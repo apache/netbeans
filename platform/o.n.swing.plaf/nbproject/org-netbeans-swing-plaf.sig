@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.46
+#Version 1.53
 
 CLSS public java.lang.Object
 cons public init()
@@ -23,11 +23,13 @@ fld protected final static java.lang.String DESKTOP_BACKGROUND = "Nb.Desktop.bac
 fld protected final static java.lang.String DESKTOP_BORDER = "Nb.Desktop.border"
 fld protected final static java.lang.String DESKTOP_SPLITPANE_BORDER = "nb.desktop.splitpane.border"
 fld protected final static java.lang.String EDITOR_ERRORSTRIPE_SCROLLBAR_INSETS = "Nb.Editor.ErrorStripe.ScrollBar.Insets"
+fld protected final static java.lang.String EDITOR_PREFERRED_COLOR_PROFILE = "nb.preferred.color.profile"
 fld protected final static java.lang.String EDITOR_STATUS_INNER_BORDER = "Nb.Editor.Status.innerBorder"
 fld protected final static java.lang.String EDITOR_STATUS_LEFT_BORDER = "Nb.Editor.Status.leftBorder"
 fld protected final static java.lang.String EDITOR_STATUS_ONLYONEBORDER = "Nb.Editor.Status.onlyOneBorder"
 fld protected final static java.lang.String EDITOR_STATUS_RIGHT_BORDER = "Nb.Editor.Status.rightBorder"
 fld protected final static java.lang.String EDITOR_TABBED_CONTAINER_UI = "TabbedContainerUI"
+fld protected final static java.lang.String EDITOR_TABSCOMPONENT_BORDER = "Nb.Editor.TabsComponent.border"
 fld protected final static java.lang.String EDITOR_TAB_CONTENT_BORDER = "TabbedContainer.editor.contentBorder"
 fld protected final static java.lang.String EDITOR_TAB_DISPLAYER_UI = "EditorTabDisplayerUI"
 fld protected final static java.lang.String EDITOR_TAB_OUTER_BORDER = "TabbedContainer.editor.outerBorder"

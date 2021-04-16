@@ -77,10 +77,10 @@ public class NbClassPathCompat {
 
 
         Env env = new Env ();
-        Enumeration en = cap.fileSystems ();
+        Enumeration<? extends FileSystem> en = cap.fileSystems();
         while (en.hasMoreElements ()) {
             try {
-                FileSystem fs = (FileSystem)en.nextElement ();
+                FileSystem fs = en.nextElement();
                 FileSystemCompat.compat(fs).prepareEnvironment((FileSystem$Environment)env);
             } catch (EnvironmentNotSupportedException ex) {
                 // store the exception

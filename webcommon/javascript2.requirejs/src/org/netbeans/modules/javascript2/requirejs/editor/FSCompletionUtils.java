@@ -65,7 +65,7 @@ public class FSCompletionUtils {
 
         assert relativeTo != null;
 
-        List<CompletionProposal> result = new LinkedList();
+        List<CompletionProposal> result = new LinkedList<>();
 
         int lastSlash = prefix.lastIndexOf('/');
         String pathPrefix;
@@ -79,7 +79,7 @@ public class FSCompletionUtils {
             filePrefix = prefix;
         }
 
-        Set<FileObject> directories = new HashSet();
+        Set<FileObject> directories = new HashSet<>();
         File prefixFile = null;
         if (pathPrefix != null && !pathPrefix.startsWith(".")) { //NOI18N
             if (pathPrefix.length() == 0 && prefix.startsWith(SLASH)) {
@@ -232,8 +232,8 @@ public class FSCompletionUtils {
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
-            Collection<String> basePaths = new ArrayList();
-            Map<String, String> configPaths = new HashMap();
+            Collection<String> basePaths = new ArrayList<>();
+            Map<String, String> configPaths = new HashMap<>();
 
             if (rIndex != null) {
                 basePaths = rIndex.getBasePaths();

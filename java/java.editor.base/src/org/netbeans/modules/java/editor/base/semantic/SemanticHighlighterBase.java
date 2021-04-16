@@ -18,15 +18,11 @@
  */
 package org.netbeans.modules.java.editor.base.semantic;
 
-import com.sun.source.tree.ArrayTypeTree;
-import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.CompoundAssignmentTree;
-import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExportsTree;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.IdentifierTree;
-import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -44,43 +40,47 @@ import com.sun.source.tree.UsesTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.swing.text.Document;
+import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaParserResultTask;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.support.CancellableTreePathScanner;
+import org.netbeans.api.lexer.PartType;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
-//import org.netbeans.modules.editor.NbEditorUtilities;
+import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.modules.java.editor.base.imports.UnusedImports;
 import org.netbeans.modules.java.editor.base.semantic.ColoringAttributes.Coloring;
+import org.netbeans.modules.java.editor.base.semantic.UnusedDetector.UnusedDescription;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.netbeans.modules.parsing.spi.TaskIndexingMode;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Pair;
 
 
 /**
@@ -146,95 +146,6 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         
     protected abstract boolean process(CompilationInfo info, final Document doc);
     
-    /**
-     * Signatures of Serializable methods.
-     */
-    private static final Set<String> SERIALIZABLE_SIGNATURES = new HashSet<>(Arrays.asList(new String[] {
-        "writeObject(Ljava/io/ObjectOutputStream;)V",
-        "readObject(Ljava/io/ObjectInputStream;)V",
-        "readResolve()Ljava/lang/Object;",
-        "writeReplace()Ljava/lang/Object;",
-        "readObjectNoData()V",
-    }));
-    
-    /**
-     * Also returns true on error / undecidable situation, so the filtering 
-     * will probably accept serial methods and will not mark them as unused, if
-     * the class declaration is errneous.
-     * 
-     * @param info the compilation context
-     * @param e the class member (the enclosing element will be tested)
-     * @return true, if in serializable/externalizable or unknown
-     */
-    private static boolean isInSerializableOrExternalizable(CompilationInfo info, Element e) {
-        Element encl = e.getEnclosingElement();
-        if (encl == null || !encl.getKind().isClass()) {
-            return true;
-        }
-        TypeMirror m = encl.asType();
-        if (m == null || m.getKind() != TypeKind.DECLARED) {
-            return true;
-        }
-        Element serEl = info.getElements().getTypeElement("java.io.Serializable"); // NOI18N
-        Element extEl = info.getElements().getTypeElement("java.io.Externalizable"); // NOI18N
-        if (serEl == null || extEl == null) {
-            return true;
-        }
-        if (info.getTypes().isSubtype(m, serEl.asType())) {
-            return true;
-        }
-        if (info.getTypes().isSubtype(m, extEl.asType())) {
-            return true;
-        }
-        return false;
-    }
-    
-    private static Field signatureAccessField;
-    
-    /**
-     * Hack to get signature out of ElementHandle - there's no API method for that
-     */
-    private static String _getSignatureHack(ElementHandle<ExecutableElement> eh) {
-        try {
-            if (signatureAccessField == null) {
-                try {
-                    Field f = ElementHandle.class.getDeclaredField("signatures"); // NOI18N
-                    f.setAccessible(true);
-                    signatureAccessField = f;
-                } catch (NoSuchFieldException | SecurityException ex) {
-                    // ignore
-                    return ""; // NOI18N
-                }
-            }
-            String[] signs = (String[])signatureAccessField.get(eh);
-            if (signs == null || signs.length != 3) {
-                return ""; // NOI18N
-            } else {
-                return signs[1] + signs[2];
-            }
-        } catch (IllegalArgumentException | IllegalAccessException ex) {
-            return ""; // NOI18N
-        }
-    }
-
-    /**
-     * Checks if the method is specified by Serialization API and the class
-     * extends Serializable/Externalizable. Unused methods defined in API spec
-     * should not be marked as unused.
-     * 
-     * @param info compilation context
-     * @param method the method
-     * @return true, if the method is from serialization API and should not be reported
-     */
-    private boolean isSerializationMethod(CompilationInfo info, ExecutableElement method) {
-        if (!isInSerializableOrExternalizable(info, method)) {
-            return false;
-        }
-        ElementHandle<ExecutableElement> eh = ElementHandle.create(method);
-        String sign = _getSignatureHack(eh);
-        return SERIALIZABLE_SIGNATURES.contains(sign);
-    }
-    
     protected boolean process(CompilationInfo info, final Document doc, ErrorDescriptionSetter setter) {
         DetectorVisitor v = new DetectorVisitor(info, doc, cancel);
         
@@ -249,26 +160,31 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         
         boolean computeUnusedImports = "text/x-java".equals(FileUtil.getMIMEType(info.getFileObject()));
         
-        List<int[]> imports = computeUnusedImports ? new ArrayList<int[]>() : null;
+        List<Pair<int[], Coloring>> extraColoring = computeUnusedImports ? new ArrayList<>(v.extraColoring) : v.extraColoring;
 
         if (computeUnusedImports) {
             Collection<TreePath> unusedImports = UnusedImports.process(info, cancel);
 
             if (unusedImports == null) return true;
             
+            Coloring unused = collection2Coloring(Arrays.asList(ColoringAttributes.UNUSED));
+
             for (TreePath tree : unusedImports) {
                 if (cancel.get()) {
                     return true;
                 }
 
                 //XXX: finish
-                imports.add(new int[] {
+                extraColoring.add(Pair.of(new int[] {
                     (int) info.getTrees().getSourcePositions().getStartPosition(cu, tree.getLeaf()),
                     (int) info.getTrees().getSourcePositions().getEndPosition(cu, tree.getLeaf())
-                });
+                }, unused));
             }
         }
         
+        Map<Element, List<UnusedDescription>> element2Unused = UnusedDetector.findUnused(info) //XXX: unnecessarily ugly
+                                                                             .stream()
+                                                                             .collect(Collectors.groupingBy(ud -> ud.unusedElement));
         for (Element decl : v.type2Uses.keySet()) {
             if (cancel.get())
                 return true;
@@ -279,23 +195,9 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 if (u.spec == null)
                     continue;
                 
-                if (u.type.contains(UseTypes.DECLARATION) && Utilities.isPrivateElement(decl)) {
-                    if ((decl.getKind().isField() && !isSerialSpecField(info, decl)) || isLocalVariableClosure(decl)) {
-                        if (!hasAllTypes(uses, EnumSet.of(UseTypes.READ, UseTypes.WRITE))) {
-                            u.spec.add(ColoringAttributes.UNUSED);
-                        }
-                    }
-                    
-                    if ((decl.getKind() == ElementKind.CONSTRUCTOR && !decl.getModifiers().contains(Modifier.PRIVATE)) || decl.getKind() == ElementKind.METHOD) {
-                        if (!(hasAllTypes(uses, EnumSet.of(UseTypes.EXECUTE)) || isSerializationMethod(info, (ExecutableElement)decl))) {
-                            u.spec.add(ColoringAttributes.UNUSED);
-                        }
-                    }
-                    
-                    if (decl.getKind().isClass() || decl.getKind().isInterface()) {
-                        if (!hasAllTypes(uses, EnumSet.of(UseTypes.CLASS_USE))) {
-                            u.spec.add(ColoringAttributes.UNUSED);
-                        }
+                if (u.declaration) {
+                    if (element2Unused.containsKey(decl)) {
+                        u.spec.add(ColoringAttributes.UNUSED);
                     }
                 }
                 
@@ -320,31 +222,12 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             return true;
         
         if (computeUnusedImports) {
-            setter.setHighlights(doc, imports, v.preText);
+            setter.setHighlights(doc, extraColoring, v.preText);
         }
 
         setter.setColorings(doc, newColoring);
 
         return false;
-    }
-    
-        
-    private boolean hasAllTypes(List<Use> uses, Collection<UseTypes> types) {
-        EnumSet e = EnumSet.copyOf(types);
-        
-        for (Use u : uses) {
-            if (types.isEmpty()) {
-                return true;
-            }
-            
-            types.removeAll(u.type);
-        }
-        
-        return types.isEmpty();
-    }
-    
-    private enum UseTypes {
-        READ, WRITE, EXECUTE, DECLARATION, CLASS_USE, MODULE_USE;
     }
     
     private static Coloring collection2Coloring(Collection<ColoringAttributes> attr) {
@@ -357,46 +240,40 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         return c;
     }
     
+    private static final Set<ElementKind> LOCAL_VARIABLES = EnumSet.of(
+            ElementKind.LOCAL_VARIABLE, ElementKind.RESOURCE_VARIABLE,
+            ElementKind.EXCEPTION_PARAMETER);
+    private static final ElementKind BINDING_VARIABLE;
+
+    static {
+        ElementKind bindingVariable;
+        try {
+            LOCAL_VARIABLES.add(bindingVariable = ElementKind.valueOf(TreeShims.BINDING_VARIABLE));
+        } catch (IllegalArgumentException ex) {
+            bindingVariable = null;
+        }
+        BINDING_VARIABLE = bindingVariable;
+    }
+
     private static boolean isLocalVariableClosure(Element el) {
-        return el.getKind() == ElementKind.PARAMETER || el.getKind() == ElementKind.LOCAL_VARIABLE
-                || el.getKind() == ElementKind.RESOURCE_VARIABLE || el.getKind() == ElementKind.EXCEPTION_PARAMETER;
+        return el.getKind() == ElementKind.PARAMETER ||
+               LOCAL_VARIABLES.contains(el.getKind());
     }
     
-    /** Detects static final long SerialVersionUID 
-     * @return true if element is final static long serialVersionUID
-     */
-    private static boolean isSerialSpecField(CompilationInfo info, Element el) {
-        if (el.getModifiers().contains(Modifier.FINAL) 
-                && el.getModifiers().contains(Modifier.STATIC)) {
-            
-            if (!isInSerializableOrExternalizable(info, el)) {
-                return false;
-            }
-            if (info.getTypes().getPrimitiveType(TypeKind.LONG).equals(el.asType())
-                && el.getSimpleName().toString().equals("serialVersionUID")) {
-                return true;
-            }
-            if (el.getSimpleName().contentEquals("serialPersistentFields")) {
-                return true;
-            }
-        }
-        return false;
-    }
-        
     private static class Use {
-        private Collection<UseTypes> type;
+        private boolean declaration;
         private TreePath     tree;
         private Collection<ColoringAttributes> spec;
         
-        public Use(Collection<UseTypes> type, TreePath tree, Collection<ColoringAttributes> spec) {
-            this.type = type;
+        public Use(boolean declaration, TreePath tree, Collection<ColoringAttributes> spec) {
+            this.declaration = declaration;
             this.tree = tree;
             this.spec = spec;
         }
         
         @Override
         public String toString() {
-            return "Use: " + type;
+            return "Use: " + spec;
         }
     }
     
@@ -407,6 +284,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         private Map<Element, List<Use>> type2Uses;        
         private Map<Tree, List<Token>> tree2Tokens;
         private List<Token> contextKeywords;
+        private List<Pair<int[], Coloring>> extraColoring;
         private Map<int[], String> preText;
         private TokenList tl;
         private long memberSelectBypass = -1;        
@@ -421,6 +299,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             type2Uses = new HashMap<Element, List<Use>>();
             tree2Tokens = new IdentityHashMap<Tree, List<Token>>();
             contextKeywords = new ArrayList<>();
+            extraColoring = new ArrayList<>();
             preText = new HashMap<>();
 
             tl = new TokenList(info, doc, cancel);
@@ -430,7 +309,11 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         }
         
         private void firstIdentifier(String name) {
-            tl.firstIdentifier(getCurrentPath(), name, tree2Tokens);
+            firstIdentifier(getCurrentPath(), name);
+        }
+
+        private void firstIdentifier(TreePath path, String name) {
+            tl.firstIdentifier(path, name, tree2Tokens);
         }
         
         private Token firstIdentifierToken(String... names) {
@@ -445,6 +328,9 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         
         @Override
         public Void visitMemberSelect(MemberSelectTree tree, Void p) {
+            if (info.getTreeUtilities().isSynthetic(getCurrentPath()))
+                return null;
+
             long memberSelectBypassLoc = memberSelectBypass;
             
             memberSelectBypass = -1;
@@ -468,7 +354,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             
             handlePossibleIdentifier(getCurrentPath(), false);
             firstIdentifier(tree.getIdentifier().toString());
-            
+            addParameterInlineHint(tree);
             return null;
         }
         
@@ -482,7 +368,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             }
             
             boolean accessModifier = false;
-            
+
             if (decl.getModifiers().contains(Modifier.PUBLIC)) {
                 c.add(ColoringAttributes.PUBLIC);
                 accessModifier = true;
@@ -525,14 +411,17 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             
             addModifiers(decl, c);
             
-            if (decl.getKind().isField()) {
-                c.add(ColoringAttributes.FIELD);
+            if (decl.getKind().isField() || TreeShims.isRecordComponent(decl.getKind())) {
+                if (decl.getKind().isField()) {
+                    c.add(ColoringAttributes.FIELD);
+                } else {
+                    c.add(ColoringAttributes.RECORD_COMPONENT);
+                }
                 
                 return c;
             }
             
-            if (decl.getKind() == ElementKind.LOCAL_VARIABLE || decl.getKind() == ElementKind.RESOURCE_VARIABLE
-                    || decl.getKind() == ElementKind.EXCEPTION_PARAMETER) {
+            if (LOCAL_VARIABLES.contains(decl.getKind())) {
                 c.add(ColoringAttributes.LOCAL_VARIABLE);
                 
                 return c;
@@ -571,7 +460,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 return ;
             }
 
-            decl = decl == null ? info.getTrees().getElement(expr) : decl;
+            decl = decl == null ? Utilities.toRecordComponent(info.getTrees().getElement(expr)) : decl;
 
             ElementKind declKind = decl != null ? decl.getKind() : null;
             boolean isDeclType = decl != null &&
@@ -599,7 +488,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             isDeclType = decl.getKind().isClass() || decl.getKind().isInterface();
             Collection<ColoringAttributes> c = null;
 
-            if (decl.getKind().isField() || isLocalVariableClosure(decl)) {
+            if (decl.getKind().isField() || isLocalVariableClosure(decl) || TreeShims.isRecordComponent(decl.getKind())) {
                 c = getVariableColoring(decl);
             }
             
@@ -622,6 +511,11 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                     case INTERFACE: c.add(ColoringAttributes.INTERFACE); break;
                     case ANNOTATION_TYPE: c.add(ColoringAttributes.ANNOTATION_TYPE); break;
                     case ENUM: c.add(ColoringAttributes.ENUM); break;
+                    default:
+                        if (decl.getKind().name().contentEquals("RECORD")) {
+                            c.add(ColoringAttributes.RECORD);
+                        }
+                        break;
                 }
             }                       
             
@@ -634,93 +528,23 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             }
             
             if (c != null) {
-                Collection<UseTypes> type = EnumSet.noneOf(UseTypes.class);
-
-                if (isDeclType) {
-                    if (!declaration) {
-                        type.add(UseTypes.CLASS_USE);
-                    }
-                } else if (decl.getKind().isField() || isLocalVariableClosure(decl)) {
-                    if (!declaration) {
-                        while (true) {
-                            if (parent.getLeaf().getKind() == Kind.POSTFIX_DECREMENT ||
-                                parent.getLeaf().getKind() == Kind.POSTFIX_INCREMENT ||
-                                parent.getLeaf().getKind() == Kind.PREFIX_DECREMENT ||
-                                parent.getLeaf().getKind() == Kind.PREFIX_INCREMENT) {
-                                type.add(UseTypes.WRITE);
-                                currentPath = parent;
-                                parent = currentPath.getParentPath();
-                                continue;
-                            }
-                            if (CompoundAssignmentTree.class.isAssignableFrom(parent.getLeaf().getKind().asInterface()) &&
-                                ((CompoundAssignmentTree) parent.getLeaf()).getVariable() == currentPath.getLeaf()) {
-                                type.add(UseTypes.WRITE);
-                                currentPath = parent;
-                                parent = currentPath.getParentPath();
-                                continue;
-                            }
-                            break;
-                        }
-                        if (parent.getLeaf().getKind() == Kind.ASSIGNMENT &&
-                            ((AssignmentTree) parent.getLeaf()).getVariable() == currentPath.getLeaf()) {
-                            type.add(UseTypes.WRITE);
-                        } else if (parent.getLeaf().getKind() != Kind.EXPRESSION_STATEMENT) {
-                            type.add(UseTypes.READ);
-                        }
-                    } else if (decl.getKind() == ElementKind.PARAMETER) {
-                        Element method = decl.getEnclosingElement();
-
-                        type.add(UseTypes.WRITE);
-
-                        if (parent.getLeaf().getKind() == Kind.LAMBDA_EXPRESSION &&
-                            ((LambdaExpressionTree) parent.getLeaf()).getParameters().contains(currentPath.getLeaf())) {
-//                            type.add(UseTypes.READ);
-                        } else if (method.getModifiers().contains(Modifier.ABSTRACT) || method.getModifiers().contains(Modifier.NATIVE) || !method.getModifiers().contains(Modifier.PRIVATE)) {
-                            type.add(UseTypes.READ);
-                        }
-                    } else if (decl.getKind().isField() || decl.getKind() == ElementKind.EXCEPTION_PARAMETER) {
-                        type.add(UseTypes.WRITE);
-                    } else if (parent.getLeaf().getKind() == Kind.ENHANCED_FOR_LOOP &&
-                               ((EnhancedForLoopTree) parent.getLeaf()).getVariable() == currentPath.getLeaf()) {
-                        type.add(UseTypes.WRITE);
-                    } else {
-                        VariableTree vt = (VariableTree) currentPath.getLeaf();
-
-                        if (vt.getInitializer() != null) {
-                            type.add(UseTypes.WRITE);
-                        }
-                    }
-                } else if (decl.getKind() == ElementKind.METHOD) {
-                    if (!declaration) {
-                        type.add(UseTypes.EXECUTE);
-                    }
-                } else if (decl.getKind() == ElementKind.CONSTRUCTOR) {
-                    if (!declaration) {
-                        if (info.getElements().isDeprecated(decl.getEnclosingElement())) {
-                            c.add(ColoringAttributes.DEPRECATED);
-                        }
-                        type.add(UseTypes.EXECUTE);
+                if (decl.getKind() == ElementKind.CONSTRUCTOR && !declaration) {
+                    if (info.getElements().isDeprecated(decl.getEnclosingElement())) {
+                        c.add(ColoringAttributes.DEPRECATED);
                     }
                 }
-                if (declaration) {
-                    type.add(UseTypes.DECLARATION);
-                }
-                addUse(decl, type, expr, c);
+                addUse(decl, declaration, expr, c);
             }
         }
         
-        private void addUse(Element decl, Collection<UseTypes> useTypes, TreePath t, Collection<ColoringAttributes> c) {
-            if (decl == recursionDetector) {
-                useTypes.remove(UseTypes.EXECUTE); //recursive execution is not use
-            }
-            
+        private void addUse(Element decl, boolean declaration, TreePath t, Collection<ColoringAttributes> c) {
             List<Use> uses = type2Uses.get(decl);
             
             if (uses == null) {
                 type2Uses.put(decl, uses = new ArrayList<Use>());
             }
             
-            Use u = new Use(useTypes, t, c);
+            Use u = new Use(declaration, t, c);
             
             uses.add(u);
         }
@@ -864,7 +688,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 if ("super".equals(ident) || "this".equals(ident)) { //NOI18N
                     Element resolved = info.getTrees().getElement(getCurrentPath());
                     
-                    addUse(resolved, EnumSet.of(UseTypes.EXECUTE), null, null);
+                    addUse(resolved, false, null, null);
                 }
             }
             
@@ -891,7 +715,52 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             
             scan(tree.getArguments(), p);
             
+            addParameterInlineHint(tree);
             return null;
+        }
+
+        @Override
+        public Void visitExpressionStatement(ExpressionStatementTree node, Void p) {
+            List<TreePath> chain = new ArrayList<>(); //TODO: avoid creating an instance if possible!
+            TreePath current = new TreePath(getCurrentPath(), node.getExpression());
+            OUTER: while (true) {
+                chain.add(current);
+                switch (current.getLeaf().getKind()) {
+                    case METHOD_INVOCATION:
+                        MethodInvocationTree mit = (MethodInvocationTree) current.getLeaf();
+                        if (mit.getMethodSelect().getKind() == Kind.MEMBER_SELECT) {
+                            current = new TreePath(new TreePath(current, mit.getMethodSelect()), ((MemberSelectTree) mit.getMethodSelect()).getExpression());
+                            break;
+                        }
+                        break OUTER;
+                    default:
+                        break OUTER;
+                }
+            }
+            int prevIndex = tl.index();
+            Collections.reverse(chain);
+            List<Pair<String, Integer>> typeToPosition = new ArrayList<>();
+            for (TreePath tp : chain) {
+                long end = info.getTrees().getSourcePositions().getEndPosition(tp.getCompilationUnit(), tp.getLeaf());
+                tl.moveToOffset(end);
+                Token t = tl.currentToken();
+                int pos;
+                if (t != null && t.id() == JavaTokenId.WHITESPACE && (pos = t.text().toString().indexOf("\n")) != -1) {
+                    TypeMirror type = info.getTrees().getTypeMirror(tp);
+                    String typeName = info.getTypeUtilities().getTypeName(type).toString();
+                    if (typeToPosition.isEmpty() || !typeName.equals(typeToPosition.get(typeToPosition.size() - 1).first())) {
+                        typeToPosition.add(Pair.of(typeName, tl.offset() + pos));
+                    }
+                }
+            }
+            if (typeToPosition.size() >= 2) {
+                for (Pair<String, Integer> typeAndPosition : typeToPosition) {
+                    preText.put(new int[] {(int) typeAndPosition.second(), (int) typeAndPosition.second() + 1},
+                                                "  " + typeAndPosition.first());
+                }
+            }
+            tl.resetToIndex(prevIndex);
+            return super.visitExpressionStatement(node, p);
         }
 
         @Override
@@ -909,6 +778,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             tl.identifierHere(tree, tree2Tokens);
             
             handlePossibleIdentifier(getCurrentPath(), false);
+            addParameterInlineHint(tree);
             super.visitIdentifier(tree, null);
             return null;
         }
@@ -972,6 +842,9 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
 
         @Override
         public Void visitVariable(VariableTree tree, Void p) {
+            if (info.getTreeUtilities().isSynthetic(getCurrentPath()))
+                return null;
+
             tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), tree));
 
             handlePossibleIdentifier(getCurrentPath(), true);
@@ -1011,7 +884,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             Element clazz = info.getTrees().getElement(tp);
             
             if (clazz != null) {
-                addUse(clazz, EnumSet.of(UseTypes.CLASS_USE), null, null);
+                addUse(clazz, false, null, null);
             }
 	    
             scan(tree.getEnclosingExpression(), null);
@@ -1032,18 +905,44 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             scan(tree.getModifiers(), null);
             
             tl.moveToEnd(tree.getModifiers());
+            boolean record = false;
+            Token recordToken = tl.firstIdentifier(getCurrentPath(), "record");
+            if (recordToken != null) {
+                contextKeywords.add(recordToken);
+                tl.moveNext();
+                record = true;
+            }
             firstIdentifier(tree.getSimpleName().toString());
-            
+
             //XXX:????
             scan(tree.getTypeParameters(), null);
+            if (record) {
+                scan(tree.getMembers().stream().filter(m -> isRecordComponent(m)).collect(Collectors.toList()), null);
+            }
             scan(tree.getExtendsClause(), null);
             scan(tree.getImplementsClause(), null);
-
+            try {
+                List<? extends Tree> permitList = TreeShims.getPermits(tree);
+                if (permitList != null && !permitList.isEmpty()) {
+                    tl.moveNext();
+                    Token t = firstIdentifierToken("permits");// NOI18N
+                    if (tl != null) {
+                        contextKeywords.add(t);
+                        scan(permitList, null);
+                    }
+                }
+            } catch (NullPointerException ex) {
+                //Do nothing
+            }
             ExecutableElement prevRecursionDetector = recursionDetector;
 
             recursionDetector = null;
             
-            scan(tree.getMembers(), null);
+            if (record) {
+                scan(tree.getMembers().stream().filter(m -> !isRecordComponent(m)).collect(Collectors.toList()), null);
+            } else {
+                scan(tree.getMembers(), null);
+            }
 
             recursionDetector = prevRecursionDetector;
             
@@ -1052,6 +951,11 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             return null;
         }
         
+        private boolean isRecordComponent(Tree member) {
+            Element el = info.getTrees().getElement(new TreePath(getCurrentPath(), member));
+            return el != null && TreeShims.isRecordComponent(Utilities.toRecordComponent(el).getKind());
+        }
+
         @Override
         public Void visitMemberReference(MemberReferenceTree node, Void p) {
             scan(node.getQualifierExpression(), p);
@@ -1063,33 +967,134 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             return null;
         }
 
+        private static final Coloring UNINDENTED_TEXT_BLOCK =
+                ColoringAttributes.add(ColoringAttributes.empty(), ColoringAttributes.UNINDENTED_TEXT_BLOCK);
+
         @Override
         public Void visitLiteral(LiteralTree node, Void p) {
-            TreePath pp = getCurrentPath().getParentPath();
-            if (pp.getLeaf() != null &&
-                pp.getLeaf().getKind() == Kind.METHOD_INVOCATION) {
-                MethodInvocationTree inv = (MethodInvocationTree) pp.getLeaf();
-                int pos = inv.getArguments().indexOf(node);
-                if (pos != (-1)) {
-                    Element invoked = info.getTrees().getElement(pp);
-                    if (invoked != null && (invoked.getKind() == ElementKind.METHOD || invoked.getKind() == ElementKind.CONSTRUCTOR)) {
-                        long start = sourcePositions.getStartPosition(info.getCompilationUnit(), node);
-                        long end = start + 1;
-                        ExecutableElement invokedMethod = (ExecutableElement) invoked;
-                        pos = Math.min(pos, invokedMethod.getParameters().size() - 1);
-                        preText.put(new int[] {(int) start, (int) end},
-                                    invokedMethod.getParameters().get(pos).getSimpleName() + ":");
+            int startPos = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), node);
+            tl.moveToOffset(startPos);
+            Token t = tl.currentToken();
+            if (t != null && t.id() == JavaTokenId.MULTILINE_STRING_LITERAL && t.partType() == PartType.COMPLETE) {
+                String tokenText = t.text().toString();
+                String[] lines = tokenText.split("\n");
+                int indent = Arrays.stream(lines, 1, lines.length)
+                                   .filter(l -> !l.trim().isEmpty())
+                                   .mapToInt(this::leadingIndent)
+                                   .min()
+                                   .orElse(0);
+                int pos = startPos + lines[0].length() + 1;
+                for (int i = 1; i < lines.length; i++) {
+                    String line = lines[i];
+                    if (i == lines.length - 1) {
+                        line = line.substring(0, line.length() - 3);
                     }
+                    String strippendLine = line.replaceAll("[\t ]+$", "");
+                    int indentedStart = pos + indent;
+                    int indentedEnd = pos + strippendLine.length();
+                    if (indentedEnd > indentedStart)
+                        extraColoring.add(Pair.of(new int[] {indentedStart, indentedEnd}, UNINDENTED_TEXT_BLOCK));
+                    pos += line.length() + 1;
                 }
             }
+
+            addParameterInlineHint(node);
             return super.visitLiteral(node, p);
         }
 
+        @Override
+        public Void scan(Tree tree, Void p) {
+            if (tree != null && "YIELD".equals(tree.getKind().name())) {
+                tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), tree));
+                Token t = firstIdentifierToken("yield"); //NOI18N
+                if (t != null) {
+                    contextKeywords.add(t);
+                }
+            } else if (tree != null && TreeShims.BINDING_PATTERN.equals(tree.getKind().name())) {
+                super.scan(tree, p);
+                TreePath tp = new TreePath(getCurrentPath(), tree);
+                handlePossibleIdentifier(tp, true, info.getTrees().getElement(tp));
+                tl.moveToOffset(sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), TreeShims.getBindingPatternType(tree)));
+                firstIdentifier(tp, TreeShims.getBinding(tree).toString());
+            } else if (tree != null && tree.getKind().equals(Kind.MODIFIERS)) {
+               visitModifier(tree);
+            }
+            return super.scan(tree, p);
+        }
+        
+        private void visitModifier(Tree tree) {
+            tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), tree));
+            Token t = null;
+            if (tree.toString().contains("non-sealed")) {// NOI18N
+                Token firstIdentifier = tl.firstIdentifier(getCurrentPath(), "non");// NOI18N
+                if (firstIdentifier != null) {
+                    contextKeywords.add(firstIdentifier);
+                }
+                tl.moveNext();
+                tl.moveNext();
+                if (TokenUtilities.textEquals(tl.currentToken().text(), "sealed")) {// NOI18N
+                    contextKeywords.add(tl.currentToken());
+                }
+            } else if (tree.toString().contains("sealed")) {// NOI18N
+                t = firstIdentifierToken("sealed"); //NOI18N
+                if (t != null) {
+                    contextKeywords.add(t);
+                }
+            }
+        }
+
+        private int leadingIndent(String line) {
+            int indent = 0;
+
+            for (int i = 0; i < line.length(); i++) { //TODO: code points
+                if (Character.isWhitespace(line.charAt(i)))
+                    indent++;
+                else
+                    break;
+            }
+
+            return indent;
+        }
+
+        private void addParameterInlineHint(Tree tree) {
+            TreePath pp = getCurrentPath().getParentPath();
+            Tree leaf = pp.getLeaf();
+            if (leaf != null &&
+                (leaf.getKind() == Kind.METHOD_INVOCATION || leaf.getKind() == Kind.NEW_CLASS)) {
+                int pos = -1;
+                if (leaf.getKind() == Kind.METHOD_INVOCATION) {
+                    pos = MethodInvocationTree.class.cast(leaf).getArguments().indexOf(tree);
+                } else if (leaf.getKind() == Kind.NEW_CLASS) {
+                    pos = NewClassTree.class.cast(leaf).getArguments().indexOf(tree);
+                }
+                if (pos != (-1)) {
+                    Element invoked = info.getTrees().getElement(pp);
+                    if (invoked != null && (invoked.getKind() == ElementKind.METHOD || invoked.getKind() == ElementKind.CONSTRUCTOR)) {
+                        long start = sourcePositions.getStartPosition(info.getCompilationUnit(), tree);
+                        long end = start + 1;
+                        ExecutableElement invokedMethod = (ExecutableElement) invoked;
+                        pos = Math.min(pos, invokedMethod.getParameters().size() - 1);
+                        if (pos != (-1)) {
+                            boolean shouldBeAdded = true;
+                            if (tree.getKind() == Kind.IDENTIFIER &&
+                                    invokedMethod.getParameters().get(pos).getSimpleName().equals(
+                                            IdentifierTree.class.cast(tree).getName())) {
+                                shouldBeAdded = false;
+                            }
+                            if (shouldBeAdded) {
+                                preText.put(new int[] {(int) start, (int) end},
+                                            invokedMethod.getParameters().get(pos).getSimpleName() + ":");
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public static interface ErrorDescriptionSetter {
         
-        public void setHighlights(Document doc, Collection<int[]> highlights, Map<int[], String> preText);
+        public void setHighlights(Document doc, Collection<Pair<int[], Coloring>> highlights, Map<int[], String> preText);
         public void setColorings(Document doc, Map<Token, Coloring> colorings);
     }    
 }

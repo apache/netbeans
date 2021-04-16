@@ -19,6 +19,7 @@
 
 package org.openide.actions;
 
+import java.util.Iterator;
 import java.beans.PropertyChangeListener;
 import javax.swing.event.ChangeListener;
 import org.openide.awt.Actions;
@@ -159,10 +160,10 @@ public final class NewAction extends NodeAction {
                 java.util.Collection c = lookup.lookupResult(Node.class).allItems();
 
                 if (c.size() == 1) {
-                    java.util.Iterator it = c.iterator();
+                    Iterator<Lookup.Item> it = c.iterator();
 
                     while (it.hasNext()) {
-                        Lookup.Item item = (Lookup.Item) it.next();
+                        Lookup.Item item = it.next();
                         Node n = (Node) item.getInstance();
 
                         if (n != null) {
@@ -215,7 +216,7 @@ public final class NewAction extends NodeAction {
             Node[] arr;
 
             if (lookup != null) {
-                arr = (Node[]) lookup.lookupAll(Node.class).toArray(new Node[0]);
+                arr = lookup.lookupAll(Node.class).toArray(new Node[0]);
             } else {
                 arr = WindowManager.getDefault().getRegistry().getCurrentNodes();
             }

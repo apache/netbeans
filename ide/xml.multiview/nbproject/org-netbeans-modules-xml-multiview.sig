@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.43.0
+#Version 1.49.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -159,8 +159,6 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
-meth public java.awt.peer.ComponentPeer getPeer()
- anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -1554,7 +1552,7 @@ meth public void setActive(boolean)
 meth public void setHeaderActions(javax.swing.Action[])
 meth public void setIndex(int)
 supr javax.swing.JPanel
-hfds actionPanel,active,activeNode,contentPanel,fillerEnd,fillerLine,foldButton,foldable,headerButtons,headerSeparator,index,root,sectionCount,sectionView,title,titleButton,titlePanel
+hfds actionPanel,active,contentPanel,fillerEnd,fillerLine,foldButton,foldable,headerButtons,headerSeparator,index,root,sectionCount,sectionView,titleButton,titlePanel
 
 CLSS public org.netbeans.modules.xml.multiview.ui.SectionContainerNode
 cons public init(org.openide.nodes.Children)
@@ -1569,6 +1567,7 @@ meth protected void addRefreshable(org.netbeans.modules.xml.multiview.Refreshabl
 meth protected void endUIChange()
 meth protected void scheduleRefreshView()
 meth protected void signalUIChange()
+ anno 0 java.lang.Deprecated()
 meth protected void startUIChange()
 meth public abstract void setValue(javax.swing.JComponent,java.lang.Object)
 meth public boolean canClose()
@@ -1732,6 +1731,7 @@ meth public boolean isAdding()
 meth public boolean[] getButtons()
 meth public boolean[] isTextField()
 meth public char[] getMnemonics()
+ anno 0 java.lang.Deprecated()
 meth public int getSize()
 meth public java.lang.String[] getA11yDesc()
 meth public java.lang.String[] getInitValues()
@@ -1741,6 +1741,7 @@ meth public void setAdding(boolean)
 meth public void setButtons(boolean[])
 meth public void setInitValues(java.lang.String[])
 meth public void setMnemonics(char[])
+ anno 0 java.lang.Deprecated()
 meth public void setSize(int)
 meth public void setTextField(boolean[])
 supr java.lang.Object
@@ -1994,6 +1995,7 @@ meth protected abstract void selectionChanged(org.openide.nodes.Node[],org.openi
 meth protected abstract void showPath(javax.swing.tree.TreePath)
 meth protected abstract void showSelection(javax.swing.tree.TreePath[])
 meth protected boolean useExploredContextMenu()
+meth public boolean getScrollsOnExpand()
 meth public boolean isDefaultActionEnabled()
 meth public boolean isDragSource()
 meth public boolean isDropTarget()
@@ -2023,6 +2025,7 @@ meth public void setDropTarget(boolean)
 meth public void setPopupAllowed(boolean)
 meth public void setQuickSearchAllowed(boolean)
 meth public void setRootVisible(boolean)
+meth public void setScrollsOnExpand(boolean)
 meth public void setSelectionMode(int)
 meth public void setUseSubstringInQuickSearch(boolean)
  anno 0 java.lang.Deprecated()

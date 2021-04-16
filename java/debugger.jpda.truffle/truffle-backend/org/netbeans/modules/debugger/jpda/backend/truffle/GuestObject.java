@@ -21,12 +21,11 @@ package org.netbeans.modules.debugger.jpda.backend.truffle;
 
 import com.oracle.truffle.api.debug.DebugStackFrame;
 import com.oracle.truffle.api.debug.DebugValue;
+import com.oracle.truffle.api.nodes.LanguageInfo;
 import com.oracle.truffle.api.source.SourceSection;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A guest language object.
@@ -37,6 +36,7 @@ public final class GuestObject {
 
     final DebugValue value;
     final String name;
+    final String language;
     final String type;
     final String displayValue;
     final boolean readable;
@@ -50,6 +50,14 @@ public final class GuestObject {
     final SourcePosition typeSourcePosition;
 
     GuestObject(DebugValue value) {
+        LanguageInfo originalLanguage = value.getOriginalLanguage();
+        // Setup the object with a language-specific value
+        if (originalLanguage != null) {
+            value = value.asInLanguage(originalLanguage);
+            this.language = originalLanguage.getId() + " " + originalLanguage.getName();
+        } else {
+            this.language = "";
+        }
         this.value = value;
         this.name = value.getName();
         //System.err.println("new GuestObject("+name+")");
@@ -62,36 +70,34 @@ public final class GuestObject {
             LangErrors.exception("Value "+name+" .getMetaObject()", ex);
         }
         String typeStr = "";
-        if (metaObject != null) {
-            try {
-                typeStr = metaObject.as(String.class);
-            } catch (ThreadDeath td) {
-                throw td;
-            } catch (Throwable ex) {
-                LangErrors.exception("Meta object of "+name+" .as(String.class)", ex);
+        try {
+            // New in GraalVM 20.1.0
+            typeStr = (String) DebugValue.class.getMethod("getMetaSimpleName").invoke(value);
+        } catch (ReflectiveOperationException | IllegalArgumentException | SecurityException exc) {
+            if (metaObject != null) {
+                try {
+                    typeStr = metaObject.as(String.class);
+                } catch (ThreadDeath td) {
+                    throw td;
+                } catch (Throwable ex) {
+                    LangErrors.exception("Meta object of "+name+" .as(String.class)", ex);
+                }
             }
         }
         this.type = typeStr;
         //this.object = value;
         String valueStr = null;
         try {
-            valueStr = value.as(String.class);
+            try {
+                // New in GraalVM 20.1.0
+                valueStr = (String) DebugValue.class.getMethod("toDisplayString").invoke(value);
+            } catch (ReflectiveOperationException | IllegalArgumentException | SecurityException exc) {
+                valueStr = value.as(String.class);
+            }
         } catch (ThreadDeath td) {
             throw td;
         } catch (Throwable ex) {
-            LangErrors.exception("Value "+name+" .as(String.class)", ex);
-        }
-        if (valueStr == null) {
-            // Hack for R:
-            try {
-                Method getMethod = DebugValue.class.getDeclaredMethod("get");
-                getMethod.setAccessible(true);
-                Object realValue = getMethod.invoke(value);
-                valueStr = Objects.toString(realValue);
-            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException |
-                     NoSuchMethodException | SecurityException ex) {
-                LangErrors.exception("Value "+name+" get() invocation", ex);
-            }
+            LangErrors.exception("Value "+name+" .toDisplayString", ex);
         }
         this.displayValue = valueStr;
         //System.err.println("  have display value "+valueStr);
@@ -138,8 +144,8 @@ public final class GuestObject {
         try {
             SourceSection sourceLocation = value.getSourceLocation();
             //System.err.println("\nSOURCE of "+value.getName()+" is: "+sourceLocation);
-            if (sourceLocation != null) {
-                sp = JPDATruffleDebugManager.getPosition(sourceLocation);
+            if (sourceLocation != null && sourceLocation.isAvailable()) {
+                sp = new SourcePosition(sourceLocation, value.getOriginalLanguage());
             }
         } catch (ThreadDeath td) {
             throw td;
@@ -152,8 +158,8 @@ public final class GuestObject {
             try {
                 SourceSection sourceLocation = metaObject.getSourceLocation();
                 //System.err.println("\nSOURCE of metaobject "+metaObject+" is: "+sourceLocation);
-                if (sourceLocation != null) {
-                    sp = JPDATruffleDebugManager.getPosition(sourceLocation);
+                if (sourceLocation != null && sourceLocation.isAvailable()) {
+                    sp = new SourcePosition(sourceLocation, value.getOriginalLanguage());
                 }
             } catch (ThreadDeath td) {
                 throw td;

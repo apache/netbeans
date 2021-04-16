@@ -37,6 +37,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyEvent;
 
 import java.beans.PropertyEditor;
 
@@ -375,17 +376,17 @@ class RadioInplaceEditor extends JPanel implements InplaceEditor, ActionListener
 
     private void fireActionPerformed(final java.awt.event.ActionEvent event) {
         //        System.err.println("Radio editor firing action performed " + event.getActionCommand());
-        java.util.List list;
+        List<ActionListener> list;
 
         synchronized (this) {
             if (actionListenerList == null) {
                 return;
             }
 
-            list = (List) ((ArrayList) actionListenerList).clone();
+            list = (List<ActionListener>) ((ArrayList) actionListenerList).clone();
         }
 
-        final java.util.List theList = list;
+        final List<ActionListener> theList = list;
 
         //When used in a table, the typical case is that the editor is instantiated,
         //processes its mouse event, fires an event and is immediately removed.
@@ -478,17 +479,17 @@ class RadioInplaceEditor extends JPanel implements InplaceEditor, ActionListener
             return "InvRadioButton - " + getText(); //NOI18N
         }
 
-        public void processKeyEvent(java.awt.event.KeyEvent ke) {
+        public void processKeyEvent(KeyEvent ke) {
             super.processKeyEvent(ke);
 
             if (
-                ((ke.getKeyCode() == ke.VK_ENTER) || (ke.getKeyCode() == ke.VK_ESCAPE)) &&
-                    (ke.getID() == ke.KEY_PRESSED)
+                ((ke.getKeyCode() == KeyEvent.VK_ENTER) || (ke.getKeyCode() == KeyEvent.VK_ESCAPE)) &&
+                    (ke.getID() == KeyEvent.KEY_PRESSED)
             ) {
                 RadioInplaceEditor.this.fireActionPerformed(
                     new ActionEvent(
                         this, ActionEvent.ACTION_PERFORMED,
-                        (ke.getKeyCode() == ke.VK_ENTER) ? COMMAND_SUCCESS : COMMAND_FAILURE
+                        (ke.getKeyCode() == KeyEvent.VK_ENTER) ? COMMAND_SUCCESS : COMMAND_FAILURE
                     )
                 );
             }

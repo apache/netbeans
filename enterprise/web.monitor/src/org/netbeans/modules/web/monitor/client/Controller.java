@@ -927,7 +927,7 @@ class Controller  {
 	}
 
 	Enumeration e = null;
-	Vector nodes = new Vector(); 
+	Vector<TransactionNode> nodes = new Vector<>(); 
 	int numtns = 0;
 	TransactionNode[] tns = null;
 	FileObject fo = null;
@@ -938,7 +938,7 @@ class Controller  {
 	if(debug) log("getTransactions removed old nodes"); //NOI18N 
 
 	e = currDir.getData(false);
-        final List fileObjectsToDelete = new ArrayList();
+        final List<FileObject> fileObjectsToDelete = new ArrayList<>();
 	while(e.hasMoreElements()) {
 
 	    fo = (FileObject)e.nextElement();
@@ -977,7 +977,7 @@ class Controller  {
 
 
 	savedTrans.remove(savedTrans.getNodes());
-	nodes = new Vector();
+	nodes = new Vector<>();
 	e = saveDir.getData(false);
 	while(e.hasMoreElements()) {
 

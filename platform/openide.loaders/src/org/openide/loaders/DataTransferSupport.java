@@ -127,7 +127,7 @@ abstract class DataTransferSupport {
                     @Override
                     public void run() {
                         java.lang.String n = org.openide.awt.Actions.cutAmpersand(getName());
-                        org.netbeans.api.progress.ProgressHandle h = org.netbeans.api.progress.ProgressHandleFactory.createHandle(n);
+                        org.netbeans.api.progress.ProgressHandle h = org.netbeans.api.progress.ProgressHandle.createHandle(n);
 
                         h.start();
                         h.switchToIndeterminate();
@@ -263,7 +263,7 @@ abstract class DataTransferSupport {
         */
         public final Transferable paste () throws IOException {
             try {
-                Class clazz = cookie.instanceClass ();
+                Class<?> clazz = cookie.instanceClass ();
                 
                 // create the instance
                 InstanceDataObject.create(getTargetFolder(), null, clazz);

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.73
+#Version 7.79
 
 CLSS public java.awt.Canvas
 cons public init()
@@ -174,8 +174,6 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
-meth public java.awt.peer.ComponentPeer getPeer()
- anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -1671,6 +1669,7 @@ CLSS public static org.openide.awt.Actions$CheckboxMenuItem
  outer org.openide.awt.Actions
 cons public init(javax.swing.Action,boolean)
 cons public init(org.openide.util.actions.BooleanStateAction,boolean)
+ anno 0 java.lang.Deprecated()
 supr javax.swing.JCheckBoxMenuItem
 hfds serialVersionUID
 
@@ -1747,6 +1746,7 @@ hfds allowCustomColors,lastSelection
 
 CLSS public final org.openide.awt.DropDownButtonFactory
 fld public final static java.lang.String PROP_DROP_DOWN_MENU = "dropDownMenu"
+meth public static javax.swing.Icon getArrowIcon(boolean)
 meth public static javax.swing.JButton createDropDownButton(javax.swing.Icon,javax.swing.JPopupMenu)
 meth public static javax.swing.JToggleButton createDropDownToggleButton(javax.swing.Icon,javax.swing.JPopupMenu)
 supr java.lang.Object

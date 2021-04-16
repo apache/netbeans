@@ -28,10 +28,12 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.ConstructorNode;
@@ -254,10 +256,9 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             if (!isEnum) {
                 getConstructors(classNode, out);
             }
-            List methods = classNode.getMethods();
+            List<MethodNode> methods = classNode.getMethods();
             if (methods != null) {
-                for (Iterator it = methods.iterator(); it.hasNext();) {
-                    MethodNode methodNode = (MethodNode) it.next();
+                for (MethodNode methodNode : methods) {
                     if (isEnum && methodNode.isSynthetic()) {
                         // skip values() method and valueOf(String)
                         String name = methodNode.getName();
@@ -274,10 +275,10 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
                     genMethod(classNode, methodNode, out);
                 }
             }
+
             // <netbeans>
-            List properties = classNode.getProperties();
-            for (Object object : properties) {
-                PropertyNode propertyNode = (PropertyNode) object;
+            List<PropertyNode> properties = classNode.getProperties();
+            for (PropertyNode propertyNode : properties) {
                 if (!propertyNode.isSynthetic()) {
                     String name = propertyNode.getName();
                     name = Character.toUpperCase(name.charAt(0)) + name.substring(1);
@@ -299,24 +300,24 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
         }
 
         private void getConstructors(ClassNode classNode, PrintWriter out) {
-            List constrs = classNode.getDeclaredConstructors();
+            List<ConstructorNode> constrs = classNode.getDeclaredConstructors();
             if (constrs != null) {
-                for (Iterator it = constrs.iterator(); it.hasNext();) {
-                    ConstructorNode constrNode = (ConstructorNode) it.next();
+                for (ConstructorNode constrNode : constrs) {
                     genConstructor(classNode, constrNode, out);
                 }
             }
         }
 
         private void genFields(ClassNode classNode, PrintWriter out, boolean isEnum) {
-            List fields = classNode.getFields();
+            List<FieldNode> fields = classNode.getFields();
             if (fields == null) {
                 return;
             }
-            ArrayList<FieldNode> enumFields   = new ArrayList<FieldNode>(fields.size());
-            ArrayList<FieldNode> normalFields = new ArrayList<FieldNode>(fields.size());
-            for (Iterator it = fields.iterator(); it.hasNext();) {
-                FieldNode fieldNode = (FieldNode) it.next();
+
+            List<FieldNode> enumFields   = new ArrayList<>(fields.size());
+            List<FieldNode> normalFields = new ArrayList<>(fields.size());
+            
+            for (FieldNode fieldNode : fields) {
                 boolean isEnumField = (fieldNode.getModifiers() & Opcodes.ACC_ENUM) != 0;
                 boolean isSynthetic = (fieldNode.getModifiers() & Opcodes.ACC_SYNTHETIC) != 0;
                 if (isEnumField) {
@@ -326,17 +327,15 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
                 }
             }
             genEnumFields(enumFields, out);
-            for (Iterator iterator = normalFields.iterator(); iterator.hasNext();) {
-                FieldNode fieldNode = (FieldNode) iterator.next();
+            for (FieldNode fieldNode : normalFields) {
                 genField(fieldNode, out);
             }
         }
 
         private void genProps(ClassNode classNode, PrintWriter out) {
-            List props = classNode.getProperties();
+            List<PropertyNode> props = classNode.getProperties();
             if (props != null) {
-                for (Iterator it = props.iterator(); it.hasNext();) {
-                    PropertyNode propNode = (PropertyNode) it.next();
+                for (PropertyNode propNode : props) {
                     genProp(propNode, out);
                 }
             }
@@ -348,10 +347,9 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             String getterName = "get" + name;
 
             boolean skipGetter = false;
-            List getterCandidates = propNode.getField().getOwner().getMethods(getterName);
+            List<MethodNode> getterCandidates = propNode.getField().getOwner().getMethods(getterName);
             if (getterCandidates != null) {
-                for (Iterator it = getterCandidates.iterator(); it.hasNext();) {
-                    MethodNode method = (MethodNode) it.next();
+                for (MethodNode method : getterCandidates) {
                     if (method.getParameters().length == 0) {
                         skipGetter = true;
                     }
@@ -373,10 +371,9 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             String setterName = "set" + name;
 
             boolean skipSetter = false;
-            List setterCandidates = propNode.getField().getOwner().getMethods(setterName);
+            List<MethodNode> setterCandidates = propNode.getField().getOwner().getMethods(setterName);
             if (setterCandidates != null) {
-                for (Iterator it = setterCandidates.iterator(); it.hasNext();) {
-                    MethodNode method = (MethodNode) it.next();
+                for (MethodNode method : setterCandidates) {
                     if (method.getParameters().length == 1) {
                         skipSetter = true;
                     }
@@ -392,13 +389,14 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             }
         }
 
-        private void genEnumFields(List fields, PrintWriter out) {
+        private void genEnumFields(List<FieldNode> fields, PrintWriter out) {
             if (fields.isEmpty()) {
                 return;
             }
             boolean first = true;
-            for (Iterator iterator = fields.iterator(); iterator.hasNext();) {
-                FieldNode fieldNode = (FieldNode) iterator.next();
+            
+            for (Iterator<FieldNode> iterator = fields.iterator(); iterator.hasNext();) {
+                FieldNode fieldNode = iterator.next();
                 if (!first) {
                     out.print(", ");
                 } else {
@@ -434,11 +432,11 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
                 return null;
             }
             BlockStatement block = (BlockStatement) code;
-            List stats = block.getStatements();
+            List<Statement> stats = block.getStatements();
             if (stats == null || stats.isEmpty()) {
                 return null;
             }
-            Statement stat = (Statement) stats.get(0);
+            Statement stat = stats.get(0);
             if (!(stat instanceof ExpressionStatement)) {
                 return null;
             }
@@ -480,9 +478,12 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             ClassNode superType = type.getSuperClass();
 
             boolean hadPrivateConstructor = false;
-            for (Iterator iter = superType.getDeclaredConstructors().iterator(); iter.hasNext();) {
-                ConstructorNode c = (ConstructorNode) iter.next();
-
+            
+            List<ConstructorNode> constructorNodes = superType
+                    .getDeclaredConstructors().stream()
+                    .sorted(Comparator.comparing(ConstructorNode::getTypeDescriptor))
+                    .collect(Collectors.toList());
+            for (ConstructorNode c : constructorNodes) {
                 // Only look at things we can actually call
                 if (c.isPublic() || c.isProtected()) {
                     return c.getParameters();
@@ -528,11 +529,9 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             // Else try to render some arguments
             if (arguments instanceof ArgumentListExpression) {
                 ArgumentListExpression argumentListExpression = (ArgumentListExpression) arguments;
-                List args = argumentListExpression.getExpressions();
+                List<Expression> args = argumentListExpression.getExpressions();
 
-                for (Iterator it = args.iterator(); it.hasNext();) {
-                    Expression arg = (Expression) it.next();
-
+                for (Expression arg : args) {
                     if (arg instanceof ConstantExpression) {
                         ConstantExpression expression = (ConstantExpression) arg;
                         Object o = expression.getValue();
@@ -750,7 +749,7 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
         }
 
         private void genImports(ClassNode classNode, PrintWriter out) {
-            Set imports = new HashSet();
+            Set<String> imports = new HashSet<>();
 
             //
             // HACK: Add the default imports... since things like Closure and GroovyObject seem to parse out w/o fully qualified classnames.
@@ -766,8 +765,7 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
                 }
             }
 
-            for (Iterator it = moduleNode.getImports().iterator(); it.hasNext();) {
-                ImportNode imp = (ImportNode) it.next();
+            for (ImportNode imp : moduleNode.getImports()) {
                 String name = imp.getType().getName();
                 int lastDot = name.lastIndexOf('.');
                 if (lastDot != -1) {
@@ -775,8 +773,7 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
                 }
             }
 
-            for (Iterator it = imports.iterator(); it.hasNext();) {
-                String imp = (String) it.next();
+            for (String imp : imports) {
                 out.print("import ");
                 out.print(imp);
                 out.println("*;");

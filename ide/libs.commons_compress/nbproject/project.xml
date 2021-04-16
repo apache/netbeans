@@ -32,8 +32,8 @@
                 <package>org.apache.commons.compress.archivers.tar</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/commons-compress-1.8.1.jar</runtime-relative-path>
-                <binary-origin>external/commons-compress-1.8.1.jar</binary-origin>
+                <runtime-relative-path>ext/commons-compress-1.19.jar</runtime-relative-path>
+                <binary-origin>external/commons-compress-1.19.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

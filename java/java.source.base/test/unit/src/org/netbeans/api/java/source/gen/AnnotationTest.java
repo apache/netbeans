@@ -65,7 +65,7 @@ public class AnnotationTest extends GeneratorTestBase {
     public static NbTestSuite suite() {
         NbTestSuite suite = new NbTestSuite();
         suite.addTestSuite(AnnotationTest.class);
-//        suite.addTest(new ConstructorRenameTest("testAnnotationRename1"));
+//        suite.addTest(new AnnotationTest("testRemoveAnnotationEnumConstant"));
 //        suite.addTest(new ConstructorRenameTest("testAnnotationRename2"));
 //        suite.addTest(new ConstructorRenameTest("testClassToAnnotation"));
 //        suite.addTest(new ConstructorRenameTest("testAddDefaultValue"));
@@ -113,7 +113,7 @@ public class AnnotationTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -144,7 +144,7 @@ public class AnnotationTest extends GeneratorTestBase {
                     if (TreeUtilities.CLASS_TREE_KINDS.contains(typeDecl.getKind())) {
                         ClassTree ct = (ClassTree) typeDecl;
                         ClassTree copy = make.AnnotationType(ct.getModifiers(),"Foo", ct.getMembers());
-                        System.err.println(copy.toString());
+                        //System.err.println(copy.toString());
                         workingCopy.rewrite(typeDecl, copy);
                     }
                 }
@@ -153,7 +153,7 @@ public class AnnotationTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -184,7 +184,7 @@ public class AnnotationTest extends GeneratorTestBase {
                     if (TreeUtilities.CLASS_TREE_KINDS.contains(typeDecl.getKind())) {
                         ClassTree ct = (ClassTree) typeDecl;
                         ClassTree copy = make.AnnotationType(ct.getModifiers(),"Foo", ct.getMembers());
-                        System.err.println(copy.toString());
+                        //System.err.println(copy.toString());
                         workingCopy.rewrite(typeDecl, copy);
                     }
                 }
@@ -193,7 +193,7 @@ public class AnnotationTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -231,7 +231,7 @@ public class AnnotationTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -268,7 +268,7 @@ public class AnnotationTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -315,7 +315,7 @@ public class AnnotationTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -362,7 +362,7 @@ public class AnnotationTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -411,7 +411,7 @@ public class AnnotationTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -460,7 +460,7 @@ public class AnnotationTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -498,7 +498,7 @@ public class AnnotationTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -544,7 +544,7 @@ public class AnnotationTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -590,7 +590,7 @@ public class AnnotationTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -636,7 +636,7 @@ public class AnnotationTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -759,9 +759,9 @@ public class AnnotationTest extends GeneratorTestBase {
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
         String formattedRes = Reformatter.reformat(res, CodeStyle.getDefault(FileUtil.toFileObject(testFile)));
-        System.err.println(res);
+        //System.err.println(res);
         res = res.replaceAll("\n[ ]*\n", "\n");
-        System.err.println(formattedRes);
+        //System.err.println(formattedRes);
         formattedRes = formattedRes.replaceAll("\n[ ]*\n", "\n"); //XXX: workaround for a bug in reformatter
         assertEquals(formattedRes, res);
         setValues(preferences, origValues);
@@ -800,7 +800,7 @@ public class AnnotationTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -839,7 +839,7 @@ public class AnnotationTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -876,7 +876,7 @@ public class AnnotationTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -909,9 +909,9 @@ public class AnnotationTest extends GeneratorTestBase {
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
         String formattedRes = Reformatter.reformat(res, CodeStyle.getDefault(FileUtil.toFileObject(testFile)));
-        System.err.println(res);
+        //System.err.println(res);
         res = res.replaceAll("\n[ ]*\n", "\n");
-        System.err.println(formattedRes);
+        //System.err.println(formattedRes);
         formattedRes = formattedRes.replaceAll("\n[ ]*\n", "\n"); //XXX: workaround for a bug in reformatter
         assertEquals(formattedRes, res);
     }
@@ -968,7 +968,7 @@ public class AnnotationTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1005,10 +1005,135 @@ public class AnnotationTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
+    public void testRemoveAnnotationEnumConstant() throws Exception {
+        fileModificationTest("package hierbas.del.litoral;\n" +
+                             "\n" +
+                             "public enum Test {\n" +
+                             "    A();\n" +
+                             "}\n",
+                             workingCopy -> {
+                                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                                 VariableTree constant = (VariableTree) clazz.getMembers().get(1);
+                                 ModifiersTree mods = constant.getModifiers();
+                                 TreeMaker make = workingCopy.getTreeMaker();
+                                 workingCopy.rewrite(mods,
+                                                     make.addModifiersAnnotation(mods, make.Annotation(make.Identifier("Deprecated"), Collections.emptyList())));
+                             },
+                             "package hierbas.del.litoral;\n" +
+                             "\n" +
+                             "public enum Test {\n" +
+                             "    @Deprecated\n" +
+                             "    A();\n" +
+                             "}\n");
+        fileModificationTest("package hierbas.del.litoral;\n" +
+                             "\n" +
+                             "public enum Test {\n" +
+                             "    @Deprecated\n" +
+                             "    A();\n" +
+                             "}\n",
+                             workingCopy -> {
+                                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                                 VariableTree constant = (VariableTree) clazz.getMembers().get(1);
+                                 ModifiersTree mods = constant.getModifiers();
+                                 TreeMaker make = workingCopy.getTreeMaker();
+                                 workingCopy.rewrite(mods,
+                                                     make.insertModifiersAnnotation(mods, 0, make.Annotation(make.Identifier("A"), Collections.emptyList())));
+                             },
+                             "package hierbas.del.litoral;\n" +
+                             "\n" +
+                             "public enum Test {\n" +
+                             "    @A\n" +
+                             "    @Deprecated\n" +
+                             "    A();\n" +
+                             "}\n");
+        fileModificationTest("package hierbas.del.litoral;\n" +
+                             "\n" +
+                             "public enum Test {\n" +
+                             "    @Deprecated\n" +
+                             "    A();\n" +
+                             "}\n",
+                             workingCopy -> {
+                                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                                 VariableTree constant = (VariableTree) clazz.getMembers().get(1);
+                                 ModifiersTree mods = constant.getModifiers();
+                                 TreeMaker make = workingCopy.getTreeMaker();
+                                 workingCopy.rewrite(mods,
+                                                     make.insertModifiersAnnotation(mods, 1, make.Annotation(make.Identifier("A"), Collections.emptyList())));
+                             },
+                             "package hierbas.del.litoral;\n" +
+                             "\n" +
+                             "public enum Test {\n" +
+                             "    @Deprecated\n" +
+                             "    @A\n" +
+                             "    A();\n" +
+                             "}\n");
+        fileModificationTest("package hierbas.del.litoral;\n" +
+                             "\n" +
+                             "public enum Test {\n" +
+                             "    @A\n" +
+                             "    @Deprecated\n" +
+                             "    A();\n" +
+                             "}\n",
+                             workingCopy -> {
+                                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                                 VariableTree constant = (VariableTree) clazz.getMembers().get(1);
+                                 ModifiersTree mods = constant.getModifiers();
+                                 TreeMaker make = workingCopy.getTreeMaker();
+                                 workingCopy.rewrite(mods,
+                                                     make.removeModifiersAnnotation(mods, 0));
+                             },
+                             "package hierbas.del.litoral;\n" +
+                             "\n" +
+                             "public enum Test {\n" +
+                             "    @Deprecated\n" +
+                             "    A();\n" +
+                             "}\n");
+        fileModificationTest("package hierbas.del.litoral;\n" +
+                             "\n" +
+                             "public enum Test {\n" +
+                             "    @Deprecated\n" +
+                             "    @A\n" +
+                             "    A();\n" +
+                             "}\n",
+                             workingCopy -> {
+                                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                                 VariableTree constant = (VariableTree) clazz.getMembers().get(1);
+                                 ModifiersTree mods = constant.getModifiers();
+                                 TreeMaker make = workingCopy.getTreeMaker();
+                                 workingCopy.rewrite(mods,
+                                                     make.removeModifiersAnnotation(mods, 1));
+                             },
+                             "package hierbas.del.litoral;\n" +
+                             "\n" +
+                             "public enum Test {\n" +
+                             "    @Deprecated\n" +
+                             "    A();\n" +
+                             "}\n");
+        fileModificationTest("package hierbas.del.litoral;\n" +
+                             "\n" +
+                             "public enum Test {\n" +
+                             "    @Deprecated\n" +
+                             "    A();\n" +
+                             "}\n",
+                             workingCopy -> {
+                                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                                 VariableTree constant = (VariableTree) clazz.getMembers().get(1);
+                                 ModifiersTree mods = constant.getModifiers();
+                                 TreeMaker make = workingCopy.getTreeMaker();
+                                 workingCopy.rewrite(mods,
+                                                     make.removeModifiersAnnotation(mods, 0));
+                             },
+                             "package hierbas.del.litoral;\n" +
+                             "\n" +
+                             "public enum Test {\n" +
+                             "    A();\n" +
+                             "}\n");
+    }
+
     String getGoldenPckg() {
         return "";
     }

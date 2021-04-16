@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.41.0
+#Version 1.47.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -159,8 +159,6 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
-meth public java.awt.peer.ComponentPeer getPeer()
- anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -2378,6 +2376,7 @@ meth protected void addRefreshable(org.netbeans.modules.xml.multiview.Refreshabl
 meth protected void endUIChange()
 meth protected void scheduleRefreshView()
 meth protected void signalUIChange()
+ anno 0 java.lang.Deprecated()
 meth protected void startUIChange()
 meth public abstract void setValue(javax.swing.JComponent,java.lang.Object)
 meth public boolean canClose()

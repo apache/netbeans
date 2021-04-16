@@ -98,7 +98,7 @@ public class CssCompletion implements CodeCompletionHandler {
     /**
      * Units which shouldn't appear in the code completion.
      */
-    private static final Collection<String> HIDDEN_UNITS = new HashSet(Arrays.asList(new String[]{"!hash_color_code"}));
+    private static final Collection<String> HIDDEN_UNITS = new HashSet<>(Arrays.asList(new String[]{"!hash_color_code"}));
 
     //unit testing support
     static String[] TEST_USED_COLORS;
@@ -245,7 +245,7 @@ public class CssCompletion implements CodeCompletionHandler {
 
     private List<CompletionProposal> completeHtmlSelectors(CompletionContext context, String prefix, int offset) {
         List<CompletionProposal> proposals = new ArrayList<>(20);
-        Collection<String> items = new ArrayList(Arrays.asList(HtmlTags.getTags()));
+        Collection<String> items = new ArrayList<>(Arrays.asList(HtmlTags.getTags()));
         items.add(UNIVERSAL_SELECTOR);
         for (String tagName : items) {
             if (tagName.startsWith(prefix.toLowerCase(Locale.ENGLISH))) {
@@ -707,6 +707,7 @@ public class CssCompletion implements CodeCompletionHandler {
         return ParameterInfo.NONE;
     }
 
+    @SuppressWarnings("fallthrough")
     private CodeCompletionResult handleLexicalBasedCompletion(FileObject file, TokenSequence<CssTokenId> ts, Snapshot snapshot, int caretOffset) {
         //position the token sequence on the caret position, not the recomputed offset with substracted prefix length
         int tokenDiff = ts.move(snapshot.getEmbeddedOffset(caretOffset));
@@ -793,6 +794,7 @@ public class CssCompletion implements CodeCompletionHandler {
         return null;
     }
 
+    @SuppressWarnings("fallthrough")
     private void completeClassSelectors(CompletionContext context, List<CompletionProposal> completionProposals, boolean unmappableClassOrId) {
         Node node = context.getActiveNode();
         FileObject file = context.getSnapshot().getSource().getFileObject();
@@ -816,11 +818,11 @@ public class CssCompletion implements CodeCompletionHandler {
                             break;
                         case IDENT:
                             if (tokenSequence.movePrevious()) {
-                            if (tokenSequence.token().id() == CssTokenId.DOT) {
-                                //.sg| case
-                                break;
+                                if (tokenSequence.token().id() == CssTokenId.DOT) {
+                                    //.sg| case
+                                    break;
+                                }
                             }
-                        }
                         default:
                             return;
                     }
@@ -998,6 +1000,7 @@ public class CssCompletion implements CodeCompletionHandler {
         }
     }
 
+    @SuppressWarnings("fallthrough")
     private void completeHtmlSelectors(CompletionContext completionContext, List<CompletionProposal> completionProposals, TokenId tokenNodeTokenId) {
         String prefix = completionContext.getPrefix();
         int caretOffset = completionContext.getCaretOffset();
@@ -1007,9 +1010,9 @@ public class CssCompletion implements CodeCompletionHandler {
             case media:
                 //check if we are in the mediaQuery section and not in the media body
                 if (null == LexerUtils.followsToken(completionContext.getTokenSequence(), CssTokenId.LBRACE, true, true, CssTokenId.WS, CssTokenId.NL, CssTokenId.COMMENT)) {
-                //@media | { div {} }
-                break;
-            }
+                    //@media | { div {} }
+                    break;
+                }
             //@media xxx { | }
             //=>fallback to the mediaQuery 
             case mediaBody:
@@ -1056,14 +1059,14 @@ public class CssCompletion implements CodeCompletionHandler {
                 }
                 break;
             case declarations:
-                if(completionContext.isCssPreprocessorSource()) {
+                if (completionContext.isCssPreprocessorSource()) {
                     completionProposals.addAll(completeHtmlSelectors(completionContext, prefix, caretOffset));
                     break;
                 }
                 //@mixin mymixin() { div {} | }
                 if (NodeUtil.getAncestorByType(node, NodeType.cp_mixin_block) == null) {
-                break; //do not complete
-            }
+                    break; //do not complete
+                }
             //fallback to cp_mixin_block
 
             case cp_mixin_block:
@@ -1117,6 +1120,7 @@ public class CssCompletion implements CodeCompletionHandler {
      * @param completionProposals
      * @param tokenFound
      */
+    @SuppressWarnings("fallthrough")
     private void completeKeywords(CompletionContext completionContext, List<CompletionProposal> completionProposals, boolean tokenFound) {
         if (!tokenFound) {
             return;
@@ -1157,11 +1161,11 @@ public class CssCompletion implements CodeCompletionHandler {
             case simpleSelectorSequence:
                 //@| -- parsed as simpleSelectorSequence due to the possible less_selector_interpolation -- @{...} in selectorsGroup
                 switch (completionContext.getTokenSequence().token().id()) {
-                case AT_SIGN:
-                    Collection<String> possibleValues = filterStrings(AT_RULES, completionContext.getPrefix());
-                    completionProposals.addAll(Utilities.createRAWCompletionProposals(possibleValues, ElementKind.FIELD, completionContext.getSnapshot().getOriginalOffset(completionContext.getActiveNode().from())));
-                    break;
-            }
+                    case AT_SIGN:
+                        Collection<String> possibleValues = filterStrings(AT_RULES, completionContext.getPrefix());
+                        completionProposals.addAll(Utilities.createRAWCompletionProposals(possibleValues, ElementKind.FIELD, completionContext.getSnapshot().getOriginalOffset(completionContext.getActiveNode().from())));
+                        break;
+                }
             case styleSheet:
                 //@| in empty file
                 switch (completionContext.getTokenSequence().token().id()) {
@@ -1173,6 +1177,7 @@ public class CssCompletion implements CodeCompletionHandler {
         }
     }
 
+    @SuppressWarnings("fallthrough")
     private void completePropertyName(CompletionContext cc, List<CompletionProposal> completionProposals) {
 //        Node activeNode = cc.getActiveNode();
 
@@ -1308,6 +1313,7 @@ public class CssCompletion implements CodeCompletionHandler {
 
     }
 
+    @SuppressWarnings("fallthrough")
     private void completePropertyValue(
             CompletionContext context,
             List<CompletionProposal> completionProposals,
@@ -1319,7 +1325,6 @@ public class CssCompletion implements CodeCompletionHandler {
         NodeType nodeType = node.type();
 
         switch (nodeType) {
-
             case declarations:
                 //In following case the caret offset falls into the declarations node
                 //which contains the whitespace after the propertyDescription.
@@ -1328,10 +1333,10 @@ public class CssCompletion implements CodeCompletionHandler {
                 //div { color: red | }
                 if (context.getActiveTokenId() == CssTokenId.SEMI
                         || LexerUtils.followsToken(context.getTokenSequence(), CssTokenId.SEMI, true, true, CssTokenId.WS, CssTokenId.NL, CssTokenId.COMMENT) != null) {
-                //semicolon found when searching backward - we are not going to
-                //complete property values
-                break;
-            }
+                    //semicolon found when searching backward - we are not going to
+                    //complete property values
+                    break;
+                }
                 //find the latest declaration backward
                 Node[] declarations = NodeUtil.getChildrenByType(node, NodeType.declaration);
                 if (declarations.length > 0) {

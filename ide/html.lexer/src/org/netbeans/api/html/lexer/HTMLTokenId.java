@@ -106,6 +106,7 @@ public enum HTMLTokenId implements TokenId {
 
     private final String primaryCategory;
     private static final String JAVASCRIPT_MIMETYPE = "text/javascript";//NOI18N
+    private static final String SCRIPT_TYPE_MODULE = "module"; //NOI18N
     private static final String BABEL_MIMETYPE = "text/babel"; //NOI18N
     private static final String STYLE_MIMETYPE = "text/css";//NOI18N
     /**
@@ -230,7 +231,15 @@ public enum HTMLTokenId implements TokenId {
 
                 case SCRIPT:
                     String scriptType = (String)token.getProperty(SCRIPT_TYPE_TOKEN_PROPERTY);
-                    mimeType = scriptType != null ? scriptType : JAVASCRIPT_MIMETYPE;
+                    if (scriptType != null) {
+                        if (SCRIPT_TYPE_MODULE.equals(scriptType)) {
+                            mimeType = JAVASCRIPT_MIMETYPE;
+                        } else {
+                            mimeType = scriptType;
+                        }
+                    } else {
+                        mimeType = JAVASCRIPT_MIMETYPE;
+                    }
                     // translate text/babel mimetype to the text/javascript
                     mimeType = BABEL_MIMETYPE.equals(mimeType) ? JAVASCRIPT_MIMETYPE : mimeType;
                     break;

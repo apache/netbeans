@@ -24,7 +24,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.table.TableColumn;
-import org.netbeans.modules.bugtracking.issuetable.IssueNode.IssueProperty;
 import org.openide.util.NbBundle;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.AncestorEvent;
@@ -114,9 +113,9 @@ public class IssueTable implements MouseListener, AncestorListener, KeyListener,
     private final FindInQuerySupport findInQuerySupport;
     private boolean isSaved;
     
-    private static final Comparator<IssueProperty> nodeComparator = new Comparator<IssueProperty>() {
+    private static final Comparator<IssueNode<Object>.IssueProperty<Object>> nodeComparator = new Comparator<IssueNode<Object>.IssueProperty<Object>>() {
         @Override
-        public int compare(IssueProperty p1, IssueProperty p2) {
+        public int compare(IssueNode<Object>.IssueProperty<Object> p1, IssueNode<Object>.IssueProperty<Object> p2) {
             Integer sk1 = (Integer) p1.getValue("sortkey"); // NOI18N
             if (sk1 != null) {
                 Integer sk2 = (Integer) p2.getValue("sortkey"); // NOI18N
@@ -414,7 +413,7 @@ public class IssueTable implements MouseListener, AncestorListener, KeyListener,
     private Map<Integer, Integer> getColumnSorting() {
         String sortingString = getColumnSorting(repositoryId);
         if(sortingString == null || sortingString.equals("")) {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         }
         Map<Integer, Integer> map = new HashMap<>();
         String[] sortingArray = sortingString.split(CONFIG_DELIMITER);
@@ -445,7 +444,7 @@ public class IssueTable implements MouseListener, AncestorListener, KeyListener,
     }
 
     private void setFilterIntern(Filter filter) {
-        final List<IssueNode> filteredNodes = new ArrayList<IssueNode>(nodes.size());
+        final List<IssueNode> filteredNodes = new ArrayList<>(nodes.size());
         for (IssueNode node : nodes) {
             if (filter == null || filter.accept(node)) {
                 filteredNodes.add(node);
@@ -670,7 +669,7 @@ public class IssueTable implements MouseListener, AncestorListener, KeyListener,
     public void ancestorRemoved(AncestorEvent event) { }
 
     private void setModelProperties() {
-        List<ColumnDescriptor> properties = new ArrayList<ColumnDescriptor>(descriptors.length + (isSaved ? 2 : 0));
+        List<ColumnDescriptor> properties = new ArrayList<>(descriptors.length + (isSaved ? 2 : 0));
         int i = 0;
         for (; i < descriptors.length; i++) {
             ColumnDescriptor desc = descriptors[i];
@@ -698,7 +697,7 @@ public class IssueTable implements MouseListener, AncestorListener, KeyListener,
         String columns = getColumns(repositoryId);
         String[] visibleColumns = columns.split(CONFIG_DELIMITER);                         // NOI18N
         if(visibleColumns.length <= 1) {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         }
         Map<String, Integer> ret = new HashMap<String, Integer>();
         for (int i = 0; i < visibleColumns.length; i=i+2) {

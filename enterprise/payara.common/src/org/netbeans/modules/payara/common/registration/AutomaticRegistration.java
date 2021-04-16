@@ -23,7 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.utils.ServerUtils;
 import org.netbeans.modules.payara.common.PayaraInstanceProvider;
 import org.openide.filesystems.FileObject;
@@ -83,17 +83,15 @@ public class AutomaticRegistration {
         String config = "PayaraEE6/Instances";
         String deployer = "deployer:pfv3ee6";
         String defaultDisplayNamePrefix = "Payara Server ";
-        PayaraVersion version = ServerUtils.getServerVersion(payaraRoot);
-        if (PayaraVersion.ge(version, PayaraVersion.PF_4_1_144)) {
-            deployer = "deployer:pfv4ee7";
-        } 
-        if (PayaraVersion.ge(version, PayaraVersion.PF_5_181)) {
-            deployer = "deployer:pfv5ee8";
-        }
-
+        PayaraPlatformVersionAPI version = ServerUtils.getPlatformVersion(payaraRoot);
         StringBuilder sb = new StringBuilder(
                 defaultDisplayNamePrefix.length() + 12);
         if (version != null) {
+            if (version.isEE8Supported()) {
+                deployer = "deployer:pfv5ee8";
+            } else if (version.isEE7Supported()) {
+                deployer = "deployer:pfv4ee7";
+            }
             sb.append(defaultDisplayNamePrefix);
             sb.append(version.toString());
         } else {
@@ -203,8 +201,8 @@ public class AutomaticRegistration {
             instanceFO.setAttribute(PayaraModule.HTTPPORT_ATTR, "8080"); // NOI18N
             instanceFO.setAttribute(PayaraModule.HTTPHOST_ATTR, "localhost"); // NOI18N
             instanceFO.setAttribute(PayaraModule.JVM_MODE, PayaraModule.NORMAL_MODE);
+            instanceFO.setAttribute(PayaraModule.HOT_DEPLOY, false);
             instanceFO.setAttribute(PayaraModule.SESSION_PRESERVATION_FLAG, true);
-            instanceFO.setAttribute(PayaraModule.START_DERBY_FLAG, false);
             instanceFO.setAttribute(PayaraModule.USE_IDE_PROXY_FLAG, true);
             instanceFO.setAttribute(PayaraModule.USE_SHARED_MEM_ATTR, false);
             

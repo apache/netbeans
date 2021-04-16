@@ -111,9 +111,9 @@ public class IDEInitializer extends ProxyLookup {
     
     public static void cleanWorkDir () {
         try {
-            Enumeration en = lfs.getRoot ().getChildren (false);
+            Enumeration<? extends FileObject> en = lfs.getRoot().getChildren(false);
             while (en.hasMoreElements ()) 
-                ((FileObject) en.nextElement ()).delete ();
+                en.nextElement().delete();
         } catch (IOException ex) {
             ex.printStackTrace ();
         }

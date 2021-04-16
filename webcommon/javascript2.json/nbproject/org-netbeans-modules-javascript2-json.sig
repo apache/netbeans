@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.8
+#Version 1.14
 
 CLSS public java.lang.Object
 cons public init()
@@ -25,7 +25,7 @@ fld public final org.antlr.v4.runtime.misc.IntegerStack _modeStack
 fld public final static int DEFAULT_MODE = 0
 fld public final static int DEFAULT_TOKEN_CHANNEL = 0
 fld public final static int HIDDEN = 1
-fld public final static int MAX_CHAR_VALUE = 65534
+fld public final static int MAX_CHAR_VALUE = 1114111
 fld public final static int MIN_CHAR_VALUE = 0
 fld public final static int MORE = -2
 fld public final static int SKIP = -3
@@ -50,6 +50,7 @@ meth public java.lang.String getErrorDisplay(int)
 meth public java.lang.String getErrorDisplay(java.lang.String)
 meth public java.lang.String getSourceName()
 meth public java.lang.String getText()
+meth public java.lang.String[] getChannelNames()
 meth public java.lang.String[] getModeNames()
 meth public java.lang.String[] getTokenNames()
  anno 0 java.lang.Deprecated()
@@ -126,6 +127,8 @@ meth public org.antlr.v4.runtime.atn.ATN getATNWithBypassAlts()
 meth public org.antlr.v4.runtime.atn.ParseInfo getParseInfo()
 meth public org.antlr.v4.runtime.misc.IntervalSet getExpectedTokens()
 meth public org.antlr.v4.runtime.misc.IntervalSet getExpectedTokensWithinCurrentRule()
+meth public org.antlr.v4.runtime.tree.ErrorNode createErrorNode(org.antlr.v4.runtime.ParserRuleContext,org.antlr.v4.runtime.Token)
+meth public org.antlr.v4.runtime.tree.TerminalNode createTerminalNode(org.antlr.v4.runtime.ParserRuleContext,org.antlr.v4.runtime.Token)
 meth public org.antlr.v4.runtime.tree.pattern.ParseTreePattern compileParseTreePattern(java.lang.String,int)
 meth public org.antlr.v4.runtime.tree.pattern.ParseTreePattern compileParseTreePattern(java.lang.String,int,org.antlr.v4.runtime.Lexer)
 meth public void addParseListener(org.antlr.v4.runtime.tree.ParseTreeListener)
@@ -162,6 +165,7 @@ fld public org.antlr.v4.runtime.Token start
 fld public org.antlr.v4.runtime.Token stop
 meth public <%0 extends org.antlr.v4.runtime.ParserRuleContext> java.util.List<{%%0}> getRuleContexts(java.lang.Class<? extends {%%0}>)
 meth public <%0 extends org.antlr.v4.runtime.ParserRuleContext> {%%0} getRuleContext(java.lang.Class<? extends {%%0}>,int)
+meth public <%0 extends org.antlr.v4.runtime.tree.ParseTree> {%%0} addAnyChild({%%0})
 meth public <%0 extends org.antlr.v4.runtime.tree.ParseTree> {%%0} getChild(java.lang.Class<? extends {%%0}>,int)
 meth public int getChildCount()
 meth public java.lang.String toInfoString(org.antlr.v4.runtime.Parser)
@@ -172,8 +176,11 @@ meth public org.antlr.v4.runtime.Token getStart()
 meth public org.antlr.v4.runtime.Token getStop()
 meth public org.antlr.v4.runtime.misc.Interval getSourceInterval()
 meth public org.antlr.v4.runtime.tree.ErrorNode addErrorNode(org.antlr.v4.runtime.Token)
+ anno 0 java.lang.Deprecated()
+meth public org.antlr.v4.runtime.tree.ErrorNode addErrorNode(org.antlr.v4.runtime.tree.ErrorNode)
 meth public org.antlr.v4.runtime.tree.ParseTree getChild(int)
 meth public org.antlr.v4.runtime.tree.TerminalNode addChild(org.antlr.v4.runtime.Token)
+ anno 0 java.lang.Deprecated()
 meth public org.antlr.v4.runtime.tree.TerminalNode addChild(org.antlr.v4.runtime.tree.TerminalNode)
 meth public org.antlr.v4.runtime.tree.TerminalNode getToken(int,int)
 meth public void copyFrom(org.antlr.v4.runtime.ParserRuleContext)
@@ -247,6 +254,7 @@ meth public org.antlr.v4.runtime.RuleContext getRuleContext()
 meth public org.antlr.v4.runtime.misc.Interval getSourceInterval()
 meth public org.antlr.v4.runtime.tree.ParseTree getChild(int)
 meth public void setAltNumber(int)
+meth public void setParent(org.antlr.v4.runtime.RuleContext)
 supr java.lang.Object
 
 CLSS public abstract interface org.antlr.v4.runtime.TokenSource
@@ -277,6 +285,7 @@ meth public abstract java.lang.String getText()
 meth public abstract java.lang.String toStringTree(org.antlr.v4.runtime.Parser)
 meth public abstract org.antlr.v4.runtime.tree.ParseTree getChild(int)
 meth public abstract org.antlr.v4.runtime.tree.ParseTree getParent()
+meth public abstract void setParent(org.antlr.v4.runtime.RuleContext)
 
 CLSS public abstract interface org.antlr.v4.runtime.tree.ParseTreeListener
 meth public abstract void enterEveryRule(org.antlr.v4.runtime.ParserRuleContext)

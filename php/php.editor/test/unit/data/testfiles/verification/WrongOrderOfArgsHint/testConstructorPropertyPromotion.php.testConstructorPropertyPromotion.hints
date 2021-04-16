@@ -1,0 +1,16 @@
+    public function __construct(private ?int $optional = 1, $mandatory) {
+                                --------------------------------------
+HINT:Wrong order of arguments
+FIX:Rearrange arguments of the method or function: __construct
+    public function __construct(private ?int $optional1 = 1, $mandatory, string $optional2 = "default value") {
+                                ----------------------------------------------------------------------------
+HINT:Wrong order of arguments
+FIX:Rearrange arguments of the method or function: __construct
+    public function __construct(protected ?int $mandatory1, $optional = "default value", private string|int $mandatory2) {
+                                ---------------------------------------------------------------------------------------
+HINT:Wrong order of arguments
+FIX:Rearrange arguments of the method or function: __construct
+    public function __construct(private ?int $mandatory1, private $optional = "default value", public string $mandatory2) {
+                                ----------------------------------------------------------------------------------------
+HINT:Wrong order of arguments
+FIX:Rearrange arguments of the method or function: __construct

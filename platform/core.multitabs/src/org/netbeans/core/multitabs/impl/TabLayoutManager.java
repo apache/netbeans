@@ -242,7 +242,7 @@ abstract class TabLayoutManager {
 
             final int tabCount = tabModel.size();
             final int rowCount = rows.size();
-            ArrayList<Integer>[] rowIndexes = new ArrayList[rowCount];
+            List<Integer>[] rowIndexes = new ArrayList[rowCount];
             for( int i=0; i<rowCount; i++ ) {
                 rowIndexes[i] = new ArrayList<Integer>( tabCount );
             }

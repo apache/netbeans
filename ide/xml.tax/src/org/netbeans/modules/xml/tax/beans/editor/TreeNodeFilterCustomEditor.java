@@ -44,7 +44,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
 
     
     /** */
-    private static final Map publicNodeTypeNamesMap = new HashMap();
+    private static final Map<Class<?>, String> publicNodeTypeNamesMap = new HashMap();
 
 
     //
@@ -82,7 +82,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
     private final TreeNodeFilter filter;
     
     /** */
-    private final List nodeTypesList;
+    private final List<Class> nodeTypesList;
 
     /** */
     private NodeTypesTableModel tableModel;
@@ -96,7 +96,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
     /** Creates new TreeNodeFilterEditor */
     public TreeNodeFilterCustomEditor (TreeNodeFilter filter) {
         this.filter = filter;
-        this.nodeTypesList = new LinkedList (Arrays.asList (filter.getNodeTypes()));
+        this.nodeTypesList = new LinkedList<>(Arrays.asList(filter.getNodeTypes()));
         
         initComponents();
         ownInitComponents();
@@ -520,19 +520,19 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
     //
 
     /** */
-    private static Vector publicNodeTypesInheritanceTree;
+    private static Vector<Item> publicNodeTypesInheritanceTree;
 
 
     /**
      */
-    private static Vector getPublicNodeTypesInheritanceTree () {
+    private static Vector<Item> getPublicNodeTypesInheritanceTree () {
         if ( publicNodeTypesInheritanceTree == null ) {
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("Init Set"); // NOI18N
             
             Item rootItem = new Item();
             Object[] array = publicNodeTypeNamesMap.keySet().toArray();
             for (int i = 0; i < array.length; i++) {
-                Class clazz = (Class)array[i];
+                Class<?> clazz = (Class)array[i];
                 Item.insertItemIntoLayer (rootItem.layer, Item.getItem (clazz));
                 
                 if ( clazz.isInterface() ) {
@@ -542,7 +542,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
                 }
             }
             
-            publicNodeTypesInheritanceTree = new Vector();
+            publicNodeTypesInheritanceTree = new Vector<>();
             fillPublicNodeTypesInheritanceTree (rootItem.layer, ""); // NOI18N
 
             Item.itemMap.clear();
@@ -555,10 +555,10 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
     
     /**
      */
-    private static void fillPublicNodeTypesInheritanceTree (Set layer, String prefix) {
-        Iterator it = layer.iterator();
+    private static void fillPublicNodeTypesInheritanceTree (Set<Item> layer, String prefix) {
+        Iterator<Item> it = layer.iterator();
         while ( it.hasNext() ) {
-            Item item = (Item) it.next();
+            Item item = it.next();
             String itemPrefix = ""; // NOI18N
             if ( prefix.length() != 0 ) {
                 if ( it.hasNext() ) {
@@ -593,12 +593,12 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
      */
     private static class Item {
         /** */
-        private static Map itemMap;
+        private static Map<Class, Item> itemMap;
 
         /** */
         private final NamedClass clazz;
         /** */
-        private final Set        layer;
+        private final Set<Item>  layer;
         /** */
         private final String     prefix;
 
@@ -651,19 +651,19 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
          */
         private static Item getItem (Class clazz) {
             if ( itemMap == null ) {
-                itemMap = new HashMap();
+                itemMap = new HashMap<>();
             }
             
-            Item item = (Item) itemMap.get (clazz);
+            Item item = itemMap.get(clazz);
             if ( item == null ) {
-                itemMap.put (clazz, item = new Item (new NamedClass (clazz)));
+                itemMap.put(clazz, item = new Item (new NamedClass (clazz)));
             }
             return item;
         }
 
         /**
          */
-        private static void insertItemIntoLayer (Set layer, Item newItem) {
+        private static void insertItemIntoLayer (Set<Item> layer, Item newItem) {
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("\n\nInsert newItem : " + newItem); // NOI18N
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("       Item : set = " + layer); // NOI18N
 
@@ -728,7 +728,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
 
     // debug
     public static final void main (String[] args) throws Exception {
-        Vector vector = getPublicNodeTypesInheritanceTree();
+//          Vector vector = getPublicNodeTypesInheritanceTree();
 
 //          Iterator it = vector.iterator();
 //          System.out.println ("+==================================="); // NOI18N

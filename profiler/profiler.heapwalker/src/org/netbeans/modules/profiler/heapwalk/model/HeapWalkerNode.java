@@ -38,6 +38,7 @@ public abstract class HeapWalkerNode extends CCTNode {
 
     public static final int MODE_FIELDS = 1;
     public static final int MODE_REFERENCES = 2;
+    public static final int MODE_FIELDS_NO_CLASSLOADER = 3;
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
@@ -83,6 +84,7 @@ public abstract class HeapWalkerNode extends CCTNode {
      * There are two different algorithms for generating childs in both Browsers.
      */
     public abstract int getMode();
+    public abstract boolean isModeFields();
     
     
     public static TreePath fromNode(TreeNode node) {
@@ -90,7 +92,7 @@ public abstract class HeapWalkerNode extends CCTNode {
     }
     
     public static TreePath fromNode(TreeNode node, TreeNode root) {
-        List l = new ArrayList();
+        List<TreeNode> l = new ArrayList<>();
         while (node != root) {
             l.add(0, node);
             node = node.getParent();

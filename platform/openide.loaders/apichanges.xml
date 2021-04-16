@@ -85,6 +85,41 @@ is the proper place.
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
   <changes>
+      <change id="ask.on.save.close.defaults">
+          <api name="editor"/>
+          <summary>Rebrand defaults for Save/Close Editor Dialogs</summary>
+          <version major="7" minor="80"/>
+          <date day="20" month="1" year="2021"/>
+          <author login="jtulach"/>
+          <compatibility addition="yes" binary="compatible" source="compatible"
+                         semantic="incompatible" deletion="no"
+                         modification="no"/>
+          <description>
+              A branding API to disable showing on close and on save editor dialogs
+              - <a href="architecture-summary.html#group-branding">ASK_OnSaving &amp; ASK_OnClosing</a>.
+          </description>
+          <class package="org.openide.text" name="DataEditorSupport"/>
+      </change>
+      <change id="org.openide.loaders.TemplateWizard.setTargetFolderLazy">
+          <api name="loaders"/>
+          <summary>Support lazy creation of TargetFolder.</summary>
+          <version major="7" minor="76"/>
+          <date day="1" month="3" year="2020"/>
+          <author login="errael"/>
+          <compatibility addition="yes" binary="compatible" source="compatible"
+                         semantic="compatible" deprecation="no" deletion="no"
+                         modification="no"/>
+          <description>
+              <p>
+                  Creation of TargetFolder can be deferred by using
+                  <a href="@org-openide-loaders@/org/openide/loaders/TemplateWizard.html#setTargetFolderLazy-java.util.function.Supplier-">
+                  TemplateWizard.setTargetFolderLazy(Supplier&lt;DataFolder&gt;)
+                  </a>.
+              </p>
+          </description>
+          <class package="org.openide.loaders" name="TemplateWizard"/>
+          <issue number="NETBEANS-3918"/>
+      </change>
       <change id="org.openide.awt.Toolbar.toggle">
           <api name="awt"/>
           <summary>Separate template handling</summary>

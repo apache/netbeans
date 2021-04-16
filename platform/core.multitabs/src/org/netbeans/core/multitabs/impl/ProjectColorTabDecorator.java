@@ -21,14 +21,13 @@ package org.netbeans.core.multitabs.impl;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import javax.swing.Icon;
+import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.core.multitabs.Settings;
@@ -53,6 +52,7 @@ public class ProjectColorTabDecorator extends TabDecorator {
     private static final Map<Object, Color> project2color = new WeakHashMap<Object, Color>(10);
     private static final Map<TabData, Color> tab2color = new WeakHashMap<TabData, Color>(10);
     private static final List<Color> backGroundColors;
+    private static Color foregroundColor;
     private final static ChangeListener projectsListener = new ChangeListener() {
 
         @Override
@@ -63,15 +63,32 @@ public class ProjectColorTabDecorator extends TabDecorator {
 
     static {
         backGroundColors = new ArrayList<Color>( 10 );
-        backGroundColors.add( new Color( 216, 255, 237 ) );
-        backGroundColors.add( new Color( 255, 221, 221 ) );
-        backGroundColors.add( new Color( 255, 247, 214 ) );
-        backGroundColors.add( new Color( 216, 239, 255 ) );
-        backGroundColors.add( new Color( 241, 255, 209 ) );
-        backGroundColors.add( new Color( 255, 225, 209 ) );
-        backGroundColors.add( new Color( 228, 255, 216 ) );
-        backGroundColors.add( new Color( 227, 255, 158 ) );
-        backGroundColors.add( new Color( 238, 209, 255 ) );
+
+        // load background colors from UI defaults if available
+        if (UIManager.getColor("nb.multitabs.project.1.background") != null) {
+            for (int i = 1; i <= 100; i++) {
+                Color color = UIManager.getColor("nb.multitabs.project." + i + ".background");
+                if (color == null) {
+                    break;
+                }
+                backGroundColors.add(color);
+            }
+        } else {
+            backGroundColors.add( new Color( 216, 255, 237 ) );
+            backGroundColors.add( new Color( 255, 221, 221 ) );
+            backGroundColors.add( new Color( 255, 247, 214 ) );
+            backGroundColors.add( new Color( 216, 239, 255 ) );
+            backGroundColors.add( new Color( 241, 255, 209 ) );
+            backGroundColors.add( new Color( 255, 225, 209 ) );
+            backGroundColors.add( new Color( 228, 255, 216 ) );
+            backGroundColors.add( new Color( 227, 255, 158 ) );
+            backGroundColors.add( new Color( 238, 209, 255 ) );
+        }
+
+        foregroundColor = UIManager.getColor("nb.multitabs.project.foreground");
+        if (foregroundColor == null) {
+            foregroundColor = Color.BLACK;
+        }
 
         ProjectSupport projects = ProjectSupport.getDefault();
         if( projects.isEnabled() && Settings.getDefault().isSameProjectSameColor() ) {
@@ -125,7 +142,7 @@ public class ProjectColorTabDecorator extends TabDecorator {
     public Color getForeground( TabData tab, boolean selected ) {
         if( selected || !Settings.getDefault().isSameProjectSameColor() )
             return null;
-        return null == getBackground( tab, selected ) ? null : Color.black;
+        return null == getBackground( tab, selected ) ? null : foregroundColor;
     }
 
     @Override
@@ -144,8 +161,16 @@ public class ProjectColorTabDecorator extends TabDecorator {
         }
         g.setColor( c );
         Rectangle rect = new Rectangle( tabRect );
-        rect.y += rect.height - 3;
-        rect.grow( -1, -1 );
+        int underlineHeight = UIManager.getInt("nb.multitabs.underlineHeight"); // NOI18N
+        if( underlineHeight > 0 ) {
+            // if the selected tab is highlighted with an "underline" (e.g. in FlatLaf)
+            // then paint the project color bar at the top of the tab
+            rect.height = underlineHeight;
+        } else {
+            // bottom project color bar
+            rect.y += rect.height - 3;
+            rect.grow( -1, -1 );
+        }
         g.fillRect( rect.x, rect.y, rect.width, rect.height );
     }
 

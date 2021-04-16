@@ -137,21 +137,11 @@ public class OverviewController extends AbstractController {
         Heap heap = heapFragmentWalker.getHeapFragment();
         HeapSummary hsummary = heap.getSummary();
         long finalizers = computeFinalizers(heap);
-        int nclassloaders = 0;
-        JavaClass cl = heap.getJavaClassByName("java.lang.ClassLoader"); // NOI18N
         NumberFormat numberFormat = (NumberFormat)NumberFormat.getInstance().clone();
         numberFormat.setMaximumFractionDigits(1);
         
         oome = getOOMEThread(heap);
-        if (cl != null) {
-            nclassloaders = cl.getInstancesCount();
-            
-            Collection<JavaClass> jcs = cl.getSubClasses();
-            
-            for (JavaClass jc : jcs) {
-                nclassloaders += jc.getInstancesCount();
-            }
-        }
+        int nclassloaders = heapFragmentWalker.countClassLoaders();
         
         String filename = LINE_PREFIX
                 + Bundle.OverviewController_FileItemString(
@@ -202,7 +192,7 @@ public class OverviewController extends AbstractController {
                 + Bundle.OverviewController_SummaryString() + "</b><br><hr>" + dateTaken + "<br>" + filename + "<br>" + filesize + "<br><br>" + liveBytes // NOI18N
                 + "<br>" + liveClasses + "<br>" + liveInstances + "<br>" + classloaders + "<br>" + gcroots + "<br>" + finalizersInfo + oomeString; // NOI18N
     }
-    
+
     public String computeEnvironment() {
         String sysinfoRes = Icons.getResource(HeapWalkerIcons.SYSTEM_INFO);
         String header =  "<b><img border='0' align='bottom' src='nbresloc:/" + sysinfoRes + "'>&nbsp;&nbsp;" // NOI18N

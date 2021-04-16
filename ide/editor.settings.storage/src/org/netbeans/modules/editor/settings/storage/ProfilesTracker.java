@@ -69,7 +69,7 @@ public final class ProfilesTracker {
         synchronized (settingProfiles) {
             Map<StorageDescription, ProfilesTracker> map = settingProfiles.get(basePath);
             if (map == null) {
-                map = new WeakHashMap<StorageDescription, ProfilesTracker>();
+                map = new WeakHashMap<>();
                 settingProfiles.put(basePath, map);
             }
             
@@ -202,21 +202,19 @@ public final class ProfilesTracker {
     //for tests only:
     static boolean synchronous = false;
     
-    private final RequestProcessor.Task task = MimeTypesTracker.RP.create(new Runnable() {
-        public @Override void run() {
-            rebuild();
-        }
+    private final RequestProcessor.Task task = MimeTypesTracker.RP.create(() -> {
+        rebuild();
     });
     
     // #172043 - this is here to keep all folder FileObjects that we have traversed in the memory
     // so that FileSystems would know about them and fired events correctly
-    private final Set<FileObject> trackedFolders = new HashSet<FileObject>();
+    private final Set<FileObject> trackedFolders = new HashSet<>();
     
     private void rebuild() {
         PropertyChangeEvent event = null;
 
         synchronized (LOCK) {
-            Map<String, List<Object[]>> scan = new HashMap<String, List<Object[]>>();
+            Map<String, List<Object[]>> scan = new HashMap<>();
 
             FileObject baseFolder = FileUtil.getConfigFile(mimeTypes.getBasePath());
             if (baseFolder != null && baseFolder.isFolder()) {
@@ -230,8 +228,8 @@ public final class ProfilesTracker {
                 }
             }
 
-            HashMap<String, ProfileDescription> newProfiles = new HashMap<String, ProfileDescription>();
-            HashMap<String, ProfileDescription> newProfilesByDisplayName = new HashMap<String, ProfileDescription>();
+            HashMap<String, ProfileDescription> newProfiles = new HashMap<>();
+            HashMap<String, ProfileDescription> newProfilesByDisplayName = new HashMap<>();
             for(String id : scan.keySet()) {
                 List<Object []> profileInfos = scan.get(id);
 

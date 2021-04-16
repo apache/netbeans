@@ -51,7 +51,7 @@ class CloneWizard  implements ChangeListener {
     private WizardDescriptor wizardDescriptor;
     private final String forPath;
     private final PasswordAuthentication pa;
-    static final List<String> ALL_BRANCHES = new ArrayList(0);
+    static final List<String> ALL_BRANCHES = new ArrayList<>();
 
     public CloneWizard (PasswordAuthentication pa, String forPath) { 
         this.forPath = forPath;

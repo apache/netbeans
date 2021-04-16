@@ -1643,7 +1643,7 @@ public final class ReferenceHelper {
             this.props = props;
         }
         
-        private static final List/*<String>*/ SUB_ELEMENT_NAMES = Arrays.asList(new String[] {
+        private static final List<String> SUB_ELEMENT_NAMES = Arrays.asList(new String[] {
             "foreign-project", // NOI18N
             "artifact-type", // NOI18N
             "script", // NOI18N
@@ -1701,7 +1701,7 @@ public final class ReferenceHelper {
             if (!REF_NAME.equals(xml.getLocalName()) || !REFS_NS2.equals(xml.getNamespaceURI())) {
                 throw new IllegalArgumentException("bad element name: " + xml); // NOI18N
             }
-            List nl = XMLUtil.findSubElements(xml);
+            List<Element> nl = XMLUtil.findSubElements(xml);
             if (nl.size() < 6) {
                 throw new IllegalArgumentException("missing or extra data: " + xml); // NOI18N
             }
@@ -1762,7 +1762,7 @@ public final class ReferenceHelper {
                 artifactID,
             };
             for (int i = 0; i < 6; i++) {
-                Element subel = ownerDocument.createElementNS(namespace, (String)SUB_ELEMENT_NAMES.get(i));
+                Element subel = ownerDocument.createElementNS(namespace, SUB_ELEMENT_NAMES.get(i));
                 subel.appendChild(ownerDocument.createTextNode(values[i]));
                 el.appendChild(subel);
             }

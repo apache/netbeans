@@ -235,17 +235,29 @@ public final class CharBuffer {
     public void addTrimObserver(TrimBufferObserver o) {
         trimObservers.add(o);
     }
+
     public void nlTerm() {
+	nlTerm(true);
+    }
+
+    public void nlTerm(boolean trim) {
 	if(hasMargin())
 	    needSpace();
 	else {
 	    int t = used;
 	    if (t <= 0) return;
-	    while (t > 0 && chars[t-1] <= ' ') t--; // NOI18N
-            trimTo(t);
+            if (trim) {
+                while (t > 0 && chars[t-1] <= ' ') t--; // NOI18N
+                trimTo(t);
+            }
 	    append('\n'); // NOI18N
 	}
     }
+
+    public void nlTermNoTrim() {
+	nlTerm(false);
+    }
+
     public void toLineStart() {
 	if(hasMargin())
 	    needSpace();

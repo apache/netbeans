@@ -26,7 +26,7 @@
         <folder name="Project">
             <folder name="AntJava">
             <folder name="J2EE">
-                <attr name="position" intvalue="400"/>
+                <attr name="position" intvalue="375"/>
                 <file name="emptyCar.xml">
                     <attr name="position" intvalue="600"/>
                     <attr name="template" boolvalue="true"/>
@@ -54,6 +54,7 @@
         <file name="application-client-5.xml" url="application-client-5.xml"/>
         <file name="application-client-6.xml" url="application-client-6.xml"/>
         <file name="application-client-7.xml" url="application-client-7.xml"/>
+        <file name="application-client-8.xml" url="application-client-8.xml"/>
         <file name="MANIFEST.MF" url="MANIFEST.MF"/>
     </folder>
     

@@ -45,48 +45,50 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
 
     /** Creates new TableElementImpl */
     public TableElementImpl(String table) {
-		super(table);
-		columns = new DBElementsCollection(this, new ColumnElement[0]);
-        //workaround for bug #4396371
-        //http://andorra.eng:8080/cgi-bin/ws.exe/bugtraq/bug.hts?where=bugid_value%3D4396371
-        Object hc = String.valueOf(columns.hashCode());
+        super(table);
+        columns = new DBElementsCollection(this, new ColumnElement[0]);
+
+        // NOTE - After doing research, not sure this comment still applys? Remove it?
+        // workaround for bug #4396371
+        // http://andorra.eng:8080/cgi-bin/ws.exe/bugtraq/bug.hts?where=bugid_value%3D4396371
+        String hc = String.valueOf(columns.hashCode());
         while (DBElementsCollection.instances.contains(hc)) {
-    		columns = new DBElementsCollection(this, new ColumnElement[0]);
+            columns = new DBElementsCollection(this, new ColumnElement[0]);
             hc = String.valueOf(columns.hashCode());
         }
         DBElementsCollection.instances.add(hc);
-        
-		indexes = new DBElementsCollection(this, new IndexElement[0]);
+
+        indexes = new DBElementsCollection(this, new IndexElement[0]);
         //workaround for bug #4396371
         //http://andorra.eng:8080/cgi-bin/ws.exe/bugtraq/bug.hts?where=bugid_value%3D4396371
         hc = String.valueOf(indexes.hashCode());
         while (DBElementsCollection.instances.contains(hc)) {
-    		indexes = new DBElementsCollection(this, new IndexElement[0]);
+            indexes = new DBElementsCollection(this, new IndexElement[0]);
             hc = String.valueOf(indexes.hashCode());
         }
         DBElementsCollection.instances.add(hc);
-        
-		keys = new DBElementsCollection(this, new KeyElement[0]);
+
+        keys = new DBElementsCollection(this, new KeyElement[0]);
         //workaround for bug #4396371
         //http://andorra.eng:8080/cgi-bin/ws.exe/bugtraq/bug.hts?where=bugid_value%3D4396371
         hc = String.valueOf(keys.hashCode());
         while (DBElementsCollection.instances.contains(hc)) {
-    		keys = new DBElementsCollection(this, new KeyElement[0]);
+            keys = new DBElementsCollection(this, new KeyElement[0]);
             hc = String.valueOf(keys.hashCode());
         }
         DBElementsCollection.instances.add(hc);
-        
-		columnPairs = new DBElementsCollection(this, new ColumnPairElement[0]);
+
+        columnPairs = new DBElementsCollection(this, new ColumnPairElement[0]);
         //workaround for bug #4396371
         //http://andorra.eng:8080/cgi-bin/ws.exe/bugtraq/bug.hts?where=bugid_value%3D4396371
         hc = String.valueOf(columnPairs.hashCode());
         while (DBElementsCollection.instances.contains(hc)) {
-    		columnPairs = new DBElementsCollection(this, new ColumnPairElement[0]);
+            columnPairs = new DBElementsCollection(this, new ColumnPairElement[0]);
             hc = String.valueOf(columnPairs.hashCode());
         }
         DBElementsCollection.instances.add(hc);
         
-		this.table = table;
+        this.table = table;
     }
     
     /** Get the name of this element.
@@ -168,7 +170,7 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
                 String colName, colNull, colSize, colDec;
                 String strAutoIncrement = null;
                 if (rs != null) {
-                    Map rset = new HashMap();
+                    Map<Integer, String> rset = new HashMap<>();
                     while (rs.next()) {
                         if (bridge != null) {
                             rset = bridge.getDriverSpecification().getRow();

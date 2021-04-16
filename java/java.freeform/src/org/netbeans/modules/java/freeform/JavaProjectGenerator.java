@@ -284,7 +284,6 @@ public class JavaProjectGenerator {
      */
     public static void putSourceViews(AntProjectHelper helper, List<SourceFolder> sources, String style) {
         //assert ProjectManager.mutex().isWriteAccess();
-        ArrayList list = new ArrayList();
         Element data = Util.getPrimaryConfigurationData(helper);
         Document doc = data.getOwnerDocument();
         Element viewEl = XMLUtil.findElement(data, "view", Util.NAMESPACE); // NOI18N
@@ -298,9 +297,7 @@ public class JavaProjectGenerator {
             XMLUtil.appendChildElement(viewEl, itemsEl, viewElementsOrder);
         }
         List<Element> sourceViews = XMLUtil.findSubElements(itemsEl);
-        Iterator it = sourceViews.iterator();
-        while (it.hasNext()) {
-            Element sourceViewEl = (Element)it.next();
+        for (Element sourceViewEl : sourceViews) {
             if (!sourceViewEl.getLocalName().equals("source-folder")) { // NOI18N
                 continue;
             }
@@ -309,9 +306,8 @@ public class JavaProjectGenerator {
                 itemsEl.removeChild(sourceViewEl);
             }
         }
-        Iterator it2 = sources.iterator();
-        while (it2.hasNext()) {
-            SourceFolder sf = (SourceFolder)it2.next();
+        
+        for (SourceFolder sf : sources) {
             if (sf.style == null || sf.style.length() == 0) {
                 // perhaps this is principal source folder?
                 continue;
@@ -468,6 +464,7 @@ public class JavaProjectGenerator {
         String namespace;
         
         switch (requiredVersion) {
+            case 5: namespace = JavaProjectNature.NS_JAVA_5; break;
             case 4: namespace = JavaProjectNature.NS_JAVA_4; break;
             case 3: namespace = JavaProjectNature.NS_JAVA_3; break;
             case 2: namespace = JavaProjectNature.NS_JAVA_2; break;
@@ -511,9 +508,7 @@ public class JavaProjectGenerator {
                 }
             }
             if (cu.output != null) {
-                Iterator it3 = cu.output.iterator();
-                while (it3.hasNext()) {
-                    String output = (String)it3.next();
+                for (String output : cu.output) {
                     el = doc.createElementNS(data.getNamespaceURI(), "built-to"); // NOI18N
                     el.appendChild(doc.createTextNode(output));
                     cuEl.appendChild(el);
@@ -691,20 +686,17 @@ public class JavaProjectGenerator {
      */
     public static void putExports(AntProjectHelper helper, List<Export> exports) {
         //assert ProjectManager.mutex().isWriteAccess();
-        ArrayList list = new ArrayList();
         Element data = Util.getPrimaryConfigurationData(helper);
         Document doc = data.getOwnerDocument();
-        Iterator it = XMLUtil.findSubElements(data).iterator();
-        while (it.hasNext()) {
-            Element exportEl = (Element)it.next();
+        
+        for (Element exportEl : XMLUtil.findSubElements(data)) {
             if (!exportEl.getLocalName().equals("export")) { // NOI18N
                 continue;
             }
             data.removeChild(exportEl);
         }
-        Iterator it2 = exports.iterator();
-        while (it2.hasNext()) {
-            Export export = (Export)it2.next();
+        
+        for (Export export : exports) {
             Element exportEl = doc.createElementNS(Util.NAMESPACE, "export"); // NOI18N
             Element el;
             el = doc.createElementNS(Util.NAMESPACE, "type"); // NOI18N
@@ -771,7 +763,6 @@ public class JavaProjectGenerator {
      */
     public static void putSubprojects(AntProjectHelper helper, List<String> subprojects) {
         //assert ProjectManager.mutex().isWriteAccess();
-        ArrayList list = new ArrayList();
         Element data = Util.getPrimaryConfigurationData(helper);
         Document doc = data.getOwnerDocument();
         Element subproject = XMLUtil.findElement(data, "subprojects", Util.NAMESPACE); // NOI18N
@@ -780,10 +771,8 @@ public class JavaProjectGenerator {
         }
         subproject = doc.createElementNS(Util.NAMESPACE, "subprojects"); // NOI18N
         XMLUtil.appendChildElement(data, subproject, rootElementsOrder);
-        
-        Iterator it = subprojects.iterator();
-        while (it.hasNext()) {
-            String proj = (String)it.next();
+
+        for (String proj : subprojects) {
             Element projEl = doc.createElementNS(Util.NAMESPACE, "project"); // NOI18N
             projEl.appendChild(doc.createTextNode(proj));
             subproject.appendChild(projEl);
@@ -863,18 +852,15 @@ public class JavaProjectGenerator {
             XMLUtil.appendChildElement(data, foldersEl, rootElementsOrder);
         } else {
             List<Element> folders = XMLUtil.findSubElements(foldersEl);
-            Iterator it = folders.iterator();
-            while (it.hasNext()) {
-                Element buildFolderEl = (Element)it.next();
+            for (Element buildFolderEl  : folders) {
                 if (!buildFolderEl.getLocalName().equals(elemName)) { // NOI18N
                     continue;
                 }
                 foldersEl.removeChild(buildFolderEl);
             }
         }
-        Iterator it = buildFolders.iterator();
-        while (it.hasNext()) {
-            String location = (String)it.next();
+
+        for (String location : buildFolders) {
             Element buildFolderEl = doc.createElementNS(Util.NAMESPACE, elemName); // NOI18N
             Element locationEl = doc.createElementNS(Util.NAMESPACE, "location"); // NOI18N
             locationEl.appendChild(doc.createTextNode(location));
@@ -1048,11 +1034,14 @@ public class JavaProjectGenerator {
             final SpecificationVersion JAVA_6 = new SpecificationVersion("1.6");  //NOI18N
             final SpecificationVersion JAVA_7 = new SpecificationVersion("1.7");  //NOI18N
             final SpecificationVersion JAVA_8 = new SpecificationVersion("1.8");  //NOI18N
+            final SpecificationVersion JAVA_9 = new SpecificationVersion("9");  //NOI18N
             final SpecificationVersion current = new SpecificationVersion(unit.sourceLevel);
             if (JAVA_6.equals(current) || JAVA_7.equals(current)) {
                 min = 3;
-            } else if (JAVA_8.compareTo(current) <= 0) {
+            } else if (JAVA_8.equals(current)) {
                 min = 4;
+            } else if (JAVA_9.compareTo(current) <= 0) {
+                min = 5;
             }
         }
         return min;

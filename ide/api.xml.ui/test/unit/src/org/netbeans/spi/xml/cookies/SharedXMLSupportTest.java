@@ -132,7 +132,7 @@ public class SharedXMLSupportTest extends TestCase {
     private static class Observer implements CookieObserver {
         private int warnings;
         public void receive(CookieMessage msg) {
-            if (msg.getLevel() >= msg.WARNING_LEVEL) {
+            if (msg.getLevel() >= CookieMessage.WARNING_LEVEL) {
                 warnings++;
             }
         }

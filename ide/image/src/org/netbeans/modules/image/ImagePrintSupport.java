@@ -63,9 +63,9 @@ public class ImagePrintSupport implements PrintCookie, Printable, ImageObserver 
             throws IllegalArgumentException {
         try{
             AffineTransform af = new AffineTransform();
-            if( pf.getOrientation() == pf.LANDSCAPE ){
+            if( pf.getOrientation() == PageFormat.LANDSCAPE ){
             }else{
-                af.translate( (double)pf.getImageableX(), (double)pf.getImageableY() );
+                af.translate(pf.getImageableX(), pf.getImageableY());
             }
             
             /** notify if too big for page **/

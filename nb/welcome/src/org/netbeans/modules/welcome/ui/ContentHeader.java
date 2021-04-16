@@ -24,6 +24,7 @@ import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -67,7 +68,7 @@ public class ContentHeader extends JPanel implements Constants {
         setLayout( new BorderLayout() );
         lblTitle.setText( title );
         lblTitle.setFont( CONTENT_HEADER_FONT );
-        lblTitle.setForeground( Color.white );
+        lblTitle.setForeground( Utils.getTopBarForeground() );
         add( lblTitle, BorderLayout.WEST );
         setBorder( BorderFactory.createEmptyBorder( 12+18, 34, 15, 34 ) );
     }
@@ -78,6 +79,11 @@ public class ContentHeader extends JPanel implements Constants {
         int width = getWidth();
         int height = getHeight();
 
+        RenderingHints rh = new RenderingHints(
+             RenderingHints.KEY_INTERPOLATION,
+             RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+
+        g2d.setRenderingHints(rh);
         g2d.setColor( Utils.getBorderColor() );
         g2d.drawRect( 0, 0, width, 12 );
 

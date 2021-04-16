@@ -37,6 +37,7 @@ import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.indexing.TransactionContext;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
@@ -245,7 +246,7 @@ public class SourceAnalyzerTest extends NbTestCase {
                     case ClassPath.COMPILE:
                         return ClassPath.EMPTY;
                     case ClassPath.BOOT:
-                        return ClassPathSupport.createClassPath(System.getProperty("sun.boot.class.path")); //NOI18N
+                        return BootClassPathUtil.getBootClassPath();
                 }
             }
             return null;

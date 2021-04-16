@@ -71,9 +71,6 @@
     <entry javaType="java.lang.Boolean" name="show-deprecated-members">
         <value><![CDATA[true]]></value>
     </entry>
-    <entry javaType="methodvalue" name="token-context-list">
-        <value><![CDATA[org.netbeans.modules.editor.java.NbJavaSettingsInitializer.getTokenContextList]]></value>
-    </entry>
     <entry javaType="java.lang.Boolean" name="word-match-match-case">
         <value><![CDATA[true]]></value>
     </entry>

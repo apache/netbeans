@@ -897,7 +897,7 @@ public final class NavigatorController implements LookupListener, PropertyChange
 
         void setNodes(Node[] nodes) {
             if (nodes != null && nodes.length > 0) {
-                List<Lookup> l = new LinkedList();
+                List<Lookup> l = new LinkedList<>();
                 l.add(panelLookup);
                 for (Node n : nodes) {
                     if (!panelLookup.lookupResult(Object.class).allInstances().containsAll(

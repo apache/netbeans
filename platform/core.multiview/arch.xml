@@ -881,7 +881,7 @@ No.
 -->
 <answer id="resources-read">
     <p>
-	<api category="devel" group="branding" name="MultiViewElement.Spliting.Enabled" type="export">
+	<api category="devel" group="branding" name="org.netbeans.core.multiview.MultiViewElement.Spliting.Enabled" type="export">
 	    By default a MultiViewElement allows the containing TopComponent to split it.
 	    Some systems may however find this not of any use. Then they should brand the
 	    <code>MultiViewElement.Spliting.Enabled</code> to <code>false</code>. NetBeans IDE

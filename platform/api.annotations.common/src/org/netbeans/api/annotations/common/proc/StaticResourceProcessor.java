@@ -23,11 +23,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collections;
 import java.util.Set;
+import java.util.TreeSet;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
+import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
@@ -36,13 +36,36 @@ import javax.lang.model.element.VariableElement;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileManager;
 import javax.tools.StandardLocation;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.CheckReturnValue;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.annotations.common.NullUnknown;
 import org.netbeans.api.annotations.common.StaticResource;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class StaticResourceProcessor extends AbstractProcessor {
 
     public @Override Set<String> getSupportedAnnotationTypes() {
-        return Collections.singleton(StaticResource.class.getCanonicalName());
+        TreeSet<String> all = new TreeSet<>();
+
+        // org.netbeans.api.annotations.common annotations
+        all.add(CheckForNull.class.getCanonicalName());
+        all.add(CheckReturnValue.class.getCanonicalName());
+        all.add(NonNull.class.getCanonicalName());
+        all.add(NullAllowed.class.getCanonicalName());
+        all.add(NullUnknown.class.getCanonicalName());
+        all.add(StaticResource.class.getCanonicalName());
+        all.add(SuppressWarnings.class.getCanonicalName());
+
+        // other well-known Java platform annotations
+        all.add(SupportedAnnotationTypes.class.getCanonicalName());
+
+        return all;
+    }
+
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latest();
     }
 
     @Override public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

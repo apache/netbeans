@@ -1036,12 +1036,11 @@ widthcheck:  {
     * @return an array of parameters
     */
     public static String[] parseParameters(String s) {
-        int NULL = 0x0; // STICK + whitespace or NULL + non_"
-        int INPARAM = 0x1; // NULL + " or STICK + " or INPARAMPENDING + "\ // NOI18N
-        int INPARAMPENDING = 0x2; // INPARAM + \
-        int STICK = 0x4; // INPARAM + " or STICK + non_" // NOI18N
-        int STICKPENDING = 0x8; // STICK + \
-        ArrayList<String> params = new ArrayList<String>(5);
+        final int NULL = 0x0;
+        final int IN_PARAM = 0x1;
+        final int IN_DOUBLE_QUOTE = 0x2;
+        final int IN_SINGLE_QUOTE = 0x3;
+        ArrayList<String> params = new ArrayList<>(5);
         char c;
 
         int state = NULL;
@@ -1050,117 +1049,72 @@ widthcheck:  {
 
         for (int i = 0; i < slength; i++) {
             c = s.charAt(i);
-
-            if (Character.isWhitespace(c)) {
-                if (state == NULL) {
-                    if (buff.length() > 0) {
-                        params.add(buff.toString());
-                        buff.setLength(0);
+            switch (state) {
+                case NULL:
+                    switch (c) {
+                        case '\'':
+                            state = IN_SINGLE_QUOTE;
+                            break;
+                        case '"':
+                            state = IN_DOUBLE_QUOTE;
+                            break;
+                        default:
+                            if (!Character.isWhitespace(c)) {
+                                buff.append(c);
+                                state = IN_PARAM;
+                            }
                     }
-                } else if (state == STICK) {
-                    params.add(buff.toString());
-                    buff.setLength(0);
-                    state = NULL;
-                } else if (state == STICKPENDING) {
-                    buff.append('\\');
-                    params.add(buff.toString());
-                    buff.setLength(0);
-                    state = NULL;
-                } else if (state == INPARAMPENDING) {
-                    state = INPARAM;
-                    buff.append('\\');
-                    buff.append(c);
-                } else { // INPARAM
-                    buff.append(c);
-                }
-
-                continue;
-            }
-
-            if (c == '\\') {
-                if (state == NULL) {
-                    ++i;
-
-                    if (i < slength) {
-                        char cc = s.charAt(i);
-
-                        if ((cc == '"') || (cc == '\\')) {
-                            buff.append(cc);
-                        } else if (Character.isWhitespace(cc)) {
-                            buff.append(c);
-                            --i;
-                        } else {
-                            buff.append(c);
-                            buff.append(cc);
-                        }
+                    break;
+                case IN_SINGLE_QUOTE:
+                    if (c != '\'') {
+                        buff.append(c);
                     } else {
-                        buff.append('\\');
-
-                        break;
+                        state = IN_PARAM;
                     }
-
-                    continue;
-                } else if (state == INPARAM) {
-                    state = INPARAMPENDING;
-                } else if (state == INPARAMPENDING) {
-                    buff.append('\\');
-                    state = INPARAM;
-                } else if (state == STICK) {
-                    state = STICKPENDING;
-                } else if (state == STICKPENDING) {
-                    buff.append('\\');
-                    state = STICK;
-                }
-
-                continue;
-            }
-
-            if (c == '"') {
-                if (state == NULL) {
-                    state = INPARAM;
-                } else if (state == INPARAM) {
-                    state = STICK;
-                } else if (state == STICK) {
-                    state = INPARAM;
-                } else if (state == STICKPENDING) {
-                    buff.append('"');
-                    state = STICK;
-                } else { // INPARAMPENDING
-                    buff.append('"');
-                    state = INPARAM;
-                }
-
-                continue;
-            }
-
-            if (state == INPARAMPENDING) {
-                buff.append('\\');
-                state = INPARAM;
-            } else if (state == STICKPENDING) {
-                buff.append('\\');
-                state = STICK;
-            }
-
-            buff.append(c);
-        }
-
-        // collect
-        if (state == INPARAM) {
-            params.add(buff.toString());
-        } else if ((state & (INPARAMPENDING | STICKPENDING)) != 0) {
-            buff.append('\\');
-            params.add(buff.toString());
-        } else { // NULL or STICK
-
-            if (buff.length() != 0) {
-                params.add(buff.toString());
+                    break;
+                case IN_DOUBLE_QUOTE:
+                    switch (c) {
+                        case '\\':
+                            char peek = (i < slength - 1) ? s.charAt(i+1) : Character.MIN_VALUE;
+                            if (peek == '"' || peek =='\\') {
+                                buff.append(peek);
+                                i++;
+                            } else {
+                                buff.append(c);
+                            }
+                            break;
+                        case '"':
+                            state = IN_PARAM;
+                            break;
+                        default:
+                            buff.append(c);
+                    }
+                    break;
+                case IN_PARAM:
+                    switch (c) {
+                        case '\'':
+                            state = IN_SINGLE_QUOTE;
+                            break;
+                        case '"':
+                            state = IN_DOUBLE_QUOTE;
+                            break;
+                        default:
+                          if (Character.isWhitespace(c)) {
+                              params.add(buff.toString());
+                              buff.setLength(0);
+                              state = NULL;
+                          } else {
+                              buff.append(c);
+                          }
+                    }
+                    break;
             }
         }
+        if (buff.length() > 0) {
+            params.add(buff.toString());
+        }
 
-        String[] ret = new String[params.size()];
-        params.toArray(ret);
-
-        return ret;
+        return params.toArray(new String[params.size()]);
     }
 
     /** Complementary method to parseParameters

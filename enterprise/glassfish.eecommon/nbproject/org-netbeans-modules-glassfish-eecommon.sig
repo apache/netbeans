@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.42.0
+#Version 1.48.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -159,8 +159,6 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
-meth public java.awt.peer.ComponentPeer getPeer()
- anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -1194,6 +1192,8 @@ hfds j2eeModuleVersion,numericModuleVersion,numericSpecVersion
 CLSS public final org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion J2EE_1_3
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion J2EE_1_4
+fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAKARTAEE_8_0
+fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAKARTAEE_9_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAVAEE_5_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAVAEE_6_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAVAEE_7_0
@@ -1281,6 +1281,7 @@ fld public final static org.netbeans.modules.glassfish.eecommon.api.config.Servl
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.ServletVersion SERVLET_2_4
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.ServletVersion SERVLET_2_5
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.ServletVersion SERVLET_3_0
+fld public final static org.netbeans.modules.glassfish.eecommon.api.config.ServletVersion SERVLET_4_0
 meth public int compareTo(java.lang.Object)
 meth public static org.netbeans.modules.glassfish.eecommon.api.config.ServletVersion getServletVersion(java.lang.String)
 supr org.netbeans.modules.glassfish.eecommon.api.config.J2EEBaseVersion
@@ -1523,4 +1524,3 @@ meth public void writeExternal(java.io.ObjectOutput) throws java.io.IOException
 supr javax.swing.JComponent
 hfds LOG,MODE_ID_PREFERENCES_KEY_INFIX,UILOG,activatedNodes,attentionGetter,closeOperation,defaultLookupLock,defaultLookupRef,displayName,htmlDisplayName,icon,modeName,nodeName,serialVersion,serialVersionUID,warnedClasses,warnedTCPIClasses
 hcls AttentionGetter,CloneWindowAction,CloseWindowAction,Replacer,SynchronizeNodes
-

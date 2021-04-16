@@ -19,6 +19,8 @@
 
 package org.netbeans.modules.maven.options;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -28,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
@@ -39,7 +42,9 @@ import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.util.WeakSet;
 
 /**
  * a netbeans settings for global options that cannot be put into the settings file.
@@ -66,6 +71,7 @@ public final class MavenSettings  {
     private static final String PROP_EXPERIMENTAL_USE_ALTERNATE_LOCATION = "useBestMavenAltLocation";
     private static final String PROP_EXPERIMENTAL_ALTERNATE_LOCATION = "bestMavenAltLocation";
     private static final String PROP_VM_OPTIONS_WRAP = "vmOptionsWrap";
+    private static final String PROP_DEFAULT_JDK = "defaultJdk";
 
     //these are from former versions (6.5) and are here only for conversion
     private static final String PROP_DEBUG = "showDebug"; // NOI18N
@@ -77,6 +83,8 @@ public final class MavenSettings  {
       
     private static final MavenSettings INSTANCE = new MavenSettings();
     
+    private final Set<PropertyChangeListener> listeners = new WeakSet<>();
+
     public static MavenSettings getDefault() {
         return INSTANCE;
     }
@@ -230,6 +238,21 @@ public final class MavenSettings  {
         getPreferences().putBoolean(PROP_VM_OPTIONS_WRAP, b);
     }
 
+    public String getDefaultJdk() {
+        return getPreferences().get(PROP_DEFAULT_JDK, "");
+    }
+
+    public void setDefaultJdk(String jdk) {
+        getPreferences().put(PROP_DEFAULT_JDK, jdk);
+        PropertyChangeListener[] arr;
+        synchronized (listeners) {
+            arr = listeners.toArray(new PropertyChangeListener[0]);
+        }
+        for (PropertyChangeListener l : arr) {
+            l.propertyChange(new PropertyChangeEvent(this, PROP_DEFAULT_JDK, null, jdk));
+        }
+    }
+
     public String getLastArchetypeGroupId() {
         return getPreferences().get(PROP_LAST_ARCHETYPE_GROUPID, Boolean.getBoolean("netbeans.full.hack") ? "test" : "com.mycompany"); //NOI18N
     }
@@ -261,9 +284,18 @@ public final class MavenSettings  {
     public void setShowLoggingLevel(boolean show) {
         getPreferences().putBoolean(PROP_SHOW_LOGGING_LEVEL, show);
     }
-    
+
+    @NbBundle.Messages({
+        "#reuse output: true, false, never",
+        "#NOI18N",
+        "DEFAULT_REUSE_OUTPUT=true"
+    })
     public boolean isReuseOutputTabs() {
-        return getPreferences().getBoolean(PROP_REUSE_OUTPUT, true);
+        String def = Bundle.DEFAULT_REUSE_OUTPUT();
+        if ("never".equals(def)) { // NOI18N
+            return false;
+        }
+        return getPreferences().getBoolean(PROP_REUSE_OUTPUT, "true".equals(def)); // NOI18N
     }
 
     public void setReuseOutputTabs(boolean reuse) {
@@ -349,6 +381,12 @@ public final class MavenSettings  {
             getPreferences().put(PROP_OUTPUT_TAB_NAME, ds.name());
         } else {
             getPreferences().remove(PROP_OUTPUT_TAB_NAME);
+        }
+    }
+
+    public void addWeakPropertyChangeListener(PropertyChangeListener l) {
+        synchronized (listeners) {
+            listeners.add(l);
         }
     }
 

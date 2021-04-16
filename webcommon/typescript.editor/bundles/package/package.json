@@ -1,0 +1,6 @@
+{
+    "dependencies": {
+        "typescript-language-server": "0.5.1",
+        "typescript": "4.1.4"
+    }
+}

@@ -546,9 +546,9 @@ class EntrySupportDefault extends EntrySupport {
                 children.parent.fireSubNodesChange(false, arr, current);
             }
             // fire change of parent
-            Iterator it = nodes.iterator();
+            Iterator<Node> it = nodes.iterator();
             while (it.hasNext()) {
-                Node n = (Node) it.next();
+                Node n = it.next();
                 n.deassignFrom(children);
                 n.fireParentNodeChange(children.parent, null);
             }
@@ -735,7 +735,7 @@ class EntrySupportDefault extends EntrySupport {
 
     /** Finalized.
      */
-    final void finalizedChildrenArray(Reference caller) {
+    final void finalizedChildrenArray(Reference<ChildrenArray> caller) {
         assert caller.get() == null : "Should be null";
         // usually in removeNotify setKeys is called => better require write access
         try {

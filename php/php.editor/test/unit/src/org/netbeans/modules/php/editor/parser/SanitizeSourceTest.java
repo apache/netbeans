@@ -231,6 +231,30 @@ public class SanitizeSourceTest extends ParserTestBase {
         performTest("sanitize/nullableTypes16");
     }
 
+    public void testUnionTypeParameter01() throws Exception {
+        performTest("sanitize/unionTypesParameter01");
+    }
+
+    public void testUnionTypeParameter02() throws Exception {
+        performTest("sanitize/unionTypesParameter02");
+    }
+
+    public void testUnionTypeParameter03() throws Exception {
+        performTest("sanitize/unionTypesParameter03");
+    }
+
+    public void testUnionTypeParameter04() throws Exception {
+        performTest("sanitize/unionTypesParameter04");
+    }
+
+    public void testUnionTypeParameter05() throws Exception {
+        performTest("sanitize/unionTypesParameter05");
+    }
+
+    public void testConstructorPropertyPromotionParameter01() throws Exception {
+        performTest("sanitize/constructorPropertyPromotionParameter01");
+    }
+
     protected String getTestResult(String filename) throws Exception {
         return getTestResult(filename, null);
     }

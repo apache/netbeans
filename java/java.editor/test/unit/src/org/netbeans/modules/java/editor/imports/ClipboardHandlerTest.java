@@ -24,13 +24,18 @@ import java.io.IOException;
 import java.util.concurrent.Exchanger;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
+import javax.lang.model.SourceVersion;
 import javax.swing.JEditorPane;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
+import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.lexer.Language;
+import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.BootClassPathUtil;
+import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -51,6 +56,7 @@ public class ClipboardHandlerTest extends NbTestCase {
     protected void setUp() throws Exception {
         SourceUtilsTestUtil.prepareTest(new String[] {"META-INF/generated-layer.xml", "org/netbeans/modules/java/source/resources/layer.xml", "org/netbeans/modules/java/editor/resources/layer.xml", "org/netbeans/modules/editor/settings/storage/layer.xml"}, new Object[0]);
         ClipboardHandler.autoImport = true;
+        Main.initializeURLFactory();
         super.setUp();
     }
 
@@ -90,8 +96,34 @@ public class ClipboardHandlerTest extends NbTestCase {
     public void testAnonymousClass() throws Exception {
         copyAndPaste("package test;\nimport java.util.ArrayList;\npublic class Test { void t() { |new ArrayList<String>() {};| } }\n", "package test;\npublic class Target {\nvoid t() { ^ }\n}", "package test;\n\nimport java.util.ArrayList;\n\npublic class Target {\nvoid t() { new ArrayList<String>() {}; }\n}");
     }
+    
+    public void testCopyIntoTextBlock() throws Exception {
+        copyAndPaste("|List l1;\nList l2;\nList l3;\n\n| ", "package test;\npublic class Target {\nString s = \"\"\"\n^\"\"\"\n}", "package test;\npublic class Target {\nString s = \"\"\"\nList l1;\nList l2;\nList l3;\n\n\"\"\"\n}");
+    }
+    
+    public void testCopyTextBlockIntoTextBlock() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return ;
+        }
+        copyAndPaste("|\"\"\"\nList l1;\"\"\"| ", "package test;\npublic class Target {\nString s = \"\"\"\ntest^ block\n\"\"\"\n}", "package test;\npublic class Target {\nString s = \"\"\"\ntest\\\"\"\"\nList l1;\\\"\"\" block\n\"\"\"\n}");
+    }
+
+    public void testStaticImportsOn11_JIRA3019() throws Exception {
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        copyAndPaste("package test;\nimport java.util.List; public class Test { public static final String CONST = null; |void t() { String s = CONST; List lst;}|\n", 
+                     "package test;\npublic class Target {\n^\n}",
+                     "package test;\n\nimport java.util.List;\nimport static test.Test.CONST;\n\npublic class Target {\nvoid t() { String s = CONST; List lst;}\n}",
+                     "11");
+    }
 
     private void copyAndPaste(String from, final String to, String golden) throws Exception {
+        copyAndPaste(from, to, golden, null);
+    }
+
+    private void copyAndPaste(String from, final String to, String golden, String sourceLevel) throws Exception {
         final int pastePos = to.indexOf('^');
 
         assertTrue(pastePos >= 0);
@@ -116,8 +148,8 @@ public class ClipboardHandlerTest extends NbTestCase {
         final JEditorPane[] target = new JEditorPane[1];
         final Exception[] fromAWT = new Exception[1];
         
-        final JEditorPane source = paneFor(src, "test/Test.java", cleanFrom);
-        target[0] = paneFor(src, "test/Target.java", to.replaceAll(Pattern.quote("^"), ""));
+        final JEditorPane source = paneFor(src, "test/Test.java", cleanFrom, sourceLevel);
+        target[0] = paneFor(src, "test/Target.java", to.replaceAll(Pattern.quote("^"), ""), sourceLevel);
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override public void run() {
                 try {
@@ -147,9 +179,12 @@ public class ClipboardHandlerTest extends NbTestCase {
         assertEquals(golden, actual[0]);
     }
 
-    private JEditorPane paneFor(FileObject src, String fileName, String code) throws Exception, DataObjectNotFoundException, IOException {
+    private JEditorPane paneFor(FileObject src, String fileName, String code, String sourceLevel) throws Exception, DataObjectNotFoundException, IOException {
         FileObject fromFO = FileUtil.createData(src, fileName);
         TestUtilities.copyStringToFile(fromFO, code);
+        if (sourceLevel != null) {
+            SourceUtilsTestUtil.setSourceLevel(fromFO, sourceLevel);
+        }
         DataObject od = DataObject.find(fromFO);
         final EditorCookie.Observable ec = od.getCookie(EditorCookie.Observable.class);
         final Exchanger<JEditorPane> exch = new Exchanger<>();

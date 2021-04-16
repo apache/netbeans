@@ -107,7 +107,7 @@ public class VariableMirrorTranslator {
             }
             if (value instanceof ObjectReference && type instanceof ReferenceType) {
                 try {
-                    Class clazz = Class.forName(typeStr);
+                    Class<?> clazz = Class.forName(typeStr);
                     if (String.class.equals(clazz)) {
                         return ShortenedStrings.getStringWithLengthControl((StringReference) value);
                     }
@@ -349,7 +349,7 @@ public class VariableMirrorTranslator {
         if (vm == null) {
             throw new VMDisconnectedExceptionWrapper(new VMDisconnectedException());
         }
-        Class clazz = mirror.getClass();
+        Class<?> clazz = mirror.getClass();
         JPDAThreadImpl currentThread;
         Lock lock;
         if (willInvokeMethods(isObject, clazz)) {
@@ -586,12 +586,12 @@ public class VariableMirrorTranslator {
             ObjectReference objectConstructor = (ObjectReference)
                     ObjectReferenceWrapper.invokeMethod(objectClass, thread,
                                                   getDeclaredConstructorMethod,
-                                                  Collections.EMPTY_LIST,
+                                                  Collections.<Value>emptyList(),
                                                   ClassType.INVOKE_SINGLE_THREADED);
             ObjectReference rf = (ObjectReference)
                     ClassTypeWrapper.invokeMethod(reflectionFactoryType, thread,
                                                   getReflectionFactoryMethod,
-                                                  Collections.EMPTY_LIST,
+                                                  Collections.<Value>emptyList(),
                                                   ClassType.INVOKE_SINGLE_THREADED);
             ObjectReference constructor = (ObjectReference)
                     ObjectReferenceWrapper.invokeMethod(rf, thread,
@@ -610,11 +610,11 @@ public class VariableMirrorTranslator {
             ObjectReference newInstance = (ObjectReference)
                     ObjectReferenceWrapper.invokeMethod(constructor, thread,
                                                         newInstanceMethod,
-                                                        Collections.EMPTY_LIST,
+                                                        Collections.<Value>emptyList(),
                                                         ClassType.INVOKE_SINGLE_THREADED);
             return newInstance;
         } else {
-            return ClassTypeWrapper.newInstance(type, thread, c, Collections.EMPTY_LIST, ClassType.INVOKE_SINGLE_THREADED);
+            return ClassTypeWrapper.newInstance(type, thread, c, Collections.<Value>emptyList(), ClassType.INVOKE_SINGLE_THREADED);
         }
     }
     

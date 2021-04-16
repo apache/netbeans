@@ -750,7 +750,7 @@ class Nodes {
                 return null;
             }
 
-            Class clazz = null;
+            Class<?> clazz = null;
             String method = null;
 
             try {
@@ -807,7 +807,7 @@ class Nodes {
                 return null;
             }
 
-            Class clazz = null;
+            Class<?> clazz = null;
             String method = null;
 
             try {

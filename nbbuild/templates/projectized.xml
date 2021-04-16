@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="projectized" basedir=".">
+<project name="projectized" basedir="." xmlns:if="ant:if">
 
     <import file="../default.xml"/>
     <import file="common.xml"/>
@@ -68,15 +68,17 @@
         <setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}"/>
     </target>
 
-    <target name="jdk-8-check" depends="-jdk-init" if="have-jdk-1.9" unless="permit.jdk9.builds">
-        <property name="user.build.properties" location="${nb_all}/nbbuild/user.build.properties"/>
-        <property name=".nbbuild.properties" location="${user.home}/.nbbuild.properties"/>
-        <fail>You are attempting to build NetBeans using JDK 9 (or higher).
-This is forbidden as it may lead to accidental usage of JDK 9+ APIs.
-Either run Ant with JDK 8, or set nbjdk.home=&lt;JDK 8 home&gt; in ${user.build.properties}
-(can be set from IDE by opening a module project's Properties dialog and picking the right Java Platform in Libraries).
-You can alternatively set this property in ${.nbbuild.properties} to affect all checkouts on this machine.
-If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=true</fail>
+    <target name="jdk-8-check" depends="-jdk-init">
+        <fail message="You need JDK 8+ to build NetBeans; nbjdk.home=${nbjdk.home} java.home=${java.home}">
+            <condition>
+                <not>
+                    <or>
+                        <isset property="have-jdk-1.8"/>
+                        <isset property="have-jdk-1.9"/>
+                    </or>
+                </not>
+            </condition>
+        </fail>
     </target>
 
     <target name="-define-custom-javac-task" unless="have-custom-javac-task">
@@ -84,7 +86,52 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <property name="have-custom-javac-task" value="true" />
     </target>
 
-    <target name="build-init" depends="basic-init,jdk-8-check,set-buildnumber,-define-custom-javac-task">
+    <target name="-init-compile-bootclasspath-nb-vanilla" depends="basic-init,jdk-8-check,set-buildnumber,-define-custom-javac-task">
+        <property name="bootclasspath.prepend.nb" value="${nb_all}/java/libs.javacapi/external/nb-javac-15.0.0.2-api.jar${path.separator}${nb_all}/java/libs.javacimpl/external/nb-javac-15.0.0.2.jar" />
+        <property name="bootclasspath.prepend.vanilla" value="${nb_all}/nbbuild/external/vanilla-javac-api.jar${path.separator}${nb_all}/nbbuild/external/vanilla-javac-impl.jar" />
+    </target>
+    <target name="-init-bootclasspath-prepend-compile" depends="-init-compile-bootclasspath-nb-vanilla">
+        <condition property="bootclasspath.prepend" value="${bootclasspath.prepend.nb}">
+            <istrue value="${requires.nb.javac.impl}"/>
+        </condition>
+        <condition property="bootclasspath.prepend" value="${bootclasspath.prepend.vanilla}">
+            <istrue value="${requires.nb.javac}"/>
+        </condition>
+    </target>
+    <target name="-init-bootclasspath-prepend-run" depends="-init-bootclasspath-prepend-compile" unless="have-jdk-1.9">
+        <condition property="run.bootclasspath.prepend" value="${bootclasspath.prepend.nb}">
+            <istrue value="${requires.nb.javac.impl}"/>
+        </condition>
+        <condition property="run.bootclasspath.prepend" value="${bootclasspath.prepend.nb}">
+            <and>
+                <istrue value="${requires.nb.javac}"/>
+                <not>
+                    <istrue value="${test.use.jdk.javac}"/>
+                </not>
+            </and>
+        </condition>
+        <condition property="run.bootclasspath.prepend" value="${bootclasspath.prepend}">
+            <and>
+                <isset property="bootclasspath.prepend"/>
+                <not>
+                    <istrue value="${test.use.jdk.javac}"/>
+                </not>
+            </and>
+        </condition>
+        <condition property="test.extra.nb.javac.deps" value="${java.source.nbjavac.dir}/modules/org-netbeans-modules-java-source-nbjavac.jar">
+            <and>
+                <istrue value="${requires.nb.javac}"/>
+                <not>
+                    <istrue value="${test.use.jdk.javac}"/>
+                </not>
+            </and>
+        </condition>
+    </target>
+    <target name="-init-bootclasspath-prepend" depends="-init-bootclasspath-prepend-run,-init-bootclasspath-prepend-compile">
+        <!-- When requires.nb.javac property is true, prepend javac-api and javac-impl on bootclasspath to allow override the default annotation
+             processing API located in rt.jar. -->
+    </target>
+    <target name="build-init" depends="basic-init,jdk-8-check,set-buildnumber,-define-custom-javac-task,-init-bootclasspath-prepend">
         <property name="public.package.jar.dir" location="${nb.build.dir}/public-package-jars"/>
         <mkdir dir="${public.package.jar.dir}"/>
         <parseprojectxml
@@ -175,43 +222,6 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <property name="locjhindexer.locales" value="${locales}"/>
         <property name="locmakenbm.locales" value="${locales}"/>
         <property name="locmakenbm.brands" value="${brandings}"/>
-        <!-- When requires.nb.javac property is true, prepend javac-api and javac-impl on bootclasspath to allow override the default annotation
-             processing API located in rt.jar. -->
-        <property name="bootclasspath.prepend.nb" value="${nb_all}/java/libs.javacapi/external/nb-javac-12-api.jar${path.separator}${nb_all}/java/libs.javacimpl/external/nb-javac-12-impl.jar" />
-        <property name="bootclasspath.prepend.vanilla" value="${nb_all}/nbbuild/external/vanilla-javac-api.jar${path.separator}${nb_all}/nbbuild/external/vanilla-javac-impl.jar" />
-        <condition property="bootclasspath.prepend" value="${bootclasspath.prepend.nb}">
-            <istrue value="${requires.nb.javac.impl}"/>
-        </condition>
-        <condition property="bootclasspath.prepend" value="${bootclasspath.prepend.vanilla}">
-            <istrue value="${requires.nb.javac}"/>
-        </condition>
-        <condition property="run.bootclasspath.prepend" value="${bootclasspath.prepend.nb}">
-            <istrue value="${requires.nb.javac.impl}"/>
-        </condition>
-        <condition property="run.bootclasspath.prepend" value="${bootclasspath.prepend.nb}">
-            <and>
-                <istrue value="${requires.nb.javac}"/>
-                <not>
-                    <istrue value="${test.use.jdk.javac}"/>
-                </not>
-            </and>
-        </condition>
-        <condition property="run.bootclasspath.prepend" value="${bootclasspath.prepend}">
-            <and>
-                <isset property="bootclasspath.prepend"/>
-                <not>
-                    <istrue value="${test.use.jdk.javac}"/>
-                </not>
-            </and>
-        </condition>
-        <condition property="test.extra.nb.javac.deps" value="${java.source.nbjavac.dir}/modules/org-netbeans-modules-java-source-nbjavac.jar">
-            <and>
-                <istrue value="${requires.nb.javac}"/>
-                <not>
-                    <istrue value="${test.use.jdk.javac}"/>
-                </not>
-            </and>
-        </condition>
         <property name="test.extra.nb.javac.deps" value="" />
         <fail message="Delete standalone/suite-related metadata from netbeans.org modules">
             <condition>
@@ -378,8 +388,8 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
     <target name="check-sources-exist" depends="build-init">
         <available file="${src.dir}" property="sources.exist"/>
     </target>
-    
-    <target name="sources-zip" depends="build-init, check-sources-exist" if="sources.exist" description="Simple sources zip creation intended for use in maven repository.">
+
+    <target name="sources-zip" depends="build-init, check-sources-exist" description="Simple sources zip creation intended for use in maven repository.">
 
         <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
         <property name="module.name.temp" location="." />
@@ -396,7 +406,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
 
         <mkdir dir="${netbeans.zipped.sources.dir}"/>
         <zip zipfile="${netbeans.zipped.sources.dir}/${code.name.base.dashes}.zip">
-            <zipfileset dir="${src.dir}" />
+            <zipfileset dir="${src.dir}" if:set="sources.exist"/>
             <zipfileset dir="${build.dir}" prefix="META-INF" includes="LICENSE NOTICE" />
         </zip>
     </target>
@@ -575,7 +585,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <taskdef name="checkhelpsets" classname="org.netbeans.nbbuild.CheckHelpSets">
             <classpath>
                 <pathelement location="${nbantext.jar}"/>
-                <fileset dir="${nb_all}/javahelp/external">
+                <fileset dir="${nb_all}/platform/javahelp/external">
                     <include name="jh*.jar"/>
                 </fileset>
             </classpath>
@@ -810,8 +820,10 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <delete file="${report.file}" failonerror="false"/>
     </target>
 
-    <target name="patch-for-maven" depends="init" description="Patch local Maven repo's version of this module with one built from sources.">
+    <target name="patch-for-maven" depends="maven-install"/> <!-- deprecated -->
+    <target name="maven-install" depends="init" description="Installs a -D{mavenVersion} of this module into local Maven repository">
         <property name="maven.tmp" location="${build.dir}/mvn"/>
+        <property name="mavenVersion" value="dev-SNAPSHOT"/>
         <delete dir="${maven.tmp}"/>
         <property name="maven.tmp.nbms" location="${maven.tmp}/nbms"/>
         <antcall target="nbm" inheritall="false">
@@ -821,7 +833,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <mkdir dir="${maven.tmp.install}"/>
         <autoupdate installdir="${maven.tmp.install}">
             <modules includes=".*"/>
-            <nbms dir="${maven.tmp.nbms}" includes="*.nbm"/>
+            <nbms dir="${maven.tmp.nbms}" includes="*.nbm,*.jar"/>
         </autoupdate>
         <property name="maven.tmp.sources" location="${maven.tmp}/sources"/>
         <antcall target="sources-zip">
@@ -835,15 +847,15 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
           <os family="windows"/>
         </condition>
         <exec executable="${maven.embedder.dir}/maven/bin/mvn${.cmd}" failonerror="true">
-            <arg value="-DforcedVersion=SNAPSHOT"/>
+            <arg value="-DforcedVersion=${mavenVersion}"/>
             <arg value="-DdefineCluster=false"/>
             <arg value="-DdependencyRepositoryId=netbeans-snapshot"/>
-            <arg value="-DdependencyRepositoryUrl=http://bits.netbeans.org/netbeans/trunk/maven-snapshot/"/>
+            <arg value="-DdependencyRepositoryUrl=https://repository.apache.org/content/groups/snapshots"/>
             <arg value="-DnetbeansInstallDirectory=${maven.tmp.install}"/>
             <arg value="-DnetbeansNbmDirectory=${maven.tmp.nbms}"/>
             <arg value="-DnetbeansSourcesDirectory=${maven.tmp.sources}"/>
             <arg value="-DnetbeansJavadocDirectory=${maven.tmp.javadoc}"/>
-            <arg value="org.codehaus.mojo:nb-repository-plugin:1.3:populate"/>
+            <arg value="org.apache.netbeans.utilities:nb-repository-plugin:1.5:populate"/>
         </exec>
     </target>
     

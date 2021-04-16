@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.15
+#Version 9.21
 
 CLSS public java.io.IOException
 cons public init()
@@ -536,7 +536,7 @@ meth public static void removeRecursiveListener(org.openide.filesystems.FileChan
 meth public static void setMIMEType(java.lang.String,java.lang.String)
 meth public static void setOrder(java.util.List<org.openide.filesystems.FileObject>) throws java.io.IOException
 supr java.lang.Object
-hfds LOG,REFRESH_RP,archiveRootProviders,diskFileSystem,normalizedRef,refreshTask,transientAttributes
+hfds LOG,REFRESH_RP,archiveRootProviderCache,archiveRootProviders,diskFileSystem,normalizedRef,refreshTask,transientAttributes
 hcls NonCanonicalizingFile
 
 CLSS public org.openide.filesystems.JarFileSystem
@@ -950,6 +950,7 @@ cons protected init()
 meth protected !varargs final org.openide.filesystems.annotations.LayerBuilder layer(javax.lang.model.element.Element[])
 meth protected abstract boolean handleProcess(java.util.Set<? extends javax.lang.model.element.TypeElement>,javax.annotation.processing.RoundEnvironment) throws org.openide.filesystems.annotations.LayerGenerationException
 meth public final boolean process(java.util.Set<? extends javax.lang.model.element.TypeElement>,javax.annotation.processing.RoundEnvironment)
+meth public javax.lang.model.SourceVersion getSupportedSourceVersion()
 supr javax.annotation.processing.AbstractProcessor
 hfds ENTITY_RESOLVER,ERROR_HANDLER,GENERATED_LAYER,LOCAL_DTD_RESOURCE,NETWORK_DTD_URL,PUBLIC_DTD_ID,createdBuilders,generatedLayerByProcessor,originatingElementsByProcessor
 

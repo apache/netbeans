@@ -104,7 +104,7 @@ public class ProjectWhiteListQueryImplementation implements WhiteListQueryImplem
     private void fireChangeAllExistingResults(final TreeSet<String> privatePackages) {
             final Set<ProjectWhiteListImplementation> set;
             synchronized (results) {
-                set = new HashSet(results);
+                set = new HashSet<>(results);
             }
 
             RP.post(new Runnable() {

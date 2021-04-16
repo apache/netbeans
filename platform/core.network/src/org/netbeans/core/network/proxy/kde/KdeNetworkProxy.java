@@ -25,7 +25,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,11 +65,13 @@ public class KdeNetworkProxy implements NetworkProxyResolver {
     private final static String KIOSLAVERC_PROXY_TYPE_PAC = "2"; //NOI18N
     private final static String KIOSLAVERC_PROXY_TYPE_AUTO = "3"; //NOI18N
     private final static String KIOSLAVERC_PROXY_TYPE_SYSTEM = "4"; //NOI18N    
-    private final static String KIOSLAVERC_PATH_IN_HOME = ".kde/share/config/kioslaverc"; //NOI18N 
-    private final String KIOSLAVERC_PATH;
+    private final static String KIOSLAVERC_PATH_IN_HOME = ".config/kioslaverc"; //NOI18N 
+    private final static String KIOSLAVERC_PATH_IN_HOME_KDE4 = ".kde/share/config/kioslaverc"; //NOI18N 
+    
+    private final List<Path> KIOSLAVERC_PATHS;
 
     public KdeNetworkProxy() {
-        KIOSLAVERC_PATH = getKioslavercPath();
+        KIOSLAVERC_PATHS = getKioslavercPaths();
     }
 
     @Override
@@ -77,14 +85,21 @@ public class KdeNetworkProxy implements NetworkProxyResolver {
             return new NetworkProxySettings(false);
         }
 
-        if (proxyType.equals(KIOSLAVERC_PROXY_TYPE_NONE) || proxyType.equals(KIOSLAVERC_PROXY_TYPE_AUTO)) {
+        if (proxyType.equals(KIOSLAVERC_PROXY_TYPE_NONE)) {
             LOGGER.log(Level.INFO, "KDE system proxy resolver: direct (proxy type: {0})", proxyType); //NOI18N
             return new NetworkProxySettings();
         }
 
-        if (proxyType.equals(KIOSLAVERC_PROXY_TYPE_PAC)) {
-            LOGGER.log(Level.INFO, "KDE system proxy resolver: auto - PAC"); //NOI18N
-            String pacFileUrl = kioslavercMap.get(KIOSLAVERC_PROXY_CONFIG_SCRIPT);
+        if (proxyType.equals(KIOSLAVERC_PROXY_TYPE_PAC)  || proxyType.equals(KIOSLAVERC_PROXY_TYPE_AUTO)) {
+            String pacFileUrl;
+            
+            if (proxyType.equals(KIOSLAVERC_PROXY_TYPE_AUTO)) {
+                LOGGER.log(Level.INFO, "KDE system proxy resolver: auto"); //NOI18N
+                pacFileUrl = "http://wpad/wpad.dat"; // NOI18N
+            } else {
+                LOGGER.log(Level.INFO, "KDE system proxy resolver: auto - PAC"); //NOI18N
+                pacFileUrl = kioslavercMap.get(KIOSLAVERC_PROXY_CONFIG_SCRIPT);
+            }
             if (pacFileUrl != null) {
                 LOGGER.log(Level.INFO, "KDE system proxy resolver: PAC URL ({0})", pacFileUrl); //NOI18N
                 return new NetworkProxySettings(pacFileUrl);
@@ -129,14 +144,16 @@ public class KdeNetworkProxy implements NetworkProxyResolver {
      * @return Map of keys and values from kioslaverc group Proxy settings.
      */
     private Map<String, String> getKioslavercMap() {
-        File kioslavercFile = new File(KIOSLAVERC_PATH);
-        Map<String, String> map = new HashMap<String, String>();
-
-        if (kioslavercFile.exists()) {
-            try {
-                FileInputStream fis = new FileInputStream(kioslavercFile);
-                DataInputStream dis = new DataInputStream(fis);
-                BufferedReader br = new BufferedReader(new InputStreamReader(dis));
+        boolean fileExists = false;
+        for (Path p : KIOSLAVERC_PATHS) {
+            if (!Files.isRegularFile(p)) {
+                continue;
+            }
+            fileExists = true;
+            Map<String, String> map = new HashMap<String, String>();
+            boolean groupFound = false;
+            
+            try (BufferedReader br = Files.newBufferedReader(p)) {
                 String line;
                 boolean inGroup = false;
                 while ((line = br.readLine()) != null) {
@@ -151,19 +168,25 @@ public class KdeNetworkProxy implements NetworkProxyResolver {
                         }
                     } else if (line.startsWith(KIOSLAVERC_PROXY_SETTINGS_GROUP)) {
                         inGroup = true;
+                        groupFound = true;
                     }
                 }
-                dis.close();
             } catch (FileNotFoundException fnfe) {
                 LOGGER.log(Level.SEVERE, "Cannot read file: ", fnfe);
             } catch (IOException ioe) {
                 LOGGER.log(Level.SEVERE, "Cannot read file: ", ioe);
             }
+            if (groupFound) {
+                return map;
+            }
+        }
+        
+        if (fileExists) {
+            LOGGER.log(Level.WARNING, "KDE system proxy resolver: The kioslaverc file does not contain proxy configuration ({0})", KIOSLAVERC_PATHS);
         } else {
-            LOGGER.log(Level.WARNING, "KDE system proxy resolver: The kioslaverc file not found ({0})", KIOSLAVERC_PATH);
+            LOGGER.log(Level.WARNING, "KDE system proxy resolver: The kioslaverc file not found ({0})", KIOSLAVERC_PATHS);
         }                
-
-        return map;
+        return Collections.emptyMap();
     }
 
     /**
@@ -171,13 +194,16 @@ public class KdeNetworkProxy implements NetworkProxyResolver {
      * 
      * @return Path of the kioslaverc config file.
      */
-    private String getKioslavercPath() {
+    private List<Path> getKioslavercPaths() {
         String homePath = System.getenv(HOME);
 
         if (homePath != null) {
-            return homePath + File.separator + KIOSLAVERC_PATH_IN_HOME;
+            return Arrays.asList(
+                        Paths.get(homePath, KIOSLAVERC_PATH_IN_HOME),
+                        Paths.get(homePath, KIOSLAVERC_PATH_IN_HOME_KDE4)
+            );
         } else {
-            return EMPTY_STRING;
+            return Collections.emptyList();
         }
     }
     

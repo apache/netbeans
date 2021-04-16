@@ -70,10 +70,9 @@ public class FoDUpdateUnitProvider implements UpdateProvider {
     
     /**
      * Known extra modules present during tests. Should contain compile-time
-     * modules like Oracle JS parser and NB Javac stub
+     * modules NB Javac stub
      */
     private static final Collection<String> EXCLUDE_EXTRA_MODULES = new HashSet<>(Arrays.asList(
-        "org.netbeans.libs.oracle.jsparser",           // NOI18N
         "org.netbeans.modules.java.source.nbjavac.test"// NOI18N
     ));
 
@@ -103,8 +102,8 @@ public class FoDUpdateUnitProvider implements UpdateProvider {
                 }
                 boolean required = false;
 
-                if (mi.recMinJDK != null && jdk.compareTo(mi.recMinJDK) < 0) {
-                    required = true;
+                if (mi.isRequiredFor(jdk)) {
+//                    required = true;
                 }
                 if (fi.getExtraModulesRequiredText() != null && fi.getExtraModulesRecommendedText() == null) {
                     required = true;

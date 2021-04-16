@@ -23,7 +23,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -75,34 +77,51 @@ public class ModulesInstaller {
         }
     }
     
-    static boolean success = false;
-    public static boolean installModules (
-        ProgressMonitor monitor, FeatureInfo info, Collection<UpdateElement> alreadyOffered
+    static boolean activateModules(
+        boolean askForInstall, ProgressMonitor monitor, FeatureInfo info,
+        Collection<UpdateElement> alreadyOffered, Set<FeatureInfo.ExtraModuleInfo> filter
     ) {
         assert ! SwingUtilities.isEventDispatchThread () : "Cannot run in EQ!";
+
+        Function<FindComponentModules,Collection<UpdateElement>> toInstall = (state) -> {
+            Collection<UpdateElement> tmp = new LinkedHashSet<>(state.getModulesForInstall());
+            tmp.removeAll(alreadyOffered);
+            return tmp;
+        };
+        Function<FindComponentModules,Collection<UpdateElement>> toEnable = (state) -> {
+            return state.getModulesForEnable();
+        };
         
-        FindComponentModules findModules = new FindComponentModules(info);
-        Collection<UpdateElement> toInstall = findModules.getModulesForInstall();
-        toInstall.removeAll(alreadyOffered);
-        Collection<UpdateElement> toEnable = findModules.getModulesForEnable();
-        if (toInstall != null && !toInstall.isEmpty()) {
-            ModulesInstaller installer = new ModulesInstaller(toInstall, findModules, monitor);
+        FindComponentModules findModules = new FindComponentModules(info, filter);
+        if (askForInstall && !toInstall.apply(findModules).isEmpty()) {
+            OperationContainer<InstallSupport> op = OperationContainer.createForInstall();
+            op.add(toInstall.apply(findModules));
+            if (!PluginManager.openInstallWizard(op)) {
+                return false;
+            }
+            findModules = new FindComponentModules(info, filter);
+            if (!toInstall.apply(findModules).isEmpty()) {
+                return false;
+            }
+        }
+        if (!toInstall.apply(findModules).isEmpty()) {
+            ModulesInstaller installer = new ModulesInstaller(toInstall.apply(findModules), findModules, monitor);
             installer.getInstallTask ().schedule (10);
             installer.getInstallTask ().waitFinished();
-            findModules = new FindComponentModules(info);
-            success = findModules.getModulesForInstall ().isEmpty ();
-        } else if (toEnable != null && !toEnable.isEmpty()) {
-            ModulesActivator enabler = new ModulesActivator(toEnable, findModules, monitor);
+            findModules = new FindComponentModules(info, filter);
+            if (!findModules.getModulesForInstall ().isEmpty ()) {
+                return false;
+            }
+        }
+        if (!toEnable.apply(findModules).isEmpty()) {
+            ModulesActivator enabler = new ModulesActivator(toEnable.apply(findModules), findModules, monitor);
             enabler.getEnableTask ().schedule (100);
             enabler.getEnableTask ().waitFinished();
-            success = true;
         }
         
-        if (success) {
-            FoDLayersProvider.getInstance().refreshForce();
-        }
+        FoDLayersProvider.getInstance().refreshForce();
         
-        return success;
+        return true;
     }
 
     public void assignDownloadHandle (ProgressHandle handle) {

@@ -83,12 +83,6 @@ public class LibraryCustomizer implements ProjectCustomizer.CompositeCategoryPro
         String libraryFolder = LibraryUtils.getLibraryFolder(project);
         final SelectionPanel customizer = new SelectionPanel(project, libraries, webRoot, libraryFolder);
         category.setStoreListener(new StoreListener(project, webRoot, customizer));
-        category.setCloseListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                customizer.dispose();
-            }
-        });
         return customizer;
     }
 

@@ -114,7 +114,7 @@ public class ViewModelListener extends DebuggerManagerAdapter {
     private String          viewType;
     private JComponent      view;
     private JComponent      buttonsPane;
-    private List models = new ArrayList(11);
+    private List<Object> models = new ArrayList<>(11);
     private List hyperModels;
 
     private List<? extends SessionProvider> sessionProviders;
@@ -415,7 +415,7 @@ public class ViewModelListener extends DebuggerManagerAdapter {
         if (View.LOCALS_VIEW_NAME.equals(viewType) && (VariablesViewButtons.isResultsViewNested() ||
                 VariablesViewButtons.isWatchesViewNested())) {
 
-            hyperModels = new ArrayList();
+            hyperModels = new ArrayList<>();
             if (VariablesViewButtons.isResultsViewNested()) {
                 hyperModels.add(createCompound(View.RESULTS_VIEW_NAME));
             }
@@ -525,7 +525,7 @@ public class ViewModelListener extends DebuggerManagerAdapter {
     }
 
     private static List joinLists(List[] modelLists) {
-        List models = new ArrayList();
+        List<Object> models = new ArrayList<>();
         for (List l : modelLists) {
             synchronized (l) {
                 for (Object o : l) {
@@ -551,7 +551,7 @@ public class ViewModelListener extends DebuggerManagerAdapter {
             models.add(joinLists(treeModelFilters));
         }
         synchronized (treeExpansionModels) {
-            models.add(new ArrayList(treeExpansionModels));
+            models.add(new ArrayList<Object>(treeExpansionModels));
         }
         synchronized (nodeModels) {
             models.add(joinLists(nodeModels));
@@ -563,25 +563,25 @@ public class ViewModelListener extends DebuggerManagerAdapter {
             models.add(joinLists(tableModels));
         }
         synchronized (tableModelFilters) {
-            models.add(new ArrayList(tableModelFilters));
+            models.add(new ArrayList<Object>(tableModelFilters));
         }
         synchronized (nodeActionsProviders) {
-            models.add(new ArrayList(nodeActionsProviders));
+            models.add(new ArrayList<Object>(nodeActionsProviders));
         }
         synchronized (nodeActionsProviderFilters) {
-            models.add(new ArrayList(nodeActionsProviderFilters));
+            models.add(new ArrayList<Object>(nodeActionsProviderFilters));
         }
         synchronized (columnModels) {
-            models.add(new ArrayList(columnModels));
+            models.add(new ArrayList<Object>(columnModels));
         }
         synchronized (mm) {
-            models.add(new ArrayList(mm));
+            models.add(new ArrayList<Object>(mm));
         }
         synchronized (treeExpansionModelFilters) {
-            models.add(new ArrayList(treeExpansionModelFilters));
+            models.add(new ArrayList<Object>(treeExpansionModelFilters));
         }
         synchronized (asynchModelFilters) {
-            models.add(new ArrayList(asynchModelFilters));
+            models.add(new ArrayList<Object>(asynchModelFilters));
         }
         synchronized (tableRenderers) {
             models.add(new ArrayList(tableRenderers));
@@ -637,10 +637,10 @@ public class ViewModelListener extends DebuggerManagerAdapter {
         if (hyperModels != null) {
             newModel = Models.createCompoundModel (hyperModels, propertiesHelpID);
         } else if (haveModels) {
-            List theModels;
+            List<Object> theModels;
             viewTreeDisplayFormat = createTreeDisplayFormat(viewPreferences, columnModels);
             if (viewTreeDisplayFormat != null) {
-                theModels = new ArrayList(models);
+                theModels = new ArrayList<>(models);
                 theModels.add(viewTreeDisplayFormat);
             } else {
                 theModels = models;

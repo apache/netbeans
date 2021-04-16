@@ -30,16 +30,17 @@ import java.util.Set;
 public enum ColoringAttributes {
 
     UNUSED,
-
     ABSTRACT,
 
     FIELD,
+    RECORD_COMPONENT,
     LOCAL_VARIABLE,
     PARAMETER,
     METHOD,
     CONSTRUCTOR,
     MODULE,
     CLASS,
+    RECORD,
     INTERFACE,
     ANNOTATION_TYPE,
     ENUM,
@@ -62,7 +63,9 @@ public enum ColoringAttributes {
     
     KEYWORD,
     
-    JAVADOC_IDENTIFIER;
+    JAVADOC_IDENTIFIER,
+
+    UNINDENTED_TEXT_BLOCK;
     
     public static Coloring empty() {
         return new Coloring();

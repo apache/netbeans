@@ -37,6 +37,7 @@ import org.netbeans.modules.refactoring.java.RefactoringUtils;
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
 import org.netbeans.modules.refactoring.java.plugins.FindVisitor;
 import org.netbeans.modules.refactoring.java.plugins.JavaPluginUtils;
+import org.netbeans.modules.refactoring.java.spi.hooks.JavaModificationResult;
 import org.netbeans.modules.refactoring.spi.ProgressProviderAdapter;
 import org.netbeans.modules.refactoring.spi.RefactoringCommit;
 import org.netbeans.modules.refactoring.spi.RefactoringElementsBag;
@@ -312,11 +313,20 @@ public abstract class JavaRefactoringPlugin extends ProgressProviderAdapter impl
                         .setSourcePath(srcPath)
                         .build();
             }
-            final JavaSource javaSource = JavaSource.create(info, entry.getValue());
+            List<FileObject> augmentedFiles = new ArrayList<>(entry.getValue());
+            FileObject fake = FileUtil.createMemoryFileSystem().getRoot().createData("Fake.java");
+            augmentedFiles.add(fake);
+            final JavaSource javaSource = JavaSource.create(info, augmentedFiles);
             if (modification) {
-                results.add(javaSource.runModificationTask((CancellableTask<WorkingCopy>)task)); // can throw IOException
+                results.add(javaSource.runModificationTask(cc -> {
+                    if (cc.getFileObject() == fake) return ;
+                    ((CancellableTask<WorkingCopy>) task).run(cc);
+                })); // can throw IOException
             } else {
-                javaSource.runUserActionTask(currentTask, true);
+                javaSource.runUserActionTask(cc -> {
+                    if (cc.getFileObject() == fake) return ;
+                    currentTask.run(cc);
+                }, true);
             }
         }
     }

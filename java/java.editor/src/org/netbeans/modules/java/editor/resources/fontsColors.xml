@@ -41,6 +41,7 @@
     <fontcolor name="mod-abstract" />
     
     <fontcolor name="mod-field-declaration" default="field"/>    
+    <fontcolor name="mod-record-component-declaration" default="field"/>
     <fontcolor name="mod-local-variable-declaration" default="identifier"/>    
     <fontcolor name="mod-parameter-declaration" default="identifier"/>
     
@@ -67,12 +68,14 @@
     </fontcolor>
     
     <fontcolor name="mod-field" default="field"/>        
+    <fontcolor name="mod-record-component" default="field"/>
     <fontcolor name="mod-local-variable" default="identifier"/>
     <fontcolor name="mod-parameter" default="identifier"/>
     <fontcolor name="mod-method" default="method"/>
     <fontcolor name="mod-constructor" default="identifier"/>
     <fontcolor name="mod-module" default="identifier"/>
     <fontcolor name="mod-class" default="identifier"/>
+    <fontcolor name="mod-record" default="identifier"/>
     <fontcolor name="mod-interface" default="identifier"/>
     <fontcolor name="mod-annotation-type" default="identifier"/>
     <fontcolor name="mod-enum" default="identifier"/>
@@ -87,6 +90,7 @@
     <fontcolor name="mod-protected" />
     <fontcolor name="mod-public" />
     <fontcolor name="mod-keyword" default="keyword" />
+    <fontcolor name="mod-unindented-text-block" bgColor="EEDDDD" />
     
     <!--currently not used:-->
 <!--    <fontcolor name="mod-type-parameter-declaration" bgColor="lightGray"/>

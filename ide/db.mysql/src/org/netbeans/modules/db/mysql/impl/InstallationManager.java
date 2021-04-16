@@ -68,8 +68,8 @@ public class InstallationManager {
             ArrayList<Installation> stackInstalls = new ArrayList<Installation>();
             ArrayList<Installation> stdInstalls = new ArrayList<Installation>();
 
-            for ( Iterator it = loadedInstallations.iterator() ; it.hasNext() ; ) {
-                Installation installation = (Installation)it.next();
+            for ( Iterator<Installation> it = loadedInstallations.iterator() ; it.hasNext() ; ) {
+                Installation installation = it.next();
 
                 if ( installation.isStackInstall() ) {
                     stackInstalls.add(installation);                
@@ -103,9 +103,8 @@ public class InstallationManager {
         installationCopy.addAll(InstallationManager.getInstallations(loadedInstallations));
         List<Installation> validInstallations =
                 new ArrayList<Installation>(3);
-        for ( Iterator it = installationCopy.iterator() ; it.hasNext() ; ) {
-            Installation installation = (Installation)it.next();
-            
+        
+        for (Installation installation : installationCopy) {            
             LOGGER.log(Level.FINE, "Looking for MySQL installation " + 
                     installation.getStartCommand()[0] + 
                     installation.getStartCommand()[1]);

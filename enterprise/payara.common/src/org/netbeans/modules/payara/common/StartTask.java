@@ -59,15 +59,12 @@ import org.netbeans.modules.payara.common.utils.JavaUtils;
 import org.netbeans.modules.payara.common.utils.Util;
 import org.netbeans.modules.payara.spi.PayaraModule.ServerState;
 import org.netbeans.modules.payara.spi.Recognizer;
-import org.netbeans.modules.payara.spi.RegisteredDerbyServer;
 import org.netbeans.modules.payara.spi.VMIntrospector;
-import org.openide.execution.NbProcessDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
-import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
 import org.netbeans.modules.payara.spi.PayaraModule;
 import org.netbeans.modules.payara.tooling.data.PayaraServerStatus;
@@ -514,12 +511,6 @@ public class StartTask extends BasicTask<TaskState> {
         long start = System.currentTimeMillis();
         StartStateListener listener;
         try {
-            // lookup the javadb start service and use it here.
-            RegisteredDerbyServer db
-                    = Lookup.getDefault().lookup(RegisteredDerbyServer.class);
-            if (null != db && "true".equals(instance.getProperty(PayaraModule.START_DERBY_FLAG))) { // NOI18N
-                db.start();
-            }
             // This may be an autheticated server... so we will say it is
             // started. Other operations will fail if the process on the port
             // is not a GF v3 server.
@@ -528,10 +519,6 @@ public class StartTask extends BasicTask<TaskState> {
                     instance.getName());
             if ((change = checkBeforeStart()) != null) {
                 return change.fireOperationStateChanged();
-            } else if (upgradeFailed()) {
-                return fireOperationStateChanged(TaskState.FAILED,
-                        TaskEvent.CMD_FAILED,
-                        "StartTask.startDAS.domainUpgrade", instanceName);
             }
             // We should be listening for reaching ONLINE state before process
             // is started.
@@ -809,73 +796,4 @@ public class StartTask extends BasicTask<TaskState> {
         return instance.getProperty(PayaraModule.DOMAIN_NAME_ATTR);
     }
 
-    private boolean upgradeFailed() {
-        // get server install version
-        File payaraDir = new File(instance.getPayaraRoot());
-        int installVersion = ServerDetails.getVersionFromInstallDirectory(payaraDir);
-
-        if (installVersion < 0) {
-            return false;  // no upgrade attempted, so it DID NOT fail.
-        }
-        // get domain.xml 'version'
-        File domainXmlFile = new File(getDomainFolder(), "config" + File.separator + "domain.xml"); // NOI18N
-        int domainVersion = ServerDetails.getVersionFromDomainXml(domainXmlFile);
-
-        if (domainVersion < 0) {
-            return false;  // no upgrade attempted, so it DID NOT fail.
-        }
-        if (domainVersion / 10 < installVersion / 10 && domainVersion < 310) {
-            return executeUpgradeProcess() != 0;
-        }
-        return false;
-    }
-
-    private int executeUpgradeProcess() {
-        int retVal = -1;
-        File asadmin = findFirstExecutableFile(new File(instance.getPayaraRoot()), "asadmin", "bin");
-        if (null == asadmin) {
-            return retVal;
-        }
-        NbProcessDescriptor upgrader = new NbProcessDescriptor(asadmin.getAbsolutePath(),
-                "start-domain --upgrade --domaindir " + Util.quote(instance.getDomainsRoot()) + " " + // NOI18N
-                instance.getDomainName());
-        try {
-            Process p = upgrader.exec();
-            p.waitFor();
-            retVal = p.exitValue();
-        } catch (InterruptedException | IOException ex) {
-            LOGGER.log(Level.INFO, upgrader.toString(), ex); // NOI18N
-        }
-        // NOI18N
-        return retVal;
-    }
-
-    // TODO : refactor and remove 'similar' methods post 7.0
-    private File findFirstExecutableFile(File installRoot, String executableName, String... directories) {
-        File result = null;
-        if (installRoot != null && installRoot.exists()) {
-            for (String dir : directories) {
-                File bin = new File(installRoot, dir); // NOI18N
-                if (bin.exists()) {
-                    if (Utilities.isWindows()) {
-                        File launcherPath = new File(bin, executableName + ".exe"); // NOI18N
-                        if (launcherPath.exists()) {
-                            result = launcherPath;
-                        } else {
-                            launcherPath = new File(bin, executableName + ".bat"); // NOI18N
-                            result = (launcherPath.exists()) ? launcherPath : null;
-                        }
-                    } else {
-                        File launcherPath = new File(bin, executableName); // NOI18N
-                        result = (launcherPath.exists()) ? launcherPath : null;
-                    }
-                    if (null != result) {
-                        break;
-                    }
-                }
-            }
-        }
-        return result;
-    }
-    
 }

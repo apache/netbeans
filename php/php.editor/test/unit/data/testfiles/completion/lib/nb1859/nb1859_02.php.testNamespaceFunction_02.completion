@@ -1,0 +1,7 @@
+Code completion result for source line:
+echo \TestNamespace\newTestClass()::|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     staticTest()                    [STATIC]   \TestNamespace\TestClass
+VARIABLE   ? $staticTest                   [STATIC]   \TestNamespace\TestClass
+CONSTANT   class \TestNamespace\TestClass  [PUBLIC]   Magic Constant

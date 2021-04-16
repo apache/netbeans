@@ -45,7 +45,7 @@ public final class MoveUpAction extends NodeAction {
     private static Logger err = Logger.getLogger("org.openide.actions.MoveUpAction"); // NOI18N
 
     /** Holds index cookie on which we are listening */
-    private Reference curIndexCookie;
+    private Reference<Index> curIndexCookie;
 
     /* Initilizes the set of properties.
     */
@@ -61,7 +61,7 @@ public final class MoveUpAction extends NodeAction {
 
     /** Getter for curIndexCookie */
     private Index getCurIndexCookie() {
-        return ((curIndexCookie == null) ? null : (Index) curIndexCookie.get());
+        return ((curIndexCookie == null) ? null : curIndexCookie.get());
     }
 
     protected void performAction(Node[] activatedNodes) {
@@ -148,7 +148,7 @@ public final class MoveUpAction extends NodeAction {
             return null;
         }
 
-        return (Index) parent.getCookie(Index.class);
+        return parent.getCookie(Index.class);
     }
 
     /** Listens to the ordering changes and enables/disables the

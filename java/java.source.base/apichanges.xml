@@ -25,6 +25,30 @@
     <apidef name="javasource_base">Java Source API</apidef>
 </apidefs>
 <changes>
+    <change id="SourceUtils.forceSource">
+        <api name="javasource_base" />
+        <summary>Adding SourceUtils.forceSource(CompilationController, FileObject)</summary>
+        <version major="1" minor="2.46"/>
+        <date day="9" month="3" year="2020"/>
+        <author login="jlahoda"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+                Adding SourceUtils.forceSource(CompilationController, FileObject).
+        </description>
+        <class name="SourceUtils" package="org.netbeans.api.java.source"/>
+    </change>
+    <change id="CodeStyle.parensAroundSingularLambdaParam">
+        <api name="javasource_base" />
+        <summary>CodeStyle.parensAroundSingularLambdaParam() added</summary>
+        <version major="1" minor="2.45"/>
+        <date day="8" month="2" year="2020"/>
+        <author login="jlahoda"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+                Method CodeStyle.parensAroundSingularLambdaParam() has been added.
+        </description>
+        <class name="CodeStyle" package="org.netbeans.api.java.source"/>
+    </change>
     <change id="TreeMaker.SwitchExpression">
         <api name="javasource_base" />
         <summary>Creates a new SwitchExpressionTree</summary>
@@ -323,6 +347,22 @@
             </p>
         </description>
         <class name="TreeUtilities" package="org.netbeans.api.java.source"/>
+    </change>
+    
+    <change id="TreeMaker.BindingPattern">
+        <api name="javasource_base" />
+        <summary>Added new method for getting Tree using VariableTree type</summary>
+        <version major="12" minor="4"/>
+        <date day="23" month="3" year="2021"/>
+        <author login="singh-akhilesh"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+            <p>
+                Regarding the JEP 394 (finalization of pattern matching for instanceof in JDK 16).
+                The shape of the BindingPatternTree has changed; the BindingPatternTree does not have a name and type, but rather a VariableTree.
+            </p>
+        </description>
+        <class name="TreeMaker" package="org.netbeans.api.java.source"/>
     </change>
 </changes>
 <htmlcontents>

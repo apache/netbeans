@@ -19,6 +19,7 @@
 package org.netbeans.modules.css.lib.nbparser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -94,14 +95,26 @@ public class CssParser extends Parser {
             CharSequence source = tooLargeSnapshot ? "" : snapshot.getText();
             
             ExtCss3Lexer lexer = new ExtCss3Lexer(source, mimeType);
-            TokenStream tokenstream = new CommonTokenStream(lexer);
+            TokenStream tokenstream = new ProgressingTokenStream(
+                10_000_000,
+                new CommonTokenStream(lexer));
             NbParseTreeBuilder builder = new NbParseTreeBuilder(source);
             ExtCss3Parser parser = new ExtCss3Parser(tokenstream, builder, mimeType);
 
             if (cancelled.get()) {
                 return;
             }
-            parser.styleSheet();
+
+            try {
+                parser.styleSheet();
+            } catch (ProgressingFailedException pfe) {
+                LOG.log(Level.INFO, "CSS/SASS/LESS document exceeded maximum reads: " + snapshot.getSource().getFileObject());
+                this.tree = null;
+                this.problems = Arrays.asList(new ProblemDescription(
+                    0, snapshot.getText().length(), "Failed to parse CSS/SASS/LESS document", ProblemDescription.Keys.PARSING.name(), ProblemDescription.Type.FATAL
+                ));
+                return;
+            }
 
             if (cancelled.get()) {
                 return;

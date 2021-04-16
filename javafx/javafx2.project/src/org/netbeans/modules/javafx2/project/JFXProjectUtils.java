@@ -31,6 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
+
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.xml.parsers.DocumentBuilder;
@@ -41,6 +42,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -61,6 +63,8 @@ import org.netbeans.modules.java.j2seproject.api.J2SEPropertyEvaluator;
 import org.netbeans.modules.javafx2.platform.api.JavaFXPlatformUtils;
 import org.netbeans.modules.javafx2.platform.api.JavaFxRuntimeInclusion;
 import org.netbeans.modules.javafx2.project.JavaFXProjectWizardIterator.WizardType;
+import org.netbeans.modules.javafx2.project.fxml.SourceGroupSupport;
+import org.netbeans.modules.javafx2.project.fxml.SourceGroupSupport.SourceGroupProxy;
 import org.netbeans.modules.javafx2.project.ui.JSEApplicationClassChooser;
 import org.netbeans.spi.project.ProjectIconAnnotator;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
@@ -1775,6 +1779,18 @@ public final class JFXProjectUtils {
                 throw (IOException) mux.getException();
             }
         }
+    }
+
+    private static final String MODULE_INFO = "module-info.java"; // NOI18N
+
+    // as in org.netbeans.modules.maven.api.ModuleInfoUtils.hasModuleInfoInSource;
+    public static boolean hasModuleInfo(SourceGroupSupport support) {
+        for (SourceGroupProxy sourceGroup : support.getSourceGroups()) {
+            if(sourceGroup.getRootFolder().getFileObject(MODULE_INFO) != null) {
+                return true;
+            }
+        }
+        return false;
     }
     
 }

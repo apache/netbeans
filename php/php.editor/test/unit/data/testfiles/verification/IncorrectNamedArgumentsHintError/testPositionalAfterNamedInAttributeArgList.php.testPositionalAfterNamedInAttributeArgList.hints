@@ -1,0 +1,6 @@
+    'positional after named',
+    ------------------------
+HINT:Can't use positional argument after named argument.
+    self::POSITIONAL_AFTER_NAMED,
+    ----------------------------
+HINT:Can't use positional argument after named argument.

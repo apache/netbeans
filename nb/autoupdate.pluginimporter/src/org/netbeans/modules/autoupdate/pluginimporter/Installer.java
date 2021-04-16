@@ -21,17 +21,21 @@ package org.netbeans.modules.autoupdate.pluginimporter;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.netbeans.api.autoupdate.UpdateManager;
 import org.netbeans.api.autoupdate.UpdateUnit;
 import org.netbeans.api.autoupdate.UpdateUnitProvider;
 import org.netbeans.api.autoupdate.UpdateUnitProviderFactory;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.ModuleInstall;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.RequestProcessor;
 import org.openide.windows.WindowManager;
@@ -48,10 +52,13 @@ public class Installer extends ModuleInstall {
 
     private static final Logger LOG = Logger.getLogger (Installer.class.getName ());
     // XXX: copy from o.n.upgrader
+    private static final Comparator<String> APACHE_VERSION_COMPARATOR = (v1, v2) -> Float.compare(Float.parseFloat(v1), Float.parseFloat(v2));
+    private static final List<String> APACHE_VERSION_TO_CHECK = Arrays.asList(NbBundle.getMessage(Installer.class, "apachenetbeanspreviousversion").split(",")).stream().sorted(APACHE_VERSION_COMPARATOR.reversed()).collect(Collectors.toList());
     private static final List<String> VERSION_TO_CHECK =
             Arrays.asList (".netbeans/7.1.2", ".netbeans/7.1.1", ".netbeans/7.1", ".netbeans/7.0", ".netbeans/6.9"); //NOI18N
-    private static final List<String> NEWER_VERSION_TO_CHECK =
-            Arrays.asList ("11.0", "10.0", "9.0", "8.2", "8.1", "8.0.2", "8.0.1", "8.0", "7.4", "7.3.1", "7.3", "7.2.1", "7.2"); //NOI18N
+    private static final List<String> PRE_APACHE_NEWER_VERSION_TO_CHECK =
+            Arrays.asList ("8.2", "8.1", "8.0.2", "8.0.1", "8.0", "7.4", "7.3.1", "7.3", "7.2.1", "7.2"); //NOI18N
+    private static final List<String> NEWER_VERSION_TO_CHECK = Stream.concat(APACHE_VERSION_TO_CHECK.stream(), PRE_APACHE_NEWER_VERSION_TO_CHECK.stream()).collect(Collectors.toList());
     private static final String IMPORTED = "imported"; // NOI18N
 
     @Override

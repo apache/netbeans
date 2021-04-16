@@ -67,9 +67,7 @@ final class CodeTemplatesModel {
         columns.add(loc("Expanded_Text_Title")); //NOI18N
         columns.add(loc("Description_Title")); //NOI18N
 
-        Set mimeTypes = EditorSettings.getDefault().getAllMimeTypes();
-        for(Iterator i = mimeTypes.iterator(); i.hasNext(); ) {
-            String mimeType = (String) i.next();
+        for (String mimeType : EditorSettings.getDefault().getAllMimeTypes()) {
             
             // Load the code templates
             MimePath mimePath = MimePath.parse(mimeType);
@@ -170,7 +168,7 @@ final class CodeTemplatesModel {
                     abbreviation,
                     tableModel.getDescription(idx),
                     tableModel.getText(idx),
-                    new ArrayList(tableModel.getContexts(idx)),
+                    new ArrayList<String>(tableModel.getContexts(idx)),
                     tableModel.getUniqueId(idx),
                     mimeType
                 );
@@ -308,9 +306,9 @@ final class CodeTemplatesModel {
             if (ret == null) {
                 CodeTemplateDescription ctd = codeTemplatesMap.get(abbreviation);
                 final boolean[] afterInit = {false};
-                ret = new LinkedHashSet() {
+                ret = new LinkedHashSet<String>() {
                     @Override
-                    public boolean add(Object e) {
+                    public boolean add(String e) {
                         boolean b = super.add(e);
                         if (b && afterInit[0]) {
                             TM.this.fireChanged();
@@ -367,7 +365,7 @@ final class CodeTemplatesModel {
                         abbreviation,
                         getDescription(idx),
                         getText(idx),
-                        new ArrayList(getContexts(idx)),
+                        new ArrayList<String>(getContexts(idx)),
                         getUniqueId(idx),
                         mimeType
                 );

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.42.0
+#Version 2.49.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -9,6 +9,7 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitArrayType(com.sun.
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAssert(com.sun.source.tree.AssertTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAssignment(com.sun.source.tree.AssignmentTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitBinary(com.sun.source.tree.BinaryTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitBindingPattern(com.sun.source.tree.BindingPatternTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitBlock(com.sun.source.tree.BlockTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitBreak(com.sun.source.tree.BreakTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitCase(com.sun.source.tree.CaseTree,{com.sun.source.tree.TreeVisitor%1})
@@ -52,7 +53,6 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitRequires(com.sun.s
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitReturn(com.sun.source.tree.ReturnTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSwitch(com.sun.source.tree.SwitchTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSwitchExpression(com.sun.source.tree.SwitchExpressionTree,{com.sun.source.tree.TreeVisitor%1})
- anno 0 java.lang.Deprecated()
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSynchronized(com.sun.source.tree.SynchronizedTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitThrow(com.sun.source.tree.ThrowTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitTry(com.sun.source.tree.TryTree,{com.sun.source.tree.TreeVisitor%1})
@@ -64,6 +64,7 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitUses(com.sun.sourc
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitVariable(com.sun.source.tree.VariableTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.tree.TreeVisitor%1})
 
 CLSS public com.sun.source.util.TreePathScanner<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons public init()
@@ -86,6 +87,7 @@ meth public {com.sun.source.util.TreeScanner%0} visitArrayType(com.sun.source.tr
 meth public {com.sun.source.util.TreeScanner%0} visitAssert(com.sun.source.tree.AssertTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitAssignment(com.sun.source.tree.AssignmentTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitBinary(com.sun.source.tree.BinaryTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitBindingPattern(com.sun.source.tree.BindingPatternTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitBlock(com.sun.source.tree.BlockTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitBreak(com.sun.source.tree.BreakTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitCase(com.sun.source.tree.CaseTree,{com.sun.source.util.TreeScanner%1})
@@ -129,7 +131,6 @@ meth public {com.sun.source.util.TreeScanner%0} visitRequires(com.sun.source.tre
 meth public {com.sun.source.util.TreeScanner%0} visitReturn(com.sun.source.tree.ReturnTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitSwitch(com.sun.source.tree.SwitchTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitSwitchExpression(com.sun.source.tree.SwitchExpressionTree,{com.sun.source.util.TreeScanner%1})
- anno 0 java.lang.Deprecated()
 meth public {com.sun.source.util.TreeScanner%0} visitSynchronized(com.sun.source.tree.SynchronizedTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitThrow(com.sun.source.tree.ThrowTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitTry(com.sun.source.tree.TryTree,{com.sun.source.util.TreeScanner%1})
@@ -141,6 +142,7 @@ meth public {com.sun.source.util.TreeScanner%0} visitUses(com.sun.source.tree.Us
 meth public {com.sun.source.util.TreeScanner%0} visitVariable(com.sun.source.tree.VariableTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.util.TreeScanner%1})
 supr java.lang.Object
 
 CLSS public java.io.IOException
@@ -535,6 +537,7 @@ meth public boolean indentTopLevelClassMembers()
 meth public boolean keepGettersAndSettersTogether()
 meth public boolean makeLocalVarsFinal()
 meth public boolean makeParametersFinal()
+meth public boolean parensAroundSingularLambdaParam()
 meth public boolean placeCatchOnNewLine()
 meth public boolean placeElseOnNewLine()
 meth public boolean placeFinallyOnNewLine()
@@ -829,6 +832,7 @@ meth public static org.netbeans.api.java.source.CompilationController get(org.ne
  anno 0 org.netbeans.api.annotations.common.NullUnknown()
  anno 1 org.netbeans.api.annotations.common.NonNull()
 supr org.netbeans.api.java.source.CompilationInfo
+hfds forcedSources
 
 CLSS public org.netbeans.api.java.source.CompilationInfo
 innr public final static !enum CacheClearPolicy
@@ -1256,6 +1260,7 @@ meth public static javax.lang.model.type.WildcardType resolveCapturedType(javax.
 meth public static org.netbeans.api.lexer.TokenSequence<org.netbeans.api.java.lexer.JavaTokenId> getJavaTokenSequence(org.netbeans.api.lexer.TokenHierarchy,int)
 meth public static org.openide.filesystems.FileObject getFile(javax.lang.model.element.Element,org.netbeans.api.java.source.ClasspathInfo)
 meth public static org.openide.filesystems.FileObject getFile(org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>,org.netbeans.api.java.source.ClasspathInfo)
+meth public static void forceSource(org.netbeans.api.java.source.CompilationController,org.openide.filesystems.FileObject)
 meth public static void waitScanFinished() throws java.lang.InterruptedException
 supr java.lang.Object
 hfds LOG
@@ -1486,6 +1491,7 @@ meth public com.sun.source.tree.SwitchTree removeSwitchCase(com.sun.source.tree.
 meth public com.sun.source.tree.SwitchTree removeSwitchCase(com.sun.source.tree.SwitchTree,int)
 meth public com.sun.source.tree.SynchronizedTree Synchronized(com.sun.source.tree.ExpressionTree,com.sun.source.tree.BlockTree)
 meth public com.sun.source.tree.ThrowTree Throw(com.sun.source.tree.ExpressionTree)
+meth public com.sun.source.tree.Tree BindingPattern(java.lang.CharSequence,com.sun.source.tree.Tree)
 meth public com.sun.source.tree.Tree SwitchExpression(com.sun.source.tree.ExpressionTree,java.util.List<? extends com.sun.source.tree.CaseTree>)
 meth public com.sun.source.tree.Tree Type(java.lang.String)
  anno 0 org.netbeans.api.annotations.common.NonNull()
@@ -1629,7 +1635,7 @@ meth public javax.lang.model.type.TypeMirror reattributeTree(com.sun.source.tree
 meth public org.netbeans.api.lexer.TokenSequence<org.netbeans.api.java.lexer.JavaTokenId> tokensFor(com.sun.source.tree.Tree)
 meth public org.netbeans.api.lexer.TokenSequence<org.netbeans.api.java.lexer.JavaTokenId> tokensFor(com.sun.source.tree.Tree,com.sun.source.util.SourcePositions)
 supr java.lang.Object
-hfds ESCAPE_ENCODE,ESCAPE_UNENCODE,EXOTIC_ESCAPE,IGNORE_TOKENS,handler,info
+hfds ESCAPE_ENCODE,ESCAPE_UNENCODE,EXOTIC_ESCAPE,IGNORE_TOKENS,VARIABLE_CAN_OWN_VARIABLES,handler,info
 hcls DummyJFO,NBScope,NoImports,ParserSourcePositions,UncaughtExceptionsVisitor,UnrelatedTypeMirrorSet
 
 CLSS public final org.netbeans.api.java.source.TypeMirrorHandle<%0 extends javax.lang.model.type.TypeMirror>

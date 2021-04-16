@@ -546,11 +546,12 @@ public class FileObjects {
         final String[] path = getFolderAndBaseName(relPath.toString(), separator);
         String fileUri;
         if (rootUri != null) {
-            fileUri = relPath.toUri().getRawPath();
-            if (fileUri.charAt(0) == FileObjects.NBFS_SEPARATOR_CHAR) {
-                fileUri = fileUri.substring(1);
+            try {
+                fileUri = new URI(null, relPath.toString(), null).getRawPath();
+                fileUri = rootUri + fileUri;
+            } catch (URISyntaxException ex) {
+                throw new IllegalArgumentException(ex);
             }
-            fileUri = rootUri + fileUri;
         } else {
             fileUri = null;
         }

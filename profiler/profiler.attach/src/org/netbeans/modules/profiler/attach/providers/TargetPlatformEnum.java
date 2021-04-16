@@ -67,7 +67,7 @@ public class TargetPlatformEnum {
     }
 
     public static Iterator iterator() {
-        List jvmList = new ArrayList(7);
+        List<TargetPlatformEnum> jvmList = new ArrayList<>(7);
         jvmList.add(JDK5);
         jvmList.add(JDK6);
         jvmList.add(JDK7);

@@ -1250,9 +1250,10 @@ public class BaseKit extends DefaultEditorKit {
                                         Object[] r = transaction.textTyped();
                                         String insertionText = r == null ? cmd : (String) r[0];
                                         int caretPosition = r == null ? -1 : (Integer) r[1];
+                                        boolean formatNewLines = r == null ? false : (Boolean) r[2];
 
                                         try {
-                                            performTextInsertion(target, insertionOffset.getOffset(), insertionText, caretPosition);
+                                            performTextInsertion(target, insertionOffset.getOffset(), insertionText, caretPosition, formatNewLines);
                                             result[0] = Boolean.TRUE;
                                             result[1] = insertionText;
                                         } catch (BadLocationException ble) {
@@ -1357,7 +1358,7 @@ public class BaseKit extends DefaultEditorKit {
         // Private implementation
         // --------------------------------------------------------------------
 
-        private void performTextInsertion(JTextComponent target, int insertionOffset, String insertionText, int caretPosition) throws BadLocationException {
+        private void performTextInsertion(JTextComponent target, int insertionOffset, String insertionText, int caretPosition, boolean formatNewLines) throws BadLocationException {
             final BaseDocument doc = (BaseDocument)target.getDocument();
             
             try {
@@ -1374,25 +1375,48 @@ public class BaseKit extends DefaultEditorKit {
                 editorUI.getWordMatch().clear(); // reset word matching
                 Boolean overwriteMode = (Boolean)editorUI.getProperty(EditorUI.OVERWRITE_MODE_PROPERTY);
                 boolean ovr = (overwriteMode != null && overwriteMode.booleanValue());
-                if (Utilities.isSelectionShowing(caret)) { // valid selection
-                    try {
-                        doc.putProperty(DOC_REPLACE_SELECTION_PROPERTY, true);
-                        replaceSelection(target, insertionOffset, caret, insertionText, ovr);
-                    } finally {
-                        doc.putProperty(DOC_REPLACE_SELECTION_PROPERTY, null);
+                int currentInsertOffset = insertionOffset;
+                int targetCaretOffset = caretPosition;
+                for (int i = 0; i < insertionText.length();) {
+                    int end = insertionText.indexOf('\n', i);
+                    if (end == (-1) || !formatNewLines) end = insertionText.length();
+                    String currentLine = insertionText.substring(i, end);
+                    if (i == 0) {
+                        if (Utilities.isSelectionShowing(caret)) { // valid selection
+                            try {
+                                doc.putProperty(DOC_REPLACE_SELECTION_PROPERTY, true);
+                                replaceSelection(target, currentInsertOffset, caret, currentLine, ovr);
+                            } finally {
+                                doc.putProperty(DOC_REPLACE_SELECTION_PROPERTY, null);
+                            }
+                        } else { // no selection
+                            if (ovr && currentInsertOffset < doc.getLength() && doc.getChars(currentInsertOffset, 1)[0] != '\n') { //NOI18N
+                                // overwrite current char
+                                insertString(doc, currentInsertOffset, caret, currentLine, true);
+                            } else { // insert mode
+                                insertString(doc, currentInsertOffset, caret, currentLine, false);
+                            }
+                        }
+                    } else {
+                        Indent indent = Indent.get(doc);
+                        indent.lock();
+                        try {
+                            currentInsertOffset = indent.indentNewLine(currentInsertOffset);
+                        } finally {
+                            indent.unlock();
+                        }
+                        insertString(doc, currentInsertOffset, caret, currentLine, false);
                     }
-                } else { // no selection
-                    if (ovr && insertionOffset < doc.getLength() && doc.getChars(insertionOffset, 1)[0] != '\n') { //NOI18N
-                        // overwrite current char
-                        insertString(doc, insertionOffset, caret, insertionText, true);
-                    } else { // insert mode
-                        insertString(doc, insertionOffset, caret, insertionText, false);
+                    if (caretPosition >= i && caretPosition <= end) {
+                        targetCaretOffset = currentInsertOffset - insertionOffset + caretPosition - i;
                     }
+                    currentInsertOffset += currentLine.length();
+                    i = end + 1;
                 }
 
-                if (caretPosition != -1) {
+                if (targetCaretOffset != -1) {
                     assert caretPosition >= 0 && (caretPosition <= insertionText.length());
-                    caret.setDot(insertionOffset + caretPosition);
+                    caret.setDot(insertionOffset + targetCaretOffset);
                 }
             } finally {
                 DocumentUtilities.setTypingModification(doc, false);
@@ -4077,8 +4101,8 @@ public class BaseKit extends DefaultEditorKit {
                 LOG.fine("BaseKit.KeymapTracker('" + mimeType + "') refreshing keymap " + (refreshActions ? "and actions" : "")); //NOI18N
             }
             
-            MultiKeymap keymap;
-            JTextComponent [] arr;
+            final MultiKeymap keymap;
+            final JTextComponent [] arr;
             
             synchronized (KEYMAPS_AND_ACTIONS_LOCK) {
                 MimePath mimePath = MimePath.parse(mimeType);
@@ -4096,13 +4120,20 @@ public class BaseKit extends DefaultEditorKit {
                 arr = components.toArray(new JTextComponent[components.size()]);
             }
             
-            for(JTextComponent c : arr) {
-                if (c != null) {
-                    c.setKeymap(keymap);
+            Runnable pushKeymapChange = () -> {
+                for(JTextComponent c : arr) {
+                    if (c != null) {
+                        c.setKeymap(keymap);
+                    }
                 }
+                
+                searchableKit.fireActionsChange();
+            };
+            if(SwingUtilities.isEventDispatchThread()) {
+                pushKeymapChange.run();
+            } else {
+                SwingUtilities.invokeLater(pushKeymapChange);
             }
-
-            searchableKit.fireActionsChange();
         }
         
     } // End of KeymapTracker class

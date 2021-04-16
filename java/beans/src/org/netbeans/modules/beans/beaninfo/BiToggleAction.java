@@ -84,8 +84,8 @@ public class BiToggleAction extends NodeAction  {
         for(int i = 0; i <activatedNodes.length; i++ ) {
             if( activatedNodes[i].getCookie( BiFeatureNode.class ) == null )
                 return false;
-            BiFeature biFeature = ((BiFeatureNode)activatedNodes[i].getCookie( BiFeatureNode.class )).getBiFeature();
-            BiAnalyser biAnalyser = ((BiFeatureNode)activatedNodes[i].getCookie( BiFeatureNode.class )).getBiAnalyser();
+            BiFeature biFeature = (activatedNodes[i].getCookie( BiFeatureNode.class )).getBiFeature();
+            BiAnalyser biAnalyser = (activatedNodes[i].getCookie( BiFeatureNode.class )).getBiAnalyser();
             if( ( biFeature instanceof BiFeature.Property || biFeature instanceof BiFeature.IdxProperty ) && biAnalyser.isNullProperties() )
                 return false;
             if( biFeature instanceof BiFeature.EventSet && biAnalyser.isNullEventSets() )
@@ -111,7 +111,7 @@ public class BiToggleAction extends NodeAction  {
 
         for(int i = 0; i < nodes.length; i++ ) {
             if( nodes[i].getCookie( BiFeatureNode.class ) != null )
-                ((BiFeatureNode)nodes[i].getCookie( BiFeatureNode.class )).toggleSelection();
+                (nodes[i].getCookie( BiFeatureNode.class )).toggleSelection();
         }
 
     }

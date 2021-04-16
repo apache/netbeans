@@ -26,6 +26,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.LabeledStatementTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -55,6 +56,7 @@ import javax.lang.model.element.Name;
 import javax.tools.Diagnostic;
 
 import com.sun.source.tree.ModifiersTree;
+import javax.lang.model.element.TypeElement;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.lexer.Token;
@@ -237,6 +239,37 @@ public class Utilities {
         return null;
     }
 
+    private static Token<JavaTokenId> findIdentifierSpanImplForBindingPattern(CompilationInfo info, Tree tree, CompilationUnitTree cu, SourcePositions positions) {
+        int start = (int)positions.getStartPosition(cu, tree);
+        int endPosition = (int)positions.getEndPosition(cu, tree);
+        
+        if (start == (-1) || endPosition == (-1))
+            return null;
+
+        String member = TreeShims.getBinding(tree).toString();
+
+        TokenHierarchy<?> th = info.getTokenHierarchy();
+        TokenSequence<JavaTokenId> ts = th.tokenSequence(JavaTokenId.language());
+
+        if (ts.move(endPosition) == Integer.MAX_VALUE) {
+            return null;
+        }
+
+        if (ts.moveNext()) {
+            while (ts.offset() >= start) {
+                Token<JavaTokenId> t = ts.token();
+
+                if (t.id() == JavaTokenId.IDENTIFIER && member.equals(info.getTreeUtilities().decodeIdentifier(t.text()).toString())) {
+                    return t;
+                }
+
+                if (!ts.movePrevious())
+                    break;
+            }
+        }
+        return null;
+    }
+
     private static final Map<Class, List<Kind>> class2Kind;
     
     static {
@@ -370,7 +403,32 @@ public class Utilities {
             
            return findTokenWithText(info, name.toString(), start, end);
         }
-        throw new IllegalArgumentException("Only MethodDecl, VariableDecl, MemberSelectTree, IdentifierTree, ParameterizedTypeTree, AnnotatedTypeTree, ClassDecl, BreakTree, ContinueTree, and LabeledStatementTree are accepted by this method. Got: " + leaf.getKind());
+        if (class2Kind.get(InstanceOfTree.class).contains(leaf.getKind())) {
+            Tree pattern = TreeShims.getPattern((InstanceOfTree) leaf);
+
+            if (pattern == null || !"BINDING_PATTERN".equals(pattern.getKind().name()))
+                return null;
+
+            Name name = TreeShims.getBinding(pattern);
+
+            if (name == null || name.length() == 0)
+                return null;
+
+            SourcePositions positions = info.getTrees().getSourcePositions();
+            CompilationUnitTree cu = info.getCompilationUnit();
+            int start = (int)positions.getEndPosition(cu, ((InstanceOfTree) leaf).getType());
+            int end   = (int)positions.getEndPosition(cu, pattern);
+
+            if (start == (-1) || end == (-1)) {
+                return null;
+            }
+
+           return findTokenWithText(info, name.toString(), start, end);
+        }
+        if ("BINDING_PATTERN".equals(leaf.getKind().name())) {
+            return findIdentifierSpanImplForBindingPattern(info, leaf, info.getCompilationUnit(), info.getTrees().getSourcePositions());
+        }
+        throw new IllegalArgumentException("Only MethodDecl, VariableDecl, MemberSelectTree, IdentifierTree, ParameterizedTypeTree, AnnotatedTypeTree, ClassDecl, BreakTree, ContinueTree, LabeledStatementTree and BindingPatternTree are accepted by this method. Got: " + leaf.getKind());
     }
 
     public static int[] findIdentifierSpan( final TreePath decl, final CompilationInfo info, final Document doc) {
@@ -500,7 +558,7 @@ public class Utilities {
     
     public static int findBodyStart(final CompilationInfo info, final Tree cltree, final CompilationUnitTree cu, final SourcePositions positions, final Document doc) {
         Kind kind = cltree.getKind();
-        if (!TreeUtilities.CLASS_TREE_KINDS.contains(kind) && kind != Kind.METHOD)
+        if (!TreeUtilities.CLASS_TREE_KINDS.contains(kind) && kind != Kind.METHOD && !cltree.getKind().toString().equals("RECORD"))
             throw new IllegalArgumentException("Unsupported kind: "+ kind);
         final int[] result = new int[1];
         
@@ -564,7 +622,8 @@ public class Utilities {
         
         //XXX: do not use instanceof:
         if (leaf instanceof MethodTree || leaf instanceof VariableTree || leaf instanceof ClassTree
-                || leaf instanceof MemberSelectTree || leaf instanceof AnnotatedTypeTree || leaf instanceof MemberReferenceTree) {
+                || leaf instanceof MemberSelectTree || leaf instanceof AnnotatedTypeTree || leaf instanceof MemberReferenceTree
+                || "BINDING_PATTERN".equals(leaf.getKind().name())) {
             return findIdentifierSpan(info, doc, tree);
         }
         
@@ -653,10 +712,32 @@ public class Utilities {
     }
 
     private static final Set<ElementKind> LOCAL_ELEMENT_KINDS = EnumSet.of(ElementKind.PARAMETER, ElementKind.LOCAL_VARIABLE, ElementKind.EXCEPTION_PARAMETER, ElementKind.RESOURCE_VARIABLE);
+    
+    static {
+        try {
+            LOCAL_ELEMENT_KINDS.add(ElementKind.valueOf(TreeShims.BINDING_VARIABLE));
+        } catch (IllegalArgumentException ignore) {}
+    }
 
     public static boolean isPrivateElement(Element el) {
         return LOCAL_ELEMENT_KINDS.contains(el.getKind()) || el.getModifiers().contains(Modifier.PRIVATE);
     }
 
+    public static Element toRecordComponent(Element el) {
+        if (el == null ||el.getKind() != ElementKind.FIELD) {
+            return el;
+        }
+        TypeElement owner = (TypeElement) el.getEnclosingElement();
+        if (!"RECORD".equals(owner.getKind().name())) {
+            return el;
+        }
+        for (Element encl : owner.getEnclosedElements()) {
+            if (TreeShims.isRecordComponent(encl.getKind()) &&
+                encl.getSimpleName().equals(el.getSimpleName())) {
+                return encl;
+            }
+        }
+        return el;
+    }
 
 }

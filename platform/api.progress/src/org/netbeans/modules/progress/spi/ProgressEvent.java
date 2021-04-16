@@ -134,4 +134,31 @@ public final class ProgressEvent {
         return displayName;
     }
     
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("EV[").append(getSource());
+        sb.append(", disp: ").append(displayName);
+        
+        String tName;
+        switch (type) {
+            case TYPE_FINISH: tName = "finish"; break;
+            case TYPE_PROGRESS: tName = "progress"; break;
+            case TYPE_REQUEST_STOP: tName = "stop"; break;
+            case TYPE_SILENT: tName = "silent"; break;
+            case TYPE_START: tName = "start"; break;
+            case TYPE_SWITCH: tName = "switch"; break;
+            default: tName = "" + type;
+        }
+        sb.append(", type: ").append(tName);
+        sb.append(", pctDone: ").append(String.format("%3.2f", percentageDone));
+        sb.append(", message: ").append(message);
+        sb.append(", disp: ").append(displayName);
+        sb.append("]");
+        return sb.toString();
+    }
+
+    void markAsFinished() {
+        type = TYPE_FINISH;
+    }
 }

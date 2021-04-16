@@ -44,6 +44,8 @@ public class ValidationWarningPanel extends javax.swing.JPanel {
         taHead.setBorder(BorderFactory.createEmptyBorder());
         taWarning.setBackground( new Color(0,0,0,0) );
         taWarning.setBorder(BorderFactory.createEmptyBorder());
+        taError.setVisible(! modified.isEmpty());
+        taHead.setVisible(modified.isEmpty());
         postInitComponents (signedVerified, signedUnverified, unsigned, modified, total);
     }
     
@@ -51,6 +53,7 @@ public class ValidationWarningPanel extends javax.swing.JPanel {
         DefaultMutableTreeNode signedAndValidNode = new DefaultMutableTreeNode("Signed and Valid (" + signedVerified.size() + ")");
         DefaultMutableTreeNode selfSignedNode = new DefaultMutableTreeNode("Self signed (" + signedUnverified.size() + ")");
         DefaultMutableTreeNode unsignedNode = new DefaultMutableTreeNode("Unsigned (" + unsigned.size() + ")");
+        DefaultMutableTreeNode modifiedNode = new DefaultMutableTreeNode("Modified/Damaged (" + modified.size() + ")");
         
         for (UpdateElement el : signedVerified) {
             signedAndValidNode.add(new DefaultMutableTreeNode(el.getDisplayName()));
@@ -66,7 +69,12 @@ public class ValidationWarningPanel extends javax.swing.JPanel {
             unsignedNode.add(new DefaultMutableTreeNode(el.getDisplayName()));
         } 
         pluginModelRoot.add(unsignedNode);
-        
+
+        for (UpdateElement el : modified) {
+            modifiedNode.add(new DefaultMutableTreeNode(el.getDisplayName()));
+        }
+        pluginModelRoot.add(modifiedNode);
+
         pluginsModel.reload();
         
         int requiresAttention = signedVerified.size() + signedUnverified.size() + unsigned.size();
@@ -77,6 +85,10 @@ public class ValidationWarningPanel extends javax.swing.JPanel {
         } else {
             taHead.setText(org.openide.util.NbBundle.getMessage(ValidationWarningPanel.class, "ValidationWarningPanel_taHead_NotTrustedTextSg", 
                     requiresAttention, total));
+        }
+
+        if(modified.size() > 0) {
+            
         }
     }
     
@@ -96,52 +108,73 @@ public class ValidationWarningPanel extends javax.swing.JPanel {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         taHead = new javax.swing.JTextArea();
+        taError = new javax.swing.JTextArea();
         spPlugins = new javax.swing.JScrollPane();
         tPlugins = new javax.swing.JTree();
         taWarning = new javax.swing.JTextArea();
+
+        setBorder(javax.swing.BorderFactory.createEmptyBorder(6, 6, 6, 6));
+        setMinimumSize(new java.awt.Dimension(480, 400));
+        setPreferredSize(new java.awt.Dimension(480, 400));
+        setRequestFocusEnabled(false);
+        setLayout(new java.awt.GridBagLayout());
 
         taHead.setEditable(false);
         taHead.setLineWrap(true);
         taHead.setWrapStyleWord(true);
         taHead.setOpaque(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 3, 0);
+        add(taHead, gridBagConstraints);
+        taHead.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ValidationWarningPanel.class, "ValidationWarningPanel_taHead_ACN")); // NOI18N
+        taHead.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ValidationWarningPanel.class, "ValidationWarningPanel_taHead_ACN")); // NOI18N
+
+        taError.setEditable(false);
+        taError.setForeground(new java.awt.Color(204, 0, 18));
+        taError.setLineWrap(true);
+        taError.setText(org.openide.util.NbBundle.getMessage(ValidationWarningPanel.class, "ValidationWarningPanel.taError.text")); // NOI18N
+        taError.setWrapStyleWord(true);
+        taError.setOpaque(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 3, 0);
+        add(taError, gridBagConstraints);
 
         tPlugins.setModel(pluginsModel);
         spPlugins.setViewportView(tPlugins);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 0);
+        add(spPlugins, gridBagConstraints);
 
         taWarning.setEditable(false);
         taWarning.setLineWrap(true);
         taWarning.setText(org.openide.util.NbBundle.getMessage(ValidationWarningPanel.class, "ValidationWarningPanel_taWarning_Text")); // NOI18N
         taWarning.setWrapStyleWord(true);
         taWarning.setOpaque(false);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spPlugins, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
-                    .addComponent(taHead)
-                    .addComponent(taWarning, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(taHead, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spPlugins, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(taWarning, javax.swing.GroupLayout.PREFERRED_SIZE, 58, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        taHead.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ValidationWarningPanel.class, "ValidationWarningPanel_taHead_ACN")); // NOI18N
-        taHead.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ValidationWarningPanel.class, "ValidationWarningPanel_taHead_ACN")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 0);
+        add(taWarning, gridBagConstraints);
         taWarning.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ValidationWarningPanel.class, "ValidationWarningPanel_taWarning_Text_ACN")); // NOI18N
         taWarning.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ValidationWarningPanel.class, "ValidationWarningPanel_taWarning_Text_ACD")); // NOI18N
 
@@ -152,6 +185,7 @@ public class ValidationWarningPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane spPlugins;
     private javax.swing.JTree tPlugins;
+    private javax.swing.JTextArea taError;
     private javax.swing.JTextArea taHead;
     private javax.swing.JTextArea taWarning;
     // End of variables declaration//GEN-END:variables

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.36.0
+#Version 1.42.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -159,8 +159,6 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
-meth public java.awt.peer.ComponentPeer getPeer()
- anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -4092,6 +4090,7 @@ meth public abstract int getSpaceWidth(java.awt.Component)
 meth public abstract int getSpaceWidth(java.awt.Graphics)
 
 CLSS public org.netbeans.editor.Formatter
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.Class)
 meth public boolean expandTabs()
 meth public int getShiftWidth()
@@ -4105,8 +4104,11 @@ meth public java.lang.Class getKitClass()
 meth public java.lang.String getIndentString(int)
 meth public java.lang.String getIndentString(org.netbeans.editor.BaseDocument,int)
 meth public static org.netbeans.editor.Formatter getFormatter(java.lang.Class)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.editor.Formatter getFormatter(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public static void setFormatter(java.lang.Class,org.netbeans.editor.Formatter)
+ anno 0 java.lang.Deprecated()
 meth public void changeBlockIndent(org.netbeans.editor.BaseDocument,int,int,int) throws javax.swing.text.BadLocationException
 meth public void changeRowIndent(org.netbeans.editor.BaseDocument,int,int) throws javax.swing.text.BadLocationException
 meth public void indentLock()
@@ -5181,6 +5183,7 @@ meth public org.netbeans.editor.ext.FormatTokenPosition removeLineEndWhitespace(
 supr org.netbeans.editor.ext.FormatSupport
 
 CLSS public org.netbeans.editor.ext.ExtFormatter
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.Class)
 innr public static Simple
 intf org.netbeans.editor.ext.FormatLayer

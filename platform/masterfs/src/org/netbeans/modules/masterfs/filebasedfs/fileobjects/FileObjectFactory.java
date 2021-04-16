@@ -173,7 +173,7 @@ public final class FileObjectFactory {
     }
     
     
-    public BaseFileObj getFileObject(FileInfo fInfo, Caller caller) {
+    public BaseFileObj getFileObject(FileInfo fInfo, Caller caller, boolean onlyExisting) {
         File file = fInfo.getFile();
         FolderObj parent = BaseFileObj.getExistingParentFor(file, this);
         FileNaming child = null;
@@ -204,7 +204,7 @@ public final class FileObjectFactory {
         if (initTouch == -1  && FileBasedFileSystem.isModificationInProgress()) {
             initTouch = file.exists() ? 1 : 0;
         }
-        return issueIfExist(file, caller, parent, child, initTouch, caller.asynchFire());
+        return issueIfExist(file, caller, parent, child, initTouch, caller.asynchFire(), onlyExisting);
     }
 
 
@@ -260,7 +260,7 @@ public final class FileObjectFactory {
         Logger.getLogger(getClass().getName()).log(Level.FINE, ise.getMessage(), ise);
     }
 
-    private BaseFileObj issueIfExist(File file, Caller caller, final FileObject parent, FileNaming child, int initTouch,boolean asyncFire) {
+    private BaseFileObj issueIfExist(File file, Caller caller, final FileObject parent, FileNaming child, int initTouch, boolean asyncFire, boolean onlyExisting) {
         boolean exist = false;
         BaseFileObj foForFile = null;
         Integer realExists = initRealExists(initTouch);
@@ -386,7 +386,15 @@ public final class FileObjectFactory {
             }
         }
         //ratio 59993/507 (means 507 touches for 59993 calls)
-        return (exist) ? getOrCreate(new FileInfo(file, 1)) : null;
+        if (onlyExisting) {
+            return (exist) ? getOrCreate(new FileInfo(file, 1)) : null;
+        } else {
+            BaseFileObj ret = getOrCreate(new FileInfo(file, 1));
+            if (!exist) {
+                ret.setValid(false);
+            }
+            return ret;
+        }
     }
 
     private static boolean touchExists(File f, Integer state) {
@@ -765,9 +773,13 @@ public final class FileObjectFactory {
 
 
 
-    public final BaseFileObj getValidFileObject(final File f, FileObjectFactory.Caller caller) {
-        final BaseFileObj retVal = (getFileObject(new FileInfo(f), caller));
-        return (retVal != null && retVal.isValid()) ? retVal : null;
+    public final BaseFileObj getValidFileObject(final File f, FileObjectFactory.Caller caller, boolean onlyExisting) {
+        final BaseFileObj retVal = (getFileObject(new FileInfo(f), caller, onlyExisting));
+        if (onlyExisting) {
+            return (retVal != null && retVal.isValid()) ? retVal : null;
+        } else {
+            return retVal;
+        }
     }
 
     public void refresh(boolean expected) {

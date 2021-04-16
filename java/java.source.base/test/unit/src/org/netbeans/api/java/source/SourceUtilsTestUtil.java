@@ -184,6 +184,10 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
     }
     
     public static void prepareTest(FileObject sourceRoot, FileObject buildRoot, FileObject cache, FileObject[] classPathElements) throws Exception {
+        prepareTest(ClassPathSupport.createClassPath(sourceRoot), buildRoot, cache, classPathElements);
+    }
+
+    public static void prepareTest(ClassPath sourceCP, FileObject buildRoot, FileObject cache, FileObject[] classPathElements) throws Exception {
         if (extraLookupContent == null)
             prepareTest(new String[0], new Object[0]);
         
@@ -191,8 +195,8 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
         
         System.arraycopy(extraLookupContent, 0, lookupContent, 4, extraLookupContent.length);
         
-        lookupContent[0] = new TestProxyClassPathProvider(sourceRoot, buildRoot, classPathElements);
-        lookupContent[1] = new TestSourceForBinaryQuery(sourceRoot, buildRoot);
+        lookupContent[0] = new TestProxyClassPathProvider(sourceCP, buildRoot, classPathElements);
+        lookupContent[1] = new TestSourceForBinaryQuery(sourceCP, buildRoot);
         lookupContent[2] = new TestSourceLevelQueryImplementation();
         lookupContent[3] = JavaDataLoader.findObject(JavaDataLoader.class, true);
         
@@ -235,11 +239,11 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
 
     private static class TestSourceForBinaryQuery implements SourceForBinaryQueryImplementation {
         
-        private final FileObject sourceRoot;
+        private final ClassPath sourcePath;
         private final FileObject buildRoot;
         
-        public TestSourceForBinaryQuery(FileObject sourceRoot, FileObject buildRoot) {
-            this.sourceRoot = sourceRoot;
+        public TestSourceForBinaryQuery(ClassPath sourcePath, FileObject buildRoot) {
+            this.sourcePath = sourcePath;
             this.buildRoot = buildRoot;
         }
         
@@ -249,9 +253,7 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
             if (buildRoot.equals(f)) {
                 return new SourceForBinaryQuery.Result() {
                     public FileObject[] getRoots() {
-                        return new FileObject[] {
-                            sourceRoot,
-                        };
+                        return sourcePath.getRoots();
                     }
 
                     public void addChangeListener(ChangeListener l) {
@@ -269,12 +271,12 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
     
     private static class TestProxyClassPathProvider implements ClassPathProvider {
         
-        private FileObject sourceRoot;
+        private ClassPath sourcePath;
         private FileObject buildRoot;
         private FileObject[] classPathElements;
         
-        public TestProxyClassPathProvider(FileObject sourceRoot, FileObject buildRoot, FileObject[] classPathElements) {
-            this.sourceRoot = sourceRoot;
+        public TestProxyClassPathProvider(ClassPath sourcePath, FileObject buildRoot, FileObject[] classPathElements) {
+            this.sourcePath = sourcePath;
             this.buildRoot = buildRoot;
             this.classPathElements = classPathElements;
         }
@@ -290,9 +292,7 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
                 }
             
             if (ClassPath.SOURCE == type) {
-                return ClassPathSupport.createClassPath(new FileObject[] {
-                    sourceRoot
-                });
+                return sourcePath;
             }
             
             if (ClassPath.COMPILE == type) {

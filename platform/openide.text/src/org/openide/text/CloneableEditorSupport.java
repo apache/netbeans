@@ -59,7 +59,6 @@ import java.util.*;
 
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -67,7 +66,9 @@ import javax.swing.text.*;
 import javax.swing.undo.UndoableEdit;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
+import org.netbeans.modules.openide.text.AskEditorQuestions;
 import org.openide.util.Exceptions;
+import org.openide.util.Mutex;
 import org.openide.util.Parameters;
 import org.openide.util.UserCancelException;
 import org.openide.util.WeakSet;
@@ -168,7 +169,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
     private Set<ChangeListener> listeners;
 
     /** last selected editor pane. */
-    private transient Reference<Pane> lastSelected[] = new Reference[] { null };
+    private transient Reference<Pane> lastSelected = null;
 
     /** The time of the last save to determine the real external modifications */
     private long lastSaveTime;
@@ -803,7 +804,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
      */
     public JEditorPane[] getOpenedPanes() {
         // expected in AWT only
-        assert SwingUtilities.isEventDispatchThread()
+        assert Mutex.EVENT.isReadAccess()
                 : "CloneableEditorSupport.getOpenedPanes() must be called from AWT thread only"; // NOI18N
         CloneableEditorSupport redirect = CloneableEditorSupportRedirector.findRedirect(this);
         if (redirect != null) {
@@ -856,7 +857,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
      */
     JEditorPane getRecentPane () {
         // expected in AWT only
-        assert SwingUtilities.isEventDispatchThread()
+        assert Mutex.EVENT.isReadAccess()
                 : "CloneableEditorSupport.getRecentPane must be called from AWT thread only"; // NOI18N
         CloneableEditorSupport redirect = CloneableEditorSupportRedirector.findRedirect(this);
         if (redirect != null) {
@@ -921,13 +922,11 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
     /** Returns the lastly selected Pane or null
      */
     final Pane getLastSelected() {
-        Reference<Pane> r = lastSelected[0];
-
-        return (r == null) ? null : r.get();
+        return (lastSelected == null) ? null : lastSelected.get();
     }
 
     final void setLastSelected(Pane lastSelected) {
-        this.lastSelected[0] = new WeakReference<Pane>(lastSelected);
+        this.lastSelected = new WeakReference<>(lastSelected);
     }
 
     //
@@ -1123,10 +1122,11 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
 			
 			
 			SafeAWTAccess safe = new SafeAWTAccess();
-            if (SwingUtilities.isEventDispatchThread()) {
+            if (Mutex.EVENT.isReadAccess()) {
                 safe.run(); 
             } else {
-                SwingUtilities.invokeLater(safe); 
+                // safe.run only blocks for a certain time, unlike Mutex.EVENT.readAccess().
+                Mutex.EVENT.postReadRequest(safe::run);
                 try {
                     safe.waitForResult();
                 } catch (InterruptedException ex) {
@@ -1711,14 +1711,10 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
                     d.getProperty(javax.swing.text.Document.TitleProperty)
                 );
 
-            NotifyDescriptor nd = new NotifyDescriptor.Confirmation(msg, NotifyDescriptor.YES_NO_OPTION);
-
             reloadDialogOpened = true;
 
             try {
-                Object ret = DialogDisplayer.getDefault().notify(nd);
-
-                if (NotifyDescriptor.YES_OPTION.equals(ret)) {
+                if (AskEditorQuestions.askReloadDocument(msg)) {
                     doReload = true;
                 }
             } finally {
@@ -1939,7 +1935,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
             private boolean documentLocked = false;
 
             public void taskFinished(org.openide.util.Task t2) {
-                javax.swing.SwingUtilities.invokeLater(this);
+                Mutex.EVENT.postReadRequest(this);
                 t2.removeTaskListener(this);
             }
 
@@ -2252,7 +2248,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
                     // - post in AWT event thread because of possible dialog popup
                     // - acquire the write access before checking, so there is no
                     //   clash in-between and we're safe for potential reload.
-                    SwingUtilities.invokeLater(
+                    Mutex.EVENT.postReadRequest(
                         new Runnable() {
                             private boolean inRunAtomic;
                             

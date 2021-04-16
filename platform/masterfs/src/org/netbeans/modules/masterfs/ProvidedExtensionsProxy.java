@@ -41,7 +41,7 @@ import org.openide.filesystems.FileSystem;
  */
 public class ProvidedExtensionsProxy extends ProvidedExtensions {
     private Collection<BaseAnnotationProvider> annotationProviders;
-    private static ThreadLocal  reentrantCheck = new ThreadLocal();
+    private static ThreadLocal<Boolean>  reentrantCheck = new ThreadLocal<>();
     
     /** Creates a new instance of ProvidedExtensionsProxy */
     public ProvidedExtensionsProxy(Collection/*AnnotationProvider*/ annotationProviders) {
@@ -263,7 +263,7 @@ public class ProvidedExtensionsProxy extends ProvidedExtensions {
 
     @Override
     public Object getAttribute(final File file, final String attrName) {
-        final AtomicReference<Object> value = new AtomicReference();
+        final AtomicReference<Object> value = new AtomicReference<>();
         for (BaseAnnotationProvider provider : annotationProviders) {
             final InterceptionListener iListener = (provider != null) ? provider.getInterceptionListener() : null;
             if (iListener instanceof ProvidedExtensions) {

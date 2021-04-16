@@ -377,7 +377,7 @@ public class NbJShellAgent implements Runnable, ClassFileTransformer {
      */
     private void insertClassInit(String className, ClassNode target) {
         // method void static clinit()
-        MethodNode clinit = new MethodNode(Opcodes.ASM5,
+        MethodNode clinit = new MethodNode(Opcodes.ASM7,
             Opcodes.ACC_STATIC | Opcodes.ACC_SYNTHETIC,
             CLASS_INIT_NAME,
             CLASS_INIT_DESC,
@@ -400,7 +400,7 @@ public class NbJShellAgent implements Runnable, ClassFileTransformer {
             istm = new ByteArrayInputStream(classfileBuffer);
             ClassReader reader = new ClassReader(istm);
             ClassWriter wr = new ClassWriter(reader, 0);
-            ClassNode clazz = new ClassNode();
+            ClassNode clazz = new ClassNode(Opcodes.ASM7);
             reader.accept(clazz, 0);
             
             boolean found = false;

@@ -33,16 +33,19 @@ import javax.swing.event.ListSelectionEvent;
 import java.util.*;
 import java.io.File;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  *
  * @author Maros Sandor
  */
-class EditorBufferSelectorPanel extends JPanel implements ListSelectionListener {
+class EditorBufferSelectorPanel extends JPanel implements ListSelectionListener, PropertyChangeListener {
     
     private final JFileChooser fileChooser;
     private final FileObject peer;
     private JList elementsList;
+    private FileObject selectedEditorFile;
 
     /** Creates new form EditorBufferSelectorPanel 
      * @param fileChooser*/
@@ -51,6 +54,7 @@ class EditorBufferSelectorPanel extends JPanel implements ListSelectionListener 
         this.peer = peer;
         initComponents();
         initEditorDocuments();
+        fileChooser.addPropertyChangeListener(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY, this);
     }
 
     private void initEditorDocuments() {
@@ -125,11 +129,34 @@ class EditorBufferSelectorPanel extends JPanel implements ListSelectionListener 
         EditorListElement element = (EditorListElement) elementsList.getSelectedValue();
         if (element != null) {
             File file = FileUtil.toFile(element.fileObject);
-            fileChooser.setSelectedFile(file);
+            if (file != null) {
+                fileChooser.setSelectedFile(file);
+            } else {
+                /*FileObject may not be disk file but a remote file. Following line serves only to 
+                   enable open action on JFileChooser. The URL gets prefixed with current directory
+                   and cannot be used to get FileObject from File
+                 */
+                fileChooser.setSelectedFile(new File(element.fileObject.toURL().toString()));
+            }
+            selectedEditorFile = element.fileObject;
         } else {
             File file = new File("");
             fileChooser.setSelectedFile(file);
+            selectedEditorFile = null;
         }
+    }
+    
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        //user has selected a different file from file chooser
+        selectedEditorFile = null;
+    }
+    
+    /**
+     * @return FileObject of the editor tab chosen by the user
+     */
+    public final FileObject getSelectedEditorFile() {
+        return selectedEditorFile;
     }
 
     /** This method is called from within the constructor to

@@ -472,12 +472,13 @@ public class FormLoaderSettings implements HelpCtx.Provider   {
      * @return background color of the designer.
      */
     public java.awt.Color getFormDesignerBackgroundColor() {
-        Color defaultBackground = UIManager.getColor( "Tree.background" ); //NOI18N
-        if( null == defaultBackground )
+        Color defaultBackground = UIManager.getColor("nb.formdesigner.background"); //NOI18N
+        if (defaultBackground == null)
+            defaultBackground = UIManager.getColor("Tree.background"); //NOI18N
+        if (defaultBackground == null)
             defaultBackground = Color.white;
         int rgb = getPreferences().getInt(PROP_FORMDESIGNER_BACKGROUND_COLOR , defaultBackground.getRGB());
         return new Color(rgb);        
-        
     }
 
     /**
@@ -497,9 +498,11 @@ public class FormLoaderSettings implements HelpCtx.Provider   {
      * @return color of the border of the designer.
      */
     public java.awt.Color getFormDesignerBorderColor() {
-        int rgb = getPreferences().getInt(PROP_FORMDESIGNER_BORDER_COLOR , new Color(224, 224, 255).getRGB());
+        Color defaultBackground = UIManager.getColor("nb.formdesigner.borderColor"); //NOI18N
+        if (defaultBackground == null)
+            defaultBackground = new Color(224, 224, 255);
+        int rgb = getPreferences().getInt(PROP_FORMDESIGNER_BORDER_COLOR , defaultBackground.getRGB());
         return new Color(rgb);        
-        
     }
 
     /**

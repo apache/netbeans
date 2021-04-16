@@ -644,8 +644,8 @@
                 <package>org.netbeans.modules.websvc.rest.client</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/jersey2/jersey-core-1.5.jar</runtime-relative-path>
-		<binary-origin>external/jersey-core-1.5.jar</binary-origin>
+                <runtime-relative-path>ext/jersey2/jersey-core-1.18.6.jar</runtime-relative-path>
+		<binary-origin>external/jersey-core-1.18.6.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

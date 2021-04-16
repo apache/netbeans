@@ -75,33 +75,32 @@ public class CoverageManagerImpl implements CoverageManager {
             enabledMimeTypes.addAll(mimeTypes);
         } else {
             enabledMimeTypes.removeAll(mimeTypes);
-        SwingUtilities.invokeLater(new Runnable() {
+            SwingUtilities.invokeLater(new Runnable() {
 
                 @Override
-            public void run() {
-                for (JTextComponent target : EditorRegistry.componentList()) {
-                    Document document = target.getDocument();
-                    FileObject fileForDocument = GsfUtilities.findFileObject(document);
-                    // show/hide code coverage toolbar in all open file editors belonging only to this project
-                    if (fileForDocument != null && project.equals(FileOwnerQuery.getOwner(fileForDocument))) {
-                        CoverageSideBar sb = CoverageSideBar.getSideBar(target);
-                        if (sb != null) {
-                            sb.showCoveragePanel(enabled);
+                public void run() {
+                    for (JTextComponent target : EditorRegistry.componentList()) {
+                        Document document = target.getDocument();
+                        FileObject fileForDocument = GsfUtilities.findFileObject(document);
+                        // show/hide code coverage toolbar in all open file editors belonging only to this project
+                        if (fileForDocument != null && project.equals(FileOwnerQuery.getOwner(fileForDocument))) {
+                            CoverageSideBar sb = CoverageSideBar.getSideBar(target);
+                            if (sb != null) {
+                                sb.showCoveragePanel(enabled);
+                            }
                         }
                     }
-                }
-                // code coverage is being disabled, so close the report window for this project
-                if(!enabled) {
-                    CoverageReportTopComponent report = showingReports.get(project);
-                    if(report != null) {
-                        report.close();
+                    // code coverage is being disabled, so close the report window for this project
+                    if (!enabled) {
+                        CoverageReportTopComponent report = showingReports.get(project);
+                        if (report != null) {
+                            report.close();
+                        }
                     }
+
                 }
-
-
-            }
-        });
-    }
+            });
+        }
         provider.setEnabled(enabled);
     }
 

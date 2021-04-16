@@ -64,8 +64,8 @@ public abstract class Breakpoint {
     private String                      validityMessage;
     private int                         hitCountFilter;
     private HIT_COUNT_FILTERING_STYLE   hitCountFilteringStyle;
-    private volatile Set<Breakpoint>    breakpointsToEnable = Collections.EMPTY_SET;
-    private volatile Set<Breakpoint>    breakpointsToDisable = Collections.EMPTY_SET;
+    private volatile Set<Breakpoint>    breakpointsToEnable = Collections.emptySet();
+    private volatile Set<Breakpoint>    breakpointsToDisable = Collections.emptySet();
     
     { pcs = new PropertyChangeSupport (this); }
 
@@ -195,7 +195,7 @@ public abstract class Breakpoint {
 
     /**
      * Get group properties of the breakpoint.
-     * These are implementation-defined group properties as oposed to {@link #getGroupName()},
+     * These are implementation-defined group properties as opposed to {@link #getGroupName()},
      * which returns user-defined group name.
      * <p>
      * These properties are used by the Breakpoint Window to show a tree

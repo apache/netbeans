@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 import javax.swing.JComponent;
 import org.netbeans.modules.payara.tooling.TaskState;
 import org.netbeans.modules.payara.tooling.data.PayaraAdminInterface;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.utils.ServerUtils;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
@@ -61,6 +61,7 @@ import org.openide.windows.InputOutput;
 import org.netbeans.modules.payara.spi.PayaraModule;
 import org.netbeans.modules.payara.spi.PayaraModuleFactory;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
+import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 
 /**
  * Payara server instance.
@@ -417,7 +418,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
             PayaraInstanceProvider pip, boolean updateNow) {
         String deployerUri = ip.get(PayaraModule.URL_ATTR);
         PayaraInstance instance = null;
-        PayaraVersion version = ServerUtils.getServerVersion(ip.get(PayaraModule.PAYARA_FOLDER_ATTR));
+        PayaraPlatformVersionAPI version = ServerUtils.getPlatformVersion(ip.get(PayaraModule.PAYARA_FOLDER_ATTR));
         try {
             instance = new PayaraInstance(ip, version, pip, updateNow);
             tagUnderConstruction(deployerUri);
@@ -700,11 +701,22 @@ public class PayaraInstance implements ServerInstanceImplementation,
     /** Payara server properties. */
     private transient Map<String, String> properties;
 
-    /** Payara server version.
-      * <p/>
-      * This is always version of local Payara related to JavaEE platform,
-      * even when registered domain is remote. */
-    private final PayaraVersion version;
+    /**
+     * Payara server version.
+     * <p/>
+     * This is always version of local Payara related to JavaEE
+     * platform, even when registered domain is remote.
+     */
+    @Deprecated
+    private PayaraVersion version;
+
+        /**
+     * Payara Platform version.
+     * <p/>
+     * This is always platformVersion of local Payara related to JavaEE
+     * platform, even when registered domain is remote.
+     */
+    private final PayaraPlatformVersionAPI platformVersion;
 
     /** Process information of local running server started from IDE.
      *  <p/>
@@ -738,9 +750,9 @@ public class PayaraInstance implements ServerInstanceImplementation,
     ////////////////////////////////////////////////////////////////////////////
 
     @SuppressWarnings("LeakingThisInConstructor")
-    private PayaraInstance(Map<String, String> ip, PayaraVersion version,
+    private PayaraInstance(Map<String, String> ip, PayaraPlatformVersionAPI version,
             PayaraInstanceProvider instanceProvider, boolean prepareProperties) {
-        this.version = version;
+        this.platformVersion = version;
         this.process = null;
         ic = new InstanceContent();
         localLookup = new AbstractLookup(ic);
@@ -773,8 +785,8 @@ public class PayaraInstance implements ServerInstanceImplementation,
             ic.add(this); 
             commonInstance = ServerInstanceFactory.createServerInstance(this);
         }
-        // Warn when creating instance of unknown version.
-        if (this.version == null) {
+        // Warn when creating instance of unknown platformVersion.
+        if (this.platformVersion == null) {
             String installroot = ip.get(PayaraModule.PAYARA_FOLDER_ATTR);
             String displayName = ip.get(PayaraModule.DISPLAY_NAME_ATTR);
             WarnPanel.pfUnknownVersionWarning(displayName, installroot);
@@ -1011,7 +1023,6 @@ public class PayaraInstance implements ServerInstanceImplementation,
     /**
      * Set Payara server domain name from stored properties.
      * <p/>
-     * @param domainsFolder Payara server domain name.
      */
     @Override
     public String getDomainName() {
@@ -1072,18 +1083,24 @@ public class PayaraInstance implements ServerInstanceImplementation,
         return properties.get(PayaraModule.INSTALL_FOLDER_ATTR);
     }
 
+    @Override
+    @Deprecated
+    public PayaraVersion getVersion() {
+        return version;
+    }
+
     /**
      * Get Payara server version.
      * <p/>
-     * This is always version of local Payara related to JavaEE platform,
-     * even when registered domain is remote.
+     * This is always platformVersion of local Payara related to JavaEE
+     * platform, even when registered domain is remote.
      * <p/>
-     * @return Payara server version or <code>null</code> when version is
-     *         not known.
+     * @return Payara server platformVersion or <code>null</code> when
+     * platformVersion is not known.
      */
     @Override
-    public PayaraVersion getVersion() {
-        return version;
+    public PayaraPlatformVersionAPI getPlatformVersion() {
+        return platformVersion;
     }
 
     /**
@@ -1093,10 +1110,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
      */
     @Override
     public PayaraAdminInterface getAdminInterface() {
-//        if (version.ordinal() < PayaraVersion.PF_4.ordinal())
-            return PayaraAdminInterface.HTTP;
-//        else
-//            return PayaraAdminInterface.REST;
+        return PayaraAdminInterface.HTTP;
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -1181,7 +1195,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
      * Method {@see #writeInstanceToFile(PayaraInstance)} must be called
      * to persist value.
      * <p/>
-     * @param usern Payara server administration user name.
+     * @param user Payara server administration user name.
      */
     public void setAdminUser(final String user) {
         properties.put(PayaraModule.USERNAME_ATTR, user);
@@ -1229,6 +1243,18 @@ public class PayaraInstance implements ServerInstanceImplementation,
 
     public String getUserName() {
         return properties.get(PayaraModule.USERNAME_ATTR);
+    }
+
+    public boolean isHotDeployFeatureAvailable() {
+        return this.getPlatformVersion().getMajor() > 5 
+                || (this.getPlatformVersion().getMajor() == 5 && this.getPlatformVersion().getMinor() >= 201);
+    }
+
+    public boolean isHotDeployEnabled() {
+        if (this.isHotDeployFeatureAvailable()) {
+            return Boolean.parseBoolean(this.getProperty(PayaraModule.HOT_DEPLOY));
+        }
+        return false;
     }
 
     /**
@@ -1521,9 +1547,9 @@ public class PayaraInstance implements ServerInstanceImplementation,
                 "Bogus display name");
         updateInt(properties, PayaraModule.ADMINPORT_ATTR,
                 DEFAULT_ADMIN_PORT);
+        updateString(properties, PayaraModule.HOT_DEPLOY, "false");
         updateString(properties, PayaraModule.SESSION_PRESERVATION_FLAG,
                 "true");
-        updateString(properties, PayaraModule.START_DERBY_FLAG, "false");
         updateString(properties, PayaraModule.USE_IDE_PROXY_FLAG, "true");
         updateString(properties, PayaraModule.DRIVER_DEPLOY_FLAG, "true");
         updateString(properties, PayaraModule.HTTPHOST_ATTR, "localhost");
@@ -1671,7 +1697,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
     @Override
     public String getServerDisplayName() {
         return NbBundle.getMessage(PayaraInstance.class, "STR_SERVER_NAME",
-                new Object[] {version != null ? version.toString() : ""});
+                new Object[] {platformVersion != null ? platformVersion.toString() : ""});
     }
 
     @Override

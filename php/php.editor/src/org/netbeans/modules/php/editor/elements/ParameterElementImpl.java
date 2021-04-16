@@ -20,7 +20,7 @@ package org.netbeans.modules.php.editor.elements;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -31,6 +31,7 @@ import org.netbeans.modules.php.editor.api.elements.TypeNameResolver;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
 import org.netbeans.modules.php.editor.elements.PhpElementImpl.Separator;
 import org.netbeans.modules.php.editor.model.impl.Type;
+import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration;
 import org.openide.util.Exceptions;
 
 /**
@@ -45,6 +46,8 @@ public final class ParameterElementImpl implements ParameterElement {
     private final boolean isMandatory;
     private final boolean isReference;
     private final boolean isVariadic;
+    private final boolean isUnionType;
+    private final int modifier;
 
     public ParameterElementImpl(
             final String name,
@@ -54,7 +57,9 @@ public final class ParameterElementImpl implements ParameterElement {
             final boolean isMandatory,
             final boolean isRawType,
             final boolean isReference,
-            final boolean isVariadic) {
+            final boolean isVariadic,
+            final boolean isUnionType,
+            final int modifier) {
         this.name = name;
         this.isMandatory = isMandatory;
         this.defaultValue = (!isMandatory && defaultValue != null) ? decode(defaultValue) : ""; //NOI18N
@@ -63,6 +68,8 @@ public final class ParameterElementImpl implements ParameterElement {
         this.isRawType = isRawType;
         this.isReference = isReference;
         this.isVariadic = isVariadic;
+        this.isUnionType = isUnionType;
+        this.modifier = modifier;
     }
 
     static List<ParameterElement> parseParameters(final String signature) {
@@ -97,9 +104,11 @@ public final class ParameterElementImpl implements ParameterElement {
             boolean isMandatory = Integer.parseInt(parts[4]) > 0;
             boolean isReference = Integer.parseInt(parts[5]) > 0;
             boolean isVariadic = Integer.parseInt(parts[6]) > 0;
+            boolean isUnionType = Integer.parseInt(parts[7]) > 0;
+            int modifier = Integer.parseInt(parts[8]);
             String defValue = parts.length > 3 ? parts[3] : null;
             retval = new ParameterElementImpl(
-                    paramName, defValue, -1, types, isMandatory, isRawType, isReference, isVariadic);
+                    paramName, defValue, -1, types, isMandatory, isRawType, isReference, isVariadic, isUnionType, modifier);
         }
         return retval;
     }
@@ -119,20 +128,24 @@ public final class ParameterElementImpl implements ParameterElement {
         }
         String typeSignatures = typeBuilder.toString().trim();
         sb.append(typeSignatures);
-        sb.append(Separator.COLON); //NOI18N
+        sb.append(Separator.COLON);
         sb.append(isRawType ? 1 : 0);
-        sb.append(Separator.COLON); //NOI18N
+        sb.append(Separator.COLON);
         if (!isMandatory()) {
             final String defVal = getDefaultValue();
             assert defVal != null;
             sb.append(encode(defVal));
         }
-        sb.append(Separator.COLON); //NOI18N
+        sb.append(Separator.COLON);
         sb.append(isMandatory ? 1 : 0);
-        sb.append(Separator.COLON); //NOI18N
+        sb.append(Separator.COLON);
         sb.append(isReference ? 1 : 0);
-        sb.append(Separator.COLON); //NOI18N
+        sb.append(Separator.COLON);
         sb.append(isVariadic ? 1 : 0);
+        sb.append(Separator.COLON);
+        sb.append(isUnionType ? 1 : 0);
+        sb.append(Separator.COLON);
+        sb.append(modifier);
         checkSignature(sb);
         return sb.toString();
     }
@@ -149,7 +162,9 @@ public final class ParameterElementImpl implements ParameterElement {
 
     @Override
     public Set<TypeResolver> getTypes() {
-        return new HashSet<>(types);
+        // use LinkedHashSet to keep the type order
+        // avoid being changed type order(e.g. int|float|Foo|Bar) when an override method is generated
+        return new LinkedHashSet<>(types);
     }
 
     @Override
@@ -257,6 +272,8 @@ public final class ParameterElementImpl implements ParameterElement {
                 assert isMandatory() == parsedParameter.isMandatory() : signature;
                 assert isReference() == parsedParameter.isReference() : signature;
                 assert isVariadic() == parsedParameter.isVariadic() : signature;
+                assert isUnionType() == parsedParameter.isUnionType() : signature;
+                assert getModifier() == parsedParameter.getModifier() : signature;
             } catch (NumberFormatException originalException) {
                 final String message = String.format("%s [for signature: %s]", originalException.getMessage(), signature); //NOI18N
                 final NumberFormatException formatException = new NumberFormatException(message);
@@ -281,9 +298,34 @@ public final class ParameterElementImpl implements ParameterElement {
     public String asString(OutputType outputType, TypeNameResolver typeNameResolver) {
         StringBuilder sb = new StringBuilder();
         Set<TypeResolver> typesResolvers = getTypes();
-        boolean forDeclaration = outputType.equals(OutputType.SHORTEN_DECLARATION) || outputType.equals(OutputType.COMPLETE_DECLARATION);
+        boolean forDeclaration = outputType == OutputType.COMPLETE_DECLARATION
+                || outputType == OutputType.COMPLETE_DECLARATION_WITH_MODIFIER
+                || outputType == OutputType.SHORTEN_DECLARATION
+                || outputType == OutputType.SHORTEN_DECLARATION_WITH_MODIFIER;
+
+        if (outputType == OutputType.COMPLETE_DECLARATION_WITH_MODIFIER
+                || outputType == OutputType.SHORTEN_DECLARATION_WITH_MODIFIER) {
+            String modifierString = BodyDeclaration.Modifier.toString(modifier);
+            if (modifierString != null && !modifierString.isEmpty()) {
+                // [NETBEANS-4443] PHP 8.0 Constructor Property Promotion
+                sb.append(modifierString).append(" "); // NOI18N
+            }
+        }
         if (forDeclaration && hasDeclaredType()) {
-            if (typesResolvers.size() > 1) {
+            if (isUnionType) {
+                boolean firstType = true;
+                for (TypeResolver typeResolver : typesResolvers) {
+                    if (typeResolver.isResolved()) {
+                        if (firstType) {
+                            firstType = false;
+                        } else {
+                            sb.append(Type.SEPARATOR);
+                        }
+                        sb.append(typeNameResolver.resolve(typeResolver.getTypeName(false)));
+                    }
+                }
+                sb.append(' ');
+            } else if (typesResolvers.size() > 1 && !isUnionType) {
                 sb.append(Type.MIXED).append(' ');
             } else {
                 for (TypeResolver typeResolver : typesResolvers) {
@@ -310,7 +352,8 @@ public final class ParameterElementImpl implements ParameterElement {
             String defVal = getDefaultValue();
             if (!isMandatory() && StringUtils.hasText(defVal)) {
                 sb.append(" = "); //NOI18N
-                if (outputType.equals(OutputType.COMPLETE_DECLARATION)) {
+                if (outputType == OutputType.COMPLETE_DECLARATION
+                        || outputType == OutputType.COMPLETE_DECLARATION_WITH_MODIFIER) {
                     sb.append(defVal);
                 } else {
                     sb.append(defVal.length() > 20 ? "..." : defVal); //NOI18N
@@ -328,5 +371,15 @@ public final class ParameterElementImpl implements ParameterElement {
     @Override
     public boolean isVariadic() {
         return isVariadic;
+    }
+
+    @Override
+    public boolean isUnionType() {
+        return isUnionType;
+    }
+
+    @Override
+    public int getModifier() {
+        return modifier;
     }
 }

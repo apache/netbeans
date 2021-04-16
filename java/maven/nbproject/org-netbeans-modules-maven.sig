@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.133
+#Version 2.142
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -159,8 +159,6 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
-meth public java.awt.peer.ComponentPeer getPeer()
- anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -1010,6 +1008,7 @@ fld public final static java.lang.String PLUGIN_COMPILER = "maven-compiler-plugi
 fld public final static java.lang.String PLUGIN_COMPILER_VERSION_SUPPORTING_JDK9 = "3.6"
 fld public final static java.lang.String PLUGIN_EAR = "maven-ear-plugin"
 fld public final static java.lang.String PLUGIN_EJB = "maven-ejb-plugin"
+fld public final static java.lang.String PLUGIN_FAILSAFE = "maven-failsafe-plugin"
 fld public final static java.lang.String PLUGIN_JAR = "maven-jar-plugin"
 fld public final static java.lang.String PLUGIN_RESOURCES = "maven-resources-plugin"
 fld public final static java.lang.String PLUGIN_SITE = "maven-site-plugin"
@@ -1344,6 +1343,8 @@ meth public static org.openide.WizardDescriptor$InstantiatingIterator<?> defined
  anno 0 java.lang.Deprecated()
  anno 4 org.netbeans.api.annotations.common.NullAllowed()
 meth public static org.openide.WizardDescriptor$InstantiatingIterator<?> definedArchetype(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+ anno 4 org.netbeans.api.annotations.common.NullAllowed()
+meth public static org.openide.WizardDescriptor$InstantiatingIterator<?> definedArchetype(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.util.Map<java.lang.String,java.lang.String>)
  anno 4 org.netbeans.api.annotations.common.NullAllowed()
 meth public static org.openide.WizardDescriptor$Panel<org.openide.WizardDescriptor> basicWizardPanel(org.netbeans.validation.api.ui.ValidationGroup,boolean,org.netbeans.modules.maven.api.archetype.Archetype)
  anno 3 org.netbeans.api.annotations.common.NullAllowed()
@@ -1954,7 +1955,7 @@ meth public boolean cancel()
 meth public static org.openide.execution.ExecutorTask executeMaven(org.netbeans.modules.maven.api.execute.RunConfig,org.openide.windows.InputOutput,org.netbeans.modules.maven.execute.AbstractMavenExecutor$TabContext)
 meth public void run()
 supr org.netbeans.modules.maven.execute.AbstractMavenExecutor
-hfds ENV_JAVAHOME,ENV_PREFIX,KEY_UUID,LOGGER,RP,UPDATE_INDEX_RP,preProcess,preProcessUUID,process,processUUID
+hfds ENV_JAVAHOME,ENV_PREFIX,KEY_UUID,LOGGER,NETBEANS_MAVEN_COMMAND_LINE,RP,UPDATE_INDEX_RP,VER17,preProcess,preProcessUUID,process,processUUID
 
 CLSS public static org.netbeans.modules.maven.execute.MavenCommandLineExecutor$ExecuteMaven
  outer org.netbeans.modules.maven.execute.MavenCommandLineExecutor
@@ -2157,7 +2158,7 @@ meth public void write(java.io.Writer,org.netbeans.modules.maven.execute.model.A
 supr java.lang.Object
 hfds NAMESPACE
 
-CLSS public abstract interface org.netbeans.modules.maven.model.ModelOperation<%0 extends org.netbeans.modules.xml.xam.dom.AbstractDocumentModel>
+CLSS public abstract interface org.netbeans.modules.maven.model.ModelOperation<%0 extends org.netbeans.modules.xml.xam.dom.AbstractDocumentModel<? extends org.netbeans.modules.xml.xam.dom.DocumentComponent<?>>>
 meth public abstract void performOperation({org.netbeans.modules.maven.model.ModelOperation%0})
 
 CLSS public org.netbeans.modules.maven.spi.IconResources

@@ -274,9 +274,9 @@ implements Node.Cookie, Serializable, HelpCtx.Provider, Lookup.Provider {
      * If the files are rescanned (e.g. after a disposal), the current data loader will be given preference.
     */
     protected final void markFiles () throws IOException {
-        Iterator en = files ().iterator ();
+        Iterator<FileObject> en = files ().iterator ();
         while (en.hasNext ()) {
-            FileObject fo = (FileObject)en.next ();
+            FileObject fo = en.next ();
             loader.markFile (fo);
         }
     }
@@ -1581,7 +1581,7 @@ implements Node.Cookie, Serializable, HelpCtx.Provider, Lookup.Provider {
             if (c == null || c.param == null) {
                 return Collections.emptyMap();
             }
-            return (Map<String, Object>)Collections.unmodifiableMap(c.param);
+            return Collections.unmodifiableMap(c.param);
         }
         
         static String getOrigName() {
@@ -1722,7 +1722,7 @@ implements Node.Cookie, Serializable, HelpCtx.Provider, Lookup.Provider {
             } else {
                 can = null;
             }
-            ProgressHandle ph = ProgressHandleFactory.createHandle(name, can);
+            ProgressHandle ph = ProgressHandle.createHandle(name, can);
             ph.setInitialDelay(500);
             ph.start();
             this.progressHandle = ph;

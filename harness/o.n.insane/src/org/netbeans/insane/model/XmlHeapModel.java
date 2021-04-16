@@ -73,7 +73,8 @@ class XmlHeapModel implements org.netbeans.insane.model.HeapModel {
 
     static class MemItem implements Item {
         // a list of Items, Strings and one null
-        private Object[] refs = new Object[] {null};
+        private Object[] incommingRefs = new Object[0];
+        private Item[] outgoingRefs = new Item[0];
         private int id;
         private int size;
         private String type;
@@ -100,11 +101,11 @@ class XmlHeapModel implements org.netbeans.insane.model.HeapModel {
         }
 
         public Enumeration<Object> incomming() {
-            return new RefEnum(true, refs);
+            return new RefEnum<Object>(incommingRefs);
         }
 
         public Enumeration<Item> outgoing() {
-            return new RefEnum(false, refs);
+            return new RefEnum<Item>(outgoingRefs);
         }
     
         public int getId() {
@@ -122,17 +123,17 @@ class XmlHeapModel implements org.netbeans.insane.model.HeapModel {
 
         // parsing impl
         void addIncomming(Object incomming) {
-            Object[] nr = new Object[refs.length+1];
+            Object[] nr = new Object[incommingRefs.length + 1];
             nr[0] = incomming;
-            System.arraycopy(refs, 0, nr, 1, refs.length);
-            refs = nr;
+            System.arraycopy(incommingRefs, 0, nr, 1, incommingRefs.length);
+            incommingRefs = nr;
         }
 
-        void addOutgoing(Object outgoing) {
-            Object[] nr = new Object[refs.length+1];
-            nr[refs.length] = outgoing;
-            System.arraycopy(refs, 0, nr, 0, refs.length);
-            refs = nr;
+        void addOutgoing(Item outgoing) {
+            Item[] nr = new Item[outgoingRefs.length+1];
+            nr[outgoingRefs.length] = outgoing;
+            System.arraycopy(outgoingRefs, 0, nr, 0, outgoingRefs.length);
+            outgoingRefs = nr;
         }
     }
 
@@ -209,26 +210,28 @@ class XmlHeapModel implements org.netbeans.insane.model.HeapModel {
         return Integer.parseInt(s, 16);
     }
 
-    // An enumeration over object array, enumeration either pre-null items
-    // or post-null items
-    private static class RefEnum implements Enumeration {
+    // An enumeration over object array
+    private static class RefEnum<T> implements Enumeration<T> {
+
         int ptr;
-        Object[] items;
-        RefEnum(boolean first, Object[] data) {
+        T[] items;
+
+        RefEnum(T[] data) {
             items = data;
-            if (!first) while (data[ptr++] != null);
         }
 
+        @Override
         public boolean hasMoreElements() {
-            return ptr < items.length && items[ptr] != null;
+            return ptr < items.length;
         }
 
-        public Object nextElement() {
-            if (hasMoreElements()) return items[ptr++];
+        @Override
+        public T nextElement() {
+            if (hasMoreElements()) {
+                return items[ptr++];
+            }
             throw new NoSuchElementException();
         }
     }
-
-
 }
                                       

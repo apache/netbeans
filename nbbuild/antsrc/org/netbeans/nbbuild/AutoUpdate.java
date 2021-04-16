@@ -22,14 +22,17 @@ package org.netbeans.nbbuild;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -55,6 +58,7 @@ import org.apache.tools.ant.taskdefs.Get;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.FileUtils;
 import org.netbeans.nbbuild.AutoUpdateCatalogParser.ModuleItem;
+import org.netbeans.nbbuild.extlibs.DownloadBinaries;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.Attributes;
@@ -141,9 +145,19 @@ public class AutoUpdate extends Task {
                     URL u = new URL("jar:" + nbm.toURI() + "!/Info/info.xml");
                     Map<String, ModuleItem> map;
                     final URL url = nbm.toURI().toURL();
-                    map = AutoUpdateCatalogParser.getUpdateItems(u, url, this);
+                    try {
+                        map = AutoUpdateCatalogParser.getUpdateItems(u, url, this);
+                    } catch (FileNotFoundException ex) {
+                        JarFile f = new JarFile(nbm);
+                        Document doc = XMLUtil.createDocument("module");
+                        MakeUpdateDesc.fakeOSGiInfoXml(f, nbm, doc);
+                        ByteArrayOutputStream os = new ByteArrayOutputStream();
+                        XMLUtil.write(doc, os);
+                        ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+                        map = AutoUpdateCatalogParser.getUpdateItems(u, is, url, this);
+                    }
                     assert map.size() == 1;
-                    Map.Entry<String,ModuleItem> entry = map.entrySet().iterator().next();
+                    Map.Entry<String, ModuleItem> entry = map.entrySet().iterator().next();
                     units.put(entry.getKey(), entry.getValue().changeDistribution(url));
                 } catch (IOException ex) {
                     throw new BuildException(ex);
@@ -393,12 +407,17 @@ public class AutoUpdate extends Task {
                     }
                     url = url.substring(0, index) + propVal + url.substring(end + 1);
                 }
-                log("Trying external URL: " + url, Project.MSG_INFO);
                 try {
-                    conn = new URL(url).openConnection();
+                    URI u = new URI(url);
+                    if ("m2".equals(u.getScheme())) {
+                        log("Trying external Maven URL: " + u, Project.MSG_INFO);
+                        return DownloadBinaries.downloadMaven(this, u);
+                    }
+                    log("Trying external URL: " + u, Project.MSG_INFO);
+                    conn = u.toURL().openConnection();
                     conn.connect();
                     return conn.getInputStream();
-                } catch (IOException ex) {
+                } catch (URISyntaxException | IOException ex) {
                     log("Cannot connect to " + url, Project.MSG_WARN);
                     try {
                         logThrowable(ex);
@@ -411,7 +430,7 @@ public class AutoUpdate extends Task {
         throw new IOException("Cannot resolve external references");
     }
 
-    private void logThrowable(IOException ex) {
+    private void logThrowable(Exception ex) {
         log("Details", ex, Project.MSG_VERBOSE);
     }
 

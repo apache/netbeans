@@ -30,6 +30,18 @@
         </folder>
     </folder>
 
+    <folder name="CslPlugins">
+        <folder name="text">
+            <folder name="x-gradle+x-groovy">
+                <file name="language.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.groovy.editor.api.parser.GroovyLanguage"/>
+                </file>
+                <attr intvalue="2" name="genver"/>
+                <attr boolvalue="true" name="useMultiview"/>
+            </folder>
+        </folder>
+    </folder>
+
     <folder name="csl-hints">
         <folder name="text">
             <folder name="x-groovy">
@@ -107,10 +119,20 @@
                     </folder>
                 </folder>
 
+                <!-- Commented out because Groovy completiont tests are failing with JavaIndexer properly in place.
+                     Groovy maintainers must address this issue appropriately, see NETBEANS-4826
                 <file name="JavaIndexer.shadow">
-                    <attr name="originalFile" stringvalue="Editors/text/x-java/JavaIndexer.instance"/>
+                    <!- - Ugly hack to make commit-validation work. Must change when NETBEANS-4795 is implemented - ->
+                    <attr name="originalFile" stringvalue="Editors/text/x-java/org-netbeans-modules-java-source-indexing-JavaCustomIndexer$Factory-register.instance"/>
                 </file>
+                          -->
 
+            </folder>
+            <folder name="x-gradle+x-groovy">
+                <file name="org-netbeans-modules-csl-core-GsfParserFactory-create.instance">
+                    <attr methodvalue="org.netbeans.modules.csl.core.GsfParserFactory.create" name="instanceCreate"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.parsing.spi.ParserFactory"/>
+                </file>
             </folder>
         </folder>
     </folder>

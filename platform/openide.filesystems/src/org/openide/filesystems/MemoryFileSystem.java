@@ -144,9 +144,9 @@ final class MemoryFileSystem extends AbstractFileSystem implements AbstractFileS
 	FileObject fo = null;
         
         if (x != null) {
-            Reference ref = findReference(n);
+            Reference<? extends FileObject> ref = findReference(n);
             if (ref != null) {
-                fo = (FileObject)ref.get();
+                fo = ref.get();
                 retval = (fo != null) ? fo.isValid() : true;
             }   
         }
@@ -187,11 +187,7 @@ final class MemoryFileSystem extends AbstractFileSystem implements AbstractFileS
 
         //System.out.println("Folder: " + f);
         synchronized(entries) {
-            Iterator it = entries.keySet().iterator();
-
-            while (it.hasNext()) {
-                String name = (String) it.next();
-
+            for (String name : entries.keySet()) {
                 if (name.startsWith(f) || (f.trim().length() == 0)) {
                     int i = name.indexOf('/', f.length());
                     String child = null;

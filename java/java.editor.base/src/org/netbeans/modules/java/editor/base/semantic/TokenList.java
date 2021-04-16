@@ -240,6 +240,30 @@ public class TokenList {
         });
     }
     
+    public Token currentToken() {
+        Token[] res = new Token[1];
+        doc.render(new Runnable() {
+            @Override
+            public void run() {
+                if (cancel.get()) {
+                    return ;
+                }
+
+                if (ts != null && !ts.isValid()) {
+                    cancel.set(true);
+                    return ;
+                }
+
+                if (ts == null) {
+                    return ;
+                }
+
+                res[0] = ts.token();
+            }
+        });
+        return res[0];
+    }
+
     public void moduleNameHere(final ExpressionTree tree, final Map<Tree, List<Token>> tree2Tokens) {
         doc.render(new Runnable() {
             @Override
@@ -331,7 +355,24 @@ public class TokenList {
             }
         });
     }
-    
+
+    public int offset() {
+        return ts != null ? ts.offset() : -1;
+    }
+
+    public int index() {
+        return ts != null ? ts.index() : -1;
+    }
+
+    public void resetToIndex(int index) {
+        if (ts == null) {
+            return ;
+        }
+
+        ts.moveIndex(index);
+        ts.moveNext();
+    }
+
     private static List<TokenSequence<?>> embeddedTokenSequences(TokenHierarchy<Document> th, int offset) {
         TokenSequence<?> embedded = th.tokenSequence();
         List<TokenSequence<?>> sequences = new ArrayList<TokenSequence<?>>();

@@ -554,9 +554,9 @@ public class MoveFileRefactoringPlugin extends JavaRefactoringPlugin {
                     transformer = new MoveClassTransformer(sourceTph, targetUrl);
                 } else {
                     if(sourceTph != null) {
-                        transformer = new MoveClassTransformer(sourceTph, targetTph.getElementHandle());
+                        transformer = new MoveClassTransformer(sourceTph, targetTph.getElementHandle(), targetTph.getFileObject(), sourceTph.getFileObject());
                     } else {
-                        transformer = new MoveClassTransformer(classes.iterator().next(), targetTph.getElementHandle());
+                        transformer = new MoveClassTransformer(classes.iterator().next(), targetTph.getElementHandle(), null, null); //TODO: unclear - source?
                     }
                 }
             }

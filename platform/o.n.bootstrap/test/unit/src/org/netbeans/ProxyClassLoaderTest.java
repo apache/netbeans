@@ -42,16 +42,16 @@ public class ProxyClassLoaderTest extends SetupHid {
 
     public void testAmbiguousDelegation() throws Exception {
         class CL extends ProxyClassLoader {
-            final Class[] owned;
+            final Class<?>[] owned;
             final String name;
-            CL(ClassLoader[] parents, String _name, Class... _owned) {
+            CL(ClassLoader[] parents, String _name, Class<?>... _owned) {
                 super(parents, false);
                 addCoveredPackages(Collections.singleton("org.netbeans"));
                 name = _name;
                 owned = _owned;
             }
-            protected @Override Class doLoadClass(String pkg, String name) {
-                for (Class c : owned) {
+            protected @Override Class<?> doLoadClass(String pkg, String name) {
+                for (Class<?> c : owned) {
                     if (name.equals(c.getName())) {
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         InputStream is = CL.class.getClassLoader().getResourceAsStream(name.replace('.', '/') + ".class");
@@ -86,7 +86,7 @@ public class ProxyClassLoaderTest extends SetupHid {
         assertEquals(l3, l3.loadClass(B.class.getName()).getClassLoader());
         assertEquals(l1, l3.loadClass(B.class.getName()).getMethod("a").invoke(null).getClass().getClassLoader());
         try {
-            Class c = l4.loadClass(A.class.getName());
+            Class<?> c = l4.loadClass(A.class.getName());
             fail("arbitrarily loaded A from " + c.getClassLoader());
         } catch (ClassNotFoundException x) {/* OK */}
         try {
@@ -206,8 +206,8 @@ public class ProxyClassLoaderTest extends SetupHid {
             }
 
             @Override
-            protected synchronized Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
-                Class c = findLoadedClass(name);
+            protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+                Class<?> c = findLoadedClass(name);
                 if (c != null) {
                     return c;
                 }

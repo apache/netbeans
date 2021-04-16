@@ -26,7 +26,7 @@ import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleStrataProvider;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame;
-import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleScope;
+import org.netbeans.modules.debugger.jpda.truffle.vars.impl.TruffleScope;
 import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
@@ -52,7 +52,8 @@ public class TruffleLocalVariablesTreeModel extends TruffleVariablesTreeModel {
     public Object[] getChildren(TreeModel original, Object parent, int from, int to) throws UnknownTypeException {
         if (parent == original.getRoot()) {
             CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(getDebugger().getCurrentThread());
-            if (currentPCInfo != null) {
+            TruffleStackFrame selectedStackFrame;
+            if (currentPCInfo != null && (selectedStackFrame = currentPCInfo.getSelectedStackFrame()) != null) {
                 synchronized (cpisListening) {
                     if (!cpisListening.contains(currentPCInfo)) {
                         currentPCInfo.addPropertyChangeListener(
@@ -60,7 +61,6 @@ public class TruffleLocalVariablesTreeModel extends TruffleVariablesTreeModel {
                         cpisListening.add(currentPCInfo);
                     }
                 }
-                TruffleStackFrame selectedStackFrame = currentPCInfo.getSelectedStackFrame();
                 TruffleScope[] scopes = selectedStackFrame.getScopes();
                 if (scopes.length == 0) {
                     return new Object[] {};

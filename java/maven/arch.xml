@@ -115,6 +115,14 @@
        will be merged into a single instance in the project's lookup.
      </p>
     </api>
+    <api group="layer" name="MavenPackagingLookup" type="export" category="devel">
+        <p>
+            <code>Projects/org-netbeans-modules-maven/&lt;packaging-type>/Lookup</code> is added to the project's additional Lookup. The content is expected
+            to contain packaing-specific services and processors, for example, <a href="@TOP@/org/netbans/modules/maven/api/execute/PrerequisitesChecker.html">PrerequisitesCheckers</a>.
+            In addition, <code>Projects/org-netbeans-modules-maven/_any/Lookup</code> defines services that act after the packaging-specific ones.
+        </p>
+        For the details and examples, see description in <a href="@TOP@/org/netbeans/modules/maven/api/execute/PrerequisitesChecker.html">PrerequisitesChecker javadoc</a>.
+    </api>
     <api group="layer" name="MavenActions" type="export" category="official">
      <p>
        "Projects/org-netbeans-modules-maven/ProjectActions", 
@@ -169,6 +177,63 @@
           in case reparsing starts too soon (wasting CPU) or too late (impeding editing).
       </api>
   </p>
+  
+  <p>
+      <api category="devel" group="branding" name="org.netbeans.modules.maven.options.DEFAULT_REUSE_OUTPUT" type="export">
+          Brand the <code>DEFAULT_REUSE_OUTPUT</code> key in a 
+          <code>org.netbeans.modules.maven.options.Bundle</code> file
+          with one of the values <code>true</code> or <code>false</code>
+          to specify the default behavior of reusing output by your application.
+          Use <code>never</code> value, if the reuse shall never be done,
+          regardless of the settings value.
+      </api> 
+      <api category="devel" group="branding" name="org.netbeans.modules.maven.api.execute.DEFAULT_COMPILE_ON_SAVE" type="export">
+          Brand the <code>DEFAULT_COMPILE_ON_SAVE</code> key in a 
+          <code>org.netbeans.modules.maven.api.execute.Bundle</code> file
+          with one of the values <code>all</code> or <code>none</code>
+          to specify the default behavior of compile on save in Maven 
+          projects.
+      </api> 
+      <api category="stable" group="property" name="exec.vmArgs" type="export">
+          The plugin exports Java VM parameters to be used for application execution in <code>${exec.vmArgs}</code> 
+          property that can be used in action mappings or Maven pom.xml.
+      </api>
+      <api category="stable" group="property" name="exec.appArgs" type="export">
+          The plugin exports application parameters to be used for application execution in <code>${exec.appArgs}</code> 
+          property that can be used in action mappings or Maven pom.xml.
+      </api>
+      <api category="private" group="property" name="NbIde." type="export">
+          Properties designed to be read only by NB IDE code, and <b>not passed</b> to Maven can be prefixed by this prefix.
+          Maven module uses such properties to communicate between services that participate on maven launch internally.
+      </api>
+      <api category="devel" group="lookup" name="ExplicitProcessParameters" type="export">
+          Project actions that execute user application (run, debug) accept additional VM and application
+          arguments as a series of <a href="@org-netbeans-modules-extexecution-base@/org/netbeans/api/extexecution/base/ExplicitProcessParameters.html">
+            ExplicitProcessParameters</a> instance(s) in the action's Lookup. See <a href="@org-netbeans-modules-extexecution-base@/org/netbeans/api/extexecution/base/ExplicitProcessParameters.html">
+            ExplicitProcessParameters</a> javadoc for more details.
+      </api>
+      <api category="devel" group="branding" name="org.netbeans.modules.maven.indexer.api.DEFAULT_CREATE_INDEX" type="export">
+          Brand the <code>DEFAULT_CREATE_INDEX</code> key in
+          <code>org.netbeans.modules.maven.indexer.api.Bundle</code> file
+          with one of the values <code>true</code> or <code>false</code>
+          to control (usually to disable with <code>DEFAULT_CREATE_INDEX=false</code>)
+          the default behavior automatic maven index downloading.
+      </api> 
+      <api category="devel" group="branding" name="org.netbeans.modules.maven.indexer.api.DEFAULT_UPDATE_FREQ" type="export">
+          Brand the <code>DEFAULT_UPDATE_FREQ</code> key in
+          <code>org.netbeans.modules.maven.indexer.api.Bundle</code> file
+          with one of the values:
+          <ul>
+              <li><code>0</code> - once a week</li>
+              <li><code>1</code> - once a day</li>
+              <li><code>2</code> - on each startup</li>
+              <li><code>3</code> - never</li>
+          </ul>
+          to control (usually to disable with <code>DEFAULT_UPDATE_FREQ=3</code>)
+          the default behavior automatic maven index downloading.
+      </api> 
+  </p>
+  
  </answer>
  
  <answer id="resources-file">

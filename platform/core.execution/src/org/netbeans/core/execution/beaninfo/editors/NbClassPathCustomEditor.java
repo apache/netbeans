@@ -47,7 +47,7 @@ class NbClassPathCustomEditor extends javax.swing.JPanel {
     /** Property editor associated with. */
     private PropertyEditor editor;
     /** Model of list of class path items. */
-    private DefaultListModel listModel = new DefaultListModel();
+    private DefaultListModel<Object> listModel = new DefaultListModel<>();
     private boolean editable = true;
 
     

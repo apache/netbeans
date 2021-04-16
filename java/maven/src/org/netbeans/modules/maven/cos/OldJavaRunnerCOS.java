@@ -47,6 +47,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.runner.JavaRunner;
 import org.netbeans.api.java.source.ui.ScanDialog;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.maven.ActionProviderImpl;
 import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.api.FileUtilities;
 import org.netbeans.modules.maven.api.NbMavenProject;
@@ -60,6 +61,7 @@ import org.netbeans.modules.maven.classpath.RuntimeClassPathImpl;
 import org.netbeans.modules.maven.classpath.TestRuntimeClassPathImpl;
 import org.netbeans.modules.maven.customizer.RunJarPanel;
 import org.netbeans.modules.maven.execute.DefaultReplaceTokenProvider;
+import org.netbeans.modules.maven.runjar.MavenExecuteUtils;
 import org.netbeans.modules.maven.spi.cos.CompileOnSaveSkipper;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ActionProvider;
@@ -94,9 +96,9 @@ public class OldJavaRunnerCOS {
                     (ActionProvider.COMMAND_RUN.equals(actionName) ||
                     ActionProvider.COMMAND_DEBUG.equals(actionName) ||
                     ActionProvider.COMMAND_PROFILE.equals(actionName))) ||
-                    CosChecker.RUN_MAIN.equals(actionName) ||
-                    CosChecker.DEBUG_MAIN.equals(actionName) ||
-                    CosChecker.PROFILE_MAIN.equals(actionName)) {
+                    ActionProviderImpl.COMMAND_RUN_MAIN.equals(actionName) ||
+                    ActionProviderImpl.COMMAND_DEBUG_MAIN.equals(actionName) ||
+                    ActionProviderImpl.COMMAND_PROFILE_MAIN.equals(actionName)) {
                 long stamp = CosChecker.getLastCoSLastTouch(config, false);
                 //check the COS timestamp against critical files (pom.xml)
                 // if changed, don't do COS.
@@ -372,7 +374,7 @@ public class OldJavaRunnerCOS {
         } else {
             params.put(JavaRunner.PROP_WORK_DIR, config.getExecutionDirectory());
         }
-        if (CosChecker.RUN_MAIN.equals(actionName) || CosChecker.DEBUG_MAIN.equals(actionName) || CosChecker.PROFILE_MAIN.equals(actionName)) {
+        if (ActionProviderImpl.COMMAND_RUN_MAIN.equals(actionName) || ActionProviderImpl.COMMAND_DEBUG_MAIN.equals(actionName) || ActionProviderImpl.COMMAND_PROFILE_MAIN.equals(actionName)) {
             FileObject selected = config.getSelectedFileObject();
             ClassPath srcs = config.getProject().getLookup().lookup(ProjectSourcesClassPathProvider.class).getProjectSourcesClassPath(ClassPath.SOURCE);
             String path = srcs.getResourceName(selected);
@@ -386,7 +388,7 @@ public class OldJavaRunnerCOS {
         }
         String exargs = config.getProperties().get("exec.args");
         if (exargs != null) {
-            String[] args = RunJarPanel.splitAll(exargs);
+            String[] args = MavenExecuteUtils.splitAll(exargs, true);
             if (params.get(JavaRunner.PROP_EXECUTE_FILE) == null) {
                 params.put(JavaRunner.PROP_CLASSNAME, args[1]);
             }
@@ -396,7 +398,7 @@ public class OldJavaRunnerCOS {
                 params.put(JavaRunner.PROP_RUN_JVMARGS, CosChecker.extractDebugJVMOptions(args[0]));
             } catch (CommandLineException cli) {
                 LOG.log(Level.INFO, "error parsing exec.args property:" + args[0], cli);
-                if (CosChecker.DEBUG_MAIN.equals(actionName) || ActionProvider.COMMAND_DEBUG.equals(actionName)) {
+                if (ActionProviderImpl.COMMAND_DEBUG_MAIN.equals(actionName) || ActionProvider.COMMAND_DEBUG.equals(actionName)) {
                     NotifyDescriptor.Message msg = new NotifyDescriptor.Message("Error parsing exec.args property, arguments will not be passed to internal execution. Error: " + cli.getLocalizedMessage(), NotifyDescriptor.ERROR_MESSAGE);
                     DialogDisplayer.getDefault().notifyLater(msg);
                 }
@@ -469,11 +471,11 @@ public class OldJavaRunnerCOS {
         String actionName = config.getActionName();
         StartupExtender.StartMode mode;
         
-        if (ActionProvider.COMMAND_RUN.equals(actionName) || CosChecker.RUN_MAIN.equals(actionName)) {
+        if (ActionProvider.COMMAND_RUN.equals(actionName) || ActionProviderImpl.COMMAND_RUN_MAIN.equals(actionName)) {
             mode = StartupExtender.StartMode.NORMAL;
-        } else if (ActionProvider.COMMAND_DEBUG.equals(actionName) || CosChecker.DEBUG_MAIN.equals(actionName)) {
+        } else if (ActionProvider.COMMAND_DEBUG.equals(actionName) || ActionProviderImpl.COMMAND_DEBUG_MAIN.equals(actionName)) {
             mode = StartupExtender.StartMode.DEBUG;
-        } else if (ActionProvider.COMMAND_PROFILE.equals(actionName) || ActionProvider.COMMAND_PROFILE_SINGLE.equals(actionName) || CosChecker.PROFILE_MAIN.equals(actionName)) {
+        } else if (ActionProvider.COMMAND_PROFILE.equals(actionName) || ActionProvider.COMMAND_PROFILE_SINGLE.equals(actionName) || ActionProviderImpl.COMMAND_PROFILE_MAIN.equals(actionName)) {
             mode = StartupExtender.StartMode.PROFILE;
         } else if (ActionProvider.COMMAND_PROFILE_TEST_SINGLE.equals(actionName)) {
             mode = StartupExtender.StartMode.TEST_PROFILE;
@@ -509,11 +511,11 @@ public class OldJavaRunnerCOS {
     static String action2Quick(String actionName) {
         if (ActionProvider.COMMAND_CLEAN.equals(actionName)) {
             return JavaRunner.QUICK_CLEAN;
-        } else if (ActionProvider.COMMAND_RUN.equals(actionName) || CosChecker.RUN_MAIN.equals(actionName)) {
+        } else if (ActionProvider.COMMAND_RUN.equals(actionName) || ActionProviderImpl.COMMAND_RUN_MAIN.equals(actionName)) {
             return JavaRunner.QUICK_RUN;
-        } else if (ActionProvider.COMMAND_DEBUG.equals(actionName) || CosChecker.DEBUG_MAIN.equals(actionName)) {
+        } else if (ActionProvider.COMMAND_DEBUG.equals(actionName) || ActionProviderImpl.COMMAND_DEBUG_MAIN.equals(actionName)) {
             return JavaRunner.QUICK_DEBUG;
-        } else if (ActionProvider.COMMAND_PROFILE.equals(actionName) || CosChecker.PROFILE_MAIN.equals(actionName)) {
+        } else if (ActionProvider.COMMAND_PROFILE.equals(actionName) || ActionProviderImpl.COMMAND_PROFILE_MAIN.equals(actionName)) {
             return JavaRunner.QUICK_PROFILE;
         } else if (ActionProvider.COMMAND_TEST.equals(actionName) || ActionProvider.COMMAND_TEST_SINGLE.equals(actionName) || SingleMethod.COMMAND_RUN_SINGLE_METHOD.equals(actionName)) {
             return JavaRunner.QUICK_TEST;

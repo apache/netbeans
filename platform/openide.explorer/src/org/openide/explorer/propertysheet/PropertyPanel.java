@@ -686,7 +686,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
     protected void processFocusEvent(FocusEvent fe) {
         super.processFocusEvent(fe);
 
-        if (fe.getID() == fe.FOCUS_GAINED) {
+        if (fe.getID() == FocusEvent.FOCUS_GAINED) {
             if ((inner != null) && inner.isEnabled() && inner.isFocusTraversable()) {
                 inner.requestFocus();
             }

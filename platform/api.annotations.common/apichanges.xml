@@ -81,6 +81,26 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="transitive-closure">
+            <api name="common_annotations_api"/>
+            <summary>Exposing necessary javax.annotation elements</summary>
+            <version major="1" minor="40"/>
+            <date day="1" month="4" year="2021"/>
+            <author login="jtulach"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    In order to enable <code>-Werror</code> to treat warnings
+                    as errors, we need to get rid of annotation errors caused
+                    by missing <code>When</code> constants as 
+                    <a href="https://github.com/apache/netbeans/pull/2835">PR-2835</a>
+                    explains. This is done by exposing transitively needed,
+                    but previously missing <code>javax.annotation</code> elements.
+                    Javadoc for the <code>javax</code> isn't generated and they aren't
+                    recommended to be used directly.
+                </p>
+            </description>
+        </change>
         <change id="SuppressWarningsJustification">
             <api name="common_annotations_api"/>
             <summary>Added justification attribute to <code>SuppressWarnings</code></summary>
@@ -90,7 +110,7 @@ is the proper place.
             <compatibility addition="yes"/>
             <description>
                 <p>
-                    Introduced justificatio attribute to specify why it is ok to
+                    Introduced justification attribute to specify why it is ok to
                     suppress a warning.
                 </p>
             </description>

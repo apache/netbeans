@@ -445,7 +445,7 @@ private void btnFetchAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         @Override
         public void perform () {
             try {
-                final DefaultListModel targetsModel = new DefaultListModel();
+                final DefaultListModel<HgLogMessage> targetsModel = new DefaultListModel<>();
                 final HgLogMessage displayedRevision = getDisplayedRevision();
                 if (displayedRevision == null) {
                     if (acceptSelection(NO_REVISION)) {

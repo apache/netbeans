@@ -42,7 +42,7 @@ public class ClassEditor extends java.beans.PropertyEditorSupport {
      *    current value.
      */
     public String getJavaInitializationString() {
-        Class clazz = (Class)getValue();
+        Class<?> clazz = (Class)getValue();
         if (clazz == null) return "null"; // NOI18N
         return "Class.forName (\"" + clazz.getName () + "\")"; // NOI18N
     }
@@ -56,7 +56,7 @@ public class ClassEditor extends java.beans.PropertyEditorSupport {
     *       be prepared to parse that string back in setAsText().
     */
     public String getAsText() {
-        Class clazz = (Class)getValue();
+        Class<?> clazz = (Class)getValue();
         if (clazz == null) return "null"; // NOI18N
         return clazz.getName ();
     }

@@ -63,7 +63,7 @@ public class SearchPerformanceComparator extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         regexpTextField = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        matcherComboBox = new javax.swing.JComboBox();
+        matcherComboBox = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -91,7 +91,7 @@ public class SearchPerformanceComparator extends javax.swing.JFrame {
 
         jLabel3.setText(org.openide.util.NbBundle.getMessage(SearchPerformanceComparator.class, "SearchPerformanceComparator.jLabel3.text")); // NOI18N
 
-        matcherComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Default (ML: BufferedCharSequence, SL: LineReader)", "MultiLineMappedMatcherBig", "MultiLineMappedMatcherSmall", "MultiLineStreamMatcher", "SingleLineStreamMatcher", "Iterator", "AsciiMultiLineMappedMatcher" }));
+        matcherComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Default (ML: BufferedCharSequence, SL: LineReader)", "MultiLineMappedMatcherBig", "MultiLineMappedMatcherSmall", "MultiLineStreamMatcher", "SingleLineStreamMatcher", "Iterator", "AsciiMultiLineMappedMatcher" }));
 
         jLabel4.setText(org.openide.util.NbBundle.getMessage(SearchPerformanceComparator.class, "SearchPerformanceComparator.jLabel4.text")); // NOI18N
 
@@ -328,7 +328,7 @@ public class SearchPerformanceComparator extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JComboBox matcherComboBox;
+    private javax.swing.JComboBox<String> matcherComboBox;
     private javax.swing.JLabel matchesLabel;
     private javax.swing.JTextField regexpTextField;
     private javax.swing.JTextField rootTextField;

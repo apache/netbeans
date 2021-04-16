@@ -477,7 +477,7 @@ public class JSFConfigEditorSupport extends DataEditorSupport
          */
         @Override
         public org.openide.windows.CloneableOpenSupport findCloneableOpenSupport() {
-            return (JSFConfigEditorSupport) getDataObject().getCookie(JSFConfigEditorSupport.class);
+            return getDataObject().getCookie(JSFConfigEditorSupport.class);
         }
     }
 }

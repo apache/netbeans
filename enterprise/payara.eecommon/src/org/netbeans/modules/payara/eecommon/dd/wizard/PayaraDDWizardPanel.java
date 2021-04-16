@@ -41,7 +41,7 @@ import org.netbeans.spi.project.ui.templates.support.Templates;
  */
 public class PayaraDDWizardPanel implements WizardDescriptor.Panel {
     
-    private final Set listeners = new HashSet(1);
+    private final Set<ChangeListener> listeners = new HashSet<>(1);
     private final PayaraDDVisualPanel component = new PayaraDDVisualPanel();
     private WizardDescriptor wizardDescriptor;
     private Project project;
@@ -117,13 +117,13 @@ public class PayaraDDWizardPanel implements WizardDescriptor.Panel {
     }
     
     protected final void fireChangeEvent() {
-        Iterator it;
+        Iterator<ChangeListener> it;
         synchronized (listeners) {
-            it = new HashSet(listeners).iterator();
+            it = new HashSet<ChangeListener>(listeners).iterator();
         }
         ChangeEvent ev = new ChangeEvent(this);
         while (it.hasNext()) {
-            ((ChangeListener)it.next()).stateChanged(ev);
+            it.next().stateChanged(ev);
         }
     }
     

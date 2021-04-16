@@ -45,7 +45,7 @@ public class IOManager {
 
     
     /** output writer Thread */
-    private Hashtable                       lines = new Hashtable ();
+    private Hashtable<String, Object> lines = new Hashtable<>();
     private Listener                        listener = new Listener ();
 
     

@@ -21,6 +21,7 @@ package org.netbeans.modules.kotlin.editor;
 import java.io.IOException;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
+import org.netbeans.modules.textmate.lexer.api.GrammarRegistrations;
 import org.netbeans.modules.textmate.lexer.api.GrammarRegistration;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -35,17 +36,24 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
 
-@GrammarRegistration(
-    mimeType="text/x-kotlin",
-    grammar="Kotlin.tmLanguage.json"
-)
+@GrammarRegistrations({
+    @GrammarRegistration(
+            mimeType = "text/x-kotlin",
+            grammar = "Kotlin.tmLanguage.json"
+    ),
+    @GrammarRegistration(
+            mimeType = "text/x-gradle+x-kotlin",
+            grammar = "Kotlin.tmLanguage.json"
+    )
+})
 @Messages({
     "LBL_Kt_LOADER=Kotlin Files"
 })
 @MIMEResolver.ExtensionRegistration(
         displayName = "#LBL_Kt_LOADER",
         mimeType = "text/x-kotlin",
-        extension = {"kt", "kts"}
+        extension = {"kt", "kts"},
+        position = 80843
 )
 @DataObject.Registration(
         mimeType = "text/x-kotlin",
@@ -120,7 +128,7 @@ public class KtDataObject extends MultiDataObject {
     @MultiViewElement.Registration(
             displayName = "#LBL_Kt_EDITOR",
             iconBase = "org/netbeans/modules/kotlin/editor/kotlin_file.png",
-            mimeType = "text/x-kotlin",
+            mimeType = {"text/x-kotlin", "text/x-gradle+x-kotlin"},
             persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
             preferredID = "Kt",
             position = 1000

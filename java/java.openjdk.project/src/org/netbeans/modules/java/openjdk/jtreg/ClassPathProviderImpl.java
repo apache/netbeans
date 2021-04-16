@@ -40,6 +40,7 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.project.libraries.Library;
 import org.netbeans.api.project.libraries.LibraryManager;
 import org.netbeans.api.queries.FileEncodingQuery;
+import org.netbeans.modules.java.openjdk.common.BuildUtils;
 import org.netbeans.modules.java.openjdk.common.ShortcutUtils;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -62,19 +63,20 @@ public class ClassPathProviderImpl implements ClassPathProvider {
 
         while (search != null) {
             if (testProperties == null) {
-                testProperties =  search.getFileObject("TEST.properties");
+                testProperties =  BuildUtils.getFileObject(search, "TEST.properties");
             }
 
-            FileObject testRoot = search.getFileObject("TEST.ROOT");
+            FileObject testRoot = BuildUtils.getFileObject(search, "TEST.ROOT");
 
             if (testRoot != null) {
                 boolean javac = (Utilities.isLangtoolsRepository(search.getParent()) || search.getNameExt().equals("langtools")) &&
                                 ShortcutUtils.getDefault().shouldUseCustomTest("langtools", FileUtil.getRelativePath(search.getParent(), file));
+                FileObject keyRoot = javac ? search.getNameExt().equals("langtools") ? Utilities.getLangtoolsKeyRoot(search.getParent().getParent()) : Utilities.getLangtoolsKeyRoot(search.getParent()) : null;
                 //XXX: hack to make things work for langtools:
                 switch (type) {
                     case ClassPath.COMPILE:
                         if (javac) {
-                            ClassPath langtoolsCP = ClassPath.getClassPath(Utilities.getLangtoolsKeyRoot(search.getParent()), ClassPath.COMPILE);
+                            ClassPath langtoolsCP = ClassPath.getClassPath(keyRoot, ClassPath.COMPILE);
                             Library testngLib = LibraryManager.getDefault().getLibrary("testng");
 
                             if (testngLib != null) {
@@ -91,7 +93,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
                     case ClassPath.BOOT:
                         if (javac) {
                             try {
-                                ClassPath langtoolsBCP = ClassPath.getClassPath(Utilities.getLangtoolsKeyRoot(search.getParent()), ClassPath.BOOT);
+                                ClassPath langtoolsBCP = ClassPath.getClassPath(keyRoot, ClassPath.BOOT);
                                 List<URL> roots = new ArrayList<>();
                                 for (String rootPaths : new String[] {"build/classes/",
                                                                       "build/java.compiler/classes/",
@@ -150,7 +152,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
                                 String externalLibRoots = p.getProperty("external.lib.roots");
                                 if (externalLibRoots != null) {
                                     for (String extLib : externalLibRoots.split("\\s+")) {
-                                        FileObject libDir = search.getFileObject(extLib);
+                                        FileObject libDir = BuildUtils.getFileObject(search, extLib);
 
                                         if (libDir != null) {
                                             libDirs.add(libDir);
@@ -191,9 +193,9 @@ public class ClassPathProviderImpl implements ClassPathProvider {
 
     private FileObject resolve(FileObject file, FileObject root, String spec) {
         if (spec.startsWith("/")) {
-            return root.getFileObject(spec.substring(1));
+            return BuildUtils.getFileObject(root, spec.substring(1));
         } else {
-            return file.getParent().getFileObject(spec);
+            return BuildUtils.getFileObject(file.getParent(), spec);
         }
     }
 

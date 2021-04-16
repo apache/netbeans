@@ -24,8 +24,13 @@
 
   <import file="../../nbbuild/templates/projectized.xml"/>
 
-  <target name="compile" depends="projectized-common.compile,javafx-nbms"/>
-
+  <target name="compile" depends="projectized-common.compile,javafx-nbms,-branding"/>
+  <target name="-branding">
+      <replace file="${build.dir}/classes/org/netbeans/modules/updatecenters/resources/Bundle.properties" value="defaultvalue" propertyFile="${nb_all}/nbbuild/build/netbeansrelease.properties">
+           <replacefilter token="@@metabuild.DistributionURL@@" property="metabuild.DistributionURL"/>
+           <replacefilter token="@@metabuild.PluginPortalURL@@" property="metabuild.PluginPortalURL"/> 
+      </replace>
+  </target>
   <target name="javafx-nbms" description="Prepare NBMs for 3rd party libraries" depends="projectized-common.compile">
       <tempfile destdir="${build.dir}" prefix="sign" suffix=".ks" property="netbeans.bundled.ks" deleteonexit="true" />
       <tempfile destdir="${build.dir}" prefix="sign" suffix=".cert" property="netbeans.bundled.cert" deleteonexit="true"/>
@@ -36,10 +41,24 @@
       />
       <subant  target="nbm" inheritall="false">
           <property name="build.dir" location="build/3rdparty-nbms"/>
-          <property name="keystore" location="${netbeans.bundled.ks}"/>
-          <property name="storepass" value="${netbeans.bundled.ks}"/>
           <property name="nbm_alias" value="netbeans-bundled"/>
           <fileset dir="${nb_all}/extra" includes="libs.javafx.*/build.xml"/>
+      </subant>
+      <subant inheritall="false">
+          <target name="clean" />
+          <target name="build" />
+          <property name="nb_all" location="${nb_all}"/>
+          <property name="nbplatform.default.netbeans.dest.dir" location="${netbeans.dest.dir}"/>
+          <property name="nbplatform.default.harness.dir" location="${netbeans.dest.dir}/harness"/>
+          <fileset dir="extras" includes="build.xml"/>
+      </subant>
+      <subant target="nbm" inheritall="false">
+          <property name="build.dir" location="build/3rdparty-nbms"/>
+          <property name="nbm_alias" value="netbeans-bundled"/>
+          <property name="nb_all" location="${nb_all}"/>
+          <property name="nbplatform.default.netbeans.dest.dir" location="${netbeans.dest.dir}"/>
+          <property name="nbplatform.default.harness.dir" location="${netbeans.dest.dir}/harness"/>
+          <fileset dir="extras" includes="*/build.xml"/>
       </subant>
       <exec executable="${java.home}/bin/keytool" failonerror="true">
           <arg value="-exportcert"/>

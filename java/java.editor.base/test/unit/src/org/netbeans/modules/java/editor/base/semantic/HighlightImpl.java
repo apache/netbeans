@@ -123,11 +123,13 @@ public final class HighlightImpl {
         ColoringAttributes.DEPRECATED,
         
         ColoringAttributes.FIELD,
+        ColoringAttributes.RECORD_COMPONENT,
         ColoringAttributes.LOCAL_VARIABLE,
         ColoringAttributes.PARAMETER,
         ColoringAttributes.METHOD,
         ColoringAttributes.CONSTRUCTOR,
         ColoringAttributes.CLASS,
+        ColoringAttributes.RECORD,
         ColoringAttributes.INTERFACE,
         ColoringAttributes.ANNOTATION_TYPE,
         ColoringAttributes.ENUM,
@@ -142,6 +144,10 @@ public final class HighlightImpl {
         ColoringAttributes.DECLARATION,
         
         ColoringAttributes.MARK_OCCURRENCES,
+
+        ColoringAttributes.KEYWORD,
+        
+        ColoringAttributes.UNINDENTED_TEXT_BLOCK,
     });
  
     public static HighlightImpl parse(StyledDocument doc, String line) throws ParseException, BadLocationException {

@@ -89,8 +89,8 @@ public class CatalogModelImpl implements CatalogModel {
     protected FileObject catalogFileObject = null;
     NbCatalogResolver catalogResolver;
     Catalog apacheCatalogResolverObj;
-    private boolean doFetch = true;
-    private boolean fetchSynchronous = false;
+    boolean doFetch = true;
+    boolean fetchSynchronous = false;
     private boolean registerInCatalog = true;
     
     /**
@@ -129,12 +129,21 @@ public class CatalogModelImpl implements CatalogModel {
      * Check if the URI conveys control information.
      * CC adds special query strings into the URI that must be cleared.
      */
-    private URI extractRealURI(URI locationURI) throws URISyntaxException {
+    URI extractRealURI(URI locationURI) throws URISyntaxException {
         URI realURI = locationURI;
-        String queryString = locationURI.getQuery();
+        // URI parsing is parsing broken on JDK and fails to parse URNs
+        // literal question marks should only be present in URIs when
+        // used as separators, so splitting at "?" should extract the
+        // queryString
+        String literalUri = locationURI.toString();
+        int questionMarkPos = literalUri.indexOf("?"); //NOI18N
+        String queryString = null;
+        if(questionMarkPos >= 0) {
+            queryString = literalUri.substring(questionMarkPos);
+        }
         if(queryString != null &&
-           queryString.indexOf("fetch=") != -1 && //NOI18N
-           queryString.indexOf("sync=") != -1) { //NOI18N
+           queryString.contains("fetch=") && //NOI18N
+           queryString.contains("sync=")) { //NOI18N
             int index = queryString.indexOf("fetch="); //NOI18N
             String temp = queryString.substring(index);
             String queries[] = temp.split("&"); //NOI18N
@@ -613,7 +622,7 @@ public class CatalogModelImpl implements CatalogModel {
         catalogResolver = new NbCatalogResolver(manager);
         apacheCatalogResolverObj = catalogResolver.getCatalog();
         for(File catFile : catalogFileList){
-            apacheCatalogResolverObj.parseCatalog(catFile.toURL());
+            apacheCatalogResolverObj.parseCatalog(catFile.toURI().toURL());
         }
         
         String result = null;

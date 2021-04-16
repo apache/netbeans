@@ -24,6 +24,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.completion.Completion;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.editor.mimelookup.MimeRegistrations;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.xml.lexer.XMLTokenId;
@@ -44,6 +46,10 @@ import org.openide.util.NbBundle;
  *
  * @author Samaresh (Samaresh.Panda@Sun.Com)
  */
+@MimeRegistrations({
+    @MimeRegistration(mimeType = "text/xml", service = CompletionProvider.class),
+    @MimeRegistration(mimeType = "text/xml-external-parsed-entity", service = CompletionProvider.class),
+})
 public class XMLCompletionProvider implements CompletionProvider {
     
     private static final boolean ENABLED = true;

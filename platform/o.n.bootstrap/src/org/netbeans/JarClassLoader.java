@@ -38,6 +38,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.nio.file.NoSuchFileException;
 import java.security.CodeSource;
 import java.security.PermissionCollection;
 import java.security.Policy;
@@ -204,7 +205,7 @@ public class JarClassLoader extends ProxyClassLoader {
     }
     
     @Override
-    protected Class doLoadClass(String pkgName, String name) {
+    protected Class<?> doLoadClass(String pkgName, String name) {
         String path = name.replace('.', '/').concat(".class"); // NOI18N
         
         // look up the Sources and return a class based on their content
@@ -519,7 +520,7 @@ public class JarClassLoader extends ProxyClassLoader {
                                         JarFile ret;
                                         try {
                                             ret = new JarFile(file, false);
-                                        } catch (FileNotFoundException ex) {
+                                        } catch (FileNotFoundException | NoSuchFileException ex) {
                                             throw (ZipException)new ZipException(ex.getMessage()).initCause(ex);
                                         }
                                         long took = System.currentTimeMillis() - now;
@@ -672,7 +673,9 @@ public class JarClassLoader extends ProxyClassLoader {
         @Override
         protected void destroy() throws IOException {
             super.destroy();
-            assert dead == false : "Already had dead JAR: " + file;
+            if (dead) {
+                return;
+            }
             
             File orig = file;
 
@@ -1138,6 +1141,7 @@ public class JarClassLoader extends ProxyClassLoader {
             return new JarFile(src.file); // #134424
         }
 
+        @SuppressWarnings("rawtypes")
         public @Override Object getContent(Class[] classes) throws IOException {
             if (Arrays.asList(classes).contains(ClassLoader.class)) {
                 return loader;

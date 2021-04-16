@@ -66,7 +66,7 @@ public final class MimeTypesTracker {
     /** The property for notifying changes in mime types tracked by this tracker. */
     public static final String PROP_MIME_TYPES = "mime-types"; //NOI18N
 
-    private static final Map<String, Map<StorageDescription, MimeTypesTracker>> settingMimeTypes = new HashMap<String, Map<StorageDescription, MimeTypesTracker>>();
+    private static final Map<String, Map<StorageDescription, MimeTypesTracker>> settingMimeTypes = new HashMap<>();
     
     public static MimeTypesTracker get(String settingsTypeId, String basePath) {
         assert basePath != null : "The parameter basePath must not be null"; //NOI18N
@@ -81,7 +81,7 @@ public final class MimeTypesTracker {
         synchronized (settingMimeTypes) {
             Map<StorageDescription, MimeTypesTracker> map = settingMimeTypes.get(basePath);
             if (map == null) {
-                map = new WeakHashMap<StorageDescription, MimeTypesTracker>();
+                map = new WeakHashMap<>();
                 settingMimeTypes.put(basePath, map);
             }
             
@@ -199,15 +199,13 @@ public final class MimeTypesTracker {
     static boolean synchronous = false;
     
     /* package */ static final RequestProcessor RP = new RequestProcessor(MimeTypesTracker.class.getName()); //NOI18N
-    private final RequestProcessor.Task task = RP.create(new Runnable() {
-        public void run() {
-            rebuild();
-        }
+    private final RequestProcessor.Task task = RP.create(() -> {
+        rebuild();
     });
 
     // #172043 - this is here to keep all folder FileObjects that we have traversed in the memory
     // so that FileSystems would know about them and fired events correctly
-    private final Set<FileObject> trackedFolders = new HashSet<FileObject>();
+    private final Set<FileObject> trackedFolders = new HashSet<>();
     
     private void rebuild() {
         PropertyChangeEvent event = null;
@@ -215,7 +213,7 @@ public final class MimeTypesTracker {
         synchronized (LOCK) {
             Object [] ret = findTarget(basePathElements);
             FileObject f = (FileObject) ret[0];
-            boolean isBase = ((Boolean) ret[1]).booleanValue();
+            boolean isBase = ((Boolean) ret[1]);
 
             // The base folder or some folder up in the hierarchy has been created/deleted
             if (f != folder) {
@@ -231,7 +229,7 @@ public final class MimeTypesTracker {
             
             if (isBaseFolder) {
                 // Clear the cache
-                newMimeTypes = new HashMap<String, String>();
+                newMimeTypes = new HashMap<>();
 
                 // Go through mime type types
                 FileObject [] types = folder.getChildren();
@@ -254,7 +252,7 @@ public final class MimeTypesTracker {
 
                         boolean add;
                         if (locator != null) {
-                            Map<String, List<Object []>> scan = new HashMap<String, List<Object []>>();
+                            Map<String, List<Object []>> scan = new HashMap<>();
                             locator.scan(folder, mimeType, null, false, true, true, false, scan);
                             add = !scan.isEmpty();
 
@@ -333,7 +331,7 @@ public final class MimeTypesTracker {
             }
         }
         
-        return new Object [] { target, Boolean.valueOf(isTarget) };
+        return new Object [] { target, isTarget};
     }
 
     private final class Listener extends FileChangeAdapter {

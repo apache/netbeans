@@ -19,12 +19,12 @@
     under the License.
 
 -->
-<project name="nbbuild" default="build-nozip" basedir=".">
+<project name="nbbuild" default="build-nozip" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
 
-  <fail message="Please build using Ant 1.8.0 or higher.">
+  <fail message="Please build using Ant 1.9.8 or higher.">
     <condition>
       <not>
-        <antversion atleast="1.8.0"/>
+        <antversion atleast="1.9.8"/>
       </not>
     </condition>
   </fail>
@@ -60,19 +60,16 @@
         <classpath>
             <pathelement location="${ant.core.lib}"/>
         </classpath>
-        <include name="org/netbeans/nbbuild/HgExec.java"/>
-        <include name="org/netbeans/nbbuild/ValidateHgConfiguration.java"/>
         <include name="org/netbeans/nbbuild/extlibs/DeregisterExternalHook.java"/>
         <include name="org/netbeans/nbbuild/extlibs/DownloadBinaries.java"/>
         <compilerarg line="-Xlint -Xlint:-serial"/>
     </javac>
-    <taskdef name="validate-hg-configuration" classname="org.netbeans.nbbuild.ValidateHgConfiguration" classpath="${build.ant.classes.dir}"/>
-    <validate-hg-configuration root=".."/>
     <taskdef name="deregisterexternalhook" classname="org.netbeans.nbbuild.extlibs.DeregisterExternalHook" classpath="${build.ant.classes.dir}"/>
     <deregisterexternalhook root=".."/>
     <taskdef name="downloadbinaries" classname="org.netbeans.nbbuild.extlibs.DownloadBinaries" classpath="${build.ant.classes.dir}"/>
+    <taskdef name="configureproxy" classname="org.netbeans.nbbuild.extlibs.ConfigureProxy" classpath="${build.ant.classes.dir}"/>
     <property name="have-downloadbinaries-task" value="true" />
-    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" repos="${binaries.repos}">
         <manifest dir="${nb_all}">
             <include name="nbbuild/external/binaries-list"/>
             <include name="platform/libs.junit4/external/binaries-list"/>
@@ -93,6 +90,8 @@
      <fileset dir="..">
         <!-- For JavaHelp indexing and link checking: -->
         <include name="platform/javahelp/external/jhall*.jar"/>
+        <!-- For json parsing -->
+        <include name="nbbuild/external/json-simple*.jar"/>
       </fileset>
     </path>
     <javac srcdir="antsrc" destdir="${build.ant.classes.dir}" deprecation="true" debug="${build.compiler.debug}" source="1.8" target="1.8">
@@ -110,18 +109,123 @@
       <zipfileset dir="${nb_all}/nbbuild" includes="notice-stub.txt" fullpath="META-INF/NOTICE"/>
     </jar>
     <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
+    <!-- get all json info we have on apache gitbox  -->
+    <property name="metabuild.releasejson" value="${nb_all}/nbbuild/build/netbeansrelease.json"/>
+    <condition property="metabuild.jsonurl" value="https://gitbox.apache.org/repos/asf?p=netbeans-jenkins-lib.git;a=blob_plain;f=meta/netbeansrelease.json">
+        <not>
+            <isset property="metabuild.jsonurl"/>
+        </not>
+    </condition>
+    <configureproxy connectTo="${metabuild.jsonurl}" hostProperty="proxyHost" portProperty="proxyPort"/>
+    <setproxy proxyhost="${proxyHost}" proxyPort="${proxyPort}"/>
+    <get dest="${metabuild.releasejson}" skipexisting="false" src="${metabuild.jsonurl}" />
+    <!-- read info from gitinfo.properties , if present in source bundle copy gitinfo-->
+    <copy file="${nb_all}/nbbuild/gitinfo.properties" tofile="${nb_all}/nbbuild/build/gitinfo.properties" failonerror="false"/>
+    <copy file="${nb_all}/nbbuild/netbeansrelease.properties" tofile="${nb_all}/nbbuild/build/netbeansrelease.properties" failonerror="false"/>
+    <!-- get branches and git information as previous not overrided this will take new-->
+    <antcall target="getgitinformation" />
+    <!-- javadoc content filtering -->
+    <taskdef name="setjavadoc" classname="org.netbeans.nbbuild.SetApidocClustersConfig" classpath="${nbantext.jar}"/>
+    <property file="${nb_all}/nbbuild/build/gitinfo.properties"/>
+    <property file="${nb_all}/nbbuild/build/netbeansrelease.properties"/>
+    <setjavadoc branch="${metabuild.branch}"/>
+    <echo message="Building branch: ${metabuild.branch}"/>
+    <property name="releasejson" value="${nb_all}/nbbuild/build/netbeansrelease.json"/>
+    <property name="xmlrelease" value="${nb_all}/nbbuild/build/netbeansrelease.xml"/>
+    <property name="propertiesrelease" value="${nb_all}/nbbuild/build/netbeansrelease.properties"/>
+    <taskdef name="releasejson" classname="org.netbeans.nbbuild.ReleaseJsonProperties" >
+        <classpath>
+            <pathelement location="${nbantext.jar}"/>
+            <fileset dir="${nb_all}/nbbuild/external">
+                <include name="json*.jar"/>
+            </fileset>
+        </classpath>
+    </taskdef>
+    <releasejson file="${releasejson}" xmloutput="${xmlrelease}" propertiesoutput="${propertiesrelease}" branch="${metabuild.branch}" hash="${metabuild.hash}"/>
   </target>
-
+  <target name="-gitinfo.ispresent">
+      <available file="${nb_all}/nbbuild/build/gitinfo.properties" property="gitinfo.present" />      
+  </target>
+  <target name="-git.down" unless="${gitinfo.present}" depends="-gitinfo.ispresent">
+      <!-- try to get information from jenkins apache multi branch build or travis -->
+      <taskdef name="gitbranchhash" classname="org.netbeans.nbbuild.GitBranchHash" classpath="${nbantext.jar}" />
+      <property environment="env"/>
+      <condition property="metabuild.branch" value="${env.GIT_BRANCH}" >
+          <isset property="env.GIT_BRANCH" />
+      </condition>
+      <condition property="metabuild.branch" value="${env.TRAVIS_BRANCH}" >
+          <isset property="env.TRAVIS_BRANCH" />
+      </condition>
+      <condition property="metabuild.branch" value="${metabuild.branch}" >
+          <isset property="metabuild.branch" />
+      </condition>
+      <condition property="metabuild.hash" value="${env.GIT_COMMIT}" >
+          <isset property="env.GIT_COMMIT" />
+      </condition>
+      <condition property="metabuild.hash" value="${env.TRAVIS_COMMIT}" >
+          <isset property="env.TRAVIS_COMMIT" />
+      </condition>
+      <condition property="metabuild.hash" value="${metabuild.hash}" >
+          <isset property="metabuild.hash" />
+      </condition>
+      
+      <gitbranchhash file="." branchproperty="metabuild.branch" hashproperty="metabuild.hash" />
+      
+      <condition property="metabuild.branch" value="master" >
+          <not>
+              <isset property="metabuild.branch" />
+          </not>
+      </condition>
+      
+      <echo message="Processing build with branch ${metabuild.branch} and hash ${metabuild.hash}" />
+      <!-- if hash not present do not fail -->
+      <fail message="Branch not found use -Dmetabuild.branch=branchName " >
+          <condition>
+              <not>
+                  <isset property="metabuild.branch"/>
+              </not>
+          </condition>
+      </fail>
+      <echo unless:set="metabuild.hash" file="${nb_all}/nbbuild/build/gitinfo.properties" >metabuild.branch=${metabuild.branch}</echo>
+      <echo if:set="metabuild.hash" file="${nb_all}/nbbuild/build/gitinfo.properties" >metabuild.branch=${metabuild.branch}
+metabuild.hash=${metabuild.hash}</echo>
+  </target>
+  <target name="-git.up" if="${gitinfo.present}" depends="-gitinfo.ispresent">
+      <property file="${nb_all}/nbbuild/build/gitinfo.properties"/>
+      <echo message="Processing build with branch ${metabuild.branch} and hash ${metabuild.hash}" />
+  </target>
+  <target name="getgitinformation" depends="-git.up,-git.down" />
   <target name="download-all-extbins" unless="ext.binaries.downloaded" depends="bootstrap">
     <echo>Downloading external binaries (*/external/ directories)...</echo>
-    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+    <!-- optionnal reporttofile used to speed resolving artefacts resolution for maven artefacts -->
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" repos="${binaries.repos}"  >
         <manifest dir="${nb_all}">
             <include name="**/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
     <property name="ext.binaries.downloaded" value="true"/>
   </target>
-
+  <!-- create list of all maven coordinate -->
+  <target name="getallmavencoordinates">
+      <concat destfile="${nb_all}/nbbuild/build/external.info">
+          <fileset dir="${nb_all}" includes="**/external/binaries-list" />
+          <fileset dir="${nb_all}" includes="**/external/binariesembedded-list" />
+          <filterchain>
+              <!-- remove comment inline not inline -->
+              <tokenfilter>
+                  <replaceregex pattern="#(.*)$" replace="" flags="gim" />
+              </tokenfilter>
+              <!-- : is sparator for maven coordinate -->
+              <linecontains>
+                  <contains value=":"/>
+              </linecontains>
+              <!--  needed as separator -->
+              <tokenfilter>
+                  <replacestring from=" " to=";"/>
+              </tokenfilter>
+          </filterchain>
+      </concat>
+  </target>
   <target name="download-selected-extbins" unless="ext.binaries.downloaded" depends="init-module-list">
     <echo>Downloading external binaries (*/external/ directories) for cluster.config=${cluster.config}...</echo>
     <pathconvert property="modules.binaries-list" pathsep=",">
@@ -131,7 +235,7 @@
         <map from="${nb_all}/" to=""/>
         <globmapper from="*" to="*/external/binaries-list"/>
     </pathconvert>
-    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" repos="${binaries.repos}">
         <manifest dir="${nb_all}" includes="${modules.binaries-list}"/>
     </downloadbinaries>
   </target>
@@ -290,6 +394,10 @@
   <target name="javadoc" depends="bootstrap" description="Builds Javadoc for all NetBeans modules with some APIs">
       <ant dir="javadoctools" target="build-javadoc"/>
   </target>
+  
+  <target name="javadoc-nb" depends="javadoc" description="Builds Javadoc and opens it in a web browser">
+      <nbbrowse file="${netbeans.javadoc.dir}/index.html"/>
+  </target>
 
   <!-- build source zips for selected modules - useful for populating maven repository only-->
   <target name="build-source-zips" depends="init" description="Builds source zips for maven repository inclusion.">
@@ -305,7 +413,7 @@
       <taskdef name="checkhelpsetsbin" classname="org.netbeans.nbbuild.CheckHelpSetsBin">
         <classpath>
           <pathelement location="${nbantext.jar}"/>
-            <fileset dir="${nb_all}/javahelp/external">
+            <fileset dir="${nb_all}/platform/javahelp/external">
               <include name="jh*.jar"/>
             </fileset>
         </classpath>
@@ -360,7 +468,7 @@
   </target>
   
   <target name="-download-nb-windows-launchers" depends="init,-check-nb-cluster" if="has.nb.cluster" unless="do.build.windows.launchers">
-    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" repos="${binaries.repos}">
         <manifest dir="${nb_all}" includes="nb/ide.launcher/external/binaries-list"/>
     </downloadbinaries>
 
@@ -378,6 +486,11 @@
 
     <mkdir dir="${netbeans.dest.dir}/etc" />
     <copy file="../nb/ide.launcher/netbeans.conf" todir="${netbeans.dest.dir}/etc" overwrite="true"/>
+    <!-- replace -->
+    <replace file="${netbeans.dest.dir}/etc/netbeans.conf" value="defaultvalue" propertyFile="${nb_all}/nbbuild/build/netbeansrelease.properties">
+        <replacefilter token="@@metabuild.RawVersion@@" property="metabuild.RawVersion"/>
+        <replacefilter token="@@metabuild.logcli@@" property="metabuild.logcli"/>
+    </replace>
     <copy file="../nb/ide.launcher/netbeans.clusters" todir="${netbeans.dest.dir}/etc" overwrite="true"/>
 
     <mkdir dir="${nb.build.dir}/license-temp" />
@@ -474,7 +587,6 @@ Hg ID:    ${hg.id}
       <mkdir dir="${netbeans.dest.dir}"/>
       <ant dir="." target="build" inheritAll="false">
           <property name="cluster.config" value="basic"/>
-          <property name="permit.jdk9.builds" value="true"/>
       </ant>
   </target>
 
@@ -484,7 +596,6 @@ Hg ID:    ${hg.id}
           <property name="cluster.config" value="basic"/>
           <property name="test.type" value="test-unit"/>
           <property name="test-unit-sys-prop.ignore.random.failures" value="true"/>
-          <property name="permit.jdk9.builds" value="true"/>
           <property name="vanilla.javac.exists" value="true"/>
       </ant>
   </target>
@@ -499,7 +610,6 @@ Hg ID:    ${hg.id}
       <mkdir dir="${netbeans.dest.dir}"/>
       <ant dir="." target="-build-platform" inheritAll="false">
           <property name="cluster.config" value="platform"/>
-          <property name="permit.jdk9.builds" value="true"/>
           <property name="vanilla.javac.exists" value="true"/>
       </ant>
   </target>
@@ -510,7 +620,6 @@ Hg ID:    ${hg.id}
           <property name="cluster.config" value="platform"/>
           <property name="test.type" value="test-unit"/>
           <property name="test-unit-sys-prop.ignore.random.failures" value="true"/>
-          <property name="permit.jdk9.builds" value="true"/>
           <property name="vanilla.javac.exists" value="true"/>
       </ant>
   </target>
@@ -1076,17 +1185,8 @@ PKGINST=${pkg.svr4.pkginst}</echo>
           description="Try running the IDE interactively.
 It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in debug mode" 
    >
-    <script language="javascript">
-        v = ''
-        i = new Packages.java.util.TreeMap(project.getProperties()).entrySet().iterator()
-        while (i.hasNext()) {
-            e = i.next()
-            if (e.getKey().startsWith('tryme.arg.')) {
-                v += ' ' + e.getValue()
-            }
-        }
-        project.setNewProperty('tryme.args', v)
-    </script>
+    <taskdef name="mergetrymeargs" classname="org.netbeans.nbbuild.MergeTrymeArgs" classpath="${nbantext.jar}"/>
+    <mergetrymeargs/>
     <property name="tryme.jdkhome" value="${nbjdk.home}"/>
     <property name="tryme.debug.args" value="" />
     <property environment="env"/>
@@ -1163,9 +1263,9 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
   <target name="hg-l10n-kit">
     <property name="l10n.kit" location="${nb.build.dir}/l10n.zip"/>
     <zip destfile="${l10n.kit}">
-        <fileset dir="${nb_all}" includesfile="${nb_all}/installer/l10n.list"/>
+        <fileset dir="${nb_all}" includesfile="${nb_all}/nbbuild/installer/l10n.list"/>
         <fileset dir="${nb_all}" includesfile="${nb_all}/nbi/l10n.list"/>
-        <fileset dir="${nb_all}" includesfile="${nb_all}/ide.branding/l10n.list"/>
+        <fileset dir="${nb_all}" includesfile="${nb_all}/nb/ide.branding/l10n.list"/>
     </zip>
   </target>
 
@@ -1194,9 +1294,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
   </target>
 
   <target name="clean" depends="-init-clean,bootstrap" description="Clean everything possible.">
-      <taskdef name="try-else" classname="org.netbeans.nbbuild.TryElse" classpath="${nbantext.jar}"/>
-      <property name="vanilla.javac.exists" value="true"/>
-      <try-else first="-hg-clean" second="-real-clean"/>
+      <antcall target="-real-clean"></antcall>
   </target>
 
   <target name="-clean-external">
@@ -1208,7 +1306,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       </fileset>
     </subant>
     <taskdef name="downloadbinaries" classname="org.netbeans.nbbuild.extlibs.DownloadBinaries" classpath="${nbantext.jar}"/>
-    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" clean="true">
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" repos="${binaries.repos}" clean="true">
         <manifest dir="${nb_all}">
             <include name="*/external/binaries-list"/>
             <include name="contrib/*/external/binaries-list"/>
@@ -1254,62 +1352,6 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <delete dir="${netbeans.dest.dir}"/>
   </target>
 
-  <target name="-hg-clean">
-    <fail message="Not running in a Mercurial checkout.">
-      <condition>
-        <not>
-          <available type="dir" file="../.hg"/>
-        </not>
-      </condition>
-    </fail>
-    <taskdef name="hgexec" classname="org.netbeans.nbbuild.HgExec" classpath="${nbantext.jar}"/>
-    <antcall target="-do-hg-clean">
-      <!-- <include name="."/> does not seem to work in a dirset -->
-      <param name="basedir" location=".."/>
-    </antcall>
-    <subant target="-do-hg-clean" genericantfile="build.xml">
-      <dirset dir="..">
-        <include name="contrib"/>
-        <include name="otherlicenses"/>
-      </dirset>
-    </subant>
-    <delete>
-      <fileset dir="nbproject">
-        <include name="private/scan-cache-*"/>
-      </fileset>
-    </delete>
-  </target>
-  <target name="-do-hg-clean">
-    <echo>Cleaning untracked files in ${basedir}...</echo>
-    <hgexec failonerror="yes" outputproperty="hg.unknown.files">
-      <arg value="--cwd"/>
-      <arg file="."/>
-      <arg value="--config"/>
-      <arg value="defaults.status="/>
-      <arg value="status"/>
-      <arg value="--unknown"/>
-      <arg value="--no-status"/>
-    </hgexec>
-    <fail message="Will not run clean; checkout contains unknown and not ignored files (did you forget to hg add?):&#10;${hg.unknown.files}">
-        <condition>
-            <not>
-                <equals arg1="${hg.unknown.files}" arg2=""/>
-            </not>
-        </condition>
-    </fail>
-    <hgexec failonerror="yes">
-      <arg value="--cwd"/>
-      <arg file="."/>
-      <arg value="--config"/>
-      <arg value="extensions.purge="/>
-      <arg value="clean"/>
-      <arg value="--all"/>
-      <arg value="--exclude"/>
-      <!-- Do not use **/nbproject/private/ as this will match some test/{results,work} dirs: -->
-      <arg value="glob:{*/nbproject/private/**,*/*/nbproject/private/**,**/user.build.properties}"/>
-    </hgexec>
-  </target>
-
   <target name="rebuild-cluster" depends="init" description="Builds only one cluster with dependencies ; takes e.g. '-Drebuild.cluster.name=nb.cluster.java' as parameter">
     <delete file="netbeans/${rebuild.cluster.name}.built" failonerror="false"/>
     <condition property="rebuild.cluster.name" value="nb.cluster.${name}">
@@ -1326,7 +1368,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <element name="test" implicit="true"/>
             <sequential>
                 <mkdir dir="${nb.build.dir}/test/unit/classes"/>
-                <javac srcdir="test/unit/src" destdir="${nb.build.dir}/test/unit/classes" debug="true" source="1.7">
+                <javac srcdir="test/unit/src" destdir="${nb.build.dir}/test/unit/classes" debug="true" source="1.8">
                     <classpath path="${test.unit.cp}"/>
                     <compilerarg line="-Xlint -Xlint:-serial"/>
                 </javac>
@@ -1589,7 +1631,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         <delete dir="${netbeans.dest.dir}/licenses" />
         <mkdir dir="${netbeans.dest.dir}/licenses" />
 
-        <createlicensesummary licenseStub="${nb_all}/LICENSE" 
+        <createlicensesummary licenseStub="license-stub.txt"
                               noticeStub="notice-stub.txt" 
                               report="${nb.build.dir}/createlicensesummary.xml" 
                               nball=".." 
@@ -1643,12 +1685,12 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <pathconvert property="source.dirs" pathsep="," refid="source.dirset">
       <regexpmapper from="${nb_all}/(.*)$" to="\1/**/*" handledirsep="yes"/>
     </pathconvert>
-    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}"> <!--XXX-->
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" repos="${binaries.repos}"> <!--XXX-->
         <manifest dir="${nb_all}">
             <include name="libs.antlr3.devel/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
-    <createlicensesummary licenseStub="${nb_all}/LICENSE"
+    <createlicensesummary licenseStub="license-stub.txt"
                           noticeStub="notice-stub.txt"
                           report="${nb.build.dir}/createlicensesummary.xml"
                           nball=".."
@@ -1696,6 +1738,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <zipfileset file="${nb.build.dir}/LICENSE" />
       <zipfileset dir="${nb.build.dir}/licenses" includes="**" prefix="licenses" /> 
       <zipfileset file="${source.zip.readme}" fullpath="README.md" erroronmissingarchive="false" />
+      <zipfileset file="${nb_all}/nbbuild/build/netbeansrelease.properties" fullpath="nbbuild/netbeansrelease.properties" erroronmissingarchive="false"/>
+      <zipfileset file="${nb_all}/nbbuild/build/gitinfo.properties" fullpath="nbbuild/gitinfo.properties" erroronmissingarchive="false" />
     </zip>
   </target>
 
@@ -2124,7 +2168,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         <taskdef name="exclusionsfromlicenseinfo" classname="org.netbeans.nbbuild.extlibs.ExclusionsFromLicenseInfo" classpath="${nbantext.jar}"/>
         <taskdef name="reportFromLicenseinfo" classname="org.netbeans.nbbuild.extlibs.ReportFromLicenseinfo" classpath="${nbantext.jar}"/>
         
-        <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+        <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" repos="${binaries.repos}">
             <manifest dir="${nb_all}">
                 <include name="nbbuild/external/binaries-list"/>
             </manifest>

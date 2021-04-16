@@ -147,7 +147,7 @@ public class ComputeOverriders {
         return result;
     }
 
-    Map<ElementHandle<? extends Element>, List<ElementDescription>> process(CompilationInfo info, TypeElement te, ExecutableElement ee, boolean interactive) {
+    public Map<ElementHandle<? extends Element>, List<ElementDescription>> process(CompilationInfo info, TypeElement te, ExecutableElement ee, boolean interactive) {
         long startTime = System.currentTimeMillis();
 
         try {
@@ -530,7 +530,7 @@ public class ComputeOverriders {
             return null;
         }
 
-        Class clazz = null;
+        Class<?> clazz = null;
         String method = null;
 
         try {
@@ -587,7 +587,7 @@ public class ComputeOverriders {
             return null;
         }
 
-        Class clazz = null;
+        Class<?> clazz = null;
         String method = null;
 
         try {

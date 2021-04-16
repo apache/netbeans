@@ -58,7 +58,7 @@ public class OQLEditor extends JPanel {
     final private OQLEngine engine;
 
     final private Color disabledBgColor = UIUtils.isGTKLookAndFeel() ?
-                  UIManager.getLookAndFeel().getDefaults().getColor("desktop") : // NOI18N
+                  UIManager.getLookAndFeelDefaults().getColor("desktop") : // NOI18N
                   UIManager.getColor("TextField.disabledBackground"); // NOI18N
 
     final private transient Caret nullCaret = new NoCaret();

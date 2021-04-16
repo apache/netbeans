@@ -224,5 +224,9 @@ public class NbCss3LexerTest extends NbTestCase {
         assertFalse(ts.moveNext());
        
     }
-    
+
+    public void testLexingUrange() throws Exception {
+        LexerTestUtilities.checkTokenDump(this, "testfiles/urange.css",
+                CssTokenId.language());
+    }
 }

@@ -83,11 +83,10 @@ public class RevertCommand extends GitCommand {
     protected void run() throws GitException {
         Repository repository = getRepository();
         RevCommit revertedCommit = Utils.findCommit(repository, revisionStr);
-        RevWalk revWalk = new RevWalk(repository);
         DirCache dc = null;
         GitRevertResult NO_CHANGE_INSTANCE = getClassFactory().createRevertResult(GitRevertResult.Status.NO_CHANGE, null, null, null);
-        try {
-            Ref headRef = repository.getRef(Constants.HEAD);
+        try(RevWalk revWalk = new RevWalk(repository);) {
+            Ref headRef = repository.findRef(Constants.HEAD);
             if (headRef == null) {
                 throw new GitException.MissingObjectException(Constants.HEAD, GitObjectType.COMMIT);
             }
@@ -139,20 +138,17 @@ public class RevertCommand extends GitCommand {
                 }
             }
             throw new GitException(ex);
-        } catch (IOException ex) {
-            throw new GitException(ex);
-        } catch (GitAPIException ex) {
+        } catch (IOException | GitAPIException ex) {
             throw new GitException(ex);
         } finally {
             if (dc != null) {
                 dc.unlock();
             }
-            revWalk.release();
         }
     }
 
     private List<File> getFiles (File workDir, Set<String> paths) {
-        List<File> files = new LinkedList<File>();
+        List<File> files = new LinkedList<>();
         for (String path : paths) {
             files.add(new File(workDir, path));
         }

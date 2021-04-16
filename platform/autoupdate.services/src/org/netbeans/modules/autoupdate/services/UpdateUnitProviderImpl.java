@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
@@ -68,6 +69,7 @@ public final class UpdateUnitProviderImpl {
     private static final String URL = "url";
     private static final String DISPLAY_NAME = "displayName";    
     private static final String ENABLED = "enabled";
+    private static final String TRUSTED = "trusted";
     private static final String CATEGORY_NAME = "categoryName";
     private static final LookupListenerImpl UPDATE_PROVIDERS = new LookupListenerImpl();
             
@@ -133,7 +135,15 @@ public final class UpdateUnitProviderImpl {
     public void setProviderURL (URL url) {
         storeUrl (getUpdateProvider (), url);
     }
-    
+
+    public boolean isTrusted() {
+        return loadTrusted(getUpdateProvider());
+    }
+
+    public void setTrusted(Boolean trusted) {
+        storeTrusted(getUpdateProvider(), trusted);
+    }
+
     public List<UpdateUnit> getUpdateUnits (UpdateManager.TYPE... types) {
         return UpdateManagerImpl.getUpdateUnits (getUpdateProvider (), types);
     }
@@ -343,6 +353,7 @@ public final class UpdateUnitProviderImpl {
         String toUrl = providerPreferences.get (URL, providerPreferences.get (AutoupdateCatalogFactory.ORIGINAL_URL, null));
         String displayName = providerPreferences.get (DISPLAY_NAME, providerPreferences.get (AutoupdateCatalogFactory.ORIGINAL_DISPLAY_NAME, codeName));
         String categoryName = providerPreferences.get (CATEGORY_NAME, providerPreferences.get (AutoupdateCatalogFactory.ORIGINAL_CATEGORY_NAME, CATEGORY.COMMUNITY.name()));
+        Boolean trusted = providerPreferences.getBoolean(TRUSTED, providerPreferences.getBoolean(AutoupdateCatalogFactory.ORIGINAL_TRUSTED, false));
         CATEGORY c;
         try {
             c = CATEGORY.valueOf(categoryName);
@@ -368,7 +379,9 @@ public final class UpdateUnitProviderImpl {
         } catch (MalformedURLException mue) {
             assert false : mue;
         }
-        return new AutoupdateCatalogProvider (codeName, displayName, url, pc);
+        AutoupdateCatalogProvider acp = new AutoupdateCatalogProvider (codeName, displayName, url, pc);
+        acp.setTrusted(trusted);
+        return acp;
     }
     
     private static boolean loadState (String codename) {
@@ -458,6 +471,32 @@ public final class UpdateUnitProviderImpl {
                     ((AutoupdateCatalogProvider) p).setUpdateCenterURL (url);
                 }
             }
+        }
+    }
+
+   static boolean loadTrusted (UpdateProvider p) {
+        Preferences providerPreferences = getPreferences ().node (p.getName ());
+        assert providerPreferences != null : "Preferences node " + p.getName () + " found.";
+
+        Boolean trusted = null;
+        if (p instanceof AutoupdateCatalogProvider) {
+            trusted = ((AutoupdateCatalogProvider) p).isTrusted();
+        }
+        if(trusted == null) {
+            trusted = false;
+        }
+        return providerPreferences.getBoolean(TRUSTED, trusted);
+    }
+
+    private static void storeTrusted (UpdateProvider p, Boolean trusted) {
+        Preferences providerPreferences = getPreferences ().node (p.getName ());
+        assert providerPreferences != null : "Preferences node " + p.getName () + " found.";
+
+        // store only if differs
+        if (trusted == null) {
+            providerPreferences.remove (TRUSTED);
+        } else {
+            providerPreferences.putBoolean(TRUSTED, trusted);
         }
     }
 

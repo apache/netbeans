@@ -36,12 +36,12 @@ public class SAXBindingsParser extends org.xml.sax.helpers.DefaultHandler {
     
     private SAXBindingsHandler handler;
     
-    private java.util.Stack context;
+    private java.util.Stack<Object[]> context;
         
     public SAXBindingsParser(final SAXBindingsHandler handler) {
         this.handler = handler;
         buffer = new StringBuffer(111);
-        context = new java.util.Stack();
+        context = new java.util.Stack<>();
     }
     
     public void setDocumentLocator(Locator locator) {

@@ -237,13 +237,13 @@ public final class ProfilerOptionsPanel extends JPanel implements ActionListener
         Object oomeSelected = oomeCombo.getSelectedItem();
 
         if (Bundle.ProfilerOptionsPanel_OomeNothingText().equals(oomeSelected)) {
-            pis.setOOMDetectionMode(pis.OOME_DETECTION_NONE);
+            pis.setOOMDetectionMode(ProfilerIDESettings.OOME_DETECTION_NONE);
         } else if (Bundle.ProfilerOptionsPanel_OomeProjectText().equals(oomeSelected)) {
-            pis.setOOMDetectionMode(pis.OOME_DETECTION_PROJECTDIR);
+            pis.setOOMDetectionMode(ProfilerIDESettings.OOME_DETECTION_PROJECTDIR);
         } else if (Bundle.ProfilerOptionsPanel_OomeTempText().equals(oomeSelected)) {
-            pis.setOOMDetectionMode(pis.OOME_DETECTION_TEMPDIR);
+            pis.setOOMDetectionMode(ProfilerIDESettings.OOME_DETECTION_TEMPDIR);
         } else if (Bundle.ProfilerOptionsPanel_OomeCustomText().equals(oomeSelected)) {
-            pis.setOOMDetectionMode(pis.OOME_DETECTION_CUSTOMDIR);
+            pis.setOOMDetectionMode(ProfilerIDESettings.OOME_DETECTION_CUSTOMDIR);
         }
 
         pis.setCustomHeapdumpPath(oomeDetectionDirTextField.getText());
@@ -301,22 +301,22 @@ public final class ProfilerOptionsPanel extends JPanel implements ActionListener
             return false;
         }
 
-        if ((settings.getOOMDetectionMode() == settings.OOME_DETECTION_NONE)
+        if ((settings.getOOMDetectionMode() == ProfilerIDESettings.OOME_DETECTION_NONE)
                 && (!Bundle.ProfilerOptionsPanel_OomeNothingText().equals(oomeCombo.getSelectedItem()))) {
             return false;
         }
 
-        if ((settings.getOOMDetectionMode() == settings.OOME_DETECTION_PROJECTDIR)
+        if ((settings.getOOMDetectionMode() == ProfilerIDESettings.OOME_DETECTION_PROJECTDIR)
                 && (!Bundle.ProfilerOptionsPanel_OomeProjectText().equals(oomeCombo.getSelectedItem()))) {
             return false;
         }
 
-        if ((settings.getOOMDetectionMode() == settings.OOME_DETECTION_TEMPDIR)
+        if ((settings.getOOMDetectionMode() == ProfilerIDESettings.OOME_DETECTION_TEMPDIR)
                 && (!Bundle.ProfilerOptionsPanel_OomeTempText().equals(oomeCombo.getSelectedItem()))) {
             return false;
         }
 
-        if ((settings.getOOMDetectionMode() == settings.OOME_DETECTION_CUSTOMDIR)
+        if ((settings.getOOMDetectionMode() == ProfilerIDESettings.OOME_DETECTION_CUSTOMDIR)
                 && (!Bundle.ProfilerOptionsPanel_OomeCustomText().equals(oomeCombo.getSelectedItem()))) {
             return false;
         }
@@ -411,13 +411,13 @@ public final class ProfilerOptionsPanel extends JPanel implements ActionListener
             takingSnapshotCombo.setSelectedItem(Bundle.ProfilerOptionsPanel_SaveSnapshotRadioText());
         }
 
-        if (pis.getOOMDetectionMode() == pis.OOME_DETECTION_NONE) {
+        if (pis.getOOMDetectionMode() == ProfilerIDESettings.OOME_DETECTION_NONE) {
             oomeCombo.setSelectedItem(Bundle.ProfilerOptionsPanel_OomeNothingText());
-        } else if (pis.getOOMDetectionMode() == pis.OOME_DETECTION_PROJECTDIR) {
+        } else if (pis.getOOMDetectionMode() == ProfilerIDESettings.OOME_DETECTION_PROJECTDIR) {
             oomeCombo.setSelectedItem(Bundle.ProfilerOptionsPanel_OomeProjectText());
-        } else if (pis.getOOMDetectionMode() == pis.OOME_DETECTION_TEMPDIR) {
+        } else if (pis.getOOMDetectionMode() == ProfilerIDESettings.OOME_DETECTION_TEMPDIR) {
             oomeCombo.setSelectedItem(Bundle.ProfilerOptionsPanel_OomeTempText());
-        } else if (pis.getOOMDetectionMode() == pis.OOME_DETECTION_CUSTOMDIR) {
+        } else if (pis.getOOMDetectionMode() == ProfilerIDESettings.OOME_DETECTION_CUSTOMDIR) {
             oomeCombo.setSelectedItem(Bundle.ProfilerOptionsPanel_OomeCustomText());
         }
 

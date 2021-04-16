@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.xml.text.syntax;
 
-import java.lang.ref.*;
 import java.util.*;
 
 import javax.swing.text.*;
@@ -50,7 +49,6 @@ import org.openide.util.WeakListeners;
  */
 public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLTokenIDs {
     
-    private Reference reference = new SoftReference(null);  // cached helper
     private String systemId = null;  // cached refernce to DTD
     private String publicId = null;  // cached refernce to DTD
     private volatile boolean requestedAutoCompletion = false;
@@ -363,7 +361,7 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
                     }
                 } else {                                                                // starttag
                     String name = text.substring( 1 );
-                    ArrayList attrs = new ArrayList();
+                    List<String> attrs = new ArrayList<>();
                     
                     // skip attributes
                     
@@ -482,10 +480,10 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
      * @param  offset of a child in parent
      * @return all tags used as children of given parent that precedes the offset
      */
-    public List getPreviousLevelTags( int offset) throws BadLocationException {
-        List result = new ArrayList();
-        Stack stack = new Stack();
-        Vector children = new Vector();
+    public List<String> getPreviousLevelTags( int offset) throws BadLocationException {
+        List<String> result = new ArrayList<>();
+        Stack<String> stack = new Stack<>();
+        Vector<String> children = new Vector<>();
         
         SyntaxElement elem = getElementChain( offset );
         if( elem != null ) {
@@ -540,9 +538,9 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
      * @param  offset of a child in parent
      * @return all tags used as children of given parent that follows the offset
      */
-    public List getFollowingLevelTags(int offset)throws BadLocationException{
-        Stack stack = new Stack();
-        Vector children = new Vector();
+    public List<String> getFollowingLevelTags(int offset)throws BadLocationException{
+        Stack<String> stack = new Stack<>();
+        Vector<String> children = new Vector<>();
         
         SyntaxElement elem = getElementChain( offset );
         if( elem != null ) {
@@ -551,7 +549,7 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
             if( offset > 0 ) {
                 elem = getElementChain( offset-1 );
             } else { // beginning of document too, not much we can do on empty doc
-                return new ArrayList();
+                return new ArrayList<>();
             }
         }
         

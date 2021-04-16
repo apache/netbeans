@@ -42,7 +42,7 @@ public class ReachableObjects {
     public ReachableObjects(Instance root, final ReachableExcludes excludes) {
         this.root = root;
         this.excludes = excludes;
-        alreadyReached = new HashSet();
+        alreadyReached = new HashSet<>();
     }
 
     public Instance getRoot() {

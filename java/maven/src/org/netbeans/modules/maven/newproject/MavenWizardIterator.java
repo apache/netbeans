@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -33,7 +34,6 @@ import org.netbeans.api.validation.adapters.WizardDescriptorAdapter;
 import org.netbeans.modules.maven.api.archetype.Archetype;
 import org.netbeans.modules.maven.api.archetype.ArchetypeWizards;
 import static org.netbeans.modules.maven.newproject.Bundle.*;
-import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.validation.api.ui.ValidationGroup;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
@@ -50,21 +50,22 @@ public class MavenWizardIterator implements WizardDescriptor.BackgroundInstantia
     private static final long serialVersionUID = 1L;
     static final String PROPERTY_CUSTOM_CREATOR = "customCreator"; //NOI18N
     static final String PROP_ARCHETYPE = "archetype";
-    static final String JAVAFX_SAMPLES_TEMPLATE_FOLDER = "Project/Samples/JavaFX";
     private transient int index;
     private transient List<WizardDescriptor.Panel<WizardDescriptor>> panels;
     private transient WizardDescriptor wiz;
     private final Archetype archetype;
     private final AtomicBoolean hasNextCalled = new AtomicBoolean(); //#216236
     private final String titlename;
+    private final Map<String, String> defaultProps;
 
     public MavenWizardIterator() {
-        this(null, null);
+        this(null, null, null);
     }
     
-    public MavenWizardIterator(Archetype archetype, String titleName) {
+    public MavenWizardIterator(Archetype archetype, String titleName, Map<String,String> defaultProps) {
         this.archetype = archetype;
         this.titlename = titleName;
+        this.defaultProps = defaultProps;
     }
 
 //    @TemplateRegistration(folder=ArchetypeWizards.TEMPLATE_FOLDER, position=100, displayName="#LBL_Maven_Quickstart_Archetype", iconBase="org/netbeans/modules/maven/resources/jaricon.png", description="quickstart.html")
@@ -73,17 +74,6 @@ public class MavenWizardIterator implements WizardDescriptor.BackgroundInstantia
 //        return ArchetypeWizards.definedArchetype("org.apache.maven.archetypes", "maven-archetype-quickstart", "1.1", null, LBL_Maven_Quickstart_Archetype());
 //    }
     
-    @TemplateRegistration(folder=ArchetypeWizards.TEMPLATE_FOLDER, position=920, displayName="#LBL_Maven_JavaFx_Archetype", iconBase="org/netbeans/modules/maven/resources/jaricon.png", description="javafx.html")
-    @Messages("LBL_Maven_JavaFx_Archetype=JavaFX Application")
-    public static WizardDescriptor.InstantiatingIterator<?> javafx() {
-        return ArchetypeWizards.definedArchetype("org.codehaus.mojo.archetypes", "javafx", "0.6", null, LBL_Maven_JavaFx_Archetype());
-    }
-
-    @TemplateRegistration(folder=JAVAFX_SAMPLES_TEMPLATE_FOLDER, position=2450, displayName="#LBL_Maven_JavaFx_Sample_Archetype", iconBase="org/netbeans/modules/maven/resources/jaricon.png", description="javafx.html")
-    @Messages("LBL_Maven_JavaFx_Sample_Archetype=Maven FXML MigPane Sample")
-    public static WizardDescriptor.InstantiatingIterator<?> javafxSample() {
-        return ArchetypeWizards.definedArchetype("org.codehaus.mojo.archetypes", "sample-javafx", "0.5", null, LBL_Maven_JavaFx_Sample_Archetype());
-    }
 
 //    @TemplateRegistration(folder=ArchetypeWizards.TEMPLATE_FOLDER, position=980, displayName="#LBL_Maven_POM_Archetype", iconBase="org/netbeans/modules/maven/resources/Maven2Icon.gif", description="pom-root.html")
 //    @Messages("LBL_Maven_POM_Archetype=POM Project")
@@ -109,7 +99,7 @@ public class MavenWizardIterator implements WizardDescriptor.BackgroundInstantia
             panels.add(new ChooseWizardPanel());
             steps.add(LBL_CreateProjectStep());
         }
-        panels.add(new BasicWizardPanel(vg, null, true, true)); //only download archetype (for additional props) when unknown archetype is used.
+        panels.add(new BasicWizardPanel(vg, null, true, true, defaultProps)); //only download archetype (for additional props) when unknown archetype is used.
         steps.add(LBL_CreateProjectStep2());
         for (int i = 0; i < panels.size(); i++) {
             JComponent c = (JComponent) panels.get(i).getComponent();

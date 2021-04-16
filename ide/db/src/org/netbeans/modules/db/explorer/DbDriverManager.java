@@ -59,17 +59,17 @@ public class DbDriverManager {
     
     private static final DbDriverManager DEFAULT = new DbDriverManager();
     
-    private Set registeredDrivers;
+    private Set<Driver> registeredDrivers;
     
     /**
      * Maps each connection to the driver used to create that connection.
      */
-    private Map/*<Connection, Driver>*/ conn2Driver = new WeakHashMap();
+    private Map<Connection, Driver> conn2Driver = new WeakHashMap<>();
     
     /**
      * Maps each driver to the class loader for that driver.
      */
-    private Map/*<JDBCDriver, ClassLoader>*/ driver2Loader = new WeakHashMap();
+    private Map<JDBCDriver, ClassLoader> driver2Loader = new WeakHashMap<>();
     
     private DbDriverManager() {
     }
@@ -99,7 +99,9 @@ public class DbDriverManager {
         if (driver != null) {
             // Issue XXXX - If this is MySQL, set up the connection to be
             // a Unicode/utf8 connection
-            if ( driver.getClass().getName().equals("com.mysql.jdbc.Driver") ) { // NOI18N
+            String driverClassName = driver.getClass().getName();
+            if ("com.mysql.jdbc.Driver".equals(driverClassName) ||  // NOI18N
+                    "com.mysql.cj.jdbc.Driver".equals(driverClassName)) { // NOI18N
                 props.put("useUnicode", "true");
                 props.put("characterEncoding", "utf8");
             }
@@ -142,7 +144,7 @@ public class DbDriverManager {
             if (!conn2Driver.containsKey(existingConn)) {
                 throw new IllegalArgumentException("A connection not obtained through DbDriverManager was passed."); // NOI18N
             }
-            driver = (Driver)conn2Driver.get(existingConn);
+            driver = conn2Driver.get(existingConn);
         }
         if (driver != null) {
             Connection newConn = driver.connect(databaseURL, props);
@@ -163,7 +165,7 @@ public class DbDriverManager {
      */
     public synchronized void registerDriver(Driver driver) {
         if (registeredDrivers == null) {
-            registeredDrivers = new HashSet();
+            registeredDrivers = new HashSet<>();
         }
         registeredDrivers.add(driver);
     }
@@ -221,8 +223,8 @@ public class DbDriverManager {
         // try the registered drivers first
         synchronized (this) {
             if (registeredDrivers != null) {
-                for (Iterator i = registeredDrivers.iterator(); i.hasNext();) {
-                    Driver d = (Driver)i.next();
+                for (Iterator<Driver> i = registeredDrivers.iterator(); i.hasNext();) {
+                    Driver d = i.next();
                     try {
                         if (d.acceptsURL(databaseURL)) {
                             return d;
@@ -257,7 +259,7 @@ public class DbDriverManager {
     private ClassLoader getClassLoader(JDBCDriver driver) {
         ClassLoader loader = null;
         synchronized (driver2Loader) {
-            loader = (ClassLoader)driver2Loader.get(driver);
+            loader = driver2Loader.get(driver);
             if (loader == null) {
                 loader = new DbURLClassLoader(driver.getURLs());
                 if (LOG) {

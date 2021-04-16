@@ -253,7 +253,9 @@ public class Utils {
                     if (J2eeModule.Type.EJB.equals(type) || (J2eeModule.Type.WAR.equals(type) &&
                                 (Profile.JAVA_EE_6_WEB.equals(profile) || Profile.JAVA_EE_6_FULL.equals(profile) ||
                                 Profile.JAVA_EE_7_WEB.equals(profile) || Profile.JAVA_EE_7_FULL.equals(profile) ||
-                                Profile.JAVA_EE_8_WEB.equals(profile) || Profile.JAVA_EE_8_FULL.equals(profile)))){
+                                Profile.JAVA_EE_8_WEB.equals(profile) || Profile.JAVA_EE_8_FULL.equals(profile) ||
+                                Profile.JAKARTA_EE_8_WEB.equals(profile) || Profile.JAKARTA_EE_8_FULL.equals(profile) ||
+                                Profile.JAKARTA_EE_9_WEB.equals(profile) || Profile.JAKARTA_EE_9_FULL.equals(profile)))){
                         isEJBModule = true;
                     }
             }

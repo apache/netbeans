@@ -80,11 +80,11 @@ public class NodeJsObjectInterceptor implements ObjectInterceptor {
             }
         }
         if (exports != null) {
-            JsFunction module = factory.newFunction((DeclarationScope) global, global, NodeJsUtils.FAKE_OBJECT_NAME_PREFIX + global.getName(), Collections.EMPTY_LIST, global.getOffsetRange(), null);
+            JsFunction module = factory.newFunction((DeclarationScope) global, global, NodeJsUtils.FAKE_OBJECT_NAME_PREFIX + global.getName(), Collections.<String>emptyList(), global.getOffsetRange(), null);
             module.setAnonymous(true);
             global.addProperty(module.getName(), module);
             ((DeclarationScope)global).addDeclaredScope(module);
-            List<JsObject> properties = new ArrayList(global.getProperties().values());
+            List<JsObject> properties = new ArrayList<>(global.getProperties().values());
             for (JsObject property : properties) {
                 String propertyName = property.getName();
                 if ((property.isDeclared() || NodeJsUtils.MODULE.equals(propertyName)
@@ -98,7 +98,7 @@ public class NodeJsObjectInterceptor implements ObjectInterceptor {
                 } 
             }
             DeclarationScope globalScope = (DeclarationScope)global;
-            List<? extends DeclarationScope> childrenScopesCopy = new ArrayList(globalScope.getChildrenScopes());
+            List<? extends DeclarationScope> childrenScopesCopy = new ArrayList<>(globalScope.getChildrenScopes());
             
             for(DeclarationScope movedScope: childrenScopesCopy) {
                 if (!movedScope.equals(module)) {

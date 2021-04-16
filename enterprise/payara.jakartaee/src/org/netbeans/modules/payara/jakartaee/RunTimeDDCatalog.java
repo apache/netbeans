@@ -362,9 +362,9 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     }
     
     public  void fireCatalogListeners() {
-        Iterator iter = catalogListeners.iterator();
+        Iterator<CatalogListener> iter = catalogListeners.iterator();
         while (iter.hasNext()) {
-            CatalogListener l = (CatalogListener) iter.next();
+            CatalogListener l = iter.next();
             l.notifyInvalidate();
         }
     }
@@ -591,9 +591,9 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
         Enumeration en = ctx.getDocumentChildren();
         while (en.hasMoreElements()) {
             Node next = (Node) en.nextElement();
-            if (next.getNodeType() == next.DOCUMENT_TYPE_NODE) {
+            if (next.getNodeType() == Node.DOCUMENT_TYPE_NODE) {
                 return null; // null for web.xml specified by DTD
-            } else if (next.getNodeType() == next.ELEMENT_NODE) {
+            } else if (next.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element) next;
                 String tag = element.getTagName();
                 if (EJB_JAR_TAG.equals(tag)) {  // NOI18N

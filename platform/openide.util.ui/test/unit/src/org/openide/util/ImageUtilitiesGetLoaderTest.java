@@ -54,11 +54,11 @@ public class ImageUtilitiesGetLoaderTest extends TestCase {
     }
 
     public void testWrongImplOfGetLoaderIssue62194() throws Exception {
-        ClassLoader l = ImageUtilities.getLoader ();
+        ClassLoader l = ImageUtilities.getClassLoader ();
         assertTrue("Error manager race condition activated", ErrMgr.switchDone);
         assertEquals("c1 the original one", Lkp.c1, l);
         
-        ClassLoader n = ImageUtilities.getLoader ();
+        ClassLoader n = ImageUtilities.getClassLoader ();
         assertEquals("c2 the new one", Lkp.c2, n);
     }
     

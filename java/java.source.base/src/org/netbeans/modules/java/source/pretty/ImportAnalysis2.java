@@ -258,7 +258,7 @@ public class ImportAnalysis2 {
 
     //Note: this method should return either "orig" or a IdentifierTree or MemberSelectTree
     //no other tree type is not allowed - see ImmutableTreeTranslator.translateStable(Tree)
-    public ExpressionTree resolveImport(MemberSelectTree orig, Element element) {
+    public ExpressionTree resolveImport(MemberSelectTree orig, final Element element) {
         if (visibleThroughClasses == null || element == null || cs != null && cs.useFQNs()) {
             //may happen for package clause
             return orig;
@@ -348,18 +348,20 @@ public class ImportAnalysis2 {
         TypeElement type = (TypeElement) element;
 
         Element parent = type.getEnclosingElement();
-        if ((parent.getKind().isClass() || parent.getKind().isInterface()) && !cs.importInnerClasses()) {
-            ExpressionTree clazz = orig.getExpression();
-            if (clazz.getKind() == Kind.MEMBER_SELECT) {
-                clazz = resolveImport((MemberSelectTree) clazz, overlay.wrap(model, elements, parent));
+        if (parent != null) {
+            if ((parent.getKind().isClass() || parent.getKind().isInterface()) && !cs.importInnerClasses()) {
+                ExpressionTree clazz = orig.getExpression();
+                if (clazz.getKind() == Kind.MEMBER_SELECT) {
+                    clazz = resolveImport((MemberSelectTree) clazz, overlay.wrap(model, elements, parent));
+                }
+                return make.MemberSelect(clazz, orig.getIdentifier());
             }
-            return make.MemberSelect(clazz, orig.getIdentifier());
-        }
 
-        //check for java.lang:
-        if (parent.getKind() == ElementKind.PACKAGE) {
-            if ("java.lang".equals(((PackageElement) parent).getQualifiedName().toString())) {
-                return make.Identifier(element.getSimpleName());
+            //check for java.lang:
+            if (parent.getKind() == ElementKind.PACKAGE) {
+                if ("java.lang".equals(((PackageElement) parent).getQualifiedName().toString())) {
+                    return make.Identifier(element.getSimpleName());
+                }
             }
         }
 
@@ -390,7 +392,7 @@ public class ImportAnalysis2 {
     }
 
     private PackageElement getPackageOf(Element el) {
-        while (el.getKind() != ElementKind.PACKAGE) el = el.getEnclosingElement();
+        while ((el != null) && (el.getKind() != ElementKind.PACKAGE)) el = el.getEnclosingElement();
 
         return (PackageElement) el;
     }

@@ -113,13 +113,10 @@
                 <package>com.sun.tools.xjc</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/jaxb/jaxb-impl-2.2.5-2.jar</runtime-relative-path>
+                <runtime-relative-path>ext/jaxb/jaxb-impl.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jaxb/jaxb1-impl-2.2.5-2.jar</runtime-relative-path>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/jaxb/jaxb-xjc-2.2.5-2.jar</runtime-relative-path>
+                <runtime-relative-path>ext/jaxb/jaxb-xjc.jar</runtime-relative-path>
             </class-path-extension>
         </data>
     </configuration>

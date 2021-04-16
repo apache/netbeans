@@ -24,12 +24,12 @@ import java.util.Objects;
  *
  * @author Petr Hejl
  */
-public final class DockerTag implements DockerEntity {
+public final class DockerTag implements DockerInstanceEntity {
 
     private final DockerImage image;
 
     private final String tag;
-
+    
     DockerTag(DockerImage image, String tag) {
         this.image = image;
         this.tag = tag;
@@ -85,5 +85,15 @@ public final class DockerTag implements DockerEntity {
     @Override
     public String toString() {
         return "DockerTag{" + "image=" + image + ", tag=" + tag + '}';
+    }
+
+    @Override
+    public DockerInstance getInstance() {
+       return image.getInstance();
+    }
+
+    @Override
+    public DockerEntityType getType() {
+        return DockerEntityType.Image;
     }
 }

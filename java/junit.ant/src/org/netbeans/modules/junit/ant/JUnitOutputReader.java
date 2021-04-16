@@ -288,6 +288,7 @@ final class JUnitOutputReader {
         }
     }
 
+    @SuppressWarnings("fallthrough")
     synchronized void messageLogged(final AntEvent event) {
         final String msg = event.getMessage();
         if (msg == null) {
@@ -614,7 +615,7 @@ final class JUnitOutputReader {
                         lastSuiteTime = reportSuite.getElapsedTime();
                         for(Testcase tc: currentSuite.getTestcases()){
                             if (!tc.getOutput().isEmpty()){
-                                List<String> output = new ArrayList();
+                                List<String> output = new ArrayList<>();
                                 for(OutputLine l: tc.getOutput()){
                                     output.add(l.getLine());
                                 }
@@ -991,7 +992,7 @@ final class JUnitOutputReader {
             }
 
         } else {
-            List<String> stList = new ArrayList(Arrays.asList(testcase.getTrouble().getStackTrace()));
+            List<String> stList = new ArrayList<>(Arrays.asList(testcase.getTrouble().getStackTrace()));
             if (!line.startsWith(stList.get(stList.size()-1))){
                 stList.add(line);
                 trouble.setStackTrace(stList.toArray(new String[stList.size()]));

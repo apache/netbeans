@@ -64,7 +64,8 @@ public final class CodeSniffer {
     static final File XML_LOG = new File(System.getProperty("java.io.tmpdir"), "nb-php-phpcs-log.xml"); // NOI18N
 
     // #270987 use --standard instead of --runtime-set default_standard
-    private static final String STANDARD_PARAM = "--standard=%s"; // NOI18N
+    private static final String STANDARD_PARAM = "--standard"; // NOI18N
+    private static final String STANDARD_PARAM_FORMAT = STANDARD_PARAM + "=%s"; // NOI18N
     private static final String RUNTIME_SET_PARAM = "--runtime-set"; // NOI18N
     private static final String DEFAULT_STANDARD_PARAM = "default_standard"; // NOI18N
     private static final String LIST_STANDARDS_PARAM = "-i"; // NOI18N
@@ -73,6 +74,12 @@ public final class CodeSniffer {
     private static final String ENCODING_PARAM = "--encoding=%s"; // NOI18N
     private static final String IGNORE_PARAM = "--ignore=%s"; // NOI18N
     private static final String NO_RECURSION_PARAM = "-l"; // NOI18N
+
+    // configuration files
+    public static final String CONFIG_FILE_NAME = "phpcs.xml";  // NOI18N
+    public static final String DOT_CONFIG_FILE_NAME = ".phpcs.xml";  // NOI18N
+    public static final String DIST_CONFIG_FILE_NAME = "phpcs.xml.dist";  // NOI18N
+    public static final String DIST_DOT_CONFIG_FILE_NAME = ".phpcs.xml.dist";  // NOI18N
 
     // cache
     private static final List<String> CACHED_STANDARDS = new CopyOnWriteArrayList<>();
@@ -136,7 +143,7 @@ public final class CodeSniffer {
         assert file.isValid() : "Invalid file given: " + file;
         try {
             Integer result = getExecutable(Bundle.CodeSniffer_analyze(analyzeGroupCounter++), findWorkDir(file))
-                    .additionalParameters(getParameters(ensureStandard(standard), file, noRecursion))
+                    .additionalParameters(getParameters(standard, file, noRecursion))
                     .runAndWait(getDescriptor(), "Running code sniffer..."); // NOI18N
             if (result == null) {
                 return null;
@@ -237,8 +244,13 @@ public final class CodeSniffer {
     private List<String> getParameters(String standard, FileObject file, boolean noRecursion) {
         Charset encoding = FileEncodingQuery.getEncoding(file);
         List<String> params = new ArrayList<>();
-        // #270987 use --standard
-        params.add(String.format(STANDARD_PARAM, standard));
+        // NETBEANS-3243 the path of Code Sniffer may have --standard parameter
+        if (StringUtils.hasText(standard)
+                && !codeSnifferPath.contains(STANDARD_PARAM + "=") // NOI18N
+                && !codeSnifferPath.contains(STANDARD_PARAM + " ")) { // NOI18N
+            // #270987 use --standard
+            params.add(String.format(STANDARD_PARAM_FORMAT, standard));
+        }
         params.add(REPORT_PARAM);
         params.add(String.format(EXTENSIONS_PARAM, StringUtils.implode(FileUtil.getMIMETypeExtensions(FileUtils.PHP_MIME_TYPE), ","))); // NOI18N
         params.add(String.format(ENCODING_PARAM, encoding.name()));
@@ -248,18 +260,6 @@ public final class CodeSniffer {
         }
         params.add(FileUtil.toFile(file).getAbsolutePath());
         return params;
-    }
-
-    private String ensureStandard(String standard) {
-        if (standard != null) {
-            return standard;
-        }
-        List<String> standards = getStandards();
-        if (standards == null) {
-            // fallback
-            return "PEAR"; // NOI18N
-        }
-        return standards.get(0);
     }
 
     private void addIgnoredFiles(List<String> params, FileObject file) {

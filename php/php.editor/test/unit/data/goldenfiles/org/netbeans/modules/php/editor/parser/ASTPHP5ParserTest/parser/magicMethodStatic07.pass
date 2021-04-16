@@ -1,0 +1,100 @@
+<testresult testFile='magicMethodStatic07.php'>
+    <scanner>
+        <token id='T_CLASS' start='894' end='899'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='900' end='901'>
+            <text>A</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='902' end='903'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='909' end='910'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='911' end='911'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='911'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <PHPDocBlock start='818' end='893'>
+                <Tags>
+                    <PHPDocMethodTag start='822' end='889' kind='method' isStatic='true'>
+                        <Name>
+                            <PHPDocNode start='839' end='841' value='m1'/>
+                        </Name>
+                        <Return Types>
+                            <PHPDocTypeNode start='837' end='838' value='A' isArray='false'/>
+                        </Return Types>
+                        <Parameters>
+                            <PHPDocVarTypeTag start='847' end='863' kind='param'>
+                                <Variable>
+                                    <PHPDocNode start='856' end='863' value='$param1'/>
+                                </Variable>
+                                <Types>
+                                    <PHPDocTypeNode start='847' end='853' value='string' isArray='false'/>
+                                    <PHPDocTypeNode start='854' end='855' value='A' isArray='false'/>
+                                </Types>
+                            </PHPDocVarTypeTag>
+                            <PHPDocVarTypeTag start='864' end='870' kind='param'>
+                                <Variable>
+                                    <PHPDocNode start='867' end='870' value='$p2'/>
+                                </Variable>
+                                <Types>
+                                    <PHPDocTypeNode start='865' end='866' value='A' isArray='false'/>
+                                </Types>
+                            </PHPDocVarTypeTag>
+                        </Parameters>
+                    </PHPDocMethodTag>
+                </Tags>
+            </PHPDocBlock>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <PHPDocBlock start='818' end='893'>
+                <Tags>
+                    <PHPDocMethodTag start='822' end='889' kind='method' isStatic='true'>
+                        <Name>
+                            <PHPDocNode start='839' end='841' value='m1'/>
+                        </Name>
+                        <Return Types>
+                            <PHPDocTypeNode start='837' end='838' value='A' isArray='false'/>
+                        </Return Types>
+                        <Parameters>
+                            <PHPDocVarTypeTag start='847' end='863' kind='param'>
+                                <Variable>
+                                    <PHPDocNode start='856' end='863' value='$param1'/>
+                                </Variable>
+                                <Types>
+                                    <PHPDocTypeNode start='847' end='853' value='string' isArray='false'/>
+                                    <PHPDocTypeNode start='854' end='855' value='A' isArray='false'/>
+                                </Types>
+                            </PHPDocVarTypeTag>
+                            <PHPDocVarTypeTag start='864' end='870' kind='param'>
+                                <Variable>
+                                    <PHPDocNode start='867' end='870' value='$p2'/>
+                                </Variable>
+                                <Types>
+                                    <PHPDocTypeNode start='865' end='866' value='A' isArray='false'/>
+                                </Types>
+                            </PHPDocVarTypeTag>
+                        </Parameters>
+                    </PHPDocMethodTag>
+                </Tags>
+            </PHPDocBlock>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='894' end='910' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='900' end='901' name='A'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='902' end='910' isCurly='true'>
+                </Block>
+            </ClassDeclaration>
+        </Statements>
+    </Program>
+</testresult>

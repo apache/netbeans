@@ -91,7 +91,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
     public static ErrorManager ERR = ErrorManager.getDefault().getInstance("org.netbeans.modules.java.hints"); // NOI18N
     public static Logger LOG = Logger.getLogger("org.netbeans.modules.java.hints"); // NOI18N
     
-    ErrorHintsProvider() {
+    public ErrorHintsProvider() {
         super(Phase.RESOLVED);
     }
     
@@ -109,7 +109,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
     /**
      * @return errors for whole file
      */
-    List<ErrorDescription> computeErrors(CompilationInfo info, Document doc, String mimeType) throws IOException {
+    public List<ErrorDescription> computeErrors(CompilationInfo info, Document doc, String mimeType) throws IOException {
         return computeErrors(info, doc, null, mimeType);
     }
     
@@ -636,6 +636,16 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
             }
         }
         
+        if ("compiler.err.illegal.unicode.esc".equals(d.getCode())) {
+            String text = info.getText();
+            endOffset = info.getSnapshot().getOriginalOffset((int) d.getEndPosition());
+            soff = endOffset;
+            while (text.charAt(soff) != '\\') {
+                soff--;
+            }
+            rangePrepared = true;
+        }
+
         // check that the start offset and end offset map into the document
         if (!rangePrepared && (info.getSnapshot().getOriginalOffset(startOffset) == -1 ||
             info.getSnapshot().getOriginalOffset(endOffset) == -1)) {

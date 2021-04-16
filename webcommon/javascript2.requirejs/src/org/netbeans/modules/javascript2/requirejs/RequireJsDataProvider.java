@@ -41,7 +41,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.modules.Places;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -77,7 +76,7 @@ public class RequireJsDataProvider {
     /**
      * Translating names from documentation to the real option names
      */
-    private final static HashMap<String, String> TRANSLATE_NAME = new HashMap();
+    private final static HashMap<String, String> TRANSLATE_NAME = new HashMap<>();
 
     static {
         TRANSLATE_NAME.put("moduleconfig", "config");//NOI18N
@@ -151,7 +150,7 @@ public class RequireJsDataProvider {
     private void startLoading() {
         LOG.fine("start loading doc"); //NOI18N
 
-        progress = ProgressHandleFactory.createHandle(Bundle.doc_building());
+        progress = ProgressHandle.createHandle(Bundle.doc_building());
         progress.start(1);
 
     }

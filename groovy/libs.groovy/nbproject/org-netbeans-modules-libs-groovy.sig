@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.11
+#Version 2.9
 
 CLSS public abstract interface groovy.lang.AdaptingMetaClass
 intf groovy.lang.MetaClass
@@ -262,6 +262,7 @@ meth public boolean hasMetaProperty(java.lang.String)
 meth public boolean isModified()
 meth public boolean isSetter(java.lang.String,org.codehaus.groovy.reflection.CachedClass[])
 meth public groovy.lang.ExpandoMetaClass define(groovy.lang.Closure)
+ anno 1 groovy.lang.DelegatesTo(int genericTypeIndex=-1, int strategy=3, java.lang.Class value=class groovy.lang.ExpandoMetaClass$DefiningClosure, java.lang.String target="", java.lang.String type="")
 meth public groovy.lang.MetaClass getMetaClass()
 meth public groovy.lang.MetaMethod findMixinMethod(java.lang.String,java.lang.Class[])
 meth public groovy.lang.MetaMethod retrieveConstructor(java.lang.Object[])
@@ -445,6 +446,7 @@ meth protected long getTimeStamp(java.lang.Class)
 meth protected org.codehaus.groovy.control.CompilationUnit createCompilationUnit(org.codehaus.groovy.control.CompilerConfiguration,java.security.CodeSource)
 meth protected void removeClassCacheEntry(java.lang.String)
 meth protected void setClassCacheEntry(java.lang.Class)
+meth public boolean hasCompatibleConfiguration(org.codehaus.groovy.control.CompilerConfiguration)
 meth public groovy.lang.GroovyResourceLoader getResourceLoader()
 meth public java.lang.Boolean isShouldRecompile()
 meth public java.lang.Class defineClass(java.lang.String,byte[])
@@ -616,6 +618,7 @@ meth public static boolean isKeepJavaMetaClasses()
 meth public static boolean isUseReflection()
  anno 0 java.lang.Deprecated()
 meth public static groovy.lang.MetaClassRegistry getMetaClassRegistry()
+meth public static java.lang.String getShortVersion()
 meth public static java.lang.String getVersion()
 meth public static void setKeepJavaMetaClasses(boolean)
 meth public static void stopThreadedReferenceManager()
@@ -878,7 +881,7 @@ meth public void setProperty(java.lang.Class,java.lang.Object,java.lang.String,j
 meth public void setProperty(java.lang.Object,java.lang.String,java.lang.Object)
 supr java.lang.Object
 hfds AMBIGUOUS_LISTENER_METHOD,CACHED_CLASS_NAME_COMPARATOR,CLOSURE_CALL_METHOD,CLOSURE_DO_CALL_METHOD,EMPTY,GETTER_MISSING_ARGS,GET_PROPERTY_METHOD,METHOD_INDEX_COPIER,METHOD_MISSING_ARGS,NAME_INDEX_COPIER,PROP_NAMES,SETTER_MISSING_ARGS,SET_PROPERTY_METHOD,additionalMetaMethods,allMethods,arrayLengthProperty,classNode,classPropertyIndex,classPropertyIndexForSuper,constructors,genericGetMethod,genericSetMethod,initialized,listeners,mainClassMethodHeader,methodMissing,myNewMetaMethods,newGroovyMethodsSet,propertyMissingGet,propertyMissingSet,staticPropertyIndex
-hcls DummyMetaMethod,MethodIndex,MethodIndexAction
+hcls DummyMetaMethod,InvokeMethodResult,MethodIndex,MethodIndexAction
 
 CLSS public static groovy.lang.MetaClassImpl$Index
  outer groovy.lang.MetaClassImpl
@@ -1107,6 +1110,7 @@ meth public java.lang.String toString()
 meth public java.util.Iterator<java.lang.Comparable> iterator()
 meth public java.util.List<java.lang.Comparable> step(int)
 meth public java.util.List<java.lang.Comparable> subList(int,int)
+meth public org.codehaus.groovy.runtime.RangeInfo subListBorders(int)
 meth public void step(int,groovy.lang.Closure)
 supr java.util.AbstractList<java.lang.Comparable>
 hfds from,hashCodeCache,inclusive,reverse,size,stepSize,to
@@ -1438,6 +1442,11 @@ meth public abstract java.io.Writer writeTo(java.io.Writer) throws java.io.IOExc
 
 CLSS public abstract interface groovy.transform.CompilationUnitAware
 meth public abstract void setCompilationUnit(org.codehaus.groovy.control.CompilationUnit)
+
+CLSS public abstract interface !annotation groovy.transform.Internal
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, CONSTRUCTOR, TYPE, FIELD])
+intf java.lang.annotation.Annotation
 
 CLSS public abstract groovy.util.AbstractFactory
 cons public init()
@@ -3759,6 +3768,7 @@ cons public init(byte[],int,int)
 cons public init(java.io.InputStream) throws java.io.IOException
 cons public init(java.lang.String) throws java.io.IOException
 fld public final byte[] b
+ anno 0 java.lang.Deprecated()
 fld public final int header
 fld public final static int EXPAND_FRAMES = 8
 fld public final static int SKIP_CODE = 1
@@ -3785,7 +3795,14 @@ meth public short readShort(int)
 meth public void accept(groovyjarjarasm.asm.ClassVisitor,groovyjarjarasm.asm.Attribute[],int)
 meth public void accept(groovyjarjarasm.asm.ClassVisitor,int)
 supr java.lang.Object
-hfds EXPAND_ASM_INSNS,INPUT_STREAM_DATA_CHUNK_SIZE,bootstrapMethodOffsets,cpInfoOffsets,cpInfoValues,maxStringLength
+hfds EXPAND_ASM_INSNS,INPUT_STREAM_DATA_CHUNK_SIZE,bootstrapMethodOffsets,classFileBuffer,constantDynamicValues,constantUtf8Values,cpInfoOffsets,maxStringLength
+
+CLSS public final groovyjarjarasm.asm.ClassTooLargeException
+cons public init(java.lang.String,int)
+meth public int getConstantPoolCount()
+meth public java.lang.String getClassName()
+supr java.lang.IndexOutOfBoundsException
+hfds className,constantPoolCount,serialVersionUID
 
 CLSS public abstract groovyjarjarasm.asm.ClassVisitor
 cons public init(int)
@@ -3797,15 +3814,17 @@ meth public groovyjarjarasm.asm.AnnotationVisitor visitTypeAnnotation(int,groovy
 meth public groovyjarjarasm.asm.FieldVisitor visitField(int,java.lang.String,java.lang.String,java.lang.String,java.lang.Object)
 meth public groovyjarjarasm.asm.MethodVisitor visitMethod(int,java.lang.String,java.lang.String,java.lang.String,java.lang.String[])
 meth public groovyjarjarasm.asm.ModuleVisitor visitModule(java.lang.String,int,java.lang.String)
+meth public groovyjarjarasm.asm.RecordComponentVisitor visitRecordComponentExperimental(int,java.lang.String,java.lang.String,java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public void visit(int,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String[])
 meth public void visitAttribute(groovyjarjarasm.asm.Attribute)
 meth public void visitEnd()
 meth public void visitInnerClass(java.lang.String,java.lang.String,java.lang.String,int)
-meth public void visitNestHostExperimental(java.lang.String)
- anno 0 java.lang.Deprecated()
-meth public void visitNestMemberExperimental(java.lang.String)
- anno 0 java.lang.Deprecated()
+meth public void visitNestHost(java.lang.String)
+meth public void visitNestMember(java.lang.String)
 meth public void visitOuterClass(java.lang.String,java.lang.String,java.lang.String)
+meth public void visitPermittedSubtypeExperimental(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public void visitSource(java.lang.String,java.lang.String)
 supr java.lang.Object
 
@@ -3814,6 +3833,7 @@ cons public init(groovyjarjarasm.asm.ClassReader,int)
 cons public init(int)
 fld public final static int COMPUTE_FRAMES = 2
 fld public final static int COMPUTE_MAXS = 1
+meth protected java.lang.ClassLoader getClassLoader()
 meth protected java.lang.String getCommonSuperClass(java.lang.String,java.lang.String)
 meth public !varargs int newConstantDynamic(java.lang.String,java.lang.String,groovyjarjarasm.asm.Handle,java.lang.Object[])
 meth public !varargs int newInvokeDynamic(java.lang.String,java.lang.String,groovyjarjarasm.asm.Handle,java.lang.Object[])
@@ -3823,11 +3843,15 @@ meth public final groovyjarjarasm.asm.AnnotationVisitor visitTypeAnnotation(int,
 meth public final groovyjarjarasm.asm.FieldVisitor visitField(int,java.lang.String,java.lang.String,java.lang.String,java.lang.Object)
 meth public final groovyjarjarasm.asm.MethodVisitor visitMethod(int,java.lang.String,java.lang.String,java.lang.String,java.lang.String[])
 meth public final groovyjarjarasm.asm.ModuleVisitor visitModule(java.lang.String,int,java.lang.String)
+meth public final groovyjarjarasm.asm.RecordComponentVisitor visitRecordComponentExperimental(int,java.lang.String,java.lang.String,java.lang.String)
 meth public final void visit(int,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String[])
 meth public final void visitAttribute(groovyjarjarasm.asm.Attribute)
 meth public final void visitEnd()
 meth public final void visitInnerClass(java.lang.String,java.lang.String,java.lang.String,int)
+meth public final void visitNestHost(java.lang.String)
+meth public final void visitNestMember(java.lang.String)
 meth public final void visitOuterClass(java.lang.String,java.lang.String,java.lang.String)
+meth public final void visitPermittedSubtypeExperimental(java.lang.String)
 meth public final void visitSource(java.lang.String,java.lang.String)
 meth public int newClass(java.lang.String)
 meth public int newConst(java.lang.Object)
@@ -3841,18 +3865,17 @@ meth public int newModule(java.lang.String)
 meth public int newNameType(java.lang.String,java.lang.String)
 meth public int newPackage(java.lang.String)
 meth public int newUTF8(java.lang.String)
-meth public void visitNestHostExperimental(java.lang.String)
-meth public void visitNestMemberExperimental(java.lang.String)
 supr groovyjarjarasm.asm.ClassVisitor
-hfds accessFlags,compute,debugExtension,enclosingClassIndex,enclosingMethodIndex,firstAttribute,firstField,firstMethod,innerClasses,interfaceCount,interfaces,lastField,lastMethod,lastRuntimeInvisibleAnnotation,lastRuntimeInvisibleTypeAnnotation,lastRuntimeVisibleAnnotation,lastRuntimeVisibleTypeAnnotation,moduleWriter,nestHostClassIndex,nestMemberClasses,numberOfInnerClasses,numberOfNestMemberClasses,signatureIndex,sourceFileIndex,superClass,symbolTable,thisClass,version
+hfds accessFlags,compute,debugExtension,enclosingClassIndex,enclosingMethodIndex,firstAttribute,firstField,firstMethod,firstRecordComponent,innerClasses,interfaceCount,interfaces,lastField,lastMethod,lastRecordComponent,lastRuntimeInvisibleAnnotation,lastRuntimeInvisibleTypeAnnotation,lastRuntimeVisibleAnnotation,lastRuntimeVisibleTypeAnnotation,moduleWriter,nestHostClassIndex,nestMemberClasses,numberOfInnerClasses,numberOfNestMemberClasses,numberOfPermittedSubtypeClasses,permittedSubtypeClasses,signatureIndex,sourceFileIndex,superClass,symbolTable,thisClass,version
 
 CLSS public final groovyjarjarasm.asm.ConstantDynamic
- anno 0 java.lang.Deprecated()
 cons public !varargs init(java.lang.String,java.lang.String,groovyjarjarasm.asm.Handle,java.lang.Object[])
 meth public boolean equals(java.lang.Object)
 meth public groovyjarjarasm.asm.Handle getBootstrapMethod()
+meth public int getBootstrapMethodArgumentCount()
+meth public int getSize()
 meth public int hashCode()
-meth public java.lang.Object[] getBootstrapMethodArguments()
+meth public java.lang.Object getBootstrapMethodArgument(int)
 meth public java.lang.String getDescriptor()
 meth public java.lang.String getName()
 meth public java.lang.String toString()
@@ -3892,6 +3915,15 @@ meth public int getOffset()
 meth public java.lang.String toString()
 supr java.lang.Object
 hfds EMPTY_LIST,FLAG_DEBUG_ONLY,FLAG_JUMP_TARGET,FLAG_REACHABLE,FLAG_RESOLVED,FLAG_SUBROUTINE_CALLER,FLAG_SUBROUTINE_END,FLAG_SUBROUTINE_START,FORWARD_REFERENCES_CAPACITY_INCREMENT,FORWARD_REFERENCE_HANDLE_MASK,FORWARD_REFERENCE_TYPE_MASK,FORWARD_REFERENCE_TYPE_SHORT,FORWARD_REFERENCE_TYPE_WIDE,LINE_NUMBERS_CAPACITY_INCREMENT,bytecodeOffset,flags,forwardReferences,frame,inputStackSize,lineNumber,nextBasicBlock,nextListElement,otherLineNumbers,outgoingEdges,outputStackMax,outputStackSize,subroutineId
+
+CLSS public final groovyjarjarasm.asm.MethodTooLargeException
+cons public init(java.lang.String,java.lang.String,java.lang.String,int)
+meth public int getCodeSize()
+meth public java.lang.String getClassName()
+meth public java.lang.String getDescriptor()
+meth public java.lang.String getMethodName()
+supr java.lang.IndexOutOfBoundsException
+hfds className,codeSize,descriptor,methodName,serialVersionUID
 
 CLSS public abstract groovyjarjarasm.asm.MethodVisitor
 cons public init(int)
@@ -3984,7 +4016,8 @@ fld public final static int ARRAYLENGTH = 190
 fld public final static int ASM4 = 262144
 fld public final static int ASM5 = 327680
 fld public final static int ASM6 = 393216
-fld public final static int ASM7_EXPERIMENTAL = 17235968
+fld public final static int ASM7 = 458752
+fld public final static int ASM8_EXPERIMENTAL = 17301504
  anno 0 java.lang.Deprecated()
 fld public final static int ASTORE = 58
 fld public final static int ATHROW = 191
@@ -4149,6 +4182,8 @@ fld public final static int RETURN = 177
 fld public final static int SALOAD = 53
 fld public final static int SASTORE = 86
 fld public final static int SIPUSH = 17
+fld public final static int SOURCE_DEPRECATED = 256
+fld public final static int SOURCE_MASK = 256
 fld public final static int SWAP = 95
 fld public final static int TABLESWITCH = 170
 fld public final static int T_BOOLEAN = 4
@@ -4161,6 +4196,10 @@ fld public final static int T_LONG = 11
 fld public final static int T_SHORT = 9
 fld public final static int V10 = 54
 fld public final static int V11 = 55
+fld public final static int V12 = 56
+fld public final static int V13 = 57
+fld public final static int V14 = 58
+fld public final static int V15 = 59
 fld public final static int V1_1 = 196653
 fld public final static int V1_2 = 46
 fld public final static int V1_3 = 47
@@ -4170,8 +4209,7 @@ fld public final static int V1_6 = 50
 fld public final static int V1_7 = 51
 fld public final static int V1_8 = 52
 fld public final static int V9 = 53
-fld public final static int V_PREVIEW_EXPERIMENTAL = -65536
- anno 0 java.lang.Deprecated()
+fld public final static int V_PREVIEW = -65536
 fld public final static java.lang.Integer DOUBLE
 fld public final static java.lang.Integer FLOAT
 fld public final static java.lang.Integer INTEGER
@@ -4180,7 +4218,27 @@ fld public final static java.lang.Integer NULL
 fld public final static java.lang.Integer TOP
 fld public final static java.lang.Integer UNINITIALIZED_THIS
 
-CLSS public groovyjarjarasm.asm.Type
+CLSS public abstract groovyjarjarasm.asm.RecordComponentVisitor
+ anno 0 java.lang.Deprecated()
+cons public init(int)
+ anno 0 java.lang.Deprecated()
+cons public init(int,groovyjarjarasm.asm.RecordComponentVisitor)
+ anno 0 java.lang.Deprecated()
+fld protected final int api
+meth public groovyjarjarasm.asm.AnnotationVisitor visitAnnotationExperimental(java.lang.String,boolean)
+ anno 0 java.lang.Deprecated()
+meth public groovyjarjarasm.asm.AnnotationVisitor visitTypeAnnotationExperimental(int,groovyjarjarasm.asm.TypePath,java.lang.String,boolean)
+ anno 0 java.lang.Deprecated()
+meth public groovyjarjarasm.asm.RecordComponentVisitor getDelegateExperimental()
+ anno 0 java.lang.Deprecated()
+meth public void visitAttributeExperimental(groovyjarjarasm.asm.Attribute)
+ anno 0 java.lang.Deprecated()
+meth public void visitEndExperimental()
+ anno 0 java.lang.Deprecated()
+supr java.lang.Object
+hfds delegate
+
+CLSS public final groovyjarjarasm.asm.Type
 fld public final static groovyjarjarasm.asm.Type BOOLEAN_TYPE
 fld public final static groovyjarjarasm.asm.Type BYTE_TYPE
 fld public final static groovyjarjarasm.asm.Type CHAR_TYPE
@@ -4236,7 +4294,7 @@ meth public static java.lang.String getMethodDescriptor(java.lang.reflect.Method
 supr java.lang.Object
 hfds INTERNAL,PRIMITIVE_DESCRIPTORS,sort,valueBegin,valueBuffer,valueEnd
 
-CLSS public groovyjarjarasm.asm.TypePath
+CLSS public final groovyjarjarasm.asm.TypePath
 fld public final static int ARRAY_ELEMENT = 0
 fld public final static int INNER_TYPE = 1
 fld public final static int TYPE_ARGUMENT = 3
@@ -4458,7 +4516,7 @@ meth public void setClassAssertionStatus(java.lang.String,boolean)
 meth public void setDefaultAssertionStatus(boolean)
 meth public void setPackageAssertionStatus(java.lang.String,boolean)
 supr java.lang.Object
-hfds assertionLock,classAssertionStatus,classes,defaultAssertionStatus,defaultDomain,domains,loadedLibraryNames,nativeLibraries,nativeLibraryContext,nocerts,package2certs,packageAssertionStatus,packages,parallelLockMap,parent,scl,sclSet,sys_paths,systemNativeLibraries,usr_paths
+hfds assertionLock,classAssertionStatus,classes,defaultAssertionStatus,defaultDomain,loadedLibraryNames,nativeLibraries,nativeLibraryContext,nocerts,package2certs,packageAssertionStatus,packages,parallelLockMap,parent,scl,sclSet,sys_paths,systemNativeLibraries,usr_paths
 hcls NativeLibrary,ParallelLoaders
 
 CLSS public abstract interface java.lang.Cloneable
@@ -4512,6 +4570,12 @@ CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
 intf java.lang.annotation.Annotation
+
+CLSS public java.lang.IndexOutOfBoundsException
+cons public init()
+cons public init(java.lang.String)
+supr java.lang.RuntimeException
+hfds serialVersionUID
 
 CLSS public abstract interface java.lang.Iterable<%0 extends java.lang.Object>
 meth public abstract java.util.Iterator<{java.lang.Iterable%0}> iterator()
@@ -5020,6 +5084,7 @@ CLSS public org.codehaus.groovy.ant.FileSystemCompilerFacade
 cons public init()
 meth public static void main(java.lang.String[])
 supr java.lang.Object
+hfds EMPTY_STRING_ARRAY
 
 CLSS public org.codehaus.groovy.ant.GenerateStubsTask
 
@@ -5027,7 +5092,7 @@ CLSS public org.codehaus.groovy.ant.Groovy
 hfds EMPTY_OBJECT_ARRAY,PREFIX,SUFFIX,append,classpath,cmdline,command,configscript,configuration,contextClassLoader,filesets,fork,includeAntRuntime,indy,log,output,scriptBaseClass,srcFile,useGroovyShell
 
 CLSS public org.codehaus.groovy.ant.Groovyc
-hfds EMPTY_URL_ARRAY,compileClasspath,compileSourcepath,configscript,destDir,encoding,errorProperty,forceLookupUnnamedFiles,fork,forkJavaHome,forkedExecutable,includeAntRuntime,includeDestClasses,includeJavaRuntime,javac,jointCompilation,keepStubs,log,memoryInitialSize,memoryMaximumSize,parameters,scriptBaseClass,scriptExtension,scriptExtensions,src,stacktrace,stubDir,targetBytecode,taskSuccess,temporaryFiles,updatedProperty,useIndy,verbose
+hfds EMPTY_FILE_ARRAY,EMPTY_STRING_ARRAY,compileClasspath,compileSourcepath,configscript,destDir,encoding,errorProperty,forceLookupUnnamedFiles,fork,forkJavaHome,forkedExecutable,includeAntRuntime,includeDestClasses,includeJavaRuntime,javac,jointCompilation,keepStubs,log,memoryInitialSize,memoryMaximumSize,parameters,previewFeatures,scriptBaseClass,scriptExtension,scriptExtensions,src,stacktrace,stubDir,targetBytecode,taskSuccess,temporaryFiles,updatedProperty,useIndy,verbose
 
 CLSS public org.codehaus.groovy.ant.GroovycTask
 
@@ -5231,6 +5296,7 @@ fld public final static groovyjarjarantlr.collections.impl.BitSet _tokenSet_109
 fld public final static groovyjarjarantlr.collections.impl.BitSet _tokenSet_11
 fld public final static groovyjarjarantlr.collections.impl.BitSet _tokenSet_110
 fld public final static groovyjarjarantlr.collections.impl.BitSet _tokenSet_111
+fld public final static groovyjarjarantlr.collections.impl.BitSet _tokenSet_112
 fld public final static groovyjarjarantlr.collections.impl.BitSet _tokenSet_12
 fld public final static groovyjarjarantlr.collections.impl.BitSet _tokenSet_13
 fld public final static groovyjarjarantlr.collections.impl.BitSet _tokenSet_14
@@ -6160,25 +6226,43 @@ supr java.lang.Object
 CLSS public org.codehaus.groovy.ast.CompileUnit
 cons public init(groovy.lang.GroovyClassLoader,java.security.CodeSource,org.codehaus.groovy.control.CompilerConfiguration)
 cons public init(groovy.lang.GroovyClassLoader,org.codehaus.groovy.control.CompilerConfiguration)
+innr public static ConstructedOuterNestedClassNode
+meth public <%0 extends java.lang.Object> {%%0} getNodeMetaData(java.lang.Object)
 meth public boolean hasClassNodeToCompile()
 meth public groovy.lang.GroovyClassLoader getClassLoader()
+meth public java.lang.Object putNodeMetaData(java.lang.Object,java.lang.Object)
 meth public java.security.CodeSource getCodeSource()
 meth public java.util.Iterator<java.lang.String> iterateClassNodeToCompile()
-meth public java.util.List getClasses()
+meth public java.util.List<org.codehaus.groovy.ast.ClassNode> getClasses()
 meth public java.util.List<org.codehaus.groovy.ast.ModuleNode> getModules()
+meth public java.util.Map<?,?> getNodeMetaData()
+meth public java.util.Map<java.lang.String,org.codehaus.groovy.ast.ClassNode> getClassesToCompile()
+meth public java.util.Map<java.lang.String,org.codehaus.groovy.ast.CompileUnit$ConstructedOuterNestedClassNode> getClassesToResolve()
 meth public java.util.Map<java.lang.String,org.codehaus.groovy.ast.InnerClassNode> getGeneratedInnerClasses()
 meth public org.codehaus.groovy.ast.ClassNode getClass(java.lang.String)
 meth public org.codehaus.groovy.ast.InnerClassNode getGeneratedInnerClass(java.lang.String)
 meth public org.codehaus.groovy.control.CompilerConfiguration getConfig()
 meth public org.codehaus.groovy.control.SourceUnit getScriptSourceLocation(java.lang.String)
+meth public org.codehaus.groovy.util.ListHashMap getMetaDataMap()
 meth public void addClass(org.codehaus.groovy.ast.ClassNode)
 meth public void addClassNodeToCompile(org.codehaus.groovy.ast.ClassNode,org.codehaus.groovy.control.SourceUnit)
+meth public void addClassNodeToResolve(org.codehaus.groovy.ast.CompileUnit$ConstructedOuterNestedClassNode)
 meth public void addGeneratedInnerClass(org.codehaus.groovy.ast.InnerClassNode)
 meth public void addModule(org.codehaus.groovy.ast.ModuleNode)
+meth public void removeNodeMetaData(java.lang.Object)
+meth public void setNodeMetaData(java.lang.Object,java.lang.Object)
 supr java.lang.Object
-hfds classLoader,classNameToSource,classes,classesToCompile,codeSource,config,generatedInnerClasses,modules
+hfds classLoader,classNameToSource,classes,classesToCompile,classesToResolve,codeSource,config,generatedInnerClasses,metaDataMap,modules
+
+CLSS public static org.codehaus.groovy.ast.CompileUnit$ConstructedOuterNestedClassNode
+ outer org.codehaus.groovy.ast.CompileUnit
+cons public init(org.codehaus.groovy.ast.ClassNode,java.lang.String)
+meth public org.codehaus.groovy.ast.ClassNode getEnclosingClassNode()
+supr org.codehaus.groovy.ast.ClassNode
+hfds enclosingClassNode
 
 CLSS public org.codehaus.groovy.ast.ConstructorNode
+cons protected init()
 cons public init(int,org.codehaus.groovy.ast.Parameter[],org.codehaus.groovy.ast.ClassNode[],org.codehaus.groovy.ast.stmt.Statement)
 cons public init(int,org.codehaus.groovy.ast.stmt.Statement)
 meth public boolean firstStatementIsSpecialConstructorCall()
@@ -6205,6 +6289,7 @@ cons public init(org.codehaus.groovy.ast.ClassNode,java.lang.String,int,org.code
 supr org.codehaus.groovy.ast.InnerClassNode
 
 CLSS public org.codehaus.groovy.ast.FieldNode
+cons protected init()
 cons public init(java.lang.String,int,org.codehaus.groovy.ast.ClassNode,org.codehaus.groovy.ast.ClassNode,org.codehaus.groovy.ast.expr.Expression)
 intf groovyjarjarasm.asm.Opcodes
 intf org.codehaus.groovy.ast.Variable
@@ -6245,6 +6330,7 @@ CLSS public org.codehaus.groovy.ast.GenericsType
 cons public init(org.codehaus.groovy.ast.ClassNode)
 cons public init(org.codehaus.groovy.ast.ClassNode,org.codehaus.groovy.ast.ClassNode[],org.codehaus.groovy.ast.ClassNode)
 fld public final static org.codehaus.groovy.ast.GenericsType[] EMPTY_ARRAY
+innr public static GenericsTypeName
 meth public boolean isCompatibleWith(org.codehaus.groovy.ast.ClassNode)
 meth public boolean isPlaceholder()
 meth public boolean isResolved()
@@ -6262,6 +6348,16 @@ meth public void setWildcard(boolean)
 supr org.codehaus.groovy.ast.ASTNode
 hfds lowerBound,name,placeholder,resolved,type,upperBounds,wildcard
 hcls GenericsTypeMatcher
+
+CLSS public static org.codehaus.groovy.ast.GenericsType$GenericsTypeName
+ outer org.codehaus.groovy.ast.GenericsType
+cons public init(java.lang.String)
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String getName()
+meth public java.lang.String toString()
+supr java.lang.Object
+hfds name
 
 CLSS public abstract interface org.codehaus.groovy.ast.GroovyClassVisitor
 meth public abstract void visitClass(org.codehaus.groovy.ast.ClassNode)
@@ -6382,6 +6478,7 @@ meth public void visitMethodCallExpression(org.codehaus.groovy.ast.expr.MethodCa
 supr org.codehaus.groovy.ast.CodeVisitorSupport
 
 CLSS public org.codehaus.groovy.ast.MethodNode
+cons protected init()
 cons public init(java.lang.String,int,org.codehaus.groovy.ast.ClassNode,org.codehaus.groovy.ast.Parameter[],org.codehaus.groovy.ast.ClassNode[],org.codehaus.groovy.ast.stmt.Statement)
 fld public final static java.lang.String SCRIPT_BODY_METHOD_KEY = "org.codehaus.groovy.ast.MethodNode.isScriptBody"
 intf groovyjarjarasm.asm.Opcodes
@@ -6815,6 +6912,7 @@ CLSS public org.codehaus.groovy.ast.expr.DeclarationExpression
 cons public init(org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.syntax.Token,org.codehaus.groovy.ast.expr.Expression)
 cons public init(org.codehaus.groovy.ast.expr.VariableExpression,org.codehaus.groovy.syntax.Token,org.codehaus.groovy.ast.expr.Expression)
 meth public boolean isMultipleAssignmentDeclaration()
+meth public java.lang.String getText()
 meth public org.codehaus.groovy.ast.expr.Expression transformExpression(org.codehaus.groovy.ast.expr.ExpressionTransformer)
 meth public org.codehaus.groovy.ast.expr.TupleExpression getTupleExpression()
 meth public org.codehaus.groovy.ast.expr.VariableExpression getVariableExpression()
@@ -6955,6 +7053,7 @@ meth public void setMethod(org.codehaus.groovy.ast.expr.Expression)
 meth public void setMethodTarget(org.codehaus.groovy.ast.MethodNode)
 meth public void setObjectExpression(org.codehaus.groovy.ast.expr.Expression)
 meth public void setSafe(boolean)
+meth public void setSourcePosition(org.codehaus.groovy.ast.ASTNode)
 meth public void setSpreadSafe(boolean)
 meth public void visit(org.codehaus.groovy.ast.GroovyCodeVisitor)
 supr org.codehaus.groovy.ast.expr.Expression
@@ -6965,7 +7064,6 @@ cons public init(org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.ast
 meth public boolean isDynamic()
 meth public java.lang.Class getTypeClass()
 meth public java.lang.String getText()
-meth public org.codehaus.groovy.ast.ClassNode getType()
 meth public org.codehaus.groovy.ast.expr.Expression getExpression()
 meth public org.codehaus.groovy.ast.expr.Expression getMethodName()
 meth public org.codehaus.groovy.ast.expr.Expression transformExpression(org.codehaus.groovy.ast.expr.ExpressionTransformer)
@@ -7384,7 +7482,7 @@ meth public static java.util.List<org.codehaus.groovy.ast.PropertyNode> getAllPr
 meth public static java.util.List<org.codehaus.groovy.ast.PropertyNode> getAllProperties(org.codehaus.groovy.ast.ClassNode,boolean,boolean,boolean,boolean,boolean)
 meth public static void addPseudoProperties(org.codehaus.groovy.ast.ClassNode,org.codehaus.groovy.ast.ClassNode,java.util.List<org.codehaus.groovy.ast.PropertyNode>,java.util.Set<java.lang.String>,boolean,boolean,boolean)
 supr java.lang.Object
-hfds GENERATED_TYPE,GET_PREFIX,IS_PREFIX,SET_PREFIX
+hfds GET_PREFIX,INTERNAL_TYPE,IS_PREFIX,SET_PREFIX
 
 CLSS public org.codehaus.groovy.ast.tools.ClassNodeUtils
  anno 0 java.lang.Deprecated()
@@ -7413,9 +7511,11 @@ supr java.lang.Object
 
 CLSS public org.codehaus.groovy.ast.tools.ClosureUtils
 cons public init()
+meth public static boolean hasImplicitParameter(org.codehaus.groovy.ast.expr.ClosureExpression)
 meth public static boolean hasSingleCharacterArg(groovy.lang.Closure)
 meth public static boolean hasSingleStringArg(groovy.lang.Closure)
 meth public static java.lang.String convertClosureToSource(org.codehaus.groovy.control.io.ReaderSource,org.codehaus.groovy.ast.expr.ClosureExpression) throws java.lang.Exception
+meth public static org.codehaus.groovy.ast.Parameter[] getParametersSafe(org.codehaus.groovy.ast.expr.ClosureExpression)
 supr java.lang.Object
 
 CLSS public org.codehaus.groovy.ast.tools.GeneralUtils
@@ -7479,6 +7579,7 @@ meth public static org.codehaus.groovy.ast.expr.BooleanExpression equalsNullX(or
 meth public static org.codehaus.groovy.ast.expr.BooleanExpression hasSameFieldX(org.codehaus.groovy.ast.FieldNode,org.codehaus.groovy.ast.expr.Expression)
 meth public static org.codehaus.groovy.ast.expr.BooleanExpression hasSamePropertyX(org.codehaus.groovy.ast.PropertyNode,org.codehaus.groovy.ast.expr.Expression)
 meth public static org.codehaus.groovy.ast.expr.BooleanExpression isInstanceOfX(org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.ast.ClassNode)
+meth public static org.codehaus.groovy.ast.expr.BooleanExpression isNullX(org.codehaus.groovy.ast.expr.Expression)
 meth public static org.codehaus.groovy.ast.expr.BooleanExpression isOneX(org.codehaus.groovy.ast.expr.Expression)
 meth public static org.codehaus.groovy.ast.expr.BooleanExpression isTrueX(org.codehaus.groovy.ast.expr.Expression)
 meth public static org.codehaus.groovy.ast.expr.BooleanExpression isZeroX(org.codehaus.groovy.ast.expr.Expression)
@@ -7492,8 +7593,14 @@ meth public static org.codehaus.groovy.ast.expr.ClosureExpression closureX(org.c
 meth public static org.codehaus.groovy.ast.expr.ClosureExpression closureX(org.codehaus.groovy.ast.stmt.Statement)
 meth public static org.codehaus.groovy.ast.expr.ConstantExpression constX(java.lang.Object)
 meth public static org.codehaus.groovy.ast.expr.ConstantExpression constX(java.lang.Object,boolean)
+meth public static org.codehaus.groovy.ast.expr.ConstantExpression nullX()
+meth public static org.codehaus.groovy.ast.expr.ConstructorCallExpression ctorSuperX()
+meth public static org.codehaus.groovy.ast.expr.ConstructorCallExpression ctorSuperX(org.codehaus.groovy.ast.expr.Expression)
+meth public static org.codehaus.groovy.ast.expr.ConstructorCallExpression ctorThisX()
+meth public static org.codehaus.groovy.ast.expr.ConstructorCallExpression ctorThisX(org.codehaus.groovy.ast.expr.Expression)
 meth public static org.codehaus.groovy.ast.expr.ConstructorCallExpression ctorX(org.codehaus.groovy.ast.ClassNode)
 meth public static org.codehaus.groovy.ast.expr.ConstructorCallExpression ctorX(org.codehaus.groovy.ast.ClassNode,org.codehaus.groovy.ast.expr.Expression)
+meth public static org.codehaus.groovy.ast.expr.DeclarationExpression declX(org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.ast.expr.Expression)
 meth public static org.codehaus.groovy.ast.expr.Expression assignX(org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.ast.expr.Expression)
 meth public static org.codehaus.groovy.ast.expr.Expression attrX(org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.ast.expr.Expression)
 meth public static org.codehaus.groovy.ast.expr.Expression findArg(java.lang.String)
@@ -7506,6 +7613,9 @@ meth public static org.codehaus.groovy.ast.expr.FieldExpression fieldX(org.codeh
 meth public static org.codehaus.groovy.ast.expr.FieldExpression fieldX(org.codehaus.groovy.ast.FieldNode)
 meth public static org.codehaus.groovy.ast.expr.ListExpression classList2args(java.util.List<java.lang.String>)
 meth public static org.codehaus.groovy.ast.expr.ListExpression list2args(java.util.List)
+meth public static org.codehaus.groovy.ast.expr.ListExpression listX(java.util.List<org.codehaus.groovy.ast.expr.Expression>)
+meth public static org.codehaus.groovy.ast.expr.MapEntryExpression entryX(org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.ast.expr.Expression)
+meth public static org.codehaus.groovy.ast.expr.MapExpression mapX(java.util.List<org.codehaus.groovy.ast.expr.MapEntryExpression>)
 meth public static org.codehaus.groovy.ast.expr.MethodCallExpression callSuperX(java.lang.String)
 meth public static org.codehaus.groovy.ast.expr.MethodCallExpression callSuperX(java.lang.String,org.codehaus.groovy.ast.expr.Expression)
 meth public static org.codehaus.groovy.ast.expr.MethodCallExpression callThisX(java.lang.String)
@@ -7514,14 +7624,22 @@ meth public static org.codehaus.groovy.ast.expr.MethodCallExpression callX(org.c
 meth public static org.codehaus.groovy.ast.expr.MethodCallExpression callX(org.codehaus.groovy.ast.expr.Expression,java.lang.String,org.codehaus.groovy.ast.expr.Expression)
 meth public static org.codehaus.groovy.ast.expr.MethodCallExpression callX(org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.ast.expr.Expression)
 meth public static org.codehaus.groovy.ast.expr.NotExpression notX(org.codehaus.groovy.ast.expr.Expression)
+meth public static org.codehaus.groovy.ast.expr.PropertyExpression propX(org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.ast.expr.Expression,boolean)
+meth public static org.codehaus.groovy.ast.expr.PropertyExpression thisPropX(boolean,java.lang.String)
 meth public static org.codehaus.groovy.ast.expr.StaticMethodCallExpression callX(org.codehaus.groovy.ast.ClassNode,java.lang.String)
 meth public static org.codehaus.groovy.ast.expr.StaticMethodCallExpression callX(org.codehaus.groovy.ast.ClassNode,java.lang.String,org.codehaus.groovy.ast.expr.Expression)
 meth public static org.codehaus.groovy.ast.expr.TernaryExpression ternaryX(org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.ast.expr.Expression)
+meth public static org.codehaus.groovy.ast.expr.VariableExpression localVarX(java.lang.String)
+meth public static org.codehaus.groovy.ast.expr.VariableExpression localVarX(java.lang.String,org.codehaus.groovy.ast.ClassNode)
 meth public static org.codehaus.groovy.ast.expr.VariableExpression varX(java.lang.String)
 meth public static org.codehaus.groovy.ast.expr.VariableExpression varX(java.lang.String,org.codehaus.groovy.ast.ClassNode)
 meth public static org.codehaus.groovy.ast.expr.VariableExpression varX(org.codehaus.groovy.ast.Variable)
 meth public static org.codehaus.groovy.ast.stmt.BlockStatement block(org.codehaus.groovy.ast.VariableScope,java.util.List<org.codehaus.groovy.ast.stmt.Statement>)
 meth public static org.codehaus.groovy.ast.stmt.CatchStatement catchS(org.codehaus.groovy.ast.Parameter,org.codehaus.groovy.ast.stmt.Statement)
+meth public static org.codehaus.groovy.ast.stmt.IfStatement ifElseS(org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.ast.stmt.Statement,org.codehaus.groovy.ast.stmt.Statement)
+meth public static org.codehaus.groovy.ast.stmt.IfStatement ifS(org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.ast.expr.Expression)
+meth public static org.codehaus.groovy.ast.stmt.IfStatement ifS(org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.ast.stmt.Statement)
+meth public static org.codehaus.groovy.ast.stmt.Statement assignNullS(org.codehaus.groovy.ast.expr.Expression)
 meth public static org.codehaus.groovy.ast.stmt.Statement assignS(org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.ast.expr.Expression)
 meth public static org.codehaus.groovy.ast.stmt.Statement createConstructorStatementDefault(org.codehaus.groovy.ast.FieldNode)
 meth public static org.codehaus.groovy.ast.stmt.Statement ctorSuperS()
@@ -7529,14 +7647,14 @@ meth public static org.codehaus.groovy.ast.stmt.Statement ctorSuperS(org.codehau
 meth public static org.codehaus.groovy.ast.stmt.Statement ctorThisS()
 meth public static org.codehaus.groovy.ast.stmt.Statement ctorThisS(org.codehaus.groovy.ast.expr.Expression)
 meth public static org.codehaus.groovy.ast.stmt.Statement declS(org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.ast.expr.Expression)
-meth public static org.codehaus.groovy.ast.stmt.Statement ifElseS(org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.ast.stmt.Statement,org.codehaus.groovy.ast.stmt.Statement)
-meth public static org.codehaus.groovy.ast.stmt.Statement ifS(org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.ast.expr.Expression)
-meth public static org.codehaus.groovy.ast.stmt.Statement ifS(org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.ast.stmt.Statement)
 meth public static org.codehaus.groovy.ast.stmt.Statement returnS(org.codehaus.groovy.ast.expr.Expression)
 meth public static org.codehaus.groovy.ast.stmt.Statement safeExpression(org.codehaus.groovy.ast.expr.Expression,org.codehaus.groovy.ast.expr.Expression)
 meth public static org.codehaus.groovy.ast.stmt.Statement stmt(org.codehaus.groovy.ast.expr.Expression)
 meth public static org.codehaus.groovy.ast.stmt.ThrowStatement throwS(org.codehaus.groovy.ast.expr.Expression)
+meth public static org.codehaus.groovy.ast.stmt.TryCatchStatement tryCatchS(org.codehaus.groovy.ast.stmt.Statement)
+meth public static org.codehaus.groovy.ast.stmt.TryCatchStatement tryCatchS(org.codehaus.groovy.ast.stmt.Statement,org.codehaus.groovy.ast.stmt.Statement)
 meth public static void copyAnnotatedNodeAnnotations(org.codehaus.groovy.ast.AnnotatedNode,java.util.List<org.codehaus.groovy.ast.AnnotationNode>,java.util.List<org.codehaus.groovy.ast.AnnotationNode>)
+meth public static void copyAnnotatedNodeAnnotations(org.codehaus.groovy.ast.AnnotatedNode,java.util.List<org.codehaus.groovy.ast.AnnotationNode>,java.util.List<org.codehaus.groovy.ast.AnnotationNode>,boolean)
 supr java.lang.Object
 hfds INDEX,INSTANCEOF,PLUS
 
@@ -7551,8 +7669,9 @@ meth public static java.lang.String toGenericTypesString(org.codehaus.groovy.ast
 meth public static java.util.Map<java.lang.String,org.codehaus.groovy.ast.ClassNode> addMethodGenerics(org.codehaus.groovy.ast.MethodNode,java.util.Map<java.lang.String,org.codehaus.groovy.ast.ClassNode>)
 meth public static java.util.Map<java.lang.String,org.codehaus.groovy.ast.ClassNode> createGenericsSpec(org.codehaus.groovy.ast.ClassNode)
 meth public static java.util.Map<java.lang.String,org.codehaus.groovy.ast.ClassNode> createGenericsSpec(org.codehaus.groovy.ast.ClassNode,java.util.Map<java.lang.String,org.codehaus.groovy.ast.ClassNode>)
-meth public static java.util.Map<java.lang.String,org.codehaus.groovy.ast.GenericsType> extractPlaceholders(org.codehaus.groovy.ast.ClassNode)
+meth public static java.util.Map<org.codehaus.groovy.ast.GenericsType$GenericsTypeName,org.codehaus.groovy.ast.GenericsType> extractPlaceholders(org.codehaus.groovy.ast.ClassNode)
 meth public static java.util.Map<org.codehaus.groovy.ast.GenericsType,org.codehaus.groovy.ast.GenericsType> makeDeclaringAndActualGenericsTypeMap(org.codehaus.groovy.ast.ClassNode,org.codehaus.groovy.ast.ClassNode)
+meth public static java.util.Map<org.codehaus.groovy.ast.GenericsType,org.codehaus.groovy.ast.GenericsType> makeDeclaringAndActualGenericsTypeMapOfExactType(org.codehaus.groovy.ast.ClassNode,org.codehaus.groovy.ast.ClassNode)
 meth public static org.codehaus.groovy.ast.ClassNode correctToGenericsSpec(java.util.Map<java.lang.String,org.codehaus.groovy.ast.ClassNode>,org.codehaus.groovy.ast.ClassNode)
 meth public static org.codehaus.groovy.ast.ClassNode correctToGenericsSpec(java.util.Map<java.lang.String,org.codehaus.groovy.ast.ClassNode>,org.codehaus.groovy.ast.GenericsType)
 meth public static org.codehaus.groovy.ast.ClassNode correctToGenericsSpecRecurse(java.util.Map<java.lang.String,org.codehaus.groovy.ast.ClassNode>,org.codehaus.groovy.ast.ClassNode)
@@ -7575,7 +7694,7 @@ meth public static org.codehaus.groovy.ast.GenericsType[] alignGenericTypes(org.
 meth public static org.codehaus.groovy.ast.GenericsType[] applyGenericsContextToPlaceHolders(java.util.Map<java.lang.String,org.codehaus.groovy.ast.ClassNode>,org.codehaus.groovy.ast.GenericsType[])
 meth public static org.codehaus.groovy.ast.MethodNode correctToGenericsSpec(java.util.Map<java.lang.String,org.codehaus.groovy.ast.ClassNode>,org.codehaus.groovy.ast.MethodNode)
 meth public static void clearParameterizedTypeCache()
-meth public static void extractPlaceholders(org.codehaus.groovy.ast.ClassNode,java.util.Map<java.lang.String,org.codehaus.groovy.ast.GenericsType>)
+meth public static void extractPlaceholders(org.codehaus.groovy.ast.ClassNode,java.util.Map<org.codehaus.groovy.ast.GenericsType$GenericsTypeName,org.codehaus.groovy.ast.GenericsType>)
 meth public static void extractSuperClassGenerics(org.codehaus.groovy.ast.ClassNode,org.codehaus.groovy.ast.ClassNode,java.util.Map<java.lang.String,org.codehaus.groovy.ast.ClassNode>)
 supr java.lang.Object
 hfds PARAMETERIZED_TYPE_CACHE,PARAMETERIZED_TYPE_CACHE_ENABLED,TRUE_STR
@@ -7661,7 +7780,9 @@ meth public org.codehaus.groovy.classgen.asm.WriterController getController()
 meth public org.codehaus.groovy.control.SourceUnit getSourceUnit()
 meth public static boolean containsSpreadExpression(org.codehaus.groovy.ast.expr.Expression)
 meth public static boolean isNullConstant(org.codehaus.groovy.ast.expr.Expression)
+ anno 0 java.lang.Deprecated()
 meth public static boolean isThisExpression(org.codehaus.groovy.ast.expr.Expression)
+ anno 0 java.lang.Deprecated()
 meth public static boolean samePackages(java.lang.String,java.lang.String)
 meth public static int argumentSize(org.codehaus.groovy.ast.expr.Expression)
 meth public static org.codehaus.groovy.ast.FieldNode getDeclaredFieldOfCurrentClassOrAccessibleFieldOfSuper(org.codehaus.groovy.ast.ClassNode,org.codehaus.groovy.ast.ClassNode,java.lang.String,boolean)
@@ -7845,6 +7966,7 @@ meth public void visitClosureExpression(org.codehaus.groovy.ast.expr.ClosureExpr
 meth public void visitIfElse(org.codehaus.groovy.ast.stmt.IfStatement)
 meth public void visitPostfixExpression(org.codehaus.groovy.ast.expr.PostfixExpression)
 meth public void visitPrefixExpression(org.codehaus.groovy.ast.expr.PrefixExpression)
+meth public void visitSwitch(org.codehaus.groovy.ast.stmt.SwitchStatement)
 meth public void visitTryCatchFinally(org.codehaus.groovy.ast.stmt.TryCatchStatement)
 meth public void visitVariableExpression(org.codehaus.groovy.ast.expr.VariableExpression)
 supr org.codehaus.groovy.ast.ClassCodeVisitorSupport
@@ -7887,7 +8009,7 @@ meth public void visitConstructorCallExpression(org.codehaus.groovy.ast.expr.Con
 meth public void visitField(org.codehaus.groovy.ast.FieldNode)
 meth public void visitProperty(org.codehaus.groovy.ast.PropertyNode)
 supr org.codehaus.groovy.classgen.InnerClassVisitorHelper
-hfds PUBLIC_SYNTHETIC,classNode,currentField,currentMethod,inClosure,processingObjInitStatements,sourceUnit,thisField
+hfds classNode,currentField,currentMethod,inClosure,processingObjInitStatements,sourceUnit
 
 CLSS public abstract org.codehaus.groovy.classgen.InnerClassVisitorHelper
 cons public init()
@@ -7921,7 +8043,6 @@ cons public init(org.codehaus.groovy.control.SourceUnit,boolean)
 meth protected org.codehaus.groovy.control.SourceUnit getSourceUnit()
 meth protected void visitConstructorOrMethod(org.codehaus.groovy.ast.MethodNode,boolean)
 meth public void prepareVisit(org.codehaus.groovy.ast.ClassNode)
-meth public void visitAnnotations(org.codehaus.groovy.ast.AnnotatedNode)
 meth public void visitBinaryExpression(org.codehaus.groovy.ast.expr.BinaryExpression)
 meth public void visitBlockStatement(org.codehaus.groovy.ast.stmt.BlockStatement)
 meth public void visitCatchStatement(org.codehaus.groovy.ast.stmt.CatchStatement)
@@ -7938,7 +8059,7 @@ meth public void visitProperty(org.codehaus.groovy.ast.PropertyNode)
 meth public void visitPropertyExpression(org.codehaus.groovy.ast.expr.PropertyExpression)
 meth public void visitVariableExpression(org.codehaus.groovy.ast.expr.VariableExpression)
 supr org.codehaus.groovy.ast.ClassCodeVisitorSupport
-hfds currentClass,currentScope,headScope,inConstructor,isSpecialConstructorCall,recurseInnerClasses,source,stateStack
+hfds currentClass,currentScope,inConstructor,inSpecialConstructorCall,recurseInnerClasses,source,stateStack
 hcls StateStackElement
 
 CLSS public org.codehaus.groovy.classgen.Verifier
@@ -7986,7 +8107,7 @@ meth public void visitGenericType(org.codehaus.groovy.ast.GenericsType)
 meth public void visitMethod(org.codehaus.groovy.ast.MethodNode)
 meth public void visitProperty(org.codehaus.groovy.ast.PropertyNode)
 supr java.lang.Object
-hfds GENERATED_ANNOTATION,GET_PROPERTY_PARAMS,INVOKE_METHOD_PARAMS,SET_METACLASS_PARAMS,SET_PROPERTY_PARAMS,classNode,methodNode
+hfds GENERATED_ANNOTATION,GET_PROPERTY_PARAMS,INTERNAL_ANNOTATION,INVOKE_METHOD_PARAMS,SET_METACLASS_PARAMS,SET_PROPERTY_PARAMS,classNode,methodNode
 hcls SwapInitStatement
 
 CLSS public abstract interface static org.codehaus.groovy.classgen.Verifier$DefaultArgsAction
@@ -8020,7 +8141,7 @@ meth public java.lang.Object doCall(java.lang.Object,java.lang.Object)
 meth public java.lang.Object getRes()
 supr groovy.lang.Closure
 
-CLSS public org.codehaus.groovy.classgen.genArrays
+CLSS public org.codehaus.groovy.classgen.genArrayUtil
 cons public init()
 cons public init(groovy.lang.Binding)
 meth public !varargs static void main(java.lang.String[])
@@ -8188,8 +8309,11 @@ fld protected java.util.LinkedList<org.codehaus.groovy.control.SourceUnit> queue
 fld protected java.util.List<java.lang.String> names
 fld protected java.util.List<org.codehaus.groovy.tools.GroovyClass> generatedClasses
 fld protected java.util.Map classSourcesByPublicClassName
+ anno 0 java.lang.Deprecated()
 fld protected java.util.Map summariesByPublicClassName
+ anno 0 java.lang.Deprecated()
 fld protected java.util.Map summariesBySourceName
+ anno 0 java.lang.Deprecated()
 fld protected java.util.Map<java.lang.String,org.codehaus.groovy.control.SourceUnit> sources
 fld protected org.codehaus.groovy.ast.CompileUnit ast
 fld protected org.codehaus.groovy.classgen.Verifier verifier
@@ -8209,12 +8333,16 @@ meth protected boolean dequeued()
 meth protected groovyjarjarasm.asm.ClassVisitor createClassVisitor()
 meth protected void mark()
 meth public boolean isPublicClass(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public groovy.lang.GroovyClassLoader getTransformLoader()
 meth public java.util.Iterator<org.codehaus.groovy.control.SourceUnit> iterator()
 meth public java.util.List getClasses()
 meth public java.util.Map getClassSourcesByPublicClassName()
+ anno 0 java.lang.Deprecated()
 meth public java.util.Map getSummariesByPublicClassName()
+ anno 0 java.lang.Deprecated()
 meth public java.util.Map getSummariesBySourceName()
+ anno 0 java.lang.Deprecated()
 meth public org.codehaus.groovy.ast.ClassNode getClassNode(java.lang.String)
 meth public org.codehaus.groovy.ast.ClassNode getFirstClassNode()
 meth public org.codehaus.groovy.ast.CompileUnit getAST()
@@ -8300,13 +8428,16 @@ CLSS public org.codehaus.groovy.control.CompilerConfiguration
 cons public init()
 cons public init(java.util.Properties)
 cons public init(org.codehaus.groovy.control.CompilerConfiguration)
-fld public final static int ASM_API_VERSION = 393216
+fld public final static int ASM_API_VERSION = 458752
 fld public final static java.lang.String CURRENT_JVM_VERSION
  anno 0 java.lang.Deprecated()
 fld public final static java.lang.String DEFAULT_SOURCE_ENCODING = "UTF-8"
 fld public final static java.lang.String INVOKEDYNAMIC = "indy"
 fld public final static java.lang.String JDK10 = "10"
 fld public final static java.lang.String JDK11 = "11"
+fld public final static java.lang.String JDK12 = "12"
+fld public final static java.lang.String JDK13 = "13"
+fld public final static java.lang.String JDK14 = "14"
 fld public final static java.lang.String JDK4 = "1.4"
 fld public final static java.lang.String JDK5 = "1.5"
 fld public final static java.lang.String JDK6 = "1.6"
@@ -8314,8 +8445,11 @@ fld public final static java.lang.String JDK7 = "1.7"
 fld public final static java.lang.String JDK8 = "1.8"
 fld public final static java.lang.String JDK9 = "9"
 fld public final static java.lang.String POST_JDK5 = "1.5"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String PRE_JDK5 = "1.4"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String[] ALLOWED_JDKS
+fld public final static java.util.Map<java.lang.String,java.lang.Integer> JDK_TO_BYTECODE_VERSION_MAP
 fld public final static org.codehaus.groovy.control.CompilerConfiguration DEFAULT
 meth public !varargs org.codehaus.groovy.control.CompilerConfiguration addCompilationCustomizers(org.codehaus.groovy.control.customizers.CompilationCustomizer[])
 meth public boolean getDebug()
@@ -8323,6 +8457,7 @@ meth public boolean getParameters()
 meth public boolean getRecompileGroovySource()
 meth public boolean getVerbose()
 meth public boolean isIndyEnabled()
+meth public boolean isPreviewFeatures()
 meth public int getMinimumRecompilationInterval()
 meth public int getTolerance()
 meth public int getWarningLevel()
@@ -8359,6 +8494,7 @@ meth public void setOutput(java.io.PrintWriter)
  anno 0 java.lang.Deprecated()
 meth public void setParameters(boolean)
 meth public void setPluginFactory(org.codehaus.groovy.control.ParserPluginFactory)
+meth public void setPreviewFeatures(boolean)
 meth public void setRecompileGroovySource(boolean)
 meth public void setScriptBaseClass(java.lang.String)
 meth public void setScriptExtensions(java.util.Set<java.lang.String>)
@@ -8370,7 +8506,7 @@ meth public void setTolerance(int)
 meth public void setVerbose(boolean)
 meth public void setWarningLevel(int)
 supr java.lang.Object
-hfds bytecodePostprocessor,classpath,compilationCustomizers,debug,defaultScriptExtension,disabledGlobalASTTransformations,jointCompilationOptions,minimumRecompilationInterval,optimizationOptions,output,parameters,pluginFactory,recompileGroovySource,scriptBaseClass,scriptExtensions,sourceEncoding,targetBytecode,targetDirectory,tolerance,verbose,warningLevel
+hfds EMPTY_STRING_ARRAY,bytecodePostprocessor,classpath,compilationCustomizers,debug,defaultScriptExtension,disabledGlobalASTTransformations,jointCompilationOptions,minimumRecompilationInterval,optimizationOptions,output,parameters,pluginFactory,previewFeatures,recompileGroovySource,scriptBaseClass,scriptExtensions,sourceEncoding,targetBytecode,targetDirectory,tolerance,verbose,warningLevel
 
 CLSS public org.codehaus.groovy.control.ConfigurationException
 cons public init(java.lang.Exception)
@@ -8431,6 +8567,11 @@ hfds source
 
 CLSS public abstract interface org.codehaus.groovy.control.HasCleanup
 meth public abstract void cleanup()
+
+CLSS public abstract org.codehaus.groovy.control.InstanceOfVerifier
+cons public init()
+meth public void visitBinaryExpression(org.codehaus.groovy.ast.expr.BinaryExpression)
+supr org.codehaus.groovy.ast.ClassCodeVisitorSupport
 
 CLSS public org.codehaus.groovy.control.Janitor
 cons public init()
@@ -8507,6 +8648,8 @@ fld protected groovy.lang.GroovyClassLoader classLoader
 fld protected int phase
 fld protected org.codehaus.groovy.control.CompilerConfiguration configuration
 fld protected org.codehaus.groovy.control.ErrorCollector errorCollector
+meth public boolean isPhaseComplete()
+meth public final void setConfiguration(org.codehaus.groovy.control.CompilerConfiguration)
 meth public groovy.lang.GroovyClassLoader getClassLoader()
 meth public int getPhase()
 meth public java.lang.String getPhaseDescription()
@@ -8517,13 +8660,13 @@ meth public void configure(org.codehaus.groovy.control.CompilerConfiguration)
 meth public void gotoPhase(int)
 meth public void nextPhase()
 meth public void setClassLoader(groovy.lang.GroovyClassLoader)
-meth public void setConfiguration(org.codehaus.groovy.control.CompilerConfiguration)
 supr java.lang.Object
 
 CLSS public org.codehaus.groovy.control.ResolveVisitor
 cons public init(org.codehaus.groovy.control.CompilationUnit)
 fld public final static java.lang.String QUESTION_MARK = "?"
 fld public final static java.lang.String[] DEFAULT_IMPORTS
+fld public final static java.lang.String[] EMPTY_STRING_ARRAY
 meth protected org.codehaus.groovy.ast.expr.Expression transformAnnotationConstantExpression(org.codehaus.groovy.ast.expr.AnnotationConstantExpression)
 meth protected org.codehaus.groovy.ast.expr.Expression transformBinaryExpression(org.codehaus.groovy.ast.expr.BinaryExpression)
 meth protected org.codehaus.groovy.ast.expr.Expression transformClosureExpression(org.codehaus.groovy.ast.expr.ClosureExpression)
@@ -8545,7 +8688,7 @@ meth public void visitField(org.codehaus.groovy.ast.FieldNode)
 meth public void visitForLoop(org.codehaus.groovy.ast.stmt.ForStatement)
 meth public void visitProperty(org.codehaus.groovy.ast.PropertyNode)
 supr org.codehaus.groovy.ast.ClassCodeExpressionTransformer
-hfds BIGDECIMAL_STR,BIGINTEGER_STR,checkingVariableTypeInDeclaration,classNodeResolver,compilationUnit,currImportNode,currentClass,currentMethod,currentScope,fieldTypesChecked,genericParameterNames,inClosure,inPropertyExpression,isTopLevelProperty,source
+hfds BIGDECIMAL_STR,BIGINTEGER_STR,DEFAULT_IMPORT_CLASS_AND_PACKAGES_CACHE,checkingVariableTypeInDeclaration,classNodeResolver,compilationUnit,currImportNode,currentClass,currentMethod,currentScope,fieldTypesChecked,genericParameterNames,inClosure,inPropertyExpression,isTopLevelProperty,source
 hcls ConstructedClassWithPackage,ConstructedNestedClass,LowerCaseClass
 
 CLSS public org.codehaus.groovy.control.SourceExtensionHandler
@@ -8657,7 +8800,9 @@ hfds phase
 CLSS public abstract org.codehaus.groovy.control.customizers.DelegatingCustomizer
 cons public init(org.codehaus.groovy.control.customizers.CompilationCustomizer)
 fld protected final org.codehaus.groovy.control.customizers.CompilationCustomizer delegate
+intf groovy.transform.CompilationUnitAware
 meth public void call(org.codehaus.groovy.control.SourceUnit,org.codehaus.groovy.classgen.GeneratorContext,org.codehaus.groovy.ast.ClassNode)
+meth public void setCompilationUnit(org.codehaus.groovy.control.CompilationUnit)
 supr org.codehaus.groovy.control.customizers.CompilationCustomizer
 
 CLSS public org.codehaus.groovy.control.customizers.ImportCustomizer
@@ -8683,14 +8828,32 @@ meth public boolean isClosuresAllowed()
 meth public boolean isIndirectImportCheckEnabled()
 meth public boolean isMethodDefinitionAllowed()
 meth public boolean isPackageAllowed()
+meth public java.util.List<java.lang.Class<? extends org.codehaus.groovy.ast.expr.Expression>> getAllowedExpressions()
+meth public java.util.List<java.lang.Class<? extends org.codehaus.groovy.ast.expr.Expression>> getDisallowedExpressions()
 meth public java.util.List<java.lang.Class<? extends org.codehaus.groovy.ast.expr.Expression>> getExpressionsBlacklist()
 meth public java.util.List<java.lang.Class<? extends org.codehaus.groovy.ast.expr.Expression>> getExpressionsWhitelist()
+meth public java.util.List<java.lang.Class<? extends org.codehaus.groovy.ast.stmt.Statement>> getAllowedStatements()
+meth public java.util.List<java.lang.Class<? extends org.codehaus.groovy.ast.stmt.Statement>> getDisallowedStatements()
 meth public java.util.List<java.lang.Class<? extends org.codehaus.groovy.ast.stmt.Statement>> getStatementsBlacklist()
 meth public java.util.List<java.lang.Class<? extends org.codehaus.groovy.ast.stmt.Statement>> getStatementsWhitelist()
+meth public java.util.List<java.lang.Integer> getAllowedTokens()
+meth public java.util.List<java.lang.Integer> getDisallowedTokens()
 meth public java.util.List<java.lang.Integer> getTokensBlacklist()
 meth public java.util.List<java.lang.Integer> getTokensWhitelist()
+meth public java.util.List<java.lang.String> getAllowedConstantTypes()
+meth public java.util.List<java.lang.String> getAllowedImports()
+meth public java.util.List<java.lang.String> getAllowedReceivers()
+meth public java.util.List<java.lang.String> getAllowedStarImports()
+meth public java.util.List<java.lang.String> getAllowedStaticImports()
+meth public java.util.List<java.lang.String> getAllowedStaticStarImports()
 meth public java.util.List<java.lang.String> getConstantTypesBlackList()
 meth public java.util.List<java.lang.String> getConstantTypesWhiteList()
+meth public java.util.List<java.lang.String> getDisallowedConstantTypes()
+meth public java.util.List<java.lang.String> getDisallowedImports()
+meth public java.util.List<java.lang.String> getDisallowedReceivers()
+meth public java.util.List<java.lang.String> getDisallowedStarImports()
+meth public java.util.List<java.lang.String> getDisallowedStaticImports()
+meth public java.util.List<java.lang.String> getDisallowedStaticStarImports()
 meth public java.util.List<java.lang.String> getImportsBlacklist()
 meth public java.util.List<java.lang.String> getImportsWhitelist()
 meth public java.util.List<java.lang.String> getReceiversBlackList()
@@ -8702,11 +8865,32 @@ meth public java.util.List<java.lang.String> getStaticImportsWhitelist()
 meth public java.util.List<java.lang.String> getStaticStarImportsBlacklist()
 meth public java.util.List<java.lang.String> getStaticStarImportsWhitelist()
 meth public void call(org.codehaus.groovy.control.SourceUnit,org.codehaus.groovy.classgen.GeneratorContext,org.codehaus.groovy.ast.ClassNode)
+meth public void setAllowedConstantTypes(java.util.List<java.lang.String>)
+meth public void setAllowedConstantTypesClasses(java.util.List<java.lang.Class>)
+meth public void setAllowedExpressions(java.util.List<java.lang.Class<? extends org.codehaus.groovy.ast.expr.Expression>>)
+meth public void setAllowedImports(java.util.List<java.lang.String>)
+meth public void setAllowedReceivers(java.util.List<java.lang.String>)
+meth public void setAllowedReceiversClasses(java.util.List<java.lang.Class>)
+meth public void setAllowedStarImports(java.util.List<java.lang.String>)
+meth public void setAllowedStatements(java.util.List<java.lang.Class<? extends org.codehaus.groovy.ast.stmt.Statement>>)
+meth public void setAllowedStaticImports(java.util.List<java.lang.String>)
+meth public void setAllowedStaticStarImports(java.util.List<java.lang.String>)
+meth public void setAllowedTokens(java.util.List<java.lang.Integer>)
 meth public void setClosuresAllowed(boolean)
 meth public void setConstantTypesBlackList(java.util.List<java.lang.String>)
 meth public void setConstantTypesClassesBlackList(java.util.List<java.lang.Class>)
 meth public void setConstantTypesClassesWhiteList(java.util.List<java.lang.Class>)
 meth public void setConstantTypesWhiteList(java.util.List<java.lang.String>)
+meth public void setDisallowedConstantTypesClasses(java.util.List<java.lang.Class>)
+meth public void setDisallowedExpressions(java.util.List<java.lang.Class<? extends org.codehaus.groovy.ast.expr.Expression>>)
+meth public void setDisallowedImports(java.util.List<java.lang.String>)
+meth public void setDisallowedReceivers(java.util.List<java.lang.String>)
+meth public void setDisallowedReceiversClasses(java.util.List<java.lang.Class>)
+meth public void setDisallowedStarImports(java.util.List<java.lang.String>)
+meth public void setDisallowedStatements(java.util.List<java.lang.Class<? extends org.codehaus.groovy.ast.stmt.Statement>>)
+meth public void setDisallowedStaticImports(java.util.List<java.lang.String>)
+meth public void setDisallowedStaticStarImports(java.util.List<java.lang.String>)
+meth public void setDisallowedTokens(java.util.List<java.lang.Integer>)
 meth public void setExpressionsBlacklist(java.util.List<java.lang.Class<? extends org.codehaus.groovy.ast.expr.Expression>>)
 meth public void setExpressionsWhitelist(java.util.List<java.lang.Class<? extends org.codehaus.groovy.ast.expr.Expression>>)
 meth public void setImportsBlacklist(java.util.List<java.lang.String>)
@@ -8729,7 +8913,7 @@ meth public void setStaticStarImportsWhitelist(java.util.List<java.lang.String>)
 meth public void setTokensBlacklist(java.util.List<java.lang.Integer>)
 meth public void setTokensWhitelist(java.util.List<java.lang.Integer>)
 supr org.codehaus.groovy.control.customizers.CompilationCustomizer
-hfds constantTypesBlackList,constantTypesWhiteList,expressionCheckers,expressionsBlacklist,expressionsWhitelist,importsBlacklist,importsWhitelist,isClosuresAllowed,isIndirectImportCheckEnabled,isMethodDefinitionAllowed,isPackageAllowed,receiversBlackList,receiversWhiteList,starImportsBlacklist,starImportsWhitelist,statementCheckers,statementsBlacklist,statementsWhitelist,staticImportsBlacklist,staticImportsWhitelist,staticStarImportsBlacklist,staticStarImportsWhitelist,tokensBlacklist,tokensWhitelist
+hfds allowedConstantTypes,allowedExpressions,allowedImports,allowedReceivers,allowedStarImports,allowedStatements,allowedStaticImports,allowedStaticStarImports,allowedTokens,disallowedConstantTypes,disallowedExpressions,disallowedImports,disallowedReceivers,disallowedStarImports,disallowedStatements,disallowedStaticImports,disallowedStaticStarImports,disallowedTokens,expressionCheckers,isClosuresAllowed,isIndirectImportCheckEnabled,isMethodDefinitionAllowed,isPackageAllowed,statementCheckers
 hcls SecuringCodeVisitor
 
 CLSS public abstract interface static org.codehaus.groovy.control.customizers.SecureASTCustomizer$ExpressionChecker
@@ -8767,6 +8951,7 @@ CLSS public org.codehaus.groovy.control.customizers.builder.CompilerCustomizatio
 cons public init()
 meth protected java.lang.Object postNodeCompletion(java.lang.Object,java.lang.Object)
 meth public static org.codehaus.groovy.control.CompilerConfiguration withConfig(org.codehaus.groovy.control.CompilerConfiguration,groovy.lang.Closure)
+ anno 2 groovy.lang.DelegatesTo(int genericTypeIndex=-1, int strategy=0, java.lang.Class value=class groovy.lang.DelegatesTo$Target, java.lang.String target="", java.lang.String type="org.codehaus.groovy.control.customizers.builder.CompilerCustomizationBuilder")
 supr groovy.util.FactoryBuilderSupport
 
 CLSS public org.codehaus.groovy.control.customizers.builder.CustomizersFactory
@@ -8776,6 +8961,7 @@ meth public java.lang.Object newInstance(groovy.util.FactoryBuilderSupport,java.
 meth public java.lang.Object postCompleteNode(groovy.util.FactoryBuilderSupport,java.lang.Object,java.lang.Object)
 meth public void setChild(groovy.util.FactoryBuilderSupport,java.lang.Object,java.lang.Object)
 supr groovy.util.AbstractFactory
+hfds EMPTY_COMPILATIONCUSTOMIZER_ARRAY
 
 CLSS public org.codehaus.groovy.control.customizers.builder.ImportCustomizerFactory
 cons public init()
@@ -9390,6 +9576,7 @@ fld public final static int GSTRING_EXPRESSION_START = 903
 fld public final static int GSTRING_START = 901
 fld public final static int IDENTIFIER = 440
 fld public final static int INFIX_OPERATOR = 1220
+fld public final static int INSTANCEOF_OPERATOR = 1108
 fld public final static int INTDIV = 204
 fld public final static int INTDIV_EQUAL = 214
 fld public final static int INTEGER_NUMBER = 450
@@ -9659,7 +9846,7 @@ meth public static void addPhaseOperations(org.codehaus.groovy.control.Compilati
 meth public void visitAnnotations(org.codehaus.groovy.ast.AnnotatedNode)
 meth public void visitClass(org.codehaus.groovy.ast.ClassNode)
 supr org.codehaus.groovy.ast.ClassCodeVisitorSupport
-hfds context,phase,source,targetNodes,transforms
+hfds COMPILEDYNAMIC_AND_COMPILESTATIC_AND_TYPECHECKED,context,phase,source,targetNodes,transforms
 
 CLSS public abstract org.codehaus.groovy.transform.AbstractASTTransformUtil
  anno 0 java.lang.Deprecated()
@@ -9737,6 +9924,7 @@ meth protected boolean checkIncludeExclude(org.codehaus.groovy.ast.AnnotationNod
 meth protected boolean checkIncludeExcludeUndefinedAware(org.codehaus.groovy.ast.AnnotationNode,java.util.List<java.lang.String>,java.util.List<java.lang.String>,java.lang.String)
 meth protected boolean checkNotInterface(org.codehaus.groovy.ast.ClassNode,java.lang.String)
 meth protected java.util.List<org.codehaus.groovy.ast.AnnotationNode> copyAnnotatedNodeAnnotations(org.codehaus.groovy.ast.AnnotatedNode,java.lang.String)
+meth protected java.util.List<org.codehaus.groovy.ast.AnnotationNode> copyAnnotatedNodeAnnotations(org.codehaus.groovy.ast.AnnotatedNode,java.lang.String,boolean)
 meth protected void checkIncludeExclude(org.codehaus.groovy.ast.AnnotationNode,java.util.List<java.lang.String>,java.util.List<java.lang.String>,java.util.List<org.codehaus.groovy.ast.ClassNode>,java.util.List<org.codehaus.groovy.ast.ClassNode>,java.lang.String)
  anno 0 java.lang.Deprecated()
 meth protected void checkIncludeExcludeUndefinedAware(org.codehaus.groovy.ast.AnnotationNode,java.util.List<java.lang.String>,java.util.List<java.lang.String>,java.util.List<org.codehaus.groovy.ast.ClassNode>,java.util.List<org.codehaus.groovy.ast.ClassNode>,java.lang.String)
@@ -10001,7 +10189,7 @@ CLSS public org.codehaus.groovy.transform.InheritConstructorsASTTransformation
 cons public init()
 meth public void visit(org.codehaus.groovy.ast.ASTNode[],org.codehaus.groovy.control.SourceUnit)
 supr org.codehaus.groovy.transform.AbstractASTTransformation
-hfds MY_CLASS,MY_TYPE,MY_TYPE_NAME
+hfds ANNOTATION,INHERIT_CONSTRUCTORS_TYPE
 
 CLSS public org.codehaus.groovy.transform.LazyASTTransformation
 cons public init()
@@ -10371,8 +10559,8 @@ meth protected static boolean typeCheckMethodsWithGenerics(org.codehaus.groovy.a
 meth protected static java.util.Set<org.codehaus.groovy.ast.MethodNode> findDGMMethodsForClassNode(java.lang.ClassLoader,org.codehaus.groovy.ast.ClassNode,java.lang.String)
 meth protected static java.util.Set<org.codehaus.groovy.ast.MethodNode> findDGMMethodsForClassNode(org.codehaus.groovy.ast.ClassNode,java.lang.String)
  anno 0 java.lang.Deprecated()
-meth protected static org.codehaus.groovy.ast.ClassNode fullyResolveType(org.codehaus.groovy.ast.ClassNode,java.util.Map<java.lang.String,org.codehaus.groovy.ast.GenericsType>)
-meth protected static org.codehaus.groovy.ast.GenericsType fullyResolve(org.codehaus.groovy.ast.GenericsType,java.util.Map<java.lang.String,org.codehaus.groovy.ast.GenericsType>)
+meth protected static org.codehaus.groovy.ast.ClassNode fullyResolveType(org.codehaus.groovy.ast.ClassNode,java.util.Map<org.codehaus.groovy.ast.GenericsType$GenericsTypeName,org.codehaus.groovy.ast.GenericsType>)
+meth protected static org.codehaus.groovy.ast.GenericsType fullyResolve(org.codehaus.groovy.ast.GenericsType,java.util.Map<org.codehaus.groovy.ast.GenericsType$GenericsTypeName,org.codehaus.groovy.ast.GenericsType>)
 meth protected static org.codehaus.groovy.ast.Variable findTargetVariable(org.codehaus.groovy.ast.expr.VariableExpression)
 meth protected static void findDGMMethodsForClassNode(java.lang.ClassLoader,org.codehaus.groovy.ast.ClassNode,java.lang.String,java.util.TreeSet<org.codehaus.groovy.ast.MethodNode>)
 meth protected static void findDGMMethodsForClassNode(org.codehaus.groovy.ast.ClassNode,java.lang.String,java.util.TreeSet<org.codehaus.groovy.ast.MethodNode>)
@@ -10389,6 +10577,7 @@ meth public static boolean isCompareToBoolean(int)
 meth public static boolean isGStringOrGStringStringLUB(org.codehaus.groovy.ast.ClassNode)
 meth public static boolean isParameterizedWithGStringOrGStringString(org.codehaus.groovy.ast.ClassNode)
 meth public static boolean isParameterizedWithString(org.codehaus.groovy.ast.ClassNode)
+meth public static boolean isUnboundedWildcard(org.codehaus.groovy.ast.GenericsType)
 meth public static boolean isUsingGenericsOrIsArrayUsingGenerics(org.codehaus.groovy.ast.ClassNode)
 meth public static boolean isUsingUncheckedGenerics(org.codehaus.groovy.ast.ClassNode)
 meth public static boolean isWildcardLeftHandSide(org.codehaus.groovy.ast.ClassNode)
@@ -10406,7 +10595,7 @@ meth public static java.util.List<org.codehaus.groovy.ast.MethodNode> findSetter
 meth public static java.util.Set<org.codehaus.groovy.ast.ClassNode> collectAllInterfaces(org.codehaus.groovy.ast.ClassNode)
 meth public static org.codehaus.groovy.ast.ClassNode getCorrectedClassNode(org.codehaus.groovy.ast.ClassNode,org.codehaus.groovy.ast.ClassNode,boolean)
 meth public static org.codehaus.groovy.ast.ClassNode isTraitSelf(org.codehaus.groovy.ast.expr.VariableExpression)
-meth public static org.codehaus.groovy.ast.ClassNode resolveClassNodeGenerics(java.util.Map<java.lang.String,org.codehaus.groovy.ast.GenericsType>,java.util.Map<java.lang.String,org.codehaus.groovy.ast.GenericsType>,org.codehaus.groovy.ast.ClassNode)
+meth public static org.codehaus.groovy.ast.ClassNode resolveClassNodeGenerics(java.util.Map<org.codehaus.groovy.ast.GenericsType$GenericsTypeName,org.codehaus.groovy.ast.GenericsType>,java.util.Map<org.codehaus.groovy.ast.GenericsType$GenericsTypeName,org.codehaus.groovy.ast.GenericsType>,org.codehaus.groovy.ast.ClassNode)
 meth public static org.codehaus.groovy.ast.Parameter[] parameterizeArguments(org.codehaus.groovy.ast.ClassNode,org.codehaus.groovy.ast.MethodNode)
 supr java.lang.Object
 hcls ExtensionMethodCache,ObjectArrayStaticTypesHelper
@@ -10426,6 +10615,7 @@ fld protected final static org.codehaus.groovy.ast.ClassNode ENUMERATION_TYPE
 fld protected final static org.codehaus.groovy.ast.ClassNode ITERABLE_TYPE
 fld protected final static org.codehaus.groovy.ast.ClassNode LINKEDHASHMAP_CLASSNODE
 fld protected final static org.codehaus.groovy.ast.ClassNode MAP_ENTRY_TYPE
+fld protected final static org.codehaus.groovy.ast.ClassNode NAMED_PARAMS_CLASSNODE
 fld protected final static org.codehaus.groovy.ast.ClassNode TYPECHECKED_CLASSNODE
 fld protected final static org.codehaus.groovy.ast.ClassNode TYPECHECKING_INFO_NODE
 fld protected final static org.codehaus.groovy.ast.ClassNode[] TYPECHECKING_ANNOTATIONS
@@ -10564,7 +10754,7 @@ meth public void visitUnaryPlusExpression(org.codehaus.groovy.ast.expr.UnaryPlus
 meth public void visitVariableExpression(org.codehaus.groovy.ast.expr.VariableExpression)
 meth public void visitWhileLoop(org.codehaus.groovy.ast.stmt.WhileStatement)
 supr org.codehaus.groovy.ast.ClassCodeVisitorSupport
-hfds DEBUG_GENERATED_CODE,EMPTY_STRING_ARRAY,UNIQUE_LONG
+hfds CLOSURE_IMPLICIT_VARIABLE_SET,DEBUG_GENERATED_CODE,EMPTY_STRING_ARRAY,UNIQUE_LONG
 hcls ExtensionMethodDeclaringClass,ParameterVariableExpression,SetterInfo
 
 CLSS public static org.codehaus.groovy.transform.stc.StaticTypeCheckingVisitor$SignatureCodecFactory

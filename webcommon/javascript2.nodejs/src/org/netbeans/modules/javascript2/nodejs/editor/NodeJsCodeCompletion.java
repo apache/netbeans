@@ -53,20 +53,20 @@ public class NodeJsCodeCompletion implements CompletionProvider {
     public List<CompletionProposal> complete(CodeCompletionContext ccContext, CompletionContext jsCompletionContext, String prefix) {
         FileObject fo = ccContext.getParserResult().getSnapshot().getSource().getFileObject();
         if (fo == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         List<CompletionProposal> result = new ArrayList<CompletionProposal>();
         if (jsCompletionContext == CompletionContext.IN_STRING || jsCompletionContext == CompletionContext.EXPRESSION
                 || jsCompletionContext == CompletionContext.GLOBAL) {
             TokenHierarchy<?> th = ccContext.getParserResult().getSnapshot().getTokenHierarchy();
             if (th == null) {
-                return Collections.EMPTY_LIST;
+                return Collections.emptyList();
             }
             int carretOffset = ccContext.getCaretOffset();
             int eOffset = ccContext.getParserResult().getSnapshot().getEmbeddedOffset(carretOffset);
             TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsTokenSequence(th, eOffset);
             if (ts == null) {
-                return Collections.EMPTY_LIST;
+                return Collections.emptyList();
             }
             ts.move(eOffset);
 
@@ -146,7 +146,7 @@ public class NodeJsCodeCompletion implements CompletionProvider {
             }
         }
 
-        return result.isEmpty() ? Collections.EMPTY_LIST : result;
+        return result.isEmpty() ? Collections.<CompletionProposal>emptyList(): result;
     }
 
     @Override

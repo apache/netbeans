@@ -20,6 +20,7 @@
 package org.netbeans.modules.db.mysql.test;
 
 import java.io.File;
+import java.util.logging.Logger;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.explorer.JDBCDriver;
@@ -29,12 +30,18 @@ import org.netbeans.modules.db.api.sql.execute.SQLExecutionInfo;
 import org.netbeans.modules.db.api.sql.execute.StatementExecutionInfo;
 import org.openide.modules.ModuleInfo;
 import org.openide.util.Lookup;
+import org.openide.util.Utilities;
 
 /**
  *
  * @author David
  */
 public class TestBase extends NbTestCase  {
+    
+    private static final Logger LOG = Logger.getLogger(TestBase.class.getName());
+    
+    private static final String DRIVER_CLASSNAME = "com.mysql.cj.jdbc.Driver";
+    
     private String host;
     private String port;
     private String user;
@@ -42,8 +49,6 @@ public class TestBase extends NbTestCase  {
     private String url;
     private String schema;
     private String dbname;
-
-    private static String DRIVER_CLASSNAME = "com.mysql.jdbc.Driver";
 
     private JDBCDriver jdbcDriver;
     private static DatabaseConnection dbconn;
@@ -53,13 +58,24 @@ public class TestBase extends NbTestCase  {
     }
 
     @Override
+    public boolean canRun() {
+        try {
+            Class.forName(DRIVER_CLASSNAME);
+            return super.canRun();
+        } catch (ClassNotFoundException e) {
+            LOG.warning(String.format("Test %s in %s disabled, %s not available", this.getName(), this.getClass().getName(), e.getMessage()));
+            return false;
+        }
+    }
+    
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         Lookup.getDefault().lookup(ModuleInfo.class);
 
         // We need to set up netbeans.dirs so that the NBInst URLMapper correctly
         // finds the driver jar file if the user is using the nbinst protocol
-        File jarFile = new File(JDBCDriverManager.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+        File jarFile = Utilities.toFile(JDBCDriverManager.class.getProtectionDomain().getCodeSource().getLocation().toURI());
         File clusterDir = jarFile.getParentFile().getParentFile();
         System.setProperty("netbeans.dirs", clusterDir.getAbsolutePath());
         

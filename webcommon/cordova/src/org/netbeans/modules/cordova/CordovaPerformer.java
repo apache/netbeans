@@ -249,7 +249,7 @@ public class CordovaPerformer implements BuildPerformer {
                                         project, 
                                         Lookups.fixed(
                                             mapper, 
-                                            ImageUtilities.loadImage("org/netbeans/modules/cordova/platforms/ios/ios" + (String) (device.isEmulator()?"simulator16.png":"device16.png")), 
+                                            ImageUtilities.loadImage("org/netbeans/modules/cordova/platforms/ios/ios" + (device.isEmulator()?"simulator16.png":"device16.png")), 
                                             getConfig(project).getId()), 
                                         false);
                             }

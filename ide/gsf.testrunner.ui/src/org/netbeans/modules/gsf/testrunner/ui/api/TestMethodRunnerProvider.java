@@ -19,18 +19,19 @@
 package org.netbeans.modules.gsf.testrunner.ui.api;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.function.BiFunction;
 import javax.swing.JEditorPane;
 import javax.swing.text.Document;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
-import org.netbeans.api.project.FileOwnerQuery;
-import org.netbeans.api.project.Project;
 import org.netbeans.modules.gsf.testrunner.api.CommonUtils;
+import org.netbeans.modules.gsf.testrunner.ui.annotation.TestMethodAnnotation;
+import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController.TestMethod;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.EditorCookie;
-import org.openide.filesystems.FileObject;
 import org.openide.nodes.Node;
 import org.openide.text.NbDocument;
 import org.openide.util.Mutex;
@@ -114,7 +115,7 @@ public abstract class TestMethodRunnerProvider {
 	    singleMethodTask = RP.create(new Runnable() {
 		@Override
 		public void run() {
-		    singleMethod = getTestMethod(doc, caret);
+		    singleMethod = findTestMethod(doc, caret, TestMethodRunnerProvider.this::getTestMethod);
 		}
 	    });
 	    final ProgressHandle ph = ProgressHandleFactory.createHandle(Bundle.Search_For_Test_Method(), singleMethodTask);
@@ -142,5 +143,26 @@ public abstract class TestMethodRunnerProvider {
 	    ph.start();
 	    singleMethodTask.schedule(0);
 	}
+    }
+
+    static SingleMethod findTestMethod(Document doc, int cursor, BiFunction<Document, Integer, SingleMethod> fallback) {
+        List<TestMethod> methods = (List<TestMethod>) doc.getProperty(TestMethodAnnotation.DOCUMENT_METHODS_KEY);
+        if (methods != null) {
+            int s = 0;
+            int e = methods.size();
+            while (e > s) {
+                int m = s + (e - s) / 2;
+                TestMethod cand = methods.get(m);
+                if (cand.start().getOffset() <= cursor && cursor <= cand.end().getOffset()) {
+                    return cand.method();
+                }
+                if (cursor < cand.start().getOffset()) {
+                    e = m - 1;
+                } else {
+                    s = m + 1;
+                }
+            }
+        }
+        return fallback.apply(doc, cursor);
     }
 }

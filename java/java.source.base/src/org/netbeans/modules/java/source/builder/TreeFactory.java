@@ -507,6 +507,8 @@ public class TreeFactory {
                 return make.at(NOPOS).Literal(TypeTag.INT, ((Byte) value).intValue());
             if (value instanceof Short)
                 return make.at(NOPOS).Literal(TypeTag.INT, ((Short) value).intValue());
+            if (value instanceof String[])
+                return make.at(NOPOS).Literal(TypeTag.CLASS, value);
             // workaround for making NULL_LITERAL kind.
             if (value == null) {
                 return make.at(NOPOS).Literal(TypeTag.BOT, value);
@@ -911,6 +913,23 @@ public class TreeFactory {
                            (JCExpression)type, (JCExpression)initializer);
     }
     
+    public Tree BindingPattern(CharSequence name,
+                               Tree type) {
+        try {
+            return (Tree) make.getClass().getMethod("BindingPattern", Name.class, JCTree.class).invoke(make.at(NOPOS), names.fromString(name.toString()), type);
+        } catch (Throwable t) {
+            throw throwAny(t);
+        }
+    }
+    
+    public Tree BindingPattern(VariableTree vt) {
+        try {
+            return (Tree) make.getClass().getMethod("BindingPattern",JCVariableDecl.class).invoke(make.at(NOPOS), vt);
+        } catch (Throwable t) {
+            throw throwAny(t);
+        }
+    }
+
     public VariableTree Variable(VariableElement variable, ExpressionTree initializer) {
         return make.at(NOPOS).VarDef((Symbol.VarSymbol)variable, (JCExpression)initializer);
     }
@@ -1910,6 +1929,10 @@ public class TreeFactory {
                 lbl.append((JCTree) t);
             }
             paramTypesList = lbl.toList();
+        }
+        ReferenceTree refrenceTree = TreeShims.getRefrenceTree(docMake, qualExpr, member, paramTypes, names, paramTypesList);
+        if (refrenceTree != null) {
+            return refrenceTree;
         }
         return docMake.at(NOPOS).newReferenceTree("", (JCExpression) qualExpr, member != null ? (Name) names.fromString(member.toString()) : null, paramTypesList);
     }

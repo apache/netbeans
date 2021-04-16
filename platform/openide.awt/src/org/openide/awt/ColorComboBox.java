@@ -165,7 +165,7 @@ public final class ColorComboBox extends JComboBox {
         Color c = JColorChooser.showDialog(
                 SwingUtilities.getAncestorOfClass( Dialog.class, this ),
                 NbBundle.getMessage( ColorComboBox.class, "SelectColor" ), //NOI18N
-                lastSelection != null ? (( ColorValue ) lastSelection).color : null );
+                lastSelection != null ? lastSelection.color : null );
         if( c != null ) {
             setSelectedColor( c );
         } else if( lastSelection != null ) {
@@ -173,8 +173,8 @@ public final class ColorComboBox extends JComboBox {
         }
     }
 
-    private static DefaultComboBoxModel createModel( Color[] colors, String[] names, boolean allowCustomColors ) {
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
+    private static DefaultComboBoxModel<ColorValue> createModel( Color[] colors, String[] names, boolean allowCustomColors ) {
+        DefaultComboBoxModel<ColorValue> model = new DefaultComboBoxModel<>();
 
         for( int i=0; i<colors.length; i++ ) {
             Color c = colors[i];

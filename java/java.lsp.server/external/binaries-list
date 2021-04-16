@@ -1,0 +1,28 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+271665493A1E35FB4C2D1DBABF19363C8AD27819 org.eclipse.lsp4j:org.eclipse.lsp4j:0.10.0
+18621C63F8D8587C0CC5EEB9CB945E49E9B5C900 org.eclipse.lsp4j:org.eclipse.lsp4j.debug:0.10.0
+ED2D6D876578B139AEA24289422435148FEF6B45 org.eclipse.lsp4j:org.eclipse.lsp4j.generator:0.10.0
+42CA44A49315A490804A3DED67163123748C1F19 org.eclipse.lsp4j:org.eclipse.lsp4j.jsonrpc:0.10.0
+30A70C7AC5E722F25843669F124CDACA9772B9C8 org.eclipse.lsp4j:org.eclipse.lsp4j.jsonrpc.debug:0.10.0
+751B324BED8C077BF6B7B8C2055595EB8C28509D org.eclipse.xtend:org.eclipse.xtend.lib:2.19.0
+F3626A047A3ABFA47CF62D76BDEF1D246F7985F6 org.eclipse.xtend:org.eclipse.xtend.lib.macro:2.19.0
+997BA9935D0069B3F1CD2F93B56B91D24E9C60A0 org.eclipse.xtext:org.eclipse.xtext.xbase.lib:2.19.0
+
+2852E6E05FBB95076FC091F6D1780F1F8FE35E0F commons-io:commons-io:2.5
+9D28A6B23650E8A7E9063C04588ACE6CF7012C17 org.apache.commons:commons-lang3:3.6

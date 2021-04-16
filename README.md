@@ -24,11 +24,13 @@
 Apache NetBeans is an open source development environment, tooling platform, and application framework.
 
 ### Build status
+   * GitHub actions
+     * [![Apache Netbeans Continuous Integration](https://github.com/apache/netbeans/workflows/Apache%20Netbeans%20Continuous%20Integration/badge.svg)](https://github.com/apache/netbeans/actions)
    * TravisCI:
-     * [![Build Status](https://travis-ci.org/apache/netbeans.svg?branch=master)](https://travis-ci.org/apache/netbeans)
+     * [![Build Status](https://travis-ci.com/apache/netbeans.svg?branch=master)](https://travis-ci.com/apache/netbeans)
    * Apache Jenkins: 
-     * Linux: [![Build Status](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-linux/badge/icon)](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-linux/)
-     * Windows: [![Build Status](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-windows/badge/icon)](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-windows/)
+     * Linux: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/)
+     * Windows: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows)
 
 ### Requirements
 
@@ -38,9 +40,11 @@ Apache NetBeans is an open source development environment, tooling platform, and
   * JDK 9 or above (to run NetBeans)
   * MinGW (optional), to build Windows Launchers
 
-**Note:** NetBeans also runs with JDK 8, although then it will not include tools for the JDK 9 Shell.
+#### Notes:
 
-**Note:** NetBeans license violation checks are managed via the [rat-exclusions.txt](https://github.com/apache/netbeans/blob/master/nbbuild/rat-exclusions.txt) file.
+* NetBeans also runs with JDK 8, although then it will not include tools for the JDK 9 Shell.
+* NetBeans license violation checks are managed via the [rat-exclusions.txt](https://github.com/apache/netbeans/blob/master/nbbuild/rat-exclusions.txt) file.
+* Set JAVA_HOME and ANT_HOME appropriately or leave them undefined.
 
 ### Building NetBeans
 
@@ -61,7 +65,8 @@ Build the NetBeans Platform:
 $ ant -Dcluster.config=platform
 ```
 
-**Note:** You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/netbeans/blob/master/nbbuild/cluster.properties) file.
+#### Notes:
+* You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/netbeans/blob/master/nbbuild/cluster.properties) file.
 
 #### Building Windows Launchers
 Windows launchers can be build using [MinGW](http://www.mingw.org/) both on Windows and Linux.
@@ -78,6 +83,15 @@ $ ant -Ddo.build.windows.launchers=true
 ```
 sudo apt install make mingw-w64
 ```
+
+#### Generating Javadoc 
+
+Build javadoc:
+```
+$ ant build javadoc
+```
+
+**Note** Run `javadoc-nb` task in Netbeans to run the javadoc build and display it in a web browser.
 
 ### Running NetBeans
 
@@ -96,7 +110,7 @@ $ ant tryme
 
 ### Download
 
-Developer builds can be downloaded: https://builds.apache.org/job/netbeans-linux.
+Developer builds can be downloaded: [Latest build (netbeans-xxx.zip)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/lastSuccessfulBuild/artifact/nbbuild/NetBeans-dev-Netbeans/).
 
 Convenience binary of released source artifacts: https://netbeans.apache.org/download/index.html.
 

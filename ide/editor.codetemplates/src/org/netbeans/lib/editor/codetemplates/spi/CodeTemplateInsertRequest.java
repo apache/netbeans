@@ -103,8 +103,8 @@ public final class CodeTemplateInsertRequest {
      *  parameter exists.
      */
     public CodeTemplateParameter getMasterParameter(String name) {
-        for (Iterator it = getMasterParameters().iterator(); it.hasNext();) {
-            CodeTemplateParameter master = (CodeTemplateParameter)it.next();
+        for (Iterator<? extends CodeTemplateParameter> it = getMasterParameters().iterator(); it.hasNext();) {
+            CodeTemplateParameter master = it.next();
             if (name.equals(master.getName())) {
                 return master;
             }

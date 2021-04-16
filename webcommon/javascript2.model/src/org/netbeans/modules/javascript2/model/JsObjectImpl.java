@@ -56,8 +56,8 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
     private Identifier declarationName;
     private JsObject parent;
     final private List<Occurrence> occurrences = new ArrayList<Occurrence>();
-    final private NavigableMap<Integer, Collection<TypeUsage>> assignments = new TreeMap<Integer, Collection<TypeUsage>>();
-    final private Map<String, Integer>assignmentsReverse = new HashMap();
+    final private NavigableMap<Integer, Collection<TypeUsage>> assignments = new TreeMap<>();
+    final private Map<String, Integer>assignmentsReverse = new HashMap<>();
     private int countOfAssignments = 0;
     private boolean hasName;
     private Documentation documentation;
@@ -283,7 +283,7 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
 
     @Override
     public Collection<? extends TypeUsage> getAssignmentForOffset(int offset) {
-        List<? extends TypeUsage> result = new ArrayList();
+        List<? extends TypeUsage> result = new ArrayList<>();
         Map.Entry<Integer, Collection<TypeUsage>> found = assignments.floorEntry(offset);
         int tmpOffset = offset;
         while (found != null) {
@@ -384,18 +384,19 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
         this.kind = kind;
     }
 
-    protected Collection<TypeUsage> resolveAssignments(JsObject jsObject, int offset) {        Collection<String> visited = new HashSet();  // for preventing infinited loops
+    protected Collection<TypeUsage> resolveAssignments(JsObject jsObject, int offset) {
+        Collection<String> visited = new HashSet<>();  // for preventing infinited loops
         return resolveAssignments(jsObject, offset, visited);
     }
 
     protected Collection<TypeUsage> resolveAssignments(JsObject jsObject, int offset, Collection<String> visited) {
-        Collection<TypeUsage> result = new HashSet();
+        Collection<TypeUsage> result = new HashSet<>();
         String fqn = jsObject.getFullyQualifiedName();
         if (visited.contains(fqn)) {
             return result;
         }
         visited.add(fqn);
-        Collection<? extends TypeUsage> offsetAssignments = Collections.EMPTY_LIST;
+        Collection<? extends TypeUsage> offsetAssignments = Collections.emptyList();
         Map.Entry<Integer, Collection<TypeUsage>> found = ((JsObjectImpl) jsObject).assignments.floorEntry(offset);
         if (found != null) {
             offsetAssignments = found.getValue();
@@ -438,7 +439,7 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
                 || (parent != null && parent.getOffset() == getOffset() && ModelUtils.ARGUMENTS.equals(getName())) ) {
             return;
         }
-        Collection<TypeUsage> resolved = new ArrayList();
+        Collection<TypeUsage> resolved = new ArrayList<>();
         for (Collection<TypeUsage> unresolved : assignments.values()) {
             resolved.clear();
             JsObject global = ModelUtils.getGlobalObject(parent);
@@ -563,7 +564,7 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
         if (prototype != null) {
             Collection<? extends TypeUsage> protoAssignments = prototype.getAssignments();
             if (protoAssignments != null && !protoAssignments.isEmpty()) {
-                protoAssignments = new ArrayList(protoAssignments);
+                protoAssignments = new ArrayList<>(protoAssignments);
                 Collection<? extends JsObject> variables = ModelUtils.getVariables(ModelUtils.getDeclarationScope(this));
                 for (TypeUsage typeUsage : protoAssignments) {
                     for (JsObject variable : variables) {
@@ -787,7 +788,7 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
     protected void correctTypes(String fromType, String toType) {
         for (Integer offset: assignments.keySet()) {
             Collection<TypeUsage> types = assignments.get(offset);
-            List<TypeUsage> copy = new ArrayList(types);
+            List<TypeUsage> copy = new ArrayList<>(types);
             String typeR = null;
             for (TypeUsage type : copy) {
                 typeR = replaceTypeInFQN(type.getType(), fromType, toType);

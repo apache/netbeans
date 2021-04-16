@@ -74,6 +74,7 @@ import org.openide.util.lookup.Lookups;
 import org.netbeans.modules.payara.spi.PayaraModule;
 import org.netbeans.modules.payara.spi.PayaraModule3;
 import org.netbeans.modules.payara.tooling.data.PayaraServerStatus;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 
 /**
  * Payara server support API.
@@ -466,8 +467,7 @@ public class CommonServerSupport
         VMIntrospector vmi = Lookups.forPath(Util.PF_LOOKUP_PATH).lookup(VMIntrospector.class);
         FutureTask<TaskState> task = new FutureTask<TaskState>(
                 new StartTask(this, getRecognizers(), vmi,
-                (String[]) (endState == ServerState.STOPPED_JVM_PROFILER
-                ? new String[]{""} : null),
+                endState == ServerState.STOPPED_JVM_PROFILER ? new String[]{""} : null,
                 startServerListener, stateListener));
         startTask = task;
         RP.post(task);
@@ -664,7 +664,8 @@ public class CommonServerSupport
         try {
             return ServerAdmin.<ResultString>exec(instance, new CommandDeploy(
                     name, Util.computeTarget(instance.getProperties()),
-                    application, contextRoot, properties, libraries
+                    application, contextRoot, properties, libraries,
+                    instance.isHotDeployEnabled()
             ), null, new TaskStateListener[]{stateListener});
         } finally {
             refreshChildren();
@@ -674,25 +675,29 @@ public class CommonServerSupport
     @Override
     public Future<ResultString> redeploy(
             final TaskStateListener stateListener,
-            final String name, boolean resourcesChanged) {
-        return redeploy(stateListener, name, null, resourcesChanged);
+            final String name, boolean resourcesChanged,
+            boolean metadataChanged, List<String> sourcesChanged) {
+        return redeploy(stateListener, name, null,
+                resourcesChanged, metadataChanged, sourcesChanged);
     }
 
     @Override
     public Future<ResultString> redeploy(
             final TaskStateListener stateListener,
             final String name, final String contextRoot,
-            boolean resourcesChanged) {
+            boolean resourcesChanged, boolean metadataChanged, List<String> sourcesChanged) {
         return redeploy(stateListener, name, contextRoot, new File[0],
-                resourcesChanged);
+                resourcesChanged, metadataChanged, sourcesChanged);
     }
 
     @Override
     public Future<ResultString> redeploy(TaskStateListener stateListener,
     String name, String contextRoot, File[] libraries,
-    boolean resourcesChanged) {
-        Map<String, String> properties = new HashMap<String, String>();
+    boolean resourcesChanged, boolean metadataChanged, List<String> sourcesChanged) {
+
+        Map<String, String> properties = new HashMap<>();
         String url = instance.getProperty(PayaraModule.URL_ATTR);
+
         String sessionPreservationFlag = instance.getProperty(PayaraModule.SESSION_PRESERVATION_FLAG);
         if (sessionPreservationFlag == null) {
             // If there isn't a value stored for the instance, use the value of
@@ -710,7 +715,10 @@ public class CommonServerSupport
             return ServerAdmin.<ResultString>exec(instance, new CommandRedeploy(
                     name, Util.computeTarget(instance.getProperties()),
                     contextRoot, properties, libraries,
-                    url != null && url.contains("ee6wc")), stateListener);
+                    url != null && url.contains("deployer:pfv"),
+                    instance.isHotDeployEnabled(),
+                    metadataChanged, sourcesChanged
+            ), stateListener);
         } finally {
             refreshChildren();
         }

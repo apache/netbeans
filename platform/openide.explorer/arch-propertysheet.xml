@@ -399,6 +399,16 @@ also provide custom values for these:</p>
     in the property sheet.  If not set, the value will be determined based on
     the font and/or the expansion handle icon, whichever is taller, the first
     time the property sheet is painted</api></li>
+
+<li><api category="friend" type="export" group="javax.swing.UIManager" name="PropSheet.customButtonForeground">(java.awt.Color)
+    UIManager key for a value which, if non null in UIDefaults, sets the
+    color for the custom editor button of the property sheet table.</api>
+</li>
+
+<li><api category="friend" type="export" group="javax.swing.UIManager" name="PropSheet.customButtonIcon">(javax.swing.Icon)
+    UIManager key for a value which, if non null in UIDefaults, sets the
+    ellipsis icon to use for the custom editor button of the property sheet table</api></li>
+
 </ul>
 <p>
 Additionally, client properties may be used to affect behavior of PropertyPanel,

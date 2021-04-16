@@ -1,0 +1,69 @@
+Licensed to the Apache Software Foundation (ASF) under one or more contributor
+license agreements; and to You under the Apache License, Version 2.0.
+
+--------------------------------------------------------------------------------
+How to update the css3-spec.zip?
+--------------------------------------------------------------------------------
+
+The css3-spec.zip file contains a copy/mirror of the w3c spec pages for various
+CSS3 modules. The file can be rebuild by using the wget tool to create a copy
+of the current state of the documents.
+
+1. Create an empty directory "css3-spec" and change into it:
+
+mkdir css3-spec
+cd css3-spec
+
+2. Do the mirroring:
+
+wget --adjust-extension --convert-links --page-requisites -e robots=off \
+http://www.w3.org/TR/css3-2d-transforms/ \
+http://www.w3.org/TR/css3-3d-transforms/ \
+http://www.w3.org/TR/css3-animations/ \
+http://www.w3.org/TR/css3-background/ \
+http://www.w3.org/TR/css3-box/ \
+http://www.w3.org/TR/css3-cascade/ \
+http://www.w3.org/TR/css3-color/ \
+http://www.w3.org/TR/css3-conditional/ \
+http://www.w3.org/TR/css3-content/ \
+http://www.w3.org/TR/css3-exclusions/ \
+http://www.w3.org/TR/css3-flexbox/ \
+http://www.w3.org/TR/css3-fonts/ \
+http://www.w3.org/TR/css3-gcpm/ \
+http://www.w3.org/TR/css3-grid/ \
+http://www.w3.org/TR/css3-hyperlinks/ \
+http://www.w3.org/TR/css3-images/ \
+http://www.w3.org/TR/css3-linebox/ \
+http://www.w3.org/TR/css3-lists/ \
+http://www.w3.org/TR/css3-marquee/ \
+http://www.w3.org/TR/css3-mediaqueries/ \
+http://www.w3.org/TR/css3-multicol/ \
+http://www.w3.org/TR/css3-namespace/ \
+http://www.w3.org/TR/css3-page/ \
+http://www.w3.org/TR/css3-positioning/ \
+http://www.w3.org/TR/css3-preslev/ \
+http://www.w3.org/TR/css3-regions/ \
+http://www.w3.org/TR/css3-ruby/ \
+http://www.w3.org/TR/css3-speech/ \
+http://www.w3.org/TR/css3-text/ \
+http://www.w3.org/TR/css3-transitions/ \
+http://www.w3.org/TR/css3-ui/ \
+http://www.w3.org/TR/css3-values/ \
+http://www.w3.org/TR/css3-writing-modes/
+
+3. Check that the contents still looks sane and mirroring worked
+
+4. ZIP the mirrored data
+
+rm ../css3-spec.zip
+zip -r ../css3-spec.zip .
+
+5. Cleanup
+
+cd ..
+rm -r css3-spec
+
+6. Upload the created file to the osuosl.org binary server and update
+   binaries-list
+
+For the upload see: https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=115507251

@@ -37,7 +37,7 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Egor Ushakov <gorrus@netbeans.org>
  */
-@ServiceProvider(service=Notifier.class, position=1010)
+@ServiceProvider(service=Notifier.class, position=200)
 public class NioNotifier extends Notifier<WatchKey> {
     private final WatchService watcher;
 
@@ -61,7 +61,9 @@ public class NioNotifier extends Notifier<WatchKey> {
         try {
             key.cancel();
         } catch (ClosedWatchServiceException ex) {
-            throw new IOException(ex);
+            // This happens on shutdown as watcher service can be closed before
+            // all watches are removed from it. It is safe to swallow this
+            // exception here.
         }
     }
 

@@ -41,7 +41,7 @@ public abstract class AbstractHeapWalkerNode extends HeapWalkerNode {
     private String size;
     private String retainedSize;
     private HeapWalkerNode[] children;
-    private int mode = HeapWalkerNode.MODE_FIELDS;
+    private final int mode;
 
     private Map<Object, Integer> indexes;
 
@@ -74,7 +74,7 @@ public abstract class AbstractHeapWalkerNode extends HeapWalkerNode {
     private Map<Object, Integer> getIndexes() {
         if (indexes == null) {
             HeapWalkerNode[] chldrn = getChildren();
-            indexes = new HashMap(chldrn.length * 4 / 3);
+            indexes = new HashMap<>(chldrn.length * 4 / 3);
             for (int i = 0; i < chldrn.length; i++)
                 indexes.put(chldrn[i], i);
         }
@@ -105,6 +105,10 @@ public abstract class AbstractHeapWalkerNode extends HeapWalkerNode {
     // Should be overridden for lazy populating children
     public boolean isLeaf() {
         return getNChildren() == 0;
+    }
+
+    public final boolean isModeFields() {
+        return mode != MODE_REFERENCES;
     }
 
     public int getMode() {

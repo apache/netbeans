@@ -19,35 +19,38 @@
 
 package org.netbeans.modules.web.monitor.data;
 
-import org.w3c.dom.*;
-import org.netbeans.modules.schema2beans.*;
-import java.beans.*;
-import java.util.*;
+import java.beans.PropertyChangeListener;
+import java.util.Vector;
 import javax.servlet.http.Cookie;
+
+import org.netbeans.modules.schema2beans.BaseBean;
+import org.netbeans.modules.schema2beans.BeanComparator;
+import org.netbeans.modules.schema2beans.BeanProp;
+import org.netbeans.modules.schema2beans.Common;
+import org.netbeans.modules.schema2beans.Version;
 
 public class CookieIn extends BaseBean {
 
-    static Vector comparators = new Vector();
-
+    static Vector<BeanComparator> comparators = new Vector<>();
 
     public CookieIn() {
 	this(Common.USE_DEFAULT_VALUES);
     }
 
     public CookieIn(Cookie cookie) {
-	super(comparators, new org.netbeans.modules.schema2beans.Version(1, 0, 5));
+	super(comparators, new Version(1, 0, 5));
 	this.setAttributeValue("name", cookie.getName());//NOI18N
 	this.setAttributeValue("value", cookie.getValue());//NOI18N
     }
 
     public CookieIn(String name, String value) {
-	super(comparators, new org.netbeans.modules.schema2beans.Version(1, 0, 5));
+	super(comparators, new Version(1, 0, 5));
 	this.setAttributeValue("name", name);//NOI18N
 	this.setAttributeValue("value", value);//NOI18N
     }
 
     public CookieIn(int options) {
-	super(comparators, new org.netbeans.modules.schema2beans.Version(1, 0, 6));
+	super(comparators, new Version(1, 0, 6));
 	// Properties (see root bean comments for the bean graph)
 	this.initialize(options);
     }

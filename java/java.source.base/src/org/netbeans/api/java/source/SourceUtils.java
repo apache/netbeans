@@ -80,13 +80,16 @@ import javax.tools.JavaFileObject;
 
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.lexer.JavaTokenId;
+import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.queries.JavadocForBinaryQuery;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
+import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.source.ClasspathInfo.PathKind;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.matching.Matcher;
@@ -99,6 +102,7 @@ import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.ElementUtils;
 import org.netbeans.modules.java.source.JavadocHelper;
 import org.netbeans.modules.java.source.ModuleNames;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.indexing.FQN2Files;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
 import org.netbeans.modules.java.source.parsing.ClasspathInfoProvider;
@@ -120,6 +124,7 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
+import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.Pair;
@@ -191,7 +196,11 @@ public class SourceUtils {
     
     public static TypeMirror getBound(WildcardType wildcardType) {
         Type.TypeVar bound = ((Type.WildcardType)wildcardType).bound;
-        return bound != null ? bound.bound : null;
+        try {
+            return bound != null ? bound.bound : null;
+        } catch (NoSuchFieldError err) {
+            return bound != null ? bound.getUpperBound() : null;
+        }
     }
 
     /**
@@ -563,7 +572,7 @@ public class SourceUtils {
         }
         return null;        
     }
-    
+
     private static FileObject findSourceForBinary(FileObject binaryRoot, FileObject binary, String signature, String pkgName, String className, boolean isPkg) throws IOException {
         FileObject[] sourceRoots = SourceForBinaryQuery.findSourceRoots(binaryRoot.toURL()).getRoots();                        
         ClassPath sourcePath = ClassPathSupport.createClassPath(sourceRoots);
@@ -860,6 +869,15 @@ public class SourceUtils {
                                     return super.visitType(e, p);
                                 } else {
                                     return null;
+                                }
+                            }
+
+                            @Override
+                            public Void scan(Element e, Void p) {
+                                if (TreeShims.isRecordComponent(e)) {
+                                    return visitVariable((VariableElement) e, p);
+                                } else {
+                                    return super.scan(e, p);
                                 }
                             }
                         };
@@ -1347,5 +1365,22 @@ public class SourceUtils {
      */
     public static Object getDiagnosticParam(Diagnostic<?> d, int index) {
         return Hacks.getDiagnosticParam(d, index);
+    }
+
+    /**
+     * Ensure that the given file is parsed from source, in the context of the
+     * provided parser instance.
+     *
+     * Please note this only has an effect before invoking {@link CompilationController#toPhase(org.netbeans.api.java.source.JavaSource.Phase) }.
+     *
+     * @param cc the parser instance that should be augmented
+     * @param file the input source file
+     * @since 2.46
+     */
+    public static void forceSource(CompilationController cc, FileObject file) {
+        if (cc.getPhase() != Phase.MODIFIED) {
+            throw new IllegalStateException("Must invoke before running toPhase!");
+        }
+        cc.addForceSource(file);
     }
 }

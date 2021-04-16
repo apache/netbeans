@@ -92,7 +92,7 @@ public final class DatabaseExplorerUIs {
 
         @Override
         public void newItemActionPerformed() {
-            Set oldConnections = new HashSet(Arrays.asList(connectionManager.getConnections()));
+            Set<DatabaseConnection> oldConnections = new HashSet<>(Arrays.<DatabaseConnection>asList(connectionManager.getConnections()));
             connectionManager.showAddConnectionDialog(null);
 
             // try to find the new connection
@@ -123,7 +123,7 @@ public final class DatabaseExplorerUIs {
     private static final class ConnectionComboBoxModel extends AbstractListModel implements ComboBoxModel {
 
         private final ConnectionManager connectionManager;
-        private final List connectionList = new ArrayList();
+        private final List<Object> connectionList = new ArrayList<>();
         private Object selectedItem; // can be anything, not just a database connection
         private ConnectionListener cl = new ConnectionListener() {
             @Override

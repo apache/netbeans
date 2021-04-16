@@ -59,21 +59,25 @@ public final class ColoringManager {
         put("mod-annotation-type-declaration", ANNOTATION_TYPE, DECLARATION);
         put("mod-interface-declaration", INTERFACE, DECLARATION);
         put("mod-class-declaration", CLASS, DECLARATION);
+        put("mod-record-declaration", RECORD, DECLARATION);
         put("mod-constructor-declaration", CONSTRUCTOR, DECLARATION);
         put("mod-method-declaration", METHOD, DECLARATION);
         put("mod-parameter-declaration", PARAMETER, DECLARATION);
         put("mod-local-variable-declaration", LOCAL_VARIABLE, DECLARATION);
         put("mod-field-declaration", FIELD, DECLARATION);
+        put("mod-record-component-declaration", RECORD_COMPONENT, DECLARATION);
         put("mod-module", MODULE);
         put("mod-enum", ENUM);
         put("mod-annotation-type", ANNOTATION_TYPE);
         put("mod-interface", INTERFACE);
         put("mod-class", CLASS);
+        put("mod-record", RECORD);
         put("mod-constructor", CONSTRUCTOR);
         put("mod-method", METHOD);
         put("mod-parameter", PARAMETER);
         put("mod-local-variable", LOCAL_VARIABLE);
         put("mod-field", FIELD);
+        put("mod-record-component", RECORD_COMPONENT);
         put("mod-public", PUBLIC);
         put("mod-protected", PROTECTED);
         put("mod-package-private", PACKAGE_PRIVATE);
@@ -85,6 +89,7 @@ public final class ColoringManager {
         put("mod-unused", UNUSED);
         put("mod-keyword", KEYWORD);
         put("javadoc-identifier", JAVADOC_IDENTIFIER);
+        put("mod-unindented-text-block", UNINDENTED_TEXT_BLOCK);
     }
     
     private static void put(String coloring, ColoringAttributes... attributes) {

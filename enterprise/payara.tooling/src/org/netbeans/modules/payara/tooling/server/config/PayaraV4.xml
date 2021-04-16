@@ -55,6 +55,7 @@ under the License.
                 <include name="jaxrpc-api-osgi.jar"/>
                 <include name="webservices-osgi.jar"/>
                 <include name="weld-osgi-bundle.jar"/>
+                <include name="mimepull.+\.jar"/>
             </fileset>            
             <fileset dir="modules/endorsed">
                 <include name=".+\.jar"/>
@@ -80,7 +81,7 @@ under the License.
             </fileset>
         </classpath>
         <javadocs> 
-            <link url="http://repo1.maven.org/maven2/org/glassfish/jersey/jersey-documentation/2.0-m05-2/jersey-documentation-2.0-m05-2-docbook.zip"/>
+            <link url="https://repo1.maven.org/maven2/org/glassfish/jersey/jersey-documentation/2.0-m05-2/jersey-documentation-2.0-m05-2-docbook.zip"/>
         </javadocs>
         <sources>
         </sources>

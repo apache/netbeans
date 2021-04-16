@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.83
+#Version 2.89
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -71,7 +71,7 @@ meth public void setClassAssertionStatus(java.lang.String,boolean)
 meth public void setDefaultAssertionStatus(boolean)
 meth public void setPackageAssertionStatus(java.lang.String,boolean)
 supr java.lang.Object
-hfds assertionLock,classAssertionStatus,classes,defaultAssertionStatus,defaultDomain,domains,loadedLibraryNames,nativeLibraries,nativeLibraryContext,nocerts,package2certs,packageAssertionStatus,packages,parallelLockMap,parent,scl,sclSet,sys_paths,systemNativeLibraries,usr_paths
+hfds assertionLock,classAssertionStatus,classes,defaultAssertionStatus,defaultDomain,loadedLibraryNames,nativeLibraries,nativeLibraryContext,nocerts,package2certs,packageAssertionStatus,packages,parallelLockMap,parent,scl,sclSet,sys_paths,systemNativeLibraries,usr_paths
 hcls NativeLibrary,ParallelLoaders
 
 CLSS public java.lang.Exception
@@ -286,7 +286,7 @@ CLSS public org.netbeans.JarClassLoader
 cons public init(java.util.List<java.io.File>,java.lang.ClassLoader[])
 cons public init(java.util.List<java.io.File>,java.lang.ClassLoader[],boolean)
 cons public init(java.util.List<java.io.File>,java.lang.ClassLoader[],boolean,org.netbeans.Module)
-meth protected java.lang.Class doLoadClass(java.lang.String,java.lang.String)
+meth protected java.lang.Class<?> doLoadClass(java.lang.String,java.lang.String)
 meth protected java.lang.Package definePackage(java.lang.String,java.util.jar.Manifest,java.net.URL)
 meth protected java.security.PermissionCollection getPermissions(java.security.CodeSource)
 meth public java.net.URL findResource(java.lang.String)
@@ -413,7 +413,7 @@ meth public boolean shouldDelegateResource(org.netbeans.Module,org.netbeans.Modu
 meth public java.lang.String[] refineProvides(org.netbeans.Module)
 meth public java.util.jar.Manifest loadManifest(java.io.File) throws java.io.IOException
 meth public org.openide.util.Task closeAsync(java.util.List<org.netbeans.Module>)
-meth public void refineClassLoader(org.netbeans.Module,java.util.List)
+meth public void refineClassLoader(org.netbeans.Module,java.util.List<? extends java.lang.ClassLoader>)
 meth public void refineDependencies(org.netbeans.Module,java.util.Set<org.openide.modules.Dependency>)
 supr java.lang.Object
 
@@ -438,7 +438,7 @@ meth public final void disable(org.netbeans.Module)
 meth public final void enable(org.netbeans.Module) throws org.netbeans.InvalidException
 meth public final void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public java.lang.ClassLoader getClassLoader()
-meth public java.lang.ClassLoader refineClassLoader(org.netbeans.Module,java.util.List)
+meth public java.lang.ClassLoader refineClassLoader(org.netbeans.Module,java.util.List<? extends java.lang.ClassLoader>)
 meth public java.util.Collection<org.netbeans.Module> getAttachedFragments(org.netbeans.Module)
 meth public java.util.List<org.netbeans.Module> simulateDisable(java.util.Set<org.netbeans.Module>)
 meth public java.util.List<org.netbeans.Module> simulateEnable(java.util.Set<org.netbeans.Module>)
@@ -518,8 +518,9 @@ cons public init(java.lang.ClassLoader[],boolean)
 meth protected boolean shouldDelegateResource(java.lang.String,java.lang.ClassLoader)
 meth protected final void addCoveredPackages(java.lang.Iterable<java.lang.String>)
 meth protected final void setSystemClassLoader(java.lang.ClassLoader)
-meth protected java.lang.Class doLoadClass(java.lang.String,java.lang.String)
-meth protected java.lang.Class loadClass(java.lang.String,boolean) throws java.lang.ClassNotFoundException
+meth protected java.lang.Class<?> doLoadClass(java.lang.String,java.lang.String)
+meth protected java.lang.Class<?> findClass(java.lang.String) throws java.lang.ClassNotFoundException
+meth protected java.lang.Class<?> loadClass(java.lang.String,boolean) throws java.lang.ClassNotFoundException
 meth protected java.lang.Package definePackage(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.net.URL)
 meth protected java.lang.Package getPackage(java.lang.String)
 meth protected java.lang.Package getPackageFast(java.lang.String,boolean)

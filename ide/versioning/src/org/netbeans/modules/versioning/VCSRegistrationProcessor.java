@@ -22,8 +22,6 @@ import java.util.Collections;
 import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.modules.versioning.spi.VersioningSystem;
@@ -38,7 +36,6 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Tomas Stupka
  */
 @ServiceProvider(service=Processor.class)
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class VCSRegistrationProcessor extends LayerGeneratingProcessor {
 
     @Override

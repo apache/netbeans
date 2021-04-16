@@ -170,19 +170,48 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                     return token(JavaTokenId.ERROR);
                 case '"': // string literal
                     if (lookupId == null) lookupId = JavaTokenId.STRING_LITERAL;
-                    while (true)
+                    while (true) {
                         switch (nextChar()) {
                             case '"': // NOI18N
+                                String text = input.readText().toString();
+                                if (text.length() == 2) {
+                                    int mark = input.readLength();
+                                    if (nextChar() != '"') {
+                                        input.backup(1); //TODO: EOF???
+                                        return token(lookupId);
+                                    }
+                                    int c2 = nextChar();
+                                    while (Character.isWhitespace(c2) && c2 != '\n') {
+                                        c2 = nextChar();
+                                    }
+                                    if (c2 != '\n') {
+                                        input.backup(input.readLengthEOF()- mark);
+                                        return token(lookupId);
+                                    }
+                                    lookupId = JavaTokenId.MULTILINE_STRING_LITERAL;
+                                }
+                                if (lookupId == JavaTokenId.MULTILINE_STRING_LITERAL) {
+                                    if (text.endsWith("\"\"\"") && !text.endsWith("\\\"\"\"") && text.length() > 6) {
+                                        return token(lookupId);
+                                    } else {
+                                        break;
+                                    }
+                                }
+                                
                                 return token(lookupId);
                             case '\\':
                                 nextChar();
                                 break;
                             case '\r': consumeNewline();
                             case '\n':
+                                if (lookupId == JavaTokenId.MULTILINE_STRING_LITERAL) {
+                                    break;
+                                }
                             case EOF:
                                 return tokenFactory.createToken(lookupId, //XXX: \n handling for exotic identifiers?
                                         input.readLength(), PartType.START);
                         }
+                    }
 
                 case '\'': // char literal
                     while (true)

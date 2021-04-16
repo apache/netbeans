@@ -51,11 +51,11 @@ public class RestServiceChildren extends Children.Keys {
     protected void removeNotify() {
         super.removeNotify();
         
-        setKeys(Collections.EMPTY_SET);
+        setKeys(Collections.emptySet());
     }
     
     private void updateKeys() {
-        final List keys = new ArrayList();
+        final List<String> keys = new ArrayList<>();
         keys.add(KEY_HTTP_METHODS);
         keys.add(KEY_SUB_RESOURCE_LOCATORS);
         

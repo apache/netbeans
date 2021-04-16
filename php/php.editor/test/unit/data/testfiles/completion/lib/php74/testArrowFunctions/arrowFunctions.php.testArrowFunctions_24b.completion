@@ -2,6 +2,9 @@ Code completion result for source line:
 $af = static fn() => |isset($this); // static
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 CLASS      ArrowFunctions                  [PUBLIC]   arrowFunctions.php
+METHOD     getNumber()                     [PUBLIC]   ArrowFunctions
+METHOD     new()                           [STATIC]   ArrowFunctions
+METHOD     test()                          [PUBLIC]   ArrowFunctions
 VARIABLE   ? $af                           [PUBLIC]   arrowFunctions.php
 VARIABLE   int $test                       [PUBLIC]   arrowFunctions.php
 CONSTANT   CONSTANT_INT 1000               [PUBLIC]   arrowFunctions.php
@@ -68,6 +71,7 @@ KEYWORD    instanceof                                 null
 KEYWORD    interface                                  null
 KEYWORD    isset()                                    Language Construct
 KEYWORD    list()                                     Language Construct
+KEYWORD    match                                      null
 KEYWORD    namespace                                  null
 KEYWORD    new                                        null
 KEYWORD    or                                         null

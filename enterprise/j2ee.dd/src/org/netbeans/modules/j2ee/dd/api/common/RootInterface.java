@@ -51,6 +51,7 @@ public interface RootInterface extends ComponentInterface {
      * The locking problems are solved for the user in this method.
      *
      * @param fo File Object where to write the content of depl.descriptor holding in bean tree structure
+     * @throws java.io.IOException
      */
     public void write(org.openide.filesystems.FileObject fo) throws java.io.IOException ;
     
@@ -69,7 +70,7 @@ public interface RootInterface extends ComponentInterface {
      *		MERGE_UNION is 	G1 U G2 <=> G1 + E2
      *		MERGE_INTERSECT is	G1 n G2 <=> (G1 U G2) - E1 - E2
      *</pre>
-     * @param bean root of the bean graph that is merged with actual bean graph
+     * @param root of the bean graph that is merged with actual bean graph
      * @param mode type of merging (INTERSECT, UNION, UPDATE)
      */
     public void merge(RootInterface root, int mode);

@@ -23,16 +23,19 @@ import java.util.Locale;
 import java.util.Map;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
+import static org.netbeans.modules.payara.tooling.data.PayaraVersion.values;
 import org.netbeans.modules.payara.tooling.utils.EnumUtils;
 import org.openide.util.Parameters;
 
 /**
- * Payara server version.
+ * Payara server version is now deprecated and replaced by.PayaraPlatformVersion
+ * class.
  * <p/>
  * @author Tomas Kraus, Peter Benedikovic
  * @author Gaurav Gupta
  */
-public enum PayaraVersion {
+@Deprecated
+public enum PayaraVersion implements PayaraPlatformVersionAPI {
 
     //add new version
     ////////////////////////////////////////////////////////////////////////////
@@ -77,7 +80,15 @@ public enum PayaraVersion {
     /** Payara 5.191 */
     PF_5_191 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 19, (short) 1, (short) 0, PayaraVersion.PF_5_191_STR),
     /** Payara 5.192 */
-    PF_5_192 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 19, (short) 2, (short) 0, PayaraVersion.PF_5_192_STR);
+    PF_5_192 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 19, (short) 2, (short) 0, PayaraVersion.PF_5_192_STR),
+    /** Payara 5.193 */
+    PF_5_193 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 19, (short) 3, (short) 0, PayaraVersion.PF_5_193_STR),
+    /** Payara 5.194 */
+    PF_5_194 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 19, (short) 4, (short) 0, PayaraVersion.PF_5_194_STR),
+    /** Payara 5.201 */
+    PF_5_201 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 20, (short) 1, (short) 0, PayaraVersion.PF_5_201_STR),
+    /** Payara 5.202 */
+    PF_5_202 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 20, (short) 2, (short) 0, PayaraVersion.PF_5_202_STR);
 
     //add new version
     /**  A <code>String</code> representation of PF_4_1_144 value. */
@@ -160,8 +171,24 @@ public enum PayaraVersion {
     static final String PF_5_192_STR = "5.192";
     /** Additional <code>String</code> representations of 5.192 value. */
     static final String PF_5_192_STR_NEXT[] = {"5.192.0"};
+    /**  A <code>String</code> representation of PF_5_193 value. */
+    static final String PF_5_193_STR = "5.193";
+    /** Additional <code>String</code> representations of 5.193 value. */
+    static final String PF_5_193_STR_NEXT[] = {"5.193.0"};
+    /**  A <code>String</code> representation of PF_5_194 value. */
+    static final String PF_5_194_STR = "5.194";
+    /** Additional <code>String</code> representations of 5.194 value. */
+    static final String PF_5_194_STR_NEXT[] = {"5.194.0"};
+    /**  A <code>String</code> representation of PF_5_201 value. */
+    static final String PF_5_201_STR = "5.201";
+    /** Additional <code>String</code> representations of 5.201 value. */
+    static final String PF_5_201_STR_NEXT[] = {"5.201.0"};
+    /**  A <code>String</code> representation of PF_5_202 value. */
+    static final String PF_5_202_STR = "5.202";
+    /** Additional <code>String</code> representations of 5.202 value. */
+    static final String PF_5_202_STR_NEXT[] = {"5.202.0"};
 
-  
+
     ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
     ////////////////////////////////////////////////////////////////////////////
@@ -181,7 +208,7 @@ public enum PayaraVersion {
      * conversion.
      */
     private static final Map<String, PayaraVersion> stringValuesMap
-            = new HashMap(2 * values().length);
+            = new HashMap<>(2 * values().length);
 
     // Initialize backward String conversion Map.
     static {
@@ -209,6 +236,10 @@ public enum PayaraVersion {
         initStringValuesMapFromArray(PF_5_184, PF_5_184_STR_NEXT);
         initStringValuesMapFromArray(PF_5_191, PF_5_191_STR_NEXT);
         initStringValuesMapFromArray(PF_5_192, PF_5_192_STR_NEXT);
+        initStringValuesMapFromArray(PF_5_193, PF_5_193_STR_NEXT);
+        initStringValuesMapFromArray(PF_5_194, PF_5_194_STR_NEXT);
+        initStringValuesMapFromArray(PF_5_201, PF_5_201_STR_NEXT);
+        initStringValuesMapFromArray(PF_5_202, PF_5_202_STR_NEXT);
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -469,6 +500,51 @@ public enum PayaraVersion {
         sb.append(SEPARATOR);
         sb.append(Integer.toString(build));
         return sb.toString();
+    }
+
+    @Override
+    public String getUriFragment() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getDirectUrl() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getIndirectUrl() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getLicenseUrl() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean isMinimumSupportedVersion() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean isEE7Supported() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean isEE8Supported() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean equalsMajorMinor(PayaraPlatformVersionAPI version) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean equals(PayaraPlatformVersionAPI version) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

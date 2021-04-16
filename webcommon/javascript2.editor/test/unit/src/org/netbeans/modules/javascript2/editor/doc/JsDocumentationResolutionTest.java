@@ -53,39 +53,38 @@ public class JsDocumentationResolutionTest extends JsTestBase {
     }
 
     public void testResolverForJsDocCompleteFile() throws ParseException {
-        parseSource(getTestSource(getTestFile("testfiles/doc/resolver/classWithJsDoc.js")));
+        parseSource(getTestSource(getTestFile("../../../testfiles/jsdoc-testfiles/classWithJsDoc.js")));
         JsDocumentationHolder documentationHolder = JsDocumentationSupport.getDocumentationHolder(parserResult);
         assertEquals("org.netbeans.modules.javascript2.jsdoc.JsDocDocumentationHolder", documentationHolder.getClass().getName());
     }
 
     public void testResolverForSDocCompleteFile() throws ParseException {
-        parseSource(getTestSource(getTestFile("testfiles/doc/resolver/classWithSDoc.js")));
+        parseSource(getTestSource(getTestFile("../../../testfiles/jsdoc-testfiles/classWithSDoc.js")));
         JsDocumentationHolder documentationHolder = JsDocumentationSupport.getDocumentationHolder(parserResult);
         assertEquals("org.netbeans.modules.javascript2.sdoc.SDocDocumentationHolder", documentationHolder.getClass().getName());
     }
 
     public void testResolverForExtDocCompleteFile() throws ParseException {
-        parseSource(getTestSource(getTestFile("testfiles/doc/resolver/classWithExtDoc.js")));
+        parseSource(getTestSource(getTestFile("../../../testfiles/jsdoc-testfiles/classWithExtDoc.js")));
         JsDocumentationHolder documentationHolder = JsDocumentationSupport.getDocumentationHolder(parserResult);
         assertEquals("org.netbeans.modules.javascript2.extdoc.ExtDocDocumentationHolder", documentationHolder.getClass().getName());
     }
 
     public void testResolverForJsDocWithSeveralSDocTags() throws ParseException {
-        parseSource(getTestSource(getTestFile("testfiles/doc/resolver/jsdocWithSDocTags.js")));
+        parseSource(getTestSource(getTestFile("../../../testfiles/jsdoc-testfiles/jsdocWithSDocTags.js")));
         JsDocumentationHolder documentationHolder = JsDocumentationSupport.getDocumentationHolder(parserResult);
         assertEquals("org.netbeans.modules.javascript2.jsdoc.JsDocDocumentationHolder", documentationHolder.getClass().getName());
     }
 
     public void testResolverForSDocWithSeveralJsDocTags() throws ParseException {
-        parseSource(getTestSource(getTestFile("testfiles/doc/resolver/sdocWithJsDocTags.js")));
+        parseSource(getTestSource(getTestFile("../../../testfiles/jsdoc-testfiles/sdocWithJsDocTags.js")));
         JsDocumentationHolder documentationHolder = JsDocumentationSupport.getDocumentationHolder(parserResult);
     assertEquals("org.netbeans.modules.javascript2.sdoc.SDocDocumentationHolder", documentationHolder.getClass().getName());
     }
 
     public void testResolverForExtDocWithSeveralSDocTags() throws ParseException {
-        parseSource(getTestSource(getTestFile("testfiles/doc/resolver/extdocWithSDocTags.js")));
+        parseSource(getTestSource(getTestFile("../../../testfiles/jsdoc-testfiles/extdocWithSDocTags.js")));
         JsDocumentationHolder documentationHolder = JsDocumentationSupport.getDocumentationHolder(parserResult);
         assertEquals("org.netbeans.modules.javascript2.extdoc.ExtDocDocumentationHolder", documentationHolder.getClass().getName());
     }
-
 }

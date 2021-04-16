@@ -176,7 +176,7 @@ public abstract class SyncSupport {
             
             // look for comodifications
 
-            Vector modified = new Vector();
+            Vector<Representation> modified = new Vector<>();
             for (int i=0; i<all.length; i++) {
                 if (all[i].represents(type)) {
                     master = all[i];

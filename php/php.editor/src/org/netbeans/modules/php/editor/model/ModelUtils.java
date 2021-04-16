@@ -237,6 +237,16 @@ public final class ModelUtils {
     }
 
     @NonNull
+    public static Collection<? extends TypeScope> resolveType(Model model, int offset) {
+        VariableScope variableScope = model.getVariableScope(offset);
+        TypeScope typeScope = getTypeScope(variableScope);
+        if (typeScope != null) {
+            return Collections.singletonList(typeScope);
+        }
+        return Collections.emptyList();
+    }
+
+    @NonNull
     public static Collection<? extends TypeScope> resolveTypeAfterReferenceToken(Model model, TokenSequence<PHPTokenId> tokenSequence,
             int offset, boolean specialVariable) {
         tokenSequence.move(offset);
@@ -630,5 +640,17 @@ public final class ModelUtils {
             LOGGER.log(Level.WARNING, null, ex);
         }
         return result;
+    }
+
+    /**
+     * Check whether the scope is anonymous function scope.
+     *
+     * @param scope the scope
+     * @return {@code true} if the scope is anonymous function scope,
+     * {@code false} otherwise
+     */
+    public static boolean isAnonymousFunction(Scope scope) {
+        return scope instanceof FunctionScope
+                && ((FunctionScope) scope).isAnonymous();
     }
 }

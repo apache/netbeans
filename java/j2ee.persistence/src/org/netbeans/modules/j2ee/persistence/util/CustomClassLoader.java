@@ -71,7 +71,7 @@ public class CustomClassLoader extends URLClassLoader {
         if(name == null) {
             throw new IllegalArgumentException("class name cannot be null");
         }
-        Class clazz = findLoadedClass(name);
+        Class<?> clazz = findLoadedClass(name);
         if (clazz != null) {
             return clazz;
         }
@@ -177,7 +177,7 @@ public class CustomClassLoader extends URLClassLoader {
                 if (f.exists()) {
                     try {
                         package2File.put(packageName, entry);
-                        return f.toURL();
+                        return f.toURI().toURL();
                     } catch (MalformedURLException ex) {
                         continue;
                     }

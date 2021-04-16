@@ -85,6 +85,21 @@ public class AnnotationProcessorTestUtils {
      * @return true if compilation succeeded, false if it failed
      */
     public static boolean runJavac(File src, String srcIncludes, File dest, File[] cp, OutputStream stderr) {
+        return runJavac(src, srcIncludes, dest, cp, stderr, null);
+    }
+    
+    /**
+     * Run the Java compiler.
+     * (A JSR 199 implementation must be available.)
+     * @param src a source root (runs javac on all *.java it finds matching {@code srcIncludes})
+     * @param srcIncludes a pattern of source files names without path to compile (useful for testing incremental compiles), or null for all
+     * @param dest a dest dir to compile classes to
+     * @param cp classpath entries; if null, use Java classpath of test
+     * @param source the source level option to the compiler
+     * @param stderr output stream to print messages to, or null for test console (i.e. do not capture)
+     * @return true if compilation succeeded, false if it failed
+     */
+    public static boolean runJavac(File src, String srcIncludes, File dest, File[] cp, OutputStream stderr, String source) {
         List<String> args = new ArrayList<String>();
         args.add("-classpath");
         StringBuilder b = new StringBuilder(dest.getAbsolutePath());
@@ -105,7 +120,11 @@ public class AnnotationProcessorTestUtils {
         File destG = new File(dest.getParentFile(), "generated-" + dest.getName());
         args.add(destG.getAbsolutePath());
         args.add("-source");
-        args.add("6");
+        if (source == null) {
+            args.add("6");
+        } else {
+            args.add(source);
+        }
         args.add("-Xlint:-options");
         dest.mkdirs();
         destG.mkdirs();

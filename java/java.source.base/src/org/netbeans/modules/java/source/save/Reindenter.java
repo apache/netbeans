@@ -40,6 +40,7 @@ import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TryTree;
+import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SourcePositions;
@@ -68,10 +69,13 @@ import javax.tools.JavaFileObject;
 import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.util.Log;
 import java.util.ArrayList;
+import java.util.Arrays;
+import javax.lang.model.element.Modifier;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.netbeans.modules.editor.indent.spi.Context;
 import org.netbeans.modules.editor.indent.spi.Context.Region;
 import org.netbeans.modules.editor.indent.spi.ExtraLock;
@@ -116,6 +120,7 @@ public class Reindenter implements IndentTask {
         for (Region region : context.indentRegions()) {
             if (initRegionData(region)) {
                 HashSet<Integer> linesToAddStar = new HashSet<Integer>();
+                Map<Integer, Integer> oldIndents = new HashMap<>();
                 LinkedList<Integer> startOffsets = getStartOffsets(region);
                 for (ListIterator<Integer> it = startOffsets.listIterator(); it.hasNext();) {
                     int startOffset = it.next();
@@ -151,6 +156,17 @@ public class Reindenter implements IndentTask {
                             if (!blockCommentLine.startsWith("*")) { //NOI18N
                                 linesToAddStar.add(startOffset);
                             }
+                        } else if (ts.token().id() == JavaTokenId.MULTILINE_STRING_LITERAL) {
+                            String tokenText = ts.token().text().toString();
+                            String[] lines = tokenText.split("\n");
+                            int indent = Arrays.stream(lines, 1, lines.length)
+                                               .mapToInt(this::leadingIndent)
+                                               .min()
+                                               .orElse(0);
+                            int initialLineStartOffset = context.lineStartOffset(ts.offset());
+                            int indentUpdate = newIndents.getOrDefault(initialLineStartOffset, 0);
+                            oldIndents.put(startOffset, indent);
+                            newIndents.put(startOffset, ts.offset() - initialLineStartOffset + indentUpdate);
                         } else {
                             if (delta == 0 && ts.moveNext() && ts.token().id() == JavaTokenId.LINE_COMMENT) {
                                 newIndents.put(startOffset, 0);
@@ -168,7 +184,12 @@ public class Reindenter implements IndentTask {
                         context.document().insertString(startOffset, "* ", null); //NOI18N
                     }
                     if (newIndent != null) {
-                        context.modifyIndent(startOffset, newIndent);
+                        Integer oldIndent = oldIndents.get(startOffset);
+                        if (oldIndent != null) {
+                            context.modifyIndent(startOffset, oldIndent, IndentUtils.createIndentString(newIndent, true, -1));
+                        } else {
+                            context.modifyIndent(startOffset, newIndent);
+                        }
                     }
                     if (!startOffsets.isEmpty()) {
                         char c;
@@ -183,6 +204,19 @@ public class Reindenter implements IndentTask {
                 }
             }
         }
+    }
+
+    private int leadingIndent(String line) {
+        int indent = 0;
+
+        for (int i = 0; i < line.length(); i++) { //TODO: code points
+            if (Character.isWhitespace(line.charAt(i)))
+                indent++;
+            else
+                break;
+        }
+
+        return indent;
     }
 
     @Override
@@ -783,6 +817,9 @@ public class Reindenter implements IndentTask {
                 if (last.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
                    currentIndent = getSwitchIndent(startOffset, endOffset,nextTokenId,lastPos,currentIndent) ;
                 }
+                else if (last.getKind().toString().equals(TreeShims.RECORD)) {
+                    currentIndent = getRecordIndent(startOffset, endOffset, nextTokenId, lastPos, currentIndent);
+                }
                 else currentIndent = getContinuationIndent(path, currentIndent);
                 break;
         }
@@ -858,6 +895,104 @@ public class Reindenter implements IndentTask {
                     } else {
                         currentIndent = getStmtIndent(startOffset, endOffset, EnumSet.of(JavaTokenId.RPAREN), getEndPosition(TreeShims.getExpressions(last).get(0)) - 1, currentIndent);
                     }
+                }
+            }
+        }
+        return currentIndent;
+    }
+
+    private int getRecordIndent(int startOffset, int endOffset, JavaTokenId nextTokenId, int lastPos, int currentIndent) throws BadLocationException {
+        LinkedList<? extends Tree> path = getPath(startOffset);
+        Tree last = path.getFirst();
+        TokenSequence<JavaTokenId> token = findFirstNonWhitespaceToken(startOffset, endOffset);
+        nextTokenId = token != null ? token.token().id() : null;
+        if (nextTokenId != null && nextTokenId == JavaTokenId.RBRACE) {
+            if (isLeftBraceOnNewLine(lastPos, startOffset)) {
+                switch (cs.getClassDeclBracePlacement()) {
+                    case NEW_LINE_INDENTED:
+                        currentIndent += cs.getIndentSize();
+                        break;
+                    case NEW_LINE_HALF_INDENTED:
+                        currentIndent += (cs.getIndentSize() / 2);
+                        break;
+                }
+            }
+        } else {
+
+            token = findFirstNonWhitespaceToken(startOffset, lastPos);
+            JavaTokenId prevTokenId = token != null ? token.token().id() : null;
+            if (prevTokenId != null) {
+                switch (prevTokenId) {
+                    case LBRACE:
+                        if (path.size() > 1 && path.get(1).getKind() == Kind.NEW_CLASS && isLeftBraceOnNewLine(lastPos, startOffset)) {
+                            switch (cs.getClassDeclBracePlacement()) {
+                                case SAME_LINE:
+                                case NEW_LINE:
+                                    currentIndent += cs.getIndentSize();
+                                    break;
+                                case NEW_LINE_HALF_INDENTED:
+                                    currentIndent += (cs.getIndentSize() - cs.getIndentSize() / 2);
+                                    break;
+                            }
+                        } else {
+                            currentIndent += cs.indentTopLevelClassMembers() ? cs.getIndentSize() : 0;
+                        }
+                        break;
+                    case COMMA:
+                        List<? extends Tree> implClauses = ((ClassTree) last).getImplementsClause();
+                        if (!implClauses.isEmpty() && getStartPosition(implClauses.get(0)) < token.offset()) {
+                            currentIndent = getMultilineIndent(implClauses, path, token.offset(), currentIndent, cs.alignMultilineImplements(), true);
+                            break;
+                        }
+                        List<? extends Tree> members = ((ClassTree) last).getMembers();
+                        if (!members.isEmpty() && getStartPosition(members.get(0)) < token.offset()) {
+                            currentIndent = getMultilineIndent(members, path, token.offset(), currentIndent, cs.alignMultilineMethodParams(), true);
+                            break;
+                        }
+                        List<? extends TypeParameterTree> typeParams = ((ClassTree) last).getTypeParameters();
+                        if (!typeParams.isEmpty() && getStartPosition(typeParams.get(0)) < token.offset()) {
+                            currentIndent = getMultilineIndent(typeParams, path, token.offset(), currentIndent, cs.alignMultilineMethodParams(), true);
+                            break;
+                        }
+                        break;
+                    case IDENTIFIER:
+                    case GT:
+                    case GTGT:
+                    case GTGTGT:
+                    case RPAREN:
+                        if (nextTokenId != null && nextTokenId == JavaTokenId.LBRACE) {
+                            switch (cs.getClassDeclBracePlacement()) {
+                                case NEW_LINE_INDENTED:
+                                    currentIndent += cs.getIndentSize();
+                                    break;
+                                case NEW_LINE_HALF_INDENTED:
+                                    currentIndent += (cs.getIndentSize() / 2);
+                                    break;
+                            }
+                        } else {
+                            currentIndent += cs.getContinuationIndentSize();
+                        }
+                        break;
+
+                    default:
+                        Tree t = null;
+                        for (Tree member : ((ClassTree) last).getMembers()) {
+
+                            if (member.getKind() == Tree.Kind.VARIABLE && !((VariableTree) member).getModifiers().getFlags().contains(Modifier.STATIC)) {
+                                continue;
+                            }
+                            if (getEndPosition(member) > startOffset) {
+                                break;
+                            }
+                            t = member;
+                        }
+                        if (t != null) {
+                            int i = getCurrentIndent(t, path);
+                            currentIndent = i < 0 ? currentIndent + (cs.indentTopLevelClassMembers() ? cs.getIndentSize() : 0) : i;
+                            return currentIndent;
+                        }
+
+                        currentIndent += cs.getContinuationIndentSize();
                 }
             }
         }

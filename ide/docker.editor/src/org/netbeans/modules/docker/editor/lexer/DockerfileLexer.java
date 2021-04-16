@@ -79,6 +79,7 @@ final class DockerfileLexer implements Lexer<DockerfileTokenId> {
 
     @Override
     @CheckForNull
+    @SuppressWarnings("fallthrough")
     public Token<DockerfileTokenId> nextToken() {
         if (state == null) {
             state = STATE_NEW_LINE;

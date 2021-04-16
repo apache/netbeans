@@ -23,6 +23,7 @@ import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,12 +39,16 @@ import org.netbeans.api.editor.fold.FoldHierarchy;
 import org.netbeans.api.editor.fold.FoldUtilities;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
+import org.netbeans.api.java.queries.SourceJavadocAttacher;
 import org.netbeans.api.java.source.*;
 import org.netbeans.api.progress.ProgressUtils;
 import org.netbeans.modules.java.BinaryElementOpen;
+import org.netbeans.modules.java.classfile.CodeGenerator;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.parsing.ClassParser;
 import org.netbeans.modules.java.source.parsing.FileObjects;
+import org.netbeans.modules.java.source.ui.ElementOpenAccessor;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
@@ -275,10 +280,125 @@ public final class ElementOpen {
         }
     }
 
+    /**
+     * Gets location of the {@link Element} corresponding to the given {@link ElementHandle}.
+     *
+     * @param cpInfo ClasspathInfo which should be used for the search
+     * @param el ElementHandle to search
+     * @param resourceName optional resource name to search
+     * @return location of the given element
+     *
+     * @since 1.58
+     */
+    public static CompletableFuture<Location> getLocation(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String resourceName) {
+        final CompletableFuture<Object[]> future = getFutureOpenInfo(cpInfo, el, resourceName, new AtomicBoolean());
+        return future.thenApply(openInfo -> {
+            if (openInfo[0] != null && (int) openInfo[1] != (-1) && (int) openInfo[2] != (-1)) {
+                FileObject file = (FileObject) openInfo[0];
+                int start = (int) openInfo[3];
+                if (start < 0) {
+                    start = (int) openInfo[1];
+                }
+                int end = (int) openInfo[4];
+                if (end < 0) {
+                    end = (int) openInfo[2];
+                }
+                return new Location(file, start, end);
+            }
+            return null;
+        });
+    }
+
+    /**
+     * Represents the location of an element. It is a range inside of a file object.
+     */
+    public static final class Location {
+
+        private final FileObject fileObject;
+        private final int startOffset;
+        private final int endOffset;
+
+        private Location(FileObject fileObject, int startOffset, int endOffset) {
+            this.fileObject = fileObject;
+            this.startOffset = startOffset;
+            this.endOffset = endOffset;
+        }
+
+        /**
+         * The location's file object.
+         *
+         * @return file object
+         */
+        public FileObject getFileObject() {
+            return fileObject;
+        }
+
+        /**
+         * The location's start offset.
+         *
+         * @return offset
+         */
+        public int getStartOffset() {
+            return startOffset;
+        }
+
+        /**
+         * The location's end offset.
+         *
+         * @return offset
+         */
+        public int getEndOffset() {
+            return endOffset;
+        }
+    }
     // Private methods ---------------------------------------------------------
 
     private static boolean isClassFile(@NonNull final FileObject file) {
         return FileObjects.CLASS.equals(file.getExt()) || ClassParser.MIME_TYPE.equals(file.getMIMEType(ClassParser.MIME_TYPE));
+    }
+
+    private static CompletableFuture<Object[]> getFutureOpenInfo(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String resourceName, AtomicBoolean cancel) {
+        Object[] openInfo = getOpenInfo(cpInfo, el, cancel);
+        if (openInfo == null && resourceName != null) {
+            // try to attach sources
+            final ClassPath cp = ClassPathSupport.createProxyClassPath(
+                    cpInfo.getClassPath(ClasspathInfo.PathKind.BOOT),
+                    cpInfo.getClassPath(ClasspathInfo.PathKind.COMPILE),
+                    cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE));
+            final FileObject resource = cp.findResource(resourceName);
+            if (resource != null) {
+                final FileObject root = cp.findOwnerRoot(resource);
+                if (root != null) {
+                    final CompletableFuture<Object[]> future = new CompletableFuture<>();
+                    SourceJavadocAttacher.attachSources(root.toURL(), new SourceJavadocAttacher.AttachmentListener() {
+                        @Override
+                        public void attachmentSucceeded() {
+                            Object[] openInfo = getOpenInfo(cpInfo, el, cancel);
+                            if (openInfo != null && (int) openInfo[1] != (-1) && (int) openInfo[2] != (-1) && openInfo[5] != null) {
+                                future.complete(openInfo);
+                            } else {
+                                attachmentFailed();
+                            }
+                        }
+
+                        @Override
+                        public void attachmentFailed() {
+                            try {
+                                FileObject generated = CodeGenerator.generateCode(cpInfo, el);
+                                if (generated != null) {
+                                    future.complete(getOpenInfo(generated, el, cancel));
+                                    return;
+                                }
+                            } catch (Exception e) {
+                            }
+                            future.complete(null);
+                        }
+                    });
+                    return future;
+                }
+            }
+        }
+        return CompletableFuture.completedFuture(openInfo);
     }
 
     private static Object[] getOpenInfo(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, AtomicBoolean cancel) {
@@ -293,8 +413,10 @@ public final class ElementOpen {
         assert fo != null;
         
         try {
-            int[] offset = getOffset(fo, handle, cancel);
-            return new Object[] {fo, offset[0], offset[1]};
+            Object[] result = new Object[6];
+            result[0] = fo;
+            getOffset(fo, handle, result, cancel);
+            return result;
         } catch (IOException e) {
             Exceptions.printStackTrace(e);
             return null;
@@ -342,8 +464,11 @@ public final class ElementOpen {
     private static final int AWT_TIMEOUT = 1000;
     private static final int NON_AWT_TIMEOUT = 2000;
 
-    private static int[] getOffset(final FileObject fo, final ElementHandle<? extends Element> handle, final AtomicBoolean cancel) throws IOException {
-        final int[]  result = new int[] {-1, -1};
+    private static void getOffset(final FileObject fo, final ElementHandle<? extends Element> handle, final Object[] result, final AtomicBoolean cancel) throws IOException {
+        result[1] = -1;
+        result[2] = -1;
+        result[3] = -1;
+        result[4] = -1;
         
         final JavaSource js = JavaSource.forFileObject(fo);
         if (js != null) {
@@ -357,6 +482,7 @@ public final class ElementOpen {
                     } catch (IOException ioe) {
                         Exceptions.printStackTrace(ioe);
                     }
+                    result[5] = info.getCompilationUnit().getLineMap();
                     Element el = handle.resolve(info);
                     if (el == null) {
                         if (!SourceUtils.isScanInProgress()) {
@@ -374,7 +500,7 @@ public final class ElementOpen {
                         // Imprecise but should usually work:
                         Matcher m = Pattern.compile("(?m)^package (.+);$").matcher(fo.asText(/*FileEncodingQuery.getEncoding(fo).name()*/)); // NOI18N
                         if (m.find()) {
-                            result[0] = m.start();
+                            result[1] = m.start();
                         }
                         return;
                     }
@@ -387,15 +513,33 @@ public final class ElementOpen {
                     Tree elTree = v.declTree;
 
                     if (elTree != null) {
-                        result[0] = (int)info.getTrees().getSourcePositions().getStartPosition(cu, elTree);
-                        result[1] = (int)info.getTrees().getSourcePositions().getEndPosition(cu, elTree);
+                        result[1] = (int)info.getTrees().getSourcePositions().getStartPosition(cu, elTree);
+                        result[2] = (int)info.getTrees().getSourcePositions().getEndPosition(cu, elTree);
+                        int[] span = null;
+                        switch(elTree.getKind()) {
+                            case CLASS:
+                            case INTERFACE:
+                            case ENUM:
+                            case ANNOTATION_TYPE:
+                                span = info.getTreeUtilities().findNameSpan((ClassTree)elTree);
+                                break;
+                            case METHOD:
+                                span = info.getTreeUtilities().findNameSpan((MethodTree)elTree);
+                                break;
+                            case VARIABLE:
+                                span = info.getTreeUtilities().findNameSpan((VariableTree)elTree);
+                                break;
+                        }
+                        if (span != null) {
+                            result[3] = span[0];
+                            result[4] = span[1];
+                        }
                     }
                 }
             };
 
             js.runUserActionTask(t, true);
         }
-        return result;
     }
     
     // Private innerclasses ----------------------------------------------------
@@ -448,5 +592,14 @@ public final class ElementOpen {
         }
     
     }
-    
+
+    static {
+        ElementOpenAccessor.setInstance(new ElementOpenAccessor() {
+            @Override
+            public Object[] getOpenInfo(ClasspathInfo cpInfo, ElementHandle<? extends Element> el, AtomicBoolean cancel) {
+                return ElementOpen.getOpenInfo(cpInfo, el, cancel);
+            }
+        });
+    }
+
 }

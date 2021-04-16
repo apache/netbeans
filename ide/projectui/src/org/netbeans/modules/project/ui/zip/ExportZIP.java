@@ -24,7 +24,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -51,7 +50,6 @@ import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
@@ -135,7 +133,7 @@ public class ExportZIP extends JPanel {
     })
     private static boolean build(File root, File zip) throws IOException {
         final AtomicBoolean canceled = new AtomicBoolean();
-        ProgressHandle handle = ProgressHandleFactory.createHandle(MSG_building(zip.getName()), new Cancellable() {
+        ProgressHandle handle = ProgressHandle.createHandle(MSG_building(zip.getName()), new Cancellable() {
             @Override public boolean cancel() {
                 return canceled.compareAndSet(false, true);
             }

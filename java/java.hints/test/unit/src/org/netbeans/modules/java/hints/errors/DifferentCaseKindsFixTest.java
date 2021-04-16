@@ -22,6 +22,7 @@ import com.sun.source.util.TreePath;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import javax.lang.model.SourceVersion;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsTestBase;
@@ -47,9 +48,16 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        sourceLevel = "12";
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        EXTRA_OPTIONS.add("--enable-preview");
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip test
+            sourceLevel = "13";
+            EXTRA_OPTIONS.add("--enable-preview");
+            return;
+        }
+        sourceLevel = "14";
     }
 
     @ServiceProvider(service = CompilerOptionsQueryImplementation.class, position = 100)
@@ -233,7 +241,7 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "     private void test(int p) {\n"
                 + "         var result = \n"
                 + "         switch (p) {\n"
-                + "             case 1: break 1;\n"
+                + "             case 1: yield 1;\n"
                 + "             case 2 -> 2;\n"
                 + "             default -> 3;\n"
                 + "         }\n"
@@ -246,9 +254,9 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "     private void test(int p) {\n"
                 + "         var result =\n"
                 + "         switch (p) {\n"
-                + "             case 1 -> { break 1; }\n"
-                + "             case 2 -> { break 2; }\n"
-                + "             default -> { break 3; }\n"
+                + "             case 1 -> { yield 1; }\n"
+                + "             case 2 -> { yield 2; }\n"
+                + "             default -> { yield 3; }\n"
                 + "         }\n"
                 + "     }\n"
                 + "}\n").replaceAll("[\\s]+", " "));
@@ -263,7 +271,7 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "         switch (p) {\n"
                 + "             case 1 -> 1;\n"
                 + "             case 2 -> 2;\n"
-                + "             default : break 3;\n"
+                + "             default : yield 3;\n"
                 + "         }\n"
                 + "     }\n"
                 + "}\n",
@@ -274,9 +282,9 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "     private void test(int p) {\n"
                 + "         var result = \n"
                 + "         switch (p) {\n"
-                + "             case 1 -> { break 1; }\n"
-                + "             case 2 -> { break 2; }\n"
-                + "             default -> { break 3; }\n"
+                + "             case 1 -> { yield 1; }\n"
+                + "             case 2 -> { yield 2; }\n"
+                + "             default -> { yield 3; }\n"
                 + "         }\n"
                 + "     }\n"
                 + "}\n").replaceAll("[\\s]+", " "));
@@ -289,9 +297,9 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "     private void test(int p) {\n"
                 + "         var result = \n"
                 + "         switch (p) {\n"
-                + "             case 1: break 1; \n"
-                + "             case 2: break getTest();\n"
-                + "             case 3 -> { System.err.println(3); break 3;}\n"
+                + "             case 1: yield 1; \n"
+                + "             case 2: yield getTest();\n"
+                + "             case 3 -> { System.err.println(3); yield 3;}\n"
                 + "         }\n"
                 + "     }\n"
                 + "     private int getTest() {\n"
@@ -305,9 +313,9 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "     private void test(int p) {\n"
                 + "         var result = \n"
                 + "         switch (p) {\n"
-                + "             case 1 -> { break 1; }\n"
-                + "             case 2 -> { break getTest(); }\n"
-                + "             case 3 -> { System.err.println(3); break 3;}\n"
+                + "             case 1 -> { yield 1; }\n"
+                + "             case 2 -> { yield getTest(); }\n"
+                + "             case 3 -> { System.err.println(3); yield 3;}\n"
                 + "         }\n"
                 + "     }\n"
                 + "     private int getTest() {\n"
@@ -324,7 +332,7 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "         String result = \n"
                 + "         switch (p) {\n"
                 + "             case 0:\n"
-                + "             case 1: break \"1\"; \n"
+                + "             case 1: yield \"1\"; \n"
                 + "             case 2 -> \"2\";\n"
                 + "         }\n"
                 + "     }\n"
@@ -336,8 +344,8 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "     private void test(int p) {\n"
                 + "         String result = \n"
                 + "         switch (p) {\n"
-                + "             case 0, 1 -> { break \"1\"; }\n"
-                + "             case 2 -> { break \"2\"; }\n"
+                + "             case 0, 1 -> { yield \"1\"; }\n"
+                + "             case 2 -> { yield \"2\"; }\n"
                 + "         }\n"
                 + "     }\n"
                 + "}\n").replaceAll("[\\s]+", " "));
@@ -352,10 +360,10 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "         result = switch (p) {\n"
                 + "             case 1 : \n"
                 + "                 int x =  1;\n"
-                + "                 break x;\n"
+                + "                 yield x;\n"
                 + "             default -> {\n"
                 + "                 int y =  1;\n"
-                + "                 break 3;\n"
+                + "                 yield 3;\n"
                 + "             }\n"
                 + "         }\n"
                 + "     }\n"
@@ -369,11 +377,11 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "         result = switch (p) {\n"
                 + "             case 1 -> {\n"
                 + "                 int x =  1;\n"
-                + "                 break x;\n"
+                + "                 yield x;\n"
                 + "             }\n"
                 + "             default -> {\n"
                 + "                 int y =  1;\n"
-                + "                 break 3;\n"
+                + "                 yield 3;\n"
                 + "             }\n"
                 + "         }\n"
                 + "     }\n"

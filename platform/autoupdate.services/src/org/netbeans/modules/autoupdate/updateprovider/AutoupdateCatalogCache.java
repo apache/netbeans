@@ -216,7 +216,7 @@ public final class AutoupdateCatalogCache {
 
         DownloadListener nwl = new DownloadListener(sourceUrl, temp, allowZeroSize);
         
-        NetworkAccess.Task task = NetworkAccess.createNetworkAcessTask (sourceUrl, AutoupdateSettings.getOpenConnectionTimeout (), nwl);
+        NetworkAccess.Task task = NetworkAccess.createNetworkAccessTask (sourceUrl, AutoupdateSettings.getOpenConnectionTimeout (), nwl, true);
         task.waitFinished ();
         nwl.notifyException ();
         synchronized(getLock(cache)) {

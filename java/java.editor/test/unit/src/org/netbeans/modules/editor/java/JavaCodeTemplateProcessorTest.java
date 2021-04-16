@@ -18,11 +18,13 @@
  */
 package org.netbeans.modules.editor.java;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Arrays;
 import javax.swing.JEditorPane;
+import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 import org.junit.Test;
@@ -38,6 +40,8 @@ import org.openide.filesystems.FileUtil;
 
 public class JavaCodeTemplateProcessorTest extends NbTestCase {
 
+    private FileObject testFile;
+    
     public JavaCodeTemplateProcessorTest(String name) {
         super(name);
     }
@@ -63,10 +67,12 @@ public class JavaCodeTemplateProcessorTest extends NbTestCase {
 
     private void doTestTemplateInsert(String template, String code, String expected) throws Exception {
         clearWorkDir();
-        FileObject testFile = FileUtil.toFileObject(getWorkDir()).createData("Test.java");
+        testFile = FileUtil.toFileObject(getWorkDir()).createData("Test.java");
         EditorKit kit = new JavaKit();
         JEditorPane pane = new JEditorPane();
-        pane.setEditorKit(kit);
+        SwingUtilities.invokeAndWait(() -> {
+            pane.setEditorKit(kit);
+        });
         Document doc = pane.getDocument();
         doc.putProperty(Document.StreamDescriptionProperty, testFile);
         doc.putProperty(Language.class, JavaTokenId.language());
@@ -90,10 +96,116 @@ public class JavaCodeTemplateProcessorTest extends NbTestCase {
         assertEquals(expectedText, doc.getText(0, doc.getLength()));
         assertEquals(resultCaretOffset, pane.getCaretPosition());
     }
+    
+    @Test
+    public void testShouldAddStaticImportForTemplateParameterWithStaticImportHint() throws Exception {
+        doTestTemplateInsert("int max = ${param staticImport=\"java.lang.Math.max\" editable=false}(0, 1);",
+                             "public class Test {\n" +
+                             "    private void t(String... args) {\n" +
+                             "        |\n" +
+                             "    }\n" +
+                             "}",
+                             "public class Test {\n" +
+                             "    private void t(String... args) {\n" +
+                             "        int max = max(0, 1);|\n" +
+                             "    }\n" +
+                             "}");
+        assertFileObjectTextMatchesRegex("(?s)\\s*?import static java\\.lang\\.Math\\.max;\\s*?public class Test.*?");
+    }
+    
+    @Test
+    public void testShouldNotAddDuplicatesOfStaticImportForTemplateParameterWithStaticImportHint() throws Exception {
+        doTestTemplateInsert("int max = ${param staticImport=\"java.lang.Math.max\" editable=false}(0, 1);",
+                             "public class Test {\n" +
+                             "    private void t(String... args) {\n" +
+                             "        |\n" +
+                             "    }\n" +
+                             "}",
+                             "public class Test {\n" +
+                             "    private void t(String... args) {\n" +
+                             "        int max = max(0, 1);|\n" +
+                             "    }\n" +
+                             "}");
+        doTestTemplateInsert("int max = ${param staticImport=\"java.lang.Math.max\" editable=false}(0, 1);",
+                             "public class Test {\n" +
+                             "    private void t(String... args) {\n" +
+                             "        int max = max(0, 1);\n" +
+                             "        |\n"+
+                             "    }\n" +
+                             "}",
+                             "public class Test {\n" +
+                             "    private void t(String... args) {\n" +
+                             "        int max = max(0, 1);\n" +
+                             "        int max = max(0, 1);|\n" +
+                             "    }\n" +
+                             "}");
+        assertFileObjectTextMatchesRegex("(?s)\\s*?import static java\\.lang\\.Math\\.max;\\s*?public class Test.*?");
+    }
+    
+    @Test
+    public void testWhenOnlyIdentifierWithoutTypeIsSpecifiedThenDoNotAddStaticImport() throws Exception {
+        doTestTemplateInsert("int max = ${param staticImport=\"max\" editable=false}(0, 1);",
+                             "public class Test {\n" +
+                             "    private void t(String... args) {\n" +
+                             "        |\n" +
+                             "    }\n" +
+                             "}",
+                             "public class Test {\n" +
+                             "    private void t(String... args) {\n" +
+                             "        int max = max(0, 1);|\n" +
+                             "    }\n" +
+                             "}");
+        assertFileObjectTextMatchesRegex("(?s)\\s*?public class Test.*?");
+    }
 
-    @Override
-    protected boolean runInEQ() {
-        return true;
+    public void testCodeTemplatesShouldWorkInsideParenthesesOfForEachLoop() throws Exception {
+         doTestTemplateInsert("${name newVarName}",
+                             "public class Test {\n" +
+                             "    private void t(String... args) {\n" +
+                             "        for (String |) {\n" +
+                             "        }\n" +
+                             "    }\n" +
+                             "}",
+                             "public class Test {\n" +
+                             "    private void t(String... args) {\n" +
+                             "        for (String name|) {\n" +
+                             "        }\n" +
+                             "    }\n" +
+                             "}");
+         doTestTemplateInsert("${names iterable}",
+                             "public class Test {\n" +
+                             "    private void t(String... args) {\n" +
+                             "        for (String name: |) {\n" +
+                             "        }\n" +
+                             "    }\n" +
+                             "}",
+                             "public class Test {\n" +
+                             "    private void t(String... args) {\n" +
+                             "        for (String name: args|) {\n" +
+                             "        }\n" +
+                             "    }\n" +
+                             "}");
+    }
+
+    public void testCodeTemplatesShouldWorkInsideParenthesesOfWhileLoop() throws Exception {
+         doTestTemplateInsert("${list instanceof=\"java.util.List\"}.isEmpty()",
+                             "public class Test {\n" +
+                             "    private void t(String... args) {\n" +
+                             "        while (|) {\n" +
+                             "        }\n" +
+                             "    }\n" +
+                             "}",
+                             "public class Test {\n" +
+                             "    private void t(String... args) {\n" +
+                             "        while (list|.isEmpty()) {\n" +
+                             "        }\n" +
+                             "    }\n" +
+                             "}");
+    }
+
+    private void assertFileObjectTextMatchesRegex(String regex) throws IOException {
+        String text = testFile.asText();
+        assertTrue("The file text must match the regular expression", text.matches(regex));
     }
 
 }

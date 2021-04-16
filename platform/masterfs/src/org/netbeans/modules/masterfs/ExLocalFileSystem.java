@@ -88,7 +88,7 @@ public class ExLocalFileSystem extends LocalFileSystem {
         * @param name the file
         * @return enumeration of keys (as strings)
         */
-        public synchronized Enumeration attributes(String name) {
+        public synchronized Enumeration<String> attributes(String name) {
             return super.attributes(transformName (name));
         }
 

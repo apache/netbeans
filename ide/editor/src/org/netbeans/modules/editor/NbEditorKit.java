@@ -25,8 +25,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,7 +48,6 @@ import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JEditorPane;
 import javax.swing.KeyStroke;
-import javax.swing.LookAndFeel;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.text.Document;
@@ -103,7 +100,6 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.openide.util.RequestProcessor;
 
 /**
 * Java editor kit with appropriate document
@@ -137,9 +133,10 @@ public class NbEditorKit extends ExtKit implements Callable {
     static {
         
         // Ensure that Nimbus L&F does not have the scrollbar size too small for large files
-        LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
-        UIDefaults defaults = lookAndFeel.getDefaults();
-        defaults.put("ScrollBar.minimumThumbSize", new Dimension(20, 20));
+        if (UIManager.getLookAndFeel().getID().equals("Nimbus")) {
+            UIDefaults defaults = UIManager.getLookAndFeelDefaults();
+            defaults.put("ScrollBar.minimumThumbSize", new Dimension(20, 20));
+        }
 
         contentTypeTable = new HashMap<String, String>();
         contentTypeTable.put("org.netbeans.modules.properties.syntax.PropertiesKit", "text/x-properties"); // NOI18N

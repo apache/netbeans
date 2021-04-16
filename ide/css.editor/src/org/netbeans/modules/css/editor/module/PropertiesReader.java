@@ -334,7 +334,7 @@ public class PropertiesReader {
                     out[outLen++] = aChar;
                 }
             } else {
-                out[outLen++] = (char) aChar;
+                out[outLen++] = aChar;
             }
         }
         return new String(out, 0, outLen);

@@ -50,24 +50,7 @@ public class CreateClientTest extends AbstractGitTestCase {
         super.setUp();
         workDir = getWorkingDirectory();
     }
-    
-    public void testCorruptedConfigNoEndingLine () throws Exception {
-        File gitFolder = new File(workDir, ".git");
-        File newLocation = new File(workDir.getParentFile(), "newFolder");
-        newLocation.mkdirs();
-        gitFolder.renameTo(new File(newLocation, ".git"));
-        gitFolder = new File(newLocation, ".git");
-        String content = read(new File(gitFolder, "config"));
-        write(new File(gitFolder, "config"), content + "[remote \"origin\"]\n	puttykeyfile = ");
-        try {
-            GitRepository.getInstance(newLocation).createClient();
-            fail("Should fail");
-        } catch (GitException ex) {
-            assertEquals("java.io.IOException: Unknown repository format", ex.getMessage());
-        }
-        write(new File(gitFolder, "config"), read(new File(gitFolder, "config")) + "\n");
-    }
-    
+
     /**
      * Submodules have .git folder elsewhere, they use GIT_LINK mechanism to access it
      */

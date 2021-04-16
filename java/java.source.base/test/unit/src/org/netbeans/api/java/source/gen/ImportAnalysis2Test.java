@@ -53,6 +53,7 @@ import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 
 import org.netbeans.junit.NbTestSuite;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.indexing.TransactionContext;
 import org.netbeans.modules.java.source.save.ElementOverlay;
@@ -83,6 +84,7 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
 
     @Override
     protected void setUp() throws Exception {
+        clearWorkDir();
         super.setUp();
 
         FileUtil.createData(FileUtil.getConfigRoot(), "Templates/Classes/Empty.java");
@@ -121,12 +123,11 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
     public void testStringQualIdentNewlyCreated() throws Exception {
-        clearWorkDir();
         testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
         assertTrue(testFile.getParentFile().mkdirs());
         TestUtilities.copyStringToFile(testFile,
@@ -163,12 +164,11 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
     public void testStringQualIdentNewlyCreatedSamePackage() throws Exception {
-        clearWorkDir();
         testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
         assertTrue(testFile.getParentFile().mkdirs());
         TestUtilities.copyStringToFile(testFile,
@@ -203,12 +203,11 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
     public void testStringQualIdentNewlyCreatedNestedClasses() throws Exception {
-        clearWorkDir();
         testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
         assertTrue(testFile.getParentFile().mkdirs());
         TestUtilities.copyStringToFile(testFile,
@@ -253,12 +252,11 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
         src.runModificationTask(task).commit();
         preferences.remove("importInnerClasses");
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
     public void testStringQualIdentNewlyCreatedNestedClassesToCurrent() throws Exception {
-        clearWorkDir();
         testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
         assertTrue(testFile.getParentFile().mkdirs());
         TestUtilities.copyStringToFile(testFile,
@@ -293,12 +291,11 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
     public void testStringQualIdentNewImplements() throws Exception {
-        clearWorkDir();
         testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
         assertTrue(testFile.getParentFile().mkdirs());
         TestUtilities.copyStringToFile(testFile,
@@ -332,12 +329,11 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
     public void testType1() throws Exception {
-        clearWorkDir();
         testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
         assertTrue(testFile.getParentFile().mkdirs());
         TestUtilities.copyStringToFile(testFile,
@@ -371,12 +367,11 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
     public void testType2() throws Exception {
-        clearWorkDir();
         testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
         assertTrue(testFile.getParentFile().mkdirs());
         TestUtilities.copyStringToFile(testFile,
@@ -408,12 +403,11 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
     public void testStringQualIdentNonExistent() throws Exception {
-        clearWorkDir();
         testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
         assertTrue(testFile.getParentFile().mkdirs());
         TestUtilities.copyStringToFile(testFile,
@@ -445,12 +439,11 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
     public void testInternalChangesAreLightweight1() throws Exception {
-        clearWorkDir();
         testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
         assertTrue(testFile.getParentFile().mkdirs());
         String code =
@@ -496,12 +489,11 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
         src.runModificationTask(task).commit();
         assertEquals(0, overlay.get().totalMapsSize());
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
     public void testInternalChangesAreLightweight2() throws Exception {
-        clearWorkDir();
         testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
         assertTrue(testFile.getParentFile().mkdirs());
         String code =
@@ -551,7 +543,7 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
         src.runModificationTask(task).commit();
         assertEquals(0, overlay.get().totalMapsSize());
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -588,12 +580,11 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
     public void test195882() throws Exception {
-        clearWorkDir();
         beginTx();
         assertTrue(new File(getWorkDir(), "test").mkdirs());
         testFile = new File(getWorkDir(), "test/Test.java");
@@ -623,7 +614,7 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
             "    }\n" +
             "}\n";
 
-        ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create (ClassPathSupport.createClassPath(System.getProperty("sun.boot.class.path")), ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getSourcePath()), ClassPath.EMPTY, null, true, false, false, true, false, null);
+        ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create (BootClassPathUtil.getBootClassPath(), ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getSourcePath()), ClassPath.EMPTY, null, true, false, false, true, false, null);
         JavaSource src = JavaSource.create(cpInfo, FileUtil.toFileObject(testFile));
         Task<WorkingCopy> task = new Task<WorkingCopy>() {
             public void run(WorkingCopy workingCopy) throws IOException {
@@ -642,12 +633,11 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
     public void testParameterizedType() throws Exception {
-        clearWorkDir();
         beginTx();
         assertTrue(new File(getWorkDir(), "test").mkdirs());
         testFile = new File(getWorkDir(), "test/Test.java");
@@ -667,7 +657,7 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
             "    Entry e;\n" +
             "}\n";
 
-        ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create (ClassPathSupport.createClassPath(System.getProperty("sun.boot.class.path")), ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getSourcePath()), ClassPath.EMPTY, null, true, false, false, true, false, null);
+        ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create (BootClassPathUtil.getBootClassPath(), ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getSourcePath()), ClassPath.EMPTY, null, true, false, false, true, false, null);
         JavaSource src = JavaSource.create(cpInfo, FileUtil.toFileObject(testFile));
         Task<WorkingCopy> task = new Task<WorkingCopy>() {
             public void run(WorkingCopy workingCopy) throws IOException {
@@ -682,12 +672,11 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
     public void testTooSoon206957a() throws Exception {
-        clearWorkDir();
         assertTrue(new File(getWorkDir(), "test").mkdirs());
         testFile = new File(getWorkDir(), "test/Test.java");
         TestUtilities.copyStringToFile(testFile,
@@ -708,7 +697,7 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
             "}\n";
         final TransactionContext ctx = TransactionContext.beginStandardTransaction(Utilities.toURI(getWorkDir()).toURL(), true, ()->true, false);
         try {
-            ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create (ClassPathSupport.createClassPath(System.getProperty("sun.boot.class.path")), ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getSourcePath()), ClassPath.EMPTY, null, true, false, false, true, false, null);
+            ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create (BootClassPathUtil.getBootClassPath(), ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getSourcePath()), ClassPath.EMPTY, null, true, false, false, true, false, null);
             JavaSource src = JavaSource.create(cpInfo, FileUtil.toFileObject(testFile));
             Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
             preferences.putBoolean("importInnerClasses", true);
@@ -725,7 +714,7 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
             src.runModificationTask(task).commit();
             preferences.remove("importInnerClasses");
             String res = TestUtilities.copyFileToString(testFile);
-            System.err.println(res);
+            //System.err.println(res);
             assertEquals(golden, res);
         } finally {
             ctx.commit();
@@ -733,7 +722,6 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
     }
 
     public void testTooSoon206957b() throws Exception {
-        clearWorkDir();
         assertTrue(new File(getWorkDir(), "test").mkdirs());
         testFile = new File(getWorkDir(), "test/Entry.java");
         TestUtilities.copyStringToFile(testFile,
@@ -754,7 +742,7 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
 
         final TransactionContext ctx = TransactionContext.beginStandardTransaction(Utilities.toURI(getWorkDir()).toURL(), true, ()->true, false);
         try {
-            ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create (ClassPathSupport.createClassPath(System.getProperty("sun.boot.class.path")), ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getSourcePath()), ClassPath.EMPTY, null, true, false, false, true, false, null);
+            ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create (BootClassPathUtil.getBootClassPath(), ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getSourcePath()), ClassPath.EMPTY, null, true, false, false, true, false, null);
             JavaSource src = JavaSource.create(cpInfo, FileUtil.toFileObject(testFile));
             Task<WorkingCopy> task = new Task<WorkingCopy>() {
                 public void run(WorkingCopy workingCopy) throws IOException {
@@ -768,7 +756,7 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
             };
             src.runModificationTask(task).commit();
             String res = TestUtilities.copyFileToString(testFile);
-            System.err.println(res);
+            //System.err.println(res);
             assertEquals(golden, res);
         } finally {
             ctx.commit();
@@ -776,7 +764,6 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
     }
 
     public void test208490() throws Exception {
-        clearWorkDir();
         testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
         assertTrue(testFile.getParentFile().mkdirs());
         TestUtilities.copyStringToFile(testFile,
@@ -825,12 +812,11 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
             }
         }, true);
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
     public void testStringQualIdentClashWithRemovedClass1() throws Exception {
-        clearWorkDir();
         testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
         assertTrue(testFile.getParentFile().mkdirs());
         TestUtilities.copyStringToFile(testFile,
@@ -873,12 +859,11 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
         src.runModificationTask(task).commit();
         preferences.remove("importInnerClasses");
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
     public void testStringQualIdentClashWithRemovedClass2() throws Exception {
-        clearWorkDir();
         testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
         assertTrue(testFile.getParentFile().mkdirs());
         TestUtilities.copyStringToFile(testFile,
@@ -922,10 +907,46 @@ public class ImportAnalysis2Test extends GeneratorTestMDRCompat {
         src.runModificationTask(task).commit();
         preferences.remove("importInnerClasses");
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
  
+    public void testQualIdentAndImportChange() throws Exception {
+        testFile = new File(getWorkDir(), "hierbas/del/litoral/Test.java");
+        assertTrue(testFile.getParentFile().mkdirs());
+        TestUtilities.copyStringToFile(testFile,
+            "package hierbas.del.litoral;\n" +
+            "import java.lang.String;\n" +
+            "public class Test {\n" +
+            "}\n"
+            );
+        String golden =
+            "package hierbas.del.litoral;\n" +
+            "import java.lang.CharSequence;\n" +
+            "import java.util.List;\n" +
+            "public class Test {\n\n" +
+            "    List test;\n" +
+            "}\n";
+
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                ImportTree imp = workingCopy.getCompilationUnit().getImports().get(0);
+                workingCopy.rewrite(imp.getQualifiedIdentifier(), make.MemberSelect(make.MemberSelect(make.Identifier("java"), "lang"), "CharSequence"));
+                ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                workingCopy.rewrite(clazz, make.addClassMember(clazz, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "test", make.QualIdent("java.util.List"), null)));
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
     String getGoldenPckg() {
         return "";
     }

@@ -78,6 +78,7 @@ public final class CodeTemplateParameterImpl {
     
     private boolean userModified;
 
+    private boolean completionInvoke;
 
     CodeTemplateParameterImpl(CodeTemplateInsertHandler handler,
     String parametrizedText, int parametrizedTextOffset) {
@@ -143,6 +144,10 @@ public final class CodeTemplateParameterImpl {
     
     public boolean isUserModified() {
         return userModified;
+    }
+    
+    boolean isCompletionInvoke() {
+        return completionInvoke;
     }
     
     void markUserModified() {
@@ -339,11 +344,14 @@ public final class CodeTemplateParameterImpl {
         }
         
         // Determine default parameter's value
-        String defaultValue = (String)getHints().get(CodeTemplateParameter.DEFAULT_VALUE_HINT_NAME);
+        String defaultValue = getHints().get(CodeTemplateParameter.DEFAULT_VALUE_HINT_NAME);
         if (defaultValue == null) { // implicit value will be name of the parameter
             defaultValue = name;
         }
         value = defaultValue;
+        
+        String completionInvokeHint = getHints().get(CodeTemplateParameter.COMPLETION_INVOKE_HINT_NAME);
+        completionInvoke = Boolean.parseBoolean(completionInvokeHint);
         
         if (name.equals(CodeTemplateParameter.CURSOR_PARAMETER_NAME)
                 || name.equals(CodeTemplateParameter.NO_FORMAT_PARAMETER_NAME)
@@ -369,7 +377,7 @@ public final class CodeTemplateParameterImpl {
     }
     
     private boolean isHintValueFalse(String hintName) {
-        String hintValue = (String)getHints().get(hintName);
+        String hintValue = getHints().get(hintName);
         return (hintValue != null) && "false".equals(hintValue.toLowerCase()); // NOI18N
     }
     

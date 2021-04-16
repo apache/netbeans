@@ -34,6 +34,7 @@ import org.openide.util.RequestProcessor;
  * @since org.netbeans.api.progress/1 1.18
  */
 public class Controller {
+    private static final Logger LOG = Logger.getLogger(Controller.class.getName());
     
     // non-private so that it can be accessed from the tests
     public static Controller defaultInstance;
@@ -310,14 +311,17 @@ public class Controller {
                 boolean isShort = (stamp - event.getSource().getTimeStampStarted()) < event.getSource().getInitialDelay();
                 if (event.getType() == ProgressEvent.TYPE_START) {
                     if (event.getSource().isCustomPlaced() || !isShort) {
+                        LOG.log(Level.FINER, "Adding to model {0}", event);
                         model.addHandle(event.getSource());
                     } else {
+                        LOG.log(Level.FINER, "Short-start: {0}", event);
                         justStarted.add(event.getSource());
                     }
                 }
                 else if (event.getType() == ProgressEvent.TYPE_FINISH &&
                        (! justStarted.contains(event.getSource()))) 
                 {
+                    LOG.log(Level.FINER, "Removed from model: {0}", event);
                     model.removeHandle(event.getSource());
                 }
                 ProgressEvent lastEvent = map.get(event.getSource());
@@ -326,16 +330,26 @@ public class Controller {
                 {
                     // if task quits really fast, ignore..
                     // defined 'really fast' as being shorter than initial delay
+                    LOG.log(Level.FINER, "Short task ended: {0}", event);
                     map.remove(event.getSource());
                     justStarted.remove(event.getSource());
                 } else {
                     if (lastEvent != null) {
                         // preserve last message
+                        if (LOG.isLoggable(Level.FINER)) {
+                            LOG.log(Level.FINE, "Merging event " + event.toString());
+                        }
                         event.copyMessageFromEarlier(lastEvent);
                         // preserve the switched state
                         if (lastEvent.isSwitched()) {
                             event.markAsSwitched();
                         }
+                        // preserve finish type
+                        if (lastEvent.getType() == ProgressEvent.TYPE_FINISH) {
+                            event.markAsFinished();
+                        }
+                        LOG.log(Level.FINER, "Event merged with {0} to {1}", 
+                                new Object [] { lastEvent, event} );
                     }
                     map.put(event.getSource(), event);
                 }
@@ -351,9 +365,12 @@ public class Controller {
                 if (diff >= hndl.getInitialDelay()) {
                     model.addHandle(hndl);
                 } else {
-                    eventQueue.add(new ProgressEvent(hndl, ProgressEvent.TYPE_START, isWatched(hndl)));
+                    ProgressEvent stE; 
+                    eventQueue.add(stE = new ProgressEvent(hndl, ProgressEvent.TYPE_START, isWatched(hndl)));
+                    LOG.log(Level.FINER, "Repost start event: {0}", stE);
                     ProgressEvent evnt = map.remove(hndl);
                     if (evnt.getType() != ProgressEvent.TYPE_START) {
+                        LOG.log(Level.FINER, "Repost queued event: {0}", evnt);
                         eventQueue.add(evnt);
                     }
                     hasShortOne = true;
@@ -369,6 +386,7 @@ public class Controller {
         }
         while (it.hasNext()) {
             ProgressEvent event = it.next();
+            LOG.log(Level.FINER, "Dispatching: {0}", event);
             if (selected == event.getSource()) {
                 component.processSelectedProgressEvent(event);
             }

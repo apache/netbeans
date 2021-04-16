@@ -29,12 +29,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.function.Consumer;
 import javax.swing.JEditorPane;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.*;
 import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.core.startup.Main;
 import org.netbeans.modules.java.source.transform.Transformer;
 import org.netbeans.modules.editor.java.JavaKit;
 import org.netbeans.modules.java.JavaDataLoader;
@@ -109,7 +111,8 @@ public abstract class GeneratorTestBase extends ClassIndexTestCase {
         SourceUtilsTestUtil.prepareTest(
                 new String[] {
                     "org/netbeans/modules/java/project/ui/layer.xml", 
-                    "org/netbeans/modules/project/ui/resources/layer.xml"
+                    "org/netbeans/modules/project/ui/resources/layer.xml",
+                    "META-INF/generated-layer.xml"
                 },
                 new Object[] {loader, cpp}
         );
@@ -120,6 +123,7 @@ public abstract class GeneratorTestBase extends ClassIndexTestCase {
         IndexUtil.setCacheFolder(cacheFolder);
         ensureRootValid(dataDir.getURL());
         TestUtil.setupEditorMockServices();
+        Main.initializeURLFactory();
     }
     
     public <R, P> void process(final Transformer<R, P> transformer) throws IOException {
@@ -201,6 +205,25 @@ public abstract class GeneratorTestBase extends ClassIndexTestCase {
             log.println(str);
         }
         in.close();
+    }
+
+    protected void fileModificationTest(String code, Consumer<WorkingCopy> modification, String expected) throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+
+        TestUtilities.copyStringToFile(testFile, code);
+
+        JavaSource src = getJavaSource(testFile);
+        Task task = new Task<WorkingCopy>() {
+            public void run(final WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+
+                modification.accept(workingCopy);
+            }
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(expected, res);
     }
 
     abstract String getGoldenPckg();

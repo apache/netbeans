@@ -43,6 +43,8 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 import java.util.prefs.Preferences;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -65,6 +67,7 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.JavaDataLoader;
+import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -335,7 +338,7 @@ public class GeneratorUtilitiesTest extends NbTestCase {
     }
 
     public void testConstructor134673a() throws Exception {
-        performTest("package test;\npublic class Test extends java.io.RandomAccessFile {\n}\n", new ConstructorTask(30, 2, 0), null);
+        performTest("package test;\npublic class Test extends java.io.RandomAccessFile {\n}\n", new ConstructorTask(30, actual -> { if (actual != 2 && actual != 3) throw new AssertionError("Wrong number of constructors: " + actual); }, 0), null);
     }
 
     public void testConstructor134673b() throws Exception {
@@ -576,6 +579,19 @@ public class GeneratorUtilitiesTest extends NbTestCase {
                 assertEquals(0, info.getDiagnostics().size());
                 List<? extends ImportTree> imports = info.getCompilationUnit().getImports();
                 assertEquals(0, imports.size());
+            }
+        }, false);
+    }
+
+    public void testAddImportsIncrementallyWithStatic_JIRA3019() throws Exception {
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("package test;\npublic class Test { public static final String CONST = null; }\n", "11", new AddImportsTask(true, "test.Test.CONST", "java.util.List"), new Validator() {
+            public void validate(CompilationInfo info) {
+                assertEquals(0, info.getDiagnostics().size());
+                List<? extends ImportTree> imports = info.getCompilationUnit().getImports();
+                assertEquals(2, imports.size());
+                assertEquals("java.util.List", imports.get(0).getQualifiedIdentifier().toString());
+                assertEquals("test.Test.CONST", imports.get(1).getQualifiedIdentifier().toString());
             }
         }, false);
     }
@@ -925,7 +941,7 @@ public class GeneratorUtilitiesTest extends NbTestCase {
 
     private static class ConstructorTask implements CancellableTask<WorkingCopy> {
 
-        private final int numCtors;
+        private final IntConsumer numCtorsValidator;
         private final int ctorToUse;
         private final int offset;
 
@@ -934,8 +950,12 @@ public class GeneratorUtilitiesTest extends NbTestCase {
         }
 
         public ConstructorTask(int offset, int numCtors, int ctorToUse) {
+            this(offset, actual -> assertEquals(numCtors, actual), ctorToUse);
+        }
+
+        public ConstructorTask(int offset, IntConsumer numCtorsValidator, int ctorToUse) {
             this.offset = offset;
-            this.numCtors = numCtors;
+            this.numCtorsValidator = numCtorsValidator;
             this.ctorToUse = ctorToUse;
         }
 
@@ -955,7 +975,7 @@ public class GeneratorUtilitiesTest extends NbTestCase {
             List<? extends ExecutableElement> ctors = sup.getQualifiedName().contentEquals("java.lang.Object")
                     ? null : ElementFilter.constructorsIn(sup.getEnclosedElements());
             if (ctors != null)
-                assertEquals(numCtors, ctors.size());
+                numCtorsValidator.accept(ctors.size());
             GeneratorUtilities utilities = GeneratorUtilities.get(copy);
             assertNotNull(utilities);
             ClassTree newCt = utilities.insertClassMember(ct, utilities.createConstructor(te, vars, ctors != null ? ctors.get(ctorToUse) : null));
@@ -1120,9 +1140,15 @@ public class GeneratorUtilitiesTest extends NbTestCase {
 
     private static class AddImportsTask implements CancellableTask<WorkingCopy> {
 
+        private final boolean incremental;
         private String[] toImport;
         
         public AddImportsTask(String... toImport) {
+            this(false, toImport);
+        }
+
+        public AddImportsTask(boolean incremental, String... toImport) {
+            this.incremental = incremental;
             this.toImport = toImport;
         }
 
@@ -1134,6 +1160,9 @@ public class GeneratorUtilitiesTest extends NbTestCase {
             CompilationUnitTree cut = copy.getCompilationUnit();
             Elements elements = copy.getElements();
             Set<Element> imports = new HashSet<Element>();
+            GeneratorUtilities utilities = GeneratorUtilities.get(copy);
+            assertNotNull(utilities);
+            CompilationUnitTree newCut = cut;
             for (String imp : toImport) {
                 if (imp.endsWith(".*"))
                     imp = imp.substring(0, imp.length() - 2);
@@ -1156,11 +1185,15 @@ public class GeneratorUtilitiesTest extends NbTestCase {
                     }
                 }
                 assertNotNull(el);
-                imports.add(el);
+                if (incremental) {
+                    newCut = utilities.addImports(newCut, Collections.singleton(el));
+                } else {
+                    imports.add(el);
+                }
             }
-            GeneratorUtilities utilities = GeneratorUtilities.get(copy);
-            assertNotNull(utilities);
-            CompilationUnitTree newCut = utilities.addImports(cut, imports);
+            if (!imports.isEmpty()) {
+                newCut = utilities.addImports(newCut, imports);
+            }
             copy.rewrite(cut, newCut);
         }
     }

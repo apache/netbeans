@@ -18,6 +18,7 @@
  */
 package org.netbeans.swing.laf.flatlaf;
 
+import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.util.SystemInfo;
 import org.netbeans.spi.options.OptionsPanelController;
 
@@ -43,13 +44,12 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
     }
 
     private void updateEnabled() {
-        boolean supportsWindowDecorations = SystemInfo.isWindows_10_orLater;
+        boolean supportsWindowDecorations = FlatLaf.supportsNativeWindowDecorations();
         useWindowDecorationsCheckBox.setEnabled(supportsWindowDecorations);
-        restartLabel.setEnabled(supportsWindowDecorations);
         unifiedTitleBarCheckBox.setEnabled(supportsWindowDecorations && useWindowDecorationsCheckBox.isSelected());
         menuBarEmbeddedCheckBox.setEnabled(supportsWindowDecorations && useWindowDecorationsCheckBox.isSelected());
 
-        restartLabel.setVisible(supportsWindowDecorations && FlatLafPrefs.isUseWindowDecorations() && !useWindowDecorationsCheckBox.isSelected());
+        underlineMenuSelectionCheckBox.setEnabled(!SystemInfo.isMacOS);
     }
 
     /**
@@ -66,7 +66,6 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
         unifiedTitleBarCheckBox = new javax.swing.JCheckBox();
         underlineMenuSelectionCheckBox = new javax.swing.JCheckBox();
         alwaysShowMnemonicsCheckBox = new javax.swing.JCheckBox();
-        restartLabel = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -105,30 +104,23 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(restartLabel, org.openide.util.NbBundle.getMessage(FlatLafOptionsPanel.class, "FlatLafOptionsPanel.restartLabel.text")); // NOI18N
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(useWindowDecorationsCheckBox)
-                        .addGap(18, 18, 18)
-                        .addComponent(restartLabel))
+                    .addComponent(useWindowDecorationsCheckBox)
                     .addComponent(unifiedTitleBarCheckBox)
                     .addComponent(menuBarEmbeddedCheckBox)
                     .addComponent(underlineMenuSelectionCheckBox)
                     .addComponent(alwaysShowMnemonicsCheckBox))
-                .addContainerGap(155, Short.MAX_VALUE))
+                .addContainerGap(73, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(useWindowDecorationsCheckBox)
-                    .addComponent(restartLabel))
+                .addComponent(useWindowDecorationsCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(unifiedTitleBarCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -137,7 +129,7 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
                 .addComponent(underlineMenuSelectionCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(alwaysShowMnemonicsCheckBox)
-                .addContainerGap(156, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -201,7 +193,6 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox alwaysShowMnemonicsCheckBox;
     private javax.swing.JCheckBox menuBarEmbeddedCheckBox;
-    private javax.swing.JLabel restartLabel;
     private javax.swing.JCheckBox underlineMenuSelectionCheckBox;
     private javax.swing.JCheckBox unifiedTitleBarCheckBox;
     private javax.swing.JCheckBox useWindowDecorationsCheckBox;

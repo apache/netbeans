@@ -40,8 +40,12 @@ import org.netbeans.swing.tabcontrol.plaf.TabControlButton;
  */
 public class FlatLFCustoms extends LFCustoms {
 
+    private static final ModifiableColor unifiedBackground = new ModifiableColor();
+
     @Override
     public Object[] createApplicationSpecificKeysAndValues() {
+        updateUnifiedBackground();
+
         Color editorContentBorderColor = UIManager.getColor("TabbedContainer.editor.contentBorderColor"); // NOI18N
 
         Object[] removeCtrlPageUpDownKeyBindings = {
@@ -50,6 +54,9 @@ public class FlatLFCustoms extends LFCustoms {
         };
 
         return new Object[] {
+            // unified background
+            "nb.options.categories.tabPanelBackground", unifiedBackground,
+
             // options
             "TitlePane.useWindowDecorations", FlatLafPrefs.isUseWindowDecorations(),
             "TitlePane.unifiedBackground", FlatLafPrefs.isUnifiedTitleBar(),
@@ -111,6 +118,35 @@ public class FlatLFCustoms extends LFCustoms {
             "Table.ancestorInputMap.RightToLeft", new LazyModifyInputMap( "Table.ancestorInputMap.RightToLeft", removeCtrlPageUpDownKeyBindings ), // NOI18N
             "Tree.focusInputMap", new LazyModifyInputMap( "Tree.focusInputMap", removeCtrlPageUpDownKeyBindings ), // NOI18N
         };
+    }
+
+    static void updateUnifiedBackground() {
+        String key = FlatLafPrefs.isUnifiedTitleBar() && FlatLafPrefs.isUseWindowDecorations()
+                ? "Panel.background"
+                : "Tree.background";
+        unifiedBackground.setRGB(UIManager.getColor(key).getRGB());
+    }
+
+    //---- class ModifiableColor ----------------------------------------------
+
+    private static class ModifiableColor
+        extends Color
+    {
+        private int rgb;
+
+        public ModifiableColor() {
+            super(Color.red.getRGB());
+            rgb = super.getRGB();
+        }
+
+        @Override
+        public int getRGB() {
+            return rgb;
+        }
+
+        public void setRGB(int rgb) {
+            this.rgb = rgb;
+        }
     }
 
     //---- class LazyModifyInputMap -------------------------------------------

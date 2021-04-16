@@ -50,13 +50,23 @@ matrix:
           script:
             - ant verify-libs-and-licenses -Dverify-libs-and-licenses.haltonfailure=true -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
 
-        - name: Run sigtests
+        - name: Build binaries with OpenJDK8
           jdk: openjdk8
+          workspaces:
+          create:
+            name: linux-binaries-openjdk8
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
-          before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+          script:
+            - ant $OPTS clean build
+  
+        - name: Run sigtests
+          jdk: openjdk8
+          workspaces:
+          use:
+            - linux-binaries-openjdk8
+          env:
+            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
           script:
             - ant $OPTS check-sigtests-release -Dfail.on.error=true
             - ant $OPTS gen-sigtests-release
@@ -89,11 +99,11 @@ matrix:
 
         - name: Test harness modules
           jdk: openjdk8
+          workspaces:
+          use:
+            - linux-binaries-openjdk8
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=platform -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
-          before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
           script:
             - ant $OPTS -f harness/o.n.insane test
             - ant $OPTS -f harness/apisupport.harness test

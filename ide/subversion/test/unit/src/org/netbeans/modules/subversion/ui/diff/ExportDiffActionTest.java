@@ -39,14 +39,4 @@ public class ExportDiffActionTest {
         assertEquals(expected, ExportDiffAction.encodeToWrappedBase64(data));
     }
 
-    /**
-     * Test of wrapText method, of class ExportDiffAction.
-     */
-    @Test
-    public void testWrapText() {
-        final String data = "Wrap this line in chunks of 5!";
-        final String wrapped = "Wrap \nthis \nline \nin ch\nunks \nof 5!";
-        assertEquals(wrapped, ExportDiffAction.wrapText(data, 5, "\n"));
-    }
-
 }

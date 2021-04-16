@@ -64,16 +64,6 @@ public class Base64EncoderTest {
     }
 
     /**
-     * Test of wrapText method, of class Base64Encoder.
-     */
-    @Test
-    public void testWrapText() {
-        final String data = "Wrap this line in chunks of 5!";
-        final String wrapped = "Wrap \nthis \nline \nin ch\nunks \nof 5!";
-        assertEquals(wrapped, Base64Encoder.wrapText(data, 5, "\n"));
-    }
-
-    /**
      * Test of decode method, of class Base64Encoder.
      */
     @Test
@@ -85,4 +75,19 @@ public class Base64EncoderTest {
         assertArrayEquals(expected, Base64Encoder.decode(encoded));
     }
 
+        /**
+     * Test of decode method, of class Base64Encoder.
+     */
+    @Test
+    public void testDecode_nonPrintable() {
+        final String encoded = "\tVGhpcyBzdHJpbmcg\n"
+                + "    aGFzIGJlZW4gZGVj\r"
+                + "b2RlZCBmcm9tIEJh"
+                + "c2U2NA==   ";
+        final byte[] expected = ("This string has been decoded from Base64")
+                .getBytes(StandardCharsets.UTF_8);
+
+        assertArrayEquals(expected, Base64Encoder.decode(encoded));
+    }
+    
 }

@@ -302,6 +302,6 @@ public class Scrambler {
     }     
     
     private byte[] decode(String str) {        
-        return Base64.getDecoder().decode(str);
+        return Base64.getMimeDecoder().decode(str);
     }
 }

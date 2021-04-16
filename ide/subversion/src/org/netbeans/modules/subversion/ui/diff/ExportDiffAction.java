@@ -39,6 +39,7 @@ import org.openide.DialogDisplayer;
 import org.openide.nodes.Node;
 import org.openide.awt.StatusDisplayer;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
 import org.netbeans.modules.subversion.client.SvnClientExceptionHandler;
@@ -356,23 +357,10 @@ public class ExportDiffAction extends ContextAction {
     }
 
     static String encodeToWrappedBase64(byte[] data) {
-        return wrapText(Base64.getEncoder().encodeToString(data), 60, System.getProperty("line.separator"));
+        return Base64.getMimeEncoder(
+                60,
+                System.getProperty("line.separator").getBytes(StandardCharsets.ISO_8859_1)
+        ).encodeToString(data);
     }
 
-    static String wrapText(String text, int length, String separator) {
-        if (length > 0) {
-            StringBuilder sb = new StringBuilder(text.length() + (((text.length() - 1) / length) * separator.length()));
-            int idx = 0;
-            while (idx < text.length()) {
-                if (idx > 0) {
-                    sb.append(separator);
-                }
-                sb.append(text.substring(idx, Math.min(idx + length, text.length())));
-                idx += length;
-            }
-            return sb.toString();
-        } else {
-            return text;
-        }
-    }
 }

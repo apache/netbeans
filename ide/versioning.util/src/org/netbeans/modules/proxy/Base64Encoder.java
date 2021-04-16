@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.proxy;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 /**
@@ -29,41 +30,44 @@ import java.util.Base64;
 @Deprecated
 public class Base64Encoder {
 
+    private static final Base64.Encoder MIME_ENCODER = Base64.getMimeEncoder(
+            60,
+            System.getProperty("line.separator").getBytes(StandardCharsets.ISO_8859_1)
+    );
+
     private Base64Encoder() {
     }
 
+    /**
+     *
+     * @deprecated use {@link java.util.Base64#getEncoder()}.encode(data)
+     * instead.
+     */
+    @Deprecated
     public static String encode(byte[] data) {
         return encode(data, false);
     }
 
+    /**
+     * @deprecated use
+     * {@link java.util.Base64#getMimeEncoder(int, byte[])}.encode(s) instead.
+     */
     public static String encode(byte[] data, boolean useNewlines) {
-        final String encoded = Base64.getEncoder().encodeToString(data);
         if (useNewlines) {
-            return wrapText(encoded, 60, System.getProperty("line.separator"));
+            return MIME_ENCODER.encodeToString(data);
         } else {
-            return encoded;
+            return Base64.getEncoder().encodeToString(data);
         }
     }
 
-    static String wrapText(String text, int length, String separator) {
-        if (length > 0) {
-            StringBuilder sb = new StringBuilder(text.length() + (((text.length() - 1) / length) * separator.length()));
-            int idx = 0;
-            while (idx < text.length()) {
-                if (idx > 0) {
-                    sb.append(separator);
-                }
-                sb.append(text.substring(idx, Math.min(idx + length, text.length())));
-                idx += length;
-            }
-            return sb.toString();
-        } else {
-            return text;
-        }
-    }
-
+    /**
+     *
+     * @deprecated use {@link java.util.Base64#getMimeDecoder()}.decode(s)
+     * instead.
+     */
+    @Deprecated
     public static byte[] decode(String s) {
-        return Base64.getDecoder().decode(s);
+        return Base64.getMimeDecoder().decode(s);
     }
 
 }

@@ -197,7 +197,7 @@ public class DatabaseConnectionConvertorTest extends TestBase {
     }
     
     public void testDecodeBase64() {
-        final byte[] data = "P4sswørd".getBytes(StandardCharsets.UTF_8);
+        final byte[] data = "P4ssw\u00f8rd".getBytes(StandardCharsets.UTF_8);
         final String encoded = "UDRzc3fDuHJk";
         final byte[] result = DatabaseConnectionConvertor.decodeBase64(encoded);
         assertEquals(data.length, result.length);

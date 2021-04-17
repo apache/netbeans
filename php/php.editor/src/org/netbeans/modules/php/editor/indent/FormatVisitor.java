@@ -40,6 +40,7 @@ import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTError;
+import org.netbeans.modules.php.editor.parser.astnodes.ASTErrorExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
@@ -2315,6 +2316,26 @@ public class FormatVisitor extends DefaultVisitor {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_NAMED_ARGUMENT_SEPARATOR, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_NAMED_ARGUMENT_SEPARATOR, ts.offset() + ts.token().length()));
+                    } else if (parent instanceof FunctionInvocation){ // [NETBEANS-4443] PHP 8.0 Support
+                        // e.g. functionInvocation(paramName: );
+                        // add white space when "parameterName:" is added (via Code Completion)
+                        boolean added = false;
+                        FunctionInvocation functionInvocation = (FunctionInvocation) parent;
+                        List<Expression> parameters = functionInvocation.getParameters();
+                        for (Expression parameter : parameters) {
+                            if (parameter instanceof ASTErrorExpression
+                                    && ts.offset() >= parameter.getStartOffset()
+                                    && ts.offset() <= parameter.getEndOffset()) {
+                                tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_NAMED_ARGUMENT_SEPARATOR, ts.offset()));
+                                tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
+                                tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_NAMED_ARGUMENT_SEPARATOR, ts.offset() + ts.token().length()));
+                                added = true;
+                                break;
+                            }
+                        }
+                        if (!added) {
+                            tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
+                        }
                     } else {
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                     }

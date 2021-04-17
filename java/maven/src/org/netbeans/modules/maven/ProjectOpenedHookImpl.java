@@ -181,17 +181,17 @@ public class ProjectOpenedHookImpl extends ProjectOpenedHook {
         //only check for the updates of index, if the indexing was already used.
         if (checkedIndices.compareAndSet(false, true) && existsDefaultIndexLocation() && RepositoryPreferences.isIndexRepositories()) {
             final int freq = RepositoryPreferences.getIndexUpdateFrequency();
-            new RequestProcessor("Maven Repo Index Transfer/Scan").post(new Runnable() { // #138102
-                public @Override void run() {
-                    List<RepositoryInfo> ris = RepositoryPreferences.getInstance().getRepositoryInfos();
-                    Set<String> doNotIndexRepos = getDoNotIndexRepos();
-                    for (final RepositoryInfo ri : ris) {
-                        //check this repo can be indexed
-                        if ( (!ri.isRemoteDownloadable() && !ri.isLocal()) || doNotIndexRepos.contains(ri.getId())) {
-                            LOGGER.log(Level.FINER, "Skipping Index At Startup for :{0}", ri.getId());//NOI18N
-                            continue;
-                        }
-                        if (freq != RepositoryPreferences.FREQ_NEVER) {
+            if (freq != RepositoryPreferences.FREQ_NEVER) {
+                new RequestProcessor("Maven Repo Index Transfer/Scan").post(new Runnable() { // #138102
+                    public @Override void run() {
+                        List<RepositoryInfo> ris = RepositoryPreferences.getInstance().getRepositoryInfos();
+                        Set<String> doNotIndexRepos = getDoNotIndexRepos();
+                        for (final RepositoryInfo ri : ris) {
+                            //check this repo can be indexed
+                            if ( (!ri.isRemoteDownloadable() && !ri.isLocal()) || doNotIndexRepos.contains(ri.getId())) {
+                                LOGGER.log(Level.FINER, "Skipping Index At Startup for :{0}", ri.getId());//NOI18N
+                                continue;
+                            }
                             boolean run = false;
                             if (freq == RepositoryPreferences.FREQ_STARTUP) {
                                 LOGGER.log(Level.FINER, "Index At Startup :{0}", ri.getId());//NOI18N
@@ -208,8 +208,8 @@ public class ProjectOpenedHookImpl extends ProjectOpenedHook {
                             }
                         }
                     }
-                }
-            }, 1000 * 60 * 2);
+                }, 1000 * 60 * 2);
+            }
         }
     }
 

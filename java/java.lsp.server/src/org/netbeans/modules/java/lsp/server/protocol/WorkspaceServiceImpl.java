@@ -39,6 +39,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
@@ -137,20 +138,14 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     file = URLMapper.findFileObject(new URL(uri));
                 } catch (MalformedURLException ex) {
                     Exceptions.printStackTrace(ex);
-                    return CompletableFuture.completedFuture(true);
+                    return CompletableFuture.completedFuture(Collections.emptyList());
                 }
-                CompletableFuture<Project[]> projectsFuture = server.asyncOpenSelectedProjects(Collections.singletonList(file));
-                return projectsFuture.thenApply(projects -> {
+                if (file == null) {
+                    return CompletableFuture.completedFuture(Collections.emptyList());
+                }
+                return server.asyncOpenFileOwner(file).thenCompose(this::getTestRootURLs).thenApply(testRootURLs -> {
                     List<TestMethodController.TestMethod> testMethods = new ArrayList<>();
-                    for (Project prj : projects) {
-                        Set<URL> testRootURLs = new HashSet<>();
-                        for (SourceGroup sg : ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
-                            for (URL url : UnitTestForSourceQuery.findUnitTests(sg.getRootFolder())) {
-                                testRootURLs.add(url);
-                            }
-                        }
-                        findTestMethods(testRootURLs, testMethods);
-                    }
+                    findTestMethods(testRootURLs, testMethods);
                     if (testMethods.isEmpty()) {
                         return Collections.emptyList();
                     }
@@ -183,30 +178,55 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         throw new UnsupportedOperationException("Command not supported: " + params.getCommand());
     }
 
+    private CompletableFuture<Set<URL>> getTestRootURLs(Project prj) {
+        final Set<URL> testRootURLs = new HashSet<>();
+        List<FileObject> contained = null;
+        if (prj != null) {
+            for (SourceGroup sg : ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
+                for (URL url : UnitTestForSourceQuery.findUnitTests(sg.getRootFolder())) {
+                    testRootURLs.add(url);
+                }
+            }
+            contained = ProjectUtils.getContainedProjects(prj, true).stream().map(p -> p.getProjectDirectory()).collect(Collectors.toList());
+        }
+        return server.asyncOpenSelectedProjects(contained).thenApply(projects -> {
+            for (Project project : projects) {
+                for (SourceGroup sg : ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
+                    for (URL url : UnitTestForSourceQuery.findUnitTests(sg.getRootFolder())) {
+                        testRootURLs.add(url);
+                    }
+                }
+            }
+            return testRootURLs;
+        });
+    }
+
     private void findTestMethods(Set<URL> testRootURLs, List<TestMethodController.TestMethod> testMethods) {
         for (URL testRootURL : testRootURLs) {
             FileObject testRoot = URLMapper.findFileObject(testRootURL);
-            List<Source> sources = new ArrayList<>();
-            Enumeration<? extends FileObject> children = testRoot.getChildren(true);
-            while(children.hasMoreElements()) {
-                FileObject fo = children.nextElement();
-                if (fo.hasExt("java")) {
-                    sources.add(((TextDocumentServiceImpl)server.getTextDocumentService()).getSource(Utils.toUri(fo)));
+            if (testRoot != null) {
+                List<Source> sources = new ArrayList<>();
+                Enumeration<? extends FileObject> children = testRoot.getChildren(true);
+                while(children.hasMoreElements()) {
+                    FileObject fo = children.nextElement();
+                    if (fo.hasExt("java")) {
+                        sources.add(((TextDocumentServiceImpl)server.getTextDocumentService()).getSource(Utils.toUri(fo)));
+                    }
                 }
-            }
-            if (!sources.isEmpty()) {
-                try {
-                    ParserManager.parse(sources, new UserTask() {
-                        @Override
-                        public void run(ResultIterator resultIterator) throws Exception {
-                            CompilationController cc = CompilationController.get(resultIterator.getParserResult());
-                            cc.toPhase(Phase.ELEMENTS_RESOLVED);
-                            for (ComputeTestMethods.Factory methodsFactory : Lookup.getDefault().lookupAll(ComputeTestMethods.Factory.class)) {
-                                testMethods.addAll(methodsFactory.create().computeTestMethods(cc));
+                if (!sources.isEmpty()) {
+                    try {
+                        ParserManager.parse(sources, new UserTask() {
+                            @Override
+                            public void run(ResultIterator resultIterator) throws Exception {
+                                CompilationController cc = CompilationController.get(resultIterator.getParserResult());
+                                cc.toPhase(Phase.ELEMENTS_RESOLVED);
+                                for (ComputeTestMethods.Factory methodsFactory : Lookup.getDefault().lookupAll(ComputeTestMethods.Factory.class)) {
+                                    testMethods.addAll(methodsFactory.create().computeTestMethods(cc));
+                                }
                             }
-                        }
-                    });
-                } catch (ParseException ex) {}
+                        });
+                    } catch (ParseException ex) {}
+                }
             }
         }
     }

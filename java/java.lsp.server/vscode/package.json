@@ -4,7 +4,7 @@
 	"description": "Apache NetBeans Language Server Extension for Visual Studio Code",
 	"author": "Apache NetBeans",
 	"license": "Apache 2.0",
-	"version": "12.3.0",
+	"version": "12.3.9",
 	"preview": true,
 	"repository": {
 		"type": "git",
@@ -110,20 +110,20 @@
 								"default": "internalConsole"
 							},
 							"args": {
-                                                            "type": [
-                                                                "string",
-                                                                "null"
-                                                            ],
-                                                            "description": "Arguments for the executed class",
-                                                            "default": null
-                                                        },
+								"type": [
+									"string",
+									"null"
+								],
+								"description": "Arguments for the executed class",
+								"default": null
+							},
 							"vmArgs": {
-                                                            "type": [
-                                                                "string",
-                                                                "null"
-                                                            ],
-                                                            "description": "Arguments for the Java VM",
-                                                            "default": null
+								"type": [
+									"string",
+									"null"
+								],
+								"description": "Arguments for the Java VM",
+								"default": null
 							}
 						}
 					}
@@ -145,6 +145,61 @@
 							"request": "launch",
 							"name": "Launch Java 8+ App",
 							"mainClass": "^\"${1:\\${file\\}}\""
+						}
+					}
+				]
+			},
+			{
+				"type": "nativeimage",
+				"label": "Native Image",
+				"runtime": "node",
+				"languages": [
+					"java"
+				],
+				"configurationAttributes": {
+					"launch": {
+						"required": [
+							"nativeImagePath"
+						],
+						"properties": {
+							"nativeImagePath": {
+								"type": "string",
+								"description": "Absolute path to the application native image.",
+								"default": "${workspaceFolder}/build/native-image/application"
+							},
+							"miDebugger": {
+								"type": "string",
+								"description": "MI Debugger",
+								"default": "gdb"
+							},
+							"console": {
+								"type": "string",
+								"enum": [
+									"internalConsole"
+								],
+								"description": "The specified console to launch the program.",
+								"default": "internalConsole"
+							}
+						}
+					}
+				},
+				"initialConfigurations": [
+					{
+						"type": "nativeimage",
+						"request": "launch",
+						"name": "Launch Native Image",
+						"nativeImagePath": "${workspaceFolder}/build/native-image/application"
+					}
+				],
+				"configurationSnippets": [
+					{
+						"label": "Launch Native Image",
+						"description": "Launch a native image with MI debugger.",
+						"body": {
+							"type": "nativeimage",
+							"request": "launch",
+							"name": "Launch Native Image",
+							"nativeImagePath": "^\"${1:\\${workspaceFolder\\}/build/native-image/application}\""
 						}
 					}
 				]

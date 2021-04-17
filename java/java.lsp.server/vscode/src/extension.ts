@@ -174,9 +174,12 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     //register debugger:
     let configProvider = new NetBeansConfigurationProvider();
     context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java8+', configProvider));
+    let configNativeProvider = new NetBeansConfigurationNativeProvider();
+    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('nativeimage', configNativeProvider));
 
     let debugDescriptionFactory = new NetBeansDebugAdapterDescriptionFactory();
     context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('java8+', debugDescriptionFactory));
+    context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('nativeimage', debugDescriptionFactory));
 
     // register commands
     context.subscriptions.push(commands.registerCommand('java.workspace.compile', () => {
@@ -228,10 +231,9 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             ]);
         }
     }));
-    const runDebug = async (noDebug : boolean, testRun: boolean, uri : any, methodName? : string) => {
-        const editor = window.activeTextEditor;
-        if (editor) {
-            const docUri = editor.document.uri;
+    const runDebug = async (noDebug: boolean, testRun: boolean, uri: string, methodName?: string) => {
+        const docUri = uri ? vscode.Uri.file(uri) : window.activeTextEditor?.document.uri;
+        if (docUri) {
             const workspaceFolder = vscode.workspace.getWorkspaceFolder(docUri);
             const debugConfig : vscode.DebugConfiguration = {
                 type: "java8+",
@@ -465,7 +467,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         // Options to control the language client
         let clientOptions: LanguageClientOptions = {
             // Register the server for java documents
-            documentSelector: ['java'],
+            documentSelector: [{ language: 'java' }, { language: 'yaml', pattern: '**/application.yml' }],
             synchronize: {
                 configurationSection: 'java',
                 fileEvents: [
@@ -648,6 +650,29 @@ class NetBeansConfigurationProvider implements vscode.DebugConfigurationProvider
         }
         if (!config.classPaths) {
             config.classPaths = ['any'];
+        }
+        if (!config.console) {
+            config.console = 'internalConsole';
+        }
+
+        return config;
+    }
+}
+
+class NetBeansConfigurationNativeProvider implements vscode.DebugConfigurationProvider {
+
+    resolveDebugConfiguration(_folder: vscode.WorkspaceFolder | undefined, config: vscode.DebugConfiguration, _token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration> {
+        if (!config.type) {
+            config.type = 'nativeimage';
+        }
+        if (!config.request) {
+            config.request = 'launch';
+        }
+        if (!config.nativeImagePath) {
+            config.nativeImagePath = '${workspaceFolder}/build/native-image/application';
+        }
+        if (!config.miDebugger) {
+            config.miDebugger = 'gdb';
         }
         if (!config.console) {
             config.console = 'internalConsole';

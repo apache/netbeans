@@ -39,10 +39,10 @@ import org.openide.DialogDisplayer;
 import org.openide.nodes.Node;
 import org.openide.awt.StatusDisplayer;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
 import org.netbeans.modules.subversion.client.SvnClientExceptionHandler;
-import org.netbeans.modules.proxy.Base64Encoder;
 import org.netbeans.modules.versioning.util.ExportDiffSupport;
 import org.openide.filesystems.FileUtil;
 import org.tigris.subversion.svnclientadapter.SVNClientException;
@@ -351,8 +351,16 @@ public class ExportDiffAction extends ContextAction {
         }
         sb.append("MIME: application/octet-stream; encoding: Base64; length: ").append(file.canRead() ? file.length() : -1); // NOI18N
         sb.append(System.getProperty("line.separator")); // NOI18N
-        sb.append(Base64Encoder.encode(baos.toByteArray(), true));
+        sb.append(encodeToWrappedBase64(baos.toByteArray()));
         sb.append(System.getProperty("line.separator")); // NOI18N
         return sb.toString();
     }
+
+    static String encodeToWrappedBase64(byte[] data) {
+        return Base64.getMimeEncoder(
+                60,
+                System.getProperty("line.separator").getBytes(StandardCharsets.ISO_8859_1)
+        ).encodeToString(data);
+    }
+
 }

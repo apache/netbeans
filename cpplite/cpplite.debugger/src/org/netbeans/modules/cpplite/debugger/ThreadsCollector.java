@@ -68,7 +68,7 @@ public final class ThreadsCollector {
         }
     }
 
-    CPPThread get(String id) {
+    public CPPThread get(String id) {
         synchronized (threads) {
             return threads.get(id);
         }

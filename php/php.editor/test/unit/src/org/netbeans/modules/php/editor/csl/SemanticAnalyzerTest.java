@@ -197,4 +197,8 @@ public class SemanticAnalyzerTest extends SemanticAnalysisTestBase {
     public void testConstrucotorPropertyPromotion() throws Exception {
         checkSemantic("testfiles/semantic/constructorPropertyPromotion.php");
     }
+
+    public void testNamedArgumentsColoring() throws Exception {
+        checkSemantic("testfiles/semantic/namedArgumentsColoring.php");
+    }
 }

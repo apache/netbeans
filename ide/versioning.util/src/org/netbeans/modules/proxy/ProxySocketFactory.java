@@ -309,7 +309,7 @@ public class ProxySocketFactory extends SocketFactory {
         String username = cs.getProxyUsername() == null ? "" : cs.getProxyUsername();
         String password = cs.getProxyPassword() == null ? "" : String.valueOf(cs.getProxyPassword());
         String credentials = username + ":" + password;
-        String basicCookie = Base64Encoder.encode(credentials.getBytes("US-ASCII"));
+        String basicCookie = encodeCredentials(credentials);
 
         dos.writeBytes("CONNECT ");
         dos.writeBytes(address.getHostName() + ":" + address.getPort());
@@ -328,6 +328,10 @@ public class ProxySocketFactory extends SocketFactory {
             return proxy;
         }
         throw new IOException("Basic authentication failed: " + line);
+    }
+
+    static String encodeCredentials(String credentials) throws UnsupportedEncodingException {
+        return Base64.getEncoder().encodeToString(credentials.getBytes("US-ASCII"));
     }
 
     /**

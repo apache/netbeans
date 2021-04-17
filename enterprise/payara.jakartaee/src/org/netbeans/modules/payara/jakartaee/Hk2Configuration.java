@@ -33,7 +33,7 @@ import javax.enterprise.deploy.spi.exceptions.BeanNotFoundException;
 import org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration;
 import org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper;
 import org.netbeans.modules.payara.jakartaee.db.Hk2DatasourceManager;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException;
 import org.netbeans.modules.j2ee.deployment.common.api.Datasource;
 import org.netbeans.modules.j2ee.deployment.common.api.DatasourceAlreadyExistsException;
@@ -55,12 +55,12 @@ public class Hk2Configuration extends PayaraConfiguration implements DeploymentC
      * for Payara servers before 3.1.
      * <p/>
      * @param module Java EE module (project).
-     * @param version Payara server version.
+     * @param version Payara server platformVersion.
      * @throws ConfigurationException when there is a problem with Java EE server
      *         configuration initialization.
      */
     public Hk2Configuration(
-            final J2eeModule module, final PayaraVersion version
+            final J2eeModule module, final PayaraPlatformVersionAPI version
     ) throws ConfigurationException {
         super(module, J2eeModuleHelper.getPayaraDDModuleHelper(module.getType()), version);
     }
@@ -71,13 +71,13 @@ public class Hk2Configuration extends PayaraConfiguration implements DeploymentC
      * <p/>
      * @param module Java EE module (project).
      * @param moduleHelper Already existing {@link J2eeModuleHelper} instance.
-     * @param version Payara server version.
+     * @param version Payara server platformVersion.
      * @throws ConfigurationException when there is a problem with Java EE server
      * configuration initialization.
      */
     public Hk2Configuration(
             final J2eeModule module, final J2eeModuleHelper jmh,
-            final PayaraVersion version
+            final PayaraPlatformVersionAPI version
     ) throws ConfigurationException {
         super(module, jmh, version);
     }
@@ -92,7 +92,7 @@ public class Hk2Configuration extends PayaraConfiguration implements DeploymentC
     // ------------------------------------------------------------------------
     @Override
     public Set<Datasource> getDatasources() throws ConfigurationException {
-        return Hk2DatasourceManager.getDatasources(module, version);
+        return Hk2DatasourceManager.getDatasources(module, getPlatformVersion());
     }
 
     @Override
@@ -105,8 +105,7 @@ public class Hk2Configuration extends PayaraConfiguration implements DeploymentC
             final String jndiName, final String url, final String username,
             final String password, final String driver
     ) throws UnsupportedOperationException, ConfigurationException, DatasourceAlreadyExistsException {
-        return Hk2DatasourceManager.createDataSource(
-                jndiName, url, username, password, driver, module, version);
+        return Hk2DatasourceManager.createDataSource(jndiName, url, username, password, driver, module, getPlatformVersion());
     }
 
     // ------------------------------------------------------------------------

@@ -19,6 +19,7 @@
 package org.netbeans.modules.junit.ui.actions;
 
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.SourcePositions;
@@ -121,11 +122,13 @@ public final class TestClassInfoTask implements Task<CompilationController> {
                 if (testMethod) {
                     SourcePositions sp = info.getTrees().getSourcePositions();
                     int start = (int) sp.getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
+                    int preferred = info.getTreeUtilities().findNameSpan((MethodTree) tp.getLeaf())[0];
                     int end = (int) sp.getEndPosition(tp.getCompilationUnit(), tp.getLeaf());
                     Document doc = info.getSnapshot().getSource().getDocument(false);
                     try {
                         result.add(new TestMethod(typeElement.getQualifiedName().toString(), new SingleMethod(fileObject, mn),
                                 doc != null ? doc.createPosition(start) : new SimplePosition(start),
+                                doc != null ? doc.createPosition(preferred) : new SimplePosition(preferred),
                                 doc != null ? doc.createPosition(end) : new SimplePosition(end)));
                     } catch (BadLocationException ex) {
                         //ignore

@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.gradle;
 
+import org.netbeans.modules.gradle.loaders.GradleProjectLoaderImpl;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
@@ -33,6 +34,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectState;
@@ -171,6 +173,8 @@ public final class NbGradleProjectImpl implements Project {
                 UILookupMergerSupport.createPrivilegedTemplatesMerger(),
                 LookupProviderSupport.createSourcesMerger(),
                 LookupProviderSupport.createSharabilityQueryMerger(),
+                new GradleProjectLoaderImpl(this),
+                new GradleProjectErrorNotifications(),
                 state
         );
     }
@@ -251,7 +255,8 @@ public final class NbGradleProjectImpl implements Project {
     }
 
     private GradleProject loadProject(boolean ignoreCache, Quality aim, String... args) {
-        GradleProject prj = GradleProjectCache.loadProject(this, aim, ignoreCache, false, args);
+        GradleProjectLoader loader = getLookup().lookup(GradleProjectLoader.class);
+        GradleProject prj = loader != null ? loader.loadProject(aim, ignoreCache, false, args) : null;
         return prj;
     }
 
@@ -286,6 +291,73 @@ public final class NbGradleProjectImpl implements Project {
             return "Unloaded Gradle Project: " + gradleFiles.toString();
         }
     }
+    
+    final RequestProcessor GRADLE_PRIMING_RP = new RequestProcessor("gradle-project-resolver", 1); //NOI18N
+
+    // @GuardedBy(this)
+    private CompletableFuture<GradleProject>    primingBuild;
+
+    boolean isProjectPrimingRequired() {
+        GradleProject gp = getGradleProject();
+        return gp.getQuality().notBetterThan(EVALUATED) || !gp.getProblems().isEmpty();
+    }
+    
+    /**
+     * The core implementation is tied to project quality itself, so it is extracted here from
+     * {@link GradleProjectProblemProvider}. 
+     * <p>
+     * <b>Note: Priming build makes the project trusted</b>
+     * 
+     * @return future that produces the result.
+     */
+    CompletableFuture<GradleProject> primeProject() {
+        CompletableFuture<GradleProject> ret;
+        synchronized (this) {
+            if (primingBuild != null && !primingBuild.isDone()) {
+                // avoid priming twice, piggyback on the old one
+                LOG.log(Level.FINER, "Priming build runs for {0}: {1}", new Object[] { this, primingBuild });
+                return primingBuild;
+            }
+            ret = new CompletableFuture<>();
+            primingBuild = ret;
+        }
+        LOG.log(Level.FINER, "Submitting priming build runs for {0}: {1}", new Object[] { this, ret });
+        GRADLE_PRIMING_RP.submit(() -> {
+            try {
+                // this was explicitly invoked as project action, or problem resolution. Same level as
+                // Build project, so trust the project.
+                ProjectTrust.getDefault().trustProject(this, true);
+                GradleProjectLoader loader = getLookup().lookup(GradleProjectLoader.class);
+                GradleProject gradleProject = loader.loadProject(FULL_ONLINE, true, true);
+                LOG.log(Level.FINER, "Priming finished, reloading {0}: {1}", project);
+                fireProjectReload(false);
+                ret.complete(gradleProject);
+            } catch (Throwable t) {
+                LOG.log(Level.FINER, t, () -> String.format("Priming errored for %s", project));
+                ret.completeExceptionally(t);
+                if (t instanceof ThreadDeath) {
+                    throw t;
+                }
+            }
+        });
+        return ret;
+    }
+    
+    public static File getCacheDir(GradleFiles gf) {
+        return getCacheDir(gf.getRootDir(), gf.getProjectDir());
+    }
+
+    public static File getCacheDir(GradleProject gp) {
+        GradleBaseProject base = gp.getBaseProject();
+        return getCacheDir(base.getRootDir(), base.getProjectDir());
+    }
+
+    private static File getCacheDir(File rootDir, File projectDir) {
+        int code = Math.abs(projectDir.getAbsolutePath().hashCode());
+        String dirName = projectDir.getName() + "-" + code; //NOI18N
+        File dir = new File(rootDir, ".gradle/nb-cache/" + dirName); //NOI18N
+        return dir;
+    }
 
     private class ProjectOpenedHookImpl extends ProjectOpenedHook {
 
@@ -311,6 +383,7 @@ public final class NbGradleProjectImpl implements Project {
             detachAllUpdater();
             dumpProject();
             getLookup().lookup(ProjectConnection.class).close();
+            getLookup().lookup(GradleProjectErrorNotifications.class).clear();
         }
     }
 
@@ -323,7 +396,7 @@ public final class NbGradleProjectImpl implements Project {
 
         @Override
         public FileObject getCacheDirectory() throws IOException {
-            return FileUtil.createFolder(GradleProjectCache.getCacheDir(gradleFiles));
+            return FileUtil.createFolder(getCacheDir(gradleFiles));
         }
     }
 
@@ -339,7 +412,7 @@ public final class NbGradleProjectImpl implements Project {
             watcherRef = new WeakReference<>(watcher);
             Lookup general = Lookups.forPath("Projects/" + NbGradleProject.GRADLE_PROJECT_TYPE + "/Lookup"); //NOI18N
             pluginLookups.put(NB_GENERAL, general); //NOI18N
-            check();
+            setLookups(general);
             watcher.addPropertyChangeListener(WeakListeners.propertyChange(this, watcher));
         }
 
@@ -348,25 +421,27 @@ public final class NbGradleProjectImpl implements Project {
             NbGradleProject watcher = watcherRef.get();
             if (watcher != null) {
                 lookupsChanged = !watcher.isGradleProjectLoaded();
-                GradleBaseProject prj = watcher.projectLookup(GradleBaseProject.class);
-                Set<String> currentPlugins = new HashSet<>(prj.getPlugins());
-                if (prj.isRoot()) {
-                    currentPlugins.add(NB_ROOT_PLUGIN);
-                }
-                for (String cp : currentPlugins) {
-                    //Add Lookups for new plugins
-                    if (!pluginLookups.containsKey(cp)) {
-                        Lookup pluginLookup = Lookups.forPath("Projects/" + NbGradleProject.GRADLE_PLUGIN_TYPE + "/" + cp + "/Lookup"); //NOI18N
-                        pluginLookups.put(cp, pluginLookup);
-                        lookupsChanged = true;
+                if (watcher.isGradleProjectLoaded()) {
+                    GradleBaseProject prj = watcher.projectLookup(GradleBaseProject.class);
+                    Set<String> currentPlugins = new HashSet<>(prj.getPlugins());
+                    if (prj.isRoot()) {
+                        currentPlugins.add(NB_ROOT_PLUGIN);
                     }
-                }
-                Iterator<String> it = pluginLookups.keySet().iterator();
-                while (it.hasNext()) {
-                    String oldPlugin = it.next();
-                    if (!currentPlugins.contains(oldPlugin) && !NB_GENERAL.equals(oldPlugin)) {
-                        it.remove();
-                        lookupsChanged = true;
+                    for (String cp : currentPlugins) {
+                        //Add Lookups for new plugins
+                        if (!pluginLookups.containsKey(cp)) {
+                            Lookup pluginLookup = Lookups.forPath("Projects/" + NbGradleProject.GRADLE_PLUGIN_TYPE + "/" + cp + "/Lookup"); //NOI18N
+                            pluginLookups.put(cp, pluginLookup);
+                            lookupsChanged = true;
+                        }
+                    }
+                    Iterator<String> it = pluginLookups.keySet().iterator();
+                    while (it.hasNext()) {
+                        String oldPlugin = it.next();
+                        if (!currentPlugins.contains(oldPlugin) && !NB_GENERAL.equals(oldPlugin)) {
+                            it.remove();
+                            lookupsChanged = true;
+                        }
                     }
                 }
             }

@@ -20,15 +20,14 @@
 
 import { WorkspaceFolder, Event, EventEmitter, Uri, commands, debug } from "vscode";
 import * as path from 'path';
-import { TestAdapter, TestSuiteEvent, TestEvent, TestLoadFinishedEvent, TestLoadStartedEvent, TestRunFinishedEvent, TestRunStartedEvent, TestSuiteInfo, TestInfo } from "vscode-test-adapter-api";
+import { TestAdapter, TestSuiteEvent, TestEvent, TestLoadFinishedEvent, TestLoadStartedEvent, TestRunFinishedEvent, TestRunStartedEvent, TestSuiteInfo, TestInfo, TestDecoration } from "vscode-test-adapter-api";
 import { TestSuite } from "./protocol";
 import { LanguageClient } from "vscode-languageclient";
-import { getVSCodeDownloadUrl } from "vscode-test/out/util";
 
 export class NbTestAdapter implements TestAdapter {
 
 	private disposables: { dispose(): void }[] = [];
-    private children: (TestSuiteInfo | TestInfo)[] = [];
+    private children: TestSuiteInfo[] = [];
     private readonly testSuite: TestSuiteInfo;
 
 	private readonly testsEmitter = new EventEmitter<TestLoadStartedEvent | TestLoadFinishedEvent>();
@@ -59,11 +58,14 @@ export class NbTestAdapter implements TestAdapter {
         const loadedTests: any = await commands.executeCommand('java.load.workspace.tests', this.workspaceFolder.uri.toString());
         if (loadedTests) {
             loadedTests.forEach((suite: TestSuite) => {
-                const children: TestInfo[] = suite.tests ? suite.tests.map(test => ({ type: 'test', id: test.id, label: test.shortName, tooltip: test.fullName, file: test.file ? Uri.parse(test.file)?.path : undefined, line: test.line })) : [];
-                this.children.push({ type: 'suite', id: suite.suiteName, label: suite.suiteName, file: suite.file ? Uri.parse(suite.file)?.path : undefined, line: suite.line, children });
+                this.updateTests(suite);
             });
         }
-		this.testsEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished', suite: this.testSuite });
+        if (this.children.length > 0) {
+            this.testsEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished', suite: this.testSuite });
+        } else {
+            this.testsEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished' });
+        }
     }
 
     async run(tests: string[]): Promise<void> {
@@ -128,39 +130,57 @@ export class NbTestAdapter implements TestAdapter {
 	}
 
     testProgress(suite: TestSuite): void {
-        this.updateTests(suite);
-        if (suite.state === 'running') {
-            this.statesEmitter.fire(<TestSuiteEvent>{ type: 'suite', suite: suite.suiteName, state: suite.state });
-        } else {
-            if (suite.tests) {
-                suite.tests.forEach(test => {
-                    let message;
-                    let decorations;
-                    if (test.stackTrace) {
-                        message = test.stackTrace.join('\n');
-                        const testFile = test.file ? Uri.parse(test.file)?.path : undefined;
-                        if (testFile) {
-                            const fileName = path.basename(testFile);
-                            const line = test.stackTrace.map(frame => {
-                                const info = frame.match(/^\s*at\s*\S*\((\S*):(\d*)\)$/);
-                                if (info && info.length >= 3 && info[1] === fileName) {
-                                    return parseInt(info[2]);
+        switch (suite.state) {
+            case 'loaded':
+                if (this.updateTests(suite)) {
+                    this.testsEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished', suite: this.testSuite });
+                }
+                break;
+            case 'running':
+                this.statesEmitter.fire(<TestSuiteEvent>{ type: 'suite', suite: suite.suiteName, state: suite.state });
+                break;
+            case 'completed':
+            case 'errored':
+                let errMessage: string | undefined;
+                if (suite.tests) {
+                    const currentSuite = this.children.find(s => s.id === suite.suiteName);
+                    if (currentSuite) {
+                        suite.tests.forEach(test => {
+                            let message: string | undefined;
+                            let decorations: TestDecoration[] | undefined;
+                            if (test.stackTrace) {
+                                message = test.stackTrace.join('\n');
+                                const testFile = test.file ? Uri.parse(test.file)?.path : undefined;
+                                if (testFile) {
+                                    const fileName = path.basename(testFile);
+                                    const line = test.stackTrace.map(frame => {
+                                        const info = frame.match(/^\s*at\s*\S*\((\S*):(\d*)\)$/);
+                                        if (info && info.length >= 3 && info[1] === fileName) {
+                                            return parseInt(info[2]);
+                                        }
+                                        return null;
+                                    }).find(l => l);
+                                    if (line) {
+                                        decorations = [{ line: line - 1, message: test.stackTrace[0] }];
+                                    }
                                 }
-                                return null;
-                            }).find(l => l);
-                            if (line) {
-                                decorations = [{ line: line - 1, message: test.stackTrace[0] }];
                             }
-                        }
+                            let currentTest = (currentSuite as TestSuiteInfo).children.find(ti => ti.id === test.id);
+                            if (currentTest) {
+                                this.statesEmitter.fire(<TestEvent>{ type: 'test', test: test.id, state: test.state, message, decorations });
+                            } else if (test.state !== 'passed' && message && !errMessage) {
+                                suite.state = 'errored';
+                                errMessage = message;
+                            }
+                        });
                     }
-                    this.statesEmitter.fire(<TestEvent>{ type: 'test', test: test.id, state: test.state, message, decorations });
-                });
-            }
-            this.statesEmitter.fire(<TestSuiteEvent>{ type: 'suite', suite: suite.suiteName, state: suite.state });
+                }
+                this.statesEmitter.fire(<TestSuiteEvent>{ type: 'suite', suite: suite.suiteName, state: suite.state, message: errMessage });
+                break;
         }
     }
 
-    updateTests(suite: TestSuite): void {
+    updateTests(suite: TestSuite): boolean {
         let changed = false;
         const currentSuite = this.children.find(s => s.id === suite.suiteName);
         if (currentSuite) {
@@ -174,11 +194,11 @@ export class NbTestAdapter implements TestAdapter {
                 changed = true
             }
             if (suite.tests) {
-                const children: (TestSuiteInfo | TestInfo)[] = [];
+                const ids = new Set();
                 suite.tests.forEach(test => {
+                    ids.add(test.id);
                     let currentTest = (currentSuite as TestSuiteInfo).children.find(ti => ti.id === test.id);
                     if (currentTest) {
-                        children.push(currentTest);
                         const file = test.file ? Uri.parse(test.file)?.path : undefined;
                         if (file && currentTest.file !== file) {
                             currentTest.file = file;
@@ -189,14 +209,14 @@ export class NbTestAdapter implements TestAdapter {
                             changed = true;
                         }
                     } else {
-                        children.push({ type: 'test', id: test.id, label: test.shortName, tooltip: test.fullName, file: test.file ? Uri.parse(test.file)?.path : undefined, line: test.line });
+                        (currentSuite as TestSuiteInfo).children.push({ type: 'test', id: test.id, label: test.shortName, tooltip: test.fullName, file: test.file ? Uri.parse(test.file)?.path : undefined, line: test.line });
                         changed = true;
                     }
                 });
-                if ((currentSuite as TestSuiteInfo).children.length !== children.length) {
+                if ((currentSuite as TestSuiteInfo).children.length !== ids.size) {
+                    (currentSuite as TestSuiteInfo).children = (currentSuite as TestSuiteInfo).children.filter(ti => ids.has(ti.id));
                     changed = true;
                 }
-                (currentSuite as TestSuiteInfo).children = children;
             }
         } else {
             const children: TestInfo[] = suite.tests ? suite.tests.map(test => {
@@ -205,8 +225,6 @@ export class NbTestAdapter implements TestAdapter {
             this.children.push({ type: 'suite', id: suite.suiteName, label: suite.suiteName, file: suite.file ? Uri.parse(suite.file)?.path : undefined, line: suite.line, children });
             changed = true;
         }
-        if (changed) {
-            this.testsEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished', suite: this.testSuite });
-        }
+        return changed;
     }
 }

@@ -60,7 +60,7 @@ abstract class AbstractFolder extends FileObject {
     protected String name;
 
     /** strong reference to parent (can be null for root) */
-    protected final AbstractFolder parent;
+    final FileObject parent;
 
     /** Stores the system name of the file system to test
     * validity later.
@@ -69,7 +69,7 @@ abstract class AbstractFolder extends FileObject {
 
     /** If root changes, all AbstractFolders in hierarchy are invalidated.
      *@see #isValid()*/
-    private final AbstractFolder validRoot;
+    private final FileObject validRoot;
 
     /** list of children */
     private String[] children;
@@ -86,12 +86,12 @@ abstract class AbstractFolder extends FileObject {
     * @param parent the parent object (folder)
     * @param name name of the object (e.g. <code>filename.ext</code>)
     */
-    public AbstractFolder(FileSystem fs, AbstractFolder parent, String name) {
+    AbstractFolder(FileSystem fs, FileObject parent, String name) {
         this.system = fs;
         this.parent = parent;
         this.name = name;
-        validFlag = true;
-        validRoot = (parent != null) ? (AbstractFolder) fs.getRoot() : null;
+        this.validFlag = true;
+        this.validRoot = (parent != null) ? fs.getRoot() : null;
     }
 
     /* Get the name without extension of this file or folder.
@@ -446,7 +446,7 @@ abstract class AbstractFolder extends FileObject {
         getFileSystem().waitRefreshed();
         return getFileObjectImpl(name, ext);
     }
-        
+
     private synchronized FileObject getFileObjectImpl(String name, String ext) {
         check();
 
@@ -505,7 +505,9 @@ abstract class AbstractFolder extends FileObject {
             FileEvent ev = new FileEvent(parent, fileevent.getFile(), fileevent.isExpected());
             try {
                 ev.inheritPostNotify(fileevent);
-                parent.fileDeleted0(ev);
+                if (parent instanceof AbstractFolder) {
+                    ((AbstractFolder) parent).fileDeleted0(ev);
+                }
             } finally {
                 ev.setPostNotify(null);
             }
@@ -526,7 +528,9 @@ abstract class AbstractFolder extends FileObject {
             FileEvent ev = new FileEvent(parent, fileevent.getFile(), fileevent.isExpected());
             try {
                 ev.inheritPostNotify(fileevent);
-                parent.fileCreated0(ev, isData);
+                if (parent instanceof AbstractFolder) {
+                    ((AbstractFolder) parent).fileCreated0(ev, isData);
+                }
             } finally {
                 ev.setPostNotify(null);
             }
@@ -546,7 +550,9 @@ abstract class AbstractFolder extends FileObject {
             FileEvent ev = new FileEvent(parent, fileevent.getFile(), fileevent.isExpected(), fileevent.getTime());
             try {
                 ev.inheritPostNotify(fileevent);
-                parent.fileChanged0(ev);
+                if (parent instanceof AbstractFolder) {
+                    ((AbstractFolder) parent).fileChanged0(ev);
+                }
             } finally {
                 ev.setPostNotify(null);
             }
@@ -569,7 +575,9 @@ abstract class AbstractFolder extends FileObject {
                 );
             try {
                 ev.inheritPostNotify(filerenameevent);
-                parent.fileRenamed0(ev);
+                if (parent instanceof AbstractFolder) {
+                    ((AbstractFolder) parent).fileRenamed0(ev);
+                }
             } finally {
                 ev.setPostNotify(null);
             }
@@ -587,7 +595,9 @@ abstract class AbstractFolder extends FileObject {
                 );
             try {
                 ev.inheritPostNotify(fileattributeevent);
-                parent.fileAttributeChanged0(ev);
+                if (parent instanceof AbstractFolder) {
+                    ((AbstractFolder) parent).fileAttributeChanged0(ev);
+                }
             } finally {
                 ev.setPostNotify(null);
             }
@@ -611,7 +621,7 @@ abstract class AbstractFolder extends FileObject {
     /** @return true if this folder or its parent have listeners
     */
     protected final boolean hasAtLeastOneListeners() {
-        return hasListeners() || ((parent != null) && parent.hasListeners());
+        return hasListeners() || ((parent instanceof AbstractFolder) && ((AbstractFolder) parent).hasListeners());
     }
 
     /** @return enumeration of all listeners.

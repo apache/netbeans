@@ -106,8 +106,10 @@ final class SuiteActionProvider implements ActionProvider {
             }
             case SingleMethod.COMMAND_RUN_SINGLE_METHOD: {
                 SingleMethod m = context.lookup(SingleMethod.class);
-                if (m != null && fo == null) {
-                    fo = m.getFile();
+                if (m != null) {
+                    if (fo == null) {
+                        fo = m.getFile();
+                    }
                     testSuffix = "#" + m.getMethodName();
                 }
                 // fallthrough
@@ -122,8 +124,10 @@ final class SuiteActionProvider implements ActionProvider {
                 break;
             case SingleMethod.COMMAND_DEBUG_SINGLE_METHOD: {
                 SingleMethod m = context.lookup(SingleMethod.class);
-                if (m != null && fo == null) {
-                    fo = m.getFile();
+                if (m != null) {
+                    if (fo == null) {
+                        fo = m.getFile();
+                    }
                     testSuffix = "#" + m.getMethodName();
                 }
                 // fallthrough
@@ -247,7 +251,7 @@ final class SuiteActionProvider implements ActionProvider {
             case ActionProvider.COMMAND_DEBUG_SINGLE:
                 return fo != null;
             default:
-                return true;
+                return false;
         }
     }
 }

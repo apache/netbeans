@@ -19,13 +19,16 @@
 package org.netbeans.modules.payara.jakartaee;
 
 import static java.util.Collections.unmodifiableSet;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.javaee.specs.support.api.JpaProvider;
 import org.netbeans.modules.javaee.specs.support.spi.JpaProviderFactory;
 import org.netbeans.modules.javaee.specs.support.spi.JpaSupportImplementation;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
 
 /**
  * Payara server JPA support.
@@ -74,14 +77,17 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
     private static final String JPA_PROVIDER
             = "org.eclipse.persistence.jpa.PersistenceProvider";
 
-    private static final JpaSupportVector jpaSupport[]
-            = new JpaSupportVector[PayaraVersion.length];
+    private static final Map<String, JpaSupportVector> jpaSupport
+            = new HashMap<>();
 
     // Initialize Payara JPA support matrix.
     static {
-        for (PayaraVersion version : PayaraVersion.values()) {
-            jpaSupport[version.ordinal()] = new JpaSupportVector(
-                    true, true, version.ordinal() >= PayaraVersion.PF_4_1_144.ordinal()
+        for (PayaraPlatformVersionAPI version : PayaraPlatformVersion.getVersions()) {
+            jpaSupport.put(
+                    version.toString(),
+                    new JpaSupportVector(
+                            true, true, version.isEE7Supported()
+                    )
             );
         }
     }
@@ -149,9 +155,9 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
             if (defaultProvider == null) {
                 // Unknown version is as the worst known case.
                 JpaSupportVector instanceJpaSupport
-                        = jpaSupport[instance.getVersion() != null
-                        ? instance.getVersion().ordinal()
-                        : PayaraVersion.PF_4_1_144.ordinal()];
+                        = jpaSupport.get(instance.getPlatformVersion() != null
+                                ? instance.getPlatformVersion().toString()
+                                : PayaraPlatformVersion.getLatestVersion().toString());
                 defaultProvider = JpaProviderFactory.createJpaProvider(
                         JPA_PROVIDER, true, instanceJpaSupport._1_0,
                         instanceJpaSupport._2_0, instanceJpaSupport._2_1);

@@ -194,7 +194,8 @@ public class WebRecoPrivTemplates implements RecommendedTemplates, PrivilegedTem
         if (ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_6_FULL) ||
             ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_7_FULL) ||
             ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_8_FULL) ||
-            ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_8_FULL)) {
+            ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_8_FULL) ||
+            ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_9_FULL)) {
 
             return true;
         }

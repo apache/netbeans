@@ -84,7 +84,8 @@ public class AbstractGradleProjectTestCase extends NbTestCase {
         NbGradleProjectImpl.RELOAD_RP.submit(() -> {
             // A bit low level calls, just to allow UI interaction to
             // Trust the project.
-            impl.project = GradleProjectCache.loadProject(impl, FULL_ONLINE, true, true);
+            GradleProjectLoader loader = impl.getLookup().lookup(GradleProjectLoader.class);
+            impl.project = loader.loadProject(FULL_ONLINE, true, true);
             NbGradleProjectImpl.ACCESSOR.doFireReload(NbGradleProject.get(impl));
         }).get();
     }

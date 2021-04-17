@@ -32,7 +32,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.server.ServerInstance;
 import org.netbeans.modules.payara.common.PayaraInstanceProvider;
-import org.netbeans.modules.payara.common.ServerDetails;
+import org.netbeans.modules.payara.common.PayaraPlatformDetails;
 import org.netbeans.modules.payara.common.wizards.PayaraWizardProvider;
 import org.netbeans.spi.server.ServerInstanceProvider;
 import org.openide.WizardDescriptor;
@@ -104,7 +104,7 @@ public final class ServerUtilities {
      */
     public static WizardDescriptor.InstantiatingIterator
             getInstantiatingIterator() {
-        return ServerDetails.getInstantiatingIterator();
+        return PayaraPlatformDetails.getInstantiatingIterator();
     }
 
     /**

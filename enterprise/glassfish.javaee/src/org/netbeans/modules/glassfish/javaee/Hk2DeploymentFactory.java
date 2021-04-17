@@ -39,6 +39,7 @@ public class Hk2DeploymentFactory implements DeploymentFactory {
     private static Hk2DeploymentFactory ee7Instance;
     private static Hk2DeploymentFactory ee8Instance;
     private static Hk2DeploymentFactory jakartaee8Instance;
+    private static Hk2DeploymentFactory jakartaee9Instance;
     private String[] uriFragments;
     private String version;
     private String displayName;
@@ -116,6 +117,22 @@ public class Hk2DeploymentFactory implements DeploymentFactory {
             jakartaee8Instance.setServerUtilities(tmp);
         }
         return jakartaee8Instance;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static synchronized DeploymentFactory createJakartaEe9() {
+        // FIXME -- these strings should come from some constant place
+        if (jakartaee9Instance == null) {
+            ServerUtilities tmp = ServerUtilities.getJakartaEe9Utilities();
+            jakartaee9Instance = new Hk2DeploymentFactory(new String[]{"deployer:gfv6ee9:", "deployer:gfv6"}, "0.4", // NOI18N
+                    NbBundle.getMessage(Hk2DeploymentFactory.class, "TXT_FactoryDisplayName"));  // NOI18N
+            DeploymentFactoryManager.getInstance().registerDeploymentFactory(jakartaee9Instance);
+            jakartaee9Instance.setServerUtilities(tmp);
+        }
+        return jakartaee9Instance;
     }
 
     /**

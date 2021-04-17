@@ -1,0 +1,4 @@
+Code completion result for source line:
+test(1, default: test(param|));
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PARAMETER  param1:                                    Parameter Name

@@ -83,6 +83,30 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="local-gradle-version-discovery">
+            <api name="general"/>
+            <summary>GradleDistributionManager can detect local Gradle Distributions</summary>
+            <version major="2" minor="10"/>
+            <date day="12" month="4" year="2021"/>
+            <author login="lkishalmi"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                Added <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleDistributionManager.html#availableLocalDistributions--">GradleDistributionManager.availableLocalDistributions()</a></code> 
+                method to help detection the already available GradleDistribution-s installed in the system.
+            </description>
+        </change>
+        <change id="tooling-runJvmArgs">
+            <api name="general"/>
+            <summary>NetBeans Tooling plugin recognizes "runJvmArgs" property</summary>
+            <version major="2" minor="9"/>
+            <date day="27" month="3" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                Introduced <code>runJvmArgs</code> project property that can be passed to NetBeans Tooling plugin in order to inject user JVM parameters
+                into gradle JavaExec task configurations. The property value shall contain whitespace-separated JVM arguments.
+            </description>
+        </change>
         <change id="trust-question-branding">
             <api name="general"/>
             <summary>Project trust dialog can be customized by branding</summary>

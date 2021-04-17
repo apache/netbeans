@@ -87,10 +87,17 @@ abstract class BaseJ2eeArchetypeProvider {
                 NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeVersion.JakartaEE8"),
                 NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeArtifactId.JakartaEE8"));
 
+        Archetype jakartaEE9Archetype = createArchetype(
+                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeGroupId.JakartaEE9"),
+                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeVersion.JakartaEE9"),
+                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeArtifactId.JakartaEE9"));
+
         map.put(Profile.JAVA_EE_8_FULL, javaEE8Archetype);
         map.put(Profile.JAVA_EE_8_WEB, javaEE8Archetype);
         map.put(Profile.JAKARTA_EE_8_FULL, jakartaEE8Archetype);
         map.put(Profile.JAKARTA_EE_8_WEB, jakartaEE8Archetype);
+        map.put(Profile.JAKARTA_EE_9_FULL, jakartaEE9Archetype);
+        map.put(Profile.JAKARTA_EE_9_WEB, jakartaEE9Archetype);
     }
 
     private Archetype createMojoArchetype(String version, String artifactId) {

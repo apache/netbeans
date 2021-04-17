@@ -31,16 +31,16 @@ import org.netbeans.modules.visual.graph.layout.orthogonalsupport.MGraph.Edge;
 import org.netbeans.modules.visual.graph.layout.orthogonalsupport.MGraph.Edge.Direction;
 import org.netbeans.modules.visual.graph.layout.orthogonalsupport.MGraph.Vertex;
 
-public class DirectionalGraph {
+public class DirectionalGraph<N, E> {
 
-    private OrthogonalRepresentation or;
+    private OrthogonalRepresentation<N, E> or;
     private Direction direction;
     private Direction barDirection;
-    private ArrayList<Bar> bars;
-    private Map<Vertex, Bar> barMap;
-    private Set<Edge> visitedEdges;
-    private Map<Vertex, Edge> forwardEdges;
-    private Map<Vertex, Edge> reverseEdges;
+    private List<Bar> bars;
+    private Map<Vertex<?>, Bar> barMap;
+    private Set<Edge<?>> visitedEdges;
+    private Map<Vertex<?>, Edge<?>> forwardEdges;
+    private Map<Vertex<?>, Edge<?>> reverseEdges;
 
     /**
      * 
@@ -48,9 +48,9 @@ public class DirectionalGraph {
      * @param direction
      * @return
      */
-    public static DirectionalGraph createGraph(OrthogonalRepresentation or,
+    public static <N, E> DirectionalGraph<N, E> createGraph(OrthogonalRepresentation<N, E> or,
             Direction direction) {
-        DirectionalGraph graph = new DirectionalGraph(or, direction);
+        DirectionalGraph<N, E> graph = new DirectionalGraph<>(or, direction);
         graph.createGraph();
 
         return graph;
@@ -61,13 +61,13 @@ public class DirectionalGraph {
      * @param or
      * @param direction
      */
-    private DirectionalGraph(OrthogonalRepresentation or, Direction direction) {
+    private DirectionalGraph(OrthogonalRepresentation<N, E> or, Direction direction) {
         this.or = or;
-        barMap = new HashMap<Vertex, Bar>();
-        bars = new ArrayList<Bar>();
-        visitedEdges = new HashSet<Edge>();
-        forwardEdges = new HashMap<Vertex, Edge>();
-        reverseEdges = new HashMap<Vertex, Edge>();
+        barMap = new HashMap<>();
+        bars = new ArrayList<>();
+        visitedEdges = new HashSet<>();
+        forwardEdges = new HashMap<>();
+        reverseEdges = new HashMap<>();
 
         this.direction = direction;
 
@@ -83,9 +83,9 @@ public class DirectionalGraph {
      * 
      */
     private void createGraph() {
-        Vertex cornerVertex = getCornerVertex();
-        Collection<Vertex> rootVertices = getRootVertices(cornerVertex);
-        assignEdgeDirections(rootVertices, new HashSet<Vertex>());
+        Vertex<?> cornerVertex = getCornerVertex();
+        Collection<Vertex<?>> rootVertices = getRootVertices(cornerVertex);
+        assignEdgeDirections(rootVertices, new HashSet<Vertex<?>>());
 
         visitedEdges.clear();
         createBar(cornerVertex, null);
@@ -99,17 +99,17 @@ public class DirectionalGraph {
      * @param vertices
      * @param skippedVertices
      */
-    private void assignEdgeDirections(Collection<Vertex> vertices,
-            Set<Vertex> skippedVertices) {
-        Collection<Vertex> oppositeVertices = new ArrayList<Vertex>();
+    private void assignEdgeDirections(Collection<Vertex<?>> vertices,
+            Set<Vertex<?>> skippedVertices) {
+        Collection<Vertex<?>> oppositeVertices = new ArrayList<>();
 
-        for (Vertex v : vertices) {
-            Collection<Edge> edges = v.getEdges();
-            for (Edge e : edges) {
+        for (Vertex<?> v : vertices) {
+            Collection<Edge<?>> edges = v.getEdges();
+            for (Edge<?> e : edges) {
                 if (e.getDirection() == direction &&
                         reverseEdges.get(v) != e) {
                     forwardEdges.put(v, e);
-                    Vertex w = e.getOppositeVertex(v);
+                    Vertex<?> w = e.getOppositeVertex(v);
                     reverseEdges.put(w, e);
                     oppositeVertices.add(w);
                 }
@@ -117,31 +117,31 @@ public class DirectionalGraph {
         }
 
         if (!oppositeVertices.isEmpty()) {
-            HashSet<Vertex> additionalVertices = new LinkedHashSet<Vertex>();
+            Set<Vertex<?>> additionalVertices = new LinkedHashSet<>();
 
-            for (Vertex v : oppositeVertices) {
-                Collection<Vertex> prevVertices = new ArrayList<Vertex>();
-                Set<Vertex> parentVertices = computeParentVertices(v);
+            for (Vertex<?> v : oppositeVertices) {
+                Collection<Vertex<?>> prevVertices = new ArrayList<>();
+                Set<Vertex<?>> parentVertices = computeParentVertices(v);
 
-                Collection<Edge> edges = v.getEdges();
-                for (Edge e : edges) {
+                Collection<Edge<?>> edges = v.getEdges();
+                for (Edge<?> e : edges) {
                     if (e.getDirection() == barDirection) {
-                        Vertex currentVertex = e.getOppositeVertex(v);
-                        Edge prevEdge = e;
+                        Vertex<?> currentVertex = e.getOppositeVertex(v);
+                        Edge<?> prevEdge = e;
                         boolean terminate = false;
 
                         while (!oppositeVertices.contains(currentVertex) &&
                                 !additionalVertices.contains(currentVertex) &&
                                 !skippedVertices.contains(currentVertex)) {
-                            if (!containsReverseEdge(currentVertex, new HashSet<Edge>()) &&
+                            if (!containsReverseEdge(currentVertex, new HashSet<Edge<?>>()) &&
                                     !reachableToParentVertex(currentVertex, parentVertices,
-                                    new HashSet<Edge>())) {
+                                    new HashSet<Edge<?>>())) {
                                 additionalVertices.add(currentVertex);
                                 prevVertices.add(currentVertex);
                                 boolean found = false;
 
-                                Collection<Edge> nextEdges = currentVertex.getEdges();
-                                for (Edge nextEdge : nextEdges) {
+                                Collection<Edge<?>> nextEdges = currentVertex.getEdges();
+                                for (Edge<?> nextEdge : nextEdges) {
                                     if (nextEdge != prevEdge &&
                                             nextEdge.getDirection() == barDirection) {
                                         currentVertex = nextEdge.getOppositeVertex(currentVertex);
@@ -179,14 +179,14 @@ public class DirectionalGraph {
      * @param v
      * @return
      */
-    private Set<Vertex> computeParentVertices(Vertex v) {
-        HashSet<Vertex> parentVertices = new HashSet<Vertex>();
+    private Set<Vertex<?>> computeParentVertices(Vertex<?> v) {
+        Set<Vertex<?>> parentVertices = new HashSet<>();
 
-        Edge reverseEdge = reverseEdges.get(v);
-        Vertex currentVertex = v;
+        Edge<?> reverseEdge = reverseEdges.get(v);
+        Vertex<?> currentVertex = v;
 
         while (reverseEdge != null) {
-            Vertex parentVertex = reverseEdge.getOppositeVertex(currentVertex);
+            Vertex<?> parentVertex = reverseEdge.getOppositeVertex(currentVertex);
             parentVertices.add(parentVertex);
             currentVertex = parentVertex;
             reverseEdge = reverseEdges.get(currentVertex);
@@ -201,10 +201,10 @@ public class DirectionalGraph {
      * @param visitedEdges
      * @return
      */
-    private boolean containsReverseEdge(Vertex v, Set<Edge> visitedEdges) {
+    private boolean containsReverseEdge(Vertex<?> v, Set<Edge<?>> visitedEdges) {
 
-        Collection<Edge> edges = v.getEdges();
-        for (Edge e : edges) {
+        Collection<Edge<?>> edges = v.getEdges();
+        for (Edge<?> e : edges) {
             if (e.getDirection() == direction &&
                     !visitedEdges.contains(e)) {
                 //Logger.log (1, "e = " + e);
@@ -227,14 +227,14 @@ public class DirectionalGraph {
      * @param visitedEdges
      * @return
      */
-    private boolean reachableToParentVertex(Vertex v, Set<Vertex> parentVertices,
-            Set<Edge> visitedEdges) {
+    private boolean reachableToParentVertex(Vertex<?> v, Set<Vertex<?>> parentVertices,
+            Set<Edge<?>> visitedEdges) {
 
-        Collection<Edge> edges = v.getEdges();
-        for (Edge e : edges) {
+        Collection<Edge<?>> edges = v.getEdges();
+        for (Edge<?> e : edges) {
             if (e.getDirection() == direction && !visitedEdges.contains(e)) {
                 visitedEdges.add(e);
-                Vertex w = e.getOppositeVertex(v);
+                Vertex<?> w = e.getOppositeVertex(v);
 
                 if (checkSideway(w, parentVertices, visitedEdges) ||
                         reachableToParentVertex(w, parentVertices, visitedEdges)) {
@@ -253,24 +253,24 @@ public class DirectionalGraph {
      * @param visitedEdges
      * @return
      */
-    private boolean checkSideway(Vertex v, Set<Vertex> parentVertices,
-            Set<Edge> visitedEdges) {
+    private boolean checkSideway(Vertex<?> v, Set<Vertex<?>> parentVertices,
+            Set<Edge<?>> visitedEdges) {
 
-        Collection<Edge> edges = v.getEdges();
-        for (Edge e : edges) {
+        Collection<Edge<?>> edges = v.getEdges();
+        for (Edge<?> e : edges) {
             if (e.getDirection() == barDirection &&
                     !visitedEdges.contains(e)) {
                 visitedEdges.add(e);
-                Vertex currentVertex = e.getOppositeVertex(v);
+                Vertex<?> currentVertex = e.getOppositeVertex(v);
 
                 while (true) {
                     if (parentVertices.contains(currentVertex)) {
                         return true;
                     }
 
-                    Edge nextEdge = null;
-                    Collection<Edge> edges2 = currentVertex.getEdges();
-                    for (Edge ce : edges2) {
+                    Edge<?> nextEdge = null;
+                    Collection<Edge<?>> edges2 = currentVertex.getEdges();
+                    for (Edge<?> ce : edges2) {
                         if (ce.getDirection() == barDirection &&
                                 !visitedEdges.contains(ce)) {
                             visitedEdges.add(ce);
@@ -297,7 +297,7 @@ public class DirectionalGraph {
      * @param parentBar
      * @return
      */
-    private Bar createBar(Vertex vertex, Bar parentBar) {
+    private Bar createBar(Vertex<?> vertex, Bar parentBar) {
         Bar bar = barMap.get(vertex);
 
         if (bar == null) {
@@ -306,19 +306,19 @@ public class DirectionalGraph {
             bar.addVertex(vertex);
             barMap.put(vertex, bar);
 
-            Collection<Edge> edges = vertex.getEdges();
-            for (Edge edge : edges) {
+            Collection<Edge<?>> edges = vertex.getEdges();
+            for (Edge<?> edge : edges) {
                 if (edge.getDirection() == barDirection) {
-                    Vertex currentVertex = edge.getOppositeVertex(vertex);
-                    Edge prevEdge = edge;
+                    Vertex<?> currentVertex = edge.getOppositeVertex(vertex);
+                    Edge<?> prevEdge = edge;
 
                     while (true) {
                         bar.addVertex(currentVertex);
                         barMap.put(currentVertex, bar);
-                        Edge foundEdge = null;
+                        Edge<?> foundEdge = null;
 
-                        Collection<Edge> edges2 = currentVertex.getEdges();
-                        for (Edge e : edges2) {
+                        Collection<Edge<?>> edges2 = currentVertex.getEdges();
+                        for (Edge<?> e : edges2) {
                             if (e != prevEdge &&
                                     e.getDirection() == barDirection) {
                                 foundEdge = e;
@@ -336,9 +336,9 @@ public class DirectionalGraph {
                 }
             }
 
-            for (Vertex v : bar.getVertices()) {
-                Collection<Edge> edges2 = v.getEdges();
-                for (Edge e : edges2) {
+            for (Vertex<?> v : bar.getVertices()) {
+                Collection<Edge<?>> edges2 = v.getEdges();
+                for (Edge<?> e : edges2) {
                     if (e.getDirection() == direction &&
                             forwardEdges.get(v) == e &&
                             !visitedEdges.contains(e)) {
@@ -368,18 +368,18 @@ public class DirectionalGraph {
      * @param cornerVertex
      * @return
      */
-    private Collection<Vertex> getRootVertices(Vertex cornerVertex) {
-        ArrayList<Vertex> rootVertices = new ArrayList<Vertex>();
+    private Collection<Vertex<?>> getRootVertices(Vertex<?> cornerVertex) {
+        ArrayList<Vertex<?>> rootVertices = new ArrayList<>();
 
-        Vertex currentVertex = cornerVertex;
-        Edge prevEdge = null;
+        Vertex<?> currentVertex = cornerVertex;
+        Edge<?> prevEdge = null;
         rootVertices.add(cornerVertex);
 
         while (true) {
-            Edge foundEdge = null;
+            Edge<?> foundEdge = null;
 
-            Collection<Edge> edges = currentVertex.getEdges();
-            for (Edge e : edges) {
+            Collection<Edge<?>> edges = currentVertex.getEdges();
+            for (Edge<?> e : edges) {
                 if (e != prevEdge &&
                         e.getDirection() == barDirection) {
                     foundEdge = e;
@@ -402,27 +402,27 @@ public class DirectionalGraph {
      * 
      * @return
      */
-    private Vertex getCornerVertex() {
-        Vertex cornerVertex = or.getCornerVertex();
+    private Vertex<?> getCornerVertex() {
+        Vertex<N> cornerVertex = or.getCornerVertex();
 
         if (cornerVertex != null) {
             return cornerVertex;
         }
 
-        EmbeddedPlanarGraph epg = or.getOriginalGraph();
+        EmbeddedPlanarGraph<N, E> epg = or.getOriginalGraph();
         Face outerFace = epg.getOuterFace();
-        List<Vertex> vertices = outerFace.getVertices();
+        List<Vertex<?>> vertices = outerFace.getVertices();
 
-        Vertex candidate1 = null;
-        Vertex candidate2 = null;
-        Vertex candidate3 = null;
+        Vertex<?> candidate1 = null;
+        Vertex<?> candidate2 = null;
+        Vertex<?> candidate3 = null;
 
-        for (Vertex v : vertices) {
+        for (Vertex<?> v : vertices) {
             int hEdgeCount = 0;
             int vEdgeCount = 0;
 
-            Collection<Edge> edges = v.getEdges();
-            for (Edge e : edges) {
+            Collection<Edge<?>> edges = v.getEdges();
+            for (Edge<?> e : edges) {
                 Direction direction = e.getDirection();
 
                 if (direction == Direction.HORIZONTAL) {
@@ -534,9 +534,9 @@ public class DirectionalGraph {
     /**
      * 
      */
-    public static class Bar implements Comparable {
+    public static class Bar implements Comparable<Object> {
 
-        private Collection<Vertex> vertices;
+        private Collection<Vertex<?>> vertices;
         private Collection<Bar> neighbors;
         private Direction direction;
         private int number;
@@ -547,15 +547,15 @@ public class DirectionalGraph {
          */
         public Bar(Direction direction) {
             this.direction = direction;
-            vertices = new ArrayList<Vertex>();
-            neighbors = new HashSet<Bar>();
+            vertices = new ArrayList<>();
+            neighbors = new HashSet<>();
         }
 
         /**
          * 
          * @param vertex
          */
-        public void addVertex(Vertex vertex) {
+        public void addVertex(Vertex<?> vertex) {
             vertices.add(vertex);
             Dimension d = vertex.getSize();
 
@@ -582,7 +582,7 @@ public class DirectionalGraph {
          * 
          * @return
          */
-        public Collection<Vertex> getVertices() {
+        public Collection<Vertex<?>> getVertices() {
             return vertices;
         }
 
@@ -618,15 +618,12 @@ public class DirectionalGraph {
             return number;
         }
 
-        /**
-         * 
-         * @return
-         */
+        @Override
         public String toString() {
             String s = "\t" + direction + " Bar:\n";
             s = s + "\t\tNumber = " + number + "\n";
             s = s + "\t\tVertices:\n";
-            for (Vertex v : vertices) {
+            for (Vertex<?> v : vertices) {
                 s = s + "\t\t\t" + v + "\n";
             }
             s = s + "\t\tNeighbors =" + neighbors.size() + "\n";
@@ -638,11 +635,7 @@ public class DirectionalGraph {
             return s;
         }
 
-        /**
-         * 
-         * @param o
-         * @return
-         */
+        @Override
         public int compareTo(Object o) {
             if (!(o instanceof Bar)) {
                 return 0;

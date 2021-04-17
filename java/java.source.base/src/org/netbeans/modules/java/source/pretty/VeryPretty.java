@@ -2077,14 +2077,11 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     public void visitTree(JCTree tree) {
         if ("BINDING_PATTERN".equals(tree.getKind().name())) {
             try {
-                Class bindingPatternClass = Class.forName("com.sun.source.tree.BindingPatternTree");
-                Method getBinding = bindingPatternClass.getMethod("getBinding");
-                Method getType = bindingPatternClass.getMethod("getType");
-                print((JCTree) getType.invoke(tree));
+                print((JCTree) TreeShims.getBindingPatternType(tree));
                 print(' ');
-                print((Name) getBinding.invoke(tree));
+                print((Name) TreeShims.getBinding(tree));
                 return ;
-            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException ex) {
+            } catch (RuntimeException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }

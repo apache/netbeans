@@ -60,11 +60,12 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.api.scripting</code-name-base>
+                    <code-name-base>org.netbeans.libs.json_simple</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.0</specification-version>
+                        <release-version>1</release-version>
+                        <specification-version>0.24</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -157,7 +158,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>9.9</specification-version>
+                        <specification-version>9.23</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

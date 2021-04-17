@@ -65,7 +65,6 @@ import org.netbeans.api.debugger.jpda.DebuggerStartException;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.ListeningDICookie;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.spi.debugger.ui.Controller;
 import org.netbeans.spi.debugger.ui.PersistentController;
 import org.openide.DialogDisplayer;
@@ -650,7 +649,7 @@ public class ConnectPanel extends JPanel implements ActionListener, HelpCtx.Prov
                 @Override
                 public void run() {
                     final Thread theCurrentThread = Thread.currentThread();
-                    ProgressHandle progress = ProgressHandleFactory.createHandle(
+                    ProgressHandle progress = ProgressHandle.createHandle(
                             NbBundle.getMessage(ConnectPanel.class, "CTL_connectProgress"),
                             new Cancellable() {
                                 @Override

@@ -1904,7 +1904,14 @@ public class CasualDiff {
         copyTo(localPointer, localPointer = tokenSequence.offset());
         PositionEstimator est = EstimatorFactory.cases(oldT.getCases(), newT.getCases(), diffContext);
         localPointer = diffList(oldT.cases, newT.cases, localPointer, est, Measure.MEMBER, printer);
-
+        
+        List<JCCase> cases = newT.cases;
+        if (cases.size() != 0) {
+            String caseKind = String.valueOf(CasualDiff.getCaseKind(cases.get(0)));
+            if (caseKind.equals("RULE")) { // NOI18N
+                printer.newline();
+            }
+        }
         copyTo(localPointer, bounds[1]);
         return bounds[1];
     }
@@ -1959,6 +1966,9 @@ public class CasualDiff {
             endpos = endPos(oldPatterns.get(oldPatterns.size() - 1));
 
             if (newPatterns.isEmpty()) {
+                moveFwdToOneOfTokens(tokenSequence, bounds[0], EnumSet.of(JavaTokenId.CASE));
+                copyTo = tokenSequence.offset();
+                copyTo(localPointer, copyTo);
                 localPointer = copyTo = posHint = endpos;
                 printer.print("default");
             }
@@ -4156,6 +4166,7 @@ public class CasualDiff {
                         match = wasInFieldGroup;
                         for (Iterator<JCTree> it = deletedItems.iterator(); !match && it.hasNext(); ) {
                             ld = it.next();
+                            // The condition inside if is meant to be an assignment operation and not a comparison
                             if (match = treesMatch(item.element, ld, false)) {
                                 it.remove();
                             }

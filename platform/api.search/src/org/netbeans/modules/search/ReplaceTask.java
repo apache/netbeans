@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.search.MatchingObject.InvalidityStatus;
 import org.netbeans.modules.search.ui.BasicReplaceResultsPanel;
 import org.openide.filesystems.FileAlreadyLockedException;
@@ -71,7 +70,7 @@ public final class ReplaceTask implements Runnable {
         this.panel = panel;
         
         problems = new ArrayList<String>(4);
-        progressHandle = ProgressHandleFactory.createHandle(
+        progressHandle = ProgressHandle.createHandle(
                 NbBundle.getMessage(getClass(), "LBL_Replacing"), //NOI18N
                 null, null);
     }

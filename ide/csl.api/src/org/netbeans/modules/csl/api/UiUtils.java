@@ -36,7 +36,7 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.csl.api.DeclarationFinder.DeclarationLocation;
 import org.netbeans.modules.csl.core.Language;
 import org.netbeans.modules.csl.core.LanguageRegistry;
@@ -301,7 +301,7 @@ public final class UiUtils {
                     return DeclarationLocation.NONE; //we are opening @ 0 position. Fix #160478
                 }
             } else if (SwingUtilities.isEventDispatchThread()) {
-                ProgressUtils.runOffEventDispatchThread(
+                BaseProgressUtils.runOffEventDispatchThread(
                     new Runnable() {
                         @Override
                         public void run() {

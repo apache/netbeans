@@ -24,13 +24,16 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.java.queries.SourceJavadocAttacher.AttachmentListener;
-import org.netbeans.spi.java.queries.SourceJavadocAttacherImplementation.Definer;
 import org.netbeans.spi.java.queries.SourceJavadocAttacherImplementation;
+import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileStateInvalidException;
+import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.Mutex;
@@ -88,7 +91,27 @@ public class DefaultSourceJavadocAttacher implements SourceJavadocAttacherImplem
                     }
                     final URL[] toAttach = selectRoots(root, currentRoots, mode);
                     if (toAttach != null) {
-                        cache.updateRoot(root, toAttach);
+                        // verify the added roots are not discoverable by normal infrastructure:
+                        FileObject[] queryRoots = SourceForBinaryQuery.findSourceRoots(root).getRoots();
+                        List<FileObject> filesToAttach = new ArrayList<>();
+
+                        boolean allMatches = true;
+                        for (URL u : toAttach) {
+                            FileObject f = URLMapper.findFileObject(u);
+                            if (f != null) {
+                                filesToAttach.add(f);
+                            } else {
+                                // URL cannot be mapped to a file, can't be represented by SFBQ
+                                allMatches = false;
+                                break;
+                            }
+                        }
+                        if (allMatches) {
+                            allMatches = Arrays.asList(queryRoots).containsAll(filesToAttach);
+                        }
+                        if (!allMatches) {
+                            cache.updateRoot(root, toAttach);
+                        }
                         success = true;
                     }
                 } catch (MalformedURLException | FileStateInvalidException e) {
@@ -122,7 +145,7 @@ public class DefaultSourceJavadocAttacher implements SourceJavadocAttacherImplem
                     Bundle.TXT_Sources(),
                     cfh),
                 SourceJavadocAttacherUtil.createDefaultURIConvertor(true),
-                Lookup.getDefault().lookup(SourceJavadocAttacherImplementation.Definer.class));
+                Lookup.getDefault().lookupAll(SourceJavadocAttacherImplementation.Definer.class));
         } else if (mode == 1) {
             selected = SourceJavadocAttacherUtil.selectJavadoc(
                 root,
@@ -132,7 +155,7 @@ public class DefaultSourceJavadocAttacher implements SourceJavadocAttacherImplem
                     Bundle.TXT_Javadoc(),
                     cfh),
                 SourceJavadocAttacherUtil.createDefaultURIConvertor(false),
-                Lookup.getDefault().lookup(SourceJavadocAttacherImplementation.Definer.class));
+                Lookup.getDefault().lookupAll(SourceJavadocAttacherImplementation.Definer.class));
         } else {
             throw new IllegalStateException(Integer.toString(mode));
         }

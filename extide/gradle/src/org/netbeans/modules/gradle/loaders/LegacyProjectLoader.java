@@ -267,12 +267,21 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
 
         @NbBundle.Messages({
             "# {0} - The project name",
-            "LBL_Loading=Loading {0}"
+            "LBL_Loading=Loading {0}",
+            "# {0} (re)load reason",
+            "# {1} project name",
+            "FMT_ProjectLoadReason={0} ({1})"
         })
         @Override
         public GradleProject call() throws Exception {
             tokenSource = GradleConnector.newCancellationTokenSource();
-            final ProgressHandle handle = ProgressHandle.createHandle(Bundle.LBL_Loading(ctx.previous.getBaseProject().getName()), this);
+            String msg;
+            if (ctx.description != null) {
+                msg = Bundle.FMT_ProjectLoadReason(ctx.description, ctx.previous.getBaseProject().getName());
+            } else {
+                msg = Bundle.LBL_Loading(ctx.previous.getBaseProject().getName());
+            }
+            final ProgressHandle handle = ProgressHandle.createHandle(msg, this);
             ProgressListener pl = (ProgressEvent pe) -> {
                 handle.progress(pe.getDescription());
             };

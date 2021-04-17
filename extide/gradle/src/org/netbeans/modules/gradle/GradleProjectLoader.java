@@ -26,6 +26,5 @@ import org.netbeans.modules.gradle.api.NbGradleProject;
  */
 public interface GradleProjectLoader {
 
-    GradleProject loadProject(NbGradleProject.Quality aim, boolean ignoreCache, boolean interactive, String... args);
-    
+    GradleProject loadProject(NbGradleProject.Quality aim, String descriptionOpt, boolean ignoreCache, boolean interactive, String... args);
 }

@@ -37,18 +37,18 @@
         <args>clean</args>
         <reload rule="NEVER"/>
     </action>
-    <action name="download.javadoc">
+    <action displayName="Download Javadoc" name="download.javadoc">
         <!--
             We do not really execute any tasks here, rather just reload the project
             allowing it to go online and fetch some dependencies. So in this case
-            the action is forcing a project reload with some argiments.
+            the action is forcing a project reload with some arguments.
         -->
         <reload rule="ALWAYS_ONLINE">
             <args>-PdownloadJavadoc=${requestedComponent}</args>
         </reload>
     </action>
 
-    <action name="download.sources">
+    <action displayName="Download sources" name="download.sources">
         <reload rule="ALWAYS_ONLINE">
             <args>-PdownloadSources=${requestedComponent}</args>
         </reload>

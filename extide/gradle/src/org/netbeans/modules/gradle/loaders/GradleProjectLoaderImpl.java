@@ -37,6 +37,7 @@ import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 public class GradleProjectLoaderImpl implements GradleProjectLoader {
 
     final Project project;
+    private String actionDescription;
     private static final Logger LOGGER = Logger.getLogger(GradleProjectLoaderImpl.class.getName());
 
     public GradleProjectLoaderImpl(Project project) {
@@ -44,10 +45,10 @@ public class GradleProjectLoaderImpl implements GradleProjectLoader {
     }
 
     @Override
-    public GradleProject loadProject(NbGradleProject.Quality aim, boolean ignoreCache, boolean interactive, String... args) {
+    public GradleProject loadProject(NbGradleProject.Quality aim, String descriptionOpt, boolean ignoreCache, boolean interactive, String... args) {
         LOGGER.info("Load aiming " +aim + " for "+ project);
         GradleCommandLine cmd = new GradleCommandLine(args);
-        AbstractProjectLoader.ReloadContext ctx = new AbstractProjectLoader.ReloadContext((NbGradleProjectImpl) project, aim, cmd);
+        AbstractProjectLoader.ReloadContext ctx = new AbstractProjectLoader.ReloadContext((NbGradleProjectImpl) project, aim, cmd, descriptionOpt);
         List<AbstractProjectLoader> loaders = new LinkedList<>();
 
         if (!ignoreCache) loaders.add(new DiskCacheProjectLoader(ctx));

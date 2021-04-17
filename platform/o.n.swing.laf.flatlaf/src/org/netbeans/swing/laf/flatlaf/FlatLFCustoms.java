@@ -41,6 +41,7 @@ import org.netbeans.swing.tabcontrol.plaf.TabControlButton;
 public class FlatLFCustoms extends LFCustoms {
 
     private static final ModifiableColor unifiedBackground = new ModifiableColor();
+    private static final ModifiableColor quicksearchBackground = new ModifiableColor();
 
     @Override
     public Object[] createApplicationSpecificKeysAndValues() {
@@ -56,6 +57,7 @@ public class FlatLFCustoms extends LFCustoms {
         return new Object[] {
             // unified background
             "nb.options.categories.tabPanelBackground", unifiedBackground,
+            "nb.quicksearch.background", quicksearchBackground,
 
             // options
             "TitlePane.useWindowDecorations", FlatLafPrefs.isUseWindowDecorations(),
@@ -121,10 +123,9 @@ public class FlatLFCustoms extends LFCustoms {
     }
 
     static void updateUnifiedBackground() {
-        String key = FlatLafPrefs.isUnifiedTitleBar() && FlatLafPrefs.isUseWindowDecorations()
-                ? "Panel.background"
-                : "Tree.background";
-        unifiedBackground.setRGB(UIManager.getColor(key).getRGB());
+        boolean unified = FlatLafPrefs.isUnifiedTitleBar() && FlatLafPrefs.isUseWindowDecorations();
+        unifiedBackground.setRGB(UIManager.getColor(unified ? "Panel.background" : "Tree.background").getRGB()); // NOI18N
+        quicksearchBackground.setRGB(UIManager.getColor(unified ? "Panel.background" : "MenuBar.background").getRGB()); // NOI18N
     }
 
     //---- class ModifiableColor ----------------------------------------------

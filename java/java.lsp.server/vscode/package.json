@@ -39,9 +39,25 @@
 					"text/javascript",
 					"application/javascript"
 				]
+			},
+			{
+				"id": "jackpot-hint",
+				"extensions": [
+					".hint"
+				],
+				"aliases": [
+					"Java Hints"
+				]
 			}
 		],
-		"configuration": {
+                "grammars": [
+                        {
+                                "language": "jackpot-hint",
+                                "scopeName": "source.java",
+                                "path": "./syntaxes/java.tmLanguage.json"
+                        }
+                ],
+                "configuration": {
 			"title": "Java",
 			"properties": {
 				"netbeans.jdkhome": {
@@ -283,8 +299,5 @@
 		"vscode-languageclient": "6.1.3",
 		"vscode-test-adapter-api": "^1.9.0",
 		"vscode-test-adapter-util": "^0.7.1"
-	},
-	"extensionDependencies": [
-		"hbenl.vscode-test-explorer"
-	]
+	}
 }

@@ -65,6 +65,13 @@ public class GlassfishWizardProvider implements ServerWizardProvider {
                 );
     }
 
+    public static GlassfishWizardProvider createJakartaEe91() {
+        return new GlassfishWizardProvider(
+                org.openide.util.NbBundle.getMessage(GlassfishWizardProvider.class,
+                "STR_V610_FAMILY_NAME", new Object[]{}) // NOI18N
+                );
+    }
+
     private final String displayName;
 
     private GlassfishWizardProvider(

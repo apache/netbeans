@@ -95,6 +95,9 @@ public class AutomaticRegistration {
         } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_6)) {
             deployer = "deployer:gfv6ee9";
             config = "GlassFishJakartaEE9/Instances";
+        } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_6_1_0)) {
+            deployer = "deployer:gfv610ee9";
+            config = "GlassFishJakartaEE9/Instances";
         }
         StringBuilder sb = new StringBuilder(
                 defaultDisplayNamePrefix.length() + 12);

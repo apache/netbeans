@@ -66,6 +66,7 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
     public static final String EE8_DEPLOYER_FRAGMENT = "deployer:gfv5ee8"; // NOI18N
     public static final String JAKARTAEE8_DEPLOYER_FRAGMENT = "deployer:gfv510ee8";
     public static final String JAKARTAEE9_DEPLOYER_FRAGMENT = "deployer:gfv6ee9";
+    public static final String JAKARTAEE91_DEPLOYER_FRAGMENT = "deployer:gfv610ee9";
     public static final String EE6WC_DEPLOYER_FRAGMENT = "deployer:gfv3ee6wc"; // NOI18N
     public static final String PRELUDE_DEPLOYER_FRAGMENT = "deployer:gfv3"; // NOI18N
     static private String EE6_INSTANCES_PATH = "/GlassFishEE6/Instances"; // NOI18N
@@ -73,6 +74,7 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
     static private String EE9_INSTANCES_PATH = "/GlassFishEE9/Instances"; // NOI18N
     static private String JAKARTAEE8_INSTANCES_PATH = "/GlassFishJakartaEE8/Instances"; // NOI18N
     static private String JAKARTAEE9_INSTANCES_PATH = "/GlassFishJakartaEE9/Instances"; // NOI18N
+  //  static private String JAKARTAEE91_INSTANCES_PATH = "/GlassFishJakartaEE91/Instances"; // NOI18N
     static private String EE6WC_INSTANCES_PATH = "/GlassFishEE6WC/Instances"; // NOI18N
 
     static public String PRELUDE_DEFAULT_NAME = "GlassFish_v3_Prelude"; //NOI18N

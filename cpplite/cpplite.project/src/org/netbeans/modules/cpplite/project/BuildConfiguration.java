@@ -63,7 +63,7 @@ public class BuildConfiguration {
         Map<String, List<List<String>>> commands = new HashMap<>();
         for (String command : new String[] {ActionProvider.COMMAND_BUILD, ActionProvider.COMMAND_CLEAN, ActionProvider.COMMAND_RUN}) {
             String cmd = prefs.get(command, null);
-            if (cmd == null) {
+            if (cmd == null || cmd.isEmpty()) {
                 continue;
             }
             commands.put(command, Utils.decode(cmd));

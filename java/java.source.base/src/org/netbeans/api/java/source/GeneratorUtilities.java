@@ -1108,7 +1108,16 @@ public final class GeneratorUtilities {
             pkgCounts.put(pkg, -2);
         }
         ExpressionTree packageName = cut.getPackageName();
-        pkg = packageName != null ? (PackageElement)trees.getElement(TreePath.getPath(cut, packageName)) : null;
+        {
+            Element element = null;
+            if (packageName != null) {
+                element = trees.getElement(TreePath.getPath(cut, packageName));
+                while (element != null && element.getKind() != ElementKind.PACKAGE) {
+                    element = element.getEnclosingElement();
+                }
+            }
+            pkg = (PackageElement)element;
+        }
         if (pkg == null && packageName != null) {
             pkg = elements.getPackageElement(elements.getName(packageName.toString()));
         }

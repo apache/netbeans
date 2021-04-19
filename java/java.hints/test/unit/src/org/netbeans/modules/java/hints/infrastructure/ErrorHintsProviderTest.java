@@ -25,6 +25,7 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
+import javax.lang.model.SourceVersion;
 import javax.swing.text.Document;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
@@ -45,6 +46,7 @@ import org.netbeans.modules.java.source.usages.IndexUtil;
 import org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.modules.java.completion.TreeShims;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -70,7 +72,7 @@ public class ErrorHintsProviderTest extends NbTestCase {
     @Override
     protected void setUp() throws Exception {
         SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/editor/resources/layer.xml"}, new Object[0]);
-
+        
         clearWorkDir();
         
         if (cache == null) {
@@ -230,7 +232,9 @@ public class ErrorHintsProviderTest extends NbTestCase {
     }
     
     public void testTestUnicodeError() throws Exception {
-        performTest("TestUnicodeError", false);
+        if (TreeShims.isJDKVersionRelease16_Or_Above()) {
+            performTest("TestUnicodeError", false);
+        }
     }
     
     public void testOverrideAnnotation() throws Exception {

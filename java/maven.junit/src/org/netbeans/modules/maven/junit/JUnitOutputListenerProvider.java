@@ -289,6 +289,22 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
             } else {
                 if (relativeFile.exists() && relativeFile.isDirectory()) {
                     outputDir = relativeFile;
+                } else {
+                    File parentFile = absoluteFile.getParentFile();
+                    if (parentFile.exists() && parentFile.isDirectory()) {
+                        absoluteFile.mkdir();
+                        if (absoluteFile.exists() && absoluteFile.isDirectory()) {
+                            outputDir = absoluteFile;
+                        }
+                    } else {
+                        File parentRelativeFile = relativeFile.getParentFile();
+                        if (parentRelativeFile.exists() && parentRelativeFile.isDirectory()) {
+                            relativeFile.mkdir();
+                            if (relativeFile.exists() && relativeFile.isDirectory()) {
+                                outputDir = relativeFile;
+                            }
+                        }
+                    }
                 }
             }
             if (null != outputDir) {

@@ -251,18 +251,22 @@ public final class NbGradleProjectImpl implements Project {
     }
 
     private GradleProject loadProject() {
-        return loadProject(false, aimedQuality);
+        return loadProject(null, false, aimedQuality);
     }
 
-    private GradleProject loadProject(boolean ignoreCache, Quality aim, String... args) {
+    private GradleProject loadProject(String desc, boolean ignoreCache, Quality aim, String... args) {
         GradleProjectLoader loader = getLookup().lookup(GradleProjectLoader.class);
-        GradleProject prj = loader != null ? loader.loadProject(aim, ignoreCache, false, args) : null;
+        GradleProject prj = loader != null ? loader.loadProject(aim, desc, ignoreCache,  false, args) : null;
         return prj;
     }
-
+    
     RequestProcessor.Task reloadProject(final boolean ignoreCache, final Quality aim, final String... args) {
+        return reloadProject(null,  ignoreCache, aim, args);
+    }
+    
+    RequestProcessor.Task reloadProject(String desc, final boolean ignoreCache, final Quality aim, final String... args) {
         return RELOAD_RP.post(() -> {
-            project = loadProject(ignoreCache, aim, args);
+            project = loadProject(desc, ignoreCache, aim, args);
             ACCESSOR.doFireReload(watcher);
         });
     }
@@ -310,6 +314,10 @@ public final class NbGradleProjectImpl implements Project {
      * 
      * @return future that produces the result.
      */
+    @NbBundle.Messages({
+        "# {0} - project name",
+        "ACT_PrimingProject=Preparing project {0}"
+    })
     CompletableFuture<GradleProject> primeProject() {
         CompletableFuture<GradleProject> ret;
         synchronized (this) {
@@ -328,7 +336,7 @@ public final class NbGradleProjectImpl implements Project {
                 // Build project, so trust the project.
                 ProjectTrust.getDefault().trustProject(this, true);
                 GradleProjectLoader loader = getLookup().lookup(GradleProjectLoader.class);
-                GradleProject gradleProject = loader.loadProject(FULL_ONLINE, true, true);
+                GradleProject gradleProject = loader.loadProject(FULL_ONLINE, Bundle.ACT_PrimingProject(project.getBaseProject().getName()), true, true);
                 LOG.log(Level.FINER, "Priming finished, reloading {0}: {1}", project);
                 fireProjectReload(false);
                 ret.complete(gradleProject);

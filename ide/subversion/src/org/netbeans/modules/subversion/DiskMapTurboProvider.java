@@ -27,7 +27,6 @@ import java.io.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.modules.proxy.Base64Encoder;
 import org.openide.modules.Places;
 import org.openide.util.NbBundle;
 
@@ -431,7 +430,7 @@ class DiskMapTurboProvider implements TurboProvider {
             FileUtils.copyFile(file, tmpFile);
             byte[] contents = FileUtils.getFileContentsAsByteArray(tmpFile);
             Subversion.LOG.log(Level.INFO, "Corrupted cache file length: {0}", contents.length);
-            String encodedContent = Base64Encoder.encode(contents); // log the file contents
+            String encodedContent = Base64.getEncoder().encodeToString(contents); // log the file contents
             Subversion.LOG.log(Level.INFO, "Corrupted cache file content:\n{0}\n", encodedContent);
             Exception ex = new Exception("Corrupted cache file \"" + file.getAbsolutePath() + "\", please report in subversion module issues and attach "
                     + tmpFile.getAbsolutePath() + " plus the IDE message log", e);

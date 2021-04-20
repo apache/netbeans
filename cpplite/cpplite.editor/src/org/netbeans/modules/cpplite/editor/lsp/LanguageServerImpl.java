@@ -47,6 +47,7 @@ import org.netbeans.modules.cpplite.editor.spi.CProjectConfigurationProvider;
 import org.netbeans.modules.cpplite.editor.spi.CProjectConfigurationProvider.ProjectConfiguration;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.Places;
+import org.openide.util.Pair;
 
 /**
  *
@@ -66,7 +67,7 @@ public class LanguageServerImpl implements LanguageServerProvider {
 
     private static final Logger LOG = Logger.getLogger(LanguageServerImpl.class.getName());
 
-    private static final Map<Project, LanguageServerDescription> prj2Server = new HashMap<>();
+    private static final Map<Project, Pair<Process, LanguageServerDescription>> prj2Server = new HashMap<>();
 
     @Override
     public LanguageServerDescription startServer(Lookup lookup) {
@@ -88,7 +89,10 @@ public class LanguageServerImpl implements LanguageServerProvider {
         String ccls = Utils.getCCLSPath();
         String clangd = Utils.getCLANGDPath();
         if (ccls != null || clangd != null) {
-            return prj2Server.computeIfAbsent(prj, (Project p) -> {
+            return prj2Server.compute(prj, (p, pair) -> {
+                if (pair != null && pair.first().isAlive()) {
+                    return pair;
+                }
                 try {
                     List<String> command = new ArrayList<>();
 
@@ -128,14 +132,14 @@ public class LanguageServerImpl implements LanguageServerProvider {
                             in = new CopyInput(in, System.err);
                             out = new CopyOutput(out, System.err);
                         }
-                        return LanguageServerDescription.create(in, out, process);
+                        return Pair.of(process, LanguageServerDescription.create(in, out, process));
                     }
                     return null;
                 } catch (IOException ex) {
                     LOG.log(Level.FINE, null, ex);
                     return null;
                 }
-            });
+            }).second();
         }
         return null;
     }

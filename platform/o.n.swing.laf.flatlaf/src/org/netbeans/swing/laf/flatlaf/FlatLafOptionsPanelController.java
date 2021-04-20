@@ -31,8 +31,7 @@ import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
 /**
- *
- * @author charly
+ * @author Karl Tauber
  */
 @OptionsPanelController.SubRegistration(
     displayName="#FlatLaf_DisplayName",
@@ -69,22 +68,23 @@ public class FlatLafOptionsPanelController extends OptionsPanelController {
             changed = false;
 
             UIDefaults defaults = UIManager.getDefaults();
-            defaults.put("TitlePane.useWindowDecorations", FlatLafPrefs.isUseWindowDecorations());
             defaults.put("TitlePane.unifiedBackground", FlatLafPrefs.isUnifiedTitleBar());
             defaults.put("TitlePane.menuBarEmbedded", FlatLafPrefs.isMenuBarEmbedded());
             defaults.put("MenuItem.selectionType", FlatLafPrefs.isUnderlineMenuSelection() ? "underline" : null);
             defaults.put("Component.hideMnemonics", !FlatLafPrefs.isAlwaysShowMnemonics());
 
-            if (oldUseWindowDecorations != FlatLafPrefs.isUseWindowDecorations()
-                    || oldUnifiedTitleBar != FlatLafPrefs.isUnifiedTitleBar()) {
-                FlatLaf.updateUI();
-            } else if (oldMenuBarEmbedded != FlatLafPrefs.isMenuBarEmbedded()
+            FlatLFCustoms.updateUnifiedBackground();
+
+            if (oldUseWindowDecorations != FlatLafPrefs.isUseWindowDecorations()) {
+                FlatLaf.setUseNativeWindowDecorations(FlatLafPrefs.isUseWindowDecorations());
+            } 
+
+            if (oldMenuBarEmbedded != FlatLafPrefs.isMenuBarEmbedded()) {
+                FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
+            } else if (oldUnifiedTitleBar != FlatLafPrefs.isUnifiedTitleBar()
                     || oldUnderlineMenuSelection != FlatLafPrefs.isUnderlineMenuSelection()
                     || oldAlwaysShowMnemonics != FlatLafPrefs.isAlwaysShowMnemonics()) {
-                for (Window w : Window.getWindows()) {
-                    w.revalidate();
-                    w.repaint();
-                }
+                FlatLaf.repaintAllFramesAndDialogs();
             }
         });
     }

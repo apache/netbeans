@@ -53,9 +53,9 @@ import org.netbeans.modules.java.source.TreeShims;
 public class CouplingTest extends TestCase {
 
     public void test200122() throws Exception {
-//        if (TreeShims.isJDKVersionRelease16_Or_Above()) {
-//            return;
-//        }
+        if (TreeShims.isJDKVersionRelease16_Or_Above()) {
+            return;
+        }
         String code = "package test; public class Test { void t() { new Runnable() { public void run() {} }; } }";
         List<String> fqns = compile(code);
 

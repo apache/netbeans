@@ -978,7 +978,7 @@ meth public abstract com.sun.source.doctree.DocCommentTree getDocCommentTree(com
 meth public abstract com.sun.source.doctree.DocCommentTree getDocCommentTree(javax.lang.model.element.Element)
 meth public abstract com.sun.source.doctree.DocCommentTree getDocCommentTree(javax.lang.model.element.Element,java.lang.String) throws java.io.IOException
 meth public abstract com.sun.source.doctree.DocCommentTree getDocCommentTree(javax.tools.FileObject)
-meth public abstract com.sun.source.util.DocTrees.getCharacters(com.sun.source.doctree.EntityTree)
+meth public abstract com.sun.source.util.DocTrees getCharacters(com.sun.source.doctree.EntityTree)
 meth public abstract com.sun.source.util.DocSourcePositions getSourcePositions()
 meth public abstract com.sun.source.util.DocTreeFactory getDocTreeFactory()
 meth public abstract com.sun.source.util.DocTreePath getDocTreePath(javax.tools.FileObject,javax.lang.model.element.PackageElement)

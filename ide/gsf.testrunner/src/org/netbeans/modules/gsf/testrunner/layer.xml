@@ -26,7 +26,7 @@
         <folder name="UnitTests">
             <attr name="displayName" bundlevalue="org.netbeans.modules.gsf.testrunner.Bundle#UnitTests_displayname"/>
             <attr name="position" intvalue="1200"/>
-
+            <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/gsf/testrunner/resources/description.html"/>
         </folder>
     </folder>
 

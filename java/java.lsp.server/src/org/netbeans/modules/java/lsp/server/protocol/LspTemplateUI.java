@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
+import java.util.logging.Level;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
@@ -203,8 +204,19 @@ class LspTemplateUI {
 
             boolean display;
             if (obj instanceof DataFolder) {
-                Object o = obj.getPrimaryFile ().getAttribute ("simple"); // NOI18N
-                display = o == null || Boolean.TRUE.equals (o);
+                Object simple = fo.getAttribute("simple"); // NOI18N
+                if (simple != null) {
+                    display = Boolean.TRUE.equals(simple);
+                } else {
+                    Object cathegory = fo.getAttribute("templateCategory"); // NOI18N
+                    if ("invisible".equals(cathegory)) { // NOI18N
+                        display = false;
+                    } else if ("helper-files".equals(cathegory)) { // NOI18N
+                        display = false;
+                    } else {
+                        display = fo.getChildren().length > 0;
+                    }
+                }
             } else {
                 display = obj.isTemplate();
             }
@@ -240,7 +252,7 @@ class LspTemplateUI {
                     descriptionText = null;
                 }
             } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
+                Exceptions.printStackTrace(Exceptions.attachSeverity(ex, Level.FINE));
                 return descriptionText;
             }
         }

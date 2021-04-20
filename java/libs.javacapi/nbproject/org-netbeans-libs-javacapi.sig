@@ -978,9 +978,9 @@ meth public abstract com.sun.source.doctree.DocCommentTree getDocCommentTree(com
 meth public abstract com.sun.source.doctree.DocCommentTree getDocCommentTree(javax.lang.model.element.Element)
 meth public abstract com.sun.source.doctree.DocCommentTree getDocCommentTree(javax.lang.model.element.Element,java.lang.String) throws java.io.IOException
 meth public abstract com.sun.source.doctree.DocCommentTree getDocCommentTree(javax.tools.FileObject)
-meth public abstract com.sun.source.util.DocTrees getCharacters(com.sun.source.doctree.EntityTree)
 meth public abstract com.sun.source.util.DocSourcePositions getSourcePositions()
 meth public abstract com.sun.source.util.DocTreeFactory getDocTreeFactory()
+meth public abstract java.lang.String getCharacters(com.sun.source.doctree.EntityTree)
 meth public abstract com.sun.source.util.DocTreePath getDocTreePath(javax.tools.FileObject,javax.lang.model.element.PackageElement)
 meth public abstract java.text.BreakIterator getBreakIterator()
 meth public abstract java.util.List<com.sun.source.doctree.DocTree> getFirstSentence(java.util.List<? extends com.sun.source.doctree.DocTree>)
@@ -2746,8 +2746,8 @@ meth public abstract java.util.Set<javax.lang.model.SourceVersion> getSourceVers
 meth public java.lang.String name()
 
 CLSS public javax.tools.ToolProvider
-meth public static java.lang.ClassLoader getSystemToolClassLoader()
  anno 0 java.lang.Deprecated()
+meth public static java.lang.ClassLoader getSystemToolClassLoader()
 meth public static javax.tools.DocumentationTool getSystemDocumentationTool()
 meth public static javax.tools.JavaCompiler getSystemJavaCompiler()
 supr java.lang.Object

@@ -303,7 +303,7 @@ meth public abstract com.sun.source.tree.ExpressionTree getRightOperand()
 
 CLSS public abstract interface com.sun.source.tree.BindingPatternTree
 intf com.sun.source.tree.PatternTree
-meth method public abstract com.sun.source.tree.VariableTree getVariable()
+meth public abstract com.sun.source.tree.VariableTree getVariable()
 
 CLSS public abstract interface com.sun.source.tree.BlockTree
 intf com.sun.source.tree.StatementTree

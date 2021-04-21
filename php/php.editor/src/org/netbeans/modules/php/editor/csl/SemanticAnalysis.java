@@ -64,6 +64,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
+import org.netbeans.modules.php.editor.parser.astnodes.NamedArgument;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeNode;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPVarComment;
@@ -115,6 +116,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
     public static final EnumSet<ColoringAttributes> ANNOTATION_TYPE_SET = EnumSet.of(ColoringAttributes.ANNOTATION_TYPE);
     public static final EnumSet<ColoringAttributes> METHOD_INVOCATION_SET = EnumSet.of(ColoringAttributes.CUSTOM1);
     public static final EnumSet<ColoringAttributes> STATIC_METHOD_INVOCATION_SET = EnumSet.of(ColoringAttributes.STATIC, ColoringAttributes.CUSTOM1);
+    public static final EnumSet<ColoringAttributes> PARAMETER_NAME_SET = EnumSet.of(ColoringAttributes.CUSTOM2);
     private static final Logger LOGGER = Logger.getLogger(SemanticAnalysis.class.getName());
     private static boolean isLogged = false;
     private volatile boolean cancelled;
@@ -310,6 +312,15 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             }
         }
 
+        private void addColoringForNamedArgument(NamedArgument node, Set<ColoringAttributes> coloring) {
+            int start = snapshot.getOriginalOffset(node.getStartOffset());
+            if (start > -1) {
+                int end = start + node.getExpression().getStartOffset() - node.getStartOffset();
+                assert coloring != null : snapshot.getText().toString();
+                highlights.put(new OffsetRange(start, end), coloring);
+            }
+        }
+
         private void addColoringForUnusedPrivateFields() {
             // are there unused private fields?
             for (ASTNodeColoring item : privateFieldsUnused.values()) {
@@ -378,6 +389,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             }
             addToPath(cldec);
             typeInfo = new TypeDeclarationTypeInfo(cldec);
+            scan(cldec.getAttributes());
             scan(cldec.getSuperClass());
             scan(cldec.getInterfaes());
             Identifier name = cldec.getName();
@@ -467,6 +479,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                     }
                 }
             }
+            scan(md.getAttributes());
             scan(md.getFunction().getFormalParameters());
             boolean isPrivate = Modifier.isPrivate(md.getModifier());
             Identifier identifier = md.getFunction().getFunctionName();
@@ -565,6 +578,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (node.isAnonymous()) {
                 addToPath(node);
                 typeInfo = new ClassInstanceCreationTypeInfo(node);
+                scan(node.getAttributes());
                 scan(node.getSuperClass());
                 scan(node.getInterfaces());
                 needToScan = new ArrayList<>();
@@ -602,6 +616,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (isCancelled()) {
                 return;
             }
+            scan(node.getAttributes());
             typeInfo = new TypeDeclarationTypeInfo(node);
             Identifier name = node.getName();
             addColoringForNode(name, createTypeNameColoring(name));
@@ -878,6 +893,15 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                     assert false : "Unexpected class type: " + useStatementPart.getClass().getName(); // NOI18N
                 }
             }
+        }
+
+        @Override
+        public void visit(NamedArgument node) {
+            if (isCancelled()) {
+                return;
+            }
+            addColoringForNamedArgument(node, PARAMETER_NAME_SET);
+            super.visit(node);
         }
 
         private class FieldAccessVisitor extends DefaultVisitor {

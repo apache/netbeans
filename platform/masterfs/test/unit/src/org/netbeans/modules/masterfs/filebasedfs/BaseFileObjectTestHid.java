@@ -263,7 +263,7 @@ public class BaseFileObjectTestHid extends TestBaseHid{
     public void testMoveOfAFolderDoesNotTouchSubhierarchy() throws Exception {
         FileObjectFactory fs = FileObjectFactory.getInstance(getWorkDir());
         assertNotNull(fs);
-        FileObject root1 = fs.getValidFileObject(getWorkDir(), FileObjectFactory.Caller.Others);
+        FileObject root1 = fs.getValidFileObject(getWorkDir(), FileObjectFactory.Caller.Others, true);
 
         FileObject where = root1.createFolder("else").createFolder("sub").createFolder("subsub");
         FileObject fo = root1.createFolder("something");
@@ -300,7 +300,7 @@ public class BaseFileObjectTestHid extends TestBaseHid{
         FileObjectFactory fs = FileObjectFactory.getInstance(getWorkDir());
         assertNotNull(fs);
         FileObject root1 = fs.getValidFileObject(getWorkDir(),
-                FileObjectFactory.Caller.Others);
+                FileObjectFactory.Caller.Others, true);
 
         FileObject where = root1.createFolder("else").createFolder("sub").createFolder(
                 "subsub");

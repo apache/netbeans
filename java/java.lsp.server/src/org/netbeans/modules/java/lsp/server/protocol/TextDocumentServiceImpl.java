@@ -52,10 +52,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.IntFunction;
 import java.util.logging.Level;
@@ -235,7 +237,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     /**
      * Documents actually opened by the client.
      */
-    private final Map<String, Document> openedDocuments = new HashMap<>();
+    private final Map<String, Document> openedDocuments = new ConcurrentHashMap<>();
     private final Map<String, RequestProcessor.Task> diagnosticTasks = new HashMap<>();
     private final LspServerState server;
     private NbCodeLanguageClient client;
@@ -1083,6 +1085,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
     //end copied
 
+    private ConcurrentHashMap<String, Boolean> upToDateTests = new ConcurrentHashMap<>();
+
     @Override
     public CompletableFuture<List<? extends CodeLens>> codeLens(CodeLensParams params) {
         // shortcut: if the projects are not yet initialized, return empty:
@@ -1099,32 +1103,35 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             source.runUserActionTask(cc -> {
                 cc.toPhase(Phase.ELEMENTS_RESOLVED);
                 //look for test methods:
-                List<TestMethod> testMethods = new ArrayList<>();
-                for (ComputeTestMethods.Factory methodsFactory : Lookup.getDefault().lookupAll(ComputeTestMethods.Factory.class)) {
-                    testMethods.addAll(methodsFactory.create().computeTestMethods(cc));
-                }
-                if (!testMethods.isEmpty()) {
-                    String testClassName = null;
-                    List<TestSuiteInfo.TestCaseInfo> tests = new ArrayList<>(testMethods.size());
-                    for (TestMethod testMethod : testMethods) {
-                        if (testClassName == null) {
-                            testClassName = testMethod.getTestClassName();
-                        }
-                        String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
-                        String fullName = testMethod.getTestClassName() + '.' + testMethod.method().getMethodName();
-                        int line = Utils.createPosition(cc.getCompilationUnit(), testMethod.start().getOffset()).getLine();
-                        tests.add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), fullName, uri, line, TestSuiteInfo.State.Loaded, null));
+                if (!upToDateTests.getOrDefault(uri, Boolean.FALSE)) {
+                    List<TestMethod> testMethods = new ArrayList<>();
+                    for (ComputeTestMethods.Factory methodsFactory : Lookup.getDefault().lookupAll(ComputeTestMethods.Factory.class)) {
+                        testMethods.addAll(methodsFactory.create().computeTestMethods(cc));
                     }
-                    Integer line = null;
-                    Trees trees = cc.getTrees();
-                    for (Tree tree : cc.getCompilationUnit().getTypeDecls()) {
-                        Element element = trees.getElement(trees.getPath(cc.getCompilationUnit(), tree));
-                        if (element != null && element.getKind().isClass() && ((TypeElement)element).getQualifiedName().contentEquals(testClassName)) {
-                            line = Utils.createPosition(cc.getCompilationUnit(), (int)trees.getSourcePositions().getStartPosition(cc.getCompilationUnit(), tree)).getLine();
-                            break;
+                    if (!testMethods.isEmpty()) {
+                        String testClassName = null;
+                        List<TestSuiteInfo.TestCaseInfo> tests = new ArrayList<>(testMethods.size());
+                        for (TestMethod testMethod : testMethods) {
+                            if (testClassName == null) {
+                                testClassName = testMethod.getTestClassName();
+                            }
+                            String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
+                            String fullName = testMethod.getTestClassName() + '.' + testMethod.method().getMethodName();
+                            int line = Utils.createPosition(cc.getCompilationUnit(), testMethod.start().getOffset()).getLine();
+                            tests.add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), fullName, uri, line, TestSuiteInfo.State.Loaded, null));
                         }
+                        Integer line = null;
+                        Trees trees = cc.getTrees();
+                        for (Tree tree : cc.getCompilationUnit().getTypeDecls()) {
+                            Element element = trees.getElement(trees.getPath(cc.getCompilationUnit(), tree));
+                            if (element != null && element.getKind().isClass() && ((TypeElement)element).getQualifiedName().contentEquals(testClassName)) {
+                                line = Utils.createPosition(cc.getCompilationUnit(), (int)trees.getSourcePositions().getStartPosition(cc.getCompilationUnit(), tree)).getLine();
+                                break;
+                            }
+                        }
+                        client.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(testClassName, uri, line, TestSuiteInfo.State.Loaded, tests)));
+                        upToDateTests.put(uri, Boolean.TRUE);
                     }
-                    client.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(testClassName, uri, line, TestSuiteInfo.State.Loaded, tests)));
                 }
                 //look for main methods:
                 List<CodeLens> lens = new ArrayList<>();
@@ -1440,7 +1447,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public void didChange(DidChangeTextDocumentParams params) {
-        Document doc = openedDocuments.get(params.getTextDocument().getUri());
+        String uri = params.getTextDocument().getUri();
+        upToDateTests.put(uri, Boolean.FALSE);
+        Document doc = openedDocuments.get(uri);
         if (doc != null) {
             NbDocument.runAtomic((StyledDocument) doc, () -> {
                 for (TextDocumentContentChangeEvent change : params.getContentChanges()) {
@@ -1462,10 +1471,12 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public void didClose(DidCloseTextDocumentParams params) {
         try {
+            String uri = params.getTextDocument().getUri();
+            upToDateTests.remove(uri);
             // the order here is important ! As the file may cease to exist, it's
             // important that the doucment is already gone form the client.
-            openedDocuments.remove(params.getTextDocument().getUri());
-            FileObject file = fromURI(params.getTextDocument().getUri(), true);
+            openedDocuments.remove(uri);
+            FileObject file = fromURI(uri, true);
             if (file == null) {
                 return;
             }

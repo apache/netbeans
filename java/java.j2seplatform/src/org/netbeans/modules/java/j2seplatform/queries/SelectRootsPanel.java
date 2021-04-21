@@ -53,7 +53,6 @@ import org.netbeans.spi.java.queries.SourceJavadocAttacherImplementation;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Cancellable;
 import org.openide.util.Exceptions;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
@@ -75,8 +74,8 @@ class SelectRootsPanel extends javax.swing.JPanel implements ActionListener {
     private final URL root;
     private final Callable<List<? extends String>> browseCall;
     private final Function<String,Collection<? extends URI>> convertor;
-    private final SourceJavadocAttacherImplementation.Definer plugin;
-    private volatile CancelService cancelService;
+    private final Collection<? extends SourceJavadocAttacherImplementation.Definer> plugins;
+    private volatile DownloadService downloadService;
 
     /** Creates new form SelectSourcesPanel */
     SelectRootsPanel (
@@ -85,7 +84,7 @@ class SelectRootsPanel extends javax.swing.JPanel implements ActionListener {
             @NonNull final List<? extends URI> attachedRoots,
             @NonNull final Callable<List<? extends String>> browseCall,
             @NonNull final Function<String, Collection<? extends URI>> convertor,
-            @NullAllowed final SourceJavadocAttacherImplementation.Definer plugin) {
+            @NullAllowed final Collection<? extends SourceJavadocAttacherImplementation.Definer> plugins) {
         assert (mode & ~1) == 0;
         assert root != null;
         assert browseCall != null;
@@ -94,7 +93,7 @@ class SelectRootsPanel extends javax.swing.JPanel implements ActionListener {
         this.root = root;
         this.browseCall = browseCall;
         this.convertor = convertor;
-        this.plugin = plugin;
+        this.plugins = plugins;
         initComponents();
         final DefaultListModel<URI> model = new DefaultListModel<URI>();
         sources.setModel(model);
@@ -109,9 +108,11 @@ class SelectRootsPanel extends javax.swing.JPanel implements ActionListener {
             model.addElement(r);
         }
         addURL.setVisible(mode != 0);
-        if (plugin != null) {
+        if (plugins != null && !plugins.isEmpty()) {
             download.setVisible(true);
-            download.setToolTipText(plugin.getDescription());
+            if (plugins.size() == 1) {
+                download.setToolTipText(plugins.iterator().next().getDescription());
+            }
         } else {
             download.setVisible(false);
         }
@@ -120,7 +121,7 @@ class SelectRootsPanel extends javax.swing.JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        final CancelService cs = cancelService;
+        final DownloadService cs = downloadService;
         if (cs != null) {
             cs.cancel();
         }
@@ -341,79 +342,57 @@ private void browse(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browse
     }//GEN-LAST:event_addURL
 
     private void download(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_download
-        assert plugin != null;
+        assert plugins != null;
         enableDownloadAction(false);
-        cancelService = new CancelService();
-        RP.execute(new Runnable() {
-            @Override
-            public void run() {
-                Collection<? extends URL> res = null;
-                try {
-                    assert plugin != null;
-                    switch (mode) {
-                        case 0:
-                            res = plugin.getSources(root, cancelService);
-                            break;
-                        case 1:
-                            res = plugin.getJavadoc(root, cancelService);
-                            break;
-                        default:
-                            throw new IllegalStateException();
+        DownloadService dn = new DownloadService(plugins, root, mode == 0);
+        downloadService = dn;
+        
+        dn.runAsync((resFin) -> {
+            Mutex.EVENT.writeAccess(new Runnable() {
+                @Override
+                public void run() {
+                    boolean finished = false;
+                    try {
+                        finished = !dn.call();
+                    } catch (Exception e) {
+                        //pass - finished is false
                     }
-                } finally {
-                    final Collection<? extends URL> resFin = res;
-                    Mutex.EVENT.writeAccess(new Runnable() {
-                        @Override
-                        public void run() {
-                            boolean finished = false;
-                            try {
-                                finished = !cancelService.call();
-                            } catch (Exception e) {
-                                //pass - finished is false
-                            }
-                            try {
-                                if (finished) {
-                                    if (resFin.isEmpty()) {
-                                        DialogDisplayer.getDefault().notify(
-                                            new NotifyDescriptor.Message(
-                                                NbBundle.getMessage(
-                                                    SelectRootsPanel.class,
-                                                    mode == 0 ?
-                                                        "ERR_DownloadSourcesFailed" :
-                                                        "ERR_DownloadJavadocFailed",
-                                                    getDisplayName(root)),
-                                                NotifyDescriptor.INFORMATION_MESSAGE));
-                                    } else {
-                                        final DefaultListModel<URI> lm = (DefaultListModel<URI>) sources.getModel();
-                                        final Set<URI> contained = new HashSet<>(Collections.list(lm.elements()));
-                                        int index = sources.getSelectedIndex();
-                                        index = index < 0 ? lm.getSize() : index + 1;
-                                        final List<Integer> added = new ArrayList<>();
-                                        for (URL url : resFin) {
-                                            try {
-                                                URI uri = url.toURI();
-                                                if (!contained.contains(uri)) {
-                                                    lm.add(index, uri);
-                                                    added.add(index);
-                                                    index++;
-                                                }
-                                            } catch (URISyntaxException e) {
-                                                Exceptions.printStackTrace(e);
-                                            }
-                                        }
-                                        select(added);
+                    try {
+                        if (finished) {
+                            if (resFin.isEmpty()) {
+                                DialogDisplayer.getDefault().notify(
+                                    new NotifyDescriptor.Message(
+                                        NbBundle.getMessage(
+                                            SelectRootsPanel.class,
+                                            mode == 0 ?
+                                                "ERR_DownloadSourcesFailed" :
+                                                "ERR_DownloadJavadocFailed",
+                                            getDisplayName(root)),
+                                        NotifyDescriptor.INFORMATION_MESSAGE));
+                            } else {
+                                final DefaultListModel<URI> lm = (DefaultListModel<URI>) sources.getModel();
+                                final Set<URI> contained = new HashSet<>(Collections.list(lm.elements()));
+                                int index = sources.getSelectedIndex();
+                                index = index < 0 ? lm.getSize() : index + 1;
+                                final List<Integer> added = new ArrayList<>();
+                                for (URI uri : resFin) {
+                                    if (!contained.contains(uri)) {
+                                        lm.add(index, uri);
+                                        added.add(index);
+                                        index++;
                                     }
                                 }
-                            } finally {
-                                cancelService = null;
-                                enableDownloadAction(true);
-                                enableSelectionSensitiveActions();
+                                select(added);
                             }
                         }
-                    });
+                    } finally {
+                        downloadService = null;
+                        enableDownloadAction(true);
+                        enableSelectionSensitiveActions();
+                    }
                 }
-            }
-        });        
+            });
+        });
     }//GEN-LAST:event_download
 
     private void enableSelectionSensitiveActions() {
@@ -512,19 +491,10 @@ private void browse(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browse
         }
     }
 
-    private static class CancelService implements Callable<Boolean>, Cancellable {
+    private static class DownloadService extends SourceJavadocAttacherUtil.Downloader {
 
-        private volatile boolean canceled;
-
-        @Override
-        public Boolean call() throws Exception {
-            return canceled;
-        }
-
-        @Override
-        public boolean cancel() {
-            canceled = true;
-            return true;
+        public DownloadService(Collection<? extends SourceJavadocAttacherImplementation.Definer> plugins, URL root, boolean source) {
+            super(plugins, root, source);
         }
     }
         

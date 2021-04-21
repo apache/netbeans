@@ -258,8 +258,10 @@ class NbProjectInfoBuilder {
                             model.info["sourceset_${sourceSet.name}_classpath_annotation"] = storeSet(sourceSet.compileClasspath.files)
                         }
                     }
-                    model.info["sourceset_${sourceSet.name}_configuration_compile"] = sourceSet.compileConfigurationName;
-                    model.info["sourceset_${sourceSet.name}_configuration_runtime"] = sourceSet.runtimeConfigurationName;
+                    beforeGradle('7.0') {
+                        model.info["sourceset_${sourceSet.name}_configuration_compile"] = sourceSet.compileConfigurationName;
+                        model.info["sourceset_${sourceSet.name}_configuration_runtime"] = sourceSet.runtimeConfigurationName;
+                    }
                 }
             } else {
                 model.info.sourcesets = Collections.emptySet();

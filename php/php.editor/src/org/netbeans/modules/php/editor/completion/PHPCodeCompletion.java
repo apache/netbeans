@@ -76,6 +76,7 @@ import org.netbeans.modules.php.editor.api.elements.FunctionElement;
 import org.netbeans.modules.php.editor.api.elements.InterfaceElement;
 import org.netbeans.modules.php.editor.api.elements.MethodElement;
 import org.netbeans.modules.php.editor.api.elements.NamespaceElement;
+import org.netbeans.modules.php.editor.api.elements.ParameterElement;
 import org.netbeans.modules.php.editor.api.elements.PhpElement;
 import org.netbeans.modules.php.editor.api.elements.TraitElement;
 import org.netbeans.modules.php.editor.api.elements.TypeConstantElement;
@@ -405,10 +406,19 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 autoCompleteExpression(completionResult, request, PHP_MATCH_EXPRESSION_KEYWORDS);
                 break;
             case EXPRESSION:
-                autoCompleteNamespaces(completionResult, request);
-                List<String> defaultKeywords = new ArrayList<>(PHP_KEYWORDS.keySet());
-                defaultKeywords.remove("default =>"); // NOI18N
-                autoCompleteExpression(completionResult, request, defaultKeywords);
+                autoCompleteExpression(completionResult, request);
+                break;
+            case CLASS_MEMBER_PARAMETER_NAME:
+                autoCompleteExpression(completionResult, request);
+                autoCompleteClassMethodParameterName(completionResult, request, false);
+                break;
+            case STATIC_CLASS_MEMBER_PARAMETER_NAME:
+                autoCompleteExpression(completionResult, request);
+                autoCompleteClassMethodParameterName(completionResult, request, true);
+                break;
+            case FUNCTION_PARAMETER_NAME:
+                autoCompleteExpression(completionResult, request);
+                autoCompleteFunctionParameterName(completionResult, request);
                 break;
             case GLOBAL_CONST_EXPRESSION:
                 autoCompleteNamespaces(completionResult, request);
@@ -1424,6 +1434,158 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         }
     }
 
+    private void autoCompleteClassMethodParameterName(
+            final PHPCompletionResult completionResult,
+            PHPCompletionItem.CompletionRequest request,
+            boolean staticContext
+    ) {
+        if (CancelSupport.getDefault().isCancelled()) {
+            return;
+        }
+        TokenHierarchy<?> th = request.info.getSnapshot().getTokenHierarchy();
+        TokenSequence<PHPTokenId> tokenSequence = LexUtilities.getPHPTokenSequence(th, request.anchor);
+        if (tokenSequence == null) {
+            return;
+        }
+        Token<? extends PHPTokenId> functionName = CompletionContextFinder.findFunctionInvocationName(tokenSequence, request.anchor);
+        if (functionName != null) {
+            int originalAnchor = request.anchor;
+            try {
+                request.anchor = tokenSequence.offset();
+                boolean isInstanceContext = !staticContext;
+                boolean isStaticContext = staticContext;
+
+                if (tokenSequence.token().id() != PHPTokenId.PHP_PAAMAYIM_NEKUDOTAYIM
+                        && tokenSequence.token().id() != PHPTokenId.PHP_OBJECT_OPERATOR
+                        && tokenSequence.token().id() != PHPTokenId.PHP_NULLSAFE_OBJECT_OPERATOR) {
+                    tokenSequence.movePrevious();
+                }
+                tokenSequence.movePrevious();
+                if (tokenSequence.token().id() == PHPTokenId.WHITESPACE) {
+                    tokenSequence.movePrevious();
+                }
+                final CharSequence varName = tokenSequence.token().text();
+                tokenSequence.moveNext();
+
+                List<String> invalidProposalsForClsMembers = INVALID_PROPOSALS_FOR_CLS_MEMBERS;
+                Model model = request.result.getModel();
+
+                boolean selfContext = false;
+                boolean staticLateBindingContext = false;
+                boolean specialVariable = false;
+                if (TokenUtilities.textEquals(varName, "$this")) { // NOI18N
+                    specialVariable = true;
+                } else if (TokenUtilities.textEquals(varName, "self")) { // NOI18N
+                    isStaticContext = true;
+                    selfContext = true;
+                    specialVariable = true;
+                } else if (TokenUtilities.textEquals(varName, "parent")) { // NOI18N
+                    invalidProposalsForClsMembers = Collections.emptyList();
+                    isStaticContext = true;
+                    isInstanceContext = true;
+                    specialVariable = true;
+                } else if (TokenUtilities.textEquals(varName, "static")) { // NOI18N
+                    isStaticContext = true;
+                    isInstanceContext = false;
+                    staticLateBindingContext = true;
+                    specialVariable = true;
+                }
+
+                Collection<? extends TypeScope> types = ModelUtils.resolveTypeAfterReferenceToken(model, tokenSequence, request.anchor, specialVariable);
+                TypeElement enclosingType = getEnclosingType(request, types);
+                Set<PhpElement> duplicateElementCheck = new HashSet<>();
+                for (TypeScope typeScope : types) {
+                    if (CancelSupport.getDefault().isCancelled()) {
+                        return;
+                    }
+                    final ElementFilter staticFlagFilter = new StaticOrInstanceMembersFilter(isStaticContext, isInstanceContext, selfContext, staticLateBindingContext);
+                    final ElementFilter methodsFilter = ElementFilter.allOf(
+                            ElementFilter.forKind(PhpElementKind.METHOD),
+                            ElementFilter.forName(NameKind.exact(functionName.text().toString())),
+                            staticFlagFilter,
+                            ElementFilter.forExcludedNames(invalidProposalsForClsMembers, PhpElementKind.METHOD),
+                            ElementFilter.forInstanceOf(MethodElement.class));
+                    HashSet<TypeMemberElement> accessibleTypeMembers = new HashSet<>();
+                    accessibleTypeMembers.addAll(request.index.getAccessibleTypeMembers(typeScope, enclosingType));
+                    if (typeScope instanceof ClassElement) {
+                        ClassElement classElement = (ClassElement) typeScope;
+                        if (!classElement.getFQMixinClassNames().isEmpty()) {
+                            accessibleTypeMembers.addAll(request.index.getAccessibleMixinTypeMembers(typeScope, enclosingType));
+                        }
+                    }
+                    for (final PhpElement phpElement : accessibleTypeMembers) {
+                        if (CancelSupport.getDefault().isCancelled()) {
+                            return;
+                        }
+                        if (duplicateElementCheck.add(phpElement)) {
+                            if (methodsFilter.isAccepted(phpElement)) {
+                                MethodElement method = (MethodElement) phpElement;
+                                for (ParameterElement parameter : method.getParameters()) {
+                                    if (CancelSupport.getDefault().isCancelled()) {
+                                        return;
+                                    }
+                                    String name = parameter.getName();
+                                    if (name != null) {
+                                        name = name.substring(1);
+                                    }
+                                    if (name != null
+                                            && name.startsWith(request.prefix)) {
+                                        completionResult.add(new PHPCompletionItem.ParameterNameItem(parameter, request));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } finally {
+                request.anchor = originalAnchor;
+            }
+        }
+    }
+
+    private void autoCompleteFunctionParameterName(final PHPCompletionResult completionResult, PHPCompletionItem.CompletionRequest request) {
+        if (CancelSupport.getDefault().isCancelled()) {
+            return;
+        }
+        TokenHierarchy<?> th = request.info.getSnapshot().getTokenHierarchy();
+        TokenSequence<PHPTokenId> tokenSequence = LexUtilities.getPHPTokenSequence(th, request.anchor);
+        if (tokenSequence == null) {
+            return;
+        }
+        Token<? extends PHPTokenId> functionName = CompletionContextFinder.findFunctionInvocationName(tokenSequence, request.anchor);
+        if (functionName != null) {
+            Set<PhpElement> elements = request.index.getTopLevelElements(NameKind.exact(functionName.text().toString()));
+            // usually, php doesn't have the same name functions
+            // but just check duplicate name
+            Set<String> duplicateCheck = new HashSet<>();
+            for (PhpElement element : elements) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
+                if (element instanceof FunctionElement) {
+                    FunctionElement functionElement = (FunctionElement) element;
+                    if (functionElement.isAnonymous()) {
+                        continue;
+                    }
+                    for (ParameterElement parameter : functionElement.getParameters()) {
+                        if (CancelSupport.getDefault().isCancelled()) {
+                            return;
+                        }
+                        String name = parameter.getName();
+                        if (name != null) {
+                            name = name.substring(1);
+                        }
+                        if (name != null
+                                && name.startsWith(request.prefix)
+                                && duplicateCheck.add(name)) {
+                            completionResult.add(new PHPCompletionItem.ParameterNameItem(parameter, request));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private void autoCompleteClassConstants(final PHPCompletionResult completionResult, final PHPCompletionItem.CompletionRequest request) {
         // NETBANS-1855
         // complete access prefix i.e. add "self::" to the top of constant names
@@ -1602,6 +1764,16 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             }
         }
         return null;
+    }
+
+    private void autoCompleteExpression(final PHPCompletionResult completionResult, PHPCompletionItem.CompletionRequest request) {
+        if (CancelSupport.getDefault().isCancelled()) {
+            return;
+        }
+        autoCompleteNamespaces(completionResult, request);
+        List<String> defaultKeywords = new ArrayList<>(PHP_KEYWORDS.keySet());
+        defaultKeywords.remove("default =>"); // NOI18N
+        autoCompleteExpression(completionResult, request, defaultKeywords);
     }
 
     private void autoCompleteExpression(final PHPCompletionResult completionResult, PHPCompletionItem.CompletionRequest request, List<String> keywords) {

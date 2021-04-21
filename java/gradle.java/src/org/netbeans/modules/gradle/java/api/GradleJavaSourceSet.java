@@ -160,10 +160,26 @@ public final class GradleJavaSourceSet implements Serializable {
         return targetCompatibility.getOrDefault(type, getSourcesCompatibility(type));
     }
 
+    /**
+     * Returns the name of the configuration used by this SourceSet for compile.
+     * This method returns an <code>null</code> from Gradle 7.0 as the
+     * corresponding method has been removed in that version. 
+     * @return the name of the configuration or <code>null</code> if that's not available.
+     * @deprecated No replacement.
+     */
+    @Deprecated
     public String getRuntimeConfigurationName() {
         return runtimeConfigurationName;
     }
 
+    /**
+     * Returns the name of the configuration used by this SourceSet for runtime.
+     * This method returns an <code>null</code> from Gradle 7.0 as the
+     * corresponding method has been removed in that version. 
+     * @return the name of the configuration or <code>null</code> if that's not available.
+     * @deprecated No replacement.
+     */
+    @Deprecated
     public String getCompileConfigurationName() {
         return compileConfigurationName;
     }

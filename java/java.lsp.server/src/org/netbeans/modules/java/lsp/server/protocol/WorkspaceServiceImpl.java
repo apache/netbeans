@@ -39,6 +39,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
@@ -179,27 +180,25 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     private CompletableFuture<Set<URL>> getTestRootURLs(Project prj) {
         final Set<URL> testRootURLs = new HashSet<>();
-        List<CompletableFuture<?>> futures = new ArrayList<>();
+        List<FileObject> contained = null;
         if (prj != null) {
             for (SourceGroup sg : ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
                 for (URL url : UnitTestForSourceQuery.findUnitTests(sg.getRootFolder())) {
                     testRootURLs.add(url);
                 }
             }
-            for (Project containedPrj : ProjectUtils.getContainedProjects(prj, true)) {
-                boolean testRootFound = false;
-                for (SourceGroup sg : ProjectUtils.getSources(containedPrj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
+            contained = ProjectUtils.getContainedProjects(prj, true).stream().map(p -> p.getProjectDirectory()).collect(Collectors.toList());
+        }
+        return server.asyncOpenSelectedProjects(contained).thenApply(projects -> {
+            for (Project project : projects) {
+                for (SourceGroup sg : ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
                     for (URL url : UnitTestForSourceQuery.findUnitTests(sg.getRootFolder())) {
                         testRootURLs.add(url);
-                        testRootFound = true;
                     }
                 }
-                if (testRootFound) {
-                    futures.add(server.asyncOpenFileOwner(containedPrj.getProjectDirectory()));
-                }
             }
-        }
-        return CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()])).thenApply(value -> testRootURLs);
+            return testRootURLs;
+        });
     }
 
     private void findTestMethods(Set<URL> testRootURLs, List<TestMethodController.TestMethod> testMethods) {

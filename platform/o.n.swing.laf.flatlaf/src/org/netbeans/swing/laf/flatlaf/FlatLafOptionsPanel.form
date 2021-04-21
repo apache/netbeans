@@ -46,27 +46,20 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="useWindowDecorationsCheckBox" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="restartLabel" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="useWindowDecorationsCheckBox" min="-2" max="-2" attributes="0"/>
                   <Component id="unifiedTitleBarCheckBox" min="-2" max="-2" attributes="0"/>
                   <Component id="menuBarEmbeddedCheckBox" min="-2" max="-2" attributes="0"/>
                   <Component id="underlineMenuSelectionCheckBox" min="-2" max="-2" attributes="0"/>
                   <Component id="alwaysShowMnemonicsCheckBox" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="155" max="32767" attributes="0"/>
+              <EmptySpace pref="73" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="useWindowDecorationsCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="restartLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
+              <Component id="useWindowDecorationsCheckBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="unifiedTitleBarCheckBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -75,7 +68,7 @@
               <Component id="underlineMenuSelectionCheckBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="alwaysShowMnemonicsCheckBox" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="156" max="32767" attributes="0"/>
+              <EmptySpace pref="25" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -130,13 +123,6 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="alwaysShowMnemonicsCheckBoxActionPerformed"/>
       </Events>
-    </Component>
-    <Component class="javax.swing.JLabel" name="restartLabel">
-      <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/netbeans/swing/laf/flatlaf/Bundle.properties" key="FlatLafOptionsPanel.restartLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
     </Component>
   </SubComponents>
 </Form>

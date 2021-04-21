@@ -1,1 +1,2 @@
-4:17-4:22:error:illegal unicode escape
+4:17-4:17:error:illegal unicode escape
+4:8-4:24:error:unclosed string literal

@@ -29,7 +29,6 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.util.Context;
-import org.netbeans.lib.nbjavac.services.NBTreeMaker.IndexedClassDecl;
 
 /**
  *
@@ -70,11 +69,6 @@ public class NBEnter extends Enter {
             return ;
         }
         super.visitTopLevel(tree);
-    }
-
-    //no @Override to ensure compatibility with ordinary javac:
-    protected int getIndex(JCClassDecl clazz) {
-        return clazz instanceof IndexedClassDecl ? ((IndexedClassDecl) clazz).index : -1;
     }
 
     @Override

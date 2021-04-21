@@ -315,4 +315,8 @@ public class TreeShims {
     public static boolean isJDKVersionSupportEnablePreview() {
         return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(PATTERN_MATCHING_INSTANCEOF_PREVIEW_JDK_VERSION) <= 0;
     }
+	
+	public static boolean isJDKVersionRelease16_Or_Above(){
+        return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(16) >= 0;
+    }
 }

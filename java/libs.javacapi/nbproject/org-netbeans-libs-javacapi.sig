@@ -303,8 +303,7 @@ meth public abstract com.sun.source.tree.ExpressionTree getRightOperand()
 
 CLSS public abstract interface com.sun.source.tree.BindingPatternTree
 intf com.sun.source.tree.PatternTree
-meth public abstract com.sun.source.tree.Tree getType()
-meth public abstract javax.lang.model.element.Name getBinding()
+meth public abstract com.sun.source.tree.VariableTree getVariable()
 
 CLSS public abstract interface com.sun.source.tree.BlockTree
 intf com.sun.source.tree.StatementTree
@@ -981,6 +980,7 @@ meth public abstract com.sun.source.doctree.DocCommentTree getDocCommentTree(jav
 meth public abstract com.sun.source.doctree.DocCommentTree getDocCommentTree(javax.tools.FileObject)
 meth public abstract com.sun.source.util.DocSourcePositions getSourcePositions()
 meth public abstract com.sun.source.util.DocTreeFactory getDocTreeFactory()
+meth public abstract java.lang.String getCharacters(com.sun.source.doctree.EntityTree)
 meth public abstract com.sun.source.util.DocTreePath getDocTreePath(javax.tools.FileObject,javax.lang.model.element.PackageElement)
 meth public abstract java.text.BreakIterator getBreakIterator()
 meth public abstract java.util.List<com.sun.source.doctree.DocTree> getFirstSentence(java.util.List<? extends com.sun.source.doctree.DocTree>)
@@ -2716,11 +2716,6 @@ CLSS public abstract interface static javax.tools.StandardJavaFileManager$PathFa
  outer javax.tools.StandardJavaFileManager
 meth public abstract !varargs java.nio.file.Path getPath(java.lang.String,java.lang.String[])
 
-CLSS public static javax.tools.StandardJavaFileManager$Util
- outer javax.tools.StandardJavaFileManager
-cons public init()
-supr java.lang.Object
-
 CLSS public final !enum javax.tools.StandardLocation
 fld public final static javax.tools.StandardLocation ANNOTATION_PROCESSOR_MODULE_PATH
 fld public final static javax.tools.StandardLocation ANNOTATION_PROCESSOR_PATH
@@ -2751,10 +2746,8 @@ meth public abstract java.util.Set<javax.lang.model.SourceVersion> getSourceVers
 meth public java.lang.String name()
 
 CLSS public javax.tools.ToolProvider
-cons public init()
  anno 0 java.lang.Deprecated()
 meth public static java.lang.ClassLoader getSystemToolClassLoader()
- anno 0 java.lang.Deprecated()
 meth public static javax.tools.DocumentationTool getSystemDocumentationTool()
 meth public static javax.tools.JavaCompiler getSystemJavaCompiler()
 supr java.lang.Object

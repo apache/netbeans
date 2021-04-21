@@ -1071,7 +1071,7 @@ public class GoToSupportTest extends NbTestCase {
         performTest(code, new UiUtilsCaller() {
             @Override public boolean open(FileObject fo, int pos) {
                 assertTrue(source == fo);
-                assertEquals(code.indexOf("o instanceof String str"), pos);
+                assertEquals(code.indexOf("String str"), pos);
                 wasCalled[0] = true;
                 return true;
             }
@@ -1153,8 +1153,8 @@ public class GoToSupportTest extends NbTestCase {
                 fail("Should not be called.");
             }
         }, true, false);
-
-        assertEquals("<html><body>final java.lang.String <b>str</b>", tooltip);
+        //as per JEP 394 : Lift the restriction that pattern variables are implicitly final
+        assertEquals("<html><body>java.lang.String <b>str</b>", tooltip);
     }
 
     private String sourceLevel = "1.5";

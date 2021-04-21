@@ -3233,7 +3233,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
                 } else {
                     StringBuilder sb = new StringBuilder();
                     sb.append(ATTRIBUTE_VALUE_COLOR);
-                    sb.append(value);
+                    sb.append(escape(getLastLine()));
                     sb.append(COLOR_END);
                     leftText = sb.toString();
                 }
@@ -3263,6 +3263,12 @@ public abstract class JavaCompletionItem implements CompletionItem {
                 sb.delete(sb.length() - 6, sb.length());
             }
             return super.substituteText(c, offset, length, sb, toAdd);
+        }
+
+        private String getLastLine() {
+            String[] lines = value.split("\n");
+            String last = lines.length > 0 ? lines[lines.length - 1] : value;
+            return last.trim();
         }
 
         @Override
@@ -4428,7 +4434,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
     private static String escape(String s) {
         if (s != null) {
             try {
-                return XMLUtil.toAttributeValue(s);
+                return XMLUtil.toElementContent(s);
             } catch (Exception ex) {}
         }
         return s;

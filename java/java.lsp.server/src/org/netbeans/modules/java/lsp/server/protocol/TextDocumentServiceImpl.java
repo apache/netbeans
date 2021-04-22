@@ -335,7 +335,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 }
                 if (completion.getAdditionalTextEdits() != null && completion.getAdditionalTextEdits().isDone()) {
                     List<org.netbeans.api.lsp.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().getNow(null);
-                    if (additionalTextEdits != null) {
+                    if (additionalTextEdits != null && !additionalTextEdits.isEmpty()) {
                         item.setAdditionalTextEdits(additionalTextEdits.stream().map(ed -> {
                             return new TextEdit(new Range(Utils.createPosition(file, ed.getStartOffset()), Utils.createPosition(file, ed.getEndOffset())), ed.getNewText());
                         }).collect(Collectors.toList()));

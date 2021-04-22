@@ -3146,9 +3146,6 @@ public abstract class JavaCompletionItem implements CompletionItem {
 
         private AttributeValueItem(CompilationInfo info, String value, String documentation, TypeElement element, int substitutionOffset, ReferencesCount referencesCount, WhiteListQuery.WhiteList whiteList) {
             super(substitutionOffset, element != null ? ElementHandle.create(element) : null, whiteList);
-            if (value.charAt(0) == '\"' && value.charAt(value.length() - 1) != '\"') { //NOI18N
-                value = value + '\"'; //NOI18N
-            }
             this.value = value;
             this.documentation = documentation;
             if (element != null) {

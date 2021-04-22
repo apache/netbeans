@@ -45,7 +45,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -365,7 +364,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                 builder.documentation(getDocumentation(doc, handle));
             }
             try {
-                List<TextEdit> textEdits = modify2TextEdits(JavaSource.forFileObject(info.getFileObject()), wc -> {
+                TextEdit textEdit = modify2TextEdit(JavaSource.forFileObject(info.getFileObject()), wc -> {
                     wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                     TreePath tp = wc.getTreeUtilities().pathFor(substitutionOffset);
                     if (implement) {
@@ -374,8 +373,8 @@ public class JavaCompletionCollector implements CompletionCollector {
                         GeneratorUtils.generateMethodOverride(wc, tp, elem, substitutionOffset);
                     }
                 });
-                if (!textEdits.isEmpty()) {
-                    builder.textEdit(textEdits.get(0));
+                if (textEdit != null) {
+                    builder.textEdit(textEdit);
                 }
             } catch (IOException ex) {
             }
@@ -419,7 +418,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                     .insertTextFormat(Completion.TextFormat.PlainText)
                     .sortText(String.format("%04d%s#%02d%s", 1500, name, setter ? 1 : 0, sortParams.toString()));
             try {
-                List<TextEdit> textEdits = modify2TextEdits(JavaSource.forFileObject(info.getFileObject()), wc -> {
+                TextEdit textEdit = modify2TextEdit(JavaSource.forFileObject(info.getFileObject()), wc -> {
                     wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                     TreePath tp = wc.getTreeUtilities().pathFor(substitutionOffset);
                     if (TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind())) {
@@ -435,8 +434,8 @@ public class JavaCompletionCollector implements CompletionCollector {
                         }
                     }
                 });
-                if (!textEdits.isEmpty()) {
-                    builder.textEdit(textEdits.get(0));
+                if (textEdit != null) {
+                    builder.textEdit(textEdit);
                 }
             } catch (IOException ex) {
             }
@@ -501,17 +500,41 @@ public class JavaCompletionCollector implements CompletionCollector {
 
         @Override
         public Completion createAttributeValueItem(CompilationInfo info, String value, String documentation, TypeElement element, int substitutionOffset, ReferencesCount referencesCount) {
-            Builder builder = CompletionCollector.newBuilder(value)
+            String label = value;
+            TextEdit textEdit = null;
+            if (value.startsWith("\"")) {
+                TokenSequence<JavaTokenId> ts = info.getTokenHierarchy().tokenSequence(JavaTokenId.language());
+                ts.move(offset);
+                if (ts.moveNext() && ts.offset() <= offset) {
+                    switch (ts.token().id()) {
+                        case STRING_LITERAL:
+                            textEdit = new TextEdit(ts.offset(), offset, value);
+                            break;
+                        case MULTILINE_STRING_LITERAL:
+                            String[] tokenLines = ts.token().text().toString().split("\n");
+                            String[] lines = value.split("\n");
+                            int cnt = 0;
+                            for (int i = 0; i < lines.length; i++) {
+                                if (i < tokenLines.length) {
+                                    if (tokenLines[i].equals(lines[i])) {
+                                        cnt += tokenLines[i].length() + 1;
+                                    } else if (i == lines.length - 1) {
+                                        label = lines[i].trim();
+                                        textEdit = new TextEdit(ts.offset() + cnt, offset, lines[i]);
+                                    }
+                                }
+                            }
+                            break;
+                    }
+                }
+            }
+            Builder builder = CompletionCollector.newBuilder(label)
                     .kind(Completion.Kind.Text)
                     .sortText(value)
                     .insertTextFormat(Completion.TextFormat.PlainText)
                     .documentation(documentation);
-            if (value.startsWith("\"") && value.endsWith("\"")) {
-                TokenSequence<JavaTokenId> ts = info.getTokenHierarchy().tokenSequence(JavaTokenId.language());
-                ts.move(offset);
-                if (ts.moveNext() && ts.token().id() == JavaTokenId.STRING_LITERAL) {
-                    builder.textEdit(new TextEdit(ts.offset(), ts.offset() + ts.token().length(), value));
-                }
+            if (textEdit != null) {
+                builder.textEdit(textEdit);
             }
             return builder.build();
         }
@@ -522,18 +545,18 @@ public class JavaCompletionCollector implements CompletionCollector {
         public Completion createStaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon) {
             //TODO: prefer static imports (but would be much slower?)
             //TODO: should be resolveImport instead of addImports:
-            Map<Element, List<TextEdit>> imports = (Map<Element, List<TextEdit>>) info.getCachedValue(KEY_IMPORT_TEXT_EDITS);
+            Map<Element, TextEdit> imports = (Map<Element, TextEdit>) info.getCachedValue(KEY_IMPORT_TEXT_EDITS);
             if (imports == null) {
                 info.putCachedValue(KEY_IMPORT_TEXT_EDITS, imports = new HashMap<>(), CompilationInfo.CacheClearPolicy.ON_TASK_END);
             }
-            List<TextEdit> currentClassImport = imports.computeIfAbsent(type.asElement(), toImport -> {
+            TextEdit currentClassImport = imports.computeIfAbsent(type.asElement(), toImport -> {
                 try {
-                    return modify2TextEdits(JavaSource.forFileObject(info.getFileObject()), wc -> {
+                    return modify2TextEdit(JavaSource.forFileObject(info.getFileObject()), wc -> {
                         wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                         wc.rewrite(info.getCompilationUnit(), GeneratorUtilities.get(wc).addImports(wc.getCompilationUnit(), new HashSet<>(Arrays.asList(toImport))));
                     });
                 } catch (IOException ex) {
-                    return Collections.emptyList();
+                    return null;
                 }
             });
             String label = type.asElement().getSimpleName() + "." + memberElem.getSimpleName();
@@ -563,7 +586,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                     .kind(elementKind2CompletionItemKind(memberElem.getKind()))
                     .insertText(label)
                     .insertTextFormat(Completion.TextFormat.PlainText)
-                    .additionalTextEdits(currentClassImport)
+                    .additionalTextEdits(Collections.singletonList(currentClassImport))
                     .sortText(String.format("%04d%s", memberElem.getKind().isField() ? 720 : 750, sortText));
             ElementHandle<Element> handle = SUPPORTED_ELEMENT_KINDS.contains(memberElem.getKind().name()) ? ElementHandle.create(memberElem) : null;
             if (handle != null) {
@@ -645,7 +668,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                     .insertTextFormat(Completion.TextFormat.PlainText)
                     .sortText(String.format("%04d%s#%02d%s", 1400, simpleName, cnt, sortParams.toString()));
             try {
-                List<TextEdit> textEdits = modify2TextEdits(JavaSource.forFileObject(info.getFileObject()), wc -> {
+                TextEdit textEdit = modify2TextEdit(JavaSource.forFileObject(info.getFileObject()), wc -> {
                     wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                     TreePath tp = wc.getTreeUtilities().pathFor(substitutionOffset);
                     if (TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind())) {
@@ -665,8 +688,8 @@ public class JavaCompletionCollector implements CompletionCollector {
                         }
                     }
                 });
-                if (!textEdits.isEmpty()) {
-                    builder.textEdit(textEdits.get(0));
+                if (textEdit != null) {
+                    builder.textEdit(textEdit);
                 }
             } catch (IOException ex) {
             }
@@ -782,7 +805,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                                         insertText.append(Utilities.getTypeName(info, ta, true));
                                         asTemplate = true;
                                     } else {
-                                        insertText.append(Utilities.getTypeName(info, ta, false));
+                                        insertText.append(Utilities.getTypeName(info, tv.getUpperBound(), false));
                                         if (addTypeVars && SourceVersion.RELEASE_5.compareTo(info.getSourceVersion()) <= 0) {
                                             asTemplate = true;
                                         }
@@ -1117,13 +1140,14 @@ public class JavaCompletionCollector implements CompletionCollector {
         private static Supplier<List<TextEdit>> addImport(Document doc, ElementHandle<?> handle) {
             return () -> {
                 try {
-                    return modify2TextEdits(JavaSource.forDocument(doc), copy -> {
+                    TextEdit textEdit = modify2TextEdit(JavaSource.forDocument(doc), copy -> {
                         copy.toPhase(JavaSource.Phase.RESOLVED);
                         Element e = handle.resolve(copy);
                         if (e != null) {
                             copy.rewrite(copy.getCompilationUnit(), GeneratorUtilities.get(copy).addImports(copy.getCompilationUnit(), Collections.singleton(e)));
                         }
                     });
+                    return textEdit != null ? Collections.singletonList(textEdit) : null;
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -1201,7 +1225,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             }
         }
 
-        private static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) throws IOException {
+        private static TextEdit modify2TextEdit(JavaSource js, Task<WorkingCopy> task) throws IOException {
             FileObject[] file = new FileObject[1];
             ModificationResult changes = js.runModificationTask(wc -> {
                 task.run(wc);
@@ -1209,12 +1233,25 @@ public class JavaCompletionCollector implements CompletionCollector {
             });
             List<? extends ModificationResult.Difference> diffs = changes.getDifferences(file[0]);
             if (diffs == null) {
-                return Collections.emptyList();
+                return null;
             }
-            return diffs.stream().map(diff -> {
+            int startOffset = -1;
+            int endOffset = -1;
+            StringBuilder sb = new StringBuilder();
+            for (ModificationResult.Difference diff : diffs) {
+                int start = diff.getStartPosition().getOffset();
+                int end = diff.getEndPosition().getOffset();
                 String newText = diff.getNewText();
-                return new TextEdit(diff.getStartPosition().getOffset(), diff.getEndPosition().getOffset(), newText != null ? newText : "");
-            }).collect(Collectors.toList());
+                if (startOffset < 0 && endOffset < 0) {
+                    startOffset = start;
+                    endOffset = end;
+                    sb.append(newText);
+                } else if (start == endOffset) {
+                    endOffset = end;
+                    sb.append(newText);
+                }
+            }
+            return startOffset >= 0 && endOffset >= startOffset ? new TextEdit(startOffset, endOffset, sb.toString()) : null;
         }
     }
 }

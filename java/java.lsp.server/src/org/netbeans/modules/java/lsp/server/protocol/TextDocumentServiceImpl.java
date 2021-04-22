@@ -213,6 +213,7 @@ import org.openide.text.PositionBounds;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
+import org.openide.util.Union2;
 import org.openide.util.WeakSet;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
@@ -854,136 +855,46 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         if (js == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
-        Map<String, ErrorDescription> id2Errors = (Map<String, ErrorDescription>) doc.getProperty("lsp-errors");
+        Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = (Map<String, org.netbeans.api.lsp.Diagnostic>) doc.getProperty("lsp-errors");
         List<Either<Command, CodeAction>> result = new ArrayList<>();
         if (id2Errors != null) {
         for (Diagnostic diag : params.getContext().getDiagnostics()) {
-            ErrorDescription err = id2Errors.get(diag.getCode().getLeft());
+            org.netbeans.api.lsp.Diagnostic err = id2Errors.get(diag.getCode().getLeft());
 
             if (err == null) {
                 client.logMessage(new MessageParams(MessageType.Log, "Cannot resolve error, code: " + diag.getCode().getLeft()));
                 continue;
             }
 
-            TreePathHandle[] topLevelHandle = new TreePathHandle[1];
-            LazyFixList lfl = err.getFixes();
+            for (org.netbeans.api.lsp.CodeAction inputAction : err.getActions().computeCodeActions(ex -> client.logMessage(new MessageParams(MessageType.Error, ex.getMessage())))) {
+                CodeAction action = new CodeAction(inputAction.getTitle());
+                action.setDiagnostics(Collections.singletonList(diag));
+                action.setKind(CodeActionKind.QuickFix);
+                if (inputAction.getCommand() != null) {
+                    action.setCommand(new Command(inputAction.getCommand().getTitle(), inputAction.getCommand().getCommand()));
+                }
+                if (inputAction.getEdit() != null) {
+                    org.netbeans.api.lsp.WorkspaceEdit edit = inputAction.getEdit();
+                    List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
+                    FileObject file = js.getFileObjects().iterator().next();
 
-            if (lfl instanceof CreatorBasedLazyFixList) {
-                try {
-                    js.runUserActionTask(cc -> {
-                        cc.toPhase(JavaSource.Phase.RESOLVED);
-                        ((CreatorBasedLazyFixList) lfl).compute(cc, new AtomicBoolean());
-                        topLevelHandle[0] = TreePathHandle.create(new TreePath(cc.getCompilationUnit()), cc);
-                    }, true);
-                } catch (IOException ex) {
-                    //TODO: include stack trace:
-                    client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-                }
-            }
-            List<Fix> fixes = sortFixes(lfl.getFixes());
-
-            //TODO: ordering
-
-            for (Fix f : fixes) {
-                if (f instanceof IncompleteClassPath.ResolveFix) {
-                    CodeAction action = new CodeAction(f.getText());
-                    action.setDiagnostics(Collections.singletonList(diag));
-                    action.setKind(CodeActionKind.QuickFix);
-                    action.setCommand(new Command(f.getText(), Server.JAVA_BUILD_WORKSPACE));
-                    result.add(Either.forRight(action));
-                }
-                if (f instanceof ImportClass.FixImport) {
-                    //TODO: FixImport is not a JavaFix, create one. Is there a better solution?
-                    String text = f.getText();
-                    CharSequence sortText = ((ImportClass.FixImport) f).getSortText();
-                    ElementHandle<Element> toImport = ((ImportClass.FixImport) f).getToImport();
-                    f = new JavaFix(topLevelHandle[0], sortText != null ? sortText.toString() : null) {
-                        @Override
-                        protected String getText() {
-                            return text;
-                        }
-                        @Override
-                        protected void performRewrite(JavaFix.TransformationContext ctx) throws Exception {
-                            Element resolved = toImport.resolve(ctx.getWorkingCopy());
-                            if (resolved == null) {
-                                return ;
-                            }
-                            WorkingCopy copy = ctx.getWorkingCopy();
-                            CompilationUnitTree cut = GeneratorUtilities.get(copy).addImports(
-                                copy.getCompilationUnit(),
-                                Collections.singleton(resolved)
-                            );
-                            copy.rewrite(copy.getCompilationUnit(), cut);
-                        }
-                    }.toEditorFix();
-                }
-                if (f instanceof JavaFixImpl) {
-                    try {
-                        JavaFix jf = ((JavaFixImpl) f).jf;
-                        List<TextEdit> edits = modify2TextEdits(js, wc -> {
-                            wc.toPhase(JavaSource.Phase.RESOLVED);
-                            Map<FileObject, byte[]> resourceContentChanges = new HashMap<FileObject, byte[]>();
-                            JavaFixImpl.Accessor.INSTANCE.process(jf, wc, true, resourceContentChanges, /*Ignored in editor:*/new ArrayList<>());
-                        });
-                        TextDocumentEdit te = new TextDocumentEdit(new VersionedTextDocumentIdentifier(params.getTextDocument().getUri(),
-                                                                                                       -1),
-                                                                   edits);
-                        CodeAction action = new CodeAction(f.getText());
-                        action.setDiagnostics(Collections.singletonList(diag));
-                        action.setKind(CodeActionKind.QuickFix);
-                        action.setEdit(new WorkspaceEdit(Collections.singletonList(Either.forLeft(te))));
-                        result.add(Either.forRight(action));
-                    } catch (IOException ex) {
-                        //TODO: include stack trace:
-                        client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-                    }
-                }
-                if (f instanceof CreateFixBase) {
-                    try {
-                        CreateFixBase cf = (CreateFixBase) f;
-                        ModificationResult changes = cf.getModificationResult();
-                        List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
-                        Set<File> newFiles = changes.getNewFiles();
-                        if (newFiles.size() > 1) {
-                            throw new IllegalStateException();
-                        }
-                        String newFilePath = null;
-                        for (File newFile : newFiles) {
-                            newFilePath = newFile.getPath();
-                            documentChanges.add(Either.forRight(new CreateFile(newFilePath)));
-                        }
-                        outer: for (FileObject fileObject : changes.getModifiedFileObjects()) {
-                            List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
-                            if (diffs != null) {
-                                List<TextEdit> edits = new ArrayList<>();
-                                for (ModificationResult.Difference diff : diffs) {
-                                    String newText = diff.getNewText();
-                                    if (diff.getKind() == ModificationResult.Difference.Kind.CREATE) {
-                                        if (newFilePath != null) {
-                                            documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(newFilePath, -1),
-                                                    Collections.singletonList(new TextEdit(new Range(Utils.createPosition(fileObject, 0), Utils.createPosition(fileObject, 0)),
-                                                            newText != null ? newText : "")))));
-                                        }
-                                        continue outer;
-                                    } else {
-                                        edits.add(new TextEdit(new Range(Utils.createPosition(fileObject, diff.getStartPosition().getOffset()),
-                                                                         Utils.createPosition(fileObject, diff.getEndPosition().getOffset())),
-                                                               newText != null ? newText : ""));
-                                    }
-                                }
-                                documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toUri(fileObject), -1), edits)));
+                    for (Union2<org.netbeans.api.lsp.TextDocumentEdit, org.netbeans.api.lsp.ResourceOperation> parts : edit.getDocumentChanges()) {
+                        if (parts.hasFirst()) {
+                            List<TextEdit> edits = parts.first().getEdits().stream().map(te -> new TextEdit(new Range(Utils.createPosition(file, te.getStartOffset()), Utils.createPosition(file, te.getEndOffset())), te.getNewText())).collect(Collectors.toList());
+                            TextDocumentEdit tde = new TextDocumentEdit(new VersionedTextDocumentIdentifier(parts.first().getDocument(), -1), edits);
+                            documentChanges.add(Either.forLeft(tde));
+                        } else {
+                            if (parts.second() instanceof org.netbeans.api.lsp.ResourceOperation.CreateFile) {
+                                documentChanges.add(Either.forRight(new CreateFile(((org.netbeans.api.lsp.ResourceOperation.CreateFile) parts.second()).getNewFile())));
+                            } else {
+                                throw new IllegalStateException(String.valueOf(parts.second()));
                             }
                         }
-                        if (!documentChanges.isEmpty()) {
-                            CodeAction codeAction = new CodeAction(f.getText());
-                            codeAction.setKind(CodeActionKind.QuickFix);
-                            codeAction.setEdit(new WorkspaceEdit(documentChanges));
-                            result.add(Either.forRight(codeAction));
-                        }
-                    } catch (IOException ex) {
-                        client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
                     }
+
+                    action.setEdit(new WorkspaceEdit(documentChanges));
                 }
+                result.add(Either.forRight(action));
             }
         }
         }
@@ -1045,43 +956,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
         return CompletableFuture.completedFuture(result);
     }
-
-    //TODO: copied from spi.editor.hints/.../FixData:
-    private List<Fix> sortFixes(Collection<Fix> fixes) {
-        List<Fix> result = new ArrayList<Fix>(fixes);
-
-        Collections.sort(result, new FixComparator());
-
-        return result;
-    }
-
-    private static final String DEFAULT_SORT_TEXT = "\uFFFF";
-
-    private static CharSequence getSortText(Fix f) {
-        if (f instanceof EnhancedFix) {
-            return ((EnhancedFix) f).getSortText();
-        } else {
-            return DEFAULT_SORT_TEXT;
-        }
-    }
-    private static final class FixComparator implements Comparator<Fix> {
-        public int compare(Fix o1, Fix o2) {
-            return compareText(getSortText(o1), getSortText(o2));
-        }
-    }
-
-    private static int compareText(CharSequence text1, CharSequence text2) {
-        int len = Math.min(text1.length(), text2.length());
-        for (int i = 0; i < len; i++) {
-            char ch1 = text1.charAt(i);
-            char ch2 = text2.charAt(i);
-            if (ch1 != ch2) {
-                return ch1 - ch2;
-            }
-        }
-        return text1.length() - text2.length();
-    }
-    //end copied
 
     private ConcurrentHashMap<String, Boolean> upToDateTests = new ConcurrentHashMap<>();
 
@@ -1587,28 +1461,22 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
-            Map<String, ErrorDescription> id2Errors = new HashMap<>();
+            Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = new HashMap<>();
             List<Diagnostic> diags = new ArrayList<>();
             int idx = 0;
             ErrorProvider errorProvider = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc))
                                                     .lookup(ErrorProvider.class);
             ErrorProvider.Context context = new ErrorProvider.Context(file, errorKind);
-            List<? extends ErrorDescription> errors = errorProvider != null ? errorProvider.computeErrors(context) : null;
+            List<? extends org.netbeans.api.lsp.Diagnostic> errors = errorProvider != null ? errorProvider.computeErrors(context) : null;
             if (errors == null) {
                 errors = Collections.emptyList();
             }
-            for (ErrorDescription err : errors) {
-                Diagnostic diag = new Diagnostic(new Range(Utils.createPosition(file, err.getRange().getBegin().getOffset()),
-                                                           Utils.createPosition(file, err.getRange().getEnd().getOffset())),
+            for (org.netbeans.api.lsp.Diagnostic err : errors) {
+                Diagnostic diag = new Diagnostic(new Range(Utils.createPosition(file, err.getStartOffset()),
+                                                           Utils.createPosition(file, err.getEndOffset())),
                                                  err.getDescription());
-                switch (err.getSeverity()) {
-                    case ERROR: diag.setSeverity(DiagnosticSeverity.Error); break;
-                    case VERIFIER:
-                    case WARNING: diag.setSeverity(DiagnosticSeverity.Warning); break;
-                    case HINT: diag.setSeverity(DiagnosticSeverity.Hint); break;
-                    default: diag.setSeverity(DiagnosticSeverity.Information); break;
-                }
-                String id = key(errorKind) + ":" + idx++ + "-" + err.getId();
+                diag.setSeverity(DiagnosticSeverity.valueOf(err.getSeverity().name()));
+                String id = err.getCode();
                 diag.setCode(id);
                 id2Errors.put(id, err);
                 diags.add(diag);
@@ -1739,7 +1607,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
     }
 
-    public static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) throws IOException {
+    public static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) throws IOException {//TODO: is this still used?
         FileObject[] file = new FileObject[1];
         LineMap[] lm = new LineMap[1];
         ModificationResult changes = js.runModificationTask(wc -> {

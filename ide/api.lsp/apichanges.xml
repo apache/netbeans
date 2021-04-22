@@ -90,7 +90,7 @@
 
 <h1>Introduction</h1>
 
-<p>This document lists changes made to the LSP APIs. Please ask on the 
+<p>This document lists changes made to the LSP APIs. Please ask on the
     <code>dev@netbeans.apache.org</code>
     mailing list if you have any questions about the details of a
     change, or are wondering how to convert existing code to be compatible.

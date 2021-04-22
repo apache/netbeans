@@ -22,8 +22,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.lsp.Diagnostic;
 import org.netbeans.modules.java.hints.declarative.DeclarativeHintTokenId;
 import org.netbeans.modules.java.hints.declarative.DeclarativeHintsParser.Result;
+import org.netbeans.modules.java.hints.infrastructure.JavaErrorProvider;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
@@ -41,12 +43,12 @@ import org.openide.util.Exceptions;
 public class HintsErrorProvider implements ErrorProvider {
 
     @Override
-    public List<? extends ErrorDescription> computeErrors(Context context) {
+    public List<? extends Diagnostic> computeErrors(Context context) {
         if (context.errorKind() == Kind.HINTS) {
             return Collections.emptyList();
         }
 
-        List<ErrorDescription> result = new ArrayList<>();
+        List<Diagnostic> result = new ArrayList<>();
 
         try {
             ParserManager.parse(Collections.singletonList(Source.create(context.file())), new UserTask() {
@@ -54,7 +56,7 @@ public class HintsErrorProvider implements ErrorProvider {
                 public void run(ResultIterator it) throws Exception {
                     Result parseResult = ParserImpl.getResult(it.getParserResult());
                     if (parseResult != null) {
-                        result.addAll(HintsTask.computeErrors(parseResult, it.getSnapshot().getText(), it.getSnapshot().getSource().getFileObject()));
+                        result.addAll(JavaErrorProvider.convert2Diagnostic(context.errorKind(), HintsTask.computeErrors(parseResult, it.getSnapshot().getText(), it.getSnapshot().getSource().getFileObject()), err -> true));
                     }
                 }
             });

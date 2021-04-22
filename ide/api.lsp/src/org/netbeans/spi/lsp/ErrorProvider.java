@@ -21,7 +21,7 @@ package org.netbeans.spi.lsp;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
-import org.netbeans.spi.editor.hints.ErrorDescription;
+import org.netbeans.api.lsp.Diagnostic;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -38,7 +38,7 @@ public interface ErrorProvider {
      * @param context specification of the file, for which the output should be computed
      * @return the errors/warnings of the given type in the given file
      */
-    public List<? extends ErrorDescription> computeErrors(Context context);
+    public List<? extends Diagnostic> computeErrors(Context context);
 
     /**
      * The context for the error provider.

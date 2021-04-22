@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.lang3.StringUtils;
@@ -77,6 +78,7 @@ import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.api.debugger.jpda.Variable;
 import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable;
+import org.netbeans.modules.java.lsp.server.LspSession;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDebugSession;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDisconnectRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbLaunchRequestHandler;
@@ -93,7 +95,7 @@ import org.netbeans.spi.debugger.ui.DebuggingView.DVThread;
  *
  * @author Dusan Balek
  */
-public final class NbProtocolServer implements IDebugProtocolServer {
+public final class NbProtocolServer implements IDebugProtocolServer, LspSession.ScheduledServer {
 
     private final DebugAdapterContext context;
     private final NbLaunchRequestHandler launchRequestHandler = new NbLaunchRequestHandler();
@@ -101,6 +103,7 @@ public final class NbProtocolServer implements IDebugProtocolServer {
     private final NbBreakpointsRequestHandler breakpointsRequestHandler = new NbBreakpointsRequestHandler();
     private final NbVariablesRequestHandler variablesRequestHandler = new NbVariablesRequestHandler();
     private boolean initialized = false;
+    private Future<Void> runningServer;
 
     public NbProtocolServer(DebugAdapterContext context) {
         this.context = context;
@@ -149,6 +152,7 @@ public final class NbProtocolServer implements IDebugProtocolServer {
         return CompletableFuture.completedFuture(caps);
     }
 
+    @Override
     public CompletableFuture<Void> configurationDone(ConfigurationDoneArguments args) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         NbDebugSession debugSession = context.getDebugSession();
@@ -513,5 +517,14 @@ public final class NbProtocolServer implements IDebugProtocolServer {
             future.complete(response);
         }
         return future;
+    }
+
+    void setRunningFuture(Future<Void> runningServer) {
+        this.runningServer = runningServer;
+    }
+
+    @Override
+    public Future<Void> getRunningFuture() {
+        return runningServer;
     }
 }

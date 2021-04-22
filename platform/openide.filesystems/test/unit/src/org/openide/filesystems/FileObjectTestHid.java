@@ -3467,14 +3467,18 @@ public class FileObjectTestHid extends TestBaseHid {
     }
 
     public void testNonExistingFileObject() throws Exception {
-        nonExistingFileObject("non-existing-child.xyz");
+        nonExistingFileObject("non-existing-child.xyz", 0);
     }
 
     public void testNonExistingFileObjectInFolder() throws Exception {
-        nonExistingFileObject("non-existing-folder/non-existing-child.xyz");
+        nonExistingFileObject("non-existing-folder/non-existing-child.xyz", 1);
     }
 
-    private void nonExistingFileObject(String childName) throws Exception {
+    public void testNonExistingDoubleFileObjectInFolder() throws Exception {
+        nonExistingFileObject("non-existing-folder/non-existing-folder/non-existing-child.xyz", 2);
+    }
+
+    private void nonExistingFileObject(String childName, int depth) throws Exception {
         checkSetUp();
         final FileObject fold = getTestFolder1(root);
 
@@ -3485,6 +3489,14 @@ public class FileObjectTestHid extends TestBaseHid {
         assertNotNull("Non existing child created", ch2);
         assertEquals("non-existing-child.xyz", ch2.getNameExt());
         assertFalse("It is not valid to begin with", ch2.isValid());
+
+        {
+            FileObject p = ch2.getParent();
+            while (depth-- > 0) {
+                assertFalse("Parent isn't valid either", p.isValid());
+                p = p.getParent();
+            }
+        }
 
         URI foldUri = fold.toURI();
         URI ch2Uri = ch2.toURI();

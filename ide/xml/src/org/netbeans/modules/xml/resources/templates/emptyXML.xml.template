@@ -8,17 +8,9 @@
 <#assign licenseLast = "-->">
 <#include "${project.licensePath}">
 
-<#if doctype??>
-${doctype}
-</#if>
-<#if !rootTagNs??>
-  <#assign rootTagNs = "demo">
-  <#assign nsDeclarations = "">
-</#if>
-<#if !generatedContent??>
-  <#assign generatedContent = "Hello World!">
-</#if>
+${doctype!""}
 
-<${rootTagNs}${nsDeclarations}>
-    ${generatedContent}
-</${rootTagNs}>
+<${rootTagNs!"demo"}${nsDeclarations!""}>
+    ${generatedContent!"Hello World!"}
+</${rootTagNs!"demo"}>
+

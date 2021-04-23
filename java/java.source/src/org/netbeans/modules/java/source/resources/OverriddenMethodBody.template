@@ -14,5 +14,5 @@ ${simple_class_name}        simple name of the enclosing class
 <#if method_return_type?? && method_return_type != "void">
 return ${super_method_call}; //To change body of generated methods, choose Tools | Templates.
 <#else>
-${super_method_call}; //To change body of generated methods, choose Tools | Templates.
+${super_method_call!''}; //To change body of generated methods, choose Tools | Templates.
 </#if>

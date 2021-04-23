@@ -23,8 +23,8 @@
 # apisupport does not even technically use it - it is only part of a sample app.
 apisupport.feedreader/external/jdom-1.0.jar mobility.deployment.webdav/external/jdom-1.0.jar
 
-# db.sql.visualeditor/external/javacc-3.2.jar is used at compile-time only
-ide/db.sql.visualeditor/external/javacc-3.2.jar java/performance/external/javacc-3.2.jar
+# db.sql.visualeditor/external/javacc-7.0.10.jar is used at compile-time only
+ide/db.sql.visualeditor/external/javacc-7.0.10.jar java/performance/external/javacc-7.0.10.jar
 
 # probably a good idea to make a common module at some point
 ide/db.dataview/external/commons-compress-1.20.jar java/java.disco/external/commons-compress-1.20.jar

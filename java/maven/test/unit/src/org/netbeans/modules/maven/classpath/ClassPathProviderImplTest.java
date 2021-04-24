@@ -163,6 +163,10 @@ public class ClassPathProviderImplTest extends NbTestCase {
                 "<packaging>jar</packaging>" +
                 "<version>1.0-SNAPSHOT</version>" +
                 "<name>Test</name>" +
+                "    <properties>" +
+                "        <maven.compiler.source>11</maven.compiler.source>" +
+                "        <maven.compiler.target>11</maven.compiler.target>" +
+                "    </properties>" +
                 "</project>");
         FileObject src = FileUtil.createFolder(d, "src/main/java");
         FileObject mi = FileUtil.createData(src, "module-info.java");
@@ -188,6 +192,10 @@ public class ClassPathProviderImplTest extends NbTestCase {
                 "<packaging>jar</packaging>" +
                 "<version>1.0-SNAPSHOT</version>" +
                 "<name>Test</name>" +
+                "    <properties>" +
+                "        <maven.compiler.source>11</maven.compiler.source>" +
+                "        <maven.compiler.target>11</maven.compiler.target>" +
+                "    </properties>" +
                 "</project>");
         FileObject src = FileUtil.createFolder(d, "src/main/java");
         Project prj = FileOwnerQuery.getOwner(src);

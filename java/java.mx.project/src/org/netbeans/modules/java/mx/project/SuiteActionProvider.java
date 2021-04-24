@@ -23,6 +23,9 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import org.netbeans.api.actions.Openable;
 import org.netbeans.api.debugger.*;
@@ -45,6 +48,7 @@ import org.openide.windows.OutputEvent;
 import org.openide.windows.OutputListener;
 
 final class SuiteActionProvider implements ActionProvider {
+    private static final RequestProcessor ASYNC = new RequestProcessor("Mx Async", 10);
     private static final List<String> SUPPORTED_ACTIONS = Arrays.asList(
         ActionProvider.COMMAND_CLEAN,
         ActionProvider.COMMAND_BUILD,
@@ -91,19 +95,13 @@ final class SuiteActionProvider implements ActionProvider {
                 runMx(Bundle.MSG_Clean(prj.getName()), "clean"); // NOI18N
                 break;
             case ActionProvider.COMMAND_BUILD:
-                runMx(Bundle.MSG_Build(prj.getName()), "build"); // NOI18N
+                ensureBuilt(null);
                 break;
             case ActionProvider.COMMAND_REBUILD:
-                runMx(Bundle.MSG_Rebuild(prj.getName()), "build"); // NOI18N
+                ensureBuilt(null);
                 break;
             case ActionProvider.COMMAND_COMPILE_SINGLE: {
-                SuiteSources.Group grp = prj.getSources().findGroup(fo);
-                if (grp == null) {
-                    Toolkit.getDefaultToolkit().beep();
-                    return;
-                }
-                final String name = grp.getDisplayName();
-                runMx(Bundle.MSG_BuildOnly(prj.getName(), name), "build", "--only", name); // NOI18N
+                ensureBuilt(fo);
                 break;
             }
             case SingleMethod.COMMAND_RUN_SINGLE_METHOD: {
@@ -122,7 +120,7 @@ final class SuiteActionProvider implements ActionProvider {
                     Toolkit.getDefaultToolkit().beep();
                     return;
                 }
-                runMx(Bundle.MSG_Unittest(fo.getName()), "unittest", fo.getName() + testSuffix); // NOI18N
+                runBuildAndMx(null, Bundle.MSG_Unittest(fo.getName()), "unittest", fo.getName() + testSuffix); // NOI18N
                 break;
             case SingleMethod.COMMAND_DEBUG_SINGLE_METHOD: {
                 SingleMethod m = context.lookup(SingleMethod.class);
@@ -141,27 +139,43 @@ final class SuiteActionProvider implements ActionProvider {
                     return;
                 }
                 ListeningDICookie ldic = ListeningDICookie.create(-1);
-                Object obj = ldic.getArgs().get("port"); // NOI18N
                 DebuggerInfo di = DebuggerInfo.create(ListeningDICookie.ID, ldic);
-                DebuggerEngine[] engines = { null };
-                RequestProcessor.getDefault().post(() -> {
-                    DebuggerEngine[] engs = DebuggerManager.getDebuggerManager().startDebugging(di);
-                    engines[0] = engs[0];
+                ASYNC.post(() -> {
+                    DebuggerManager.getDebuggerManager().startDebugging(di);
                 });
                 int port = ldic.getPortNumber();
-                runMx(Bundle.MSG_Unittest(fo.getName()), "--attach", "" + port, "unittest", fo.getName() + testSuffix); // NOI18N
+                runBuildAndMx(null, Bundle.MSG_Unittest(fo.getName()), "--attach", "" + port, "unittest", fo.getName() + testSuffix); // NOI18N
                 break;
             default:
                 throw new UnsupportedOperationException(action);
         }
     }
 
-    private boolean runMx(String taskName, String... args) {
+    private CompletionStage<Integer> ensureBuilt(FileObject fo) {
+        if (fo != null) {
+            SuiteSources.Group grp = prj.getSources().findGroup(fo);
+            if (grp != null) {
+                final String name = grp.getDisplayName();
+                return runMx(Bundle.MSG_BuildOnly(prj.getName(), name), "build", "--only", name); // NOI18N
+            }
+        }
+        return runMx(Bundle.MSG_Rebuild(prj.getName()), "build"); // NOI18N
+    }
+
+    private CompletionStage<Integer> runBuildAndMx(FileObject fo, String taskName, String... args) {
+        return ensureBuilt(fo).thenCompose((exitCode) -> {
+            return runMx(taskName, args);
+        });
+    }
+
+    private CompletableFuture<Integer> runMx(String taskName, String... args) {
         final File suiteDir = FileUtil.toFile(prj.getProjectDirectory());
         if (!suiteDir.isDirectory()) {
             Toolkit.getDefaultToolkit().beep();
-            return true;
+            return CompletableFuture.completedFuture(-1);
         }
+        CompletableFuture<Future<Integer>> taskResult = new CompletableFuture<>();
+        CompletableFuture<Integer> cf = new CompletableFuture<>();
         LifecycleManager.getDefault().saveAll();
         ExecutionDescriptor descriptor = new ExecutionDescriptor()
                 .frontWindow(true).controllable(true)
@@ -213,6 +227,14 @@ final class SuiteActionProvider implements ActionProvider {
                         }
                         return null;
                     };
+                }).postExecution(() -> {
+                    ASYNC.post(() -> {
+                        try {
+                            cf.complete(taskResult.get().get());
+                        } catch (InterruptedException | ExecutionException ex) {
+                            cf.completeExceptionally(ex);
+                        }
+                    });
                 });
         ProcessBuilder processBuilder = ProcessBuilder.getLocal();
         processBuilder.setWorkingDirectory(suiteDir.getPath());
@@ -220,8 +242,9 @@ final class SuiteActionProvider implements ActionProvider {
         processBuilder.setArguments(Arrays.asList(args));
         ExecutionService service = ExecutionService.newService(processBuilder, descriptor, taskName);
         Future<Integer> task = service.run();
+        taskResult.complete(task);
         prj.registerTask(task);
-        return false;
+        return cf;
     }
 
     private int parseLineNumber(String[] segments) {

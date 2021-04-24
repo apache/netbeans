@@ -46,7 +46,6 @@ import javax.lang.model.element.Name;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
-import org.openide.util.Exceptions;
 
 public class TreeShims {
 

@@ -1191,6 +1191,9 @@ public class CasualDiff {
     }
 
     protected int diffMethodDef(JCMethodDecl oldT, JCMethodDecl newT, int[] bounds) {
+        JCExpression oldRestype = oldT.name != names.init ? oldT.restype : null;
+        JCExpression newRestype = newT.name != names.init ? newT.restype : null;
+
         int localPointer = bounds[0];
         // match modifiers and annotations
         if (!matchModifiers(oldT.mods, newT.mods)) {
@@ -1205,8 +1208,8 @@ public class CasualDiff {
                 int oldPos = getOldPos(oldT.mods);
                 copyTo(localPointer, oldPos);
                 if (oldT.typarams.isEmpty()) {
-                    if (oldT.restype != null) {
-                        localPointer = getOldPos(oldT.restype);
+                    if (oldRestype != null) {
+                        localPointer = getOldPos(oldRestype);
                     } else {
                         localPointer = oldT.pos;
                     }
@@ -1229,8 +1232,8 @@ public class CasualDiff {
         // ii) constructor - start position of tree - i.e. first token after
         //                   modifiers.
         int pos = oldT.typarams.isEmpty() ?
-            oldT.restype != null ?
-                getOldPos(oldT.restype) :
+            oldRestype != null ?
+                getOldPos(oldRestype) :
                 oldT.pos :
             getOldPos(oldT.typarams.head);
 
@@ -1251,21 +1254,21 @@ public class CasualDiff {
                 printer.print(" "); // print the space after type parameter
             }
         }
-        if (oldT.restype != null) { // means constructor, skip return type gen.
-            int[] restypeBounds = getBounds(oldT.restype);
+        if (oldRestype != null) { // means constructor, skip return type gen.
+            int[] restypeBounds = getBounds(oldRestype);
             copyTo(localPointer, restypeBounds[0]);
-            localPointer = diffTree(oldT.restype, newT.restype, restypeBounds);
+            localPointer = diffTree(oldRestype, newRestype, restypeBounds);
             if (restypeBounds[1] > localPointer)
                 copyTo(localPointer, localPointer = restypeBounds[1]);
-        } else if(oldT.restype == null && newT.restype != null) {
+        } else if(oldRestype == null && newRestype != null) {
             copyTo(localPointer, localPointer = oldT.pos);
-            printer.print(newT.restype);
+            printer.print(newRestype);
             printer.print(" "); // print the space after return type
         }
         
         int posHint;
         if (oldT.typarams.isEmpty()) {
-            posHint = oldT.restype != null ? oldT.restype.getStartPosition() : oldT.getStartPosition();
+            posHint = oldRestype != null ? oldRestype.getStartPosition() : oldT.getStartPosition();
         } else {
             posHint = oldT.typarams.iterator().next().getStartPosition();
         }

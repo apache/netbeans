@@ -22,6 +22,7 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Future;
 import org.netbeans.api.actions.Openable;
 import org.netbeans.api.debugger.*;
@@ -44,6 +45,18 @@ import org.openide.windows.OutputEvent;
 import org.openide.windows.OutputListener;
 
 final class SuiteActionProvider implements ActionProvider {
+    private static final List<String> SUPPORTED_ACTIONS = Arrays.asList(
+        ActionProvider.COMMAND_CLEAN,
+        ActionProvider.COMMAND_BUILD,
+        ActionProvider.COMMAND_COMPILE_SINGLE,
+        ActionProvider.COMMAND_REBUILD,
+        ActionProvider.COMMAND_TEST_SINGLE,
+        ActionProvider.COMMAND_RUN_SINGLE,
+        ActionProvider.COMMAND_DEBUG_TEST_SINGLE,
+        ActionProvider.COMMAND_DEBUG_SINGLE,
+        SingleMethod.COMMAND_DEBUG_SINGLE_METHOD,
+        SingleMethod.COMMAND_RUN_SINGLE_METHOD
+    );
     private final SuiteProject prj;
 
     SuiteActionProvider(SuiteProject prj) {
@@ -52,18 +65,7 @@ final class SuiteActionProvider implements ActionProvider {
 
     @Override
     public String[] getSupportedActions() {
-        return new String[] {
-            ActionProvider.COMMAND_CLEAN,
-            ActionProvider.COMMAND_BUILD,
-            ActionProvider.COMMAND_COMPILE_SINGLE,
-            ActionProvider.COMMAND_REBUILD,
-            ActionProvider.COMMAND_TEST_SINGLE,
-            ActionProvider.COMMAND_RUN_SINGLE,
-            ActionProvider.COMMAND_DEBUG_TEST_SINGLE,
-            ActionProvider.COMMAND_DEBUG_SINGLE,
-            SingleMethod.COMMAND_DEBUG_SINGLE_METHOD,
-            SingleMethod.COMMAND_RUN_SINGLE_METHOD,
-        };
+        return SUPPORTED_ACTIONS.toArray(new String[0]);
     }
 
     @NbBundle.Messages({
@@ -251,7 +253,7 @@ final class SuiteActionProvider implements ActionProvider {
             case ActionProvider.COMMAND_DEBUG_SINGLE:
                 return fo != null;
             default:
-                return false;
+                return SUPPORTED_ACTIONS.contains(action);
         }
     }
 }

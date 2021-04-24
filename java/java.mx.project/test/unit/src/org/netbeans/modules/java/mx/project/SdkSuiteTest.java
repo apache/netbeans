@@ -28,8 +28,10 @@ import static junit.framework.TestCase.assertTrue;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Lookup;
 
 public class SdkSuiteTest extends SuiteCheck {
     public SdkSuiteTest(String n) {
@@ -42,6 +44,28 @@ public class SdkSuiteTest extends SuiteCheck {
 
     public void testParseSdkSourcesWithoutError() throws Exception {
         verifyNoErrorsInSuite("sdk");
+    }
+
+    public void testActionsEnabled() throws Exception {
+        File sdkSibling = findSuite("sdk");
+
+        FileObject fo = FileUtil.toFileObject(sdkSibling);
+        assertNotNull("project directory found", fo);
+
+        Project p = ProjectManager.getDefault().findProject(fo);
+        assertNotNull("project found", p);
+        assertEquals("It is suite project: " + p, "SuiteProject", p.getClass().getSimpleName());
+
+        ActionProvider ap = p.getLookup().lookup(ActionProvider.class);
+        assertNotNull("Action provider found", ap);
+
+        Lookup ctx = fo.getLookup();
+        assertTrue("Build is supported", ap.isActionEnabled(ActionProvider.COMMAND_BUILD, ctx));
+        assertTrue("Clean is supported", ap.isActionEnabled(ActionProvider.COMMAND_CLEAN, ctx));
+        assertTrue("Build & Clean is supported", ap.isActionEnabled(ActionProvider.COMMAND_REBUILD, ctx));
+
+        assertFalse("Move isn't supported", ap.isActionEnabled(ActionProvider.COMMAND_MOVE, ctx));
+        assertFalse("Primining isn't (yet) supported", ap.isActionEnabled(ActionProvider.COMMAND_PRIME, ctx));
     }
 
     public void testRootsForAnSdkJar() throws Exception {

@@ -1051,6 +1051,24 @@ public class JavacParser extends Parser {
             @NullAllowed final ClassPath moduleCompile,
             @NullAllowed final ClassPath moduleAllUnnamed,
             final boolean isModuleInfo) {
+        com.sun.tools.javac.code.Source validated = validateSourceLevelImpl(sourceLevel, bootClassPath, classPath, srcClassPath,
+                                                                            moduleBoot, moduleCompile, moduleAllUnnamed, isModuleInfo);
+        if (validated.compareTo(com.sun.tools.javac.code.Source.MIN) < 0) {
+            return com.sun.tools.javac.code.Source.MIN; //TODO: should we manually verify errors in this case?
+        }
+        return validated;
+    }
+
+    @NonNull
+    private static com.sun.tools.javac.code.Source validateSourceLevelImpl(
+            @NullAllowed String sourceLevel,
+            @NullAllowed final ClassPath bootClassPath,
+            @NullAllowed final ClassPath classPath,
+            @NullAllowed final ClassPath srcClassPath,
+            @NullAllowed final ClassPath moduleBoot,
+            @NullAllowed final ClassPath moduleCompile,
+            @NullAllowed final ClassPath moduleAllUnnamed,
+            final boolean isModuleInfo) {
         com.sun.tools.javac.code.Source[] sources = com.sun.tools.javac.code.Source.values();
         Level warnLevel;
         if (sourceLevel == null) {

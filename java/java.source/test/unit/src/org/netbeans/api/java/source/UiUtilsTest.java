@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.openide.util.Utilities;
 
 /**
@@ -127,25 +128,6 @@ public class UiUtilsTest extends NbTestCase {
         return src;
     }
 
-    private static ClassPath createBootClassPath() throws IOException {
-        String bcp = System.getProperty("sun.boot.class.path");    //NOI18N
-        assertNotNull(bcp);
-        StringTokenizer tk = new StringTokenizer(bcp, File.pathSeparator);
-        List<URL> roots = new ArrayList<URL>();
-        while (tk.hasMoreTokens()) {
-            String token = tk.nextToken();
-            File f = new File(token);
-            URL url = Utilities.toURI(f).toURL();
-            if (FileUtil.isArchiveFile(url)) {
-                url = FileUtil.getArchiveRoot(url);
-            } else if (!f.exists()) {
-                url = new URL(url.toExternalForm() + '/');
-            }
-            roots.add(url);
-        }
-        return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
-    }
-
     private static ClassPath createSourcePath(FileObject wrkRoot) throws IOException {
         return ClassPathSupport.createClassPath(new FileObject[]{getSrcRoot(wrkRoot)});
     }
@@ -157,7 +139,7 @@ public class UiUtilsTest extends NbTestCase {
                 if (type == ClassPath.SOURCE) {
                     return createSourcePath(FileUtil.toFileObject(getWorkDir()));
                 } else if (type == ClassPath.BOOT) {
-                    return createBootClassPath();
+                    return BootClassPathUtil.getBootClassPath();
                 }
             } catch (IOException ioe) {
                 //Skeep it

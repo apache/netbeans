@@ -332,7 +332,7 @@ public class UtilitiesTest extends TestBase {
         String code = "$1.isDirectory()";
         Tree result = Utilities.parseAndAttribute(info, code, s, positions, errors);
 
-        assertDiagnostics(errors, "0-0:compiler.err.cant.resolve.location");
+        assertDiagnostics(errors, "0-2:compiler.err.cant.resolve.location");
         assertPositions(result, positions[0], code, "$1", "$1.isDirectory", "$1.isDirectory()");
     }
 

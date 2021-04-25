@@ -22,16 +22,20 @@ import java.io.File;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
+import org.openide.util.lookup.Lookups;
 
 public class SdkSuiteTest extends SuiteCheck {
     public SdkSuiteTest(String n) {
@@ -66,6 +70,46 @@ public class SdkSuiteTest extends SuiteCheck {
 
         assertFalse("Move isn't supported", ap.isActionEnabled(ActionProvider.COMMAND_MOVE, ctx));
         assertFalse("Primining isn't (yet) supported", ap.isActionEnabled(ActionProvider.COMMAND_PRIME, ctx));
+    }
+
+    public void testActionProgressIsProvided() throws Exception {
+        File sdkSibling = findSuite("sdk");
+
+        FileObject fo = FileUtil.toFileObject(sdkSibling);
+        assertNotNull("project directory found", fo);
+
+        Project p = ProjectManager.getDefault().findProject(fo);
+        assertNotNull("project found", p);
+        assertEquals("It is suite project: " + p, "SuiteProject", p.getClass().getSimpleName());
+
+        ActionProvider ap = p.getLookup().lookup(ActionProvider.class);
+        assertNotNull("Action provider found", ap);
+
+        class MockProgress extends ActionProgress {
+            volatile boolean started;
+            volatile Boolean success;
+            CountDownLatch finished = new CountDownLatch(1);
+
+            @Override
+            protected void started() {
+                this.started = true;
+            }
+
+            @Override
+            public void finished(boolean success) {
+                this.success = success;
+                this.finished.countDown();
+            }
+        }
+        MockProgress progress = new MockProgress();
+
+        Lookup ctx = Lookups.fixed(fo, p, progress);
+        assertTrue("Clean is supported", ap.isActionEnabled(ActionProvider.COMMAND_CLEAN, ctx));
+        ap.invokeAction(ActionProvider.COMMAND_CLEAN, ctx);
+
+        assertTrue("Progress started", progress.started);
+        progress.finished.await(10, TimeUnit.SECONDS);
+        assertNotNull("Progress finished", progress.success);
     }
 
     public void testRootsForAnSdkJar() throws Exception {

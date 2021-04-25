@@ -34,6 +34,7 @@ import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.extexecution.base.ProcessBuilder;
 import org.netbeans.api.extexecution.print.ConvertedLine;
+import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.LifecycleManager;
@@ -90,18 +91,19 @@ final class SuiteActionProvider implements ActionProvider {
     public void invokeAction(String action, Lookup context) throws IllegalArgumentException {
         FileObject fo = context.lookup(FileObject.class);
         String testSuffix = "";
+        CompletionStage<Integer> running;
         switch (action) {
             case ActionProvider.COMMAND_CLEAN:
-                runMx(Bundle.MSG_Clean(prj.getName()), "clean"); // NOI18N
+                running = runMx(Bundle.MSG_Clean(prj.getName()), "clean"); // NOI18N
                 break;
             case ActionProvider.COMMAND_BUILD:
-                ensureBuilt(null);
+                running = ensureBuilt(null);
                 break;
             case ActionProvider.COMMAND_REBUILD:
-                ensureBuilt(null);
+                running = ensureBuilt(null);
                 break;
             case ActionProvider.COMMAND_COMPILE_SINGLE: {
-                ensureBuilt(fo);
+                running = ensureBuilt(fo);
                 break;
             }
             case SingleMethod.COMMAND_RUN_SINGLE_METHOD: {
@@ -120,7 +122,7 @@ final class SuiteActionProvider implements ActionProvider {
                     Toolkit.getDefaultToolkit().beep();
                     return;
                 }
-                runBuildAndMx(null, Bundle.MSG_Unittest(fo.getName()), "unittest", fo.getName() + testSuffix); // NOI18N
+                running = runBuildAndMx(null, Bundle.MSG_Unittest(fo.getName()), "unittest", fo.getName() + testSuffix); // NOI18N
                 break;
             case SingleMethod.COMMAND_DEBUG_SINGLE_METHOD: {
                 SingleMethod m = context.lookup(SingleMethod.class);
@@ -144,10 +146,17 @@ final class SuiteActionProvider implements ActionProvider {
                     DebuggerManager.getDebuggerManager().startDebugging(di);
                 });
                 int port = ldic.getPortNumber();
-                runBuildAndMx(null, Bundle.MSG_Unittest(fo.getName()), "--attach", "" + port, "unittest", fo.getName() + testSuffix); // NOI18N
+                running = runBuildAndMx(null, Bundle.MSG_Unittest(fo.getName()), "--attach", "" + port, "unittest", fo.getName() + testSuffix); // NOI18N
                 break;
             default:
                 throw new UnsupportedOperationException(action);
+        }
+        if (running != null) {
+            ActionProgress progress = ActionProgress.start(context);
+            running.handle((exitCode, error) -> {
+                progress.finished(exitCode == 0 && error == null);
+                return null;
+            });
         }
     }
 

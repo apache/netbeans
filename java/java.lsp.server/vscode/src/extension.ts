@@ -213,14 +213,12 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         if (window.activeTextEditor?.document.languageId !== "java") {
             return;
         }
-        const uri = window.activeTextEditor.document.uri.toString();
+        const uri = window.activeTextEditor.document.uri;
         const position = window.activeTextEditor.selection.active;
-        const location: any = await vscode.commands.executeCommand('java.super.implementation', uri, position);
-        if (location) {
-            return window.showTextDocument(vscode.Uri.parse(location.uri), { preserveFocus: true, selection: location.range });
-        } else {
-            return window.showInformationMessage('No super implementation found');
-        }
+        const locations: any[] = await vscode.commands.executeCommand('java.super.implementation', uri.toString(), position) || [];
+        return vscode.commands.executeCommand('editor.action.goToLocations', window.activeTextEditor.document.uri, position,
+            locations.map(location => new vscode.Location(vscode.Uri.parse(location.uri), new vscode.Range(location.range.start.line, location.range.start.character, location.range.end.line, location.range.end.character))),
+            'peek', 'No super implementation found');
     }));
     context.subscriptions.push(commands.registerCommand('java.rename.element.at', async (offset) => {
         const editor = window.activeTextEditor;

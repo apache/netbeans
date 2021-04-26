@@ -229,8 +229,14 @@
 				"when": "nbJavaLSReady"
 			},
 			{
+				"command": "java.goto.super.implementation",
+				"key": "alt+U",
+				"when": "editorHasCodeActionsProvider && editorTextFocus"
+			},
+			{
 				"command": "editor.action.sourceAction",
 				"key": "alt+insert",
+				"mac": "ctrl+alt+enter",
 				"when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly"
 			}
 		],

@@ -88,7 +88,7 @@ public final class RepositoryDataInputStream extends DataInputStream implements 
 
     @Override
     public CharSequence readCharSequenceUTF() throws IOException {
-        return UTF.readCharSequenceUTF(this);
+        return DataInputStream.readUTF(this);
     }
 
     @Override

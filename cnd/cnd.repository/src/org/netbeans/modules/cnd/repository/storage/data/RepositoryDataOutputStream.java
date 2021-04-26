@@ -56,7 +56,7 @@ public final class RepositoryDataOutputStream extends DataOutputStream implement
 
     @Override
     public void writeCharSequenceUTF(CharSequence s) throws IOException {
-        UTF.writeUTF(s, this);
+        writeCharSequenceUTF(s);
     }
 
     @Override

@@ -1,6 +1,10 @@
 Name: Javac Compiler Implementation
 Description: Javac Compiler Implementation
+<<<<<<< HEAD:java/libs.javacimpl/external/nb-javac-jdk-16+36-license.txt
 Version: 16
+=======
+Version: 16.0.0.0
+>>>>>>> jlahoda/jdk17-fixes:java/libs.javacimpl/external/nb-javac-16.0.0.0-license.txt
 License: GPL-2-CP
 Origin: OpenJDK (https://github.com/openjdk/jdk16)
 Source: https://github.com/oracle/nb-javac/

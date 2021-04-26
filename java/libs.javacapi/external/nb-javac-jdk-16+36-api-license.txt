@@ -1,6 +1,10 @@
 Name: Javac Compiler API
 Description: Javac Compiler API
+<<<<<<< HEAD:java/libs.javacapi/external/nb-javac-jdk-16+36-api-license.txt
 Version: 16
+=======
+Version: 16.0.0.0
+>>>>>>> jlahoda/jdk17-fixes:java/libs.javacapi/external/nb-javac-16.0.0.0-api-license.txt
 License: GPL-2-CP
 Origin: OpenJDK (https://github.com/openjdk/jdk16)
 Source: https://github.com/oracle/nb-javac/

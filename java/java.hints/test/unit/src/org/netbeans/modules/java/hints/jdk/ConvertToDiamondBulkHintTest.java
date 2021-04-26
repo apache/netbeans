@@ -37,7 +37,8 @@ public class ConvertToDiamondBulkHintTest extends NbTestCase {
                 .replace("," + key + ",", ",");
     }
 
-    public void testSimple1() throws Exception {
+    //nb-javac: disabled because JDK javac does not produce the correct hint here for -XDfind=diamond:
+    public void NB_JAVAC_testSimple1() throws Exception {
         HintTest
                 .create()
                 .input("package test;\n" +
@@ -55,7 +56,8 @@ public class ConvertToDiamondBulkHintTest extends NbTestCase {
                               "}\n");
     }
 
-    public void testSimple2() throws Exception {
+    //nb-javac: disabled because JDK javac does not produce the correct hint here for -XDfind=diamond:
+    public void NB_JAVAC_testSimple2() throws Exception {
         HintTest
                 .create()
                 .input("package test;\n" +

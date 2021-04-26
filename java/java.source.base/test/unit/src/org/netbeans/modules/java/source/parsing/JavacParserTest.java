@@ -63,6 +63,7 @@ import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.tasklist.CompilerSettings;
 import org.netbeans.modules.openide.util.GlobalLookup;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -106,6 +107,11 @@ public class JavacParserTest extends NbTestCase {
     }
 
     public void testMultiSource() throws Exception {
+        if (!NoJavacHelper.hasNbJavac()) {
+            //nb-javac (NB_JAVAC_): JDK's javac we currently don't correctly run JavaSource with multiple files:
+            return ;
+        }
+
         FileObject f1 = createFile("test/Test1.java", "package test; class Test1");
         FileObject f2 = createFile("test/Test2.java", "package test; class Test2{}");
         FileObject f3 = createFile("test/Test3.java", "package test; class Test3{}");

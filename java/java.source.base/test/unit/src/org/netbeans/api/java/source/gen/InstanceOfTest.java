@@ -25,9 +25,13 @@ import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.tree.JCTree;
 import java.io.File;
 import java.io.IOException;
+import java.util.EnumSet;
+import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Modifier;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
@@ -35,6 +39,7 @@ import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.junit.NbTestSuite;
+import org.netbeans.modules.java.completion.TreeShims;
 
 /**
  * Tests correct adding cast to statement.
@@ -88,7 +93,13 @@ public class InstanceOfTest extends GeneratorTestMDRCompat {
                 MethodTree method = (MethodTree) clazz.getMembers().get(1);
                 IfTree ift = (IfTree) method.getBody().getStatements().get(0);
                 InstanceOfTree it = (InstanceOfTree) ((ParenthesizedTree) ift.getCondition()).getExpression();
-                InstanceOfTree nue = make.InstanceOf(it.getExpression(), make.BindingPattern("t", it.getType()));
+                InstanceOfTree nue = null;
+                if (TreeShims.isJDKVersionSupportEnablePreview()) {
+                    nue = make.InstanceOf(it.getExpression(), make.BindingPattern("t", it.getType()));
+                } else {
+                    VariableTree var = make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "t", it.getType(), null);
+                    nue = make.InstanceOf(it.getExpression(), make.BindingPattern(var));
+                }
                 workingCopy.rewrite(it, nue);
             }
 

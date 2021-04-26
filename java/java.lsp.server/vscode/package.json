@@ -231,6 +231,7 @@
 			{
 				"command": "java.goto.super.implementation",
 				"key": "alt+U",
+				"mac": "alt+cmd+U",
 				"when": "editorHasCodeActionsProvider && editorTextFocus"
 			},
 			{

@@ -46,7 +46,6 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -57,7 +56,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.IntFunction;
 import java.util.logging.Level;
@@ -67,6 +65,7 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
@@ -584,9 +583,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                         null, null, null, ed.getDisplayName(), true));
                             } else {
                                 TypeElement te = elm != null ? cc.getElementUtilities().outermostTypeElement(elm) : null;
-                                targets.add(new GoToTarget(-1, -1, null, cc.getClasspathInfo(), ed.getHandle(),
-                                        te != null ? te.getQualifiedName().toString().replace('.', '/') + ".class" : null,
-                                        ed.getDisplayName(), true));
+                                targets.add(new GoToTarget(-1, -1, null, ed.getOriginalCPInfo(), ed.getHandle(), getResourceName(te, ed.getHandle()), ed.getDisplayName(), true));
                             }
                         }
                     }
@@ -1526,9 +1523,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                                     null, null, null, ed.getDisplayName(), true));
                                         } else {
                                             TypeElement te = el != null ? cc.getElementUtilities().outermostTypeElement(el) : null;
-                                            targets.add(new GoToTarget(-1, -1, null, cc.getClasspathInfo(), ed.getHandle(),
-                                                    te != null ? te.getQualifiedName().toString().replace('.', '/') + ".class" : null,
-                                                    ed.getDisplayName(), true));
+                                            targets.add(new GoToTarget(-1, -1, null, ed.getOriginalCPInfo(), ed.getHandle(), getResourceName(te, ed.getHandle()), ed.getDisplayName(), true));
                                         }
                                     }
                                 }
@@ -1548,8 +1543,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                                     null, null, null, cc.getElementUtilities().getElementName(el, false).toString(), true));
                                         } else {
                                             TypeElement te = el != null ? cc.getElementUtilities().outermostTypeElement(el) : null;
-                                            targets.add(new GoToTarget(-1, -1, null, cc.getClasspathInfo(), ElementHandle.create(el),
-                                                    te != null ? te.getQualifiedName().toString().replace('.', '/') + ".class" : null,
+                                            targets.add(new GoToTarget(-1, -1, null, cc.getClasspathInfo(), ElementHandle.create(el), getResourceName(te, null),
                                                     cc.getElementUtilities().getElementName(el, false).toString(), true));
                                         }
                                     }
@@ -1817,6 +1811,16 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                    newText != null ? newText : ""));
         }
         return edits;
+    }
+
+    private static String getResourceName(TypeElement te, ElementHandle<?> handle) {
+        String qualifiedName = null;
+        if (te != null) {
+            qualifiedName = te.getQualifiedName().toString();
+        } else if (handle != null && (handle.getKind().isClass() || handle.getKind().isInterface())) {
+            qualifiedName = handle.getQualifiedName();
+        }
+        return qualifiedName != null ? qualifiedName.replace('.', '/') + ".class" : null;
     }
 
     private static void reportNotificationDone(String s, Object parameter) {

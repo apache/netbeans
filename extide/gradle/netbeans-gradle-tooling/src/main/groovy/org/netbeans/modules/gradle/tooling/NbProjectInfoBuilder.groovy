@@ -74,9 +74,16 @@ class NbProjectInfoBuilder {
         detectTests(model)
         detectDependencies(model)
         detectArtifacts(model)
+        detectDistributions(model)
         return model
     }
 
+    private void detectDistributions(NbProjectInfoModel model) {
+        if (project.plugins.hasPlugin('distribution')) {
+           model.info.distributions = storeSet(project.distributions.collect() { it.name })
+        }
+    }
+    
     private void detectLicense(NbProjectInfoModel model) {
         def license = project.hasProperty('netbeans.license') ? project.property('netbeans.license').toString() : null;
         if (license == null) {

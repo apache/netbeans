@@ -37,7 +37,6 @@ import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 public class GradleProjectLoaderImpl implements GradleProjectLoader {
 
     final Project project;
-    private String actionDescription;
     private static final Logger LOGGER = Logger.getLogger(GradleProjectLoaderImpl.class.getName());
 
     public GradleProjectLoaderImpl(Project project) {

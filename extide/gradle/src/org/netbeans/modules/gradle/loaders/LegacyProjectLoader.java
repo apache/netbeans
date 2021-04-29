@@ -46,7 +46,7 @@ import static org.netbeans.modules.gradle.loaders.GradleDaemon.INIT_SCRIPT;
 import static org.netbeans.modules.gradle.loaders.GradleDaemon.TOOLING_JAR;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
-import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FALLBACK;
+import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.EVALUATED;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FULL_ONLINE;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.SIMPLE;
 import org.netbeans.modules.gradle.api.NbProjectInfo;
@@ -94,7 +94,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
 
     @Override
     public boolean isEnabled() {
-        return ctx.aim.betterThan(FALLBACK);
+        return ctx.aim.betterThan(EVALUATED);
     }
 
     @NbBundle.Messages({

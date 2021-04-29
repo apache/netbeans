@@ -302,7 +302,7 @@ public class ActionProviderImpl implements ActionProvider {
             if (needReload && canReload) {
                 String[] reloadArgs = RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), ctx);
                 final ActionProgress g = ActionProgress.start(context);
-                RequestProcessor.Task reloadTask = prj.reloadProject(loadReason, true, maxQualily, reloadArgs);
+                RequestProcessor.Task reloadTask = prj.forceReloadProject(loadReason, false, maxQualily, reloadArgs);
                 reloadTask.addTaskListener((t) -> {
                     g.finished(true);
                 });

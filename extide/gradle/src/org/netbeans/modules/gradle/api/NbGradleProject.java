@@ -206,6 +206,11 @@ public final class NbGradleProject {
     public boolean isUnloadable() {
         return getQuality().worseThan(Quality.SIMPLE);
     }
+    
+    public Quality toQuality(String reason, Quality q, boolean forceLoad) {
+        project.projectWithQuality(reason, q, false, forceLoad);
+        return getQuality();
+    }
 
     public Preferences getPreferences(boolean shared) {
         Preferences ret = shared ? sharedPrefs : privatePrefs;

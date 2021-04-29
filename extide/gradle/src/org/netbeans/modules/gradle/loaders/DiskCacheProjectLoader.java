@@ -20,7 +20,6 @@ package org.netbeans.modules.gradle.loaders;
 
 import org.netbeans.modules.gradle.GradleProject;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FALLBACK;
-import org.netbeans.modules.gradle.cache.AbstractDiskCache;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
 import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 

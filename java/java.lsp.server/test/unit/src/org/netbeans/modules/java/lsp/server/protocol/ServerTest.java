@@ -996,7 +996,10 @@ public class ServerTest extends NbTestCase {
         Position pos = new Position(1, 20);
         Object ret = server.getWorkspaceService().executeCommand(new ExecuteCommandParams(Server.JAVA_SUPER_IMPLEMENTATION, Arrays.asList(new Object[] {toURI(src), pos}))).get();
         assertNotNull(ret);
-        Location loc = gson.fromJson(gson.toJsonTree(ret).getAsJsonObject(), Location.class);
+        Location[] locs = gson.fromJson(gson.toJsonTree(ret).getAsJsonArray(), Location[].class);
+        assertNotNull(locs);
+        assertEquals(1, locs.length);
+        Location loc = locs[0];
         assertEquals(toURI(otherSrc), loc.getUri());
         assertEquals(2, loc.getRange().getStart().getLine());
         assertEquals(9, loc.getRange().getStart().getCharacter());

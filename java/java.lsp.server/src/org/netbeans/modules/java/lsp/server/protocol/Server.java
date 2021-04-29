@@ -85,6 +85,7 @@ import static org.netbeans.api.project.ProjectUtils.parentOf;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.java.lsp.server.LspServerState;
+import org.netbeans.modules.java.lsp.server.LspSession;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 import org.netbeans.modules.progress.spi.InternalHandle;
@@ -94,6 +95,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -120,28 +122,24 @@ public final class Server {
                 DISPATCHERS.get() != null;
     }
     
-    public static void launchServer(InputStream in, OutputStream out) {
+    public static NbLspServer launchServer(Pair<InputStream, OutputStream> io, LspSession session) {
         LanguageServerImpl server = new LanguageServerImpl();
         ConsumeWithLookup msgProcessor = new ConsumeWithLookup(server.getSessionLookup());
-        Launcher<NbCodeLanguageClient> serverLauncher = createLauncher(server, in, out, msgProcessor::attachLookup);
+        Launcher<NbCodeLanguageClient> serverLauncher = createLauncher(server, io, msgProcessor::attachLookup);
         NbCodeLanguageClient remote = serverLauncher.getRemoteProxy();
         ((LanguageClientAware) server).connect(remote);
         msgProcessor.attachClient(server.client);
         Future<Void> runningServer = serverLauncher.startListening();
-        try {
-            runningServer.get();
-        } catch (InterruptedException | ExecutionException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+        return new NbLspServer(server, runningServer);
     }
     
-    private static Launcher<NbCodeLanguageClient> createLauncher(LanguageServerImpl server, InputStream in, OutputStream out,
+    private static Launcher<NbCodeLanguageClient> createLauncher(LanguageServerImpl server, Pair<InputStream, OutputStream> io,
             Function<MessageConsumer, MessageConsumer> processor) {
         return new LSPLauncher.Builder<NbCodeLanguageClient>()
             .setLocalService(server)
             .setRemoteInterface(NbCodeLanguageClient.class)
-            .setInput(in)
-            .setOutput(out)
+            .setInput(io.first())
+            .setOutput(io.second())
             .wrapMessages(processor)
 //                .traceMessages(new java.io.PrintWriter(System.err))
             .create();

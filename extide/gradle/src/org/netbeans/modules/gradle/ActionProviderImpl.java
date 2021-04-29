@@ -93,6 +93,7 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.Presenter;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
+import org.openide.windows.InputOutput;
 import org.openide.windows.OutputWriter;
 
 /**
@@ -312,20 +313,24 @@ public class ActionProviderImpl implements ActionProvider {
             final Lookup outerCtx = ctx;
             task.addTaskListener((Task t) -> {
                 try {
-                    OutputWriter out1 = task.getInputOutput().getOut();
-                    boolean canReload = project.getLookup().lookup(BeforeReloadActionHook.class).beforeReload(action, outerCtx, task.result(), out1);
-                    if (needReload && canReload) {
-                        String[] reloadArgs = RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), outerCtx);
-                        RequestProcessor.Task reloadTask = prj.reloadProject(true, maxQualily, reloadArgs);
-                        reloadTask.waitFinished();
-                    }
-                    project.getLookup().lookup(AfterBuildActionHook.class).afterAction(action, outerCtx, task.result(), out1);
-                    for (AfterBuildActionHook l : context.lookupAll(AfterBuildActionHook.class)) {
-                        l.afterAction(action, outerCtx, task.result(), out1);
+                    InputOutput io = task.getInputOutput();
+                    try (OutputWriter out1 = (io == null ? InputOutput.NULL : io).getOut()) {
+                        boolean canReload = project.getLookup().lookup(BeforeReloadActionHook.class).beforeReload(action, outerCtx, task.result(), out1);
+                        if (needReload && canReload) {
+                            String[] reloadArgs = RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), outerCtx);
+                            RequestProcessor.Task reloadTask = prj.forceReloadProject(null, false, maxQualily, reloadArgs);
+                            reloadTask.waitFinished();
+                        }
+                        project.getLookup().lookup(AfterBuildActionHook.class).afterAction(action, outerCtx, task.result(), out1);
+                        for (AfterBuildActionHook l : context.lookupAll(AfterBuildActionHook.class)) {
+                            l.afterAction(action, outerCtx, task.result(), out1);
+                        }
+                    } finally {
+                        if (io != null) {
+                            io.getErr().close();
+                        }
                     }
                 } finally {
-                    task.getInputOutput().getOut().close();
-                    task.getInputOutput().getErr().close();
                     g.finished(task.result() == 0);
                 }
             });

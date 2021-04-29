@@ -236,7 +236,7 @@ public final class NbGradleProjectImpl implements Project {
         aimedQuality = FALLBACK;
     }
 
-    public final Quality getAimedQuality() {
+    public Quality getAimedQuality() {
         return aimedQuality;
     }
 

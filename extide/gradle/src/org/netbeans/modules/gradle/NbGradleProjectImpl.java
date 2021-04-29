@@ -28,10 +28,12 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -554,58 +556,109 @@ public final class NbGradleProjectImpl implements Project {
     }
 
     private static class PluginDependentLookup extends ProxyLookup implements PropertyChangeListener {
-
-        private static final String NB_GENERAL = "<nb-general>"; //NOI18N
         private static final String NB_ROOT_PLUGIN = "root"; //NOI18N
         private final WeakReference<NbGradleProject> watcherRef;
-        private final Map<String, Lookup> pluginLookups = new HashMap<>();
+        
+        // @GuardedBy(this)
+        private Map<String, Lookup> pluginLookups = Collections.emptyMap();
+        
+        // @GuardedBy(this)
+        private List<String> pluginOrder = Collections.emptyList();
 
         @java.lang.SuppressWarnings("LeakingThisInConstructor")
         public PluginDependentLookup(NbGradleProject watcher) {
+            // PENDING: is this ref really necessary ? If we added a strong PropertyChangeListener
+            // to the `watcher', it would keep this Lookup alive as long as the watcher itself is alive
             watcherRef = new WeakReference<>(watcher);
-            Lookup general = Lookups.forPath("Projects/" + NbGradleProject.GRADLE_PROJECT_TYPE + "/Lookup"); //NOI18N
-            pluginLookups.put(NB_GENERAL, general); //NOI18N
-            setLookups(general);
+            check();
             watcher.addPropertyChangeListener(WeakListeners.propertyChange(this, watcher));
         }
-
+        
+        /**
+         * Path for the default Gradle project lookup contents
+         */
+        private static final String GRADLE_DEFAULT_LOOKUP = "Projects/" + NbGradleProject.GRADLE_PROJECT_TYPE + "/Lookup";
+        
+        /**
+         * Path for the default Gradle project lookup contents
+         */
+        private static final String GRADLE_ANY_PLUGIN_LOOKUP = "Projects/" + NbGradleProject.GRADLE_PLUGIN_TYPE + "/_any/Lookup";
+        
+        /**
+         * Root for plugin lookup registrations. Individual Plugins must register in "&lt;GRADLE_PLUGINS_ROOT>/&lt;plugin-id>/Lookup".
+         */
+        private static final String GRADLE_PLUGINS_ROOT = "Projects/" + NbGradleProject.GRADLE_PLUGIN_TYPE;
+        
         private void check() {
-            boolean lookupsChanged = false;
             NbGradleProject watcher = watcherRef.get();
-            if (watcher != null) {
-                lookupsChanged = !watcher.isGradleProjectLoaded();
-                if (watcher.isGradleProjectLoaded()) {
-                    GradleBaseProject prj = watcher.projectLookup(GradleBaseProject.class);
-                    Set<String> currentPlugins = new HashSet<>(prj.getPlugins());
-                    if (prj.isRoot()) {
-                        currentPlugins.add(NB_ROOT_PLUGIN);
-                    }
-                    for (String cp : currentPlugins) {
-                        //Add Lookups for new plugins
-                        if (!pluginLookups.containsKey(cp)) {
-                            Lookup pluginLookup = Lookups.forPath("Projects/" + NbGradleProject.GRADLE_PLUGIN_TYPE + "/" + cp + "/Lookup"); //NOI18N
-                            pluginLookups.put(cp, pluginLookup);
-                            lookupsChanged = true;
-                        }
-                    }
-                    Iterator<String> it = pluginLookups.keySet().iterator();
-                    while (it.hasNext()) {
-                        String oldPlugin = it.next();
-                        if (!currentPlugins.contains(oldPlugin) && !NB_GENERAL.equals(oldPlugin)) {
-                            it.remove();
-                            lookupsChanged = true;
+            if (watcher == null) {
+                // shortcut
+                return;
+            }
+            List<String> orderedPaths = new ArrayList<>();
+            
+            orderedPaths.add(GRADLE_DEFAULT_LOOKUP);
+            if (watcher.isGradleProjectLoaded()) {
+                GradleBaseProject prj = watcher.projectLookup(GradleBaseProject.class);
+                // plugins are unordered initially
+                Set<String> currentPlugins = new HashSet<>(prj.getPlugins());
+                if (prj.isRoot()) {
+                    currentPlugins.add(NB_ROOT_PLUGIN);
+                }
+
+                FileObject pluginRoot = FileUtil.getConfigFile(GRADLE_PLUGINS_ROOT);
+                if (pluginRoot != null) {
+                    // iterate in the file-system order to get at least SOME defined default order (according to module dependencies)
+                    for (FileObject pl : pluginRoot.getChildren()) {
+                        if (currentPlugins.remove(pl.getName())) {
+                            orderedPaths.add(GRADLE_PLUGINS_ROOT + "/" + pl.getName() + "/Lookup");
                         }
                     }
                 }
+                // order the rest of plugins alphabetically
+                List<String> remaining = new ArrayList<>(currentPlugins);
+                Collections.sort(remaining);
+                remaining.forEach(r -> orderedPaths.add(GRADLE_PLUGINS_ROOT + "/" + r + "/Lookup"));
             }
-            if (lookupsChanged) {
-                setLookups(pluginLookups.values().toArray(new Lookup[pluginLookups.size()]));
+            orderedPaths.add(GRADLE_ANY_PLUGIN_LOOKUP);
+
+            Map<String, Lookup> newLookups;
+            Map<String, Lookup> prevLookups;
+
+            synchronized (this) {
+                if (this.pluginOrder.equals(orderedPaths)) {
+                    return;
+                }
+                prevLookups = this.pluginLookups;
             }
+            newLookups = new HashMap<>(prevLookups);
+            newLookups.keySet().retainAll(orderedPaths);
+
+            Lookup[] lkps = new Lookup[orderedPaths.size()];
+            int i = 0;
+            for (String s : orderedPaths) {
+                Lookup l = newLookups.get(s);
+                if (l == null) {
+                    newLookups.put(s, l = Lookups.forPath(s));
+                }
+                lkps[i++] = l;
+            }
+            synchronized (this) {
+                // double check: if a parallel execution took the pluginLookups (= later than us) and finished
+                // before -> more recent data.
+                if (pluginLookups != prevLookups) {
+                    return;
+                }
+                pluginLookups = newLookups;
+                pluginOrder = orderedPaths;
+            }
+            setLookups(lkps);
         }
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (NbGradleProject.PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
+                // PENDING: maybe the Lookup change should synchronize into RELOAD_RP
                 check();
             }
         }

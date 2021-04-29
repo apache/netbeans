@@ -71,6 +71,8 @@ import org.netbeans.modules.debugger.jpda.expr.JDIVariable;
 import org.netbeans.modules.debugger.jpda.jdi.ClassTypeWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.IllegalThreadStateExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper;
+import org.netbeans.modules.debugger.jpda.jdi.LocatableWrapper;
+import org.netbeans.modules.debugger.jpda.jdi.LocationWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.ObjectCollectedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.ThreadReferenceWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper;
@@ -273,17 +275,16 @@ public class TruffleAccess implements JPDABreakpointListener {
             Method suspendHereMethod = ClassTypeWrapper.concreteMethodByName(debugAccessorClass, METHOD_SUSPEND_HERE, METHOD_SUSPEND_HERE_SGN);
             JPDADebuggerImpl debugger = threadImpl.getDebugger();
             Value haltInfo;
-            Lock writeLock = threadImpl.accessLock.writeLock();
+            threadImpl.notifyMethodInvoking();
             Runnable cleanup = null;
             try {
-                writeLock.lock();
                 cleanup = skipSuspendedEventClearLeakingReferences(debugger, thread);
                 haltInfo = ClassTypeWrapper.invokeMethod(debugAccessorClass, tr, suspendHereMethod, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
             } finally {
                 try {
                     cleanup.run();
                 } finally {
-                    writeLock.unlock();
+                    threadImpl.notifyMethodInvokeDone();
                 }
             }
             if (haltInfo instanceof ObjectReference) {
@@ -297,23 +298,28 @@ public class TruffleAccess implements JPDABreakpointListener {
         return null;
     }
 
+    private static final String CLEAR_REFERENCES_CLASS = "com.oracle.truffle.api.debug.SuspendedEvent";
+    private static final String CLEAR_REFERENCES_METHOD = "clearLeakingReferences";
+
     private static Runnable skipSuspendedEventClearLeakingReferences(JPDADebugger debugger, JPDAThread thread) {
         ThreadReference tr = ((JPDAThreadImpl) thread).getThreadReference();
-        MethodBreakpoint clearLeakingReferencesBreakpoint = MethodBreakpoint.create("com.oracle.truffle.api.debug.SuspendedEvent", "clearLeakingReferences");
+        MethodBreakpoint clearLeakingReferencesBreakpoint = MethodBreakpoint.create(CLEAR_REFERENCES_CLASS, CLEAR_REFERENCES_METHOD);
         clearLeakingReferencesBreakpoint.setBreakpointType(MethodBreakpoint.TYPE_METHOD_ENTRY);
         clearLeakingReferencesBreakpoint.setThreadFilters(debugger, new JPDAThread[] { thread });
         clearLeakingReferencesBreakpoint.setHidden(true);
         Function<EventSet, Boolean> breakpointEventInterceptor = eventSet -> {
-            ThreadReference etr = null;
             try {
+                ThreadReference etr = null;
+                Method method = null;
                 for (Event e: eventSet) {
                     if (e instanceof ClassPrepareEvent) {
                         etr = ClassPrepareEventWrapper.thread((ClassPrepareEvent) e);
                     } else if (e instanceof LocatableEvent) {
                         etr = LocatableEventWrapper.thread((LocatableEvent) e);
+                        method = LocationWrapper.method(LocatableWrapper.location((LocatableEvent) e));
                     }
                 }
-                if (tr.equals(etr)) {
+                if (tr.equals(etr) && method != null && CLEAR_REFERENCES_METHOD.equals(method.name()) && CLEAR_REFERENCES_CLASS.equals(method.declaringType().name())) {
                     boolean resume = true;
                     for (Event e: eventSet) {
                         EventRequest r = EventWrapper.request(e);

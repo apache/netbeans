@@ -1781,6 +1781,14 @@ public class FolderObjTest extends NbTestCase {
         }
     }
 
+    public void testVirtualFOs() throws IOException {
+        final FileObject wd = FileBasedFileSystem.getFileObject(getWorkDir());
+        FileObject nonExisting = wd.getFileObject("non-existing-folder/non-existing-folder/non-existing-child.xyz", false);
+        assertFalse(nonExisting.isValid());
+        assertFalse(nonExisting.getParent().isValid());
+        assertFalse(nonExisting.getParent().getParent().isValid());
+    }
+
     private class EventsEvaluator extends FileChangeAdapter {
         private int folderCreatedCount;
         private int dataCreatedCount;

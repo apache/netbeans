@@ -576,10 +576,9 @@ fld protected final com.oracle.js.parser.ir.Scope scope
 fld protected final int flags
 fld protected final java.util.List<com.oracle.js.parser.ir.Statement> statements
 fld public final static int IS_BODY = 32
-fld public final static int IS_EXPRESSION_BLOCK = 512
-fld public final static int IS_FOR_OF_BLOCK = 256
+fld public final static int IS_EXPRESSION_BLOCK
 fld public final static int IS_GLOBAL_SCOPE = 8
-fld public final static int IS_MODULE_BODY = 1024
+fld public final static int IS_MODULE_BODY
 fld public final static int IS_PARAMETER_BLOCK = 64
 fld public final static int IS_SWITCH_BLOCK = 128
 fld public final static int IS_SYNTHETIC = 16
@@ -596,7 +595,6 @@ meth public boolean hasSymbol(java.lang.String)
 meth public boolean isBreakableWithoutLabel()
 meth public boolean isCatchBlock()
 meth public boolean isExpressionBlock()
-meth public boolean isForOfBlock()
 meth public boolean isFunctionBody()
 meth public boolean isGlobalScope()
 meth public boolean isModuleBody()

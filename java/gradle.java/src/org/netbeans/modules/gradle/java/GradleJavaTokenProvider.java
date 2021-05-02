@@ -134,11 +134,13 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
             GradleJavaSourceSet sourceSet = gjp.containingSourceSet(f);
             if (sourceSet != null) {
                 String relPath = sourceSet.relativePath(f);
-                ret = (relPath.lastIndexOf('.') > 0 ?
-                        relPath.substring(0, relPath.lastIndexOf('.')) :
-                        relPath).replace('/', '.');
-                if (fo.isFolder()) {
-                    ret = ret + '*';
+                if (relPath != null) {
+                    ret = (relPath.lastIndexOf('.') > 0 ?
+                            relPath.substring(0, relPath.lastIndexOf('.')) :
+                            relPath).replace('/', '.');
+                    if (fo.isFolder()) {
+                        ret = ret + '*';
+                    }
                 }
             }
         }

@@ -113,15 +113,17 @@ public class FileBuiltQueryImpl extends ProjectOpenedHook implements FileBuiltQu
             GradleJavaSourceSet sourceSet = gjp.containingSourceSet(f);
             if (sourceSet != null) {
                 String relFile = sourceSet.relativePath(f);
-                String relClass = relFile.substring(0, relFile.lastIndexOf('.')) + ".class"; //NOI18N
-                String moduleRoot = null;
-                File moduleInfo = sourceSet.findResource("module-info.java", false, JAVA); //NOI18N
-                if (moduleInfo != null && sourceSet.getCompilerArgs(JAVA).contains("--module-source-path")) {
-                    moduleRoot = SourceUtils.parseModuleName(FileUtil.toFileObject(moduleInfo));
+                if (relFile != null) {
+                    String relClass = relFile.substring(0, relFile.lastIndexOf('.')) + ".class"; //NOI18N
+                    String moduleRoot = null;
+                    File moduleInfo = sourceSet.findResource("module-info.java", false, JAVA); //NOI18N
+                    if (moduleInfo != null && sourceSet.getCompilerArgs(JAVA).contains("--module-source-path")) {
+                        moduleRoot = SourceUtils.parseModuleName(FileUtil.toFileObject(moduleInfo));
+                    }
+                    try {
+                        ret = new StatusImpl(file, sourceSet.getOutputClassDirs(), relClass, moduleRoot);
+                    } catch (DataObjectNotFoundException ex) {}
                 }
-                try {
-                    ret = new StatusImpl(file, sourceSet.getOutputClassDirs(), relClass, moduleRoot);
-                } catch (DataObjectNotFoundException ex) {}
             }
 
         }

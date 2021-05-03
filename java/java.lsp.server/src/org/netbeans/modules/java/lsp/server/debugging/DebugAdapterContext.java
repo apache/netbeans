@@ -31,6 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.lsp4j.debug.services.IDebugProtocolClient;
 
+import org.netbeans.modules.java.lsp.server.LspSession;
 import org.netbeans.modules.java.lsp.server.debugging.breakpoints.BreakpointsManager;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDebugSession;
 import org.netbeans.modules.java.lsp.server.progress.LspInternalHandle;
@@ -39,6 +40,7 @@ import org.openide.util.Pair;
 
 public final class DebugAdapterContext {
 
+    private final LspSession lspSession;
     private IDebugProtocolClient client;
     private NbDebugSession debugSession;
     private boolean clientLinesStartAt1 = true;
@@ -63,7 +65,12 @@ public final class DebugAdapterContext {
     private final NbThreads threadsProvider = new NbThreads();
     private final BreakpointsManager breakpointManager = new BreakpointsManager(threadsProvider);
 
-    public DebugAdapterContext() {
+    DebugAdapterContext(LspSession lspSession) {
+        this.lspSession = lspSession;
+    }
+
+    public LspSession getLspSession() {
+        return lspSession;
     }
 
     public IDebugProtocolClient getClient() {

@@ -366,7 +366,7 @@ public class LSPBindings {
         project2MimeType2Server.values()
                                .stream()
                                .flatMap(n -> n.values().stream())
-                               .map(description -> description.bindings.get())
+                               .map(description -> description.bindings != null ? description.bindings.get() : null)
                                .filter(binding -> binding != null)
                                .forEach(allBindings::add);
         workspace2Extension2Server.values()

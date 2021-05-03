@@ -118,6 +118,8 @@ public final class CPPLiteDebugger {
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
+            // Debug I/O has finished.
+            finish(false);
         }).start();
 
         proxy.waitStarted();
@@ -356,14 +358,16 @@ public final class CPPLiteDebugger {
         proxy.send(new Command("-exec-continue --all"));
     }
 
-    void finish () {
+    void finish (boolean sendExit) {
         LOGGER.fine("CPPLiteDebugger.finish()");
         if (finished) {
             LOGGER.fine("finish(): already finished.");
             return ;
         }
         breakpointsHandler.dispose();
-        proxy.send(new Command("-gdb-exit"));
+        if (sendExit) {
+            proxy.send(new Command("-gdb-exit"));
+        }
         Utils.unmarkCurrent ();
         engineProvider.getDestructor().killEngine();
         finished = true;
@@ -405,7 +409,7 @@ public final class CPPLiteDebugger {
         } catch (InterruptedException ex) {
             return null;
         }
-        return versionRecord.results().toString();
+        return versionRecord.command().getConsoleStream();
     }
 
     ContextProvider getContextProvider() {
@@ -423,6 +427,7 @@ public final class CPPLiteDebugger {
         private final CountDownLatch runningLatch = new CountDownLatch(1);
         private final CountDownLatch runningCommandLatch = new CountDownLatch(0);
         private final Semaphore runningCommandSemaphore = new Semaphore(1);
+        private final Object sendLock = new Object();
 
         LiteMIProxy(MICommandInjector injector, String prompt, String encoding) {
             super(injector, prompt, encoding);
@@ -460,7 +465,7 @@ public final class CPPLiteDebugger {
                         switch (reason) {
                             case "exited-normally":
                                 if ('*' == record.type()) {
-                                    finish();
+                                    finish(false);
                                 } else {
                                     threadsCollector.remove(threadId);
                                 }
@@ -551,7 +556,9 @@ public final class CPPLiteDebugger {
                     Exceptions.printStackTrace(ex);
                 }
                 LOGGER.log(Level.FINE, "MIProxy.send({0})", cmd);
-                super.send(cmd);
+                synchronized (sendLock) {
+                    super.send(cmd);
+                }
             }
         }
 
@@ -564,7 +571,9 @@ public final class CPPLiteDebugger {
                 Exceptions.printStackTrace(ex);
             }
             LOGGER.log(Level.FINE, "MIProxy.send({0})", cmd);
-            super.send(cmd);
+            synchronized (sendLock) {
+                super.send(cmd);
+            }
         }
 
         @Override

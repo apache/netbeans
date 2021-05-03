@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+
 import org.eclipse.lsp4j.debug.launch.DSPLauncher;
 import org.eclipse.lsp4j.debug.services.IDebugProtocolClient;
 import org.eclipse.lsp4j.jsonrpc.JsonRpcException;
@@ -29,9 +30,12 @@ import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
 import org.eclipse.lsp4j.jsonrpc.MessageIssueException;
 import org.eclipse.lsp4j.jsonrpc.messages.Message;
+import org.netbeans.modules.java.lsp.server.LspSession;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
+
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.Pair;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.Lookups;
@@ -46,21 +50,18 @@ public final class Debugger {
     private Debugger() {
     }
 
-    public static void startDebugger(InputStream in, OutputStream out) {
-        final DebugAdapterContext context = new DebugAdapterContext();
+    public static NbProtocolServer startDebugger(Pair<InputStream, OutputStream> io, LspSession session) {
+        final DebugAdapterContext context = new DebugAdapterContext(session);
         NbProtocolServer server = new NbProtocolServer(context);
-        
+
         Launcher<IDebugProtocolClient> serverLauncher = DSPLauncher.createServerLauncher(
-                server, in, out, null, ConsumeWithLookup::new);
+                server, io.first(), io.second(), null, ConsumeWithLookup::new);
         context.setClient(serverLauncher.getRemoteProxy());
         Future<Void> runningServer = serverLauncher.startListening();
-        try {
-            runningServer.get();
-        } catch (InterruptedException | ExecutionException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+        server.setRunningFuture(runningServer);
+        return server;
     }
-    
+
     private static class ConsumeWithLookup implements MessageConsumer {
         private final MessageConsumer delegate;
         private OperationContext topContext;

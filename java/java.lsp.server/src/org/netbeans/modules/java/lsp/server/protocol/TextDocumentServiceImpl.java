@@ -46,7 +46,6 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -57,7 +56,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.IntFunction;
 import java.util.logging.Level;
@@ -67,7 +65,11 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
@@ -336,7 +338,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 }
                 if (completion.getAdditionalTextEdits() != null && completion.getAdditionalTextEdits().isDone()) {
                     List<org.netbeans.api.lsp.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().getNow(null);
-                    if (additionalTextEdits != null) {
+                    if (additionalTextEdits != null && !additionalTextEdits.isEmpty()) {
                         item.setAdditionalTextEdits(additionalTextEdits.stream().map(ed -> {
                             return new TextEdit(new Range(Utils.createPosition(file, ed.getStartOffset()), Utils.createPosition(file, ed.getEndOffset())), ed.getNewText());
                         }).collect(Collectors.toList()));
@@ -581,9 +583,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                         null, null, null, ed.getDisplayName(), true));
                             } else {
                                 TypeElement te = elm != null ? cc.getElementUtilities().outermostTypeElement(elm) : null;
-                                targets.add(new GoToTarget(-1, -1, null, cc.getClasspathInfo(),ed.getHandle(),
-                                        te != null ? te.getQualifiedName().toString().replace('.', '/') + ".class" : null,
-                                        ed.getDisplayName(), true));
+                                targets.add(new GoToTarget(-1, -1, null, ed.getOriginalCPInfo(), ed.getHandle(), getResourceName(te, ed.getHandle()), ed.getDisplayName(), true));
                             }
                         }
                     }
@@ -1492,9 +1492,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         //TODO: nothing for now?
     }
 
-    CompletableFuture<Location> superImplementation(String uri, Position position) {
+    CompletableFuture<List<? extends Location>> superImplementations(String uri, Position position) {
         JavaSource js = getJavaSource(uri);
-        GoToTarget[] target = new GoToTarget[1];
+        List<GoToTarget> targets = new ArrayList<>();
         LineMap[] thisFileLineMap = new LineMap[1];
         try {
             if (js != null) {
@@ -1503,30 +1503,49 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     Document doc = cc.getSnapshot().getSource().getDocument(true);
                     int offset = Utils.getOffset(doc, position);
                     TreeUtilities treeUtilities = cc.getTreeUtilities();
-                    TreePath path = treeUtilities.getPathElementOfKind(Kind.METHOD, treeUtilities.pathFor(offset));
+                    TreePath path = treeUtilities.getPathElementOfKind(EnumSet.of(Kind.CLASS, Kind.INTERFACE, Kind.ENUM, Kind.ANNOTATION_TYPE, Kind.METHOD), treeUtilities.pathFor(offset));
                     if (path != null) {
                         Trees trees = cc.getTrees();
                         Element resolved = trees.getElement(path);
-                        if (resolved != null && resolved.getKind() == ElementKind.METHOD) {
-                            Map<ElementHandle<? extends Element>, List<ElementDescription>> overriding = new ComputeOverriding(new AtomicBoolean()).process(cc);
-                            List<ElementDescription> eds = overriding.get(ElementHandle.create(resolved));
-                            if (eds != null) {
-                                Iterator<ElementDescription> it = eds.iterator();
-                                if (it.hasNext()) {
-                                    ElementDescription ed = it.next();
-                                    Element el = ed.getHandle().resolve(cc);
-                                    TreePath tp = trees.getPath(el);
-                                    long startPos = tp != null && cc.getCompilationUnit() == tp.getCompilationUnit() ? trees.getSourcePositions().getStartPosition(cc.getCompilationUnit(), tp.getLeaf()) : -1;
-                                    if (startPos >= 0) {
-                                        long endPos = trees.getSourcePositions().getEndPosition(cc.getCompilationUnit(), tp.getLeaf());
-                                        target[0] = new GoToTarget(cc.getSnapshot().getOriginalOffset((int) startPos),
-                                                cc.getSnapshot().getOriginalOffset((int) endPos), GoToSupport.getNameSpan(tp.getLeaf(), treeUtilities),
-                                                null, null, null, ed.getDisplayName(), true);
-                                    } else {
-                                        TypeElement te = el != null ? cc.getElementUtilities().outermostTypeElement(el) : null;
-                                        target[0] = new GoToTarget(-1, -1, null, cc.getClasspathInfo(),ed.getHandle(),
-                                                te != null ? te.getQualifiedName().toString().replace('.', '/') + ".class" : null,
-                                                ed.getDisplayName(), true);
+                        if (resolved != null) {
+                            if (resolved.getKind() == ElementKind.METHOD) {
+                                Map<ElementHandle<? extends Element>, List<ElementDescription>> overriding = new ComputeOverriding(new AtomicBoolean()).process(cc);
+                                List<ElementDescription> eds = overriding.get(ElementHandle.create(resolved));
+                                if (eds != null) {
+                                    for (ElementDescription ed : eds) {
+                                        Element el = ed.getHandle().resolve(cc);
+                                        TreePath tp = trees.getPath(el);
+                                        long startPos = tp != null && cc.getCompilationUnit() == tp.getCompilationUnit() ? trees.getSourcePositions().getStartPosition(cc.getCompilationUnit(), tp.getLeaf()) : -1;
+                                        if (startPos >= 0) {
+                                            long endPos = trees.getSourcePositions().getEndPosition(cc.getCompilationUnit(), tp.getLeaf());
+                                            targets.add(new GoToTarget(cc.getSnapshot().getOriginalOffset((int) startPos),
+                                                    cc.getSnapshot().getOriginalOffset((int) endPos), GoToSupport.getNameSpan(tp.getLeaf(), treeUtilities),
+                                                    null, null, null, ed.getDisplayName(), true));
+                                        } else {
+                                            TypeElement te = el != null ? cc.getElementUtilities().outermostTypeElement(el) : null;
+                                            targets.add(new GoToTarget(-1, -1, null, ed.getOriginalCPInfo(), ed.getHandle(), getResourceName(te, ed.getHandle()), ed.getDisplayName(), true));
+                                        }
+                                    }
+                                }
+                            } else if (resolved.getKind().isClass() || resolved.getKind().isInterface()) {
+                                List<TypeMirror> superTypes = new ArrayList<>();
+                                superTypes.add(((TypeElement)resolved).getSuperclass());
+                                superTypes.addAll(((TypeElement)resolved).getInterfaces());
+                                for (TypeMirror superType : superTypes) {
+                                    if (superType.getKind() == TypeKind.DECLARED) {
+                                        Element el = ((DeclaredType) superType).asElement();
+                                        TreePath tp = trees.getPath(el);
+                                        long startPos = tp != null && cc.getCompilationUnit() == tp.getCompilationUnit() ? trees.getSourcePositions().getStartPosition(cc.getCompilationUnit(), tp.getLeaf()) : -1;
+                                        if (startPos >= 0) {
+                                            long endPos = trees.getSourcePositions().getEndPosition(cc.getCompilationUnit(), tp.getLeaf());
+                                            targets.add(new GoToTarget(cc.getSnapshot().getOriginalOffset((int) startPos),
+                                                    cc.getSnapshot().getOriginalOffset((int) endPos), GoToSupport.getNameSpan(tp.getLeaf(), treeUtilities),
+                                                    null, null, null, cc.getElementUtilities().getElementName(el, false).toString(), true));
+                                        } else {
+                                            TypeElement te = el != null ? cc.getElementUtilities().outermostTypeElement(el) : null;
+                                            targets.add(new GoToTarget(-1, -1, null, cc.getClasspathInfo(), ElementHandle.create(el), getResourceName(te, null),
+                                                    cc.getElementUtilities().getElementName(el, false).toString(), true));
+                                        }
                                     }
                                 }
                             }
@@ -1538,7 +1557,17 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         } catch (IOException ex) {
             client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
         }
-        return gotoTarget2Location(uri, target[0], thisFileLineMap[0]);
+        CompletableFuture<Location>[] futures = targets.stream().map(target -> gotoTarget2Location(uri, target, thisFileLineMap[0])).toArray(CompletableFuture[]::new);
+        return CompletableFuture.allOf(futures).thenApply(value -> {
+            ArrayList<Location> locations = new ArrayList<>(futures.length);
+            for (CompletableFuture<Location> future : futures) {
+                Location location = future.getNow(null);
+                if (location != null) {
+                    locations.add(location);
+                }
+            }
+            return locations;
+        });
     }
 
     private CompletableFuture<Location> gotoTarget2Location(String uri, GoToTarget target, LineMap lineMap) {
@@ -1782,6 +1811,16 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                    newText != null ? newText : ""));
         }
         return edits;
+    }
+
+    private static String getResourceName(TypeElement te, ElementHandle<?> handle) {
+        String qualifiedName = null;
+        if (te != null) {
+            qualifiedName = te.getQualifiedName().toString();
+        } else if (handle != null && (handle.getKind().isClass() || handle.getKind().isInterface())) {
+            qualifiedName = handle.getQualifiedName();
+        }
+        return qualifiedName != null ? qualifiedName.replace('.', '/') + ".class" : null;
     }
 
     private static void reportNotificationDone(String s, Object parameter) {

@@ -56,11 +56,11 @@
 	.st30{opacity:0.5;fill:#E9F7FF;}
 	.st31{opacity:0.66;}
 </style>
-<g>
-	<circle class="st19" cx="8" cy="8" r="6"/>
-	<g class="st3">
-		<path d="M8,3c2.757,0,5,2.243,5,5s-2.243,5-5,5s-5-2.243-5-5S5.243,3,8,3 M8,2C4.686,2,2,4.686,2,8c0,3.314,2.686,6,6,6
-			s6-2.686,6-6C14,4.686,11.314,2,8,2L8,2z"/>
-	</g>
+<polygon class="st25" points="9,2 9,1 6,1 6,2 2,2 2,5 3,5 3,14 12,14 12,5 13,5 13,2 "/>
+<path class="st26" d="M9,2V1H6v1H2v3h1v9h9V5h1V2H9z M11,13H4V5h7V13z M12,4H3V3h9V4z"/>
+<g class="st27">
+	<rect x="5" y="6" width="1" height="6"/>
+	<rect x="7" y="6" width="1" height="6"/>
+	<rect x="9" y="6" width="1" height="6"/>
 </g>
 </svg>

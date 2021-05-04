@@ -56,11 +56,20 @@
 	.st30{opacity:0.5;fill:#E9F7FF;}
 	.st31{opacity:0.66;}
 </style>
+<rect class="st30" width="14" height="14"/>
+<polygon class="st1" points="13.5,7.5 13.5,13.5 0.5,13.5 0.5,0.5 5.5,0.5 13.5,0.5 14,0.5 14,0 0,0 0,14 14,14 14,7.5 "/>
 <g>
-	<circle class="st19" cx="8" cy="8" r="6"/>
+	<polygon class="st2" points="16,8 16,1 14.5,1 13,5 11,5 11,3 9,3 5,7.5 9,12 11,12 11,10 16,10.003 	"/>
 	<g class="st3">
-		<path d="M8,3c2.757,0,5,2.243,5,5s-2.243,5-5,5s-5-2.243-5-5S5.243,3,8,3 M8,2C4.686,2,2,4.686,2,8c0,3.314,2.686,6,6,6
-			s6-2.686,6-6C14,4.686,11.314,2,8,2L8,2z"/>
+		<path d="M15.5,1.5L15,9h-3.999L10,8.999V11H9.449L6.338,7.5L9.449,4H10v2h3.5L15,1.5H15.5z M16,1h-1.5L13,5h-2V3H9L5,7.5L9,12h2
+			v-2l5,0.003V8V1L16,1z"/>
 	</g>
+</g>
+<g class="st31">
+	<rect x="3" y="3" width="1" height="8"/>
+	<rect x="2" y="2" width="1" height="1"/>
+	<rect x="4" y="2" width="1" height="1"/>
+	<rect x="2" y="11" width="1" height="1"/>
+	<rect x="4" y="11" width="1" height="1"/>
 </g>
 </svg>

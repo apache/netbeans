@@ -340,7 +340,7 @@ public final class Server {
         @NbBundle.Messages({
             "PROMPT_AskOpenProjectForFile=File {0} belongs to project {1}. To enable all features, the project should be opened"
                     + " and initialized by the Language Server. Do you want to proceed ?",
-            "PROMPT_AskOpenProjectForFileNoName=File {0} belongs to a project. To enable all features, the project should be opened"
+            "PROMPT_AskOpenProject=To enable all features of project {0}, it should be opened"
                     + " and initialized by the Language Server. Do you want to proceed ?",
             "PROMPT_AskOpenProjectForFile_Yes=Open and initialize",
             "PROMPT_AskOpenProjectForFile_No=No",
@@ -397,10 +397,10 @@ public final class Server {
                         yes,
                         new MessageActionItem(Bundle.PROMPT_AskOpenProjectForFile_No())
                     ));
-                    if (dispName.equals(prj.getProjectDirectory().getPath())) {
-                        smrp.setMessage(Bundle.PROMPT_AskOpenProjectForFileNoName(file.getPath()));
+                    if (prj.getProjectDirectory() == file) {
+                        smrp.setMessage(Bundle.PROMPT_AskOpenProject(dispName));
                     } else {
-                        smrp.setMessage(Bundle.PROMPT_AskOpenProjectForFile(file.getPath(), dispName));
+                        smrp.setMessage(Bundle.PROMPT_AskOpenProjectForFile(file.getNameExt(), dispName));
                     }
                     smrp.setType(MessageType.Info);
 

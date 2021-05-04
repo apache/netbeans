@@ -33,6 +33,10 @@ import org.netbeans.modules.java.nativeimage.debugger.displayer.JavaFrameDisplay
 import org.netbeans.modules.java.nativeimage.debugger.displayer.JavaVariablesDisplayer;
 import static org.netbeans.spi.project.ActionProvider.COMMAND_DEBUG;
 
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
+import org.openide.util.NbBundle;
+
 /**
  * Runs debugger with Java translations on a native image.
  *
@@ -68,16 +72,53 @@ public final class NIDebugRunner {
         JPDABreakpointsHandler breakpointsHandler = new JPDABreakpointsHandler(niFile, debugger);
         File workingDirectory = new File(System.getProperty("user.dir"));
         List<String> command = arguments.isEmpty() ? Collections.singletonList(niFile.getAbsolutePath()) : join(niFile.getAbsolutePath(), arguments);
+        DialogDisplayer displayer = DialogDisplayer.getDefault(); // The launcher might provide a special displayer in the lookup. This is why we grab it eagerly.
         debugger.start(
                 command,
                 workingDirectory,
                 debuggerCommand,
                 COMMAND_DEBUG + " " + niFile.getName(),
                 executionDescriptor,
-                startedEngine).thenRun(() -> {
+                (engine) -> {
+                    checkVersion(debugger.getVersion(), displayer);
+                    if (startedEngine != null) {
+                        startedEngine.accept(engine);
+                    }
+                }).thenRun(() -> {
                     breakpointsHandler.dispose();
                 });
         return debugger;
+    }
+
+    @NbBundle.Messages("MSG_GDBVersionBug=gdb bug #26139 will affect the debugging.\nWe recommend to upgrade to version 10.1 or newer.")
+    private static void checkVersion(String version, DialogDisplayer displayer) {
+        String gdbVersion = "GNU gdb";
+        int i = version.indexOf(gdbVersion);
+        if (i >= 0) {
+            i += gdbVersion.length();
+            i = skipParanthesis(version, i);
+            int eol = version.indexOf("\\n", i);
+            if (eol > 0) {
+                String v = version.substring(i, eol).trim();
+                if (v.startsWith("8.") && !v.startsWith("8.0") || v.startsWith("9.")) {
+                    NotifyDescriptor descriptor = new NotifyDescriptor.Message(Bundle.MSG_GDBVersionBug(), NotifyDescriptor.WARNING_MESSAGE);
+                    displayer.notifyLater(descriptor);
+                }
+            }
+        }
+    }
+
+    private static int skipParanthesis(String str, int i) {
+        while (i < str.length() && Character.isWhitespace(str.charAt(i))) {
+            i++;
+        }
+        if (i < str.length() && '(' == str.charAt(i)) {
+            int p = str.indexOf(')', i + 1);
+            if (p > 0) {
+                i = p + 1;
+            }
+        }
+        return i;
     }
 
     private static List<String> join(String first, List<String> next) {

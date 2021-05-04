@@ -3,7 +3,7 @@ Version: 0.50.36
 License: BSD-flexmark
 Description: FlexMark library
 Origin: https://github.com/vsch/flexmark-java
-Files: flexmark-0.50.36.jar flexmark-html2md-converter-0.50.36.jar flexmark-util-0.50.36.jar
+Files: flexmark-0.50.36.jar flexmark-ext-emoji-0.50.36.jar flexmark-formatter-0.50.36.jar flexmark-html2md-converter-0.50.36.jar flexmark-util-0.50.36.jar
 
 Copyright (c) 2015-2016, Atlassian Pty Ltd
 All rights reserved.

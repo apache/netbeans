@@ -586,8 +586,10 @@ public class JavaCompletionCollector implements CompletionCollector {
                     .kind(elementKind2CompletionItemKind(memberElem.getKind()))
                     .insertText(label)
                     .insertTextFormat(Completion.TextFormat.PlainText)
-                    .additionalTextEdits(Collections.singletonList(currentClassImport))
                     .sortText(String.format("%04d%s", memberElem.getKind().isField() ? 720 : 750, sortText));
+            if (currentClassImport != null) {
+                builder.additionalTextEdits(Collections.singletonList(currentClassImport));
+            }
             ElementHandle<Element> handle = SUPPORTED_ELEMENT_KINDS.contains(memberElem.getKind().name()) ? ElementHandle.create(memberElem) : null;
             if (handle != null) {
                 builder.documentation(getDocumentation(doc, handle));

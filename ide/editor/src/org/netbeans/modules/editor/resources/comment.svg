@@ -57,10 +57,23 @@
 	.st31{opacity:0.66;}
 </style>
 <g>
-	<circle class="st19" cx="8" cy="8" r="6"/>
+	<rect x="11" y="4" class="st22" width="4" height="1"/>
+	<rect x="11" y="6" class="st22" width="4" height="1"/>
+	<rect x="11" y="8" class="st22" width="4" height="1"/>
+	<rect x="1" y="10" class="st22" width="14" height="1"/>
+	<rect x="1" y="12" class="st22" width="14" height="1"/>
+	<rect x="1" y="14" class="st22" width="14" height="1"/>
+</g>
+<g>
+	<polygon class="st16" points="3.5,9 1,9 3.5,1 6,1 	"/>
 	<g class="st3">
-		<path d="M8,3c2.757,0,5,2.243,5,5s-2.243,5-5,5s-5-2.243-5-5S5.243,3,8,3 M8,2C4.686,2,2,4.686,2,8c0,3.314,2.686,6,6,6
-			s6-2.686,6-6C14,4.686,11.314,2,8,2L8,2z"/>
+		<path d="M5.184,1.6L3.059,8.4H1.816l2.125-6.8H5.184 M6,1H3.5L1,9h2.5L6,1L6,1z"/>
+	</g>
+</g>
+<g>
+	<polygon class="st16" points="7.5,9 5,9 7.5,1 10,1 	"/>
+	<g class="st3">
+		<path d="M9.184,1.6L7.059,8.4H5.816l2.125-6.8H9.184 M10,1H7.5L5,9h2.5L10,1L10,1z"/>
 	</g>
 </g>
 </svg>

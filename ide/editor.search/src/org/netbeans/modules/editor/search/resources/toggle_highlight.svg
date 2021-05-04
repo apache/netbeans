@@ -57,10 +57,23 @@
 	.st31{opacity:0.66;}
 </style>
 <g>
-	<circle class="st19" cx="8" cy="8" r="6"/>
+	<rect class="st2" width="12" height="7"/>
 	<g class="st3">
-		<path d="M8,3c2.757,0,5,2.243,5,5s-2.243,5-5,5s-5-2.243-5-5S5.243,3,8,3 M8,2C4.686,2,2,4.686,2,8c0,3.314,2.686,6,6,6
-			s6-2.686,6-6C14,4.686,11.314,2,8,2L8,2z"/>
+		<path d="M11,1v5H1V1H11 M12,0H0v7h12V0L12,0z"/>
 	</g>
+</g>
+<g>
+	<rect x="4" y="8" class="st18" width="12" height="7"/>
+	<g class="st3">
+		<path d="M15,9v5H5V9H15 M16,8H4v7h12V8L16,8z"/>
+	</g>
+</g>
+<g>
+	<rect x="1" y="10" class="st21" width="1" height="1"/>
+	<rect y="8" class="st21" width="1" height="1"/>
+	<rect x="13" y="2" class="st21" width="1" height="1"/>
+	<rect x="14" y="4" class="st21" width="1" height="1"/>
+	<rect x="15" y="6" class="st21" width="1" height="1"/>
+	<rect x="2" y="12" class="st21" width="1" height="1"/>
 </g>
 </svg>

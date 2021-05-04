@@ -57,10 +57,31 @@
 	.st31{opacity:0.66;}
 </style>
 <g>
-	<circle class="st19" cx="8" cy="8" r="6"/>
-	<g class="st3">
-		<path d="M8,3c2.757,0,5,2.243,5,5s-2.243,5-5,5s-5-2.243-5-5S5.243,3,8,3 M8,2C4.686,2,2,4.686,2,8c0,3.314,2.686,6,6,6
-			s6-2.686,6-6C14,4.686,11.314,2,8,2L8,2z"/>
+	<rect y="2" class="st21" width="1" height="1"/>
+	<rect y="4" class="st21" width="1" height="1"/>
+	<rect y="6" class="st21" width="1" height="1"/>
+	<rect y="8" class="st21" width="1" height="1"/>
+	<rect y="10" class="st21" width="1" height="1"/>
+	<rect x="12" y="2" class="st21" width="1" height="1"/>
+	<rect x="12" y="4" class="st21" width="1" height="1"/>
+	<rect x="12" y="6" class="st21" width="1" height="1"/>
+	<rect class="st21" width="1" height="1"/>
+	<rect x="2" class="st21" width="1" height="1"/>
+	<rect x="4" class="st21" width="1" height="1"/>
+	<rect x="6" class="st21" width="1" height="1"/>
+	<rect x="8" class="st21" width="1" height="1"/>
+	<rect x="10" class="st21" width="1" height="1"/>
+	<rect x="12" class="st21" width="1" height="1"/>
+	<rect x="2" y="10" class="st21" width="1" height="1"/>
+	<rect x="4" y="10" class="st21" width="1" height="1"/>
+	<rect x="6" y="10" class="st21" width="1" height="1"/>
+	<rect x="8" y="10" class="st21" width="1" height="1"/>
+</g>
+<g>
+	<polygon class="st23" points="10.375,6.905 15.204,11.734 12.323,12.146 10.375,14.095 	"/>
+	<g>
+		<path class="st24" d="M10.75,7.811l3.659,3.659l-2.015,0.288l-0.247,0.035L11.97,11.97l-1.22,1.22V7.811 M10,6v9l2.5-2.5L16,12
+			L10,6L10,6z"/>
 	</g>
 </g>
 </svg>

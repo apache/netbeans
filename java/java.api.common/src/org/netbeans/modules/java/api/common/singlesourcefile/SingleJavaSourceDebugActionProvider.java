@@ -22,6 +22,7 @@ import java.util.concurrent.Callable;
 
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
+import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
@@ -53,8 +54,11 @@ public final class SingleJavaSourceDebugActionProvider implements ActionProvider
             return;
         }
 
+        ActionProgress progress = ActionProgress.start(context);
         ExecutionDescriptor descriptor = new ExecutionDescriptor().controllable(true).frontWindow(true).
-                preExecution(null).postExecution(null);
+            preExecution(null).postExecution((exitCode) -> {
+                progress.finished(exitCode == 0);
+            });
 
         ExecutionService exeService = ExecutionService.newService(
                 new Callable<Process>() {

@@ -62,12 +62,7 @@ public class JavaFileTest extends NbTestCase {
     }
     
     private boolean isJDK11OrNewer() {
-        String javaVersion = System.getProperty("java.specification.version");
-        if (javaVersion.startsWith("1.")) {
-            javaVersion = javaVersion.substring(2);
-        }
-        int version = Integer.parseInt(javaVersion);
-        return version >= 11;
+        return SingleSourceFileUtil.findJavaVersion() >= 11;
     }
     
 }

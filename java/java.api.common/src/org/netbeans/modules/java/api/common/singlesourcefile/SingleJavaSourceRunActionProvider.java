@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.concurrent.Future;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
+import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
@@ -52,8 +53,14 @@ public final class SingleJavaSourceRunActionProvider implements ActionProvider {
         FileObject fileObject = SingleSourceFileUtil.getJavaFileWithoutProjectFromLookup(context);
         if (fileObject == null) 
             return;
-        ExecutionDescriptor descriptor = new ExecutionDescriptor().controllable(true).frontWindow(true).
-                    preExecution(null).postExecution(null);
+
+        ActionProgress progress = ActionProgress.start(context);
+        ExecutionDescriptor descriptor = new ExecutionDescriptor().
+            controllable(true).
+            frontWindow(true).
+            preExecution(null).postExecution((exitCode) -> {
+                progress.finished(exitCode == 0);
+            });
         RunProcess process = invokeActionHelper(command, fileObject);
         ExecutionService exeService = ExecutionService.newService(
                     process,

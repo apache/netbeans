@@ -24,11 +24,8 @@ import java.util.List;
 import java.util.concurrent.Future;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
-import org.netbeans.api.project.FileOwnerQuery;
-import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
-import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
@@ -52,7 +49,7 @@ public final class SingleJavaSourceRunActionProvider implements ActionProvider {
 
     @Override
     public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
-        FileObject fileObject = getJavaFileWithoutProjectFromLookup(context);
+        FileObject fileObject = SingleSourceFileUtil.getJavaFileWithoutProjectFromLookup(context);
         if (fileObject == null) 
             return;
         ExecutionDescriptor descriptor = new ExecutionDescriptor().controllable(true).frontWindow(true).
@@ -66,14 +63,8 @@ public final class SingleJavaSourceRunActionProvider implements ActionProvider {
 
     @Override
     public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
-        // JEP-330 is supported only on JDK-11 and above.
-        String javaVersion = System.getProperty("java.specification.version");
-        if (javaVersion.startsWith("1.")) {
-            javaVersion = javaVersion.substring(2);
-        }
-        int version = Integer.parseInt(javaVersion);
-        FileObject fileObject = getJavaFileWithoutProjectFromLookup(context);
-        return version >= 11 && fileObject != null;
+        FileObject fileObject = SingleSourceFileUtil.getJavaFileWithoutProjectFromLookup(context);
+        return fileObject != null;
     }
     
     final RunProcess invokeActionHelper (String command, FileObject fileObject) {
@@ -91,17 +82,6 @@ public final class SingleJavaSourceRunActionProvider implements ActionProvider {
         String javaPath = "\"" + javaPathFile.getAbsolutePath() + "\"";
         commandsList.add(javaPath + " " + vmOptions + " " + filePath + " " + arguments);
         return new RunProcess(commandsList);
-    }
-
-    private FileObject getJavaFileWithoutProjectFromLookup(Lookup lookup) {
-        for (DataObject dObj : lookup.lookupAll(DataObject.class)) {
-            FileObject fObj = dObj.getPrimaryFile();
-            Project p = FileOwnerQuery.getOwner(fObj);
-            if (p == null && fObj.getExt().equalsIgnoreCase("java")) {
-                return fObj;
-            }
-        }
-        return null;
     }
         
 }

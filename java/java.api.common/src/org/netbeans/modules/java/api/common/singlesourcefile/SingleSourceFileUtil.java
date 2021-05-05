@@ -28,7 +28,21 @@ import org.openide.util.Lookup;
  *
  * @author Arunava Sinha
  */
-class SingleSourceFileUtil {
+final class SingleSourceFileUtil {
+    static final boolean IS_SUPPORTED;
+    static {
+        IS_SUPPORTED = findJavaVersion() >= 11;
+    }
+
+    static int findJavaVersion() throws NumberFormatException {
+        // JEP-330 is supported only on JDK-11 and above.
+        String javaVersion = System.getProperty("java.specification.version"); //NOI18N 
+        if (javaVersion.startsWith("1.")) { //NOI18N
+            javaVersion = javaVersion.substring(2);
+        }
+        int version = Integer.parseInt(javaVersion);
+        return version;
+    }
 
     public static final String FILE_ARGUMENTS = "single_file_run_arguments"; //NOI18N
     public static final String FILE_VM_OPTIONS = "single_file_vm_options"; //NOI18N
@@ -36,6 +50,11 @@ class SingleSourceFileUtil {
     static FileObject getJavaFileWithoutProjectFromLookup(Lookup lookup) {
         for (DataObject dObj : lookup.lookupAll(DataObject.class)) {
             FileObject fObj = dObj.getPrimaryFile();
+            if (isSingleSourceFile(fObj)) {
+                return fObj;
+            }
+        }
+        for (FileObject fObj : lookup.lookupAll(FileObject.class)) {
             if (isSingleSourceFile(fObj)) {
                 return fObj;
             }
@@ -48,14 +67,7 @@ class SingleSourceFileUtil {
         if (p != null || !fObj.getExt().equalsIgnoreCase("java")) { //NOI18N
             return false;
         }
-        // JEP-330 is supported only on JDK-11 and above.
-        String javaVersion = System.getProperty("java.specification.version"); //NOI18N 
-        if (javaVersion.startsWith("1.")) { //NOI18N
-            javaVersion = javaVersion.substring(2);
-        }
-        int version = Integer.parseInt(javaVersion);
-
-        return version >= 11;
+        return IS_SUPPORTED;
     }
 
 }

@@ -1,0 +1,12 @@
+Apache NetBeans
+
+Binaries in this ZIP are...
+Build by GitHub Actions Workflow: Profiler native binary build
+
+Build from:
+   Git repo       : https://github.com/apache/netbeans
+   Git commit SHA : 5273a10f9471d5cf60ed894dc26ec0e59e71cc24
+   Git ref        : refs/heads/master
+
+Build time UTC : 2021-04-01 18:38:20+00:00
+

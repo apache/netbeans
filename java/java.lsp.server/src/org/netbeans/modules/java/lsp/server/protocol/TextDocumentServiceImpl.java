@@ -126,6 +126,7 @@ import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
+import org.eclipse.lsp4j.TypeDefinitionParams;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
@@ -526,6 +527,29 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
+    public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> typeDefinition(TypeDefinitionParams params) {
+        try {
+            String uri = params.getTextDocument().getUri();
+            Document doc = openedDocuments.get(uri);
+            if (doc != null) {
+                FileObject file = Utils.fromUri(uri);
+                if (file != null) {
+                    int offset = Utils.getOffset(doc, params.getPosition());
+                    return HyperlinkLocation.resolveTypeDefinition(doc, offset).thenApply(locs -> {
+                        return Either.forLeft(locs.stream().map(location -> {
+                            FileObject fo = location.getFileObject();
+                            return new Location(Utils.toUri(fo), new Range(Utils.createPosition(fo, location.getStartOffset()), Utils.createPosition(fo, location.getEndOffset())));
+                        }).collect(Collectors.toList()));
+                    });
+                }
+            }
+        } catch (MalformedURLException ex) {
+            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+        }
+        return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
+    }
+
+    @Override
     public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> implementation(ImplementationParams params) {
         // shortcut: if the projects are not yet initialized, return empty:
         if (server.openedProjects().getNow(null) == null) {
@@ -682,7 +706,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     }
                 }
                 if (!sourceRoots.isEmpty()) {
-                    query[0].getContext().add(org.netbeans.modules.refactoring.api.Scope.create(sourceRoots, null, null));
+                    query[0].getContext().add(org.netbeans.modules.refactoring.api.Scope.create(sourceRoots, null, null, true));
                 }
                 cancelCallback[0] = () -> query[0].cancelRequest();
                 RefactoringSession refactoring = RefactoringSession.create("FindUsages");

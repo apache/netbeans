@@ -33,9 +33,8 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
 final class DebugProcess implements Callable<Process> {
-    private static final Logger LOG = Logger.getLogger(DebugProcess.class.getName());
     private static final Pattern JVM_ARGS_PATTERN = Pattern.compile("(.*) (--source[ ]* [0-9]*)(.*)");  //NOI18N
-    
+
     private final FileObject fileObject;
     private final JPDAStart start;
 
@@ -52,9 +51,17 @@ final class DebugProcess implements Callable<Process> {
             return setupProcess(null);
         }
     }
-    
-    private Process setupProcess(String port) {
+
+    private Process setupProcess(String port) throws InterruptedException {
         try {
+            boolean compile = SingleSourceFileUtil.findJavaVersion() < 11;
+
+            if (compile) {
+                Process p = SingleSourceFileUtil.compileJavaSource(fileObject);
+                if (p.waitFor() != 0) {
+                    return p;
+                }
+            }
 
             List<String> commandsList = new ArrayList<>();
 
@@ -82,7 +89,13 @@ final class DebugProcess implements Callable<Process> {
             if (port != null) {
                 commandsList.add("-agentlib:jdwp=transport=dt_socket,address=" + port + ",server=n"); //NOI18N
             }
-            commandsList.add(fileObject.getNameExt());
+            if (compile) {
+                commandsList.add("-cp");
+                commandsList.add(FileUtil.toFile(fileObject.getParent()).toString());
+                commandsList.add(fileObject.getName());
+            } else {
+                commandsList.add(fileObject.getNameExt());
+            }
 
             if (!arguments.isEmpty()) {
                 commandsList.addAll(Arrays.asList(arguments.split(" ")));  //NOI18N
@@ -95,7 +108,7 @@ final class DebugProcess implements Callable<Process> {
 
             return runFileProcessBuilder.start();
         } catch (IOException ex) {
-            LOG.log(
+            SingleSourceFileUtil.LOG.log(
                     Level.WARNING,
                     "Could not get InputStream of Run Process"); //NOI18N
         }

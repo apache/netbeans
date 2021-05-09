@@ -18,9 +18,18 @@
  */
 package org.netbeans.modules.java.api.common.singlesourcefile;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
 
@@ -29,14 +38,11 @@ import org.openide.util.Lookup;
  * @author Arunava Sinha
  */
 final class SingleSourceFileUtil {
-    static final boolean IS_SUPPORTED;
-    static {
-        IS_SUPPORTED = findJavaVersion() >= 11;
-    }
+    static final Logger LOG = Logger.getLogger(SingleSourceFileUtil.class.getPackage().getName());
 
     static int findJavaVersion() throws NumberFormatException {
         // JEP-330 is supported only on JDK-11 and above.
-        String javaVersion = System.getProperty("java.specification.version"); //NOI18N 
+        String javaVersion = System.getProperty("java.specification.version"); //NOI18N
         if (javaVersion.startsWith("1.")) { //NOI18N
             javaVersion = javaVersion.substring(2);
         }
@@ -67,7 +73,32 @@ final class SingleSourceFileUtil {
         if (p != null || !fObj.getExt().equalsIgnoreCase("java")) { //NOI18N
             return false;
         }
-        return IS_SUPPORTED;
+        return true;
+    }
+
+    static Process compileJavaSource(FileObject fileObject) {
+        FileObject javac = JavaPlatformManager.getDefault().getDefaultPlatform().findTool("javac"); //NOI18N
+        File javacFile = FileUtil.toFile(javac);
+        String javacPath = javacFile.getAbsolutePath();
+        List<String> compileCommandList = new ArrayList<>();
+        Object compilerVmOptionsObj = fileObject.getAttribute(SingleSourceFileUtil.FILE_VM_OPTIONS);
+        compileCommandList.add(javacPath);
+        compileCommandList.add("-g"); //NOI18N
+        String vmOptions = compilerVmOptionsObj != null ? ((String) compilerVmOptionsObj).trim() : ""; // NOI18N
+        if (!vmOptions.isEmpty()) {
+            compileCommandList.addAll(Arrays.asList(vmOptions.split(" "))); //NOI18N
+        }
+        compileCommandList.add(fileObject.getPath());
+        ProcessBuilder compileProcessBuilder = new ProcessBuilder(compileCommandList);
+        compileProcessBuilder.directory(new File(fileObject.getParent().getPath()));
+        compileProcessBuilder.redirectErrorStream(true);
+        compileProcessBuilder.redirectOutput();
+        try {
+            return compileProcessBuilder.start();
+        } catch (IOException ex) {
+            LOG.log(Level.WARNING, "Could not get InputStream of Compile Process"); //NOI18N
+        }
+        return null;
     }
 
 }

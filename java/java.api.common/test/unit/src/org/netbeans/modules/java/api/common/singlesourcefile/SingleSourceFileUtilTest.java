@@ -37,11 +37,7 @@ public class SingleSourceFileUtilTest {
         Lookup lookup = Lookups.fixed(java);
         FileObject result = SingleSourceFileUtil.getJavaFileWithoutProjectFromLookup(lookup);
         
-        if (SingleSourceFileUtil.findJavaVersion() < 11) {
-            assertNull("Execution isn't supported on less then JDK11", result);
-        } else {
-            assertEquals("Java FileObject found in the lookup", java, result);
-        }
+        assertEquals("Java FileObject found in the lookup", java, result);
     }
 
     

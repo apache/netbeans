@@ -64,13 +64,13 @@ public class JPDAStart implements Runnable {
     /**
      * returns the port that the debugger listens to..
      */
-    public String execute() throws Throwable {
+    public String execute() throws Exception {
         LOG.log(Level.INFO, "JPDA Listening Start"); //NOI18N
         synchronized (lock) {
             RP.post(this);
             lock.wait();
             if (lock[1] != null) {
-                throw ((Throwable) lock[1]); //NOI18N
+                throw ((Exception) lock[1]); //NOI18N
             }
         }
         return (String) lock[0];

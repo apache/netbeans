@@ -20,7 +20,7 @@ package org.netbeans.modules.java.api.common.singlesourcefile;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.util.logging.Logger;
 import static junit.framework.TestCase.assertEquals;
@@ -41,17 +41,28 @@ public class JavaFileTest extends NbTestCase {
         super(name);
     }
     
-    public void testSingleJavaSourceRun() throws IOException {
-        File f1 = new File(new File(new File(getDataDir().getAbsolutePath()), "files"), "TestSingleJavaFile.java");
+    public void testSingleJavaSourceRun() throws Exception {
+        clearWorkDir();
+        File f1 = new File(getWorkDir(), "TestSingleJavaFile.java");
+        FileWriter w = new FileWriter(f1);
+        w.write("public class TestSingleJavaFile {\n" +
+        "    \n" +
+        "    public static void main (String args[]) {\n" +
+        "        System.out.print(\"hello world\");\n" +
+        "    }\n" +
+        "    \n" +
+        "}");
+        w.close();
         FileObject javaFO = FileUtil.toFileObject(f1);
+        assertNotNull("FileObject found: " + f1, javaFO);
         SingleJavaSourceRunActionProvider runActionProvider = new SingleJavaSourceRunActionProvider();
         if (!isJDK11OrNewer()) {
             assertFalse("The action is only enabled on JDK11 and newer", runActionProvider.isActionEnabled("run.single", Lookup.EMPTY));
             return;
         }
-        RunProcess process = runActionProvider.invokeActionHelper("run.single", javaFO);
+        DebugProcess process = runActionProvider.invokeActionHelper(null, "run.single", javaFO);
         BufferedReader reader
-                = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                = new BufferedReader(new InputStreamReader(process.call().getInputStream()));
         StringBuilder builder = new StringBuilder();
         String line = null;
         while ((line = reader.readLine()) != null) {

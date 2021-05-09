@@ -18,9 +18,6 @@
  */
 package org.netbeans.modules.java.api.common.singlesourcefile;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Future;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
@@ -28,8 +25,10 @@ import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
-import org.openide.util.Utilities;
+import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.windows.IOProvider;
+import org.openide.windows.InputOutput;
 
 /**
  * This class provides support to run a single Java file without a parent
@@ -39,29 +38,34 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = ActionProvider.class)
 public final class SingleJavaSourceRunActionProvider implements ActionProvider {
-    
-    private static final String FILE_ARGUMENTS = "single_file_run_arguments"; //NOI18N
-    private static final String FILE_VM_OPTIONS = "single_file_vm_options"; //NOI18N
-
     @Override
     public String[] getSupportedActions() {
-        return new String[]{ActionProvider.COMMAND_RUN_SINGLE};
+        return new String[]{
+            ActionProvider.COMMAND_RUN_SINGLE,
+            ActionProvider.COMMAND_DEBUG_SINGLE
+        };
     }
 
+    @NbBundle.Messages({
+        "CTL_SingleJavaFile=Running Single Java File"
+    })
     @Override
     public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
         FileObject fileObject = SingleSourceFileUtil.getJavaFileWithoutProjectFromLookup(context);
         if (fileObject == null) 
             return;
 
+        InputOutput io = IOProvider.getDefault().getIO(Bundle.CTL_SingleJavaFile(), false);
         ActionProgress progress = ActionProgress.start(context);
         ExecutionDescriptor descriptor = new ExecutionDescriptor().
             controllable(true).
             frontWindow(true).
-            preExecution(null).postExecution((exitCode) -> {
+            preExecution(null).
+            inputOutput(io).
+            postExecution((exitCode) -> {
                 progress.finished(exitCode == 0);
             });
-        RunProcess process = invokeActionHelper(command, fileObject);
+        DebugProcess process = invokeActionHelper(io, command, fileObject);
         ExecutionService exeService = ExecutionService.newService(
                     process,
                     descriptor, "Running Single Java File");
@@ -74,21 +78,10 @@ public final class SingleJavaSourceRunActionProvider implements ActionProvider {
         return fileObject != null;
     }
     
-    final RunProcess invokeActionHelper (String command, FileObject fileObject) {
-        String filePath = fileObject.getPath();
-        Object argumentsObject = fileObject.getAttribute(FILE_ARGUMENTS);
-        String arguments = argumentsObject != null ? (String) argumentsObject : "";
-        Object vmOptionsObject = fileObject.getAttribute(FILE_VM_OPTIONS);
-        String vmOptions = vmOptionsObject != null ? (String) vmOptionsObject : "";
-        List<String> commandsList = new ArrayList<>();
-        if (Utilities.isUnix()) {
-            commandsList.add("bash");
-            commandsList.add("-c");
-        }
-        File javaPathFile = new File(new File(new File(System.getProperty("java.home")), "bin"), "java");
-        String javaPath = "\"" + javaPathFile.getAbsolutePath() + "\"";
-        commandsList.add(javaPath + " " + vmOptions + " " + filePath + " " + arguments);
-        return new RunProcess(commandsList);
+    final DebugProcess invokeActionHelper (InputOutput io, String command, FileObject fo) {
+        JPDAStart start = ActionProvider.COMMAND_DEBUG_SINGLE.equals(command) ?
+                new JPDAStart(io, fo) : null;
+        return new DebugProcess(fo, start);
     }
         
 }

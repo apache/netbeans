@@ -124,7 +124,13 @@ public class TestJavaPlatformProviderImpl implements JavaPlatformProvider {
         }
 
         public FileObject findTool(String toolName) {
-            return null;//no tools supported.
+            File home = new File(System.getProperty("java.home"));
+            File bin = new File(home, "bin");
+            File tool = new File(bin, toolName);
+            if (!tool.exists()) {
+                tool = new File(bin, toolName + ".exe");
+            }
+            return FileUtil.toFileObject(tool);
         }
 
         public ClassPath getSourceFolders() {

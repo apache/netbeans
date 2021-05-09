@@ -35,9 +35,9 @@ public class GradleModuleFileCache21Test extends NbTestCase {
      */
     public void testGavSplitFixedVersion() throws Exception {
         String[] parts = GradleModuleFileCache21.gavSplit("io.micronaut:micronaut-core:2.3.4"); // NOI18N
-        assertEquals(parts[0], "io.micronaut"); // NOI18N
-        assertEquals(parts[1], "micronaut-core"); // NOI18N
-        assertEquals(parts[2], "2.3.4"); // NOI18N
+        assertEquals("io.micronaut", parts[0]);
+        assertEquals("micronaut-core", parts[1]);
+        assertEquals("2.3.4", parts[2]);
     }
 
     /**
@@ -46,15 +46,63 @@ public class GradleModuleFileCache21Test extends NbTestCase {
      */
     public void testGavSplitFixedSnapshotWithMavenTimestamp() throws Exception {
         String[] parts = GradleModuleFileCache21.gavSplit("io.micronaut:micronaut-core:2.3.4-SNAPSHOT:20210302.164619-21"); // NOI18N
-        assertEquals(parts[0], "io.micronaut"); // NOI18N
-        assertEquals(parts[1], "micronaut-core"); // NOI18N
-        assertEquals(parts[2], "2.3.4-SNAPSHOT"); // NOI18N
+        assertEquals("io.micronaut", parts[0]); 
+        assertEquals("micronaut-core", parts[1]);
+        assertEquals("2.3.4-SNAPSHOT", parts[2]);
     }
 
     public void testGavSplitFixedSnapshotWithoutUnqiueId() throws Exception {
         String[] parts = GradleModuleFileCache21.gavSplit("io.micronaut:micronaut-core:2.3.4-SNAPSHOT"); // NOI18N
-        assertEquals(parts[0], "io.micronaut"); // NOI18N
-        assertEquals(parts[1], "micronaut-core"); // NOI18N
-        assertEquals(parts[2], "2.3.4-SNAPSHOT"); // NOI18N
+        assertEquals("io.micronaut", parts[0]); 
+        assertEquals("micronaut-core", parts[1]);
+        assertEquals("2.3.4-SNAPSHOT", parts[2]);
+    }
+
+    public void testGavSplitIncomplete() throws Exception {
+        try {
+            GradleModuleFileCache21.gavSplit("junit:junit");
+            fail("IllegalArgumentException expected");
+        } catch (IllegalArgumentException iae) {
+            assertEquals("Invalid GAV format: 'junit:junit'", iae.getMessage());
+        }
+    }
+
+    public void testGavSplitIncomplete2() throws Exception {
+        try {
+            GradleModuleFileCache21.gavSplit("junit");
+            fail("IllegalArgumentException expected");
+        } catch (IllegalArgumentException iae) {
+            assertEquals("Invalid GAV format: 'junit'", iae.getMessage());
+        }
+    }
+
+    public void testGavSplitIncomplete3() throws Exception {
+        try {
+            GradleModuleFileCache21.gavSplit("");
+            fail("IllegalArgumentException expected");
+        } catch (IllegalArgumentException iae) {
+            assertEquals("Invalid GAV format: ''", iae.getMessage());
+        }
+    }
+
+    public void testGavSplitEmpty() throws Exception {
+        String[] parts = GradleModuleFileCache21.gavSplit("org.junit.jupiter:junit-jupiter-api:");
+        assertEquals("org.junit.jupiter", parts[0]); 
+        assertEquals("junit-jupiter-api", parts[1]);
+        assertEquals("", parts[2]);
+    }
+
+    public void testGavSplitEmpty2() throws Exception {
+        String[] parts = GradleModuleFileCache21.gavSplit("org.junit.jupiter::");
+        assertEquals("org.junit.jupiter", parts[0]); 
+        assertEquals("", parts[1]);
+        assertEquals("", parts[2]);
+    }
+
+    public void testGavSplitEmpty3() throws Exception {
+        String[] parts = GradleModuleFileCache21.gavSplit("::");
+        assertEquals("", parts[0]); 
+        assertEquals("", parts[1]);
+        assertEquals("", parts[2]);
     }
 }

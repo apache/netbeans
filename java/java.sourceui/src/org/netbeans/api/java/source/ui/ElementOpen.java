@@ -415,7 +415,7 @@ public final class ElementOpen {
             result[0] = fo;
             getOffset(fo, handle, result, cancel);
             return result;
-        } catch (IOException e) {
+        } catch (Exception e) {
             Exceptions.printStackTrace(e);
             return null;
         }

@@ -1324,8 +1324,8 @@ public class ServerTest extends NbTestCase {
             assertEquals("length()", lengthItem.get().getInsertText());
             Optional<CompletionItem> substringItem = completion.getRight().getItems().stream().filter(ci -> ci.getLabel().startsWith("substring(") && ci.getLabel().contains(",")).findAny();
             assertTrue(substringItem.isPresent());
-            assertEquals(InsertTextFormat.PlainText, substringItem.get().getInsertTextFormat());
-            assertEquals("substring(", substringItem.get().getInsertText());
+            assertEquals(InsertTextFormat.Snippet, substringItem.get().getInsertTextFormat());
+            assertEquals("substring(${1:i}, ${2:i1})$0", substringItem.get().getInsertText());
         }
 
         {
@@ -1351,9 +1351,9 @@ public class ServerTest extends NbTestCase {
                 Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), afterJavaLangAnnotation)).get();
                 assertTrue(completion.isRight());
                 completion.getRight().getItems().stream().forEach(ci -> System.err.println(ci.getLabel()));
-                Optional<CompletionItem> targetItem = completion.getRight().getItems().stream().filter(ci -> "Target".equals(ci.getLabel())).findAny();
+                Optional<CompletionItem> targetItem = completion.getRight().getItems().stream().filter(ci -> "Target (java.lang.annotation)".equals(ci.getLabel())).findAny();
                 assertTrue(targetItem.isPresent());
-                assertEquals("Target", targetItem.get().getLabel()); //TODO: insert text '('!
+                assertEquals("Target (java.lang.annotation)", targetItem.get().getLabel()); //TODO: insert text '('!
                 assertEquals(CompletionItemKind.Interface, targetItem.get().getKind());
             }
 
@@ -1388,7 +1388,7 @@ public class ServerTest extends NbTestCase {
                 assertTrue(methodItem.isPresent());
                 assertEquals(InsertTextFormat.PlainText, methodItem.get().getInsertTextFormat());
                 assertEquals("ElementType.METHOD", methodItem.get().getInsertText());
-                assertEquals(0, methodItem.get().getAdditionalTextEdits().size());
+                assertNull(methodItem.get().getAdditionalTextEdits());
             }
         }
     }
@@ -1454,7 +1454,7 @@ public class ServerTest extends NbTestCase {
 
             Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(2, 8 + "ArrayL".length()))).get();
             assertTrue(completion.isRight());
-            Optional<CompletionItem> arrayListItem = completion.getRight().getItems().stream().filter(ci -> "ArrayList".equals(ci.getLabel())).findAny();
+            Optional<CompletionItem> arrayListItem = completion.getRight().getItems().stream().filter(ci -> "ArrayList (java.util)".equals(ci.getLabel())).findAny();
             assertTrue(arrayListItem.isPresent());
             assertNull(arrayListItem.get().getAdditionalTextEdits());
             CompletableFuture<CompletionItem> resolvedItem = server.getTextDocumentService().resolveCompletionItem(arrayListItem.get());
@@ -1473,7 +1473,7 @@ public class ServerTest extends NbTestCase {
 
             Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(3, 8 + "ArrayL".length()))).get();
             assertTrue(completion.isRight());
-            Optional<CompletionItem> arrayListItem = completion.getRight().getItems().stream().filter(ci -> "ArrayList".equals(ci.getLabel())).findAny();
+            Optional<CompletionItem> arrayListItem = completion.getRight().getItems().stream().filter(ci -> "ArrayList (java.util)".equals(ci.getLabel())).findAny();
             assertTrue(arrayListItem.isPresent());
             assertNull(arrayListItem.get().getAdditionalTextEdits());
             CompletableFuture<CompletionItem> resolvedItem = server.getTextDocumentService().resolveCompletionItem(arrayListItem.get());
@@ -1743,12 +1743,12 @@ public class ServerTest extends NbTestCase {
         InitializeResult result = server.initialize(initParams).get();
         indexingComplete.await();
         List<? extends SymbolInformation> symbols = server.getWorkspaceService().symbol(new WorkspaceSymbolParams("Tes")).get();
-        List<String> actual = symbols.stream().map(si -> si.getKind() + ":" + si.getName() + ":" + si.getContainerName() + ":" + si.getDeprecated() + ":" + toString(si.getLocation())).collect(Collectors.toList());
-        assertEquals(Arrays.asList("Class:Test:Test:false:Test.java:0:0-3:1",
-                                   "Constructor:Test():Test:false:Test.java:0:7-0:7",
-                                   "Method:testMethod():Test:false:Test.java:2:4-2:38",
-                                   "Class:TestNested:Test.TestNested:false:Test.java:1:4-1:37",
-                                   "Constructor:TestNested():Test.TestNested:false:Test.java:1:18-1:18"),
+        List<String> actual = symbols.stream().map(si -> si.getKind() + ":" + si.getName() + ":" + si.getContainerName() + ":" + toString(si.getLocation())).collect(Collectors.toList());
+        assertEquals(Arrays.asList("Class:Test:null:Test.java:0:13-0:17",
+                                   "Constructor:Test():Test:Test.java:0:7-0:7",
+                                   "Method:testMethod():Test:Test.java:2:4-2:38",
+                                   "Class:TestNested:Test:Test.java:1:24-1:34",
+                                   "Constructor:TestNested():Test.TestNested:Test.java:1:18-1:18"),
                      actual);
     }
 
@@ -3984,7 +3984,7 @@ public class ServerTest extends NbTestCase {
         Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(0, 15))).get();
         assertTrue(completion.isRight());
         List<String> actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
-        assertEquals(Arrays.asList("Interface:SuppressWarnings"), actualItems);
+        assertEquals(Arrays.asList("Interface:SuppressWarnings (java.lang)"), actualItems);
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(1);
         id.setUri(toURI(src));
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 1), new Position(0, 15)), 14, "SuppressWarnings(v"))));

@@ -640,7 +640,7 @@ public final class ExecutionDescriptor {
      *
      * @param postExecution post execution callback that receives exit code of the
      *    execution, <code>null</code> allowed
-     * @return new descriptor with configured post execution runnable
+     * @return new descriptor with configured post execution callback
      * @since 1.61
      */
     @NonNull

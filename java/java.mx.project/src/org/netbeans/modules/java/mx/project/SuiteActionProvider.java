@@ -153,7 +153,7 @@ final class SuiteActionProvider implements ActionProvider {
         if (running != null) {
             ActionProgress progress = ActionProgress.start(context);
             running.handle((exitCode, error) -> {
-                progress.finished(error == null && exitCode == 0);
+                progress.finished(error == null && exitCode != null && exitCode == 0);
                 return null;
             });
         }

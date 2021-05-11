@@ -63,7 +63,7 @@ public class SuiteActionProviderTest extends SuiteCheck {
             assertTrue("Build & Clean is supported", ap.isActionEnabled(ActionProvider.COMMAND_REBUILD, ctx));
 
             assertFalse("Move isn't supported", ap.isActionEnabled(ActionProvider.COMMAND_MOVE, ctx));
-            assertFalse("Primining isn't (yet) supported", ap.isActionEnabled(ActionProvider.COMMAND_PRIME, ctx));
+            assertFalse("Priming isn't (yet) supported", ap.isActionEnabled(ActionProvider.COMMAND_PRIME, ctx));
         }
 
         class MockProgress extends ActionProgress {

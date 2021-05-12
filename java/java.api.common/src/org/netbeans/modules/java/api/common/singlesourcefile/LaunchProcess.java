@@ -31,13 +31,13 @@ import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
-final class DebugProcess implements Callable<Process> {
+final class LaunchProcess implements Callable<Process> {
     private static final Pattern JVM_ARGS_PATTERN = Pattern.compile("(.*) (--source[ ]* [0-9]*)(.*)");  //NOI18N
 
     private final FileObject fileObject;
     private final JPDAStart start;
 
-    DebugProcess(FileObject fileObject, JPDAStart start) {
+    LaunchProcess(FileObject fileObject, JPDAStart start) {
         this.fileObject = fileObject;
         this.start = start;
     }

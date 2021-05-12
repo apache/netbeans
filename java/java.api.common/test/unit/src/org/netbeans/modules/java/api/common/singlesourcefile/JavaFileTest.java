@@ -55,7 +55,7 @@ public class JavaFileTest extends NbTestCase {
         FileObject javaFO = FileUtil.toFileObject(f1);
         assertNotNull("FileObject found: " + f1, javaFO);
         SingleJavaSourceRunActionProvider runActionProvider = new SingleJavaSourceRunActionProvider();
-        DebugProcess process = runActionProvider.invokeActionHelper(null, "run.single", javaFO);
+        LaunchProcess process = runActionProvider.invokeActionHelper(null, "run.single", javaFO);
         BufferedReader reader
                 = new BufferedReader(new InputStreamReader(process.call().getInputStream()));
         StringBuilder builder = new StringBuilder();

@@ -65,7 +65,7 @@ public final class SingleJavaSourceRunActionProvider implements ActionProvider {
             postExecution((exitCode) -> {
                 progress.finished(exitCode == 0);
             });
-        DebugProcess process = invokeActionHelper(io, command, fileObject);
+        LaunchProcess process = invokeActionHelper(io, command, fileObject);
         ExecutionService exeService = ExecutionService.newService(
                     process,
                     descriptor, "Running Single Java File");
@@ -78,10 +78,10 @@ public final class SingleJavaSourceRunActionProvider implements ActionProvider {
         return fileObject != null;
     }
     
-    final DebugProcess invokeActionHelper (InputOutput io, String command, FileObject fo) {
+    final LaunchProcess invokeActionHelper (InputOutput io, String command, FileObject fo) {
         JPDAStart start = ActionProvider.COMMAND_DEBUG_SINGLE.equals(command) ?
                 new JPDAStart(io, fo) : null;
-        return new DebugProcess(fo, start);
+        return new LaunchProcess(fo, start);
     }
         
 }

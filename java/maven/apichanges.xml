@@ -83,6 +83,20 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="plugin-lookup">
+            <api name="general"/>
+            <summary>Plugin-dependent Lookup</summary>
+            <version major="2" minor="148"/>
+            <date day="15" month="5" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                <p>
+                    Services can be registered not also for a specific <i>maven plugin</i>
+                    used in the project. See <a href="@TOP@/architecture-summary.html#layer-PluginLookup">PluginLookup</a>.
+                </p>
+            </description>
+        </change>
         <change id="disable-maven-repo-indexing">
             <api name="general"/>
             <summary>Default for frequency of indexing</summary>

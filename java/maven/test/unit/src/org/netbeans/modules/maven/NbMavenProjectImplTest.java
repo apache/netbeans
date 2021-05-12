@@ -240,7 +240,7 @@ public class NbMavenProjectImplTest extends NbTestCase {
 
     // BEGIN:ProjectServiceProvider.pluginSpecific
     @ProjectServiceProvider(service=PS.class, 
-            projectType=NbMavenProject.TYPE + "/org.ntebeans.modules.maven:test.plugin")
+            projectType=NbMavenProject.TYPE + "/org.netbeans.modules.maven:test.plugin")
     public static class PluginService implements PS {
         public @Override String m() {
             return "special";
@@ -263,7 +263,7 @@ public class NbMavenProjectImplTest extends NbTestCase {
     public void testPluginServicePresentWithPlugin() throws Exception {
         TestFileUtils.writeFile(wd, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
                 + "<groupId>test</groupId><artifactId>parent</artifactId><version>1.0</version><packaging>pom</packaging>"
-                + "<build><plugins><plugin><artifactId>test.plugin</artifactId><groupId>org.ntebeans.modules.maven</groupId></plugin></plugins></build>"
+                + "<build><plugins><plugin><artifactId>test.plugin</artifactId><groupId>org.netbeans.modules.maven</groupId></plugin></plugins></build>"
                 + "</project>");
         
         Project p = FileOwnerQuery.getOwner(wd);

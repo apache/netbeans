@@ -123,6 +123,7 @@ public final class Server {
     }
     
     public static NbLspServer launchServer(Pair<InputStream, OutputStream> io, LspSession session) {
+        System.setProperty("org.netbeans.modules.java.source.usages.BinaryAnalyser.fullIndex", "true");
         LanguageServerImpl server = new LanguageServerImpl();
         ConsumeWithLookup msgProcessor = new ConsumeWithLookup(server.getSessionLookup());
         Launcher<NbCodeLanguageClient> serverLauncher = createLauncher(server, io, msgProcessor::attachLookup);

@@ -23,25 +23,44 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
-/**
- *
- * @author Arunava Sinha
- */
-class DebugProcess {
+final class LaunchProcess implements Callable<Process> {
+    private static final Pattern JVM_ARGS_PATTERN = Pattern.compile("(.*) (--source[ ]* [0-9]*)(.*)");  //NOI18N
 
-    private static final Logger LOG = Logger.getLogger(DebugProcess.class.getName());
-    private final Pattern JVM_ARGS_PATTERN = Pattern.compile("(.*) (--source[ ]* [0-9]*)(.*)");  //NOI18N
+    private final FileObject fileObject;
+    private final JPDAStart start;
 
-    public Process setupProcess(FileObject fileObject, String port) {
+    LaunchProcess(FileObject fileObject, JPDAStart start) {
+        this.fileObject = fileObject;
+        this.start = start;
+    }
+
+    @Override
+    public Process call() throws Exception {
+        if (start != null) {
+            return setupProcess(start.execute());
+        } else {
+            return setupProcess(null);
+        }
+    }
+
+    private Process setupProcess(String port) throws InterruptedException {
         try {
+            boolean compile = SingleSourceFileUtil.findJavaVersion() < 11;
+
+            if (compile) {
+                Process p = SingleSourceFileUtil.compileJavaSource(fileObject);
+                if (p.waitFor() != 0) {
+                    return p;
+                }
+            }
 
             List<String> commandsList = new ArrayList<>();
 
@@ -66,24 +85,29 @@ class DebugProcess {
                 }
                 commandsList.addAll(Arrays.asList(vmOptions.split(" ")));  //NOI18N
             }
-            commandsList.add("-Xdebug");  //NOI18N
-            commandsList.add("-Xrunjdwp:transport=dt_socket,address=" + port + ",server=n"); //NOI18N
-            commandsList.add("-cp"); //NOI18N
-            commandsList.add(fileObject.getParent().getPath());
-            commandsList.add(fileObject.getName());
+            if (port != null) {
+                commandsList.add("-agentlib:jdwp=transport=dt_socket,address=" + port + ",server=n"); //NOI18N
+            }
+            if (compile) {
+                commandsList.add("-cp");
+                commandsList.add(FileUtil.toFile(fileObject.getParent()).toString());
+                commandsList.add(fileObject.getName());
+            } else {
+                commandsList.add(fileObject.getNameExt());
+            }
 
             if (!arguments.isEmpty()) {
                 commandsList.addAll(Arrays.asList(arguments.split(" ")));  //NOI18N
             }
 
             ProcessBuilder runFileProcessBuilder = new ProcessBuilder(commandsList);
-            runFileProcessBuilder.directory(new File(System.getProperty("user.home"))); //NOI18N
+            runFileProcessBuilder.directory(FileUtil.toFile(fileObject.getParent())); //NOI18N
             runFileProcessBuilder.redirectErrorStream(true);
             runFileProcessBuilder.redirectOutput();
 
             return runFileProcessBuilder.start();
         } catch (IOException ex) {
-            LOG.log(
+            SingleSourceFileUtil.LOG.log(
                     Level.WARNING,
                     "Could not get InputStream of Run Process"); //NOI18N
         }

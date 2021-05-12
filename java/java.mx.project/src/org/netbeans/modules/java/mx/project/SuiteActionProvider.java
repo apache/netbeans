@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import org.netbeans.api.actions.Openable;
 import org.netbeans.api.debugger.*;
@@ -154,7 +153,7 @@ final class SuiteActionProvider implements ActionProvider {
         if (running != null) {
             ActionProgress progress = ActionProgress.start(context);
             running.handle((exitCode, error) -> {
-                progress.finished(error == null && exitCode == 0);
+                progress.finished(error == null && exitCode != null && exitCode == 0);
                 return null;
             });
         }
@@ -236,14 +235,8 @@ final class SuiteActionProvider implements ActionProvider {
                         }
                         return null;
                     };
-                }).postExecution(() -> {
-                    ASYNC.post(() -> {
-                        try {
-                            cf.complete(taskResult.get().get());
-                        } catch (InterruptedException | ExecutionException ex) {
-                            cf.completeExceptionally(ex);
-                        }
-                    });
+                }).postExecution((exitCode) -> {
+                    cf.complete(exitCode);
                 });
         ProcessBuilder processBuilder = ProcessBuilder.getLocal();
         processBuilder.setWorkingDirectory(suiteDir.getPath());

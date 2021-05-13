@@ -1430,7 +1430,7 @@ public class GoToSupportTest extends NbTestCase {
                         public void run(CompilationController parameter) throws Exception {
                             parameter.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                             Element e = el.resolve(parameter);
-                            
+
                             //assertTrue(TreeShims.isRecordComponent(e)); e is not RECORD_COMPONENT its METHOD, tested in JDK version 15,16 & 17ea
                             assertEquals("ff", e.getSimpleName().toString());
                             wasCalled[0] = true;

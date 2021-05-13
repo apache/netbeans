@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.hints.bugs;
+package org.netbeans.modules.java.hints.jdk;
 
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.test.api.HintTest;
@@ -41,6 +41,6 @@ public class RegexpTest extends NbTestCase {
                        "    }\n" +
                        "}\n")
                 .run(Regexp.class)
-                .assertWarnings("3:40-3:43:verifier:Invalid regular expression");
+                .assertWarnings("3:40-3:43:error:Invalid regular expression: Unclosed group");
     }
 }

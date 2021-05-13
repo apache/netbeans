@@ -60,11 +60,12 @@ import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 import org.netbeans.modules.java.lsp.server.progress.ProgressOperationEvent;
 import org.netbeans.modules.java.lsp.server.progress.ProgressOperationListener;
 import org.netbeans.modules.java.lsp.server.progress.TestProgressHandler;
-import org.netbeans.modules.java.lsp.server.protocol.NbLspServer;
 import org.netbeans.modules.java.nativeimage.debugger.api.NIDebugRunner;
 import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.ProjectConfiguration;
+import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.netbeans.spi.project.SingleMethod;
 
 import org.openide.filesystems.FileObject;
@@ -172,13 +173,35 @@ public abstract class NbLaunchDelegate {
                         testProgressHandler != null ? Lookups.fixed(toRun, ioContext, progress, testProgressHandler) : Lookups.fixed(toRun, ioContext, progress),
                         Lookup.getDefault()
                 );
-
+                
+                ProjectConfiguration selectConfiguration = null;
+                Object o = launchArguments.get("launchConfiguration");
+                if (o instanceof String) {
+                    Project p = FileOwnerQuery.getOwner(toRun);
+                    if (p != null) {
+                        ProjectConfigurationProvider<ProjectConfiguration> pcp = p.getLookup().lookup(ProjectConfigurationProvider.class);
+                        if (pcp != null) {
+                            String n = (String)o;
+                            selectConfiguration = pcp.getConfigurations().stream().filter(c -> n.equals(c.getDisplayName())).findAny().orElse(null);
+                        }
+                    }
+                }
+                List<? super Object> runContext = new ArrayList<>();
+                runContext.add(toRun);
+                runContext.add(params);
+                runContext.add(ioContext);
+                runContext.add(progress);
+                
                 Lookup lookup;
                 if (singleMethod != null) {
-                    lookup = Lookups.fixed(toRun, singleMethod, params, ioContext, progress);
-                } else {
-                    lookup = Lookups.fixed(toRun, ioContext, params, progress);
+                    runContext.add(singleMethod);
                 }
+                if (selectConfiguration != null) {
+                    runContext.add(selectConfiguration);
+                }
+                
+                lookup = Lookups.fixed(runContext.toArray(new Object[runContext.size()]));
+                
                 Lookups.executeWith(launchCtx, () -> {
                     providerAndCommand.first().invokeAction(providerAndCommand.second(), lookup);
 

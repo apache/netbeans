@@ -391,6 +391,7 @@ public class ElementJavadoc {
                     }
                     return doc.toString();
                 } catch (Exception ex) {
+                    Exceptions.printStackTrace(ex);
                     return null;
                 }
             }, RP);

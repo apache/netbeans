@@ -45,7 +45,7 @@ import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.modules.java.editor.overridden.ComputeOverriders;
 import org.netbeans.modules.java.editor.overridden.ElementDescription;
-import org.netbeans.modules.java.hints.TreeShims;
+import org.netbeans.modules.java.source.builder.TreeFactory;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.Severity;
@@ -57,7 +57,7 @@ import org.netbeans.spi.java.hints.TriggerTreeKind;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle.Messages;
 
-@Hint(displayName = "#DN_AddSealedForClass", description = "#DESC_AddSealedForClass", category = "suggestions", enabled=false, hintKind=org.netbeans.spi.java.hints.Hint.Kind.INSPECTION, severity=Severity.VERIFIER, minSourceVersion = "15")
+@Hint(displayName = "#DN_AddSealedForClass", description = "#DESC_AddSealedForClass", category = "suggestions", minSourceVersion = "15", hintKind = Hint.Kind.ACTION, severity = Severity.HINT)
 @Messages({
     "DN_AddSealedForClass=Can Be Sealed Type",
     "DESC_AddSealedForClass=This class can be set to sealed type with permiting only current sub classes."
@@ -69,12 +69,10 @@ public class AddSealedForClass {
     public static ErrorDescription computeWarning(HintContext context) {
         TreePath tp = context.getPath();
         ClassTree cls = (ClassTree) tp.getLeaf();
-        if (!CompilerOptionsQuery.getOptions(context.getInfo().getFileObject()).getArguments().contains("--enable-preview"))
-            return null;
         CompilationInfo info = context.getInfo();
         TypeElement typeElement = (TypeElement) info.getTrees().getElement(tp);
 
-        if (typeElement == null || typeElement.getModifiers().contains(Modifier.FINAL) || typeElement.getModifiers().contains(TreeShims.getSealed())) {
+        if (typeElement == null || typeElement.getModifiers().contains(Modifier.FINAL) || typeElement.getModifiers().contains(TreeFactory.getSealed())) {
             return null;
         }
         
@@ -96,15 +94,7 @@ public class AddSealedForClass {
             subClassesToRemove.addAll(subClasses.getOrDefault(currentSubClasses.get(i).getHandle(), new ArrayList<>()));
         }
         PackageElement currentPackageElement = (PackageElement) info.getElementUtilities().outermostTypeElement(typeElement).getEnclosingElement();
-        boolean isModule=false;
-        Element parentElement=currentPackageElement;
-        while(parentElement!=null){
-            if(parentElement.getKind().equals(ElementKind.MODULE) && !parentElement.getSimpleName().toString().equals("")){
-                isModule=true;
-                break;
-            }
-            parentElement=parentElement.getEnclosingElement();
-        }
+        boolean isModule=info.getElements().getModuleOf(typeElement).isUnnamed();
         if(!isModule){
             for (int i = 0; i < currentSubClasses.size(); i++) {
                 String currentSubClass = currentSubClasses.get(i).getHandle().getQualifiedName();
@@ -192,8 +182,8 @@ public class AddSealedForClass {
             Set<Modifier> newModifiers = new HashSet<>();
 
             newModifiers.addAll(oldModifiers.getFlags());
-            newModifiers.remove(TreeShims.getNonSealed());
-            Modifier sealedMod = TreeShims.getSealed();
+            newModifiers.remove(TreeFactory.getNonSealed());
+            Modifier sealedMod = TreeFactory.getSealed();
             if(sealedMod!=null)
                 newModifiers.add(sealedMod);
 

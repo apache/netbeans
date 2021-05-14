@@ -55,6 +55,7 @@ import org.netbeans.modules.editor.indent.spi.ReformatTask;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.TreeShims;
+import org.netbeans.modules.java.source.builder.TreeFactory;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.parsing.api.Embedding;
@@ -955,7 +956,7 @@ public class Reformatter implements ReformatTask {
                         wrapToken(cs.wrapExtendsImplementsKeyword(), 1, id == INTERFACE ? EXTENDS : IMPLEMENTS);
                         wrapList(cs.wrapExtendsImplementsList(), cs.alignMultilineImplements(), true, COMMA, impls);
                     }
-                    List<? extends Tree> perms = TreeShims.getPermits(node);
+                    List<? extends Tree> perms = TreeFactory.getPermits(node);
                     if (perms != null && !perms.isEmpty()) {
                         wrapToken(cs.wrapExtendsImplementsKeyword(), 1, EXTENDS); 
                         wrapList(cs.wrapExtendsImplementsList(), cs.alignMultilineImplements(), true, COMMA, perms);

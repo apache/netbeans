@@ -2817,7 +2817,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     public void printFlags(long flags, boolean addSpace) {
 	print(flagNames(flags & ~INTERFACE & ~ANNOTATION & ~ENUM));
-        if ((flags & Flags.StandardFlags) != 0 || ((TreeShims.getSealedFlag() != 0) && ((flags & TreeShims.getSealedFlag()) != 0))) {
+        if ((flags & Flags.StandardFlags) != 0 || ((getSealedFlag() != 0) && ((flags & getSealedFlag()) != 0))) {
             if (cs.placeNewLineAfterModifiers())
                 toColExactly(out.leftMargin);
             else if (addSpace)
@@ -2841,7 +2841,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
      * @return flag names, space-separated.
      */
     public static String flagNames(long flags) {
-        long flagExtendedStandardFlags=TreeShims.getFlagExtendedStandardFlags();
+        long flagExtendedStandardFlags=getFlagExtendedStandardFlags();
         flags &= flagExtendedStandardFlags;
         StringBuilder buf = new StringBuilder();
         String sep = ""; // NOI18N
@@ -2852,6 +2852,30 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             sep = " "; // NOI18N
         }
         return buf.toString().trim();
+    }
+
+    public static long getFlagExtendedStandardFlags() {
+        Class flagsClass = null;
+        long flagExtendedStandardFlags = Flags.ExtendedStandardFlags;
+        try {
+            flagsClass = Class.forName("com.sun.tools.javac.code.Flags");
+            flagExtendedStandardFlags = flagsClass.getDeclaredField("ExtendedStandardFlags").getLong(null);
+        } catch (ClassNotFoundException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException ex) {
+            return flagExtendedStandardFlags;
+        }
+        return flagExtendedStandardFlags;
+    }
+
+    public static long getSealedFlag() {
+        Class flagsClass = null;
+        long sealedFlag = 0;
+        try {
+            flagsClass = Class.forName("com.sun.tools.javac.code.Flags");
+            sealedFlag = flagsClass.getDeclaredField("SEALED").getLong(null);
+        } catch (ClassNotFoundException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException ex) {
+            return 0;
+        }
+        return sealedFlag;
     }
 
     public void printBlock(JCTree oldT, JCTree newT, Kind parentKind) {

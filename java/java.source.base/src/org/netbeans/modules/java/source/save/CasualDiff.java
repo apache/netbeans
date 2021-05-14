@@ -170,6 +170,7 @@ import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
 import javax.lang.model.type.TypeKind;
 import org.netbeans.modules.java.source.TreeShims;
+import org.netbeans.modules.java.source.builder.TreeFactory;
 
 public class CasualDiff {
 
@@ -1049,7 +1050,7 @@ public class CasualDiff {
                 copyTo(localPointer, insertHint);
             localPointer = diffList2(oldT.implementing, newT.implementing, insertHint, estimator);
             insertHint = endPos(oldT) - 1;
-        List<? extends JCTree> permits = TreeShims.getPermits(newT);
+        List<? extends JCTree> permits = TreeFactory.getPermits(newT);
         if(permits != null && !permits.isEmpty()){
             localPointer = diffList2(new ArrayList<>(), permits, insertHint,estimatorPermit);
             insertHint = endPos(oldT) - 1;

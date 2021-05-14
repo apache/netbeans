@@ -51,5 +51,6 @@ public interface HoverProvider {
      *
      * @since 1.2
      */
+    @NonNull
     CompletableFuture<String> getHoverContent(@NonNull Document doc, int offset);
 }

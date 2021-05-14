@@ -56,7 +56,8 @@ public class JavaHoverProvider implements HoverProvider {
                     task.run(resultIterator);
                 }
             });
-            return task.getDocumentation();
+            CompletableFuture<String> documentation = task.getDocumentation();
+            return documentation != null ? documentation : CompletableFuture.completedFuture(null);
         } catch (ParseException parseException) {
             return CompletableFuture.completedFuture(null);
         }

@@ -231,7 +231,7 @@ public class ProxyLookup extends Lookup {
 
         class Notify implements Runnable {
             public void run() {
-                Iterator it = evAndListeners.iterator();
+                Iterator<?> it = evAndListeners.iterator();
                 while (it.hasNext()) {
                     LookupEvent ev = (LookupEvent)it.next();
                     LookupListener l = (LookupListener)it.next();

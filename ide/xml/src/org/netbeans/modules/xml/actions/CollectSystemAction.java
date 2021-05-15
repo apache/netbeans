@@ -90,7 +90,7 @@ public abstract class CollectSystemAction extends SystemAction implements Presen
         if (xmlActionsResult == null) return;
         synchronized (registeredAction) {
             Collection lookupActions = xmlActionsResult.allInstances();
-            Iterator it = lookupActions.iterator();
+            Iterator<?> it = lookupActions.iterator();
             while (it.hasNext()) {
                 Object lookupAction = it.next();
                 String lookupActionClassName = lookupAction.getClass().getName();
@@ -118,7 +118,7 @@ public abstract class CollectSystemAction extends SystemAction implements Presen
 
         List<JMenuItem> items = new ArrayList<>();
 
-        Iterator it = coll.iterator();
+        Iterator<SystemAction> it = coll.iterator();
         while (it.hasNext ()) {
             SystemAction a = (SystemAction) it.next();
             

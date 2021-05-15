@@ -110,7 +110,7 @@ class MultiViewTopComponentLookup extends Lookup {
         public Collection allItems() {
             // remove duplicates..
             Set s = new HashSet(delegate.allItems());
-            Iterator it = s.iterator();
+            Iterator<Lookup.Item> it = s.iterator();
             Set instances = new HashSet();
             while (it.hasNext()) {
                 Lookup.Item i = (Lookup.Item)it.next();

@@ -18,6 +18,7 @@
  */
 package org.netbeans.lib.nbjavac.services;
 
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.comp.Attr;
 import com.sun.tools.javac.comp.AttrContext;
@@ -31,6 +32,7 @@ import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.List;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
@@ -59,6 +61,11 @@ public class NBAttr extends Attr {
     }
 
     @Override
+    public void attribClass(DiagnosticPosition pos, ClassSymbol c) {
+        super.attribClass(pos, c); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
     public void visitClassDef(JCClassDecl tree) {
         cancelService.abortIfCanceled();
         super.visitClassDef(tree);
@@ -81,6 +88,12 @@ public class NBAttr extends Attr {
         //for erroneous "var", make sure the synthetic make.Error() has an invalid/synthetic position:
         tm.at(-1);
         super.visitVarDef(tree);
+    }
+
+    @Override
+    public Type attribType(JCTree tree, Env<AttrContext> env) {
+        cancelService.abortIfCanceled();
+        return super.attribType(tree, env);
     }
 
     @Override

@@ -117,6 +117,7 @@ import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.Task;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.impl.Utilities;
+import org.netbeans.modules.parsing.spi.LowMemoryWatcher;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.ParserResultTask;
@@ -154,6 +155,8 @@ public class JavacParser extends Parser {
     //Command line switch disabling partial reparse
     private static final boolean DISABLE_PARTIAL_REPARSE = Boolean.getBoolean("org.netbeans.modules.java.source.parsing.JavacParser.no_reparse");   //NOI18N
     private static final boolean DISABLE_PARAMETER_NAMES_READING = Boolean.getBoolean("org.netbeans.modules.java.source.parsing.JavacParser.no_parameter_names");   //NOI18N
+    private static final Set<Reference<Object>> HUGE_SNAPSHOTS = new HashSet<>();
+    private static final LowMemoryWatcher LOW_MEMORY_WATCHER = LowMemoryWatcher.getInstance();
     public static final String LOMBOK_DETECTED = "lombokDetected";
 
     /**
@@ -171,6 +174,7 @@ public class JavacParser extends Parser {
     private final ChangeSupport listeners = new ChangeSupport(this);
     //Cancelling of parser
     private final AtomicBoolean parserCanceled = new AtomicBoolean();
+    private final AtomicBoolean lowMemoryCancel = new AtomicBoolean();
     //Cancelling of index
     private final AtomicBoolean indexCanceled = new AtomicBoolean();
 
@@ -184,8 +188,6 @@ public class JavacParser extends Parser {
     private ClasspathInfo cpInfo;
     //all the files for which parser was created for
     private final Collection<Snapshot> snapshots;
-    //size of all the files to check the memory leack
-    private long snapshotSize;
     //Incremental parsing support
     private final boolean supportsReparse;
     //Incremental parsing support
@@ -212,16 +214,13 @@ public class JavacParser extends Parser {
     private ChangeListener weakCpListener;
     //Current source for parse optmalization of task with no Source (identity)
     private Reference<JavaSource> currentSource;
+    private final boolean perFileProcessing;
 
     JavacParser (final Collection<Snapshot> snapshots, boolean privateParser) {
         this.privateParser = privateParser;
         this.snapshots = snapshots;
         final boolean singleJavaFile = this.snapshots.size() == 1 && MIME_TYPE.equals(snapshots.iterator().next().getSource().getMimeType());
         this.supportsReparse = singleJavaFile && !DISABLE_PARTIAL_REPARSE;
-        this.snapshotSize=0;
-        for (Snapshot snapshot : snapshots) {
-            this.snapshotSize+=snapshot.getSource().getFileObject().getSize();
-        }
         JavaFileFilterImplementation filter = null;
         if (singleJavaFile) {
             final Source source = snapshots.iterator().next().getSource();
@@ -243,6 +242,27 @@ public class JavacParser extends Parser {
                 }
             });
         this.sequentialParsing = Lookup.getDefault().lookup(SequentialParsing.class);
+        this.perFileProcessing = perFileProcessing();
+    }
+
+    private boolean perFileProcessing() {
+        if (snapshots.size() <= 1) {
+            return true;
+        }
+
+        boolean result = false;
+
+        for (Iterator<Reference<Object>> it = HUGE_SNAPSHOTS.iterator(); it.hasNext();) {
+            Reference<Object> ref = it.next();
+            Object obj = ref.get();
+            if (obj == null) {
+                it.remove();
+            } else if (obj == snapshots) {
+                result = true;
+            }
+        }
+
+        return result;
     }
 
     private void init (final Snapshot snapshot, final Task task, final boolean singleSource) {
@@ -385,13 +405,13 @@ public class JavacParser extends Parser {
         assert privateParser || Utilities.holdsParserLock();
         parseId++;
         parserCanceled.set(false);
+        lowMemoryCancel.set(false);
         indexCanceled.set(false);
         cachedSnapShot = snapshot;
         LOGGER.log(Level.FINE, "parse: task: {0}\n{1}", new Object[]{   //NOI18N
             task.toString(),
             snapshot == null ? "null" : snapshot.getText()});      //NOI18N
         final CompilationInfoImpl oldInfo = ciImpl;
-        Map<String, CompilationUnitTree> oldParsedTrees = new HashMap<>();
         boolean success = false;
         try {
             switch (this.snapshots.size()) {
@@ -417,7 +437,7 @@ public class JavacParser extends Parser {
                     }
                     if (needsFullReparse) {
                         positions.clear();
-                        ciImpl = createCurrentInfo(this, file, root, snapshot, null, null, oldParsedTrees);
+                        ciImpl = createCurrentInfo(this, file, root, snapshot, null, null, new HashMap<>(), new HashMap<>(), Collections.singletonMap(file, snapshot));
                         LOGGER.fine("\t:created new javac");                                    //NOI18N
                     }
                     break;
@@ -425,26 +445,30 @@ public class JavacParser extends Parser {
                     init(snapshot, task, false);
                     DiagnosticListener<JavaFileObject> diagnosticListener;
                     JavacTaskImpl javacTask;
-                    boolean oneInstanceJava=Boolean.getBoolean("java.enable.single.javac") && this.snapshotSize <= this.MAX_FILE_SIZE;
-                    if (sequentialParsing == null && ciImpl == null && oneInstanceJava) {
-                        List<JavaFileObject> jfos = new ArrayList<>();
-                        for (Snapshot s : snapshots) {
-                            jfos.add(FileObjects.sourceFileObject(s.getSource().getFileObject(), root, JavaFileFilterQuery.getFilter(s.getSource().getFileObject()), s.getText()));
-                        }
-                        diagnosticListener = new CompilationInfoImpl.DiagnosticListenerImpl(this.root, jfos.get(0), this.cpInfo);
-                        javacTask = JavacParser.createJavacTask(this.file, jfos, this.root, this.cpInfo,
-                                this, diagnosticListener, false);
-                     } else if (ciImpl != null && (sequentialParsing != null || oneInstanceJava)) {
+                    Map<JavaFileObject, CompilationUnitTree> oldParsedTrees;
+                    Map<FileObject, AbstractSourceFileObject> ide2javacFileObject;
+                    Map<FileObject, Snapshot> file2Snapshot;
+
+                    if (ciImpl != null && !perFileProcessing) {
                         diagnosticListener = ciImpl.getDiagnosticListener();
                         javacTask = ciImpl.getJavacTask();
                         oldParsedTrees = ciImpl.getParsedTrees();
+                        ide2javacFileObject = ciImpl.getIde2javacFileObject();
+                        file2Snapshot = ciImpl.getFileObject2Snapshot();
                     } else {
                         diagnosticListener = null;
                         javacTask = null;
+                        oldParsedTrees = new HashMap<>();
+                        ide2javacFileObject = new HashMap<>();
+                        file2Snapshot = new HashMap<>();
+                        for (Snapshot s : snapshots) {
+                            file2Snapshot.put(s.getSource().getFileObject(), s);
+                        }
                     }
                     ciImpl = createCurrentInfo(this, file, root, snapshot,
                         javacTask,
-                        diagnosticListener,oldParsedTrees);
+                        diagnosticListener, oldParsedTrees, ide2javacFileObject,
+                        file2Snapshot);
             }
             success = true;
         } finally {
@@ -538,7 +562,7 @@ public class JavacParser extends Parser {
             final NewComilerTask nct = (NewComilerTask)task;
             if (nct.getCompilationController() == null || nct.getTimeStamp() != parseId) {
                 try {
-                    CompilationInfoImpl cii = new CompilationInfoImpl(this, file, root, null, null, cachedSnapShot, true);
+                    CompilationInfoImpl cii = new CompilationInfoImpl(this, file, root, null, null, cachedSnapShot, true, new HashMap<>(), new HashMap<>());
                     cii.setParsedTrees(new HashMap<>());
                     nct.setCompilationController(JavaSourceAccessor.getINSTANCE().createCompilationController(cii),
                         parseId);
@@ -616,14 +640,27 @@ public class JavacParser extends Parser {
                 Iterable<? extends CompilationUnitTree> trees = null;
                 Iterator<? extends CompilationUnitTree> it = null;
                 CompilationUnitTree unit = null;
-                if (snapshots.size() > 1 && currentInfo.getParsedTrees() != null && currentInfo.getParsedTrees().containsKey(currentInfo.jfo.getName())) {
-                    unit = currentInfo.getParsedTrees().get(currentInfo.jfo.getName());
+                if (currentInfo.getParsedTrees() != null && currentInfo.getParsedTrees().containsKey(currentInfo.jfo)) {
+                    unit = currentInfo.getParsedTrees().get(currentInfo.jfo);
                 } else {
-
                     if (sequentialParsing != null) {
                         trees = sequentialParsing.parse(currentInfo.getJavacTask(), currentInfo.jfo);
                     } else {
-                        trees = currentInfo.getJavacTask(forcedSources).parse();
+                        List<FileObject> files = new ArrayList<>();
+
+                        if (perFileProcessing) {
+                            files.add(file);
+                        } else {
+                            snapshots.stream()
+                                     .map(s -> s.getSource().getFileObject())
+                                     .forEach(files::add);
+                        }
+
+                        files.addAll(forcedSources);
+
+                        JavacTaskImpl javacTask = currentInfo.getJavacTask(files);
+
+                        trees = javacTask.parse();
                     }
                     if (unit == null) {
                         if (trees == null) {
@@ -640,9 +677,8 @@ public class JavacParser extends Parser {
                         while (it.hasNext()) {
                             CompilationUnitTree oneFileTree = it.next();
                             parsedFiles.add(oneFileTree.getSourceFile());
-                            CompilationUnitTree put = currentInfo.getParsedTrees().put(oneFileTree.getSourceFile().getName(), oneFileTree);
+                            CompilationUnitTree put = currentInfo.getParsedTrees().put(oneFileTree.getSourceFile(), oneFileTree);
                         }
-                        currentInfo.setParsedFiles(parsedFiles);
                         unit = trees.iterator().next();
                     }
 
@@ -724,7 +760,11 @@ public class JavacParser extends Parser {
                 JavaCompiler compiler = JavaCompiler.instance(jti.getContext());
                 List<Env<AttrContext>> savedTodo = new ArrayList<>(compiler.todo);
                 try {
-                    compiler.todo.retainFiles(currentInfo.getParsedFiles());
+                    List<FileObject> currentFileObjects = new ArrayList<>();
+                    currentFileObjects.addAll(forcedSources);
+                    currentFileObjects.add(file);
+                    List<AbstractSourceFileObject> currentFiles = currentInfo.getFiles(currentFileObjects);
+                    compiler.todo.retainFiles(currentFiles);
                     savedTodo.removeAll(compiler.todo);
                     PostFlowAnalysis.analyze(jti.analyze(), jti.getContext());
                 } finally {
@@ -740,18 +780,29 @@ public class JavacParser extends Parser {
                 currentPhase = Phase.UP_TO_DATE;
             }
         } catch (CancelAbort ca) {
-            currentPhase = Phase.MODIFIED;
-            invalidate(false);
+            if (lowMemoryCancel.get()) {
+                currentInfo.markIncomplete();
+                HUGE_SNAPSHOTS.add(new WeakReference<>(snapshots));
+            } else {
+                //real cancel
+                currentPhase = Phase.MODIFIED;
+                invalidate(false);
+            }
         } catch (Abort abort) {
             parserError = currentPhase;
         } catch (RuntimeException | Error ex) {
-            if (cancellable && parserCanceled.get()) {
-                currentPhase = Phase.MODIFIED;
-                invalidate(false);
+            if (lowMemoryCancel.get()) {
+                currentInfo.markIncomplete();
+                HUGE_SNAPSHOTS.add(new WeakReference<>(snapshots));
             } else {
-                parserError = currentPhase;
-                dumpSource(currentInfo, ex);
-                throw ex;
+                if (cancellable && parserCanceled.get()) {
+                    currentPhase = Phase.MODIFIED;
+                    invalidate(false);
+                } else {
+                    parserError = currentPhase;
+                    dumpSource(currentInfo, ex);
+                    throw ex;
+                }
             }
         } finally {
             currentInfo.setPhase(currentPhase);
@@ -766,8 +817,10 @@ public class JavacParser extends Parser {
             final Snapshot snapshot,
             final JavacTaskImpl javac,
             final DiagnosticListener<JavaFileObject> diagnosticListener,
-            final Map<String, CompilationUnitTree> parsedTrees) throws IOException {
-        CompilationInfoImpl info = new CompilationInfoImpl(parser, file, root, javac, diagnosticListener, snapshot, false);
+            final Map<JavaFileObject, CompilationUnitTree> parsedTrees,
+            final Map<FileObject, AbstractSourceFileObject> ide2javacFileObject,
+            final Map<FileObject, Snapshot> file2Snapshot) throws IOException {
+        CompilationInfoImpl info = new CompilationInfoImpl(parser, file, root, javac, diagnosticListener, snapshot, false, ide2javacFileObject, file2Snapshot);
         if (file != null) {
             Logger.getLogger("TIMER").log(Level.FINE, "CompilationInfo",    //NOI18N
                     new Object[] {file, info});
@@ -1326,7 +1379,14 @@ public class JavacParser extends Parser {
 
         @Override
         public boolean isCanceled() {
-            return mayCancel.get() && parser.parserCanceled.get();
+            if (!mayCancel.get() && parser.parserCanceled.get()) {
+                return true;
+            }
+            if (!parser.perFileProcessing && LOW_MEMORY_WATCHER.isLowMemory()) {
+                parser.lowMemoryCancel.set(true);
+                return true;
+            }
+            return false;
         }
     }
 

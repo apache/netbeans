@@ -1435,17 +1435,22 @@ public abstract class NbTestCase extends TestCase implements NbTest {
             try {
                 System.gc();
             } catch (OutOfMemoryError error) {
+                error.printStackTrace();
                 // OK
             }
             try {
                 System.runFinalization();
             } catch (OutOfMemoryError error) {
+                error.printStackTrace();
                 // OK
             }
             try {
+                System.err.println("size=" + size);
                 alloc.add(new byte[size]);
+                System.err.println("success");
                 size = (int)(((double)size) * 1.3);
             } catch (OutOfMemoryError error) {
+                error.printStackTrace();
                 size = size / 2;
             }
             try {

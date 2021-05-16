@@ -23,25 +23,57 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import org.junit.After;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import org.openide.util.Pair;
+
 public class ConnectionSpecTest {
+
+    private static ThreadLocal<List<Boolean>> copySessionServer = new ThreadLocal<>();
+
     public ConnectionSpecTest() {
     }
 
-    private static void copy(InputStream is, OutputStream os) {
-        try {
-            for (;;) {
-                int ch = is.read();
-                if (ch == -1) {
-                    break;
-                }
-                os.write(ch);
+    @After
+    public void afterTest() {
+        copySessionServer.remove();
+    }
+
+    private static LspSession.ScheduledServer copy(Pair<InputStream, OutputStream> io, LspSession lspSession) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        new Thread(() -> {
+            if (lspSession == null) {
+                future.completeExceptionally(new AssertionError(new NullPointerException("null session")));
+                return ;
             }
-        } catch (IOException ex) {
-            throw new AssertionError("copying error", ex);
+            try {
+                for (;;) {
+                    int ch = io.first().read();
+                    if (ch == -1) {
+                        break;
+                    }
+                    io.second().write(ch);
+                }
+                future.complete(null);
+            } catch (IOException ex) {
+                future.completeExceptionally(new AssertionError("copying error", ex));
+            }
+        }).start();
+        return () -> future;
+    }
+
+    private static void setCopy(LspSession session, LspSession.ScheduledServer copyServer) {
+        List<Boolean> list = copySessionServer.get();
+        if (list == null) {
+            list = new ArrayList<>(4);
+            copySessionServer.set(list);
         }
+        list.add(copyServer != null);
     }
 
     @Test
@@ -51,7 +83,16 @@ public class ConnectionSpecTest {
         ByteArrayInputStream in = new ByteArrayInputStream(bytes);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
 
-        conn.prepare("testParseNull", in, os, ConnectionSpecTest::copy);
+        conn.prepare("testParseNull", in, os, new LspSession(), ConnectionSpecTest::setCopy, ConnectionSpecTest::copy);
+        assertEquals("[true, false]", copySessionServer.get().toString());
+
+        try {
+            conn.prepare("testParseNull", in, os, null, ConnectionSpecTest::setCopy, ConnectionSpecTest::copy);
+            fail();
+        } catch (AssertionError err) {
+            assertTrue(err.getCause() instanceof NullPointerException);
+        }
+        assertEquals("[true, false, true, false]", copySessionServer.get().toString());
 
         assertArrayEquals("Copied properly", bytes, os.toByteArray());
     }
@@ -63,7 +104,8 @@ public class ConnectionSpecTest {
             ByteArrayInputStream in = new ByteArrayInputStream(bytes);
             ByteArrayOutputStream os = new ByteArrayOutputStream();
 
-            conn.prepare("testParseNull", in, os, ConnectionSpecTest::copy);
+            conn.prepare("testParseNull", in, os, new LspSession(), ConnectionSpecTest::setCopy, ConnectionSpecTest::copy);
+            assertEquals("[true, false]", copySessionServer.get().toString());
 
             assertArrayEquals("Copied properly", bytes, os.toByteArray());
         }
@@ -75,14 +117,14 @@ public class ConnectionSpecTest {
             final byte[] bytes = "Hello".getBytes();
             ByteArrayInputStream in = new ByteArrayInputStream(bytes);
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            conn.prepare("Pipe server", in, os, ConnectionSpecTest::copy);
+            conn.prepare("Pipe server", in, os, new LspSession(), ConnectionSpecTest::setCopy, ConnectionSpecTest::copy);
             String reply = os.toString("UTF-8");
             String exp = "Pipe server listening at port ";
             assertTrue(reply, reply.startsWith(exp));
             int port = Integer.parseInt(reply.substring(exp.length()));
             assertTrue("port is specified: " + port, port >= 1024);
             try (ConnectionSpec second = ConnectionSpec.parse("connect:" + port)) {
-                second.prepare("Pipe client", in, os, ConnectionSpecTest::copy);
+                second.prepare("Pipe client", in, os, new LspSession(), ConnectionSpecTest::setCopy, ConnectionSpecTest::copy);
             }
         }
     }

@@ -776,13 +776,27 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
     public abstract OutputStream getOutputStream(FileLock lock)
     throws IOException;
 
-    /** Get output stream.
+    /** Get output stream. This method does its best even
+     * when this file object is {@linkplain #isValid() invalid} - since
+     * version 9.23 it tries to recreate the parent hierarchy
+     * and really open the stream.
+     *
      * @return output stream to overwrite the contents of this file
-     * @throws IOException if an error occurs (the file is invalid, etc.)
+     * @throws IOException if an error occurs
      * @throws FileAlreadyLockedException if the file is already locked
      * @since 6.6
      */
     public final OutputStream getOutputStream() throws FileAlreadyLockedException, IOException  {
+        if (!isValid()) {
+            final FileObject recreate = FileUtil.createData(getFileSystem().getRoot(), getPath());
+            if (recreate != null) {
+                return recreate.getOutputStreamImpl();
+            }
+        }
+        return getOutputStreamImpl();
+    }
+
+    private OutputStream getOutputStreamImpl() throws IOException {
         final FileLock lock = lock();
         final OutputStream os;
         try {

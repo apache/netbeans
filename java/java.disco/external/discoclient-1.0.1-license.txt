@@ -1,6 +1,6 @@
 Name: DiscoClient
 Origin: Azul
-Version: 1.0
+Version: 1.0.1
 License: BSD-azul
 Description: A Java library that makes it easier to access the foojay discovery API
 Origin: https://github.com/foojay2020/discoclient

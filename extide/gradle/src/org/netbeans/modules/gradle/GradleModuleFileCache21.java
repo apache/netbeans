@@ -244,15 +244,20 @@ public final class GradleModuleFileCache21 {
     }
 
     public static String[] gavSplit(String gav) {
-        int firstColon = gav.indexOf(':');
-        int lastColon = gav.lastIndexOf(':');
-        if (firstColon == -1 || firstColon == lastColon) {
-            throw new IllegalArgumentException("Invalid GAV format: " + gav); //NOI18N
+        // the general GAV format is - <group>:<artifact>:<version/snapshot>[:<classifier>][@extension]
+        int firstColon = gav.indexOf(':'); // NOI18N
+        int versionColon = gav.indexOf(':', firstColon + 1); // NOI18N
+        int versionEnd = versionColon > firstColon ? gav.indexOf(':', versionColon + 1) : -1; // NO18N
+
+        if (firstColon == -1 || versionColon == -1 || firstColon == versionColon) {
+            throw new IllegalArgumentException("Invalid GAV format: '" + gav + "'"); //NOI18N
         }
-        return new String[] {
+        int end = versionEnd == -1 ? gav.length() : versionEnd;
+
+        return new String[]{
             gav.substring(0, firstColon),
-            gav.substring(firstColon + 1, lastColon),
-            gav.substring(lastColon + 1)
+            gav.substring(firstColon + 1, versionColon),
+            gav.substring(versionColon + 1, end)
         };
     }
 }

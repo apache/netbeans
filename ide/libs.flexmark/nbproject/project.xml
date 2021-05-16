@@ -42,6 +42,14 @@
                 <binary-origin>external/flexmark-util-0.50.36.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
+                <runtime-relative-path>ext/flexmark-formatter-0.50.36.jar</runtime-relative-path>
+                <binary-origin>external/flexmark-formatter-0.50.36.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/flexmark-ext-emoji-0.50.36.jar</runtime-relative-path>
+                <binary-origin>external/flexmark-ext-emoji-0.50.36.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
                 <runtime-relative-path>ext/flexmark-0.50.36.jar</runtime-relative-path>
                 <binary-origin>external/flexmark-0.50.36.jar</binary-origin>
             </class-path-extension>

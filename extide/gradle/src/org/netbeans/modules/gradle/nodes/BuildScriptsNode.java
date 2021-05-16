@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import org.netbeans.api.annotations.common.StaticResource;
+import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.gradle.spi.GradleFiles.Kind;
@@ -54,6 +55,7 @@ import org.openide.util.Pair;
 import org.openide.util.lookup.Lookups;
 
 import static org.netbeans.modules.gradle.spi.GradleFiles.Kind.*;
+import org.netbeans.spi.project.ui.PathFinder;
 import org.openide.util.Exceptions;
 /**
  *
@@ -70,7 +72,7 @@ public final class BuildScriptsNode extends AnnotatedAbstractNode {
     @NbBundle.Messages("LBL_Build_Scripts=Build Scripts")
     public BuildScriptsNode(NbGradleProjectImpl prj) {
         super(Children.create(new ProjectFilesChildren(prj), true),
-                Lookups.fixed(prj.getProjectDirectory()));
+                Lookups.fixed(prj.getProjectDirectory(), new Finder(prj)));
         setName("buildscripts"); //NOI18N
         setDisplayName(Bundle.LBL_Build_Scripts());
     }
@@ -96,6 +98,34 @@ public final class BuildScriptsNode extends AnnotatedAbstractNode {
         return img;
     }
 
+    private static class Finder implements PathFinder {
+
+        final Project project;
+
+        public Finder(Project project) {
+            this.project = project;
+        }
+        
+        @Override
+        public Node findPath(Node node, Object target) {
+        if (target instanceof FileObject) {
+            FileObject fo = (FileObject) target;
+            if (project != FileOwnerQuery.getOwner(fo)) {
+                return null; // Don't waste time if project does not own the fo
+            }
+            Node[] nodes = node.getChildren().getNodes(true);
+            for (Node n : nodes) {
+                FileObject nf = n.getLookup().lookup(FileObject.class);
+                if ((nf != null) && (nf.equals(fo))) {
+                   return n;
+                }
+            }
+        }
+
+        return null;
+        }
+    }
+    
     private static class ProjectFilesChildren extends ChildFactory.Detachable<Pair<FileObject, GradleFiles.Kind>> implements PropertyChangeListener {
 
         private final NbGradleProjectImpl project;

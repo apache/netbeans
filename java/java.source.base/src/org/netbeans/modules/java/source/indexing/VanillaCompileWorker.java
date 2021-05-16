@@ -539,6 +539,7 @@ final class VanillaCompileWorker extends CompileWorker {
             public Void visitCompilationUnit(CompilationUnitTree node, Void p) {
                 diags = dc.peekDiagnostics(cut.getSourceFile())
                           .stream()
+                          .filter(d -> d.getKind() == Diagnostic.Kind.ERROR)
                           .collect(Collectors.toMap(d -> d.getPosition(),
                                                     d -> Collections.singletonList(d),
                                                     (dl1, dl2) -> Stream.of(dl1, dl2)

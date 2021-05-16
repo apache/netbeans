@@ -1428,7 +1428,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
             public @Override void run() {
         List<byte[]> alloc = new ArrayList<byte[]>();
         int size = 100000;
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 100; i++) {
             if (ref.get() == null) {
                 return;
             }

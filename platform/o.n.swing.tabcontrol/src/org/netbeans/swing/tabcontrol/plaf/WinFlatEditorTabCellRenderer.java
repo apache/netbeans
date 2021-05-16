@@ -115,7 +115,9 @@ class WinFlatEditorTabCellRenderer extends AbstractTabCellRenderer {
         int txtH = fm.getHeight();
         Insets ins = getInsets();
         int availH = getHeight() - (ins.top + ins.bottom);
-        return (availH <= txtH) ? -fm.getDescent() : -1;
+        // Ad hoc adjustment for the Windows LAF.
+        int yAdjustment = 1;
+        return ((availH <= txtH) ? -fm.getDescent() : -1) + yAdjustment;
     }
 
     @Override
@@ -175,7 +177,9 @@ class WinFlatEditorTabCellRenderer extends AbstractTabCellRenderer {
             int iconWidth = icon.getIconWidth();
             int iconHeight = icon.getIconHeight();
             rect.x = bounds.x + bounds.width - iconWidth - UIScale.scale(CLOSE_ICON_RIGHT_PAD);
-            rect.y = bounds.y + Math.max(0, (bounds.height - iconHeight) / 2) - 1;
+            // Ad hoc adjustment for the Windows LAF.
+            int yAdjustment = 2;
+            rect.y = bounds.y + Math.max(0, (bounds.height - iconHeight) / 2) - 1 + yAdjustment;
             rect.width = iconWidth;
             rect.height = iconHeight;
         }

@@ -34,7 +34,7 @@ final class Windows8VectorCloseButton extends VectorIcon {
     private final boolean pressed;
 
     private Windows8VectorCloseButton(boolean pressed) {
-        super(14, 14);
+        super(14, 15);
         this.pressed = pressed;
     }
 
@@ -55,7 +55,7 @@ final class Windows8VectorCloseButton extends VectorIcon {
         if (scaling > 1.0)
             strokeWidth *= 1.5f;
         double marginX = 3.5 * scaling;
-        int topMarginY = round(3 * scaling);
+        int topMarginY = round(4 * scaling);
         int botMarginY = round(4 * scaling);
         g.clip(new Rectangle2D.Double(0, topMarginY, width, height - topMarginY - botMarginY));
         g.setStroke(new BasicStroke((float) strokeWidth));

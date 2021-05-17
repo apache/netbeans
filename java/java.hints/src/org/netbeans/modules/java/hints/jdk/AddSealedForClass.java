@@ -75,6 +75,34 @@ public class AddSealedForClass {
         if (typeElement == null || typeElement.getModifiers().contains(Modifier.FINAL) || typeElement.getModifiers().contains(TreeFactory.getSealed())) {
             return null;
         }
+//        if(!Boolean.getBoolean("java.sealed.hint.enabled")){
+//            return null;
+//        }
+        SourcePositions sourcePositions = info.getTrees().getSourcePositions();
+        long startPos = sourcePositions.getStartPosition(tp.getCompilationUnit(), cls);
+        if (startPos > Integer.MAX_VALUE) {
+            return null;
+        }
+        int[] bodySpan = info.getTreeUtilities().findBodySpan(cls);
+        if (bodySpan == null || bodySpan[0] <= startPos) {
+            return null;
+        }
+        Element outer = typeElement.getEnclosingElement();
+        // do not offer the hint for non-static inner classes. Permit for classes nested into itnerface - no enclosing instance
+        if (outer != null && outer.getKind() != ElementKind.PACKAGE && outer.getKind() != ElementKind.INTERFACE) {
+            if (outer.getKind() != ElementKind.CLASS && outer.getKind() != ElementKind.ENUM) {
+                return null;
+            }
+            if (!typeElement.getModifiers().contains(Modifier.STATIC)) {
+                return null;
+            }
+        }
+
+        ClassPath cp = info.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE);
+        FileObject root = cp.findOwnerRoot(info.getFileObject());
+        if (root == null) { //File not part of any project
+            return null;
+        }
         
         AtomicBoolean cancel = new AtomicBoolean();
         cancel.set(false);
@@ -112,41 +140,10 @@ public class AddSealedForClass {
                 }
             }
         }
-//        for (int i = 0; i < currentSubClasses.size(); i++) {
-//            Collection<Modifier> modifiers = currentSubClasses.get(i).getModifiers();
-//            if (!modifiers.contains(TreeShims.getSealed()) && !modifiers.contains(TreeShims.getNonSealed()) && !modifiers.contains(Modifier.FINAL)) {
-//                return null;
-//            }
-//        }
         if (currentSubClasses.isEmpty()) {
             return null;
         }
-        SourcePositions sourcePositions = info.getTrees().getSourcePositions();
-        long startPos = sourcePositions.getStartPosition(tp.getCompilationUnit(), cls);
-        if (startPos > Integer.MAX_VALUE) {
-            return null;
-        }
-        int[] bodySpan = info.getTreeUtilities().findBodySpan(cls);
-        if (bodySpan == null || bodySpan[0] <= startPos) {
-            return null;
-        }
-        Element outer = typeElement.getEnclosingElement();
-        // do not offer the hint for non-static inner classes. Permit for classes nested into itnerface - no enclosing instance
-        if (outer != null && outer.getKind() != ElementKind.PACKAGE && outer.getKind() != ElementKind.INTERFACE) {
-            if (outer.getKind() != ElementKind.CLASS && outer.getKind() != ElementKind.ENUM) {
-                return null;
-            }
-            if (!typeElement.getModifiers().contains(Modifier.STATIC)) {
-                return null;
-            }
-        }
-
-        ClassPath cp = info.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE);
-        FileObject root = cp.findOwnerRoot(info.getFileObject());
-        if (root == null) { //File not part of any project
-            return null;
-        }
-      
+        
         Fix fix = new FixImpl(context.getInfo(), context.getPath(), currentSubClasses).toEditorFix();
         return ErrorDescriptionFactory.forName(context, context.getPath(), Bundle.ERR_AddSealedForClass(), fix);
     }

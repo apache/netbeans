@@ -75,6 +75,7 @@ import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.modules.java.editor.base.imports.UnusedImports;
 import org.netbeans.modules.java.editor.base.semantic.ColoringAttributes.Coloring;
 import org.netbeans.modules.java.editor.base.semantic.UnusedDetector.UnusedDescription;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;

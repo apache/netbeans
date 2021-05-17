@@ -1866,15 +1866,7 @@ public ClassTree Interface(ModifiersTree modifiers,
     public static ClassTree getClassTree(TreeMaker make, Names names, ModifiersTree modifiers, CharSequence simpleName, ListBuffer<JCTree.JCTypeParameter> typarams, Tree extendsClause, ListBuffer<JCExpression> impls, ListBuffer<JCExpression> permits, ListBuffer<JCTree> defs) {
         try {
             Class treeMaker = Class.forName("com.sun.tools.javac.tree.TreeMaker");
-            Method allMethods[] = treeMaker.getDeclaredMethods();
-            Method classDefs = null;
-            for (int i = 0; i < allMethods.length; i++) {
-                Method oneMethod = allMethods[i];
-                if (oneMethod.getName().equals("ClassDef") && oneMethod.getParameterCount() == 7) {
-                    classDefs = oneMethod;
-                    break;
-                }
-            }
+            Method classDefs = treeMaker.getDeclaredMethod("ClassDef", JCTree.JCModifiers.class, Name.class, com.sun.tools.javac.util.List.class, JCExpression.class, com.sun.tools.javac.util.List.class, com.sun.tools.javac.util.List.class, com.sun.tools.javac.util.List.class);
             if (classDefs == null) {
                 return null;
             }
@@ -1886,9 +1878,7 @@ public ClassTree Interface(ModifiersTree modifiers,
                     permits.toList(),
                     defs.toList());
             return name;
-        } catch (ClassNotFoundException ex) {
-            return null;
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+        } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             return null;
         }
     }
@@ -1897,15 +1887,7 @@ public ClassTree Interface(ModifiersTree modifiers,
             com.sun.tools.javac.util.List<JCAnnotation> annotations, CharSequence simpleName, ListBuffer<JCTree.JCTypeParameter> typarams, Tree extendsClause, ListBuffer<JCExpression> impls, ListBuffer<JCExpression> permits, ListBuffer<JCTree> defs) {
         try {
             Class treeMaker = Class.forName("com.sun.tools.javac.tree.TreeMaker");
-            Method allMethods[] = treeMaker.getDeclaredMethods();
-            Method classDefs = null;
-            for (int i = 0; i < allMethods.length; i++) {
-                Method oneMethod = allMethods[i];
-                if (oneMethod.getName().equals("ClassDef") && oneMethod.getParameterCount() == 7) {
-                    classDefs = oneMethod;
-                    break;
-                }
-            }
+            Method classDefs = treeMaker.getDeclaredMethod("ClassDef", JCTree.JCModifiers.class, Name.class, com.sun.tools.javac.util.List.class, JCExpression.class, com.sun.tools.javac.util.List.class, com.sun.tools.javac.util.List.class, com.sun.tools.javac.util.List.class);
             if (classDefs == null) {
                 return null;
             }
@@ -1917,9 +1899,7 @@ public ClassTree Interface(ModifiersTree modifiers,
                     permits.toList(),
                     defs.toList());
             return name;
-        } catch (ClassNotFoundException ex) {
-            return null;
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+        } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             return null;
         }
     }

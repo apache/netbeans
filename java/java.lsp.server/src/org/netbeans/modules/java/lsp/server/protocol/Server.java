@@ -92,7 +92,6 @@ import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
@@ -123,7 +122,6 @@ public final class Server {
     }
     
     public static NbLspServer launchServer(Pair<InputStream, OutputStream> io, LspSession session) {
-        System.setProperty("org.netbeans.modules.java.source.usages.BinaryAnalyser.fullIndex", "true");
         LanguageServerImpl server = new LanguageServerImpl();
         ConsumeWithLookup msgProcessor = new ConsumeWithLookup(server.getSessionLookup());
         Launcher<NbCodeLanguageClient> serverLauncher = createLauncher(server, io, msgProcessor::attachLookup);

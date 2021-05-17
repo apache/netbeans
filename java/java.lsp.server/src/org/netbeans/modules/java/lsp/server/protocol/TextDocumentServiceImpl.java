@@ -659,7 +659,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 }
                 for (RefactoringElement re : refactoring.getRefactoringElements()) {
                     if (cancel.get()) return ;
-                    locations.add(new Location(Utils.toUri(re.getParentFile()), toRange(re.getPosition())));
+                    FileObject parentFile = re.getParentFile();
+                    if (parentFile.isData()) {
+                        locations.add(new Location(Utils.toUri(parentFile), toRange(re.getPosition())));
+                    }
                 }
 
                 refactoring.finished();

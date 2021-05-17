@@ -318,8 +318,7 @@ public final class Windows8LFCustoms extends LFCustoms {
         @Override
         public Object[] createKeysAndValues() {
             return new Object[] {
-            //Tab control - XXX REPLACE WITH RelativeColor - need to figure out base
-            //colors for each color
+            // ==== Windows8*TabDisplayerUI ========================================================
             //selected & focused
             TAB_FOCUS_FILL_UPPER, new Color(236,244,252),
             TAB_FOCUS_FILL_LOWER, new Color(221,237,252),
@@ -342,6 +341,8 @@ public final class Windows8LFCustoms extends LFCustoms {
             TAB_SEL_BORDER, new Color(60,127,177),
             TAB_BORDER_INNER, new Color(255,255,255),
 
+            // ==== TabbedContainerUI ==============================================================
+
             //Borders for the tab control
             EDITOR_TAB_OUTER_BORDER, BorderFactory.createEmptyBorder(),
             EDITOR_TAB_CONTENT_BORDER,
@@ -352,6 +353,49 @@ public final class Windows8LFCustoms extends LFCustoms {
             VIEW_TAB_CONTENT_BORDER,
                 new DPIUnscaledBorder(new MatteBorder(0, 1, 1, 1, new Color(137, 140, 149))),
             VIEW_TAB_TABS_BORDER, BorderFactory.createEmptyBorder(),
+
+            // ==== WinFlat*TabDisplayerUI =========================================================
+
+            "EditorTab.tabInsets", new Insets(5,6,7,8),
+            "EditorTab.underlineHeight", 3,
+            //"EditorTab.underlineAtTop", null,
+            "EditorTab.showTabSeparators", true,
+
+            "ViewTab.tabInsets", new Insets(5,6,7,2),
+            "ViewTab.underlineHeight", 3,
+            //"ViewTab.underlineAtTop", null,
+            "ViewTab.showTabSeparators", true,
+
+            "EditorTab.background", new Color(242, 242, 242),
+            //"EditorTab.foreground", null,
+            "EditorTab.hoverBackground", new Color(224, 224, 224),
+            "EditorTab.attentionBackground", new Color(230, 200, 64),
+            "EditorTab.underlineColor", new Color(64, 131, 201),
+            "EditorTab.inactiveUnderlineColor", new Color(156, 167, 184),
+            "EditorTab.tabSeparatorColor", new Color(196, 196, 196),
+            "EditorTab.activeBackground", new Color(226, 230, 236),
+            "EditorTab.selectedBackground", new Color(255, 255, 255),
+            //"EditorTab.activeForeground", null,
+            "EditorTab.selectedForeground", new Color(0, 0, 0),
+            //"EditorTab.hoverForeground", null,
+            "EditorTab.attentionForeground", new Color(0, 0, 0),
+
+            "ViewTab.background", new Color(242, 242, 242),
+            "ViewTab.hoverBackground", new Color(224, 224, 224),
+            "ViewTab.attentionBackground", new Color(230, 200, 64),
+            "ViewTab.underlineColor", new Color(64, 131, 201),
+            "ViewTab.inactiveUnderlineColor", new Color(156, 167, 184),
+            "ViewTab.tabSeparatorColor", new Color(196, 196, 196),
+            "ViewTab.activeBackground", new Color(226, 230, 236),
+            //"ViewTab.selectedBackground", null,
+            //"ViewTab.foreground", null,
+            //"ViewTab.activeForeground", null,
+            //"ViewTab.selectedForeground", null,
+            //"ViewTab.hoverForeground", null,
+            "ViewTab.attentionForeground", new Color(0, 0, 0),
+
+            "TabbedContainer.editor.contentBorderColor", new Color(196, 196, 196),
+            "TabbedContainer.view.contentBorderColor", new Color(196, 196, 196)
             };
         }
     }

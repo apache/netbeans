@@ -35,6 +35,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.actions.Editable;
+import org.netbeans.api.actions.Openable;
 import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
@@ -43,6 +45,8 @@ import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.openide.awt.HtmlBrowser.URLDisplayer;
 import org.openide.awt.StatusDisplayer;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -101,6 +105,22 @@ public class HyperlinkImpl implements HyperlinkProviderExt {
         try {
             String urlText = doc.getText(span[0], span[1] - span[0]);
             URL url = new URL(urlText);
+
+            if ("nbfs".equals(url.getProtocol())) { // NOI18N
+                FileObject fo = URLMapper.findFileObject(url);
+                if (fo != null) {
+                    Editable ed = fo.getLookup().lookup(Editable.class);
+                    if (ed != null) {
+                        ed.edit();
+                        return;
+                    }
+                    Openable op = fo.getLookup().lookup(Openable.class);
+                    if (op != null) {
+                        op.open();
+                        return;
+                    }
+                }
+            }
 
             URLDisplayer.getDefault().showURL(url);
         } catch (BadLocationException ex) {

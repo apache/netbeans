@@ -48,6 +48,7 @@ import org.openide.util.Utilities;
 
 import static org.netbeans.api.java.classpath.ClassPath.*;
 import static org.netbeans.api.java.classpath.JavaClassPathConstants.*;
+import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 /**
  *
@@ -124,12 +125,42 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
             updateGroups(Collections.<String>emptySet());
         }
     }
+    
+    /**
+     * If true, the impl has attempted project load upon CP request.
+     * Will try once.
+     */
+    private boolean lateProjectLoadAttempted;
 
+    @NbBundle.Messages({
+        "MSG_ObtainClasspath=Attempting to obtain classpath"
+    })
     @Override
     public ClassPath findClassPath(FileObject fo, String type) {
         GradleJavaProject prj = GradleJavaProject.get(project);
         if (!SUPPORTED_PATHS.contains(type) || (prj == null)) {
             return null;
+        }
+        NbGradleProject ngp = NbGradleProject.get(project);
+        if (ngp != null) {
+            boolean attempt;
+            if (ngp.getQuality().worseThan(NbGradleProject.Quality.EVALUATED)) {
+                synchronized (this) {
+                    attempt = !lateProjectLoadAttempted;
+                    lateProjectLoadAttempted = true;
+                }
+            } else {
+                attempt = false;
+            }
+            if (attempt) {
+                // someone is asking for a classpath. Try to go for FULL at least. Runs asynchronously.
+                ngp.toQuality(Bundle.MSG_ObtainClasspath(), NbGradleProject.Quality.FULL, false).
+                    thenAccept((p) -> {
+                        if (p.getQuality().atLeast(NbGradleProject.Quality.EVALUATED)) {
+                            updateGroups();
+                        }
+                    });
+            }
         }
         GradleJavaSourceSet sourceSet = prj.containingSourceSet(FileUtil.toFile(fo));
         return sourceSet != null ? getSourceSetPath(type, sourceSet) : null;

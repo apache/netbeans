@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.gradle.java.classpath;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.Reference;
@@ -262,5 +264,66 @@ public class ClassPathProviderImplTest extends AbstractGradleProjectTestCase {
                 x.copy(to, x.getName(), x.getExt());
             }
         }
+    }
+    
+    /**
+     * Classpath in a new project (not loaded) project can be just guessed. But should force project load
+     * and refresh itself afterwards.
+     * /
+     * @throws Exception 
+     */
+    public void testClasspathWillRefreshLate() throws Exception {
+        FileObject d = FileUtil.toFileObject(getDataDir());
+        FileObject main = d.getFileObject("javasimple/src/main/java/test/App.java");
+        project = createGradleProject(path, "apply plugin: 'java'\n"
+                + "\n"
+                + "sourceSets {\n"
+                + "    main {\n"
+                + "        java {\n"
+                + "            srcDirs(\"src/main/java\", \"src/main/kava\" )\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n", null);
+        
+        FileObject src = FileUtil.createFolder(project, "src/main/java/test");
+        java = FileUtil.copyFile(main, src, main.getName());
+        
+        // add some additional sources (tests):
+        FileObject src2 = FileUtil.createFolder(project, "src/main/kava/test2");
+
+        Project prj = FileOwnerQuery.getOwner(java);
+        ProjectTrust.getDefault().trustProject(prj);
+
+        NbGradleProject gp = NbGradleProject.get(prj);
+        gp.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                synchronized (ClassPathProviderImplTest.this) {
+                    // just block the project reload in the async RP
+                }
+            }
+        });
+
+        CountDownLatch cpChange = new CountDownLatch(1);
+
+        ClassPath cp;
+        synchronized (this) {
+            cp = ClassPath.getClassPath(java, ClassPath.SOURCE);
+            // uninitialized project, no roots reported at this time
+            assertEquals(1, cp.getRoots().length);
+
+            cp.addPropertyChangeListener(new PropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if (ClassPath.PROP_ROOTS.equals(evt.getPropertyName())) {
+                        cpChange.countDown();
+                    }
+                }
+            });
+        }
+
+        cpChange.await();
+        FileObject secondSource = cp.findResource("test2");
+        assertSame(src2, secondSource);
     }
 }

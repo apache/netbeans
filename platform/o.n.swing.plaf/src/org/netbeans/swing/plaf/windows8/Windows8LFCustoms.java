@@ -153,8 +153,7 @@ public final class Windows8LFCustoms extends LFCustoms {
                 Object key = entry.getKey();
                 /* Force loading of lazily loaded values, so we can see if the actual implementation
                 type is of the kind that needs to be patched. All currently known icon properties
-                are suffixed "icon" or "Icon". All but one is of the kind that needs to be
-                patched. */
+                are suffixed "icon" or "Icon", and all are of the kind that needs to be patched. */
                 Object value = key.toString().toLowerCase(Locale.ROOT).endsWith("icon") //NOI18N
                         ? UIManager.getDefaults().get(key) : null;
                 if (value == null) {
@@ -163,13 +162,10 @@ public final class Windows8LFCustoms extends LFCustoms {
                 String valueCN = value.getClass().getName();
                 if (value instanceof Icon &&
                     (valueCN.startsWith("com.sun.java.swing.plaf.windows.WindowsIconFactory$") || //NOI18N
-                    valueCN.startsWith("com.sun.java.swing.plaf.windows.WindowsTreeUI$")) && //NOI18N
-                    /* This particular one can't be used as a delegate, as it intentionally behaves
-                    differently when the application has overridden UIDefaults. */
-                    !valueCN.contains("VistaMenuItemCheckIcon")) //NOI18N
+                    valueCN.startsWith("com.sun.java.swing.plaf.windows.WindowsTreeUI$"))) //NOI18N
                 {
                     result.add(key);
-                    result.add(new WindowsDPIWorkaroundIcon((Icon) value));
+                    result.add(new WindowsDPIWorkaroundIcon(key, (Icon) value));
                 }
             }
         }

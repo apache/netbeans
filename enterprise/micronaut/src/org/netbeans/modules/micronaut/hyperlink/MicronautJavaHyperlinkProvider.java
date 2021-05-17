@@ -109,8 +109,13 @@ public class MicronautJavaHyperlinkProvider implements HyperlinkProviderExt {
                     SourceGroup[] sourceGroups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_RESOURCES);
                     for (SourceGroup sourceGroup : sourceGroups) {
                         FileObject rootFolder = sourceGroup.getRootFolder();
-                        FileObject cfgFo = rootFolder.getFileObject("application.yml");
-                        if (cfgFo != null) {
+                        List<FileObject> configFiles = new ArrayList<>();
+                        for (FileObject chldFo : rootFolder.getChildren()) {
+                            if (MicronautConfigUtilities.isMicronautConfigFile(chldFo)) {
+                                configFiles.add(chldFo);
+                            }
+                        }
+                        if (!configFiles.isEmpty()) {
                             JavaSource source = JavaSource.forDocument(doc);
                             if (source != null) {
                                 try {
@@ -118,9 +123,11 @@ public class MicronautJavaHyperlinkProvider implements HyperlinkProviderExt {
                                     ConfigurationMetadataProperty property = MicronautConfigProperties.getProperties(project).get(propertyName);
                                     if (property != null) {
                                         List<MicronautConfigUtilities.Usage> usages = new ArrayList<>();
-                                        MicronautConfigUtilities.collectUsages(cfgFo, propertyName, usage -> {
-                                            usages.add(usage);
-                                        });
+                                        for (FileObject configFile : configFiles) {
+                                            MicronautConfigUtilities.collectUsages(configFile, propertyName, usage -> {
+                                                usages.add(usage);
+                                            });
+                                        }
                                         if (!usages.isEmpty()) {
                                             return usages.get(0);
                                         }

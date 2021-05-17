@@ -27,6 +27,7 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.lib.editor.util.ArrayUtilities;
 import org.netbeans.modules.micronaut.MicronautConfigProperties;
+import org.netbeans.modules.micronaut.MicronautConfigUtilities;
 import org.netbeans.spi.lsp.CompletionCollector;
 import org.openide.filesystems.FileObject;
 import org.springframework.boot.configurationmetadata.ConfigurationMetadataProperty;
@@ -41,7 +42,7 @@ public class MicronautConfigCompletionCollector implements CompletionCollector {
     @Override
     public boolean collectCompletions(Document doc, int offset, Completion.Context context, Consumer<Completion> consumer) {
         FileObject fo = EditorDocumentUtils.getFileObject(doc);
-        if (fo != null && "application.yml".equalsIgnoreCase(fo.getNameExt())) {
+        if (MicronautConfigUtilities.isMicronautConfigFile(fo)) {
             Project project = FileOwnerQuery.getOwner(fo);
             if (project != null) {
                 if (MicronautConfigProperties.hasConfigMetadata(project)) {

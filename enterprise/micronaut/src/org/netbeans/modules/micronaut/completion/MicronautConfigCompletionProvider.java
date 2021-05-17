@@ -44,7 +44,7 @@ public class MicronautConfigCompletionProvider implements CompletionProvider {
     @Override
     public CompletionTask createTask(int queryType, JTextComponent component) {
         FileObject fo = EditorDocumentUtils.getFileObject(component.getDocument());
-        if (fo != null && "application.yml".equalsIgnoreCase(fo.getNameExt())) {
+        if (MicronautConfigUtilities.isMicronautConfigFile(fo)) {
             Project project = FileOwnerQuery.getOwner(fo);
             if (project != null) {
                 if (MicronautConfigProperties.hasConfigMetadata(project)) {

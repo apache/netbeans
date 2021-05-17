@@ -53,11 +53,17 @@ import org.springframework.boot.configurationmetadata.ConfigurationMetadataSourc
  */
 public class MicronautConfigUtilities {
 
+    private static final Pattern REGEXP = Pattern.compile("^(application|bootstrap)(-\\w*)*\\.yml$", Pattern.CASE_INSENSITIVE);
+
+    public static boolean isMicronautConfigFile(FileObject fo) {
+        return fo != null && REGEXP.matcher(fo.getNameExt()).matches();
+    }
+
     public static ConfigurationMetadataProperty resolveProperty(Document doc, int offset, int[] span, List<ConfigurationMetadataSource> sources) {
         LineDocument lineDocument = LineDocumentUtils.as(doc, LineDocument.class);
         if (lineDocument != null) {
             FileObject fo = EditorDocumentUtils.getFileObject(doc);
-            if (fo != null && "application.yml".equalsIgnoreCase(fo.getNameExt())) {
+            if (isMicronautConfigFile(fo)) {
                 Project project = FileOwnerQuery.getOwner(fo);
                 if (project != null) {
                     if (MicronautConfigProperties.hasConfigMetadata(project)) {

@@ -36,7 +36,8 @@ public final class Hover {
 
     /**
      * Resolves a hover information at the given document offset and returns its
-     * content.
+     * content. Example usage can be illustrated by:
+     * {@codesnippet HoverTest#testHoverContent}
      *
      * @param doc document on which to operate.
      * @param offset offset within document

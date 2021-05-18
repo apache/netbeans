@@ -16,20 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.nbcode.integration;
+package org.netbeans.modules.java.lsp.server.ui;
 
-import org.netbeans.modules.java.lsp.server.ui.AnalyserConfig;
-import org.openide.util.lookup.ServiceProvider;
+import org.openide.util.Lookup;
 
 /**
  *
  * @author Dusan Balek
  */
-@ServiceProvider(service = AnalyserConfig.class, position = 1000)
-public class LspAnalyserConfig extends AnalyserConfig {
+public abstract class AnalyserConfig {
 
-    @Override
-    public boolean useFullIndex() {
-        return true;
+    private static final String PROP_FULL_INDEX = "org.netbeans.modules.java.source.usages.BinaryAnalyser.fullIndex";   //NOI18N
+
+    public static boolean fullIndex() {
+        AnalyserConfig cfg = Lookup.getDefault().lookup(AnalyserConfig.class);
+        return (cfg != null && cfg.useFullIndex()) || Boolean.getBoolean(PROP_FULL_INDEX);
     }
+
+    public abstract boolean useFullIndex();
 }

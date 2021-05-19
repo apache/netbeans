@@ -49,6 +49,16 @@ class WinFlatUtils {
             Color color = UIManager.getColor(key);
             return (color != null) ? color : UIManager.getColor(defaultKey);
         }
+
+        static int getUIInt(String key, int defaultValue) {
+            Object value = UIManager.get(key);
+            return (value instanceof Integer) ? ((Integer) value) : defaultValue;
+        }
+
+        static boolean getUIBoolean(String key, boolean defaultValue) {
+            Object value = UIManager.get(key);
+            return (value instanceof Boolean) ? ((Boolean) value) : defaultValue;
+        }
     }
 
     /**
@@ -121,13 +131,20 @@ class WinFlatUtils {
             {
                   // HiDPI scaling is active.
                   double scale = tx.getScaleX();
-                  /* Round the starting (top-left) position up and the end (bottom-right) position down,
-                  to ensure we are painting the border in an area that will not be painted over by an
-                  adjacent component. */
-                  int deviceX = (int) Math.ceil(tx.getTranslateX());
+                  /* For non-integral HiDPI scalings (e.g. 150%), rounding of device pixel positions
+                  becomes significant; see see comments in
+                  org.netbeans.swing.plaf.windows8.DPIUnscaledBorder. Round the starting X position
+                  in a manner consistent with DPIUnscaledBorder for the tabContainer case, to ensure
+                  that the left tab border lines up between the tab and the container area. Round
+                  the other positions in the conservative direction, to avoid borders being
+                  overpainted by adjacent components. In the 125% scaling case there can sometimes
+                  still be a one-device-pixel gap between the tab and the container, but the
+                  approach taken here (and in DPIUnscaledBorder) was still what looked best across
+                  all the common situations. */
+                  int deviceX = (int) Math.round(tx.getTranslateX());
                   int deviceY = (int) Math.ceil(tx.getTranslateY());
-                  int deviceXend = (int) (tx.getTranslateX() + width * scale);
-                  int deviceYend = (int) (tx.getTranslateY() + height * scale);
+                  int deviceXend = (int) Math.floor(tx.getTranslateX() + width * scale);
+                  int deviceYend = (int) Math.floor(tx.getTranslateY() + height * scale);
                   int deviceWidth = deviceXend - deviceX;
                   int deviceHeight = deviceYend - deviceY;
                   /* Deactivate the HiDPI scaling transform so we can do paint operations in the device

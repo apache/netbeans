@@ -48,6 +48,7 @@ public class WinFlatEditorTabDisplayerUI extends BasicScrollingTabDisplayerUI {
     private final Color background = UIManager.getColor("EditorTab.background"); // NOI18N
     private final Color activeBackground = Utils.getUIColor("EditorTab.activeBackground", background); // NOI18N
     private final Color contentBorderColor = UIManager.getColor("TabbedContainer.editor.contentBorderColor"); // NOI18N
+    private final boolean unscaledBorders = Utils.getUIBoolean("EditorTab.unscaledBorders", false); // NOI18N
     private final Insets tabInsets = UIScale.scale(UIManager.getInsets("EditorTab.tabInsets")); // NOI18N
 
     public WinFlatEditorTabDisplayerUI(TabDisplayer displayer) {
@@ -80,8 +81,12 @@ public class WinFlatEditorTabDisplayerUI extends BasicScrollingTabDisplayerUI {
     @Override
     public TabCellRenderer getTabCellRenderer(int tab) {
         TabCellRenderer ren = super.getTabCellRenderer(tab);
-        if (ren instanceof WinFlatEditorTabCellRenderer && tab + 1 < displayer.getModel().size()) {
-            ((WinFlatEditorTabCellRenderer)ren).nextTabSelected = (tabState.getState(tab + 1) & TabState.SELECTED) != 0;
+        if (ren instanceof WinFlatEditorTabCellRenderer) {
+            WinFlatEditorTabCellRenderer fren = (WinFlatEditorTabCellRenderer) ren;
+            int N = displayer.getModel().size();
+            fren.firstTab = (tab == 0);
+            fren.lastTab = (tab == N - 1);
+            fren.nextTabSelected = tab + 1 < N && (tabState.getState(tab + 1) & TabState.SELECTED) != 0;
         }
         return ren;
     }
@@ -114,7 +119,7 @@ public class WinFlatEditorTabDisplayerUI extends BasicScrollingTabDisplayerUI {
         g.fillRect (0, 0, width, height);
 
         // paint bottom border
-        int contentBorderWidth = HiDPIUtils.deviceBorderWidth(scale, 1);
+        int contentBorderWidth = unscaledBorders ? 1 : HiDPIUtils.deviceBorderWidth(scale, 1);
         g.setColor(contentBorderColor);
         g.fillRect(0, height - contentBorderWidth, width, contentBorderWidth);
     }

@@ -346,12 +346,12 @@ public final class Windows8LFCustoms extends LFCustoms {
             //Borders for the tab control
             EDITOR_TAB_OUTER_BORDER, BorderFactory.createEmptyBorder(),
             EDITOR_TAB_CONTENT_BORDER,
-                new DPIUnscaledBorder(new MatteBorder(0, 1, 1, 1, new Color(137, 140, 149))),
+                new DPIUnscaledBorder(new MatteBorder(0, 1, 1, 1, new Color(137, 140, 149)), true),
             EDITOR_TAB_TABS_BORDER, BorderFactory.createEmptyBorder(),
 
             VIEW_TAB_OUTER_BORDER, BorderFactory.createEmptyBorder(),
             VIEW_TAB_CONTENT_BORDER,
-                new DPIUnscaledBorder(new MatteBorder(0, 1, 1, 1, new Color(137, 140, 149))),
+                new DPIUnscaledBorder(new MatteBorder(0, 1, 1, 1, new Color(137, 140, 149)), true),
             VIEW_TAB_TABS_BORDER, BorderFactory.createEmptyBorder(),
 
             // ==== WinFlat*TabDisplayerUI =========================================================

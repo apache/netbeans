@@ -77,12 +77,17 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
         BaseProgressUtils.runOffEventDispatchThread(() -> {
             List<ConfigurationMetadataSource> sources = new ArrayList<>();
             ConfigurationMetadataProperty property = MicronautConfigUtilities.resolveProperty(doc, offset, null, sources);
-            if (property != null && !sources.isEmpty()) {
+            if (!sources.isEmpty()) {
                 ClasspathInfo cpInfo = ClasspathInfo.create(doc);
-                ElementHandle handle = getElementHandle(cpInfo, sources.get(0).getType(), property.getName(), cancel);
-                if (handle == null || !ElementOpen.open(cpInfo, handle)) {
-                    Toolkit.getDefaultToolkit().beep();
+                for (ConfigurationMetadataSource source : sources) {
+                    if (property == null || source.getProperties().get(property.getId()) == property) {
+                        ElementHandle handle = getElementHandle(cpInfo, source.getType(), property != null ? property.getName() : null, cancel);
+                        if (handle != null && ElementOpen.open(cpInfo, handle)) {
+                            return;
+                        }
+                    }
                 }
+                Toolkit.getDefaultToolkit().beep();
             }
         }, Bundle.LBL_GoToDeclaration(), cancel, false);
     }
@@ -104,25 +109,27 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
 
     private static ElementHandle getElementHandle(ClasspathInfo cpInfo, String typeName, String propertyName, AtomicBoolean cancel) {
         ElementHandle[] handle = new ElementHandle[1];
-        if (cpInfo != null) {
-            try {
-                JavaSource.create(cpInfo).runUserActionTask(controller -> {
-                    if (cancel != null && cancel.get()) {
-                        return;
-                    }
-                    handle[0] = ElementHandle.createTypeElementHandle(ElementKind.CLASS, typeName);
-                    TypeElement te = (TypeElement) handle[0].resolve(controller);
-                    if (te != null) {
-                        String name = "set" + propertyName.replaceAll("-", "");
-                        for (ExecutableElement executableElement : ElementFilter.methodsIn(te.getEnclosedElements())) {
-                            if (name.equalsIgnoreCase(executableElement.getSimpleName().toString())) {
-                                handle[0] = ElementHandle.create(executableElement);
-                                break;
+        if (typeName != null) {
+            handle[0] = ElementHandle.createTypeElementHandle(ElementKind.CLASS, typeName);
+            if (cpInfo != null && propertyName != null) {
+                try {
+                    JavaSource.create(cpInfo).runUserActionTask(controller -> {
+                        if (cancel != null && cancel.get()) {
+                            return;
+                        }
+                        TypeElement te = (TypeElement) handle[0].resolve(controller);
+                        if (te != null) {
+                            String name = "set" + propertyName.replaceAll("-", "");
+                            for (ExecutableElement executableElement : ElementFilter.methodsIn(te.getEnclosedElements())) {
+                                if (name.equalsIgnoreCase(executableElement.getSimpleName().toString())) {
+                                    handle[0] = ElementHandle.create(executableElement);
+                                    break;
+                                }
                             }
                         }
-                    }
-                }, true);
-            } catch (IOException ex) {}
+                    }, true);
+                } catch (IOException ex) {}
+            }
         }
         return handle[0];
     }
@@ -135,15 +142,19 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
             final AtomicBoolean cancel = new AtomicBoolean();
             List<ConfigurationMetadataSource> sources = new ArrayList<>();
             ConfigurationMetadataProperty property = MicronautConfigUtilities.resolveProperty(doc, offset, null, sources);
-            if (property != null && !sources.isEmpty()) {
+            if (!sources.isEmpty()) {
                 ClasspathInfo cpInfo = ClasspathInfo.create(doc);
-                String typeName = sources.get(0).getType();
-                ElementHandle handle = getElementHandle(cpInfo, typeName, property.getName(), cancel);
-                if (handle != null) {
-                    CompletableFuture<ElementOpen.Location> future = ElementOpen.getLocation(cpInfo, handle, typeName.replace('.', '/') + ".class");
-                    return future.thenApply(location -> {
-                        return location != null ? HyperlinkLocationProvider.createHyperlinkLocation(location.getFileObject(), location.getStartOffset(), location.getEndOffset()) : null;
-                    });
+                for (ConfigurationMetadataSource source : sources) {
+                    if (property == null || source.getProperties().get(property.getId()) == property) {
+                        String typeName = source.getType();
+                        ElementHandle handle = getElementHandle(cpInfo, typeName, property != null ? property.getName() : null, cancel);
+                        if (handle != null) {
+                            CompletableFuture<ElementOpen.Location> future = ElementOpen.getLocation(cpInfo, handle, typeName.replace('.', '/') + ".class");
+                            return future.thenApply(location -> {
+                                return location != null ? HyperlinkLocationProvider.createHyperlinkLocation(location.getFileObject(), location.getStartOffset(), location.getEndOffset()) : null;
+                            });
+                        }
+                    }
                 }
             }
             return CompletableFuture.completedFuture(null);

@@ -96,15 +96,18 @@ public class MicronautConfigUtilities {
                                                                 String propertyName = getPropertyName(context);
                                                                 for (Map.Entry<String, ConfigurationMetadataGroup> groupEntry : MicronautConfigProperties.getGroups(project).entrySet()) {
                                                                     String groupKey = groupEntry.getKey();
+                                                                    if (groupKey.endsWith(".*")) {
+                                                                        groupKey = groupKey.substring(0, groupKey.length() - 2);
+                                                                    }
                                                                     if (Pattern.matches(groupKey.replaceAll("\\.", "\\\\.").replaceAll("\\*", "\\\\w*") + ".*", propertyName)) {
                                                                         ConfigurationMetadataGroup group = groupEntry.getValue();
+                                                                        if (sources != null) {
+                                                                            sources.addAll(group.getSources().values());
+                                                                        }
                                                                         for (Map.Entry<String, ConfigurationMetadataProperty> propertyEntry : group.getProperties().entrySet()) {
                                                                             String propertyKey = propertyEntry.getKey();
                                                                             if (Pattern.matches(propertyKey.replaceAll("\\.", "\\\\.").replaceAll("\\*", "\\\\w*"), propertyName)) {
                                                                                 property[0] = propertyEntry.getValue();
-                                                                                if (sources != null) {
-                                                                                    sources.addAll(group.getSources().values());
-                                                                                }
                                                                             }
                                                                         }
                                                                     }

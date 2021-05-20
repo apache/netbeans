@@ -155,7 +155,8 @@ class NbProjectInfoBuilder {
             'ivy-publish', 'antlr', \
             'org.springframework.boot', \
             'com.github.lkishalmi.gatling', \
-            'com.android.library', 'com.android.application']) {
+            'com.android.library', 'com.android.application',
+            "io.micronaut.application"]) {
             if (project.plugins.hasPlugin(plugin)) {
                 plugins.add(plugin);
             }

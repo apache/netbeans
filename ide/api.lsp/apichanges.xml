@@ -47,6 +47,21 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="HoverProvider">
+        <api name="LSP_API"/>
+        <summary>Adding Hover and HoverProvider</summary>
+        <version major="1" minor="2"/>
+        <date day="13" month="5" year="2021"/>
+        <author login="dbalek"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            A <code>Hover</code> class and <code>HoverProvider</code> interface introduced
+            that allows to resolve a hover information at a given document offset and
+            return its content.
+        </description>
+        <class package="org.netbeans.api.lsp" name="Hover"/>
+        <class package="org.netbeans.spi.lsp" name="HoverProvider"/>
+    </change>
     <change id="HyperlinkTypeDefLocationProvider">
         <api name="LSP_API"/>
         <summary>Adding HyperlinkTypeDefLocationProvider</summary>

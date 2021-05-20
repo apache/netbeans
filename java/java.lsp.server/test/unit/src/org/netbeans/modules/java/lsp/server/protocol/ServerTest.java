@@ -1240,6 +1240,7 @@ public class ServerTest extends NbTestCase {
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
         assertTrue(result.getCapabilities().getHoverProvider());
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
         Hover hover = server.getTextDocumentService().hover(new HoverParams(new TextDocumentIdentifier(toURI(src)), new Position(5, 10))).get();
         assertNotNull(hover);
         assertTrue(hover.getContents().isRight());

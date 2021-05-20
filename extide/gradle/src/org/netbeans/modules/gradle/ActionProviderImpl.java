@@ -76,7 +76,9 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
+import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
+import org.netbeans.modules.gradle.spi.actions.ProjectConfigurationSupport;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.support.ProjectOperations;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
@@ -163,8 +165,12 @@ public class ActionProviderImpl implements ActionProvider {
             }
             
         }
-        ActionMapping mapping = ActionToTaskUtils.getActiveMapping(command, project);
-        invokeProjectAction(project, mapping, context, false);
+        NbGradleProject gp = NbGradleProject.get(project);
+        GradleExecConfiguration execCfg = ProjectConfigurationSupport.getEffectiveConfiguration(gp, context);
+        ProjectConfigurationSupport.executeWithConfiguration(gp, execCfg, () -> {
+            ActionMapping mapping = ActionToTaskUtils.getActiveMapping(command, project, context);
+            invokeProjectAction2(project, mapping, execCfg, context, false);
+        });
     }
 
     @Override
@@ -238,13 +244,20 @@ public class ActionProviderImpl implements ActionProvider {
     }
 
     private static void invokeProjectAction(final Project project, final ActionMapping mapping, Lookup context, boolean showUI) {
+        NbGradleProject gp = NbGradleProject.get(project);
+        GradleExecConfiguration execCfg = ProjectConfigurationSupport.getEffectiveConfiguration(gp, context);
+        ProjectConfigurationSupport.executeWithConfiguration(gp, execCfg, () -> 
+                invokeProjectAction2(project, mapping, execCfg, context, showUI));
+    }
+    
+    private static void invokeProjectAction2(final Project project, final ActionMapping mapping, final GradleExecConfiguration execCfg, Lookup context, boolean showUI) {
         final String action = mapping.getName();
         String argLine = askInputArgs(mapping.getDisplayName(), mapping.getArgs());
         if (argLine == null) {
             return;
         }
         final StringWriter writer = new StringWriter();
-
+        final NbGradleProject gp = NbGradleProject.get(project);
         PrintWriter out = new PrintWriter(writer);
         Lookup ctx = project.getLookup().lookup(BeforeBuildActionHook.class).beforeAction(action, context, out);
 
@@ -312,13 +325,12 @@ public class ActionProviderImpl implements ActionProvider {
             final ActionProgress g = ActionProgress.start(context);
             final Lookup outerCtx = ctx;
             task.addTaskListener((Task t) -> {
-                try {
-                    InputOutput io = task.getInputOutput();
-                    try (OutputWriter out1 = (io == null ? InputOutput.NULL : io).getOut()) {
+                    try {
+                        OutputWriter out1 = task.getInputOutput().getOut();
                         boolean canReload = project.getLookup().lookup(BeforeReloadActionHook.class).beforeReload(action, outerCtx, task.result(), out1);
                         if (needReload && canReload) {
                             String[] reloadArgs = RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), outerCtx);
-                            RequestProcessor.Task reloadTask = prj.forceReloadProject(null, false, maxQualily, reloadArgs);
+                            RequestProcessor.Task reloadTask = prj.forceReloadProject(null, true, maxQualily, reloadArgs);
                             reloadTask.waitFinished();
                         }
                         project.getLookup().lookup(AfterBuildActionHook.class).afterAction(action, outerCtx, task.result(), out1);
@@ -326,13 +338,11 @@ public class ActionProviderImpl implements ActionProvider {
                             l.afterAction(action, outerCtx, task.result(), out1);
                         }
                     } finally {
-                        if (io != null) {
-                            io.getErr().close();
-                        }
+                        task.getInputOutput().getOut().close();
+                        task.getInputOutput().getErr().close();
+                        g.finished(task.result() == 0);
                     }
-                } finally {
-                    g.finished(task.result() == 0);
-                }
+                });
             });
         }
     }
@@ -342,7 +352,7 @@ public class ActionProviderImpl implements ActionProvider {
     }
 
     public static Action createCustomGradleAction(Project project, String name, String command, Lookup context, boolean showUI) {
-        ActionMapping mapping = ActionToTaskUtils.getActiveMapping(command, project);
+        ActionMapping mapping = ActionToTaskUtils.getActiveMapping(command, project, context);
         return new CustomAction(project, name, mapping, context, showUI);
     }
 

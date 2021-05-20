@@ -92,7 +92,7 @@ is the proper place.
             <compatibility addition="yes" semantic="compatible"/>
             <description>
                 <p>
-                    Services can be registered not also for a specific <i>maven plugin</i>
+                    Register services for a specific <i>maven plugin</i>
                     used in the project. See <a href="@TOP@/architecture-summary.html#layer-PluginLookup">PluginLookup</a>.
                 </p>
             </description>

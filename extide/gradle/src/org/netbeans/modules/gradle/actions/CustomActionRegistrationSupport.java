@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -31,11 +32,13 @@ import java.util.TreeMap;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
+import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.customizer.CustomActionMapping;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.openide.filesystems.FileObject;
 import org.openide.util.EditableProperties;
 import org.openide.util.Exceptions;
+import org.netbeans.modules.gradle.execute.ConfigurableActionProvider;
 
 /**
  *
@@ -45,17 +48,59 @@ public class CustomActionRegistrationSupport {
 
     public static final String ACTION_PROP_PREFIX = "action."; //NOI18N
 
-    final Map<String, CustomActionMapping> customActions = new TreeMap<>();
     final Project project;
+    final Map<String, ActionsHolder>  configHolders = new HashMap<>();
+    GradleExecConfiguration config;
+    Map<String, CustomActionMapping> customActions = new TreeMap<>();
+    
 
     public CustomActionRegistrationSupport(Project project) {
         this.project = project;
-        ProjectActionMappingProvider mappingProvider = project.getLookup().lookup(ProjectActionMappingProvider.class);
-        Set<String> customizedActions = mappingProvider.customizedActions();
-        customizedActions.forEach((action) -> {
-            CustomActionMapping mapping = new CustomActionMapping(mappingProvider.findMapping(action));
-            customActions.put(action, mapping);
-        });
+        config = ActionToTaskUtils.findProjectConfiguration(project);
+        loadCustomizedActions(config);
+    }
+    
+    class ActionsHolder {
+        final GradleExecConfiguration config;
+        Map<String, CustomActionMapping> customActions = new TreeMap<>();
+
+        public ActionsHolder(GradleExecConfiguration config) {
+            this.config = config;
+        }
+    }
+    
+    private void loadCustomizedActions(GradleExecConfiguration c) {
+        ActionsHolder h = configHolders.get(c.getId());
+        if (h != null) {
+            customActions = h.customActions;
+            return;
+        } 
+        final ActionsHolder nh = new ActionsHolder(c);
+        
+        ConfigurableActionProvider configP = project.getLookup().lookup(ConfigurableActionProvider.class);
+        ProjectActionMappingProvider actionP = null;
+        
+        if (configP != null) {
+            actionP = configP.findActionProvider(c.getId());
+        }
+        if (actionP == null) {
+            actionP = project.getLookup().lookup(ProjectActionMappingProvider.class);
+        }
+        if (actionP != null) {
+            ProjectActionMappingProvider fa = actionP;
+            Set<String> customizedActions = actionP.customizedActions();
+            customizedActions.forEach((action) -> {
+                CustomActionMapping mapping = new CustomActionMapping(fa.findMapping(action));
+                nh.customActions.put(action, mapping);
+            });
+        }
+        configHolders.put(c.getId(), nh);
+        customActions = h.customActions;
+    }
+    
+    public void setActiveConfiguration(GradleExecConfiguration cfg) {
+        this.config = cfg;
+        loadCustomizedActions(cfg);
     }
 
     public String findNewCustonActionId() {

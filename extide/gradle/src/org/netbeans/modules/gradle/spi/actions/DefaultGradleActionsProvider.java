@@ -19,13 +19,27 @@
 
 package org.netbeans.modules.gradle.spi.actions;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import javax.xml.parsers.ParserConfigurationException;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.actions.ActionMappingScanner;
+import org.netbeans.modules.gradle.api.execute.ActionMapping;
+import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
+import org.netbeans.spi.project.LookupProvider;
+import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.lookup.Lookups;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -55,4 +69,69 @@ public abstract class DefaultGradleActionsProvider implements GradleActionsProvi
         return getClass().getResourceAsStream("action-mapping.xml"); //NOI18N
     }
 
+    static LookupProvider fromLayer(FileObject fo) throws IOException {
+        Object r = fo.getAttribute("resource");
+        if (!(r instanceof String)) {
+            throw new IllegalArgumentException("Resource URL not found: " + fo);
+        }
+        URL u = new URL(r.toString());
+        return new LookupProvider() {
+            @Override
+            public Lookup createAdditionalLookup(Lookup baseContext) {
+                return Lookups.fixed(new ResourceActionsProvider(u));
+            }
+        };
+    }
+    
+    private static class ResourceActionsProvider implements GradleActionsProvider {
+        private final URL resourceURL;
+        
+        // @GuardedBy(this)
+        private Set<String> actions;
+
+        public ResourceActionsProvider(URL resourceURL) {
+            this.resourceURL = resourceURL;
+        }
+        
+        @Override
+        public boolean isActionEnabled(String action, Project project, Lookup context) {
+            return getSupportedActions().contains(action);
+        }
+
+        @Override
+        public Set<String> getSupportedActions() {
+            Set<String> ids;
+            if (actions != null) {
+                return actions;
+            }
+            
+            try {
+                Map<GradleExecConfiguration, Set<ActionMapping>> mapp = new HashMap<>();
+                Set<ActionMapping> def = ActionMappingScanner.loadMappings(defaultActionMapConfig(), mapp);
+                Set<String> nids = new HashSet<>();
+                def.forEach(a -> nids.add(a.getName()));
+                for (Set<ActionMapping> m : mapp.values()) {
+                    m.forEach(a -> nids.add(a.getName()));
+                }
+                ids = nids;
+            } catch (SAXException | IOException | ParserConfigurationException ex) {
+                Exceptions.printStackTrace(ex);
+                ids = new HashSet<>();
+            }
+            synchronized (this) {
+                actions = ids;
+                return ids;
+            }
+        }
+
+        @Override
+        public InputStream defaultActionMapConfig() {
+            try {
+                return resourceURL.openStream();
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+                return new ByteArrayInputStream(new byte[0]);
+            }
+        }
+    }
 }

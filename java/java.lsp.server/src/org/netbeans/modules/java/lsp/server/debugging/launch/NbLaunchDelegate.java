@@ -22,6 +22,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -121,8 +122,31 @@ public abstract class NbLaunchDelegate {
             }
         };
         if (toRun != null) {
+            class W extends Writer {
+                @Override
+                public void write(char[] cbuf, int off, int len) throws IOException {
+                    write(String.copyValueOf(cbuf, off, len));
+                }
+
+                @Override
+                public void write(String str) throws IOException {
+                    ioContext.stdIn(str);
+                }
+
+                @Override
+                public void flush() throws IOException {
+                    // nop 
+                }
+
+                @Override
+                public void close() throws IOException {
+                    // nop
+                }
+            }
+            W writer = new W();
             CompletableFuture<Pair<ActionProvider, String>> commandFuture = findTargetWithPossibleRebuild(toRun, singleMethod, debug, testRun, ioContext);
             commandFuture.thenAccept((providerAndCommand) -> {
+                context.setInputSinkProvider(() -> writer);
                 if (debug) {
                     DebuggerManager.getDebuggerManager().addDebuggerListener(new DebuggerManagerAdapter() {
                         @Override

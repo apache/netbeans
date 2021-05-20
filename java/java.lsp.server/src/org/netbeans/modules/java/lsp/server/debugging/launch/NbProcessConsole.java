@@ -18,8 +18,15 @@
  */
 package org.netbeans.modules.java.lsp.server.debugging.launch;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.util.function.Consumer;
 import org.netbeans.modules.java.lsp.server.ui.IOContext;
+import org.openide.util.Exceptions;
 
 public final class NbProcessConsole extends IOContext {
 
@@ -27,7 +34,11 @@ public final class NbProcessConsole extends IOContext {
     private static final String STDERR = "stderr";
     private final Consumer<ConsoleMessage> messageConsumer;
     private boolean stopped;
-
+    
+    private final PipedOutputStream inputSource = new PipedOutputStream();
+    private BufferedWriter inputBuffer;
+    private PipedInputStream inputSink;
+    
     /**
      * Constructor.
      * @param process
@@ -46,6 +57,34 @@ public final class NbProcessConsole extends IOContext {
      */
     public void stop() {
         stopped = true;
+        synchronized (this) {
+            if (inputSink != null) {
+                try {
+                    inputSink.close();
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
+    }
+    
+    protected InputStream getStdIn() throws IOException {
+        synchronized (this) {
+            if (inputSink == null) {
+                inputSink = new PipedInputStream(inputSource);
+            }
+        }
+        return inputSink;
+    }
+    
+    public void stdIn(String line) throws IOException {
+        synchronized (this) {
+            if (inputBuffer == null) {
+                inputBuffer = new BufferedWriter(new OutputStreamWriter(inputSource, "UTF-8"));
+            }
+        }
+        inputBuffer.write(line);
+        inputBuffer.newLine();
     }
 
     @Override
@@ -55,7 +94,7 @@ public final class NbProcessConsole extends IOContext {
     }
 
     @Override
-    protected void stdErr(String line) {
+    public void stdErr(String line) {
         ConsoleMessage msg = new ConsoleMessage(line, STDERR);
         messageConsumer.accept(msg);
     }

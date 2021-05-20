@@ -20,6 +20,7 @@ package org.netbeans.modules.java.lsp.server.ui;
 
 import java.io.CharArrayReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
@@ -29,6 +30,7 @@ import org.netbeans.api.io.OutputColor;
 import org.netbeans.api.io.ShowOperation;
 import org.netbeans.modules.java.lsp.server.ui.AbstractLspInputOutputProvider.LspIO;
 import org.netbeans.spi.io.InputOutputProvider;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
 public abstract class AbstractLspInputOutputProvider implements InputOutputProvider<LspIO, PrintWriter, Void, Void> {
@@ -141,11 +143,18 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
             this.lookup = lookup;
             this.out = new PrintWriter(new LspWriter(true));
             this.err = new PrintWriter(new LspWriter(false));
-            this.in = new CharArrayReader(new char[0]) {
-                @Override
-                public void close() {
-                }
-            };
+            Reader in;
+            try {
+                in = new InputStreamReader(ioCtx.getStdIn(), "UTF-8");
+            } catch (IOException ex) {
+                err.write(ex.getLocalizedMessage());
+                in = new CharArrayReader(new char[0]) {
+                    @Override
+                    public void close() {
+                    }
+                };
+            }
+            this.in = in;
         }
 
         private final class LspWriter extends Writer {

@@ -30,6 +30,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -60,6 +61,7 @@ import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
+import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -133,6 +135,75 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
                 progressOfCompilation.checkStatus();
                 return progressOfCompilation.getFinishFuture();
+            }
+            case Server.JAVA_GET_PROJECT_SOURCE_ROOTS: {
+                String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                String type = params.getArguments().size() > 1 ? ((JsonPrimitive) params.getArguments().get(1)).getAsString() : JavaProjectConstants.SOURCES_TYPE_JAVA;
+                FileObject file;
+                try {
+                    file = URLMapper.findFileObject(new URL(uri));
+                } catch (MalformedURLException ex) {
+                    Exceptions.printStackTrace(ex);
+                    return CompletableFuture.completedFuture(Collections.emptyList());
+                }
+                if (file == null) {
+                    return CompletableFuture.completedFuture(Collections.emptyList());
+                }
+                return server.asyncOpenFileOwner(file).thenApply(project -> {
+                    List<String> roots = new ArrayList<>();
+                    if (project != null) {
+                        for(SourceGroup sourceGroup : ProjectUtils.getSources(project).getSourceGroups(type)) {
+                            roots.add(Utils.toUri(sourceGroup.getRootFolder()));
+                        }
+                    }
+                    return roots;
+                });
+            }
+            case Server.JAVA_GET_PROJECT_CLASSPATH: {
+                String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                ClasspathInfo.PathKind kind = params.getArguments().size() > 1 ? ClasspathInfo.PathKind.valueOf(((JsonPrimitive) params.getArguments().get(1)).getAsString()) : ClasspathInfo.PathKind.COMPILE;
+                FileObject file;
+                try {
+                    file = URLMapper.findFileObject(new URL(uri));
+                } catch (MalformedURLException ex) {
+                    Exceptions.printStackTrace(ex);
+                    return CompletableFuture.completedFuture(Collections.emptyList());
+                }
+                if (file == null) {
+                    return CompletableFuture.completedFuture(Collections.emptyList());
+                }
+                return server.asyncOpenFileOwner(file).thenApply(project -> {
+                    List<String> roots = new ArrayList<>();
+                    if (project != null) {
+                        for (FileObject root : ClasspathInfo.create(project.getProjectDirectory()).getClassPath(kind).getRoots()) {
+                            roots.add(Utils.toUri(root));
+                        }
+                    }
+                    return roots;
+                });
+            }
+            case Server.JAVA_GET_PROJECT_PACKAGES: {
+                String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                boolean srcOnly = params.getArguments().size() > 1 ? ((JsonPrimitive) params.getArguments().get(1)).getAsBoolean() : false;
+                FileObject file;
+                try {
+                    file = URLMapper.findFileObject(new URL(uri));
+                } catch (MalformedURLException ex) {
+                    Exceptions.printStackTrace(ex);
+                    return CompletableFuture.completedFuture(Collections.emptyList());
+                }
+                if (file == null) {
+                    return CompletableFuture.completedFuture(Collections.emptyList());
+                }
+                return server.asyncOpenFileOwner(file).thenApply(project -> {
+                    if (project != null) {
+                        EnumSet<ClassIndex.SearchScope> scope = srcOnly ? EnumSet.of(ClassIndex.SearchScope.SOURCE) : EnumSet.allOf(ClassIndex.SearchScope.class);
+                        ArrayList<String> packages = new ArrayList<>(ClasspathInfo.create(project.getProjectDirectory()).getClassIndex().getPackageNames("", false, scope));
+                        Collections.sort(packages);
+                        return packages;
+                    }
+                    return Collections.emptyList();
+                });
             }
             case Server.JAVA_LOAD_WORKSPACE_TESTS: {
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();

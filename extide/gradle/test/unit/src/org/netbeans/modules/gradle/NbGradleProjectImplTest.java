@@ -21,6 +21,7 @@ package org.netbeans.modules.gradle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -278,7 +279,10 @@ public class NbGradleProjectImplTest extends AbstractGradleProjectTestCase {
                 FileObject cp = FileUtil.createFolder(to, x.getNameExt());
                 copy(x, cp);
             } else {
-                x.copy(to, x.getName(), x.getExt());
+                FileObject f = x.copy(to, x.getName(), x.getExt());
+                // see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8177809
+                Files.setLastModifiedTime(FileUtil.toFile(f).toPath(),
+                        Files.getLastModifiedTime(FileUtil.toFile(x).toPath()));
             }
         }
     }

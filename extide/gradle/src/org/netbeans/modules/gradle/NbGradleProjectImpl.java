@@ -75,7 +75,7 @@ import org.openide.util.lookup.ProxyLookup;
  */
 public final class NbGradleProjectImpl implements Project {
 
-    private static final Logger LOG = Logger.getLogger(NbGradleProjectImpl.class.getName());
+    static final Logger LOG = Logger.getLogger(NbGradleProjectImpl.class.getName());
 
     public static final RequestProcessor RELOAD_RP = new RequestProcessor("Gradle project reloading", 1); //NOI18
     private final RequestProcessor.Task reloadTask = RELOAD_RP.create(new Runnable() {
@@ -260,9 +260,11 @@ public final class NbGradleProjectImpl implements Project {
             GradleProject c = project;
             if (c != null) {
                 if (c.getQuality().atLeast(aim)) {
+                    LOG.log(Level.FINER, "Asked for {0}, got {1} already: ", new Object[] { aim, c.getQuality() });
                     return c;
                 }
                 if (!force && attemptedQuality.atLeast(aim)) {
+                    LOG.log(Level.FINER, "Attempted quality was {0}, ignoring request to get {1}", new Object[] { attemptedQuality, aim });
                     return c;
                 }
             }
@@ -390,26 +392,32 @@ public final class NbGradleProjectImpl implements Project {
 
         int s = currentSerial.incrementAndGet();
         // do not block during project load.
+        LOG.log(Level.FINER, "Starting project {2} load, serial {0}, attempted quality {1}", new Object[] { s, aim, this });
         GradleProject prj = loader.loadProject(aim, desc, ignoreCache, interactive, args);
         synchronized (this) {
             if (loadedProjectSerial > s && project != null) {
                 // the load started LATER than this one: return that project, and do not replace anything as this.project is newer
+                LOG.log(Level.FINER, "Future finished project load, returing {0} throwing away {1}", new Object[] { project, prj });
                 return CompletableFuture.completedFuture(this.project);
             }
             loadedProjectSerial = s;
             this.attemptedQuality = aim;
             if (project != null && !force && project.getQuality().atLeast(prj.getQuality())) {
                 // avoid replacing a project when nothing has changed.
+                LOG.log(Level.FINER, "Current project {1} sufficient for attempted quality {0}", new Object[] { this.project, aim });
                 return CompletableFuture.completedFuture(this.project);
             }
+            LOG.log(Level.FINER, "Replacing {0} with {1}, attempted quality {2}", new Object[] { this.project, prj, attemptedQuality });
             this.project = prj;
         }
         // notify the project has been changed.
         if (sync || RELOAD_RP.isRequestProcessorThread()) {
+            LOG.log(Level.FINER, "Firing changes/reload synchronously");
             ACCESSOR.doFireReload(watcher);
             return CompletableFuture.completedFuture(prj);
         } else {
             CompletableFuture<GradleProject> f = new CompletableFuture<>();
+            LOG.log(Level.FINER, "Firing changes/reload in RP");
             RELOAD_RP.post(() -> callAccessorReload(f, prj));
             return f;
         }

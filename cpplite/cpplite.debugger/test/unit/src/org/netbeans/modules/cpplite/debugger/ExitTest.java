@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.cpplite.debugger;
 
 import java.io.File;
@@ -24,10 +23,11 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import junit.framework.Test;
-
+import static junit.framework.TestCase.assertNotNull;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.junit.NbModuleSuite;
+import static org.netbeans.modules.cpplite.debugger.AbstractDebugTest.compileCPP;
 import org.netbeans.modules.cpplite.debugger.breakpoints.CPPLiteBreakpoint;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
@@ -35,65 +35,60 @@ import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 
 /**
- * Tests C/C++ debugger stepping actions: step in, step out and step over.
  *
- * @author Jan Jancura
+ * @author Martin Entlicher
  */
-public class StepTest extends AbstractDebugTest {
+public class ExitTest extends AbstractDebugTest {
 
-    public StepTest (String s) {
-        super (s);
+    public ExitTest(String s) {
+        super(s);
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        clearWorkDir();
-    }
-
-    public void testStepOver () throws Exception {
+    public void testAppExit () throws Exception {
         File wd = getWorkDir();
-        FileObject source = FileUtil.createData(FileUtil.toFileObject(wd), "main.cpp");
+        for (int exitCode = 0; exitCode <= 200; exitCode += 100) {
+            FileObject source = FileUtil.createData(FileUtil.toFileObject(wd), "mainExit" + exitCode + ".cpp");
+            try (OutputStream os = source.getOutputStream();
+                Writer w = new OutputStreamWriter(os)) {
+                w.append("int main(int argc, char** args) {\n" +
+                         "    int N = 100;\n" +
+                         "    return " + exitCode + ";\n" +
+                         "}");
+            }
+            compileCPP("mainExit" + exitCode, wd);
+            LineCookie lc = DataObject.find(source).getLookup().lookup(LineCookie.class);
+            assertNotNull(lc);
+            DebuggerManager.getDebuggerManager().addBreakpoint(CPPLiteBreakpoint.create(lc.getLineSet().getCurrent(4)));
+            startDebugging("mainExit" + exitCode, wd);
+            assertEquals(exitCode, waitAppProcessExit());
+        }
+    }
+
+    public void testAppKill () throws Exception {
+        File wd = getWorkDir();
+        FileObject source = FileUtil.createData(FileUtil.toFileObject(wd), "mainKill.cpp");
         try (OutputStream os = source.getOutputStream();
             Writer w = new OutputStreamWriter(os)) {
-            w.append("#include <iostream>\n" +
-                     "\n" +
-                     "void test(void) {\n" +
-                     "    std::cerr << \"Hello, from err!\" << std::endl;\n" +
-                     "    std::cout << \"Hello, second time!\" << std::endl;\n" +
-                     "}\n" +
-                     "\n" +
-                     "int main(void) {\n" +
-                     "    int i = 42;\n" +
-                     "    std::cout << \"Hello, world!\" << std::endl;\n" +
-                     "    test();\n" +
-                     "    std::cout << \"Hello, second time!\" << std::endl;\n" +
+            w.append("int main(int argc, char** args) {\n" +
+                     "    for(;;);\n" +
                      "}");
         }
-        compileCPP("main", wd);
+        compileCPP("mainKill", wd);
         LineCookie lc = DataObject.find(source).getLookup().lookup(LineCookie.class);
         assertNotNull(lc);
         DebuggerManager.getDebuggerManager().addBreakpoint(CPPLiteBreakpoint.create(lc.getLineSet().getCurrent(4)));
-        startDebugging("main", wd);
-
-        waitSuspended(1);
-
-        assertStoppedAt(source.toURI(), 5);
-
-        engine.getActionsManager().doAction(ActionsManager.ACTION_STEP_OVER);
-
-        waitResumed(1);
-
-        waitSuspended(2);
-
-        assertStoppedAt(source.toURI(), 6);
-
-        engine.getActionsManager().doAction(ActionsManager.ACTION_CONTINUE);
+        startDebugging("mainKill", wd);
+        assertTrue(isAppProcessAlive());
+        Thread.sleep(10);
+        assertTrue(isAppProcessAlive());
+        engine.getActionsManager().doAction(ActionsManager.ACTION_KILL);
         assertEquals(0, waitAppProcessExit());
+        assertFalse(isAppProcessAlive());
     }
 
     public static Test suite() {
         return NbModuleSuite.emptyConfiguration()
-                            .addTest(StepTest.class)
+                            .addTest(ExitTest.class)
                             .enableModules(".*", ".*")
                             .gui(false)
                             .suite();

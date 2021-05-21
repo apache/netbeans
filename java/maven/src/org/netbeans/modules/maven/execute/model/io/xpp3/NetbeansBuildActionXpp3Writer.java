@@ -197,6 +197,9 @@ public class NetbeansBuildActionXpp3Writer {
     throws java.io.IOException {
         serializer.startTag( NAMESPACE, tagName);
         serializer.startTag( NAMESPACE, "id" ).text( p.getId()).endTag( NAMESPACE, "id");
+        if (p.getDisplayName() != null) {
+            serializer.startTag(NAMESPACE, "displayName" ).text( p.getId()).endTag( NAMESPACE, "displayName");  // NOI18N
+        }
         serializer.startTag( NAMESPACE, "actions");
         for (NetbeansActionMapping m : p.getActions()) {
             writeNetbeansActionMapping(m, "action", serializer);

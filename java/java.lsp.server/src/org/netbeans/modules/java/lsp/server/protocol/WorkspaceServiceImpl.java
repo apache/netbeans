@@ -88,6 +88,8 @@ import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.spi.jumpto.type.SearchType;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.ProjectConfiguration;
+import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
@@ -171,6 +173,20 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 Position pos = gson.fromJson(gson.toJson(params.getArguments().get(1)), Position.class);
                 return (CompletableFuture)((TextDocumentServiceImpl)server.getTextDocumentService()).superImplementations(uri, pos);
+                
+            case Server.JAVA_FIND_CONFIGURATIONS: {
+                String fileUri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                
+                FileObject file;
+                try {
+                    file = URLMapper.findFileObject(new URL(fileUri));
+                } catch (MalformedURLException ex) {
+                    Exceptions.printStackTrace(ex);
+                    return CompletableFuture.completedFuture(Collections.emptyList());
+                }
+
+                return findProjectConfigurations(file);
+            }
             default:
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     if (codeGenerator.getCommands().contains(command)) {
@@ -179,6 +195,20 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
         }
         throw new UnsupportedOperationException("Command not supported: " + params.getCommand());
+    }
+    
+    private CompletableFuture<Object> findProjectConfigurations(FileObject ownedFile) {
+        return server.asyncOpenFileOwner(ownedFile).thenApply(p -> {
+            if (p == null) {
+                return CompletableFuture.completedFuture(Collections.emptyList());
+            }
+            ProjectConfigurationProvider<ProjectConfiguration> provider = p.getLookup().lookup(ProjectConfigurationProvider.class);
+            List<String> configDispNames = new ArrayList<>();
+            for (ProjectConfiguration c : provider.getConfigurations()) {
+                configDispNames.add(c.getDisplayName());
+            }
+            return configDispNames;
+        });
     }
 
     private CompletableFuture<Set<URL>> getTestRootURLs(Project prj) {

@@ -231,7 +231,7 @@ public abstract class AbstractProjectClassPathImpl implements ClassPathImplement
                         LOGGER.log(Level.FINE, "swapped {0} → {1}", new Object[] {f, f2});
                         return f2;
                     } else {
-                        LOGGER.log(Level.FINE, "did not find predicted {0}", f);
+                        LOGGER.log(Level.FINE, "did not find predicted {0}", f2);
                     }
                 } else {
                     LOGGER.log(Level.FINE, "failed to match file pattern for {0} from {1}", new Object[] {f, art});

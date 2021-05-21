@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.gradle.loaders;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.modules.gradle.GradleProject;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FALLBACK;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
@@ -28,7 +30,8 @@ import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
  * @author lkishalmi
  */
 public class DiskCacheProjectLoader extends AbstractProjectLoader {
-
+    private static final Logger LOG = Logger.getLogger(DiskCacheProjectLoader.class.getName());
+    
     DiskCacheProjectLoader(ReloadContext ctx) {
         super(ctx);
     }
@@ -38,6 +41,7 @@ public class DiskCacheProjectLoader extends AbstractProjectLoader {
         ProjectInfoDiskCache cache = ProjectInfoDiskCache.get(ctx.project.getGradleFiles());
         if (cache.isCompatible()) {
             GradleProject prev = createGradleProject(cache.loadData());
+            LOG.log(Level.FINER, "Loaded from cache: {0}, valid: {1}", new Object[] { prev, cache.isValid() });
             if (cache.isValid()) {
                 updateSubDirectoryCache(prev);
                 return prev;

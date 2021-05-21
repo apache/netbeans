@@ -135,6 +135,7 @@ public class BreakpointsTest extends AbstractDebugTest {
         waitResumed(6);
 
         engine.getActionsManager().doAction(ActionsManager.ACTION_KILL);
+        assertEquals(0, waitAppProcessExit());
     }
 
     public static Test suite() {

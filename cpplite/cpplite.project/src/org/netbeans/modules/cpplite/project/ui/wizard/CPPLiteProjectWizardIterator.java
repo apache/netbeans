@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.cpplite.project.ui.wizard;
 
-import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -35,7 +34,6 @@ import org.netbeans.modules.cpplite.project.BuildConfiguration;
 import org.netbeans.modules.cpplite.project.CPPLiteProject;
 import static org.netbeans.modules.cpplite.project.CPPLiteProject.KEY_COMPILE_COMMANDS;
 import static org.netbeans.modules.cpplite.project.CPPLiteProject.getBuildPreferences;
-import static org.netbeans.modules.cpplite.project.CPPLiteProject.getRootPreferences;
 import org.netbeans.modules.cpplite.project.ui.Build;
 import org.netbeans.modules.cpplite.project.ui.Editor;
 import org.netbeans.spi.project.ActionProvider;
@@ -76,11 +74,11 @@ public class CPPLiteProjectWizardIterator implements WizardDescriptor.Instantiat
     @Override
     public Set instantiate() throws IOException {
         CPPLiteProjectSettings settings = CPPLiteProjectSettings.get(wizard);
-        FileObject projectDirectory = FileUtil.toFileObject(new File(settings.projectPath));
+        FileObject projectDirectory = FileUtil.toFileObject(new File(settings.getProjectPath()));
         Preferences prefs = CPPLiteProject.getRootPreferences(projectDirectory);
         prefs.putBoolean(CPPLiteProject.KEY_IS_PROJECT, true);
         settings.getBuildConfig().save(getBuildPreferences(projectDirectory));
-        getRootPreferences(projectDirectory).put(KEY_COMPILE_COMMANDS, settings.getEditorConfigPath());
+        prefs.put(KEY_COMPILE_COMMANDS, settings.getEditorConfigPath());
         return Collections.singleton(projectDirectory);
     }
 

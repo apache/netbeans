@@ -1,0 +1,3 @@
+class |>MARK_OCCURRENCES:B^ar<| {
+    |>MARK_OCCURRENCES:Bar<|,
+$bar = new |>MARK_OCCURRENCES:Bar<|();

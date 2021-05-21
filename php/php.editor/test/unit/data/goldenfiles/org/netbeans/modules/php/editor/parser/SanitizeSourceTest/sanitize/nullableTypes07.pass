@@ -1,0 +1,46 @@
+<Program start='0' end='113'>
+    <Comments>
+    </Comments>
+    <Statements>
+        <NamespaceDeclaration start='7' end='112' isBracketed='false'>
+            <NamespaceName start='17' end='23' isCurrent='false' isGlobal='false'>
+                <Identifier start='17' end='19' name='My'/>
+                <Identifier start='20' end='23' name='Sub'/>
+            </NamespaceName>
+            <Block start='24' end='112' isCurly='true'>
+                <InterfaceDeclaration start='26' end='112'>
+                    <Name>
+                        <Identifier start='36' end='62' name='NullableTypesInterfaceTest'/>
+                    </Name>
+                    <Block start='63' end='112' isCurly='true'>
+                        <MethodDeclaration start='69' end='110' modifiers='public'>
+                            <FunctionDeclaration start='76' end='110' isReference='false'>
+                                <Identifier start='85' end='91' name='mytest'/>
+                                <FormalParameters>
+                                    <FormalParameter start='92' end='105' isMandatory='true' isVariadic='false'>
+                                        <ParametrType>
+                                            <NullableType start='92' end='99'>
+                                                <NamespaceName start='93' end='99' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='93' end='99' name='string'/>
+                                                </NamespaceName>
+                                            </NullableType>
+                                        </ParametrType>
+                                        <ParametrName>
+                                            <Variable start='100' end='105' isDollared='true'>
+                                                <Identifier start='101' end='105' name='test'/>
+                                            </Variable>
+                                        </ParametrName>
+                                        <DefaultValue>
+                                        </DefaultValue>
+                                    </FormalParameter>
+                                </FormalParameters>
+                                <Block start='109' end='110' isCurly='flase'>
+                                </Block>
+                            </FunctionDeclaration>
+                        </MethodDeclaration>
+                    </Block>
+                </InterfaceDeclaration>
+            </Block>
+        </NamespaceDeclaration>
+    </Statements>
+</Program>

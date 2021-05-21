@@ -1,0 +1,59 @@
+    function formalParams($first, $second) {}
+                                   ------
+HINT:Variable $first seems to be unused in its scope
+HINT:Variable $second seems to be unused in its scope
+$simpleUnused;
+ ------------
+HINT:Variable $simpleUnused seems to be unused in its scope
+$result = ($instanceUsed instanceof Foo);
+ ------
+HINT:Variable $result seems to be unused in its scope
+$cloned = clone $c;
+ ------
+HINT:Variable $cloned seems to be unused in its scope
+$casted = (int) $flt;
+ ------
+HINT:Variable $casted seems to be unused in its scope
+$assign = $rightUsed;
+ ------
+HINT:Variable $assign seems to be unused in its scope
+$condRes = $cond ? $true : $false;
+ -------
+HINT:Variable $condRes seems to be unused in its scope
+$cls = new $clsName($prm);
+ ---
+HINT:Variable $cls seems to be unused in its scope
+foreach ($arrayUsed as $key => $value) {
+                                -----
+HINT:Variable $key seems to be unused in its scope
+HINT:Variable $value seems to be unused in its scope
+$fnc = function($formUsed) use($lexUsed) {};
+                                -------
+HINT:Variable $fnc seems to be unused in its scope
+HINT:Variable $formUsed seems to be unused in its scope
+HINT:Variable $lexUsed seems to be unused in its scope
+function($param1) use ($field1) {return $field1;};
+          ------
+HINT:Variable $param1 seems to be unused in its scope
+function($param11) use ($field11) {return $param11;};
+                         -------
+HINT:Variable $field11 seems to be unused in its scope
+    $index = 1;
+     -----
+HINT:Variable $index seems to be unused in its scope
+    function ($index) use ($used) {};
+                            ----
+HINT:Variable $index seems to be unused in its scope
+HINT:Variable $used seems to be unused in its scope
+    function ($index) { };
+               -----
+HINT:Variable $index seems to be unused in its scope
+    function ($index) { };
+               -----
+HINT:Variable $index seems to be unused in its scope
+    function ($index) { };
+               -----
+HINT:Variable $index seems to be unused in its scope
+    function () { $index = 5; };
+                   -----
+HINT:Variable $index seems to be unused in its scope

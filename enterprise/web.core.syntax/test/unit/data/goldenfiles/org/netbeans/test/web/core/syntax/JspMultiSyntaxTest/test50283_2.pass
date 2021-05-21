@@ -1,0 +1,6 @@
+'token image' [offset, length]; tokenID name; tokenID id; token category name; <list of token context names>
+--------------------
+
+'</ jsp:element' [0, 14]; error; 2; -; JspTagTokenContext, JspMultiTokenContext
+' ' [14, 1]; whitespace; 11; -; JspTagTokenContext, JspMultiTokenContext
+'>' [15, 1]; symbol; 4; -; JspTagTokenContext, JspMultiTokenContext

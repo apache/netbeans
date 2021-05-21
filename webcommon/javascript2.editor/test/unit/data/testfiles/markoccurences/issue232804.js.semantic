@@ -1,0 +1,16 @@
+(function () {
+var |>CLASS:testWith02<| = {
+    |>CLASS:app<| : {
+        |>FIELD:name<|: "some name",
+        |>FIELD:description<|: "some description",
+        |>METHOD:getUsages<| : function() { return 0;}
+        
+    }
+    
+}
+   
+with (testWith02) {
+    app.|>FIELD:description<| = "new description";
+    |>GLOBAL:console<|.log(app.|>FIELD:description<|);
+}
+})();

@@ -1,0 +1,4 @@
+$|>MARK_OCCURRENCES:references<| = [];
+$anon2 = function() use (&$|>MARK_OCCURRENCES:reference^s<|) {
+    $|>MARK_OCCURRENCES:references<|[0] = [1, 2, 3];
+var_dump($|>MARK_OCCURRENCES:references<|);

@@ -1,0 +1,866 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+    Copyright (c) 2010 Oracle and/or its affiliates. All rights reserved.
+
+    The contents of this file are subject to the terms of either the GNU
+    General Public License Version 2 only ("GPL") or the Common Development
+    and Distribution License("CDDL") (collectively, the "License").  You
+    may not use this file except in compliance with the License.  You can
+    obtain a copy of the License at
+    https://glassfish.dev.java.net/public/CDDL+GPL_1_1.html
+    or packager/legal/LICENSE.txt.  See the License for the specific
+    language governing permissions and limitations under the License.
+
+    When distributing the software, include this License Header Notice in each
+    file and include the License file at packager/legal/LICENSE.txt.
+
+    GPL Classpath Exception:
+    Oracle designates this particular file as subject to the "Classpath"
+    exception as provided by Oracle in the GPL Version 2 section of the License
+    file that accompanied this code.
+
+    Modifications:
+    If applicable, add the following below the License Header, with the fields
+    enclosed by brackets [] replaced by your own identifying information:
+    "Portions Copyright [year] [name of copyright owner]"
+
+    Contributor(s):
+    If you wish your version of this file to be governed by only the CDDL or
+    only the GPL Version 2, indicate your decision by adding "[Contributor]
+    elects to include this software in this distribution under the [CDDL or GPL
+    Version 2] license."  If you don't indicate a single choice of license, a
+    recipient has the option to distribute your version of this file under
+    either the CDDL, the GPL Version 2 or to extend the choice of license to
+    its licensees as provided above.  However, if you add GPL Version 2 code
+    and therefore, elected the GPL Version 2 license, then the option applies
+    only if the new code is made subject to such option by the copyright
+    holder.
+
+-->
+
+<!--  
+  A resources instance document referring to this DTD should have a DOCTYPE as follows:
+ <!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">-->
+<!-- ENTITIES -->
+<!-- boolean
+
+  Used in:
+    admin-object-resource, connector-connection-pool,                 
+    connector-resource, custom-resource, external-jndi-resource,      
+    jdbc-connection-pool, jdbc-resource, mail-resource,
+    work-security-map              
+-->
+<!ENTITY % boolean "(yes | no | on | off | 1 | 0 | true | false)">
+
+<!-- isolation
+
+  Used in:
+    jdbc-connection-pool                                              
+-->
+<!ENTITY % isolation
+    "(read-uncommitted | read-committed | repeatable-read | serializable)">    
+
+
+<!-- object-type
+    defines the type of the resource. It can be:                      
+    system-all                                                                 
+        These are system resources for all instances and DAS          
+    system-admin                                                               
+        These are system resources only in DAS                        
+    system-instance                                                            
+        These are system resources only in instances (and not DAS)    
+    user                                                                       
+        User resources (This is the default for all elements)         
+
+  Used in:
+    admin-object-resource, connector-resource, custom-resource,       
+    external-jndi-resource, jdbc-resource, mail-resource,             
+    resource-adapter-config, work-security-map     
+-->
+<!ENTITY % object-type "(system-all | system-admin | system-instance | user)">
+
+<!-- ELEMENTS -->
+
+<!-- resources
+    J2EE Applications look up resources registered with the           
+    Application server, using portable JNDI names.                    
+-->
+<!ELEMENT resources
+    ((custom-resource | external-jndi-resource | jdbc-resource | mail-resource 
+    | admin-object-resource | connector-resource
+    | resource-adapter-config | jdbc-connection-pool      
+    | connector-connection-pool | work-security-map)*)>                                              
+
+
+
+<!-- description
+    Textual description of a configured entity                        
+
+  Used in:
+    admin-object-resource, connector-connection-pool,                 
+    connector-resource, custom-resource, external-jndi-resource,      
+    jdbc-connection-pool, jdbc-resource, mail-resource,               
+    work-security-map, property                    
+-->
+<!ELEMENT description (#PCDATA)>
+
+
+<!-- custom-resource
+    custom (or generic) resource managed by a user-written factory    
+    class.                                                            
+
+  attributes
+    jndi-name                                                                  
+        JNDI name for generic resource, the fully qualified type of   
+        the resource and whether it is enabled at runtime             
+
+  Used in:
+    resources                                                         
+-->
+<!ELEMENT custom-resource (description?, property*)>
+
+<!ATTLIST custom-resource
+    jndi-name CDATA #REQUIRED
+    res-type CDATA #REQUIRED
+    factory-class CDATA #REQUIRED
+    object-type %object-type; "user"
+    enabled %boolean; "true">
+
+
+<!-- external-jndi-resource
+    resource residing in an external JNDI repository                  
+
+  Used in:
+    resources                                                         
+-->
+<!ELEMENT external-jndi-resource (description?, property*)>
+
+<!ATTLIST external-jndi-resource
+    jndi-name CDATA #REQUIRED
+    jndi-lookup-name CDATA #REQUIRED
+    res-type CDATA #REQUIRED
+    factory-class CDATA #REQUIRED
+    object-type %object-type; "user"
+    enabled %boolean; "true">
+
+
+<!-- jdbc-resource
+    JDBC javax.sql.(XA)DataSource resource definition                 
+
+  Used in:
+    resources                                                         
+-->
+<!ELEMENT jdbc-resource (description?, property*)>
+
+<!ATTLIST jdbc-resource
+    jndi-name CDATA #REQUIRED
+    pool-name CDATA #REQUIRED
+    object-type %object-type; "user"
+    enabled %boolean; "true">
+
+
+<!-- mail-resource
+    The mail-resource element describes a javax.mail.Session resource 
+
+  attributes
+    host                                                                       
+        ip V6 or V4 address or hostname.                              
+
+  Used in:
+    resources                                                         
+-->
+<!ELEMENT mail-resource (description?, property*)>
+
+<!ATTLIST mail-resource
+    jndi-name CDATA #REQUIRED
+    store-protocol CDATA "imap"
+    store-protocol-class CDATA "com.sun.mail.imap.IMAPStore"
+    transport-protocol CDATA "smtp"
+    transport-protocol-class CDATA "com.sun.mail.smtp.SMTPTransport"
+    host CDATA #REQUIRED
+    user CDATA #REQUIRED
+    from CDATA #REQUIRED
+    debug %boolean; "false"
+    object-type %object-type; "user"
+    enabled %boolean; "true">
+
+<!-- admin-object-resource
+    The admin-object-resource element describes a administered object 
+    for a inbound resource adapter.                                   
+
+  attributes
+    jndi-name                                                                  
+        JNDI name for this resource                                   
+    res-adapter                                                                
+        Name of the inbound resource adapter.                         
+    res-type                                                                   
+        Interface definition for the administered object              
+    class-name
+        admin-object class-name (when more than one implementation class
+        is specified for same res-type in the resource-adapter,
+        class-name must be specified)
+
+  Used in:
+    resources                                                         
+-->
+<!ELEMENT admin-object-resource (description?, property*)>
+
+<!ATTLIST admin-object-resource
+    jndi-name CDATA #REQUIRED
+    res-type CDATA #REQUIRED
+    class-name CDATA #IMPLIED
+    res-adapter CDATA #REQUIRED
+    object-type %object-type; "user"
+    enabled %boolean; "true">
+
+
+<!-- connector-resource
+
+  Used in:
+    resources                                                         
+-->
+<!ELEMENT connector-resource (description?, property*)>
+
+<!ATTLIST connector-resource
+    jndi-name CDATA #REQUIRED
+    pool-name CDATA #REQUIRED
+    object-type %object-type; "user"
+    enabled %boolean; "true">
+
+
+<!-- resource-adapter-config
+    This element is for configuring the resource adapter. These       
+    values (properties) over-rides the default values present in      
+    ra.xml. The name attribute has to be unique . It is optional for  
+    PE. It is used mainly for EE.                                     
+
+  Used in:
+    resources                                                         
+-->
+<!ELEMENT resource-adapter-config (property*)>
+
+<!ATTLIST resource-adapter-config
+    name CDATA #IMPLIED
+    thread-pool-ids CDATA #IMPLIED
+    object-type %object-type; "user"
+    resource-adapter-name CDATA #REQUIRED>
+
+
+<!-- jdbc-connection-pool
+    jdbc-connection-pool defines configuration used to create and     
+    manage a pool physical database connections. Pool definition is   
+    named, and can be referred to by multiple jdbc-resource elements  
+    (See <jdbc-resource>).                                            
+
+    Each named pool definition results in a pool instantiated at server        
+    start-up. Pool is populated when accessed for the first time. If two or    
+    more jdbc-resource elements point to the same jdbc-connection-pool         
+    element, they are using the same pool of connections, at run time.         
+
+
+  children
+    property                                                                   
+        Most JDBC 2.0 drivers permit use of standard property lists,  
+        to specify User, Password and other resource configuration.   
+        While these are optional properties, according to the         
+        specification, several of these properties may be necessary   
+        for most databases. See Section 5.3 of JDBC 2.0 Standard      
+        Extension API.                                                
+
+        The following are the names and corresponding values for these         
+        properties                                                             
+
+        databaseName                                                           
+            Name of the Database                                      
+        serverName                                                             
+            Database Server name.                                     
+        port                                                                   
+            Port where a Database server is listening for requests.   
+        networkProtocol                                                        
+            Communication Protocol used.                              
+        user                                                                   
+            default name of the database user with which connections  
+            will be stablished. Programmatic database authentication  
+            or default-resource-principal specified in vendor         
+            specific web and ejb deployment descriptors will take     
+            precedence, over this default. The details and caveats    
+            are described in detail in the Administrator's guide.     
+        password                                                               
+            password for default database user                        
+        roleName                                                               
+            The initial SQL role name.                                
+        datasourceName                                                         
+            used to name an underlying XADataSource, or               
+            ConnectionPoolDataSource when pooling of connections is   
+            done                                                      
+        description                                                            
+            Textual Description                                       
+
+        When one or more of these properties are specified, they are passed as 
+        is using set<Name>(<Value>) methods to the vendors Datasource class    
+        (specified in datasource-classname). User and Password properties are  
+        used as default principal, if Container Managed authentication is      
+        specified and a default-resource-principal is not found in application 
+        deployment descriptors.                                                
+
+
+  attributes
+    allow-non-component-callers                                                
+        A pool with this property set to true, can be used by         
+        non-J2EE components (i.e components other than EJBs or        
+        Servlets). The returned connection is enlisted automatically  
+        with the transaction context obtained from the transaction    
+        manager. This property is to enable the pool to be used by    
+        non-component callers such as ServletFilters, Lifecycle       
+        modules, and 3rd party persistence managers. Standard J2EE    
+        components can continue to use such pools. Connections        
+        obtained by non-component callers are not automatically       
+        cleaned at the end of a transaction by the container. They    
+        need to be explicitly closed by the the caller.               
+    associate-with-thread                                                      
+        Associate a connection with the thread such that when the     
+        same thread is in need of a connection, it can reuse the      
+        connection already associated with that thread, thereby not   
+        incurring the overhead of getting a connection from the pool. 
+        Default value is false.                                       
+    connection-creation-retry-attempts                                         
+        The number of attempts to create a new connection. Default is 
+        0, which implies no retries.                                  
+    connection-creation-retry-interval-in-seconds                              
+        The time interval between retries while attempting to create  
+        a connection. Default is 10 seconds. Effective when           
+        connection-creation-retry-attempts is greater than 0.         
+    connection-leak-reclaim                                                    
+        If enabled, connection will be reusable (put back into pool)  
+        after connection-leak-timeout-in-seconds occurs. Default      
+        value is false.                                               
+    connection-leak-timeout-in-seconds                                         
+        To aid user in detecting potential connection leaks by the    
+        application. When a connection is not returned back to the    
+        pool by the application within the specified period, it is    
+        assumed to be a potential leak and stack trace of the caller  
+        will be logged. Default is 0, which implies there is no leak  
+        detection, by default. A positive non-zero value turns on     
+        leak detection. Note however that, this attribute only        
+        detects if there is a connection leak. The connection can be  
+        reclaimed only if connection-leak-reclaim is set to true.     
+    connection-validation-method                                               
+        specifies the type of validation to be performed when         
+        is-connection-validation-required is true. Default value of
+	this attribute is table. (see validation-table-name). The following      
+        types of validation are supported:                            
+        auto-commit                                                            
+            using connection.autoCommit()                             
+        meta-data                                                              
+            using connection.getMetaData()                            
+        table                                                                  
+            performing a query on a user specified table (see         
+            validation-table-name).                           
+        custom-validation
+            validation based on user specified validation mechanism (see
+            validation-classname).
+    datasource-classname                                                       
+        Name of the vendor supplied JDBC datasource resource manager. 
+        An XA or global transactions capable datasource class will    
+        implement javax.sql.XADatasource interface. Non XA or Local   
+        transactions only datasources will implement                  
+        javax.sql.Datasource interface.                               
+    driver-classname
+        Name of the vendor supplied JDBC driver class name. The 
+        specified driver should implement the java.sql.Driver interface.	
+    fail-all-connections                                                       
+        indicates if all connections in the pool must be closed       
+        should a single validation check fail. The default is false.  
+        One attempt will be made to re-establish failed connections.  
+    idle-timeout-in-seconds                                                    
+        maximum time in seconds, that a connection can remain idle in 
+        the pool. After this time, the pool implementation can close  
+        this connection. Note that this does not control connection   
+        timeouts enforced at the database server side. Adminsitrators 
+        are advised to keep this timeout shorter than the database    
+        server side timeout (if such timeouts are configured on the   
+        specific vendor's database), to prevent accumulation of       
+        unusable connection in Application Server.                    
+    init-sql
+        Used to specify a SQL string by the user, to be executed 
+        whenever a connection is created from the pool (not the 
+        connections that are reused). This is executed to initialize
+        the state of the connection.
+        This is an optional attribute and should carry a value when 
+        a initialization SQL is to be executed.
+    is-connection-validation-required                                          
+        if true, connections are validated (checked to find out if    
+        they are usable) before giving out to the application. The    
+        default is false.                                             
+    is-isolation-level-guaranteed                                              
+        Applicable only when a particular isolation level is          
+        specified for transaction-isolation-level. The default value  
+        is true. This assures that every time a connection is         
+        obtained from the pool, it is guaranteed to have the          
+        isolation set to the desired value. This could have some      
+        performance impact on some JDBC drivers. Can be set to false  
+        by that administrator when they are certain that the          
+        application does not change the isolation level before        
+        returning the connection.                                     
+    lazy-connection-association                                                
+        Connections are lazily associated when an operation is        
+        performed on them. Also, they are disassociated when the      
+        transaction is completed and a component method ends, which   
+        helps reuse of the physical connections. Default value is     
+        false.                                                        
+    lazy-connection-enlistment                                                 
+        Enlist a resource to the transaction only when it is actually 
+        used in a method, which avoids enlistment of connections that 
+        are not used in a transaction. This also prevents unnecessary 
+        enlistment of connections cached in the calling components.   
+        Default value is false.                                       
+    match-connections                                                          
+        To switch on/off connection matching for the pool. It can be  
+        set to false if the administrator knows that the connections  
+        in the pool will always be homogeneous and hence a connection 
+        picked from the pool need not be matched by the resource      
+        adapter. Default value is false.                              
+    max-connection-usage-count                                                 
+        When specified, connections will be re-used by the pool for   
+        the specified number of times after which it will be closed.  
+        This is useful for instance, to avoid statement-leaks.        
+        Default value is 0, which implies the feature is not enabled. 
+    max-pool-size                                                              
+        maximum number of conections that can be created              
+    max-wait-time-in-millis                                                    
+        amount of time the caller will wait before getting a          
+        connection timeout. The default is 60 seconds. A value of 0   
+        will force caller to wait indefinitely.                       
+    name                                                                       
+        unique name of the pool definition.                           
+    non-transactional-connections                                              
+        A pool with this property set to true returns                 
+        non-transactional connections. This connection does not get   
+        automatically enlisted with the transaction manager.          
+    ping
+        A pool with this attribute set to true is pinged during the pool
+        creation or reconfiguration to identify and warn of any erroneous
+        values for the its attributes. Default value of this attribute 
+        is false.
+    pool-resize-quantity                                                       
+        number of connections to be removed when                      
+        idle-timeout-in-seconds timer expires. Connections that have  
+        idled for longer than the timeout are candidates for removal. 
+        When the pool size reaches steady-pool-size, the connection   
+        removal stops.                                                
+    pooling
+        When set to false, this attribute disables connection pooling. 
+        Default value of this attribute is true.
+    res-type                                                                   
+        DataSource implementation class could implement one of of     
+        javax.sql.DataSource, javax.sql.XADataSource or               
+        javax.sql.ConnectionPoolDataSource interfaces. To support 
+        configuration of JDBC drivers and applications that use
+        java.sql.Driver implementations, set this attribute to
+        java.sql.Driver. This optional attribute must be specified to 
+	disambiguate when a Datasource class implements two or more of 
+	these interfaces or when a driver classname is to be provided. 
+	An error is produced when this attribute has a legal value and the        
+        indicated interface is not implemented by the datasource      
+        class. This attribute has no default value. (see also driver-classname).
+    sql-trace-listeners
+        Used to set if the SQL statements executed by applications need to be traced, 
+	enabling easy filtering of SQL statements executed as log messages. 
+        Aids administrators in analysing the statements. Multiple listeners can be
+        specified as comma separated list of listener implementation class names,
+	to enable different means of recording the SQL trace records.
+    statement-cache-size
+        Specifies the number of statements to be cached. The only cache
+	eviction strategy supported in this release is "Least Recently Used".
+	The default value is 0 and statement caching is not enabled. Specify a
+	non-zero integer value to enable statement caching.
+    statement-timeout-in-seconds                                               
+        Sets the timeout property of a connection to enable           
+        termination of abnormally long running queries. Default value 
+        of -1 implies that it is not enabled.                         
+    statement-leak-reclaim
+        If enabled, statement is reclaimed after the statement-leak-timeout-
+        in-seconds occurs. Default value is false.
+    statement-leak-timeout-in-seconds                                               
+        To aid user in detecting the statement leaks by applications.
+        When a statement is not closed by the application within the specified
+        period, it is assumed to be a statement leak. Default is 0, which 
+        implies there is no statement leak detection, by default. A 
+        positive non-zero value turns on statement leak detection.
+        Note however that, this attribute only detects if there is
+        a statement leak. The statement can be reclaimed only is
+        statement-leak-reclaim is set to true.     
+    steady-pool-size                                                           
+        minimum and initial number of connections maintained in the   
+        pool.                                                         
+    transaction-isolation-level                                                
+        Specifies the Transaction Isolation Level on the pooled       
+        database connections. Optional. Has no default. If left       
+        unspecified the pool operates with default isolation level    
+        provided by the JDBC Driver. A desired isolation level can be 
+        set using one of the standard transaction isolation levels,   
+        which see.                                                    
+
+        Applications that change the Isolation level on a pooled connection    
+        programmatically, risk polluting the pool and this could lead to       
+        program errors. Also see: is-isolation-level-guaranteed                
+
+    validate-atmost-once-period-in-seconds                                     
+        Used to set the time-interval within which a connection is    
+        validated atmost once. Default is 0 which implies that it is  
+        not enabled. TBD: Documentation is to be corrected.           
+    validation-classname
+        Specifies the custom validation implementation class name to be used
+	for validation. This parameter is mandatory if the 
+	connection-validation-type is set to custom-validation. The specified
+	class must implement the org.glassfish.api.jdbc.ConnectionValidation
+	interface and must be accessible by the application server.
+    validation-table-name                                                      
+        specifies the table name to be used to perform a query to     
+        validate a connection. This parameter is mandatory, if        
+	is-connection-validation-required is set to true and 
+	connection-validation-type set to table. Verification by      
+        accessing a user specified table may become necessary for     
+        connection validation, particularly if database driver caches 
+        calls to setAutoCommit() and getMetaData().                   
+    wrap-jdbc-objects                                                          
+        When set to true, application will get wrapped jdbc objects   
+        for Statement, PreparedStatement, CallableStatement,          
+        ResultSet, DatabaseMetaData. Defaults to true.               
+
+  Used in:
+    resources                                                         
+-->
+<!ELEMENT jdbc-connection-pool (description?, property*)>
+
+<!ATTLIST jdbc-connection-pool
+    name CDATA #REQUIRED
+    datasource-classname CDATA #IMPLIED
+    res-type (javax.sql.DataSource | javax.sql.XADataSource | javax.sql.ConnectionPoolDataSource | java.sql.Driver) #IMPLIED
+    driver-classname CDATA #IMPLIED
+    ping %boolean; "false"   
+    steady-pool-size CDATA "8"
+    max-pool-size CDATA "32"
+    max-wait-time-in-millis CDATA "60000"
+    pool-resize-quantity CDATA "2"
+    idle-timeout-in-seconds CDATA "300"
+    transaction-isolation-level %isolation; #IMPLIED
+    is-isolation-level-guaranteed %boolean; "true"
+    is-connection-validation-required %boolean; "false"
+    connection-validation-method (auto-commit | meta-data | table | custom-validation) "table"
+    validation-table-name CDATA #IMPLIED
+    validation-classname CDATA #IMPLIED
+    init-sql CDATA #IMPLIED	      
+    fail-all-connections %boolean; "false"
+    non-transactional-connections %boolean; "false"
+    allow-non-component-callers %boolean; "false"
+    validate-atmost-once-period-in-seconds CDATA "0"
+    connection-leak-timeout-in-seconds CDATA "0"
+    connection-leak-reclaim %boolean; "false"
+    connection-creation-retry-attempts CDATA "0"
+    connection-creation-retry-interval-in-seconds CDATA "10"
+    statement-leak-timeout-in-seconds CDATA "0"
+    statement-leak-reclaim %boolean; "false"
+    statement-timeout-in-seconds CDATA "-1"
+    lazy-connection-enlistment %boolean; "false"
+    lazy-connection-association %boolean; "false"
+    associate-with-thread %boolean; "false"
+    match-connections %boolean; "false"
+    max-connection-usage-count CDATA "0"
+    sql-trace-listeners CDATA #IMPLIED 
+    statement-cache-size CDATA "0"
+    pooling %boolean; "true"
+    wrap-jdbc-objects %boolean; "true">
+
+
+<!-- connector-connection-pool
+    connector-connection-pool defines configuration used to create    
+    and manage a pool of connections to a EIS. Pool definition is     
+    named, and can be referred to by multiple connector-resource      
+    elements (See connector-resource).                                
+
+    Each named pool definition results in a pool instantiated at server        
+    start-up. Pool is populated when accessed for the first time. If two or    
+    more connector-resource elements point to the same                         
+    connector-connection-pool element, they are using the same pool of         
+    connections, at run time.                                                  
+
+    There can be more than one pool for one connection-definition in one       
+    resource-adapter.                                                          
+
+
+  children
+    property                                                                   
+        Properties are used to override the ManagedConnectionFactory  
+        javabean configuration settings.                              
+
+        When one or more of these properties are specified, they are passed as 
+        is using set<Name>(<Value>) methods to the Resource Adapter's          
+        ManagedConnectionfactory class (specified in ra.xml).                  
+
+
+  attributes
+    associate-with-thread                                                      
+        Associate a connection with the thread such that when the     
+        same thread is in need of a connection, it can reuse the      
+        connection already associated with that thread, thereby not   
+        incurring the overhead of getting a connection from the pool. 
+        Default value is false.                                       
+    connection-creation-retry-attempts                                         
+        The number of attempts to create a new connection. Default is 
+        0, which implies no retries.                                  
+    connection-creation-retry-interval-in-seconds                              
+        The time interval between retries while attempting to create  
+        a connection. Default is 10 seconds. Effective when           
+        connection-creation-retry-attempts is greater than 0.         
+    connection-definition-name                                                 
+        unique name, identifying one connection-definition in a       
+        Resource Adapter. Currently this is ConnectionFactory type.   
+    connection-leak-reclaim                                                    
+        If enabled, connection will be reusable (put back into pool)  
+        after connection-leak-timeout-in-seconds occurs. Default      
+        value is false.                                               
+    connection-leak-timeout-in-seconds                                         
+        To aid user in detecting potential connection leaks by the    
+        application. When a connection is not returned back to the    
+        pool by the application within the specified period, it is    
+        assumed to be a potential leak and stack trace of the caller  
+        will be logged. Default is 0, which implies there is no leak  
+        detection, by default. A positive non-zero value turns on     
+        leak detection. Note however that, this attribute only        
+        detects if there is a connection leak. The connection can be  
+        reclaimed only if connection-leak-reclaim is set to true.     
+    fail-all-connections                                                       
+        indicates if all connections in the pool must be closed       
+        should a single connection fail validation. The default is    
+        false. One attempt will be made to re-establish failed        
+        connections.                                                  
+    idle-timeout-in-seconds                                                    
+        maximum time in seconds, that a connection can remain idle in 
+        the pool. After this time, the pool implementation can close  
+        this connection. Note that this does not control connection   
+        timeouts enforced at the database server side. Adminsitrators 
+        are advised to keep this timeout shorter than the EIS         
+        connection timeout (if such timeouts are configured on the    
+        specific EIS), to prevent accumulation of unusable connection 
+        in Application Server.                                        
+    is-connection-validation-required                                          
+        This attribute specifies if the connection that is about to   
+        be returned is to be validated by the container,              
+    lazy-connection-association                                                
+        Connections are lazily associated when an operation is        
+        performed on them. Also, they are disassociated when the      
+        transaction is completed and a component method ends, which   
+        helps reuse of the physical connections. Default value is     
+        false.                                                        
+    lazy-connection-enlistment                                                 
+        Enlist a resource to the transaction only when it is actually 
+        used in a method, which avoids enlistment of connections that 
+        are not used in a transaction. This also prevents unnecessary 
+        enlistment of connections cached in the calling components.   
+        Default value is false.                                       
+    match-connections                                                          
+        To switch on/off connection matching for the pool. It can be  
+        set to false if the administrator knows that the connections  
+        in the pool will always be homogeneous and hence a connection 
+        picked from the pool need not be matched by the resource      
+        adapter. Default value is true.                               
+    max-connection-usage-count                                                 
+        When specified, connections will be re-used by the pool for   
+        the specified number of times after which it will be closed.  
+        This is useful for instance, to avoid statement-leaks.        
+        Default value is 0, which implies the feature is not enabled. 
+    max-pool-size                                                              
+        maximum number of conections that can be created              
+    max-wait-time-in-millis                                                    
+        amount of time the caller will wait before getting a          
+        connection timeout. The default is 60 seconds. A value of 0   
+        will force caller to wait indefinitely.                       
+    name                                                                       
+        unique name of the pool definition.                           
+    ping
+        A pool with this attribute set to true is pinged during the pool
+        creation or reconfiguration to identify and warn of any erroneous
+        values for the its attributes. Default value of this attribute 
+        is false.
+    pool-resize-quantity                                                       
+        number of connections to be removed when                      
+        idle-timeout-in-seconds timer expires. Connections that have  
+        idled for longer than the timeout are candidates for removal. 
+        When the pool size reaches steady-pool-size, the connection   
+        removal stops.                                                
+    pooling
+       When set to false, this attribute disables connection pooling.
+       Default value of this attribute is true.	
+    resource-adapter-name                                                      
+        This is the name of resource adapter. Name of .rar file is    
+        taken as the unique name for the resource adapter.            
+    steady-pool-size                                                           
+        minimum and initial number of connections maintained in the   
+        pool.                                                         
+    transaction-support                                                        
+        Indicates the level of transaction support that this pool     
+        will have. Possible values are "XATransaction",               
+        "LocalTransaction" and "NoTransaction". This attribute will   
+        override that transaction support attribute in the Resource   
+        Adapter in a downward compatible way, i.e it can support a    
+        lower/equal transaction level than specified in the RA, but   
+        not a higher level.                                           
+    validate-atmost-once-period-in-seconds                                     
+        Used to set the time-interval within which a connection is    
+        validated atmost once. Default is 0 which implies that it is  
+        not enabled. TBD: Documentation is to be corrected.           
+
+  Used in:
+    resources                                                         
+-->
+<!ELEMENT connector-connection-pool (description?, security-map*, property*)>
+
+<!ATTLIST connector-connection-pool
+    name CDATA #REQUIRED
+    resource-adapter-name CDATA #REQUIRED
+    connection-definition-name CDATA #REQUIRED
+    steady-pool-size CDATA "8"
+    max-pool-size CDATA "32"
+    max-wait-time-in-millis CDATA "60000"
+    pool-resize-quantity CDATA "2"
+    idle-timeout-in-seconds CDATA "300"
+    fail-all-connections %boolean; "false"
+    transaction-support (XATransaction | LocalTransaction | NoTransaction) #IMPLIED
+    is-connection-validation-required %boolean; "false"
+    validate-atmost-once-period-in-seconds CDATA "0"
+    connection-leak-timeout-in-seconds CDATA "0"
+    connection-leak-reclaim %boolean; "false"
+    connection-creation-retry-attempts CDATA "0"
+    connection-creation-retry-interval-in-seconds CDATA "10"
+    lazy-connection-enlistment %boolean; "false"
+    lazy-connection-association %boolean; "false"
+    associate-with-thread %boolean; "false"
+    match-connections %boolean; "true"
+    max-connection-usage-count CDATA "0"
+    ping %boolean; "false"
+    pooling %boolean; "true">
+
+
+
+<!-- property
+    Syntax for supplying properties as name value pairs               
+
+  Used in:
+    admin-object-resource, connector-connection-pool,                 
+    connector-resource, custom-resource, external-jndi-resource,      
+    jdbc-connection-pool, jdbc-resource, mail-resource,               
+    work-security-map, resource-adapter-config     
+-->
+<!ELEMENT property (description?)>
+
+<!ATTLIST property
+    name CDATA #REQUIRED
+    value CDATA #REQUIRED>
+
+
+<!-- security-map
+    Perform mapping from principal received during Servlet/EJB        
+    authentication, to credentials accepted by the EIS. This mapping  
+    is optional.It is possible to map multiple (server) principal to  
+    the same backend principal.                                       
+
+  Used in:
+    connector-connection-pool                                         
+-->
+<!ELEMENT security-map ((principal | user-group)+, backend-principal)>
+
+<!ATTLIST security-map
+    name CDATA #REQUIRED>
+
+
+<!-- principal
+    Principal of the Servlet and EJB client                           
+
+  Used in:
+    security-map                                                      
+-->
+<!ELEMENT principal (#PCDATA)>
+
+
+<!-- user-group
+
+  Used in:
+    security-map                                                      
+-->
+<!ELEMENT user-group (#PCDATA)>
+
+
+<!-- backend-principal
+
+  Used in:
+    security-map                                                      
+-->
+<!ELEMENT backend-principal EMPTY>
+
+<!ATTLIST backend-principal
+    user-name CDATA #REQUIRED
+    password CDATA #IMPLIED>
+
+<!-- work-security-map
+  Perform mapping from Principal associated with an incoming Work
+  instance to a Principal in the application server's security domain. The 
+  security-map element, on the other hand, performs mapping from
+  Principals in the application server security domain to a Principal
+  accepted by the EIS. It is possible to map multiple EIS Group and/or
+  User Principals to the same application server (server) Principal.
+
+ Used in:
+   resources
+-->
+
+<!ELEMENT work-security-map (description?, (principal-map*, group-map*)+) >
+
+<!ATTLIST work-security-map 
+name CDATA #REQUIRED
+resource-adapter-name CDATA #REQUIRED
+object-type %object-type; "user"
+enabled %boolean; "true">
+
+<!-- principal-map
+  Performs mapping from a Principal in the EIS security domain to
+  a Principal accepted by the application server security domain
+
+  attributes 
+    eis-principal 
+        A Principal in the EIS security domain that is being mapped to 
+        a Principal in the application server's security domain.
+    mapped-principal
+        A Principal that is valid in the application server's security domain
+
+  Used in:
+    work-security-map
+-->
+<!ELEMENT principal-map EMPTY >
+
+<!ATTLIST principal-map
+eis-principal CDATA #REQUIRED
+mapped-principal CDATA #REQUIRED>
+
+<!-- group-map
+  Group map to map eis-group name to application server domain's group name
+
+  attributes 
+    eis-group 
+        A Group in the EIS security domain that is being mapped to 
+        a Group in the application server's security domain
+    mapped-group
+        A Group that is valid in the application server's security domain
+
+  Used in:
+    work-security-map
+-->
+<!ELEMENT group-map EMPTY >
+
+<!ATTLIST group-map
+eis-group CDATA #REQUIRED
+mapped-group CDATA #REQUIRED>
+

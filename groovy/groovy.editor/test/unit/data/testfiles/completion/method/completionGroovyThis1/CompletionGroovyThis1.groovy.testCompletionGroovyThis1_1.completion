@@ -1,0 +1,12 @@
+Code completion result for source line:
+this.get|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getAt(String)                              Object
+METHOD     getClass()                      [PUBLIC]   Class<?>
+METHOD     getMetaClass()                             MetaClass
+METHOD     getMetaPropertyValues()                    List
+METHOD     getProperties()                            Map
+METHOD     getProperty(String)             [PUBLIC]   Object
+METHOD     getSt()                         [PUBLIC]   String
+METHOD     getTest()                       [PUBLIC]   Object

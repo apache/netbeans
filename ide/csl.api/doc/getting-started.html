@@ -1,0 +1,162 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+    <body>
+        <h2>Getting Started with GSF</h2>
+        <p>
+            Here's a quick checklist for how to get started writing
+            language support with GSF.
+        </p>
+        <p>
+            <ul>
+                <li>
+                    First, you need to write a mime resolver to
+                    associate source files of your language with a given
+                    mime type. Your language will be associated with this
+                    unique mime type. This is described in the
+                    <a href="mime-resolver.html">mime resolver document</a>.
+                    <br/><br/>
+                </li>
+                <li>
+                    Next, you need to write a lexer for your language.
+                    This is described in the
+                    <a href="lexing.html">lexing document</a>.
+                    <br/><br/>
+                </li>
+                <li>
+                    Next, you need to write register your lexer with
+                    GSF and set up basic GSF registration for your language.
+                    This is described in the
+                    <a href="registration.html">registration document</a>.
+                    At this point, you have basic support for you language -
+                    you can recognize and open files in the IDE, and the
+                    files are syntax highlighted.
+                    <br/><br/>
+                </li>
+                <li>
+                    Next, you can create an implementation of the
+                    <a href="org/netbeans/modules/gsf/api/KeystrokeHandler.html">KeystrokeHandler</a>
+                    and register it with GSF, to support keystroke handling for
+                    your language. This is where you can make matching quotes, parentheses
+                    etc. happen automatically, as well as implementing return-key handling
+                    such that you provide smart-indent, inserting matching tags when you
+                    open an if-clause, and so on. 
+                    <br/><br/>
+                    <a href="org/netbeans/modules/gsf/api/Formatter.html">Formatter</a>.
+                    This will provide basic indentation/formatting for your language.
+                    <br/><br/>
+                </li>
+                <li>
+                    At this point, you should be writing unit tests to check your features,
+                    for all kinds of corner cases, as well as a guard against regressions
+                    as you're improving your code. Unit testing GSF features is trivial; see
+                    the <a href="unit-testing.html">unit testing document</a> for more details.
+                    <br/><br/>
+                </li>
+                <li>
+                    The above features only relied on lexical analysis of your language.
+                    The next set of features will require semantic/parse information.
+                    To do this, you need to implement a parser for your language by implementing a
+                    <a href="org/netbeans/modules/gsf/api/Parser.html">Parser</a>.
+                    Your parser will be called at the right times - and this topic
+                    is explored in more detail in the 
+                    <a href="parsing.html">parsing document</a>.
+                    <br/><br/>
+                </li>
+                <li>
+                    Once you have a parser, you can implement some basic features that require
+                    parser information.
+                    First, implement the 
+                    <a href="org/netbeans/modules/gsf/api/StructureScanner.html">StructureScanner</a>
+                    interface. This lets you to provide a code outline of the current
+                    file in the navigation window, as well as code folding regions in the editor.
+                    You basically just need to iterate over your own parse tree, decide which
+                    regions should be code folding regions and register them with GSF. Similarly,
+                    for navigation, you just need to identify relevant "code elements" from your
+                    AST, and then tell GSF about them using logical descriptors like
+                    "method", "attribute", "tag", etc.
+                    <br/><br/>
+                </li>
+                <li>
+                    Next, you can add some other related features which rely on your parsing result:
+                    <a href="org/netbeans/modules/gsf/api/SemanticAnalyzer.html">SemanticAnalyzer</a>,
+                    <a href="org/netbeans/modules/gsf/api/OccurrencesFinder.html">OccurrencesFinder</a>, and
+                    <a href="org/netbeans/modules/gsf/api/InstantRenamer.html">InstantRenamer</a>.
+                    These features let you provide semantic highlighting (e.g. highlighting unused
+                    variables, method declarations, etc), mark occurrences, and instant rename - refactoring
+                    for things like local variables and parameters which doesn't require full blown
+                    multi-file refactoring.
+                    <br/><br/>
+                </li>
+                <li>
+                    If you are developing support for a language which can be embedded in other 
+                    languages (such as JavaScript, which is embedded in HTML files etc., or Ruby,
+                    which is embedded in ERb files), you need to handle the embedding aspects
+                    of languages. At the syntactic level, this is handled completely by the
+                    embedding language support. But at the parse level, it will require coordination
+                    as well as careful use of offset translation methods; you should never assume
+                    that your AST node offsets correspond to the offsets in the document.
+                    This is described in more detail in the <a href="embedding.html">embedding document</a>.
+                </li>
+                <li>
+                    Now you are finally ready to attack the "hardest" features: Code Completion,
+                    Go To Declaration, and other features that require multifile analysis.
+                    To do this, you need to have a persistent store such that you can quickly
+                    query and find information across files and libraries. To do this, you need
+                    to implement an indexer. The indexer is called by the infrastructure when needed,
+                    and lets you extract information from parse results and store them into an index.
+                    This is all explained in greater detail in the <a href="indexer.html">indexing document</a>.
+                    You will also need to tell GSF how the user's project related to source code,
+                    such that multifile analysis can be properly scoped. This part is described in
+                    the <a href="classpath.html">classpath document</a>.
+                    <br/><br/>
+                </li>
+                <li>
+                    With the index in place, you can now implement code completion using the
+                    <a href="org/netbeans/modules/gsf/api/CodeCompletionHandler.html">CodeCompletionHandler</a>
+                    interface. Here, you will most likely draw on everything you have built up to
+                    this point. Lexical analysis, to for example determine if you're in a string or
+                    a comment (where different completion alternatives present themselves), then the
+                    parser AST to determine things like local variables, and finally the index to
+                    determine other functions and classes in the project. Code completion also typically
+                    involves attempting to analyze code which is broken (because you're in the middle
+                    of typing an expression) so error recovery as discussed in the
+                    <a href="parsing.html">parsing document</a> will also need to be perfected.
+                    <br/><br/>
+                    You can also implement Go To Declaration at this point, by implementing the
+                    <a href="org/netbeans/modules/gsf/api/DeclarationFinder.html">DeclarationFinder</a>
+                    interface and registering it with GSF.
+                    <br/><br/>
+                    I hope to write a more detailed document with information on how to write code
+                    completion soon.
+                    <br/><br/>
+                </li>
+                <li>
+                  At some point, you should consider adding incremental updating support,
+                  such as incremental parsing. This is described in detail in the
+                  <a href="incremental-parsing.html">incremental parsing</a> document.
+                </li>
+            </ul>
+        </p>
+        <br/>
+        <span style="color: #cccccc">Tor Norbye &lt;tor@netbeans.org&gt;</span>
+    </body>
+</html>

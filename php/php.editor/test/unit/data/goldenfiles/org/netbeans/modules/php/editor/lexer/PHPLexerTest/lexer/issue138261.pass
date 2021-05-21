@@ -1,0 +1,24 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n    
+token #2 PHP_VARIABLE $foo
+token #3 WHITESPACE  
+token #4 PHP_OPERATOR =
+token #5 WHITESPACE  
+token #6 PHP_NULL NULL
+token #7 PHP_SEMICOLON ;
+token #8 WHITESPACE \n    
+token #9 PHP_VARIABLE $bar1
+token #10 WHITESPACE  
+token #11 PHP_OPERATOR =
+token #12 WHITESPACE  
+token #13 PHP_TRUE TRUE
+token #14 PHP_SEMICOLON ;
+token #15 WHITESPACE \n    
+token #16 PHP_VARIABLE $bar2
+token #17 WHITESPACE  
+token #18 PHP_OPERATOR =
+token #19 WHITESPACE  
+token #20 PHP_FALSE FALSE
+token #21 PHP_SEMICOLON ;
+token #22 WHITESPACE \n
+token #23 PHP_CLOSETAG ?>\n

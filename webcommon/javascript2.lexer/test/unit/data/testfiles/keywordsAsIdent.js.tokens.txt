@@ -1,0 +1,426 @@
+<Unnamed test>
+KEYWORD_VAR     "var", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+BRACKET_LEFT_CURLY  "{", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+BRACKET_RIGHT_CURLY  "}", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "break", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "1", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "do", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "2", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "in", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "3", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "typeof", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "4", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "case", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "5", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "else", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "6", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "instanceof", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "7", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "var", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "9", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "catch", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "10", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "export", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "11", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "new", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "12", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "void", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "13", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "class", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "14", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "extends", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "15", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "return", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "16", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "while", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "17", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "const", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "18", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "finaly", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "19", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "super", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "20", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "with", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "21", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "continue", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "22", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "for", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "23", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "of", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "24", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "switch", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "25", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "yield", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "26", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "debugger", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "27", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "function", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "28", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "this", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "29", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "default", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "30", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "if", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "31", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "throw", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "32", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "delete", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "33", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "import", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "34", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "try", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "35", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "enum", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "36", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "await", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "37", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "implements", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "38", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "package", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "39", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "protected", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "40", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "interface", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "41", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "private", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "42", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "public", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "43", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "static", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "44", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "let", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "45", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "as", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "46", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "a", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "from", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+NUMBER          "47", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+----- EOF -----
+

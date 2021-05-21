@@ -1,0 +1,2 @@
+var |>MARK_OCCURRENCES:job<| = {a: 1}; 
+|>MARK_OCCURRENCES:j^ob<|.a = 3;

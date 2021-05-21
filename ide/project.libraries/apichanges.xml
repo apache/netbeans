@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="general">Project Libraries API</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+    <changes>
+
+    <change id="LibrariesSupport-getLibraryImplementation">
+        <api name="general"/>
+        <summary>Added <code>LibrariesSupport.getLibraryImplementation</code>to obtain SPI for <code>Library</code></summary>
+        <version major="1" minor="51"/>
+        <date day="16" month="1" year="2015"/>
+        <author login="tzezula"/>
+        <compatibility addition="yes"/>
+        <description>
+            Added <code>LibrariesSupport.getLibraryImplementation</code> into SPI support to obtain the SPI
+            for given <code>Library</code>. Needed to remove an implementation dependency among project.libraries and project.libraries.ui.
+        </description>
+        <class package="org.netbeans.spi.project.libraries.support" name="LibrariesSupport"/>
+    </change>
+    <change id="Libraries-UI-split">
+        <api name="general"/>
+        <summary>Moved the UI part of the <code>project.libraries</code> into a new <code>project.libraries.ui</code>module</summary>
+        <version major="1" minor="49"/>
+        <date day="1" month="7" year="2014"/>
+        <author login="tzezula"/>
+        <compatibility addition="yes"/>
+        <description>
+            Moved the UI part of the <code>project.libraries</code> into a new <code>project.libraries.ui</code>module.
+            Added a new integration SPI and SPI support methods.
+        </description>
+        <class package="org.netbeans.spi.project.libraries" name="WritableLibraryProvider"/>
+        <class package="org.netbeans.spi.project.libraries.support" name="ForwardingLibraryImplementation"/>
+        <class package="org.netbeans.spi.project.libraries.support" name="LibrariesSupport"/>
+    </change>
+    <change id="LibrariesSupport.createLibraryImplementation3">
+        <api name="general"/>
+        <summary>Added a new factory method to create default implementation of <code>LibraryImplementation3</code></summary>
+        <version major="1" minor="39"/>
+        <date day="30" month="8" year="2011"/>
+        <author login="tzezula"/>
+        <compatibility addition="yes"/>
+        <description>
+            Added a new factory method to create default implementation of <code>LibraryImplementation3</code>.
+        </description>
+        <class package="org.netbeans.spi.project.libraries.support" name="LibrariesSupport"/>
+        <issue number="217321"/>
+    </change>
+    <change id="create-library-with-properties">
+        <api name="general"/>
+        <summary>Added methods to create a new <code>Library</code> with properties</summary>
+        <version major="1" minor="38"/>
+        <date day="19" month="6" year="2011"/>
+        <author login="tzezula"/>
+        <compatibility addition="yes"/>
+        <description>
+            Added new factory methods into <code>LibraryManager</code> to create a <code>Library</code>
+            with associated properties.
+        </description>
+        <class package="org.netbeans.api.project.libraries" name="LibraryManager"/>
+        <issue number="205380"/>
+    </change>
+    <change id="library-properties-name">
+        <api name="general"/>
+        <summary>Added a name of the properties property into LibraryImplementation3</summary>
+        <version major="1" minor="35"/>
+        <date day="14" month="3" year="2011"/>
+        <author login="tzezula"/>
+        <compatibility addition="yes"/>
+        <description>
+            Added the missing <code>LibraryImplementation3.PROP_PROPERTIES</code> providing the name
+            of the properties property.
+        </description>
+        <class package="org.netbeans.api.project.libraries" name="Library"/>
+        <class package="org.netbeans.spi.project.libraries" name="LibraryImplementation3"/>
+    </change>
+    <change id="library-properties">
+        <api name="general"/>
+        <summary>Allow <code>Library</code> to provide properties</summary>
+        <version major="1" minor="34"/>
+        <date day="13" month="3" year="2011"/>
+        <author login="tzezula"/>
+        <compatibility addition="yes"/>
+        <description>
+            Allow <code>Library</code> to provide properties.
+        </description>
+        <class package="org.netbeans.api.project.libraries" name="Library"/>
+        <class package="org.netbeans.spi.project.libraries" name="LibraryImplementation3"/>
+        <issue number="199253"/>
+    </change>
+    <change id="library-display-name">
+        <api name="general"/>
+        <summary>Allow user created library to provide display name</summary>
+        <version major="1" minor="31"/>
+        <date day="16" month="6" year="2011"/>
+        <author login="tzezula"/>
+        <compatibility addition="yes"/>
+        <description>
+            Added <code>displayName</code> property into the <code>Library</code>'s SPI
+            allowing an implementor to provide the a display name of the <code>Library</code>
+            which differs from the system (identifying) name.
+        </description>
+        <class package="org.netbeans.api.project.libraries" name="LibraryManager"/>
+        <class package="org.netbeans.spi.project.libraries" name="NamedLibraryImplementation"/>
+        <issue number="199253"/>
+    </change>
+    <change id="use-uri-for-relative-paths">
+        <api name="general"/>
+        <summary>URI used for relative library entries instead of URL</summary>
+        <version major="1" minor="18"/>
+        <date day="27" month="3" year="2008"/>
+        <author login="dkonecny"/>
+        <compatibility>
+            <p>
+                Signatures of some methods previously using URL were changed
+                to use URI. Some URL handling methods were removed and/or
+                replaced with URI counterpart.
+            </p>
+        </compatibility>
+        <description>
+            <p>
+                API review of Sharable Libraries requested using URI for
+                relative paths instead of URL.
+            </p>
+            <p>
+                Added <code>LibraryCustomizerContext</code> class to provide richer
+                context to libraries customizer.
+            </p>
+        </description>
+        <class package="org.netbeans.api.project.libraries" name="LibraryManager"/>
+        <class package="org.netbeans.api.project.libraries" name="Library"/>
+        <class package="org.netbeans.spi.project.libraries" name="LibraryImplementation2"/>
+        <class package="org.netbeans.spi.project.libraries.support" name="LibrariesSupport"/>
+        <issue number="129628"/>
+    </change>
+    
+    <change id="project-libraries">
+        <api name="general"/>
+        <summary>Support for project libraries</summary>
+        <version major="1" minor="17"/>
+        <date day="22" month="1" year="2008"/>
+        <author login="jglick"/>
+        <compatibility addition="yes" deprecation="yes">
+            <p>
+                <code>LibraryManager.addLibrary</code> will not work with areas,
+                so it was deprecated in favor of the new <code>createLibrary</code>.
+            </p>
+            <p>
+                Code which obtained a <code>Library</code> of arbitrary origin,
+                and then assumed it could refer to that library henceforth by name only,
+                will not work with project libraries.
+                The simplest persistent identifier for a new-style library is pair of name
+                and URL of manager (null for the default manager).
+            </p>
+        </compatibility>
+        <description>
+            <p>
+                There is a new API and SPI for project libraries
+                (or, more generally, libraries with specific storage locations).
+                <code>ArealLibraryProvider</code>,
+                and <code>LibraryStorageArea</code> are new, as are methods
+                <code>Library.getManager</code>,
+                <code>Library.getRawContent(String)</code>
+                <code>LibraryManager.getDisplayName</code>,
+                <code>LibraryManager.getLocation</code>,
+                <code>LibraryManager.createLibrary</code>,
+                <code>LibraryManager.forLocation</code>, and
+                <code>LibraryManager.getOpenManagers</code>.
+                (<code>LibraryProvider</code> was also generified.)
+                <code>LibrariesSupport</code> has few additional helper methods.
+            </p>
+            <p>
+                There's also new methods and classes for UI customizations of Libraries, eg.
+                <code>LibrariesCustomizer.showCreateNewLibraryCustomizer(LibraryManager)</code>,
+                <code>LibrariesCustomizer.showCustomizer(Library, LibraryManager)</code>,
+                <code>LibrariesCustomizer.showSingleLibraryCustomizer(Library)</code>,
+                and <code>LibraryChooser</code> class.
+            </p>
+        </description>
+        <class package="org.netbeans.api.project.libraries" name="LibraryManager"/>
+        <class package="org.netbeans.api.project.libraries" name="Library"/>
+        <class package="org.netbeans.spi.project.libraries" name="LibraryProvider"/>
+        <class package="org.netbeans.spi.project.libraries" name="ArealLibraryProvider"/>
+        <class package="org.netbeans.spi.project.libraries" name="LibraryStorageArea"/>
+        <class package="org.netbeans.spi.project.libraries.support" name="LibrariesSupport"/>
+        <issue number="44035"/>
+    </change>
+    
+    <change id="Customizer-can-be-null">
+            <api name="general"/>
+            <summary>Customizer for volume type in LibraryTypeProvider is not mandatory</summary>
+            <version major="1" minor="15"/>
+            <date day="31" month="8" year="2007"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                 LibraryTypeProvider.getCustomizer() can return null for some volume types.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.libraries" name="LibraryTypeProvider"/>
+    </change>    
+
+    <change id="LibraryManager.add-remove">
+            <api name="general"/>
+            <summary>Added methods for adding and removing libraries into/from library manager</summary>
+            <version major="1" minor="14"/>
+            <date day="11" month="8" year="2006"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added method for adding and removing a new library into/from the library manager.
+                    Added a factory class for creating Library (API object) form LibraryImplementation (SPI object).
+                    Added a support methods for listing installed LibraryTypeProviders.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project.libraries" name="LibraryManager"/>
+            <class package="org.netbeans.spi.project.libraries" name="LibraryFactory"/>
+            <class package="org.netbeans.spi.project.libraries.support" name="LibrariesSupport"/>
+        </change>    
+
+        <change id="rel-vers-1">
+            <api name="general"/>
+            <summary>Switched to major release version 1</summary>
+            <version major="1" minor="10"/>
+            <date day="22" month="12" year="2004"/>
+            <author login="jglick"/>
+            <compatibility>
+                <p>
+                    Clients should begin requesting the new version to avoid a warning at startup.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    To indicate that this is now considered a stable API, the major release version was
+                    incremented to 1 from 0.
+                </p>
+            </description>
+            <issue number="51468"/>
+        </change>
+
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE projects/libraries/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Project Libraries API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="@org-netbeans-modules-project-libraries@/index.html">Project Libraries API</a>.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.modules.project.libraries/1"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

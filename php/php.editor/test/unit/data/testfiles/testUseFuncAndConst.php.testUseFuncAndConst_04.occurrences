@@ -1,0 +1,4 @@
+    function |>MARK_OCCURRENCES:fnc<|() {}
+use function Name\Space\|>MARK_OCCURRENCES:f^nc<|;
+use function Name\Space\|>MARK_OCCURRENCES:fnc<| as fnc2;
+|>MARK_OCCURRENCES:fnc<|();

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
+
+<fontscolors>
+    <!-- JavaTokenId categories -->
+    <fontcolor name="character" default="char"/>
+    <fontcolor name="identifier" default="identifier"/>
+    <fontcolor name="keyword" default="keyword"/>
+    <fontcolor name="literal" default="keyword" />
+    <fontcolor name="comment" default="comment"/>
+    <fontcolor name="number" default="number"/>
+    <fontcolor name="operator" default="operator"/>
+    <fontcolor name="string" default="string"/>
+    <fontcolor name="separator" default="separator"/>
+    <fontcolor name="whitespace" default="whitespace"/>
+    
+    <fontcolor name="keyword-directive" default="keyword"/>
+    
+    <!--"semantic" highlighting:-->
+    <fontcolor name="mod-unused" waveUnderlined="999999"/>
+    <fontcolor name="mod-abstract" />
+    
+    <fontcolor name="mod-field-declaration" default="field"/>    
+    <fontcolor name="mod-record-component-declaration" default="field"/>
+    <fontcolor name="mod-local-variable-declaration" default="identifier"/>    
+    <fontcolor name="mod-parameter-declaration" default="identifier"/>
+    
+    <fontcolor name="mod-method-declaration" default="method">
+        <font style="bold" />
+    </fontcolor>
+    <fontcolor name="mod-constructor-declaration" default="identifier">
+        <font style="bold" />
+    </fontcolor>
+    <fontcolor name="mod-module-declaration" default="identifier">
+            <font style="bold" />
+    </fontcolor>
+    <fontcolor name="mod-class-declaration" default="identifier">
+            <font style="bold" />
+    </fontcolor>
+    <fontcolor name="mod-interface-declaration" default="identifier">
+            <font style="bold" />
+    </fontcolor>
+    <fontcolor name="mod-annotation-type-declaration" default="identifier">
+                <font style="bold" />
+    </fontcolor>
+    <fontcolor name="mod-enum-declaration" default="identifier">
+        <font style="bold" />
+    </fontcolor>
+    
+    <fontcolor name="mod-field" default="field"/>        
+    <fontcolor name="mod-record-component" default="field"/>
+    <fontcolor name="mod-local-variable" default="identifier"/>
+    <fontcolor name="mod-parameter" default="identifier"/>
+    <fontcolor name="mod-method" default="method"/>
+    <fontcolor name="mod-constructor" default="identifier"/>
+    <fontcolor name="mod-module" default="identifier"/>
+    <fontcolor name="mod-class" default="identifier"/>
+    <fontcolor name="mod-record" default="identifier"/>
+    <fontcolor name="mod-interface" default="identifier"/>
+    <fontcolor name="mod-annotation-type" default="identifier"/>
+    <fontcolor name="mod-enum" default="identifier"/>
+    
+    
+    <fontcolor name="mod-deprecated" strikeThrough="black"/>    
+    <fontcolor name="mod-static" >
+        <font style="italic" />
+    </fontcolor>    
+    <fontcolor name="mod-private" />
+    <fontcolor name="mod-package-private" />
+    <fontcolor name="mod-protected" />
+    <fontcolor name="mod-public" />
+    <fontcolor name="mod-keyword" default="keyword" />
+    <fontcolor name="mod-unindented-text-block" bgColor="EEDDDD" />
+    
+    <!--currently not used:-->
+<!--    <fontcolor name="mod-type-parameter-declaration" bgColor="lightGray"/>
+    <fontcolor name="mod-type-parameter-use" bgColor="green"/>
+    <fontcolor name="mod-undefined" foreColor="red"/>-->
+    
+    <!-- JavaStringTokenId categories -->
+    <fontcolor name="string-escape" default="string">
+        <font style="bold" />
+    </fontcolor>
+    <fontcolor name="string-escape-invalid" waveUnderlined="CE7B00" default="string">
+        <font style="bold" />
+    </fontcolor>
+    
+    <!-- JavaCharacterTokenId categories -->
+    <fontcolor name="character-escape" default="character">
+        <font style="bold" />
+    </fontcolor>
+    <fontcolor name="character-escape-invalid" default="character">
+        <font style="italic" />
+    </fontcolor>
+   
+    <!-- JavadocTokenId categories -->
+    <fontcolor name="javadoc-tag" default="comment">
+        <font style="bold" />
+    </fontcolor>
+    <fontcolor name="html-tag" default="comment" foreColor="9999FF">
+        <font style="bold" />
+    </fontcolor>
+    <fontcolor name="javadoc-first-sentence" default="comment">
+        <font style="bold" />
+    </fontcolor>
+
+    <fontcolor name="javadoc-identifier" default="comment" foreColor="000000" >
+    </fontcolor>
+
+<!-- XXX: should java module really define these colorings ??
+
+    <fontcolor name="html-argument" foreColor="ff007c00" default="identifier"/>
+    <fontcolor name="html-block-comment" foreColor="gray" default="comment"/>
+    <fontcolor name="html-character" foreColor="ffb20000" default="char"/>
+    <fontcolor name="html-error" foreColor="black" bgColor="pink" default="error"/>
+    <fontcolor name="html-operator" foreColor="ff007c00" default="operator"/>
+    <fontcolor name="html-sgml-comment" foreColor="gray" default="comment"/>
+    <fontcolor name="html-sgml-declaration" foreColor="ffbf9221" default="default"/>
+    <fontcolor name="html-text" default="default"/>
+    <fontcolor name="html-value" foreColor="ff99006b" default="default"/>
+    <fontcolor name="html-ws" default="whitespace"/>
+-->
+</fontscolors>

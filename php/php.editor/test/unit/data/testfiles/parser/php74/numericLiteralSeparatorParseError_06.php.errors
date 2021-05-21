@@ -1,0 +1,7 @@
+[[816,821]-Syntax error
+ unexpected:	identifier 'b_101'
+ after:	integer '0'
+ expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ], ), :, ??] 816-821:Syntax error
+ unexpected:	identifier 'b_101'
+ after:	integer '0'
+ expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ], ), :, ??

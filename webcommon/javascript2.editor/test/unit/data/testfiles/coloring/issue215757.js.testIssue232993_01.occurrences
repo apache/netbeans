@@ -1,0 +1,3 @@
+var Utils = function(|>MARK_OCCURRENCES:window<|) {
+    this.window = |>MARK_OCCURRENCES:window<|;  
+    this.document = |>MARK_OCCURRENCES:win^dow<|.document;       

@@ -1,0 +1,1735 @@
+<!--
+~ JBoss, Home of Professional Open Source
+~ Copyright 2019, Red Hat, Inc., and individual contributors as indicated
+~ by the @authors tag.
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+
+<!--
+$Id: jboss_4_0.dtd 73541 2008-05-20 22:17:16Z alex.loubyansky@jboss.com $
+
+This is the XML DTD for the JBoss 4.0 EJB deployment descriptor.
+The DOCTYPE is:
+
+  <!DOCTYPE jboss PUBLIC
+      "-//JBoss//DTD JBOSS 4.0//EN"
+      "http://www.jboss.org/dtd/jbossas/jboss_4_0_1.dtd">
+
+Overview of the architecture of jboss.xml
+
+<jboss>
+
+  <enforce-ejb-restrictions />
+  <security-domain />
+  <unauthenticated-principal />
+  <webservices>
+    <context-root>
+    <webservice-description>
+      <webservice-description-name>
+      <wsdl-publish-location>
+    </webservice-description>
+  <webservices>
+
+  <enterprise-beans>
+
+    <entity>
+      <ejb-name />
+      <jndi-name />
+      <local-jndi-name />
+      <call-by-value>
+      <read-only>
+      <call-by-value>
+      <configuration-name>
+      <security-proxy>
+      <ejb-ref>
+      <ejb-local-ref>
+      <service-ref>
+      <security-identity>
+        <run-as-principal>
+      </security-identity>
+      <resource-ref>
+        <res-ref-name />
+        <resource-name />
+      </resource-ref>
+      <resource-env-ref>
+      <clustered />
+      <cluster-config>
+    </entity>
+
+    <session>
+      <ejb-name />
+      <jndi-name />
+      <local-jndi-name />
+      <call-by-value>
+      <configuration-name>
+      <security-proxy>
+      <ejb-ref>
+      <ejb-local-ref>
+      <service-ref>
+      <security-identity>
+        <run-as-principal>
+      </security-identity>
+      <resource-ref>
+        <res-ref-name />
+        <resource-name />
+      </resource-ref>
+      <resource-env-ref>
+      <clustered />
+      <cluster-config>
+      <port-component>
+        <port-component-name>
+        <port-component-uri>
+        <auth-method>
+        <transport-guarantee>
+      </port-component>
+    </session>
+
+    <message-driven>
+      <ejb-name>
+      <destination-jndi-name>
+      <mdb-user>
+      <mdb-passwd>
+      <mdb-client-id>
+      <mdb-subscription-id>
+      <resource-adapter-name>
+      <configuration-name>
+      <security-proxy>
+      <ejb-ref>
+      <service-ref>
+      <security-identity>
+        <run-as-principal>
+      </security-identity>
+      <resource-ref>
+      <resource-env-ref>
+    </message-driven>
+
+  </enterprise-beans>
+
+  <assembly-descriptor>
+    <security-role>
+      <role-name>
+      <principal-name>
+    </security-role>
+  </assembly-descriptor>
+
+  <resource-managers>
+
+    <resource-manager>
+      <res-name />
+      <res-jndi-name />
+    </resource-manager>
+
+    <resource-manager>
+      <res-name />
+      <res-url />
+    </resource-manager>
+
+  </resource-managers>
+
+  <container-configurations>
+
+    <container-configuration>
+      <container-name />
+      <call-logging />
+      <invoker-proxy-binding-name />
+      <sync-on-commit-only />
+      <insert-after-ejb-post-create />
+      <call-ejb-store-on-clean />
+      <store-not-flushed />
+      <container-interceptors />
+      <instance-pool />
+      <instance-cache />
+      <persistence-manager />
+      <web-class-loader />
+      <locking-policy />
+      <container-cache-conf />
+      <container-pool-conf />
+      <commit-option />
+      <optiond-refresh-rate />
+      <security-domain />
+      <cluster-config />
+      <depends />
+    </container-configuration>
+
+  </container-configurations>
+
+</jboss>
+-->
+
+<!ENTITY % service-ref PUBLIC
+   "-//JBoss//DTD Web Service Reference 4.0//EN"
+   "http://www.jboss.org/j2ee/dtd/service-ref_4_0_1.dtd">
+
+%service-ref;
+
+<!--
+  The jboss element is the root element of the jboss.xml file. It
+  contains all the information used by jboss but not described in the
+  ejb-jar.xml file. All of it is optional.
+
+  1- the application assembler can define custom container configurations
+     for the beans. Standard configurations are provided in standardjboss.xml
+  2- the deployer can override the jndi names under which the beans are deployed
+  3- the deployer can specify runtime jndi names for resource managers.
+
+-->
+<!ELEMENT jboss (loader-repository?, jmx-name?, enforce-ejb-restrictions?,
+ security-domain?, missing-method-permissions-excluded-mode?,
+ unauthenticated-principal?, exception-on-rollback?,
+ webservices?, enterprise-beans?, assembly-descriptor?,
+ resource-managers?, invoker-proxy-bindings?, container-configurations?)>
+
+<!-- The loader-repository specifies the name of the UnifiedLoaderRepository
+   MBean to use for the ear to provide ear level scoping of classes deployed
+   in the ear. It is a unique JMX ObjectName string. It may also specify
+   an arbitrary configuration by including a loader-repository-config element.
+
+Examples:
+   <loader-repository>jboss.test:loader=cts-cmp2v1-sar.ear</loader-repository>
+
+   <loader-repository loaderRepositoryClass='dot.com.LoaderRepository'>
+      dot.com:loader=unique-archive-name
+      <loader-repository-config configParserClass='dot.com.LoaderParser'>
+         java2ParentDelegaton=true
+      </loader-repository-config>
+   </loader-repository>
+-->
+<!ELEMENT loader-repository (#PCDATA | loader-repository-config)*>
+
+<!-- The loaderRepositoryClass attribute gives the classname of the
+org.jboss.mx.loading.LoaderRepository implementation.
+-->
+<!ATTLIST loader-repository loaderRepositoryClass CDATA #IMPLIED>
+
+<!-- The loader-repository-config element specifies any arbitrary configuration
+fragment for use in configuring the loader-repository instance. The actual
+content of this element is specific to the loaderRepositoryClass and the
+code parsing the element.
+-->
+<!ELEMENT loader-repository-config (#PCDATA)>
+
+<!-- The configParserClass attribute gives the classname of the
+org.jboss.mx.loading.LoaderRepositoryFactory.LoaderRepositoryConfigParser
+implementation to use to parse the loader-repository-config content.
+-->
+<!ATTLIST loader-repository-config configParserClass CDATA #IMPLIED>
+
+<!-- The jmx-name element allows one to specify the JMX ObjectName to use
+for the MBean associated with the ejb-jar module. This must be a unique
+name and valid JMX ObjectName string.
+
+   Used in: jboss
+-->
+<!ELEMENT jmx-name (#PCDATA)>
+
+<!--
+  The enforce-ejb-restrictions element tells the container to enforce ejb1.1 restrictions
+  It must be one of the following :
+    <enforce-ejb-restrictions>true</enforce-ejb-restrictions>
+    <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
+
+  Used in: jboss
+-->
+<!ELEMENT enforce-ejb-restrictions (#PCDATA)>
+
+<!--
+  The security-domain element specifies the JNDI name of the security
+  manager that implements the EJBSecurityManager and RealmMapping for
+  the domain. When specified at the jboss level it specifies the security
+  domain for all j2ee components in the deployment unit.
+  One can override the global security-domain at the container
+  level using the security-domain element at the container-configuration
+  level.
+
+  Used in: jboss, container-configuration
+-->
+<!ELEMENT security-domain (#PCDATA)>
+
+<!-- The missing-method-permissions-excluded-mode determines the treatment
+of missing method-permission mappings in the ejb-jar descriptor. The ejb 2.1
+spec states: "It is possible that some methods are not assigned to any security
+roles nor contained in the exclude-list element. In this case, it is the
+responsibility of the Deployer to assign method permissions for all of the
+unspecified methods, either by assigning them to security roles, or by marking
+them as unchecked." The missing-method-permissions-excluded-mode is a boolean
+that allows the deployer to globally indicate that all methods without a
+method-permission element should be treated as excluded(= true and the default),
+or that methods without a method-permission element should be treated as
+unchecked(= false)
+
+<missing-method-permissions-excluded-mode>true</missing-method-permissions-excluded-mode>
+<missing-method-permissions-excluded-mode>false</missing-method-permissions-excluded-mode>
+
+-->
+<!ELEMENT missing-method-permissions-excluded-mode (#PCDATA)>
+
+<!--
+  The unauthenticated-principal element specifies the name of the principal
+  that will be returned by the EJBContext.getCallerPrincipal() method if there
+  is no authenticated user. This Principal has no roles or privaledges to call
+  any other beans.
+-->
+<!ELEMENT unauthenticated-principal (#PCDATA)>
+
+<!-- The invoker-proxy-bindings defines the invokers available for use with
+the ejb container configurations.
+-->
+<!ELEMENT invoker-proxy-bindings (invoker-proxy-binding*)>
+
+<!-- The invoker-proxy-binding defines an invoker service and proxy factory
+-->
+<!ELEMENT invoker-proxy-binding (name, invoker-mbean, proxy-factory, proxy-factory-config)>
+
+<!-- The name gives a unique name for the invoker-proxy-binding
+-->
+<!ELEMENT name (#PCDATA)>
+
+<!-- The invoker-mbean gives the JMX ObjectName of the invoker MBean service
+-->
+<!ELEMENT invoker-mbean (#PCDATA)>
+
+<!-- The org.jboss.ejb.EJBProxyFactory implementation class
+-->
+<!ELEMENT proxy-factory (#PCDATA)>
+
+<!-- The proxy-factory-config defines the client-interceptors stack
+and other configuration options to use for the various EJB proxies.
+-->
+<!ELEMENT proxy-factory-config (client-interceptors?, endpoint-interceptors? , web-class-loader? ,
+activation-config?, JMSProviderAdapterJNDI? , ServerSessionPoolFactoryJNDI? ,
+CreateJBossMQDestination? , MinimumSize? , MaximumSize? ,
+KeepAliveMillis? , MaxMessages? , MDBConfig? , poa? , register-ejbs-in-jnp-context? ,
+jnp-context? , interface-repository-supported?)>
+
+<!--
+  The jndi name of the jms provider adapter in the java:/ namespace.
+  This is mandatory for an MDB and must implement
+  org.jboss.jms.jndi.JMSProviderAdapter
+
+  Used in: proxy-factory-config for JMSContainerInvoker
+-->
+<!ELEMENT JMSProviderAdapterJNDI (#PCDATA)>
+
+<!--
+  The jndi name of the session pool in the java:/ namespace.
+  This is mandatory for an MDB and must implement
+  org.jboss.jms.asf.ServerSessionPoolFactory
+
+  Used in: proxy-factory-config for JMSContainerInvoker
+-->
+<!ELEMENT ServerSessionPoolFactoryJNDI (#PCDATA)>
+
+<!--
+  Whether to create destinations in JBossMQ if the
+  destination cannot be found.
+
+  Used in: proxy-factory-config for JMSContainerInvoker
+-->
+<!ELEMENT CreateJBossMQDestination (#PCDATA)>
+
+<!--
+  The maximum number of messages parameter for the mdb's
+  connection consumer.
+
+  Used in: proxy-factory-config for JMSContainerInvoker
+-->
+<!ELEMENT MaxMessages (#PCDATA)>
+
+<!--
+  Configuration for the MDB
+
+  Used in: proxy-factory-config for JMSContainerInvoker
+-->
+<!ELEMENT MDBConfig (ReconnectIntervalSec , DeliveryActive? , DLQConfig?)>
+
+<!--
+  The time to wait (in seconds) before trying to recover
+  the connection to the JMS server.
+
+  Used in: MDBConfig
+-->
+<!ELEMENT ReconnectIntervalSec (#PCDATA)>
+
+<!--
+  Whether delivery of messages is active at startup,
+  valid values are "True" or "False".
+
+  Used in: MDBConfig
+-->
+<!ELEMENT DeliveryActive (#PCDATA)>
+
+<!--
+  Configuration for an MDB's dead letter queue, used
+  when messages are redelivered too many times.
+
+  Used in: MDBConfig
+-->
+<!ELEMENT DLQConfig (DestinationQueue , MaxTimesRedelivered , TimeToLive, DLQUser?,  DLQPassword?)>
+
+<!--
+  The jndi name of the queue to use as the dead letter queue.
+
+  Used in: DLQConfig
+-->
+<!ELEMENT DestinationQueue (#PCDATA)>
+
+<!--
+  The maximum number of times a message is redelivered before it
+  is placed in the dead letter queue.
+
+  Used in: DLQConfig
+-->
+<!ELEMENT MaxTimesRedelivered (#PCDATA)>
+
+<!--
+  The time-to-live of the message in the dead letter queue.
+  See javax.jms.Message
+
+  Used in: DLQConfig
+-->
+<!ELEMENT TimeToLive (#PCDATA)>
+
+<!--
+  The user for the dlq connection
+
+  Used in: DLQConfig
+-->
+<!ELEMENT DLQUser (#PCDATA)>
+
+<!--
+  The password for the dlq connection
+
+  Used in: DLQConfig
+-->
+<!ELEMENT DLQPassword (#PCDATA)>
+
+<!--
+  The portable object adapter usage, one of
+  <poa>per-servent</poa>
+  <poa>shared</poa>
+
+  Used in: proxy-factory-config for IORFactory
+-->
+<!ELEMENT poa (#PCDATA)>
+
+<!--
+  Whether to register ejbs in jnp (jndi)
+
+  Used in: proxy-factory-config for IORFactory
+-->
+<!ELEMENT register-ejbs-in-jnp-context (#PCDATA)>
+
+<!--
+  The jndi context in which to register ejbs
+
+  Used in: proxy-factory-config for IORFactory
+-->
+<!ELEMENT jnp-context (#PCDATA)>
+
+<!--
+  Whether a deployed ejb has its own CORBA interface repository or not
+
+  Used in: proxy-factory-config for IORFactory
+-->
+<!ELEMENT interface-repository-supported (#PCDATA)>
+
+<!--
+  The enterprise-beans element contains additional information about
+  the beans. These informations, such as jndi names, resource managers and
+  container configurations, are specific to jboss and not described in
+  ejb-jar.xml.
+
+  jboss will provide a standard behaviour if no enterprise-beans element
+  is found, see container-configurations, jndi-name and resource-managers
+  for defaults.
+
+  Used in: jboss
+-->
+<!ELEMENT webservices (context-root?, webservice-description*)>
+
+<!-- The context-root element specifies the context root of the web
+application that the EJB service endpoints are deployed to.
+If it is not specified it will be derived from the deployment short name.
+-->
+<!ELEMENT context-root (#PCDATA)>
+
+<!--
+Runtime information about a web service.
+wsdl-publish-location is optionally used to specify
+where the final wsdl and any dependent files should be stored.  This location
+resides on the file system from which deployment is initiated.
+-->
+<!ELEMENT webservice-description ( webservice-description-name, config-name?, config-file?, wsdl-publish-location? )>
+
+<!--
+Unique name of a webservice within a module. It corresponds to the <webservice-description-name>
+element in webservices.xml
+-->
+<!ELEMENT webservice-description-name ( #PCDATA )>
+
+<!--
+file: URL of a directory to which a web-service-description's wsdl should be
+published during deployment.  Any required files will be published to this
+directory, preserving their location relative to the module-specific
+wsdl directory(META-INF/wsdl or WEB-INF/wsdl).
+Example :
+  For an ejb.jar whose webservices.xml wsdl-file element contains
+    META-INF/wsdl/a/Foo.wsdl
+  <wsdl-publish-location>file:/home/user1/publish
+  </wsdl-publish-location>
+  The final wsdl will be stored in /home/user1/publish/a/Foo.wsdl
+-->
+<!ELEMENT wsdl-publish-location ( #PCDATA )>
+
+<!--
+  The enterprise-beans element contains additional information about
+  the beans. These informations, such as jndi names, resource managers and
+  container configurations, are specific to jboss and not described in
+  ejb-jar.xml.
+  jboss will provide a standard behaviour if no enterprise-beans element
+  is found, see container-configurations, jndi-name and resource-managers
+  for defaults.
+  Used in: jboss
+-->
+<!ELEMENT enterprise-beans ((session | entity | message-driven)*)>
+
+<!--
+  The entity element holds information specific to jboss and not declared
+  in ejb-jar.xml about an entity bean, such as jndi name, container
+  configuration, and resource managers. (see tags for details)
+  The bean should already be declared in ejb-jar.xml, with the same
+  ejb-name.
+
+  Used in: enterprise-beans
+-->
+<!ELEMENT entity (ejb-name , jndi-name? , local-jndi-name? , call-by-value?, read-only?,
+ exception-on-rollback?, timer-persistence?, configuration-name? , invoker-bindings?,
+ security-proxy? , ejb-ref* , ejb-local-ref* , service-ref*, security-identity? ,
+ resource-ref* , resource-env-ref*, message-destination-ref* , method-attributes? ,
+ clustered? , cluster-config?, cache-invalidation? , cache-invalidation-config?,
+ depends*, ior-security-config?)>
+<!-- Allow the entity to have a unique id -->
+<!ATTLIST entity id ID #IMPLIED>
+<!--
+  The session element holds information specific to jboss and not declared
+  in ejb-jar.xml about a session bean, such as jndi name, container
+  configuration, and resource managers. (see tags for details)
+  The bean should already be declared in ejb-jar.xml, with the same
+  ejb-name.
+
+  Used in: enterprise-beans
+-->
+<!ELEMENT session (ejb-name , jndi-name? , local-jndi-name?, call-by-value?,
+ exception-on-rollback?, timer-persistence?, configuration-name?, invoker-bindings?,
+ security-proxy? , ejb-ref* ,  ejb-local-ref* , service-ref*, security-identity? ,
+ resource-ref* , resource-env-ref*, message-destination-ref* , clustered? ,
+ cluster-config?, method-attributes?, depends*,
+ ior-security-config?, port-component*,  ejb-timeout-identity?)>
+<!-- Allow the session to have a unique id -->
+<!ATTLIST session id ID #IMPLIED>
+
+<!--
+  The message-driven element holds information specific to jboss and not declared
+  in ejb-jar.xml about a message-driven bean, such as container
+  configuration and resources.
+  The bean should already be declared in ejb-jar.xml, with the same
+  ejb-name.
+
+  Used in: enterprise-beans
+-->
+<!ELEMENT message-driven (ejb-name , activation-config?, destination-jndi-name? ,
+ local-jndi-name?,
+ mdb-user?,  mdb-passwd? , mdb-client-id? , mdb-subscription-id? , resource-adapter-name? ,
+ exception-on-rollback?, timer-persistence?, configuration-name? , invoker-bindings?,
+ security-proxy? , ejb-ref* ,  ejb-local-ref*, service-ref*, security-identity?, resource-ref*,
+ resource-env-ref*, message-destination-ref*, depends*, ior-security-config?,
+ ejb-timeout-identity?)>
+<!-- Allow the message-driven to have a unique id -->
+<!ATTLIST message-driven id ID #IMPLIED>
+
+<!--
+  The ejb-name element gives the name of the bean, it must correspond to
+  an ejb-name element in ejb-jar.xml
+
+  Used in: entity, session, and message-driven
+-->
+<!ELEMENT ejb-name (#PCDATA)>
+
+<!--
+  The jndi-name element gives the actual jndi name under which
+  the bean will be deployed when used in the entity, session and
+  message-driven elements. If it is not provided jboss will assume
+  "jndi-name" = "ejb-name"
+
+  When used in the ejb-ref,  ejb-local-ref, resource-ref, resource-env-ref,
+  message-destination-ref, message-destination elements this specifies the jndi name to
+  which the reference should link.
+
+  Used in: entity, session and message-driven
+    ejb-ref, resource-ref, resource-env-ref
+-->
+<!ELEMENT jndi-name (#PCDATA)>
+
+<!--
+  The JNDI name under with the local home interface should be bound
+
+  Used in: entity and session
+-->
+<!ELEMENT local-jndi-name (#PCDATA)>
+
+<!--
+  Determine if the bean should use by value call semantics
+
+  Used in: entity and session
+-->
+<!ELEMENT call-by-value (#PCDATA)>
+
+<!--
+  The read-only element flags an entity bean as read only.
+  The bean will never be ejbStored. Defaults to false.
+  It must be one of the following :
+    <read-only>true</read-only>
+    <read-only>false</read-only>
+
+  Used in: entity
+-->
+<!ELEMENT read-only (#PCDATA)>
+
+<!--
+  Whether to throw an exception if the CMT controlled
+  transaction is no longer active (e.g. marked rollback)
+  but the application has not itself thrown an exception.
+  If the bean specifies false, it uses the
+  jboss/exception-on-rollback config.
+  Defaults to false.
+  It must be one of the following :
+    <exception-on-rollback>true</exception-on-rollback>
+    <exception-on-rollback>false</exception-on-rollback>
+
+  Used in: jboss, session, entity and message-driven
+-->
+<!ELEMENT exception-on-rollback (#PCDATA)>
+
+<!--
+  The timer-persistence element determines whether ejb timers should
+  be persisted across application redeployment. Defaults to true.
+
+  It must be one of the following:
+    <timer-persistence>true</timer-persistence>
+    <timer-persistence>false</timer-persistence>
+
+  Used in: session, entity and message-driven
+-->
+<!ELEMENT timer-persistence (#PCDATA)>
+
+<!--
+  The configuration-name element gives the name of the container
+  configuration for this bean. It must match one of the container-name
+  tags in the container-configurations section, or one of the standard
+  configurations. If no element is provided, jboss will automatically use the
+  right standard configuration, see container-configurations.
+
+  Note: unlike earlier releases, this element may not be specified as an
+   empty element to achieve the same effect as not specifying the element.
+
+  Used in: entity, session, and message-driven
+-->
+<!ELEMENT configuration-name (#PCDATA)>
+
+<!-- The depends element gives a JMX ObjectName of a service on which the
+container or ejb depends.
+-->
+<!ELEMENT depends (#PCDATA)>
+
+<!-- The queue/topic jndi name from which we receive messages -->
+<!ELEMENT destination-jndi-name (#PCDATA)>
+
+<!-- The optional user for the jms connection that delivers messages -->
+<!ELEMENT mdb-user (#PCDATA)>
+
+<!-- The optional password for the jms connection that delivers messages -->
+<!ELEMENT mdb-passwd (#PCDATA)>
+
+<!-- The optional client-id for the jms connection that delivers messages -->
+<!ELEMENT mdb-client-id (#PCDATA)>
+
+<!-- The subscription name for topic delivery -->
+<!ELEMENT mdb-subscription-id (#PCDATA)>
+
+<!-- The name of the rar used in JCA 1.5 message inflow
+e.g.
+   <resource-adapter-name>jms-ra.rar</resource-adapter-name>
+or for embedded rars
+   <resource-adapter-name>myapp.ear#myconnector.rar</resource-adapter-name>
+-->
+<!ELEMENT resource-adapter-name (#PCDATA)>
+
+<!-- The security-proxy gives the class name of the security proxy implementation.
+  This may be an instance of org.jboss.security.SecurityProxy, or an
+  just an object that implements methods in the home or remote interface
+  of an EJB without implementating any common interface.
+
+      Used in: entity, session, and message-driven
+-->
+<!ELEMENT security-proxy (#PCDATA)>
+
+<!--
+  The ejb-ref element is used to give the jndi-name of an external
+  ejb reference. In the case of an external ejb reference, you don't
+  provide a ejb-link element in ejb-jar.xml, but you provide a jndi-name
+  in jboss.xml
+
+  Used in: entity, session, and message-driven
+-->
+<!ELEMENT ejb-ref (ejb-ref-name , jndi-name)>
+
+<!--
+  The ejb-ref-name element is the name of the ejb reference as given in
+  ejb-jar.xml.
+
+  Used in: ejb-ref
+-->
+<!ELEMENT ejb-ref-name (#PCDATA)>
+
+<!--
+  The ejb-local-ref element is used to give the jndi-name of an external
+  ejb reference. This is an alternative to using ejb-link in ejb-jar.xml
+
+  Used in: entity, session, and message-driven
+-->
+<!ELEMENT ejb-local-ref (ejb-ref-name , local-jndi-name)>
+
+<!--
+  The security-identity element specifies whether a specific run-as identity is to be
+  used. If there is a run-as role defined for an enterprise bean, there can also be a
+  run-as-principal define here. If you don't define a run-as principal the callee will
+  see ctx.getCallerPrincipal() == 'anonymous'
+
+  Used in: entity, message-driven, session
+-->
+<!ELEMENT security-identity (run-as-principal)>
+
+<!--
+  The ejb-timeout-identity element specifies the run-as used for the ejbTimeout
+  callback method. If the run-as-principal is specified this is the identity
+  that will be set as the callback run-as. If the run-as-principal is empty,
+  then no security context is specified at the container level. Any access of
+  secured resources will require that the ejbTimeout method establish the
+  security context.
+-->
+<!ELEMENT ejb-timeout-identity (run-as-principal)>
+
+<!--
+  The run-as-principal element is the name of the principal that is used
+  when the enterprise bean calls out with a run-as role.
+
+  Used in: security-identity
+-->
+<!ELEMENT run-as-principal (#PCDATA)>
+
+<!--
+  The resource-env-ref element gives a mapping between the "code name"
+  of a env resource (res-ref-name, provided by the Bean Developer) and
+  its deployed JNDI name.
+
+  Used in: session, entity, message-driven
+-->
+<!ELEMENT resource-env-ref (resource-env-ref-name , jndi-name)>
+
+<!--
+  The resource-env-ref-name element gives the "code name" of a resource. It is
+  provided by the Bean Developer.
+
+  Used in: resource-env-ref
+-->
+<!ELEMENT resource-env-ref-name (#PCDATA)>
+
+<!--
+  The method-attributes element can be used to specify which methods are read only
+  or idempotent.  This is used to reduce the need for locks and replication.
+-->
+<!ELEMENT method-attributes (method*)>
+
+<!--
+  The method element is used to specify attributes for one method or all those
+  matching a pattern startingstring*.
+-->
+<!ELEMENT method (method-name, read-only?, idempotent?, transaction-timeout?)>
+
+<!--
+  The method-name element specifies a complete method name or a pattern consisting of an
+  initial match followed by '*'
+-->
+<!ELEMENT method-name (#PCDATA)>
+
+<!--
+  The idempotent element is used in method-attributes to indicate that a method
+  is completely stateless. Really the same as read-only and should be dropped.
+-->
+<!ELEMENT idempotent (#PCDATA)>
+
+<!--
+  The transaction timeout in seconds (overriding the default timeout).
+  This will only work for Required (where the method starts the transaction) and RequiresNew.
+  The special value of 0 (zero) uses the default timeout configured on jboss:service=TransactionManager
+  NOTE: any subsequent use of RequiresNew that is not explicitly overridden will use this value.
+-->
+<!ELEMENT transaction-timeout (#PCDATA)>
+
+<!--
+  The clustered element indicates if this bean will run in a cluster of JBoss instances.
+  It is provided by the deployer. If not, jboss will assume clustered = False
+  Possible values: "True", "False" (default)
+
+  Used in: entity and session
+-->
+<!ELEMENT clustered (#PCDATA)>
+
+<!--
+  The cluster-config element allows to specify cluster specific settings.
+  WARNING: session-state-manager-jndi-name is only for SFSB.
+
+  Used in: session, entity, container-configuration
+-->
+<!ELEMENT cluster-config (partition-name? , home-load-balance-policy? ,
+ bean-load-balance-policy? , session-state-manager-jndi-name?)>
+
+<!--
+  The partition-name element indicates the name of the HAPartition to be used
+  by the container to exchange clustering information. This is a name and *not*
+  a JNDI name. Given name will be prefixed by "/HAPartition/" by the container to get
+  the actual JNDI name of the HAPartition.
+
+  Must be set; there is no hard coded default. Can be set either in a bean's own
+  cluster-config element or in a container-configuration used by the bean.
+  The standard clustered bean container configurations in conf/standardjboss.xml
+  set this to the value of system property "jboss.partition.name", or
+  "DefaultPartition" if that property is not set.
+
+  Used in: entity, session and container-configuration (in clustered-config element)
+-->
+<!ELEMENT partition-name (#PCDATA)>
+
+<!--
+  The home-load-balance-policy element indicates the java class name to be used
+  to load balance calls in the home proxy.
+
+  Must be set; there is no hard coded default. Can be set either in a bean's own
+  cluster-config element or in a container-configuration used by the bean.
+  The standard clustered bean container configurations in conf/standardjboss.xml
+  set this to "org.jboss.ha.framework.interfaces.RoundRobin".
+
+  Used in: entity, session and container-configuration (in cluster-config element)
+-->
+<!ELEMENT home-load-balance-policy (#PCDATA)>
+
+<!--
+  The bean-load-balance-policy element indicates the java class name to be used
+  to load balance calls in an EJB2 bean proxy.
+
+  Must be set; there is no hard coded default. Can be set either in a bean's own
+  cluster-config element or in a container-configuration used by the bean.
+  The standard clustered bean container configurations in conf/standardjboss.xml
+  set this to "org.jboss.ha.framework.interfaces.RoundRobin" for SLSBs and to
+  "org.jboss.ha.framework.interfaces.FirstAvailable" for EB and SFSBs.
+
+  Used in: entity, session and container-configuration (in cluster-config element)
+-->
+<!ELEMENT bean-load-balance-policy (#PCDATA)>
+
+<!--
+  The cache-invalidation element indicates if this bean cache should listen to cache
+  invalidation events and clear its cache accordingly as well as send cache invalidation
+  messages.
+  It is provided by the deployer. If not, jboss will assume cache-invalidation = False
+  NOTE: This value will *only* be applied if the correct cache plugin and interceptor(s)
+        are defined in the container configuration.
+  Possible values: "True", "False" (default)
+
+  Used in: entity (only commit-option A and D will invalidate their cache)
+-->
+<!ELEMENT cache-invalidation (#PCDATA)>
+
+<!--
+  The cache-invalidation-config element allows to specify cache invalidation specific settings.
+
+  Used in: entity
+-->
+<!ELEMENT cache-invalidation-config (invalidation-group-name? , invalidation-manager-name?)>
+
+<!--
+  The invalidation-group-name element indicates the name of a group in which all
+  invalidation messages are exchanged i.e. all beans sharing a given invalidation-group-name
+  should share the same PK semantic.
+  By default, invalidation-group-name equals to the EJB name. Thus, when using cache invalidation
+  accross a cluster, it is not necessary to specify a name as all beans will have the same name
+  accross the cluster. Nevertheless, if you deploy, on the same node, the same EJB, once with
+  commit-option C (RW access) and once in commit-option A (RO) and want the RW EJB to invalidate
+  entries of RO EJB, each one will obviously have its own EJB name. Consequently, you can assign
+  a common invalidation-group-name to both EJBs so that they share their cache invalidation messages.
+
+  Used in: entity (in cache-invalidation-config element)
+-->
+<!ELEMENT invalidation-group-name (#PCDATA)>
+
+<!--
+  The invalidation-manager-name references the InvalidationManager MBean to be used.
+  By Default, the default InvalidationManager is used.
+
+  Used in: entity (in cache-invalidation-config element)
+-->
+<!ELEMENT invalidation-manager-name (#PCDATA)>
+
+<!--
+  The session-state-manager-jndi-name element indicates the name of the
+  HASessionState to be used by the container as a backend for EJB2 stateful
+  session bean management in the cluster. This *is* a JNDI name (unlike the
+  partition-name element).
+
+  Must be set; there is no hard coded default. Can be set either in a bean's own
+  cluster-config element or in a container-configuration used by the bean.
+  The standard clustered bean container configurations in conf/standardjboss.xml
+  set this to "/HASessionState/" plus the value of system property
+  "jboss.partition.name", or "DefaultPartition" if that property is not set.
+
+  Used in: session or container-configuration (in cluster-config element)
+-->
+<!ELEMENT session-state-manager-jndi-name (#PCDATA)>
+
+<!--
+  The resource-ref element gives a mapping between the "code name"
+  of a resource (res-ref-name, provided by the Bean Developer) and
+  its "xml name" (resource-name, provided by the Application Assembler).
+  If no resource-ref is provided, jboss will assume that
+  "xml-name" = "code name"
+
+  See resource-managers.
+
+  Used in: entity, session, and message-driven
+-->
+<!ELEMENT resource-ref (res-ref-name , (resource-name | jndi-name | res-url))>
+
+<!--
+  The res-ref-name element gives the "code name" of a resource. It is
+  provided by the Bean Developer. See resource-managers for the actual
+  configuration of the resource.
+
+  Used in: resource-ref
+-->
+<!ELEMENT res-ref-name (#PCDATA)>
+
+<!--
+  The resource-name element gives the "xml name" of the resource. It is
+  provided by the Application Assembler. See resource-managers for the
+  actual configuration of the resource.
+
+  Used in: resource-ref
+-->
+<!ELEMENT resource-name (#PCDATA)>
+
+<!--
+  The resource-managers element is used to declare resource managers.
+
+  A resource has 3 names:
+  - the "code name" is the name used in the code of the bean, supplied by
+    the Bean Developer in the resource-ref section of the ejb-jar.xml file
+
+  - the "xml name" is an intermediary name used by the Application Assembler
+    to identify resources in the XML file.
+
+  - the "runtime jndi name" is the actual jndi-name or url of the deployed
+    resource, it is supplied by the Deployer.
+
+  The mapping between the "code name" and the "xml name" is given
+  in the resource-ref section for the bean. If not, jboss will assume that
+  "xml name" = "code name".
+
+  The mapping between the "xml name" and the "runtime jndi name" is given in
+  a resource-manager section. If not, and if the datasource is of type
+  javax.sql.DataSource, jboss will look for a javax.sql.DataSource in the jndi
+  tree.
+
+  Used in: jboss
+-->
+<!ELEMENT resource-managers (resource-manager*)>
+
+<!--
+  The resource-manager element is used to provide a mapping between the
+  "xml name" of a resource (res-name) and its "runtime jndi name"
+  (res-jndi-name or res-url according to the type of the resource).
+  If it is not provided, and if the type of the resource is
+  javax.sql.DataSource, jboss will look for a javax.sql.DataSource in the
+  jndi tree.
+
+  See resource-managers.
+
+  Used in: resource-managers
+-->
+<!ELEMENT resource-manager (res-name , (res-jndi-name | res-url))>
+
+<!--
+  The res-name element gives the "xml name" of a resource, it is provided
+  by the Application Assembler. See resource-managers.
+
+  Used in: resource-manager
+-->
+<!ELEMENT res-name (#PCDATA)>
+
+<!--
+  The res-jndi-name element is the "deployed jndi name" of a resource, it
+  is provided by the Deployer. See resource-managers.
+
+  Used in: resource-manager
+-->
+<!ELEMENT res-jndi-name (#PCDATA)>
+
+<!-- The res-url element value is a URL string for a resource-ref of
+res-type = java.net.URL. Using a res-url creates a binding of the URL
+instance under the java:comp/env. If you want to link to another binding
+of a URL, you can use the jndi-name to do so.
+
+// Binds the URL(http://x.y.z) under java:comp/env/jdbc/XYZHome
+<resource-ref>
+    <res-ref-name>jdbc/XYZHome</res-ref-name>
+    <res-url>http://x.y.z</res-url>
+</resource-ref>
+// Binds a link to urls/XYZHomePage under java:comp/env/jdbc/XYZHome
+<resource-ref>
+    <res-ref-name>jdbc/XYZHome</res-ref-name>
+    <res-url>urls/XYZHomePage</res-url>
+</resource-ref>
+
+   Used in: resource-ref, resource-manager
+-->
+<!ELEMENT res-url (#PCDATA)>
+
+<!--
+  The message-destination-ref element is used to configure the
+  jndi-name for a message-destination-ref in ejb-jar.xml
+
+  Used in: entity, session, and message-driven
+-->
+<!ELEMENT message-destination-ref (message-destination-ref-name, jndi-name)>
+
+<!--
+  The message-destination-ref-name element identifies the
+  message-destination-ref. It must match the name in ejb-jar.xml
+
+  Used in: message-destination-ref
+-->
+<!ELEMENT message-destination-ref-name (#PCDATA)>
+
+<!--
+  The assembly-descriptor element contains application-assembly information.
+
+  The definition of security roles allows you to map assembly roles to one or more
+  principals. For example, you may define a run-as principal in the security-identity
+  element and include that principal in one or more security-role(s) in the
+  assembly descriptor. When called with a run-as role, the callee will see all
+  those roles in ctx.isCallerInRole(...)
+
+  Used in: jboss
+-->
+<!ELEMENT assembly-descriptor (security-role*, message-destination*)>
+
+<!--
+  The security-role element contains the definition of a security role.
+  The definition consists of an the security role name and principal name element(s).
+
+Used in: assembly-descriptor
+
+Example:
+		<security-role>
+      <role-name>Manager</role-name>
+      <principal-name>j2ee</principal-name>
+      <principal-name>javajoe</principal-name>
+		</security-role>
+-->
+<!ELEMENT security-role (role-name, principal-name+)>
+
+<!--
+  The role-name element is the name of the role.
+
+  Used in: security-role
+-->
+<!ELEMENT role-name (#PCDATA)>
+
+<!--
+  The principal-name element is the name of the principal that is mapped
+  to the assembly role-name.
+
+  Used in: security-role
+-->
+<!ELEMENT principal-name (#PCDATA)>
+
+<!--
+  The message-destination element is used to configure the
+  jndi-name for a message-destination in ejb-jar.xml
+
+  Used in: assembly-descriptor
+-->
+<!ELEMENT message-destination (message-destination-name, jndi-name)>
+
+<!--
+  The message-destination-name element identifies the
+  message-destination. It must match the name in ejb-jar.xml
+
+  Used in: message-destination
+-->
+<!ELEMENT message-destination-name (#PCDATA)>
+
+<!--
+  The container-configurations element declares the different possible
+  container configurations that the beans can use. standardjboss.xml
+  provides 15 standard configurations with the following container-names:
+    - Standard CMP 2.x EntityBean
+    - Standard CMP EntityBean
+    - Clustered CMP 2.x EntityBean
+    - Clustered CMP EntityBean
+    - IIOP CMP 2.x EntityBean
+    - IIOP CMP EntityBean
+    - Standard Stateless SessionBean
+    - Clustered Stateless SessionBean
+    - IIOP Stateless SessionBean
+    - Standard Stateful SessionBean
+    - Clustered Stateful SessionBean
+    - IIOP Stateful SessionBean
+    - Standard BMP EntityBean
+    - Clustered BMP EntityBean
+    - IIOP BMP EntityBean
+    - Standard message Driven Bean
+
+  The standard configurations will automatically be used if no custom
+  configuration is specified.
+
+  The application assembler can define advanced custom configurations here.
+
+  Used in: jboss
+-->
+<!ELEMENT container-configurations (container-configuration*)>
+
+<!--
+  The container-configuration element describes a configuration for the
+  container.
+  The different plugins to use are declared here, as well as their
+  configurations. The configuration-class attribute is no longer used.
+
+  Used in: container-configurations
+-->
+<!ELEMENT container-configuration (container-name , call-logging?,
+ invoker-proxy-binding-name?, sync-on-commit-only?,
+ insert-after-ejb-post-create?, call-ejb-store-on-clean?, store-not-flushed?, container-interceptors? ,
+ instance-pool? , instance-cache? ,  persistence-manager? , web-class-loader? ,
+ locking-policy? ,  container-cache-conf? , container-pool-conf? ,
+ commit-option? , optiond-refresh-rate? , security-domain?, cluster-config?,
+ depends*)>
+
+<!-- The extends attribute gives the container-name value of the configuration the container-configuration
+is extending. This allows one to specify an extension configuration without having to reiterate all of
+the other duplicate configuration info.
+
+        <container-configuration extends="Standard Stateful SessionBean">
+            <container-name>Secure Stateless SessionBean</container-name>
+            <security-domain>java:/jaas/other</security-domain>
+        </container-configuration>
+-->
+<!ATTLIST container-configuration extends CDATA  #IMPLIED>
+
+<!--
+  The container-name element gives the name of the configuration being
+  defined. Beans may refer to this name in their configuration-name tag.
+
+  Used in: container-configuration
+-->
+<!ELEMENT container-name (#PCDATA)>
+
+<!--
+  The call-logging element tells if the container must log every method
+  invocation for this bean or not. Its value must be true or false.
+
+  Used in: container-configuration
+-->
+<!ELEMENT call-logging (#PCDATA)>
+
+<!--
+  The invoker-bindings element gives the invokers configuration for an
+  ejb container.
+
+  Used in: entity, session, message-driven
+-->
+<!ELEMENT invoker-bindings (invoker+)>
+<!--
+ -->
+<!ELEMENT invoker (invoker-proxy-binding-name, jndi-name?, ejb-ref*)>
+
+<!-- The invoker-proxy-binding-name elements maps to the name element of
+an invoker-proxy-binding definition.
+
+  Used in: container-configuration, invoker
+-->
+<!ELEMENT invoker-proxy-binding-name (#PCDATA)>
+
+<!-- The sync-on-commit-only element determines the behavior of ejbStore
+calls on finds, selects and removes. If set to true, ejbStore will only be
+called on transaction commit.
+-->
+<!ELEMENT sync-on-commit-only (#PCDATA)>
+
+<!-- The insert-after-ejb-post-create element defines when the INSERT
+ statement will be executed for created entity instance.
+ Possible values are:
+ false - the default value, INSERT will be executed after ejbCreate but before
+         ejbPostCreate;
+ true - INSERT will be executed after ejbPostCreate.
+-->
+<!ELEMENT insert-after-ejb-post-create (#PCDATA)>
+
+<!-- The call-ejb-store-for-clean says whether ejbStore should be called on clean instances
+ at synchronization time. By the spec it should be true. But users wanted it to be false.
+ False is the default, meaning ejbStore is called only on dirty instances.
+-->
+<!ELEMENT call-ejb-store-on-clean (#PCDATA)>
+
+<!-- The store-not-flushed says whether dirty instances that could not be evicted
+ from the cache should or should not (to prevent potential data inconsistency)
+ be stored. The default value is TRUE.
+-->
+<!ELEMENT store-not-flushed (#PCDATA)>
+
+<!--
+  The container-interceptors element gives the chain of Interceptors
+  (instances of org.jboss.ejb.Interceptor) that are associated with the container.
+  The declared order of the interceptor elements corresponds to the order of the
+  interceptor chain.
+
+  Used in: container-configuration
+-->
+<!ELEMENT container-interceptors (interceptor+)>
+
+<!--
+The client-interceptors defines the home and bean client side interceptor chain
+
+  Used in: proxy-factory-config
+-->
+<!ELEMENT client-interceptors (home , bean, list-entity?)>
+
+<!-- Define whether the ejb proxy should expose an org.jboss.proxy.IClientContainer
+   interface to provide access to the invocation context and interceptors.
+-->
+<!ATTLIST client-interceptors exposeContainer (true | false )  "false">
+
+<!--
+The endpoint-interceptors element gives the chain of interceptors
+(instances of org.jboss.proxy.Interceptor) that are associated with the
+message endpoint.
+
+  Used in: proxy-factory-config for message inflow
+-->
+<!ELEMENT endpoint-interceptors (interceptor+)>
+
+<!--
+The home element gives the chain of interceptors
+(instances of org.jboss.proxy.Interceptor) that are associated with the home
+proxy and operate in the client VM. The declared order of the interceptor
+elements corresponds to the order of the interceptor chain.
+
+  Used in: client-interceptors
+-->
+<!ELEMENT home (interceptor+)>
+
+<!--
+The bean element gives the chain of interceptors
+(instances of org.jboss.proxy.Interceptor) that are associated with the remote
+proxy and operate in the client VM. The declared order of the interceptor
+elements corresponds to the order of the interceptor chain.
+
+  Used in: client-interceptors
+-->
+<!ELEMENT bean (interceptor+)>
+
+<!--
+The list-entity element gives the chain of interceptors
+(instances of org.jboss.proxy.Interceptor) that are associated with the remote
+proxy and operate in the client VM. The declared order of the interceptor
+elements corresponds to the order of the interceptor chain.
+
+  Used in: client-interceptors
+-->
+<!ELEMENT list-entity (interceptor+)>
+
+<!--
+  The interceptor element specifies an instance of org.jboss.ejb.Interceptor
+  that is to be added to the container interceptor stack.
+
+  Used in: home, bean, list-entity, endpoint-interceptors
+-->
+<!ELEMENT interceptor ANY>
+
+<!-- possible content for the TxInterceptorCMT -->
+<!ELEMENT retry-handlers (handler+)>
+<!ELEMENT handler (#PCDATA)>
+
+<!--
+  The transaction attribute is used to indicate what type of container its
+  interceptor applies to. It is an enumerated value that can take on one of: Bean,
+  Container or Both. A value of Bean indicates that the interceptor should only be
+  added to a container for bean-managed transaction.
+  A value of Container indicates that the interceptor should only be added to a
+  container for container-managed transactions.
+  A value of Both indicates that the interceptor should be added to all
+  containers. This is the default value if the transaction attribute is not
+  explictlygiven.
+-->
+<!ATTLIST interceptor transaction     (Bean | Container | Both )  "Both">
+
+<!--
+  The metricsEnabled attributes is used to indicate if the interceptor
+  should only be included when the org.jboss.ejb.ContainerFactory metricsEnabled
+  flag is set to true. The allowed values are true and false with false being the
+  default if metricsEnabled is not explicitly given.
+-->
+<!ATTLIST interceptor metricsEnabled  (true | false )  "false">
+
+<!--
+  The call-by-value attribute is used to indicate that the interceptor
+  should only be included when the value of the attribute corresponds
+  to the value of org.jboss.metadata.BeanMetaData callByValue.
+  For example, if a bean defines the element <call-by-value>true</call-by-value>
+  then a marshalling invoker interceptor will be used instead of the
+  non marshalling optimized invoker interceptor.
+-->
+<!ATTLIST interceptor call-by-value  (true | false )  #IMPLIED>
+
+<!--
+  The instance-pool element gives the class name of the instance pool
+  jboss must use for in this configuration. This class must implement
+  the org.jboss.ejb.InstancePool interface. The defaults are:
+  - org.jboss.ejb.plugins.EntityInstancePool for entity beans
+  - org.jboss.ejb.plugins.StatelessSessionInstancePool for stateless
+  session beans.
+  - no pool is used for stateful session beans
+
+  Used in: container-configuration
+-->
+<!ELEMENT instance-pool (#PCDATA)>
+
+<!--
+  The instance-cache element gives the class name of the instance cache
+  jboss must use for in this configuration. This class must implement
+  the org.jboss.ejb.InstanceCache interface. The defaults are:
+  - org.jboss.ejb.plugins.NoPassivationEntityInstanceCache for entity beans
+  - org.jboss.ejb.plugins.NoPassivationStatefulSessionInstanceCache for
+  stateful session beans.
+  - no cache is used for stateless session beans
+
+  Used in: container-configuration
+-->
+<!ELEMENT instance-cache (#PCDATA)>
+
+<!--
+  The persistence-manager element gives the class name of the persistence
+  manager / persistence store jboss must use for in this configuration.
+  This class must implement:
+  - org.jboss.ejb.EntityPersistenceStore for CMP Entity Beans (default is
+  org.jboss.ejb.plugins.jaws.JAWSPersistenceManager)
+  - org.jboss.ejb.EntityPersistenceManager for BMP entity beans (default
+  is org.jboss.ejb.plugins.BMPPersistenceManager)
+  - org.jboss.ejb.StatefulSessionPersistenceManager for stateless session
+  beans.
+  - no persistence-manager is used for stateless session beans
+
+  Used in: container-configuration
+-->
+<!ELEMENT persistence-manager (#PCDATA)>
+
+<!--
+  The locking-policy element gives the class name of the EJB lock
+  implementation JBoss must use for in this configuration. This class must
+  implement  the org.jboss.ejb.BeanLock interface. The default is
+  org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock.
+
+  Used in: container-configuration
+-->
+<!ELEMENT locking-policy (#PCDATA)>
+
+<!--
+  The web-class-loader element gives the class name of the web classloader
+  jboss must use for in this configuration. This class must be a subclass
+  of org.jboss.web.WebClassLoader. The default is org.jboss.web.WebClassLoader.
+
+  Used in: container-configuration
+  Used in: proxy-factory-config
+-->
+<!ELEMENT web-class-loader (#PCDATA)>
+
+<!--
+  The container-cache-conf element holds dynamic configuration data
+  for the instance cache.
+  jboss does not read directly the subtree for this element: instead,
+  it is passed to the instance cache instance (if it implements
+  org.jboss.metadata.XmlLoadable) for it to load its parameters.
+
+  Used in: container-configuration
+-->
+<!ELEMENT container-cache-conf (cache-policy? , cache-policy-conf?, cache-policy-conf-other?)>
+
+<!--
+  The implementation class for the cache policy, which controls
+  when instances will be passivated, etc.
+
+  Used in: container-cache-conf
+-->
+<!ELEMENT cache-policy (#PCDATA)>
+
+<!--
+  The configuration settings for the selected cache policy.  This
+  is currently only valid for the LRU cache.
+  When the cache is the LRU one for the stateful container, the elements
+  remover-period and max-bean-life specifies the period of the remover
+  task that removes stateful beans (that normally have been passivated)
+  that have age greater than the specified max-bean-life element.
+
+  Used in: container-cache-conf (when cache-policy is the LRU cache)
+-->
+<!ELEMENT cache-policy-conf (min-capacity? , max-capacity? , remover-period? ,
+ max-bean-life? , overager-period? , max-bean-age? , resizer-period? ,
+ max-cache-miss-period? , min-cache-miss-period? , cache-load-factor?, flush-enabled?)>
+
+<!--
+  The minimum capacity of this cache
+-->
+<!ELEMENT min-capacity (#PCDATA)>
+
+<!--
+  The maximum capacity of this cache
+-->
+<!ELEMENT max-capacity (#PCDATA)>
+
+<!--
+  The period of the overager's runs
+-->
+<!ELEMENT overager-period (#PCDATA)>
+
+<!--
+  The period of the remover's runs
+-->
+<!ELEMENT remover-period (#PCDATA)>
+
+<!--
+  The max-bean-life specifies the period of the remover
+  task that removes stateful beans (that normally have been passivated)
+  that have age greater than the specified max-bean-life element.
+-->
+<!ELEMENT max-bean-life (#PCDATA)>
+
+<!--
+  The period of the resizer's runs
+-->
+<!ELEMENT resizer-period (#PCDATA)>
+
+<!--
+  The age after which a bean is automatically passivated
+-->
+<!ELEMENT max-bean-age (#PCDATA)>
+
+<!--
+  Shrink cache capacity if there is a cache miss every or more
+  this member's value
+-->
+<!ELEMENT max-cache-miss-period (#PCDATA)>
+
+<!--
+  Enlarge cache capacity if there is a cache miss every or less
+  this member's value
+-->
+<!ELEMENT min-cache-miss-period (#PCDATA)>
+
+<!--
+  The resizer will always try to keep the cache capacity so that
+  the cache is this member's value loaded of cached objects
+-->
+<!ELEMENT cache-load-factor (#PCDATA)>
+
+<!--
+  For the NoPassivationCachePolicy. Can be true or false
+-->
+<!ELEMENT flush-enabled (#PCDATA)>
+
+<!--
+  Arbitrary XML configuration
+-->
+<!ELEMENT cache-policy-conf-other ANY>
+
+<!--
+  Possible content for the cache-policy-conf-other
+-->
+<!ELEMENT partitions (#PCDATA)>
+<!ELEMENT batch-commit-strategy (#PCDATA)>
+<!ELEMENT invalidable EMPTY>
+
+<!--
+  The container-pool-conf element holds configuration data for the
+  instance pool.
+  jboss does not read directly the subtree for this element: instead,
+  it is passed to the instance pool instance (if it implements
+  org.jboss.metadata.XmlLoadable) for it to load its parameters.
+
+  The default instance pools, EntityInstancePool and
+  StatelessSessionInstancePool, both accept the following configuration.
+
+  Used in: container-configuration
+-->
+<!ELEMENT container-pool-conf ((MinimumSize?, MaximumSize?,
+   strictMaximumSize?, strictTimeout?) | Synchronized)>
+
+<!-- The theoretical minimum size of the pool. Currently unused by JBoss
+EJB pools.
+
+Used in: invoker-proxy-conf for JMSContainerInvoker
+-->
+<!ELEMENT MinimumSize (#PCDATA)>
+
+<!--
+  The capacity of the Pool. For pools where reclaim is possible, the pool will
+  also be repopulated when the instance is free to be reused.
+  This is not an hard limit, if instances are needed when the pool is at
+  its MaximumSize, new instances will be created following the demand unless
+  a strictMaximumSize of true is specified.
+
+  Used in: container-pool-conf and invoker-proxy-conf for JMSContainerInvoker
+-->
+<!ELEMENT MaximumSize (#PCDATA)>
+
+<!-- A boolean flag indicating if attempts to access the pool will block when
+MaximumSize instances are active. The default is false.
+
+  Used in: container-pool-conf
+-->
+<!ELEMENT strictMaximumSize (#PCDATA)>
+
+<!-- The time in milliseconds to wait for the strictMaximumSize semaphore. The
+default is Long.MAX_VALUE or essentially enternity.
+
+  Used in: container-pool-conf
+-->
+<!ELEMENT strictTimeout (#PCDATA)>
+
+<!--
+  Can be true or false.
+  Used in SingletonStatelessSessionInstancePool to synchronize access to the SLSB instance.
+
+  Used in: container-pool-conf
+-->
+<!ELEMENT Synchronized (#PCDATA)>
+
+<!--
+  The number of millis to keep an unused object in the pool. Currently unused by
+  JBoss EJB Pools.
+
+  Used in: invoker-proxy-conf for JMSContainerInvoker
+-->
+<!ELEMENT KeepAliveMillis (#PCDATA)>
+
+<!--
+  This option is only used for entity container configurations.
+
+  The commit-option element tells the container which option to use for transactions.
+  Its value must be A, B C, or D.
+
+  - option A: the entiry instance has exclusive access to the database. The instance
+  stays ready after a transaction.
+  - option B: the entity instance does not have exclusive access to the database.
+  The state is loaded before the next transaction.
+  - option C: same as B, except the container does not keep the instance after commit:
+  a passivate is immediately performed after the commit.
+
+  - option D: a lazy update. default is every 30 secs.
+               can be updated with <optiond-refresh-rate>
+
+  See ejb1.1 specification for details (p118).
+
+  Used in: container-configuration
+-->
+<!ELEMENT commit-option (#PCDATA)>
+
+<!--
+  This element is used to specify the refresh rate of commit option d
+-->
+<!ELEMENT optiond-refresh-rate (#PCDATA)>
+
+<!--
+ior-security-config element describes the security configuration information for the IOR.
+-->
+<!ELEMENT ior-security-config ( transport-config? , as-context?, sas-context?  )>
+
+<!--
+transport-config is the root element for security between the end points
+-->
+<!ELEMENT transport-config ( integrity, confidentiality,
+ establish-trust-in-target, establish-trust-in-client, detect-misordering?,
+ detect-replay?)>
+
+<!--
+integrity element indicates if the server (target) supports integrity protected messages.
+The valid values are NONE, SUPPORTED or REQUIRED
+-->
+<!ELEMENT integrity ( #PCDATA)>
+
+<!--
+confidentiality element indicates if the server (target) supports privacy protected
+messages. The values are NONE, SUPPORTED or REQUIRED
+-->
+<!ELEMENT confidentiality ( #PCDATA)>
+
+<!--
+establish-trust-in-target element indicates if the target is capable of authenticating to a client.
+The values are NONE or SUPPORTED.
+-->
+<!ELEMENT establish-trust-in-target ( #PCDATA)>
+
+<!--
+establish-trust-in-client element indicates if the target is capable of authenticating a client. The
+values are NONE, SUPPORTED or REQUIRED.
+-->
+<!ELEMENT establish-trust-in-client ( #PCDATA)>
+
+<!--
+The optional detect-misordering indicates if the server (target) supports
+detection of message sequence errors. The values are NONE, SUPPORTED or REQUIRED.
+-->
+<!ELEMENT detect-misordering ( #PCDATA)>
+
+<!--
+The optional detect-replay indicates if the server (target) supports detection
+of message replay attempts. The values are NONE, SUPPORTED or REQUIRED.
+-->
+<!ELEMENT detect-replay ( #PCDATA)>
+
+<!--
+as-context (CSIv2 authentication service) is the element describing the authentication
+mechanism that will be used to authenticate the client. If specified it will be the
+username-password mechanism.
+-->
+<!ELEMENT as-context ( auth-method, realm, required )>
+
+<!--
+required element specifies if the authentication method specified is required
+to be used for client authentication. If so the EstablishTrustInClient bit
+will be set in the target_requires field of the AS_Context. The element value
+is either true or false.
+-->
+<!ELEMENT required ( #PCDATA )>
+
+<!--
+auth-method element describes the authentication method. The only supported value
+for as-context is USERNAME_PASSWORD
+
+For port-component, the auth-method element is used to configure the
+authentication mechanism for the web service. As a prerequisite to gaining
+access to any web service which are protected by an authorization
+constraint, a user must have authenticated using the configured
+mechanism. Legal values for this element are "BASIC", or "CLIENT-CERT".
+
+Used in: as-context, port-component
+
+-->
+<!ELEMENT auth-method ( #PCDATA )>
+
+<!--
+realm element describes the realm in which the user is authenticated. Must be
+a valid realm that is registered in server configuration.
+-->
+<!ELEMENT realm ( #PCDATA )>
+
+<!--
+sas-context (related to CSIv2 security attribute service) element describes
+the sas-context fields.
+-->
+<!ELEMENT sas-context ( caller-propagation )>
+
+<!--
+caller-propagation element indicates if the target will accept propagated caller identities
+The values are NONE or SUPPORTED.
+-->
+<!ELEMENT caller-propagation ( #PCDATA) >
+
+<!-- The port-component element specifies a mapping from a webservice
+port-component whose service-impl-bean/ejb-link value maps to an ejb.
+
+Used in: session
+-->
+<!ELEMENT port-component (port-component-name, port-component-uri?, auth-method?,
+ transport-guarantee?) >
+
+<!-- Maps to the port-component-name in the webservices.xml descriptor.
+
+Used in: port-component
+-->
+<!ELEMENT port-component-name (#PCDATA) >
+
+<!-- Relative path that is appended to the <context-root> element to form fully qualified
+endpoint address for a web service endpoint.
+
+For backwards compatibility, it may also be the absolute path starting with web context root
+to form fully qualified endpoint address for a web service endpoint. In this case, the port component uri
+must contain at least two token seperated by '/'. The first token is the web context root,
+which must be identical among all port component uris in a given deployment.
+
+Used in: port-component
+-->
+<!ELEMENT port-component-uri (#PCDATA) >
+
+<!--
+The transport-guarantee element specifies that the communication
+between client and server should be NONE, INTEGRAL, or
+CONFIDENTIAL. NONE means that the application does not require any
+transport guarantees. A value of INTEGRAL means that the application
+requires that the data sent between the client and server be sent in
+such a way that it can't be changed in transit. CONFIDENTIAL means
+that the application requires that the data be transmitted in a
+fashion that prevents other entities from observing the contents of
+the transmission. In most cases, the presence of the INTEGRAL or
+CONFIDENTIAL flag will indicate that the use of SSL is required.
+
+Used in: port-component
+-->
+<!ELEMENT transport-guarantee (#PCDATA)>
+
+<!--
+Activation config
+
+used in message-driven and proxy-factory-config
+-->
+<!ELEMENT activation-config ( activation-config-property* )>
+
+<!--
+Activation config properties
+
+used in activation-config
+-->
+<!ELEMENT activation-config-property ( activation-config-property-name,
+                                       activation-config-property-value )>
+<!--
+Activation config property name
+
+used in activation-config-property
+-->
+<!ELEMENT activation-config-property-name ( #PCDATA )>
+
+<!--
+Activation config property value
+
+used in activation-config-property
+-->
+<!ELEMENT activation-config-property-value ( #PCDATA )>

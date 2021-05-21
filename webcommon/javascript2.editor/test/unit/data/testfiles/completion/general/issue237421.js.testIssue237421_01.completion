@@ -1,0 +1,8 @@
+Code completion result for source line:
+var foo = this.|g ;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     run(): undefined                [PUBLIC]   issue237421.js
+METHOD     run2(): undefined               [PUBLIC]   issue237421.js
+METHOD     run3(): undefined               [PUBLIC]   issue237421.js
+FIELD      g                               [PUBLIC]   issue237421.js

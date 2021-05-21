@@ -1,0 +1,7 @@
+{% extends standalone ? foo : 'bar.twig' %}
+
+{% block content %}{{ parent() }}FOO{% endblock %}
+
+{% block content %}FOO{% endblock %}
+
+{% block content %}BAR{% endblock %}

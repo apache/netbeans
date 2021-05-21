@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1233352238" phpunit="3.3.1">
+  <project name="." timestamp="1233352238">
+    <file name="/home/gapon/NetBeansProjects/PhpProject01/src/hola/Calculator2.php5">
+      <class name="Calculator2" namespace="global">
+        <metrics methods="11" coveredmethods="5" statements="3" coveredstatements="2" elements="7" coveredelements="6"/>
+      </class>
+      <class name="Calculator3" namespace="global">
+        <metrics methods="1" coveredmethods="1" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
+      </class>
+      <line num="11" type="method" count="1"/>
+      <line num="13" type="stmt" count="1"/>
+      <line num="26" type="method" count="5"/>
+      <line num="28" type="stmt" count="5"/>
+      <metrics loc="32" ncloc="18" classes="4" methods="2" coveredmethods="1" statements="5" coveredstatements="3" elements="43" coveredelements="25"/>
+    </file>
+    <file name="/home/gapon/NetBeansProjects/PhpProject01/src/Calculator.php">
+      <class name="Calculator" namespace="global">
+        <metrics methods="1" coveredmethods="1" statements="4" coveredstatements="3" elements="5" coveredelements="4"/>
+      </class>
+      <line num="10" type="method" count="3"/>
+      <line num="12" type="stmt" count="3"/>
+      <line num="13" type="stmt" count="1"/>
+      <line num="15" type="stmt" count="2"/>
+      <line num="18" type="method" count="0"/>
+      <line num="19" type="stmt" count="0"/>
+      <metrics loc="18" ncloc="12" classes="1" methods="1" coveredmethods="1" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
+    </file>
+    <metrics files="2" loc="50" ncloc="30" classes="33" methods="1717" coveredmethods="665" statements="532" coveredstatements="443" elements="2344" coveredelements="1234"/>
+  </project>
+</coverage>

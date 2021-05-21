@@ -1,0 +1,1 @@
+fn($x, &...$|>MARK_OCCURRENCES:reset<|) => $|>MARK_OCCURRENCES:res^et<|; // reference variadics

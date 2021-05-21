@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project basedir="." default="build" name="php/php.editor">
+    <description>Builds, tests, and runs the project org.netbeans.modules.php.editor</description>
+    <import file="../../nbbuild/templates/projectized.xml"/>
+
+    <!-- external unit test data -->
+    <target name="build-init" depends="projectized.build-init">
+        <unzip src="external/TextSearchQuery-1.28.zip" dest="test/unit/data/testfiles/parser"/>
+        <unzip src="external/Mpdf-7.1.5.zip" dest="test/unit/data/testfiles/parser/performance"/>
+    </target>
+
+    <!--taskdef name="jflex"
+        classname="JFlex.anttask.JFlexTask"
+        classpath="/opt/jflex-1.4/lib/JFlex.jar" /-->
+    <!--taskdef name="jflex"
+        classname="jflex.anttask.JFlexTask"
+        classpath="/opt/jflex-1.5/lib/jflex-1.5.1.jar" /-->
+    <!--taskdef name="jflex"
+        classname="jflex.anttask.JFlexTask"
+        classpath="/opt/jflex-1.6/lib/jflex-1.6.1.jar" /-->
+
+    <!-- for coloring lexer, jflex 1.4 or 1.5 must be used -->
+    <!--target name="gen-lexer">
+        <jflex file="tools/Php5ColoringScanner.flex"
+        destdir="src"
+        skel="tools/skeleton.netbeans"/>
+        <replace file="src/org/netbeans/modules/php/editor/lexer/PHP5ColoringLexer.java">
+            <replacetoken>      yychar+= zzMarkedPosL-zzStartRead;&#xA;&#xA;</replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+        <replace file="src/org/netbeans/modules/php/editor/lexer/PHP5ColoringLexer.java">
+            <replacetoken><![CDATA[
+          if (zzCurrentPosL < zzEndReadL)
+            zzInput = zzBufferL[zzCurrentPosL++];
+          else if (zzAtEOF) {
+            zzInput = YYEOF;
+            break zzForAction;
+          }
+          else {
+            // store back cached positions
+            zzCurrentPos  = zzCurrentPosL;
+            zzMarkedPos   = zzMarkedPosL;
+            boolean eof = zzRefill();
+            // get translated positions and possibly new buffer
+            zzCurrentPosL  = zzCurrentPos;
+            zzMarkedPosL   = zzMarkedPos;
+            zzBufferL      = zzBuffer;
+            zzEndReadL     = zzEndRead;
+            if (eof) {
+              zzInput = YYEOF;
+              break zzForAction;
+            }
+            else {
+              zzInput = zzBufferL[zzCurrentPosL++];
+            }
+          }]]></replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+        <replaceregexp file="src/org/netbeans/modules/php/editor/lexer/PHP5ColoringLexer.java"
+                       match="[ ]+$"
+                       replace=""
+                       byline="true" />
+    </target-->
+
+    <!-- for ast scanner, jflex 1.4 must be used! -->
+    <!--target name="gen-astscanner">
+        <jflex file="tools/ASTPHP5Scanner.flex"
+        destdir="src"
+        skel="tools/skeletonParser.netbeans"/>
+        <replace file="src/org/netbeans/modules/php/editor/parser/ASTPHP5Scanner.java">
+            <replacetoken>if (!zzEOFDone) {&#xA;      zzEOFDone = true;&#xA;      yyclose();&#xA;    }</replacetoken>
+            <replacevalue>/*if (!zzEOFDone) {&#xA;      zzEOFDone = true;&#xA;      yyclose();&#xA;    }*/</replacevalue>
+        </replace>
+        <replaceregexp file="src/org/netbeans/modules/php/editor/parser/ASTPHP5Scanner.java"
+                       match="[ ]+$"
+                       replace=""
+                       byline="true" />
+    </target-->
+
+    <!--target name="gen-docscanner">
+        <jflex file="tools/DocumentorColoringScanner.flex"
+        destdir="src"
+        skel="tools/skeleton.netbeans"/>
+    </target-->
+
+    <!-- add license and @SuppressWarnings for FindBugs in the generated ASTPHP5Parser & ASTPHP5Symbols files -->
+    <!-- parsercutter can be found in misc repository -->
+    <!--target name="gen-astparser">
+        <taskdef name="javacup"
+            classname="java_cup.anttask.CUPTask"
+            classpath="${nb_all}/php/libs.javacup/external/java-cup-11a.jar" />
+            <javacup srcfile="tools/ASTPHP5Parser.cup"
+            destdir="src"
+            parser="ASTPHP5Parser"
+            symbols="ASTPHP5Symbols"
+            interface="on"/>
+        <taskdef name="parsercutter"
+            classname="org.netbeans.modules.php.editor.cup.parser.cutter.ParserCutter"
+            classpath="/opt/parser.cutter/dist/parser.cutter.jar" />
+            <parsercutter parserpath="src/org/netbeans/modules/php/editor/parser/ASTPHP5Parser.java" />
+            <replaceregexp match="[ \t]+$" replace="" byline="true" >
+                <fileset dir="src/org/netbeans/modules/php/editor/parser">
+                    <include name="ASTPHP5Parser.java"/>
+                    <include name="EncodedActionTable*.java"/>
+                </fileset>
+            </replaceregexp>
+            <replace file="src/org/netbeans/modules/php/editor/parser/ASTPHP5Parser.java">
+                <replacetoken>public class ASTPHP5Parser extends java_cup.runtime.lr_parser {</replacetoken>
+                <replacevalue><![CDATA[@org.netbeans.api.annotations.common.SuppressWarnings({"EI_EXPOSE_REP", "MS_PKGPROTECT", "BC_BAD_CAST_TO_CONCRETE_COLLECTION"})
+public class ASTPHP5Parser extends java_cup.runtime.lr_parser {]]></replacevalue>
+            </replace>
+            <replace>
+                <fileset dir="src/org/netbeans/modules/php/editor/parser">
+                    <include name="ASTPHP5Parser.java"/>
+                    <include name="ASTPHP5Symbols.java"/>
+                </fileset>
+                <replacetoken>
+//&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;
+// The following code was generated by CUP v0.11a beta 20060608
+</replacetoken>
+                <replacevalue>/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+//&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;
+// The following code was generated by CUP v0.11a beta 20060608
+</replacevalue>
+            </replace>
+    </target-->
+
+</project>

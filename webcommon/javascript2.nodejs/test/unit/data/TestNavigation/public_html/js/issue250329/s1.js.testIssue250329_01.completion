@@ -1,0 +1,10 @@
+Code completion result for source line:
+ut.|errorRespond();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     definedNotNull(obj): Boolean    [PUBLIC]   utl.js
+METHOD     endsWith(pattern, suffix): Boo  [PUBLIC]   utl.js
+METHOD     errorRespond(response, errCode  [PUBLIC]   utl.js
+METHOD     listFiles(path: type): Array    [PUBLIC]   utl.js
+METHOD     listFilesAndNames(path)         [PUBLIC]   utl.js
+METHOD     listFoldersAndNames(path)       [PUBLIC]   utl.js

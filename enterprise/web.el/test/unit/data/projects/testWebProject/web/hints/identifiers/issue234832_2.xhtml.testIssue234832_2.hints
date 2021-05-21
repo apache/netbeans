@@ -1,0 +1,3 @@
+#{[1, 2, 3].stream().average().fake()}
+                               ------
+HINT:Unknown method "fake"

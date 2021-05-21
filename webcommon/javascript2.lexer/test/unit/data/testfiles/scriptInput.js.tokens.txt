@@ -1,0 +1,33 @@
+<Unnamed test>
+LINE_COMMENT    "#!/usr/bin/env node", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "console", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "log", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+BRACKET_LEFT_PAREN  "(", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+STRING_BEGIN    "'", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+STRING          "Arguments:", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+STRING_END      "'", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_COMMA  ",", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "process", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "argv", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "length", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+BRACKET_RIGHT_PAREN  ")", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      "  ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "console", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "log", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+BRACKET_LEFT_PAREN  "(", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "process", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "argv", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+BRACKET_RIGHT_PAREN  ")", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+----- EOF -----
+

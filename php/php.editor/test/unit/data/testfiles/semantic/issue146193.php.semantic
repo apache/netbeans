@@ -1,0 +1,10 @@
+<?php
+class |>CLASS:BlaBla<| {
+    private $|>FIELD:count<| = array();//see this line
+    function |>METHOD:count<|() {
+        $this->|>FIELD:count<|[0]="huh";
+        echo $this->|>FIELD:count<|[0];
+    }
+
+}
+?>

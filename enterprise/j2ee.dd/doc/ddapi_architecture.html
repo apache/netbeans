@@ -1,0 +1,799 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="Stylesheet" href="../prose.css" type='text/css'>
+<title>Architecture Document for Deployment Descriptor API</title>
+</head>
+<body>
+<center>
+<h1>Architecture Document for Deployment Descriptor API</h1>
+</center>
+
+<dl>
+<dt>Author: <a href="mailto:milan.kuchtiak@sun.com">Milan Kuchtiak</a></dt>
+<dt>Version: 1.4</dt>
+<dt><font  class="constant">Updated 01/16/2004</font></dt>
+<dt>Contents</dt>
+<dd>
+<ul>
+    <li><a href="#p1">0. Initial Description of DD API</a>
+    <li><a href="#arch-what">1. The Goal of Project</a>
+    <li><a href="#arch-usecases">2. Use Cases</a>
+    <li><a href="#requirements">3. Requirements</a>
+    <li><a href="#arch-overall">4. The Overall Architecture</a>
+      <ul>
+        <li><a href="#component1">4.1. DD API Interfaces</a>
+        <li><a href="#component2">4.2. DDProvider class</a>
+	<li><a href="#component3">4.3. DD API Exceptions</a>
+	<li><a href="#component4">4.4. DD API Super-Interfaces</a>
+	<li><a href="#component5">4.5. Examples of Usage</a>
+      </ul>
+    <li><a href="#arch-time">5. Time Estimates of the Work</a>
+    <li><a href="#deps">6. Dependencies</a>
+      <ul>
+        <li><a href="#dep-nb">6.1. NetBeans Modules</a>
+        <li><a href="#dep-non-nb">6.2. External Projects</a>
+      </ul>
+    <li><a href="#dep-platform">7. Platform Requirements</a>
+    <li><a href="#deploy-packages">8. Public Packages</a>
+    <li><a href="#compat">9. Compatibility</a>
+      <ul>
+        <li><a href="#compat-standards">9.1. With Standards</a>
+        <li><a href="#compat-impact">9.2. Compatibility Impact</a>
+      </ul>
+    <li><a href="#lookup-lookup">10. Using Lookup</a>
+    <li><a href="#perf">11. Performance</a>
+      <ul>
+        <li><a href="#perf-scale">11.1. Scalability</a>
+        <li><a href="#perf-limit">11.2. Limitations</a>
+        <li><a href="#perf-spi">11.3. Impact of SPI on Performance</a>
+      </ul>
+    <li><a href="#conc">12. Resolving Concurrency</a>
+      <ul>
+        <li><a href="#conc-usecases">12.1. Use Cases</a>
+        <li><a href="#conc-solution">12.2. Solution and Impact on DD API users</a>
+      </ul>
+    <li><a href="#ext">13. Extensibility</a>
+    <li><a href="#testing">14. Testing</a>
+</ul>
+</dd>
+<a name="p1"/>
+                <h2>0. Initial Description of DD API</h2>
+<p>
+The project is based on the requirement to access the web module deployment descriptor for other Netbeans modules in a simple and servlet spec.-independent way.<br>
+</p>
+
+<a name="arch-what"/>
+<h2>1. The Goal of Project</h2>
+<p>
+There are multiple cases when web module deployment descriptor need to be modified from the "<b>outside</b>".<br>
+These are some examples of probable DD API <b>clients</b> :<br>
+<ul>
+<li>J2EE aplication need to read/write information from/into web module DD</li>
+<li>Web Services based on servlet need to access and modify the deployment descriptor</li>
+<li>Web application wizards (web module wizard, servlet wizard, filter wizard, etc.) need to add elements to Deployment descriptor</li>
+<li>DD visual editor need to access the deployment descriptor in a simple and version-independent way</li>
+</ul>
+<br>
+The goal of DD API is to provide a simple way how web module deployments descriptor can be found, scanned and modified.
+</p>
+
+<a name="arch-usecases"/>
+<h2>2. Use Cases</h2>
+
+<h4>Use case 1 : <b>J2EE Application</b></h4>
+J2EE Aplications often need to explore the included modules. Web modules are usually used as clients or front-end  components of J2EE application.<br>
+There is a requirement to be able to identify the sub-elements of web modules that are included to J2EE Application. For example, the J2EE Application need to be able to create a web module (<b>WEB client</b>), with the default web.xml file, then create a display-name and add a servlet element to deployment descriptor.
+<p>
+
+</p>
+<h4>Use case 2 : <b>Web Services Based on Servlet</b></h4>
+<p>
+	JAX-RPC Web Services based on servlet need to include specific elemens to deployment descriptor and map the service to a URL that specifies where the WSDL file can be found.<br>
+	See the example (JWSDP1.2)  : 
+<pre>
+<font class="keyword">&lt;listener&gt;</font>
+  <font class="keyword">&lt;listener-class&gt;</font>com.sun.xml.rpc.server.http.JAXRPCContextListener<font class="keyword">&lt;/listener-class&gt;</font>
+<font class="keyword">&lt;/listener&gt;</font>
+<font class="keyword">&lt;servlet&gt;</font>
+  <font class="keyword">&lt;servlet-name&gt;</font>Hello<font class="keyword">&lt;/servlet-name&gt;</font>
+  <font class="keyword">&lt;display-name&gt;</font>Hello<font class="keyword">&lt;/display-name&gt;</font>
+  <font class="keyword">&lt;description&gt;</font>JAX-RPC endpoint - Hello<font class="keyword">&lt;/description&gt;</font>
+  <font class="keyword">&lt;servlet-class&gt;</font>com.sun.xml.rpc.server.http.JAXRPCServlet<font class="keyword">&lt;/servlet-class&gt;</font>
+  <font class="keyword">&lt;load-on-startup&gt;</font>1<font class="keyword">&lt;/load-on-startup&gt;</font>
+<font class="keyword">&lt;/servlet&gt;</font>
+<font class="keyword">&lt;servlet-mapping&gt;</font>
+  <font class="keyword">&lt;servlet-name&gt;</font>Hello<font class="keyword">&lt;/servlet-name&gt;</font>
+  <font class="keyword">&lt;url-pattern&gt;</font>/hello<font class="keyword">&lt;/url-pattern&gt;</font>
+<font class="keyword">&lt;/servlet-mapping&gt;</font>
+</pre>
+</p>
+<h4>Use case 3 : <b>Web Application Wizards</b></h4>
+<p>
+	There are several wizards that need to insert elements to DD regarding the type of the wizard.<br>
+	Examples :
+	<ul>
+	<li><b>Web Module Wizard</b> - need to specify the web module  <font class="keyword">&lt;display-name&gt;</font> and <font class="keyword">&lt;locale-encoding-mapping-list&gt;</font></li>
+	<li><b>Servlet Wizard</b> - need to specify the <font class="keyword">&lt;servlet&gt;</font> and <font class="keyword">&lt;servlet-mapping&gt;</font> elements</li>
+	<li><b>Listener Wizard</b> - need to specify the <font class="keyword">&lt;listener&gt;</font> element</li>
+	<li><b>Filter Wizard</b> - need to specify the <font class="keyword">&lt;filter&gt;</font> and <font class="keyword">&lt;filter-mapping&gt;</font> elements</li>
+	</ul>
+</p>
+<h4>Use case 4 : <b>DD Editor</b></h4>
+<p>
+	DD Editor significantly improves DD editing in the way that user doesn't need to know the syntax of  web.xml file.  It is desirable for DD Editor module to work with DD API interfaces instead of  s2b 	beans directly (generated for the specific version of DD), as it is was done in previous versions.
+</p>
+<h4>Use case 5 : <b>Other modules that need to modify the deployment descriptor</b></h4>
+<p>
+	This is the list of other possible clients of DD API :
+	<ul>
+	<li><b>RAVE</b></li>
+	<li><b>JATO module</b></li>
+	<li><b>STRUTS module</b></li>
+	</ul>
+</p>
+
+<a name="requirements"/>
+<h2>3. Requirements</h2>
+<p>
+Based on the expectations  derived from the Use Cases we can specify the list of requirements:
+</p>
+<ol>
+<li><h3>Read/write access</h3>
+<p>
+Clients need to have <b>access</b> to deployment descriptor data, <b>modify</b> the data and be able to <b>save</b> changes back to FileObject or output stream.
+</p></li>
+<li><h3>All data access</h3>
+<p>
+Clients need to be able to access all the data from deployment descriptor and modify them easily. There need to be some <b>general</b> methods created to simplify the actions like :
+<ul>
+	<li>create a new empty web.xml element</li>
+	<li>add a new element containing the initial data</li>
+	<li>find a specific element by name</li>
+</ul>
+<b>Comment:</b> These methods need to improve the usability comparing to the direct manipulation with schema2beans classes.
+</p></li>
+<li><h3>Multiple Version Support, support for both DTD and XML schema driven files</h3>
+<p>
+Provide the universal DD API interfaces/methods regardless the version of  DD(Servlet2.3/Servlet2.4). Throw the <a href="#component3">VersionNotSupportedException</a> when the method is not supported in specific version.
+</p></li>
+<li><h3>Flexibility against the servlet specification changes</h3>
+<p>
+DD API should be prepared for the Servlet spec.changes in order to be backward compatible : <br><br>
+- if new elements are added, new methods need to throw the <a href="#component3">VersionNotSupportedException</a> in order to support the old version(s).<br>
+- If elements are removed from new spec.(broken backward compatibility),  the related methods need to throw the <a href="#component3">VersionNotSupportedException</a>.
+</p></li>
+<p>
+<b><font color=#ff0000>It is not supposed that DD API interfaces will be implemented by third party - no SPI support.</font></b>
+</p>
+<li><h3>DD API listener model</h3>
+<p>
+Clients must be able to listen to the changes on DD API objects. The <b>PropertyChangeEvents</b> must be fired when :
+<ul>
+<li>web.xml elements are changed</li>
+<li>web.xml elements are added</li>
+<li>web.xml elements are removed</li>
+</ul>
+The <b>PropertyChangeListener</b> should be available to listen to web.xml nodes (represented by DD API interfaces). 
+</p></li>
+<li><h3>Invalid data handling</h3>
+<p>
+DD API should notify client when web.xml file is unparsable or invalid towards the DTD or XML schema file.
+</p></li>
+</ol>
+<p>
+<a name="not-for"/>
+What is the DD API not :
+</p>
+<ol>
+<li><h3>NOT DD Editor</h3>
+<p>
+The DD API provides no UI for deployment descriptor editing.
+It provides no UI at all.
+</li></p>
+<li><h3>NOT web.xml constructor</h3>
+<p>
+DD API doesn't enable to create the web.xml file from scratch.
+</li></p>
+<li><h3>NOT able to change the version of web.xml file</h3>
+<p>
+This feature is not planned to be supported for the first version of DD API (PromotionB), but can be implemented later.<br>
+Thus, the server spec.version is the read-only property for the first version.
+</li></p>
+<li><h3>NOT related to web-apps functionality</h3>
+<p>
+There is no relationship to web-apps functionality provided by web/core, web/advanced etc. modules.
+In other words <b>DD API  exists as a standalone Netbeans module</b> not dependent on other modules (except OpenIDE/FileSystem,OpenIDE/Util and schema2beans). 
+</li></p>
+<li><h3>NO ANT support</h3>
+<p>
+Meanwhile there is no support for web.xml modification using the <b>ANT build script</b>. There are no DD API <b>ant tasks</b> prepared for the first version.<br>
+It is expected that for the next version one ore more ANT tasks will be created for DD modification.
+</li></p>
+</ol>
+
+<a name="arch-overall"/>
+<h2>4. The Overall Architecture</h2>
+ <p>
+The DD API is based on a bunch of interfaces corresponding to the deployment descriptor xml structure. The names of interfaces are derived from the names of deployment descriptor elements in web.xml file.
+The DD API interfaces are organized in  a hierarchic tree structure.  The object of particular interface type is available through the root (<b>WebApp</b> object)  od deployment descriptor.
+The implementation of DD API interfaces is hidden for clients.  It is based on schema2beans infrastructure and is DD version - specific. (there is always requirement to support at least two successive versions of DD specification). 
+The root of the deployment descriptor is available using the <b>DDProvider</b> class.
+</p>
+
+<a name="component1"/>
+<h3>4.1. DD API Interfaces</h3>
+Package: <b><i>org.netbeans.api.web.dd</i></b>
+<p>
+All DD API interfaces are included to this package. <br>
+Here is the hierarchic structure of the DD API interfaces :
+<pre>
+<font class="type">WebApp</font>
+  - <font class="type">Icon</font><font class = "constant"> [*]</font>
+  - <font class="type">InitParam</font><font class = "constant"> [*]</font>
+  - <font class="type">Filter</font><font class = "constant"> [*]</font>
+    - <font class="type">Icon</font><font class = "constant"> [*]</font>
+    - <font class="type">InitParam</font><font class = "constant"> [*]</font>
+  - <font class="type">FilterMapping</font><font class = "constant"> [*]</font>
+  - <font class="type">Listener</font><font class = "constant"> [*]</font>
+    - <font class="type">Icon</font><font class = "constant"> [*]</font>
+  - <font class="type">Servlet</font><font class = "constant"> [*]</font>
+    - <font class="type">Icon</font><font class = "constant"> [*]</font>
+    - <font class="type">InitParam</font><font class = "constant"> [*]</font>
+    - <font class="type">RunAs</font><font class = "constant"> [*]</font>
+    - <font class="type">SecurityRoleRef</font><font class = "constant"> [*]</font>
+  - <font class="type">ServletMapping</font><font class = "constant"> [*]</font>
+  - <font class="type">SessionConfig</font><font class = "constant"> [?]</font>	
+  - <font class="type">MimeMapping</font><font class = "constant"> [*]</font>
+  - <font class="type">WelcomeFileList</font><font class = "constant"> [?]</font>
+  - <font class="type">ErrorPage</font><font class = "constant"> [*]</font>
+  - <font class="type">Taglib</font><font class = "constant"> [*]</font>
+  - <font class="type">JspConfig</font><font class = "constant"> [?]</font>
+    - <font class="type">Taglib</font><font class = "constant"> [*]</font>
+    - <font class="type">JspPropertyGroup</font><font class = "constant"> [*]</font>
+  - <font class="type">SecurityConstraint</font><font class = "constant"> [*]</font>
+    - <font class="type">WebResourceCollection</font><font class = "constant"> [+]</font>
+    - <font class="type">AuthConstraint</font><font class = "constant"> [?]</font>
+    - <font class="type">UserDataConstraint</font><font class = "constant"> [?]</font>
+  - <font class="type">LoginConfig</font><font class = "constant"> [?]</font>
+    - <font class="type">FormLoginConfig</font><font class = "constant"> [?]</font>
+  - <font class="type">SecurityRole</font><font class = "constant"> [*]</font>
+  - <font class="type">EnvEntry</font><font class = "constant"> [*]</font>
+  - <font class="type">EjbRef</font><font class = "constant"> [*]</font>
+  - <font class="type">EjbLocalRef</font><font class = "constant"> [*]</font>
+  - <font class="type">ServiceRef</font><font class = "constant"> [*]</font>
+    - <font class="type">Icon</font><font class = "constant"> [*]</font>
+    - <font class="type">PortComponentRef</font><font class = "constant"> [*]</font>
+    - <font class="type">ServiceRefHandler</font><font class = "constant"> [*]</font>
+      - <font class="type">InitParam</font><font class = "constant"> [*]</font>
+  - <font class="type">ResourceRef</font><font class = "constant"> [*]</font>
+  - <font class="type">ResourceEnvRef</font><font class = "constant"> [*]</font>
+  - <font class="type">MessageDestinationRef</font><font class = "constant"> [*]</font>
+  - <font class="type">MessageDestination</font><font class = "constant"> [*]</font>
+    - <font class="type">Icon</font><font class = "constant"> [*]</font>
+  - <font class="type">LocaleEncodingMappingList</font><font class = "constant"> [?]</font>
+    - <font class="type">LocaleEncoding</font><font class = "constant"> [+]</font>
+
+<font class="comment">Comments : </font>
+<font class = "constant">[*]</font> - objects occur multiple times in the parent object (0-n)
+<font class = "constant">[+]</font> - objects occur multiple times in the parent object (1-n)
+<font class = "constant">[?]</font> - object can occur only once in the parent object (0-1)
+</pre>
+</p>
+
+<p>
+The syntax and usage of interface methods is very simple and straightforward.<br>
+If certain object [XYZ interface] occurs multiple times in the parent object these methods are present in the parent interface :
+<ul>
+<li> <font class="type">XYZ</font>[] <font class="function-name"><b>getXYZ</b></font> (); - returns an array of XYZ objects</li>
+<li> <font class="type">XYZ</font> <font class="function-name"><b>getXYZ</b></font> (int i); -returns an XYZ object at the certain position (i) within the array</li>
+<li> <font class="keyword">void</font> <font class="function-name"><b>setXYZ</b></font> (XYZ[] array); - sets the array of XYZ objects</li>
+<li> <font class="keyword">void</font> <font class="function-name"><b>setXYZ</b></font> (int i, XYZ object); - sets the XYZ object at certain position (i)</li>
+<li> <font class="type">int</font> <font class="function-name"><b>addXYZ</b></font> (XYZ object); - adds the XYZ object to the parent object</li>
+<li> <font class="type">int</font> <font class="function-name"><b>removeXYZ</b></font> (XYZ object); - removes the XYZ object from the parent object</li>
+<li> <font class="type">int</font> <font class="function-name"><b>sizeXYZ</b></font> (); - returns the size of XYZ array</li>
+</ul><br>
+If certain object [XYZ interface] cat occur only once in the parent object these methods are present in the parent interface :
+<ul>
+<li> <font class="type">XYZ</font> <font class="function-name"><b>getSingleXYZ</b></font> (); - returns an XYZ object or null</li>
+<li> <font class="keyword">void</font> <font class="function-name"><b>setXYZ</b></font> (XYZ object); - sets the XYZ object to the parent object</li>
+</ul><br>
+Example :  The WebApp interface contains these methods for getting/setting <b>Servlet</b>s and <b>WelcomeFileList</b> :
+<ul>
+<li> Servlet[] <b>getServlet</b> ();</li>
+<li> Servlet <b>getServlet</b> (int i);</li>
+<li> void <b>setServlet</b> (Servlet[] servlets);</li>
+<li> void <b>setServlet</b> (int i, Servlet servlet);</li>
+<li> int <b>addServlet</b> (Servlet servlet);</li>
+<li> int <b>removeServlet</b> (Servlet servlet);</li>
+<li> int <b>sizeServlet</b> ();</li>
+<li> WelcomeFileList <b>getSingleWelcomeFileList</b> ();</li>
+<li> void <b>setWelcomeFileList</b> (WelcomeFileList list);</li>
+</ul><br>
+
+Interfaces contain additional methods corresponding to the simple (String) sub-elements following the deployment descriptor xml syntax.<br>
+Example :  The <b>Taglib</b> interface contains these additional getters/setters :
+<ul>
+<li> String <b>getTaglibUri</b> ();</li>
+<li> String <b>getTaglibLocation</b> ();</li>
+<li> void <b>setTaglibUri</b> (String uri);</li>
+<li> void <b>setTaglibLocation</b> (String location);</li>
+</ul><br>
+
+Interfaces usually extend some interfaces from <u><b><a href="#deploy-packages">org.netbeans.api.web.dd.common </a></b></u> package. For example if a DD Element has the description property, it extends the <a href="#component4"><b><u>DescriptionInterface </u></b></a> containing the methods for handling the description property .<br>
+Example :  The <b>WebApp, Servlet, Filter, Listener, ServiceRef , WebResourceCollection </b> extend the DescriptionInterface.
+</p>
+
+<a name="component2"/>
+<h3>4.2. DDProvider class</h3>
+Package: <b><i>org.netbeans.api.web.dd</i></b>
+<p>
+Provides the access to deployment descriptor root - WebApp object.
+The DDProvider class is a singleton and caches the WebApp objects in IDE.
+There are following methods for getting the WebApp object : <br>
+<ul>
+<li>public WebApp <b>getDDRoot</b> (org.openide.filesystems.FileObject fo) throws java.io.IOException, org.xml.sax.SAXException;</li>
+<li>public WebApp <b>getDDRoot</b> (java.io.File file) throws java.io.IOException, org.xml.sax.SAXException;</li>
+</ul>
+</p>
+
+<a name="component3"/>
+<h3>4.3. DD API Exceptions</h3>
+Package: <b><i>org.netbeans.api.web.dd.common</i></b>
+<p>
+<font class="type"><b>VersionNotSupportedException</b></font><br><br>
+The exception is thrown when specific DD version doesn't support a specific DD API method.<br>
+Methods :
+<ul>
+<li>public String <b>getVersion</b> ();</li>
+<li>public String <b>getMessage</b> ();</li>
+</ul>
+Examples : 
+<ul>
+<li> VersionNotSupportedException is thrown when DD API user tries to add a JspConfig object to Servlet2.3 root (WebApp object)</li>
+<li> VersionNotSupportedException is thrown when DD API user tries to get the Taglib objects from Servlet2.4 root (WebApp object)</li>
+</ul>
+</p>
+<p>
+<font class="type"><b>NameAlreadyUsedException</b></font><br><br>
+Thrown when an element with the same name is being pushed to deployment descriptor.<br>
+Methods :
+<ul>
+<li>public String <b>getMessage</b> (); 
+<dd>specifies the element, keyProperty name and keyProperty value that had already bean used in DD.</dd>
+</li>
+</ul>
+Examples : 
+<ul>
+<li>NameAlreadyUsedException is thrown when DD API client tries to add a Servlet object having the ServletName value that is already used in DD</li>
+<li>NameAlreadyUsedException is thrown when DD API client tries to add a ContextParam object havingthe ParamName value that is already used in DD</li>
+</ul>
+</p>
+
+<a name="component4"/>
+<h3>4.4. DD API Super-Interfaces</h3>
+Package: <b><i>org.netbeans.api.web.dd.common</i></b>
+<p>
+<font class="type"><b>CommonDDBean</b></font><br><br>
+Interface providing the basic functionality for all DD API interfaces :
+<ul>
+<li>public void <b>addPropertyChangeListener</b>(java.beans.PropertyChangeListener pcl);</li>
+<li>public void <b>removePropertyChangeListener</b>(java.beans.PropertyChangeListener pcl);</li>
+ <li>public Object <b>clone()</b>;</li>
+ <li>public Object <b>getValue</b>(String name);</li>
+ <li>public void <b>write</b> (OutputStream os) throws java.io.IOException;</li>
+ <li>public void  <b>setId</b> (java.lang.String value);</li>
+ <li>public java.lang.String <b>getId</b> ();</li>
+</ul><br>
+</p>
+
+<p>
+<font class="type"><b>CreateCapability</b></font><br><br>
+Interface providing a create capability - for creating a not bound or bound  deployment descriptor elements  :
+<ul>
+ <li>public CommonDDBean <b>createBean</b> (<b>String</b> beanName) throws <b>ClassNotFoundException</b> ;</li>
+ <li>public CommonDDBean <b>addBean</b> (<b>String</b> beanName, <b>String[]</b> propertyNames, <b>Object[]</b> propertyValues, <b>String</b> keyProperty)<br>
+        throws <b>ClassNotFoundException</b>, <b>NameAlreadyUsedException</b>;</li>
+ <li>public CommonDDBean <b>addBean</b> (String beanName) throws <b>ClassNotFoundException</b>;</li>
+</ul><br>
+</p>
+
+<p>
+<font class="type"><b>FindCapability</b></font><br><br>
+Interface providing a general lookup capability :
+<ul>
+ <li>public CommonDDBean <b>findBeanByName</b> (String beanName, String propertyName, String value);</li>
+</ul><br>
+</p>
+
+<p>
+<font class="type"><b>DescriptionInterface</b></font><br><br>
+Interface providing methods for description manipulation. Extended by DD Interfaces containing the Description property.<br>
+Methods :
+<ul>
+    <li>public void <b>setDescription</b> (String locale, String description) throws VersionNotSupportedException;</li>
+    <li>public void <b>setDescription</b> (String description);</li>
+    <li>public void <b>setAllDescriptions</b> (java.util.Map descriptions) throws VersionNotSupportedException;</li>
+   <br>	
+    <li>public String <b>getDescription</b> (String locale) throws VersionNotSupportedException;</li>
+    <li>public String <b>getDefaultDescription</b> ();</li>
+    <li>public java.util.Map <b>getAllDescriptions</b> ();</li>
+   <br>
+    <li>public void <b>removeDescriptionForLocale</b> (String locale) throws VersionNotSupportedException;</li>
+    <li>public void <b>removeDescription</b> ();</li>
+    <li>public void <b>removeAllDescriptions</b> ();</li>
+</ul><br>
+</p>
+
+<p>
+<font class="type"><b>DisplayNameInterface</b></font><br><br>
+Interface providing methods for display name manipulation. Extended by DD Interfaces containing the DisplayName property.<br>
+Methods :
+<ul>
+    <li>public void <b>setDisplayName</b> (String locale, String displayName) throws VersionNotSupportedException;</li>
+    <li>public void <b>setDisplayName</b> (String displayName);</li>
+    <li>public void <b>setAllDisplayNames</b> (java.util.Map displayNames) throws VersionNotSupportedException;</li>
+   <br>	
+    <li>public String <b>getDisplayName</b> (String locale) throws VersionNotSupportedException;</li>
+    <li>public String <b>getDefaultDisplayName</b> ();</li>
+    <li>public java.util.Map <b>getAllDisplayNames</b> ();</li>
+   <br>
+    <li>public void <b>removeDisplayNameForLocale</b> (String locale) throws VersionNotSupportedException;</li>
+    <li>public void <b>removeDisplayName</b> ();</li>
+    <li>public void <b>removeAllDisplayNames</b> ();</li>
+</ul><br>
+</p>
+
+<p>
+<font class="type"><b>IconInterface</b></font><br><br>
+Interface providing methods for icon manipulation. Extended by DD Interfaces containing the Icon property.<br>
+Methods :
+<ul>
+    <li>public void <b>setSmallIcon</b> (String locale, String icon) throws VersionNotSupportedException;</li>
+    <li>public void <b>setSmallIcon</b> (String icon);</li>
+    <li>public void <b>setLargeIcon</b> (String locale, String icon) throws VersionNotSupportedException;</li>
+    <li>public void <b>setLargeIcon</b> (String icon);</li>
+    <li>public void <b>setAllIcons</b> (String[] locales, String[] smallIcons, String[] largeIcons) throws VersionNotSupportedException;</li>
+    <li>public void <b>setIcon</b> (org.netbeans.api.web.dd.Icon icon);</li>
+    <br>
+    <li>public String <b>getSmallIcon</b> (String locale) throws VersionNotSupportedException;</li>
+    <li>public String <b>getSmallIcon</b> ();</li>
+    <li>public String <b>getLargeIcon</b> (String locale) throws VersionNotSupportedException;</li>
+    <li>public String <b>getLargeIcon</b> ();</li>
+    <li>public org.netbeans.api.web.dd.Icon <b>getDefaultIcon</b> ();</li>
+    <li>public java.util.Map <b>getAllIcons </b>();</li>
+    <br>
+    <li>public void <b>removeSmallIcon</b> (String locale) throws VersionNotSupportedException;</li>
+    <li>public void <b>removeLargeIcon</b> (String locale) throws VersionNotSupportedException;</li>
+    <li>public void <b>removeIcon</b> (String locale) throws VersionNotSupportedException;</li>
+    <li>public void <b>removeSmallIcon</b> ();</li>
+    <li>public void <b>removeLargeIcon</b> ();</li>
+    <li>public void <b>removeIcon</b> ();</li>
+    <li>public void <b>removeAllIcons</b> ();</li>
+</ul><br>
+</p>
+
+<p>
+<font class="type"><b>ComponentInterface</b></font><br><br>
+It is a compound interface created by CommonDDBean, CreateCapability, FindCapability, DescriptionInterface, DisplayNameInterface and IconInterface.
+</p>
+
+<p>
+<font class="type"><b>RootInterface</b></font><br><br>
+Interface providing an additional functionality for the WebApp interface like method for writing the deployment descriptor to file or merging two DDs into one bean graph.<br>
+It extends the ComponentInterface.<br>
+Methods :
+<ul>
+<li>public void <b>write</b>(FileObject fo) throws java.io.IOException;</li>
+<li>public void <b>merge</b>(RootInterface bean, int mode);</li>
+</ul><br>
+</p>
+
+<a name="component5"/>
+<h3>4.5. Examples of Usage</h3>
+</p>
+
+<h4>Example 1</h4>
+
+In this example, DD API client prints all listener classes from  deployment descriptor to the console:<br>
+<div class="nonnormative">
+<pre>
+ <font class="keyword">package</font> mypackage;
+
+ <font class="keyword">import</font> org.netbeans.api.web.DDProvider;
+ <font class="keyword">import</font> org.netbeans.api.web.dd.WebApp;
+ <font class="keyword">import</font> org.netbeans.api.web.dd.Listener;
+ <font class="keyword">import</font> org.openide.filesystems.*;
+
+ <font class="keyword">public class</font> ListenerExample {
+ <font class="comment">    
+    /**
+     * @param args the command line arguments
+     */
+</font>
+    <font class="keyword">public static void</font> main(String[] args) <font class="keyword">throws</font> Exception {
+
+	<font class="comment">// get the file object of web.xml file</font>
+        DDProvider ddProvider = DDProvider.getDefault();
+        FileObject fo = Repository.getDefault().findResource("WEB-INF/web.xml");
+
+	<font class="comment">// get the deployment descriptor root object</font>
+        WebApp webApp = ddProvider.getDDRoot(fo);
+
+	<font class="comment">// print the version of deployment dscriptor</font>
+        System.out.println("<font class="constant">DD version = </font>"+webApp.getVersion());
+
+	<font class="comment">// get the array of listeners and print the listener classes</font>
+        Listener[] listeners = webApp.getListener();
+        <font class="keyword">for</font> (int i=<font class="constant">0</font>; i&lt;listeners.length; i++) {
+            System.out.println("<font class="constant">Listener [</font>"+i+"<font class="constant">] = </font>"+listeners[i].getListenerClass());
+        }
+    }
+ }
+</pre>
+</div>
+</p>
+
+<h4>Example 2</h4>
+
+In this example, DD API client searches a servlet "CarServlet" and, if found, adds 2 init parameters there "car_type" and "car_color" :<br>
+<div class="nonnormative">
+<pre>
+ <font class="keyword">package</font> mypackage;
+
+ <font class="keyword">import</font> org.netbeans.api.web.DDProvider;
+ <font class="keyword">import</font> org.netbeans.api.web.dd.WebApp;
+ <font class="keyword">import</font> org.netbeans.api.web.dd.Servlet;
+ <font class="keyword">import</font> org.netbeans.api.web.dd.InitParam;
+ <font class="keyword">import</font> org.openide.filesystems.*;
+
+ <font class="keyword">public class</font> InitParamExample {
+ <font class="comment">    
+    /**
+     * @param args the command line arguments
+     */
+</font>
+    <font class="keyword">public static void</font> main(String[] args) <font class="keyword">throws</font> Exception {
+
+	<font class="comment">// get the file object of web.xml file</font>
+        DDProvider ddProvider = DDProvider.getDefault();
+        FileObject fo = Repository.getDefault().findResource("WEB-INF/web.xml");
+
+	<font class="comment">// get the deployment descriptor root object</font>
+        WebApp webApp = ddProvider.getDDRoot(fo);
+
+	<font class="comment">// print the version of deployment dscriptor</font>
+        System.out.println("<font class="constant">DD version = </font>"+webApp.getVersion());
+
+	<font class="comment">// looks for the "CarServlet" servlet at WebApp object by ServletName property</font>
+        Servlet servlet = (Servlet) webApp.findBeanByName("<font class="constant">Servlet</font>", "<font class="constant">ServletName</font>", "<font class="constant">CarServlet</font>");
+
+        if (servlet!=<font class="constant">null</font>) {
+
+            <font class="comment">// create a new - not bound - InitParam object and set it 2 properties ("ParamName" and "ParamValue")</font>
+            InitParam param = (InitParam)servlet.createBean("<font class="constant">InitParam</font>");
+            param.setParamName("<font class="constant">car_type</font>");
+            param.setParamValue("<font class="constant">FORD</font>");
+	    <font class="comment">// add InitParam object to Servlet object</font>
+            servlet.addInitParam(param);
+
+            <font class="comment">// create another InitParam object and set it 2 properties</font>
+            param = (InitParam)servlet.createBean("<font class="constant">InitParam</font>");
+            param.setParamName("<font class="constant">car_color</font>");
+            param.setParamValue("<font class="constant">green</font>");
+	    <font class="comment">// add InitParam object to Servlet object</font>
+            servlet.addInitParam(param);
+
+	    <font class="comment">// write changes to file object</font>
+            webApp.write(fo);
+
+	    <font class="comment">// print all init params to console</font>
+            InitParam[] newParams = servlet.getInitParam();
+            <font class="keyword">for</font> (int i=<font class="constant">0</font>;i&lt;newParams.length;i++)
+                System.out.println("<font class="constant">init-param [</font>"+i+"<font class="constant">] = </font>"+newParams[i].getParamName()+"<font class="constant"> -&gt; </font>"+newParams[i].getParamValue()); 
+        }
+    }
+ }
+</pre>
+</div>
+</p>
+
+<a name="arch-time"/>
+<h3>5. Time Estimates of the Work</h3>
+<p>
+<ul>
+<li><b>October 2003</b> - DD API proposal and architecture discussion. [<font color=#ff0000>done</font>]</li> 
+<li><b>November 2003</b> - DD API initial implementation, NbUnit tests. [<font color=#ff0000>done</font>]</li>
+<li><b>December 2003</b> - DD API documentation, DD API architecture document, DD API architecture question document. [<font color=#ff0000>done</font>]</li>
+<li><b>December 5. 2003</b> - DD API review - the overall architecture [<font color=#ff0000>done</font>] See <a href="http://openide.netbeans.org/tutorial/reviews/opinions_37386.html">DDAPI Rewiev Report</a></li>
+<li><b>January 2004</b> - DD API review - architecture details (Commitment Review) </li>
+<li><b>January 2004</b> - implementation of  (final) changes emerging from DD API Commitment Review</li>
+</ul>
+</p>
+       
+<a name="deps"/>
+<h2>6. Dependencies</h2>
+
+<a name="dep-nb"/>
+<h3>6.1. NetBeans Modules</h3>
+<ul>
+<li><b>OpenAPI / FileSystems</b>
+<dd>If FileSystems exist as a standalone jar the DD API can depend just on that.</dd>
+</li>
+<li><b>OpenAPI / Util</b>
+<dd>If openapi/util exists as a standalone jar the DD API can depend just on that.</dd>
+</li>
+<li><b>org.netbeans.modules.schema2beans/1</b>
+<dd>Runtime dependency - the implementation part depends on this library. The implementation part is located in non-public <b>org.netbeans.modules.web.dd.impl</b> package od web/ddapi module.
+</dd>
+</li>
+</ul>
+
+<a name="dep-non-nb"/>
+<h3>6.2. External Projects</h3>
+No dependences.
+<a name="dep-platform"/>
+<h2>7. Platform Requirements</h2>
+<p>
+<b>JRE 1.4</b> or <b>JRE1.3</b> with <b>JAXP</b><br>
+<b>IDE/1 &gt; 3.17</b>
+</p>
+<a name="deploy-packages"/>
+<h2>8. Public Packages</h2>
+<p>
+<b><i><font class="type">org.netbeans.api.web.dd</font></i></b> - <font class="type"><a href="#component1"><u>DD API interfaces</u></a></font> and <a href="#component2"><font class="type"><u>DDProvider</u></font></a> class.
+</p>
+<p>
+<b><i><font class="type">org.netbeans.api.web.dd.common</font></i></b> - <font class="type"><a href="#component4"><u>DD API Super-Interfaces</u></a></font> 
+ and <font class="type"><a href="#component3"><u>DD API Exceptions</u></a></font>.
+</p>
+<a name="compat"/>
+<h2>9. Compatibility</h2>
+<a name="compat-standard"/>
+<h3>9. 1. With Standards</h3>
+<p>
+<b>Servlet 2.3, Servlet2.4, JAXP</b>
+</p>
+<a name="compat-impact"/>
+<h3>9. 2.  Compatibility Impact</h3>
+<p>
+The impact on other modules currently exploring and manipulating web.xml files is minimal. Instead of working with schema2bean classes directly, they need to switch to DD API and work with interfaces.<br>
+In most cases the method names used in s2b generated classes are equal to method names in DD API interfaces.
+</p>
+<a name="lookup-lookup"/>
+<h2>10. Using Lookup</h2>
+<p>
+Not. 
+</p>
+
+<a name="perf"/>
+<h2>11. Performance</h2>
+<p>
+The reading/parsing and writing the web.xml is the bottleneck of the DD API performance. Than the schema2beans root object is <b>weakly</b> cached in memmory.
+However, those operations have no visible impact while working with web modules with standard-sized deployment descriptors.<br>
+The measurements were not provided for DD API specifically, but there may have been some measurements made in <a href="http://schema2beans.netbeans.org"><u>schema2beans infrastructure</u></a> that is used for DD API implementation. There should be no additional deficites added by DD API. 
+</p>
+<a name="perf-scale"/>
+<h3>11.1. Scalability</h3>
+<p>
+Getting rid of the direct dependency on schema2beans generated bean graph enables DD API clients to work with deployment descriptor without care about version-specific details.
+</p>
+        
+<a name="perf-limit"/>
+<h3>11.2. Limitations</h3>
+<p>
+Some methods from DD API interfaces throw the VersionNotSupportedException which may be changed in the future (when all versions of DD will suport that element)
+or vice versa there can be methods which may not be supported in higher versions, so the exception should be thrown.
+It is supposed that in the future only the limited number of DD versions will always be supported (2 successive versions) . 
+See also the <a href="#not-for"><b>What is DD API Not For</b></a> part.
+</p>
+
+<a name="perf-spi"/>
+<h3>11.3. Impact of SPI on Performance</h3>
+<p>
+There is no SPI support in DD API.
+</p>
+
+<a name="conc"/>
+<h2>12. Resolving Concurrency</h2>
+<p>
+Several clients can concurrently use the DD API and work with the same instance of deployment descriptor at the same time. <br>
+In another words, several clients can work with the same DD API data model. See the picture :
+</p>
+<p>
+<img src="dd_api_schema.jpg" width="600" height="500" alt="DD API Schema" border=1><br>
+</p>
+<p>
+Problems arise when one client stars to modify a web.xml and another client tries to make some changes to the same file while being modificated by the first client.<br>
+Also the synchronization between the data model (in memory) and web.xml file (on disk) need to be solved. 
+It is important to devide the responsibility for rosolving the concurent issues and synchronization between DD API module and client modules.
+</p>
+<a name="conc-usecases"/>
+<h3>12.1. Use Cases</h3>
+<p>
+Let's supose these subjects, that may come into a conflict, dealing with DD API :<br>
+<ul>
+<li><b>Client 1: </b>Deployment Descriptor text editor</li>
+<li><b>Client 2: </b>Servlet Wizard</li>
+<li><b>Client 3: </b>Deployment Descriptor Visual Editor</li>
+</ul>
+</p>
+<h4>Use Case 1 [Client 1 vs. Client 2]</h4>
+Client 1 (DD Text Editor) : the web.xml file is open in text editor and user makes some changes leading towards a <b>valid web.xml document</b>, then <b>saves </b>the changes.<br>
+Client 2 (Servlet Wizard) : gets the deployment descriptor (using DD API) and adds the servlet and servlet-mapping. Then it tries to write the changes.<br>
+<b>Expected Behaviour : </b>changes from Client 2 are propagated to text editor and afterwards saved to web.xml file.
+<h4>Use Case 2 [Client 1 vs. Client 2]</h4>
+Client 1 (DD Text Editor) : the web.xml file is open in text editor and user makes some changes leading towards a <b>valid web.xml document</b>, but <b>doesn't save</b> the changes.<br>
+Client 2 (Servlet Wizard) : tries to update and write deployment descriptor using DD API.<br>
+<b>Expected Behaviour : </b>changes from Client 2 are propagated to text editor and user is asked to save the changes in order to be accepted by web server.
+<h4>Use Case 3 [Client 1 vs. Client 2]</h4>
+Client 1 (DD Text Editor) : the web.xml file is open in text editor and user makes  some changes leading towards an <b>invalid web.xml document</b>, <b>doesn't save</b> the changes.<br>
+Client 2 (Servlet Wizard) : tries to update and write deployment descriptor using DD API.<br>
+<b>Expected Behaviour : </b>The text editor asks user to complete the changes to make the document valid and to save the document. Then Changes made by Client 2 are merged.
+<h4>Use Case 4 [Client 1 vs. Client 2]</h4>
+Client 1 (DD Text Editor) : the web.xml file is open in text editor and user makes some changes leading towards an <b>invalid web.xml document</b>, then <b>saves</b> the changes even for invalid data.<br>
+Client 2 (Servlet Wizard) : tries to update and write deployment descriptor using DD API.<br>
+<b>Expected Behaviour : </b> The same as for Use Case 3 - user is asked to modify (and save) the document in text editor in order to be valid, then changes made by Client 2 are merged. 
+<h4>Use Case 5 [Client 1 vs. Client 3]</h4>
+Client 1 (DD Text Editor) : the web.xml file is open in text editor and user makes some changes leading towards the invalid web.xml document.<br>
+Client 3 (DD Visual Editor) : user switches to Visual DD Editor and continues in editing using a visual editor component panel.<br>
+<b>Expected Behaviour : </b> When trying to provide the changes(the focus on text field is lost), Text Editor client should be notified that document in text editor isn't valid and following changes can cause some data lost. After accomlishing the changes in text editor, changes from visual editor are merged to web.xml data model.
+<p>
+The Client 2[Wizard] and Client 3[Visual DD Editor] don't differ much in behaviour except that Visual DD Editor doesn't require the changes to be saved to disk after any change in component panel. In fact the Text Editor and Visual Editor should share the same save cookie object and let user to decide when to save the data to disk.
+</p>
+
+<a name="conc-solution"/>
+<h3>12.2. Solution and Impact on DD API users</h3>
+<p>
+The concurrent problems should be hidden for the users and need to be resolved in implementation part of DD API and in DD Text Editor and DD Visual Editor respectively.<br>
+The solution is based on <b>call back pattern</b> when DD Editor provides the DD API with <b>OutputProvider</b> object.<br>
+DD API delegates then the save action to OutputProvider.save() method that resolves the writing as well as the concurent problem for DD API. It is realizable, because OutputProvider object knows whether the web.xml document is valid or not in DD Editor.<br>
+<br>
+It is important for DD API cliets to minimize the time between the event when web.xml file is open  (obtained using the DDProvider.getDDRoot() method) and saved. There is not reasonable do create delays between those actions. <br>
+<b>Example :</b> When implementing the Servlet Wizard the wrong technique is to obtain the WebApp (DD root) object when the wizard is open and then provide the (modification and) writing after the wizard is finished. The good implementation takes the root object just before the deployment descriptor is modified and saved.
+</p>
+
+<a name="ext"/>
+<h2>13. Extensibility</h2>
+<p>
+The DD API need do be flexible enough towards the future changes in Servlet specification. Nowadays DD API accepts both the DTD and XML schema files. 
+It is expected that in future the XML schema for deployment descriptor will be changed. The DD API is prepared for changes that either break or not break the backward compatibility.
+It is expected that :
+<ul>
+<li>some interfaces/methods can be added for new versions</li>
+<li>some methods can turn to throw the VersionNotSupportedException in the future</li>
+</ul>
+Though the DD API consists of a set of interfaces, <b>the implementation part is supposed to be writen only by DD API owners</b>.<br>
+There is also no support for plug-in the new implementation.<br>
+ <font color=#ff0000><b>This will be specified clearly in the API documentation</b></font>.
+</p>
+
+<a name="testing"/>
+<h2>14. Testing</h2>
+<p>
+The DD API is being developed in the Extreme Programming style and the <b>NbUnit</b> tests were already developped.
+Though, the unit tests are running in "<b>ide</b>" mode currently, newertheless, they are ready to run in "<b>code</b>" mode as well. 
+</p>
+
+</body>
+</html>

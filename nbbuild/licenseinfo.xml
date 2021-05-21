@@ -21,15 +21,11 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>antsrc/org/netbeans/nbbuild/xhtml1-strict.dtd</file>
-        <license ref="W3C2" />
-        <sourceOnly />
-    </fileset>
-    <fileset>
         <file>antsrc/org/netbeans/nbbuild/xhtml-lat1.ent</file>
         <file>antsrc/org/netbeans/nbbuild/xhtml-special.ent</file>
         <file>antsrc/org/netbeans/nbbuild/xhtml-symbol.ent</file>
-        <license ref="ISO-8879-SGML" />
+        <file>antsrc/org/netbeans/nbbuild/xhtml1-strict.dtd</file>
+        <license ref="W3C2" />
         <sourceOnly />
     </fileset>
     <fileset>

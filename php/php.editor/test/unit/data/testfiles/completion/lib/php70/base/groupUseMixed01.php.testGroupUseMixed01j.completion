@@ -1,0 +1,8 @@
+Code completion result for source line:
+new My|A();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    My                              [PUBLIC]   null
+CLASS      MyA                             [PUBLIC]   A
+CLASS      MyAA                            [PUBLIC]   A
+------------------------------------
+CLASS      MyCls                           [PUBLIC]   A

@@ -1,0 +1,7 @@
+[[818,819]-Syntax error
+ unexpected:	identifier '_'
+ after:	integer '100'
+ expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ], ), :, ??] 818-819:Syntax error
+ unexpected:	identifier '_'
+ after:	integer '100'
+ expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ], ), :, ??

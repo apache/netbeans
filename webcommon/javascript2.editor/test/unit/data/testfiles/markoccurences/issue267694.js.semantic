@@ -1,0 +1,15 @@
+function |>METHOD:PC<| (){
+    this.|>FIELD:buf<| = 10;
+
+   
+    this.|>METHOD:peek<| = function |>METHOD,UNUSED:peek<|() { 
+        var |>LOCAL_VARIABLE_DECLARATION:buf<| = this.|>FIELD:buf<|;
+        |>LOCAL_VARIABLE:buf<| = 20;
+        |>GLOBAL:console<|.log(this.|>FIELD:buf<|);
+        |>GLOBAL:console<|.log(|>LOCAL_VARIABLE:buf<|);
+    };
+}
+
+var |>GLOBAL:a<| = new PC();
+|>GLOBAL:a<|.peek();
+   

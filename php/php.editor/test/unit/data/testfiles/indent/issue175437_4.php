@@ -1,0 +1,4 @@
+<?php
+    $text = "hello"; ^ /* comment */
+
+?>

@@ -1,0 +1,59 @@
+FUNCTION returnTypes01 [ANONYMOUS: false, DECLARED: true - returnTypes01, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+formatter      : OBJECT formatter [ANONYMOUS: false, DECLARED: false - formatter, MODIFIERS: PUBLIC, OBJECT]
+               # PROPERTIES
+               println : FUNCTION println [ANONYMOUS: false, DECLARED: false - println, MODIFIERS: PUBLIC, METHOD]
+                       # PARAMETERS
+                       OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                       # PROPERTIES
+                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+isGood         : FUNCTION isGood [ANONYMOUS: false, DECLARED: false - isGood, MODIFIERS: PUBLIC, FUNCTION]
+               # PROPERTIES
+               arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+isGreate       : OBJECT isGreate [ANONYMOUS: false, DECLARED: false - isGreate, MODIFIERS: PUBLIC, VARIABLE]
+testReturnType : OBJECT testReturnType [ANONYMOUS: false, DECLARED: true - testReturnType, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+               # PROPERTIES
+               getBigNumber         : FUNCTION getBigNumber [ANONYMOUS: false, DECLARED: true - getBigNumber, MODIFIERS: PUBLIC, METHOD]
+                                    # RETURN TYPES
+                                    Number, RESOLVED: true
+                                    # PROPERTIES
+                                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+               getDouble            : FUNCTION getDouble [ANONYMOUS: false, DECLARED: true - getDouble, MODIFIERS: PUBLIC, METHOD]
+                                    # RETURN TYPES
+                                    Number, RESOLVED: true
+                                    # PROPERTIES
+                                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+               getInteger           : FUNCTION getInteger [ANONYMOUS: false, DECLARED: true - getInteger, MODIFIERS: PUBLIC, METHOD]
+                                    # RETURN TYPES
+                                    Number, RESOLVED: true
+                                    # PROPERTIES
+                                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+               getRegExp            : FUNCTION getRegExp [ANONYMOUS: false, DECLARED: true - getRegExp, MODIFIERS: PUBLIC, METHOD]
+                                    # RETURN TYPES
+                                    RegExp, RESOLVED: true
+                                    # PROPERTIES
+                                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+               getSimpleDescription : FUNCTION getSimpleDescription [ANONYMOUS: false, DECLARED: true - getSimpleDescription, MODIFIERS: PUBLIC, METHOD]
+                                    # RETURN TYPES
+                                    String, RESOLVED: true
+                                    # PROPERTIES
+                                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+               isGood1              : FUNCTION isGood1 [ANONYMOUS: false, DECLARED: true - isGood1, MODIFIERS: PUBLIC, METHOD]
+                                    # RETURN TYPES
+                                    Boolean, RESOLVED: true
+                                    # PROPERTIES
+                                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+               isGood2              : FUNCTION isGood2 [ANONYMOUS: false, DECLARED: true - isGood2, MODIFIERS: PUBLIC, METHOD]
+                                    # RETURN TYPES
+                                    Boolean, RESOLVED: true
+                                    # PROPERTIES
+                                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+               isGreat              : OBJECT isGreat [ANONYMOUS: false, DECLARED: true - isGreat, MODIFIERS: PUBLIC, PROPERTY]
+               simpleMix            : FUNCTION simpleMix [ANONYMOUS: false, DECLARED: true - simpleMix, MODIFIERS: PUBLIC, METHOD]
+                                    # RETURN TYPES
+                                    Number, RESOLVED: true
+                                    String, RESOLVED: true
+                                    # PROPERTIES
+                                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

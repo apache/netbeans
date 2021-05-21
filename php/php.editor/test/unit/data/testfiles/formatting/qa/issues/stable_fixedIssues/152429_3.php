@@ -1,0 +1,13 @@
+<?php
+switch ($anything) {
+    case 'error':
+        break;
+    case 'search':
+        echo '';
+        break;
+    case 'test':
+        echo '1';
+        break;
+    // CURSOR IS NOW HERE
+}
+?>

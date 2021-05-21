@@ -1,8 +1,0 @@
-Name: aopalliance
-Description: Part of Apache Maven Distribution
-Version: 3.3.9
-License: Maven-PD
-Origin: Apache Software Foundation
-Files: apache-maven-3.3.9-bin.zip!/apache-maven-3.3.9/lib/aopalliance-1.0.jar
-
-LICENCE: all the source code provided by AOP Alliance is Public Domain.

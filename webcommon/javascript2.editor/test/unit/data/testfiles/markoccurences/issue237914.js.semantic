@@ -1,0 +1,11 @@
+var |>GLOBAL:job<| = {|>FIELD:a<|: 1}; 
+
+function |>METHOD:JobParser<|(job, |>UNUSED:results<|) {
+    this.|>METHOD:parse<| = function() {
+        var |>LOCAL_VARIABLE_DECLARATION,UNUSED:test<| = job;
+        return job; // this is purple, should be black
+    };   
+
+}
+|>GLOBAL:job<|.|>FIELD:a<| = 3;
+|>GLOBAL:window<|.console.log(new JobParser({|>FIELD:d<|: 1}).parse());

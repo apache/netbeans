@@ -1,0 +1,57 @@
+
+
+Document 0
+Searchable Keys:
+
+Not Searchable Keys:
+
+
+Document 1
+Searchable Keys:
+
+Not Searchable Keys:
+
+
+Document 2
+Searchable Keys:
+  clz : aaa;AAA;12;;;;1;
+  method : af;af;36;;;1;
+  method : bark;bark;62;;;1;
+  top : aaa
+
+Not Searchable Keys:
+
+
+Document 3
+Searchable Keys:
+  clz : bbb;BBB;80;AAA;;;1;
+  method : bf;bf;116;;;1;
+  top : bbb
+
+Not Searchable Keys:
+
+
+Document 4
+Searchable Keys:
+  clz : ccc;CCC;132;BBB;;;1;
+  method : bark;bark;194;;;1;
+  method : cf;cf;168;;;1;
+  top : ccc
+
+Not Searchable Keys:
+
+
+Document 5
+Searchable Keys:
+  identifier_used : aaa;
+  identifier_used : aaa;
+  identifier_used : af;
+  identifier_used : bark;
+  identifier_used : bark;
+  identifier_used : bbb;
+  identifier_used : bbb;
+  identifier_used : bf;
+  identifier_used : ccc;
+  identifier_used : cf;
+
+Not Searchable Keys:

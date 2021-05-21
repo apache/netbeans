@@ -1,0 +1,4 @@
+Code completion result for source line:
+throw Some|Exception::create($message);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      SomeException                   [PUBLIC]   issue270733.php

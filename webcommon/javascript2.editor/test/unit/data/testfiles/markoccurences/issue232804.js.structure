@@ -1,0 +1,5 @@
+testWith02:CLASS:[PRIVATE]:ESCAPED{testWith02}:
+  app:CLASS:[PUBLIC]:ESCAPED{app}:
+    description:FIELD:[PUBLIC]:ESCAPED{description}<font color="#999999">ESCAPED{ : }String</font>:
+    getUsages:METHOD:[PUBLIC]:ESCAPED{getUsages}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Number</font>:
+    name:FIELD:[PUBLIC]:ESCAPED{name}<font color="#999999">ESCAPED{ : }String</font>:

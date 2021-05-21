@@ -1,0 +1,7 @@
+[[816,819]-Syntax error
+ unexpected:	identifier 'e_2'
+ after:	integer '1'
+ expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ], ), :, ??] 816-819:Syntax error
+ unexpected:	identifier 'e_2'
+ after:	integer '1'
+ expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ], ), :, ??

@@ -1,0 +1,5 @@
+Code completion result for source line:
+function union_types(null|int|float $param1, string|obj|ect $param): UnionTypes1| UnionTypes2 {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    object                                     null

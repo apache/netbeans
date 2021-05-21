@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+
+    <folder name="OptionsExport">
+        <folder name="Java">
+            <file name="AntShortcuts"> <!-- #167803 -->
+                <attr name="displayName" bundlevalue="org.apache.tools.ant.module.resources.Bundle#OptionsExport.displayName"/>
+                <attr name="include" stringvalue="config/(Actions/Build/.*[.]xml|(Menu|Toolbars|Shortcuts)/.*[.]shadow)"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Templates">
+ 
+        <folder name="Other">
+            <file name="Project.xml" url="Project.xml_">
+                <attr name="displayName" bundlevalue="org.apache.tools.ant.module.resources.Bundle#Templates/Other/Project.xml"/>
+                <attr name="position" intvalue="800"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/apache/tools/ant/module/resources/ProjectDescription.html"/>
+                <attr name="templateCategory" stringvalue="ant-script"/>
+            </file>
+            <file name="CustomTask.java" url="CustomTask_java">
+                <attr name="displayName" bundlevalue="org.apache.tools.ant.module.resources.Bundle#Templates/Other/CustomTask.java"/>
+                <attr name="position" intvalue="900"/>
+                <attr name="template" boolvalue="true"/>
+                <!-- XXX #44054: implies a runtime dep on java/project module: -->
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.spi.java.project.support.ui.templates.JavaTemplates.createJavaTemplateIterator"/>
+                <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/apache/tools/ant/module/resources/CustomTaskDescription.html"/>
+                <attr name="templateCategory" stringvalue="ant-task"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+            </file>
+        </folder>
+    </folder>
+
+    <folder name="Services">
+
+        <folder name="Hidden">
+            <file name="com-jcraft-jzlib-antlibrary.instance">
+                <attr name="instanceCreate" methodvalue="org.apache.tools.ant.module.spi.AutomaticExtraClasspath.url"/>
+                <attr name="instanceOf" stringvalue="org.apache.tools.ant.module.spi.AutomaticExtraClasspathProvider"/>
+                <attr name="url" urlvalue="nbinst://com.jcraft.jzlib/modules/com-jcraft-jzlib.jar"/>
+            </file>
+            <file name="com-jcraft-jsch-antlibrary.instance">
+                <attr name="instanceCreate" methodvalue="org.apache.tools.ant.module.spi.AutomaticExtraClasspath.url"/>
+                <attr name="instanceOf" stringvalue="org.apache.tools.ant.module.spi.AutomaticExtraClasspathProvider"/>
+                <attr name="url" urlvalue="nbinst://com.jcraft.jsch/modules/com-jcraft-jsch.jar"/>
+            </file>
+        </folder>
+
+    </folder>
+
+    <!-- Lines marked as erroneous: -->
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-ant+xml">
+                <folder name="CodeTemplates">
+                    <folder name="Defaults">
+                        <file name="org-apache-tools-ant-module-CodeTemplates.xml" url="codetemplates.xml"/>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+  
+    <folder name="org-apache-tools-ant-module">
+        <folder name="target-actions">
+            <file name="org-openide-actions-OpenAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-OpenAction.instance"/>
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="sep-1.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="200"/>
+            </file>
+            <file name="sep-2.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="700"/>
+            </file>
+            <file name="org-openide-actions-PropertiesAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                <attr name="position" intvalue="800"/>
+            </file>
+        </folder>
+    </folder>
+    
+</filesystem>

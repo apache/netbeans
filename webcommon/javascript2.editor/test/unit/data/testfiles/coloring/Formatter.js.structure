@@ -1,0 +1,10 @@
+formatter:CLASS:[PUBLIC]:ESCAPED{formatter}:
+  addIndent:METHOD:[PUBLIC]:ESCAPED{addIndent}ESCAPED{(}ESCAPED{count}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  addSpace:METHOD:[PUBLIC]:ESCAPED{addSpace}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+  delimiter:METHOD:[PUBLIC]:ESCAPED{delimiter}ESCAPED{(}ESCAPED{title}ESCAPED{, }ESCAPED{emptyLine}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  indent:FIELD:[PUBLIC]:ESCAPED{indent}<font color="#999999">ESCAPED{ : }Number</font>:
+  print:METHOD:[PUBLIC]:ESCAPED{print}ESCAPED{(}ESCAPED{text}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  printCode:METHOD:[PUBLIC]:ESCAPED{printCode}ESCAPED{(}ESCAPED{code}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  println:METHOD:[PUBLIC]:ESCAPED{println}ESCAPED{(}ESCAPED{text}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  removeIndent:METHOD:[PUBLIC]:ESCAPED{removeIndent}ESCAPED{(}ESCAPED{count}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  space:FIELD:[PUBLIC]:ESCAPED{space}<font color="#999999">ESCAPED{ : }String</font>:

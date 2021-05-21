@@ -1,0 +1,6 @@
+var |>METHOD:foo<| = function (layout) {    
+    var |>LOCAL_VARIABLE_DECLARATION:row<| = layout[0];
+    for (var |>LOCAL_VARIABLE_DECLARATION:i<| = 0; |>LOCAL_VARIABLE:i<| < 10; |>LOCAL_VARIABLE:i<|++) {
+        |>LOCAL_VARIABLE:row<|[|>LOCAL_VARIABLE:i<|] = '';
+    }     
+};

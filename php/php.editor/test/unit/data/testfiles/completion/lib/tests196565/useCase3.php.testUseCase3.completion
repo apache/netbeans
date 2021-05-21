@@ -1,0 +1,5 @@
+Code completion result for source line:
+$test->|; // CC shows methods from both Child and Parent
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     childFnc($param)                [PUBLIC]   ChildP
+METHOD     create()                        [STATIC]   ParentP

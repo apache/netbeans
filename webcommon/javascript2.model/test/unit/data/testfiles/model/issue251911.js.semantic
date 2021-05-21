@@ -1,0 +1,21 @@
+var |>GLOBAL:MyLib<| = new function |>METHOD,UNUSED:MyLib<|() {
+    var |>LOCAL_VARIABLE_DECLARATION:_myLib<| = this;
+ 
+    var |>LOCAL_VARIABLE_DECLARATION:TRUE<|   = !0,
+        |>LOCAL_VARIABLE_DECLARATION:FALSE<|  = !1;
+ 
+    |>LOCAL_VARIABLE:_myLib<|.|>METHOD:in<| = _myLib_in; 
+    
+    function |>METHOD:_myLib_in<|(item, container) {
+        if( _myLib_isArray(container) || _myLib_isStr(container) )
+            return _myLib_indexOf(container, item) >= 0;
+        
+        for( var |>LOCAL_VARIABLE_DECLARATION:key<| in container ) {
+            if( container[|>LOCAL_VARIABLE:key<|] === item )
+                return |>LOCAL_VARIABLE:TRUE<|;
+        }
+        
+        return |>LOCAL_VARIABLE:FALSE<|;
+    }
+       
+};

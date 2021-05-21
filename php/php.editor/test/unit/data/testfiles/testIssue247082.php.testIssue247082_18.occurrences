@@ -1,0 +1,2 @@
+    public static function |>MARK_OCCURRENCES:myTestStatic<|() {
+            echo self::|>MARK_OCCURRENCES:myTest^Static<|() . PHP_EOL;

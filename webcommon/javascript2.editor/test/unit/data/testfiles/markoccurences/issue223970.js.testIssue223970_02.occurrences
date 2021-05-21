@@ -1,0 +1,2 @@
+  this.|>MARK_OCCURRENCES:pers<| = new Person();
+wrapper.|>MARK_OCCURRENCES:pe^rs<|.run(); // place cursor here to inside run

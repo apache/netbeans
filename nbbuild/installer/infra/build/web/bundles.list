@@ -1,0 +1,8 @@
+#UID=<list of products separated by comma-space>
+javase=nb-base, nb-javase, nb-extide, nb-platform-sdk, nb-javafx-mod
+javaee=nb-base, nb-javase, nb-platform-sdk, nb-javafx-mod, nb-javaee, nb-webcommon, nb-extide, glassfish-mod, tomcat
+html=nb-base, nb-php, nb-webcommon, nb-extide
+php=nb-base, nb-php, nb-webcommon, nb-extide
+cpp=nb-base, nb-cnd
+all=nb-base, nb-javase, nb-platform-sdk, nb-javafx-mod, nb-javaee, nb-webcommon, nb-extide, nb-javacard, nb-javame, nb-cnd, nb-groovy, nb-php, nb-ergonomics, glassfish-mod, tomcat
+hidden=nb-base, nb-ergonomics, nb-javafx, nb-ruby, nb-extide, jre-nested

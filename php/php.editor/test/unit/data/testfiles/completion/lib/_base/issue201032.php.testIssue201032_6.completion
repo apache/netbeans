@@ -1,0 +1,4 @@
+Code completion result for source line:
+$this->dontMatchNames|($myFloat);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     dontMatchNames($first)          [PRIVATE]  SmartCompletion

@@ -1,0 +1,7 @@
+Code completion result for source line:
+console.log(p|rom02);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      prom01: String                  [PUBLIC]   issue233719.js
+FIELD      prom02: String                  [PUBLIC]   issue233719.js
+FIELD      prom03: Number                  [PUBLIC]   issue233719.js

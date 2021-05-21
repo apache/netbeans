@@ -1,0 +1,5 @@
+Code completion result for source line:
+echo $_COOKI|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   $_COOKIE                                   PHP Platform

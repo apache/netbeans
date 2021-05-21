@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<metaDD>
+	<extends>org.netbeans.modules.j2ee.sun.dd.impl.common.SunBaseBean</extends>
+	<meta-element>
+		<dtd-name>jndi-name</dtd-name>
+		<bean-name>JndiName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>resource-ref</dtd-name>
+		<bean-name>ResourceRef</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.ResourceRef</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>security-role-mapping</dtd-name>
+		<bean-name>SecurityRoleMapping</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.SecurityRoleMapping</implements>
+		<user-code>
+    //needed for 3_0_0
+    public void setPrincipalNameClassName(int index, String value) throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SecurityRoleMapping.VERSION_SERVER_8_0);
+    }
+    public String getPrincipalNameClassName(int index) throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SecurityRoleMapping.VERSION_SERVER_8_0);
+    }
+    public int sizePrincipalNameClassName() throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SecurityRoleMapping.VERSION_SERVER_8_0);
+    }
+		</user-code>
+	</meta-element>
+	<meta-element>
+		<dtd-name>ejb-ref-name</dtd-name>
+		<bean-name>EjbRefName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>res-ref-name</dtd-name>
+		<bean-name>ResRefName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>principal-name</dtd-name>
+		<bean-name>PrincipalName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>client-args</dtd-name>
+		<bean-name>ClientArgs</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>client-jar-path</dtd-name>
+		<bean-name>ClientJarPath</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>resource-env-ref-name</dtd-name>
+		<bean-name>ResourceEnvRefName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>name</dtd-name>
+		<bean-name>Name</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>password</dtd-name>
+		<bean-name>Password</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>#PCDATA</dtd-name>
+		<bean-name>Pcdata</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>default-resource-principal</dtd-name>
+		<bean-name>DefaultResourcePrincipal</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.DefaultResourcePrincipal</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>group-name</dtd-name>
+		<bean-name>GroupName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>role-name</dtd-name>
+		<bean-name>RoleName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>resource-env-ref</dtd-name>
+		<bean-name>ResourceEnvRef</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.ResourceEnvRef</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>ejb-ref</dtd-name>
+		<bean-name>EjbRef</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.EjbRef</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>plugin-data</dtd-name>
+		<bean-name>PluginData</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.PluginData</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>auto-generate-sql</dtd-name>
+		<bean-name>AutoGenerateSql</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+</metaDD>

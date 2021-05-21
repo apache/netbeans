@@ -1,0 +1,6 @@
+Code completion result for source line:
+var x = {a238310:{oneA:"test", twoA:2}}.a238310.|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      oneA: String                    [PUBLIC]   issue238310_02.js
+FIELD      twoA: Number                    [PUBLIC]   issue238310_02.js

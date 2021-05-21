@@ -1,0 +1,4 @@
+Code completion result for source line:
+* print $test3|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   int $test3                      [PUBLIC]   issue136744.php

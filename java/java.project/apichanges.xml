@@ -1,0 +1,777 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="java_project">Java Project API</apidef>
+        <apidef name="classpath">Classpath Support SPI</apidef>
+        <apidef name="java_project_ui_old">UI Support SPI (obsoleted)</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+        <change id="ProjectPlatformNoPE">
+            <api name="java_project"/>
+            <summary>Added support for per-project platform for projects which don't use PropertyEvaluator.</summary>
+            <version major="1" minor="77"/>
+            <date day="19" month="6" year="2019"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                Added support for per-project platform for projects which don't use <code>PropertyEvaluator</code>.
+            </description>
+            <class package="org.netbeans.spi.java.project.support" name="ProjectPlatform"/>
+        </change>
+        <change id="ProjectModulesModifier">
+            <api name="java_project"/>
+            <summary>Added a SPI to manipulate with project's <code>module-info.java</code> declarations</summary>
+            <version major="1" minor="71"/>
+            <date day="16" month="3" year="2017"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                Added a SPI interface, which should be implemented on project to provide backwards compatibility for
+                <code>ProjectClassPathModifier</code> for modular projects. 
+            </description>
+            <class package="org.netbeans.spi.java.project.classpath" name="ProjectModulesModifier"/>
+        </change>
+        <change id="CompilerOptionsQueryMerger">
+            <api name="java_project"/>
+            <summary>Added a <code>LookupMerger</code> for <code>CompilerOptionsQueryImplementation</code>s</summary>
+            <version major="1" minor="68"/>
+            <date day="4" month="10" year="2016"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                Added a factory method <code>LookupMergerSupport.createCompilerOptionsQueryMerger</code>
+                to create a <code>LookupMerger</code> for <code>CompilerOptionsQueryImplementation</code>s
+                instances.
+            </description>
+            <class package="org.netbeans.spi.java.project.support" name="LookupMergerSupport"/>
+        </change>
+        <change id="ProjectPlatform">
+            <api name="java_project"/>
+            <summary>Added a support for per project JavaPlatform</summary>
+            <version major="1" minor="66"/>
+            <date day="17" month="8" year="2016"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added a support for per project <code>JavaPlatform</code>.
+                    The usecase for the per project JavaPlatform is a generated
+                    project. The project generator puts platform path into
+                    the project properties and the generated projects have correct
+                    JavaPlatform. There is no need to resolve broken JavaPlatform
+                    when the projects are opened.
+                </p>
+                <p>
+                    To use the per project <code>JavaPlatform</code> set the
+                    <code>platform.active</code> property to the platform name and
+                    add the <code>platforms.&lt;platform_name&gt;.home</code> property
+                    pointing to the path to the JDK home.
+                </p>
+                <p>
+                    Example:<br/>
+                    <code>platforms.MyJDK.home=/Library/Java/JavaVirtualMachines/jdk1.7.0_67.jdk/Contents/Home</code><br/>
+                    <code>platform.active=MyJDK</code><br/>
+                </p>
+            </description>
+            <class package="org.netbeans.spi.java.project.support" name="ProjectPlatform"/>
+        </change>
+        <change id="server.is.free">
+            <api name="java_project"/>
+            <summary>Desktop dependent Java Project Support UI extracted</summary>
+            <version major="1" minor="62"/>
+            <date day="2" month="6" year="2014"/>
+            <author login="tstupka"/>
+            <compatibility modification="yes" addition="yes">
+                <p>
+                    Runtime compatibility remains, compile time compatibility is
+                    mostly preserved too. It is however recommended to upgrade
+                    dependencies of client modules. Try running
+                    <code>ant fix-dependencies</code> in your Ant module.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    The following packages were moved from 
+                    <a href="@org-netbeans-modules-java-project@/overview-summary.html">org.netbeans.modules.java.project</a> 
+                    into the
+                    <a href="@org-netbeans-modules-java-project-ui@/overview-summary.html">org.netbeans.modules.java.project.ui</a> module:
+                </p>
+                <ul>
+                    <li><a href="@org-netbeans-modules-java-project-ui@/org/netbeans/api/java/project/runner/package-summary.html">o.n.api.java.project.runner</a></li>
+                    <li><a href="@org-netbeans-modules-java-project-ui@/org/netbeans/spi/java/project/runner/package-summary.html">o.n.spi.java.project.runner</a></li>
+                    <li><a href="@org-netbeans-modules-java-project-ui@/org/netbeans/spi/java/project/support/ui/package-summary.html">o.n.spi.java.project.support.ui</a></li>
+                    <li><a href="@org-netbeans-modules-java-project-ui@/org/netbeans/spi/java/project/support/ui/templates/package-summary.html">o.n.spi.java.project.support.ui.templates</a></li>
+                </ul>
+            </description>
+        </change>  
+        <change id="JavaTemplates-icons">
+            <api name="java_project"/>
+            <summary>Added more specific icons into <code>JavaTemplates</code></summary>
+            <version major="1" minor="60"/>
+            <date day="30" month="7" year="2013"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added more specific icons into <code>JavaTemplates</code>
+                </p>
+            </description>
+            <class package="org.netbeans.spi.java.project.support.ui.templates" name="JavaTemplates" link="no"/>
+        </change>
+        <change id="JavadocAndSourceRootDetection-findJavadocRoots">
+            <api name="java_project"/>
+            <summary>Added <code>JavadocAndSourceRootDetection.findJavadocRoots</code> method to find out all javadoc roots under given folder</summary>
+            <version major="1" minor="56"/>
+            <date day="4" month="7" year="2013"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added <code>JavadocAndSourceRootDetection.findJavadocRoots</code> method to find out all javadoc roots under given folder.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.java.project.support" name="JavadocAndSourceRootDetection"/>
+            <issue number="232084"/>
+        </change>
+        <change id="ProjectModificationActions">
+            <api name="java_project"/>
+            <summary>Added <code>ProjectProblemsProvider</code> to resolve JDK 8 Profile problems</summary>
+            <version major="1" minor="53"/>
+            <date day="12" month="4" year="2013"/>
+            <author login="mkozeny"/>
+            <compatibility addition="yes" deprecation="yes"/>
+            <description>
+                <p>
+                    In method <code>getActions</code> added package actions from <code>Projects/package/Actions</code>.
+                </p>
+            </description>
+            <!--<class package="org.netbeans.spi.java.project.support.ui" name="PackageViewChildren" link="no"/>-->
+            <issue number="200833"/>
+        </change>
+        <change id="BrokenReferencesSupport-Profiles">
+            <api name="java_project"/>
+            <summary>Added <code>ProjectProblemsProvider</code> to resolve JDK 8 Profile problems</summary>
+            <version major="1" minor="53"/>
+            <date day="28" month="3" year="2013"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes" deprecation="yes"/>
+            <description>
+                <p>
+                    Added a factory method <code>createProfileProblemProvider</code> into <code>BrokenReferencesSupport</code>
+                    creating a <code>ProjectProblemsProvider</code> resolving dependencies on libraries with higher or invalid profile.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.java.project.support.ui" name="BrokenReferencesSupport" link="no"/>
+            <issue number="227831"/>
+        </change>
+        <change id="ProjectProblems">
+            <api name="java_project"/>
+            <summary>Changed <code>BrokenReferencesSupport</code> to delegate to <code>ProjectProblems</code></summary>
+            <version major="1" minor="46"/>
+            <date day="24" month="7" year="2012"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes" deprecation="yes"/>
+            <description>
+                <p>
+                    Added <code>PreferredProjectPlatform</code> to provide a
+                    <code>JavaPlatform</code> which should be used for a new project.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.java.project.support.ui" name="BrokenReferencesSupport" link="no"/>
+            <issue number="215628"/>
+        </change>
+        <change id="PreferredProjectPlatform">
+            <api name="java_project"/>
+            <summary>Added <code>PreferredProjectPlatform</code></summary>
+            <version major="1" minor="46"/>
+            <date day="20" month="5" year="2012"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added <code>PreferredProjectPlatform</code> to provide a 
+                    <code>JavaPlatform</code> which should be used for a new project.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.java.project.support" name="PreferredProjectPlatform"/>
+            <issue number="208528"/>
+        </change>
+        <change id="ProfilerActions">
+            <api name="java_project"/>
+            <summary>Added 
+                <code>JavaRunner.QUICK_PROFILE</code>, 
+                <code>JavaRunner.QUICK_TEST_PROFILE</code> and
+                <code>JavaRunner.QUICK_PROFILE_APPLET</code> constants
+            </summary>
+            <version major="1" minor="44"/>
+            <date day="27" month="3" year="2011"/>
+            <author login="yardus"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Integrating profiler into the generic project infrastructure.
+                </p>
+            </description>
+            <class package="org.netbeans.api.java.project.runner" name="JavaRunner" link="no"/>
+            <issue number="203519"/>
+        </change>
+        <change id="ProjectClassPathModifier.extenderForModifier">
+            <api name="classpath"/>
+            <summary>Added <code>ProjectClassPathModifier.extenderForModifier</code></summary>
+            <version major="1" minor="41"/>
+            <date day="22" month="8" year="2011"/>
+            <author login="jglick"/>
+            <compatibility addition="yes">
+                <p>
+                    Any modules still implementing <code>ProjectClassPathExtender</code> should cease to do so.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    Added a bridge from an old SPI to the newer, preferred SPI.
+                    Also added <code>LookupMergerSupport.createClassPathModifierMerger</code>.
+                </p>
+            </description>
+            <class package="org.netbeans.api.java.project.classpath" name="ProjectClassPathModifier"/>
+            <class package="org.netbeans.spi.java.project.support" name="LookupMergerSupport"/>
+            <issue number="196455"/>
+        </change>
+        <change id="JAVA_ICON">
+            <api name="java_project"/>
+            <summary>Added <code>JavaTemplates.JAVA_ICON</code></summary>
+            <version major="1" minor="40"/>
+            <date day="25" month="7" year="2011"/>
+            <author login="jglick"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added a constant for a Java template icon.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.java.project.support.ui.templates" name="JavaTemplates" link="no"/>
+            <issue number="200175"/>
+        </change>
+        <change id="BrokenReferencesSupport-showAlert">
+            <api name="java_project"/>
+            <summary>Added <code>showAlert</code> method into the<code>BrokenReferencesSupport</code></summary>
+            <version major="1" minor="37"/>
+            <date day="7" month="3" year="2011"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added showAlert method having project context allowing the broken references alert to do
+                    the broken references resolution.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.java.project.support.ui" name="BrokenReferencesSupport" link="no"/>
+            <issue number="195249"/>
+        </change>
+        <change id="LibraryDefiner">
+            <api name="java_project"/>
+            <summary>Added <code>LibraryDefiner</code></summary>
+            <version major="1" minor="35"/>
+            <date day="2" month="2" year="2011"/>
+            <author login="jglick"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added a new SPI to permit alternate ways of resolving missing library references.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.java.project.support.ui" name="BrokenReferencesSupport" link="no"/>
+            <issue number="194744"/>
+        </change>
+        <change id="JavadocAndSourceRootDetection.findSourceRoots">
+            <api name="java_project"/>
+            <summary>Added JavadocAndSourceRootDetection.findSourceRoots method to find all source roots under the given folder</summary>
+            <version major="1" minor="31"/>
+            <date day="15" month="1" year="2010"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added JavadocAndSourceRootDetection.findSourceRoots to find all source roots under the given folder.
+                    This method is used by the import source roots in the new project wizards.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.java.project.support" name="JavadocAndSourceRootDetection"/>
+            <issue number="179427"/>
+        </change>
+        <change id="JavaRunner-runtime-encoding">
+            <api name="java_project"/>
+            <summary>Added JavaRunner.PROP_RUNTIME_ENCODING property for COS Runner</summary>
+            <version major="1" minor="28"/>
+            <date day="19" month="10" year="2009"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added <code>JavaRunner.PROP_RUNTIME_ENCODING</code> property to allow project types
+                    to pass the runtime encoding to jvm.
+                </p>
+            </description>
+            <class package="org.netbeans.api.java.project.runner" name="JavaRunner" link="no"/>
+            <issue number="173406"/>
+        </change>
+
+        <change id="source-group-modifier-constants">
+            <api name="java_project"/>
+            <summary>Constants for SourceGroupModifier</summary>
+            <version major="1" minor="25"/>
+            <date day="18" month="2" year="2009"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added a few constants to <code>JavaProjectConstants</code> for use by <code>SourceGroupModifier</code> with relation
+                    to java projects.
+                </p>
+            </description>
+            <class package="org.netbeans.api.java.project" name="JavaProjectConstants"/>
+            <issue number="102711"/>
+        </change>
+
+        <change id="CPModifier-addProject">
+            <api name="java_project"/>
+            <summary>Addition of ProjectClassPathModifier.addProject() method</summary>
+            <version major="1" minor="24"/>
+            <date day="11" month="2" year="2008"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    <code>ProjectClassPathModifier.addProject(Project[], FileObject, String)</code> is a partial replacement for
+                    <code>ProjectClassPathModifier.addAntArtifact()</code> that is capable of working with non-ant based project types as well.
+                    It's not guaranteed that the source and target project will connect in cases when each is of different class of project. Eg.
+                    Ant-based vs Maven project types. A way to check is to attempt to retrieve AntArtifact from the source and target projects..
+                </p>
+            </description>
+            <class package="org.netbeans.api.java.project.classpath" name="ProjectClassPathModifier"/>
+            <class package="org.netbeans.spi.java.project.classpath" name="ProjectClassPathModifierImplementation"/>
+            <issue number="157985"/>
+        </change>
+
+        
+        <change id="javadoc-root-and-source-root-detection">
+            <api name="java_project"/>
+            <summary>Detection of Javadoc root and source root</summary>
+            <version major="1" minor="20"/>
+            <date day="22" month="7" year="2008"/>
+            <author login="dkonecny"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Class <code>JavadocAndSourceRootDetection</code> added with couple of
+                    helper methods to detect Javadoc and/or sources root.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.java.project.support" name="JavadocAndSourceRootDetection"/>
+            <issue number="124779"/>
+        </change>
+
+        <change id="JavaRunner">
+            <api name="java_project"/>
+            <summary>Added JavaRunner</summary>
+            <version major="1" minor="22"/>
+            <date day="29" month="9" year="2008"/>
+            <author login="jlahoda"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Classes <code>JavaRunner</code> and <code>JavaRunnerImplementation</code> added.
+                </p>
+            </description>
+            <class package="org.netbeans.api.java.project.runner" name="JavaRunner" link="no"/>
+            <class package="org.netbeans.spi.java.project.runner" name="JavaRunnerImplementation" link="no"/>
+            <issue number="138504"/>
+        </change>
+        
+        <change id="LookupMerger">
+            <api name="classpath"/>
+            <summary>Create LookupMerger implementation for ClassPathProvider</summary>
+            <version major="1" minor="18"/>
+            <date day="19" month="5" year="2008"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    <code>LookupMergerSupport.createClassPathProviderMerger(ClassPathProvider)</code>
+                    can be used to allow composing the project's classpath from multiple sources (modules).
+                </p>
+            </description>
+            <class package="org.netbeans.spi.java.project.support" name="LookupMergerSupport"/>
+            <issue number="134341"/>
+        </change>
+        
+        <change id="use-uri-for-relative-paths">
+            <api name="java_project"/>
+            <summary>Support for adding/removing relative classpath entries</summary>
+            <version major="1" minor="16"/>
+            <date day="27" month="3" year="2008"/>
+            <author login="dkonecny"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>Allow to add/remove relative classpath entries.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.java.project.classpath" name="ProjectClassPathModifierImplementation"/>
+            <class package="org.netbeans.api.java.project.classpath" name="ProjectClassPathModifier"/>
+            <issue number="129628"/>
+        </change>        
+        <change id="ant-project-libraries">
+            <api name="java_project"/>
+            <summary>Support for project-specific libraries</summary>
+            <version major="1" minor="15"/>
+            <date day="7" month="2" year="2008"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p> A new utility class for helping project types create UI for
+                sharable Libraries.
+                </p>
+                <p> An additional protected method for use in <code>ProjectClassPathModifierImplementation</code> subclasses named
+                <code>performSharabilityHeuristics(URL,AntProjectHelper)</code> that takes classpath roots and tries to find the best way to reference that jar/folder.
+                </p>
+                
+            </description>
+            <class package="org.netbeans.spi.java.project.support.ui" name="SharableLibrariesUtils" link="no"/>
+            <class package="org.netbeans.spi.java.project.classpath" name="ProjectClassPathModifierImplementation"/>
+            <issue number="44035"/>
+        </change>        
+    <change id="AttachJavadocSourceToJar">
+        <api name="java_project_ui_old"/>
+        <summary>Added support classes for attaching javadoc/source to jar-based classpath items</summary>
+        <version major="1" minor="14"/>
+        <date day="21" month="1" year="2008"/>
+        <author login="mkleint"/>
+        <compatibility addition="yes"/>
+        <description>
+            3 new utility classes to allow attaching javadoc/source to existing jar dependencies of an Ant-based project.
+            These classes are for use by project type owners. Specifically
+            <ul>
+                <li><code>ExtraSourceJavadocSupport.createExtraSourceQueryImplementation()</code> and 
+                <code>ExtraSourceJavadocSupport.createExtraJavadocQueryImplementation()</code> 
+                create instances to be added to project's Lookup.</li>
+                <li><code>LookupMergerSupport.createSFBLookupMerger()</code> and <code>LookupMergerSupport.createJFBLookupMerger()</code>
+                provide simple implementations of lookup mergers for respective query implementations. 
+                A typical project implementation will put the lookup merger and the Extra*Support's instance in the project's lookup.</li>
+                <li><code>EditJarSupport.showEditDialog()</code> is a facotry method for creating editing UI. To be added to Project's properties dialog
+                preferably the "Libraries" panel. Client code (project type owner) is assumed to write down the ant properties
+               source.reference.__name__ and javadoc.reference.__name__ in the same manner as file.reference.__name__ is persisted.</li>
+            </ul>
+        </description>
+        <class package="org.netbeans.spi.java.project.support" name="ExtraSourceJavadocSupport"/>
+        <class package="org.netbeans.spi.java.project.support" name="LookupMergerSupport"/>
+        <class package="org.netbeans.spi.java.project.support.ui" name="EditJarSupport" link="no"/>
+        <issue number="70497"/>
+    </change>
+        
+    <change id="IncludeExcludeVisualizer">
+        <api name="java_project_ui_old"/>
+        <summary>Added <code>IncludeExcludeVisualizer</code> support class</summary>
+        <version major="1" minor="12"/>
+        <date day="1" month="3" year="2007"/>
+        <author login="jglick"/>
+        <compatibility addition="yes"/>
+        <description>
+            A new utility class which is handy for previewing include and exclude patterns (Ant syntax)
+            for source groups, for example in project customizer dialogs.
+        </description>
+        <class package="org.netbeans.spi.java.project.support.ui" name="IncludeExcludeVisualizer" link="no"/>
+        <issue number="49026"/>
+    </change>
+    <change id="JavaProjectConstants.SOURCES_TYPE_RESOURCES">
+        <api name="java_project"/>
+        <summary>Add SourceGroup type for resources that are separate from sources</summary>
+        <version major="1" minor="11"/>
+        <date day="30" month="1" year="2007"/>
+        <author login="mkleint"/>
+        <compatibility addition="yes"/>
+        <description>
+            Add a new Sourcegroup type for resources, if these are not put together with Java sources. (For example
+            Maven based projects put resource files like images, or properties files in different source structures)
+            Useful for creating new resource files in a project from a 3rd party module.
+        </description>
+        <class package="org.netbeans.api.java.project" name="JavaProjectConstants"/>
+        <issue number="89204"/>
+    </change>
+    <change id="ProjectClassPathModifier">
+        <api name="classpath"/>
+        <summary>New ProjectClassPathModifier API/SPI for modification of project's classpath</summary>
+        <version major="1" minor="10"/>
+        <date day="15" month="5" year="2006"/>
+        <author login="tzezula"/>
+        <compatibility addition="yes"/>
+        <description>
+        The new SPI interface ProjectClassPathModifierImplementation was created to allow extension modules to
+        add or remove classpath elements (archive files, folders, libraries, subprojects) from the
+        project's classpath. The ProjectClassPathModifierImplementation is provided by the project types in the
+        project's Lookup. The API client uses the static methods of ProjectClassPathModifier which delegate to
+        the SPI.
+        </description>
+        <class package="org.netbeans.api.java.project.classpath" name="ProjectClassPathModifier"/>
+        <class package="org.netbeans.spi.java.project.classpath" name="ProjectClassPathModifierImplementation"/>
+         <issue number="74356"/>
+         <issue number="75469"/>
+         <issue number="60852"/>
+         <issue number="73197"/>
+         <issue number="73198"/>
+    </change>
+                                                                                                                                
+    <change id="BrokenReferencesModel.updateReference">
+        <api name="java_project"/>
+        <summary>Semantic changes in the BrokenReferencesModel.updateReference behavior</summary>
+        <version major="1" minor="6"/>
+        <date day="28" month="8" year="2005"/>
+        <author login="tzezula"/>
+        <compatibility modification="yes" semantic="incompatible"/>
+        <description>
+                The BrokenReferencesModel was changed to support better sharability of
+                projects. The BrokenReferencesModel always stores the resolved broken reference
+                into the private properties as absolute files and does not affect the project properties.
+        </description>
+        <issue number="63401"/>
+    </change>
+    <change id="JavaProjectConstants">
+            <api name="java_project"/>
+            <summary>Added artifact type representing folder</summary>
+            <version major="1" minor="4"/>
+            <date day="20" month="4" year="2005"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                The freeform project may have as its output a folder rather than a jar archive.
+                The JavaProjectConstants was extended by the ARTIFACT_TYPE_FOLDER constant to represent such an output.
+                </p>
+            </description>
+            <class package="org.netbeans.api.java.project" name="JavaProjectConstants"/>
+            <issue number="57733"/>
+        </change>
+        <change id="JavaTemplates.factory.package-required">
+            <api name="java_project_ui_old"/>
+            <summary>Added a new factory method for creating the name/package chooser wizard panel into the templates SPI.</summary>
+            <version major="1" minor="3"/>
+            <date day="21" month="3" year="2005"/>
+            <author login="pjiricka"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                A new factory method for creating the name and package chooser panel in the Java file wizard.
+                This method is similar to the methods that already exist in this class; it has an extra boolean 
+                parameter that allows to specify whether the entered package name is required to be valid (non-empty).
+                </p>
+            </description>
+            <class package="org.netbeans.spi.java.project.support.ui.templates" name="JavaTemplates" link="no"/>
+            <issue number="56730"/>
+        </change>
+        <change id="PackageView.listView">
+            <api name="java_project_ui_old"/>
+            <summary>Display of packages in a list added</summary>
+            <version major="1" minor="3"/>
+            <date day="10" month="1" year="2005"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                New methods supporting creation of package lists were added to <code>PackageView</code>.
+                <code>createListView(SourceGroup)</code> creates a <code>ComboBoxModel</code> containing the
+                packages from a given source group. <code>listRenderer()</code> returns a <code>ListCellRenderer</code>
+                rendering the packages.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.java.project.support.ui" name="PackageView" link="no"/>
+            <issue number="48618"/>
+        </change>
+         <change id="ProjectClassPathSupport.createPropertyBasedClassPathImplemenentation">
+            <api name="classpath"/>
+            <summary>Added helper method for creating <code>ClassPathImplementation</code> based on an Ant property</summary>
+            <version major="1" minor="3"/>
+            <date day="6" month="1" year="2005"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                Added new helper class <code>ProjectClassPathSupport</code>
+                with a factory method <code>createPropertyBasedClassPathImplementation(...)</code>.
+                This method creates a live classpath based on the list of Ant properties holding the path. The classpath
+                implementation listens on changes of properties, updates state and fires events to clients.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.java.project.classpath.support" name="ProjectClassPathSupport"/>
+            <issue number="42309"/>
+        </change>    
+        <change id="ProjectClassPathExtender">
+            <api name="classpath"/>
+            <summary><code>ProjectClassPathExtender</code> made public</summary>
+            <version major="1" minor="3"/>
+            <date day="5" month="1" year="2005"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                <code>ProjectClassPathExtender</code> was a private contract between <code>j2seproject</code> and <code>form</code>
+                which allowed the form editor to extend the compilation classpath of a project by a new classpath
+                element (archive file, folder, dependent project, or library).
+                This interface was moved into a public SPI package
+                to remove the need to have an implementation dependency of <code>form</code> and <code>j2seproject</code> on <code>java/project</code>.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.java.project.classpath" name="ProjectClassPathExtender"/>
+            <issue number="52998"/>
+        </change>
+        <change id="rel-vers-1">
+            <api name="java_project"/>
+            <summary>Switched to major release version 1</summary>
+            <version major="1" minor="3"/>
+            <date day="22" month="12" year="2004"/>
+            <author login="jglick"/>
+            <compatibility>
+                <p>
+                    Clients should begin requesting the new version to avoid a warning at startup.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    To indicate that this is now considered a stable API, the major release version was
+                    incremented to 1 from 0.
+                </p>
+            </description>
+            <issue number="51468"/>
+        </change>
+        
+    <change>
+        <api name="java_project_ui_old"/>
+        <summary>Introduction of a new interface PackageRenameHandler which allows plugging into <code>PackageViewChildren.PackageNode.setName()</code></summary>
+        <version major="1" minor="5"/>
+        <date day="11" month="5" year="2005"/>
+        <author login="jbecicka"/>
+        <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+        <description>
+        Refactoring needs to handle rename of Package Nodes. It is allowed through PackageRenameHandler.
+        Any client can put it's PackageRenameHandler into Lookup (only one instance is allowed). 
+        Implementation of packageNode.setName() will use this instance to handle rename request.
+        </description>
+        <class package="org.netbeans.spi.java.project.support.ui" name="PackageRenameHandler" link="no"/>
+        <issue number="53295"/>
+    </change>
+        
+
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE java/project/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Java Project API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="@TOP@">Java Project API</a>.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.modules.java.project/1"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

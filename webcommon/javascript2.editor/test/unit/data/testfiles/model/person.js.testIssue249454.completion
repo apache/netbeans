@@ -1,0 +1,16 @@
+Code completion result for source line:
+this.|dirtFactor++;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      constructor                     [PUBLIC]   person.js
+METHOD     eat(): Number                   [PROTECTE  person.js
+METHOD     exercise(): Number              [PROTECTE  person.js
+METHOD     getAge(): Number                [PROTECTE  person.js
+METHOD     getName(): String               [PROTECTE  person.js
+METHOD     getRace()                       [PROTECTE  person.js
+METHOD     muchTimePasses(): undefined     [PROTECTE  person.js
+METHOD     toString(): String              [PROTECTE  person.js
+METHOD     weigh(): Number                 [PROTECTE  person.js
+FIELD      clothing: String                [PUBLIC]   person.js
+FIELD      dirtFactor: Number              [PUBLIC]   person.js
+FIELD      population: Number              [PUBLIC,   person.js

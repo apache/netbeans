@@ -1,0 +1,25 @@
+FUNCTION ternary [ANONYMOUS: false, DECLARED: true - ternary, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+x : FUNCTION x [ANONYMOUS: false, DECLARED: true - x, MODIFIERS: PUBLIC, FUNCTION]
+  # RETURN TYPES
+  x.ternaryAnonym$0, RESOLVED: true
+  # PROPERTIES
+  arguments       : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+  ternaryAnonym$0 : OBJECT ternaryAnonym$0 [ANONYMOUS: true, DECLARED: true, MODIFIERS: PRIVATE, ANONYMOUS_OBJECT]
+                  # PROPERTIES
+                  a : FUNCTION a [ANONYMOUS: false, DECLARED: true - a, MODIFIERS: PUBLIC, METHOD]
+                    # RETURN TYPES
+                    Boolean, RESOLVED: true
+                    # PARAMETERS
+                    OBJECT co [ANONYMOUS: false, DECLARED: true - co, MODIFIERS: PUBLIC, PARAMETER]
+                    # PROPERTIES
+                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                  b : FUNCTION b [ANONYMOUS: false, DECLARED: true - b, MODIFIERS: PUBLIC, METHOD]
+                    # RETURN TYPES
+                    @call;value, RESOLVED: false
+                    # PARAMETERS
+                    OBJECT value [ANONYMOUS: false, DECLARED: true - value, MODIFIERS: PUBLIC, PARAMETER]
+                    # PROPERTIES
+                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

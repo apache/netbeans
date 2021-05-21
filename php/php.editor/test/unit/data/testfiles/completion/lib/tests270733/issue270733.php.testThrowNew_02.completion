@@ -1,0 +1,5 @@
+Code completion result for source line:
+throw new Som|eException($message);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO SomeException()                 [PUBLIC]   SomeException
+CLASS      SomeException                   [PUBLIC]   issue270733.php

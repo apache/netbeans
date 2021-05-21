@@ -1,0 +1,6 @@
+Code completion result for source line:
+mess.set|Code(25);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     setCode(code): undefined        [PUBLIC]   simpleModule.js
+METHOD     setText(text): undefined        [PUBLIC]   simpleModule.js

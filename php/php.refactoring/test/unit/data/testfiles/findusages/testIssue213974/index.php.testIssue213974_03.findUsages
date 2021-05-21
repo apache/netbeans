@@ -1,0 +1,14 @@
+Display text: const <b>SIZE</b> = 3;
+File name: Kitchen.php
+Name: SIZE
+Position: BEGIN: 74 END: 78
+
+Display text: return self::<b>SIZE</b>;
+File name: Kitchen.php
+Name: SIZE
+Position: BEGIN: 186 END: 190
+
+Display text: echo Kitchen::<b>SIZE</b>;
+File name: index.php
+Name: SIZE
+Position: BEGIN: 230 END: 234

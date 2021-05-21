@@ -1,0 +1,14 @@
+monolog/monolog: Sends your logs to files, sockets, inboxes, databases and various web services
+hydra/hydra: The cozy RESTfull PHP5.3 micro-framework.
+monolog/monolog-crowdpark-module: Logging for PHP 5.3
+symfony/monolog-bridge: Symfony Monolog Bridge
+symfony/monolog-bundle: Symfony MonologBundle
+kamisama/monolog-init: Very basic and light Dependency Injector Container for Monolog
+lf4php/lf4php-monolog: This is an lf4php binding for Monolog.
+nrk/monolog-fluent: A simple Monolog handler for Fluent
+z7/hydra: The cozy RESTfull PHP5.3 micro-framework.
+swestcott/monolog-extension: Monolog extension for Behat
+cobaia/monologdoctrine: Monolog meets Doctrine as SQL Logger
+beberlei/loggly-bundle: Bundle for Symfony2 that extends Monolog for Loggly support
+ehough/epilog: Logger based heavily on Monolog, but works with PHP 5.1 and above.
+processus/schreibmaschine: Logging for PHP 5.3 base on Monolog

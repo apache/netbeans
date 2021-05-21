@@ -1,0 +1,7 @@
+<div>
+    <div>
+        {% block %}
+            foo {{myVariable}} bar
+        {% endblock %}
+    </div>
+</div>

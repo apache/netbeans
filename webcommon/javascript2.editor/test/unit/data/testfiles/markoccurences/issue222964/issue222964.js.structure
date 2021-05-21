@@ -1,0 +1,7 @@
+window:CLASS:[PUBLIC]:ESCAPED{window}:
+  store:CLASS:[PUBLIC]:ESCAPED{store}:
+    address:CLASS:[PUBLIC]:ESCAPED{address}:
+      city:FIELD:[PUBLIC]:ESCAPED{city}<font color="#999999">ESCAPED{ : }String</font>:
+      street:FIELD:[PUBLIC]:ESCAPED{street}<font color="#999999">ESCAPED{ : }String</font>:
+    populate:METHOD:[PUBLIC]:ESCAPED{populate}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    wines:CLASS:[PUBLIC]:ESCAPED{wines}:

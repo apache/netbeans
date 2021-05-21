@@ -1,0 +1,7 @@
+var |>MARK_OCCURRENCES:MyLib<| = new function MyLib() {};
+ *  @return {|>MARK_OCCURRENCES:MyLib<|.ObjB} description */
+|>MARK_OCCURRENCES:MyL^ib<|.ObjB = function (arg) {
+ *  @returns {|>MARK_OCCURRENCES:MyLib<|.ObjB} */
+|>MARK_OCCURRENCES:MyLib<|.objB = function () {
+    return new |>MARK_OCCURRENCES:MyLib<|.ObjB(); 
+var b1 = |>MARK_OCCURRENCES:MyLib<|.objB();    // <- place cursor into objB identifier

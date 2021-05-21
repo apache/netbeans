@@ -1,0 +1,24 @@
+<?php
+
+$instance = new class {
+
+    protected $name, $price, $qty, $total;
+
+    public function __construct($iName, $iPrice, $iQty) {
+        $this->name = $iName;
+        $this->price = $iPrice;
+        $this->qty = $iQty;
+        $this->calculate();
+    }
+
+    protected function calculate() {
+        $this->price = number_format($this->price, 2);
+        $this->total = number_format(($this->price * $this->qty), 2);
+    }
+
+    public function __toString() {
+        return "You ordered ($this->qty) '$this->name'" . ($this->qty == 1 ? "" : "s") .
+                " at \$$this->price, for a total of: \$$this->total.";
+    }
+};
+echo (new Item("Widget 22", 4.90, 2));

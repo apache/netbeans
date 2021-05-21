@@ -1,0 +1,5 @@
+
+/**
+ * @param foo
+ */
+function |>METHOD:test<|(|>UNUSED:foo<|){}

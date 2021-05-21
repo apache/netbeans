@@ -1,0 +1,5 @@
+Code completion result for source line:
+var foo2 = this.getTest().m|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     method2(): undefined            [PUBLIC]   issue237421.js

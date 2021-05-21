@@ -1,0 +1,33 @@
+Caret position: 138
+Should show uses panel: true
+Defaults:
+ \Nette\Utils\Arrays
+ \Nette\Utils\Html
+ \Nette\Application\UI\Presenter
+ \Nette\Http\Request
+ \Nette\Utils\Strings
+
+Names:
+ Arrays
+ Html
+ Presenter
+ Request
+ Strings
+
+Variants:
+ \Nette\Utils\Arrays
+ Don't import.
+
+ \Nette\Utils\Html
+ Don't import.
+
+ \Nette\Application\UI\Presenter
+ Don't import.
+
+ \Nette\Application\Request
+ \Nette\Http\Request
+ Don't import.
+
+ \Nette\Utils\Strings
+ Don't import.
+

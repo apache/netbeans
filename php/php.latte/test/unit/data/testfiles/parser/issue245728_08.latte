@@ -1,0 +1,7 @@
+{var $var = 10}
+
+{define #test}
+	This is definition #{$var}
+{/define}
+
+{include #test, var => 20}

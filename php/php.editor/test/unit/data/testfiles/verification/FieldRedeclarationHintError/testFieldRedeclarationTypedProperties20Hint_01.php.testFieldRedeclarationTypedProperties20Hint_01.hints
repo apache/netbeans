@@ -1,0 +1,63 @@
+    private string $foo = "foo";
+                    ---
+HINT:Field "$foo" has already been declared
+    protected int $foo;
+                   ---
+HINT:Field "$foo" has already been declared
+    var bool $foo;
+              ---
+HINT:Field "$foo" has already been declared
+    public static ?string $foo;
+                           ---
+HINT:Field "$foo" has already been declared
+    private static ?array $foo;
+                           ---
+HINT:Field "$foo" has already been declared
+    protected static iterable $foo;
+                               ---
+HINT:Field "$foo" has already been declared
+    static MyClass $foo;
+                    ---
+HINT:Field "$foo" has already been declared
+    protected ?string $bar;
+                       ---
+HINT:Field "$bar" has already been declared
+    var bool $bar;
+              ---
+HINT:Field "$bar" has already been declared
+    public string $bar = 'bar';
+                   ---
+HINT:Field "$bar" has already been declared
+    public static array $bar;
+                         ---
+HINT:Field "$bar" has already been declared
+    private static ?array $bar;
+                           ---
+HINT:Field "$bar" has already been declared
+    protected static float $bar;
+                            ---
+HINT:Field "$bar" has already been declared
+    static self $bar;
+                 ---
+HINT:Field "$bar" has already been declared
+    public string $baz;
+                   ---
+HINT:Field "$baz" has already been declared
+    var ?MyClass $baz;
+                  ---
+HINT:Field "$baz" has already been declared
+    private object $baz;
+                    ---
+HINT:Field "$baz" has already been declared
+    public static ?string $baz;
+                           ---
+HINT:Field "$baz" has already been declared
+    protected static \Foo\Bar\MyClass $baz;
+                                       ---
+HINT:Field "$baz" has already been declared
+    private static ?\Foo\MyClass $baz;
+                                  ---
+HINT:Field "$baz" has already been declared
+    static int $baz;
+                ---
+HINT:Field "$baz" has already been declared

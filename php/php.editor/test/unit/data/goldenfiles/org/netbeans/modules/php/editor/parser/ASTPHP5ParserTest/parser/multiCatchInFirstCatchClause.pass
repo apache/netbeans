@@ -1,0 +1,142 @@
+<testresult testFile='multiCatchInFirstCatchClause.php'>
+    <scanner>
+        <token id='T_TRY' start='7' end='10'>
+            <text>try</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='11' end='12'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='17' end='21'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='22' end='24'>
+            <text>""</text>
+        </token>
+        <token id='T_SEMICOLON' start='24' end='25'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='26' end='27'>
+            <text>}</text>
+        </token>
+        <token id='T_CATCH' start='28' end='33'>
+            <text>catch</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='34' end='35'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='35' end='49'>
+            <text>ExceptionType1</text>
+        </token>
+        <token id='T_OR' start='50' end='51'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='52' end='66'>
+            <text>ExceptionType2</text>
+        </token>
+        <token id='T_VARIABLE' start='67' end='69'>
+            <text>$e</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='69' end='70'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='71' end='72'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='77' end='81'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='82' end='84'>
+            <text>""</text>
+        </token>
+        <token id='T_SEMICOLON' start='84' end='85'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='86' end='87'>
+            <text>}</text>
+        </token>
+        <token id='T_CATCH' start='88' end='93'>
+            <text>catch</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='94' end='95'>
+            <text>(</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='95' end='96'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='96' end='105'>
+            <text>Exception</text>
+        </token>
+        <token id='T_VARIABLE' start='106' end='108'>
+            <text>$e</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='108' end='109'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='110' end='111'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='116' end='120'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='121' end='123'>
+            <text>""</text>
+        </token>
+        <token id='T_SEMICOLON' start='123' end='124'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='125' end='126'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='127' end='127'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='127'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <TryStatement start='7' end='126'>
+                <CatchClauses>
+                    <CatchClause start='28' end='87'>
+                        <ClassNames>
+                            <NamespaceName start='35' end='49' isCurrent='false' isGlobal='false'>
+                                <Identifier start='35' end='49' name='ExceptionType1'/>
+                            </NamespaceName>
+                            <NamespaceName start='52' end='66' isCurrent='false' isGlobal='false'>
+                                <Identifier start='52' end='66' name='ExceptionType2'/>
+                            </NamespaceName>
+                        </ClassNames>
+                        <Variable start='67' end='69' isDollared='true'>
+                            <Identifier start='68' end='69' name='e'/>
+                        </Variable>
+                        <Block start='71' end='87' isCurly='true'>
+                            <EchoStatement start='77' end='85'>
+                                <Scalar start='82' end='84' type='STRING' value='""'/>
+                            </EchoStatement>
+                        </Block>
+                    </CatchClause>
+                    <CatchClause start='88' end='126'>
+                        <ClassNames>
+                            <NamespaceName start='95' end='105' isCurrent='false' isGlobal='true'>
+                                <Identifier start='96' end='105' name='Exception'/>
+                            </NamespaceName>
+                        </ClassNames>
+                        <Variable start='106' end='108' isDollared='true'>
+                            <Identifier start='107' end='108' name='e'/>
+                        </Variable>
+                        <Block start='110' end='126' isCurly='true'>
+                            <EchoStatement start='116' end='124'>
+                                <Scalar start='121' end='123' type='STRING' value='""'/>
+                            </EchoStatement>
+                        </Block>
+                    </CatchClause>
+                </CatchClauses>
+                <Block start='11' end='27' isCurly='true'>
+                    <EchoStatement start='17' end='25'>
+                        <Scalar start='22' end='24' type='STRING' value='""'/>
+                    </EchoStatement>
+                </Block>
+            </TryStatement>
+        </Statements>
+    </Program>
+</testresult>

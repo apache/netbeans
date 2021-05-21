@@ -1,0 +1,6 @@
+Code completion result for source line:
+/*test 2*/$fooObject->|methodOne();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     methodOne()                     [PUBLIC]   SimpleObject
+METHOD     methodThree()                   [PUBLIC]   ComplexObject
+METHOD     methodTwo()                     [PUBLIC]   SimpleObject

@@ -1,0 +1,6 @@
+Query:CONSTRUCTOR:[PUBLIC]:ESCAPED{Query}ESCAPED{(}ESCAPED{booleanQ}ESCAPED{, }ESCAPED{valueQ}ESCAPED{)}<font color="#999999">ESCAPED{ : }Query</font>:
+  results:FIELD:[PUBLIC]:ESCAPED{results}<font color="#999999">ESCAPED{ : }tmp</font>:
+  setResults:METHOD:[PROTECTED]:ESCAPED{setResults}ESCAPED{(}ESCAPED{items}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+config:CLASS:[PUBLIC]:ESCAPED{config}:
+  hh:FIELD:[PUBLIC]:ESCAPED{hh}<font color="#999999">ESCAPED{ : }Number</font>:
+  name:FIELD:[PUBLIC]:ESCAPED{name}<font color="#999999">ESCAPED{ : }String</font>:

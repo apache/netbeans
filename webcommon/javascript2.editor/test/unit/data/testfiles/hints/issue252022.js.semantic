@@ -1,0 +1,18 @@
+/**
+ * @constructor
+ */
+var |>GLOBAL:MyLib<| = new function |>METHOD,UNUSED:MyLib<|() {
+    
+    function |>METHOD,UNUSED:fn1<|() {
+        fn2().toLowerCase();  // test
+        fn2().toLowerCase();
+        return "";
+    } 
+
+    /**
+     * @returns {string}
+     */
+    function |>METHOD:fn2<|() {
+        return "";
+    }
+};      

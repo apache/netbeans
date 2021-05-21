@@ -1,0 +1,6 @@
+<?php
+trait |>CLASS:B<|
+{
+  use A { |>METHOD:getName<| as protected; }
+}
+?>

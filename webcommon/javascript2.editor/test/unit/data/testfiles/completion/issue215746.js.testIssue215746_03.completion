@@ -1,0 +1,6 @@
+Code completion result for source line:
+window.history.s|tate;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     seal(obj: Object): Object       [PUBLIC,   JS Platform
+FIELD      state: Object                   [PUBLIC]   JS Platform

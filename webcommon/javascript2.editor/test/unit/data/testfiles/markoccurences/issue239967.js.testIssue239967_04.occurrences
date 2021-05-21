@@ -1,0 +1,2 @@
+    var |>MARK_OCCURRENCES:pool2<| = [];
+        |>MARK_OCCURRENCES:po^ol2<|[i] = i;

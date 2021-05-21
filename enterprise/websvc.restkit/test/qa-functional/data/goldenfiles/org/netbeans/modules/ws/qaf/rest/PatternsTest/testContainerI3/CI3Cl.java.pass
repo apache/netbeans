@@ -1,0 +1,65 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package o.n.m.ws.qaf.rest.patterns;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.PUT;
+import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
+import javax.ws.rs.DELETE;
+
+/**
+ * REST Web Service
+ *
+ * @author jskrivanek
+ */
+public class CI3Cl {
+
+    private String CI3URI;
+
+    /**
+     * Creates a new instance of CI3Cl
+     */
+    private CI3Cl(String CI3URI) {
+        this.CI3URI = CI3URI;
+    }
+
+    /**
+     * Get instance of the CI3Cl
+     */
+    public static CI3Cl getInstance(String CI3URI) {
+        // The user may use some kind of persistence mechanism
+        // to store and restore instances of CI3Cl class.
+        return new CI3Cl(CI3URI);
+    }
+
+    /**
+     * Retrieves representation of an instance of o.n.m.ws.qaf.rest.patterns.CI3Cl
+     * @return an instance of java.lang.String
+     */
+    @GET
+    @Produces("text/html")
+    public String getHtml() {
+        //TODO return proper representation object
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * PUT method for updating or creating an instance of CI3Cl
+     * @param content representation for the resource
+     * @return an HTTP response with content of the updated or created resource.
+     */
+    @PUT
+    @Consumes("text/html")
+    public void putHtml(String content) {
+    }
+
+    /**
+     * DELETE method for resource CI3Cl
+     */
+    @DELETE
+    public void delete() {
+    }
+}

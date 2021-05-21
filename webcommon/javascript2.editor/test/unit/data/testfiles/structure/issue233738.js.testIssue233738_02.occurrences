@@ -1,0 +1,2 @@
+    |>MARK_OCCURRENCES:window<|.someprom = "helpik";
+    var myhelp = |>MARK_OCCURRENCES:win^dow<|['someprom'];

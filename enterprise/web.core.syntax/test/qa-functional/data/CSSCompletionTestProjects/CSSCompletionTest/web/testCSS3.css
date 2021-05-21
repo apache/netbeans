@@ -1,0 +1,73 @@
+
+
+/**CC 
+@|
+@namespace
+@namespace
+*/
+
+/**CC
+.a2[class^="start"]:|
+active
+.a2[class^="start"]:active
+*/
+
+
+/**CC
+.a2[class^="start"]::|
+after
+.a2[class^="start"]::after
+*/
+
+/**CC
+a + |
+div
+a + div
+*/
+
+div[hreflang|=en]{
+/**CC
+display: |
+display none
+display: none
+*/
+
+}
+
+p:nth-child(4n+1) { 
+/**CC
+color: |
+color navy
+color: navy
+*/
+
+}
+
+root {
+/**CC
+-web|
+-webkit-animation
+-webkit-animation: 
+*/
+
+/**CC
+box-|
+box-shadow
+box-shadow: 
+*/
+
+/**CC
+border-|
+border-radius
+border-radius: 
+*/
+
+}
+
+/**CC
+div:not(:|){}
+hover
+div:not(:hover){}
+*/
+
+

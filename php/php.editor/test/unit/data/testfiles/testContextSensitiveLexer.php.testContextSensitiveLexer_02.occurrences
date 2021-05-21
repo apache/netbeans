@@ -1,0 +1,3 @@
+    const |>MARK_OCCURRENCES:interface<| = "interface";
+        self::|>MARK_OCCURRENCES:interf^ace<|;
+MyInterface::|>MARK_OCCURRENCES:interface<|;

@@ -1,0 +1,6 @@
+Code completion result for source line:
+x.|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      oneA: String                    [PUBLIC]   issue238310_03.js
+FIELD      twoA: Number                    [PUBLIC]   issue238310_03.js

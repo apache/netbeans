@@ -1,0 +1,44 @@
+<testresult testFile='yield_05.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='7' end='12'>
+            <text>$data</text>
+        </token>
+        <token id='T_EQUAL' start='13' end='14'>
+            <text>=</text>
+        </token>
+        <token id='T_YIELD' start='15' end='20'>
+            <text>yield</text>
+        </token>
+        <token id='T_VARIABLE' start='21' end='27'>
+            <text>$value</text>
+        </token>
+        <token id='T_SEMICOLON' start='27' end='28'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='30' end='33'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='33' end='33'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='32'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='28'>
+                <Assignment start='7' end='27' operator='EQUAL'>
+                    <Variable start='7' end='12' isDollared='true'>
+                        <Identifier start='8' end='12' name='data'/>
+                    </Variable>
+                    <YieldExpression start='15' end='27'>
+                        <Variable start='21' end='27' isDollared='true'>
+                            <Identifier start='22' end='27' name='value'/>
+                        </Variable>
+                    </YieldExpression>
+                </Assignment>
+            </ExpressionStatement>
+            <EmptyStatement start='30' end='32'/>
+        </Statements>
+    </Program>
+</testresult>

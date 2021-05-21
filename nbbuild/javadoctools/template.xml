@@ -173,7 +173,7 @@ cause it to fail.
 
     <target name="javadoc-check-timestamps" depends="javadoc-init">
         <uptodate targetfile="${javadoc.out.zip}" property="javadoc.up.to.date">
-            <srcfiles dir="${javadoc.src}">
+            <srcfiles dir="${javadoc.src}" erroronmissingdir="false">
                 <or>
                     <and>
                         <selector refid="${javadoc.files}" />
@@ -245,12 +245,16 @@ cause it to fail.
     </target>
     
     <target name="javadoc-stage-main" depends="javadoc-init,javadoc-check-timestamps,javadoc-exec-files,javadoc-exec-packages" unless="javadoc.should.not.be.generated" >
+        <tstamp>
+            <format property="YEAR" pattern="yyyy"/>
+        </tstamp>
         <copy todir="${javadoc.out.dir}">
             <fileset refid="javadoc.css.files"/>
         </copy>
         <replace dir="${javadoc.out.dir}" >
             <include name="javadoc*.css"/>
             <include name="nb-docs-stability.css"/>
+            <replacefilter token="@CSS_TIMESTAMP@" value="Built on ${TODAY}. Copyright 2017-${YEAR} The Apache Software Foundation. All Rights Reserved." />
             <replacefilter token="@nb-docs-css@" value="${nb-docs.css}"/>
             <replacefilter token="@api-stability-image@" value="${stability.image}"/>
         </replace>
@@ -265,16 +269,16 @@ cause it to fail.
             <or>
                 <isset property="javadoc.files.provided"/>
                 <isset property="javadoc.should.not.be.generated"/>
+                <not>
+                    <available file="${javadoc.src}"/>
+                </not>
             </or>
         </condition>
     </target>
 
     <target name="-javadoc-set-footer">
-        <tstamp>
-            <format property="YEAR" pattern="yyyy"/>
-        </tstamp>
-        <property name="javadoc.footer" value='&lt;span class="footnote"&gt;Built on ${TODAY}.&amp;nbsp;&amp;nbsp;|&amp;nbsp;&amp;nbsp;
-        Copyright &amp;#169; 2017-${YEAR} Apache Software Foundation. All Rights Reserved.&lt;/span&gt;'/>
+        <!-- Timestamp is handled in javadoc.css to avoid too many commits on generated HTML files. -->
+        <property name="javadoc.footer" value='&lt;span class="footnote"&gt;&lt;/span&gt;&lt;!-- See javadoc.css for timestamp information --&gt;'/>
     </target>
     
     <target name="javadoc-exec-packages" depends="javadoc-init,javadoc-generate-references,javadoc-generate-overview,javadoc-exec-condition,javadoc-check-timestamps,javadoc-make-plain-title,javadoc-make-hyperlinked-title,javadoc-exec-condition,-javadoc-set-footer" unless="javadoc.exec.packages">
@@ -283,6 +287,13 @@ cause it to fail.
                 <pathelement location="${javadoc.docfiles}"/>
                 <pathelement location="${javadoc.src}"/>
             </sourcepath>
+            <doclet
+                name="org.apidesign.javadoc.codesnippet.Doclet"
+                path="${nb_all}/nbbuild/external/codesnippet-doclet-0.30.jar"
+            >
+                <param name="-snippetpath" value="${javadoc.base}"/>
+                <param name="-maxLineLength" value="120"/>
+            </doclet>
             <classpath path="${javadoc.classpath}"/>
             <!-- XXX note, this does not support more than one group -->
             <group packages="${javadoc.packages}">
@@ -293,6 +304,9 @@ cause it to fail.
             <doctitle>${javadoc.title}&lt;br/&gt;${javadoc.stability.label}</doctitle>
             <header>${javadoc.header}</header>
             <bottom>${javadoc.footer}</bottom>
+            <!-- Avoid timestamp comments in _all_ html generated files, to reduce unnecessary git commits -->
+            <arg value="-notimestamp" />
+            <arg value="--allow-script-in-comments" />
         </javadoc>
     </target>
     
@@ -425,6 +439,12 @@ cause it to fail.
         </replace>
         <replace dir="${javadoc.out.dir}" token="@TOP@/" value="@TOP@">
             <include name="**/*.html"/>
+        </replace>
+        <replace dir="${javadoc.out.dir}">
+            <replacetoken><![CDATA[<ul class="navList" title="Navigation">]]></replacetoken>
+            <replacevalue><![CDATA[<ul class="navList" title="Navigation"><li><a href="@TOP@apichanges.html">API Changes</a></li><li><a href="@TOP@architecture-summary.html">Architecture Summary</a></li>]]></replacevalue>
+            <include name="**/*.html"/>
+            <exclude name="**/**/architecture-summary.html,**/**/apichanges.html"/>
         </replace>
         <replace dir="${javadoc.out.dir}" token="@TOP@" value="">
             <include name="*.html"/>

@@ -1,0 +1,201 @@
+[<% org.test.|, TestBean, <% org.test.TestBean, 468]
+Card
+TestBean
+End cursor position = 489
+[<% t|, TestBean testBean, <% testBean, 615]
+TestBean testBean
+String toString ()
+this
+throw
+try
+Thread
+ThreadDeath
+ThreadGroup
+ThreadLocal <T>
+Throwable
+TypeNotPresentException
+End cursor position = 627
+[<% testBean.|, void setName, <% testBean.setName(name);, 764]
+boolean equals (Object obj )
+Class  getClass ()
+Integer getId ()
+String getName ()
+int hashCode ()
+void notify ()
+void notifyAll ()
+void setId (Integer id )
+void setName (String name )
+String toString ()
+void wait ()
+void wait (long timeout )
+void wait (long timeout , int 
+End cursor position = 789
+[<% "Hello World !".| %>, int indexOf (String str ), <% "Hello World !".indexOf(str) %>, 919]
+char charAt (int index )
+IntStream chars ()
+int codePointAt (int index )
+int codePointBefore (int index
+int codePointCount (int beginI
+IntStream codePoints ()
+int compareTo (String anotherS
+int compareToIgnoreCase (Strin
+String concat (String str )
+boolean contains (CharSequence
+boolean contentEquals (CharSeq
+boolean contentEquals (StringB
+boolean endsWith (String suffi
+boolean equals (Object anObjec
+boolean equalsIgnoreCase (Stri
+byte[] getBytes ()
+byte[] getBytes (Charset chars
+byte[] getBytes (String charse
+void getBytes (int srcBegin , 
+void getChars (int srcBegin , 
+Class  getClass ()
+int hashCode ()
+int indexOf (String str )
+int indexOf (int ch )
+int indexOf (String str , int 
+int indexOf (int ch , int from
+String intern ()
+boolean isEmpty ()
+int lastIndexOf (String str )
+int lastIndexOf (int ch )
+int lastIndexOf (String str , 
+int lastIndexOf (int ch , int 
+int length ()
+boolean matches (String regex 
+void notify ()
+void notifyAll ()
+int offsetByCodePoints (int in
+boolean regionMatches (int tof
+boolean regionMatches (boolean
+String replace (CharSequence t
+String replace (char oldChar ,
+String replaceAll (String rege
+String replaceFirst (String re
+String[] split (String regex )
+String[] split (String regex ,
+boolean startsWith (String pre
+boolean startsWith (String pre
+CharSequence subSequence (int 
+String substring (int beginInd
+String substring (int beginInd
+char[] toCharArray ()
+String toLowerCase ()
+String toLowerCase (Locale loc
+String toString ()
+String toUpperCase ()
+String toUpperCase (Locale loc
+String trim ()
+void wait ()
+void wait (long timeout )
+void wait (long timeout , int 
+End cursor position = 950
+[<% Li|, LinkedList <E>, <% LinkedList, 1048]
+LinkageError
+LinkedList <E>
+End cursor position = 1062
+[<% C|, Card, <% Card, 1160]
+ServletConfig config
+Object clone ()
+char
+class
+Card
+CharSequence
+Character
+Class <T>
+ClassCastException
+ClassCircularityError
+ClassFormatError
+ClassLoader
+ClassNotFoundException
+ClassValue <T>
+CloneNotSupportedException
+Cloneable
+Comparable <T>
+Compiler
+Cookie
+ch
+com
+End cursor position = 1168
+[<% LinkedList l = new LinkedList();l.| %>, void clear (), <% LinkedList l = new LinkedList();l.clear(); %>, 1385]
+boolean add (Object e )
+void add (int index , Object e
+boolean addAll (Collection c )
+boolean addAll (int index , Co
+void addFirst (Object e )
+void addLast (Object e )
+void clear ()
+Object clone ()
+boolean contains (Object o )
+boolean containsAll (Collectio
+Iterator descendingIterator ()
+Object element ()
+boolean equals (Object o )
+void forEach (Consumer action 
+Object get (int index )
+Class  getClass ()
+Object getFirst ()
+Object getLast ()
+int hashCode ()
+int indexOf (Object o )
+boolean isEmpty ()
+Iterator iterator ()
+int lastIndexOf (Object o )
+ListIterator listIterator ()
+ListIterator listIterator (int
+void notify ()
+void notifyAll ()
+boolean offer (Object e )
+boolean offerFirst (Object e )
+boolean offerLast (Object e )
+Stream parallelStream ()
+Object peek ()
+Object peekFirst ()
+Object peekLast ()
+Object poll ()
+Object pollFirst ()
+Object pollLast ()
+Object pop ()
+void push (Object e )
+Object remove ()
+boolean remove (Object o )
+Object remove (int index )
+boolean removeAll (Collection 
+Object removeFirst ()
+boolean removeFirstOccurrence 
+boolean removeIf (Predicate fi
+Object removeLast ()
+boolean removeLastOccurrence (
+void replaceAll (UnaryOperator
+boolean retainAll (Collection 
+Object set (int index , Object
+int size ()
+void sort (Comparator c )
+Spliterator spliterator ()
+Stream stream ()
+List subList (int fromIndex , 
+Object[] toArray ()
+Object[] toArray (Object[] a )
+String toString ()
+void wait ()
+void wait (long timeout )
+void wait (long timeout , int 
+new
+End cursor position = 1431
+[<% org.test.TestBean t = new org.test.TestBean(); t.| %>, void setName, <% org.test.TestBean t = new org.test.TestBean(); t.setName(name); %>, 1645]
+boolean equals (Object obj )
+Class  getClass ()
+Integer getId ()
+String getName ()
+int hashCode ()
+void notify ()
+void notifyAll ()
+void setId (Integer id )
+void setName (String name )
+String toString ()
+void wait ()
+void wait (long timeout )
+void wait (long timeout , int 
+End cursor position = 1710

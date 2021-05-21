@@ -1,0 +1,2 @@
+$|>MARK_OCCURRENCES:o^bj<| = 'MyObj';
+$x = new $|>MARK_OCCURRENCES:obj<|;

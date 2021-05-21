@@ -1,0 +1,6 @@
+function |>METHOD:test<|(bar)
+{
+    return bar;
+}
+
+|>GLOBAL:bar<| = 1; 

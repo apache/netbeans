@@ -1,0 +1,6 @@
+Code completion result for source line:
+$v1480109->|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     test()                          [PUBLIC]   issue1480109
+VARIABLE   ? a                             [PUBLIC]   issue1480109
+VARIABLE   ? b                             [PUBLIC]   issue1480109

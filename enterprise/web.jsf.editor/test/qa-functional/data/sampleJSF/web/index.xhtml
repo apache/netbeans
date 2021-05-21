@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      >
+    <h:head>
+        <title>Hello world, index</title>
+        <style>
+            .rule{
+                font-weight: 100;
+                
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <h1>Hello world</h1>
+        <h:form>
+            <h:panelGrid columns="2">
+                <h:outputText value="Text:"/>
+                <h:inputText value="#{simplebean.msg}" title="msg" 
+                             id="msg" required="true"/>
+            </h:panelGrid>
+            
+            
+            <h:commandButton action="show" value="submit"/>
+        </h:form>
+        <script>
+            
+            function Test(){
+                this.name = "dummy";
+                this.total="";
+                this.print = function(){
+                    return "what";
+                };
+            }
+            
+            var a = new Test();
+            
+            
+            
+        </script>
+    </h:body>
+</html>
+

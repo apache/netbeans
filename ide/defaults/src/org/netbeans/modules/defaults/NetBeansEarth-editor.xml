@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
+
+<fontscolors>
+    <fontcolor name="block-search" foreColor="black" bgColor="ffe0e8f1"/>
+    <fontcolor name="code-folding" foreColor="ff666666"/>
+    <fontcolor name="code-folding-bar" foreColor="ff666666"/>
+    <fontcolor name="guarded" bgColor="ffdfdfdf"/>
+    <fontcolor name="readonly-files" bgColor="ffdfdfdf"/>
+    <fontcolor name="highlight-caret-row" bgColor="fff1f1da"/>
+    <fontcolor name="nbeditor-bracesMatching-match" bgColor="ff4BFF0F"/>
+    <fontcolor name="nbeditor-bracesMatching-mismatch" bgColor="ffD83636"/>
+    <fontcolor name="nbeditor-bracesMatching-match-multichar" bgColor="ff4BFF0F"/>
+    <fontcolor name="nbeditor-bracesMatching-mismatch-multichar" bgColor="ffD83636"/>
+    <fontcolor name="highlight-search" foreColor="black" bgColor="ffFFB442"/>
+    <fontcolor name="inc-search" foreColor="black" bgColor="ffFFB442"/> <!-- ffff9900 -->
+    <fontcolor name="line-number" foreColor="black" bgColor="ffe9e8e2"/>
+    <fontcolor name="selection" bgColor="ffb5cce3"/>
+    <fontcolor name="status-bar"/>
+    <fontcolor name="status-bar-bold" foreColor="red"/>
+    <fontcolor name="caret-color-insert-mode" foreColor="black"/>
+    <fontcolor name="caret-color-overwrite-mode" foreColor="black"/>
+    <fontcolor name="text-limit-line-color" foreColor="ffffa8a8"/>
+    <fontcolor name="hyperlinks" foreColor="blue" underline="blue"/>
+    <fontcolor name="synchronized-text-blocks-ext" foreColor="ffCC0099"/>
+    <fontcolor name="synchronized-text-blocks-ext-slave" foreColor="ff996600"/>
+    <fontcolor name="indent-whitespace"/>
+    <fontcolor name="trailing-whitespace"/>
+    <fontcolor name="nbeditor-bracesMatching-sidebar"/>
+    <fontcolor name="remove-surround-code-delete" foreColor="ffB4B4B4" bgColor="ffF5F5F5"/>
+    <fontcolor name="remove-surround-code-remain" bgColor="ffCCFFCC"/>
+</fontscolors>

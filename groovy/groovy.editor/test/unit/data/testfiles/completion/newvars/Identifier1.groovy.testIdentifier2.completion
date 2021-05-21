@@ -1,0 +1,5 @@
+Code completion result for source line:
+Long lo|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   long                                       null

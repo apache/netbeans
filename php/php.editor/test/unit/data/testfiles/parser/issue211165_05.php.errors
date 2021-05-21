@@ -1,0 +1,28 @@
+[[224,231]-Syntax error
+ unexpected:	String '"Ivory"'
+ after:	String '"FFFFE0"'
+ expected:	=>, {, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', [, ], ), :, ??] 224-231:Syntax error
+ unexpected:	String '"Ivory"'
+ after:	String '"FFFFE0"'
+ expected:	=>, {, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', [, ], ), :, ??
+[[235,237]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	=>] 235-237:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	=>
+[[246,247]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	','] 246-247:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	','
+[[267,269]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	=>] 267-269:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	=>
+[[283,284]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	)] 283-284:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	)
+[[299,307]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	function] 299-307:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	function
+[[321,322]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	;] 321-322:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	;
+[[355,356]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}] 355-356:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}

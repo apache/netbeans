@@ -1,0 +1,255 @@
+<!--
+
+W3C Software and Document Notice and License
+
+This work is being provided by the copyright holders under the following license.
+
+License
+
+By obtaining and/or copying this work, you (the licensee) agree that you have
+read, understood, and will comply with the following terms and conditions.
+
+Permission to copy, modify, and distribute this work, with or without
+modification, for any purpose and without fee or royalty is hereby granted,
+provided that you include the following on ALL copies of the work or portions
+thereof, including modifications:
+
+- The full text of this NOTICE in a location viewable to users of the
+  redistributed or derivative work.
+- Any pre-existing intellectual property disclaimers, notices, or terms and
+  conditions. If none exist, the W3C Software and Document Short Notice should
+  be included.
+- Notice of any changes or modifications, through a copyright statement on the
+  new code or document such as "This software or document includes material
+  copied from or derived from [title and URI of the W3C document].
+  Copyright © [YEAR] W3C® (MIT, ERCIM, Keio, Beihang)."
+
+Disclaimers
+
+THIS WORK IS PROVIDED "AS IS," AND COPYRIGHT HOLDERS MAKE NO REPRESENTATIONS OR
+ WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO, WARRANTIES OF
+MERCHANTABILITY OR FITNESS FOR ANY PARTICULAR PURPOSE OR THAT THE USE OF THE
+SOFTWARE OR DOCUMENT WILL NOT INFRINGE ANY THIRD PARTY PATENTS, COPYRIGHTS,
+TRADEMARKS OR OTHER RIGHTS.
+
+COPYRIGHT HOLDERS WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL OR
+CONSEQUENTIAL DAMAGES ARISING OUT OF ANY USE OF THE SOFTWARE OR DOCUMENT.
+
+The name and trademarks of copyright holders may NOT be used in advertising or
+publicity pertaining to the work without specific, written prior permission.
+Title to copyright in this work will at all times remain with copyright
+holders.
+
+Changes:
+
+- File content downloaded from https://www.w3.org/2001/datatypes.dtd
+- Added license information from https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+
+-->
+
+<!-- DTD for XML Schemas: Part 1: Structures
+     Public Identifier: "-//W3C//DTD XMLSCHEMA 200102//EN"
+     Official Location: https://www.w3.org/2001/datatypes.dtd -->
+<!--
+        DTD for XML Schemas: Part 2: Datatypes
+        $Id$
+        Note this DTD is NOT normative, or even definitive. - - the
+        prose copy in the datatypes REC is the definitive version
+        (which shouldn't differ from this one except for this comment
+        and entity expansions, but just in case)
+  -->
+
+<!--
+        This DTD cannot be used on its own, it is intended
+        only for incorporation in XMLSchema.dtd, q.v.
+  -->
+
+<!-- Define all the element names, with optional prefix -->
+<!ENTITY % simpleType "%p;simpleType">
+<!ENTITY % restriction "%p;restriction">
+<!ENTITY % list "%p;list">
+<!ENTITY % union "%p;union">
+<!ENTITY % maxExclusive "%p;maxExclusive">
+<!ENTITY % minExclusive "%p;minExclusive">
+<!ENTITY % maxInclusive "%p;maxInclusive">
+<!ENTITY % minInclusive "%p;minInclusive">
+<!ENTITY % totalDigits "%p;totalDigits">
+<!ENTITY % fractionDigits "%p;fractionDigits">
+<!ENTITY % length "%p;length">
+<!ENTITY % minLength "%p;minLength">
+<!ENTITY % maxLength "%p;maxLength">
+<!ENTITY % enumeration "%p;enumeration">
+<!ENTITY % whiteSpace "%p;whiteSpace">
+<!ENTITY % pattern "%p;pattern">
+
+<!--
+        Customisation entities for the ATTLIST of each element
+        type. Define one of these if your schema takes advantage
+        of the anyAttribute='##other' in the schema for schemas
+  -->
+
+<!ENTITY % simpleTypeAttrs "">
+<!ENTITY % restrictionAttrs "">
+<!ENTITY % listAttrs "">
+<!ENTITY % unionAttrs "">
+<!ENTITY % maxExclusiveAttrs "">
+<!ENTITY % minExclusiveAttrs "">
+<!ENTITY % maxInclusiveAttrs "">
+<!ENTITY % minInclusiveAttrs "">
+<!ENTITY % totalDigitsAttrs "">
+<!ENTITY % fractionDigitsAttrs "">
+<!ENTITY % lengthAttrs "">
+<!ENTITY % minLengthAttrs "">
+<!ENTITY % maxLengthAttrs "">
+<!ENTITY % enumerationAttrs "">
+<!ENTITY % whiteSpaceAttrs "">
+<!ENTITY % patternAttrs "">
+
+<!-- Define some entities for informative use as attribute
+        types -->
+<!ENTITY % URIref "CDATA">
+<!ENTITY % XPathExpr "CDATA">
+<!ENTITY % QName "NMTOKEN">
+<!ENTITY % QNames "NMTOKENS">
+<!ENTITY % NCName "NMTOKEN">
+<!ENTITY % nonNegativeInteger "NMTOKEN">
+<!ENTITY % boolean "(true|false)">
+<!ENTITY % simpleDerivationSet "CDATA">
+<!--
+        #all or space-separated list drawn from derivationChoice
+  -->
+
+<!--
+        Note that the use of 'facet' below is less restrictive
+        than is really intended:  There should in fact be no
+        more than one of each of minInclusive, minExclusive,
+        maxInclusive, maxExclusive, totalDigits, fractionDigits,
+        length, maxLength, minLength within datatype,
+        and the min- and max- variants of Inclusive and Exclusive
+        are mutually exclusive. On the other hand,  pattern and
+        enumeration may repeat.
+  -->
+<!ENTITY % minBound "(%minInclusive; | %minExclusive;)">
+<!ENTITY % maxBound "(%maxInclusive; | %maxExclusive;)">
+<!ENTITY % bounds "%minBound; | %maxBound;">
+<!ENTITY % numeric "%totalDigits; | %fractionDigits;">
+<!ENTITY % ordered "%bounds; | %numeric;">
+<!ENTITY % unordered
+   "%pattern; | %enumeration; | %whiteSpace; | %length; |
+   %maxLength; | %minLength;">
+<!ENTITY % facet "%ordered; | %unordered;">
+<!ENTITY % facetAttr 
+        "value CDATA #REQUIRED
+        id ID #IMPLIED">
+<!ENTITY % fixedAttr "fixed %boolean; #IMPLIED">
+<!ENTITY % facetModel "(%annotation;)?">
+<!ELEMENT %simpleType;
+        ((%annotation;)?, (%restriction; | %list; | %union;))>
+<!ATTLIST %simpleType;
+    name      %NCName; #IMPLIED
+    final     %simpleDerivationSet; #IMPLIED
+    id        ID       #IMPLIED
+    %simpleTypeAttrs;>
+<!-- name is required at top level -->
+<!ELEMENT %restriction; ((%annotation;)?,
+                         (%restriction1; |
+                          ((%simpleType;)?,(%facet;)*)),
+                         (%attrDecls;))>
+<!ATTLIST %restriction;
+    base      %QName;                  #IMPLIED
+    id        ID       #IMPLIED
+    %restrictionAttrs;>
+<!--
+        base and simpleType child are mutually exclusive,
+        one is required.
+
+        restriction is shared between simpleType and
+        simpleContent and complexContent (in XMLSchema.xsd).
+        restriction1 is for the latter cases, when this
+        is restricting a complex type, as is attrDecls.
+  -->
+<!ELEMENT %list; ((%annotation;)?,(%simpleType;)?)>
+<!ATTLIST %list;
+    itemType      %QName;             #IMPLIED
+    id        ID       #IMPLIED
+    %listAttrs;>
+<!--
+        itemType and simpleType child are mutually exclusive,
+        one is required
+  -->
+<!ELEMENT %union; ((%annotation;)?,(%simpleType;)*)>
+<!ATTLIST %union;
+    id            ID       #IMPLIED
+    memberTypes   %QNames;            #IMPLIED
+    %unionAttrs;>
+<!--
+        At least one item in memberTypes or one simpleType
+        child is required
+  -->
+
+<!ELEMENT %maxExclusive; %facetModel;>
+<!ATTLIST %maxExclusive;
+        %facetAttr;
+        %fixedAttr;
+        %maxExclusiveAttrs;>
+<!ELEMENT %minExclusive; %facetModel;>
+<!ATTLIST %minExclusive;
+        %facetAttr;
+        %fixedAttr;
+        %minExclusiveAttrs;>
+
+<!ELEMENT %maxInclusive; %facetModel;>
+<!ATTLIST %maxInclusive;
+        %facetAttr;
+        %fixedAttr;
+        %maxInclusiveAttrs;>
+<!ELEMENT %minInclusive; %facetModel;>
+<!ATTLIST %minInclusive;
+        %facetAttr;
+        %fixedAttr;
+        %minInclusiveAttrs;>
+
+<!ELEMENT %totalDigits; %facetModel;>
+<!ATTLIST %totalDigits;
+        %facetAttr;
+        %fixedAttr;
+        %totalDigitsAttrs;>
+<!ELEMENT %fractionDigits; %facetModel;>
+<!ATTLIST %fractionDigits;
+        %facetAttr;
+        %fixedAttr;
+        %fractionDigitsAttrs;>
+
+<!ELEMENT %length; %facetModel;>
+<!ATTLIST %length;
+        %facetAttr;
+        %fixedAttr;
+        %lengthAttrs;>
+<!ELEMENT %minLength; %facetModel;>
+<!ATTLIST %minLength;
+        %facetAttr;
+        %fixedAttr;
+        %minLengthAttrs;>
+<!ELEMENT %maxLength; %facetModel;>
+<!ATTLIST %maxLength;
+        %facetAttr;
+        %fixedAttr;
+        %maxLengthAttrs;>
+
+<!-- This one can be repeated -->
+<!ELEMENT %enumeration; %facetModel;>
+<!ATTLIST %enumeration;
+        %facetAttr;
+        %enumerationAttrs;>
+
+<!ELEMENT %whiteSpace; %facetModel;>
+<!ATTLIST %whiteSpace;
+        %facetAttr;
+        %fixedAttr;
+        %whiteSpaceAttrs;>
+
+<!-- This one can be repeated -->
+<!ELEMENT %pattern; %facetModel;>
+<!ATTLIST %pattern;
+        %facetAttr;
+        %patternAttrs;>

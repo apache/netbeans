@@ -1,0 +1,5 @@
+path:CLASS:[PUBLIC]:ESCAPED{path}:
+module:CLASS:[PUBLIC]:ESCAPED{module}:
+  exports:CLASS:[PUBLIC]:ESCAPED{exports}:
+    server:CLASS:[PUBLIC]:ESCAPED{server}:
+      distFolder:FIELD:[PUBLIC]:ESCAPED{distFolder}:

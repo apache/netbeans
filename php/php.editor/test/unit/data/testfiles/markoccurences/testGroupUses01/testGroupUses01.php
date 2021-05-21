@@ -1,0 +1,50 @@
+<?php
+namespace A;
+
+class ClsA {
+    public function test() {
+        echo 'ClsA' . PHP_EOL;
+    }
+}
+
+class ClsAB implements Iface {
+}
+
+class MyCls implements Iface {
+}
+
+namespace A\B;
+
+class ClsAB {
+    public function test() {
+        echo 'ClsAB' . PHP_EOL;
+    }
+}
+
+namespace A\B\C;
+
+class ClsABC {
+    public function test() {
+        echo 'ClsABC' . PHP_EOL;
+    }
+}
+
+class ClsABC2 {
+    public function test() {
+        echo 'ClsABC2' . PHP_EOL;
+    }
+}
+
+namespace Run;
+
+use A\{
+    ClsA,
+    B\ClsAB,
+    B\C\ClsABC,
+    B\C\ClsABC2 AS MyCls
+};
+
+$a = new ClsA();
+$ab = new ClsAB();
+$abc = new ClsABC();
+$mycls = new MyCls();

@@ -1,0 +1,9 @@
+function ($unusedLabmdaParam) use ($unusedLexialVariable) { // unused 2a $unusedLabmdaParam $unusedLexialVariable
+                                    --------------------
+HINT:Variable $unusedLexialVariable seems to be unused in its scope
+$fn = fn($unused1) => function ($unusedLambda) use ($unusedLexialVariable) { // unused 5a $unused1 $unusedLambda $unusedLexialVariable
+                                                     --------------------
+HINT:Variable $unusedLexialVariable seems to be unused in its scope
+$fn = fn($unused1) => function ($usedLambda) use ($unusedLexialVariable) { // unused 6a $unused1 $unusedLexialVariable
+                                                   --------------------
+HINT:Variable $unusedLexialVariable seems to be unused in its scope

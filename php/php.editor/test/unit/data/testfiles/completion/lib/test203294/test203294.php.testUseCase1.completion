@@ -1,0 +1,12 @@
+Code completion result for source line:
+$f->|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     h()                             [PUBLIC]   Foo
+METHOD     h(array $p = array())           [PUBLIC]   Foo
+METHOD     h(array $p = array(), string $  [PUBLIC]   Foo
+METHOD     i($a = array())                 [PUBLIC]   Foo
+METHOD     i()                             [PUBLIC]   Foo
+METHOD     j()                             [PUBLIC]   Foo
+METHOD     l()                             [PUBLIC]   Foo
+METHOD     l(string $w = null)             [PUBLIC]   Foo
+METHOD     l(string $w = null, array $p =  [PUBLIC]   Foo

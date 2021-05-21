@@ -1,0 +1,16 @@
+    var |>MARK_OCCURRENCES:PagesManager<| = function() {
+        Breeze.checkSingleton(|>MARK_OCCURRENCES:PagesManager<|);
+    |>MARK_OCCURRENCES:PagesManager<|.NO_IMPLEMENTATION_ERROR = new Error('No implementation of PagesManagerImpl registered!');
+    |>MARK_OCCURRENCES:PagesManager<|.INVALID_ARGUMENT = new Error('Invalid argument!');
+    |>MARK_OCCURRENCES:PagesManager<|.ALREADY_REGISTERED = new Error('Already registered!');
+    |>MARK_OCCURRENCES:PagesManager<|.prototype._implementation = null;
+    |>MARK_OCCURRENCES:PagesManager<|.prototype.loadPage = function(id, callback) {
+            throw |>MARK_OCCURRENCES:Pages^Manager<|.NO_IMPLEMENTATION_ERROR;
+    |>MARK_OCCURRENCES:PagesManager<|.prototype.getIds = function(callback) {
+            throw |>MARK_OCCURRENCES:PagesManager<|.NO_IMPLEMENTATION_ERROR;
+    |>MARK_OCCURRENCES:PagesManager<|.prototype.storePage = function(page) {
+            throw |>MARK_OCCURRENCES:PagesManager<|.NoImplementationError;
+    |>MARK_OCCURRENCES:PagesManager<|.prototype.registerImplementation = function(impl) {
+            throw |>MARK_OCCURRENCES:PagesManager<|.INVALID_ARGUMENT;
+            throw |>MARK_OCCURRENCES:PagesManager<|.ALREADY_REGISTERED;
+    return Breeze.initSingleton(|>MARK_OCCURRENCES:PagesManager<|);

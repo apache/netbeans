@@ -1,0 +1,5 @@
+Code completion result for source line:
+return $this->teacher->|getName();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     getName()                       [PUBLIC]   teacher140784
+METHOD     setName($name)                  [PUBLIC]   teacher140784

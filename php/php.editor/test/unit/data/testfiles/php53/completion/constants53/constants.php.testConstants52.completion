@@ -1,0 +1,4 @@
+Code completion result for source line:
+echo CONSTANT_AB|C;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   CONSTANT_ABC "Hello world."     [PUBLIC]   constants.php

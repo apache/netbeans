@@ -1,0 +1,6 @@
+<?php
+
+$emptyLongArray=array();
+$longArray=array(1,2,3);
+$emptyShortArray=[];
+$shortArray=[1,2,3];

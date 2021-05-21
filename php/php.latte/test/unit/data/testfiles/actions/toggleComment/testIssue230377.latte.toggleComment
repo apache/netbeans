@@ -1,0 +1,5 @@
+{!$item->content}
+{foreach $points as $point}
+^    <!--<div class="homepage-point {last}no-right-margin{/last}">-->
+    <div class="homepage-point-number">{$iterator->counter}</div>
+{/foreach}

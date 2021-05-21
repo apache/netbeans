@@ -1,0 +1,5 @@
+Code completion result for source line:
+return this.a|; // .age does NOT get suggested (actually there is "no suggestions")
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      age                             [PUBLIC]   issue258724.js

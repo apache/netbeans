@@ -1,0 +1,86 @@
+/*
+ * RefConverter.java
+ *
+ * Created on __DATE__, __TIME__
+ *
+ * To change this template, choose Tools | Template Manager
+ * and open the template in the editor.
+ */
+
+package Templates.Classes;
+
+import java.io.IOException;
+import java.math.BigInteger;
+import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.netbeans.saas.RestConnection;
+
+/**
+ *
+ * @author __USER__
+ */
+public class __NAME__ {
+
+    private static String apiKey;
+    private static String secret;
+    
+    static {
+        try {
+            Properties props = new Properties();
+            props.load(__NAME__.class.getResourceAsStream(
+                    "profile.properties"));
+            apiKey = props.getProperty("api_key");
+            secret = props.getProperty("secret");
+        } catch (IOException ex) {
+            Logger.getLogger(__NAME__.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static String getApiKey() {
+        return apiKey;
+    }
+
+    public static String sign(String[][] params) {
+        return sign(secret, params);
+    }
+
+    private static String sign(String secret,
+            String[][] params) {
+
+        try {
+            TreeMap<String, String> map = new TreeMap<String, String>();
+
+            for (int i = 0; i < params.length; i++) {
+                String key = params[i][0];
+                String value = params[i][1];
+
+                if (value != null) {
+                    map.put(key, URLEncoder.encode(value, "UTF-8"));
+                }
+            }
+
+            String signature = "";
+            Set<Map.Entry<String, String>> entrySet = map.entrySet();
+            for (Map.Entry<String, String> entry : entrySet) {
+                signature += entry.getKey() + "=" + entry.getValue();
+            }
+            signature += secret;
+
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] sum = md.digest(signature.getBytes("UTF-8"));
+            BigInteger bigInt = new BigInteger(1, sum);
+
+            return bigInt.toString(16);
+        } catch (Exception ex) {
+            Logger.getLogger(__NAME__.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
+    }
+}

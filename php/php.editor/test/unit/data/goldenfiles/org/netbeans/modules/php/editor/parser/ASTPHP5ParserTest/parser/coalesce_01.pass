@@ -1,0 +1,40 @@
+<testresult testFile='coalesce_01.php'>
+    <scanner>
+        <token id='T_ECHO' start='6' end='10'>
+            <text>echo</text>
+        </token>
+        <token id='T_LNUMBER' start='11' end='12'>
+            <text>1</text>
+        </token>
+        <token id='T_COALESCE' start='13' end='15'>
+            <text>??</text>
+        </token>
+        <token id='T_LNUMBER' start='16' end='17'>
+            <text>2</text>
+        </token>
+        <token id='T_SEMICOLON' start='17' end='18'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='19' end='19'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='19'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <EchoStatement start='6' end='18'>
+                <ConditionalExpression start='11' end='17'>
+                    <Condition>
+                        <Scalar start='11' end='12' type='INT' value='1'/>
+                    </Condition>
+                    <Then>
+                    </Then>
+                    <Else>
+                        <Scalar start='16' end='17' type='INT' value='2'/>
+                    </Else>
+                </ConditionalExpression>
+            </EchoStatement>
+        </Statements>
+    </Program>
+</testresult>

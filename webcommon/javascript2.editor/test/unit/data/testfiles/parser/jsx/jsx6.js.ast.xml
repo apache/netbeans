@@ -1,0 +1,167 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='302'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='302'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='Test' start='0' end='10'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='6' end='10'>
+        <name>Test</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ClassNode ident='Test' start='0' end='302'>
+        <!-- ClassNode Constructor -->
+        <PropertyNode name='Test' start='0' end='302'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='6' end='10'>
+            <name>Test</name>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='Test' kind='NORMAL' start='0' end='302'>
+            <isClassConstructor/>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='0' end='302'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Elements -->
+        <PropertyNode name='render' start='15' end='300'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='15' end='21'>
+            <name>render</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='render' kind='NORMAL' start='15' end='300'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='24' end='296'>
+              <isFunctionBody/>
+              <isTerminal/>
+              <!-- Block Statements -->
+              <ReturnNode start='30' end='296'>
+                <JsxElementNode name='div' start='45' end='289'>
+                  <!-- JSX Element Attributes -->
+                  <JsxAttributeNode name='className' start='50' end='68'>
+                    <!-- JSX Attribute Value -->
+                    <AccessNode property='root' start='61' end='67'>
+                      <!-- AccessNode Base -->
+                      <IdentNode start='61' end='62'>
+                        <name>s</name>
+                      </IdentNode>
+                    </AccessNode>
+                  </JsxAttributeNode>
+                  <!-- JSX Element Children -->
+                  <JsxElementNode name='div' start='78' end='276'>
+                    <!-- JSX Element Attributes -->
+                    <JsxAttributeNode name='className' start='83' end='106'>
+                      <!-- JSX Attribute Value -->
+                      <AccessNode property='container' start='94' end='105'>
+                        <!-- AccessNode Base -->
+                        <IdentNode start='94' end='95'>
+                          <name>s</name>
+                        </IdentNode>
+                      </AccessNode>
+                    </JsxAttributeNode>
+                    <!-- JSX Element Children -->
+                    <TernaryNode start='143' end='179'>
+                      <BinaryNode type='EQ_STRICT' start='119' end='141'>
+                        <isComparison/>
+                        <!-- BinaryNode lhs -->
+                        <AccessNode property='path' start='119' end='134'>
+                          <!-- AccessNode Base -->
+                          <AccessNode property='props' start='119' end='129'>
+                            <!-- AccessNode Base -->
+                            <IdentNode start='119' end='123'>
+                              <name>this</name>
+                            </IdentNode>
+                          </AccessNode>
+                        </AccessNode>
+                        <!-- BinaryNode rhs -->
+                        <StringLiteralNode value='/' start='140' end='141'/>
+                      </BinaryNode>
+                      <JoinPredecessorExpression start='145' end='149'>
+                        <NullLiteralNode start='145' end='149'/>
+                      </JoinPredecessorExpression>
+                      <JoinPredecessorExpression start='152' end='179'>
+                        <JsxElementNode name='h1' start='152' end='179'>
+                          <!-- JSX Element Attributes -->
+                          <!-- JSX Element Children -->
+                          <AccessNode property='title' start='157' end='173'>
+                            <!-- AccessNode Base -->
+                            <AccessNode property='props' start='157' end='167'>
+                              <!-- AccessNode Base -->
+                              <IdentNode start='157' end='161'>
+                                <name>this</name>
+                              </IdentNode>
+                            </AccessNode>
+                          </AccessNode>
+                        </JsxElementNode>
+                      </JoinPredecessorExpression>
+                    </TernaryNode>
+                    <JsxElementNode name='div' start='191' end='261'>
+                      <!-- JSX Element Attributes -->
+                      <JsxAttributeNode name='dangerouslySetInnerHTML' start='196' end='258'>
+                        <!-- JSX Attribute Value -->
+                        <ObjectNode start='221' end='257'>
+                          <!-- ObjectNode Elements -->
+                          <PropertyNode name='__html' start='223' end='254'>
+                            <!-- PropertyNode Key -->
+                            <IdentNode start='223' end='229'>
+                              <name>__html</name>
+                              <isPropertyName/>
+                            </IdentNode>
+                            <!-- PropertyNode Value -->
+                            <BinaryNode type='OR' start='231' end='254'>
+                              <isLogical/>
+                              <!-- BinaryNode lhs -->
+                              <JoinPredecessorExpression start='231' end='249'>
+                                <AccessNode property='content' start='231' end='249'>
+                                  <!-- AccessNode Base -->
+                                  <AccessNode property='props' start='231' end='241'>
+                                    <!-- AccessNode Base -->
+                                    <IdentNode start='231' end='235'>
+                                      <name>this</name>
+                                    </IdentNode>
+                                  </AccessNode>
+                                </AccessNode>
+                              </JoinPredecessorExpression>
+                              <!-- BinaryNode rhs -->
+                              <JoinPredecessorExpression start='254' end='254'>
+                                <StringLiteralNode value='' start='254' end='254'/>
+                              </JoinPredecessorExpression>
+                            </BinaryNode>
+                            <!-- PropertyNode Decorators -->
+                          </PropertyNode>
+                        </ObjectNode>
+                      </JsxAttributeNode>
+                      <!-- JSX Element Children -->
+                    </JsxElementNode>
+                  </JsxElementNode>
+                </JsxElementNode>
+              </ReturnNode>
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Decorators -->
+      </ClassNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

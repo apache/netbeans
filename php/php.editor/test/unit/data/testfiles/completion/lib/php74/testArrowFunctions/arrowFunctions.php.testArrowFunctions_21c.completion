@@ -1,0 +1,4 @@
+Code completion result for source line:
+$af = fn(): ?ArrowFunctions => $this|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+KEYWORD    ArrowFunctions $this->                     null

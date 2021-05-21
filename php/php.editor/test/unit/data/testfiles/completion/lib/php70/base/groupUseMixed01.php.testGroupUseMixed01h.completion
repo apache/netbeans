@@ -1,0 +1,14 @@
+Code completion result for source line:
+|MyAA
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      MyA                             [PUBLIC]   A
+CLASS      MyAA                            [PUBLIC]   A
+------------------------------------
+PACKAGE    B                               [PUBLIC]   A
+CLASS      ClsA                            [PUBLIC]   A
+CLASS      ClsA                            [PUBLIC]   A
+CLASS      ClsAB                           [PUBLIC]   A
+CLASS      ClsUnused                       [PUBLIC]   A
+CLASS      MyCls                           [PUBLIC]   A
+KEYWORD    const                                      null
+KEYWORD    function                                   null

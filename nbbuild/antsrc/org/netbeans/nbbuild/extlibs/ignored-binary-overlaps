@@ -43,7 +43,6 @@ extra/ */
 python*/jython-*/javalib/ */
 
 # Libraries from the bundled Java Card SDK which are also used by the IDE
-javacard/JCDK3.0.2_ConnectedEdition/lib/commons-codec-1.3.jar ide/modules/ext/apache-commons-codec-1.3.jar
 javacard/JCDK3.0.2_ConnectedEdition/lib/commons-logging-1.1.jar ide/modules/ext/commons-logging-1.1.jar
 javacard/JCDK3.0.2_ConnectedEdition/lib/ant-contrib-1.0b3.jar mobility/modules/ext/ant-contrib-1.0b3.jar
 javacard/JCDK3.0.2_ConnectedEdition/lib/commons-httpclient-3.0.jar mobility/modules/ext/commons-httpclient-3.0.jar

@@ -1,0 +1,11 @@
+|>METHOD:development<|:
+  |>METHOD:adapter<|: mysql
+  |>METHOD:database<|: hello_development
+  |>METHOD:username<|: root
+  |>METHOD:password<|:
+  |>METHOD:host<|: localhost
+  |>METHOD:socket<|: /var/run/mysqld/mysqld.sock
+
+|>METHOD:production<|:
+  development
+

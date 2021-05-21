@@ -1,0 +1,5 @@
+Code completion result for source line:
+const CONSTANT5 = [...CONSTANT2, 100 => 0, ...\Bar\Qux::|QUX_CONSTANT];
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   QUX_CONSTANT "test"             [PUBLIC]   \Bar\Qux
+CONSTANT   class \Bar\Qux                  [PUBLIC]   Magic Constant

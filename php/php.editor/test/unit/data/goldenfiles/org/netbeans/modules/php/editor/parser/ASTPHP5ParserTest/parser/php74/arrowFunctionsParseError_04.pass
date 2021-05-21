@@ -1,0 +1,135 @@
+<testresult testFile='arrowFunctionsParseError_04.php'>
+    <scanner>
+        <token id='T_FUNCTION' start='815' end='823'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='824' end='841'>
+            <text>array_map_example</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='841' end='842'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='842' end='848'>
+            <text>$array</text>
+        </token>
+        <token id='T_COMMA' start='848' end='849'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='850' end='855'>
+            <text>$keys</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='855' end='856'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='857' end='858'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='863' end='869'>
+            <text>return</text>
+        </token>
+        <token id='T_STRING' start='870' end='879'>
+            <text>array_map</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='879' end='880'>
+            <text>(</text>
+        </token>
+        <token id='T_FN' start='880' end='882'>
+            <text>fn</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='882' end='883'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='883' end='885'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='885' end='886'>
+            <text>)</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='887' end='889'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_COMMA' start='889' end='890'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='891' end='896'>
+            <text>$keys</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='896' end='897'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='897' end='898'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='899' end='900'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='901' end='901'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='901'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <FunctionDeclaration start='815' end='900' isReference='false'>
+                <Identifier start='824' end='841' name='array_map_example'/>
+                <FormalParameters>
+                    <FormalParameter start='842' end='848' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='842' end='848' isDollared='true'>
+                                <Identifier start='843' end='848' name='array'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='850' end='855' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='850' end='855' isDollared='true'>
+                                <Identifier start='851' end='855' name='keys'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <Block start='857' end='900' isCurly='true'>
+                    <ReturnStatement start='863' end='898'>
+                        <FunctionInvocation start='870' end='897'>
+                            <FucntionName start='870' end='879'>
+                                <NamespaceName start='870' end='879' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='870' end='879' name='array_map'/>
+                                </NamespaceName>
+                            </FucntionName>
+                            <Parameters>
+                                <ArrowFunctionDeclaration start='880' end='889' isReference='false' isStatic='false'>
+                                    <FormalParameter start='883' end='885' isMandatory='true' isVariadic='false'>
+                                        <ParametrType>
+                                        </ParametrType>
+                                        <ParametrName>
+                                            <Variable start='883' end='885' isDollared='true'>
+                                                <Identifier start='884' end='885' name='x'/>
+                                            </Variable>
+                                        </ParametrName>
+                                        <DefaultValue>
+                                        </DefaultValue>
+                                    </FormalParameter>
+                                    <ASTErrorExpression start='887' end='889'/>
+                                </ArrowFunctionDeclaration>
+                                <Variable start='891' end='896' isDollared='true'>
+                                    <Identifier start='892' end='896' name='keys'/>
+                                </Variable>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </ReturnStatement>
+                </Block>
+            </FunctionDeclaration>
+        </Statements>
+    </Program>
+</testresult>

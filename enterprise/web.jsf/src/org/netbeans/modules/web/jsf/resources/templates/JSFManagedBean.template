@@ -1,0 +1,64 @@
+<#if comment??>
+
+  TEMPLATE DESCRIPTION:
+
+  This is Java template for 'JSF Pages From Entity Beans' controller class. Templating
+  is performed using FreeMaker (http://freemarker.org/) - see its documentation
+  for full syntax. Variables available for templating are:
+
+    cdiEnabled - CDI is enabled in project or not (type: Boolean)
+    classAnnotation - type of class annotation if any (type: String, values: @ManagedBean, @Named)
+    scope - bean scope information (type: ScopeEntry)
+        ScopeEntry#getClassName() - scope simple name (type: String)
+        ScopeEntry#getImportEntry() - import entry for the scope (type: String)
+        ScopeEntry#getParameters() - annotation parameters (type: String)
+
+  This template is accessible via top level menu Tools->Templates and can
+  be found in category JavaServer Faces->JSF Managed Bean.
+
+</#if>
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+<#if package?? && package != "">
+package ${package};
+
+</#if>
+<#if cdiEnabled?? && cdiEnabled>
+    <#if classAnnotation??>
+import javax.inject.Named;
+    </#if>
+    <#if scope??>
+import ${scope.getImportEntry()};
+    </#if>
+    <#if passivationCapable??>
+import java.io.Serializable;
+	</#if>
+<#else>
+    <#if classAnnotation??>
+import javax.faces.bean.ManagedBean;
+    </#if>
+    <#if scope??>
+import ${scope.getImportEntry()};
+    </#if>
+</#if>
+
+/**
+ *
+ * @author ${user}
+ */
+<#if classAnnotation??>
+${classAnnotation}
+</#if>
+<#if scope??>
+@${scope.getClassName()}<#if scope.getParameters()??>(${scope.getParameters()})</#if>
+</#if>
+public class ${name} <#if passivationCapable??>implements Serializable</#if>{
+
+    /** Creates a new instance of ${name} */
+    public ${name}() {
+    }
+
+}

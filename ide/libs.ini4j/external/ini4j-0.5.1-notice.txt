@@ -1,0 +1,2 @@
+[ini4j]
+Copyright 2005,2009 Ivan SZKIBA

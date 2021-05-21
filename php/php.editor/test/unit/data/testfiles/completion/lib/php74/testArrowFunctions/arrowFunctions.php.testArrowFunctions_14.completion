@@ -1,0 +1,5 @@
+Code completion result for source line:
+fn(): ArrowFunctions => ArrowFunctions::|new();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     new()                           [STATIC]   ArrowFunctions
+CONSTANT   class \ArrowFunctions           [PUBLIC]   Magic Constant

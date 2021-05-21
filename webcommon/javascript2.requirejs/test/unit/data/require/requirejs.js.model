@@ -1,0 +1,17 @@
+OBJECT requirejs [ANONYMOUS: false, DECLARED: true - requirejs, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+# PROPERTIES
+config  : FUNCTION config [ANONYMOUS: false, DECLARED: true - config, MODIFIERS: PUBLIC, METHOD]
+        # RETURN TYPES
+        undefined, RESOLVED: true
+        # PROPERTIES
+        arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+onError : FUNCTION onError [ANONYMOUS: false, DECLARED: true - onError, MODIFIERS: PUBLIC, METHOD]
+        # RETURN TYPES
+        undefined, RESOLVED: true
+        # PROPERTIES
+        arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+unDef   : FUNCTION unDef [ANONYMOUS: false, DECLARED: true - unDef, MODIFIERS: PUBLIC, METHOD]
+        # RETURN TYPES
+        undefined, RESOLVED: true
+        # PROPERTIES
+        arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

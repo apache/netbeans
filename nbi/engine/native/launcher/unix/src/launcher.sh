@@ -955,7 +955,7 @@ installBundledJVMs() {
 
 searchJavaOnMacOs() {
         if [ -x "/usr/libexec/java_home" ]; then
-            javaOnMacHome=`/usr/libexec/java_home --version 1.8+ --failfast`
+            javaOnMacHome=`/usr/libexec/java_home --failfast`
         fi
 
         if [ ! -x "$javaOnMacHome/bin/java" -a -f "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin/java" ] ; then

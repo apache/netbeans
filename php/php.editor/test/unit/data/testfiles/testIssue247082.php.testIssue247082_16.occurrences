@@ -1,0 +1,2 @@
+    public function |>MARK_OCCURRENCES:myTestInstance<|() {
+            echo $this->|>MARK_OCCURRENCES:myTest^Instance<|() . PHP_EOL;

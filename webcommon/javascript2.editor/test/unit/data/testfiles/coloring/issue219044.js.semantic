@@ -1,0 +1,23 @@
+|>GLOBAL:$<|(|>GLOBAL:document<|).ready(function() {
+
+    // draw graph
+    drawChart('#chart_placeholder');
+
+    // get all JSONs data and fill up the content
+    |>GLOBAL:$<|.getJSON(|>GLOBAL:JsonLocation<|.auctions, function(data) {
+        // generate list
+        |>GLOBAL:productList<| = generateProductList();
+
+        // generate all products into it
+        |>GLOBAL:$<|.each(data, function(|>UNUSED:index<|, element) {
+            |>GLOBAL:product<| = generateProduct(element);
+            |>GLOBAL:productList<|.append(|>GLOBAL:product<|);
+        });
+
+        // append clearer to the content (to get correct borders)
+        |>GLOBAL:productList<|.append(generateClearer());
+
+        // append everything to the page
+        |>GLOBAL:$<|('#products').append(|>GLOBAL:productList<|);
+    });
+});

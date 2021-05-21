@@ -1,0 +1,369 @@
+#   Licensed to the Apache Software Foundation (ASF) under one
+#   or more contributor license agreements.  See the NOTICE file
+#   distributed with this work for additional information
+#   regarding copyright ownership.  The ASF licenses this file
+#   to you under the Apache License, Version 2.0 (the
+#   "License"); you may not use this file except in compliance
+#   with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing,
+#   software distributed under the License is distributed on an
+#   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+#   KIND, either express or implied.  See the License for the
+#   specific language governing permissions and limitations
+#   under the License.
+#
+# HG changeset patch
+# Parent  1370ab8cc556e2e418f5e8fcd886403e555a6fbe
+Fix error in maven build when run on JDK8
+
+diff --git a/pom.xml b/pom.xml
+--- a/pom.xml
++++ b/pom.xml
+@@ -81,17 +81,17 @@
+         <artifactId>maven-compiler-plugin</artifactId>
+         <configuration>
+           <source>1.5</source>
+           <target>1.5</target>
+         </configuration>
+       </plugin>
+       <plugin>
+         <artifactId>maven-antrun-plugin</artifactId>
+-        <version>1.7</version>
++        <version>1.8</version>
+         <dependencies>
+           <dependency>
+             <groupId>com.sun</groupId>
+             <artifactId>tools</artifactId>
+             <version>1.5.0</version>
+             <scope>system</scope>
+             <systemPath>${java.home}/../lib/tools.jar</systemPath>
+           </dependency>
+diff --git a/src/nu/validator/htmlparser/dom/HtmlDocumentBuilder.java b/src/nu/validator/htmlparser/dom/HtmlDocumentBuilder.java
+--- a/src/nu/validator/htmlparser/dom/HtmlDocumentBuilder.java
++++ b/src/nu/validator/htmlparser/dom/HtmlDocumentBuilder.java
+@@ -377,26 +377,26 @@ public class HtmlDocumentBuilder extends
+     public void setTransitionHander(TransitionHandler handler) {
+         transitionHandler = handler;
+         driver = null;
+     }
+     
+     /**
+      * Indicates whether NFC normalization of source is being checked.
+      * @return <code>true</code> if NFC normalization of source is being checked.
+-     * @see nu.validator.htmlparser.impl.Tokenizer#isCheckingNormalization()
++     * @see nu.validator.htmlparser.io.Driver#isCheckingNormalization()
+      */
+     public boolean isCheckingNormalization() {
+         return checkingNormalization;
+     }
+ 
+     /**
+      * Toggles the checking of the NFC normalization of source.
+      * @param enable <code>true</code> to check normalization
+-     * @see nu.validator.htmlparser.impl.Tokenizer#setCheckingNormalization(boolean)
++     * @see nu.validator.htmlparser.io.Driver#setCheckingNormalization(boolean)
+      */
+     public void setCheckingNormalization(boolean enable) {
+         this.checkingNormalization = enable;
+         if (driver != null) {
+             driver.setCheckingNormalization(checkingNormalization);
+         }
+     }
+ 
+@@ -657,17 +657,17 @@ public class HtmlDocumentBuilder extends
+             treeBuilder.setNamePolicy(namePolicy);
+         }
+     }
+     
+     /**
+      * Sets the encoding sniffing heuristics.
+      * 
+      * @param heuristics the heuristics to set
+-     * @see nu.validator.htmlparser.impl.Tokenizer#setHeuristics(nu.validator.htmlparser.common.Heuristics)
++     * @see nu.validator.htmlparser.io.Driver#setHeuristics(nu.validator.htmlparser.common.Heuristics)
+      */
+     public void setHeuristics(Heuristics heuristics) {
+         this.heuristics = heuristics;
+         if (driver != null) {
+             driver.setHeuristics(heuristics);
+         }
+     }
+     
+diff --git a/src/nu/validator/htmlparser/extra/NormalizationChecker.java b/src/nu/validator/htmlparser/extra/NormalizationChecker.java
+--- a/src/nu/validator/htmlparser/extra/NormalizationChecker.java
++++ b/src/nu/validator/htmlparser/extra/NormalizationChecker.java
+@@ -118,19 +118,16 @@ public final class NormalizationChecker 
+      * <code>false</code> otherwise
+      */
+     private static boolean isComposingChar(int c) {
+         return COMPOSING_CHARACTERS.contains(c);
+     }
+ 
+     /**
+      * Constructor with mode selection.
+-     * 
+-     * @param sourceTextMode whether the source text-related messages 
+-     * should be enabled.
+      */
+     public NormalizationChecker(Locator locator) {
+         super();
+         start();
+     }
+ 
+     /**
+      * @see nu.validator.htmlparser.common.CharacterHandler#start()
+diff --git a/src/nu/validator/htmlparser/impl/ErrorReportingTokenizer.java b/src/nu/validator/htmlparser/impl/ErrorReportingTokenizer.java
+--- a/src/nu/validator/htmlparser/impl/ErrorReportingTokenizer.java
++++ b/src/nu/validator/htmlparser/impl/ErrorReportingTokenizer.java
+@@ -123,17 +123,17 @@ public class ErrorReportingTokenizer ext
+     public void setContentNonXmlCharPolicy(
+             XmlViolationPolicy contentNonXmlCharPolicy) {
+         this.contentNonXmlCharPolicy = contentNonXmlCharPolicy;
+     }
+ 
+     /**
+      * Sets the errorProfile.
+      *
+-     * @param errorProfile
++     * @param errorProfileMap
+      */
+     public void setErrorProfile(HashMap<String, String> errorProfileMap) {
+         this.errorProfileMap = errorProfileMap;
+     }
+ 
+     /**
+      * Reports on an event based on profile selected.
+      *
+diff --git a/src/nu/validator/htmlparser/impl/TreeBuilder.java b/src/nu/validator/htmlparser/impl/TreeBuilder.java
+--- a/src/nu/validator/htmlparser/impl/TreeBuilder.java
++++ b/src/nu/validator/htmlparser/impl/TreeBuilder.java
+@@ -3135,18 +3135,16 @@ public abstract class TreeBuilder<T> imp
+     }
+ 
+     /**
+      *
+      * <p>
+      * C++ memory note: The return value must be released.
+      *
+      * @return
+-     * @throws SAXException
+-     * @throws StopSniffingException
+      */
+     public static String extractCharsetFromContent(String attributeValue
+         // CPPONLY: , TreeBuilder tb
+     ) {
+         // This is a bit ugly. Converting the string to char array in order to
+         // make the portability layer smaller.
+         int charsetState = CHARSET_INITIAL;
+         int start = -1;
+diff --git a/src/nu/validator/htmlparser/io/HtmlInputStreamReader.java b/src/nu/validator/htmlparser/io/HtmlInputStreamReader.java
+--- a/src/nu/validator/htmlparser/io/HtmlInputStreamReader.java
++++ b/src/nu/validator/htmlparser/io/HtmlInputStreamReader.java
+@@ -106,17 +106,19 @@ public final class HtmlInputStreamReader
+ 
+     private boolean nextCharOnNewLine;
+ 
+     private boolean prevWasCR;
+ 
+     /**
+      * @param inputStream
+      * @param errorHandler
+-     * @param locator
++     * @param tokenizer
++     * @param driver
++     * @param heuristics
+      * @throws IOException
+      * @throws SAXException
+      */
+     public HtmlInputStreamReader(InputStream inputStream,
+             ErrorHandler errorHandler, Tokenizer tokenizer, Driver driver,
+             Heuristics heuristics) throws SAXException, IOException {
+         this.inputStream = inputStream;
+         this.errorHandler = errorHandler;
+diff --git a/src/nu/validator/htmlparser/io/MetaSniffer.java b/src/nu/validator/htmlparser/io/MetaSniffer.java
+--- a/src/nu/validator/htmlparser/io/MetaSniffer.java
++++ b/src/nu/validator/htmlparser/io/MetaSniffer.java
+@@ -85,17 +85,16 @@ public class MetaSniffer extends MetaSca
+ 
+     /**
+      * Main loop.
+      * 
+      * @return
+      * 
+      * @throws SAXException
+      * @throws IOException
+-     * @throws
+      */
+     public Encoding sniff(ByteReadable readable) throws SAXException, IOException {
+         this.readable = readable;
+         stateLoop(stateSave);
+         return characterEncoding;
+     }
+     
+ 
+diff --git a/src/nu/validator/htmlparser/sax/HtmlParser.java b/src/nu/validator/htmlparser/sax/HtmlParser.java
+--- a/src/nu/validator/htmlparser/sax/HtmlParser.java
++++ b/src/nu/validator/htmlparser/sax/HtmlParser.java
+@@ -732,26 +732,26 @@ public class HtmlParser implements XMLRe
+         } else {
+             throw new SAXNotRecognizedException();
+         }
+     }
+ 
+     /**
+      * Indicates whether NFC normalization of source is being checked.
+      * @return <code>true</code> if NFC normalization of source is being checked.
+-     * @see nu.validator.htmlparser.impl.Tokenizer#isCheckingNormalization()
++     * @see nu.validator.htmlparser.io.Driver#isCheckingNormalization()
+      */
+     public boolean isCheckingNormalization() {
+         return checkingNormalization;
+     }
+ 
+     /**
+      * Toggles the checking of the NFC normalization of source.
+      * @param enable <code>true</code> to check normalization
+-     * @see nu.validator.htmlparser.impl.Tokenizer#setCheckingNormalization(boolean)
++     * @see nu.validator.htmlparser.io.Driver#setCheckingNormalization(boolean)
+      */
+     public void setCheckingNormalization(boolean enable) {
+         this.checkingNormalization = enable;
+         if (driver != null) {
+             driver.setCheckingNormalization(checkingNormalization);
+         }
+     }
+ 
+@@ -1005,18 +1005,17 @@ public class HtmlParser implements XMLRe
+      * 
+      * @return the reportingDoctype
+      */
+     public boolean isReportingDoctype() {
+         return reportingDoctype;
+     }
+ 
+     /**
+-     * @param errorProfile
+-     * @see nu.validator.htmlparser.impl.errorReportingTokenizer#setErrorProfile(set)
++     * @param errorProfileMap
+      */
+     public void setErrorProfile(HashMap<String, String> errorProfileMap) {
+         this.errorProfileMap = errorProfileMap;
+     }
+ 
+     /**
+      * The policy for non-NCName element and attribute names.
+      * @param namePolicy
+@@ -1029,17 +1028,17 @@ public class HtmlParser implements XMLRe
+             treeBuilder.setNamePolicy(namePolicy);
+         }
+     }
+     
+     /**
+      * Sets the encoding sniffing heuristics.
+      * 
+      * @param heuristics the heuristics to set
+-     * @see nu.validator.htmlparser.impl.Tokenizer#setHeuristics(nu.validator.htmlparser.common.Heuristics)
++     * @see nu.validator.htmlparser.io.Driver#setHeuristics(nu.validator.htmlparser.common.Heuristics)
+      */
+     public void setHeuristics(Heuristics heuristics) {
+         this.heuristics = heuristics;
+         if (driver != null) {
+             driver.setHeuristics(heuristics);
+         }
+     }
+     
+diff --git a/src/nu/validator/htmlparser/sax/NameCheckingXmlSerializer.java b/src/nu/validator/htmlparser/sax/NameCheckingXmlSerializer.java
+--- a/src/nu/validator/htmlparser/sax/NameCheckingXmlSerializer.java
++++ b/src/nu/validator/htmlparser/sax/NameCheckingXmlSerializer.java
+@@ -35,17 +35,17 @@ public class NameCheckingXmlSerializer e
+         super(out);
+     }
+ 
+     public NameCheckingXmlSerializer(Writer out) {
+         super(out);
+     }
+ 
+     /**
+-     * @see nu.validator.htmlparser.sax.XmlSerializer#checkNCName()
++     * @see nu.validator.htmlparser.sax.XmlSerializer#checkNCName(java.lang.String) 
+      */
+     @Override protected void checkNCName(String name) throws SAXException {
+         if (!NCName.isNCName(name)) {
+             throw new SAXException("Not an XML 1.0 4th ed. NCName: " + name);
+         }
+     }
+ 
+ }
+diff --git a/src/nu/validator/htmlparser/xom/HtmlBuilder.java b/src/nu/validator/htmlparser/xom/HtmlBuilder.java
+--- a/src/nu/validator/htmlparser/xom/HtmlBuilder.java
++++ b/src/nu/validator/htmlparser/xom/HtmlBuilder.java
+@@ -265,17 +265,17 @@ public class HtmlBuilder extends Builder
+         tokenize(is);
+         return treeBuilder.getDocumentFragment();
+     }
+ 
+     /**
+      * Parse a fragment from SAX <code>InputSource</code>.
+      * @param is the <code>InputSource</code>
+      * @param contextLocal the local name of the context element
+-     * @parem contextNamespace the namespace of the context element
++     * @param contextNamespace the namespace of the context element
+      * @return the fragment
+      * @throws ParsingException in case of an XML violation
+      * @throws IOException if IO goes wrang
+      */
+     public Nodes buildFragment(InputSource is, String contextLocal, String contextNamespace)
+             throws IOException, ParsingException {
+         lazyInit();
+         treeBuilder.setFragmentContext(contextLocal.intern(), contextNamespace.intern(), null, false);
+@@ -414,26 +414,26 @@ public class HtmlBuilder extends Builder
+     public void setTransitionHander(TransitionHandler handler) {
+         transitionHandler = handler;
+         driver = null;
+     }
+ 
+     /**
+      * Indicates whether NFC normalization of source is being checked.
+      * @return <code>true</code> if NFC normalization of source is being checked.
+-     * @see nu.validator.htmlparser.impl.Tokenizer#isCheckingNormalization()
++     * @see nu.validator.htmlparser.io.Driver#isCheckingNormalization()
+      */
+     public boolean isCheckingNormalization() {
+         return checkingNormalization;
+     }
+ 
+     /**
+      * Toggles the checking of the NFC normalization of source.
+      * @param enable <code>true</code> to check normalization
+-     * @see nu.validator.htmlparser.impl.Tokenizer#setCheckingNormalization(boolean)
++     * @see nu.validator.htmlparser.io.Driver#setCheckingNormalization(boolean)
+      */
+     public void setCheckingNormalization(boolean enable) {
+         this.checkingNormalization = enable;
+         if (driver != null) {
+             driver.setCheckingNormalization(checkingNormalization);
+         }
+     }
+ 
+@@ -694,17 +694,17 @@ public class HtmlBuilder extends Builder
+             treeBuilder.setNamePolicy(namePolicy);
+         }
+     }
+     
+     /**
+      * Sets the encoding sniffing heuristics.
+      * 
+      * @param heuristics the heuristics to set
+-     * @see nu.validator.htmlparser.impl.Tokenizer#setHeuristics(nu.validator.htmlparser.common.Heuristics)
++     * @see nu.validator.htmlparser.io.Driver#setHeuristics(nu.validator.htmlparser.common.Heuristics)
+      */
+     public void setHeuristics(Heuristics heuristics) {
+         this.heuristics = heuristics;
+         if (driver != null) {
+             driver.setHeuristics(heuristics);
+         }
+     }
+     

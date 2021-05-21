@@ -1,0 +1,17 @@
+Code completion result for source line:
+#{request.r|}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     removeAttribute(String string)  [PUBLIC]   void
+PROPERTY   reader                          [PUBLIC]   BufferedReader
+PROPERTY   remoteAddr                      [PUBLIC]   String
+PROPERTY   remoteHost                      [PUBLIC]   String
+PROPERTY   remotePort                      [PUBLIC]   int
+PROPERTY   remoteUser                      [PUBLIC]   String
+PROPERTY   requestURI                      [PUBLIC]   String
+PROPERTY   requestURL                      [PUBLIC]   StringBuffer
+PROPERTY   requestedSessionId              [PUBLIC]   String
+PROPERTY   requestedSessionIdFromCookie    [PUBLIC]   boolean
+PROPERTY   requestedSessionIdFromURL       [PUBLIC]   boolean
+PROPERTY   requestedSessionIdFromUrl       [PUBLIC]   boolean
+PROPERTY   requestedSessionIdValid         [PUBLIC]   boolean

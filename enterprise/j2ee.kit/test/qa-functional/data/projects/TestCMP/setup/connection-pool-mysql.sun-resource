@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <jdbc-connection-pool connection-validation-method="auto-commit" datasource-classname="org.gjt.mm.mysql.jdbc2.optional.MysqlDataSource" fail-all-connections="false" idle-timeout-in-seconds="300" is-connection-validation-required="false" is-isolation-level-guaranteed="true" max-pool-size="32" max-wait-time-in-millis="60000" name="mysqlConnectionPool" pool-resize-quantity="2" res-type="javax.sql.DataSource" steady-pool-size="8">
+    <property name="URL" value="jdbc:mysql://localhost:3306/users"/>
+    <property name="User" value="blaha"/>
+    <property name="Password" value="vsds"/>
+  </jdbc-connection-pool>
+</resources>

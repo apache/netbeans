@@ -1,0 +1,33 @@
+[TAG(1):p][WHITESPACE(1): ][EOL(1):\n]
+[WHITESPACE(1): ][COMMENT_DELIMITER(2)://][COMMENT(82): 
+  line comment 1
+                line comment 2
+  line comment 3
+
+  line coment
+][TAG(4):This][WHITESPACE(1): ][TEXT(18):is not comment now][EOL(1):\n]
+[EOL(1):\n]
+[TAG(1):p][WHITESPACE(1): ][EOL(1):\n]
+[WHITESPACE(1): ][UNBUFFERED_COMMENT_DELIMITER(3)://-][UNBUFFERED_COMMENT(82): 
+  line comment 1
+                line comment 2
+  line comment 3
+
+  line coment
+][TAG(4):This][WHITESPACE(1): ][TEXT(18):is not comment now][EOL(1):\n]
+[EOL(1):\n]
+[COMMENT_DELIMITER(2)://][COMMENT(82): 
+  line comment 1
+                line comment 2
+  line comment 3
+
+  line coment
+][TAG(4):This][WHITESPACE(1): ][TEXT(18):is not comment now][EOL(1):\n]
+[EOL(1):\n]
+[UNBUFFERED_COMMENT_DELIMITER(3)://-][UNBUFFERED_COMMENT(82): 
+  line comment 1
+                line comment 2
+  line comment 3
+
+  line coment
+][TAG(4):This][WHITESPACE(1): ][TEXT(18):is not comment now]

@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Standard Web Project Properties Dialog Box: Run</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="CHDBGCAH" name="CHDBGCAH"></a><a id="org.netbeans.modules.web.project.ui.customizer.CustomizerRun" name="org.netbeans.modules.web.project.ui.customizer.CustomizerRun"></a></p>
+<div id="NBCSH3986"><!-- infolevel="all" infotype="General" -->
+<h1>Standard Web Project Properties Dialog Box: Run</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to configure options for deploying your project, by setting the following properties. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2195">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t35">Property</th>
+<th align="left" valign="bottom" id="r1c2-t35">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t35" headers="r1c1-t35">
+<p>Server</p>
+</td>
+<td align="left" headers="r2c1-t35 r1c2-t35">Specifies the server to which the web application is deployed. To register servers, choose Tools &gt; Servers from the main menu. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1119">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t35" headers="r1c1-t35">
+<p>Java EE Version</p>
+</td>
+<td align="left" headers="r3c1-t35 r1c2-t35">Specifies which version of Java EE is to be used.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t35" headers="r1c1-t35">
+<p>Context Path</p>
+</td>
+<td align="left" headers="r4c1-t35 r1c2-t35">Specifies a way to distinguish resources in one web application from resources in others that are deployed on the same server instance. The context of an application determines the URL namespace of the contents of the web application. When a web application's context property value is set, you access the web application at <code dir="ltr">http://hostname:port/context/servlet_or_jsp</code>. For example, with the property value set to /HelloWeb, you access the web application at <code dir="ltr">http://hostname:port/HelloWeb/index.jsp</code>.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t35" headers="r1c1-t35">
+<p>Relative URL</p>
+</td>
+<td align="left" headers="r5c1-t35 r1c2-t35">Specifies the URL relative to the context path to run. For example, if you want a specific servlet to be the entry point to a web application, specify the servlet's URL-pattern here. The IDE generates a servlet's URL-pattern in the <code dir="ltr">WEB-INF/web.xml</code> file when you use the New File (Ctrl-N) wizard to create a servlet.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t35" headers="r1c1-t35">
+<p>Browser</p>
+</td>
+<td align="left" headers="r6c1-t35 r1c2-t35">Select the browser that will launch when you run the application.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t35" headers="r1c1-t35">
+<p>Display Browser on Run</p>
+</td>
+<td align="left" headers="r7c1-t35 r1c2-t35">Specifies whether the browser is displayed.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t35" headers="r1c1-t35">
+<p>Deploy on Save</p>
+</td>
+<td align="left" headers="r8c1-t35 r1c2-t35">When selected, when you save files the Java files are automatically compiled, non-Java files are copied to the build directory and the files are redeployed to the server. Enabling Deploy on Save automatically enables the Copy Static Resources on Save and Compile on Save options. The Deploy on Save option saves you time when you run or debug your application in the IDE and ensures that all new and modified files in the build directory are automatically redeployed to the server.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t35" headers="r1c1-t35">
+<p>VM Options</p>
+</td>
+<td align="left" headers="r9c1-t35 r1c2-t35">Type options that are used for running main classes or unit tests.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH3995" name="NBCSH3995"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG370">
+<param name="text" value="<html><u>&quot;Using Java Project Templates&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1651">
+<param name="text" value="<html><u>&quot;About Working with Web and Application Servers&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1111">
+<param name="text" value="<html><u>&quot;Configuring a Web Application&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

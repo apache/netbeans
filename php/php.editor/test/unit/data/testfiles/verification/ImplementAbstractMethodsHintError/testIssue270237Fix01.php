@@ -1,0 +1,10 @@
+<?php
+
+interface FooInterface
+{
+    public function someMethod(?string $string, int $int): ?Bar;
+}
+
+class Foo implements FooInterface
+{
+}

@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<project name="nb/updatecenters" default="build" basedir=".">
+
+  <import file="../../nbbuild/templates/projectized.xml"/>
+
+  <target name="compile" depends="projectized-common.compile,javafx-nbms,-branding"/>
+  <target name="-branding">
+      <replace file="${build.dir}/classes/org/netbeans/modules/updatecenters/resources/Bundle.properties" value="defaultvalue" propertyFile="${nb_all}/nbbuild/build/netbeansrelease.properties">
+           <replacefilter token="@@metabuild.DistributionURL@@" property="metabuild.DistributionURL"/>
+           <replacefilter token="@@metabuild.PluginPortalURL@@" property="metabuild.PluginPortalURL"/> 
+      </replace>
+  </target>
+  <target name="javafx-nbms" description="Prepare NBMs for 3rd party libraries" depends="projectized-common.compile">
+      <tempfile destdir="${build.dir}" prefix="sign" suffix=".ks" property="netbeans.bundled.ks" deleteonexit="true" />
+      <tempfile destdir="${build.dir}" prefix="sign" suffix=".cert" property="netbeans.bundled.cert" deleteonexit="true"/>
+      <genkey
+        keystore="${netbeans.bundled.ks}"
+        alias="netbeans-bundled" storepass="${netbeans.bundled.ks}"
+        dname="CN=Ant Group, OU=NetBeans, O=Apache.org, C=US"
+      />
+      <subant  target="nbm" inheritall="false">
+          <property name="build.dir" location="build/3rdparty-nbms"/>
+          <property name="nbm_alias" value="netbeans-bundled"/>
+          <fileset dir="${nb_all}/extra" includes="libs.javafx.*/build.xml"/>
+      </subant>
+      <subant inheritall="false">
+          <target name="clean" />
+          <target name="build" />
+          <property name="nb_all" location="${nb_all}"/>
+          <property name="nbplatform.default.netbeans.dest.dir" location="${netbeans.dest.dir}"/>
+          <property name="nbplatform.default.harness.dir" location="${netbeans.dest.dir}/harness"/>
+          <fileset dir="extras" includes="build.xml"/>
+      </subant>
+      <subant target="nbm" inheritall="false">
+          <property name="build.dir" location="build/3rdparty-nbms"/>
+          <property name="nbm_alias" value="netbeans-bundled"/>
+          <property name="nb_all" location="${nb_all}"/>
+          <property name="nbplatform.default.netbeans.dest.dir" location="${netbeans.dest.dir}"/>
+          <property name="nbplatform.default.harness.dir" location="${netbeans.dest.dir}/harness"/>
+          <fileset dir="extras" includes="*/build.xml"/>
+      </subant>
+      <exec executable="${java.home}/bin/keytool" failonerror="true">
+          <arg value="-exportcert"/>
+          <arg value="-keystore" />
+          <arg value="${netbeans.bundled.ks}"/>
+          <arg line="-alias netbeans-bundled"/>
+          <arg value="-storepass" />
+          <arg value="${netbeans.bundled.ks}"/>
+          <arg value="-file" />
+          <arg value="${netbeans.bundled.cert}"/>
+      </exec>
+      <copy overwrite="true" file="ide.ks" tofile="${build.dir}/ide.ks"/>
+      <exec executable="${java.home}/bin/keytool" failonerror="true">
+          <arg value="-importcert"/>
+          <arg value="-noprompt"/>
+          <arg value="-keystore" />
+          <arg value="${build.dir}/ide.ks"/>
+          <arg line="-storepass open4all"/>
+          <arg value="-file" />
+          <arg value="${netbeans.bundled.cert}"/>
+      </exec>
+      <delete file="${netbeans.bundled.ks}"/>
+      <delete file="${netbeans.bundled.cert}"/>
+      <taskdef name="makeupdatedesc" classname="org.netbeans.nbbuild.MakeUpdateDesc"
+               classpath="${nbantext.jar}"/>
+
+      <property name="3rdparty.dir" location="build/classes/org/netbeans/modules/updatecenters/resources"/>
+      <mkdir dir="${3rdparty.dir}"/>
+      <makeupdatedesc desc="${3rdparty.dir}/3rdparty-catalog.xml" distbase="." uselicenseurl="true">
+          <fileset dir="build/3rdparty-nbms">
+              <include name="*.nbm"/>
+          </fileset>
+      </makeupdatedesc>
+      <copy todir="${3rdparty.dir}">
+          <fileset dir="build/3rdparty-nbms">
+              <include name="*.nbm"/>
+          </fileset>
+      </copy>
+  </target>
+</project>

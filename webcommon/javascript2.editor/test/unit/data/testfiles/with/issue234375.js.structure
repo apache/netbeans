@@ -1,0 +1,8 @@
+Test234375:CONSTRUCTOR:[PUBLIC]:ESCAPED{Test234375}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Test234375</font>:
+  arr:VARIABLE:[PRIVATE]:ESCAPED{arr}<font color="#999999">ESCAPED{ : }Array</font>:
+  car:VARIABLE:[PRIVATE]:ESCAPED{car}<font color="#999999">ESCAPED{ : }Car234375</font>:
+  den:FIELD:[PUBLIC]:ESCAPED{den}<font color="#999999">ESCAPED{ : }Date</font>:
+Car234375:CONSTRUCTOR:[PUBLIC]:ESCAPED{Car234375}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Car234375</font>:
+  run:METHOD:[PROTECTED]:ESCAPED{run}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  rypadlo:FIELD:[PUBLIC]:ESCAPED{rypadlo}<font color="#999999">ESCAPED{ : }Boolean</font>:
+  topSpeed:FIELD:[PUBLIC]:ESCAPED{topSpeed}<font color="#999999">ESCAPED{ : }Number</font>:

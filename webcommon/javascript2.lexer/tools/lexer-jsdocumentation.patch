@@ -1,0 +1,128 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+--- JsDocumentationColoringLexer.java	2012-09-11 23:39:26.537582358 +0200
++++ JsDocumentationColoringLexer.java.patched	2012-09-11 23:39:26.617582375 +0200
+@@ -569,7 +569,7 @@
+    * Returns the text matched by the current regular expression.
+    */
+   public final String yytext() {
+-    return new String( zzBuffer, zzStartRead, zzMarkedPos-zzStartRead );
++    return input.readText().toString();
+   }
+ 
+ 
+@@ -585,7 +585,7 @@
+    * @return the character at position pos
+    */
+   public final char yycharat(int pos) {
+-    return zzBuffer[zzStartRead+pos];
++    return input.readText().charAt(pos);
+   }
+ 
+ 
+@@ -593,7 +593,7 @@
+    * Returns the length of the matched text region.
+    */
+   public final int yylength() {
+-    return zzMarkedPos-zzStartRead;
++    return input.readLength();
+   }
+ 
+ 
+@@ -636,7 +636,7 @@
+     if ( number > yylength() )
+       zzScanError(ZZ_PUSHBACK_2BIG);
+ 
+-    zzMarkedPos -= number;
++    input.backup(number);
+   }
+ 
+ 
+@@ -652,10 +652,7 @@
+     int zzAction;
+ 
+     // cached fields:
+-    int zzCurrentPosL;
+     int zzMarkedPosL;
+-    int zzEndReadL = zzEndRead;
+-    char [] zzBufferL = zzBuffer;
+     char [] zzCMapL = ZZ_CMAP;
+ 
+     int [] zzTransL = ZZ_TRANS;
+@@ -669,38 +666,19 @@
+ 
+       zzAction = -1;
+ 
+-      zzCurrentPosL = zzCurrentPos = zzStartRead = zzMarkedPosL;
++      int tokenLength = 0;
+   
+       zzState = ZZ_LEXSTATE[zzLexicalState];
+ 
+ 
+       zzForAction: {
+         while (true) {
+-    
+-          if (zzCurrentPosL < zzEndReadL)
+-            zzInput = zzBufferL[zzCurrentPosL++];
+-          else if (zzAtEOF) {
++            zzInput = input.read();
++            if(zzInput == LexerInput.EOF) {
+             zzInput = YYEOF;
+             break zzForAction;
+           }
+-          else {
+-            // store back cached positions
+-            zzCurrentPos  = zzCurrentPosL;
+-            zzMarkedPos   = zzMarkedPosL;
+-            boolean eof = zzRefill();
+-            // get translated positions and possibly new buffer
+-            zzCurrentPosL  = zzCurrentPos;
+-            zzMarkedPosL   = zzMarkedPos;
+-            zzBufferL      = zzBuffer;
+-            zzEndReadL     = zzEndRead;
+-            if (eof) {
+-              zzInput = YYEOF;
+-              break zzForAction;
+-            }
+-            else {
+-              zzInput = zzBufferL[zzCurrentPosL++];
+-            }
+-          }
++
+           int zzNext = zzTransL[ zzRowMapL[zzState] + zzCMapL[zzInput] ];
+           if (zzNext == -1) break zzForAction;
+           zzState = zzNext;
+@@ -708,7 +686,7 @@
+           int zzAttributes = zzAttrL[zzState];
+           if ( (zzAttributes & 1) == 1 ) {
+             zzAction = zzState;
+-            zzMarkedPosL = zzCurrentPosL;
++            tokenLength = input.readLength();
+             if ( (zzAttributes & 8) == 8 ) break zzForAction;
+           }
+ 
+@@ -716,7 +694,9 @@
+       }
+ 
+       // store back cached position
+-      zzMarkedPos = zzMarkedPosL;
++      if(zzInput != YYEOF) {
++          input.backup(input.readLength() - tokenLength);
++      }
+ 
+       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
+         case 6: 

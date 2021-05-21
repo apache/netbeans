@@ -1,0 +1,7 @@
+Code completion result for source line:
+new String().toS|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     toSet()                                    Set
+METHOD     toShort()                                  Short
+METHOD     toString()                      [PUBLIC]   String

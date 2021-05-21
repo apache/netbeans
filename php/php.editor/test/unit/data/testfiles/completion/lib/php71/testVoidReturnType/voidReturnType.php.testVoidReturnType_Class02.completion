@@ -1,0 +1,5 @@
+Code completion result for source line:
+public function returnType(): voi|d { // class
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    void                                       null

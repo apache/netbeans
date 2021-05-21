@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>DTD Grammar Documentation</title>
+<meta http-equiv="Content-Type" content="text/xhtml; charset=UTF-8" />
+</head>
+
+<!-- Generated.*
+<body>
+
+<hr />
+<h2>Element Index</h2>
+<ul><li><tt><a href="#CATALOG">CATALOG</a></tt></li>
+<li><tt><a href="#NOTES">NOTES</a></tt></li>
+<li><tt><a href="#OPTIONS">OPTIONS</a></tt></li>
+<li><tt><a href="#PRICE">PRICE</a></tt></li>
+<li><tt><a href="#PRODUCT">PRODUCT</a></tt></li>
+<li><tt><a href="#SPECIFICATIONS">SPECIFICATIONS</a></tt></li>
+</ul>
+
+<hr />
+<h2>Element Details</h2>
+
+
+<hr />
+<h2><a name="CATALOG"></a>CATALOG</h2>
+
+<p><b>Element Content Model</b></p>
+<p><tt>(<a href="#PRODUCT">PRODUCT</a>+)</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt></tt></p>
+
+
+<hr />
+<h2><a name="PRODUCT"></a>PRODUCT</h2>
+
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#IMPLIED CDATA NAME</tt></li>
+<li><tt>#DEFAULT ENUMERATION ( HandTool | Table | Shop-Professional ) CATEGORY = HandTool</tt></li>
+<li><tt>#IMPLIED CDATA PARTNUM</tt></li>
+<li><tt>#DEFAULT ENUMERATION ( Pittsburgh | Milwaukee | Chicago ) PLANT = Chicago</tt></li>
+<li><tt>#DEFAULT ENUMERATION ( InStock | Backordered | Discontinued ) INVENTORY = InStock</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>(<a href="#SPECIFICATIONS">SPECIFICATIONS</a>+, <a href="#OPTIONS">OPTIONS</a>?, <a href="#PRICE">PRICE</a>+, <a href="#NOTES">NOTES</a>?)</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#CATALOG">CATALOG</a></tt></p>
+
+
+<hr />
+<h2><a name="SPECIFICATIONS"></a>SPECIFICATIONS</h2>
+
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#IMPLIED CDATA WEIGHT</tt></li>
+<li><tt>#IMPLIED CDATA POWER</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>(#PCDATA)*</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#PRODUCT">PRODUCT</a></tt></p>
+
+
+<hr />
+<h2><a name="OPTIONS"></a>OPTIONS</h2>
+
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#DEFAULT ENUMERATION ( Metal | Polished | Matte ) FINISH = Matte</tt></li>
+<li><tt>#DEFAULT ENUMERATION ( Included | Optional | NotApplicable ) ADAPTER = Included</tt></li>
+<li><tt>#DEFAULT ENUMERATION ( HardShell | Soft | NotApplicable ) CASE = HardShell</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>(#PCDATA)*</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#PRODUCT">PRODUCT</a></tt></p>
+
+
+<hr />
+<h2><a name="PRICE"></a>PRICE</h2>
+
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#IMPLIED CDATA MSRP</tt></li>
+<li><tt>#IMPLIED CDATA WHOLESALE</tt></li>
+<li><tt>#IMPLIED CDATA STREET</tt></li>
+<li><tt>#IMPLIED CDATA SHIPPING</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>(#PCDATA)*</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#PRODUCT">PRODUCT</a></tt></p>
+
+
+<hr />
+<h2><a name="NOTES"></a>NOTES</h2>
+
+<p><b>Element Content Model</b></p>
+<p><tt>(#PCDATA)*</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#PRODUCT">PRODUCT</a></tt></p>
+</body></html>

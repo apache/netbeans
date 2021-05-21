@@ -1,0 +1,8 @@
+<?php
+class |>CLASS:Unused_Bug<| {
+	public function |>METHOD:__construct<|() {
+		$this->|>CUSTOM1:capitalizedwrongfunction<|();
+	}
+	private function |>METHOD:capitalizedWrongFunction<|() {} // no unused!
+}
+?>

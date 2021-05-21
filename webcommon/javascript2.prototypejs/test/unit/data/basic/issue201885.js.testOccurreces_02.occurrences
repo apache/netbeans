@@ -1,0 +1,3 @@
+     * @param {String} |>MARK_OCCURRENCES:name<|
+    initialize: function(|>MARK_OCCURRENCES:nam^e<|){
+       this.name = |>MARK_OCCURRENCES:name<|; 

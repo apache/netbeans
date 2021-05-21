@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project basedir="." default="build" name="java/i18n">
+
+    <import file="../../nbbuild/templates/projectized.xml"/>
+
+    <target name="build-init" depends="projectized.build-init">
+        <available property="have.bogus.javahelp" file="javahelp/CVS/Entries"/>
+        <fail if="have.bogus.javahelp">
+<![CDATA[
+You seem to have a directory named i18n/javahelp in your sources.
+This probably means you forgot to pass -P to cvs checkout.
+You must use -P or you will get empty directories which may cause problems.
+Read your CVS manual on how to edit .cvsrc, which should look something like
+
+cvs -z3
+update -d -P
+checkout -P
+diff -u
+rdiff -u
+]]></fail>
+    </target>
+
+</project>

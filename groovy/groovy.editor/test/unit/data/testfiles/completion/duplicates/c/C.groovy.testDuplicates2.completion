@@ -1,0 +1,5 @@
+Code completion result for source line:
+class C extends a.A| {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      A                                          null

@@ -1,0 +1,124 @@
+doctype html
+html
+    title TODO supply a title
+    body
+      - var user = { description: 'foo bar baz' }
+      - var authorised = true
+      #user
+        unless false
+          p You're logged in as #{user.name}
+        if false
+          h2 Description
+          p.description= user.description
+        else if authorised
+          h2 Description
+          p.description.
+           User has no description,
+           why not add one...
+        else
+          h1 Description
+          p.description User has no description
+      ul
+        - for (var x = 0; x < 3; x++)
+            li item is #{x}
+      p
+         = 'This code is <escaped>!'
+      p= 'This code is' + ' <escaped>!'
+      p
+        != 'This code is <strong>not</strong> escaped!'
+      p!= 'This code is <strong>not</strong> escaped!'
+      a(href='google.com') Google
+      a(class='button', href='google.com') Google
+      - var authenticated = true
+      div(class=authenticated ? 'authed' : 'anon')
+      input(
+          type='checkbox'
+          name='agreement'
+          checked
+       )
+      div(data-escaped="<code>")
+      div(data-unescaped!="<code>")
+      input(type='checkbox', checked)
+      input(type='checkbox', checked=true)
+      input(type='checkbox', checked=false)
+      input(type='checkbox', checked=true.toString())
+      input(type='checkbox', checked=true && 'checked')
+      div
+      a(style={color: 'red', background: 'green'})
+      a(style={color: 'red',
+                  background: 'green'})
+      a(style={color: 'red',
+background: 'green'})
+      - var classes = ['foo', 'bar', 'baz']
+      a(class=classes)
+      // the class attribute may also be repeated to merge arrays
+       ^
+      
+      a.bing(class=classes class=['bing'])
+      - var currentUrl = '/about'
+      div
+      a(class={active: currentUrl === '/'} href='/') Home
+      a(class={active: currentUrl === '/about'} href='/about') About
+      a.button
+      .content
+      #just.foo [nic=1]
+      #caramba
+      - var pokus = 10
+      - var friends = pokus
+      case friends
+        when 0
+          p you have no friends
+        when 1
+          p you have a friend
+        default
+          p you have #{friends} friends
+      #a
+      - var justtest = 0
+      case justtest
+        when 0
+        when 1
+          p you have very few friends
+        default
+          p you have #{justtest} friends
+      - var ee = 1
+      case ee
+        when 0: p you have no friends
+        when 2: p you hav&nbps;e a friend
+        default: code you&nbsp;have #{friends} friends
+      // just some paragraphs
+      p foo
+      p bar
+      //- will not output within markup
+       s
+       uyhhh
+       llllll
+      p foo
+      <!--[if IE 8]>
+      div
+      <!--<![endif]-->
+      p bar
+      div#foo(data-bar="foo")&attributes({'data-foo': 'bar'})
+      :markdown
+        # Markdown
+        I often like including markdown documents. #{friends}
+      script
+        :coffee
+           console.log 'This is coffee script#{friends}'
+extends ./layout.jade
+
+block title
+  title Article Title
+p.
+  If you take a look at this page's source #[a(target="_blank", href="https://github.com/jadejs/jade/blob/master/docs/views/reference/interpolation.jade") on GitHub],
+  you'll see several places where the tag interpolation operator is
+  used, like so.
+block content
+  h1 My Article
+  include:markdown article.md
+include ./includes/foot.jade
+    script
+      include script.js
+  //
+    As much text as you want
+    z
+    can go here.

@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:body>
+        
+        This text above will not be displayed.
+        
+        <ui:composition template="/template.xhtml">
+            
+            This text will not be displayed.
+            
+            <ui:define name="title">
+                Facelets
+            </ui:define>
+            
+            This text will also not be displayed.
+            
+            <ui:define name="body">
+                Hello from the Facelets client template!
+            </ui:define>
+            
+            This text will not be displayed.
+            
+        </ui:composition>
+        
+        This text below will also not be displayed.
+        
+    </h:body>
+</html>
+

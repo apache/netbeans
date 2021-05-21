@@ -1,0 +1,5 @@
+Code completion result for source line:
+export { foo a|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    as                                         ECMAScript 6

@@ -1,0 +1,13 @@
+package test;
+public class Test {
+    public interface Base {
+         public void test() { }
+    }
+    public interface Int extends Base {
+    }
+    public static class Impl implements Int {
+         public void test() { }
+    }
+    private t(Base b) {
+        if (b instanceof Impl) {
+            b.test();

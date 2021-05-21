@@ -1,0 +1,6 @@
+Code completion result for source line:
+function|Name($myInt);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     functionName($param)            [PUBLIC]   issue202281.php
+------------------------------------
+KEYWORD    function                                   null

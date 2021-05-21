@@ -20,7 +20,7 @@
 
 @import "nb-docs.css";
 @import "netbeans.css"; /* copied from http://www.netbeans.org/netbeans.css */
-
+@import "javadoc.css";
 /* ... with just these changes: */
 
 /* XXX should these things really be overridden?

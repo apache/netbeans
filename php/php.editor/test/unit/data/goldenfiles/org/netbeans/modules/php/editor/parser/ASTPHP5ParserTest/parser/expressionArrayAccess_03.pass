@@ -1,0 +1,128 @@
+<testresult testFile='expressionArrayAccess_03.php'>
+    <scanner>
+        <token id='T_ECHO' start='6' end='10'>
+            <text>echo</text>
+        </token>
+        <token id='T_OPEN_RECT' start='11' end='12'>
+            <text>[</text>
+        </token>
+        <token id='T_OPEN_RECT' start='12' end='13'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='13' end='14'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='14' end='15'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='16' end='17'>
+            <text>3</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='17' end='18'>
+            <text>]</text>
+        </token>
+        <token id='T_COMMA' start='18' end='19'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='20' end='21'>
+            <text>2</text>
+        </token>
+        <token id='T_COMMA' start='21' end='22'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='23' end='24'>
+            <text>3</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='24' end='25'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='25' end='26'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='26' end='27'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='27' end='28'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='28' end='29'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='29' end='30'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='30' end='31'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='31' end='32'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='33' end='36'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='36' end='36'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='35'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <EchoStatement start='6' end='32'>
+                <ExpressionArrayAccess start='11' end='31'>
+                    <ExpressionArrayAccess start='11' end='28'>
+                        <ArrayCreation start='11' end='25' type='NEW'>
+                            <ArrayElement start='12' end='18'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <ArrayCreation start='12' end='18' type='NEW'>
+                                        <ArrayElement start='13' end='14'>
+                                            <Key>
+                                            </Key>
+                                            <Value>
+                                                <Scalar start='13' end='14' type='INT' value='1'/>
+                                            </Value>
+                                        </ArrayElement>
+                                        <ArrayElement start='16' end='17'>
+                                            <Key>
+                                            </Key>
+                                            <Value>
+                                                <Scalar start='16' end='17' type='INT' value='3'/>
+                                            </Value>
+                                        </ArrayElement>
+                                    </ArrayCreation>
+                                </Value>
+                            </ArrayElement>
+                            <ArrayElement start='20' end='21'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <Scalar start='20' end='21' type='INT' value='2'/>
+                                </Value>
+                            </ArrayElement>
+                            <ArrayElement start='23' end='24'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <Scalar start='23' end='24' type='INT' value='3'/>
+                                </Value>
+                            </ArrayElement>
+                        </ArrayCreation>
+                        <ArrayDimension start='25' end='28'>
+                            <Index>
+                                <Scalar start='26' end='27' type='INT' value='0'/>
+                            </Index>
+                        </ArrayDimension>
+                    </ExpressionArrayAccess>
+                    <ArrayDimension start='28' end='31'>
+                        <Index>
+                            <Scalar start='29' end='30' type='INT' value='1'/>
+                        </Index>
+                    </ArrayDimension>
+                </ExpressionArrayAccess>
+            </EchoStatement>
+            <EmptyStatement start='33' end='35'/>
+        </Statements>
+    </Program>
+</testresult>

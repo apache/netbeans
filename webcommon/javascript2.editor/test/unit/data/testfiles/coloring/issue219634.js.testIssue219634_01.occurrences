@@ -1,0 +1,2 @@
+    var |>MARK_OCCURRENCES:mon^_yr<| = getInputValue(document.form1.mon_yr),
+    $.getJSON('json_txt.php', {mon_yr: |>MARK_OCCURRENCES:mon_yr<|, period: period},

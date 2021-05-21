@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!--
+XML Schema to define the project.xml for a freeform project.
+Cf. http://projects.netbeans.org/buildsys/design.html#freeform
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.netbeans.org/ns/freeform-project-web/2"
+            xmlns="http://www.netbeans.org/ns/freeform-project-web/2"
+            elementFormDefault="qualified">
+
+    <xsd:element name="web-data">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="web-module" minOccurs="0" maxOccurs="unbounded" type="web-module"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:complexType name="web-module">
+        <xsd:sequence>
+            <xsd:element name="doc-root" maxOccurs="1" minOccurs="1" type="substitutable-text"/>
+            <xsd:element name="classpath" maxOccurs="1" minOccurs="0" type="substitutable-text"/>
+            <xsd:element name="context-path" maxOccurs="1" minOccurs="0" type="substitutable-text"/>
+            <xsd:element name="j2ee-spec-level" minOccurs="0" maxOccurs="1">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:NMTOKEN">
+                        <xsd:enumeration value="1.3"/>
+                        <xsd:enumeration value="1.4"/>
+                        <xsd:enumeration value="1.5"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="web-inf" minOccurs="0" maxOccurs="1" type="substitutable-text"/>
+            <!-- XXX other locations (web.xml, libraries,... -->
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <!-- XXX: this type was copied from freeform-project-general.xsd -->
+    <!-- Some text that might be substituted with Ant property references. -->
+    <xsd:simpleType name="substitutable-text">
+        <xsd:restriction base="xsd:string">
+            <!-- XXX limit by regexp, perhaps -->
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</xsd:schema>

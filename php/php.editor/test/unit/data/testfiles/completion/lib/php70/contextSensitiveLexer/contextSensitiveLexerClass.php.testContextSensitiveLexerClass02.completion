@@ -1,0 +1,149 @@
+Code completion result for source line:
+ClassStaticExample::|DEFINE;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     __CLASS__()                     [STATIC]   ClassStaticExample
+METHOD     __DIR__()                       [STATIC]   ClassStaticExample
+METHOD     __FILE__()                      [STATIC]   ClassStaticExample
+METHOD     __FUNCTION__()                  [STATIC]   ClassStaticExample
+METHOD     __LINE__()                      [STATIC]   ClassStaticExample
+METHOD     __METHOD__()                    [STATIC]   ClassStaticExample
+METHOD     __NAMESPACE__()                 [STATIC]   ClassStaticExample
+METHOD     __TRAIT__()                     [STATIC]   ClassStaticExample
+METHOD     abstract()                      [STATIC]   ClassStaticExample
+METHOD     and()                           [STATIC]   ClassStaticExample
+METHOD     array()                         [STATIC]   ClassStaticExample
+METHOD     as()                            [STATIC]   ClassStaticExample
+METHOD     break()                         [STATIC]   ClassStaticExample
+METHOD     callable()                      [STATIC]   ClassStaticExample
+METHOD     case()                          [STATIC]   ClassStaticExample
+METHOD     catch()                         [STATIC]   ClassStaticExample
+METHOD     class()                         [STATIC]   ClassStaticExample
+METHOD     clone()                         [STATIC]   ClassStaticExample
+METHOD     const()                         [STATIC]   ClassStaticExample
+METHOD     continue()                      [STATIC]   ClassStaticExample
+METHOD     declare()                       [STATIC]   ClassStaticExample
+METHOD     default()                       [STATIC]   ClassStaticExample
+METHOD     define()                        [STATIC]   ClassStaticExample
+METHOD     die()                           [STATIC]   ClassStaticExample
+METHOD     do()                            [STATIC]   ClassStaticExample
+METHOD     echo()                          [STATIC]   ClassStaticExample
+METHOD     else()                          [STATIC]   ClassStaticExample
+METHOD     elseif()                        [STATIC]   ClassStaticExample
+METHOD     enddeclare()                    [STATIC]   ClassStaticExample
+METHOD     endfor()                        [STATIC]   ClassStaticExample
+METHOD     endforeach()                    [STATIC]   ClassStaticExample
+METHOD     endif()                         [STATIC]   ClassStaticExample
+METHOD     endswitch()                     [STATIC]   ClassStaticExample
+METHOD     endwhile()                      [STATIC]   ClassStaticExample
+METHOD     exit()                          [STATIC]   ClassStaticExample
+METHOD     extends()                       [STATIC]   ClassStaticExample
+METHOD     final()                         [STATIC]   ClassStaticExample
+METHOD     finally()                       [STATIC]   ClassStaticExample
+METHOD     for()                           [STATIC]   ClassStaticExample
+METHOD     foreach()                       [STATIC]   ClassStaticExample
+METHOD     function()                      [STATIC]   ClassStaticExample
+METHOD     global()                        [STATIC]   ClassStaticExample
+METHOD     goto()                          [STATIC]   ClassStaticExample
+METHOD     if()                            [STATIC]   ClassStaticExample
+METHOD     implements()                    [STATIC]   ClassStaticExample
+METHOD     include()                       [STATIC]   ClassStaticExample
+METHOD     include_once()                  [STATIC]   ClassStaticExample
+METHOD     instanceof()                    [STATIC]   ClassStaticExample
+METHOD     insteadof()                     [STATIC]   ClassStaticExample
+METHOD     interface()                     [STATIC]   ClassStaticExample
+METHOD     list()                          [STATIC]   ClassStaticExample
+METHOD     namespace()                     [STATIC]   ClassStaticExample
+METHOD     new()                           [STATIC]   ClassStaticExample
+METHOD     or()                            [STATIC]   ClassStaticExample
+METHOD     parent()                        [STATIC]   ClassStaticExample
+METHOD     print()                         [STATIC]   ClassStaticExample
+METHOD     private()                       [STATIC]   ClassStaticExample
+METHOD     protected()                     [STATIC]   ClassStaticExample
+METHOD     public()                        [STATIC]   ClassStaticExample
+METHOD     require()                       [STATIC]   ClassStaticExample
+METHOD     require_once()                  [STATIC]   ClassStaticExample
+METHOD     return()                        [STATIC]   ClassStaticExample
+METHOD     self()                          [STATIC]   ClassStaticExample
+METHOD     static()                        [STATIC]   ClassStaticExample
+METHOD     switch()                        [STATIC]   ClassStaticExample
+METHOD     throw()                         [STATIC]   ClassStaticExample
+METHOD     trait()                         [STATIC]   ClassStaticExample
+METHOD     try()                           [STATIC]   ClassStaticExample
+METHOD     use()                           [STATIC]   ClassStaticExample
+METHOD     var()                           [STATIC]   ClassStaticExample
+METHOD     while()                         [STATIC]   ClassStaticExample
+METHOD     xor()                           [STATIC]   ClassStaticExample
+METHOD     yield()                         [STATIC]   ClassStaticExample
+CONSTANT   ABSTRACT "test"                 [PUBLIC]   ClassStaticExample
+CONSTANT   AND "test"                      [PUBLIC]   ClassStaticExample
+CONSTANT   ARRAY "test"                    [PUBLIC]   ClassStaticExample
+CONSTANT   AS "test"                       [PUBLIC]   ClassStaticExample
+CONSTANT   BREAK "test"                    [PUBLIC]   ClassStaticExample
+CONSTANT   CALLABLE "test"                 [PUBLIC]   ClassStaticExample
+CONSTANT   CASE "test"                     [PUBLIC]   ClassStaticExample
+CONSTANT   CATCH "test"                    [PUBLIC]   ClassStaticExample
+CONSTANT   CLONE "test"                    [PUBLIC]   ClassStaticExample
+CONSTANT   CONST "test"                    [PUBLIC]   ClassStaticExample
+CONSTANT   CONTINUE "test"                 [PUBLIC]   ClassStaticExample
+CONSTANT   DECLARE "test"                  [PUBLIC]   ClassStaticExample
+CONSTANT   DEFAULT "test"                  [PUBLIC]   ClassStaticExample
+CONSTANT   DEFINE "test"                   [PUBLIC]   ClassStaticExample
+CONSTANT   DIE "test"                      [PUBLIC]   ClassStaticExample
+CONSTANT   DO "test"                       [PUBLIC]   ClassStaticExample
+CONSTANT   ECHO "test"                     [PUBLIC]   ClassStaticExample
+CONSTANT   ELSE "test"                     [PUBLIC]   ClassStaticExample
+CONSTANT   ELSEIF "test"                   [PUBLIC]   ClassStaticExample
+CONSTANT   ENDDECLARE "test"               [PUBLIC]   ClassStaticExample
+CONSTANT   ENDFOR "test"                   [PUBLIC]   ClassStaticExample
+CONSTANT   ENDFOREACH "test"               [PUBLIC]   ClassStaticExample
+CONSTANT   ENDIF "test"                    [PUBLIC]   ClassStaticExample
+CONSTANT   ENDSWITCH "test"                [PUBLIC]   ClassStaticExample
+CONSTANT   ENDWHILE "test"                 [PUBLIC]   ClassStaticExample
+CONSTANT   EXIT "test"                     [PUBLIC]   ClassStaticExample
+CONSTANT   EXTENDS "test"                  [PUBLIC]   ClassStaticExample
+CONSTANT   FINAL "test"                    [PUBLIC]   ClassStaticExample
+CONSTANT   FINALLY "test"                  [PUBLIC]   ClassStaticExample
+CONSTANT   FOR "test"                      [PUBLIC]   ClassStaticExample
+CONSTANT   FOREACH "test"                  [PUBLIC]   ClassStaticExample
+CONSTANT   FUNCTION "test"                 [PUBLIC]   ClassStaticExample
+CONSTANT   GLOBAL "test"                   [PUBLIC]   ClassStaticExample
+CONSTANT   GOTO "test"                     [PUBLIC]   ClassStaticExample
+CONSTANT   IF "test"                       [PUBLIC]   ClassStaticExample
+CONSTANT   IMPLEMENTS "test"               [PUBLIC]   ClassStaticExample
+CONSTANT   INCLUDE "test"                  [PUBLIC]   ClassStaticExample
+CONSTANT   INCLUDE_ONCE "test"             [PUBLIC]   ClassStaticExample
+CONSTANT   INSTANCEOF "test"               [PUBLIC]   ClassStaticExample
+CONSTANT   INSTEADOF "test"                [PUBLIC]   ClassStaticExample
+CONSTANT   INTERFACE "test"                [PUBLIC]   ClassStaticExample
+CONSTANT   LIST "test"                     [PUBLIC]   ClassStaticExample
+CONSTANT   NAMESPACE "test"                [PUBLIC]   ClassStaticExample
+CONSTANT   NEW "test"                      [PUBLIC]   ClassStaticExample
+CONSTANT   OR "test"                       [PUBLIC]   ClassStaticExample
+CONSTANT   PARENT "test"                   [PUBLIC]   ClassStaticExample
+CONSTANT   PRINT "test"                    [PUBLIC]   ClassStaticExample
+CONSTANT   PRIVATE "test"                  [PUBLIC]   ClassStaticExample
+CONSTANT   PROTECTED "test"                [PUBLIC]   ClassStaticExample
+CONSTANT   PUBLIC "test"                   [PUBLIC]   ClassStaticExample
+CONSTANT   REQUIRE "test"                  [PUBLIC]   ClassStaticExample
+CONSTANT   REQUIRE_ONCE "test"             [PUBLIC]   ClassStaticExample
+CONSTANT   RETURN "test"                   [PUBLIC]   ClassStaticExample
+CONSTANT   SELF "test"                     [PUBLIC]   ClassStaticExample
+CONSTANT   STATIC "test"                   [PUBLIC]   ClassStaticExample
+CONSTANT   SWITCH "test"                   [PUBLIC]   ClassStaticExample
+CONSTANT   THROW "test"                    [PUBLIC]   ClassStaticExample
+CONSTANT   TRAIT "test"                    [PUBLIC]   ClassStaticExample
+CONSTANT   TRY "test"                      [PUBLIC]   ClassStaticExample
+CONSTANT   USE "test"                      [PUBLIC]   ClassStaticExample
+CONSTANT   VAR "test"                      [PUBLIC]   ClassStaticExample
+CONSTANT   WHILE "test"                    [PUBLIC]   ClassStaticExample
+CONSTANT   XOR "test"                      [PUBLIC]   ClassStaticExample
+CONSTANT   YIELD "test"                    [PUBLIC]   ClassStaticExample
+CONSTANT   __CLASS__ "test"                [PUBLIC]   ClassStaticExample
+CONSTANT   __DIR__ "test"                  [PUBLIC]   ClassStaticExample
+CONSTANT   __FILE__ "test"                 [PUBLIC]   ClassStaticExample
+CONSTANT   __FUNCTION__ "test"             [PUBLIC]   ClassStaticExample
+CONSTANT   __LINE__ "test"                 [PUBLIC]   ClassStaticExample
+CONSTANT   __METHOD__ "test"               [PUBLIC]   ClassStaticExample
+CONSTANT   __NAMESPACE__ "test"            [PUBLIC]   ClassStaticExample
+CONSTANT   __TRAIT__ "test"                [PUBLIC]   ClassStaticExample
+CONSTANT   class \ClassStaticExample       [PUBLIC]   Magic Constant

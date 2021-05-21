@@ -1,0 +1,4 @@
+$object->request['test']['id'] = $object->request['test']['id'] ??^ "test";
+--------------------------------------------------------------------------
+HINT:You can use combined assignment operator
+FIX:Use Combined Assignment Operator"??="

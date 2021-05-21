@@ -1,0 +1,4 @@
+token #0 T_MACRO_START [include]
+token #1 T_WHITESPACE [ ]
+token #2 T_STRING ["ui/{]
+token #3 T_STRING [$}/bar.latte"]

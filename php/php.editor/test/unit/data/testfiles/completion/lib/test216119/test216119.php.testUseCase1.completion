@@ -1,0 +1,6 @@
+Code completion result for source line:
+$this->more_example()->|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     abc()                           [PUBLIC]   Test
+METHOD     example()                       [PUBLIC]   X
+METHOD     more_example()                  [PUBLIC]   X

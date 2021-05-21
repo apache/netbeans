@@ -1,0 +1,12 @@
+interface |>MARK_OCCURRENCES:I<| {
+     * @param |>MARK_OCCURRENCES:I<| $interface Description
+     * @return |>MARK_OCCURRENCES:I<| interface
+    function testInterface(|>MARK_OCCURRENCES:I<| $interface);
+ * @method |>MARK_OCCURRENCES:I<| testClass2(|>MARK_OCCURRENCES:I<| $class) Description
+ * @property |>MARK_OCCURRENCES:I<| $prop Description
+     * @param |>MARK_OCCURRENCES:I<| $class Description
+     * @return ^|>MARK_OCCURRENCES:I<| class
+    function testClass(|>MARK_OCCURRENCES:I<| $class){
+     * @param |>MARK_OCCURRENCES:I<| $trait Description
+     * @return |>MARK_OCCURRENCES:I<| trait
+    function testTrait(|>MARK_OCCURRENCES:I<| $trait){

@@ -1,0 +1,6 @@
+Code completion result for source line:
+$af = fn(ArrowFunctions $x): callable => fn(ArrowFunctions $z): ?ArrowFunctions => $y->|test();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     getNumber()                     [PUBLIC]   ArrowFunctions
+METHOD     new()                           [STATIC]   ArrowFunctions
+METHOD     test()                          [PUBLIC]   ArrowFunctions

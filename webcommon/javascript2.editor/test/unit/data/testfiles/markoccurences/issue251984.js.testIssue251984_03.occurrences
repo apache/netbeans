@@ -1,0 +1,4 @@
+    this.|>MARK_OCCURRENCES:f1<| = |>MARK_OCCURRENCES:f1<|; 
+    function |>MARK_OCCURRENCES:f^1<|(f1arg) {
+    |>MARK_OCCURRENCES:f1<|("arg");
+myLib.|>MARK_OCCURRENCES:f1<|();

@@ -1,0 +1,13 @@
+Code completion result for source line:
+use FirstTrait, SecondTrait, |MyTrait;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    Baz                             [PUBLIC]   null
+PACKAGE    Fom                             [PUBLIC]   null
+PACKAGE    Foo                             [PUBLIC]   null
+CLASS      FirstTrait                      [PUBLIC]   Foo\Bar
+CLASS      MyTrait                         [PUBLIC]   Fom\Bom
+CLASS      SecondTrait                     [PUBLIC]   Baz\Bat
+------------------------------------
+PACKAGE    Bar                             [PUBLIC]   Foo
+PACKAGE    Bat                             [PUBLIC]   Baz
+PACKAGE    Bom                             [PUBLIC]   Fom

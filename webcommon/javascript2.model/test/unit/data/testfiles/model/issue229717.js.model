@@ -1,0 +1,39 @@
+FUNCTION issue229717 [ANONYMOUS: false, DECLARED: true - issue229717, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+ExpensesModel : FUNCTION ExpensesModel [ANONYMOUS: false, DECLARED: true - ExpensesModel, MODIFIERS: PUBLIC, CONSTRUCTOR]
+              # RETURN TYPES
+              ExpensesModel, RESOLVED: true
+              # PROPERTIES
+              addType    : FUNCTION addType [ANONYMOUS: false, DECLARED: true - addType, MODIFIERS: PUBLIC, METHOD]
+                         # RETURN TYPES
+                         undefined, RESOLVED: true
+                         # PARAMETERS
+                         OBJECT type [ANONYMOUS: false, DECLARED: true - type, MODIFIERS: PUBLIC, PARAMETER]
+                         # PROPERTIES
+                         arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+              arguments  : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+              privateFun : FUNCTION privateFun [ANONYMOUS: false, DECLARED: true - privateFun, MODIFIERS: PRIVATE, METHOD]
+                         # RETURN TYPES
+                         undefined, RESOLVED: true
+                         # PROPERTIES
+                         arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+              prototype  : OBJECT prototype [ANONYMOUS: false, DECLARED: false - prototype, MODIFIERS: PUBLIC, OBJECT]
+                         # PROPERTIES
+                         publicFnc : FUNCTION publicFnc [ANONYMOUS: false, DECLARED: true - publicFnc, MODIFIERS: PUBLIC, METHOD]
+                                   # RETURN TYPES
+                                   undefined, RESOLVED: true
+                                   # PROPERTIES
+                                   arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+              self       : OBJECT self [ANONYMOUS: false, DECLARED: true - self, MODIFIERS: PRIVATE, VARIABLE]
+              types      : OBJECT types [ANONYMOUS: false, DECLARED: true - types, MODIFIERS: PUBLIC, PROPERTY]
+                         # PROPERTIES
+                         push : FUNCTION push [ANONYMOUS: false, DECLARED: false - push, MODIFIERS: PUBLIC, METHOD]
+                              # PARAMETERS
+                              OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                              # PROPERTIES
+                              arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+test          : OBJECT test [ANONYMOUS: false, DECLARED: true - test, MODIFIERS: PUBLIC, VARIABLE]
+              # PROPERTIES
+              types : OBJECT types [ANONYMOUS: false, DECLARED: false - types, MODIFIERS: PUBLIC, PROPERTY]

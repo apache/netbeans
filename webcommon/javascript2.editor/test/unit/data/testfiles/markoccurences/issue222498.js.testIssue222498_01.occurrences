@@ -1,0 +1,2 @@
+store.getChildren = function(|>MARK_OCCURRENCES:object<|) {
+    return this.query({parent: this.getIdentity(|>MARK_OCCURRENCES:obje^ct<|)});

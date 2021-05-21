@@ -1,0 +1,4 @@
+Code completion result for source line:
+function returnType(?Foo $foo): ?Fo|o { // CC
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Foo                             [PUBLIC]   My\Sub

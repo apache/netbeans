@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.java.j2sedeploy
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/j2sedeploy/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.13
-AutoUpdate-Show-In-Client: false
-

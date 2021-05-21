@@ -1,0 +1,4 @@
+function test(|>MARK_OCCURRENCES:data<|, status) {
+        username: |>MARK_OCCURRENCES:data<|.username,
+        role: |>MARK_OCCURRENCES:da^ta<|.role,
+        created: |>MARK_OCCURRENCES:data<|.created

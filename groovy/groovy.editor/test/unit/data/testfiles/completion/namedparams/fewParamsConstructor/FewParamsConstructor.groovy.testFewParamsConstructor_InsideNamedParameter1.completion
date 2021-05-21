@@ -1,0 +1,24 @@
+Code completion result for source line:
+Bar baar = new Bar(a|aa: 0, bbb: 1, )
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PARAMETER  aaa: int                                   null
+------------------------------------
+CLASS      AbstractCollection                         null
+CLASS      AbstractFactory                            null
+CLASS      AbstractList                               null
+CLASS      AbstractMap                                null
+CLASS      AbstractMethodError                        null
+CLASS      AbstractQueue                              null
+CLASS      AbstractSequentialList                     null
+CLASS      AbstractSet                                null
+CLASS      AdaptingMetaClass                          null
+CLASS      Appendable                                 null
+CLASS      ArithmeticException                        null
+CLASS      ArrayDeque                                 null
+CLASS      ArrayIndexOutOfBoundsException             null
+CLASS      ArrayList                                  null
+CLASS      ArrayStoreException                        null
+CLASS      Arrays                                     null
+CLASS      AssertionError                             null
+CLASS      Authenticator                              null
+CLASS      AutoCloseable                              null

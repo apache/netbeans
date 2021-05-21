@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+  <servlet>
+    <servlet-name>WSServlet_SampleWebService</servlet-name>
+    <servlet-class>sample.SampleWebServiceImpl</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>WSServlet_SampleWebService</servlet-name>
+    <url-pattern>/SampleWebService</url-pattern>
+  </servlet-mapping>
+  <session-config>
+    <session-timeout>
+            30
+        </session-timeout>
+  </session-config>
+  <welcome-file-list>
+    <welcome-file>
+            index.jsp
+        </welcome-file>
+  </welcome-file-list>
+    <ejb-ref>
+        <ejb-ref-name>ejb/SampleSessionBean</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <home>sample.SampleSessionRemoteHome</home>
+        <remote>sample.SampleSessionRemote</remote>
+        <ejb-link>SampleApp-EJBModule.jar#SampleSessionBean</ejb-link>
+    </ejb-ref>
+    </web-app>

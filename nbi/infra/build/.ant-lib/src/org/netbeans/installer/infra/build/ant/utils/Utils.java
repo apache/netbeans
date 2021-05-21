@@ -41,10 +41,6 @@ import java.util.Properties;
 import java.util.Stack;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.jar.JarOutputStream;
-import java.util.jar.Pack200;
-import java.util.jar.Pack200.Packer;
-import java.util.jar.Pack200.Unpacker;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
@@ -61,8 +57,6 @@ import org.apache.tools.bzip2.CBZip2InputStream;
 public final class Utils {
     /////////////////////////////////////////////////////////////////////////////////
     // Static
-    private final static Packer packer = Pack200.newPacker();
-    private final static Unpacker unpacker = Pack200.newUnpacker();
     /**
      * The current ant project. Some of its methods will get called in process of
      * the executions of some of the utility procedures. Thus the ant tasks using the
@@ -72,8 +66,6 @@ public final class Utils {
     private static byte[] buffer = new byte[102400];
     
     private static Project project = null;
-    private static boolean useInternalPacker = false;
-    private static boolean useInternalUnpacker = false;
 
     private static boolean tarInitialized = false;
 
@@ -91,17 +83,6 @@ public final class Utils {
      */
     public static void setProject(final Project project) {
         Utils.project = project;
-        useInternalPacker = "true".equals(project.getProperty("use.internal.packer"));
-        useInternalUnpacker = "true".equals(project.getProperty("use.internal.unpacker"));
-        xmx = ARG_PREFIX + XMX_ARG + project.getProperty("pack200.xmx");
-        permSize = ARG_PREFIX + PERM_SIZE_ARG + project.getProperty("pack200.perm.size");
-        maxPermSize = ARG_PREFIX + MAX_PERM_SIZE_ARG + project.getProperty("pack200.max.perm.size");
-        String output = "use.internal.packer? " + useInternalPacker;
-        if (project != null) {
-            project.log("            " + output);
-        } else {
-            System.out.println(output);
-        }
     }
     
     /**
@@ -198,140 +179,6 @@ public final class Utils {
         }
     }
 
-    /**
-     * Packs the given jar archive using the pack200 utility.
-     *
-     * @param source Jar archive to pack.
-     * @param target File which should become the packed jar archive.
-     * @return The target file, i.e. the packed jar archive.
-     * @throws java.io.IOException if an I/O error occurs.
-     */
-    public static boolean pack(
-            final File source,
-            final File target) throws IOException {
-        return useInternalPacker ? packInternally(source,target) : packExternally(source,target);        
-    }
-    
-    private static boolean packExternally(
-            final File source,
-            final File target) throws IOException {
-        boolean result;
-        
-        
-            String output = "Calling pack200(" + getPackerExecutable() + ") on " + source + " to " + target;
-            if (project != null) {
-                project.log("            " + output);
-            } else {
-                System.out.println(output);
-            }
-
-        Results results = run(
-                getPackerExecutable(),
-                xmx,
-                permSize,
-                maxPermSize,
-                target.getAbsolutePath(),
-                source.getAbsolutePath());
-        
-        if (results.getExitcode() == 0) {
-            result = true;
-        } else {
-            System.out.println(results.getStdout());
-            System.out.println(results.getStderr());
-            System.out.println(results.getExitcode());
-            result = false;
-        }
-        
-        if (result == true) {
-            target.setLastModified(source.lastModified());
-        }
-        
-        return result;
-    }
-    @SuppressWarnings("CallToThreadDumpStack")
-    public static boolean packInternally(final File source,
-            final File target) throws IOException {
-        try {
-            JarFile jarFile = new JarFile(source);
-            FileOutputStream outputStream = new FileOutputStream(target);
-
-            
-            String output = "Packing jarFile: " + jarFile + " to " + target;
-            if (project != null) {
-                project.log("            " + output);
-            } else {
-                System.out.println(output);
-            }
-
-            packer.pack(jarFile, outputStream);
-
-            jarFile.close();
-            outputStream.close();
-            target.setLastModified(source.lastModified());
-        } catch (IOException exc) {
-            exc.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-    /**
-     * Unpacks the given packed jar archive using the unpack200 utility.
-     *
-     * @param source Jar archive to unpack.
-     * @param target File to which the unpacked archive should be saved.
-     * @return The target file, i.e. the unpacked jar archive.
-     * @throws java.io.IOException if an I/O errors occurs.
-     */
-    
-     public static boolean unpack(
-            final File source,
-            final File target) throws IOException {
-        return useInternalUnpacker ? unpackInternally(source,target) : unpackExternally(source,target);        
-    }
-     
-    private static boolean unpackExternally(
-            final File source,
-            final File target) throws IOException {
-        boolean result;
-        
-        
-        Results results = run(
-                getUnPackerExecutable(),
-                xmx,
-                permSize,
-                maxPermSize,
-                source.getAbsolutePath(),
-                target.getAbsolutePath());
-        
-        if (results.getExitcode() == 0) {
-            result = true;
-        } else {
-            System.out.println(results.getStdout());
-            System.out.println(results.getStderr());
-            System.out.println(results.getExitcode());
-            result = false;
-        }
-        
-        if (result == true) {
-            target.setLastModified(source.lastModified());
-        }
-        
-        return result;
-    }
-    @SuppressWarnings("CallToThreadDumpStack")
-    public static boolean unpackInternally(final File source,
-            final File target) throws IOException {
-        try {
-            JarOutputStream os = new JarOutputStream(new FileOutputStream(target));
-            unpacker.unpack(source, os);
-            os.close();
-            target.setLastModified(source.lastModified());
-        } catch (IOException exc) {
-            exc.printStackTrace();
-            return false;
-        }
-        return true;
-    }
     /**
      * Verifies that the jar archive is correct. This method tries to access all
      * jar archive entries and to load all the classes.
@@ -1096,12 +943,6 @@ public final class Utils {
         return handleProcess(process);
     }
     
-    public static String getPackerExecutable() {
-        return getExecutable(PACKER_EXECUTABLE_PROPERTY, PACKER_EXECUTABLE);
-    }
-    public static String getUnPackerExecutable() {
-        return getExecutable(UNPACKER_EXECUTABLE_PROPERTY, UNPACKER_EXECUTABLE);
-    }
     public static String getLsExecutable() {
         final String value = project.getProperty(LS_EXECUTABLE_PROPERTY);
         return (value == null || value.equals("")) ? findLsExecutable() : value;
@@ -1464,10 +1305,6 @@ public final class Utils {
     private static final String VERIFICATION_JAVA_EXECUTABLE = 
             JAVA_HOME_VALUE + File.separator + ((IS_WINDOWS) ? JAVA_EXE : JAVA);
     
-    private static final String PACKER_EXECUTABLE = JAVA_HOME_VALUE + 
-            ((IS_WINDOWS) ? "\\bin\\pack200.exe" : "/bin/pack200");//NOI18N
-    private static final String UNPACKER_EXECUTABLE = JAVA_HOME_VALUE + 
-            ((IS_WINDOWS) ? "\\bin\\unpack200.exe" : "/bin/unpack200");//NOI18N
     private static final String NATIVE_UNZIP_EXECUTABLE =
             (IS_WINDOWS) ? "unzip.exe" : "unzip"; //NOI18N
     private static final String NATIVE_TAR_EXECUTABLE =
@@ -1477,10 +1314,6 @@ public final class Utils {
     private static final String NATIVE_GNUTAR_EXECUTABLE =
             (IS_WINDOWS) ? "gnutar.exe" : "gnutar"; //NOI18N
 
-    public static final String PACKER_EXECUTABLE_PROPERTY = 
-            "pack200.executable";
-    public static final String UNPACKER_EXECUTABLE_PROPERTY = 
-            "unpack200.executable";
     public static final String TAR_EXECUTABLE_PROPERTY = 
             "tar.executable";
     public static final String UNZIP_EXECUTABLE_PROPERTY = 

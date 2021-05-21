@@ -1,0 +1,3 @@
+        test: function(|>MARK_OCCURRENCES:value<|) {
+            alert(REGEXP.test(|>MARK_OCCURRENCES:val^ue<|));
+                    alert(REGEXP.test(|>MARK_OCCURRENCES:value<|));

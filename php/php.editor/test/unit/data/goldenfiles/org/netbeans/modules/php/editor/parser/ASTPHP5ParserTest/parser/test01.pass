@@ -1,0 +1,40 @@
+<testresult testFile='test01.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='137'>
+            <text>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;\n&lt;html&gt;\n    &lt;head&gt;\n        &lt;title&gt;&lt;/title&gt;\n    &lt;/head&gt;\n    &lt;body&gt;\n        </text>
+        </token>
+        <token id='T_STRING' start='155' end='162'>
+            <text>phpinfo</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='162' end='163'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='163' end='164'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='164' end='165'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='213' end='213'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='178'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='137'/>
+            <ExpressionStatement start='155' end='165'>
+                <FunctionInvocation start='155' end='164'>
+                    <FucntionName start='155' end='162'>
+                        <NamespaceName start='155' end='162' isCurrent='false' isGlobal='false'>
+                            <Identifier start='155' end='162' name='phpinfo'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project basedir="." default="build" name="php/php.samples">
+    <description>Builds, tests, and runs the project org.netbeans.modules.php.samples</description>
+    <!--
+    <import file="nbproject/build-impl.xml"/>
+    -->
+    <import file="../../nbbuild/templates/projectized.xml"/>
+
+    <target name="jar" depends="zip-examples,projectized-common.jar"/>
+
+    <target name="zip-examples">
+        <property name="examples" location="${build.classes.dir}/org/netbeans/modules/php/samples"/>
+        <property name="excludes" value="CVS private build-impl.xml **/.keep" />
+        <mkdir dir="${examples}"/>
+        <zip basedir="samples_src/TodoList" excludes="${excludes}" destfile="${examples}/TodoList.zip"/>
+        <zip basedir="samples_src/Calculator-PHPUnit" excludes="${excludes}" destfile="${examples}/Calculator-PHPUnit.zip"/>
+        <zip basedir="samples_src/Calculator-atoum" excludes="${excludes}" destfile="${examples}/Calculator-atoum.zip"/>
+        <zip basedir="samples_src/Calculator-Nette-Tester" excludes="${excludes}" destfile="${examples}/Calculator-Nette-Tester.zip"/>
+        <zip basedir="samples_src/Calculator-Codeception" excludes="${excludes}" destfile="${examples}/Calculator-Codeception.zip"/>
+    </target>
+</project>

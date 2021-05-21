@@ -1,0 +1,6 @@
+Code completion result for source line:
+msg|26;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+PARAMETER  msg25                           [PUBLIC]   issue250011.js
+PARAMETER  msg26                           [PUBLIC]   issue250011.js

@@ -1,0 +1,2 @@
+use api\Logger as |>MARK_OCCURRENCES:MyLogg^er<|;
+$x = new class implements |>MARK_OCCURRENCES:MyLogger<| {

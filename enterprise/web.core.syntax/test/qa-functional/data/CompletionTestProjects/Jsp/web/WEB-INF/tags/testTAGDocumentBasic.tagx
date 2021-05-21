@@ -1,0 +1,36 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+
+<!-- completion for tags -->
+<%--CC
+<j|
+jsp:directive.attribute
+<jsp:directive.attribute
+--%>
+
+<!-- completion for attributes -->
+<%--CC
+<jsp:directive.tag |
+language
+<jsp:directive.tag language=""
+--%>
+
+<!-- completion for end tags -->
+<%--CC
+<jsp:body><html></|
+/jsp:body
+<jsp:body><html></jsp:body>
+--%>
+
+<%--CC
+<jsp:directive.attribute fragment="|"/>
+true
+<jsp:directive.attribute fragment="true"/>
+--%>
+
+<%--CC
+<jsp:directive.tag isELIgnored="|"/>
+false
+<jsp:directive.tag isELIgnored="false"/>
+--%>
+
+</jsp:root>

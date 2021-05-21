@@ -1,0 +1,1 @@
+|>GLOBAL:config<|=loadConfig('./server-config.json') || {};

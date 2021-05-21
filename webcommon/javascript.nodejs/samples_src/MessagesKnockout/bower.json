@@ -1,0 +1,12 @@
+{
+    "name": "${project.name}",
+    "version": "1.0.0",
+    "ignore": [
+        ".jshintrc",
+        "**/*.txt"
+    ],
+    "dependencies": {
+        "knockoutjs": "~3.2.0"
+    },
+    "devDependencies": {}
+}

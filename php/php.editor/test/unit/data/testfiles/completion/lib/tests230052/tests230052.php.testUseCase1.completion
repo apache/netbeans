@@ -1,0 +1,5 @@
+Code completion result for source line:
+/**/my|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   myFirstVar "value"              [PUBLIC]   tests230052.php
+CONSTANT   mySecondVar "value"             [PUBLIC]   tests230052.php

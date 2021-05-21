@@ -1,0 +1,52 @@
+[<j|, jsp:directive.attribute, <jsp:directive.attribute, 160]
+< jsp:attribute >
+< jsp:body >
+< jsp:declaration >
+< jsp:directive.attribute / >
+< jsp:directive.include / >
+< jsp:directive.page / >
+< jsp:directive.tag / >
+< jsp:directive.variable / >
+< jsp:doBody / >
+< jsp:element >
+< jsp:expression >
+< jsp:fallback >
+< jsp:forward >
+< jsp:getProperty / >
+< jsp:include >
+< jsp:invoke >
+< jsp:output >
+< jsp:param / >
+< jsp:params >
+< jsp:plugin >
+< jsp:root >
+< jsp:scriptlet >
+< jsp:setProperty / >
+< jsp:text >
+< jsp:useBean >
+End cursor position = 185
+[<jsp:directive.tag |, language, <jsp:directive.tag language="", 269]
+body-content
+description
+display-name
+dynamic-attributes
+example
+import
+isELIgnored
+language
+large-icon
+pageEncoding
+small-icon
+End cursor position = 299
+[<jsp:body><html></|, /jsp:body, <jsp:body><html></jsp:body>, 373]
+< /jsp:body >
+</html >
+End cursor position = 401
+[<jsp:directive.attribute fragment="|"/>, true, <jsp:directive.attribute fragment="true"/>, 474]
+false
+true
+End cursor position = 514
+[<jsp:directive.tag isELIgnored="|"/>, false, <jsp:directive.tag isELIgnored="false"/>, 571]
+false
+true
+End cursor position = 609

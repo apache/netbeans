@@ -1,0 +1,3 @@
+{
+    "directory": "<#if project.webRootPath?? && project.webRootPath?length &gt; 0>${project.webRootPath}/</#if>bower_components"
+}

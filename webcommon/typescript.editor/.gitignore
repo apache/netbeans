@@ -1,0 +1,6 @@
+bundles/bundles
+bundles/external
+bundles/licenses
+bundles/package/node_modules
+bundles/prepare/nbactions.xml
+bundles/prepare/target/

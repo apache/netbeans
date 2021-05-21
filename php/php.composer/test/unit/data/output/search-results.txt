@@ -1,0 +1,16 @@
+No composer.json found in the current directory, showing packages from packagist
+monolog/monolog Sends your logs to files, sockets, inboxes, databases and various web services
+symfony/monolog-bundle Symfony MonologBundle
+symfony/monolog-bridge Symfony Monolog Bridge
+kamisama/monolog-init Very basic and light Dependency Injector Container for Monolog
+lexik/monolog-browser-bundle This Symfony2 bundle provides a Doctrine DBAL handler for Monolog and a web UI to display log entries
+jelmersnoeck/fork-monolog Extension for Fork CMS to integrate Monolog
+beberlei/loggly-bundle Bundle for Symfony2 that extends Monolog for Loggly support
+ehough/epilog Fork of seldaek/monolog that works with PHP 5.2 and above.
+nrk/monolog-fluent A simple Monolog handler for Fluent
+z7/hydra The cozy RESTfull PHP5.3 micro-framework.
+hydra/hydra The cozy RESTfull PHP5.3 micro-framework.
+cobaia/monologdoctrine Monolog meets Doctrine as SQL Logger
+lf4php/lf4php-monolog This is an lf4php binding for Monolog.
+swestcott/monolog-extension Monolog extension for Behat
+processus/schreibmaschine Logging for PHP 5.3 base on Monolog

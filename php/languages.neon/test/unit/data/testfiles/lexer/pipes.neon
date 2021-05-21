@@ -1,0 +1,3 @@
+# here can be a | pipe
+first: "here can be a | pipe"
+second: 'here can be a | pipe'

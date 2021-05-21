@@ -1,0 +1,3 @@
+var |>MARK_OCCURRENCES:a<| = new Person();
+|>MARK_OCCURRENCES:a^<|.test.name = "B";
+var c = |>MARK_OCCURRENCES:a<|;

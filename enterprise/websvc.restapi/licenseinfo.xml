@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/app.gif</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/cc.gif</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/cg.gif</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/collapse.gif</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/expand.gif</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/images/background_border_bottom.gif</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/images/bg_gradient.gif</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/images/level1_deselect.jpg</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/images/level1_selected-1lvl.jpg</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/images/masthead.png</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/images/masthead_link_enabled.gif</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/images/masthead_link_roll.gif</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/images/pbdis.png</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/images/pbena.png</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/images/pbmou.png</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/images/pbsel.png</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/images/pname-clientstubs.png</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/images/pname.png</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/images/primary-enabled.gif</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/images/primary-roll.gif</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/images/secondary-enabled.gif</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/images/tbsel.png</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/images/tbuns.png</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/item.gif</file>
+        <file>src/org/netbeans/modules/websvc/rest/spi/resources/og.gif</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

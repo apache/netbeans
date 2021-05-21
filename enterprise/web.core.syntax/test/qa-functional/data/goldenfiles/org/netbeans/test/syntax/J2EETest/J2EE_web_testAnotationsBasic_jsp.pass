@@ -1,0 +1,29 @@
+[<% @J|, JoinColumn, <% @JoinColumn, 362]
+JoinColumn
+JoinColumns
+JoinTable
+java
+javanet
+javassist
+javax
+jp
+End cursor position = 377
+[<% @Ta|, TableGenerator, <% @TableGenerator, 473]
+Table
+TableGenerator
+End cursor position = 492
+[<% @ManyToOne(|, boolean optional = true, <% @ManyToOne(optional=, 607]
+CascadeType[] cascade = {}
+FetchType fetch = javax.persis
+boolean optional = true
+Class targetEntity = void.clas
+End cursor position = 631
+[<% @Basic(fetch=FetchType.|, FetchType LAZY, <% @Basic(fetch=FetchType.LAZY, 746]
+FetchType EAGER
+FetchType LAZY
+class
+End cursor position = 777
+[<% @ManyToOne(cascade=CascadeType.R|, CascadeType REMOVE, <% @ManyToOne(cascade=CascadeType.REMOVE, 912]
+CascadeType REFRESH
+CascadeType REMOVE
+End cursor position = 953

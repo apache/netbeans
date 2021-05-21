@@ -1,0 +1,6 @@
+    if (!disallowBlank(document.|>MARK_OCCURRENCES:form1<|.period, 'Pls. selec Period.'))
+    if (!disallowBlank(document.|>MARK_OCCURRENCES:form1<|.mon_yr, 'Pls. select Month /Year.'))
+    var mon_yr = getInputValue(document.|>MARK_OCCURRENCES:for^m1<|.mon_yr),
+        period = getInputValue(document.|>MARK_OCCURRENCES:form1<|.period);
+                document.|>MARK_OCCURRENCES:form1<|.submit();
+            document.|>MARK_OCCURRENCES:form1<|.submit();

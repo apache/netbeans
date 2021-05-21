@@ -1,0 +1,43 @@
+Code completion result for source line:
+$hTML->|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     BlueBox($sBorder = true)        [PUBLIC]   HTML
+METHOD     BlueBox()                       [PUBLIC]   HTML
+------------------------------------
+METHOD     BulletSection($sFieldName)      [PUBLIC]   HTMLbase
+METHOD     BulletSection($sFieldName, $sT  [PUBLIC]   HTMLbase
+METHOD     BulletSection($sFieldName, $sT  [PUBLIC]   HTMLbase
+METHOD     BulletSection($sFieldName, $sT  [PUBLIC]   HTMLbase
+METHOD     BulletSubSection($sFieldName)   [PUBLIC]   HTMLbase
+METHOD     Clear()                         [PUBLIC]   HTMLbase
+METHOD     ClearOthers(&$s)                [PUBLIC]   HTMLbase
+METHOD     CommaSection($sFieldName)       [PUBLIC]   HTMLbase
+METHOD     Debug($s)                       [PUBLIC]   HTMLbase
+METHOD     FieldsetSection()               [PUBLIC]   HTMLbase
+METHOD     Grid4($sField, $sCol1, $sCol2,  [PUBLIC]   HTMLbase
+METHOD     Grid4($sField, $sCol1, $sCol2,  [PUBLIC]   HTMLbase
+METHOD     H2()                            [PUBLIC]   HTMLbase
+METHOD     H3()                            [PUBLIC]   HTMLbase
+METHOD     H4()                            [PUBLIC]   HTMLbase
+METHOD     IsEmpty(array $aFieldsOrValues  [PUBLIC]   HTMLbase
+METHOD     Item($s0, $s1)                  [PUBLIC]   HTMLbase
+METHOD     Item($s0, $s1, $s2 = '')        [PUBLIC]   HTMLbase
+METHOD     ItemMid($s0, $s1, $s2, $s3)     [PUBLIC]   HTMLbase
+METHOD     ItemMid($s0, $s1, $s2, $s3, $s  [PUBLIC]   HTMLbase
+METHOD     One_Time_Title($sSession, $sTi  [PUBLIC]   HTMLbase
+METHOD     Row($s0)                        [PUBLIC]   HTMLbase
+METHOD     Row($s0, $s1 = '')              [PUBLIC]   HTMLbase
+METHOD     Row($s0, $s1 = '', $s2 = '')    [PUBLIC]   HTMLbase
+METHOD     SRow($sRow)                     [PUBLIC]   HTMLbase
+METHOD     StringSection($sFieldName)      [PUBLIC]   HTMLbase
+METHOD     StringSection($sFieldName, $sF  [PUBLIC]   HTMLbase
+VARIABLE   ? aFieldNames                   [PUBLIC]   HTMLbase
+VARIABLE   ? sBBEndText                    [PUBLIC]   HTMLbase
+VARIABLE   ? sBBStartText                  [PUBLIC]   HTMLbase
+VARIABLE   ? sBBStyle                      [PUBLIC]   HTMLbase
+VARIABLE   ? sHTML                         [PUBLIC]   HTMLbase
+VARIABLE   ? sHTML2                        [PUBLIC]   HTMLbase
+VARIABLE   ? sHTML3                        [PUBLIC]   HTMLbase
+VARIABLE   ? sHTML4                        [PUBLIC]   HTMLbase
+VARIABLE   ? sTitle                        [PUBLIC]   HTMLbase
+VARIABLE   ? sTitle2                       [PUBLIC]   HTMLbase

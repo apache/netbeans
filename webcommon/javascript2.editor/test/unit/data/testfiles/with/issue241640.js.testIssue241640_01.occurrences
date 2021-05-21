@@ -1,0 +1,4 @@
+    |>MARK_OCCURRENCES:date<|: new Date()
+    |>MARK_OCCURRENCES:date<|.getMonth();
+        |>MARK_OCCURRENCES:da^te<|.getYear();
+        ironman.|>MARK_OCCURRENCES:date<|.getTimezoneOffset();

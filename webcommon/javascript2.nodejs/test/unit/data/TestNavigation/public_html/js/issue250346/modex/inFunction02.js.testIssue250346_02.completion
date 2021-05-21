@@ -1,0 +1,8 @@
+Code completion result for source line:
+simpleLit.|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      jejda                           [PUBLIC]   literal.js
+CLASS      jejda2                          [PUBLIC]   literal.js
+FIELD      obj: Runner                     [PUBLIC]   literal.js
+FIELD      pokus: Date                     [PUBLIC]   literal.js

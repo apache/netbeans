@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.installer.infra.autoupdate.lib
+OpenIDE-Module-Localizing-Bundle: org/netbeans/installer/infra/autoupdate/lib/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

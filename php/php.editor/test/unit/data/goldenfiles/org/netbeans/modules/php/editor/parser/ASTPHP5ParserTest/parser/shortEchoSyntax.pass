@@ -1,0 +1,39 @@
+<testresult testFile='shortEchoSyntax.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='3'>
+            <text>&lt;p&gt;</text>
+        </token>
+        <token id='T_ECHO' start='5' end='6'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='7' end='11'>
+            <text>$foo</text>
+        </token>
+        <token id='T_SEMICOLON' start='11' end='12'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='13' end='15'>
+            <text>?&gt;</text>
+        </token>
+        <token id='T_INLINE_HTML' start='15' end='20'>
+            <text>&lt;/p&gt;\n</text>
+        </token>
+        <token id='EOF' start='20' end='20'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='20'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='3'/>
+            <EchoStatement start='5' end='12'>
+                <Variable start='7' end='11' isDollared='true'>
+                    <Identifier start='8' end='11' name='foo'/>
+                </Variable>
+            </EchoStatement>
+            <EmptyStatement start='13' end='15'/>
+            <InLineHtml start='15' end='20'/>
+        </Statements>
+    </Program>
+</testresult>

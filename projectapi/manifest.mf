@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.projectapi/1
-OpenIDE-Module-Specification-Version: 1.68
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/projectapi/Bundle.properties
-OpenIDE-Module-Layer: org/netbeans/modules/projectapi/layer.xml
-OpenIDE-Module-Recommends: cnb.org.netbeans.modules.projectapi.nb

@@ -1,0 +1,7 @@
+1..2
+not ok 1 - tests\units\netbeans\sample\Calculator::testDivide()
+# Fatal error : Call to undefined method netbeans\sample\Calculator::divide()
+# /Users/jubianchi/NetBeansProjects/nb-atoum-blog/tests/units/netbeans/sample/Calculator.php
+not ok 2 - tests\units\netbeans\sample\Calculator::testAdd()
+# Fatal error : Call to undefined method netbeans\sample\Calculator::add()
+# /Users/jubianchi/NetBeansProjects/nb-atoum-blog/tests/units/netbeans/sample/Calculator.php

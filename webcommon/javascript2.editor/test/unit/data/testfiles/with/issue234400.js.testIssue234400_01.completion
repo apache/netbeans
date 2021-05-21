@@ -1,0 +1,6 @@
+Code completion result for source line:
+o234400.|name = 10;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     start(): undefined              [PROTECTE  issue234400.js
+FIELD      name                            [PUBLIC]   issue234400.js

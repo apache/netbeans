@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<apichanges>
+<apidefs>
+<apidef name="dialogs">Dialogs API</apidef>
+</apidefs>
+<changes>
+
+    <change id="DialogParent">
+        <api name="dialogs"/>
+        <summary>Allow to specify dialog parent window when using DialogDisplayer.</summary>
+        <version major="7" minor="38"/>
+        <date day="18" month="4" year="2014"/>
+        <author login="saubrecht"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+            When a document window is floated (decoupled from the main IDE window)
+            and has focus then a new dialog window will use it as a parent window by default.
+            That means such non-modal dialogs will close when that document window is closed.
+            To avoid such situation pass <code>WindowManager.getDefault().getMainWindow()</code> as
+            dialog parent window when creating the dialog instance.
+            </p>
+        </description>
+        <class package="org.openide" name="DialogDisplayer"/>
+        <issue number="242854"/>
+    </change>
+
+    <change id="NoDefaultClose">
+        <api name="dialogs"/>
+        <summary>Added an option to disable the closing of a dialog with ESC key
+            and title bar close button.</summary>
+        <version major="7" minor="35"/>
+        <date day="17" month="9" year="2013"/>
+        <author login="saubrecht"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Added method <code>setNoDefaultClose(boolean)</code> to
+                <code>NotifyDescriptor</code> class which disables ESC key closing
+                of dialog window and also disables close button in dialogs title
+                bar. When the method is invoked with true parameter then the dialog
+                window can be closed only by pressing one of its Ok/Yes/No/Cancel buttons
+                (depending on the specified closing options).
+            </p>
+        </description>
+        <class package="org.openide" name="NotifyDescriptor"/>
+        <issue number="196200"/>
+    </change>
+
+    <change id="ExtendedAsynchronousValidatingPanel">
+        <api name="dialogs"/>
+        <summary>Added <code>ExtendedAsynchronousValidatingPanel</code></summary>
+        <version major="7" minor="31"/>
+        <date day="10" month="4" year="2013"/>
+        <author login="saubrecht"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Added a new wizard panel type which introduces <code>finishValidation()</code>
+                method. It is complementary to <code>prepareValidation()</code>
+                method in <code>AsynchronousValidatingPanel</code> and should be
+                used to unlock user interface when the validation is finished.
+            </p>
+        </description>
+        <class package="org.openide" name="WizardDescriptor"/>
+        <issue number="228411"/>
+    </change>
+
+    <change id="BackgroundInstantiatingIterator">
+        <api name="dialogs"/>
+        <summary>Added <code>BackgroundInstantiatingIterator</code></summary>
+        <version major="7" minor="22"/>
+        <date day="7" month="9" year="2011"/>
+        <author login="jglick"/>
+        <compatibility addition="yes">
+            <p>
+                Any code <em>initiating</em> an instantiating iterator using
+                <code>org.openide.loaders.TemplateWizard.instantiate</code> should
+                not do so from the event dispatch thread if a background iterator
+                might have been selected. Normally such initiating code is part
+                of infrastructure, such as the project system UI.
+            </p>
+        </compatibility>
+        <description>
+            <p>
+                Added a new form of instantiating wizard iterator which can do
+                its work after the wizard has been closed.
+            </p>
+        </description>
+        <class package="org.openide" name="WizardDescriptor"/>
+        <issue number="191951"/>
+    </change>
+
+    <change id="WizardMove_Next_Previous">
+        <api name="dialogs"/>
+        <summary>Public API to move wizard to its next/previous step</summary>
+        <version major="7" minor="19"/>
+        <date day="13" month="4" year="2011"/>
+        <author login="saubrecht"/>
+        <compatibility addition="yes"/>
+        <description>
+            This change makes four existing methods in
+            <a href="@TOP@/org/openide/WizardDescriptor.html">WizardDescriptor</a>
+            public: doNextClick(), doPreviousClick(), doFinishClick() and doCancelClick().
+            In previous version the methods were declared final and package
+            private.<br/>
+            Using these methods it will be possible to move to wizard's next step
+            without clicking the Next button for example when user double-clicks
+            some selected item in wizard's panel .
+        </description>
+        <class package="org.openide" name="WizardDescriptor"/>
+        <issue number="197697"/>
+    </change>
+
+    <change id="Dialogs_NotificationLineSupport">
+        <api name="dialogs"/>
+        <summary>Simplify handling error/warning/info messages in dialogs</summary>
+        <version major="7" minor="10"/>
+        <date day="28" month="11" year="2008"/>
+        <author login="jrechtacek"/>
+        <compatibility addition="yes"/>
+        <description>
+            Two new methods in <a href="@TOP@/org/openide/NotifyDescriptor.html">NotifyDescriptor</a> were added to allow API client to
+            create <a href="@TOP@/org/openide/NotificationLineSupport.html">NotificationLineSupport</a> which allow handling
+            error/warning/info messages in dialogs. If a dialog descriptor creates
+            this support, <a href="@TOP@/org/openide/DialogDisplayer.html">DialogDisplayer</a>
+            allocates necessary space at the bottom of dialog where API clients
+            can set info/warning/error messages with appropriate icons.
+        </description>
+        <class package="org.openide" name="NotifyDescriptor"/>
+        <class package="org.openide" name="NotificationLineSupport"/>
+        <issue number="148730"/>
+    </change>
+
+    <change id="WizardDescriptor_new_constants">
+        <api name="dialogs"/>
+        <summary>New WizardDescriptor constants introduced for info and warning messages</summary>
+        <version major="7" minor="8"/>
+        <date day="3" month="7" year="2008"/>
+        <author login="mkubec"/>
+        <compatibility addition="yes"/>
+        <description>
+            Two new constants for warning and info messages were introduced. Info message is annotated by blue info icon
+            and warning message is annotated by orange warning icon with exclamation mark. Message foreground color is set to
+            Label foreground standard color.
+        </description>
+        <class package="org.openide" name="WizardDescriptor"/>
+        <issue number="137737"/>
+    </change>
+
+    <change id="WizardDescriptor_constants">
+        <api name="dialogs"/>
+        <summary>Wizard Descriptor properties changed to constants, two new constants introduced</summary>
+        <version major="7" minor="8"/>
+        <date day="3" month="7" year="2008"/>
+        <author login="mkubec"/>
+        <compatibility addition="yes"/>
+        <description>
+            Freeform property strings are replaced by public constants.
+        </description>
+        <class package="org.openide" name="WizardDescriptor"/>
+        <issue number="138128"/>
+    </change>
+    
+    <change id="WizardDescriptor.ArrayIterator-generic-constructor">
+        <api name="dialogs"/>
+        <summary>Generics-friendly constructor added for <code>WizardDescriptor.ArrayIterator</code></summary>
+        <version major="7" minor="5"/>
+        <date day="15" month="6" year="2007"/>
+        <author login="jglick"/>
+        <compatibility addition="yes"/>
+        <description>
+            A constructor accepting <code>List&lt;Panel&lt;Data>></code> was added
+            to <code>ArrayIterator</code> to avoid the need for generic array construction
+            by client code.
+        </description>
+        <class package="org.openide" name="WizardDescriptor"/>
+        <issue number="106208"/>
+    </change>
+    <change id="default-constructor-for-wizarddescriptor">
+           <api name="dialogs"/>
+           <summary>New <code>WizardDescriptor</code> constructor.</summary>
+           <version major="7" minor="4"/>
+           <date day="30" month="4" year="2007"/>
+           <author login="jtulach"/>
+           <compatibility addition="yes" binary="compatible" semantic="compatible" source="compatible" deprecation="no" deletion="no" modification="no"/>
+           <description>
+            New <code>WizardDescriptor</code> constructor for subclasses. 
+            It allows to eliminate unchecked warnings.
+           </description>
+           <class package="org.openide" name="WizardDescriptor"/>
+           <issue number="102261"/>
+    </change>
+    <change id="notifyLater_improved">
+           <api name="dialogs"/>
+           <summary>Method notifyLater improved to work before main window is opened</summary>
+           <version major="7" minor="3"/>
+           <date day="6" month="2" year="2007"/>
+           <author login="dsimonek"/>
+           <compatibility addition="no" binary="compatible" semantic="compatible" source="incompatible" deprecation="no" deletion="no" modification="no"/>
+           <description>
+             Implementation of method notifyLater improved to work before 
+             main window is opened. For example: When method is called from 
+             ModuleInstall.restored, then modal dialog is opened and blocks main
+             window until dialog is closed. Typical use case is login dialog.
+           </description>
+           <class package="org.openide" name="DialogDisplayer"/>
+           <issue number="92570"/>
+    </change>
+    <change id="WizardDescriptor.getProperties">
+           <api name="dialogs"/>
+           <summary>New method <code>getProperties</code> added to <code>WizardDescriptor</code></summary>
+           <version major="7" minor="3"/>
+           <date day="8" month="2" year="2007"/>
+           <author login="jtulach"/>
+           <compatibility addition="yes" binary="compatible" semantic="compatible" source="compatible" deprecation="no" deletion="no" modification="no"/>
+           <description>
+               New method to get list of all properties of the <code>WizardDescriptor</code>
+               added to the class.
+           </description>
+           <class package="org.openide" name="WizardDescriptor"/>
+    </change>
+    <change id="generified.wizarddescriptor.panel">
+           <api name="dialogs"/>
+           <summary>Generified <code>WizardDescriptor.Panel</code></summary>
+           <version major="7" minor="2"/>
+           <date day="2" month="2" year="2007"/>
+           <author login="jtulach"/>
+           <compatibility addition="yes" binary="compatible" semantic="compatible" source="compatible" deprecation="no" deletion="no" modification="no"/>
+           <description>
+               <code>WizardDescriptor.Panel</code> and <code>WizardDescriptor.Iterator</code>
+               has been generified to take generic type for data passed
+               into <code>readSettings</code> and <code>storeSettings</code>
+               objects.
+           </description>
+           <class package="org.openide" name="WizardDescriptor"/>
+           <issue number="92762"/>
+    </change>
+    <change id="WizardDescriptor.ProgressInstantiatingIterator">
+           <api name="dialogs"/>
+           <summary>Interface <code>ProgressInstantiatingIterator</code> added</summary>
+           <version major="7" minor="1"/>
+           <date day="8" month="4" year="2006"/>
+           <author login="jrechtacek"/>
+           <compatibility addition="yes" binary="compatible" semantic="compatible" source="compatible" deprecation="no" deletion="no" modification="no"/>
+           <description>
+             The <code>ProgressInstantiatingIterator</code> notifies users while instantiate
+             is running by a progress bar, this progress bar is integrated into wizard panel.
+             Instantiating of newly created objects is invoked asynchronously.
+           </description>
+           <class package="org.openide" name="WizardDescriptor"/>
+           <issue number="58889"/>
+    </change>
+    <change id="notifyLater">
+           <api name="dialogs"/>
+           <summary>New method to asynchronously show messages</summary>
+           <version major="7" minor="0"/>
+           <date day="20" month="6" year="2006"/>
+           <author login="jtulach"/>
+           <compatibility addition="yes" binary="compatible" semantic="compatible" source="compatible" deprecation="no" deletion="no" modification="no"/>
+           <description>
+             Now it is simple to display a message box described by
+             <a href="@TOP@/org/openide/NotifyDescriptor.html">NotifyDescriptor</a>
+             asynchronously using
+             <a href="@TOP@/org/openide/DialogDisplayer.html#notifyLater-org.openide.NotifyDescriptor-">
+                 DialogDisplayer.notifyLater
+             </a>.
+           </description>
+           <class package="org.openide" name="DialogDisplayer"/>
+           <issue number="35067"/>
+    </change>
+    <change id="WizardDescriptor.AsynchronousInstantiatingIterator">
+           <api name="dialogs"/>
+           <summary>Interface <code>AsynchronousInstantiatingIterator</code> added</summary>
+           <version major="6" minor="5"/>
+           <date day="6" month="12" year="2005"/>
+           <author login="jrechtacek"/>
+           <compatibility addition="yes" binary="compatible" semantic="compatible" source="compatible" deprecation="no" deletion="no" modification="no"/>
+           <description>
+             The <code>AsynchronousInstantiatingIterator</code> allows to implement
+             asynchronous instantating of newly created objects. Wizard's framework
+             esures that the method <code>AsynchronousInstantiatingIterator.instantiate()</code>
+             will be called ouside of an event queue.
+           </description>
+           <class package="org.openide" name="WizardDescriptor"/>
+           <issue number="62161"/>
+    </change>
+
+    <change id="AsynchronousValidatingPanel">
+           <api name="dialogs"/>
+           <summary>Interface <code>AsynchronousValidationgPanel</code> added</summary>
+           <version major="6" minor="2"/>
+           <date day="16" month="5" year="2005"/>
+           <author login="pkuzel"/>
+           <compatibility addition="yes" binary="compatible" semantic="compatible" source="compatible" deprecation="no" deletion="no" modification="no"/>
+           <description>
+             The <code>AsynchronousValidatingPanel</code> allows to implement
+             background validation that does not block UI thread. I.e. UI
+             thread can be used to render validation progress.
+           </description>
+           <class package="org.openide" name="WizardDescriptor"/>
+           <issue number="58530"/>
+    </change>
+
+    <change id="NotifyDescriptor.getDefaultValue">
+       <api name="dialogs"/>
+       <summary>Add method <code>NotifyDescriptor.getDefaultValue()</code> </summary>
+       <version major="5" minor="9"/>
+       <date day="28" month="3" year="2005"/>
+       <author login="jrechtacek"/>
+       <compatibility addition="yes" binary="compatible" semantic="compatible" source="compatible" deprecation="no" deletion="no" modification="no"/>
+       <description>
+         The <code>NotifyDescriptor.getDefaultValue()</code> returns object which represents the default value.
+         This default value is introduced in the constructor of <code>NotifyDescriptor</code>.
+       </description>
+       <class package="org.openide" name="NotifyDescriptor"/>
+       <issue number="56878"/>
+    </change>
+<change id="add-leaf-attribute-to-DialogDescriptor">
+      <api name="dialogs"/>
+      <summary>Added paramater <code>leaf</code> to <code>DialogDescriptor</code>
+</summary>
+      <version major="5" minor="5"/>
+      <date day="8" month="1" year="2005"/>
+      <author login="jrechtacek"/>
+      <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+      <description>
+        <p>Added the parameter <code>leaf</code> in constructor of the <code>DialogDescriptor</code>.
+        The parameter is not mandatory and can be set manually.
+        If this parameter is <code>false</code> (as default), all works as before.
+        If the parameter <code>leaf</code> is <code>true</code>, then a dialog which is created by this
+        descriptor cannot own any other windows.
+        </p>
+      </description>
+      <class package="org.openide" name="DialogDescriptor"/>
+    </change>
+<change>
+     <api name="dialogs"/>
+     <summary>Added WizardDescriptor.getInstantiatedObjects</summary>
+     <version major="4" minor="41"/>
+     <date day="2" month="7" year="2004"/>
+     <author login="jrechtacek"/>
+     <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+     <description>
+        Added the new method <code>Set getInstantiatedObjects</code>. This method
+        returns set of newly instantiated objects if the wizard has been correctly finished.
+        The empty set is returned as default, if the wizard uses the <code>InstantiatingIterator</code>
+        then returns a set of <code>Object</code> as same as <code>InstantiatingIterator.instantiate()</code> does.
+        The method throws the exception <code>IllegalStateException</code> if this method
+        is called on the unfinished wizard.
+     </description>
+     <class package="org.openide" name="WizardDescriptor"/>
+     <issue number="44513"/>
+     </change>
+<change>
+     <api name="dialogs"/>
+     <summary>Made instantiating iterator</summary>
+     <version major="4" minor="33"/>
+     <date day="4" month="5" year="2004"/>
+     <author login="jrechtacek"/>
+     <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+     <description>
+     Added a special interface for a wizard that needs to controll instantiating new objects.
+     This interface can replace TemplateWizard.Iterator in template's declaration.
+     New <code>WizardDescriptor.InstantiatingIterator</code> extends <code>WizardDescriptor.Iterator</code>
+     and contains the methods for <code>initialize/uninitialize</code> the iterator and the central method
+     <code>instantiate</code> which returns a set on instantiated objects.
+     </description>
+     <class package="org.openide" name="WizardDescriptor"/>
+     <issue number="42192"/>
+    </change>
+<change>
+     <api name="dialogs"/>
+     <summary>Allow dynamically enable/disable Finish button</summary>
+     <version major="4" minor="28"/>
+     <date day="29" month="3" year="2004"/>
+     <author login="jrechtacek"/>
+     <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+     <description>
+     Added a special interface for a panel that needs to dynamically enabled
+     <code>Finish</code> button. This interface <code>WizardDescriptor.FinishablePanel</code> 
+     extends <code>WizardDescriptor.Panel</code> and adds a method <code>isFinishPanel()</code>
+     which returns if <code>Finish</code> button could be enabled. <code>WizardDescriptor.FinishPanel</code>
+     is now deprecated, the preferred way is using <code>FinishablePanel</code> instead.
+     </description>
+     <class package="org.openide" name="WizardDescriptor"/>
+     <issue number="7706"/>
+    </change>
+<change>
+     <api name="dialogs"/>
+     <summary>Allow vetoable Next/Finish validation in wizard</summary>
+     <version major="4" minor="28"/>
+     <date day="29" month="3" year="2004"/>
+     <author login="jrechtacek"/>
+     <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+     <description>
+     Added a special interface for panels that need to do additional
+     validation when <code>Next</code> or <code>Finish</code> button is clicked.
+     This interface <code>WizardDescriptor.ValidatingPanel</code> extends <code>WizardDescriptor.Panel</code>
+     and adds a method <code>validate()</code> which is called when un user clicked <code>Next</code>
+     or <code>Finish</code> button. If validation fails  the wizard doesn't move to next panel nor finish, 
+     the <code>WizardValidationException</code> is thrown and it returns which component
+     fails (in a wizard's panel) and provides a error message to notify the user about.
+     </description>
+     <class package="org.openide" name="WizardDescriptor"/>
+     <class package="org.openide" name="WizardValidationException"/>
+     <issue number="23116"/>
+    </change>
+</changes>
+<htmlcontents>
+<head>
+<title>Change History for the Dialogs API</title>
+<link rel="stylesheet" href="prose.css" type="text/css"/>
+</head>
+<body>
+<p class="overviewlink">
+<a href="overview-summary.html">Overview</a>
+</p>
+<h1>Introduction</h1>
+<h2>What do the Dates Mean?</h2>
+<p>The supplied dates indicate when the API change was made, on the CVS
+trunk. From this you can generally tell whether the change should be
+present in a given build or not; for trunk builds, simply whether it
+was made before or after the change; for builds on a stabilization
+branch, whether the branch was made before or after the given date. In
+some cases corresponding API changes have been made both in the trunk
+and in an in-progress stabilization branch, if they were needed for a
+bug fix; this ought to be marked in this list.</p>
+<ul>
+<li>The <code>release41</code> branch was made on Apr 03 '05 for use in the NetBeans 4.1 release.
+Specification versions: 6.0 begins after this point.</li>
+<li>The <code>release40</code> branch was made on Nov 01 '04 for use in the NetBeans 4.0 release.
+Specification versions: 5.0 begins after this point.</li>
+</ul>
+<hr/>
+<standard-changelists module-code-name="org.openide.dialogs"/>
+<hr/>
+<p>@FOOTER@</p>
+</body>
+</htmlcontents>
+</apichanges>

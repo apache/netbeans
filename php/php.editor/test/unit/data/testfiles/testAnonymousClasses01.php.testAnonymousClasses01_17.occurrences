@@ -1,0 +1,2 @@
+    public function |>MARK_OCCURRENCES:log<|(string $msg3) {
+})->|>MARK_OCCURRENCES:lo^g<|('hello world');

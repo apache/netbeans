@@ -1,0 +1,4 @@
+var |>MARK_OCCURRENCES:hiddenComponents<| = true;
+    if (|>MARK_OCCURRENCES:hiddenComponents<|) {
+        |>MARK_OCCURRENCES:hiddenCom^ponents<| = false;
+        |>MARK_OCCURRENCES:hiddenComponents<| = true;

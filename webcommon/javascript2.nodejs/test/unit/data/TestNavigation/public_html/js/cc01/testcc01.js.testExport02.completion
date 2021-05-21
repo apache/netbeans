@@ -1,0 +1,5 @@
+Code completion result for source line:
+simple.m|essage.setCode(23);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      message: Message                [PUBLIC]   simpleModule.js

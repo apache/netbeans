@@ -1,0 +1,88 @@
+<Program start='0' end='236'>
+    <Comments>
+        <Comment start='163' end='172' commentType='singleLine'/>
+        <Comment start='191' end='197' commentType='singleLine'/>
+        <Comment start='215' end='234' commentType='singleLine'/>
+    </Comments>
+    <Statements>
+        <ClassDeclaration start='7' end='54' modifier='NONE'>
+            <ClassName>
+                <Identifier start='13' end='19' name='classA'/>
+            </ClassName>
+            <SuperClassName>
+            </SuperClassName>
+            <Interfaces>
+            </Interfaces>
+            <Block start='19' end='54' isCurly='true'>
+                <FieldsDeclaration start='25' end='52' modifier='public'>
+                    <FieldType>
+                    </FieldType>
+                    <VariableNames>
+                        <Variable start='32' end='51' isDollared='true'>
+                            <Identifier start='33' end='51' name='inherited_property'/>
+                        </Variable>
+                    </VariableNames>
+                    <InitialValues>
+                    </InitialValues>
+                </FieldsDeclaration>
+            </Block>
+        </ClassDeclaration>
+        <ClassDeclaration start='56' end='141' modifier='NONE'>
+            <ClassName>
+                <Identifier start='62' end='68' name='classB'/>
+            </ClassName>
+            <SuperClassName>
+                <NamespaceName start='77' end='83' isCurrent='false' isGlobal='false'>
+                    <Identifier start='77' end='83' name='classA'/>
+                </NamespaceName>
+            </SuperClassName>
+            <Interfaces>
+            </Interfaces>
+            <Block start='84' end='141' isCurly='true'>
+                <FieldsDeclaration start='90' end='107' modifier='public'>
+                    <FieldType>
+                    </FieldType>
+                    <VariableNames>
+                        <Variable start='97' end='106' isDollared='true'>
+                            <Identifier start='98' end='106' name='property'/>
+                        </Variable>
+                    </VariableNames>
+                    <InitialValues>
+                    </InitialValues>
+                </FieldsDeclaration>
+                <MethodDeclaration start='113' end='139' modifiers='public'>
+                    <FunctionDeclaration start='120' end='139' isReference='false'>
+                        <Identifier start='129' end='135' name='method'/>
+                        <FormalParameters>
+                        </FormalParameters>
+                        <Block start='137' end='139' isCurly='true'>
+                        </Block>
+                    </FunctionDeclaration>
+                </MethodDeclaration>
+            </Block>
+        </ClassDeclaration>
+        <ASTError start='143' end='153'/>
+        <EmptyStatement start='156' end='157'/>
+        <EchoStatement start='173' end='190'>
+            <Quote start='178' end='189' type='QUOTE'>
+                <Expressions>
+                    <Scalar start='179' end='185' type='STRING' value='Hello '/>
+                    <Variable start='185' end='188' isDollared='true'>
+                        <Identifier start='186' end='188' name='ts'/>
+                    </Variable>
+                </Expressions>
+            </Quote>
+        </EchoStatement>
+        <EchoStatement start='198' end='214'>
+            <Quote start='203' end='213' type='QUOTE'>
+                <Expressions>
+                    <Scalar start='204' end='209' type='STRING' value='Hello'/>
+                    <Variable start='209' end='212' isDollared='true'>
+                        <Identifier start='210' end='212' name='ts'/>
+                    </Variable>
+                </Expressions>
+            </Quote>
+        </EchoStatement>
+        <EmptyStatement start='234' end='236'/>
+    </Statements>
+</Program>

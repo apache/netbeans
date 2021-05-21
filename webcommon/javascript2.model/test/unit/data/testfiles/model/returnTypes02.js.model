@@ -1,0 +1,99 @@
+FUNCTION returnTypes02 [ANONYMOUS: false, DECLARED: true - returnTypes02, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+Man       : FUNCTION Man [ANONYMOUS: false, DECLARED: true - Man, MODIFIERS: PUBLIC, CONSTRUCTOR]
+          # RETURN TYPES
+          Man, RESOLVED: true
+          # PARAMETERS
+          OBJECT firstName [ANONYMOUS: false, DECLARED: true - firstName, MODIFIERS: PUBLIC, PARAMETER]
+          OBJECT lastName [ANONYMOUS: false, DECLARED: true - lastName, MODIFIERS: PUBLIC, PARAMETER]
+          OBJECT street [ANONYMOUS: false, DECLARED: true - street, MODIFIERS: PUBLIC, PARAMETER]
+          OBJECT town [ANONYMOUS: false, DECLARED: true - town, MODIFIERS: PUBLIC, PARAMETER]
+          OBJECT zip [ANONYMOUS: false, DECLARED: true - zip, MODIFIERS: PUBLIC, PARAMETER]
+          # PROPERTIES
+          Address       : FUNCTION Address [ANONYMOUS: false, DECLARED: true - Address, MODIFIERS: PRIVATE, CONSTRUCTOR]
+                        # RETURN TYPES
+                        Man.Address, RESOLVED: true
+                        # PARAMETERS
+                        OBJECT streetp [ANONYMOUS: false, DECLARED: true - streetp, MODIFIERS: PUBLIC, PARAMETER]
+                        OBJECT townp [ANONYMOUS: false, DECLARED: true - townp, MODIFIERS: PUBLIC, PARAMETER]
+                        OBJECT zipp [ANONYMOUS: false, DECLARED: true - zipp, MODIFIERS: PUBLIC, PARAMETER]
+                        # PROPERTIES
+                        arguments    : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                        correct      : FUNCTION correct [ANONYMOUS: false, DECLARED: true - correct, MODIFIERS: PROTECTED, METHOD]
+                                     # RETURN TYPES
+                                     Man.Address, RESOLVED: true
+                                     # PROPERTIES
+                                     arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                        getZip       : FUNCTION getZip [ANONYMOUS: false, DECLARED: true - getZip, MODIFIERS: PROTECTED, METHOD]
+                                     # PROPERTIES
+                                     arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                        printAddress : FUNCTION printAddress [ANONYMOUS: false, DECLARED: true - printAddress, MODIFIERS: PROTECTED, METHOD]
+                                     # RETURN TYPES
+                                     undefined, RESOLVED: true
+                                     # PROPERTIES
+                                     arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                     tmp       : OBJECT tmp [ANONYMOUS: false, DECLARED: true - tmp, MODIFIERS: PRIVATE, VARIABLE]
+                                               # PROPERTIES
+                                               getZip : FUNCTION getZip [ANONYMOUS: false, DECLARED: false - getZip, MODIFIERS: PUBLIC, METHOD]
+                                                      # PROPERTIES
+                                                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                        street       : OBJECT street [ANONYMOUS: false, DECLARED: true - street, MODIFIERS: PRIVATE, VARIABLE]
+                        town         : OBJECT town [ANONYMOUS: false, DECLARED: true - town, MODIFIERS: PRIVATE, VARIABLE]
+                        zip          : OBJECT zip [ANONYMOUS: false, DECLARED: true - zip, MODIFIERS: PRIVATE, VARIABLE]
+          address       : OBJECT address [ANONYMOUS: false, DECLARED: true - address, MODIFIERS: PRIVATE, VARIABLE]
+          arguments     : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+          createAddress : FUNCTION createAddress [ANONYMOUS: false, DECLARED: true - createAddress, MODIFIERS: PRIVATE, METHOD]
+                        # RETURN TYPES
+                        Man.Address, RESOLVED: true
+                        # PARAMETERS
+                        OBJECT street [ANONYMOUS: false, DECLARED: true - street, MODIFIERS: PUBLIC, PARAMETER]
+                        OBJECT town [ANONYMOUS: false, DECLARED: true - town, MODIFIERS: PUBLIC, PARAMETER]
+                        OBJECT zip [ANONYMOUS: false, DECLARED: true - zip, MODIFIERS: PUBLIC, PARAMETER]
+                        # PROPERTIES
+                        arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+          getAddress    : FUNCTION getAddress [ANONYMOUS: false, DECLARED: true - getAddress, MODIFIERS: PROTECTED, METHOD]
+                        # RETURN TYPES
+                        @exp;Man@pro;address, RESOLVED: false
+                        # PROPERTIES
+                        arguments    : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                        printAddress : FUNCTION printAddress [ANONYMOUS: false, DECLARED: false - printAddress, MODIFIERS: PUBLIC, METHOD]
+                                     # PROPERTIES
+                                     arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+          print         : FUNCTION print [ANONYMOUS: false, DECLARED: true - print, MODIFIERS: PROTECTED, METHOD]
+                        # RETURN TYPES
+                        Man, RESOLVED: true
+                        # PROPERTIES
+                        arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+formatter : OBJECT formatter [ANONYMOUS: false, DECLARED: false - formatter, MODIFIERS: PUBLIC, OBJECT]
+          # PROPERTIES
+          addIndent    : FUNCTION addIndent [ANONYMOUS: false, DECLARED: false - addIndent, MODIFIERS: PUBLIC, METHOD]
+                       # PARAMETERS
+                       OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                       # PROPERTIES
+                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+          println      : FUNCTION println [ANONYMOUS: false, DECLARED: false - println, MODIFIERS: PUBLIC, METHOD]
+                       # PARAMETERS
+                       OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                       # PROPERTIES
+                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+          removeIndent : FUNCTION removeIndent [ANONYMOUS: false, DECLARED: false - removeIndent, MODIFIERS: PUBLIC, METHOD]
+                       # PARAMETERS
+                       OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                       # PROPERTIES
+                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+person    : OBJECT person [ANONYMOUS: false, DECLARED: true - person, MODIFIERS: PUBLIC, VARIABLE]
+          # PROPERTIES
+          getAddress : FUNCTION getAddress [ANONYMOUS: false, DECLARED: false - getAddress, MODIFIERS: PUBLIC, METHOD]
+                     # PROPERTIES
+                     arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                     correct   : FUNCTION correct [ANONYMOUS: false, DECLARED: false - correct, MODIFIERS: PUBLIC, METHOD]
+                               # PROPERTIES
+                               arguments    : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                               printAddress : FUNCTION printAddress [ANONYMOUS: false, DECLARED: false - printAddress, MODIFIERS: PUBLIC, METHOD]
+                                            # PROPERTIES
+                                            arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+          print      : FUNCTION print [ANONYMOUS: false, DECLARED: false - print, MODIFIERS: PUBLIC, METHOD]
+                     # PROPERTIES
+                     arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

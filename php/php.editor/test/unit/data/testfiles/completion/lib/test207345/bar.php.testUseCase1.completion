@@ -1,0 +1,8 @@
+Code completion result for source line:
+parent::|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     __construct()                   [PUBLIC]   \Testing\Ns\Blah
+METHOD     baz($param)                     [PUBLIC]   \Testing\Ns\Blah
+VARIABLE   ? field                         [PUBLIC]   \Testing\Ns\Blah
+CONSTANT   class \Testing\Ns\Blah          [PUBLIC]   Magic Constant

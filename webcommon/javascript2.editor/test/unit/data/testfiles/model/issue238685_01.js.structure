@@ -1,0 +1,5 @@
+a:VARIABLE:[PUBLIC]:ESCAPED{a}<font color="#999999">ESCAPED{ : }HudsonReader.utils.DB</font>:
+HudsonReader:CLASS:[PUBLIC]:ESCAPED{HudsonReader}:
+  utils:CLASS:[PUBLIC]:ESCAPED{utils}:
+    DB:CONSTRUCTOR:[PUBLIC]:ESCAPED{DB}ESCAPED{(}ESCAPED{callback}ESCAPED{, }ESCAPED{logger}ESCAPED{)}<font color="#999999">ESCAPED{ : }HudsonReader.utils.DB</font>:
+      store:METHOD:[PROTECTED]:ESCAPED{store}ESCAPED{(}<font color="#999999">ESCAPED{Job}ESCAPED{ }</font>ESCAPED{job}ESCAPED{, }<font color="#999999">ESCAPED{Function}ESCAPED{ }</font>ESCAPED{callback}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

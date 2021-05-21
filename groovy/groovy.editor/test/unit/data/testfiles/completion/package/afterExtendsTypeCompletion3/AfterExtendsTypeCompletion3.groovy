@@ -1,0 +1,2 @@
+class PrefixIsEqualWithKeyword extends in {
+}

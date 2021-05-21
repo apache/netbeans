@@ -1,0 +1,25 @@
+ 
+
+
+
+
+var |>METHOD:Person<| = |>GLOBAL:Class<|.create({
+    /**
+     * @constructor
+     * @param {String} name
+     */
+    |>METHOD:initialize<|: function(name){
+       this.|>FIELD:name<| = name; 
+    },
+    
+    /**
+     * @param {String} message
+     */
+    |>METHOD:say<|: function(message) {
+        |>GLOBAL:console<|.log(message + ' ' + this.|>FIELD:name<|);
+    }
+});   
+
+var |>GLOBAL:person<| = new Person();
+|>GLOBAL:person<|.
+        

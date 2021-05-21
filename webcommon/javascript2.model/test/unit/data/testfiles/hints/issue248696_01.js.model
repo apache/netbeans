@@ -1,0 +1,26 @@
+FUNCTION issue248696_01 [ANONYMOUS: false, DECLARED: true - issue248696_01, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+issue248696_01L#1 : FUNCTION issue248696_01L#1 [ANONYMOUS: true, DECLARED: true - issue248696_01L#1, MODIFIERS: PUBLIC, FUNCTION]
+                  # RETURN TYPES
+                  undefined, RESOLVED: true
+                  # PARAMETERS
+                  OBJECT Profile [ANONYMOUS: false, DECLARED: true - Profile, MODIFIERS: PUBLIC, PARAMETER]
+                  # PROPERTIES
+                  L:1#initAuth : FUNCTION initAuth [ANONYMOUS: false, DECLARED: true - initAuth, MODIFIERS: PRIVATE, METHOD]
+                               # RETURN TYPES
+                               undefined, RESOLVED: true
+                               # PROPERTIES
+                               arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                  arguments    : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+test              : OBJECT test [ANONYMOUS: false, DECLARED: false - test, MODIFIERS: PUBLIC, OBJECT]
+                  # PROPERTIES
+                  controller : FUNCTION controller [ANONYMOUS: false, DECLARED: false - controller, MODIFIERS: PUBLIC, METHOD]
+                             # PARAMETERS
+                             OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                             # PROPERTIES
+                             arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                             factory   : FUNCTION factory [ANONYMOUS: false, DECLARED: false - factory, MODIFIERS: PUBLIC, METHOD]
+                                       # PROPERTIES
+                                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

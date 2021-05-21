@@ -1,0 +1,127 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<library id="http://java.sun.com/jsf/core">
+    <common_attributes>
+        <attr name="disabled">
+            <type name="boolean"/>
+        </attr>
+    </common_attributes>
+
+    <tag name="actionListener"/>
+    <tag name="attribute"/>
+    <tag name="convertDateTime">
+        <attr name="dateStyle">
+            <type name="enum">
+                <val>default</val>
+                <val>short</val>
+                <val>medium</val>
+                <val>long</val>
+                <val>full</val>
+            </type>
+        </attr>
+        <attr name="type">
+            <type name="enum">
+                <val>date</val>
+                <val>time</val>
+                <val>both</val>
+                <val>localDate</val>
+                <val>localDateTime</val>
+                <val>localTime</val>
+                <val>offsetTime</val>
+                <val>offsetDateTime</val>
+                <val>zonedDateTime</val>
+            </type>
+        </attr>
+    </tag>
+    <tag name="convertNumber">
+        <attr name="groupingUsed">
+            <type name="boolean"/>
+        </attr>
+        <attr name="integerOnly">
+            <type name="boolean"/>
+        </attr>
+        <attr name="type">
+            <type name="enum">
+                <val>number</val>
+                <val>currency</val>
+                <val>percent</val>
+            </type>
+        </attr>
+    </tag>
+    <tag name="converter"/>
+    <tag name="ajax">
+        <attr name="immediate">
+            <type name="boolean"/>
+        </attr>
+    </tag>
+    <tag name="event">
+        <attr name="name">
+            <type name="enum">
+                <val>preRenderComponent</val>
+                <val>PostAddToView</val>
+                <val>preValidate</val>
+                <val>postValidate</val>
+            </type>
+        </attr>
+    </tag>
+    <tag name="facet"/>
+    <tag name="metadata"/>
+    <tag name="loadBundle"/>
+    <tag name="param">
+        <attr name="disable">
+            <type name="boolean"/>
+        </attr>
+    </tag>
+    <tag name="viewParam"/>
+    <tag name="phaseListener"/>
+    <tag name="selectItem">
+        <attr name="noSelectionOption">
+            <type name="boolean"/>
+        </attr>
+    </tag>
+    <tag name="selectItems">
+        <attr name="itemDisabled">
+            <type name="boolean"/>
+        </attr>
+        <attr name="itemLabelEscaped">
+            <type name="boolean"/>
+        </attr>
+    </tag>
+    <tag name="setPropertyActionListener"/>
+    <tag name="subview">
+        <attr name="rendered">
+            <type name="boolean"/>
+        </attr>
+    </tag>
+    <tag name="validateDoubleRange"/>
+    <tag name="validateLength"/>
+    <tag name="validateLongRange"/>
+    <tag name="validateWholeBean"/>
+    <tag name="importConstants"/>
+    <tag name="websocket"/>
+    <tag name="validateBean"/>
+    <tag name="validateRegex"/>
+    <tag name="validateRequired"/>
+    <tag name="validator"/>
+    <tag name="valueChangeListener"/>
+    <tag name="verbatim"/>
+    <tag name="view"/>
+</library>

@@ -1,0 +1,36 @@
+Code completion result for source line:
+echo $_SERVER["|"];
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    AUTH_TYPE                                  null
+KEYWORD    DOCUMENT_ROOT                              null
+KEYWORD    GATEWAY_INTERFACE                          null
+KEYWORD    HTTPS                                      null
+KEYWORD    HTTP_ACCEPT                                null
+KEYWORD    HTTP_ACCEPT_CHARSET                        null
+KEYWORD    HTTP_ACCEPT_ENCODING                       null
+KEYWORD    HTTP_ACCEPT_LANGUAGE                       null
+KEYWORD    HTTP_CONNECTION                            null
+KEYWORD    HTTP_HOST                                  null
+KEYWORD    HTTP_REFERER                               null
+KEYWORD    HTTP_USER_AGENT                            null
+KEYWORD    PATH_TRANSLATED                            null
+KEYWORD    PHP_AUTH_DIGEST                            null
+KEYWORD    PHP_AUTH_PW                                null
+KEYWORD    PHP_AUTH_USER                              null
+KEYWORD    PHP_SELF                                   null
+KEYWORD    QUERY_STRING                               null
+KEYWORD    REMOTE_ADDR                                null
+KEYWORD    REMOTE_HOST                                null
+KEYWORD    REMOTE_PORT                                null
+KEYWORD    REQUEST_METHOD                             null
+KEYWORD    REQUEST_URI                                null
+KEYWORD    SCRIPT_FILENAME                            null
+KEYWORD    SCRIPT_NAME                                null
+KEYWORD    SERVER_ADDR                                null
+KEYWORD    SERVER_ADMIN                               null
+KEYWORD    SERVER_NAME                                null
+KEYWORD    SERVER_PORT                                null
+KEYWORD    SERVER_PROTOCOL                            null
+KEYWORD    SERVER_SIGNATURE                           null
+KEYWORD    SERVER_SOFTWARE                            null

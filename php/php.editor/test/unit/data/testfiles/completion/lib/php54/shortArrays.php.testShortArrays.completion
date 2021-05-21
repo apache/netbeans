@@ -1,0 +1,4 @@
+Code completion result for source line:
+$xxxAr|r;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   array $xxxArr                   [PUBLIC]   shortArrays.php

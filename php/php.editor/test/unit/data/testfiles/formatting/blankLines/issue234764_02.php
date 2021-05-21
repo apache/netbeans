@@ -1,0 +1,3 @@
+<?php
+class Test { public function getName(){} }
+?>

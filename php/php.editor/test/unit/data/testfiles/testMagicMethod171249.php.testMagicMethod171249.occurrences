@@ -1,0 +1,3 @@
+ * @method   |>MARK_OCCURRENCES:OldClass<| newerFunction <- intentional spaces after @method
+        return new |>MARK_OCCURRENCES:OldClass<|();
+class |>MARK_OCCURRENCES:OldC^lass<| {

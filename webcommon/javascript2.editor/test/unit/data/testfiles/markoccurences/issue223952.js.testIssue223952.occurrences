@@ -1,0 +1,2 @@
+ * @returns {|>MARK_OCCURRENCES:UserToConnections<|} the connections
+function |>MARK_OCCURRENCES:UserToConnectio^ns<|(ahoj) {

@@ -1,0 +1,4 @@
+Code completion result for source line:
+const CON|STANTA,
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   CONSTANTA "CONSTANTA"           [PUBLIC]   A

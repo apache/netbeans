@@ -1,0 +1,7 @@
+Code completion result for source line:
+_|arr[1] = 10;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     _privateWork(): Array           [PRIVATE]  SingletonCloser.js
+VARIABLE   _arr: Array                     [PRIVATE]  SingletonCloser.js
+VARIABLE   _rx: RegExp                     [PRIVATE]  SingletonCloser.js

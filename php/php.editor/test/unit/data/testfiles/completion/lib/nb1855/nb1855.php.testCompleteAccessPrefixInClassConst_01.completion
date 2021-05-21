@@ -1,0 +1,15 @@
+Code completion result for source line:
+public const TEST1 = |;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Class1855                       [PUBLIC]   nb1855.php
+CLASS      ParentClass                     [PUBLIC]   nb1855.php
+CONSTANT   PRIVATE_CONSTANT "private cons  [PRIVATE]  Class1855
+CONSTANT   PROTECTED_CONSTANT "protected   [PROTECTE  Class1855
+CONSTANT   PROTECTED_PARENT_CONSTANT "pro  [PROTECTE  ParentClass
+CONSTANT   PUBLIC_CONSTANT "pubic constan  [PUBLIC]   Class1855
+CONSTANT   PUBLIC_PARENT_CONSTANT "pubic   [PUBLIC]   ParentClass
+CONSTANT   TEST2 ?                         [PUBLIC]   Class1855
+KEYWORD    parent::                                   null
+KEYWORD    self::                                     null
+------------------------------------
+KEYWORD    array                                      null

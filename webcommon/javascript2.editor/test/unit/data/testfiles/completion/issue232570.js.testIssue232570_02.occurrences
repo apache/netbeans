@@ -1,0 +1,2 @@
+Test.modules.|>MARK_OCCURRENCES:moduleA<| = new function(){
+Test.modules.|>MARK_OCCURRENCES:modul^eA<|.name;

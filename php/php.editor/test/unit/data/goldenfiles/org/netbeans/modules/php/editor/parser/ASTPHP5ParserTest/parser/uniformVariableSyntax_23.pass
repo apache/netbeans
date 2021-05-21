@@ -1,0 +1,128 @@
+<testresult testFile='uniformVariableSyntax_23.php'>
+    <scanner>
+        <token id='T_STRING' start='7' end='11'>
+            <text>UVS3</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='11' end='13'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='13' end='22'>
+            <text>myStatic3</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='22' end='23'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='23' end='24'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='24' end='26'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='26' end='35'>
+            <text>myStatic2</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='35' end='36'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='36' end='37'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='37' end='39'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='39' end='48'>
+            <text>myStatic1</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='48' end='49'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='49' end='50'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='50' end='52'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='52' end='55'>
+            <text>MAX</text>
+        </token>
+        <token id='T_SEMICOLON' start='55' end='56'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='57' end='57'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='57'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='56'>
+                <StaticConstantAccess start='7' end='55'>
+                    <StaticMethodInvocation start='7' end='50'>
+                        <StaticMethodInvocation start='7' end='37'>
+                            <StaticMethodInvocation start='7' end='24'>
+                                <NamespaceName start='7' end='11' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='7' end='11' name='UVS3'/>
+                                </NamespaceName>
+                                <Member>
+                                    <FunctionInvocation start='13' end='24'>
+                                        <FucntionName start='13' end='22'>
+                                            <Identifier start='13' end='22' name='myStatic3'/>
+                                        </FucntionName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </Member>
+                                <FunctionInvocation start='13' end='24'>
+                                    <FucntionName start='13' end='22'>
+                                        <Identifier start='13' end='22' name='myStatic3'/>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </StaticMethodInvocation>
+                            <Member>
+                                <FunctionInvocation start='26' end='37'>
+                                    <FucntionName start='26' end='35'>
+                                        <Identifier start='26' end='35' name='myStatic2'/>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </Member>
+                            <FunctionInvocation start='26' end='37'>
+                                <FucntionName start='26' end='35'>
+                                    <Identifier start='26' end='35' name='myStatic2'/>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </StaticMethodInvocation>
+                        <Member>
+                            <FunctionInvocation start='39' end='50'>
+                                <FucntionName start='39' end='48'>
+                                    <Identifier start='39' end='48' name='myStatic1'/>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Member>
+                        <FunctionInvocation start='39' end='50'>
+                            <FucntionName start='39' end='48'>
+                                <Identifier start='39' end='48' name='myStatic1'/>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </StaticMethodInvocation>
+                    <Constant>
+                        <Identifier start='52' end='55' name='MAX'/>
+                    </Constant>
+                    <Member>
+                        <Identifier start='52' end='55' name='MAX'/>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

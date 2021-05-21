@@ -1,0 +1,7 @@
+Code completion result for source line:
+fn1().fn1_|prop3;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      fn1_prop3                       [PUBLIC]   <font color=#999999>issue244509_test.js</font>
+FIELD      fn1_prop1: String               [PUBLIC]   issue244509.js
+FIELD      fn1_prop2: Number               [PUBLIC]   issue244509.js

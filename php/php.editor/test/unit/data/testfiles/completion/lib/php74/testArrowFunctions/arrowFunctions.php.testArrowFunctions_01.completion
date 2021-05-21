@@ -1,0 +1,10 @@
+Code completion result for source line:
+$fn0 = f|n() => 100;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    final                                      null
+KEYWORD    finally                                    null
+KEYWORD    fn                                         null
+KEYWORD    for                                        null
+KEYWORD    foreach                                    null
+KEYWORD    function                                   null

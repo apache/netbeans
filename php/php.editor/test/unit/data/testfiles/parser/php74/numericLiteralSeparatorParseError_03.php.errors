@@ -1,0 +1,10 @@
+[[816,817]-Syntax error
+ unexpected:	identifier '_'
+ after:	integer '1'
+ expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ], ), :, ??] 816-817:Syntax error
+ unexpected:	identifier '_'
+ after:	integer '1'
+ expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ], ), :, ??
+[[817,819]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	double '.0'] 817-819:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	double '.0'

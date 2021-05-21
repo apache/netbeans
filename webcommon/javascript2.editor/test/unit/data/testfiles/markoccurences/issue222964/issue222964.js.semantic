@@ -1,0 +1,14 @@
+|>GLOBAL:window<|.|>GLOBAL:store<| = {
+    |>CLASS:wines<|: {},
+    |>METHOD:populate<|: function() {
+    },
+    |>CLASS:address<|: {
+        |>FIELD:street<|: "Ulice",
+        |>FIELD:city<|: "Praha"
+    }
+};
+
+|>GLOBAL:store<|.populate();  
+|>GLOBAL:window<|.|>GLOBAL:store<|.populate();
+|>GLOBAL:console<|.log(|>GLOBAL:store<|.address.|>FIELD:street<|);
+|>GLOBAL:console<|.log(|>GLOBAL:window<|.|>GLOBAL:store<|.address.|>FIELD:street<|);

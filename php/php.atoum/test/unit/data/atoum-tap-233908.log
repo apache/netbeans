@@ -1,0 +1,8 @@
+not ok 1 - tests\unit\Calculator::testPlus()
+# integer(2) is not equal to integer(3)
+# -Expected
+# +Actual
+# @@ -1 +1 @@
+# -int(3)
+# +int(2)
+# /home/gapon/NetBeansProjects/Calculator-atoum/test/Calculator.php:62

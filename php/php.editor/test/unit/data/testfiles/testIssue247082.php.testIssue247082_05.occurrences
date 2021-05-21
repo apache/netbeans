@@ -1,0 +1,2 @@
+    public function |>MARK_OCCURRENCES:parentTe^stInstance<|() {
+            echo parent::|>MARK_OCCURRENCES:parentTestInstance<|() . PHP_EOL;

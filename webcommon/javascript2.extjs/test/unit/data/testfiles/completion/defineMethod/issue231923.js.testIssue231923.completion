@@ -1,0 +1,6 @@
+Code completion result for source line:
+var obj = My.app.Pan|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      Panel                           [PUBLIC]   issue231923.js
+CLASS      PanelPart2                      [PUBLIC]   issue231923.js

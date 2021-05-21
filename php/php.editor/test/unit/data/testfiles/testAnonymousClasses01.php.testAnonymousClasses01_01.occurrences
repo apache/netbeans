@@ -1,0 +1,6 @@
+interface |>MARK_OCCURRENCES:Lo^gger<| {
+$anonCls = new class implements |>MARK_OCCURRENCES:Logger<| {
+    public function getLogger(): |>MARK_OCCURRENCES:Logger<| {
+    public function setLogger(|>MARK_OCCURRENCES:Logger<| $logger) {
+$app->setLogger(new class implements |>MARK_OCCURRENCES:Logger<| {
+(new class implements |>MARK_OCCURRENCES:Logger<| {

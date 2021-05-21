@@ -1,0 +1,4 @@
+        self.|>MARK_OCCURRENCES:types<| = ["ahoj", "cau"];
+            self.|>MARK_OCCURRENCES:types<|.push(type);
+            this.|>MARK_OCCURRENCES:types<|;
+test.|>MARK_OCCURRENCES:typ^es<|;

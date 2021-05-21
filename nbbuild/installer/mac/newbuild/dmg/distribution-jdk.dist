@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<installer-gui-script minSpecVersion="1.0">
+    <title>jdk-netbeans-Title</title>
+    <welcome file="Welcome.html"></welcome>
+    <background file="background.tif" scaling="none" alignment="bottomleft"></background>
+    <options allow-external-scripts="no" customize="never" rootVolumeOnly="false"></options>
+    <installation-check script="checkMemsize()"></installation-check>
+    <volume-check script="checkSystemversion()"></volume-check>
+    <script>
+/* js:pkmk:start */
+function installationCheckRAM() {
+	return  checkMemsize() ;
+}
+/* js:pkmk:end */
+
+
+/* js:pkmk:start */
+function checkMemsize() {
+	var result = false;
+	try {
+		result = system.sysctl('hw.memsize') >= '536870912';
+	} catch (e) {}
+	
+	if(!result) {
+		my.result.type = 'Warn';
+		my.result.title = system.localizedStringWithFormat('MEMORY_WARNING_TITLE');
+		my.result.message = system.localizedStringWithFormat('MEMORY_WARNING_MSG');
+	}
+	return result;
+}
+/* js:pkmk:end */
+</script>
+
+<script>
+/* js:pkmk:start */
+function checkSystemversion() {
+  if(!(checkForMacOSX('10.7.3') == true)) {
+    my.result.title = 'OS X Lion required';
+    my.result.message = 'This Installer is supported only on OS X 10.7.3 or Later.';
+    my.result.type = 'Fatal';
+    return false;
+  }
+  return true;
+}
+/* js:pkmk:end */
+    
+// Check is current MAC OS X version less than supportedVersion
+function checkForMacOSX(supportedVersion) {
+    try {
+        // Get current ProductVersion
+        var tProductVersion = system.version.ProductVersion;
+        // Get current ProductName
+        var tProductName = system.version.ProductName;
+
+        // Check if current version is less than supportedVersion, if yes Set the result type to Fatal, and give correct message to user
+
+        if(system.compareVersions(tProductVersion, supportedVersion) &lt; 0)
+        {
+            // Set result values
+            var osCheckTitle = system.localizedStringWithFormat('OSCHECK_TITLE');
+            osCheckTitle = osCheckTitle.replace("%1$@", tProductName);
+            osCheckTitle = osCheckTitle.replace("%2$@", supportedVersion);
+    
+            var osCheckMessage = system.localizedStringWithFormat('OSCHECK_MESSAGE');
+            osCheckMessage = osCheckMessage.replace("%1$@", tProductName);
+            osCheckMessage = osCheckMessage.replace("%2$@", tProductVersion);
+            osCheckMessage = osCheckMessage.replace("%3$@", supportedVersion);
+    
+            my.result.title = osCheckTitle;
+            my.result.message = osCheckMessage;
+            my.result.type = 'Fatal';
+        }
+    } catch (e) {
+        // an exception just occurred
+        return (false);
+    }
+    // return true
+    return (true);
+}
+</script>
+
+<script>
+/* js:pkmk:start */
+function choiceIsADowngrade() {
+	return  checkChoiceUpgradeAction() ;
+}
+/* js:pkmk:end */
+
+
+/* js:pkmk:start */
+function checkChoiceUpgradeAction() {
+	var result = false;
+	try {
+		result = my.choice.packageUpgradeAction == 'downgrade' || my.choice.packageUpgradeAction == 'mixed';
+	} catch (e) {}
+	
+	return result;
+}
+/* js:pkmk:end */
+</script>
+
+<script>// check if this is a downgrade from current version installed, return true
+function isDowngrade() {
+    try {
+        var tInstallVersion = "@JDK_VERSION_NUMBER@.@JDK_UPDATE_NUMBER@";
+        // get current installed JavaAppletPlugin bundle
+        var bundle = system.files.bundleAtPath("/Library/Internet Plug-Ins/JavaAppletPlugin.plugin");
+        if(bundle != null) {
+            // check if Info.plist file is present, we need this in case the plugin was not installed properly
+            if(!system.files.plistAtPath("/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Info.plist")) {
+                return false;
+            }
+            // check if Oracle JRE is installed not by someone else
+            if (bundle.CFBundleIdentifier == 'com.oracle.java.JavaAppletPlugin') {
+                var tCurrentVersion = bundle.CFBundleShortVersionString;
+                // check if current plugin being installed is a downgrade
+                var tVersionResult = system.compareVersions(bundle.CFBundleVersion, tInstallVersion);
+                if(tVersionResult > 0) {
+                    // This is a downgrade return true
+                    return true;
+                }
+            }
+        }
+    } catch(e) {
+        // an exception just occurred
+        return (true);
+    }
+    return false;
+}
+    
+function pm_choice1_selected() {
+  result = true;
+  result = result &amp;&amp; (isDowngrade() == false);
+  return result;
+}
+
+
+function pm_choice1_enabled() {
+  result = true;
+  result = result &amp;&amp; (isDowngrade() == false);
+  return result;
+}</script>
+
+    <choices-outline>
+        <line choice="netbeans">
+            <line choice="choice0"/>
+            <line choice="nbide"/>            
+        </line>       
+        <line choice="postinstallscripts"></line>
+    </choices-outline>
+    <choice id="netbeans" title="netbeans-title" description="netbeans-description" start_selected="true" start_enabled="true" start_visible="true"></choice>
+    <choice id="choice0" title="JDK_VERSION">
+        <pkg-ref id="com.oracle.jdk@JDK_VERSION_NUMBER@u@JDK_UPDATE_NUMBER_SHORT@"/>
+    </choice>
+    <choice id="nbide" title="nbide-title" description="nbide--description" start_selected="true" start_enabled="true" start_visible="true">
+        <pkg-ref id="ident.pkg.nbide"></pkg-ref>
+    </choice>
+    <choice id="postinstallscripts" title="postinstallscripts-title" description="postinstallscripts-description" start_selected="true" start_enabled="true" start_visible="false" selected="true" enabled="true" visible="false">
+        <pkg-ref id="ident.pkg.postinstallscripts"></pkg-ref>
+    </choice>
+    <pkg-ref id="com.oracle.jdk@JDK_VERSION_NUMBER@u@JDK_UPDATE_NUMBER_SHORT@" installKBytes="285148" version="1.1" auth="Root">jdk.pkg</pkg-ref>
+    <pkg-ref id="ident.pkg.nbide" version="0.0.0.0.1" installKBytes="@SIZE_BASEIDE@" auth="Root" onConclusion="None">nbide-@NB_ID@.pkg</pkg-ref>
+    <pkg-ref id="ident.pkg.postinstallscripts" version="0.0.0.0.1" auth="Root" onConclusion="None">postinstallscripts.pkg</pkg-ref>
+    <locator>
+        <search id="pkmktoken6-1" type="component">
+            <bundle CFBundleIdentifier="com.oracle.jmc" path="/Library/Java/JavaVirtualMachines/jdk1.@JDK_VERSION_NUMBER@.0_@JDK_UPDATE_NUMBER@.jdk/Contents/Home/lib/missioncontrol/Java Mission Control.app"/>
+        </search>
+        <search id="pkmktoken6-0" type="script" script="pkmktoken6_combined()">
+            <script>
+function pkmktoken6_combined() {
+	function pkmk_add_results_to_array(results, array) {
+		for(i = 0; i &lt; results.length; i++)
+			array.push(results[i]);
+	}
+	var result = new Array();
+	var search;
+	search = my.search.results['pkmktoken6-1'];
+	if(search) pkmk_add_results_to_array(search, result);
+	return result;
+}
+</script>
+        </search>
+        <search type="script" id="pkmktoken6" script="pkmktoken6_final()">
+            <script>
+function pkmktoken6_final() {
+	var combined = my.search.results['pkmktoken6-0'];
+	return combined;
+}
+</script>
+        </search>
+        <search id="pkmktoken18-1" type="component">
+            <bundle CFBundleIdentifier="org.andymatuschak.sparkle.finish-installation" path="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Frameworks/Sparkle.framework/Resources/finish_installation.app"/>
+        </search>
+        <search id="pkmktoken18-0" type="script" script="pkmktoken18_combined()">
+            <script>
+function pkmktoken18_combined() {
+	function pkmk_add_results_to_array(results, array) {
+		for(i = 0; i &lt; results.length; i++)
+			array.push(results[i]);
+	}
+	var result = new Array();
+	var search;
+	search = my.search.results['pkmktoken18-1'];
+	if(search) pkmk_add_results_to_array(search, result);
+	return result;
+}
+</script>
+        </search>
+        <search type="script" id="pkmktoken18" script="pkmktoken18_final()">
+            <script>
+function pkmktoken18_final() {
+	var combined = my.search.results['pkmktoken18-0'];
+	return combined;
+}
+</script>
+        </search>
+        <search id="pkmktoken22-1" type="component">
+            <bundle CFBundleIdentifier="org.andymatuschak.sparkle.finish-installation" path="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Frameworks/Sparkle.framework/Versions/A/Resources/finish_installation.app"/>
+        </search>
+        <search id="pkmktoken22-0" type="script" script="pkmktoken22_combined()">
+            <script>
+function pkmktoken22_combined() {
+	function pkmk_add_results_to_array(results, array) {
+		for(i = 0; i &lt; results.length; i++)
+			array.push(results[i]);
+	}
+	var result = new Array();
+	var search;
+	search = my.search.results['pkmktoken22-1'];
+	if(search) pkmk_add_results_to_array(search, result);
+	return result;
+}
+</script>
+        </search>
+        <search type="script" id="pkmktoken22" script="pkmktoken22_final()">
+            <script>
+function pkmktoken22_final() {
+	var combined = my.search.results['pkmktoken22-0'];
+	return combined;
+}
+</script>
+        </search>
+        <search id="pkmktoken26-1" type="component">
+            <bundle CFBundleIdentifier="org.andymatuschak.sparkle.finish-installation" path="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Frameworks/Sparkle.framework/Versions/Current/Resources/finish_installation.app"/>
+        </search>
+        <search id="pkmktoken26-0" type="script" script="pkmktoken26_combined()">
+            <script>
+function pkmktoken26_combined() {
+	function pkmk_add_results_to_array(results, array) {
+		for(i = 0; i &lt; results.length; i++)
+			array.push(results[i]);
+	}
+	var result = new Array();
+	var search;
+	search = my.search.results['pkmktoken26-1'];
+	if(search) pkmk_add_results_to_array(search, result);
+	return result;
+}
+</script>
+        </search>
+        <search type="script" id="pkmktoken26" script="pkmktoken26_final()">
+            <script>
+function pkmktoken26_final() {
+	var combined = my.search.results['pkmktoken26-0'];
+	return combined;
+}
+</script>
+        </search>
+        <search id="pkmktoken34-1" type="component">
+            <bundle CFBundleIdentifier="com.oracle.java.Java-Updater" path="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Resources/Java Updater.app"/>
+        </search>
+        <search id="pkmktoken34-0" type="script" script="pkmktoken34_combined()">
+            <script>
+function pkmktoken34_combined() {
+	function pkmk_add_results_to_array(results, array) {
+		for(i = 0; i &lt; results.length; i++)
+			array.push(results[i]);
+	}
+	var result = new Array();
+	var search;
+	search = my.search.results['pkmktoken34-1'];
+	if(search) pkmk_add_results_to_array(search, result);
+	return result;
+}
+</script>
+        </search>
+        <search type="script" id="pkmktoken34" script="pkmktoken34_final()">
+            <script>
+function pkmktoken34_final() {
+	var combined = my.search.results['pkmktoken34-0'];
+	return combined;
+}
+</script>
+        </search>
+    </locator>
+</installer-gui-script>

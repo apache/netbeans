@@ -1,0 +1,6 @@
+cal.beforeSelectEvent = new CE(defEvents.BEFORE_SELECT) 
+                                                      -
+HINT:Expected semicolon ; after ")".
+cal.beforeSelectEvent = new CE(defEvents.BEFORE_SELECT)    // commment   
+                                                      -
+HINT:Expected semicolon ; after ")".

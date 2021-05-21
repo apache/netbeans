@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="file:/C:/NetBeansProjects/AddNumbers.wsdl" uri="src/conf/xml-resources/web-services/FromWSDL/wsdl/AddNumbers.wsdl"/>
+</catalog>

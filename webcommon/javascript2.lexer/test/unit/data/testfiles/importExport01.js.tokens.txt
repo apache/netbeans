@@ -1,0 +1,30 @@
+<Unnamed test>
+KEYWORD_IMPORT  "import", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "Ember", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "from", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+STRING_BEGIN    "'", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+STRING          "ember", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+STRING_END      "'", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+KEYWORD_EXPORT  "export", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+KEYWORD_DEFAULT  "default", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "Ember", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "Route", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "extend", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+BRACKET_LEFT_PAREN  "(", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+BRACKET_LEFT_CURLY  "{", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+BRACKET_RIGHT_CURLY  "}", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+BRACKET_RIGHT_PAREN  ")", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+----- EOF -----
+

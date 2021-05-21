@@ -1,0 +1,6 @@
+Code completion result for source line:
+$af = sta|tic fn() => isset($this); // static
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+KEYWORD    static::                                   null
+------------------------------------
+KEYWORD    static                                     null

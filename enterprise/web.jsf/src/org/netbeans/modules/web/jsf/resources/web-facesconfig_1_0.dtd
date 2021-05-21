@@ -1,0 +1,910 @@
+<!--
+ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+ Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
+
+ The contents of this file are subject to the terms of either the GNU
+ General Public License Version 2 only ("GPL") or the Common Development
+ and Distribution License("CDDL") (collectively, the "License").  You
+ may not use this file except in compliance with the License. You can obtain
+ a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
+ or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
+ language governing permissions and limitations under the License.
+
+ When distributing the software, include this License Header Notice in each
+ file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
+ Sun designates this particular file as subject to the "Classpath" exception
+ as provided by Sun in the GPL Version 2 section of the License file that
+ accompanied this code.  If applicable, add the following below the License
+ Header, with the fields enclosed by brackets [] replaced by your own
+ identifying information: "Portions Copyrighted [year]
+ [name of copyright owner]"
+
+ Contributor(s):
+
+ If you wish your version of this file to be governed by only the CDDL or
+ only the GPL Version 2, indicate your decision by adding "[Contributor]
+ elects to include this software in this distribution under the [CDDL or GPL
+ Version 2] license."  If you don't indicate a single choice of license, a
+ recipient has the option to distribute your version of this file under
+ either the CDDL, the GPL Version 2 or to extend the choice of license to
+ its licensees as provided above.  However, if you add GPL Version 2 code
+ and therefore, elected the GPL Version 2 license, then the option applies
+ only if the new code is made subject to such option by the copyright
+ holder.
+-->
+
+<!--
+    DTD for the JavaServer Faces Application Configuration File (Version 1.0)
+
+    To support validation of your configuration file(s), include the following
+    DOCTYPE element at the beginning (after the "xml" declaration):
+
+    <!DOCTYPE faces-config PUBLIC
+     "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+     "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+
+    $Id: web-facesconfig_1_0.dtd,v 1.34 2007/06/19 18:17:20 rogerk Exp $
+
+-->
+
+
+<!-- ==================== Defined Types =================================== -->
+
+
+<!--
+    An "Action" is a String that represents a method binding
+    expression that points at a method with no arguments that returns a
+    String.  It must be bracketed with "#{}", for example,
+    "#{cardemo.buyCar}".
+-->
+<!ENTITY % Action "CDATA">
+
+
+<!--
+    A "ClassName" is the fully qualified name of a Java class that is
+    instantiated to provide the functionality of the enclosing element.
+-->
+<!ENTITY % ClassName "CDATA">
+
+
+<!--
+    An "Identifier" is a string of characters that conforms to the variable
+    naming conventions of the Java programming language (JLS Section ?.?.?).
+-->
+<!ENTITY % Identifier "CDATA">
+
+
+<!--
+    A "JavaType" is either the fully qualified name of a Java class that is
+    instantiated to provide the functionality of the enclosing element, or
+    the name of a Java primitive type (such as int or char).  The class name
+    or primitive type may optionally be followed by "[]" to indicate that
+    the underlying data must be an array, rather than a scalar variable.
+-->
+<!ENTITY % JavaType "CDATA">
+
+
+<!--
+    A "Language" is a lower case two-letter code for a language as defined
+    by ISL-639.
+-->
+<!ENTITY % Language "CDATA">
+
+
+<!--
+    A "ResourcePath" is the relative or absolute path to a resource file
+    (such as a logo image).
+-->
+<!ENTITY % ResourcePath "CDATA">
+
+
+<!--
+    A "Scope" is the well-known name of a scope in which managed beans may
+    optionally be defined to be created in.
+-->
+<!ENTITY % Scope "(request|session|application)">
+
+
+
+<!--
+    A "ScopeOrNone" element defines the legal values for the
+    <managed-bean-scope> element's body content, which includes
+    all of the scopes respresented by the "Scope" type, plus the
+    "none" value indicating that a created bean should not be
+    stored into any scope.
+-->
+<!ENTITY % ScopeOrNone "(request|session|application|none)">
+
+
+<!--
+    A "ViewIdPattern" is a pattern for matching view identifiers in
+    order to determine whether a particular navigation rule should be
+    fired.  It must contain one of the following values:
+
+    - The exact match for a view identifier that is recognized
+      by the the ViewHandler implementation being used (such as
+      "/index.jsp" if you are using the default ViewHandler).
+
+    - A proper prefix of a view identifier, plus a trailing "*"
+      character.  This pattern indicates that all view identifiers that
+      match the portion of the pattern up to the asterisk will match the
+      surrounding rule.  When more than one match exists, the match with
+      the longest pattern is selected.
+
+    - An "*" character, which means that this pattern applies to all
+      view identifiers.
+-->
+<!ENTITY % ViewIdPattern "CDATA">
+
+
+<!-- ==================== Top Level Elements ============================== -->
+
+
+<!--
+    The "faces-config" element is the root of the configuration information
+    hierarchy, and contains nested elements for all of the other configuration
+    settings.
+-->
+<!ELEMENT faces-config    ((application|factory|component|converter|managed-bean|navigation-rule|referenced-bean|render-kit|lifecycle|validator)*)>
+<!ATTLIST faces-config
+       xmlns CDATA #FIXED "http://java.sun.com/JSF/Configuration">
+
+
+
+<!-- ==================== Definition Elements ============================= -->
+
+
+<!--
+    The "application" element provides a mechanism to define the various
+    per-application-singleton implementation artifacts for a particular web
+    application that is utilizing JavaServer Faces.  For nested elements
+    that are not specified, the JSF implementation must provide a suitable
+    default.
+-->
+<!ELEMENT application     ((action-listener|default-render-kit-id|message-bundle|navigation-handler|view-handler|state-manager|property-resolver|variable-resolver|locale-config)*)>
+
+
+<!--
+    The "factory" element provides a mechanism to define the various
+    Factories that comprise parts of the implementation of JavaServer
+    Faces.  For nested elements that are not specified, the JSF
+    implementation must provide a suitable default.
+-->
+<!ELEMENT factory     ((application-factory|faces-context-factory|lifecycle-factory|render-kit-factory)*)>
+
+
+<!--
+    The "attribute" element represents a named, typed, value associated with
+    the parent UIComponent via the generic attributes mechanism.
+
+    Attribute names must be unique within the scope of the parent (or related)
+    component.
+-->
+<!ELEMENT attribute       (description*, display-name*, icon*, attribute-name, attribute-class, default-value?, suggested-value?, attribute-extension*)>
+
+<!-- 
+    Extension element for attribute.  May contain implementation
+    specific content.
+-->
+<!ELEMENT attribute-extension ANY>
+
+
+<!--
+    The "component" element represents a concrete UIComponent implementation
+    class that should be registered under the specified type identifier,
+    along with its associated properties and attributes.  Component types must
+    be unique within the entire web application.
+
+    Nested "attribute" elements identify generic attributes that are recognized
+    by the implementation logic of this component.  Nested "property" elements
+    identify JavaBeans properties of the component class that may be exposed
+    for manipulation via tools.
+-->
+<!ELEMENT component       (description*, display-name*, icon*, component-type, component-class, attribute*, property*, component-extension*)>
+
+<!-- 
+    Extension element for component.  May contain implementation
+    specific content.
+-->
+<!ELEMENT component-extension ANY>
+
+
+
+<!--
+    The "converter" element represents a concrete Converter implementation
+    class that should be registered under the specified converter identifier.
+    Converter identifiers must be unique within the entire web application.
+
+    Nested "attribute" elements identify generic attributes that may be
+    configured on the corresponding UIComponent in order to affect the
+    operation of the Converter.  Nested "property" elements identify JavaBeans
+    properties of the Converter implementation class that may be configured
+    to affect the operation of the Converter.
+-->
+<!ELEMENT converter       (description*, display-name*, icon*, (converter-id | converter-for-class), converter-class, attribute*, property*)>
+
+
+<!--
+    The "icon" element contains "small-icon" and "large-icon" elements that
+    specify the resoruce paths for small and large GIF or JPG icon images
+    used to represent the parent element in a GUI tool.
+-->
+<!ELEMENT icon            (small-icon?, large-icon?)>
+<!ATTLIST icon            xml:lang        %Language;      #IMPLIED>
+
+<!--
+    The "lifecycle" element provides a mechanism to specify
+    modifications to the behaviour of the default Lifecycle
+    implementation for this web application.
+-->
+<!ELEMENT lifecycle       (phase-listener*)>
+
+<!--
+     The "locale-config" element allows the app developer to declare the
+     supported locales for this application.  
+-->
+<!ELEMENT locale-config (default-locale?, supported-locale*)>
+
+<!--
+    The "managed-bean" element represents a JavaBean, of a particular class,
+    that will be dynamically instantiated at runtime (by the default
+    VariableResolver implementation) if it is referenced as the first element
+    of a value binding expression, and no corresponding bean can be
+    identified in any scope.  In addition to the creation of the managed bean,
+    and the optional storing of it into the specified scope, the nested
+    managed-property elements can be used to initialize the contents of
+    settable JavaBeans properties of the created instance.
+-->
+<!ELEMENT managed-bean (description*, display-name*, icon*, managed-bean-name, managed-bean-class, managed-bean-scope, (managed-property* | map-entries | list-entries))>
+
+
+<!--
+    The "managed-property" element represents an individual property of a
+    managed bean that will be configured to the specified value (or value set)
+    if the corresponding managed bean is automatically created.
+-->
+<!ELEMENT managed-property (description*, display-name*, icon*, property-name, property-class?, (map-entries|null-value|value|list-entries))>
+
+
+<!--
+    The "map-entry" element reprsents a single key-entry pair that
+    will be added to the computed value of a managed property of type
+    java.util.Map.
+-->
+<!ELEMENT map-entry (key, (null-value|value))>
+
+
+<!--
+    The "map-entries' element represents a set of key-entry pairs that
+    will be added to the computed value of a managed property of type
+    java.util.Map.  In addition, the Java class types of the key and entry
+    values may be optionally declared.
+-->
+<!ELEMENT map-entries (key-class?, value-class?, map-entry*)>
+
+
+<!--
+    The base name of a resource bundle representing the message resources
+    for this application.  See the JavaDocs for the "java.util.ResourceBundle"
+    class for more information on the syntax of resource bundle names.
+-->
+
+<!ELEMENT message-bundle (#PCDATA)>
+
+
+<!--
+    The "navigation-case" element describes a particular combination of
+    conditions that must match for this case to be executed, and the
+    view id of the component tree that should be selected next.
+-->
+<!ELEMENT navigation-case (description*, display-name*, icon*, from-action?, from-outcome?, to-view-id, redirect?)>
+
+
+<!--
+    The "navigation-rule" element represents an individual decision rule
+    that will be utilized by the default NavigationHandler
+    implementation to make decisions on what view should be displayed
+    next, based on the view id being processed.
+-->
+<!ELEMENT navigation-rule (description*, display-name*, icon*, from-view-id?, navigation-case*)>
+
+
+<!--
+    The "property" element represents a JavaBean property of the Java class
+    represented by our parent element.
+
+    Property names must be unique within the scope of the Java class
+    that is represented by the parent element, and must correspond to
+    property names that will be recognized when performing introspection
+    against that class via java.beans.Introspector.
+-->
+<!ELEMENT property        (description*, display-name*, icon*, property-name, property-class, default-value?, suggested-value?, property-extension*)>
+
+<!-- 
+    Extension element for property.  May contain implementation
+    specific content.
+-->
+<!ELEMENT property-extension ANY>
+
+<!--
+    The "referenced-bean" element represents at design time the promise
+    that a Java object of the specified type will exist at runtime in some
+    scope, under the specified key.  This can be used by design time tools
+    to construct user interface dialogs based on the properties of the
+    specified class.  The presence or absence of a referenced bean
+    element has no impact on the JavaServer Faces runtime environment
+    inside a web application.
+-->
+<!ELEMENT referenced-bean (description*, display-name*, icon*, referenced-bean-name, referenced-bean-class)>
+
+
+<!--
+    The "render-kit" element represents a concrete RenderKit implementation
+    that should be registered under the specified render-kit-id.  If no
+    render-kit-id is specified, the identifier of the default RenderKit
+    (RenderKitFactory.DEFAULT_RENDER_KIT) is assumed.
+-->
+<!ELEMENT render-kit      (description*, display-name*, icon*, render-kit-id?, render-kit-class?, renderer*)>
+
+
+<!--
+    The "renderer" element represents a concrete Renderer implementation
+    class that should be registered under the specified component family
+    and renderer type identifiers, in the RenderKit associated with the
+    parent "render-kit" element.  Combinations of component family and renderer
+    type must be unique within the RenderKit associated with the parent
+    "render-kit" element.
+
+    Nested "attribute" elements identify generic component attributes that
+    are recognized by this renderer.
+-->
+<!ELEMENT renderer        (description*, display-name*, icon*, component-family, renderer-type, renderer-class, attribute*, renderer-extension*)>
+
+<!-- 
+    Extension element for renderer.  May contain implementation
+    specific content.
+-->
+<!ELEMENT renderer-extension ANY>
+
+<!--
+    The "validator" element represents a concrete Validator implementation
+    class that should be registered under the specified validator identifier.
+    Validator identifiers must be unique within the entire web application.
+
+    Nested "attribute" elements identify generic attributes that may be
+    configured on the corresponding UIComponent in order to affect the
+    operation of the Validator.  Nested "property" elements identify JavaBeans
+    properties of the Validator implementation class that may be configured
+    to affect the operation of the Validator.
+-->
+<!ELEMENT validator       (description*, display-name*, icon*, validator-id, validator-class, attribute*, property*)>
+
+
+<!--
+    The "list-entries" element represents a set of initialization
+    elements for a managed property that is a java.util.List or an
+    array.  In the former case, the "value-class" element can optionally
+    be used to declare the Java type to which each value should be
+    converted before adding it to the Collection.
+-->
+<!ELEMENT list-entries    (value-class?, (null-value|value)*)>
+
+
+<!-- ==================== Subordinate Elements ============================ -->
+
+
+<!--
+    The "action-listener" element contains the fully qualified class name
+    of the concrete ActionListener implementation class that will be called
+    during the Invoke Application phase of the request processing lifecycle.
+    It must be of type "ClassName".
+-->
+<!ELEMENT action-listener (#PCDATA)>
+
+<!--
+    The "application-factory" element contains the fully qualified class
+    name of the concrete ApplicationFactory implementation class that
+    will be called when FactoryFinder.getFactory(APPLICATION_FACTORY) is
+    called. It must be of type "ClassName".
+-->
+<!ELEMENT application-factory (#PCDATA)>
+
+<!--
+    The "attribute-class" element represents the Java type of the value
+    associated with this attribute name.  It must be of type "ClassName".
+-->
+<!ELEMENT attribute-class (#PCDATA)>
+
+
+<!--
+    The "attribute-name" element represents the name under which the
+    corresponding value will be stored, in the generic attributes of the
+    UIComponent we are related to.
+-->
+<!ELEMENT attribute-name  (#PCDATA)>
+
+
+<!--
+    The "component-class" element represents the fully qualified class name
+    of a concrete UIComponent implementation class.  It must be of
+    type "ClassName".
+-->
+<!ELEMENT component-class (#PCDATA)>
+
+
+<!--
+    The "component-family" element represents the component family for
+    which the Renderer represented by the parent "renderer" element will be
+    used.
+-->
+<!ELEMENT component-family (#PCDATA)>
+
+<!--
+    The "component-type" element represents the name under which the
+    corresponding UIComponent class should be registered.
+-->
+<!ELEMENT component-type  (#PCDATA)>
+
+
+<!--
+    The "converter-class" element represents the fully qualified class name
+    of a concrete Converter implementation class.  It must be of
+    type "ClassName".
+-->
+<!ELEMENT converter-class (#PCDATA)>
+
+
+<!--
+    The "converter-for-class" element represents the fully qualified class name
+    for which a Converter class will be registered.  It must be of
+    type "ClassName".
+-->
+<!ELEMENT converter-for-class (#PCDATA)>
+
+
+<!--
+    The "converter-id" element represents the identifier under which the
+    corresponding Converter class should be registered.
+-->
+<!ELEMENT converter-id    (#PCDATA)>
+
+<!--
+    The "default-render-kit-id" element allows the application to define
+    a renderkit to be used other than the standard one. 
+-->
+<!ELEMENT default-render-kit-id   (#PCDATA)>
+
+<!--
+     The "default-locale" element declares the default locale for this
+     application instance.  It must be specified as
+     :language:[_:country:[_:variant:]] without the colons, for example
+     "ja_JP_SJIS".  The separators between the segments may be '-' or
+     '_'.
+-->
+<!ELEMENT default-locale (#PCDATA)>
+
+<!--
+    The "default-value" contains the value for the property or attribute
+    in which this element resides.  This value differs from the
+    "suggested-value" in that the property or attribute must take the
+    value, whereas in "suggested-value" taking the value is optional.
+-->
+<!ELEMENT default-value (#PCDATA)>
+
+<!--
+    The "description" element contains a textual description of the element
+    it is nested in, optionally flagged with a language code using the
+    "xml:lang" attribute.
+-->
+<!ELEMENT description     ANY>
+<!ATTLIST description     xml:lang        %Language;      #IMPLIED>
+
+
+<!--
+    The "display-name" element is a short descriptive name describing the
+    entity associated with the element it is nested in, intended to be
+    displayed by tools, and optionally flagged with a language code using
+    the "xml:lang" attribute.
+-->
+<!ELEMENT display-name    (#PCDATA)>
+<!ATTLIST display-name    xml:lang        %Language;      #IMPLIED>
+
+<!--
+    The "faces-context-factory" element contains the fully qualified
+    class name of the concrete FacesContextFactory implementation class
+    that will be called when
+    FactoryFinder.getFactory(FACES_CONTEXT_FACTORY) is called. It must
+    be of type "ClassName".
+-->
+<!ELEMENT faces-context-factory (#PCDATA)>
+
+<!--
+    The "from-action" element contains an action reference expression
+    that must have been executed (by the default ActionListener for handling
+    application level events) in order to select this navigation rule.  If
+    not specified, this rule will be relevant no matter which action reference
+    was executed (or if no action reference was executed).
+
+    This value must be of type "Action".
+-->
+<!ELEMENT from-action (#PCDATA)>
+
+
+<!--
+    The "from-outcome" element contains a logical outcome string returned
+    by the execution of an application action method selected via an
+    "actionRef" property (or a literal value specified by an "action"
+    property) of a UICommand component.  If specified, this rule will be
+    relevant only if the outcome value matches this element's value.  If
+    not specified, this rule will be relevant no matter what the outcome
+    value was.
+-->
+<!ELEMENT from-outcome    (#PCDATA)>
+
+
+<!--
+    The "from-view-id" element contains the view identifier of the view
+    for which the containing navigation rule is relevant.  If no
+    "from-view" element is specified, this rule applies to navigation
+    decisions on all views.  If this element is not specified, a value
+    of "*" is assumed, meaning that this navigation rule applies to all
+    views.
+
+    This value must be of type "ViewIdPattern".
+-->
+<!ELEMENT from-view-id    (#PCDATA)>
+
+
+<!--
+    The "key" element is the String representation of a map key that
+    will be stored in a managed property of type java.util.Map.  
+-->
+<!ELEMENT key             (#PCDATA)>
+
+
+<!--
+    The "key-class" element defines the Java type to which each "key"
+    element in a set of "map-entry" elements will be converted to.  It
+    must be of type "ClassName".  If omitted, "java.lang.String"
+    is assumed.
+-->
+<!ELEMENT key-class       (#PCDATA)>
+
+
+<!--
+    The "large-icon" element contains the resource path to a large (32x32)
+    icon image.  The image may be in either GIF or JPG format.
+-->
+<!ELEMENT large-icon      (#PCDATA)>
+
+<!--
+    The "lifecycle-factory" element contains the fully qualified class name
+    of the concrete LifecycleFactory implementation class that will be called
+    when FactoryFinder.getFactory(LIFECYCLE_FACTORY) is called. It must be 
+    of type "ClassName".
+-->
+<!ELEMENT lifecycle-factory (#PCDATA)>
+
+<!--
+    The "managed-bean-class" element represents the fully qualified class
+    name of the Java class that will be used to instantiate a new instance
+    if creation of the specified managed bean is requested.  It must be of
+    type "ClassName".
+
+    The specified class must conform to standard JavaBeans conventions.
+    In particular, it must have a public zero-arguments constructor, and
+    zero or more public property setters.
+-->
+<!ELEMENT managed-bean-class  (#PCDATA)>
+
+
+<!--
+    The "managed-bean-name" element represents the attribute name under
+    which a managed bean will be searched for, as well as stored (unless
+    the "managed-bean-scope" value is "none").  It must be of type
+    "Identifier".
+-->
+<!ELEMENT managed-bean-name (#PCDATA)>
+
+
+<!--
+    The "managed-bean-scope" element represents the scope into which a newly
+    created instance of the specified managed bean will be stored (unless
+    the value is "none").  It must be of type "ScopeOrNone".
+-->
+<!ELEMENT managed-bean-scope (#PCDATA)>
+
+<!--
+    The "navigation-handler" element contains the fully qualified class name
+    of the concrete NavigationHandler implementation class that will be called
+    during the Invoke Application phase of the request processing lifecycle,
+    if the default ActionListener (provided by the JSF implementation) is used.
+    It must be of type "ClassName".
+-->
+<!ELEMENT navigation-handler (#PCDATA)>
+
+<!--
+The "phase-listener" element contains the fully qualified class
+name of the concrete PhaseListener implementation class that will be
+registered on the Lifecycle. It must be of type "ClassName".
+-->
+<!ELEMENT phase-listener (#PCDATA)>
+
+<!--
+    The "redirect" element indicates that navigation to the specified
+    "to-view-id" should be accomplished by performing an HTTP redirect
+    rather than the usual ViewHandler mechanisms.
+-->
+<!ELEMENT redirect EMPTY>
+
+<!--
+    The "suggested-value" contains the value for the property or
+    attribute in which this element resides.  This value is advisory
+    only and is intended for tools to use when populating pallettes.
+-->
+<!ELEMENT suggested-value (#PCDATA)>
+
+
+<!--
+
+    The "view-handler" element contains the fully qualified class name
+    of the concrete ViewHandler implementation class that will be called
+    during the Restore View and Render Response phases of the request
+    processing lifecycle.  The faces implementation must provide a
+    default implementation of this class
+-->
+<!ELEMENT view-handler (#PCDATA)>
+
+<!--
+
+    The "state-manager" element contains the fully qualified class name
+    of the concrete StateManager implementation class that will be called
+    during the Restore View and Render Response phases of the request
+    processing lifecycle.  The faces implementation must provide a
+    default implementation of this class
+-->
+<!ELEMENT state-manager (#PCDATA)>
+
+<!--
+    The "null-value" element indicates that the managed property in which we
+    are nested will be explicitly set to null if our managed bean is
+    automatically created.  This is different from omitting the managed
+    property element entirely, which will cause no property setter to be
+    called for this property.
+
+    The "null-value" element can only be used when the associated
+    "property-class" identifies a Java class, not a Java primitive.
+-->
+<!ELEMENT null-value EMPTY>
+
+
+<!--
+    The "property-class" element represents the Java type of the value
+    associated with this property name.  It must be of type "JavaType".
+    If not specified, it can be inferred from existing classes; however,
+    this element should be specified if the configuration file is going
+    to be the source for generating the corresponding classes.
+-->
+<!ELEMENT property-class  (#PCDATA)>
+
+
+<!--
+    The "property-name" element represents the JavaBeans property name
+    under which the corresponding value may be stored.
+-->
+<!ELEMENT property-name   (#PCDATA)>
+
+
+<!--
+    The "property-resolver" element contains the fully qualified class name
+    of the concrete PropertyResolver implementation class that will be used
+    during the processing of value binding expressions.
+    It must be of type "ClassName".
+-->
+<!ELEMENT property-resolver (#PCDATA)>
+
+
+<!--
+    The "referenced-bean-class" element represents the fully qualified class
+    name of the Java class (either abstract or concrete) or Java interface
+    implemented by the corresponding referenced bean.  It must be of type
+    "ClassName".
+-->
+<!ELEMENT referenced-bean-class  (#PCDATA)>
+
+
+<!--
+    The "referenced-bean-name" element represents the attribute name under
+    which the corresponding referenced bean may be assumed to be stored,
+    in one of the scopes defined by the "Scope" type.  It must be of type
+    "Identifier".
+-->
+<!ELEMENT referenced-bean-name (#PCDATA)>
+
+
+<!--
+    The "render-kit-id" element represents an identifier for the
+    RenderKit represented by the parent "render-kit" element.
+-->
+<!ELEMENT render-kit-id   (#PCDATA)>
+
+
+<!--
+    The "render-kit-class" element represents the fully qualified class name
+    of a concrete RenderKit implementation class.  It must be of
+    type "ClassName".
+-->
+<!ELEMENT render-kit-class (#PCDATA)>
+
+
+<!--
+    The "renderer-class" element represents the fully qualified class name
+    of a concrete Renderer implementation class.  It must be of
+    type "ClassName".
+-->
+<!ELEMENT renderer-class  (#PCDATA)>
+
+<!--
+    The "render-kit-factory" element contains the fully qualified class name
+    of the concrete RenderKitFactory implementation class that will be called
+    when FactoryFinder.getFactory(RENDER_KIT_FACTORY) is called. It must be 
+    of type "ClassName".
+-->
+<!ELEMENT render-kit-factory (#PCDATA)>
+
+<!--
+    The "renderer-type" element represents a renderer type identifier for the
+    Renderer represented by the parent "renderer" element.
+-->
+<!ELEMENT renderer-type   (#PCDATA)>
+
+<!--
+    The "small-icon" element contains the resource path to a large (16x16)
+    icon image.  The image may be in either GIF or JPG format.
+-->
+<!ELEMENT small-icon      (#PCDATA)>
+
+<!--
+     The "supported-locale" element allows authors to declare which
+     locales are supported in this application instance.
+
+     It must be specified as :language:[_:country:[_:variant:]] without
+     the colons, for example "ja_JP_SJIS".  The separators between the
+     segments may be '-' or '_'.
+-->
+<!ELEMENT supported-locale (#PCDATA)>
+
+<!--
+    The "to-view" element contains the view identifier of the next view
+    that should be displayed if this navigation rule is matched.  It
+    must be of type "ViewId".
+-->
+<!ELEMENT to-view-id      (#PCDATA)>
+
+
+<!--
+    The "validator-class" element represents the fully qualified class name
+    of a concrete Validator implementation class.  It must be of
+    type "ClassName".
+-->
+<!ELEMENT validator-class (#PCDATA)>
+
+
+<!--
+    The "validator-id" element represents the identifier under which the
+    corresponding Validator class should be registered.
+-->
+<!ELEMENT validator-id    (#PCDATA)>
+
+
+<!--
+    The "value" element is the String representation of a literal
+    value to which a scalar managed property will be set, or a value
+    binding expression ("#{...}") that will be used to calculate the
+    required value.  It will be converted as specified for the actual
+    property type.
+-->
+<!ELEMENT value (#PCDATA)>
+
+
+<!--
+    The "value-class" element defines the Java type to which each
+    "value" element's value will be converted to, prior to adding it to
+    the "list-entries" list for a managed property that is a
+    java.util.List, or a "map-entries" map for a managed property that
+    is a java.util.Map.  It must be of type "ClassName".  If omitted,
+    "java.lang.String" is assumed.
+-->
+<!ELEMENT value-class (#PCDATA)>
+
+<!--
+    The "variable-resolver" element contains the fully qualified class name
+    of the concrete VariableResolver implementation class that will be used
+    during the processing of value binding expressions.
+    It must be of type "ClassName".
+-->
+<!ELEMENT variable-resolver (#PCDATA)>
+
+
+<!-- ============================ Identifier Attributes ==================== -->
+
+
+<!ATTLIST action-listener                   id ID #IMPLIED>
+<!ATTLIST application                       id ID #IMPLIED>
+<!ATTLIST application-factory               id ID #IMPLIED>
+<!ATTLIST attribute                         id ID #IMPLIED>
+<!ATTLIST attribute-class                   id ID #IMPLIED>
+<!ATTLIST attribute-extension               id ID #IMPLIED>
+<!ATTLIST attribute-name                    id ID #IMPLIED>
+<!ATTLIST component                         id ID #IMPLIED>
+<!ATTLIST component-class                   id ID #IMPLIED>
+<!ATTLIST component-extension               id ID #IMPLIED>
+<!ATTLIST component-family                  id ID #IMPLIED>
+<!ATTLIST component-type                    id ID #IMPLIED>
+<!ATTLIST converter                         id ID #IMPLIED>
+<!ATTLIST converter-class                   id ID #IMPLIED>
+<!ATTLIST converter-for-class               id ID #IMPLIED>
+<!ATTLIST converter-id                      id ID #IMPLIED>
+<!ATTLIST default-locale                    id ID #IMPLIED>
+<!ATTLIST default-render-kit-id             id ID #IMPLIED>
+<!ATTLIST default-value                     id ID #IMPLIED>
+<!ATTLIST description                       id ID #IMPLIED>
+<!ATTLIST display-name                      id ID #IMPLIED>
+<!ATTLIST faces-config                      id ID #IMPLIED>
+<!ATTLIST faces-context-factory             id ID #IMPLIED>
+<!ATTLIST factory                           id ID #IMPLIED>
+<!ATTLIST from-action                       id ID #IMPLIED>
+<!ATTLIST from-outcome                      id ID #IMPLIED>
+<!ATTLIST from-view-id                      id ID #IMPLIED>
+<!ATTLIST icon                              id ID #IMPLIED>
+<!ATTLIST key                               id ID #IMPLIED>
+<!ATTLIST key-class                         id ID #IMPLIED>
+<!ATTLIST large-icon                        id ID #IMPLIED>
+<!ATTLIST lifecycle                         id ID #IMPLIED>
+<!ATTLIST lifecycle-factory                 id ID #IMPLIED>
+<!ATTLIST list-entries                      id ID #IMPLIED>
+<!ATTLIST locale-config                     id ID #IMPLIED>
+<!ATTLIST managed-bean                      id ID #IMPLIED>
+<!ATTLIST managed-bean-class                id ID #IMPLIED>
+<!ATTLIST managed-bean-name                 id ID #IMPLIED>
+<!ATTLIST managed-bean-scope                id ID #IMPLIED>
+<!ATTLIST managed-property                  id ID #IMPLIED>
+<!ATTLIST map-entries                       id ID #IMPLIED>
+<!ATTLIST map-entry                         id ID #IMPLIED>
+<!ATTLIST message-bundle                    id ID #IMPLIED>
+<!ATTLIST navigation-case                   id ID #IMPLIED>
+<!ATTLIST navigation-handler                id ID #IMPLIED>
+<!ATTLIST navigation-rule                   id ID #IMPLIED>
+<!ATTLIST null-value                        id ID #IMPLIED>
+<!ATTLIST phase-listener                    id ID #IMPLIED>
+<!ATTLIST property                          id ID #IMPLIED>
+<!ATTLIST property-class                    id ID #IMPLIED>
+<!ATTLIST property-extension                id ID #IMPLIED>
+<!ATTLIST property-name                     id ID #IMPLIED>
+<!ATTLIST property-resolver                 id ID #IMPLIED>
+<!ATTLIST redirect                          id ID #IMPLIED>
+<!ATTLIST referenced-bean                   id ID #IMPLIED>
+<!ATTLIST referenced-bean-class             id ID #IMPLIED>
+<!ATTLIST referenced-bean-name              id ID #IMPLIED>
+<!ATTLIST render-kit                        id ID #IMPLIED>
+<!ATTLIST render-kit-class                  id ID #IMPLIED>
+<!ATTLIST render-kit-factory                id ID #IMPLIED>
+<!ATTLIST render-kit-id                     id ID #IMPLIED>
+<!ATTLIST renderer                          id ID #IMPLIED>
+<!ATTLIST renderer-class                    id ID #IMPLIED>
+<!ATTLIST renderer-extension                id ID #IMPLIED>
+<!ATTLIST renderer-type                     id ID #IMPLIED>
+<!ATTLIST small-icon                        id ID #IMPLIED>
+<!ATTLIST state-manager                     id ID #IMPLIED>
+<!ATTLIST suggested-value                   id ID #IMPLIED>
+<!ATTLIST supported-locale                  id ID #IMPLIED>
+<!ATTLIST to-view-id                        id ID #IMPLIED>
+<!ATTLIST validator                         id ID #IMPLIED>
+<!ATTLIST validator-class                   id ID #IMPLIED>
+<!ATTLIST validator-id                      id ID #IMPLIED>
+<!ATTLIST value                             id ID #IMPLIED>
+<!ATTLIST value-class                       id ID #IMPLIED>
+<!ATTLIST variable-resolver                 id ID #IMPLIED>
+<!ATTLIST view-handler                      id ID #IMPLIED>
+

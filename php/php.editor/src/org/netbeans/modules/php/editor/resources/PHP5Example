@@ -1,0 +1,64 @@
+<?php
+
+namespace My\Great\Space;
+
+trait Feature {
+    public function returnFive() {
+        // just a dummy code
+        return 5;
+    }
+}
+
+class TestClass {
+    use Feature;
+
+    const CONSTANT = 1;
+
+    /** @var string */
+    public $everywhere = "Everyone can read me!";
+
+    /** @var string */
+    protected $under = "Descendants and such...";
+
+    /** @var string */
+    private $here = "Just me and such...";
+
+    /**
+     * Just prints private field.
+     * @return void
+     */
+    public function printPrivate() {
+        echo $this->here;
+    }
+
+    /**
+     * readFile - do something
+     * @param string $src Path to dir or textfile (local or remote)
+     * @return string The content of the file or NULL
+     */
+    public static function readFile($src) {
+        if (!isset($src)) {
+            return NULL;
+        } else {
+            // TODO: read the $src file
+            return "Not yet implemented";
+        }
+    }
+
+}
+
+$cls = new TestClass();
+
+echo TestClass::CONSTANT;
+echo $cls->everywhere;
+echo $cls->returnFive();
+$cls->printPrivate();
+
+echo "File: " . TestClass::readFile("/tmp/greetings.txt");
+
+$name = "Petr";
+echo <<<HEREDOC
+Hello $name!
+HEREDOC;
+
+?>

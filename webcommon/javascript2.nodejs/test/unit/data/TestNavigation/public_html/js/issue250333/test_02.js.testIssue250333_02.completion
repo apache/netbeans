@@ -1,0 +1,7 @@
+Code completion result for source line:
+aaa.|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      exports                         [PUBLIC]   <font color=#999999>test_01.js</font>
+FIELD      a: Number                       [PUBLIC]   newjavascript.js
+FIELD      b: Number                       [PUBLIC]   newjavascript.js

@@ -1,0 +1,2 @@
+    this.|>MARK_OCCURRENCES:methodB<| = |>MARK_OCCURRENCES:metho^dB<|;   // <- the methodB is marked as global
+    function |>MARK_OCCURRENCES:methodB<|(){

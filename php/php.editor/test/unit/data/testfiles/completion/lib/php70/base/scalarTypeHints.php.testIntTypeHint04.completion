@@ -1,0 +1,6 @@
+Code completion result for source line:
+function __construct(in|t $arg) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      IntClass                        [PUBLIC]   scalarTypeHints.php
+------------------------------------
+KEYWORD    int                                        null

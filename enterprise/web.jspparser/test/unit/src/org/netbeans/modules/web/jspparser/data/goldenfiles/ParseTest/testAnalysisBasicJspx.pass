@@ -1,0 +1,208 @@
+--------- JspParserAPI.parseResult(), success: true
+ ---- PAGEINFO
+----- PageInfo -----
+      imports:
+        javax.servlet.*
+        javax.servlet.http.*
+        javax.servlet.jsp.*
+      dependants:
+      taglibsMap:
+        tag library: http://java.sun.com/jsp/jstl/core
+            tlibversion : 1.1
+            jspversion  : 2.0
+            shortname   : c
+            urn         : http://java.sun.com/jsp/jstl/core
+            info        : JSTL 1.1 core library
+            uri         : http://java.sun.com/jsp/jstl/core
+              tag name     : catch
+                  class    : org.apache.taglibs.standard.tag.common.core.CatchTag
+                  attribs  : [var]
+              tag name     : choose
+                  class    : org.apache.taglibs.standard.tag.common.core.ChooseTag
+                  attribs  : []
+              tag name     : if
+                  class    : org.apache.taglibs.standard.tag.rt.core.IfTag
+                  attribs  : [test, var, scope]
+              tag name     : import
+                  class    : org.apache.taglibs.standard.tag.rt.core.ImportTag
+                  attribs  : [url, var, scope, varReader, context, charEncoding]
+              tag name     : forEach
+                  class    : org.apache.taglibs.standard.tag.rt.core.ForEachTag
+                  attribs  : [items, begin, end, step, var, varStatus]
+              tag name     : forTokens
+                  class    : org.apache.taglibs.standard.tag.rt.core.ForTokensTag
+                  attribs  : [items, delims, begin, end, step, var, varStatus]
+              tag name     : out
+                  class    : org.apache.taglibs.standard.tag.rt.core.OutTag
+                  attribs  : [value, default, escapeXml]
+              tag name     : otherwise
+                  class    : org.apache.taglibs.standard.tag.common.core.OtherwiseTag
+                  attribs  : []
+              tag name     : param
+                  class    : org.apache.taglibs.standard.tag.rt.core.ParamTag
+                  attribs  : [name, value]
+              tag name     : redirect
+                  class    : org.apache.taglibs.standard.tag.rt.core.RedirectTag
+                  attribs  : [url, context]
+              tag name     : remove
+                  class    : org.apache.taglibs.standard.tag.common.core.RemoveTag
+                  attribs  : [var, scope]
+              tag name     : set
+                  class    : org.apache.taglibs.standard.tag.rt.core.SetTag
+                  attribs  : [var, value, target, property, scope]
+              tag name     : url
+                  class    : org.apache.taglibs.standard.tag.rt.core.UrlTag
+                  attribs  : [var, scope, value, context]
+              tag name     : when
+                  class    : org.apache.taglibs.standard.tag.rt.core.WhenTag
+                  attribs  : [test]
+      prefixMapper:
+      approxXmlPrefixMapper :
+        c -> http://java.sun.com/jsp/jstl/core
+      language            : java
+      xtends              : org.apache.jasper.runtime.HttpJspBase
+      contentType         : text/html;charset=UTF-8
+      session             : true
+      buffer              : 8192
+      autoFlush           : true
+      threadSafe          : true
+      isErrorPage         : false
+      errorPage           : null
+      scriptless          : true
+      scriptingInvalid    : false
+      elIgnored           : false
+      omitXmlDecl         : null
+      isJspPrefixHijacked : false
+      doctypeName         : null
+      doctypeSystem       : null
+      doctypePublic       : null
+      hasJspRoot          : true
+      prefixes:
+        c
+        jsp
+        xmlns
+      includePrelude:
+      includeCoda:
+      pluginDcls:
+      beans:
+ ------- XML View (constructed from the original data structure) -----
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root
+  version="2.0"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:jsp="http://java.sun.com/JSP/Page"
+  jsp:id="0"
+>
+<jsp:directive.page
+  jsp:id="1"
+  pageEncoding="UTF-8"
+  contentType="text/html;charset=UTF-8"
+/>
+<jsp:element
+  name="text"
+  jsp:id="2"
+>
+<jsp:attribute
+  name="lang"
+  jsp:id="3"
+>
+<![CDATA[
+EN]]>
+</jsp:attribute>
+<jsp:body
+  jsp:id="4"
+>
+<![CDATA[
+
+            Hello World!
+            ]]>
+<c:out
+  value="bye"
+  jsp:id="5"
+/>
+<c:set
+  value="${empty param[&quot;name&quot;] ? &quot;JSPX&quot; : param[&quot;name&quot;]}"
+  var="name"
+  jsp:id="6"
+/>
+<c:forEach
+  end="24"
+  begin="1"
+  var="i"
+  jsp:id="7"
+>
+<jsp:text
+  jsp:id="8"
+>
+<![CDATA[
+
+                  ]]>
+<![CDATA[
+<div class="nested">]]>
+<![CDATA[
+
+                ]]>
+</jsp:text>
+<![CDATA[
+
+                ]]>
+${${name}}
+<![CDATA[
+
+            ]]>
+</c:forEach>
+<c:forEach
+  end="24"
+  begin="1"
+  var="i"
+  jsp:id="9"
+>
+<jsp:text
+  jsp:id="10"
+>
+<![CDATA[
+</div>]]>
+</jsp:text>
+</c:forEach>
+<span
+  style="font-size:75;font-family:Serif;"
+  jsp:id="11"
+>
+${${name}}
+</span>
+</jsp:body>
+</jsp:element>
+</jsp:root>
+
+ ---- NODES
+
+Node [/basic.jspx(6,4), Comment] <%-- 
+    Document   : basic
+    Created on : 31.1.2008, 11:05:20
+    Author     : tmysik
+--%>
+Node [/basic.jspx(9,71), PageDirective] <%@ page pageEncoding="UTF-8" contentType="text/html"%>
+Node [/basic.jspx(11,54), Comment] <%-- any content can be specified here, e.g.: --%>
+Node [/basic.jspx(13,36), NamedAttribute] <jsp:attribute name="lang">  
+Node [/basic.jspx(13,36), TemplateText]   EN</jsp:attribute>
+Node [/basic.jspx(14,19), JspBody] <jsp:body>  
+Node [/basic.jspx(14,19), TemplateText]   
+            Hello World!
+              
+Node [/basic.jspx(16,33), CustomTag]   <c:out value="bye">  </c:out>  
+Node [/basic.jspx(18,88), CustomTag]   <c:set value="${empty param["name"] ? "JSPX" : param["name"]}" var="name">  </c:set>  
+Node [/basic.jspx(20,51), CustomTag]   <c:forEach end="24" begin="1" var="i">    
+Node [/basic.jspx(21,27), TemplateText]     
+                      
+Node [/basic.jspx(22,28), TemplateText]     <div class="nested">    
+Node [/basic.jspx(22,51), TemplateText]     
+                    
+Node [/basic.jspx(23,28), TemplateText]     
+                    
+Node [/basic.jspx(24,17), ELExpression]     ${name}    
+Node [/basic.jspx(24,24), TemplateText]     
+              </c:forEach>  
+Node [/basic.jspx(26,51), CustomTag]   <c:forEach end="24" begin="1" var="i">    
+Node [/basic.jspx(27,36), TemplateText]     </div>  </c:forEach>  
+Node [/basic.jspx(29,59), UninterpretedTag]   <span style="font-size:75;font-family:Serif;">    
+Node [/basic.jspx(29,59), ELExpression]     ${name}  </span></jsp:body>

@@ -1,0 +1,2 @@
+    static |>MARK_OCCURRENCES:distance<|(a, b) {
+console.log(Point.|>MARK_OCCURRENCES:distan^ce<|(p1, p2)); 

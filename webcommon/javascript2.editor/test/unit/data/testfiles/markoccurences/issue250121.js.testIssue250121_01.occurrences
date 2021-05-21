@@ -1,0 +1,4 @@
+var |>MARK_OCCURRENCES:MyContext<| = {};
+ * @typedef {Object} |>MARK_OCCURRENCES:MyContext<|~Address description
+ * @param {|>MARK_OCCURRENCES:MyCon^text<|~Address} addressDescription
+|>MARK_OCCURRENCES:MyContext<|.prototype.createAddress = function (addressDescription){};              

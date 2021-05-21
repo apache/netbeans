@@ -1,0 +1,6 @@
+    "sdf" => array(^1, 2, 3)
+---------------------------
+HINT:You can use new shorter array creation syntax
+FIX:Use New Array Creation Syntax
+HINT:You can use new shorter array creation syntax
+FIX:Use New Array Creation Syntax

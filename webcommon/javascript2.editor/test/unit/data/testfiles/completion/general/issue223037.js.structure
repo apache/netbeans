@@ -1,0 +1,10 @@
+slideIndex:CLASS:[PUBLIC]:ESCAPED{slideIndex}:
+  content:CLASS:[PUBLIC]:ESCAPED{content}:
+    numberOfSlide:FIELD:[PUBLIC]:ESCAPED{numberOfSlide}<font color="#999999">ESCAPED{ : }Number</font>:
+    slides:CLASS:[PUBLIC]:ESCAPED{slides}:
+      simpleSlide:FIELD:[PUBLIC]:ESCAPED{simpleSlide}<font color="#999999">ESCAPED{ : }Array</font>:
+      titles:FIELD:[PUBLIC]:ESCAPED{titles}<font color="#999999">ESCAPED{ : }Array</font>:
+    title:FIELD:[PUBLIC]:ESCAPED{title}<font color="#999999">ESCAPED{ : }String</font>:
+  host:FIELD:[PUBLIC]:ESCAPED{host}<font color="#999999">ESCAPED{ : }host</font>:
+  sendResponse:METHOD:[PUBLIC]:ESCAPED{sendResponse}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    index:VARIABLE:[PRIVATE]:ESCAPED{index}<font color="#999999">ESCAPED{ : }Number</font>:

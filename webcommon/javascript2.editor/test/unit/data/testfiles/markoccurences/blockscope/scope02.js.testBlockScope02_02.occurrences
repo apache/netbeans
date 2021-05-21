@@ -1,0 +1,2 @@
+        function |>MARK_OCCURRENCES:getNumber<|() {  // function 2
+        console.log(|>MARK_OCCURRENCES:getN^umber<|()); // 2

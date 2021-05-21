@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.foo/1
-OpenIDE-Module-Name: Foo test module
-

@@ -1,0 +1,6 @@
+Code completion result for source line:
+rnewe.rgetAttempt().a|a;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      aa: Number                      [PUBLIC]   rrfunc.js
+FIELD      ab: Number                      [PUBLIC]   rrfunc.js

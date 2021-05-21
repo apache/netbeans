@@ -1,0 +1,2 @@
+var |>MARK_OCCURRENCES:Polygon<| = class {
+var p = new |>MARK_OCCURRENCES:Pol^ygon<| (10,20);

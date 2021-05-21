@@ -1,0 +1,95 @@
+[y.cha|, String charCodeAt ( index ) : Number, y.charCodeAt(index), 150]
+String charAt ( index ) : Stri
+String charCodeAt ( index ) : 
+End cursor position = 169
+[de|, debugger, debugger, 182]
+CSSMediaRule deleteRule ( Numb
+CSSStyleSheet deleteRule ( Num
+CharacterData deleteData ( Num
+Core JS decodeURI ( encodedURI
+Core JS decodeURIComponent ( e
+Document defaultView
+Document designMode
+DocumentView defaultView : Abs
+Event detail
+HTMLInputElement defaultChecke
+HTMLInputElement defaultValue 
+HTMLObjectElement declare : Bo
+HTMLOptionElement defaultSelec
+HTMLScriptElement defer : Bool
+HTMLTableElement deleteCaption
+HTMLTableElement deleteRow ( N
+HTMLTableElement deleteTFoot (
+HTMLTableElement deleteTHead (
+HTMLTableRowElement deleteCell
+HTMLTableSectionElement delete
+HTMLTextAreaElement defaultVal
+MediaList deleteMedium ( Strin
+NodeIterator detach () : void
+Range deleteContents () : void
+Range detach () : void
+Selection deleteFromDocument (
+Stylesheet deleteRule ( index 
+Table deleteCaption () : void
+Table deleteRow ( index ) : vo
+Table deleteTFoot () : void
+Table deleteTHead () : void
+TableRow deleteCell ( index ) 
+UIEvent detail : Number
+Window defaultStatus : String
+debugger
+default
+delete
+End cursor position = 191
+[va|, var, var, 204]
+Array valueOf () : void
+Attr value : String
+Boolean valueOf () : void
+Date valueOf () : Number
+Function valueOf () : void
+HTMLButtonElement value : Stri
+HTMLInputElement value : Strin
+HTMLLIElement value : Number
+HTMLOptionElement value : Stri
+HTMLParamElement value : Strin
+HTMLParamElement valueType : S
+HTMLSelectElement value : Stri
+HTMLTextAreaElement value : St
+Number valueOf () : Number
+Object valueOf () : void
+String valueOf () : String
+var
+End cursor position = 208
+[St|, Core JS String, String, 240]
+Core JS String
+Core JS String
+Core JS String ( string )
+Core JS String ( val )
+DOM Storage
+DOM Style
+DOM Style
+DOM StyleSheet
+DOM StyleSheet
+DOM StyleSheetList
+DOM StyleSheetList
+DOM Stylesheet
+DOM Stylesheet
+FlashPlayer StopPlay ()
+static
+End cursor position = 247
+[my|, testJS.js myfunction () : void, myfunction(), 305]
+testJS.js myfunction () : void
+testJS.js myvariable
+End cursor position = 318
+[my|, testJS.js myvariable, myvariable, 359]
+testJS.js myfunction () : void
+testJS.js myvariable
+End cursor position = 370
+[Ra|, Core JS RangeError, RangeError, 403]
+Core JS RangeError
+Core JS RangeError
+DOM Range
+DOM Range
+DOM RangeException
+DOM RangeException
+End cursor position = 414

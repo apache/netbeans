@@ -1,0 +1,15 @@
+<?php
+trait MyTrait
+{
+    public function hello() {
+        echo "hello";
+    }
+}
+
+class MyClass {
+
+    |>MARK_BC:use MyTrait
+    {<|
+        hello as protected;
+    } // use
+}

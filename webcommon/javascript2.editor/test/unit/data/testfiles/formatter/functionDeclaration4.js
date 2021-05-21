@@ -1,0 +1,12 @@
+function x() {a
+}
+
+function b() { b}
+
+var x=1, d = function c(){return xxx}, c =1, d = ""
+
+var test =  {
+    getDescription: function () {
+        return "test"
+    }, a:5, testFuntion: function(){return x}, b:7
+}

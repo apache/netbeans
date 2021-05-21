@@ -1,0 +1,2 @@
+    "|>MARK_OCCURRENCES:jquery1.6+<|": function () { console.log("Running");},
+dependencies["|>MARK_OCCURRENCES:jqu^ery1.6+<|"]();

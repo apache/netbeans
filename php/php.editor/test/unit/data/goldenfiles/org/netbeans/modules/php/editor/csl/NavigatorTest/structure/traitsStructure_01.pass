@@ -1,0 +1,4 @@
+|-MyTrait [13, 87] : ESCAPED{MyTrait}
+|--$traitField [35, 45] : ESCAPED{$traitField}
+|--traitFoo [72, 85] : ESCAPED{traitFoo}ESCAPED{(}ESCAPED{)}
+|-TraitedClass [95, 128] : ESCAPED{TraitedClass}<font color="#999999">#ESCAPED{MyTrait}</font>

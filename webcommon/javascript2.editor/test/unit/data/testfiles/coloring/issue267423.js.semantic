@@ -1,0 +1,4 @@
+function |>METHOD:test<|() {   
+    if (|>GLOBAL:origin<| !== undefined) 
+       return;
+}  

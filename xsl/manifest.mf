@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.xsl/1
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/xsl/resources/Bundle.properties
-OpenIDE-Module-Layer: org/netbeans/modules/xsl/resources/mf-layer.xml
-OpenIDE-Module-Requires: org.openide.util.HttpServer$Impl
-AutoUpdate-Show-In-Client: false
-OpenIDE-Module-Specification-Version: 1.45

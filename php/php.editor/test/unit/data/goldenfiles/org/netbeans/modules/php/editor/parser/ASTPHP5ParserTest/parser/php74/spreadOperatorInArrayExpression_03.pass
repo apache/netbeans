@@ -1,0 +1,117 @@
+<testresult testFile='spreadOperatorInArrayExpression_03.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='833' end='840'>
+            <text>$array1</text>
+        </token>
+        <token id='T_EQUAL' start='841' end='842'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='843' end='844'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='844' end='845'>
+            <text>0</text>
+        </token>
+        <token id='T_COMMA' start='845' end='846'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='847' end='848'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='848' end='849'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='850' end='851'>
+            <text>2</text>
+        </token>
+        <token id='T_COMMA' start='851' end='852'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='853' end='854'>
+            <text>3</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='854' end='855'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='855' end='856'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='857' end='863'>
+            <text>$array</text>
+        </token>
+        <token id='T_EQUAL' start='864' end='865'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='866' end='867'>
+            <text>[</text>
+        </token>
+        <token id='T_ELLIPSIS' start='867' end='870'>
+            <text>...</text>
+        </token>
+        <token id='T_REFERENCE' start='870' end='871'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_VARIABLE' start='871' end='878'>
+            <text>$array1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='878' end='879'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='879' end='880'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='881' end='881'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='881'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='815' end='833' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='815' end='833' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='833' end='856'>
+                <Assignment start='833' end='855' operator='EQUAL'>
+                    <Variable start='833' end='840' isDollared='true'>
+                        <Identifier start='834' end='840' name='array1'/>
+                    </Variable>
+                    <ArrayCreation start='843' end='855' type='NEW'>
+                        <ArrayElement start='844' end='845'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='844' end='845' type='INT' value='0'/>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='847' end='848'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='847' end='848' type='INT' value='1'/>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='850' end='851'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='850' end='851' type='INT' value='2'/>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='853' end='854'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='853' end='854' type='INT' value='3'/>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ASTError start='857' end='870'/>
+            <ASTError start='871' end='878'/>
+            <EmptyStatement start='879' end='880'/>
+        </Statements>
+    </Program>
+</testresult>

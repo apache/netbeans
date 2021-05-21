@@ -1,0 +1,7 @@
+Code completion result for source line:
+this.|content.slides.titles[0] = {};
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      content                         [PUBLIC]   issue222993.js
+METHOD     sendResponse(): undefined       [PUBLIC]   issue222993.js
+FIELD      host: host                      [PUBLIC]   issue222993.js

@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>New Entity Classes from Database Wizard: Entity Classes</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.j2ee.persistence.wizard.fromdb.EntityClassesPanel" name="org.netbeans.modules.j2ee.persistence.wizard.fromdb.EntityClassesPanel"></a></p>
+<div id="NBCSH5040"><!-- infolevel="all" infotype="General" --><a id="sthref748" name="sthref748"></a>
+<h1>New Entity Classes from Database Wizard: Entity Classes</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to generate a set of entity classes from an existing database connection or schema. The IDE generates an entity class for each related table with persistent fields. The wizard takes you through the steps of choosing the database connection or schema, and then selecting the tables in the database that will be used to generate the entity classes. You can also use the optional mapping page to configure annotation elements that are generated in the entity class. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2778">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>In this page of the wizard you set the following:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t3">Element</th>
+<th align="left" valign="bottom" id="r1c2-t3">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t3" headers="r1c1-t3">
+<p>Class Names</p>
+</td>
+<td align="left" headers="r2c1-t3 r1c2-t3">Displays the name of the class that is generated for each table listed. The Generation Type column displays if the class will be new, updated or recreated.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t3" headers="r1c1-t3">
+<p>Project</p>
+</td>
+<td align="left" headers="r3c1-t3 r1c2-t3">Displays the project where the entity classes will be saved. This field is read only.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t3" headers="r1c1-t3">
+<p>Location</p>
+</td>
+<td align="left" headers="r4c1-t3 r1c2-t3">Specifies the source folder.
+<p>Select the source folder where you want to create the entity class.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t3" headers="r1c1-t3">
+<p>Package</p>
+</td>
+<td align="left" headers="r5c1-t3 r1c2-t3">Specifies an existing package.
+<p>Select a package from the Package drop-down list or type the name of a new package.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t3" headers="r1c1-t3">
+<p>Generate Named Query Annotations for Persistent Fields</p>
+</td>
+<td align="left" headers="r6c1-t3 r1c2-t3">When selected, the IDE generates named query annotations in the entity classes.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t3" headers="r1c1-t3">
+<p>Generate JAXB Annotations</p>
+</td>
+<td align="left" headers="r7c1-t3 r1c2-t3">When selected, the IDE generates annotations in the entity class for mapping the class to an XML element that can then be used by a JAXB web service.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t3" headers="r1c1-t3">
+<p>Generate MappedSuperclasses instead of Entities</p>
+</td>
+<td align="left" headers="r8c1-t3 r1c2-t3">When selected, the IDE generates a mapped superclass instead of an entity class for each table that you selected. Each class is decorated with the <code dir="ltr">@MappedSuperclass</code> annotation.
+<p>When this option is selected the Generate Named Query option is disabled.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t3" headers="r1c1-t3">
+<p>Create Persistence Unit</p>
+</td>
+<td align="left" headers="r9c1-t3 r1c2-t3">When selected, the IDE generates a persistence unit based upon the selected datasource. This option is not visible if a persistence unit already exists.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>When you select a data source or JDBC connection, the IDE also creates a database schema for the database and saves it in your <code dir="ltr">src/conf</code> folder.</p>
+<p>To persist entity classes, your project requires a persistence unit. When you create the entity class, the IDE checks if there is a persistence unit for the project. If the IDE cannot locate a persistence unit, the Create Persistence Unit button appears. Click <b>Create Persistence Unit</b> to open the Create Persistence Unit wizard. Alternatively, you can create a persistence unit later by choosing <b>Persistence</b> &gt; <b>Persistence Unit</b> in the New File wizard.</p>
+<a id="NBCSH5049" name="NBCSH5049"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2773">
+<param name="text" value="<html><u>&quot;Creating an Entity Class&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

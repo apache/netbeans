@@ -1,0 +1,19 @@
+<?php
+class |>CLASS:Monitor<| {
+
+    public function |>METHOD:__construct<|() {
+        echo "Monitor constructor\n";
+    }
+    private function |>METHOD:__get<|($name) {
+        echo("getter ".$name."\n");
+    }
+
+    private function |>METHOD:__set<|($name, $value) {
+        echo("setter ".$name." value: ".$value."\n");
+    }
+
+    private function |>METHOD,UNUSED:test<|() {
+
+    }
+}
+?>

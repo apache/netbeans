@@ -1,0 +1,25 @@
+CVS            >  Checkout...                         k
+                  Import into Repository...           m
+                  Change CVS Root...                  n
+                  =================================
+                  Update Project with Dependencies    p
+                  =================================
+                  Show Changes                        w
+                  Diff                                D
+                  Update                              U
+                  Commit...                           o
+                  =================================
+                  Export Diff Patch...                x
+                  Apply Diff Patch...                 y
+                  =================================
+                  Tag...                              T
+                  Branches                        >   B
+                  =================================
+                  Show Annotations                    A
+                  View Revision...                    i
+                  Search History...                   H
+                  =================================
+                  Revert Modifications                R
+                  Resolve Conflicts...                v
+                  Ignore                              g  [or] Unignore
+                  Exclude from Commit                 e

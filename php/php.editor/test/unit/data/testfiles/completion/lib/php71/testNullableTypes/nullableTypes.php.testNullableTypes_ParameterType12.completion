@@ -1,0 +1,5 @@
+Code completion result for source line:
+public static function interfaceParameterTypeStatic(?Foo $foo, ?st|ring $stirng): ?string; // CC
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    string                                     null

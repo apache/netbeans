@@ -1,0 +1,5 @@
+org.netbeans.modules.php.dbgp.actions.ContinueActionProvider
+org.netbeans.modules.php.dbgp.actions.RunToCursorActionProvider
+org.netbeans.modules.php.dbgp.actions.StepIntoActionProvider
+org.netbeans.modules.php.dbgp.actions.StepOutActionProvider
+org.netbeans.modules.php.dbgp.actions.StepOverActionProvider

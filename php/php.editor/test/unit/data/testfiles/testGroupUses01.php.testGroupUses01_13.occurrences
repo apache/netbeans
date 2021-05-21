@@ -1,0 +1,2 @@
+    B\C\ClsABC2 AS |>MARK_OCCURRENCES:MyCls<|
+$mycls = new |>MARK_OCCURRENCES:MyCl^s<|();

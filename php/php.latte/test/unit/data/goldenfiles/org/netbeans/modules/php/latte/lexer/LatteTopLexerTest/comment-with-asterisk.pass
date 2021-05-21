@@ -1,0 +1,4 @@
+token #0 T_LATTE_COMMENT_DELIMITER [{*]
+token #1 T_LATTE_COMMENT [*\n * lkjsdhf lkdsajf hlsakjdfh dsf\n * sdf safs dsfds sdf ds\n *  asdf dsaff hsajfhsa lkjf hlksajd hf\n * s df dsafdsafds f\n ]
+token #2 T_LATTE_COMMENT_DELIMITER [*}]
+token #3 T_HTML [\n<!DOCTYPE html>\n<html>\n<head>\n\t<title>Nette Application Skeleton</title>\n</head>\n<body>\n\n</body>\n</html>]

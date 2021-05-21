@@ -1,0 +1,48 @@
+token #0 T_INLINE_HTML --TEST--\nHeredocs can be used as default property value.\n--FILE--\n
+token #1 PHP_OPENTAG <?php
+token #2 WHITESPACE \n\n
+token #3 PHP_CLASS class
+token #4 WHITESPACE  
+token #5 PHP_STRING e
+token #6 WHITESPACE  
+token #7 PHP_CURLY_OPEN {
+token #8 WHITESPACE \n\n    
+token #9 PHP_PUBLIC public
+token #10 WHITESPACE  
+token #11 PHP_VARIABLE $e
+token #12 WHITESPACE  
+token #13 PHP_OPERATOR =
+token #14 WHITESPACE  
+token #15 PHP_HEREDOC_TAG_START <<<THISMUSTNOTERROR\n
+token #16 PHP_CONSTANT_ENCAPSED_STRING If you see this, everything is ok.
+token #17 PHP_CONSTANT_ENCAPSED_STRING \n
+token #18 PHP_HEREDOC_TAG_END THISMUSTNOTERROR
+token #19 PHP_SEMICOLON ;
+token #20 WHITESPACE \n\n
+token #21 PHP_CURLY_CLOSE }
+token #22 PHP_SEMICOLON ;
+token #23 WHITESPACE \n
+token #24 PHP_VARIABLE $e
+token #25 WHITESPACE  
+token #26 PHP_OPERATOR =
+token #27 WHITESPACE  
+token #28 PHP_NEW new
+token #29 WHITESPACE  
+token #30 PHP_STRING e
+token #31 PHP_TOKEN (
+token #32 PHP_TOKEN )
+token #33 PHP_SEMICOLON ;
+token #34 WHITESPACE \n
+token #35 PHP_PRINT print
+token #36 WHITESPACE  
+token #37 PHP_VARIABLE $e
+token #38 PHP_OBJECT_OPERATOR ->
+token #39 PHP_STRING e
+token #40 WHITESPACE  
+token #41 PHP_TOKEN .
+token #42 WHITESPACE  
+token #43 PHP_CONSTANT_ENCAPSED_STRING "\n"
+token #44 PHP_SEMICOLON ;
+token #45 WHITESPACE \n\n
+token #46 PHP_CLOSETAG ?>
+token #47 T_INLINE_HTML \n--EXPECT--\nIf you see this, everything is ok.\n

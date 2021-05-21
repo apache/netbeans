@@ -1,0 +1,4 @@
+Code completion result for source line:
+TestCCOnMethods::crea|te();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     create()                        [STATIC]   TestCCOnMethods

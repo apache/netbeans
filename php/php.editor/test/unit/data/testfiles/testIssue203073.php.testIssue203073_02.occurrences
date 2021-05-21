@@ -1,0 +1,4 @@
+    class |>MARK_OCCURRENCES:FirstParent<| {
+    use Full\Name\Space\|>MARK_OCCURRENCES:First^Parent<| as SecondParent;
+    use Full\Name\Space\|>MARK_OCCURRENCES:FirstParent<|;
+    class Yours1 extends |>MARK_OCCURRENCES:FirstParent<| {

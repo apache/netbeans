@@ -1,0 +1,20 @@
+Code completion result for source line:
+private int|\Test1\UnionTypes2||
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    Test1                           [PUBLIC]   null
+PACKAGE    Test2                           [PUBLIC]   null
+CLASS      Test                            [PUBLIC]   Test2
+CLASS      UnionTypes1                     [PUBLIC]   Test1
+CLASS      UnionTypes2                     [PUBLIC]   Test1
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    false                                      null
+KEYWORD    float                                      null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    null                                       null
+KEYWORD    object                                     null
+KEYWORD    parent                                     null
+KEYWORD    self                                       null
+KEYWORD    string                                     null

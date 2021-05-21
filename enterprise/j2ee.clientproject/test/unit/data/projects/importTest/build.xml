@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See commented blocks below for -->
+<!-- some examples of how to customize the build. -->
+<!-- (If you delete it and reopen the project it will be recreated.) -->
+<project name="ApplicationClientImport" default="default" basedir=".">
+    <description>Builds, tests, and runs the project ApplicationClientImport.</description>
+
+    <target name="build">
+        <obfuscate>
+            <fileset dir="${build.classes.dir}"/>
+        </obfuscate>
+    </target>
+    <target name="run" depends="ApplicationClient1.5-impl.jar">
+        <exec dir="bin" executable="launcher.exe">
+            <arg file="${dist.jar}"/>
+        </exec>
+    </target>
+
+</project>

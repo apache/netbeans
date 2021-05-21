@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="j2ee">
+        <folder name="webtier">
+            <folder name="framework">
+                <file name="org-netbeans-modules-spring-webmvc-SpringWebFrameworkProvider.instance">
+                    <attr name="position" intvalue="200"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="org-netbeans-api-project-libraries">
+        <folder name="Libraries">
+            <file name="spring-webmvc-5.0.xml" url="spring-webmvc-5.0.xml">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.spring.webmvc.resources.Bundle#spring-webmvc5"/>
+            </file>
+            <file name="spring-webmvc-4.0.xml" url="spring-webmvc-4.0.xml">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.spring.webmvc.resources.Bundle#spring-webmvc4"/>
+            </file>
+            <file name="spring-webmvc-3.0.xml" url="spring-webmvc-3.0.xml">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.spring.webmvc.resources.Bundle#spring-webmvc3"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Templates">
+        <folder name="SpringFramework">
+            <file name="AbstractController.java" url="templates/AbstractController.template">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.spring.webmvc.resources.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.gif"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.spi.java.project.support.ui.templates.JavaTemplates.createJavaTemplateIterator"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="servlet-types"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/spring/webmvc/resources/abstractController.html"/>
+                <attr name="position" intvalue="200"/>
+            </file>
+            <file name="SimpleFormController.java" url="templates/SimpleFormController.template">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.spring.webmvc.resources.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.gif"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.spi.java.project.support.ui.templates.JavaTemplates.createJavaTemplateIterator"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="servlet-types"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/spring/webmvc/resources/simpleFormController.html"/>
+                <attr name="position" intvalue="300"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="SpringFramework">
+        <folder name="Templates">
+            <file name="applicationContext-3.xml" url="templates/applicationContext3.template">
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="dispatcher-servlet-3.xml" url="templates/dispatcher-servlet3.template">
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="applicationContext-4.xml" url="templates/applicationContext4.template">
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="dispatcher-servlet-4.xml" url="templates/dispatcher-servlet4.template">
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="index.jsp" url="templates/index.template">
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="redirect.jsp" url="templates/redirect.template">
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-springconfig+xml">
+                <folder name="CodeGenerators">
+                    <file name="org-netbeans-modules-spring-webmvc-editor-BeanCodeGenerator$Factory.instance">
+                        <attr name="position" intvalue="107"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="x-java">
+                <folder name="CodeGenerators">
+                    <file name="org-netbeans-modules-spring-webmvc-editor-BeanCodeGenerator$Factory.instance">
+                        <attr name="position" intvalue="107"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

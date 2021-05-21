@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="unit" tests="1" assertions="0" errors="0" failures="1" skipped="0" time="0.020000">
+    <testcase name="testGetBar" class="ProjectX\FooTest" classname="ProjectX.FooTest" file="/home/kacer/projectx/tests/unit/FooTest.php" line="6" assertions="0" time="0.020000">
+      <warning type="PHPUnit\Framework\Warning">ProjectX\FooTest::testGetBar
+Trying to configure method "getBarAAA" which cannot be configured because it does not exist, has not been specified, is final, or is static
+
+</warning>
+    </testcase>
+  </testsuite>
+</testsuites>

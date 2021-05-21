@@ -1,0 +1,23 @@
+FUNCTION issue252135 [ANONYMOUS: false, DECLARED: true - issue252135, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+aa      : FUNCTION aa [ANONYMOUS: false, DECLARED: true - aa, MODIFIERS: PUBLIC, FUNCTION]
+        # RETURN TYPES
+        undefined, RESOLVED: true
+        # PROPERTIES
+        arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+        bb        : FUNCTION bb [ANONYMOUS: false, DECLARED: true - bb, MODIFIERS: PRIVATE, FUNCTION]
+                  # RETURN TYPES
+                  undefined, RESOLVED: true
+                  # PROPERTIES
+                  arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                  bb        : CYCLE aa.bb
+console : OBJECT console [ANONYMOUS: false, DECLARED: false - console, MODIFIERS: PUBLIC, OBJECT]
+        # PROPERTIES
+        log : FUNCTION log [ANONYMOUS: false, DECLARED: false - log, MODIFIERS: PUBLIC, METHOD]
+            # PARAMETERS
+            OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+            # PROPERTIES
+            arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+count   : OBJECT count [ANONYMOUS: false, DECLARED: true - count, MODIFIERS: PUBLIC, VARIABLE]

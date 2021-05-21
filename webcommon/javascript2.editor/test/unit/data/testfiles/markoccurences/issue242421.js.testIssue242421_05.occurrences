@@ -1,0 +1,4 @@
+   var |>MARK_OCCURRENCES:v^<| = expand(path, ref, pfx, options);
+   if( options && options.option1 && (|>MARK_OCCURRENCES:v<| === path) )
+   |>MARK_OCCURRENCES:v<| = page.root + '~/' + |>MARK_OCCURRENCES:v<|;
+   return |>MARK_OCCURRENCES:v<|;

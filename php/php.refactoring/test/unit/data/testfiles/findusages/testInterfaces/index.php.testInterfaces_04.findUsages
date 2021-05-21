@@ -1,0 +1,14 @@
+Display text: interface <b>MyFace</b> {}
+File name: index.php
+Name: MyFace
+Position: BEGIN: 35 END: 41
+
+Display text: use First\<b>MyFace</b>;
+File name: index.php
+Name: MyFace
+Position: BEGIN: 75 END: 81
+
+Display text: interface AnotherFace extends <b>MyFace</b> {}
+File name: index.php
+Name: MyFace
+Position: BEGIN: 114 END: 120

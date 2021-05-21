@@ -1,0 +1,55 @@
+package foo;
+
+class |>CLASS:Hello1<| {
+
+    int |>FIELD:field1<| = 1;
+    public |>FIELD:publicField<| = 1
+    protected |>FIELD:protectedField<| = 2
+    private |>FIELD:privateField<| = 3
+    def |>FIELD:name<| = 'World'
+
+    |>CONSTRUCTOR:Hello1<|(int inputval) {
+	|>FIELD:field1<| = inputval
+    }
+
+    static void |>METHOD,STATIC:main<|(args) {
+        String s = 'aaa'
+        println 'Hello, world'
+    }
+
+    void |>METHOD:dynamicmethod<|() {
+        |>FIELD:field1<| = 2
+        this.field1 = 77
+    }
+
+    def |>FIELD:greeting<| = {
+        println "Hello, ${|>FIELD:name<|}!"
+    }
+
+}
+
+class |>CLASS:SecondTestClass<| {
+
+    |>CONSTRUCTOR:SecondTestClass<| (int f) {
+    }
+
+    |>CONSTRUCTOR:SecondTestClass<| (String str) {
+    }
+}
+
+class |>CLASS:ThirdTestClass<| {
+
+    |>CONSTRUCTOR:ThirdTestClass<| (int f) {
+    }
+
+    |>CONSTRUCTOR:ThirdTestClass<| (String str) {
+    }
+}
+
+class |>CLASS:FourthClass<| {}
+
+Hello1 hello = new Hello1()
+hello.field1 = 9
+
+println "End."
+

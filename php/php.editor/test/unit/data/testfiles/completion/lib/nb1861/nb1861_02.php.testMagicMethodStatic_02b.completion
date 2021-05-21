@@ -1,0 +1,8 @@
+Code completion result for source line:
+Example::getDefault()->|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     getDefault()                    [STATIC]   Example
+METHOD     staticTest()                    [STATIC]   Example
+METHOD     test()                          [PUBLIC]   Example
+METHOD     testType(Test $test)            [PUBLIC]   Example
+METHOD     testVoid(Test $test)            [PUBLIC]   Example

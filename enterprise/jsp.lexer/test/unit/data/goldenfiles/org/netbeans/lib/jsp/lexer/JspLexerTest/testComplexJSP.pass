@@ -1,0 +1,354 @@
+TOKEN[text="<%@"; tokenId=SYMBOL; offset=0]
+TOKEN[text="page"; tokenId=TAG; offset=3]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=7]
+TOKEN[text="contentType"; tokenId=ATTRIBUTE; offset=8]
+TOKEN[text="="; tokenId=SYMBOL; offset=19]
+TOKEN[text=""text/html""; tokenId=ATTR_VALUE; offset=20]
+TOKEN[text="%>"; tokenId=SYMBOL; offset=31]
+TOKEN[text="
+"; tokenId=TEXT; offset=33]
+TOKEN[text="<%@"; tokenId=SYMBOL; offset=34]
+TOKEN[text=" page"; tokenId=TAG; offset=37]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=42]
+TOKEN[text="pageEncoding"; tokenId=ATTRIBUTE; offset=43]
+TOKEN[text="="; tokenId=SYMBOL; offset=55]
+TOKEN[text=""UTF-8""; tokenId=ATTR_VALUE; offset=56]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=63]
+TOKEN[text="%>"; tokenId=SYMBOL; offset=64]
+TOKEN[text="
+"; tokenId=TEXT; offset=66]
+TOKEN[text="<%@"; tokenId=SYMBOL; offset=67]
+TOKEN[text="page"; tokenId=TAG; offset=70]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=74]
+TOKEN[text="import"; tokenId=ATTRIBUTE; offset=75]
+TOKEN[text="="; tokenId=SYMBOL; offset=81]
+TOKEN[text=""java.util.Date, java.io.*""; tokenId=ATTR_VALUE; offset=82]
+TOKEN[text="%>"; tokenId=SYMBOL; offset=109]
+TOKEN[text="
+"; tokenId=TEXT; offset=111]
+TOKEN[text="<%@"; tokenId=SYMBOL; offset=112]
+TOKEN[text=" taglib"; tokenId=TAG; offset=115]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=122]
+TOKEN[text="tagdir"; tokenId=ATTRIBUTE; offset=123]
+TOKEN[text="="; tokenId=SYMBOL; offset=129]
+TOKEN[text=""/WEB-INF/tags/""; tokenId=ATTR_VALUE; offset=130]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=146]
+TOKEN[text="prefix"; tokenId=ATTRIBUTE; offset=147]
+TOKEN[text="="; tokenId=SYMBOL; offset=153]
+TOKEN[text=""tag""; tokenId=ATTR_VALUE; offset=154]
+TOKEN[text="%>"; tokenId=SYMBOL; offset=159]
+TOKEN[text="
+"; tokenId=TEXT; offset=161]
+TOKEN[text="<%@"; tokenId=SYMBOL; offset=162]
+TOKEN[text="taglib"; tokenId=TAG; offset=165]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=171]
+TOKEN[text="uri"; tokenId=ATTRIBUTE; offset=172]
+TOKEN[text="="; tokenId=SYMBOL; offset=175]
+TOKEN[text=""http://java.sun.com/jstl/core_rt""; tokenId=ATTR_VALUE; offset=176]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=210]
+TOKEN[text="prefix"; tokenId=ATTRIBUTE; offset=211]
+TOKEN[text="="; tokenId=SYMBOL; offset=217]
+TOKEN[text=""c""; tokenId=ATTR_VALUE; offset=218]
+TOKEN[text="%>"; tokenId=SYMBOL; offset=221]
+TOKEN[text="
+"; tokenId=TEXT; offset=223]
+TOKEN[text="<%@"; tokenId=SYMBOL; offset=224]
+TOKEN[text=" taglib"; tokenId=TAG; offset=227]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=234]
+TOKEN[text="uri"; tokenId=ATTRIBUTE; offset=235]
+TOKEN[text="="; tokenId=SYMBOL; offset=238]
+TOKEN[text=""/WEB-INF/missing.tld""; tokenId=ATTR_VALUE; offset=239]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=261]
+TOKEN[text="prefix"; tokenId=ATTRIBUTE; offset=262]
+TOKEN[text="="; tokenId=SYMBOL; offset=268]
+TOKEN[text=""missing""; tokenId=ATTR_VALUE; offset=269]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=278]
+TOKEN[text="%>"; tokenId=SYMBOL; offset=279]
+TOKEN[text="
+<html>
+    <head><title>JSP CC Page</title></head>
+    <body>
+        <h1 title="Session Creation time">
+        index.jsp - "; tokenId=TEXT; offset=281]
+TOKEN[text="<%="; tokenId=SYMBOL2; offset=407]
+TOKEN[text=" new java.util.Date(session.getCreationTime()).toGMTString()"; tokenId=SCRIPTLET; offset=410]
+TOKEN[text="%>"; tokenId=SYMBOL2; offset=470]
+TOKEN[text="</h1>
+
+        "; tokenId=TEXT; offset=472]
+TOKEN[text="<"; tokenId=SYMBOL; offset=487]
+TOKEN[text="missing:SimpleTag"; tokenId=TAG; offset=488]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=505]
+TOKEN[text="name"; tokenId=ATTRIBUTE; offset=506]
+TOKEN[text="="; tokenId=SYMBOL; offset=510]
+TOKEN[text=""My Name""; tokenId=ATTR_VALUE; offset=511]
+TOKEN[text="/>"; tokenId=SYMBOL; offset=520]
+TOKEN[text="
+        "; tokenId=TEXT; offset=522]
+TOKEN[text="<"; tokenId=SYMBOL; offset=531]
+TOKEN[text="tag:MyTag"; tokenId=TAG; offset=532]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=541]
+TOKEN[text="title"; tokenId=ATTRIBUTE; offset=542]
+TOKEN[text="="; tokenId=SYMBOL; offset=547]
+TOKEN[text=""My title""; tokenId=ATTR_VALUE; offset=548]
+TOKEN[text="/>"; tokenId=SYMBOL; offset=558]
+TOKEN[text=" 
+"; tokenId=TEXT; offset=560]
+TOKEN[text="<%"; tokenId=SYMBOL2; offset=562]
+TOKEN[text="
+    String var = "str";
+    var.getBytes(); /*CC var.| */
+    int i = 0;
+    char ch = 'a';
+    if (true) {
+        switch (aa) {
+            case 0: a = b;
+            default: run ();
+        }
+    }
+    // comment
+"; tokenId=SCRIPTLET; offset=564]
+TOKEN[text="%>"; tokenId=SYMBOL2; offset=782]
+TOKEN[text="
+
+"; tokenId=TEXT; offset=784]
+TOKEN[text="<%-- comment --%>"; tokenId=COMMENT; offset=786]
+TOKEN[text="
+<!-- a text -->
+"; tokenId=TEXT; offset=803]
+TOKEN[text="<%"; tokenId=SYMBOL2; offset=820]
+TOKEN[text="
+    var.compareTo("AA"); //CC var.|
+"; tokenId=SCRIPTLET; offset=822]
+TOKEN[text="%>"; tokenId=SYMBOL2; offset=859]
+TOKEN[text="
+
+        "; tokenId=TEXT; offset=861]
+TOKEN[text="<"; tokenId=SYMBOL; offset=871]
+TOKEN[text="jsp:useBean"; tokenId=TAG; offset=872]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=883]
+TOKEN[text="id"; tokenId=ATTRIBUTE; offset=884]
+TOKEN[text="="; tokenId=SYMBOL; offset=886]
+TOKEN[text=""var2""; tokenId=ATTR_VALUE; offset=887]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=893]
+TOKEN[text="scope"; tokenId=ATTRIBUTE; offset=894]
+TOKEN[text="="; tokenId=SYMBOL; offset=899]
+TOKEN[text=""request""; tokenId=ATTR_VALUE; offset=900]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=909]
+TOKEN[text="class"; tokenId=ATTRIBUTE; offset=910]
+TOKEN[text="="; tokenId=SYMBOL; offset=915]
+TOKEN[text=""java.util.Date""; tokenId=ATTR_VALUE; offset=916]
+TOKEN[text="/>"; tokenId=SYMBOL; offset=932]
+TOKEN[text="
+        "; tokenId=TEXT; offset=934]
+TOKEN[text="<%-- jsp:useBean id="var2" scope="request" class="| --%>"; tokenId=COMMENT; offset=943]
+TOKEN[text="
+
+        Date2: "; tokenId=TEXT; offset=999]
+TOKEN[text="<%="; tokenId=SYMBOL2; offset=1016]
+TOKEN[text=" System.currentTimeMillis()"; tokenId=SCRIPTLET; offset=1019]
+TOKEN[text="%>"; tokenId=SYMBOL2; offset=1046]
+TOKEN[text="<%--CC System.| --%>"; tokenId=COMMENT; offset=1048]
+TOKEN[text="
+        Params: "; tokenId=TEXT; offset=1068]
+TOKEN[text="<%="; tokenId=SYMBOL2; offset=1085]
+TOKEN[text=" request.getParameterMap()"; tokenId=SCRIPTLET; offset=1088]
+TOKEN[text="%>"; tokenId=SYMBOL2; offset=1114]
+TOKEN[text="<%--CC request.| --%>"; tokenId=COMMENT; offset=1116]
+TOKEN[text="
+
+        "; tokenId=TEXT; offset=1137]
+TOKEN[text="<%-- html comments --%>"; tokenId=COMMENT; offset=1147]
+TOKEN[text="
+        <!--
+        "; tokenId=TEXT; offset=1170]
+TOKEN[text="<"; tokenId=SYMBOL; offset=1192]
+TOKEN[text="jsp:include"; tokenId=TAG; offset=1193]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=1204]
+TOKEN[text="page"; tokenId=ATTRIBUTE; offset=1205]
+TOKEN[text="="; tokenId=SYMBOL; offset=1209]
+TOKEN[text=""yyy.jsp""; tokenId=ATTR_VALUE; offset=1210]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=1219]
+TOKEN[text="flush"; tokenId=ATTRIBUTE; offset=1220]
+TOKEN[text="="; tokenId=SYMBOL; offset=1225]
+TOKEN[text=""false""; tokenId=ATTR_VALUE; offset=1226]
+TOKEN[text="/>"; tokenId=SYMBOL; offset=1233]
+TOKEN[text="<%-- CC <jsp:include page="| --%>"; tokenId=COMMENT; offset=1235]
+TOKEN[text="
+"; tokenId=TEXT; offset=1268]
+TOKEN[text="<%"; tokenId=SYMBOL2; offset=1269]
+TOKEN[text="
+    var.equals("aa"); //CC var.|
+"; tokenId=SCRIPTLET; offset=1271]
+TOKEN[text="%>"; tokenId=SYMBOL2; offset=1305]
+TOKEN[text="
+        -->
+        "; tokenId=TEXT; offset=1307]
+TOKEN[text="<"; tokenId=SYMBOL; offset=1328]
+TOKEN[text="jsp:include"; tokenId=TAG; offset=1329]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=1340]
+TOKEN[text="page"; tokenId=ATTRIBUTE; offset=1341]
+TOKEN[text="="; tokenId=SYMBOL; offset=1345]
+TOKEN[text=""yyy.jsp""; tokenId=ATTR_VALUE; offset=1346]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=1355]
+TOKEN[text="flush"; tokenId=ATTRIBUTE; offset=1356]
+TOKEN[text="="; tokenId=SYMBOL; offset=1361]
+TOKEN[text=""false""; tokenId=ATTR_VALUE; offset=1362]
+TOKEN[text="/>"; tokenId=SYMBOL; offset=1369]
+TOKEN[text=" 
+
+        <ul>
+            "; tokenId=TEXT; offset=1371]
+TOKEN[text="<"; tokenId=SYMBOL; offset=1399]
+TOKEN[text="c:forTokens"; tokenId=TAG; offset=1400]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=1411]
+TOKEN[text="items"; tokenId=ATTRIBUTE; offset=1412]
+TOKEN[text="="; tokenId=SYMBOL; offset=1417]
+TOKEN[text=""a,b,c""; tokenId=ATTR_VALUE; offset=1418]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=1425]
+TOKEN[text="delims"; tokenId=ATTRIBUTE; offset=1426]
+TOKEN[text="="; tokenId=SYMBOL; offset=1432]
+TOKEN[text="",""; tokenId=ATTR_VALUE; offset=1433]
+TOKEN[text=" "; tokenId=WHITESPACE; offset=1436]
+TOKEN[text="var"; tokenId=ATTRIBUTE; offset=1437]
+TOKEN[text="="; tokenId=SYMBOL; offset=1440]
+TOKEN[text=""token""; tokenId=ATTR_VALUE; offset=1441]
+TOKEN[text=">"; tokenId=SYMBOL; offset=1448]
+TOKEN[text="
+                <li>"; tokenId=TEXT; offset=1449]
+TOKEN[text="${token}"; tokenId=EL; offset=1470]
+TOKEN[text="
+            "; tokenId=TEXT; offset=1478]
+TOKEN[text="</"; tokenId=SYMBOL; offset=1491]
+TOKEN[text="c:forTokens"; tokenId=ENDTAG; offset=1493]
+TOKEN[text=">"; tokenId=SYMBOL; offset=1504]
+TOKEN[text="
+        </ul>
+        
+            <h1>JSP 2.0 Expression Language - Basic Comparisons</h1>
+    <hr>
+    This example illustrates basic Expression Language comparisons.
+    The following comparison operators are supported:
+    <ul>
+      <li>Less-than (&lt; or lt)</li>
+      <li>Greater-than (&gt; or gt)</li>
+      <li>Less-than-or-equal (&lt;= or le)</li>
+      <li>Greater-than-or-equal (&gt;= or ge)</li>
+      <li>Equal (== or eq)</li>
+      <li>Not Equal (!= or ne)</li>
+    </ul>
+    <blockquote>
+      <u><b>Numeric</b></u>
+      <code>
+        <table border="1">
+          <thead>
+	    <td><b>EL Expression</b></td>
+	    <td><b>Result</b></td>
+	  </thead>
+	  <tr>
+	    <td>\${1 &lt; 2}</td>
+	    <td>"; tokenId=TEXT; offset=1505]
+TOKEN[text="${1 < 2}"; tokenId=EL; offset=2216]
+TOKEN[text="</td>
+	  </tr>
+	  <tr>
+	    <td>\${1 lt 2}</td>
+	    <td>"; tokenId=TEXT; offset=2224]
+TOKEN[text="${1 lt 2}"; tokenId=EL; offset=2281]
+TOKEN[text="</td>
+	  </tr>
+	  <tr>
+	    <td>\${1 &gt; (4/2)}</td>
+	    <td>"; tokenId=TEXT; offset=2290]
+TOKEN[text="${1 > (4/2)}"; tokenId=EL; offset=2353]
+TOKEN[text="</td>
+	  </tr>
+	  <tr>
+	    <td>\${1 &gt; (4/2)}</td>
+	    <td>"; tokenId=TEXT; offset=2365]
+TOKEN[text="${1 > (4/2)}"; tokenId=EL; offset=2428]
+TOKEN[text="</td>
+	  </tr>
+	  <tr>
+	    <td>\${4.0 &gt;= 3}</td>
+	    <td>"; tokenId=TEXT; offset=2440]
+TOKEN[text="${4.0 >= 3}"; tokenId=EL; offset=2502]
+TOKEN[text="</td>
+	  </tr>
+	  <tr>
+	    <td>\${4.0 ge 3}</td>
+	    <td>"; tokenId=TEXT; offset=2513]
+TOKEN[text="${4.0 ge 3}"; tokenId=EL; offset=2572]
+TOKEN[text="</td>
+	  </tr>
+	  <tr>
+	    <td>\${4 &lt;= 3}</td>
+	    <td>"; tokenId=TEXT; offset=2583]
+TOKEN[text="${4 <= 3}"; tokenId=EL; offset=2643]
+TOKEN[text="</td>
+	  </tr>
+	  <tr>
+	    <td>\${4 le 3}</td>
+	    <td>"; tokenId=TEXT; offset=2652]
+TOKEN[text="${4 le 3}"; tokenId=EL; offset=2709]
+TOKEN[text="</td>
+	  </tr>
+	  <tr>
+	    <td>\${100.0 == 100}</td>
+	    <td>"; tokenId=TEXT; offset=2718]
+TOKEN[text="${100.0 == 100}"; tokenId=EL; offset=2781]
+TOKEN[text="</td>
+	  </tr>
+	  <tr>
+	    <td>\${100.0 eq 100}</td>
+	    <td>"; tokenId=TEXT; offset=2796]
+TOKEN[text="${100.0 eq 100}"; tokenId=EL; offset=2859]
+TOKEN[text="</td>
+	  </tr>
+	  <tr>
+	    <td>\${(10*10) != 100}</td>
+	    <td>"; tokenId=TEXT; offset=2874]
+TOKEN[text="${(10*10) != 100}"; tokenId=EL; offset=2939]
+TOKEN[text="</td>
+	  </tr>
+	  <tr>
+	    <td>\${(10*10) ne 100}</td>
+	    <td>"; tokenId=TEXT; offset=2956]
+TOKEN[text="${(10*10) ne 100}"; tokenId=EL; offset=3021]
+TOKEN[text="</td>
+	  </tr>
+	</table>
+      </code>
+      <br>
+      <u><b>Alphabetic</b></u>
+      <code>
+        <table border="1">
+          <thead>
+	    <td><b>EL Expression</b></td>
+	    <td><b>Result</b></td>
+	  </thead>
+	  <tr>
+	    <td>\${'a' &lt; 'b'}</td>
+	    <td>"; tokenId=TEXT; offset=3038]
+TOKEN[text="${'a' < 'b'}"; tokenId=EL; offset=3300]
+TOKEN[text="</td>
+	  </tr>
+	  <tr>
+	    <td>\${'hip' &gt; 'hit'}</td>
+	    <td>"; tokenId=TEXT; offset=3312]
+TOKEN[text="${'hip' > 'hit'}"; tokenId=EL; offset=3379]
+TOKEN[text="</td>
+	  </tr>
+	  <tr>
+	    <td>\${'4' &gt; 3}</td>
+	    <td>"; tokenId=TEXT; offset=3395]
+TOKEN[text="${'4' > 3}"; tokenId=EL; offset=3456]
+TOKEN[text="</td>
+	  </tr>
+	</table>
+      </code>
+    </blockquote>
+        
+    </body>
+</html>
+"; tokenId=TEXT; offset=3466]

@@ -1,0 +1,9 @@
+    var |>MARK_OCCURRENCES:fir^st<| = "defined in level0";// Try rename refactor from here
+        return |>MARK_OCCURRENCES:first<|;
+        |>MARK_OCCURRENCES:first<| = "value assigned in level1_3";// hidden - cannot be refactored from level0
+        return |>MARK_OCCURRENCES:first<|;
+            |>MARK_OCCURRENCES:first<| = "value assigned in level2_1";// hidden - cannot be refactored from level0
+            return |>MARK_OCCURRENCES:first<|;
+    formatter.println("value in lovel0: " + |>MARK_OCCURRENCES:first<|);
+    formatter.println("value in lovel0: " + |>MARK_OCCURRENCES:first<|); 
+    return |>MARK_OCCURRENCES:first<|;

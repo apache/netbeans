@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metaDD>
+  <throw-exceptions/>
+  <meta-element>
+    <dtd-name>EXCEPS</dtd-name>
+    <bean-name>Exceps</bean-name>
+    <meta-property>
+      <bean-name>Blue</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Green</bean-name>
+    </meta-property>
+  </meta-element>
+  <meta-element>
+    <dtd-name>BLUE</dtd-name>
+    <bean-name>Blue</bean-name>
+    <wrapper-class>String</wrapper-class>
+  </meta-element>
+  <meta-element>
+    <dtd-name>GREEN</dtd-name>
+    <bean-name>Green</bean-name>
+    <wrapper-class>Boolean</wrapper-class>
+  </meta-element>
+</metaDD>

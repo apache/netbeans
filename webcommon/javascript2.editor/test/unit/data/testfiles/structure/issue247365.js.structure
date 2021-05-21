@@ -1,0 +1,8 @@
+book:VARIABLE:[PUBLIC]:ESCAPED{book}<font color="#999999">ESCAPED{ : }Book</font>:
+Book:CONSTRUCTOR:[PUBLIC]:ESCAPED{Book}ESCAPED{(}ESCAPED{name}ESCAPED{)}<font color="#999999">ESCAPED{ : }Book</font>:
+  counter:FIELD:[PUBLIC]:ESCAPED{counter}<font color="#999999">ESCAPED{ : }Number</font>:
+  name:FIELD:[PUBLIC]:ESCAPED{name}:
+  prototype:CLASS:[PUBLIC]:ESCAPED{prototype}:
+    print2:FIELD:[PUBLIC]:ESCAPED{print2}<font color="#999999">ESCAPED{ : }Book.prototype.printName</font>:
+    printName:METHOD:[PUBLIC]:ESCAPED{printName}ESCAPED{(}ESCAPED{)}:
+      printName:METHOD:[PRIVATE]:ESCAPED{printName}ESCAPED{(}ESCAPED{)}:

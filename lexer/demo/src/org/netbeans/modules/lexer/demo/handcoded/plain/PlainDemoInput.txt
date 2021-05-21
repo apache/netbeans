@@ -1,6 +1,0 @@
-Plain text demo input
-Every line should have an extra token instance
-
-including lines containing whitespace only
-
-Last line

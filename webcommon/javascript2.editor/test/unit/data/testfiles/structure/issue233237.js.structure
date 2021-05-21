@@ -1,0 +1,5 @@
+Man:CONSTRUCTOR:[PUBLIC]:ESCAPED{Man}ESCAPED{(}ESCAPED{fName}ESCAPED{, }<font color="#999999">ESCAPED{String}ESCAPED{ }</font>ESCAPED{sName}ESCAPED{)}<font color="#999999">ESCAPED{ : }Man</font>:
+  firstName:VARIABLE:[PRIVATE]:ESCAPED{firstName}:
+  getFirstName:METHOD:[PROTECTED]:ESCAPED{getFirstName}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Man.firstName</font>:
+  getSecondName:METHOD:[PROTECTED]:ESCAPED{getSecondName}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+  secondName:VARIABLE:[PRIVATE]:ESCAPED{secondName}<font color="#999999">ESCAPED{ : }String</font>:

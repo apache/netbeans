@@ -1,0 +1,23 @@
+Code completion result for source line:
+$fn = fn(array $array, int $test) => $af->getNumber() + $|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   ? $fn                           [PUBLIC]   arrowFunctionsInFunctionWithError.php
+VARIABLE   ArrowFunctions $af              [PUBLIC]   arrowFunctionsInFunctionWithError.php
+VARIABLE   array $array                    [PUBLIC]   arrowFunctionsInFunctionWithError.php
+VARIABLE   int $number                     [PUBLIC]   arrowFunctionsInFunctionWithError.php
+VARIABLE   int $test                       [PUBLIC]   arrowFunctionsInFunctionWithError.php
+------------------------------------
+VARIABLE   $GLOBALS                                   PHP Platform
+VARIABLE   $HTTP_RAW_POST_DATA                        PHP Platform
+VARIABLE   $_COOKIE                                   PHP Platform
+VARIABLE   $_ENV                                      PHP Platform
+VARIABLE   $_FILES                                    PHP Platform
+VARIABLE   $_GET                                      PHP Platform
+VARIABLE   $_POST                                     PHP Platform
+VARIABLE   $_REQUEST                                  PHP Platform
+VARIABLE   $_SERVER                                   PHP Platform
+VARIABLE   $_SESSION                                  PHP Platform
+VARIABLE   $argc                                      PHP Platform
+VARIABLE   $argv                                      PHP Platform
+VARIABLE   $http_response_header                      PHP Platform
+VARIABLE   $php_errormsg                              PHP Platform

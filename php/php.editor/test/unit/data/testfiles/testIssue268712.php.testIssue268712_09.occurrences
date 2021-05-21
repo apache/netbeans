@@ -1,0 +1,3 @@
+    const |>MARK_OCCURRENCES:TEST6<| = ["test" => "test"];
+    echo \Issue268712_B\|>MARK_OCCURRENCES:TES^T6<|["test"] . PHP_EOL;
+    echo namespace\|>MARK_OCCURRENCES:TEST6<|["test"] . PHP_EOL;

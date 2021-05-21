@@ -1,0 +1,29 @@
+Detected parser blocks in the file:
+
+{null <154:160> - $title}
+
+{null <1281:1290> - $username}
+
+{if <616:637> -  (empty($username))}
+ |
+ -- {else <1260:1264> - }
+ |
+ -- {/if <1370:1373> - }
+
+{include <1505:1531> -  file="submenu.tpl"}
+
+{include <1537:1560> -  file="menu.tpl"}
+
+{null <1847:1855> - $item[0]}
+
+{null <1858:1866> - $item[1]}
+
+{null <1876:1884> - $item[2]}
+
+{foreach <1805:1837> -  from=$newsRows item=item}
+ |
+ -- {/foreach <1902:1910> - }
+
+{if <1917:1954> -  (!empty($username) && $permitions)}
+ |
+ -- {/if <2055:2058> - }

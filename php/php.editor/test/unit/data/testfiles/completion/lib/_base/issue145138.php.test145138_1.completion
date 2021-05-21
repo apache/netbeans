@@ -1,0 +1,4 @@
+Code completion result for source line:
+echo $param|2;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   ? $param2                       [PUBLIC]   issue145138.php

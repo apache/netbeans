@@ -1,0 +1,4 @@
+Code completion result for source line:
+public function interfaceParameterType(?F|oo $foo, ?string $stirng); // CC
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Foo                             [PUBLIC]   My\Sub

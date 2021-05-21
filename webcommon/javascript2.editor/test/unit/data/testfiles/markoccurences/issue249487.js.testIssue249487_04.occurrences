@@ -1,0 +1,1 @@
+    this.|>MARK_OCCURRENCES:myEv^ent<| = new MyApi.Event(myEventArgs);

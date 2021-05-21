@@ -1,0 +1,45 @@
+FUNCTION issue251911 [ANONYMOUS: false, DECLARED: true - issue251911, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+MyLib          : OBJECT MyLib [ANONYMOUS: false, DECLARED: true - MyLib, MODIFIERS: PUBLIC, OBJECT]
+               # PROPERTIES
+               MyLib : FUNCTION MyLib [ANONYMOUS: false, DECLARED: true - MyLib, MODIFIERS: PRIVATE, CONSTRUCTOR]
+                     # RETURN TYPES
+                     MyLib.MyLib, RESOLVED: true
+                     # PROPERTIES
+                     FALSE     : OBJECT FALSE [ANONYMOUS: false, DECLARED: true - FALSE, MODIFIERS: PRIVATE, VARIABLE]
+                     TRUE      : OBJECT TRUE [ANONYMOUS: false, DECLARED: true - TRUE, MODIFIERS: PRIVATE, VARIABLE]
+                     _myLib    : OBJECT _myLib [ANONYMOUS: false, DECLARED: true - _myLib, MODIFIERS: PRIVATE, VARIABLE]
+                     _myLib_in : FUNCTION _myLib_in [ANONYMOUS: false, DECLARED: true - _myLib_in, MODIFIERS: PRIVATE, METHOD]
+                               # RETURN TYPES
+                               @exp;MyLib@pro;MyLib@pro;FALSE, RESOLVED: false
+                               @exp;MyLib@pro;MyLib@pro;TRUE, RESOLVED: false
+                               Boolean, RESOLVED: true
+                               # PARAMETERS
+                               OBJECT item [ANONYMOUS: false, DECLARED: true - item, MODIFIERS: PUBLIC, PARAMETER]
+                               OBJECT container [ANONYMOUS: false, DECLARED: true - container, MODIFIERS: PUBLIC, PARAMETER]
+                               # PROPERTIES
+                               arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                               key       : OBJECT key [ANONYMOUS: false, DECLARED: true - key, MODIFIERS: PRIVATE, VARIABLE]
+                     arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                     in        : FUNCTION in [ANONYMOUS: false, DECLARED: true - in, MODIFIERS: PUBLIC, METHOD]
+                               # RETURN TYPES
+                               @exp;MyLib@pro;MyLib@pro;FALSE, RESOLVED: false
+                               @exp;MyLib@pro;MyLib@pro;TRUE, RESOLVED: false
+                               Boolean, RESOLVED: true
+                               # PARAMETERS
+                               OBJECT item [ANONYMOUS: false, DECLARED: true - item, MODIFIERS: PUBLIC, PARAMETER]
+                               OBJECT container [ANONYMOUS: false, DECLARED: true - container, MODIFIERS: PUBLIC, PARAMETER]
+                               # PROPERTIES
+                               arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                               key       : OBJECT key [ANONYMOUS: false, DECLARED: true - key, MODIFIERS: PRIVATE, VARIABLE]
+_myLib_indexOf : FUNCTION _myLib_indexOf [ANONYMOUS: false, DECLARED: false - _myLib_indexOf, MODIFIERS: PUBLIC, FUNCTION]
+               # PROPERTIES
+               arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+_myLib_isArray : FUNCTION _myLib_isArray [ANONYMOUS: false, DECLARED: false - _myLib_isArray, MODIFIERS: PUBLIC, FUNCTION]
+               # PROPERTIES
+               arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+_myLib_isStr   : FUNCTION _myLib_isStr [ANONYMOUS: false, DECLARED: false - _myLib_isStr, MODIFIERS: PUBLIC, FUNCTION]
+               # PROPERTIES
+               arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

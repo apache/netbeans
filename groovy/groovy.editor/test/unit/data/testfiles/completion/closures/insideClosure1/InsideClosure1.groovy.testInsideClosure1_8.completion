@@ -1,0 +1,11 @@
+Code completion result for source line:
+"TestString".eachLine {String line -> println lin|}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      LineNumberInputStream                      null
+CLASS      LineNumberReader                           null
+CLASS      LinkageError                               null
+CLASS      LinkedHashMap                              null
+CLASS      LinkedHashSet                              null
+CLASS      LinkedList                                 null
+VARIABLE   line                                       String

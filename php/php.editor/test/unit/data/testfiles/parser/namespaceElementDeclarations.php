@@ -1,0 +1,1 @@
+<?php namespace A; const C = 5; ?> 

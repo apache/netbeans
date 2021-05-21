@@ -1,0 +1,37 @@
+<%@page contentType="text/html"%>
+<%@page pageEncoding="__ENCODING__"%>
+<%@taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
+<f:view>
+    <html>
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=__ENCODING__" />
+            <title>Listing __ENTITY_NAME__ Items</title>
+            __LINK_TO_SS__
+        </head>
+        <body>
+        <h:panelGroup id="messagePanel" layout="block">
+            <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+        </h:panelGroup>
+        <h1>Listing __ENTITY_NAME__ Items</h1>
+        <h:form styleClass="jsfcrud_list_form">
+            <h:outputText escape="false" value="(No __ENTITY_NAME__ Items Found)<br />" rendered="#{__MANAGED_BEAN_NAME__.pagingInfo.itemCount == 0}" />
+            <h:panelGroup rendered="#{__MANAGED_BEAN_NAME__.pagingInfo.itemCount > 0}">
+                <h:outputText value="Item #{__MANAGED_BEAN_NAME__.pagingInfo.firstItem + 1}..#{__MANAGED_BEAN_NAME__.pagingInfo.lastItem} of #{__MANAGED_BEAN_NAME__.pagingInfo.itemCount}"/>&nbsp;
+                <h:commandLink action="#{__MANAGED_BEAN_NAME__.prev}" value="Previous #{__MANAGED_BEAN_NAME__.pagingInfo.batchSize}" rendered="#{__MANAGED_BEAN_NAME__.pagingInfo.firstItem >= __MANAGED_BEAN_NAME__.pagingInfo.batchSize}"/>&nbsp;
+                <h:commandLink action="#{__MANAGED_BEAN_NAME__.next}" value="Next #{__MANAGED_BEAN_NAME__.pagingInfo.batchSize}" rendered="#{__MANAGED_BEAN_NAME__.pagingInfo.lastItem + __MANAGED_BEAN_NAME__.pagingInfo.batchSize <= __MANAGED_BEAN_NAME__.pagingInfo.itemCount}"/>&nbsp;
+                <h:commandLink action="#{__MANAGED_BEAN_NAME__.next}" value="Remaining #{__MANAGED_BEAN_NAME__.pagingInfo.itemCount - __MANAGED_BEAN_NAME__.pagingInfo.lastItem}"
+                               rendered="#{__MANAGED_BEAN_NAME__.pagingInfo.lastItem < __MANAGED_BEAN_NAME__.pagingInfo.itemCount && __MANAGED_BEAN_NAME__.pagingInfo.lastItem + __MANAGED_BEAN_NAME__.pagingInfo.batchSize > __MANAGED_BEAN_NAME__.pagingInfo.itemCount}"/>
+                <h:dataTable value="#{__MANAGED_BEAN_NAME__.__FIELD_NAME__}" var="__TABLE_VAR_NAME__" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
+                    __TABLE_BODY__
+                </h:dataTable>
+            </h:panelGroup>
+            <br />
+            <h:commandLink action="#{__MANAGED_BEAN_NAME__.createSetup}" value="New __ENTITY_NAME__"/>
+            <br />
+            __LINK_TO_INDEX__
+
+        </h:form>
+        </body>
+    </html>
+</f:view>

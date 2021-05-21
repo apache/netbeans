@@ -1,0 +1,2 @@
+var {a:ab=10, |>MARK_OCCURRENCES:b^b<|=5} = {a: 3}; 
+console.log(|>MARK_OCCURRENCES:bb<|); // 5

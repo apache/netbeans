@@ -1,0 +1,4 @@
+|>GLOBAL:x<| = {
+    |>FIELD:async<| : true,
+    |>FIELD:a<| : |>GLOBAL:b<|
+}

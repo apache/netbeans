@@ -1,0 +1,18 @@
+FUNCTION property03 [ANONYMOUS: false, DECLARED: true - property03, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+window : OBJECT window [ANONYMOUS: false, DECLARED: false - window, MODIFIERS: PUBLIC, OBJECT]
+       # PROPERTIES
+       JSON : OBJECT JSON [ANONYMOUS: false, DECLARED: false - JSON, MODIFIERS: PUBLIC, OBJECT]
+            # PROPERTIES
+            parse : OBJECT parse [ANONYMOUS: false, DECLARED: false - parse, MODIFIERS: PUBLIC, PROPERTY]
+x      : OBJECT x [ANONYMOUS: false, DECLARED: true - x, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+       # PROPERTIES
+       parseJson : FUNCTION parseJson [ANONYMOUS: false, DECLARED: true - parseJson, MODIFIERS: PUBLIC, METHOD]
+                 # RETURN TYPES
+                 @pro;window@pro;JSON@call;parse, RESOLVED: false
+                 # PARAMETERS
+                 OBJECT jsonString [ANONYMOUS: false, DECLARED: true - jsonString, MODIFIERS: PUBLIC, PARAMETER]
+                 # PROPERTIES
+                 arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

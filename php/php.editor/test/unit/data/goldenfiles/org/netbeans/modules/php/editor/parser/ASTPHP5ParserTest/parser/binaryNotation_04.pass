@@ -1,0 +1,38 @@
+<testresult testFile='binaryNotation_04.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='7' end='11'>
+            <text>$int</text>
+        </token>
+        <token id='T_EQUAL' start='12' end='13'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='14' end='15'>
+            <text>0</text>
+        </token>
+        <token id='T_STRING' start='15' end='17'>
+            <text>b2</text>
+        </token>
+        <token id='T_SEMICOLON' start='17' end='18'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='20' end='23'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='23' end='23'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='22'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ASTError start='7' end='15'/>
+            <ExpressionStatement start='15' end='18'>
+                <NamespaceName start='15' end='17' isCurrent='false' isGlobal='false'>
+                    <Identifier start='15' end='17' name='b2'/>
+                </NamespaceName>
+            </ExpressionStatement>
+            <EmptyStatement start='20' end='22'/>
+        </Statements>
+    </Program>
+</testresult>

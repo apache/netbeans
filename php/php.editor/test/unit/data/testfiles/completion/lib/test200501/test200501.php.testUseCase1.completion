@@ -1,0 +1,4 @@
+Code completion result for source line:
+$item->|getFoo();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     getFoo()                        [PUBLIC]   ABCX

@@ -1,0 +1,8 @@
+ * @param {|>MARK_OCCURRENCES:String<|} maker car maker
+ * @param {|>MARK_OCCURRENCES:St^ring<|} street
+ * @param {|>MARK_OCCURRENCES:String<|} town
+ * @param {|>MARK_OCCURRENCES:String<|} country
+ * @param {|>MARK_OCCURRENCES:String<|} street my street
+ * @param {|>MARK_OCCURRENCES:String<|} town my town
+ * @param {|>MARK_OCCURRENCES:String<|} country my country
+var mujString = new |>MARK_OCCURRENCES:String<|("mujString");

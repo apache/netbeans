@@ -1,0 +1,7 @@
+Code completion result for source line:
+$stVarAA1=$stVarAA->|aCreateA();//test 7
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     aCreateA()                      [PUBLIC]   clsAVarAssignment
+METHOD     aCreateC()                      [PUBLIC]   clsAVarAssignment
+METHOD     aStaticCreateA()                [STATIC]   clsAVarAssignment
+METHOD     aStaticCreateC()                [STATIC]   clsAVarAssignment

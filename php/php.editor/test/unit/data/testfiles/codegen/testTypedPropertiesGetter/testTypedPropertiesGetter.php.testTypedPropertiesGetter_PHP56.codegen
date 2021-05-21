@@ -1,0 +1,72 @@
+public  function getInstanceArray() {
+return $$this->instanceArray;
+}
+
+public  function getInstanceInt() {
+return $$this->instanceInt;
+}
+
+public  function getInstanceString() {
+return $$this->instanceString;
+}
+
+public  function getInstanceBool() {
+return $$this->instanceBool;
+}
+
+public  function getInstanceNull() {
+return $$this->instanceNull;
+}
+
+public  function getInstanceNullable() {
+return $$this->instanceNullable;
+}
+
+public  function getInstanceArrayNullable() {
+return $$this->instanceArrayNullable;
+}
+
+public  function getInstanceClass() {
+return $$this->instanceClass;
+}
+
+public static function getStaticInt() {
+return self::$$staticInt;
+}
+
+public static function getStaticNullable() {
+return self::$$staticNullable;
+}
+
+public  function getInstanceInt74() {
+return $$this->instanceInt74;
+}
+
+public  function getInstanceString74() {
+return $$this->instanceString74;
+}
+
+public  function getInstanceBool74() {
+return $$this->instanceBool74;
+}
+
+public  function getInstanceNullable74() {
+return $$this->instanceNullable74;
+}
+
+public static function getStaticInt74() {
+return self::$$staticInt74;
+}
+
+public static function getStaticString74() {
+return self::$$staticString74;
+}
+
+public static function getStaticBool74() {
+return self::$$staticBool74;
+}
+
+public static function getStaticNullable74() {
+return self::$$staticNullable74;
+}
+

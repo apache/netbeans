@@ -1,0 +1,5 @@
+Code completion result for source line:
+var a2 = require('./|');
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FILE       module3.js                                 

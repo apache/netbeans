@@ -1,0 +1,12 @@
+plyn:CLASS:[PUBLIC]:ESCAPED{plyn}:
+  count:FIELD:[PUBLIC]:ESCAPED{count}<font color="#999999">ESCAPED{ : }Number</font>:
+is:VARIABLE:[PUBLIC]:ESCAPED{is}<font color="#999999">ESCAPED{ : }Issue</font>:
+helpId:METHOD:[PUBLIC]:ESCAPED{helpId}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Number</font>:
+Issue:CONSTRUCTOR:[PUBLIC]:ESCAPED{Issue}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Issue</font>:
+  amount:FIELD:[PUBLIC]:ESCAPED{amount}<font color="#999999">ESCAPED{ : }Number</font>:
+  id:FIELD:[PUBLIC]:ESCAPED{id}<font color="#999999">ESCAPED{ : }Number</font>:
+  prototype:CLASS:[PUBLIC]:ESCAPED{prototype}:
+    getAmount:METHOD:[PUBLIC]:ESCAPED{getAmount}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Number</font>:
+    getId:METHOD:[PUBLIC]:ESCAPED{getId}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Number</font>:
+    getType:METHOD:[PUBLIC]:ESCAPED{getType}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+  type:FIELD:[PUBLIC]:ESCAPED{type}<font color="#999999">ESCAPED{ : }String</font>:

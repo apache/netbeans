@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<apichanges>
+
+  <apidefs>
+    <apidef name="launcher">Launcher &amp; CLI</apidef>
+  </apidefs>
+
+  <changes>
+    <change id="bootstrap.filter">
+        <api name="launcher"/>
+        <summary>Can use classloader to check access to bootstrap classes</summary>
+        <version major="2" minor="80"/>
+        <date day="5" month="9" year="2018"/>
+        <author login="sdedic"/>
+        <compatibility addition="yes" binary="compatible" semantic="incompatible" deprecation="yes"/>
+        <description>
+            <p>
+                Bootstrap classloaders are not paired with a single module, yet they should obey visibility restrictions. The added method
+                allows to check also accesses to resources served by bootstrap classloaders.
+            </p>
+            <p>
+                This change <b>will hide classes</b> (namely <code>org.objectweb.asm</code>, but also some core impl classes) that were visible
+                in Apache NetBeans 9.0 release from NetBeans platform applications.
+            </p>
+        </description>
+        <class package="org.netbeans" name="ModuleManager"/>
+    </change>
+    <change id="module.fragments">
+         <api name="launcher"/>
+         <summary>Ability to join other module</summary>
+         <version major="2" minor="71"/>
+         <date day="11" month="4" year="2014"/>
+         <author login="sdedic"/>
+         <compatibility addition="yes" binary="compatible" semantic="compatible" />
+         <description>
+         <p>
+             Module can be declared as <a href="@TOP@architecture-summary.html#usecase-modfrag">
+                 Module Fragment
+             </a> to join other module loader. Fragment classes may ask to be bytecode-patched
+             as superclasses of API classes to preserve compatibility.
+         </p>
+         </description>
+         <issue number="243561"/>
+     </change>
+     <change id="disable.fallback.cache">
+        <api name="launcher"/>
+        <summary>Disable fallback cache</summary>
+        <version major="2" minor="69"/>
+        <date day="4" month="7" year="2014"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            Special property to disable usage of shared, installation
+            caches <a href="@TOP@architecture-summary.html#systemproperty-netbeans.fallback.cache">
+                netbeans.fallback.cache
+            </a> with special value which can be <code>none</code>.
+        </p>
+        </description>
+        <issue number="237919"/>
+    </change>
+     <change id="patch.classes">
+        <api name="launcher"/>
+        <summary>Ability to patch classes</summary>
+        <version major="2" minor="66"/>
+        <date day="14" month="11" year="2013"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            Define your <a href="@TOP@architecture-summary.html#usecase-patch">
+                Agent-Class
+            </a> to participate in patching other classes.
+        </p>
+        </description>
+        <issue number="237919"/>
+    </change>
+     <change id="disable.cli.server">
+        <api name="launcher"/>
+        <summary>Property to disable CLI server</summary>
+        <version major="2" minor="58"/>
+        <date day="15" month="2" year="2013"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            See <a href="@TOP@architecture-summary.html#systemproperty-org.netbeans.CLIHandler.server">
+                org.netbeans.CLIHandler.server
+            </a> for details.
+        </p>
+        </description>
+        <issue number="225895"/>
+    </change>
+     <change id="system-proxy-reload">
+        <api name="launcher"/>
+        <summary>Launcher does not provide proxy setting properties.</summary>
+        <version major="2" minor="60"/>
+        <date day="2" month="4" year="2013"/>
+        <author login="lfischme"/>
+        <compatibility addition="no" binary="compatible" semantic="incompatible" />
+        <description>
+        <p>
+            Launcher does not provide <code>netbeans.system_http_proxy</code> and
+            <code>netbeans.system_http_non_proxy_hosts</code> properties anymore.
+            Proxy settings are now detected in Core Network module.
+        </p>
+        </description>
+        <issue number="201731"/>
+    </change>
+     <change id="netbeans.ignore.dupmodule">
+        <api name="launcher"/>
+        <summary>Property to replace DuplicateException with warning log only</summary>
+        <version major="2" minor="63"/>
+        <date day="24" month="7" year="2013"/>
+        <author login="mantlik"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            See <a href="@TOP@architecture-summary.html#systemproperty-netbeans.ignore.dupmodule">
+                netbeans.ignore.dupmodule
+            </a> for details.
+        </p>
+        </description>
+        <issue number="232229"/>
+    </change>
+  </changes>
+
+  <!-- Now the surrounding HTML text and document structure: -->
+
+  <htmlcontents>
+    <head>
+      <title>Change History for the Friend Core APIs</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>
+This document lists changes made to the API between core/startup and core
+modules. It is a friend API so it does not need to be developed compatibly,
+and indeed it is not. 
+</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+
+      <hr/><standard-changelists module-code-name="org.netbeans.bootstrap"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

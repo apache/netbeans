@@ -1,0 +1,5 @@
+Code completion result for source line:
+$mm->|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     borp(int $i)                    [PUBLIC]   MagicMethods
+METHOD     borp(int $i, int $j = 5)        [PUBLIC]   MagicMethods

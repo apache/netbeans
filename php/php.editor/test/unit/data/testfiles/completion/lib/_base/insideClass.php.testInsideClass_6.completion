@@ -1,0 +1,4 @@
+Code completion result for source line:
+$v = new InsideCl|ass();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO InsideClass()                   [PUBLIC]   InsideClass

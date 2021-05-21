@@ -1,0 +1,11 @@
+<?php
+
+class CL {
+
+    public $x;
+    public $y;
+    function functionName($param) {
+        
+    }
+}
+?>

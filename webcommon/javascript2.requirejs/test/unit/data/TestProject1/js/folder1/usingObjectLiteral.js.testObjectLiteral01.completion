@@ -1,0 +1,7 @@
+Code completion result for source line:
+ob.ol1|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     ol1yell(): undefined            [PUBLIC]   objectLiteral.js
+FIELD      ol1name: String                 [PUBLIC]   objectLiteral.js
+FIELD      ol1nickname: String             [PUBLIC]   objectLiteral.js

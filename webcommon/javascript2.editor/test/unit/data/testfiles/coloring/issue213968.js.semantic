@@ -1,0 +1,15 @@
+|>GLOBAL:Ext<|.application({
+    |>FIELD:name<|: 'HelloExt',
+    |>METHOD:launch<|: function() {
+        |>GLOBAL:Ext<|.create('Ext.container.Viewport', { 
+            |>FIELD:layout<|: 'fit',
+            |>FIELD:items<|: [
+            // strange coloring after this line
+                {
+                    |>FIELD:title<|: 'Hello Ext',
+                    |>FIELD:html<|: 'Hello! Welcome to Ext JS.'
+                }
+            ]
+        });
+    } 
+});

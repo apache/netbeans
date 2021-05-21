@@ -1,0 +1,5 @@
+Test:CONSTRUCTOR:[PUBLIC]:ESCAPED{Test}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Test</font>:
+  prop1:FIELD:[PUBLIC]:ESCAPED{prop1}<font color="#999999">ESCAPED{ : }Boolean</font>:
+  prop2:FIELD:[PUBLIC]:ESCAPED{prop2}<font color="#999999">ESCAPED{ : }Boolean</font>:
+  prototype:CLASS:[PUBLIC]:ESCAPED{prototype}:
+    addItems:METHOD:[PUBLIC]:ESCAPED{addItems}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

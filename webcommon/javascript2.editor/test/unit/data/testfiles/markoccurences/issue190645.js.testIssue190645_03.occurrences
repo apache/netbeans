@@ -1,0 +1,6 @@
+ * @property {object}  |>MARK_OCCURRENCES:defaults<|               - The default values for parties.
+ * @property {number}  |>MARK_OCCURRENCES:defaults<|.players       - The default number of players.
+ * @property {string}  |>MARK_OCCURRENCES:defaults<|.level         - The default level for the party.
+ * @property {object}  |>MARK_OCCURRENCES:defaults<|.treasure      - The default treasure.
+ * @property {number}  |>MARK_OCCURRENCES:defaults<|.treasure.gold - How much gold the party starts with.
+config.|>MARK_OCCURRENCES:def^aults<|.treasure.gold = 1;

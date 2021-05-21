@@ -1,0 +1,3 @@
+.t.e.s.t. SimpleMustacheQuote
+k: {{ '}}
+.e.o.f.

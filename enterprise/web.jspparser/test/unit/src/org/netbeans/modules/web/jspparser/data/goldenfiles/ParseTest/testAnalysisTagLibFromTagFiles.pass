@@ -1,0 +1,304 @@
+--------- JspParserAPI.parseResult(), success: true
+ ---- PAGEINFO
+----- PageInfo -----
+      imports:
+        javax.servlet.*
+        javax.servlet.http.*
+        javax.servlet.jsp.*
+      dependants:
+      taglibsMap:
+        tag library: /TestTagLibrary
+            tlibversion : 1.0
+            jspversion  : 2.0
+            shortname   : ttl
+            urn         : /TestTagLibrary
+            info        : Test tag library.
+            uri         : /TestTagLibrary
+              tagfile path : /META-INF/tags/hTag.tag
+              tag name     : helloTag
+                  class    : org.apache.jsp.tag.meta.hTag_tag
+                  attribs  : []
+              tagfile path : /META-INF/tags/book.tag
+              tag name     : book
+                  class    : org.apache.jsp.tag.meta.book_tag
+                  attribs  : [title, author]
+        tag library: http://java.sun.com/jstl/core
+            tlibversion : 1.0
+            jspversion  : 1.2
+            shortname   : c
+            urn         : http://java.sun.com/jstl/core
+            info        : JSTL 1.0 core library
+            uri         : http://java.sun.com/jstl/core
+              tag name     : catch
+                  class    : org.apache.taglibs.standard.tag.common.core.CatchTag
+                  attribs  : [var]
+              tag name     : choose
+                  class    : org.apache.taglibs.standard.tag.common.core.ChooseTag
+                  attribs  : []
+              tag name     : out
+                  class    : org.apache.taglibs.standard.tag.el.core.OutTag
+                  attribs  : [value, default, escapeXml]
+              tag name     : if
+                  class    : org.apache.taglibs.standard.tag.el.core.IfTag
+                  attribs  : [test, var, scope]
+              tag name     : import
+                  class    : org.apache.taglibs.standard.tag.el.core.ImportTag
+                  attribs  : [url, var, scope, varReader, context, charEncoding]
+              tag name     : forEach
+                  class    : org.apache.taglibs.standard.tag.el.core.ForEachTag
+                  attribs  : [items, begin, end, step, var, varStatus]
+              tag name     : forTokens
+                  class    : org.apache.taglibs.standard.tag.el.core.ForTokensTag
+                  attribs  : [items, delims, begin, end, step, var, varStatus]
+              tag name     : otherwise
+                  class    : org.apache.taglibs.standard.tag.common.core.OtherwiseTag
+                  attribs  : []
+              tag name     : param
+                  class    : org.apache.taglibs.standard.tag.el.core.ParamTag
+                  attribs  : [name, value]
+              tag name     : redirect
+                  class    : org.apache.taglibs.standard.tag.el.core.RedirectTag
+                  attribs  : [var, scope, url, context]
+              tag name     : remove
+                  class    : org.apache.taglibs.standard.tag.common.core.RemoveTag
+                  attribs  : [var, scope]
+              tag name     : set
+                  class    : org.apache.taglibs.standard.tag.el.core.SetTag
+                  attribs  : [var, value, target, property, scope]
+              tag name     : url
+                  class    : org.apache.taglibs.standard.tag.el.core.UrlTag
+                  attribs  : [var, scope, value, context]
+              tag name     : when
+                  class    : org.apache.taglibs.standard.tag.el.core.WhenTag
+                  attribs  : [test]
+        tag library: urn:jsptagdir:/WEB-INF/tags/
+            tlibversion : 1.0
+            jspversion  : 2.0
+            shortname   : tags
+            urn         : null
+            info        : null
+            uri         : null
+              tagfile path : /WEB-INF/tags/linklist.tag
+              tag name     : linklist
+                  class    : org.apache.jsp.tag.web.linklist_tag
+                  attribs  : [separator]
+              tagfile path : /WEB-INF/tags/othertag.tag
+              tag name     : othertag
+                  class    : org.apache.jsp.tag.web.othertag_tag
+                  attribs  : [separator]
+        tag library: urn:jsptagdir:/WEB-INF/tags/myTags/
+            tlibversion : 1.0
+            jspversion  : 2.0
+            shortname   : -myTags-
+            urn         : null
+            info        : null
+            uri         : null
+              tagfile path : /WEB-INF/tags/myTags/testx.tagx
+              tag name     : testx
+                  class    : org.apache.jsp.tag.web.myTags.testx_tagx
+                  attribs  : [a]
+              tagfile path : /WEB-INF/tags/myTags/first.tag
+              tag name     : first
+                  class    : org.apache.jsp.tag.web.myTags.first_tag
+                  attribs  : [title, author, price_info]
+              tagfile path : /WEB-INF/tags/myTags/test.tag
+              tag name     : test
+                  class    : org.apache.jsp.tag.web.myTags.test_tag
+                  attribs  : [a]
+      prefixMapper:
+        c -> http://java.sun.com/jstl/core
+        jarTags -> /TestTagLibrary
+        myTags -> urn:jsptagdir:/WEB-INF/tags/myTags/
+        tags -> urn:jsptagdir:/WEB-INF/tags/
+      approxXmlPrefixMapper :
+      language            : java
+      xtends              : org.apache.jasper.runtime.HttpJspBase
+      contentType         : text/html;charset=UTF-8
+      session             : true
+      buffer              : 8192
+      autoFlush           : true
+      threadSafe          : true
+      isErrorPage         : false
+      errorPage           : null
+      scriptless          : true
+      scriptingInvalid    : false
+      elIgnored           : false
+      omitXmlDecl         : null
+      isJspPrefixHijacked : false
+      doctypeName         : null
+      doctypeSystem       : null
+      doctypePublic       : null
+      hasJspRoot          : true
+      prefixes:
+        jsp
+        xmlns
+      includePrelude:
+      includeCoda:
+      pluginDcls:
+      beans:
+ ------- XML View (constructed from the original data structure) -----
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root
+  version="2.0"
+  xmlns:c="http://java.sun.com/jstl/core"
+  xmlns:tags="urn:jsptagdir:/WEB-INF/tags/"
+  xmlns:myTags="urn:jsptagdir:/WEB-INF/tags/myTags/"
+  xmlns:jarTags="urn:jsptld:/TestTagLibrary"
+  xmlns:jsp="http://java.sun.com/JSP/Page"
+  jsp:id="0"
+>
+<jsp:directive.page
+  jsp:id="1"
+  pageEncoding="UTF-8"
+  contentType="text/html;charset=UTF-8"
+/>
+<jsp:text
+  jsp:id="2"
+>
+<![CDATA[
+
+]]>
+</jsp:text>
+<jsp:text
+  jsp:id="3"
+>
+<![CDATA[
+
+]]>
+</jsp:text>
+<jsp:text
+  jsp:id="4"
+>
+<![CDATA[
+
+]]>
+</jsp:text>
+<jsp:text
+  jsp:id="5"
+>
+<![CDATA[
+
+]]>
+</jsp:text>
+<jsp:text
+  jsp:id="6"
+>
+<![CDATA[
+
+]]>
+</jsp:text>
+<jsp:text
+  jsp:id="7"
+>
+<![CDATA[
+<html>
+]]>
+</jsp:text>
+<jsp:text
+  jsp:id="8"
+>
+<![CDATA[
+<head>]]>
+</jsp:text>
+<jsp:text
+  jsp:id="9"
+>
+<![CDATA[
+<title>Test for taglib and tagfiles]]>
+</jsp:text>
+<jsp:text
+  jsp:id="10"
+>
+<![CDATA[
+</title>]]>
+</jsp:text>
+<jsp:text
+  jsp:id="11"
+>
+<![CDATA[
+</head>
+]]>
+</jsp:text>
+<jsp:text
+  jsp:id="12"
+>
+<![CDATA[
+<body>
+]]>
+</jsp:text>
+<tags:linklist
+  separator="/"
+  jsp:id="13"
+/>
+<jsp:text
+  jsp:id="14"
+>
+<![CDATA[
+
+]]>
+</jsp:text>
+<myTags:testx
+  a="hello"
+  jsp:id="15"
+/>
+<jsp:text
+  jsp:id="16"
+>
+<![CDATA[
+
+
+]]>
+</jsp:text>
+<jsp:text
+  jsp:id="17"
+>
+<![CDATA[
+</body>
+]]>
+</jsp:text>
+<jsp:text
+  jsp:id="18"
+>
+<![CDATA[
+</html>
+]]>
+</jsp:text>
+</jsp:root>
+
+ ---- NODES
+
+Node [/testTagLibs.jsp(1,1), PageDirective] <%@ page contentType="text/html" pageEncoding="UTF-8"%>
+Node [/testTagLibs.jsp(1,55), TemplateText] 
+
+Node [/testTagLibs.jsp(2,0), TaglibDirective] <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
+Node [/testTagLibs.jsp(2,58), TemplateText] 
+
+Node [/testTagLibs.jsp(3,0), TaglibDirective] <%@ taglib prefix="tags" tagdir="/WEB-INF/tags/"%>
+Node [/testTagLibs.jsp(3,49), TemplateText] 
+
+Node [/testTagLibs.jsp(4,0), TaglibDirective] <%@ taglib prefix="myTags" tagdir="/WEB-INF/tags/myTags/"%>
+Node [/testTagLibs.jsp(4,58), TemplateText] 
+
+Node [/testTagLibs.jsp(5,0), TaglibDirective] <%@ taglib prefix="jarTags" uri="/TestTagLibrary"%>
+Node [/testTagLibs.jsp(5,50), TemplateText] 
+
+Node [/testTagLibs.jsp(6,0), TemplateText] <html>
+
+Node [/testTagLibs.jsp(7,0), TemplateText] <head>
+Node [/testTagLibs.jsp(7,6), TemplateText] <title>Test for taglib and tagfiles
+Node [/testTagLibs.jsp(7,41), TemplateText] </title>
+Node [/testTagLibs.jsp(7,49), TemplateText] </head>
+
+Node [/testTagLibs.jsp(8,0), TemplateText] <body>
+
+Node [/testTagLibs.jsp(9,0), CustomTag] <tags:linklist separator="/"></tags:linklist>
+Node [/testTagLibs.jsp(9,30), TemplateText] 
+
+Node [/testTagLibs.jsp(10,0), CustomTag] <myTags:testx a="hello"></myTags:testx>
+Node [/testTagLibs.jsp(10,26), TemplateText] 
+
+
+Node [/testTagLibs.jsp(12,0), TemplateText] </body>
+
+Node [/testTagLibs.jsp(13,0), TemplateText] </html>
+

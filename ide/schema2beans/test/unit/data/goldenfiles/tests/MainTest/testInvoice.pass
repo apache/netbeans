@@ -1,0 +1,97 @@
+Calling GenBeans.doIt
+Bean Tree:
+invoice <invoice> : Invoice
+	shipTo <ship-to> : ShipTo
+		name <name> : java.lang.String
+		address <address> : Address
+			street1 <street1> : java.lang.String
+			street2 <street2> : java.lang.String[0,1]
+			city <city> : java.lang.String
+			state <state> : java.lang.String 	[pattern ([A-Z]{2})]
+			zipCode <zip-code> : String 	[pattern ([0-9]{5}(-[0-9]{4})?)]
+		phone <phone> : java.lang.String 	[length (12), pattern ([0-9]{3}-[0-9]{3}-[0-9]{4})]
+	item <item> : Item[1,n]
+		[attr: Id CDATA #REQUIRED  : java.lang.String] 	[whiteSpace (collapse)]
+		[attr: InStock CDATA #IMPLIED false : boolean]
+		[attr: Category CDATA #REQUIRED  : java.lang.String]
+		quantity <Quantity> : int
+		price <Price> : java.math.BigDecimal 	[fractionDigits (2), totalDigits (5), minInclusive (1), maxInclusive (100)]
+	shippingMethod <shipping-method> : ShippingMethod
+		carrier <carrier> : java.lang.String
+		option <option> : java.lang.String
+		estimatedDelivery <estimated-delivery> : java.lang.String
+	shippingDate <shipping-date> : ShippingDate
+		date <date> : java.util.Calendar
+		time <time> : java.lang.String
+
+Compiling
+Finished compiling: 0
+out: TestInvoice - creating the DOM document
+out: TestInvoice - creating the bean graph
+out: TestInvoice - bean graph created
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <!DOCTYPE invoice>
+out: <invoice>
+out: 	<!--This is an invoice-->
+out: 	<!-- Another comment -->
+out: 	<ship-to>
+out: 		<!-- Where the heck is this thing going to? -->
+out: 		<name>Cliff</name>
+out: 		<address>
+out: 			<street1>1800 Harrison St.</street1>
+out: 			<city>Oakland</city>
+out: 			<state>CA</state>
+out: 			<zip-code>94404</zip-code>
+out: 		</address>
+out: 		<phone>800 236-9564</phone>
+out: 	</ship-to>
+out: 	<item Id='45623' InStock='true' Category='toy'>
+out: 		<Quantity>3</Quantity>
+out: 		<Price>9.99</Price>
+out: 	</item>
+out: 	<shipping-method>
+out: 		<carrier>FedEx</carrier>
+out: 		<option>Fast</option>
+out: 		<estimated-delivery>P1D</estimated-delivery>
+out: 	</shipping-method>
+out: 	<shipping-date>
+out: 		<date>2002-10-25</date>
+out: 		<time>10:21:00</time>
+out: 	</shipping-date>
+out: </invoice>
+out: TestInvoice - Adding an item
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <!DOCTYPE invoice>
+out: <invoice>
+out: 	<!--This is an invoice-->
+out: 	<!-- Another comment -->
+out: 	<ship-to>
+out: 		<!-- Where the heck is this thing going to? -->
+out: 		<name>Cliff</name>
+out: 		<address>
+out: 			<street1>1800 Harrison St.</street1>
+out: 			<city>Oakland</city>
+out: 			<state>CA</state>
+out: 			<zip-code>94404</zip-code>
+out: 		</address>
+out: 		<phone>800 236-9564</phone>
+out: 	</ship-to>
+out: 	<item Id='45623' InStock='true' Category='toy'>
+out: 		<Quantity>3</Quantity>
+out: 		<Price>9.99</Price>
+out: 	</item>
+out: 	<item Id='123' InStock='false' Category='office'>
+out: 		<Quantity>10</Quantity>
+out: 		<Price>15.99</Price>
+out: 	</item>
+out: 	<shipping-method>
+out: 		<carrier>FedEx</carrier>
+out: 		<option>Fast</option>
+out: 		<estimated-delivery>P1D</estimated-delivery>
+out: 	</shipping-method>
+out: 	<shipping-date>
+out: 		<date>2002-10-25</date>
+out: 		<time>10:21:00</time>
+out: 	</shipping-date>
+out: </invoice>
+Finished running TestInvoice: 0

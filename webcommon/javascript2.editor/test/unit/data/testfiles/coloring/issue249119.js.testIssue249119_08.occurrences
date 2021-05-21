@@ -1,0 +1,2 @@
+    var |>MARK_OCCURRENCES:g2<| = function () {
+    ^|>MARK_OCCURRENCES:g2<|();

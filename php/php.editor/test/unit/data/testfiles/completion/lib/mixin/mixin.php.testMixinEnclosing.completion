@@ -1,0 +1,35 @@
+Code completion result for source line:
+$this->|protectedMethodC1(); // CC
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     protectedMethodC1()             [PROTECTE  C1
+METHOD     protectedMethodC2()             [PROTECTE  C2
+METHOD     protectedMethodC3()             [PROTECTE  C3
+METHOD     protectedMethodC4()             [PROTECTE  C4
+METHOD     protectedMethodC5()             [PROTECTE  C5
+METHOD     protectedStaticMethodC1()       [PROTECTE  C1
+METHOD     protectedStaticMethodC2()       [PROTECTE  C2
+METHOD     protectedStaticMethodC3()       [PROTECTE  C3
+METHOD     protectedStaticMethodC4()       [PROTECTE  C4
+METHOD     protectedStaticMethodC5()       [PROTECTE  C5
+METHOD     publicMethodC1()                [PUBLIC]   C1
+METHOD     publicMethodC2()                [PUBLIC]   C2
+METHOD     publicMethodC3()                [PUBLIC]   C3
+METHOD     publicMethodC4()                [PUBLIC]   C4
+METHOD     publicMethodC5()                [PUBLIC]   C5
+METHOD     publicStaticMethodC1()          [STATIC]   C1
+METHOD     publicStaticMethodC2()          [STATIC]   C2
+METHOD     publicStaticMethodC3()          [STATIC]   C3
+METHOD     publicStaticMethodC4()          [STATIC]   C4
+METHOD     publicStaticMethodC5()          [STATIC]   C5
+METHOD     test()                          [PUBLIC]   Mixin
+METHOD     testParent()                    [PUBLIC]   MixinParent
+VARIABLE   ? protectedFieldC1              [PROTECTE  C1
+VARIABLE   ? protectedFieldC2              [PROTECTE  C2
+VARIABLE   ? protectedFieldC3              [PROTECTE  C3
+VARIABLE   ? protectedFieldC4              [PROTECTE  C4
+VARIABLE   ? protectedFieldC5              [PROTECTE  C5
+VARIABLE   ? publicFieldC1                 [PUBLIC]   C1
+VARIABLE   ? publicFieldC2                 [PUBLIC]   C2
+VARIABLE   ? publicFieldC3                 [PUBLIC]   C3
+VARIABLE   ? publicFieldC4                 [PUBLIC]   C4
+VARIABLE   ? publicFieldC5                 [PUBLIC]   C5

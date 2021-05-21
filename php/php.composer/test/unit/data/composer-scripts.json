@@ -1,0 +1,11 @@
+{
+    "name": "me/project",
+    "scripts": {
+        "ci": [
+            "@analyze",
+            "@test"
+        ],
+        "analyze": "phpstan analyze",
+        "test": "codecept run"
+    }
+}

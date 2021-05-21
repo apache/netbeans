@@ -1,0 +1,14 @@
+<html>
+<body>
+{% block test_block -%}
+<div {{ block('test') }}>
+{% for child in form -%}
+<div class="test">
+{{ test(child) -}}
+{{ test(child) -}}
+</div>
+{% endfor -%}
+</div>
+{% endblock test_block -%}
+</body>
+</html>

@@ -1,0 +1,6 @@
+Code completion result for source line:
+B\|fb,
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+PACKAGE    C                               [PUBLIC]   A\B
+METHOD     fb()                            [PUBLIC]   A\B

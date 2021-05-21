@@ -1,0 +1,4 @@
+var |>MARK_OCCURRENCES:value<| = 2;
+|>MARK_OCCURRENCES:va^lue<| = 1;
+    propB: |>MARK_OCCURRENCES:value<|
+    |>MARK_OCCURRENCES:value<| = 1;

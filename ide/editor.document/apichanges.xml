@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC
+	"-//NetBeans//DTD API changes list 1.0//EN"
+        "../../nbbuild/javadoctools/apichanges.dtd"
+>
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, this will be done periodically; just
+change the XML. If you can, validate the XML against the DTD, if not
+do not worry about it. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+  <!-- First, a list of API names you may use: -->
+  <apidefs>
+    <!-- org.netbeans.api.editor.document -->
+    <apidef name="api">Editor Document API</apidef>
+    <!-- org.netbeans.spi.editor.document -->
+    <apidef name="spi">Editor Document SPI</apidef>
+  </apidefs>
+
+<!-- ACTUAL CHANGES BEGIN HERE: -->
+
+  <changes>
+      <change id="ComplexPositions">
+          <api name="api"/>
+          <summary>Renamed ShiftPositions to ComplexPositions</summary>
+          <version major="1" minor="9"/>
+          <date day="23" month="5" year="2016"/>
+          <author login="mmetelka"/>
+          <compatibility source="compatible" binary="compatible" semantic="compatible" modification="yes"/>
+          <description>
+              <p>
+                  Renamed ShiftPositions class to ComplexPositions an its getShift() method
+                  to getSplitOffset() for better description.
+              </p>
+          </description>
+          <class name="ComplexPositions" package="org.netbeans.api.editor.document"/>
+          <issue number="257889"/>
+      </change>
+        <change id="CustomUndoDocument">
+            <api name="api"/>
+            <summary>CustomUndoDocument added</summary>
+            <version major="1" minor="8"/>
+            <date day="19" month="4" year="2016"/>
+            <author login="mmetelka"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" deprecation="no" deletion="no" modification="no" />
+            <description>
+                <p>
+                    CustomUndoDocument allows to add extra undoable edits during atomic transactions
+                    over a document.
+                </p>
+            </description>
+            <class name="CustomUndoDocument" package="org.netbeans.api.editor.document"/>
+            <issue number="258798"/>
+        </change>
+      <change id="ShiftPositions">
+          <api name="api"/>
+          <summary>Added ShiftPositions</summary>
+          <version major="1" minor="7"/>
+          <date day="22" month="2" year="2016"/>
+          <author login="mmetelka"/>
+          <compatibility source="compatible" binary="compatible" semantic="compatible" addition="yes"/>
+          <description>
+              <p>
+                  Added ShiftPositions class to create and read ShiftPositions.
+                  The implementation ShiftPos is a position together with a 
+                  shift of extra columns. This allows for positions behind
+                  line's last character (newline) or within a tab character.
+              </p>
+          </description>
+          <class name="ShiftPositions" package="org.netbeans.api.editor.document"/>
+          <issue number="257889"/>
+      </change>
+      <change id="TextSearchUtils-getPreviousWordStart">
+          <api name="api"/>
+          <summary>Added TextSearchUtils.getPreviousWordStart() method</summary>
+          <version major="1" minor="4"/>
+          <date day="17" month="3" year="2015"/>
+          <author login="mmetelka"/>
+          <compatibility source="compatible" binary="compatible" semantic="compatible" addition="yes"/>
+          <description>
+              <p>
+                  Added TextSearchUtils.getPreviousWordStart() method to cover Ctrl+Left/Right properly.
+              </p>
+          </description>
+          <class name="TextSearchUtils" package="org.netbeans.modules.editor.document"/>
+          <issue number="249051"/>
+      </change>
+  </changes>
+
+  <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <======================
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE editor/document/apichanges.xml
+
+-->
+    <head>
+      <title>Editor Document API Changes by Date</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+      <meta name="CATEGORY" content="OtherDevelopmentDoc"/>
+      <meta name="DESCRIPTION" content="A cross-indexed list of all changes made to the Editor Document API."/>
+    </head>
+    <body>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the Editor Document APIs. Please ask on the 
+<code>nbdev@netbeans.org</code>
+mailing list if you have any questions about the details of a
+change, or are wondering how to convert existing code to be compatible.</p>
+
+      <hr/><standard-changelists module-code-name="org.netbeans.modules.editor.document/1"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

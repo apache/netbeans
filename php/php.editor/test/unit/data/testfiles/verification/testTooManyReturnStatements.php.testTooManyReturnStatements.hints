@@ -1,0 +1,24 @@
+        return;
+        -------
+HINT:Too Many Return Statements
+        return;
+        -------
+HINT:Too Many Return Statements
+        return $fail;
+        -------------
+HINT:Too Many Return Statements
+                return;
+                -------
+HINT:Too Many Return Statements
+                return;
+                -------
+HINT:Too Many Return Statements
+        return $fail;
+        -------------
+HINT:Too Many Return Statements
+                return;
+                -------
+HINT:Too Many Return Statements
+                return;
+                -------
+HINT:Too Many Return Statements

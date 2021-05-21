@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd">
+    <description>
+        DESCRIPTION 1
+    </description>
+    <description >
+        annotation.getMessage();      
+    </description>
+    <icon id="myIcon" />
+    <tlib-version>1.0</tlib-version>
+    <short-name>tld</short-name>
+    <uri>/WEB-INF/tlds/tld</uri>
+    <validator>
+        <validator-class>com.mycompany.TagLibValidator</validator-class>
+        <init-param>
+            <param-name>parameter</param-name>
+            <param-value>value</param-value>
+        </init-param>
+    </validator>
+    <listener>
+        <listener-class>com.mycompany.TagLibListener</listener-class>
+    </listener>
+    <listener>
+        <description>ServletContextListener</description>
+        <listener-class>listeners.L2</listener-class>
+    </listener>
+    <tag>
+        <name>NewTagHandler</name>
+        <tag-class>handlers.NewTagHandler</tag-class>
+        <body-content>scriptless</body-content>
+    </tag>
+    <tag>
+        <name>NewTagHandler2</name>
+        <tag-class>fun.NewTagHandler</tag-class>
+        <body-content>JSP</body-content>
+        <variable>
+            <name-given>var</name-given>
+            <variable-class>java.lang.String</variable-class>
+            <declare>true</declare>
+            <scope>NESTED</scope>
+        </variable>
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <name>surname</name>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <name>isMan</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+        </attribute>
+    </tag>
+    <tag-file>
+        <name>tagFile2</name>
+        <path>/WEB-INF/tags/tagFile2.tag</path>
+    </tag-file>
+    
+    <function>
+        <description> TOHLE JE FCE MESSAGE </description>
+        <name>message</name>
+        <function-class>fun.FCS</function-class>
+        <function-signature>java.lang.String message()</function-signature>
+    </function>
+</taglib>

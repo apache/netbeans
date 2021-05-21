@@ -1,0 +1,131 @@
+<testresult testFile='groupUse_04.php'>
+    <scanner>
+        <token id='T_USE' start='7' end='10'>
+            <text>use</text>
+        </token>
+        <token id='T_STRING' start='11' end='14'>
+            <text>foo</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='14' end='15'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='15' end='19'>
+            <text>math</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='19' end='20'>
+            <text>\</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='20' end='21'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='22' end='26'>
+            <text>Math</text>
+        </token>
+        <token id='T_COMMA' start='26' end='27'>
+            <text>,</text>
+        </token>
+        <token id='T_CONST' start='28' end='33'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='34' end='36'>
+            <text>PI</text>
+        </token>
+        <token id='T_COMMA' start='36' end='37'>
+            <text>,</text>
+        </token>
+        <token id='T_FUNCTION' start='38' end='46'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='47' end='50'>
+            <text>sin</text>
+        </token>
+        <token id='T_COMMA' start='50' end='51'>
+            <text>,</text>
+        </token>
+        <token id='T_FUNCTION' start='52' end='60'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='61' end='64'>
+            <text>cos</text>
+        </token>
+        <token id='T_COMMA' start='64' end='65'>
+            <text>,</text>
+        </token>
+        <token id='T_FUNCTION' start='66' end='74'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='75' end='79'>
+            <text>cosh</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='80' end='81'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='81' end='82'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='83' end='83'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='83'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <UseStatement start='7' end='82' type='TYPE'>
+                <GroupUseStatementPart start='11' end='81'>
+                    <BaseNameSpace>
+                        <NamespaceName start='11' end='19' isCurrent='false' isGlobal='false'>
+                            <Identifier start='11' end='14' name='foo'/>
+                            <Identifier start='15' end='19' name='math'/>
+                        </NamespaceName>
+                    </BaseNameSpace>
+                    <SingleUseStatementPart start='22' end='26'>
+                        <Name>
+                            <NamespaceName start='22' end='26' isCurrent='false' isGlobal='false'>
+                                <Identifier start='22' end='26' name='Math'/>
+                            </NamespaceName>
+                        </Name>
+                        <Alias>
+                        </Alias>
+                    </SingleUseStatementPart>
+                    <SingleUseStatementPart start='28' end='36' type='CONST'>
+                        <Name>
+                            <NamespaceName start='34' end='36' isCurrent='false' isGlobal='false'>
+                                <Identifier start='34' end='36' name='PI'/>
+                            </NamespaceName>
+                        </Name>
+                        <Alias>
+                        </Alias>
+                    </SingleUseStatementPart>
+                    <SingleUseStatementPart start='38' end='50' type='FUNCTION'>
+                        <Name>
+                            <NamespaceName start='47' end='50' isCurrent='false' isGlobal='false'>
+                                <Identifier start='47' end='50' name='sin'/>
+                            </NamespaceName>
+                        </Name>
+                        <Alias>
+                        </Alias>
+                    </SingleUseStatementPart>
+                    <SingleUseStatementPart start='52' end='64' type='FUNCTION'>
+                        <Name>
+                            <NamespaceName start='61' end='64' isCurrent='false' isGlobal='false'>
+                                <Identifier start='61' end='64' name='cos'/>
+                            </NamespaceName>
+                        </Name>
+                        <Alias>
+                        </Alias>
+                    </SingleUseStatementPart>
+                    <SingleUseStatementPart start='66' end='79' type='FUNCTION'>
+                        <Name>
+                            <NamespaceName start='75' end='79' isCurrent='false' isGlobal='false'>
+                                <Identifier start='75' end='79' name='cosh'/>
+                            </NamespaceName>
+                        </Name>
+                        <Alias>
+                        </Alias>
+                    </SingleUseStatementPart>
+                </GroupUseStatementPart>
+            </UseStatement>
+        </Statements>
+    </Program>
+</testresult>

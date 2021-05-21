@@ -1,0 +1,13 @@
+<%-- 
+    Document   : ${name}
+    Created on : ${date}, ${time}
+    Author     : ${user}
+--%>
+
+<%@tag description="put the tag description here" pageEncoding="${encoding}"%>
+
+<%-- The list of normal or fragment attributes can be specified here: --%>
+<%@attribute name="message"%>
+
+<%-- any content can be specified here e.g.: --%>
+<#noparse><h2>${message}</h2></#noparse>

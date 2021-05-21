@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="Templates">
+        <folder name="SaaSServices">
+            <attr name="position" intvalue="3000"/>
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.websvc.saas.codegen.php.Bundle"/>
+
+            <!-- PHP -->
+            <file name="RestConnection.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/RestConnection.template">
+                <attr name="position" intvalue="510"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+            </file>
+            <file name="RestResponse.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/RestResponse.template">
+                <attr name="position" intvalue="520"/>
+            </file>
+            <file name="SaasService.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/SaasService.template">
+                <attr name="position" intvalue="530"/>
+            </file>
+            <file name="ApiKeyAuthenticator.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/ApiKeyAuthenticator.template">
+                <attr name="position" intvalue="540"/>
+            </file>
+            <file name="apikey.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/apikey.template">
+                <attr name="position" intvalue="550"/>
+            </file>
+            <file name="HttpBasicAuthenticator.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/HttpBasicAuthenticator.template">
+                <attr name="position" intvalue="560"/>
+            </file>
+            <file name="HttpBasicLogin.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/HttpBasicLogin.template">
+                <attr name="position" intvalue="570"/>
+            </file>
+            <file name="HttpBasicCallback.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/HttpBasicCalback.template">
+                <attr name="position" intvalue="580"/>
+            </file>
+            <file name="httpbasic.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/httpbasic.template">
+                <attr name="position" intvalue="600"/>
+            </file>
+            <file name="SessionKeyAuthenticator.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/SessionKeyAuthenticator.template">
+                <attr name="position" intvalue="610"/>
+            </file>
+            <file name="SessionKeyCallback.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/SessionKeyCallback.template">
+                <attr name="position" intvalue="620"/>
+            </file>
+            <file name="SessionKeyLogin.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/SessionKeyLogin.template">
+                <attr name="position" intvalue="630"/>
+            </file>
+            <file name="sessionkey.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/sessionkey.template">
+                <attr name="position" intvalue="640"/>
+            </file>
+            <file name="SignedUrlAuthenticator.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/SignedUrlAuthenticator.template">
+                <attr name="position" intvalue="650"/>
+            </file>
+            <file name="signedurl.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/signedurl.template">
+                <attr name="position" intvalue="660"/>
+            </file>
+
+        </folder>
+    </folder>
+</filesystem>
+

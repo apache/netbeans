@@ -1,0 +1,4 @@
+var |>MARK_OCCURRENCES:pavel<| = new Man ("Petr", "Pavel");
+with(|>MARK_OCCURRENCES:pavel<|.address) {
+|>MARK_OCCURRENCES:pav^el<|.address.city = "Praha";
+console.log(|>MARK_OCCURRENCES:pavel<|.address.print());

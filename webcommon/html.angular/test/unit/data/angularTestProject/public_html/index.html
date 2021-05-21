@@ -1,0 +1,51 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html ng-app>
+    <head> 
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="style.css"/>
+        <script src="js/angular.js"></script>
+        <script>
+            function mymodel($scope) {
+                $scope.moje = function() {
+                    this.jmeno = "Marek";
+                };
+
+                $scope.data = [
+                    {text: 'Tobik', imp: true},
+                    {text: 'Matik', imp: true},
+                    {text: 'Marek', imp: false}
+                ];
+
+                $scope.addItem = function() {
+                    $scope.data.push({text: $scope.item_text});
+                    $scope.item_text = '';
+                };
+
+                $scope.removeItem = function() {
+                    //alert($scope.item);
+                };
+            }
+        </script>
+    </head>
+    <body>
+        <div ng-controller="mymodel">
+            {{addItem()}} 
+            <ol>
+                <li ng-repeat="item in data">
+                    <input type="checkbox" ng-model="item.imp"/>
+                    <span class="important-{{item.imp}}">{{item.text}}</span>
+                    <input type="button" ng-click="removeItem()" value="remove"/>
+                </li>
+            </ol>
+            <form ng-submit="addItem()">
+                <input type="text" ng-model="item_text" placeholder="add new item here"/>
+                <input type="submit" value="OK"/>
+            </form>
+        </div>
+    </body>
+</html>

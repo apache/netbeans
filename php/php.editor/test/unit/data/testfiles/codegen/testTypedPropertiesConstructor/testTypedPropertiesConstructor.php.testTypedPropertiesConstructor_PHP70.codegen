@@ -1,0 +1,20 @@
+public function __construct(array $instanceArray, int $instanceInt, string $instanceString, bool $instanceBool, $instanceNull, string $instanceNullable, array $instanceArrayNullable, Test53 $instanceClass, int $staticInt, int $staticNullable, $instanceInt74, $instanceString74, $instanceBool74, $instanceNullable74, $staticInt74, $staticString74, $staticBool74, $staticNullable74) {
+$$this->instanceArray = $instanceArray;
+$$this->instanceInt = $instanceInt;
+$$this->instanceString = $instanceString;
+$$this->instanceBool = $instanceBool;
+$$this->instanceNull = $instanceNull;
+$$this->instanceNullable = $instanceNullable;
+$$this->instanceArrayNullable = $instanceArrayNullable;
+$$this->instanceClass = $instanceClass;
+self::staticInt = $staticInt;
+self::staticNullable = $staticNullable;
+$$this->instanceInt74 = $instanceInt74;
+$$this->instanceString74 = $instanceString74;
+$$this->instanceBool74 = $instanceBool74;
+$$this->instanceNullable74 = $instanceNullable74;
+self::staticInt74 = $staticInt74;
+self::staticString74 = $staticString74;
+self::staticBool74 = $staticBool74;
+self::staticNullable74 = $staticNullable74;${cursor}
+}

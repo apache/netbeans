@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!DOCTYPE codetemplates PUBLIC  "-//NetBeans//DTD Editor Code Templates settings 1.0//EN"
+                                "http://www.netbeans.org/dtds/EditorCodeTemplates-1_0.dtd">
+
+<codetemplates>
+
+    <!-- Are not pluggable for now, since duplication of the same abbreviation doesn't work.
+    In case of documentation tools tags are too similar that they would duplicate abbr. in
+    most cases. Defined are JsDoc templates and users can add templates of their used doc tool. -->
+
+    <!-- JsDoc's -->
+    <codetemplate abbreviation="arg" contexts="JsDoc-Comment">
+        <code>@argument {${type}} ${name} ${cursor}</code>
+    </codetemplate>
+    <codetemplate abbreviation="au" contexts="JsDoc-Comment">
+        <code>@author ${cursor}</code>
+    </codetemplate>
+    <codetemplate abbreviation="aug" contexts="JsDoc-Comment">
+        <code>@augments ${otherClass}</code>
+    </codetemplate>
+    <codetemplate abbreviation="bo" contexts="JsDoc-Comment">
+        <code>@borrows ${otherMemberName} as ${thisMemberName}</code>
+    </codetemplate>
+    <codetemplate abbreviation="cl" contexts="JsDoc-Comment">
+        <code>@class ${description}</code>
+    </codetemplate>
+    <codetemplate abbreviation="co" contexts="JsDoc-Comment">
+        <code>@constructor</code>
+    </codetemplate>
+    <codetemplate abbreviation="cn" contexts="JsDoc-Comment">
+        <code>@constant</code>
+    </codetemplate>
+    <codetemplate abbreviation="cs" contexts="JsDoc-Comment">
+        <code>@constructs</code>
+    </codetemplate>
+    <codetemplate abbreviation="de" contexts="JsDoc-Comment">
+        <code>@description ${description}</code>
+    </codetemplate>
+    <codetemplate abbreviation="def" contexts="JsDoc-Comment">
+        <code>@default ${value}</code>
+    </codetemplate>
+    <codetemplate abbreviation="dep" contexts="JsDoc-Comment">
+        <code>@deprecated ${description}</code>
+    </codetemplate>
+    <codetemplate abbreviation="ev" contexts="JsDoc-Comment">
+        <code>@example ${cursor}</code>
+    </codetemplate>
+    <codetemplate abbreviation="ex" contexts="JsDoc-Comment">
+        <code>@example ${cursor}</code>
+    </codetemplate>
+    <codetemplate abbreviation="ext" contexts="JsDoc-Comment">
+        <code>@extends ${otherClass}</code>
+    </codetemplate>
+    <codetemplate abbreviation="fi" contexts="JsDoc-Comment">
+        <code>@field</code>
+    </codetemplate>
+    <codetemplate abbreviation="fo" contexts="JsDoc-Comment">
+        <code>@fileOverview ${fileDesc}</code>
+    </codetemplate>
+    <codetemplate abbreviation="fu" contexts="JsDoc-Comment">
+        <code>@function</code>
+    </codetemplate>
+    <codetemplate abbreviation="ig" contexts="JsDoc-Comment">
+        <code>@ignore</code>
+    </codetemplate>
+    <codetemplate abbreviation="in" contexts="JsDoc-Comment">
+        <code>@inner</code>
+    </codetemplate>
+    <codetemplate abbreviation="le" contexts="JsDoc-Comment">
+        <code>@lends ${symbolAlias}</code>
+    </codetemplate>
+    <codetemplate abbreviation="li" contexts="JsDoc-Comment">
+        <code>{@link ${link}} ${cursor}</code>
+    </codetemplate>
+    <codetemplate abbreviation="me" contexts="JsDoc-Comment">
+        <code>@memberOf ${parentNamepath}</code>
+    </codetemplate>
+    <codetemplate abbreviation="na" contexts="JsDoc-Comment">
+        <code>@name ${namepath}</code>
+    </codetemplate>
+    <codetemplate abbreviation="ns" contexts="JsDoc-Comment">
+        <code>@namespace ${cursor}</code>
+    </codetemplate>
+    <codetemplate abbreviation="pa" contexts="JsDoc-Comment">
+        <code>@param {${type}} ${name} ${cursor}</code>
+    </codetemplate>
+    <codetemplate abbreviation="pr" contexts="JsDoc-Comment">
+        <code>@private</code>
+    </codetemplate>
+    <codetemplate abbreviation="pro" contexts="JsDoc-Comment">
+        <code>@property {${type}} ${name} ${cursor}</code>
+    </codetemplate>
+    <codetemplate abbreviation="pu" contexts="JsDoc-Comment">
+        <code>@public</code>
+    </codetemplate>
+    <codetemplate abbreviation="re" contexts="JsDoc-Comment">
+        <code>@returns {${type}} ${cursor}</code>
+    </codetemplate>
+    <codetemplate abbreviation="rq" contexts="JsDoc-Comment">
+        <code>@requires ${requireDescription}</code>
+    </codetemplate>
+    <codetemplate abbreviation="se" contexts="JsDoc-Comment">
+        <code>@see ${seeDescription}</code>
+    </codetemplate>
+    <codetemplate abbreviation="si" contexts="JsDoc-Comment">
+        <code>@since ${sinceDescription}</code>
+    </codetemplate>
+    <codetemplate abbreviation="st" contexts="JsDoc-Comment">
+        <code>@static</code>
+    </codetemplate>
+    <codetemplate abbreviation="th" contexts="JsDoc-Comment">
+        <code>@throws {${exceptionType}} ${cursor}</code>
+    </codetemplate>
+    <codetemplate abbreviation="ty" contexts="JsDoc-Comment">
+        <code>@type ${type}</code>
+    </codetemplate>
+    <codetemplate abbreviation="ve" contexts="JsDoc-Comment">
+        <code>@version ${versionDescription}</code>
+    </codetemplate>
+
+</codetemplates>

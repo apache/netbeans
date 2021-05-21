@@ -1,0 +1,2 @@
+class |>MARK_OCCURRENCES:Mix^inB1<|
+ * @mixin \Mixin\A\MixinA2||>MARK_OCCURRENCES:MixinB1<|

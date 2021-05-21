@@ -1,0 +1,4 @@
+Code completion result for source line:
+echo "Book $newBook->|";
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   ? name                          [PUBLIC]   Test148219

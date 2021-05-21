@@ -121,10 +121,13 @@
 
   <target name="init" depends="init-tasks,-define-cluster-path">
     <!-- Gets the module name -->
-    <getmodulename name="module.name" root="${nb_all}"/>
-    
+    <getmodulename name="module.name" id="module.id" root="${nb_all}"/>
+
+    <property name="javac.default.target" value="1.8"/>
+
     <property name="cluster.dir.fallback" value="extra" />
     <setcluster name="cluster.dir" module="${module.name}" defaultLocation="${cluster.dir.fallback}" clusterName="module.cluster.name"/>
+    <property name="cluster.dir" value="${cluster.dir.fallback}"/>
 
     <property name="cluster" location="${netbeans.dest.dir}/${cluster.dir}"/> <!-- #59872 -->
 
@@ -134,8 +137,10 @@
     <!-- Writing the module's cluster to property file -->
     <propertyfile file="${moduleCluster.file}">
       <entry  key="${module.name}.dir" value="$${netbeans.dest.dir}/${cluster.dir}"/>
+      <entry  key="${module.id}.dir" value="$${netbeans.dest.dir}/${cluster.dir}"/>
     </propertyfile>
     <property name="${module.name}.dir" value="${netbeans.dest.dir}/${cluster.dir}"/>
+    <property name="${module.id}.dir" value="${netbeans.dest.dir}/${cluster.dir}"/>
   </target>
 
   <target name="-define-cluster-path">
@@ -159,7 +164,12 @@
     <tstamp>
     	<format property="buildday" pattern="d MMM yyyy" locale="en" />
     </tstamp>
-
+    <condition property="buildnumber" value="${metabuild.RawVersion}-${metabuild.hash}">
+        <and>
+            <isset property="metabuild.hash" />
+            <isset property="metabuild.RawVersion" />
+        </and>
+    </condition>
     <property environment="hudson"/>
     <condition property="buildnumber" value="${hudson.JOB_NAME}-${hudson.BUILD_NUMBER}-on-${buildstamp}">
       <and>
@@ -169,7 +179,7 @@
     </condition>
     <hgid property="hg.id" file="."/>
     <property name="buildnumber" value="${buildstamp}-${hg.id}"/>
-    <echo message="${buildnumber}" level="verbose"/>
+    <echo message="Build number : ${buildnumber}" />
   </target>
   <target name="set-buildnumber" depends="-do-set-buildnumber">
     <!-- Overridable. Note: need not necessarily be a number at all): -->

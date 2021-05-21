@@ -1,0 +1,4 @@
+Code completion result for source line:
+use FirstTrait, SecondTrait, M|yTrait;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      MyTrait                         [PUBLIC]   Fom\Bom

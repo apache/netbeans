@@ -1,0 +1,2 @@
+    |>MARK_OCCURRENCES:method<|() {
+console.log(o.|>MARK_OCCURRENCES:met^hod<|());

@@ -1,0 +1,22 @@
+"use strict";
+var |>LOCAL_VARIABLE_DECLARATION:Promise<| = require("promise");
+var |>CLASS,UNUSED:extensions<| = {};
+
+/**
+ * Resolves all extensions for given day
+ * @param {TripDay} day
+ * @param {String} action
+ * @returns {Promise}
+ */
+function |>METHOD,UNUSED:resolveDay<|(day, |>UNUSED:index<|, |>UNUSED:days<|, action) {
+    var |>LOCAL_VARIABLE_DECLARATION:p<| = |>LOCAL_VARIABLE:Promise<|.resolve();
+    for (var |>LOCAL_VARIABLE_DECLARATION:i<| = 0, |>LOCAL_VARIABLE_DECLARATION:max<| = day.data.length; |>LOCAL_VARIABLE:i<| < |>LOCAL_VARIABLE:max<|; |>LOCAL_VARIABLE:i<|++) {
+        (function (index) {
+            |>LOCAL_VARIABLE:p<| = |>LOCAL_VARIABLE:p<|.then(|>GLOBAL:resolveExtension<|.bind(null, day, day.data[index].name, index, action));
+        }(|>LOCAL_VARIABLE:i<|));
+    }
+
+    return |>LOCAL_VARIABLE:p<|;
+}
+
+module.|>FIELD:exports<| = new TripDayExtCtrl();

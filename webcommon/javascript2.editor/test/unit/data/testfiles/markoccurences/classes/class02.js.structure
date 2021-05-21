@@ -1,0 +1,5 @@
+Polygon:CLASS:[PUBLIC]:ESCAPED{Polygon}:
+  constructor:CONSTRUCTOR:[PUBLIC]:ESCAPED{constructor}ESCAPED{(}ESCAPED{height}ESCAPED{, }ESCAPED{width}ESCAPED{)}<font color="#999999">ESCAPED{ : }Polygon</font>:
+  height:FIELD:[PUBLIC]:ESCAPED{height}:
+  width:FIELD:[PUBLIC]:ESCAPED{width}:
+p:VARIABLE:[PUBLIC]:ESCAPED{p}<font color="#999999">ESCAPED{ : }Polygon</font>:

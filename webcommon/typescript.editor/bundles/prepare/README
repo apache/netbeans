@@ -1,0 +1,13 @@
+Prepare Bundles
+===============
+
+This is a tool that simplifies creation of external binaries from NPM modules. To use it,
+create a directory "bundles" and inside it a directory "package", with package.json.
+The package.json should specifying modules that should be packed (their transitive dependencies
+will be pulled in automatically as well). Then run this project with two parameters: the location of the
+"bundles" directory, and the location of the NetBeans checkout. This tool will produce the
+following inside the "bundles" directory:
+ * bundles directory, which should be suitable for copying into the "external" directory of
+   your module. This directory includes licenses, binaries-list, and the zipped modules
+ * external directory, which contains zips that should be uploaded to the binary storage server
+ * licenses directory, which contains new license files that should be put into nbbuild/licenses

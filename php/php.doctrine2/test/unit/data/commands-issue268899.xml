@@ -1,0 +1,1053 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<symfony name="Doctrine Command Line Interface" version="2.5.4">
+  <commands>
+    <command id="help" name="help">
+      <usages>
+        <usage>help [--format FORMAT] [--raw] [--] [&lt;command_name&gt;]</usage>
+      </usages>
+      <description>Displays help for a command</description>
+      <help>The &lt;info&gt;help&lt;/info&gt; command displays help for a given command:
+
+   &lt;info&gt;php ./vendor/bin/doctrine help list&lt;/info&gt;
+
+ You can also output the help in other formats by using the &lt;comment&gt;--format&lt;/comment&gt; option:
+
+   &lt;info&gt;php ./vendor/bin/doctrine help --format=xml list&lt;/info&gt;
+
+ To display the list of available commands, please use the &lt;info&gt;list&lt;/info&gt; command.</help>
+      <arguments>
+        <argument name="command_name" is_required="0" is_array="0">
+          <description>The command name</description>
+          <defaults>
+            <default>help</default>
+          </defaults>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--format" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>The output format (txt, xml, json, or md)</description>
+          <defaults>
+            <default>txt</default>
+          </defaults>
+        </option>
+        <option name="--raw" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>To output raw command help</description>
+        </option>
+        <option name="--help" shortcut="-h" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this help message</description>
+        </option>
+        <option name="--quiet" shortcut="-q" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not output any message</description>
+        </option>
+        <option name="--verbose" shortcut="-v" shortcuts="-v|-vv|-vvv" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</description>
+        </option>
+        <option name="--version" shortcut="-V" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this application version</description>
+        </option>
+        <option name="--ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force ANSI output</description>
+        </option>
+        <option name="--no-ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Disable ANSI output</description>
+        </option>
+        <option name="--no-interaction" shortcut="-n" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not ask any interactive question</description>
+        </option>
+      </options>
+    </command>
+    <command id="list" name="list">
+      <usages>
+        <usage>list [--raw] [--format FORMAT] [--] [&lt;namespace&gt;]</usage>
+      </usages>
+      <description>Lists commands</description>
+      <help>The &lt;info&gt;list&lt;/info&gt; command lists all commands:
+
+   &lt;info&gt;php ./vendor/bin/doctrine list&lt;/info&gt;
+
+ You can also display the commands for a specific namespace:
+
+   &lt;info&gt;php ./vendor/bin/doctrine list test&lt;/info&gt;
+
+ You can also output the information in other formats by using the &lt;comment&gt;--format&lt;/comment&gt; option:
+
+   &lt;info&gt;php ./vendor/bin/doctrine list --format=xml&lt;/info&gt;
+
+ It's also possible to get raw list of commands (useful for embedding command runner):
+
+   &lt;info&gt;php ./vendor/bin/doctrine list --raw&lt;/info&gt;</help>
+      <arguments>
+        <argument name="namespace" is_required="0" is_array="0">
+          <description>The namespace name</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--raw" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>To output raw command list</description>
+        </option>
+        <option name="--format" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>The output format (txt, xml, json, or md)</description>
+          <defaults>
+            <default>txt</default>
+          </defaults>
+        </option>
+      </options>
+    </command>
+    <command id="dbal:import" name="dbal:import">
+      <usages>
+        <usage>dbal:import &lt;file&gt; (&lt;file&gt;)...</usage>
+      </usages>
+      <description>Import SQL file(s) directly to Database.</description>
+      <help>Import SQL file(s) directly to Database.</help>
+      <arguments>
+        <argument name="file" is_required="1" is_array="1">
+          <description>File path(s) of SQL to be executed.</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--help" shortcut="-h" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this help message</description>
+        </option>
+        <option name="--quiet" shortcut="-q" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not output any message</description>
+        </option>
+        <option name="--verbose" shortcut="-v" shortcuts="-v|-vv|-vvv" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</description>
+        </option>
+        <option name="--version" shortcut="-V" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this application version</description>
+        </option>
+        <option name="--ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force ANSI output</description>
+        </option>
+        <option name="--no-ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Disable ANSI output</description>
+        </option>
+        <option name="--no-interaction" shortcut="-n" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not ask any interactive question</description>
+        </option>
+      </options>
+    </command>
+    <command id="dbal:run-sql" name="dbal:run-sql">
+      <usages>
+        <usage>dbal:run-sql [--depth DEPTH] [--] &lt;sql&gt;</usage>
+      </usages>
+      <description>Executes arbitrary SQL directly from the command line.</description>
+      <help>Executes arbitrary SQL directly from the command line.</help>
+      <arguments>
+        <argument name="sql" is_required="1" is_array="0">
+          <description>The SQL statement to execute.</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--depth" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>Dumping depth of result set.</description>
+          <defaults>
+            <default>7</default>
+          </defaults>
+        </option>
+        <option name="--help" shortcut="-h" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this help message</description>
+        </option>
+        <option name="--quiet" shortcut="-q" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not output any message</description>
+        </option>
+        <option name="--verbose" shortcut="-v" shortcuts="-v|-vv|-vvv" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</description>
+        </option>
+        <option name="--version" shortcut="-V" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this application version</description>
+        </option>
+        <option name="--ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force ANSI output</description>
+        </option>
+        <option name="--no-ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Disable ANSI output</description>
+        </option>
+        <option name="--no-interaction" shortcut="-n" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not ask any interactive question</description>
+        </option>
+      </options>
+    </command>
+    <command id="orm:clear-cache:metadata" name="orm:clear-cache:metadata">
+      <usages>
+        <usage>orm:clear-cache:metadata [--flush]</usage>
+      </usages>
+      <description>Clear all metadata cache of the various cache drivers.</description>
+      <help>The &lt;info&gt;orm:clear-cache:metadata&lt;/info&gt; command is meant to clear the metadata cache of associated Entity Manager.
+ It is possible to invalidate all cache entries at once - called delete -, or flushes the cache provider
+ instance completely.
+
+ The execution type differ on how you execute the command.
+ If you want to invalidate the entries (and not delete from cache instance), this command would do the work:
+
+ &lt;info&gt;orm:clear-cache:metadata&lt;/info&gt;
+
+ Alternatively, if you want to flush the cache provider using this command:
+
+ &lt;info&gt;orm:clear-cache:metadata --flush&lt;/info&gt;
+
+ Finally, be aware that if &lt;info&gt;--flush&lt;/info&gt; option is passed, not all cache providers are able to flush entries,
+ because of a limitation of its execution nature.</help>
+      <arguments/>
+      <options>
+        <option name="--flush" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>If defined, cache entries will be flushed instead of deleted/invalidated.</description>
+        </option>
+        <option name="--help" shortcut="-h" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this help message</description>
+        </option>
+        <option name="--quiet" shortcut="-q" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not output any message</description>
+        </option>
+        <option name="--verbose" shortcut="-v" shortcuts="-v|-vv|-vvv" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</description>
+        </option>
+        <option name="--version" shortcut="-V" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this application version</description>
+        </option>
+        <option name="--ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force ANSI output</description>
+        </option>
+        <option name="--no-ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Disable ANSI output</description>
+        </option>
+        <option name="--no-interaction" shortcut="-n" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not ask any interactive question</description>
+        </option>
+      </options>
+    </command>
+    <command id="orm:clear-cache:query" name="orm:clear-cache:query">
+      <usages>
+        <usage>orm:clear-cache:query [--flush]</usage>
+      </usages>
+      <description>Clear all query cache of the various cache drivers.</description>
+      <help>The &lt;info&gt;orm:clear-cache:query&lt;/info&gt; command is meant to clear the query cache of associated Entity Manager.
+ It is possible to invalidate all cache entries at once - called delete -, or flushes the cache provider
+ instance completely.
+
+ The execution type differ on how you execute the command.
+ If you want to invalidate the entries (and not delete from cache instance), this command would do the work:
+
+ &lt;info&gt;orm:clear-cache:query&lt;/info&gt;
+
+ Alternatively, if you want to flush the cache provider using this command:
+
+ &lt;info&gt;orm:clear-cache:query --flush&lt;/info&gt;
+
+ Finally, be aware that if &lt;info&gt;--flush&lt;/info&gt; option is passed, not all cache providers are able to flush entries,
+ because of a limitation of its execution nature.</help>
+      <arguments/>
+      <options>
+        <option name="--flush" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>If defined, cache entries will be flushed instead of deleted/invalidated.</description>
+        </option>
+        <option name="--help" shortcut="-h" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this help message</description>
+        </option>
+        <option name="--quiet" shortcut="-q" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not output any message</description>
+        </option>
+        <option name="--verbose" shortcut="-v" shortcuts="-v|-vv|-vvv" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</description>
+        </option>
+        <option name="--version" shortcut="-V" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this application version</description>
+        </option>
+        <option name="--ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force ANSI output</description>
+        </option>
+        <option name="--no-ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Disable ANSI output</description>
+        </option>
+        <option name="--no-interaction" shortcut="-n" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not ask any interactive question</description>
+        </option>
+      </options>
+    </command>
+    <command id="orm:clear-cache:result" name="orm:clear-cache:result">
+      <usages>
+        <usage>orm:clear-cache:result [--flush]</usage>
+      </usages>
+      <description>Clear all result cache of the various cache drivers.</description>
+      <help>The &lt;info&gt;orm:clear-cache:result&lt;/info&gt; command is meant to clear the result cache of associated Entity Manager.
+ It is possible to invalidate all cache entries at once - called delete -, or flushes the cache provider
+ instance completely.
+
+ The execution type differ on how you execute the command.
+ If you want to invalidate the entries (and not delete from cache instance), this command would do the work:
+
+ &lt;info&gt;orm:clear-cache:result&lt;/info&gt;
+
+ Alternatively, if you want to flush the cache provider using this command:
+
+ &lt;info&gt;orm:clear-cache:result --flush&lt;/info&gt;
+
+ Finally, be aware that if &lt;info&gt;--flush&lt;/info&gt; option is passed, not all cache providers are able to flush entries,
+ because of a limitation of its execution nature.</help>
+      <arguments/>
+      <options>
+        <option name="--flush" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>If defined, cache entries will be flushed instead of deleted/invalidated.</description>
+        </option>
+        <option name="--help" shortcut="-h" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this help message</description>
+        </option>
+        <option name="--quiet" shortcut="-q" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not output any message</description>
+        </option>
+        <option name="--verbose" shortcut="-v" shortcuts="-v|-vv|-vvv" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</description>
+        </option>
+        <option name="--version" shortcut="-V" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this application version</description>
+        </option>
+        <option name="--ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force ANSI output</description>
+        </option>
+        <option name="--no-ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Disable ANSI output</description>
+        </option>
+        <option name="--no-interaction" shortcut="-n" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not ask any interactive question</description>
+        </option>
+      </options>
+    </command>
+    <command id="orm:convert-d1-schema" name="orm:convert-d1-schema">
+      <usages>
+        <usage>orm:convert-d1-schema [--from FROM] [--extend [EXTEND]] [--num-spaces [NUM-SPACES]] [--] &lt;from-path&gt; &lt;to-type&gt; &lt;dest-path&gt;</usage>
+        <usage>orm:convert:d1-schema</usage>
+      </usages>
+      <description>Converts Doctrine 1.X schema into a Doctrine 2.X schema.</description>
+      <help>Converts Doctrine 1.X schema into a Doctrine 2.X schema.</help>
+      <arguments>
+        <argument name="from-path" is_required="1" is_array="0">
+          <description>The path of Doctrine 1.X schema information.</description>
+          <defaults/>
+        </argument>
+        <argument name="to-type" is_required="1" is_array="0">
+          <description>The destination Doctrine 2.X mapping type.</description>
+          <defaults/>
+        </argument>
+        <argument name="dest-path" is_required="1" is_array="0">
+          <description>The path to generate your Doctrine 2.X mapping information.</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--from" shortcut="" accept_value="1" is_value_required="1" is_multiple="1">
+          <description>Optional paths of Doctrine 1.X schema information.</description>
+          <defaults/>
+        </option>
+        <option name="--extend" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>Defines a base class to be extended by generated entity classes.</description>
+          <defaults/>
+        </option>
+        <option name="--num-spaces" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>Defines the number of indentation spaces</description>
+          <defaults>
+            <default>4</default>
+          </defaults>
+        </option>
+        <option name="--help" shortcut="-h" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this help message</description>
+        </option>
+        <option name="--quiet" shortcut="-q" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not output any message</description>
+        </option>
+        <option name="--verbose" shortcut="-v" shortcuts="-v|-vv|-vvv" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</description>
+        </option>
+        <option name="--version" shortcut="-V" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this application version</description>
+        </option>
+        <option name="--ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force ANSI output</description>
+        </option>
+        <option name="--no-ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Disable ANSI output</description>
+        </option>
+        <option name="--no-interaction" shortcut="-n" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not ask any interactive question</description>
+        </option>
+      </options>
+    </command>
+    <command id="orm:convert-mapping" name="orm:convert-mapping">
+      <usages>
+        <usage>orm:convert-mapping [--filter FILTER] [-f|--force] [--from-database] [--extend [EXTEND]] [--num-spaces [NUM-SPACES]] [--namespace [NAMESPACE]] [--] &lt;to-type&gt; &lt;dest-path&gt;</usage>
+        <usage>orm:convert:mapping</usage>
+      </usages>
+      <description>Convert mapping information between supported formats.</description>
+      <help>Convert mapping information between supported formats.
+
+ This is an execute &lt;info&gt;one-time&lt;/info&gt; command. It should not be necessary for
+ you to call this method multiple times, especially when using the &lt;comment&gt;--from-database&lt;/comment&gt;
+ flag.
+
+ Converting an existing database schema into mapping files only solves about 70-80%
+ of the necessary mapping information. Additionally the detection from an existing
+ database cannot detect inverse associations, inheritance types,
+ entities with foreign keys as primary keys and many of the
+ semantical operations on associations such as cascade.
+
+ &lt;comment&gt;Hint:&lt;/comment&gt; There is no need to convert YAML or XML mapping files to annotations
+ every time you make changes. All mapping drivers are first class citizens
+ in Doctrine 2 and can be used as runtime mapping for the ORM.
+
+ &lt;comment&gt;Hint:&lt;/comment&gt; If you have a database with tables that should not be managed
+ by the ORM, you can use a DBAL functionality to filter the tables and sequences down
+ on a global level:
+
+     $config-&gt;setFilterSchemaAssetsExpression($regexp);</help>
+      <arguments>
+        <argument name="to-type" is_required="1" is_array="0">
+          <description>The mapping type to be converted.</description>
+          <defaults/>
+        </argument>
+        <argument name="dest-path" is_required="1" is_array="0">
+          <description>The path to generate your entities classes.</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--filter" shortcut="" accept_value="1" is_value_required="1" is_multiple="1">
+          <description>A string pattern used to match entities that should be processed.</description>
+          <defaults/>
+        </option>
+        <option name="--force" shortcut="-f" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force to overwrite existing mapping files.</description>
+        </option>
+        <option name="--from-database" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Whether or not to convert mapping information from existing database.</description>
+        </option>
+        <option name="--extend" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>Defines a base class to be extended by generated entity classes.</description>
+          <defaults/>
+        </option>
+        <option name="--num-spaces" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>Defines the number of indentation spaces</description>
+          <defaults>
+            <default>4</default>
+          </defaults>
+        </option>
+        <option name="--namespace" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>Defines a namespace for the generated entity classes, if converted from database.</description>
+          <defaults/>
+        </option>
+        <option name="--help" shortcut="-h" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this help message</description>
+        </option>
+        <option name="--quiet" shortcut="-q" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not output any message</description>
+        </option>
+        <option name="--verbose" shortcut="-v" shortcuts="-v|-vv|-vvv" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</description>
+        </option>
+        <option name="--version" shortcut="-V" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this application version</description>
+        </option>
+        <option name="--ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force ANSI output</description>
+        </option>
+        <option name="--no-ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Disable ANSI output</description>
+        </option>
+        <option name="--no-interaction" shortcut="-n" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not ask any interactive question</description>
+        </option>
+      </options>
+    </command>
+    <command id="orm:ensure-production-settings" name="orm:ensure-production-settings">
+      <usages>
+        <usage>orm:ensure-production-settings [--complete]</usage>
+      </usages>
+      <description>Verify that Doctrine is properly configured for a production environment.</description>
+      <help>Verify that Doctrine is properly configured for a production environment.</help>
+      <arguments/>
+      <options>
+        <option name="--complete" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Flag to also inspect database connection existence.</description>
+        </option>
+        <option name="--help" shortcut="-h" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this help message</description>
+        </option>
+        <option name="--quiet" shortcut="-q" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not output any message</description>
+        </option>
+        <option name="--verbose" shortcut="-v" shortcuts="-v|-vv|-vvv" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</description>
+        </option>
+        <option name="--version" shortcut="-V" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this application version</description>
+        </option>
+        <option name="--ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force ANSI output</description>
+        </option>
+        <option name="--no-ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Disable ANSI output</description>
+        </option>
+        <option name="--no-interaction" shortcut="-n" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not ask any interactive question</description>
+        </option>
+      </options>
+    </command>
+    <command id="orm:generate-entities" name="orm:generate-entities">
+      <usages>
+        <usage>orm:generate-entities [--filter FILTER] [--generate-annotations [GENERATE-ANNOTATIONS]] [--generate-methods [GENERATE-METHODS]] [--regenerate-entities [REGENERATE-ENTITIES]] [--update-entities [UPDATE-ENTITIES]] [--extend EXTEND] [--num-spaces NUM-SPACES] [--no-backup] [--] &lt;dest-path&gt;</usage>
+        <usage>orm:generate:entities</usage>
+      </usages>
+      <description>Generate entity classes and method stubs from your mapping information.</description>
+      <help>Generate entity classes and method stubs from your mapping information.
+
+ If you use the &lt;comment&gt;--update-entities&lt;/comment&gt; or &lt;comment&gt;--regenerate-entities&lt;/comment&gt; flags your existing
+ code gets overwritten. The EntityGenerator will only append new code to your
+ file and will not delete the old code. However this approach may still be prone
+ to error and we suggest you use code repositories such as GIT or SVN to make
+ backups of your code.
+
+ It makes sense to generate the entity code if you are using entities as Data
+ Access Objects only and don't put much additional logic on them. If you are
+ however putting much more logic on the entities you should refrain from using
+ the entity-generator and code your entities manually.
+
+ &lt;error&gt;Important:&lt;/error&gt; Even if you specified Inheritance options in your
+ XML or YAML Mapping files the generator cannot generate the base and
+ child classes for you correctly, because it doesn't know which
+ class is supposed to extend which. You have to adjust the entity
+ code manually for inheritance to work!</help>
+      <arguments>
+        <argument name="dest-path" is_required="1" is_array="0">
+          <description>The path to generate your entity classes.</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--filter" shortcut="" accept_value="1" is_value_required="1" is_multiple="1">
+          <description>A string pattern used to match entities that should be processed.</description>
+          <defaults/>
+        </option>
+        <option name="--generate-annotations" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>Flag to define if generator should generate annotation metadata on entities.</description>
+          <defaults>
+            <default>false</default>
+          </defaults>
+        </option>
+        <option name="--generate-methods" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>Flag to define if generator should generate stub methods on entities.</description>
+          <defaults>
+            <default>true</default>
+          </defaults>
+        </option>
+        <option name="--regenerate-entities" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>Flag to define if generator should regenerate entity if it exists.</description>
+          <defaults>
+            <default>false</default>
+          </defaults>
+        </option>
+        <option name="--update-entities" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>Flag to define if generator should only update entity if it exists.</description>
+          <defaults>
+            <default>true</default>
+          </defaults>
+        </option>
+        <option name="--extend" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>Defines a base class to be extended by generated entity classes.</description>
+          <defaults/>
+        </option>
+        <option name="--num-spaces" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>Defines the number of indentation spaces</description>
+          <defaults>
+            <default>4</default>
+          </defaults>
+        </option>
+        <option name="--no-backup" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Flag to define if generator should avoid backuping existing entity file if it exists.</description>
+        </option>
+        <option name="--help" shortcut="-h" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this help message</description>
+        </option>
+        <option name="--quiet" shortcut="-q" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not output any message</description>
+        </option>
+        <option name="--verbose" shortcut="-v" shortcuts="-v|-vv|-vvv" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</description>
+        </option>
+        <option name="--version" shortcut="-V" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this application version</description>
+        </option>
+        <option name="--ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force ANSI output</description>
+        </option>
+        <option name="--no-ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Disable ANSI output</description>
+        </option>
+        <option name="--no-interaction" shortcut="-n" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not ask any interactive question</description>
+        </option>
+      </options>
+    </command>
+    <command id="orm:generate-proxies" name="orm:generate-proxies">
+      <usages>
+        <usage>orm:generate-proxies [--filter FILTER] [--] [&lt;dest-path&gt;]</usage>
+        <usage>orm:generate:proxies</usage>
+      </usages>
+      <description>Generates proxy classes for entity classes.</description>
+      <help>Generates proxy classes for entity classes.</help>
+      <arguments>
+        <argument name="dest-path" is_required="0" is_array="0">
+          <description>The path to generate your proxy classes. If none is provided, it will attempt to grab from configuration.</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--filter" shortcut="" accept_value="1" is_value_required="1" is_multiple="1">
+          <description>A string pattern used to match entities that should be processed.</description>
+          <defaults/>
+        </option>
+        <option name="--help" shortcut="-h" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this help message</description>
+        </option>
+        <option name="--quiet" shortcut="-q" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not output any message</description>
+        </option>
+        <option name="--verbose" shortcut="-v" shortcuts="-v|-vv|-vvv" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</description>
+        </option>
+        <option name="--version" shortcut="-V" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this application version</description>
+        </option>
+        <option name="--ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force ANSI output</description>
+        </option>
+        <option name="--no-ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Disable ANSI output</description>
+        </option>
+        <option name="--no-interaction" shortcut="-n" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not ask any interactive question</description>
+        </option>
+      </options>
+    </command>
+    <command id="orm:generate-repositories" name="orm:generate-repositories">
+      <usages>
+        <usage>orm:generate-repositories [--filter FILTER] [--] &lt;dest-path&gt;</usage>
+        <usage>orm:generate:repositories</usage>
+      </usages>
+      <description>Generate repository classes from your mapping information.</description>
+      <help>Generate repository classes from your mapping information.</help>
+      <arguments>
+        <argument name="dest-path" is_required="1" is_array="0">
+          <description>The path to generate your repository classes.</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--filter" shortcut="" accept_value="1" is_value_required="1" is_multiple="1">
+          <description>A string pattern used to match entities that should be processed.</description>
+          <defaults/>
+        </option>
+        <option name="--help" shortcut="-h" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this help message</description>
+        </option>
+        <option name="--quiet" shortcut="-q" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not output any message</description>
+        </option>
+        <option name="--verbose" shortcut="-v" shortcuts="-v|-vv|-vvv" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</description>
+        </option>
+        <option name="--version" shortcut="-V" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this application version</description>
+        </option>
+        <option name="--ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force ANSI output</description>
+        </option>
+        <option name="--no-ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Disable ANSI output</description>
+        </option>
+        <option name="--no-interaction" shortcut="-n" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not ask any interactive question</description>
+        </option>
+      </options>
+    </command>
+    <command id="orm:info" name="orm:info">
+      <usages>
+        <usage>orm:info</usage>
+      </usages>
+      <description>Show basic information about all mapped entities</description>
+      <help>The &lt;info&gt;orm:info&lt;/info&gt; shows basic information about which
+ entities exist and possibly if their mapping information contains errors or
+ not.</help>
+      <arguments/>
+      <options>
+        <option name="--help" shortcut="-h" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this help message</description>
+        </option>
+        <option name="--quiet" shortcut="-q" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not output any message</description>
+        </option>
+        <option name="--verbose" shortcut="-v" shortcuts="-v|-vv|-vvv" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</description>
+        </option>
+        <option name="--version" shortcut="-V" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this application version</description>
+        </option>
+        <option name="--ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force ANSI output</description>
+        </option>
+        <option name="--no-ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Disable ANSI output</description>
+        </option>
+        <option name="--no-interaction" shortcut="-n" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not ask any interactive question</description>
+        </option>
+      </options>
+    </command>
+    <command id="orm:mapping:describe" name="orm:mapping:describe">
+      <usages>
+        <usage>orm:mapping:describe &lt;entityName&gt;</usage>
+      </usages>
+      <description>Display information about mapped objects</description>
+      <help>The ./vendor/bin/doctrine orm:mapping:describe command describes the metadata for the given full or partial entity class name.
+
+     &lt;info&gt;./vendor/bin/doctrine orm:mapping:describe&lt;/info&gt; My\Namespace\Entity\MyEntity
+
+ Or:
+
+     &lt;info&gt;./vendor/bin/doctrine orm:mapping:describe&lt;/info&gt; MyEntity</help>
+      <arguments>
+        <argument name="entityName" is_required="1" is_array="0">
+          <description>Full or partial name of entity</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--help" shortcut="-h" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this help message</description>
+        </option>
+        <option name="--quiet" shortcut="-q" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not output any message</description>
+        </option>
+        <option name="--verbose" shortcut="-v" shortcuts="-v|-vv|-vvv" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</description>
+        </option>
+        <option name="--version" shortcut="-V" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this application version</description>
+        </option>
+        <option name="--ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force ANSI output</description>
+        </option>
+        <option name="--no-ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Disable ANSI output</description>
+        </option>
+        <option name="--no-interaction" shortcut="-n" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not ask any interactive question</description>
+        </option>
+      </options>
+    </command>
+    <command id="orm:run-dql" name="orm:run-dql">
+      <usages>
+        <usage>orm:run-dql [--hydrate HYDRATE] [--first-result FIRST-RESULT] [--max-result MAX-RESULT] [--depth DEPTH] [--show-sql] [--] &lt;dql&gt;</usage>
+      </usages>
+      <description>Executes arbitrary DQL directly from the command line.</description>
+      <help>Executes arbitrary DQL directly from the command line.</help>
+      <arguments>
+        <argument name="dql" is_required="1" is_array="0">
+          <description>The DQL to execute.</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--hydrate" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>Hydration mode of result set. Should be either: object, array, scalar or single-scalar.</description>
+          <defaults>
+            <default>object</default>
+          </defaults>
+        </option>
+        <option name="--first-result" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>The first result in the result set.</description>
+          <defaults/>
+        </option>
+        <option name="--max-result" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>The maximum number of results in the result set.</description>
+          <defaults/>
+        </option>
+        <option name="--depth" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>Dumping depth of Entity graph.</description>
+          <defaults>
+            <default>7</default>
+          </defaults>
+        </option>
+        <option name="--show-sql" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Dump generated SQL instead of executing query</description>
+        </option>
+        <option name="--help" shortcut="-h" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this help message</description>
+        </option>
+        <option name="--quiet" shortcut="-q" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not output any message</description>
+        </option>
+        <option name="--verbose" shortcut="-v" shortcuts="-v|-vv|-vvv" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</description>
+        </option>
+        <option name="--version" shortcut="-V" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this application version</description>
+        </option>
+        <option name="--ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force ANSI output</description>
+        </option>
+        <option name="--no-ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Disable ANSI output</description>
+        </option>
+        <option name="--no-interaction" shortcut="-n" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not ask any interactive question</description>
+        </option>
+      </options>
+    </command>
+    <command id="orm:schema-tool:create" name="orm:schema-tool:create">
+      <usages>
+        <usage>orm:schema-tool:create [--dump-sql]</usage>
+      </usages>
+      <description>Processes the schema and either create it directly on EntityManager Storage Connection or generate the SQL output.</description>
+      <help>Processes the schema and either create it directly on EntityManager Storage Connection or generate the SQL output.
+
+ &lt;comment&gt;Hint:&lt;/comment&gt; If you have a database with tables that should not be managed
+ by the ORM, you can use a DBAL functionality to filter the tables and sequences down
+ on a global level:
+
+     $config-&gt;setFilterSchemaAssetsExpression($regexp);</help>
+      <arguments/>
+      <options>
+        <option name="--dump-sql" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Instead of trying to apply generated SQLs into EntityManager Storage Connection, output them.</description>
+        </option>
+        <option name="--help" shortcut="-h" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this help message</description>
+        </option>
+        <option name="--quiet" shortcut="-q" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not output any message</description>
+        </option>
+        <option name="--verbose" shortcut="-v" shortcuts="-v|-vv|-vvv" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</description>
+        </option>
+        <option name="--version" shortcut="-V" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this application version</description>
+        </option>
+        <option name="--ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force ANSI output</description>
+        </option>
+        <option name="--no-ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Disable ANSI output</description>
+        </option>
+        <option name="--no-interaction" shortcut="-n" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not ask any interactive question</description>
+        </option>
+      </options>
+    </command>
+    <command id="orm:schema-tool:drop" name="orm:schema-tool:drop">
+      <usages>
+        <usage>orm:schema-tool:drop [--dump-sql] [-f|--force] [--full-database]</usage>
+      </usages>
+      <description>Drop the complete database schema of EntityManager Storage Connection or generate the corresponding SQL output.</description>
+      <help>Processes the schema and either drop the database schema of EntityManager Storage Connection or generate the SQL output.
+ Beware that the complete database is dropped by this command, even tables that are not relevant to your metadata model.
+
+ &lt;comment&gt;Hint:&lt;/comment&gt; If you have a database with tables that should not be managed
+ by the ORM, you can use a DBAL functionality to filter the tables and sequences down
+ on a global level:
+
+     $config-&gt;setFilterSchemaAssetsExpression($regexp);</help>
+      <arguments/>
+      <options>
+        <option name="--dump-sql" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Instead of trying to apply generated SQLs into EntityManager Storage Connection, output them.</description>
+        </option>
+        <option name="--force" shortcut="-f" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Don't ask for the deletion of the database, but force the operation to run.</description>
+        </option>
+        <option name="--full-database" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Instead of using the Class Metadata to detect the database table schema, drop ALL assets that the database contains.</description>
+        </option>
+        <option name="--help" shortcut="-h" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this help message</description>
+        </option>
+        <option name="--quiet" shortcut="-q" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not output any message</description>
+        </option>
+        <option name="--verbose" shortcut="-v" shortcuts="-v|-vv|-vvv" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</description>
+        </option>
+        <option name="--version" shortcut="-V" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this application version</description>
+        </option>
+        <option name="--ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force ANSI output</description>
+        </option>
+        <option name="--no-ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Disable ANSI output</description>
+        </option>
+        <option name="--no-interaction" shortcut="-n" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not ask any interactive question</description>
+        </option>
+      </options>
+    </command>
+    <command id="orm:schema-tool:update" name="orm:schema-tool:update">
+      <usages>
+        <usage>orm:schema-tool:update [--complete] [--dump-sql] [-f|--force]</usage>
+      </usages>
+      <description>Executes (or dumps) the SQL needed to update the database schema to match the current mapping metadata.</description>
+      <help>The &lt;info&gt;orm:schema-tool:update&lt;/info&gt; command generates the SQL needed to
+ synchronize the database schema with the current mapping metadata of the
+ default entity manager.
+
+ For example, if you add metadata for a new column to an entity, this command
+ would generate and output the SQL needed to add the new column to the database:
+
+ &lt;info&gt;orm:schema-tool:update --dump-sql&lt;/info&gt;
+
+ Alternatively, you can execute the generated queries:
+
+ &lt;info&gt;orm:schema-tool:update --force&lt;/info&gt;
+
+ If both options are specified, the queries are output and then executed:
+
+ &lt;info&gt;orm:schema-tool:update --dump-sql --force&lt;/info&gt;
+
+ Finally, be aware that if the &lt;info&gt;--complete&lt;/info&gt; option is passed, this
+ task will drop all database assets (e.g. tables, etc) that are *not* described
+ by the current metadata. In other words, without this option, this task leaves
+ untouched any "extra" tables that exist in the database, but which aren't
+ described by any metadata.
+
+ &lt;comment&gt;Hint:&lt;/comment&gt; If you have a database with tables that should not be managed
+ by the ORM, you can use a DBAL functionality to filter the tables and sequences down
+ on a global level:
+
+     $config-&gt;setFilterSchemaAssetsExpression($regexp);</help>
+      <arguments/>
+      <options>
+        <option name="--complete" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>If defined, all assets of the database which are not relevant to the current metadata will be dropped.</description>
+        </option>
+        <option name="--dump-sql" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Dumps the generated SQL statements to the screen (does not execute them).</description>
+        </option>
+        <option name="--force" shortcut="-f" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Causes the generated SQL statements to be physically executed against your database.</description>
+        </option>
+        <option name="--help" shortcut="-h" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this help message</description>
+        </option>
+        <option name="--quiet" shortcut="-q" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not output any message</description>
+        </option>
+        <option name="--verbose" shortcut="-v" shortcuts="-v|-vv|-vvv" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</description>
+        </option>
+        <option name="--version" shortcut="-V" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this application version</description>
+        </option>
+        <option name="--ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force ANSI output</description>
+        </option>
+        <option name="--no-ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Disable ANSI output</description>
+        </option>
+        <option name="--no-interaction" shortcut="-n" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not ask any interactive question</description>
+        </option>
+      </options>
+    </command>
+    <command id="orm:validate-schema" name="orm:validate-schema">
+      <usages>
+        <usage>orm:validate-schema [--skip-mapping] [--skip-sync]</usage>
+      </usages>
+      <description>Validate the mapping files.</description>
+      <help>'Validate that the mapping files are correct and in sync with the database.'</help>
+      <arguments/>
+      <options>
+        <option name="--skip-mapping" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Skip the mapping validation check</description>
+        </option>
+        <option name="--skip-sync" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Skip checking if the mapping is in sync with the database</description>
+        </option>
+        <option name="--help" shortcut="-h" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this help message</description>
+        </option>
+        <option name="--quiet" shortcut="-q" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not output any message</description>
+        </option>
+        <option name="--verbose" shortcut="-v" shortcuts="-v|-vv|-vvv" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug</description>
+        </option>
+        <option name="--version" shortcut="-V" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this application version</description>
+        </option>
+        <option name="--ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force ANSI output</description>
+        </option>
+        <option name="--no-ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Disable ANSI output</description>
+        </option>
+        <option name="--no-interaction" shortcut="-n" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not ask any interactive question</description>
+        </option>
+      </options>
+    </command>
+  </commands>
+  <namespaces>
+    <namespace id="_global">
+      <command>help</command>
+      <command>list</command>
+    </namespace>
+    <namespace id="dbal">
+      <command>dbal:import</command>
+      <command>dbal:run-sql</command>
+    </namespace>
+    <namespace id="orm">
+      <command>orm:clear-cache:metadata</command>
+      <command>orm:clear-cache:query</command>
+      <command>orm:clear-cache:result</command>
+      <command>orm:convert-d1-schema</command>
+      <command>orm:convert-mapping</command>
+      <command>orm:convert:d1-schema</command>
+      <command>orm:convert:mapping</command>
+      <command>orm:ensure-production-settings</command>
+      <command>orm:generate-entities</command>
+      <command>orm:generate-proxies</command>
+      <command>orm:generate-repositories</command>
+      <command>orm:generate:entities</command>
+      <command>orm:generate:proxies</command>
+      <command>orm:generate:repositories</command>
+      <command>orm:info</command>
+      <command>orm:mapping:describe</command>
+      <command>orm:run-dql</command>
+      <command>orm:schema-tool:create</command>
+      <command>orm:schema-tool:drop</command>
+      <command>orm:schema-tool:update</command>
+      <command>orm:validate-schema</command>
+    </namespace>
+  </namespaces>
+</symfony>

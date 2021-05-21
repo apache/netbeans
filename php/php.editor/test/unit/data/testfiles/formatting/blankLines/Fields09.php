@@ -1,0 +1,34 @@
+<?php
+
+class Test {
+/**
+* Field 1.
+* 
+* @var string
+*/
+protected $field1;
+/**
+* Field 2.
+* 
+* @var string
+*/
+protected $field2;
+/**
+* Field 3.
+* 
+* @var string
+*/
+protected $field3;
+/**
+     *
+     * @param type $field1
+     * @param type $field2
+     * @param type $field3 
+     */
+function __construct($field1, $field2, $field3) {
+	$this->field1 = $field1;
+	$this->field2 = $field2;
+	$this->field3 = $field3;
+    }
+
+}

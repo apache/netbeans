@@ -1,0 +1,3 @@
+    var |>MARK_OCCURRENCES:myDataVarInWith<| = truhlik;
+console.log(|>MARK_OCCURRENCES:myDataVarI^nWith<|);
+console.log(|>MARK_OCCURRENCES:myDataVarInWith<|.kolik);

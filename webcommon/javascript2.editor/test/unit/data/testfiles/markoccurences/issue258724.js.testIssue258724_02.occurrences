@@ -1,0 +1,2 @@
+	this.|>MARK_OCCURRENCES:age<| = age;
+	return this.|>MARK_OCCURRENCES:ag^e<|; // .age does NOT get suggested (actually there is "no suggestions")

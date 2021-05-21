@@ -1,0 +1,5 @@
+AdminRunsCtrl:CONSTRUCTOR:[PUBLIC]:ESCAPED{AdminRunsCtrl}ESCAPED{(}ESCAPED{$http}ESCAPED{)}<font color="#999999">ESCAPED{ : }AdminRunsCtrl</font>:
+  get:METHOD:[PROTECTED]:ESCAPED{get}ESCAPED{(}ESCAPED{$scope}ESCAPED{, }ESCAPED{version}ESCAPED{, }ESCAPED{onSuccess}ESCAPED{, }ESCAPED{onFail}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    version:PARAMETER:[PUBLIC]:ESCAPED{version}:
+      petr:FIELD:[PUBLIC]:ESCAPED{petr}<font color="#999999">ESCAPED{ : }Number</font>:
+      version:FIELD:[PUBLIC]:ESCAPED{version}<font color="#999999">ESCAPED{ : }AdminRunsCtrl.get.versionESCAPED{|}Number</font>:

@@ -1,0 +1,28 @@
+<Unnamed test>
+IDENTIFIER      "ReactDOM", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "render", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+BRACKET_LEFT_PAREN  "(", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      "  ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+JSX_TEXT        "<CommentBox url="/api/comments" pollInterval=", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[1]}
+JSX_EXP_BEGIN   "{", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[JSX], jsxBalances=[1]}
+NUMBER          "2000", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[JSX], jsxBalances=[1]}
+JSX_EXP_END     "}", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[1]}
+JSX_TEXT        " />", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_COMMA  ",", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      "  ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "document", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_DOT    ".", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=false, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "getElementById", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+BRACKET_LEFT_PAREN  "(", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+STRING_BEGIN    "'", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+STRING          "content", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+STRING_END      "'", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+BRACKET_RIGHT_PAREN  ")", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+BRACKET_RIGHT_PAREN  ")", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+----- EOF -----
+

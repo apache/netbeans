@@ -1,0 +1,27 @@
+Code completion result for source line:
+* @|param {int} One The first number to add
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+OTHER      @alias {type}                              SDoc
+OTHER      @author text                               SDoc
+OTHER      @classDescription text                     SDoc
+OTHER      @constant                                  SDoc
+OTHER      @constructor                               SDoc
+OTHER      @deprecated                                SDoc
+OTHER      @example text                              SDoc
+OTHER      @exception {type} description              SDoc
+OTHER      @id text                                   SDoc
+OTHER      @inherits {type}                           SDoc
+OTHER      @internal                                  SDoc
+OTHER      @memberOf {type}                           SDoc
+OTHER      @method                                    SDoc
+OTHER      @namespace {type}                          SDoc
+OTHER      @param {type} name description             SDoc
+OTHER      @private                                   SDoc
+OTHER      @projectDescription text                   SDoc
+OTHER      @property                                  SDoc
+OTHER      @return {type} description                 SDoc
+OTHER      @see text                                  SDoc
+OTHER      @since text                                SDoc
+OTHER      @type                                      SDoc
+OTHER      @version text                              SDoc

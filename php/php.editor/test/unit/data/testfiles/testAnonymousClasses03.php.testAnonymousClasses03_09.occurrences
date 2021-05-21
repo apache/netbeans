@@ -1,0 +1,3 @@
+            private $|>MARK_OCCURRENCES:prop3<|;
+                $this->|>MARK_OCCURRENCES:pro^p3<| = $prop;
+                return $this->prop2 + $this->|>MARK_OCCURRENCES:prop3<| + $this->func1();

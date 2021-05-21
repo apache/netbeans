@@ -1,0 +1,159 @@
+<testresult testFile='contextSensitiveLexerWithConstVisibility_01.php'>
+    <scanner>
+        <token id='T_CLASS' start='7' end='12'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='13' end='25'>
+            <text>ClassExample</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='26' end='27'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='32' end='38'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='39' end='44'>
+            <text>const</text>
+        </token>
+        <token id='T_PUBLIC' start='45' end='51'>
+            <text>public</text>
+        </token>
+        <token id='T_EQUAL' start='52' end='53'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='54' end='60'>
+            <text>"test"</text>
+        </token>
+        <token id='T_SEMICOLON' start='60' end='61'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='66' end='75'>
+            <text>protected</text>
+        </token>
+        <token id='T_CONST' start='76' end='81'>
+            <text>const</text>
+        </token>
+        <token id='T_PROTECTED' start='82' end='91'>
+            <text>protected</text>
+        </token>
+        <token id='T_EQUAL' start='92' end='93'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='94' end='100'>
+            <text>"test"</text>
+        </token>
+        <token id='T_SEMICOLON' start='100' end='101'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='106' end='113'>
+            <text>private</text>
+        </token>
+        <token id='T_CONST' start='114' end='119'>
+            <text>const</text>
+        </token>
+        <token id='T_PRIVATE' start='120' end='127'>
+            <text>private</text>
+        </token>
+        <token id='T_EQUAL' start='128' end='129'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='130' end='136'>
+            <text>"test"</text>
+        </token>
+        <token id='T_SEMICOLON' start='136' end='137'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='138' end='139'>
+            <text>}</text>
+        </token>
+        <token id='T_INTERFACE' start='141' end='150'>
+            <text>interface</text>
+        </token>
+        <token id='T_STRING' start='151' end='167'>
+            <text>InterfaceExample</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='168' end='169'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='174' end='180'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='181' end='186'>
+            <text>const</text>
+        </token>
+        <token id='T_PUBLIC' start='187' end='193'>
+            <text>PUBLIC</text>
+        </token>
+        <token id='T_EQUAL' start='194' end='195'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='196' end='204'>
+            <text>"public"</text>
+        </token>
+        <token id='T_SEMICOLON' start='204' end='205'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='206' end='207'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='208' end='208'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='208'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='7' end='139' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='13' end='25' name='ClassExample'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='26' end='139' isCurly='true'>
+                    <ClassConstantDeclaration start='32' end='61' modifier='public'>
+                        <Names>
+                            <Identifier start='45' end='51' name='public'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='54' end='60' type='STRING' value='"test"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='66' end='101' modifier='protected'>
+                        <Names>
+                            <Identifier start='82' end='91' name='protected'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='94' end='100' type='STRING' value='"test"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='106' end='137' modifier='private'>
+                        <Names>
+                            <Identifier start='120' end='127' name='private'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='130' end='136' type='STRING' value='"test"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <InterfaceDeclaration start='141' end='207'>
+                <Name>
+                    <Identifier start='151' end='167' name='InterfaceExample'/>
+                </Name>
+                <Block start='168' end='207' isCurly='true'>
+                    <ClassConstantDeclaration start='174' end='205' modifier='public'>
+                        <Names>
+                            <Identifier start='187' end='193' name='PUBLIC'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='196' end='204' type='STRING' value='"public"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                </Block>
+            </InterfaceDeclaration>
+        </Statements>
+    </Program>
+</testresult>

@@ -1,0 +1,62 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n\n
+token #2 PHP_CLASS class
+token #3 WHITESPACE  
+token #4 PHP_STRING ClassExample
+token #5 WHITESPACE  
+token #6 PHP_CURLY_OPEN {
+token #7 WHITESPACE \n    
+token #8 PHP_PUBLIC public
+token #9 WHITESPACE  
+token #10 PHP_CONST const
+token #11 WHITESPACE  
+token #12 PHP_STRING public
+token #13 WHITESPACE  
+token #14 PHP_OPERATOR =
+token #15 WHITESPACE  
+token #16 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #17 PHP_SEMICOLON ;
+token #18 WHITESPACE \n    
+token #19 PHP_PROTECTED protected
+token #20 WHITESPACE  
+token #21 PHP_CONST const
+token #22 WHITESPACE  
+token #23 PHP_STRING protected
+token #24 WHITESPACE  
+token #25 PHP_OPERATOR =
+token #26 WHITESPACE  
+token #27 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #28 PHP_SEMICOLON ;
+token #29 WHITESPACE \n    
+token #30 PHP_PRIVATE private
+token #31 WHITESPACE  
+token #32 PHP_CONST const
+token #33 WHITESPACE  
+token #34 PHP_STRING private
+token #35 WHITESPACE  
+token #36 PHP_OPERATOR =
+token #37 WHITESPACE  
+token #38 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #39 PHP_SEMICOLON ;
+token #40 WHITESPACE \n
+token #41 PHP_CURLY_CLOSE }
+token #42 WHITESPACE \n\n
+token #43 PHP_INTERFACE interface
+token #44 WHITESPACE  
+token #45 PHP_STRING InterfaceExample
+token #46 WHITESPACE  
+token #47 PHP_CURLY_OPEN {
+token #48 WHITESPACE \n    
+token #49 PHP_PUBLIC public
+token #50 WHITESPACE  
+token #51 PHP_CONST const
+token #52 WHITESPACE  
+token #53 PHP_STRING PUBLIC
+token #54 WHITESPACE  
+token #55 PHP_OPERATOR =
+token #56 WHITESPACE  
+token #57 PHP_CONSTANT_ENCAPSED_STRING "public"
+token #58 PHP_SEMICOLON ;
+token #59 WHITESPACE \n
+token #60 PHP_CURLY_CLOSE }
+token #61 WHITESPACE \n

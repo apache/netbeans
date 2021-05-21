@@ -1,0 +1,8 @@
+Code completion result for source line:
+formatter.println("The dos is old " + Dog.|years + " years.");
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getColor(): Dog.color           [PUBLIC]   getterSettterInObjectLiteral.js
+FIELD      color                           [PUBLIC]   getterSettterInObjectLiteral.js
+FIELD      old: Number                     [PUBLIC]   getterSettterInObjectLiteral.js
+FIELD      years: Number                   [PUBLIC]   getterSettterInObjectLiteral.js

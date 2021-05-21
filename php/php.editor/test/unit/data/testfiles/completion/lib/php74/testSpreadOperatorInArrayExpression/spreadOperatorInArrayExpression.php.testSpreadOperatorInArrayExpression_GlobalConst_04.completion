@@ -1,0 +1,4 @@
+Code completion result for source line:
+const CONSTANT4 = [...CONSTANT2, 100 => 0, ...\B|ar\BAR_CONSTANT];
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    Bar                             [PUBLIC]   null

@@ -1,0 +1,135 @@
+|>GLOBAL:Ext<|.onReady(function() {
+
+    var |>LOCAL_VARIABLE_DECLARATION:recordFields<| = [
+    {
+        |>FIELD:name<| : 'id',
+        |>FIELD:mapping<| : 'service_id'
+    },
+
+    {
+        |>FIELD:name<| : 'displayname',
+        |>FIELD:mapping<| : 'display_name'
+    },
+
+    {
+        |>FIELD:name<| : 'checkcommandargs',
+        |>FIELD:mapping<| : 'check_command_args'
+    },
+
+    {
+        |>FIELD:name<| : 'checkinterval',
+        |>FIELD:mapping<| : 'check_interval'
+    },
+
+    {
+        |>FIELD:name<| : 'retryinterval',
+        |>FIELD:mapping<| : 'retry_interval'
+    },
+
+    {
+        |>FIELD:name<| : 'notifyonwarning',
+        |>FIELD:mapping<| : 'notify_on_warning'
+    }
+    ];
+
+    var |>LOCAL_VARIABLE_DECLARATION:remoteJsonStore<| = new |>GLOBAL:Ext<|.data.JsonStore ({
+        |>FIELD:fields<|          : |>LOCAL_VARIABLE:recordFields<|,
+        |>FIELD:url<|             : 'http://localhost:8080/ext-test/chapter-07/dataQuery.php',
+        |>FIELD:totalProperty<|   : 'totalCount',
+        |>FIELD:root<|            : 'records',
+        |>FIELD:id<|              : 'ourRemoteStore',
+        |>FIELD:autoLoad<|        : false,
+        |>FIELD:remoteSort<|      : true
+    });
+
+    var |>METHOD:colorTextBlue<| = function(id) {
+        return '<span style="color: #0000FF;">' + id + '</span>';
+    }
+
+    var |>METHOD:stylizeDisplayName<| = function(|>UNUSED:displayname<|, |>UNUSED:column<|, record) {
+        var |>LOCAL_VARIABLE_DECLARATION:displayname<| = record.get('displayname');
+
+        return String.format('{0}<br />', |>LOCAL_VARIABLE:displayname<|);
+    }
+
+    var |>LOCAL_VARIABLE_DECLARATION:columnModel<| = [
+    {
+        |>FIELD:header<|      : 'Service ID',
+        |>FIELD:dataIndex<|   : 'serviceid',
+        |>FIELD:sortable<|    : true,
+        |>FIELD:width<|       : 50,
+        |>FIELD:resizable<|   : false,
+        |>FIELD:hidden<|      : true,
+        |>METHOD:renderer<|    : colorTextBlue
+    },
+    {
+        |>FIELD:header<|      : 'Display Name',
+        |>FIELD:dataIndex<|   : 'displayname',
+        |>FIELD:sortable<|    : true,
+        |>FIELD:hideable<|    : false,
+        |>FIELD:width<|       : 75,
+        |>FIELD:id<|          : 'displaynameCol',
+        |>METHOD:renderer<|    : stylizeDisplayName
+    },
+    {
+        |>FIELD:header<|      : 'Check Command Arguments',
+        |>FIELD:dataIndex<|   : 'checkcommanargs',
+        |>FIELD:sortable<|    : false,
+        |>FIELD:hideable<|    : false,
+        |>FIELD:width<|       : 150
+    },
+    {
+        |>FIELD:header<|      : 'Check Interval',
+        |>FIELD:dataIndex<|   : 'checkinterval',
+        |>FIELD:sortable<|    : false,
+        |>FIELD:hideable<|    : false,
+        |>FIELD:width<|       : 85
+    },
+    {
+        |>FIELD:header<|      : 'Retry Interval',
+        |>FIELD:dataIndex<|   : 'retryinterval',
+        |>FIELD:sortable<|    : false,
+        |>FIELD:hideable<|    : false,
+        |>FIELD:width<|       : 85
+    },
+    {
+        |>FIELD:header<|      : 'Retry on Warning',
+        |>FIELD:dataIndex<|   : 'retryonwarning',
+        |>FIELD:sortable<|    : false,
+        |>FIELD:hideable<|    : false,
+        |>FIELD:width<|       : 95
+    }
+    ];
+
+    var |>CLASS:pagingToolbar<| = {
+        |>FIELD:xtype<|       : 'paging',
+        |>FIELD:store<|       : |>LOCAL_VARIABLE:remoteJsonStore<|,
+        |>FIELD:pageSize<|    : 50,
+        |>FIELD:displayInfo<| : true
+    }
+
+    var |>CLASS:grid<| = {
+        |>FIELD:xtype<|               : 'grid',
+        |>FIELD:columns<|             : |>LOCAL_VARIABLE:columnModel<|,
+        |>FIELD:store<|               : |>LOCAL_VARIABLE:remoteJsonStore<|,
+        |>FIELD:loadMask<|            : true,
+        |>FIELD:bbar<|                : pagingToolbar,
+        |>FIELD:autoExpandColumn<|    : 'displaynameCol'
+    }
+
+    new |>GLOBAL:Ext<|.Window({
+        |>FIELD:height<|  : 350,
+        |>FIELD:width<|   : 540,
+        |>FIELD:border<|  : false,
+        |>FIELD:layout<|  : 'fit',
+        |>FIELD:items<|   : grid
+    }).show();
+
+    |>GLOBAL:Ext<|.StoreMgr.get('ourRemoteStore').load({
+        |>CLASS:params<| : {
+            |>FIELD:start<| : 0,
+            |>FIELD:limit<| : 50
+        }
+    });
+
+});

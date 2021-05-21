@@ -1,0 +1,15 @@
+<?php
+
+class |>CLASS:Foo<| {
+
+    const |>FIELD,STATIC:bar<| = "";
+    public static $|>FIELD,STATIC:bar<|;
+    public $|>FIELD:foobar<|;
+
+    public function |>METHOD:test<|() {
+        $this->|>FIELD:foobar<|[Foo::|>FIELD,STATIC:bar<|];
+        $this->|>FIELD:foobar<|[Foo::$|>FIELD,STATIC:bar<|];
+    }
+
+}
+?>

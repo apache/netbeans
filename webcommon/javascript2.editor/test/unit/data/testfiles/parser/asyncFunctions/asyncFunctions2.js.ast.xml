@@ -1,0 +1,64 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='90'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='90'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='fooBar' start='6' end='90'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='6' end='12'>
+        <name>fooBar</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='=>:1' kind='ARROW' start='15' end='90'>
+        <isAnonymous/>
+        <isAsync/>
+        <!-- FunctionNode Parameters -->
+        <!-- FunctionNode Body -->
+        <Block start='27' end='88'>
+          <isFunctionBody/>
+          <!-- Block Statements -->
+          <IfNode start='33' end='88'>
+            <IdentNode start='37' end='41'>
+              <name>user</name>
+            </IdentNode>
+            <Block start='43' end='88'>
+              <!-- Block Statements -->
+              <VarNode name='userLogin' start='57' end='81'>
+                <hasInit/>
+                <isAssignment/>
+                <isBlockScoped/>
+                <isConst/>
+                <!-- VarNode Assignment Dest -->
+                <IdentNode start='57' end='66'>
+                  <name>userLogin</name>
+                  <isDeclaredHere/>
+                  <isInitializedHere/>
+                </IdentNode>
+                <!-- VarNode Init -->
+                <UnaryNode type='AWAIT' start='69' end='81'>
+                  <!-- UnaryNode Expression -->
+                  <CallNode start='75' end='81'>
+                    <!-- CallNode Arguments -->
+                    <!-- CallNode Function -->
+                    <IdentNode start='75' end='79'>
+                      <name>test</name>
+                    </IdentNode>
+                  </CallNode>
+                </UnaryNode>
+              </VarNode>
+            </Block>
+          </IfNode>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

@@ -1,0 +1,2 @@
+    const |>MARK_OCCURRENCES:ECHO<| = "ECHO", FOR = 1;
+        static::|>MARK_OCCURRENCES:E^CHO<|;

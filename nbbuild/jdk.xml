@@ -96,7 +96,10 @@
                 <available file="${nbjdk.javac}" type="file"/>
                 <available file="${nbjdk.java}" type="file"/>
                 <available file="${nbjdk.javadoc}" type="file"/>
-                <available classname="java.lang.Object" classpath="${nbjdk.bootclasspath}" ignoresystemclasses="true"/>
+                <or>
+                    <available classname="java.lang.Object" classpath="${nbjdk.bootclasspath}" ignoresystemclasses="true"/>
+                    <available file="${nbjdk.home}/bin/jmod${.exe}"/>
+                </or>
             </and>
         </condition>
         <available property="have-jdk-1.4" classname="java.lang.CharSequence" classpath="${nbjdk.bootclasspath}" ignoresystemclasses="true"/>
@@ -104,7 +107,7 @@
         <available property="have-jdk-1.6" classname="java.util.ServiceLoader" classpath="${nbjdk.bootclasspath}" ignoresystemclasses="true"/>
         <available property="have-jdk-1.7" classname="java.lang.ReflectiveOperationException" classpath="${nbjdk.bootclasspath}" ignoresystemclasses="true"/>
         <available property="have-jdk-1.8" classname="java.lang.FunctionalInterface" classpath="${nbjdk.bootclasspath}" ignoresystemclasses="true"/>
-        <available property="have-jdk-1.9" classname="java.util.zip.CRC32C" classpath="${nbjdk.bootclasspath}" ignoresystemclasses="true"/>
+        <available property="have-jdk-1.9" file="${nbjdk.home}/bin/jmod${.exe}"/>
         <echo level="verbose">nbjdk.active=${nbjdk.active} nbjdk.home=${nbjdk.home} nbjdk.java=${nbjdk.java} nbjdk.javac=${nbjdk.javac} nbjdk.javadoc=${nbjdk.javadoc} nbjdk.bootclasspath=${nbjdk.bootclasspath} nbjdk.valid=${nbjdk.valid} have-jdk-1.4=${have-jdk-1.4} have-jdk-1.5=${have-jdk-1.5} have-jdk-1.6=${have-jdk-1.6} have-jdk-1.7=${have-jdk-1.7} have-jdk-1.8=${have-jdk-1.8} have-jdk-1.9=${have-jdk-1.9}</echo>
     </target>
 

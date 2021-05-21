@@ -1,0 +1,13 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+
+<!-- The list of normal or fragment attributes can be specified here, e.g.: -->
+    <jsp:directive.attribute name="title" required="true"/>
+    <jsp:directive.attribute name="author" required="false"/>
+
+<!-- Use expression language to work with attributes, e.g.: -->
+    <jsp:element name="book">
+        <jsp:element name="title">${title}</jsp:element>
+        <jsp:element name="author">${author}</jsp:element>
+    </jsp:element>
+
+</jsp:root>

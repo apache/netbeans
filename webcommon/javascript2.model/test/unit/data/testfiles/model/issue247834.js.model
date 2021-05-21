@@ -1,0 +1,36 @@
+FUNCTION issue247834 [ANONYMOUS: false, DECLARED: true - issue247834, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+Breeze              : OBJECT Breeze [ANONYMOUS: false, DECLARED: false - Breeze, MODIFIERS: PUBLIC, OBJECT]
+                    # PROPERTIES
+                    checkThis : FUNCTION checkThis [ANONYMOUS: false, DECLARED: false - checkThis, MODIFIERS: PUBLIC, METHOD]
+                              # PARAMETERS
+                              OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                              # PROPERTIES
+                              arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+define              : FUNCTION define [ANONYMOUS: false, DECLARED: false - define, MODIFIERS: PUBLIC, FUNCTION]
+                    # PROPERTIES
+                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+issue247834Anonym$0 : OBJECT issue247834Anonym$0 [ANONYMOUS: true, DECLARED: true, MODIFIERS: PRIVATE, ANONYMOUS_OBJECT]
+issue247834L#1      : FUNCTION issue247834L#1 [ANONYMOUS: true, DECLARED: true - issue247834L#1, MODIFIERS: PUBLIC, FUNCTION]
+                    # RETURN TYPES
+                    issue247834L#1.Async, RESOLVED: true
+                    # PROPERTIES
+                    Async     : FUNCTION Async [ANONYMOUS: false, DECLARED: true - Async, MODIFIERS: PRIVATE, CONSTRUCTOR]
+                              # RETURN TYPES
+                              Async, RESOLVED: true
+                              # PARAMETERS
+                              OBJECT createResult [ANONYMOUS: false, DECLARED: true - createResult, MODIFIERS: PUBLIC, PARAMETER]
+                              OBJECT initialResultValue [ANONYMOUS: false, DECLARED: true - initialResultValue, MODIFIERS: PUBLIC, PARAMETER]
+                              OBJECT resultChangeListener [ANONYMOUS: false, DECLARED: true - resultChangeListener, MODIFIERS: PUBLIC, PARAMETER]
+                              OBJECT eager [ANONYMOUS: false, DECLARED: true - eager, MODIFIERS: PUBLIC, PARAMETER]
+                              # PROPERTIES
+                              _debugThisAsync : OBJECT _debugThisAsync [ANONYMOUS: false, DECLARED: true - _debugThisAsync, MODIFIERS: PUBLIC, PROPERTY]
+                              arguments       : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                              setEager        : FUNCTION setEager [ANONYMOUS: false, DECLARED: false - setEager, MODIFIERS: PUBLIC, METHOD]
+                                              # PARAMETERS
+                                              OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                                              # PROPERTIES
+                                              arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

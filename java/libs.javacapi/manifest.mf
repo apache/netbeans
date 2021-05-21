@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.libs.javacapi
+OpenIDE-Module-Implementation-Version: 3
+OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/javacapi/Bundle.properties
+OpenIDE-Module-Requires: org.openide.modules.ModuleFormat2

@@ -1,0 +1,31 @@
+Detected parser blocks in the file:
+
+{null <240:278> - $item.timeins|date_format:$config.time}
+
+{null <281:292> - $item.login}
+
+{null <297:307> - $item.text}
+
+{foreach <179:221> -  from=$chat_text item=item name=foo}
+ |
+ -- {/foreach <328:336> - }
+
+{null <501:512> - $item.login}
+
+{foreach <439:482> -  from=$chat_users item=item name=foo}
+ |
+ -- {/foreach <527:535> - }
+
+{capture <76:98> -  name=chat_read}
+ |
+ -- {/capture <820:828> - }
+
+{null <853:878> - $smarty.capture.chat_read}
+
+{null <917:923> - $error}
+
+{if <832:846> -  ($room > 0)}
+ |
+ -- {else <881:885> - }
+ |
+ -- {/if <998:1001> - }

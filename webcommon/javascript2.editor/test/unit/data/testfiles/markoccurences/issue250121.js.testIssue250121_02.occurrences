@@ -1,0 +1,2 @@
+ * @typedef {Object} MyContext~|>MARK_OCCURRENCES:Address<| description
+ * @param {MyContext~|>MARK_OCCURRENCES:Add^ress<|} addressDescription

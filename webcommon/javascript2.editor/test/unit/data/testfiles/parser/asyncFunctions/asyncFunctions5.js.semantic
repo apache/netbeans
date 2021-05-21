@@ -1,0 +1,4 @@
+ |>GLOBAL:async<|
+ function |>METHOD:r<|(|>UNUSED:await<|) {
+     
+ }

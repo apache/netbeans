@@ -1,0 +1,15 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n\n
+token #2 PHP_FUNCTION function
+token #3 WHITESPACE  
+token #4 PHP_STRING test
+token #5 PHP_TOKEN (
+token #6 PHP_CALLABLE callable
+token #7 WHITESPACE  
+token #8 PHP_VARIABLE $param
+token #9 PHP_TOKEN )
+token #10 WHITESPACE  
+token #11 PHP_CURLY_OPEN {
+token #12 WHITESPACE \n
+token #13 PHP_CURLY_CLOSE }
+token #14 WHITESPACE \n

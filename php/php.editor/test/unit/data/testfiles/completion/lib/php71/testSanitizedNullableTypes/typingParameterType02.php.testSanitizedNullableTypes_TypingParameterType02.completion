@@ -1,0 +1,4 @@
+Code completion result for source line:
+public function mytest(?BSanitizing $sanitizing, ?BSanit|);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      BSanitizing                     [PUBLIC]   typingParameterType02.php

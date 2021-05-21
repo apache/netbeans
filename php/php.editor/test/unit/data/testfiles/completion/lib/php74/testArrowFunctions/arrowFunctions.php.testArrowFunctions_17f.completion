@@ -1,0 +1,4 @@
+Code completion result for source line:
+$af = fn(int $x): callable => fn(int $z): int => $x + $y * $z|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   int $z                          [PUBLIC]   arrowFunctions.php

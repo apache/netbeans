@@ -1,0 +1,4 @@
+Test:CONSTRUCTOR:[PUBLIC]:ESCAPED{Test}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Test</font>:
+  name:FIELD:[PUBLIC]:ESCAPED{name}<font color="#999999">ESCAPED{ : }String</font>:
+  prototype:CLASS:[PUBLIC]:ESCAPED{prototype}:
+    msg:METHOD:[PUBLIC]:ESCAPED{msg}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

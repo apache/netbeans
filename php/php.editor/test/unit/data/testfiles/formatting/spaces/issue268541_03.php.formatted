@@ -1,0 +1,12 @@
+<?php
+
+if (true) {
+    if ($condition)
+        $something;
+    else
+        $something;
+} elseif ($condition) {
+    $something;
+} else {
+    $something;
+}

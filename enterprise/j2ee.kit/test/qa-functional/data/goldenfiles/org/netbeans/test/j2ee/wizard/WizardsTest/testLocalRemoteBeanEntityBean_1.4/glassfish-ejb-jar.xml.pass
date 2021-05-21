@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE glassfish-ejb-jar PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 EJB 3.1//EN" "http://glassfish.org/dtds/glassfish-ejb-jar_3_1-1.dtd">
+<glassfish-ejb-jar>
+  <enterprise-beans>
+    <ejb>
+      <ejb-name>RemoteSession</ejb-name>
+      <jndi-name>ejb/RemoteSession</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>LRS</ejb-name>
+      <jndi-name>ejb/LRS</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>RSS</ejb-name>
+      <jndi-name>ejb/RSS</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>LRSS</ejb-name>
+      <jndi-name>ejb/LRSS</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>RemoteEntity</ejb-name>
+      <jndi-name>ejb/RemoteEntity</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>LRE</ejb-name>
+      <jndi-name>ejb/LRE</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>QueueMdb</ejb-name>
+      <jndi-name>jms/QueueMdb</jndi-name>
+      <mdb-connection-factory>
+        <jndi-name>jms/QueueMdbFactory</jndi-name>
+      </mdb-connection-factory>
+    </ejb>
+    <ejb>
+      <ejb-name>TopicMdb</ejb-name>
+      <jndi-name>jms/TopicMdb</jndi-name>
+      <mdb-connection-factory>
+        <jndi-name>jms/TopicMdbFactory</jndi-name>
+      </mdb-connection-factory>
+    </ejb>
+    <ejb>
+      <ejb-name>RemoteBeanEntity</ejb-name>
+      <jndi-name>ejb/RemoteBeanEntity</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>LRBE</ejb-name>
+      <jndi-name>ejb/LRBE</jndi-name>
+    </ejb>
+  </enterprise-beans>
+</glassfish-ejb-jar>

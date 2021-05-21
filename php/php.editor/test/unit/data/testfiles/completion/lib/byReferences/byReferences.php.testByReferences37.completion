@@ -1,0 +1,4 @@
+Code completion result for source line:
+function &my_sort13(array &$data1, Coll|ection &...$data2) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Collection                      [PUBLIC]   byReferences.php

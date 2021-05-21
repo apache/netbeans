@@ -1,0 +1,13 @@
+$|>MARK_OCCURRENCES:y<| = 5;
+$fn1a = fn(int $x) => $x + $|>MARK_OCCURRENCES:y<|;
+$fn1b = function ($x) use ($|>MARK_OCCURRENCES:y<|) {
+    return $x + $|>MARK_OCCURRENCES:y<|;
+$fn2 = fn(int $a, ArrowFunctions $b) => $a + $b->getNumber() * $|>MARK_OCCURRENCES:y<|;
+$af = fn() => fn() => $|>MARK_OCCURRENCES:y<|;
+(fn() => fn() => $|>MARK_OCCURRENCES:y<|)()();
+(fn() => function() use ($|>MARK_OCCURRENCES:y<|) {return $^|>MARK_OCCURRENCES:y<|;})()();
+$af = fn(int $x): callable => fn(int $z): int => $x + $|>MARK_OCCURRENCES:y<| * $z;
+$fn3 = function ($x) use ($|>MARK_OCCURRENCES:y<|) {
+    return fn() => $x + $|>MARK_OCCURRENCES:y<|;
+$fn4 = function ($x) use ($|>MARK_OCCURRENCES:y<|) {
+    return fn($x) => $x + $|>MARK_OCCURRENCES:y<|;

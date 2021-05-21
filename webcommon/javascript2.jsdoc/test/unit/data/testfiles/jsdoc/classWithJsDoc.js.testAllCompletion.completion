@@ -1,0 +1,44 @@
+Code completion result for source line:
+* @|param {int} One The first number to add
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+OTHER      @argument {type} name descript             JsDoc
+OTHER      @augments type                             JsDoc
+OTHER      @author text                               JsDoc
+OTHER      @borrows otherName as thisName             JsDoc
+OTHER      @callback type                             JsDoc
+OTHER      @class text                                JsDoc
+OTHER      @constant                                  JsDoc
+OTHER      @constructor                               JsDoc
+OTHER      @constructs                                JsDoc
+OTHER      @default text                              JsDoc
+OTHER      @deprecated text                           JsDoc
+OTHER      @description text                          JsDoc
+OTHER      @event                                     JsDoc
+OTHER      @example text                              JsDoc
+OTHER      @extends type                              JsDoc
+OTHER      @field                                     JsDoc
+OTHER      @fileOverview text                         JsDoc
+OTHER      @function                                  JsDoc
+OTHER      @ignore                                    JsDoc
+OTHER      @inner                                     JsDoc
+OTHER      @lends namePath                            JsDoc
+OTHER      @link text                                 JsDoc
+OTHER      @memberOf namePath                         JsDoc
+OTHER      @name namePath                             JsDoc
+OTHER      @namespace text                            JsDoc
+OTHER      @param {type} name description             JsDoc
+OTHER      @private                                   JsDoc
+OTHER      @property {type} name descript             JsDoc
+OTHER      @public                                    JsDoc
+OTHER      @requires text                             JsDoc
+OTHER      @return {type} description                 JsDoc
+OTHER      @returns {type} description                JsDoc
+OTHER      @see text                                  JsDoc
+OTHER      @since text                                JsDoc
+OTHER      @static                                    JsDoc
+OTHER      @syntax text                               JsDoc
+OTHER      @throws {type} description                 JsDoc
+OTHER      @type type                                 JsDoc
+OTHER      @typedef {type} name descripti             JsDoc
+OTHER      @version text                              JsDoc

@@ -1,0 +1,999 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<symfony>
+  <commands>
+    <command id="help" name="help">
+      <usage>help [--xml] [command_name]</usage>
+      <description>Displays help for a command</description>
+      <help>The &lt;info&gt;help&lt;/info&gt; command displays help for a given command:
+ 
+   &lt;info&gt;php app/console help list&lt;/info&gt;
+ 
+ You can also output the help as XML by using the &lt;comment&gt;--xml&lt;/comment&gt; option:
+ 
+   &lt;info&gt;php app/console help --xml list&lt;/info&gt;</help>
+      <aliases/>
+      <arguments>
+        <argument name="command_name" is_required="0" is_array="0">
+          <description>The command name</description>
+          <defaults>
+            <default>help</default>
+          </defaults>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--xml" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>To output help as XML</description>
+        </option>
+      </options>
+    </command>
+    <command id="list" name="list">
+      <usage>list [--xml] [namespace]</usage>
+      <description>Lists commands</description>
+      <help>The &lt;info&gt;list&lt;/info&gt; command lists all commands:
+ 
+   &lt;info&gt;php app/console list&lt;/info&gt;
+ 
+ You can also display the commands for a specific namespace:
+ 
+   &lt;info&gt;php app/console list test&lt;/info&gt;
+ 
+ You can also output the information as XML by using the &lt;comment&gt;--xml&lt;/comment&gt; option:
+ 
+   &lt;info&gt;php app/console list --xml&lt;/info&gt;</help>
+      <aliases/>
+      <arguments>
+        <argument name="command" is_required="1" is_array="0">
+          <description>The command to execute</description>
+          <defaults/>
+        </argument>
+        <argument name="namespace" is_required="0" is_array="0">
+          <description>The namespace name</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--xml" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>To output help as XML</description>
+        </option>
+        <option name="--help" shortcut="-h" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this help message.</description>
+        </option>
+        <option name="--quiet" shortcut="-q" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not output any message.</description>
+        </option>
+        <option name="--verbose" shortcut="-v" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Increase verbosity of messages.</description>
+        </option>
+        <option name="--version" shortcut="-V" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Display this program version.</description>
+        </option>
+        <option name="--ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force ANSI output.</description>
+        </option>
+        <option name="--no-ansi" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Disable ANSI output.</description>
+        </option>
+        <option name="--no-interaction" shortcut="-n" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not ask any interactive question.</description>
+        </option>
+        <option name="--shell" shortcut="-s" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Launch the shell.</description>
+        </option>
+        <option name="--env" shortcut="-e" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>The Environment name.</description>
+          <defaults>
+            <default>dev</default>
+          </defaults>
+        </option>
+        <option name="--no-debug" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Switches off debug mode.</description>
+        </option>
+      </options>
+    </command>
+    <command id="assetic:dump" name="assetic:dump">
+      <usage>assetic:dump [--watch] [--force] [--period="..."] [write_to]</usage>
+      <description>Dumps all assets to the filesystem</description>
+      <help></help>
+      <aliases/>
+      <arguments>
+        <argument name="write_to" is_required="0" is_array="0">
+          <description>Override the configured asset root</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--watch" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Check for changes every second, debug mode only</description>
+        </option>
+        <option name="--force" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force an initial generation of all assets (used with --watch)</description>
+        </option>
+        <option name="--period" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>Set the polling period in seconds (used with --watch)</description>
+          <defaults>
+            <default>1</default>
+          </defaults>
+        </option>
+      </options>
+    </command>
+    <command id="assets:install" name="assets:install">
+      <usage>assets:install [--symlink] target</usage>
+      <description>Install bundles web assets under a public web directory</description>
+      <help>The &lt;info&gt;assets:install&lt;/info&gt; command installs bundle assets into a given
+ directory (e.g. the web directory).
+ 
+ &lt;info&gt;php app/console assets:install web [--symlink]&lt;/info&gt;
+ 
+ A "bundles" directory will be created inside the target directory, and the
+ "Resources/public" directory of each bundle will be copied into it.
+ 
+ To create a symlink to each bundle instead of copying its assets, use the
+ &lt;info&gt;--symlink&lt;/info&gt; option.
+ </help>
+      <aliases/>
+      <arguments>
+        <argument name="target" is_required="1" is_array="0">
+          <description>The target directory (usually "web")</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--symlink" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Symlinks the assets instead of copying it</description>
+        </option>
+      </options>
+    </command>
+    <command id="cache:clear" name="cache:clear">
+      <usage>cache:clear [--no-warmup]</usage>
+      <description>Clear the cache</description>
+      <help>The &lt;info&gt;cache:clear&lt;/info&gt; command clears the application cache for a given environment
+ and debug mode:
+ 
+ &lt;info&gt;php app/console cache:clear --env=dev&lt;/info&gt;
+ &lt;info&gt;php app/console cache:clear --env=prod --no-debug&lt;/info&gt;</help>
+      <aliases/>
+      <arguments/>
+      <options>
+        <option name="--no-warmup" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not warm up the cache</description>
+        </option>
+      </options>
+    </command>
+    <command id="cache:warmup" name="cache:warmup">
+      <usage>cache:warmup</usage>
+      <description>Warms up an empty cache</description>
+      <help>The &lt;info&gt;cache:warmup&lt;/info&gt; command warms up the cache.
+ 
+ Before running this command, the cache must be empty.</help>
+      <aliases/>
+      <arguments/>
+      <options/>
+    </command>
+    <command id="container:debug" name="container:debug">
+      <usage>container:debug [--show-private] [name]</usage>
+      <description>Displays current services for an application</description>
+      <help>The &lt;info&gt;container:debug&lt;/info&gt; command displays all configured &lt;comment&gt;public&lt;/comment&gt; services:
+ 
+   &lt;info&gt;container:debug&lt;/info&gt;
+ 
+ To get specific information about a service, specify its name:
+ 
+   &lt;info&gt;container:debug validator&lt;/info&gt;
+ 
+ By default, private services are hidden. You can display all services by
+ using the --show-private flag:
+ 
+   &lt;info&gt;container:debug --show-private&lt;/info&gt;</help>
+      <aliases/>
+      <arguments>
+        <argument name="name" is_required="0" is_array="0">
+          <description>A service name (foo)  or search (foo*)</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--show-private" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Use to show public *and* private services</description>
+        </option>
+      </options>
+    </command>
+    <command id="doctrine:cache:clear-metadata" name="doctrine:cache:clear-metadata">
+      <usage>doctrine:cache:clear-metadata [--em[="..."]]</usage>
+      <description>Clear all metadata cache for a entity manager</description>
+      <help>The &lt;info&gt;doctrine:cache:clear-metadata&lt;/info&gt; command clears all metadata
+ cache for the default entity manager:
+ 
+ &lt;info&gt;php app/console doctrine:cache:clear-metadata&lt;/info&gt;
+ 
+ You can also optionally specify the &lt;comment&gt;--em&lt;/comment&gt; option to specify
+ which entity manager to clear the cache for:
+ 
+ &lt;info&gt;php app/console doctrine:cache:clear-metadata --em=default&lt;/info&gt;</help>
+      <aliases/>
+      <arguments/>
+      <options>
+        <option name="--em" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>The entity manager to use for this command</description>
+          <defaults/>
+        </option>
+      </options>
+    </command>
+    <command id="doctrine:cache:clear-query" name="doctrine:cache:clear-query">
+      <usage>doctrine:cache:clear-query [--em[="..."]]</usage>
+      <description>Clear all query cache for a entity manager</description>
+      <help>The &lt;info&gt;doctrine:cache:clear-query&lt;/info&gt; command clears all query cache for
+ the default entity manager:
+ 
+ &lt;info&gt;php app/console doctrine:cache:clear-query&lt;/info&gt;
+ 
+ You can also optionally specify the &lt;comment&gt;--em&lt;/comment&gt; option to specify
+ which entity manager to clear the cache for:
+ 
+ &lt;info&gt;php app/console doctrine:cache:clear-query --em=default&lt;/info&gt;</help>
+      <aliases/>
+      <arguments/>
+      <options>
+        <option name="--em" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>The entity manager to use for this command</description>
+          <defaults/>
+        </option>
+      </options>
+    </command>
+    <command id="doctrine:cache:clear-result" name="doctrine:cache:clear-result">
+      <usage>doctrine:cache:clear-result [--id="..."] [--regex="..."] [--prefix="..."] [--suffix="..."] [--em[="..."]]</usage>
+      <description>Clear result cache for a entity manager</description>
+      <help>The &lt;info&gt;doctrine:cache:clear-result&lt;/info&gt; command clears all result cache
+ for the default entity manager:
+ 
+ &lt;info&gt;php app/console doctrine:cache:clear-result&lt;/info&gt;
+ 
+ You can also optionally specify the &lt;comment&gt;--em&lt;/comment&gt; option to specify
+ which entity manager to clear the cache for:
+ 
+ &lt;info&gt;php app/console doctrine:cache:clear-result --em=default&lt;/info&gt;
+ 
+ If you don't want to clear all result cache you can specify some additional
+ options to control what cache is deleted:
+ 
+ &lt;info&gt;php app/console doctrine:cache:clear-result --id=cache_key&lt;/info&gt;
+ 
+ Or you can specify a &lt;comment&gt;--regex&lt;/comment&gt; to delete cache entries that
+ match it:
+ 
+ &lt;info&gt;php app/console doctrine:cache:clear-result --regex="user_(.*)"&lt;/info&gt;
+ 
+ You can also specify a &lt;comment&gt;--prefix&lt;/comment&gt; or
+ &lt;comment&gt;--suffix&lt;/comment&gt; to delete cache entries for:
+ 
+ &lt;info&gt;php app/console doctrine:cache:clear-result --prefix="user_" --suffix="_frontend"&lt;/info&gt;</help>
+      <aliases/>
+      <arguments/>
+      <options>
+        <option name="--id" shortcut="" accept_value="1" is_value_required="1" is_multiple="1">
+          <description>ID(s) of the cache entry to delete (accepts * wildcards).</description>
+          <defaults/>
+        </option>
+        <option name="--regex" shortcut="" accept_value="1" is_value_required="1" is_multiple="1">
+          <description>Delete cache entries that match the given regular expression(s).</description>
+          <defaults/>
+        </option>
+        <option name="--prefix" shortcut="" accept_value="1" is_value_required="1" is_multiple="1">
+          <description>Delete cache entries that have the given prefix(es).</description>
+          <defaults/>
+        </option>
+        <option name="--suffix" shortcut="" accept_value="1" is_value_required="1" is_multiple="1">
+          <description>Delete cache entries that have the given suffix(es).</description>
+          <defaults/>
+        </option>
+        <option name="--em" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>The entity manager to use for this command</description>
+          <defaults/>
+        </option>
+      </options>
+    </command>
+    <command id="doctrine:database:create" name="doctrine:database:create">
+      <usage>doctrine:database:create [--connection[="..."]]</usage>
+      <description>Create the configured databases</description>
+      <help>The &lt;info&gt;doctrine:database:create&lt;/info&gt; command creates the default
+ connections database:
+ 
+ &lt;info&gt;php app/console doctrine:database:create&lt;/info&gt;
+ 
+ You can also optionally specify the name of a connection to create the
+ database for:
+ 
+ &lt;info&gt;php app/console doctrine:database:create --connection=default&lt;/info&gt;</help>
+      <aliases/>
+      <arguments/>
+      <options>
+        <option name="--connection" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>The connection to use for this command</description>
+          <defaults/>
+        </option>
+      </options>
+    </command>
+    <command id="doctrine:database:drop" name="doctrine:database:drop">
+      <usage>doctrine:database:drop [--connection[="..."]] [--force]</usage>
+      <description>Drop the configured databases</description>
+      <help>The &lt;info&gt;doctrine:database:drop&lt;/info&gt; command drops the default connections
+ database:
+ 
+ &lt;info&gt;php app/console doctrine:database:drop&lt;/info&gt;
+ 
+ The --force parameter has to be used to actually drop the database.
+ 
+ You can also optionally specify the name of a connection to drop the database
+ for:
+ 
+ &lt;info&gt;php app/console doctrine:database:drop --connection=default&lt;/info&gt;
+ 
+ &lt;error&gt;Be careful: All data in a given database will be lost when executing
+ this command.&lt;/error&gt;</help>
+      <aliases/>
+      <arguments/>
+      <options>
+        <option name="--connection" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>The connection to use for this command</description>
+          <defaults/>
+        </option>
+        <option name="--force" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Set this parameter to execute this action</description>
+        </option>
+      </options>
+    </command>
+    <command id="doctrine:ensure-production-settings" name="doctrine:ensure-production-settings">
+      <usage>doctrine:ensure-production-settings [--complete] [--em[="..."]]</usage>
+      <description>Verify that Doctrine is properly configured for a production environment.</description>
+      <help>The &lt;info&gt;doctrine:ensure-production-settings&lt;/info&gt; command ensures that
+ Doctrine is properly configured for a production environment.:
+ 
+ &lt;info&gt;php app/console doctrine:ensure-production-settings&lt;/info&gt;
+ 
+ You can also optionally specify the &lt;comment&gt;--em&lt;/comment&gt; option to specify
+ which entity manager to use:
+ 
+ &lt;info&gt;php app/console doctrine:ensure-production-settings --em=default&lt;/info&gt;</help>
+      <aliases/>
+      <arguments/>
+      <options>
+        <option name="--complete" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Flag to also inspect database connection existance.</description>
+        </option>
+        <option name="--em" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>The entity manager to use for this command</description>
+          <defaults/>
+        </option>
+      </options>
+    </command>
+    <command id="doctrine:generate:crud" name="doctrine:generate:crud">
+      <usage>doctrine:generate:crud [--entity="..."] [--route-prefix="..."] [--with-write] [--format="..."]</usage>
+      <description>Generates a CRUD based on a Doctrine entity</description>
+      <help>The &lt;info&gt;doctrine:generate:crud&lt;/info&gt; command generates a CRUD based on a Doctrine entity.
+ 
+ The default command only generates the list and show actions.
+ 
+ &lt;info&gt;php app/console doctrine:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin&lt;/info&gt;
+ 
+ Using the --write option allows to generate the new, edit and delete actions.
+ 
+ &lt;info&gt;php app/console doctrine:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin --with-write&lt;/info&gt;</help>
+      <aliases>
+        <alias>generate:doctrine:crud</alias>
+      </aliases>
+      <arguments/>
+      <options>
+        <option name="--entity" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>The entity class name to initialize (shortcut notation)</description>
+          <defaults/>
+        </option>
+        <option name="--route-prefix" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>The route prefix</description>
+          <defaults/>
+        </option>
+        <option name="--with-write" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Whether or not to generate create, new and delete actions</description>
+        </option>
+        <option name="--format" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>Use the format for configuration files (php, xml, yml, or annotation)</description>
+          <defaults>
+            <default>annotation</default>
+          </defaults>
+        </option>
+      </options>
+    </command>
+    <command id="doctrine:generate:entities" name="doctrine:generate:entities">
+      <usage>doctrine:generate:entities [--path="..."] [--no-backup] name</usage>
+      <description>Generate entity classes and method stubs from your mapping information</description>
+      <help>The &lt;info&gt;doctrine:generate:entities&lt;/info&gt; command generates entity classes
+ and method stubs from your mapping information:
+ 
+ You have to limit generation of entities:
+ 
+ * To a bundle:
+ 
+   &lt;info&gt;php app/console doctrine:generate:entities MyCustomBundle&lt;/info&gt;
+ 
+ * To a single entity:
+ 
+   &lt;info&gt;php app/console doctrine:generate:entities MyCustomBundle:User&lt;/info&gt;
+   &lt;info&gt;php app/console doctrine:generate:entities MyCustomBundle/Entity/User&lt;/info&gt;
+ 
+ * To a namespace
+ 
+   &lt;info&gt;php app/console doctrine:generate:entities MyCustomBundle/Entity&lt;/info&gt;
+ 
+ If the entities are not stored in a bundle, and if the classes do not exist,
+ the command has no way to guess where they should be generated. In this case,
+ you must provide the &lt;comment&gt;--path&lt;/comment&gt; option:
+ 
+   &lt;info&gt;php app/console doctrine:generate:entities Blog/Entity --path=src/&lt;/info&gt;
+ 
+ You should provide the &lt;comment&gt;--no-backup&lt;/comment&gt; option if you don't mind to back up files
+ before to generate entities:
+ 
+   &lt;info&gt;php app/console doctrine:generate:entities Blog/Entity --no-backup&lt;/info&gt;
+ 
+ &lt;error&gt;Important:&lt;/error&gt; Even if you specified Inheritance options in your
+ XML or YAML Mapping files the generator cannot generate the base and
+ child classes for you correctly, because it doesn't know which
+ class is supposed to extend which. You have to adjust the entity
+ code manually for inheritance to work!
+ </help>
+      <aliases>
+        <alias>generate:doctrine:entities</alias>
+      </aliases>
+      <arguments>
+        <argument name="name" is_required="1" is_array="0">
+          <description>A bundle name, a namespace, or a class name</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--path" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>The path where to generate entities when it cannot be guessed</description>
+          <defaults/>
+        </option>
+        <option name="--no-backup" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Do not backup existing entities files.</description>
+        </option>
+      </options>
+    </command>
+    <command id="doctrine:generate:entity" name="doctrine:generate:entity">
+      <usage>doctrine:generate:entity [--entity="..."] [--fields="..."] [--format="..."] [--with-repository]</usage>
+      <description>Generates a new Doctrine entity inside a bundle</description>
+      <help>The &lt;info&gt;doctrine:generate:entity&lt;/info&gt; task generates a new Doctrine
+ entity inside a bundle:
+ 
+ &lt;info&gt;php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post&lt;/info&gt;
+ 
+ The above command would initialize a new entity in the following entity
+ namespace &lt;info&gt;Acme\BlogBundle\Entity\Blog\Post&lt;/info&gt;.
+ 
+ You can also optionally specify the fields you want to generate in the new
+ entity:
+ 
+ &lt;info&gt;php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --fields="title:string(255) body:text"&lt;/info&gt;
+ 
+ The command can also generate the corresponding entity repository class with the
+ &lt;comment&gt;--with-repository&lt;/comment&gt; option:
+ 
+ &lt;info&gt;php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --with-repository&lt;/info&gt;
+ 
+ By default, the command uses YAML for the mapping information; change it
+ with &lt;comment&gt;--format&lt;/comment&gt;:
+ 
+ &lt;info&gt;php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --format=annotation&lt;/info&gt;
+ 
+ To deactivate the interaction mode, simply use the `--no-interaction` option
+ whitout forgetting to pass all needed options:
+ 
+ &lt;info&gt;php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --format=annotation --field="title:string(255) body:text" --with-repository --no-interaction&lt;/info&gt;</help>
+      <aliases>
+        <alias>generate:doctrine:entity</alias>
+      </aliases>
+      <arguments/>
+      <options>
+        <option name="--entity" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>The entity class name to initialize (shortcut notation)</description>
+          <defaults/>
+        </option>
+        <option name="--fields" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>The fields to create with the new entity</description>
+          <defaults/>
+        </option>
+        <option name="--format" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>Use the format for configuration files (php, xml, yml, or annotation)</description>
+          <defaults>
+            <default>annotation</default>
+          </defaults>
+        </option>
+        <option name="--with-repository" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Whether to generate the entity repository or not</description>
+        </option>
+      </options>
+    </command>
+    <command id="doctrine:generate:form" name="doctrine:generate:form">
+      <usage>doctrine:generate:form entity</usage>
+      <description>Generates a form type class based on a Doctrine entity</description>
+      <help>The &lt;info&gt;doctrine:generate:form&lt;/info&gt; command generates a form class based on a Doctrine entity.
+ 
+ &lt;info&gt;php app/console doctrine:generate:form AcmeBlogBundle:Post&lt;/info&gt;</help>
+      <aliases>
+        <alias>generate:doctrine:form</alias>
+      </aliases>
+      <arguments>
+        <argument name="entity" is_required="1" is_array="0">
+          <description>The entity class name to initialize (shortcut notation)</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options/>
+    </command>
+    <command id="doctrine:mapping:convert" name="doctrine:mapping:convert">
+      <usage>doctrine:mapping:convert [--filter="..."] [--force] [--from-database] [--extend[="..."]] [--num-spaces[="..."]] [--namespace[="..."]] [--em[="..."]] to-type dest-path</usage>
+      <description>Convert mapping information between supported formats.</description>
+      <help>The &lt;info&gt;doctrine:mapping:convert&lt;/info&gt; command converts mapping information
+ between supported formats:
+ 
+ &lt;info&gt;php app/console doctrine:mapping:convert xml /path/to/output&lt;/info&gt;</help>
+      <aliases/>
+      <arguments>
+        <argument name="to-type" is_required="1" is_array="0">
+          <description>The mapping type to be converted.</description>
+          <defaults/>
+        </argument>
+        <argument name="dest-path" is_required="1" is_array="0">
+          <description>The path to generate your entities classes.</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--filter" shortcut="" accept_value="1" is_value_required="1" is_multiple="1">
+          <description>A string pattern used to match entities that should be processed.</description>
+          <defaults/>
+        </option>
+        <option name="--force" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force to overwrite existing mapping files.</description>
+        </option>
+        <option name="--from-database" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Whether or not to convert mapping information from existing database.</description>
+        </option>
+        <option name="--extend" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>Defines a base class to be extended by generated entity classes.</description>
+          <defaults/>
+        </option>
+        <option name="--num-spaces" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>Defines the number of indentation spaces</description>
+          <defaults>
+            <default>4</default>
+          </defaults>
+        </option>
+        <option name="--namespace" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>Defines a namespace for the generated entity classes, if converted from database.</description>
+          <defaults/>
+        </option>
+        <option name="--em" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>The entity manager to use for this command</description>
+          <defaults/>
+        </option>
+      </options>
+    </command>
+    <command id="doctrine:mapping:import" name="doctrine:mapping:import">
+      <usage>doctrine:mapping:import [--em[="..."]] [--filter="..."] [--force] bundle [mapping-type]</usage>
+      <description>Import mapping information from an existing database</description>
+      <help>The &lt;info&gt;doctrine:mapping:import&lt;/info&gt; command imports mapping information
+ from an existing database:
+ 
+ &lt;info&gt;php app/console doctrine:mapping:import "MyCustomBundle" xml&lt;/info&gt;
+ 
+ You can also optionally specify which entity manager to import from with the
+ &lt;info&gt;--em&lt;/info&gt; option:
+ 
+ &lt;info&gt;php app/console doctrine:mapping:import "MyCustomBundle" xml --em=default&lt;/info&gt;
+ 
+ If you don't want to map every entity that can be found in the database, use the
+ &lt;info&gt;--filter&lt;/info&gt; option. It will try to match the targeted mapped entity with the
+ provided pattern string.
+ 
+ &lt;info&gt;php app/console doctrine:mapping:import "MyCustomBundle" xml --filter=MyMatchedEntity&lt;/info&gt;
+ 
+ Use the &lt;info&gt;--force&lt;/info&gt; option, if you want to override existing mapping files:
+ 
+ &lt;info&gt;php app/console doctrine:mapping:import "MyCustomBundle" xml --force&lt;/info&gt;</help>
+      <aliases/>
+      <arguments>
+        <argument name="bundle" is_required="1" is_array="0">
+          <description>The bundle to import the mapping information to</description>
+          <defaults/>
+        </argument>
+        <argument name="mapping-type" is_required="0" is_array="0">
+          <description>The mapping type to export the imported mapping information to</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--em" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>The entity manager to use for this command</description>
+          <defaults/>
+        </option>
+        <option name="--filter" shortcut="" accept_value="1" is_value_required="1" is_multiple="1">
+          <description>A string pattern used to match entities that should be mapped.</description>
+          <defaults/>
+        </option>
+        <option name="--force" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Force to overwrite existing mapping files.</description>
+        </option>
+      </options>
+    </command>
+    <command id="doctrine:mapping:info" name="doctrine:mapping:info">
+      <usage>doctrine:mapping:info [--em[="..."]]</usage>
+      <description>Show basic information about all mapped entities</description>
+      <help>The &lt;info&gt;doctrine:mapping:info&lt;/info&gt; shows basic information about which
+ entities exist and possibly if their mapping information contains errors or
+ not.
+ 
+ &lt;info&gt;php app/console doctrine:mapping:info&lt;/info&gt;
+ 
+ If you are using multiple entity managers you can pick your choice with the
+ &lt;info&gt;--em&lt;/info&gt; option:
+ 
+ &lt;info&gt;php app/console doctrine:mapping:info --em=default&lt;/info&gt;</help>
+      <aliases/>
+      <arguments/>
+      <options>
+        <option name="--em" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>The entity manager to use for this command</description>
+          <defaults/>
+        </option>
+      </options>
+    </command>
+    <command id="doctrine:query:dql" name="doctrine:query:dql">
+      <usage>doctrine:query:dql [--hydrate="..."] [--first-result="..."] [--max-result="..."] [--depth="..."] [--em[="..."]] dql</usage>
+      <description>Executes arbitrary DQL directly from the command line.</description>
+      <help>The &lt;info&gt;doctrine:query:dql&lt;/info&gt; command executes the given DQL query and
+ outputs the results:
+ 
+ &lt;info&gt;php app/console doctrine:query:dql "SELECT u FROM UserBundle:User u"&lt;/info&gt;
+ 
+ You can also optional specify some additional options like what type of
+ hydration to use when executing the query:
+ 
+ &lt;info&gt;php app/console doctrine:query:dql "SELECT u FROM UserBundle:User u" --hydrate=array&lt;/info&gt;
+ 
+ Additionally you can specify the first result and maximum amount of results to
+ show:
+ 
+ &lt;info&gt;php app/console doctrine:query:dql "SELECT u FROM UserBundle:User u" --first-result=0 --max-result=30&lt;/info&gt;</help>
+      <aliases/>
+      <arguments>
+        <argument name="dql" is_required="1" is_array="0">
+          <description>The DQL to execute.</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--hydrate" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>Hydration mode of result set. Should be either: object, array, scalar or single-scalar.</description>
+          <defaults>
+            <default>object</default>
+          </defaults>
+        </option>
+        <option name="--first-result" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>The first result in the result set.</description>
+          <defaults/>
+        </option>
+        <option name="--max-result" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>The maximum number of results in the result set.</description>
+          <defaults/>
+        </option>
+        <option name="--depth" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>Dumping depth of Entity graph.</description>
+          <defaults>
+            <default>7</default>
+          </defaults>
+        </option>
+        <option name="--em" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>The entity manager to use for this command</description>
+          <defaults/>
+        </option>
+      </options>
+    </command>
+    <command id="doctrine:query:sql" name="doctrine:query:sql">
+      <usage>doctrine:query:sql [--depth="..."] [--connection[="..."]] sql</usage>
+      <description>Executes arbitrary SQL directly from the command line.</description>
+      <help>The &lt;info&gt;doctrine:query:sql&lt;/info&gt; command executes the given DQL query and
+ outputs the results:
+ 
+ &lt;info&gt;php app/console doctrine:query:sql "SELECT * from user"&lt;/info&gt;</help>
+      <aliases/>
+      <arguments>
+        <argument name="sql" is_required="1" is_array="0">
+          <description>The SQL statement to execute.</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--depth" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>Dumping depth of result set.</description>
+          <defaults>
+            <default>7</default>
+          </defaults>
+        </option>
+        <option name="--connection" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>The connection to use for this command</description>
+          <defaults/>
+        </option>
+      </options>
+    </command>
+    <command id="doctrine:schema:create" name="doctrine:schema:create">
+      <usage>doctrine:schema:create [--dump-sql] [--em[="..."]]</usage>
+      <description>Executes (or dumps) the SQL needed to generate the database schema</description>
+      <help>The &lt;info&gt;doctrine:schema:create&lt;/info&gt; command executes the SQL needed to
+ generate the database schema for the default entity manager:
+ 
+ &lt;info&gt;php app/console doctrine:schema:create&lt;/info&gt;
+ 
+ You can also generate the database schema for a specific entity manager:
+ 
+ &lt;info&gt;php app/console doctrine:schema:create --em=default&lt;/info&gt;
+ 
+ Finally, instead of executing the SQL, you can output the SQL:
+ 
+ &lt;info&gt;php app/console doctrine:schema:create --dump-sql&lt;/info&gt;</help>
+      <aliases/>
+      <arguments/>
+      <options>
+        <option name="--dump-sql" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Instead of try to apply generated SQLs into EntityManager Storage Connection, output them.</description>
+        </option>
+        <option name="--em" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>The entity manager to use for this command</description>
+          <defaults/>
+        </option>
+      </options>
+    </command>
+    <command id="doctrine:schema:drop" name="doctrine:schema:drop">
+      <usage>doctrine:schema:drop [--dump-sql] [--force] [--full-database] [--em[="..."]]</usage>
+      <description>Executes (or dumps) the SQL needed to drop the current database schema</description>
+      <help>The &lt;info&gt;doctrine:schema:drop&lt;/info&gt; command generates the SQL needed to
+ drop the database schema of the default entity manager:
+ 
+ &lt;info&gt;php app/console doctrine:schema:drop --dump-sql&lt;/info&gt;
+ 
+ Alternatively, you can execute the generated queries:
+ 
+ &lt;info&gt;php app/console doctrine:schema:drop --force&lt;/info&gt;
+ 
+ You can also optionally specify the name of a entity manager to drop the
+ schema for:
+ 
+ &lt;info&gt;php app/console doctrine:schema:drop --em=default&lt;/info&gt;</help>
+      <aliases/>
+      <arguments/>
+      <options>
+        <option name="--dump-sql" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Instead of try to apply generated SQLs into EntityManager Storage Connection, output them.</description>
+        </option>
+        <option name="--force" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Don't ask for the deletion of the database, but force the operation to run.</description>
+        </option>
+        <option name="--full-database" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Instead of using the Class Metadata to detect the database table schema, drop ALL assets that the database contains.</description>
+        </option>
+        <option name="--em" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>The entity manager to use for this command</description>
+          <defaults/>
+        </option>
+      </options>
+    </command>
+    <command id="doctrine:schema:update" name="doctrine:schema:update">
+      <usage>doctrine:schema:update [--complete] [--dump-sql] [--force] [--em[="..."]]</usage>
+      <description>Executes (or dumps) the SQL needed to update the database schema to match the current mapping metadata</description>
+      <help>The &lt;info&gt;doctrine:schema:update&lt;/info&gt; command generates the SQL needed to
+ synchronize the database schema with the current mapping metadata of the
+ default entity manager.
+ 
+ For example, if you add metadata for a new column to an entity, this command
+ would generate and output the SQL needed to add the new column to the database:
+ 
+ &lt;info&gt;php app/console doctrine:schema:update --dump-sql&lt;/info&gt;
+ 
+ Alternatively, you can execute the generated queries:
+ 
+ &lt;info&gt;php app/console doctrine:schema:update --force&lt;/info&gt;
+ 
+ You can also update the database schema for a specific entity manager:
+ 
+ &lt;info&gt;php app/console doctrine:schema:update --em=default&lt;/info&gt;</help>
+      <aliases/>
+      <arguments/>
+      <options>
+        <option name="--complete" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>If defined, all assets of the database which are not relevant to the current metadata will be dropped.</description>
+        </option>
+        <option name="--dump-sql" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Dumps the generated SQL statements to the screen (does not execute them).</description>
+        </option>
+        <option name="--force" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Causes the generated SQL statements to be physically executed against your database.</description>
+        </option>
+        <option name="--em" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>The entity manager to use for this command</description>
+          <defaults/>
+        </option>
+      </options>
+    </command>
+    <command id="generate:bundle" name="generate:bundle">
+      <usage>generate:bundle [--namespace="..."] [--dir="..."] [--bundle-name="..."] [--format="..."] [--structure]</usage>
+      <description>Generates a bundle</description>
+      <help>The &lt;info&gt;generate:bundle&lt;/info&gt; command helps you generates new bundles.
+ 
+ By default, the command interacts with the developer to tweak the generation.
+ Any passed option will be used as a default value for the interaction
+ (&lt;comment&gt;--namespace&lt;/comment&gt; is the only one needed if you follow the
+ conventions):
+ 
+ &lt;info&gt;php app/console generate:bundle --namespace=Acme/BlogBundle&lt;/info&gt;
+ 
+ Note that you can use &lt;comment&gt;/&lt;/comment&gt; instead of &lt;comment&gt;\&lt;/comment&gt; for the namespace delimiter to avoid any
+ problem.
+ 
+ If you want to disable any user interaction, use &lt;comment&gt;--no-interaction&lt;/comment&gt; but don't forget to pass all needed options:
+ 
+ &lt;info&gt;php app/console generate:bundle --namespace=Acme/BlogBundle --dir=src [--bundle-name=...] --no-interaction&lt;/info&gt;
+ 
+ Note that the bundle namespace must end with "Bundle".</help>
+      <aliases/>
+      <arguments/>
+      <options>
+        <option name="--namespace" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>The namespace of the bundle to create</description>
+          <defaults/>
+        </option>
+        <option name="--dir" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>The directory where to create the bundle</description>
+          <defaults/>
+        </option>
+        <option name="--bundle-name" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>The optional bundle name</description>
+          <defaults/>
+        </option>
+        <option name="--format" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>Use the format for configuration files (php, xml, yml, or annotation)</description>
+          <defaults>
+            <default>annotation</default>
+          </defaults>
+        </option>
+        <option name="--structure" shortcut="" accept_value="0" is_value_required="0" is_multiple="0">
+          <description>Whether to generate the whole directory structure</description>
+        </option>
+      </options>
+    </command>
+    <command id="init:acl" name="init:acl">
+      <usage>init:acl</usage>
+      <description>Mounts ACL tables in the database</description>
+      <help>The &lt;info&gt;init:acl&lt;/info&gt; command mounts ACL tables in the database.
+ 
+ &lt;info&gt;php app/console ini:acl&lt;/info&gt;
+ 
+ The name of the DBAL connection must be configured in your &lt;info&gt;app/config/security.yml&lt;/info&gt; configuration file in the &lt;info&gt;security.acl.connection&lt;/info&gt; variable.
+ 
+ &lt;info&gt;security:
+     acl:
+         connection: default&lt;/info&gt;</help>
+      <aliases/>
+      <arguments/>
+      <options/>
+    </command>
+    <command id="router:debug" name="router:debug">
+      <usage>router:debug [name]</usage>
+      <description>Displays current routes for an application</description>
+      <help>The &lt;info&gt;router:debug&lt;/info&gt; displays the configured routes:
+ 
+   &lt;info&gt;router:debug&lt;/info&gt;</help>
+      <aliases/>
+      <arguments>
+        <argument name="name" is_required="0" is_array="0">
+          <description>A route name</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options/>
+    </command>
+    <command id="router:dump-apache" name="router:dump-apache">
+      <usage>router:dump-apache [--base-uri="..."] [script_name]</usage>
+      <description>Dumps all routes as Apache rewrite rules</description>
+      <help>The &lt;info&gt;router:dump-apache&lt;/info&gt; dumps all routes as Apache rewrite rules.
+ These can then be used with the ApacheUrlMatcher to use Apache for route
+ matching.
+ 
+   &lt;info&gt;router:dump-apache&lt;/info&gt;</help>
+      <aliases/>
+      <arguments>
+        <argument name="script_name" is_required="0" is_array="0">
+          <description>The script name of the application's front controller.</description>
+          <defaults/>
+        </argument>
+      </arguments>
+      <options>
+        <option name="--base-uri" shortcut="" accept_value="1" is_value_required="1" is_multiple="0">
+          <description>The base URI</description>
+          <defaults/>
+        </option>
+      </options>
+    </command>
+    <command id="swiftmailer:spool:send" name="swiftmailer:spool:send">
+      <usage>swiftmailer:spool:send [--message-limit[="..."]] [--time-limit[="..."]]</usage>
+      <description>Send emails from the spool</description>
+      <help>The &lt;info&gt;swiftmailer:spool:send&lt;/info&gt; command sends all emails from the spool.
+ 
+ &lt;info&gt;php app/console swiftmailer:spool:send --message-limit=10 --time-limit=10&lt;/info&gt;
+ </help>
+      <aliases/>
+      <arguments/>
+      <options>
+        <option name="--message-limit" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>The maximum number of messages to send.</description>
+          <defaults/>
+        </option>
+        <option name="--time-limit" shortcut="" accept_value="1" is_value_required="0" is_multiple="0">
+          <description>The time limit for sending messages (in seconds).</description>
+          <defaults/>
+        </option>
+      </options>
+    </command>
+  </commands>
+  <namespaces>
+    <namespace id="_global">
+      <command>help</command>
+      <command>list</command>
+    </namespace>
+    <namespace id="assetic">
+      <command>assetic:dump</command>
+    </namespace>
+    <namespace id="assets">
+      <command>assets:install</command>
+    </namespace>
+    <namespace id="cache">
+      <command>cache:clear</command>
+      <command>cache:warmup</command>
+    </namespace>
+    <namespace id="container">
+      <command>container:debug</command>
+    </namespace>
+    <namespace id="doctrine">
+      <command>doctrine:cache:clear-metadata</command>
+      <command>doctrine:cache:clear-query</command>
+      <command>doctrine:cache:clear-result</command>
+      <command>doctrine:database:create</command>
+      <command>doctrine:database:drop</command>
+      <command>doctrine:ensure-production-settings</command>
+      <command>doctrine:generate:crud</command>
+      <command>doctrine:generate:entities</command>
+      <command>doctrine:generate:entity</command>
+      <command>doctrine:generate:form</command>
+      <command>doctrine:mapping:convert</command>
+      <command>doctrine:mapping:import</command>
+      <command>doctrine:mapping:info</command>
+      <command>doctrine:query:dql</command>
+      <command>doctrine:query:sql</command>
+      <command>doctrine:schema:create</command>
+      <command>doctrine:schema:drop</command>
+      <command>doctrine:schema:update</command>
+    </namespace>
+    <namespace id="generate">
+      <command>generate:bundle</command>
+    </namespace>
+    <namespace id="init">
+      <command>init:acl</command>
+    </namespace>
+    <namespace id="router">
+      <command>router:debug</command>
+      <command>router:dump-apache</command>
+    </namespace>
+    <namespace id="swiftmailer">
+      <command>swiftmailer:spool:send</command>
+    </namespace>
+  </namespaces>
+</symfony>
+

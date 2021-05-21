@@ -1,0 +1,7 @@
+Code completion result for source line:
+console.log(man.|prop2);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      prop1: Number                   [PUBLIC]   issue233719.js
+FIELD      prop2: Number                   [PUBLIC]   issue233719.js
+FIELD      prop3: String                   [PUBLIC]   issue233719.js

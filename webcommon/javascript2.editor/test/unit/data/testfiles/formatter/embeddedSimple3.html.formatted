@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <div>TODO write content</div>
+        <script type="text/javascript">
+            function print_onclick() {
+                document.form1.target = 'print_view';
+                document.form1.action = 'kra_print.php';
+                document.form1.submit();
+                self.frames["print_view"].focus();
+            }
+            function pdf_onclick() {
+                document.form1.target = 'downframe';
+                document.form1.action = 'kra_pdf.php';
+                document.form1.submit();
+            }
+            function do_submit() {
+                document.form1.target = 'downframe';
+                document.form1.action = 'view_appraisee.php';
+                document.form1.submit();
+            }
+        </script>
+    </body>
+</html>

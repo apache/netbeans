@@ -1,0 +1,33 @@
+Code completion result for source line:
+e|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      EOFException                               null
+CLASS      EmptyRange                                 null
+CLASS      EmptyStackException                        null
+CLASS      Enum                                       null
+CLASS      EnumConstantNotPresentExceptio             null
+CLASS      EnumMap                                    null
+CLASS      EnumSet                                    null
+CLASS      Enumeration                                null
+CLASS      Error                                      null
+CLASS      Eval                                       null
+CLASS      EventListener                              null
+CLASS      EventListenerProxy                         null
+CLASS      EventObject                                null
+CLASS      Exception                                  null
+CLASS      ExceptionInInitializerError                null
+CLASS      Expando                                    null
+CLASS      ExpandoMetaClass                           null
+CLASS      ExpandoMetaClassCreationHandle             null
+CLASS      Externalizable                             null
+METHOD     each(Closure)                              Object
+METHOD     eachWithIndex(Closure)                     Object
+METHOD     equals(Object)                  [PUBLIC]   boolean
+METHOD     every()                                    boolean
+METHOD     every(Closure)                             boolean
+VARIABLE   esop                                       Properties
+VARIABLE   est                                        Object
+VARIABLE   ex                                         RuntimeException
+KEYWORD    else                                       null
+KEYWORD    extends                                    null

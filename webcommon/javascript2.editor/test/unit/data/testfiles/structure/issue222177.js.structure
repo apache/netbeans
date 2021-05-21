@@ -1,0 +1,5 @@
+Page:VARIABLE:[PRIVATE]:ESCAPED{Page}:
+test:VARIABLE:[PRIVATE]:ESCAPED{test}<font color="#999999">ESCAPED{ : }Page</font>:
+getProperties:METHOD:[PUBLIC]:ESCAPED{getProperties}ESCAPED{(}ESCAPED{)}:
+  property1:FIELD:[PUBLIC]:ESCAPED{property1}:
+  property2:FIELD:[PUBLIC]:ESCAPED{property2}:

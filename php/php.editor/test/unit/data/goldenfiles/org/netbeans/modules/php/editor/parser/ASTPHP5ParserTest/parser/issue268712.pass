@@ -1,0 +1,1096 @@
+<testresult testFile='issue268712.php'>
+    <scanner>
+        <token id='T_NAMESPACE' start='7' end='16'>
+            <text>namespace</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='17' end='18'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='24' end='29'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='30' end='35'>
+            <text>TEST1</text>
+        </token>
+        <token id='T_EQUAL' start='36' end='37'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='38' end='39'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='39' end='40'>
+            <text>0</text>
+        </token>
+        <token id='T_COMMA' start='40' end='41'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='42' end='43'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='43' end='44'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='44' end='45'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='47' end='48'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='50' end='59'>
+            <text>namespace</text>
+        </token>
+        <token id='T_STRING' start='60' end='73'>
+            <text>Issue268712_A</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='74' end='75'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='81' end='86'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='87' end='92'>
+            <text>TEST2</text>
+        </token>
+        <token id='T_EQUAL' start='93' end='94'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='95' end='96'>
+            <text>[</text>
+        </token>
+        <token id='T_OPEN_RECT' start='96' end='97'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='97' end='98'>
+            <text>0</text>
+        </token>
+        <token id='T_COMMA' start='98' end='99'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='100' end='101'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='101' end='102'>
+            <text>]</text>
+        </token>
+        <token id='T_COMMA' start='102' end='103'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='104' end='105'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='105' end='106'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='106' end='107'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='112' end='117'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='118' end='123'>
+            <text>TEST3</text>
+        </token>
+        <token id='T_EQUAL' start='124' end='125'>
+            <text>=</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='126' end='127'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='127' end='132'>
+            <text>TEST1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='132' end='133'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='133' end='134'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='134' end='135'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='135' end='136'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='138' end='139'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='141' end='150'>
+            <text>namespace</text>
+        </token>
+        <token id='T_STRING' start='151' end='164'>
+            <text>Issue268712_B</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='164' end='165'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='165' end='168'>
+            <text>Sub</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='169' end='170'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='175' end='180'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='181' end='184'>
+            <text>SUB</text>
+        </token>
+        <token id='T_EQUAL' start='185' end='186'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='187' end='188'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='188' end='193'>
+            <text>"sub"</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='194' end='196'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='197' end='202'>
+            <text>"sub"</text>
+        </token>
+        <token id='T_COMMA' start='202' end='203'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='204' end='211'>
+            <text>"array"</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='212' end='214'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_OPEN_RECT' start='215' end='216'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='216' end='217'>
+            <text>0</text>
+        </token>
+        <token id='T_COMMA' start='217' end='218'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='219' end='220'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='220' end='221'>
+            <text>]</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='221' end='222'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='222' end='223'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='224' end='225'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='227' end='236'>
+            <text>namespace</text>
+        </token>
+        <token id='T_STRING' start='237' end='250'>
+            <text>Issue268712_B</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='251' end='252'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='258' end='263'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='264' end='269'>
+            <text>TEST4</text>
+        </token>
+        <token id='T_EQUAL' start='270' end='271'>
+            <text>=</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='272' end='273'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='273' end='286'>
+            <text>Issue268712_A</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='286' end='287'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='287' end='292'>
+            <text>TEST3</text>
+        </token>
+        <token id='T_SEMICOLON' start='292' end='293'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='298' end='303'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='304' end='309'>
+            <text>TEST5</text>
+        </token>
+        <token id='T_EQUAL' start='310' end='311'>
+            <text>=</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='312' end='313'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='313' end='326'>
+            <text>Issue268712_A</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='326' end='327'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='327' end='332'>
+            <text>TEST2</text>
+        </token>
+        <token id='T_OPEN_RECT' start='332' end='333'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='333' end='334'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='334' end='335'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='335' end='336'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='336' end='337'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='337' end='338'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='338' end='339'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='344' end='349'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='350' end='355'>
+            <text>TEST6</text>
+        </token>
+        <token id='T_EQUAL' start='356' end='357'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='358' end='359'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='359' end='365'>
+            <text>"test"</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='366' end='368'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='369' end='375'>
+            <text>"test"</text>
+        </token>
+        <token id='T_COMMA' start='375' end='376'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='377' end='384'>
+            <text>"array"</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='385' end='387'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_OPEN_RECT' start='388' end='389'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='389' end='390'>
+            <text>0</text>
+        </token>
+        <token id='T_COMMA' start='390' end='391'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='392' end='393'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='393' end='394'>
+            <text>]</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='394' end='395'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='395' end='396'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='402' end='407'>
+            <text>$test</text>
+        </token>
+        <token id='T_EQUAL' start='408' end='409'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='410' end='411'>
+            <text>0</text>
+        </token>
+        <token id='T_SEMICOLON' start='411' end='412'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='417' end='424'>
+            <text>$const1</text>
+        </token>
+        <token id='T_EQUAL' start='425' end='426'>
+            <text>=</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='427' end='428'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='428' end='433'>
+            <text>TEST1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='433' end='434'>
+            <text>[</text>
+        </token>
+        <token id='T_VARIABLE' start='434' end='439'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='439' end='440'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='440' end='441'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='446' end='453'>
+            <text>$const2</text>
+        </token>
+        <token id='T_EQUAL' start='454' end='455'>
+            <text>=</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='456' end='457'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='457' end='470'>
+            <text>Issue268712_A</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='470' end='471'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='471' end='476'>
+            <text>TEST2</text>
+        </token>
+        <token id='T_OPEN_RECT' start='476' end='477'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='477' end='478'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='478' end='479'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='479' end='480'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='486' end='490'>
+            <text>echo</text>
+        </token>
+        <token id='T_VARIABLE' start='491' end='498'>
+            <text>$const1</text>
+        </token>
+        <token id='T_NEKUDA' start='499' end='500'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='501' end='508'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='508' end='509'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='514' end='518'>
+            <text>echo</text>
+        </token>
+        <token id='T_VARIABLE' start='519' end='526'>
+            <text>$const2</text>
+        </token>
+        <token id='T_NEKUDA' start='527' end='528'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='529' end='536'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='536' end='537'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='543' end='547'>
+            <text>echo</text>
+        </token>
+        <token id='T_STRING' start='548' end='553'>
+            <text>TEST4</text>
+        </token>
+        <token id='T_NEKUDA' start='554' end='555'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='556' end='563'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='563' end='564'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='569' end='573'>
+            <text>echo</text>
+        </token>
+        <token id='T_STRING' start='574' end='579'>
+            <text>TEST5</text>
+        </token>
+        <token id='T_NEKUDA' start='580' end='581'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='582' end='589'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='589' end='590'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='595' end='599'>
+            <text>echo</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='600' end='601'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='601' end='614'>
+            <text>Issue268712_B</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='614' end='615'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='615' end='620'>
+            <text>TEST6</text>
+        </token>
+        <token id='T_OPEN_RECT' start='620' end='621'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='621' end='627'>
+            <text>"test"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='627' end='628'>
+            <text>]</text>
+        </token>
+        <token id='T_NEKUDA' start='629' end='630'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='631' end='638'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='638' end='639'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='644' end='648'>
+            <text>echo</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='649' end='650'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='650' end='663'>
+            <text>Issue268712_B</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='663' end='664'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='664' end='669'>
+            <text>TEST6</text>
+        </token>
+        <token id='T_OPEN_RECT' start='669' end='670'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='670' end='677'>
+            <text>"array"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='677' end='678'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='678' end='679'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='679' end='680'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='680' end='681'>
+            <text>]</text>
+        </token>
+        <token id='T_NEKUDA' start='682' end='683'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='684' end='691'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='691' end='692'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='697' end='701'>
+            <text>echo</text>
+        </token>
+        <token id='T_STRING' start='702' end='705'>
+            <text>Sub</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='705' end='706'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='706' end='709'>
+            <text>SUB</text>
+        </token>
+        <token id='T_OPEN_RECT' start='709' end='710'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='710' end='715'>
+            <text>"sub"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='715' end='716'>
+            <text>]</text>
+        </token>
+        <token id='T_NEKUDA' start='717' end='718'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='719' end='726'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='726' end='727'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='732' end='736'>
+            <text>echo</text>
+        </token>
+        <token id='T_STRING' start='737' end='740'>
+            <text>Sub</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='740' end='741'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='741' end='744'>
+            <text>SUB</text>
+        </token>
+        <token id='T_OPEN_RECT' start='744' end='745'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='745' end='752'>
+            <text>"array"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='752' end='753'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='753' end='754'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='754' end='755'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='755' end='756'>
+            <text>]</text>
+        </token>
+        <token id='T_NEKUDA' start='757' end='758'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='759' end='766'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='766' end='767'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='772' end='776'>
+            <text>echo</text>
+        </token>
+        <token id='T_NAMESPACE' start='777' end='786'>
+            <text>namespace</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='786' end='787'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='787' end='792'>
+            <text>TEST6</text>
+        </token>
+        <token id='T_OPEN_RECT' start='792' end='793'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='793' end='799'>
+            <text>"test"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='799' end='800'>
+            <text>]</text>
+        </token>
+        <token id='T_NEKUDA' start='801' end='802'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='803' end='810'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='810' end='811'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='816' end='820'>
+            <text>echo</text>
+        </token>
+        <token id='T_NAMESPACE' start='821' end='830'>
+            <text>namespace</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='830' end='831'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='831' end='836'>
+            <text>TEST6</text>
+        </token>
+        <token id='T_OPEN_RECT' start='836' end='837'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='837' end='844'>
+            <text>"array"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='844' end='845'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='845' end='846'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='846' end='847'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='847' end='848'>
+            <text>]</text>
+        </token>
+        <token id='T_NEKUDA' start='849' end='850'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='851' end='858'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='858' end='859'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='861' end='862'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='863' end='863'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='863'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <NamespaceDeclaration start='7' end='48' isBracketed='true'>
+                <Block start='17' end='48' isCurly='true'>
+                    <GlobalConstantDeclaration start='24' end='45'>
+                        <Names>
+                            <Identifier start='30' end='35' name='TEST1'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='38' end='44' type='NEW'>
+                                <ArrayElement start='39' end='40'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='39' end='40' type='INT' value='0'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='42' end='43'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='42' end='43' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </GlobalConstantDeclaration>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='50' end='139' isBracketed='true'>
+                <NamespaceName start='60' end='73' isCurrent='false' isGlobal='false'>
+                    <Identifier start='60' end='73' name='Issue268712_A'/>
+                </NamespaceName>
+                <Block start='74' end='139' isCurly='true'>
+                    <GlobalConstantDeclaration start='81' end='107'>
+                        <Names>
+                            <Identifier start='87' end='92' name='TEST2'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='95' end='106' type='NEW'>
+                                <ArrayElement start='96' end='102'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <ArrayCreation start='96' end='102' type='NEW'>
+                                            <ArrayElement start='97' end='98'>
+                                                <Key>
+                                                </Key>
+                                                <Value>
+                                                    <Scalar start='97' end='98' type='INT' value='0'/>
+                                                </Value>
+                                            </ArrayElement>
+                                            <ArrayElement start='100' end='101'>
+                                                <Key>
+                                                </Key>
+                                                <Value>
+                                                    <Scalar start='100' end='101' type='INT' value='1'/>
+                                                </Value>
+                                            </ArrayElement>
+                                        </ArrayCreation>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='104' end='105'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='104' end='105' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </GlobalConstantDeclaration>
+                    <GlobalConstantDeclaration start='112' end='136'>
+                        <Names>
+                            <Identifier start='118' end='123' name='TEST3'/>
+                        </Names>
+                        <Initializers>
+                            <ExpressionArrayAccess start='126' end='135'>
+                                <NamespaceName start='126' end='132' isCurrent='false' isGlobal='true'>
+                                    <Identifier start='127' end='132' name='TEST1'/>
+                                </NamespaceName>
+                                <ArrayDimension start='132' end='135'>
+                                    <Index>
+                                        <Scalar start='133' end='134' type='INT' value='0'/>
+                                    </Index>
+                                </ArrayDimension>
+                            </ExpressionArrayAccess>
+                        </Initializers>
+                    </GlobalConstantDeclaration>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='141' end='225' isBracketed='true'>
+                <NamespaceName start='151' end='168' isCurrent='false' isGlobal='false'>
+                    <Identifier start='151' end='164' name='Issue268712_B'/>
+                    <Identifier start='165' end='168' name='Sub'/>
+                </NamespaceName>
+                <Block start='169' end='225' isCurly='true'>
+                    <GlobalConstantDeclaration start='175' end='223'>
+                        <Names>
+                            <Identifier start='181' end='184' name='SUB'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='187' end='222' type='NEW'>
+                                <ArrayElement start='188' end='202'>
+                                    <Key>
+                                        <Scalar start='188' end='193' type='STRING' value='"sub"'/>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='197' end='202' type='STRING' value='"sub"'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='204' end='221'>
+                                    <Key>
+                                        <Scalar start='204' end='211' type='STRING' value='"array"'/>
+                                    </Key>
+                                    <Value>
+                                        <ArrayCreation start='215' end='221' type='NEW'>
+                                            <ArrayElement start='216' end='217'>
+                                                <Key>
+                                                </Key>
+                                                <Value>
+                                                    <Scalar start='216' end='217' type='INT' value='0'/>
+                                                </Value>
+                                            </ArrayElement>
+                                            <ArrayElement start='219' end='220'>
+                                                <Key>
+                                                </Key>
+                                                <Value>
+                                                    <Scalar start='219' end='220' type='INT' value='1'/>
+                                                </Value>
+                                            </ArrayElement>
+                                        </ArrayCreation>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </GlobalConstantDeclaration>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='227' end='862' isBracketed='true'>
+                <NamespaceName start='237' end='250' isCurrent='false' isGlobal='false'>
+                    <Identifier start='237' end='250' name='Issue268712_B'/>
+                </NamespaceName>
+                <Block start='251' end='862' isCurly='true'>
+                    <GlobalConstantDeclaration start='258' end='293'>
+                        <Names>
+                            <Identifier start='264' end='269' name='TEST4'/>
+                        </Names>
+                        <Initializers>
+                            <NamespaceName start='272' end='292' isCurrent='false' isGlobal='true'>
+                                <Identifier start='273' end='286' name='Issue268712_A'/>
+                                <Identifier start='287' end='292' name='TEST3'/>
+                            </NamespaceName>
+                        </Initializers>
+                    </GlobalConstantDeclaration>
+                    <GlobalConstantDeclaration start='298' end='339'>
+                        <Names>
+                            <Identifier start='304' end='309' name='TEST5'/>
+                        </Names>
+                        <Initializers>
+                            <ExpressionArrayAccess start='312' end='338'>
+                                <ExpressionArrayAccess start='312' end='335'>
+                                    <NamespaceName start='312' end='332' isCurrent='false' isGlobal='true'>
+                                        <Identifier start='313' end='326' name='Issue268712_A'/>
+                                        <Identifier start='327' end='332' name='TEST2'/>
+                                    </NamespaceName>
+                                    <ArrayDimension start='332' end='335'>
+                                        <Index>
+                                            <Scalar start='333' end='334' type='INT' value='0'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                </ExpressionArrayAccess>
+                                <ArrayDimension start='335' end='338'>
+                                    <Index>
+                                        <Scalar start='336' end='337' type='INT' value='1'/>
+                                    </Index>
+                                </ArrayDimension>
+                            </ExpressionArrayAccess>
+                        </Initializers>
+                    </GlobalConstantDeclaration>
+                    <GlobalConstantDeclaration start='344' end='396'>
+                        <Names>
+                            <Identifier start='350' end='355' name='TEST6'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='358' end='395' type='NEW'>
+                                <ArrayElement start='359' end='375'>
+                                    <Key>
+                                        <Scalar start='359' end='365' type='STRING' value='"test"'/>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='369' end='375' type='STRING' value='"test"'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='377' end='394'>
+                                    <Key>
+                                        <Scalar start='377' end='384' type='STRING' value='"array"'/>
+                                    </Key>
+                                    <Value>
+                                        <ArrayCreation start='388' end='394' type='NEW'>
+                                            <ArrayElement start='389' end='390'>
+                                                <Key>
+                                                </Key>
+                                                <Value>
+                                                    <Scalar start='389' end='390' type='INT' value='0'/>
+                                                </Value>
+                                            </ArrayElement>
+                                            <ArrayElement start='392' end='393'>
+                                                <Key>
+                                                </Key>
+                                                <Value>
+                                                    <Scalar start='392' end='393' type='INT' value='1'/>
+                                                </Value>
+                                            </ArrayElement>
+                                        </ArrayCreation>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </GlobalConstantDeclaration>
+                    <ExpressionStatement start='402' end='412'>
+                        <Assignment start='402' end='411' operator='EQUAL'>
+                            <Variable start='402' end='407' isDollared='true'>
+                                <Identifier start='403' end='407' name='test'/>
+                            </Variable>
+                            <Scalar start='410' end='411' type='INT' value='0'/>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='417' end='441'>
+                        <Assignment start='417' end='440' operator='EQUAL'>
+                            <Variable start='417' end='424' isDollared='true'>
+                                <Identifier start='418' end='424' name='const1'/>
+                            </Variable>
+                            <ExpressionArrayAccess start='427' end='440'>
+                                <NamespaceName start='427' end='433' isCurrent='false' isGlobal='true'>
+                                    <Identifier start='428' end='433' name='TEST1'/>
+                                </NamespaceName>
+                                <ArrayDimension start='433' end='440'>
+                                    <Index>
+                                        <Variable start='434' end='439' isDollared='true'>
+                                            <Identifier start='435' end='439' name='test'/>
+                                        </Variable>
+                                    </Index>
+                                </ArrayDimension>
+                            </ExpressionArrayAccess>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='446' end='480'>
+                        <Assignment start='446' end='479' operator='EQUAL'>
+                            <Variable start='446' end='453' isDollared='true'>
+                                <Identifier start='447' end='453' name='const2'/>
+                            </Variable>
+                            <ExpressionArrayAccess start='456' end='479'>
+                                <NamespaceName start='456' end='476' isCurrent='false' isGlobal='true'>
+                                    <Identifier start='457' end='470' name='Issue268712_A'/>
+                                    <Identifier start='471' end='476' name='TEST2'/>
+                                </NamespaceName>
+                                <ArrayDimension start='476' end='479'>
+                                    <Index>
+                                        <Scalar start='477' end='478' type='INT' value='1'/>
+                                    </Index>
+                                </ArrayDimension>
+                            </ExpressionArrayAccess>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <EchoStatement start='486' end='509'>
+                        <InfixExpression start='491' end='508' operator='CONCAT'>
+                            <Variable start='491' end='498' isDollared='true'>
+                                <Identifier start='492' end='498' name='const1'/>
+                            </Variable>
+                            <NamespaceName start='501' end='508' isCurrent='false' isGlobal='false'>
+                                <Identifier start='501' end='508' name='PHP_EOL'/>
+                            </NamespaceName>
+                        </InfixExpression>
+                    </EchoStatement>
+                    <EchoStatement start='514' end='537'>
+                        <InfixExpression start='519' end='536' operator='CONCAT'>
+                            <Variable start='519' end='526' isDollared='true'>
+                                <Identifier start='520' end='526' name='const2'/>
+                            </Variable>
+                            <NamespaceName start='529' end='536' isCurrent='false' isGlobal='false'>
+                                <Identifier start='529' end='536' name='PHP_EOL'/>
+                            </NamespaceName>
+                        </InfixExpression>
+                    </EchoStatement>
+                    <EchoStatement start='543' end='564'>
+                        <InfixExpression start='548' end='563' operator='CONCAT'>
+                            <NamespaceName start='548' end='553' isCurrent='false' isGlobal='false'>
+                                <Identifier start='548' end='553' name='TEST4'/>
+                            </NamespaceName>
+                            <NamespaceName start='556' end='563' isCurrent='false' isGlobal='false'>
+                                <Identifier start='556' end='563' name='PHP_EOL'/>
+                            </NamespaceName>
+                        </InfixExpression>
+                    </EchoStatement>
+                    <EchoStatement start='569' end='590'>
+                        <InfixExpression start='574' end='589' operator='CONCAT'>
+                            <NamespaceName start='574' end='579' isCurrent='false' isGlobal='false'>
+                                <Identifier start='574' end='579' name='TEST5'/>
+                            </NamespaceName>
+                            <NamespaceName start='582' end='589' isCurrent='false' isGlobal='false'>
+                                <Identifier start='582' end='589' name='PHP_EOL'/>
+                            </NamespaceName>
+                        </InfixExpression>
+                    </EchoStatement>
+                    <EchoStatement start='595' end='639'>
+                        <InfixExpression start='600' end='638' operator='CONCAT'>
+                            <ExpressionArrayAccess start='600' end='628'>
+                                <NamespaceName start='600' end='620' isCurrent='false' isGlobal='true'>
+                                    <Identifier start='601' end='614' name='Issue268712_B'/>
+                                    <Identifier start='615' end='620' name='TEST6'/>
+                                </NamespaceName>
+                                <ArrayDimension start='620' end='628'>
+                                    <Index>
+                                        <Scalar start='621' end='627' type='STRING' value='"test"'/>
+                                    </Index>
+                                </ArrayDimension>
+                            </ExpressionArrayAccess>
+                            <NamespaceName start='631' end='638' isCurrent='false' isGlobal='false'>
+                                <Identifier start='631' end='638' name='PHP_EOL'/>
+                            </NamespaceName>
+                        </InfixExpression>
+                    </EchoStatement>
+                    <EchoStatement start='644' end='692'>
+                        <InfixExpression start='649' end='691' operator='CONCAT'>
+                            <ExpressionArrayAccess start='649' end='681'>
+                                <ExpressionArrayAccess start='649' end='678'>
+                                    <NamespaceName start='649' end='669' isCurrent='false' isGlobal='true'>
+                                        <Identifier start='650' end='663' name='Issue268712_B'/>
+                                        <Identifier start='664' end='669' name='TEST6'/>
+                                    </NamespaceName>
+                                    <ArrayDimension start='669' end='678'>
+                                        <Index>
+                                            <Scalar start='670' end='677' type='STRING' value='"array"'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                </ExpressionArrayAccess>
+                                <ArrayDimension start='678' end='681'>
+                                    <Index>
+                                        <Scalar start='679' end='680' type='INT' value='0'/>
+                                    </Index>
+                                </ArrayDimension>
+                            </ExpressionArrayAccess>
+                            <NamespaceName start='684' end='691' isCurrent='false' isGlobal='false'>
+                                <Identifier start='684' end='691' name='PHP_EOL'/>
+                            </NamespaceName>
+                        </InfixExpression>
+                    </EchoStatement>
+                    <EchoStatement start='697' end='727'>
+                        <InfixExpression start='702' end='726' operator='CONCAT'>
+                            <ExpressionArrayAccess start='702' end='716'>
+                                <NamespaceName start='702' end='709' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='702' end='705' name='Sub'/>
+                                    <Identifier start='706' end='709' name='SUB'/>
+                                </NamespaceName>
+                                <ArrayDimension start='709' end='716'>
+                                    <Index>
+                                        <Scalar start='710' end='715' type='STRING' value='"sub"'/>
+                                    </Index>
+                                </ArrayDimension>
+                            </ExpressionArrayAccess>
+                            <NamespaceName start='719' end='726' isCurrent='false' isGlobal='false'>
+                                <Identifier start='719' end='726' name='PHP_EOL'/>
+                            </NamespaceName>
+                        </InfixExpression>
+                    </EchoStatement>
+                    <EchoStatement start='732' end='767'>
+                        <InfixExpression start='737' end='766' operator='CONCAT'>
+                            <ExpressionArrayAccess start='737' end='756'>
+                                <ExpressionArrayAccess start='737' end='753'>
+                                    <NamespaceName start='737' end='744' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='737' end='740' name='Sub'/>
+                                        <Identifier start='741' end='744' name='SUB'/>
+                                    </NamespaceName>
+                                    <ArrayDimension start='744' end='753'>
+                                        <Index>
+                                            <Scalar start='745' end='752' type='STRING' value='"array"'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                </ExpressionArrayAccess>
+                                <ArrayDimension start='753' end='756'>
+                                    <Index>
+                                        <Scalar start='754' end='755' type='INT' value='0'/>
+                                    </Index>
+                                </ArrayDimension>
+                            </ExpressionArrayAccess>
+                            <NamespaceName start='759' end='766' isCurrent='false' isGlobal='false'>
+                                <Identifier start='759' end='766' name='PHP_EOL'/>
+                            </NamespaceName>
+                        </InfixExpression>
+                    </EchoStatement>
+                    <EchoStatement start='772' end='811'>
+                        <InfixExpression start='777' end='810' operator='CONCAT'>
+                            <ExpressionArrayAccess start='777' end='800'>
+                                <NamespaceName start='777' end='792' isCurrent='true' isGlobal='false'>
+                                    <Identifier start='787' end='792' name='TEST6'/>
+                                </NamespaceName>
+                                <ArrayDimension start='792' end='800'>
+                                    <Index>
+                                        <Scalar start='793' end='799' type='STRING' value='"test"'/>
+                                    </Index>
+                                </ArrayDimension>
+                            </ExpressionArrayAccess>
+                            <NamespaceName start='803' end='810' isCurrent='false' isGlobal='false'>
+                                <Identifier start='803' end='810' name='PHP_EOL'/>
+                            </NamespaceName>
+                        </InfixExpression>
+                    </EchoStatement>
+                    <EchoStatement start='816' end='859'>
+                        <InfixExpression start='821' end='858' operator='CONCAT'>
+                            <ExpressionArrayAccess start='821' end='848'>
+                                <ExpressionArrayAccess start='821' end='845'>
+                                    <NamespaceName start='821' end='836' isCurrent='true' isGlobal='false'>
+                                        <Identifier start='831' end='836' name='TEST6'/>
+                                    </NamespaceName>
+                                    <ArrayDimension start='836' end='845'>
+                                        <Index>
+                                            <Scalar start='837' end='844' type='STRING' value='"array"'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                </ExpressionArrayAccess>
+                                <ArrayDimension start='845' end='848'>
+                                    <Index>
+                                        <Scalar start='846' end='847' type='INT' value='0'/>
+                                    </Index>
+                                </ArrayDimension>
+                            </ExpressionArrayAccess>
+                            <NamespaceName start='851' end='858' isCurrent='false' isGlobal='false'>
+                                <Identifier start='851' end='858' name='PHP_EOL'/>
+                            </NamespaceName>
+                        </InfixExpression>
+                    </EchoStatement>
+                </Block>
+            </NamespaceDeclaration>
+        </Statements>
+    </Program>
+</testresult>

@@ -1,0 +1,7 @@
+Code completion result for source line:
+} catch (\Test\Sub\E|xceptionType1 | \Test\Sub\ExceptionType2 $e) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      ExceptionType1                  [PUBLIC]   Test\Sub
+CLASS      ExceptionType2                  [PUBLIC]   Test\Sub
+CLASS      ExceptionType3                  [PUBLIC]   Test\Sub

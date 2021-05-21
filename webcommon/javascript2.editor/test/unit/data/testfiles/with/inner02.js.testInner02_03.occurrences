@@ -1,0 +1,2 @@
+    |>MARK_OCCURRENCES:console<|.log(firstName);
+        |>MARK_OCCURRENCES:con^sole<|.log(street);

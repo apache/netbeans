@@ -1,0 +1,984 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+]>
+
+<api-answers
+  question-version="1.12"
+  author="jrechtacek@netbeans.org"
+>
+
+  &api-questions;
+
+
+<!--
+        <question id="arch-what">
+            What is this project good for?
+            <hint>
+            Please provide here a few lines describing the project,
+            what problem it should solve, provide links to documentation, 
+            specifications, etc.
+            </hint>
+        </question>
+-->
+<answer id="arch-what">
+
+    The 
+    <api 
+        type="export" name="ExplorerAPI" group="java" category="official" 
+        url="@org-openide-explorer@/org/openide/explorer/doc-files/api.html" 
+    />
+    is build around Explorer - solely a user-interface device: it has no particular knowledge 
+    of the structure of the IDE. Rather, it provides the physical user interface for 
+    the Node hierarchy, as described in the 
+    <api 
+        type="import" name="NodesAPI" group="java" category="official" 
+        url="@org-openide-nodes@/org/openide/nodes/doc-files/api.html" 
+    />.
+
+    A given Explorer instance will be some visual component (such as a Swing panel) 
+    displaying some representation of a subtree of the complete Node hierarchy; 
+    the topmost node being displayed is said to be the root of the Explorer. 
+    Be careful not to confuse the root of a particular Explorer instance, which is 
+    selected according to what the user wishes to see, with the root(s) of 
+    the entire Node hierarchy, which generally are fixed. 
+</answer>
+
+<answer id="arch-usecases">
+    
+  <p>
+     <a onclick="target='_blank'" href="https://leanpub.com/nbp4beginners">
+     <img src="http://wiki.apidesign.org/images/0/03/NetBeansPlatformForBeginners.jpg"
+        style="float: right"
+          width="60" height="70" alt="Cover of NetBeans Platform for Beginners book"/>
+     </a>
+    For general overview of the concepts related to <a href="@org-openide-nodes@/overview-summary.html">nodes</a> and explorers, 
+    together with code samples, see chapter 7, 
+    of <a onclick="target='_blank'" href="https://leanpub.com/nbp4beginners">NetBeans Platform for Beginners</a> 
+    by Jason Wexbridge and Walter Nyland.
+  </p>
+</answer>
+
+
+<!--
+        <question id="compat-i18n">
+            Is your module correctly internationalized?
+            <hint>
+            Correct internationalization means that it obeys instuctions 
+            at <a href="http://www.netbeans.org/devhome/docs/i18n/index.html">
+            NetBeans I18N pages</a>.
+            </hint>
+        </question>
+-->
+<answer id="compat-i18n">
+The module is fully internationalized.
+</answer>
+
+
+
+<!--
+        <question id="compat-standards">
+            Does the module implement or define any standards? Is the 
+            implementation exact or does it deviate somehow?
+        </question>
+-->
+<answer id="compat-standards">
+The explorer does not implement any standards.
+</answer>
+
+
+
+<!--
+        <question id="compat-version">
+            Can your module coexist with earlier and future
+            versions of itself? Can you correctly read all old settings? Will future
+            versions be able to read your current settings? Can you read
+            or politely ignore settings stored by a future version?
+            
+            <hint>
+            Very helpful for reading settings is to store version number
+            there, so future versions can decide whether how to read/convert
+            the settings and older versions can ignore the new ones.
+            </hint>
+        </question>
+-->
+<answer id="compat-version">
+The only serializable object that might be part of some settings 
+is <a href="@org-openide-explorer@/org/openide/explorer/ExplorerManager.html">ExplorerManager</a>
+which serialization is backward compatible.
+</answer>
+
+
+
+<!--
+        <question id="dep-jre">
+            Which version of JRE do you need (1.2, 1.3, 1.4, etc.)?
+            <hint>
+            It is expected that if your module runs on 1.x that it will run 
+            on 1.x+1 if no, state that please. Also describe here cases where
+            you run different code on different versions of JRE and why.
+            </hint>
+        </question>
+-->
+<answer id="dep-jre">
+Runs on JDK1.3 and higher.
+</answer>
+
+
+
+<!--
+        <question id="dep-jrejdk">
+            Do you require the JDK or is the JRE enough?
+        </question>
+-->
+<answer id="dep-jrejdk">
+JRE is enough.
+</answer>
+
+
+
+<!--
+        <question id="dep-nb">
+            What other NetBeans projects does this one depend on?
+            <hint>
+            If you want, describe such projects as imported API using
+            the <code>&lt;api name="identification" type="import or export" category="stable" url="where is the description" /&gt;</code>
+            </hint>
+        </question>
+-->
+<answer id="dep-nb">
+The project needs <a href="#java-NodesAPI">Nodes API</a> and 
+    <api 
+        type="import" group="java" name="UtilitiesAPI" category="official" 
+        url="@org-openide-util-ui@/org/openide/util/doc-files/api.html" 
+    /> 
+which are essential for it to run. Beyond that it uses runtime 
+checks for presence of other APIs (PENDING) to use their 
+features for backward compatibility.
+</answer>
+
+
+
+<!--
+        <question id="dep-non-nb">
+            What other projects outside NetBeans does this one depend on?
+            
+            <hint>
+            Some non-NetBeans projects are packaged as NetBeans modules
+            (see <a href="http://libs.netbeans.org">libraries</a>) and
+            it is prefered to use this approach when more modules may
+            depend on such third-party library.
+            </hint>
+        </question>
+-->
+<answer id="dep-non-nb">
+No other dependencies.
+</answer>
+
+
+
+<!--
+        <question id="dep-platform">
+            On which platforms does your module run? Does it run in the same
+            way on each?
+            <hint>
+            If your module is using JNI or deals with special differences of
+            OSes like filesystems, etc. please describe here what they are.
+            </hint>
+        </question>
+-->
+<answer id="dep-platform">
+The module is platform independent.
+</answer>
+
+
+
+<!--
+        <question id="deploy-jar">
+            Do you deploy just module JAR file(s) or other files as well?
+            <hint>
+            If your module consists of just one module JAR file, just confirm that.
+            If it uses more than one JAR, describe where they are located, how
+            they refer to each other. 
+            If it consist of module JAR(s) and other files, please describe
+            what is their purpose, why other files are necessary. Please 
+            make sure that installation/deinstallation leaves the system 
+            in state as it was before installation.
+            </hint>
+        </question>
+-->
+<answer id="deploy-jar">
+Right now the module is part of <code>openide.jar</code>.
+</answer>
+
+
+
+<!--
+        <question id="deploy-nbm">
+            Can you deploy an NBM via the Update Center?
+            <hint>
+            If not why?
+            </hint>
+        </question>
+-->
+<answer id="deploy-nbm">
+The whole openide.jar and core.jar can be updated as nbm file.
+</answer>
+
+
+
+<!--
+        <question id="deploy-packages">
+            Are packages of your module made inaccessible by not declaring them
+            public?
+            
+            <hint>
+            NetBeans module system allows restriction of access rights to
+            public classes of your module from other modules. This prevents
+            unwanted dependencies of others on your code and should be used
+            whenever possible (<a href="http://www.netbeans.org/download/apis/org/openide/doc-files/upgrade.html#3.4-public-packages">
+            public packages
+            </a>). 
+            </hint>
+        </question>
+-->
+<answer id="deploy-packages">
+Both packages (<code>org.openide.explorer</code> and <code>org.openide.explorer.view</code>) are 
+part of API, so there is no need to make them unaccessible.
+</answer>
+
+
+
+<!--
+        <question id="deploy-shared">
+            Do you need to be installed in the shared location only, or in the user directory only,
+            or can your module be installed anywhere?
+            <hint>
+            Installation location shall not matter, if it does explain why.
+            Consider also whether <code>InstalledFileLocator</code> can help.
+            </hint>
+        </question>
+-->
+<answer id="deploy-shared">
+As part of openide.jar it needs to be in shared location.
+</answer>
+
+
+
+<!--
+        <question id="exec-classloader">
+            Does your code create its own class loader(s)?
+            <hint>
+            A bit unusual. Please explain why and what for.
+            </hint>
+        </question>
+-->
+<answer id="exec-classloader">
+No.
+</answer>
+
+
+
+<!--
+        <question id="exec-component">
+            Is execution of your code influenced by any (string) property
+            of any of your components?
+            
+            <hint>
+            Often <code>JComponent.getClientProperty</code>, <code>Action.getValue</code>
+            or <code>PropertyDescriptor.getValue</code>, etc. are used to influence
+            a behaviour of some code. This of course forms an interface that should
+            be documented. Also if one depends on some interface that an object
+            implements (<code>component instanceof Runnable</code>) that forms an
+            API as well.
+            </hint>
+        </question>
+-->
+<answer id="exec-component">
+    <api type="export" group="systemproperty" name="org.openide.explorer.VisualizerNode.prefetchCount" category="private">
+        Setting this property to integer number controls prefetching of nodes
+        when VisualizerChildren are constructed (prefetchCount = 0 disables
+        prefetching).
+        The prefetching should eliminate "bounce" effect (see #144718) in lazy 
+        implementation which is caused by the fact that there exist keys without
+        nodes. In such case "dummy" nodes are created and remove event is fired.
+        This undesirable effect is eliminated by prefetching selected number of 
+        nodes so "dummy" nodes are detected and removed in advance before any 
+        visualization occurs. 
+    </api>
+</answer>
+
+
+
+<!--
+        <question id="exec-introspection">
+            Does your module use any kind of runtime type informations (instanceof,
+            work with java.lang.Class, etc.)?
+            <hint>
+            Check for cases when you have an object of type A and you also
+            expect it to (possibly) be of type B and do some special action. That
+            should be documented. The same applies on operations in meta-level
+            (Class.isInstance(...), Class.isAssignableFrom(...), etc.).
+            </hint>
+        </question>
+-->
+<answer id="exec-introspection">
+Also <code>TreeTableView</code> offers sort by the values of explored properties if type
+of value implements <code>Comparable</code> interface, it's based on semi-private API
+<api group="java" name="TreeTableViewSortingAPI" type="export" category="friend"/>.
+</answer>
+
+
+
+<!--
+        <question id="exec-privateaccess">
+            Are you aware of any other parts of the system calling some of 
+            your methods by reflection?
+            <hint>
+            If so, describe the "contract" as an API. Likely private or friend one, but
+            still API and consider rewrite of it.
+            </hint>
+        </question>
+-->
+<answer id="exec-privateaccess">
+No.
+</answer>
+
+
+
+<!--
+        <question id="exec-process">
+            Do you execute an external process from your module? How do you ensure
+            that the result is the same on different platforms? Do you parse output?
+            Do you depend on result code?
+            <hint>
+            If you feed an input, parse the output please declare that as an API.
+            </hint>
+        </question>
+-->
+<answer id="exec-process">
+No.
+</answer>
+
+
+
+<!--
+        <question id="exec-property">
+            Is execution of your code influenced by any environment or
+            Java system (<code>System.getProperty</code>) property?
+            
+            <hint>
+            If there is a property that can change the behaviour of your 
+            code, somebody will likely use it. You should describe what it does 
+            and the stability category of this API. You may use
+            <pre>
+                &lt;property name="id" category="private" &gt;
+                    description of the property, where it is used, what it influence, etc.
+                &lt;/property&gt;            
+            </pre>
+            </hint>
+        </question>
+-->
+<answer id="exec-property">
+    <api name="netbeans.dnd.enabled" group="systemproperty" category="private" type="export" url="">
+    Checks by Drag &amp; Drop support for views. True is regard as default
+    (no matter what jdk's version). False value disallows Drag &amp; Drop in
+    all views.
+    </api>
+    <api name="customDelete" group="property" category="devel" type="export">
+    Nodes returing Boolean.TRUE from getValue(&quot;customDelete&quot;) are assumed to
+    provide their own confirmation dialog for delete action and explorer will not show
+    default one when they are deleted.
+    </api>
+    <api name="slowRename" group="property" category="devel" type="export">
+    Nodes returing Boolean.TRUE from getValue(&quot;slowRename&quot;) are expected
+    to have potentially slow implemenation of <code>setName</code>. Explorer views
+    rather process in-place rename in background for such nodes.
+    </api>
+</answer>
+
+
+
+<!--
+        <question id="exec-reflection">
+            Does your code use Java Reflection to execute other code?
+            <hint>
+            This usually indicates a missing or unsufficient API in the other
+            part of the system. If the other side is not aware of your dependency
+            this contract can be easily broken.
+            </hint>
+        </question>
+-->
+<answer id="exec-reflection">
+Yes, <code>TreeView</code> calls via reflection to openide's Window System API
+and to Actions API to allow use Explorer API as standalone library.
+</answer>
+
+
+
+<!--
+        <question id="format-clipboard">
+            Which data flavors (if any) does your code read from or insert to
+            the clipboard?
+        </question>
+-->
+<answer id="format-clipboard">
+The module servers as a bridge between nodes and the clipboard. It takes what 
+Nodes provide 
+(<a href="@org-openide-nodes@/org/openide/nodes/Node.html#clipboardCopy--">Node.clipboardCopy</a>,
+ <a href="@org-openide-nodes@/org/openide/nodes/Node.html#clipboardCut--">Node.clipboardCut</a>) and
+inserts them into clipboard (as part of Copy/Cut action) and also retrive the
+content of clipboard and pases it to 
+ <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getPasteTypes-java.awt.datatransfer.Transferable-">Node.getPasteTypes(Transferable)</a>)
+during paste action.
+</answer>
+
+
+
+<!--
+        <question id="format-dnd">
+            Which protocols (if any) does your code understand during Drag &amp; Drop?
+        </question>
+-->
+<answer id="format-dnd">
+Same formats as during clipboard access.
+</answer>
+
+
+
+<!--
+        <question id="format-types">
+            Which protocols and file formats (if any) does your module read or write on disk,
+            or transmit or receive over the network?
+        </question>
+-->
+<answer id="format-types">
+None.
+</answer>
+
+
+
+<!--
+        <question id="lookup-lookup">
+            Does your module use <code>org.openide.util.Lookup</code>
+            to find any components to communicate with? Which ones?
+            
+            <hint>
+            Please describe the interfaces you are searching for, where 
+            are defined, whether you are searching for just one or more of them,
+            if the order is important, etc. Also clasify the stability of such
+            API contract.
+            </hint>
+        </question>
+-->
+<answer id="lookup-lookup">
+Yes, it does. There is searched for <code>java.awt.datatransfer.Clipboard.class</code>
+(to obtain clipboard for cut/cope/paste operations),
+for <code>org.openide.actions.ActionManager</code> (to process an action in separate
+thread) and for registry of all top components.
+A presence these object are not forced, system can work w/o them.
+</answer>
+
+
+
+<!--
+        <question id="lookup-register">
+            Do you register anything into lookup for other code to find?
+            <hint>
+            Do you register using layer file or using <code>META-INF/services</code>?
+            Who is supposed to find your component?
+            </hint>
+        </question>
+-->
+<answer id="lookup-register">
+No.
+</answer>
+
+
+
+<!--
+        <question id="lookup-remove">
+            Do you remove entries of other modules from lookup?
+            <hint>
+            Why? Of course, that is possible, but it can be dangerous. Is the module
+            your are masking resource from aware of what you are doing?
+            </hint>
+        </question>
+-->
+<answer id="lookup-remove">
+No.
+</answer>
+
+
+
+<!--
+        <question id="perf-exit">
+            Does your module run any code on exit?
+        </question>
+-->
+<answer id="perf-exit">
+No.
+</answer>
+
+
+
+<!--
+        <question id="perf-huge_dialogs">
+            Does your module contain any dialogs or wizards with a large number of
+            GUI controls such as combo boxes, lists, trees, or text areas?
+        </question>
+-->
+<answer id="perf-huge_dialogs">
+No, only the small dialogs, e.g. Rename, Navigator, etc.
+</answer>
+
+
+
+<!--
+        <question id="perf-limit">
+            Are there any hardcoded or practical limits in the number or size of
+            elements your code can handle?
+        </question>
+-->
+<answer id="perf-limit">
+No.
+</answer>
+
+
+
+<!--
+        <question id="perf-mem">
+            How much memory does your component consume? Estimate
+            with a relation to the number of windows, etc.
+        </question>
+-->
+<answer id="perf-mem">
+No answer
+</answer>
+
+
+
+<!--
+        <question id="perf-menus">
+            Does your module use dynamically updated context menus, or
+            context-sensitive actions with complicated enablement logic?
+        </question>
+-->
+<answer id="perf-menus">
+No answer
+</answer>
+
+
+
+<!--
+        <question id="perf-progress">
+            Does your module execute any long-running tasks?
+            <hint>Typically they are tasks like connecting over
+            network, computing huge amount of data, compilation.
+            Such communication should be done asynchronously (for example
+            using <code>RequestProcessor</code>), definitively it should 
+            not block AWT thread.
+            </hint>
+        </question>
+-->
+<answer id="perf-progress">
+No answer
+</answer>
+
+
+
+<!--
+        <question id="perf-scale">
+            Which external criteria influence the performance of your
+            program (size of file in editor, number of files in menu, 
+            in source directory, etc.) and how well your code scales?
+            Please include some estimates.
+        </question>
+-->
+<answer id="perf-scale">
+No answer
+</answer>
+
+
+
+<!--
+        <question id="perf-startup">
+            Does your module run any code on startup?
+        </question>
+-->
+<answer id="perf-startup">
+No.
+</answer>
+
+
+
+<!--
+        <question id="perf-wakeup">
+            Does any piece of your code wake up periodically and do something
+            even when the system is otherwise idle (no user interaction)?
+        </question>
+-->
+<answer id="perf-wakeup">
+No.
+</answer>
+
+
+
+<!--
+        <question id="resources-file">
+            Does your module use <code>java.io.File</code> directly?
+            
+            <hint>
+            NetBeans provide a logical wrapper over plain files called 
+            <code>org.openide.filesystems.FileObject</code> that
+            provides uniform access to such resources and is the prefered
+            way that should be used. But of course there can be situations when
+            this is not suitable.
+            </hint>
+        </question>
+-->
+<answer id="resources-file">
+No.
+</answer>
+
+
+
+<!--
+        <question id="resources-layer">
+            Does your module provide own layer? Does it create any files or
+            folders in it? What it is trying to communicate by that and with which 
+            components?
+            
+            <hint>
+            NetBeans allows automatic and declarative installation of resources 
+            by module layers. Module register files into appropriate places
+            and other components use that information to perform their task
+            (build menu, toolbar, window layout, list of templates, set of
+            options, etc.). 
+            </hint>
+        </question>
+-->
+<answer id="resources-layer">
+No.
+</answer>
+
+
+
+<!--
+        <question id="resources-mask">
+            Does your module mask/hide/override any resources provided by other modules in
+            their layers?
+            
+            <hint>
+            If you mask a file provided by another module, you probably depend
+            on that and do not want the other module to (for example) change
+            the file's name. That module shall thus make that file available as an API
+            of some stability category.
+            </hint>
+        </question>
+-->
+<answer id="resources-mask">
+No.
+</answer>
+
+
+
+<!--
+        <question id="resources-read">
+            Does your module read any resources from layers? For what purpose?
+            
+            <hint>
+            As this is some kind of intermodule dependency, it is a kind of API.
+            Please describe it and clasify according to 
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            common stability categories</a>.
+            </hint>
+        </question>
+-->
+<answer id="resources-read">
+No.
+</answer>
+
+
+
+
+<!--
+        <question id="arch-overall" when="init">
+            Describe the overall architecture. 
+            <hint>
+            What will be API for 
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#design.apiandspi" shape="rect">
+                clients and what support API</a>? 
+            What parts will be pluggable?
+            How will plug-ins be registered? Please use <code>&lt;api type="export"/&gt;</code>
+            to describe your general APIs and specify their
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#category-private" shape="rect">
+            stability categories</a>.
+            If possible please provide simple diagrams.
+            </hint>
+        </question>
+-->
+ <answer id="arch-overall">
+  <p>
+   Provides Swing UI components that render 
+   provided <a href="@org-openide-nodes@/overview-summary.html">node hierarchy</a>
+   in different ways (as a <a href="@TOP@org/openide/explorer/view/BeanTreeView.html">tree</a>,
+   <a href="@TOP@org/openide/explorer/view/ListView.html">list</a>,
+   <a href="@TOP@org/openide/explorer/view/IconView.html">icons</a>,
+   <a href="@TOP@org/openide/explorer/propertysheet/PropertySheetView.html">set of properties</a>
+   and many other).
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="arch-quality" when="init">
+            How will the <a href="http://www.netbeans.org/community/guidelines/q-evangelism.html" shape="rect">quality</a>
+            of your code be tested and 
+            how are future regressions going to be prevented?
+            <hint>
+            What kind of testing do
+            you want to use? How much functionality, in which areas,
+            should be covered by the tests? How you find out that your
+            project was successful?
+            </hint>
+        </question>
+-->
+ <answer id="arch-quality">
+  <p>
+   XXX no answer for arch-quality
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="arch-time" when="init">
+            What are the time estimates of the work?
+            <hint>
+            Please express your estimates of how long the design, implementation,
+            stabilization are likely to last. How many people will be needed to
+            implement this and what is the expected milestone by which the work should be 
+            ready?
+            </hint>
+        </question>
+-->
+ <answer id="arch-time">
+  <p>
+   XXX no answer for arch-time
+  </p>
+ </answer>
+
+
+
+
+
+<!--
+        <question id="arch-where" when="impl">
+            Where one can find sources for your module?
+            <hint>
+                Please provide link to the Hg web client at
+                http://hg.netbeans.org/
+                or just use tag defaultanswer generate='here'
+            </hint>
+        </question>
+-->
+ <answer id="arch-where">
+  <defaultanswer generate='here' />
+ </answer>
+
+
+
+<!--
+        <question id="compat-deprecation" when="init">
+            How the introduction of your project influences functionality
+            provided by previous version of the product?
+            <hint>
+            If you are planning to deprecate/remove/change any existing APIs,
+            list them here accompanied with the reason explaining why you
+            are doing so.
+            </hint>
+        </question>
+-->
+ <answer id="compat-deprecation">
+  <p>
+   XXX no answer for compat-deprecation
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="deploy-dependencies" when="final">
+            What do other modules need to do to declare a dependency on this one,
+            in addition to or instead of the normal module dependency declaration
+            (e.g. tokens to require)?
+            <hint>
+                Provide a sample of the actual lines you would add to a module manifest
+                to declare a dependency, for example OpenIDE-Module-Requires: some.token.
+                If other modules should not depend on this module, or should just use a
+                simple regular module dependency, you can just answer "nothing". If you
+                intentionally expose a semistable API to clients using implementation
+                dependencies, you should mention that here (but there is no need to give
+                an example of usage).
+            </hint>
+        </question>
+-->
+ <answer id="deploy-dependencies">
+  <p>
+   XXX no answer for deploy-dependencies
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="exec-ant-tasks" when="impl">
+            Do you define or register any ant tasks that other can use?
+            
+            <hint>
+            If you provide an ant task that users can use, you need to be very
+            careful about its syntax and behaviour, as it most likely forms an
+	          API for end users and as there is a lot of end users, their reaction
+            when such API gets broken can be pretty strong.
+            </hint>
+        </question>
+-->
+ <answer id="exec-ant-tasks">
+  <p>
+   XXX no answer for exec-ant-tasks
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="exec-threading" when="init">
+            What threading models, if any, does your module adhere to? How the
+            project behaves with respect to threading?
+            <hint>
+                Is your API threadsafe? Can it be accessed from any threads or
+                just from some dedicated ones? Any special relation to AWT and
+                its Event Dispatch thread? Also
+                if your module calls foreign APIs which have a specific threading model,
+                indicate how you comply with the requirements for multithreaded access
+                (synchronization, mutexes, etc.) applicable to those APIs.
+                If your module defines any APIs, or has complex internal structures
+                that might be used from multiple threads, declare how you protect
+                data against concurrent access, race conditions, deadlocks, etc.,
+                and whether such rules are enforced by runtime warnings, errors, assertions, etc.
+                Examples: a class might be non-thread-safe (like Java Collections); might
+                be fully thread-safe (internal locking); might require access through a mutex
+                (and may or may not automatically acquire that mutex on behalf of a client method);
+                might be able to run only in the event queue; etc.
+                Also describe when any events are fired: synchronously, asynchronously, etc.
+                Ideas: <a href="http://core.netbeans.org/proposals/threading/index.html#recommendations" shape="rect">Threading Recommendations</a> (in progress)
+            </hint>
+        </question>
+-->
+ <answer id="exec-threading">
+  <p>
+   XXX no answer for exec-threading
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="perf-spi" when="init">
+            How the performance of the plugged in code will be enforced?
+            <hint>
+            If you allow foreign code to be plugged into your own module, how
+            do you enforce that it will behave correctly and quickly and will not
+            negatively influence the performance of your own module?
+            </hint>
+        </question>
+-->
+ <answer id="perf-spi">
+  <p>
+   XXX no answer for perf-spi
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="resources-preferences" when="final">
+            Does your module uses preferences via Preferences API? Does your module use NbPreferences or
+            or regular JDK Preferences ? Does it read, write or both ? 
+            Does it share preferences with other modules ? If so, then why ?
+            <hint>
+                You may use
+                    &lt;api type="export" group="preferences"
+                    name="preference node name" category="private"&gt;
+                    description of individual keys, where it is used, what it
+                    influences, whether the module reads/write it, etc.
+                    &lt;/api&gt;
+                Due to XML ID restrictions, rather than /org/netbeans/modules/foo give the "name" as org.netbeans.modules.foo.
+                Note that if you use NbPreferences this name will then be the same as the code name base of the module.
+            </hint>
+        </question>
+-->
+ <answer id="resources-preferences">
+  <p>
+   XXX no answer for resources-preferences
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="security-grant" when="final">
+            Does your code grant additional rights to some other code?
+            <hint>Avoid using a class loader that adds extra
+            permissions to loaded code unless really necessary.
+            Also note that your API implementation
+            can also expose unneeded permissions to enemy code by
+            calling AccessController.doPrivileged().</hint>
+        </question>
+-->
+ <answer id="security-grant">
+  <p>
+   XXX no answer for security-grant
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="security-policy" when="final">
+            Does your functionality require modifications to the standard policy file?
+            <hint>Your code might pass control to third-party code not
+            coming from trusted domains. This could be code downloaded over the
+            network or code coming from libraries that are not bundled
+            with NetBeans. Which permissions need to be granted to which domains?</hint>
+        </question>
+-->
+ <answer id="security-policy">
+  <p>
+   XXX no answer for security-policy
+  </p>
+ </answer>
+
+</api-answers>

@@ -1,0 +1,6 @@
+{% include "foo.twig" %}
+{% include "foo.twig" only %}
+{% include "foo.twig" with {'foo1': 'bar'} %}
+{% include "foo.twig" with {'foo1': 'bar'} only %}
+
+{% for k, v in _context %}{{ k }},{% endfor %}

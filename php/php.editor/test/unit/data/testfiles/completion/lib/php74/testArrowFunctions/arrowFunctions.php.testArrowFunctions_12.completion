@@ -1,0 +1,4 @@
+Code completion result for source line:
+fn($x, &...$reset) => $r|eset; // reference variadics
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   ? $reset                        [PUBLIC]   arrowFunctions.php

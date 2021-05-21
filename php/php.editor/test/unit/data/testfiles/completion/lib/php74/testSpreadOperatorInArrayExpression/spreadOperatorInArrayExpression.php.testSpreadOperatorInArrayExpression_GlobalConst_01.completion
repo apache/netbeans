@@ -1,0 +1,16 @@
+Code completion result for source line:
+const CONSTANT1 = [...|CONSTANT];
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    Bar                             [PUBLIC]   null
+PACKAGE    Foo                             [PUBLIC]   null
+CLASS      Qux                             [PUBLIC]   Bar
+CONSTANT   BAR_CONSTANT []                 [PUBLIC]   Bar
+CONSTANT   CONSTANT [0, 1, 2, 3]           [PUBLIC]   Foo
+CONSTANT   CONSTANT1 [?]                   [PUBLIC]   Foo
+CONSTANT   CONSTANT1a [...[0, 1, 2, 3]]    [PUBLIC]   Foo
+CONSTANT   CONSTANT2 [100, ?, ?]           [PUBLIC]   Foo
+CONSTANT   CONSTANT3 [?, 100 => 0, ?]      [PUBLIC]   Foo
+CONSTANT   CONSTANT4 [?, 100 => 0, ?]      [PUBLIC]   Foo
+CONSTANT   CONSTANT5 [?, 100 => 0, ?]      [PUBLIC]   Foo
+------------------------------------
+KEYWORD    array                                      null

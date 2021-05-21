@@ -1,0 +1,16 @@
+(function () {
+    var |>CLASS:context<|;
+    context.|>METHOD:Parser<| = function |>METHOD,UNUSED:Parser<|() {
+
+
+
+        var |>METHOD:MyError<| = function () {
+            this.|>FIELD:prop<| = "prot"
+        }
+         
+        MyError.prototype.|>METHOD:constructor<| = MyError;
+    }
+    
+    context.|>FIELD:Parser2<| = |>GLOBAL:Parser<|;
+       
+}());

@@ -1,0 +1,4 @@
+Code completion result for source line:
+$af = fn(ArrowFunctions $x): callable => fn(?ArrowFunct|ions $z): ?ArrowFunctions => new ArrowFunctions();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      ArrowFunctions                  [PUBLIC]   arrowFunctions.php

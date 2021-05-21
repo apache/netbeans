@@ -1,0 +1,18 @@
+<Program start='0' end='50'>
+    <Comments>
+    </Comments>
+    <Statements>
+        <ClassDeclaration start='10' end='46' modifier='NONE'>
+            <ClassName>
+                <Identifier start='16' end='19' name='cls'/>
+            </ClassName>
+            <SuperClassName>
+            </SuperClassName>
+            <Interfaces>
+            </Interfaces>
+            <Block start='20' end='46' isCurly='true'>
+            </Block>
+        </ClassDeclaration>
+        <EmptyStatement start='47' end='50'/>
+    </Statements>
+</Program>

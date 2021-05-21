@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleGetInfoString</key>
+	<string>@BASEVERSION@</string>
+	<key>CFBundleIdentifier</key>
+	<string>org.netbeans.ide.nbide.@NB_ID@</string>
+	<key>CFBundleShortVersionString</key>
+	<string>@APPVERSION@</string>
+	<key>IFPkgFlagAllowBackRev</key>
+	<false/>
+	<key>IFPkgFlagAuthorizationAction</key>
+	<string>RootAuthorization</string>
+	<key>IFPkgFlagBackgroundAlignment</key>
+	<string>topleft</string>
+	<key>IFPkgFlagBackgroundScaling</key>
+	<string>none</string>
+	<key>IFPkgFlagDefaultLocation</key>
+	<string>@INSTALLDIR@</string>
+	<key>IFPkgFlagFollowLinks</key>
+	<false/>
+	<key>IFPkgFlagInstallFat</key>
+	<false/>
+	<key>IFPkgFlagInstalledSize</key>
+	<integer>46860</integer>
+	<key>IFPkgFlagIsRequired</key>
+	<false/>
+	<key>IFPkgFlagOverwritePermissions</key>
+	<false/>
+	<key>IFPkgFlagRelocatable</key>
+	<false/>
+	<key>IFPkgFlagRestartAction</key>
+	<string>None</string>
+	<key>IFPkgFlagRootVolumeOnly</key>
+	<true/>
+	<key>IFPkgFlagUpdateInstalledLanguages</key>
+	<false/>
+	<key>IFPkgFormatVersion</key>
+	<real>0.1000000014901161</real>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+</dict>
+</plist>

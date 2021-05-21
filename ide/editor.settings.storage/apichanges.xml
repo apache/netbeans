@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="settings-storage">Editor Settings Storage API</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+         <change>
+            <summary>Adding Color definitions in Color Schema XML-s</summary>
+            <version major="1" minor="59"/>
+            <date day="24" month="11" year="2019"/>
+            <author login="lkishalmi"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" deprecation="no" deletion="no" modification="no" />
+            <description>
+            <p>
+                Adding new element &lt;colordef name="" color="" /&gt; to fontcolors XML schema, which makes possible custom string to color mapping. It
+                allows to define a color palette, then lookup colors from that palette, making porting color schemas easier.
+            </p>
+            </description>
+            <issue number="NETBEANS-3440"/>
+        </change>
+       <change>
+            <summary>Module split</summary>
+            <version major="1" minor="49"/>
+            <date day="6" month="3" year="2015"/>
+            <author login="sdedic"/>
+            <compatibility modification="yes" source="compatible" binary="compatible"/>
+            <description>
+                Basic infrastructure for settings separated to a library.
+            </description>
+            <class package="org.netbeans.modules.editor.settings.storage.api" name="OverridePreferences" link="no"/>
+            <class package="org.netbeans.modules.editor.settings.storage.api" name="MemoryPreferences" link="no"/>
+            <class package="org.netbeans.modules.editor.settings.storage.api" name="EditorSettingsStorage" link="no"/>
+            
+            <class package="org.netbeans.modules.editor.settings.storage.spi" name="StorageDescription" link="no"/>
+            <class package="org.netbeans.modules.editor.settings.storage.spi" name="StorageFilter" link="no"/>
+            <class package="org.netbeans.modules.editor.settings.storage.spi" name="StorageReader" link="no"/>
+            <class package="org.netbeans.modules.editor.settings.storage.spi" name="StorageWriter" link="no"/>
+            <class package="org.netbeans.modules.editor.settings.storage.spi" name="TypedValue" link="no"/>
+        </change>
+        <change>
+            <summary>Implement profiles for annotations coloring</summary>
+            <version major="1" minor="43"/>
+            <date day="17" month="9" year="2013"/>
+            <author login="mkristofic"/>
+            <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible"  deprecation="no" deletion="no" modification="no" />
+            <description>
+                <p>
+                    <code>EditorSettings</code> is extended to handle saving and loading annotations colorings for any profile.
+                </p>
+                <pre>
+                    Class org.netbeans.modules.editor.settings.storage.api.EditorSettings
+  [sigtest]   "E5.2 - Adding abstract methods" : method public abstract void org.netbeans.modules.editor.settings.storage.api.EditorSettings.setAnnotations(java.lang.String,java.util.Map)
+  [sigtest]   "E5.2 - Adding abstract methods" : method public abstract java.util.Map org.netbeans.modules.editor.settings.storage.api.EditorSettings.getAnnotations(java.lang.String)
+  [sigtest]   "E5.2 - Adding abstract methods" : method public abstract java.util.Map org.netbeans.modules.editor.settings.storage.api.EditorSettings.getAnnotationDefaults(java.lang.String)
+  [sigtest] 
+                </pre>
+            </description>
+            <issue number="231735"/>
+        </change>
+        <change>
+            <summary>Detect preferences override and support inheritance</summary>
+            <version major="1" minor="38"/>
+            <date day="21" month="2" year="2013"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible"  deprecation="no" deletion="no" modification="no" />
+            <description>
+                <p>
+                    <code>OverridePreferences</code> can be used to detect whether the setting is defined for
+                    the specific MIME type, or inherited from default ('all languages') settings.
+                </p>
+                <p>
+                    During options editing, <code>MemoryPreferences</code> can be used to create Preferences 
+                    object, that propagates changes to its (persistent) delegate upon flush(). 
+                </p>
+            </description>
+            <class package="org.netbeans.modules.editor.settings.storage.api" name="OverridePreferences" link="no"/>
+            <class package="org.netbeans.modules.editor.settings.storage.api" name="MemoryPreferences" link="no"/>
+            <issue number="226111"/>
+        </change>
+        
+        <change>
+            <summary>EditorSettings.PROP_MIME_TYPES</summary>
+            <version major="1" minor="21"/>
+            <date day="16" month="7" year="2009"/>
+            <author login="vstejskal"/>
+            <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no" />
+            <description>
+            <p>
+                Adding <code>EditorSettings.PROP_MIME_TYPES</code> to notify about changes in mimetypes returned
+                from <code>EditorSettings.getAllMimeTypes()</code> and <code>EditorSettings.getMimeTypes()</code>.
+            </p>
+            </description>
+        </change>
+        <change>
+            <summary>SPI refinements</summary>
+            <version major="1" minor="17"/>
+            <date day="14" month="2" year="2008"/>
+            <author login="vstejskal"/>
+            <compatibility addition="no" binary="incompatible" source="incompatible" semantic="compatible" deprecation="no" deletion="no" modification="yes" />
+            <description>
+            <p>
+                The <code>createReader</code> and <code>createWriter</code> methods
+                of <code>StorageDescription</code> now have second parameter, which
+                is a mime path string of the file being read or writter respectively.
+            </p>
+            <p>
+                The <code>StorageReader.getMimePath</code> method was added alongside
+                with a new constructor that takse two parameters <code>FileObject</code>
+                that the reader is dealing with and the mime path <code>String</code> of
+                that file.
+            </p>
+            </description>
+        </change>
+        <change>
+            <summary>Added StorageSupport.stringToKeyStrokes and keyStrokesToString</summary>
+            <version major="1" minor="16"/>
+            <date day="6" month="12" year="2007"/>
+            <author login="vstejskal"/>
+            <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no" />
+            <description>
+            <p>
+                Two methods were added for the benefit of keymaps and macros
+                storage implementations. The added methods are - 
+                <code>StorageSupport.stringToKeyStrokes</code> and
+                <code>StorageSupport.keyStrokesToString</code>.
+            </p>
+            </description>
+        </change>
+        <change>
+            <summary>Moving code templates storage to editor/codetemplates</summary>
+            <version major="1" minor="12"/>
+            <date day="28" month="11" year="2007"/>
+            <author login="vstejskal"/>
+            <compatibility addition="no" binary="incompatible" source="incompatible" semantic="compatible" deprecation="no" deletion="yes" modification="yes" />
+            <description>
+            <p>
+                The classes related to the code templates storage were moved to
+                the editor/codetemplates module, which is no using the new SPI to
+                plugin its own storage files reader/writer.
+            </p>
+            </description>
+        </change>
+        <change>
+            <summary>#90403 - phase 1</summary>
+            <version major="1" minor="10"/>
+            <date day="21" month="3" year="2007"/>
+            <author login="vstejskal"/>
+            <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="yes" deletion="no" modification="no" />
+            <description>
+            <p>
+                The phase 1 of the editor settings enhancements, please see
+                <a href="http://www.netbeans.org/issues/show_bug.cgi?id=90403">issue 90403</a>
+                for details. Briefly, the changes involve introducing a special
+                folder for each setting type, profiles are always stored in their
+                own folder, modules are allowed to register multiple settings files,
+                platform specific settings, the use of 'text/base' for all-editors
+                settings has been deprecated in favor of the hierarchy root (ie. 'Editors' folder), etc.
+            </p>
+            <p>
+                The changes are documented in the Architecture Description document
+                and marked with the module version.
+            </p>
+            </description>
+        </change>
+        <change>
+            <summary>Adding EditorSettings.getAllMimeTypes()</summary>
+            <version major="1" minor="9"/>
+            <date day="5" month="2" year="2007"/>
+            <author login="vstejskal"/>
+            <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no" />
+            <description>
+            <p>
+                Adding <code>EditorSettings.getAllMimeTypes()</code> method, which
+                lists all top-level mime types registered in <code>MimeLookup</code>.
+            </p>
+            </description>
+        </change>
+        <change>
+            <summary>Deprecating several methods and attributes in EditorSettings</summary>
+            <version major="1" minor="8"/>
+            <date day="30" month="12" year="2006"/>
+            <author login="vstejskal"/>
+            <compatibility addition="no" binary="compatible" source="compatible" semantic="compatible" deprecation="yes" deletion="no" modification="no" />
+            <description>
+            <p>
+                The <code>getDefaultFontColors</code>, <code>getDefaultFontColorDefaults</code>
+                and <code>setDefaultFontColors</code> methods in the <code>EditorSettings</code>
+                classe were deprecated in favor of using <code>EditorSettings.getFontColorSettings(String[])</code>
+                with an empty mime path, which is the standard way of getting defaults
+                for all document types.
+            </p>
+            <p>
+                The <code>PROP_DEFAULT_FONT_COLORS</code> and <code>PROP_EDITOR_FONT_COLORS</code>
+                should have never been made public. They are only used internally.
+            </p>
+            </description>
+        </change>
+        <change>
+            <summary>OpenIDE-Module-Provides: org.netbeans.api.editor.settings.implementation</summary>
+            <version major="1" minor="7"/>
+            <date day="13" month="11" year="2006"/>
+            <author login="vstejskal"/>
+            <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no" />
+            <description>
+            <p>
+                The module is now 'eager' and it provides the <code>org.netbeans.api.editor.settings.implementation</code>
+                token required by the <code>editor/settings</code> module. Also
+                the API was properly marked as for-friends-only.
+            </p>
+            </description>
+        </change>
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE CHANGEME/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Editor Settings Storage API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="@TOP@">Editor Settings
+Storage API</a>.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.modules.editor.settings.storage/1"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

@@ -1,0 +1,3 @@
+    |>MARK_OCCURRENCES:b<| = 42,
+var o = {a, |>MARK_OCCURRENCES:b<|, c};
+console.log(o.|>MARK_OCCURRENCES:b^<|);           // 42

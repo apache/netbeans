@@ -1,0 +1,71 @@
+<testresult testFile='traits_03.php'>
+    <scanner>
+        <token id='T_TRAIT' start='6' end='11'>
+            <text>trait</text>
+        </token>
+        <token id='T_STRING' start='12' end='22'>
+            <text>MyTrait_03</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='23' end='24'>
+            <text>{</text>
+        </token>
+        <token id='T_USE' start='29' end='32'>
+            <text>use</text>
+        </token>
+        <token id='T_STRING' start='33' end='40'>
+            <text>MyTrait</text>
+        </token>
+        <token id='T_COMMA' start='40' end='41'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='42' end='52'>
+            <text>Mytrait_02</text>
+        </token>
+        <token id='T_SEMICOLON' start='52' end='53'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='54' end='55'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='56' end='59'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='59' end='59'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='58'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <TraitDeclaration start='6' end='55'>
+                <TraitName>
+                    <Identifier start='12' end='22' name='MyTrait_03'/>
+                </TraitName>
+                <Block start='23' end='55' isCurly='true'>
+                    <UseTraitStatement start='29' end='53'>
+                        <Parts>
+                            <UseTraitStatementPart start='33' end='40'>
+                                <Name>
+                                    <NamespaceName start='33' end='40' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='33' end='40' name='MyTrait'/>
+                                    </NamespaceName>
+                                </Name>
+                            </UseTraitStatementPart>
+                            <UseTraitStatementPart start='42' end='52'>
+                                <Name>
+                                    <NamespaceName start='42' end='52' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='42' end='52' name='Mytrait_02'/>
+                                    </NamespaceName>
+                                </Name>
+                            </UseTraitStatementPart>
+                        </Parts>
+                        <Body>
+                        </Body>
+                    </UseTraitStatement>
+                </Block>
+            </TraitDeclaration>
+            <EmptyStatement start='56' end='58'/>
+        </Statements>
+    </Program>
+</testresult>

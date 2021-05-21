@@ -1,0 +1,4 @@
+ function getBar(): Bar  {
+return $$this->bar;
+}
+

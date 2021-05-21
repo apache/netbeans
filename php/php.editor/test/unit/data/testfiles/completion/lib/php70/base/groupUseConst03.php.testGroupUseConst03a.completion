@@ -1,0 +1,7 @@
+Code completion result for source line:
+use const \A\{|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+PACKAGE    B                               [PUBLIC]   A
+CONSTANT   CONSTANTA "CONSTANTA"           [PUBLIC]   A
+CONSTANT   C_A 'C-A'                       [PUBLIC]   A

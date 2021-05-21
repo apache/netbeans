@@ -1,0 +1,6 @@
+    var |>MARK_OCCURRENCES:uga<| = window[ugaVarName];
+    if( !|>MARK_OCCURRENCES:uga<| ) {
+        |>MARK_OCCURRENCES:uga<| = function() {
+            |>MARK_OCCURRENCES:uga<|.q.push(arguments);
+        |>MARK_OCCURRENCES:u^ga<|.q = []; // <-- here: The global variable "uga" is not declared.
+        window[ugaVarName] = |>MARK_OCCURRENCES:uga<|;

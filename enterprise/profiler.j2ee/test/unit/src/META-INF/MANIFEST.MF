@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.profiler.j2ee.test
+OpenIDE-Module-Layer: org/netbeans/modules/profiler/categories/j2ee/layer.xml

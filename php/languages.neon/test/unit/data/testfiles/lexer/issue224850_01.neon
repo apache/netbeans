@@ -1,0 +1,2 @@
+servicename:
+    class: Model("\ClassA\", "\ClassB\")

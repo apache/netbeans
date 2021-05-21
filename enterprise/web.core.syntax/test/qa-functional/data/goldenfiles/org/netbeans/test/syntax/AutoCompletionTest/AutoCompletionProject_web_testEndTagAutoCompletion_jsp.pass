@@ -1,0 +1,6 @@
+[<jsp:useBean id="bean" scope="application" class="java.lang.Date"></|, ..., <jsp:useBean id="bean" scope="application" class="java.lang.Date"></jsp:useBean>, 731]
+[<jsp:include page="index.jsp" flush="false"></jsp:i|, ..., <jsp:include page="index.jsp" flush="false"></jsp:include>, 894]
+[<c:when test="" ></|, ..., <c:when test="" ></c:when>, 998]
+[<c:forTokens delims=":;," items="items"></|, ..., <c:forTokens delims=":;," items="items"></c:forTokens>, 1153]
+[<h:inputTextarea ></|, ..., <h:inputTextarea ></h:inputTextarea>, 1269]
+[<h:outputFormat></h:out|, ..., <h:outputFormat></h:outputFormat>, 1384]

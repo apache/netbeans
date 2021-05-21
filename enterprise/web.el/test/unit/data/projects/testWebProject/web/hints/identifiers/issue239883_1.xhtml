@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        Please specify your apple
+        <h:form>
+            <h:panelGrid columns="2">
+                <h:outputLabel value="color:"/><h:inputText value="#{appleBean.selected.color}"/>
+                <h:outputLabel value="size:"/><h:inputText value="#{appleBean.selected.size}"/>
+                <h:outputLabel value="taste: "/><h:inputText value="#{appleBean.selected.taste}"/>
+                <h:outputLabel value="taste: "/><h:inputText value="#{appleBean.selected.tasteMistake}"/>
+            </h:panelGrid>
+            <h:commandButton value="submit" actionListener="#{appleBean.submit()}" />
+        </h:form>
+        <h:outputText value="#{appleBean.message}" rendered="#{appleBean.message ne null}"/>
+
+    </h:body>
+</html>
+

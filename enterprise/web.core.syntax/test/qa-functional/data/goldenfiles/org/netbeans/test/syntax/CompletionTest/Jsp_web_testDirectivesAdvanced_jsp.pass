@@ -1,0 +1,40 @@
+[<%@page import="java.lang.Cl|" %>, Class <T>, <%@page import="java.lang.Class" %>, 203]
+Class <T>
+ClassCastException
+ClassCircularityError
+ClassFormatError
+ClassLoader
+ClassNotFoundException
+ClassValue <T>
+CloneNotSupportedException
+Cloneable
+End cursor position = 235
+[<%@taglib tagdir="|", /WEB-INF/tags/, <%@taglib tagdir="/WEB-INF/tags/", 344]
+/WEB-INF/tags/
+/WEB-INF/tags/myTag/
+End cursor position = 377
+[<%@taglib uri="http://java.sun.com/jsf/|", http://java.sun.com/jsf/core, <%@taglib uri="http://java.sun.com/jsf/core", 528]
+http://java.sun.com/jsf/core
+http://java.sun.com/jsf/html
+End cursor position = 572
+[<%@include file="/META-INF/|"%>, context.xml, <%@include file="/META-INF/context.xml"%>, 667]
+context.xml
+emptyFile
+End cursor position = 706
+[<c:v|, c:view, <c:view, 804]
+< c:validateDoubleRange >
+< c:validateLength >
+< c:validateLongRange >
+< c:validateRegex / >
+< c:validator / >
+< c:valueChangeListener / >
+< c:verbatim >
+< c:view >
+< c:viewParam >
+End cursor position = 812
+[<c:view |, locale, <c:view locale="", 907]
+afterPhase
+beforePhase
+locale
+renderKitId
+End cursor position = 924

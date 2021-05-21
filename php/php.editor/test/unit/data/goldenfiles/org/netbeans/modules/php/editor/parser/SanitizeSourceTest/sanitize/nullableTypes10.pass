@@ -1,0 +1,29 @@
+<Program start='0' end='45'>
+    <Comments>
+    </Comments>
+    <Statements>
+        <FunctionDeclaration start='7' end='44' isReference='false'>
+            <Identifier start='16' end='22' name='mytest'/>
+            <FormalParameters>
+                <FormalParameter start='23' end='36' isMandatory='true' isVariadic='false'>
+                    <ParametrType>
+                        <NullableType start='23' end='30'>
+                            <NamespaceName start='24' end='30' isCurrent='false' isGlobal='false'>
+                                <Identifier start='24' end='30' name='string'/>
+                            </NamespaceName>
+                        </NullableType>
+                    </ParametrType>
+                    <ParametrName>
+                        <Variable start='31' end='36' isDollared='true'>
+                            <Identifier start='32' end='36' name='test'/>
+                        </Variable>
+                    </ParametrName>
+                    <DefaultValue>
+                    </DefaultValue>
+                </FormalParameter>
+            </FormalParameters>
+            <Block start='41' end='44' isCurly='true'>
+            </Block>
+        </FunctionDeclaration>
+    </Statements>
+</Program>

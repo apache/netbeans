@@ -1,0 +1,11 @@
+myObject:CLASS:[PRIVATE]:ESCAPED{myObject}:
+  method1:METHOD:[PUBLIC]:ESCAPED{method1}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Number</font>:
+  method2:METHOD:[PUBLIC]:ESCAPED{method2}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+myObject0:VARIABLE:[PRIVATE]:ESCAPED{myObject0}<font color="#999999">ESCAPED{ : }myObject</font>:
+myObject1:VARIABLE:[PRIVATE]:ESCAPED{myObject1}<font color="#999999">ESCAPED{ : }Number</font>:
+myObject2:VARIABLE:[PRIVATE]:ESCAPED{myObject2}<font color="#999999">ESCAPED{ : }String</font>:
+myObject3:VARIABLE:[PRIVATE]:ESCAPED{myObject3}:
+myObject4:VARIABLE:[PRIVATE]:ESCAPED{myObject4}<font color="#999999">ESCAPED{ : }Number</font>:
+myObject5:VARIABLE:[PRIVATE]:ESCAPED{myObject5}<font color="#999999">ESCAPED{ : }String</font>:
+myObject6:VARIABLE:[PRIVATE]:ESCAPED{myObject6}:
+getNumber:METHOD:[PRIVATE]:ESCAPED{getNumber}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Number</font>:

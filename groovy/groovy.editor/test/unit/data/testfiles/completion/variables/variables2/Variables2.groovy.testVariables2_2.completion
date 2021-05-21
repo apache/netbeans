@@ -1,0 +1,7 @@
+Code completion result for source line:
+ind|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      IndentPrinter                              null
+CLASS      IndexOutOfBoundsException                  null
+VARIABLE   index                                      Integer

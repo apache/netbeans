@@ -1,0 +1,13 @@
+function |>METHOD:resolveDay<|(day, |>UNUSED:index<|, |>UNUSED:days<|, action) {
+    for (var |>LOCAL_VARIABLE_DECLARATION:i<| = 0, |>LOCAL_VARIABLE_DECLARATION:max<| = day; |>LOCAL_VARIABLE:i<| < |>LOCAL_VARIABLE:max<|; |>LOCAL_VARIABLE:i<|++) {
+        (function(index) {
+            |>GLOBAL:console<|.log("--------------");
+            |>GLOBAL:console<|.log("i: " + |>LOCAL_VARIABLE:i<|);
+            |>GLOBAL:console<|.log("day: " + day);     
+            |>GLOBAL:console<|.log("index: " + index);
+            |>GLOBAL:console<|.log("action: " + action);
+        }()); 
+    }
+}
+
+resolveDay(3, 2, 7, "test");

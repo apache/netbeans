@@ -1,0 +1,123 @@
+<testresult testFile='nowdoc_008.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='42'>
+            <text>--TEST--\nempty doc test (nowdoc)\n--FILE--\n</text>
+        </token>
+        <token id='T_REQUIRE_ONCE' start='49' end='61'>
+            <text>require_once</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='62' end='74'>
+            <text>&apos;nowdoc.inc&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='74' end='75'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='77' end='82'>
+            <text>print</text>
+        </token>
+        <token id='T_START_NOWDOC' start='83' end='100'>
+            <text>&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='100' end='111'>
+            <text>ENDOFNOWDOC</text>
+        </token>
+        <token id='T_SEMICOLON' start='111' end='112'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='114' end='116'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='117' end='118'>
+            <text>=</text>
+        </token>
+        <token id='T_START_NOWDOC' start='119' end='136'>
+            <text>&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='136' end='147'>
+            <text>ENDOFNOWDOC</text>
+        </token>
+        <token id='T_SEMICOLON' start='147' end='148'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='150' end='155'>
+            <text>print</text>
+        </token>
+        <token id='T_QUATE' start='156' end='157'>
+            <text>"</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='157' end='158'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='158' end='160'>
+            <text>$x</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='160' end='161'>
+            <text>}</text>
+        </token>
+        <token id='T_QUATE' start='161' end='162'>
+            <text>"</text>
+        </token>
+        <token id='T_SEMICOLON' start='162' end='163'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='165' end='168'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='T_INLINE_HTML' start='168' end='179'>
+            <text>--EXPECT--\n</text>
+        </token>
+        <token id='EOF' start='179' end='179'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='179'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='42'/>
+            <ExpressionStatement start='49' end='75'>
+                <Include start='49' end='74' type='REQUIRE_ONCE'>
+                    <Scalar start='62' end='74' type='STRING' value='&apos;nowdoc.inc&apos;'/>
+                </Include>
+            </ExpressionStatement>
+            <ExpressionStatement start='77' end='112'>
+                <FunctionInvocation start='77' end='111'>
+                    <FucntionName start='77' end='82'>
+                        <Identifier start='77' end='82' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='83' end='111' type='STRING' value=''/>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='114' end='148'>
+                <Assignment start='114' end='147' operator='EQUAL'>
+                    <Variable start='114' end='116' isDollared='true'>
+                        <Identifier start='115' end='116' name='x'/>
+                    </Variable>
+                    <Scalar start='119' end='147' type='STRING' value=''/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='150' end='163'>
+                <FunctionInvocation start='150' end='162'>
+                    <FucntionName start='150' end='155'>
+                        <Identifier start='150' end='155' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Quote start='156' end='162' type='QUOTE'>
+                            <Expressions>
+                                <ReflectionVariable start='157' end='161'>
+                                    <Variable start='158' end='160' isDollared='true'>
+                                        <Identifier start='159' end='160' name='x'/>
+                                    </Variable>
+                                </ReflectionVariable>
+                            </Expressions>
+                        </Quote>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='165' end='168'/>
+            <InLineHtml start='168' end='179'/>
+        </Statements>
+    </Program>
+</testresult>

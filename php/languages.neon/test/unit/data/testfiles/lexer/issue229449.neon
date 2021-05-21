@@ -1,0 +1,2 @@
+mapping:
+    *: App\*Module\*Presenter

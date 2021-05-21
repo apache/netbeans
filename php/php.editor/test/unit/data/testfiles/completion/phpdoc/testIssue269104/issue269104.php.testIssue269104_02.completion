@@ -1,0 +1,5 @@
+Code completion result for source line:
+* @param calla|ble $callable
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    callable                                   null

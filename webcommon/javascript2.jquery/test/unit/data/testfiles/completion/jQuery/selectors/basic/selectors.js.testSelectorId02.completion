@@ -1,0 +1,5 @@
+Code completion result for source line:
+$('#|myIdTable')
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+RULE       #myIdTable                                 null

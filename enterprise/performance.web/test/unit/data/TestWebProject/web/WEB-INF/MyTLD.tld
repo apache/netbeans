@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd">
+  <tlib-version>1.0</tlib-version>
+  <short-name>mytld</short-name>
+  <uri>/WEB-INF/MyTLD</uri>
+  <!-- A validator verifies that the tags are used correctly at JSP
+         translation time. Validator entries look like this: 
+      <validator>
+          <validator-class>com.mycompany.TagLibValidator</validator-class>
+          <init-param>
+             <param-name>parameter</param-name>
+             <param-value>value</param-value>
+	  </init-param>
+      </validator>
+   -->
+  <!-- A tag library can register Servlet Context event listeners in
+        case it needs to react to such events. Listener entries look
+        like this: 
+     <listener>
+         <listener-class>com.mycompany.TagLibListener</listener-class> 
+     </listener>
+   -->
+  <tag>
+    <name>HelloWorld</name>
+    <tag-class>test.MyTagHandler</tag-class>
+    <body-content>scriptless</body-content>
+  </tag>
+</taglib>

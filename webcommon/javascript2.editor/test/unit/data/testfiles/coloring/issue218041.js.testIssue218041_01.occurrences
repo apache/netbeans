@@ -1,0 +1,2 @@
+function test(|>MARK_OCCURRENCES:bar<|)
+    return |>MARK_OCCURRENCES:b^ar<|;

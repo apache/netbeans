@@ -1,0 +1,16 @@
+Code completion result for source line:
+echo self::|MY_CONST . PHP_EOL;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     myPrivateTestStatic()           [PRIVATE,  A
+METHOD     myProtectedTestStatic()         [PROTECTE  A
+METHOD     myTestStatic()                  [STATIC]   A
+METHOD     parentProtectedTestStatic()     [PROTECTE  ParentA
+METHOD     parentTestStatic()              [STATIC]   ParentA
+VARIABLE   ? $myFieldStatic                [STATIC]   A
+VARIABLE   ? $myPrivateFieldStatic         [PRIVATE,  A
+VARIABLE   ? $myProtectedFieldStatic       [PROTECTE  A
+VARIABLE   ? $parentFieldStatic            [STATIC]   ParentA
+VARIABLE   ? $parentProtectedFieldStatic   [PROTECTE  ParentA
+CONSTANT   MY_CONST 'MY_CONST'             [PUBLIC]   A
+CONSTANT   PARENT_CONST 'PARENT_CONST'     [PUBLIC]   ParentA
+CONSTANT   class \A                        [PUBLIC]   Magic Constant

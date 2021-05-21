@@ -1,0 +1,4 @@
+Code completion result for source line:
+$object->|publicMethod();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicMethod()                  [PUBLIC]   VdocTest

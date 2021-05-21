@@ -1,0 +1,10 @@
+{
+    "types": [
+        "good",
+        "bad"
+    ],
+    "redundant":
+            [1,
+                2,
+            ]
+}

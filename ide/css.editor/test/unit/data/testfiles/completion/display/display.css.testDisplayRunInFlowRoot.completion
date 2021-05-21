@@ -1,0 +1,5 @@
+Code completion result for source line:
+display: run-in flow-root l|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+GLOBAL     list-item                                  <font color=999999>display</font>

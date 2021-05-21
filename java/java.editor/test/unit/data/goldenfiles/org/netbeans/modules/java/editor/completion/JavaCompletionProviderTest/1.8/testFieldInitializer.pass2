@@ -1,0 +1,10 @@
+package test;
+
+import java.util.HashSet;
+import java.util.Set;
+
+public class FieldSet {
+
+    public Set<String> field = new HashSet<String>;
+
+}

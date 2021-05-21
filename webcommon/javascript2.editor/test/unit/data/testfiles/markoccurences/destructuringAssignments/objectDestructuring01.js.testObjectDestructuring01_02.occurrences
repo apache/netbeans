@@ -1,0 +1,2 @@
+var {p, |>MARK_OCCURRENCES:q^<|} = o;
+console.log(|>MARK_OCCURRENCES:q<|); // true

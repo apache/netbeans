@@ -1,0 +1,3 @@
+use Blah\Sec as |>MARK_OCCURRENCES:BS<|;
+    new |>MARK_OCCURRENCES:B^S<|\MyException();
+} catch (|>MARK_OCCURRENCES:BS<|\MyException $ex) {

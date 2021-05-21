@@ -1,0 +1,5 @@
+Code completion result for source line:
+ParentSt::staticFnc()->|; //cc parentFnc, staticFnc
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     parentFnc()                     [PUBLIC]   ParentSt
+METHOD     staticFnc()                     [STATIC]   ParentSt

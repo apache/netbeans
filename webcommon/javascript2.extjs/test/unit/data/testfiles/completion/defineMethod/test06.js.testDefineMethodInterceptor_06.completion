@@ -1,0 +1,5 @@
+Code completion result for source line:
+NetBeans.stuff.engineer.developer.address.z|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      zip: Number                     [PUBLIC]   defineMethod.js

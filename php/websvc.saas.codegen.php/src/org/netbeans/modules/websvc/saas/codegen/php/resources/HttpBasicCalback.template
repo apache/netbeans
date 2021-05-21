@@ -1,0 +1,13 @@
+<?php
+    session_start();
+
+    define("ATTR_PREFIX", "__NAME__");
+    include_once str_replace("Callback", "Authenticator", ATTR_PREFIX).".php";
+
+    $_SESSION["__GROUP__username"] = $_POST["username"];
+    $_SESSION["__GROUP__password"] = $_POST["password"];
+    $_SESSION["__GROUP__return_url"] = $_POST["rUrl"];
+
+    $login = new ReflectionMethod(str_replace("Callback", "Authenticator", ATTR_PREFIX), 'login');
+    $login->invoke(NULL);
+?>

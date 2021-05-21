@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence">
+  <persistence-unit name="J2EECompletionTest" transaction-type="JTA">
+    <jta-data-source>jdbc/__default</jta-data-source>
+    <properties>
+      <property name="ddl-generation" value="createtables"/>
+    </properties>
+  </persistence-unit>
+</persistence>

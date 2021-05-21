@@ -1,0 +1,4 @@
+var |>MARK_OCCURRENCES:property<| = 10;
+        return |>MARK_OCCURRENCES:property<|; // global property
+        |>MARK_OCCURRENCES:property<| = value;  // global property
+console.log(|>MARK_OCCURRENCES:prop^erty<|);

@@ -1,0 +1,28 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n
+token #2 PHP_STRING fnc
+token #3 PHP_TOKEN (
+token #4 PHP_TOKEN [
+token #5 PHP_NUMBER 1
+token #6 WHITESPACE  
+token #7 PHP_OPERATOR =>
+token #8 WHITESPACE  
+token #9 PHP_CONSTANT_ENCAPSED_STRING "str"
+token #10 PHP_TOKEN ]
+token #11 PHP_TOKEN )
+token #12 PHP_SEMICOLON ;
+token #13 WHITESPACE \n
+token #14 PHP_FUNCTION function
+token #15 WHITESPACE  
+token #16 PHP_STRING fnc
+token #17 PHP_TOKEN (
+token #18 PHP_ARRAY array
+token #19 WHITESPACE  
+token #20 PHP_VARIABLE $foo
+token #21 PHP_TOKEN )
+token #22 WHITESPACE  
+token #23 PHP_CURLY_OPEN {
+token #24 WHITESPACE \n\n
+token #25 PHP_CURLY_CLOSE }
+token #26 WHITESPACE \n
+token #27 PHP_CLOSETAG ?>\n

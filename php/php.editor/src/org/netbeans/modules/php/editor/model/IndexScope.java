@@ -1,0 +1,54 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+package org.netbeans.modules.php.editor.model;
+
+import java.util.List;
+import org.netbeans.modules.php.editor.api.ElementQuery;
+import org.netbeans.modules.php.editor.api.QualifiedName;
+
+/**
+ * @author Radek Matous
+ */
+public interface IndexScope extends Scope {
+
+    //for now implemented on top of PHPIndex
+    ElementQuery.Index getIndex();
+    //globally visible
+    List<? extends InterfaceScope> findInterfaces(final QualifiedName ifaceName);
+    List<? extends TraitScope> findTraits(final QualifiedName traitName);
+    List<? extends TypeScope> findTypes(final QualifiedName typeName);
+    List<? extends ClassScope> findClasses(final QualifiedName className);
+    List<? extends FunctionScope> findFunctions(final QualifiedName fncName);
+    List<? extends ConstantElement> findConstants(final QualifiedName constName);
+    List<? extends VariableName> findVariables(final String varName);
+    //class members
+    List<? extends MethodScope> findMethods(TypeScope type);
+    List<? extends MethodScope> findMethods(TypeScope type, final String methName, final int... modifiers);
+    List<? extends MethodScope>  findInheritedMethods(TypeScope typeScope, String methName);
+    List<? extends ClassConstantElement> findClassConstants(TypeScope type);
+    List<? extends ClassConstantElement> findClassConstants(TypeScope type, String clsConstName);
+    List<? extends ClassConstantElement> findInheritedClassConstants(ClassScope clsScope, String constName);
+    List<? extends FieldElement> findFields(ClassScope cls, String field, int... modifiers);
+    List<? extends FieldElement> findFields(TraitScope cls, String field, int... modifiers);
+    List<? extends FieldElement> findFields(ClassScope cls, int... modifiers);
+    List<? extends FieldElement> findFields(TraitScope cls, int... modifiers);
+    List<? extends FieldElement> findInheritedFields(ClassScope clsScope, String fieldName);
+
+}

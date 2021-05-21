@@ -1,0 +1,10 @@
+Code completion result for source line:
+$fieldAccess->C1->|publicMethodC1(); // CC
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     publicMethodC1()                [PUBLIC]   C1
+METHOD     publicMethodC2()                [PUBLIC]   C2
+METHOD     publicStaticMethodC1()          [STATIC]   C1
+METHOD     publicStaticMethodC2()          [STATIC]   C2
+VARIABLE   ? publicFieldC1                 [PUBLIC]   C1
+VARIABLE   ? publicFieldC2                 [PUBLIC]   C2

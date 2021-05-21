@@ -1,0 +1,2 @@
+var [|>MARK_OCCURRENCES:o^ne<|, two, three] = foo;
+console.log(|>MARK_OCCURRENCES:one<|); // "one"

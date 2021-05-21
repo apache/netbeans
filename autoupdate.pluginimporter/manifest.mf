@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-AutoUpdate-Show-In-Client: false
-OpenIDE-Module: org.netbeans.modules.autoupdate.pluginimporter
-OpenIDE-Module-Install: org/netbeans/modules/autoupdate/pluginimporter/Installer.class
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/autoupdate/pluginimporter/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.21
-

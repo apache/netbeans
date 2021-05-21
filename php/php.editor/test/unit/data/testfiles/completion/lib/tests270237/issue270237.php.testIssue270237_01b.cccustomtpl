@@ -1,0 +1,19 @@
+Name: test71_01
+public function test71_01(?string $string, int $int) {
+${cursor};
+}
+
+Name: test71_02
+public function test71_02(?string $string, int $int) {
+${cursor};
+}
+
+Name: test71_03
+public function test71_03(?string $string, int $int) {
+${cursor};
+}
+
+Name: test71_04
+public function test71_04(?\FooInterface $self) {
+${cursor};
+}

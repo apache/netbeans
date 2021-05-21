@@ -1,0 +1,55 @@
+<testresult testFile='useSubNamespace.php'>
+    <scanner>
+        <token id='T_USE' start='6' end='9'>
+            <text>use</text>
+        </token>
+        <token id='T_STRING' start='10' end='11'>
+            <text>A</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='11' end='12'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='12' end='13'>
+            <text>B</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='13' end='14'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='14' end='15'>
+            <text>C</text>
+        </token>
+        <token id='T_SEMICOLON' start='15' end='16'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='17' end='19'>
+            <text>?&gt;</text>
+        </token>
+        <token id='T_INLINE_HTML' start='19' end='21'>
+            <text> \n</text>
+        </token>
+        <token id='EOF' start='21' end='21'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='20'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <UseStatement start='6' end='16' type='TYPE'>
+                <SingleUseStatementPart start='10' end='15'>
+                    <Name>
+                        <NamespaceName start='10' end='15' isCurrent='false' isGlobal='false'>
+                            <Identifier start='10' end='11' name='A'/>
+                            <Identifier start='12' end='13' name='B'/>
+                            <Identifier start='14' end='15' name='C'/>
+                        </NamespaceName>
+                    </Name>
+                    <Alias>
+                    </Alias>
+                </SingleUseStatementPart>
+            </UseStatement>
+            <EmptyStatement start='17' end='19'/>
+            <InLineHtml start='19' end='20'/>
+        </Statements>
+    </Program>
+</testresult>

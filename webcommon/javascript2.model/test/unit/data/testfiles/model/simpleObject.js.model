@@ -1,0 +1,26 @@
+FUNCTION simpleObject [ANONYMOUS: false, DECLARED: true - simpleObject, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+Carrot    : OBJECT Carrot [ANONYMOUS: false, DECLARED: true - Carrot, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+          # PROPERTIES
+          called      : OBJECT called [ANONYMOUS: false, DECLARED: true - called, MODIFIERS: PUBLIC, PROPERTY]
+          color       : OBJECT color [ANONYMOUS: false, DECLARED: true - color, MODIFIERS: PUBLIC, PROPERTY]
+          getColor    : FUNCTION getColor [ANONYMOUS: false, DECLARED: true - getColor, MODIFIERS: PUBLIC, METHOD]
+                      # RETURN TYPES
+                      @exp;Carrot@pro;getColor@pro;text, RESOLVED: false
+                      # PROPERTIES
+                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                      text      : OBJECT text [ANONYMOUS: false, DECLARED: true - text, MODIFIERS: PRIVATE, VARIABLE]
+          isVegitable : FUNCTION isVegitable [ANONYMOUS: false, DECLARED: true - isVegitable, MODIFIERS: PUBLIC, METHOD]
+                      # RETURN TYPES
+                      Boolean, RESOLVED: true
+                      # PROPERTIES
+                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+formatter : OBJECT formatter [ANONYMOUS: false, DECLARED: false - formatter, MODIFIERS: PUBLIC, OBJECT]
+          # PROPERTIES
+          println : FUNCTION println [ANONYMOUS: false, DECLARED: false - println, MODIFIERS: PUBLIC, METHOD]
+                  # PARAMETERS
+                  OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                  # PROPERTIES
+                  arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

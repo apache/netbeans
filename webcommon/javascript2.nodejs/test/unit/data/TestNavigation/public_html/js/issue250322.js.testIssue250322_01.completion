@@ -1,0 +1,16 @@
+Code completion result for source line:
+ht.|; // cc here
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     _makeLong(path)                 [PUBLIC]   path.js
+METHOD     basename(path, ext)             [PUBLIC]   path.js
+METHOD     dirname(path): String           [PUBLIC]   path.js
+METHOD     extname(path)                   [PUBLIC]   path.js
+METHOD     join()                          [PUBLIC]   path.js
+METHOD     normalize(path): String         [PUBLIC]   path.js
+METHOD     relative(from, to)              [PUBLIC]   path.js
+METHOD     resolve(): String               [PUBLIC]   path.js
+FIELD      delimiter: String               [PUBLIC]   path.js
+FIELD      exists                          [PUBLIC]   path.js
+FIELD      existsSync                      [PUBLIC]   path.js
+FIELD      sep: String                     [PUBLIC]   path.js

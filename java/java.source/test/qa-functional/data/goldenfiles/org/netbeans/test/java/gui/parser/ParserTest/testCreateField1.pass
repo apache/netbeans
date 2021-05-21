@@ -1,0 +1,19 @@
+Type Element: testCreateField 2332 2503
+public class testCreateField {
+    
+String field;
+    /** Creates a new instance of testCreateField */
+    public testCreateField() {
+    }
+    
+    
+    
+    
+    
+    
+}
+Variable Element: field 2368 2381
+String field;
+Executable Element: <init> 2439 2471
+public testCreateField() {
+    }

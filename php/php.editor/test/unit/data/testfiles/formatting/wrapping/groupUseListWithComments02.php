@@ -1,0 +1,13 @@
+<?php
+namespace GroupUse;
+
+use    Classes\{   ClassA,ClassB,         ClassC}; // test
+use function Functions\{
+    functionA, // a
+        functionB, // b
+        functionC // c
+};
+use const    Constants\   {CONSTANT_A, /* CONSTANT_B ,*/ CONSTANT_C, // const
+    CONSTANT_D
+};
+use Mixed\ { ClassA, const      /*CONSTANT_A, function functionA*/    CONSTANT_B };

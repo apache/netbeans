@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.libs.commons_net/2
+OpenIDE-Module-Implementation-Version: 36
+OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/commons_net/Bundle.properties
+OpenIDE-Module-Layer: org/netbeans/libs/commons_net/mf-layer.xml

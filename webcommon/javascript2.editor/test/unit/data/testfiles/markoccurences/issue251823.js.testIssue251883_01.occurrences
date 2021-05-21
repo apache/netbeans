@@ -1,0 +1,4 @@
+ *  @return {MyLib.|>MARK_OCCURRENCES:ObjB<|} description */
+MyLib.|>MARK_OCCURRENCES:ObjB<| = function (arg) {
+ *  @returns {MyLib.|>MARK_OCCURRENCES:ObjB<|} */
+    return new MyLib.|>MARK_OCCURRENCES:O^bjB<|(); 

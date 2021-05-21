@@ -1,0 +1,23 @@
+{
+    "name": "${project.name}",
+    "version": "1.0.0",
+    "keywords": ["NetBeans", "node.js", "sample"],
+    "author": "NetBeans",
+    "dependencies": {
+        "express": "^4.10.1",
+        "body-parser": "^1.4.3",
+        "bower" : "~1.8.8"
+    },
+    "devDependencies": {
+        "grunt": "^0.4.5",
+        "grunt-contrib-jshint": "^0.10.0",
+        "jshint-stylish": "^0.2.0",
+        "time-grunt": "^0.3.2",
+        "mocha" : "~2.0.1",
+        "selenium-webdriver" : "~2.44.0"
+    },
+    "scripts": {
+        "start": "node server\/server.js",
+        "postinstall": "node node_modules/bower/bin/bower install"
+    }
+}

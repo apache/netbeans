@@ -1,0 +1,6 @@
+Code completion result for source line:
+'lib/api/|',
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FILE       utils.js                                   
+FILE       v0.1                                       

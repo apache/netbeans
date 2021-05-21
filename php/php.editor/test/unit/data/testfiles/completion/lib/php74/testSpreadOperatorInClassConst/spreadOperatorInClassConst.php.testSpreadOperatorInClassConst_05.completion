@@ -1,0 +1,4 @@
+Code completion result for source line:
+public const CONSTANT5 = ["0", ...self::CONSTANT, "4", se|lf::CONSTANT1];
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+KEYWORD    self::                                     null

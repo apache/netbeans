@@ -1,0 +1,367 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!DOCTYPE html>
+<html> 
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+        <title>Cordova and Google Maps Sample</title>
+
+        <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jquerymobile/1.4.0/jquery.mobile.min.css">
+        
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script>
+            $(document).bind("mobileinit", function() {
+                $.mobile.defaultPageTransition = 'none';
+                $.mobile.defaultDialogTransition = 'none';
+                $.mobile.useFastClick = true;
+            });
+        </script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquerymobile/1.4.0/jquery.mobile.min.js"></script>
+        <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/main.js"></script>
+    </head> 
+    <body> 
+        <div data-dom-cache="false" data-role="page" id="index" >
+            <div data-role="header" data-theme="b">
+
+                <h1>Sample Map App</h1>
+            </div>
+            <div data-role="content"  style="padding:0.5em;">
+                <ul data-role="listview" data-divider-theme="b" data-inset="true">
+                    <li data-theme="c">
+                        <a href="#mylocation" rel="external" >
+                            My Location
+                        </a>
+                    </li>
+                    <li data-theme="c">
+                        <a href="#contacts">
+                            Contact Location
+                        </a>
+                    </li>
+                    <li data-theme="c">
+                        <a href="#search" rel="external">
+                            Search Address
+                        </a>
+                    </li>
+                    <li data-theme="c">
+                        <a href="#directions">
+                            Find Directions
+                        </a>
+                    </li>
+                    <li data-theme="c">
+                        <a href="#compass">
+                            Compass
+                        </a>
+                    </li>
+                    <li data-theme="c">
+                        <a href="#photos">
+                            Photos Nearby
+                        </a>
+                    </li>
+                    <li data-theme="c">
+                        <a href="#about">
+                            About
+                        </a>
+                    </li>
+                </ul>
+
+
+            </div>
+            <div data-role="footer" data-theme="b" data-position="fixed">
+                <h4>NetBeans</h4></div>
+        </div>
+
+        <!-- My location page -->
+        <div data-dom-cache="false" data-role="page" id="mylocation">
+            <div data-role="header" data-theme="b">
+                <a data-role="button" href="index.html" data-icon="home" data-iconpos="left"
+                   class="ui-btn-right">
+                    Home
+                </a>
+                <a data-role="button" data-rel="back" href="#page1" data-icon="arrow-l"
+                   data-iconpos="left" class="ui-btn-left">
+                    Back
+                </a>
+                <h1 id="header">Searching for GPS</h1></div>
+            <div data-role="content" style="padding:0;">
+                <div id="map" style="width:100%;height:100%;"></div>
+            </div>
+            <div data-role="footer" data-theme="b" data-position="fixed" >
+                <a data-role="button" data-rel="external" href="#" id="cancelMyLocationBt" style="margin: 0.4em; float: left" data-cache="false" data-icon="delete"
+                   data-iconpos="left" class="ui-btn-left">
+                    Stop
+                </a>
+
+
+                <a data-role="button" data-rel="external" href="#" id="refreshMyLocationBt" style="margin: 0.4em; float: right" data-cache="false" data-icon="refresh"
+                   data-iconpos="left" class="ui-btn-right">
+                    Refresh
+                </a>
+                <h4>Google Maps</h4>
+            </div>
+        </div>
+        <!-- Search address field -->
+        <div data-dom-cache="false" data-role="page" id="search">
+            <div data-role="header" data-theme="b">
+                <a data-role="button" href="index.html" data-icon="home" data-iconpos="left"
+                   class="ui-btn-right">
+                    Home
+                </a>
+                <a data-role="button" data-rel="back" href="#page1" data-icon="arrow-l"
+                   data-iconpos="left" class="ui-btn-left">
+                    Back
+                </a>
+                <h1>Search Address</h1></div>
+            <div data-role="content" style="padding:0.5em;" >
+                <input name="" id="addressfield" placeholder="address..." value="" type="text">
+                <input type="button" value="Search" onclick="validateSearchField('addressfield', 'results');">
+            </div>
+            <div data-role="footer" data-theme="b" data-position="fixed"><h4>Search address</h4></div>
+        </div>
+        <!--Show searched address-->
+        <div data-dom-cache="false" data-role="page" id="address">
+            <div data-role="header" data-theme="b">
+                <a data-role="button" href="index.html" data-icon="home" data-iconpos="left"
+                   class="ui-btn-right">
+                    Home
+                </a>
+                <a data-role="button" data-rel="back" href="#page1" data-icon="arrow-l"
+                   data-iconpos="left" class="ui-btn-left">
+                    Back
+                </a>
+                <h1 id="addressHeader">Location</h1></div>
+            <div data-role="content" style="padding:0;">
+                <div id="addressMap" style="width:100%;height:100%;"></div>
+            </div>
+            <div data-role="footer" data-theme="b" data-position="fixed"  ><h4>Google Maps</h4></div>
+        </div>
+        <!--Show list of results for address-->
+        <div data-dom-cache="false"  data-role="page" id="results">
+            <div data-role="header" data-theme="b">
+                <a data-role="button" href="index.html" data-icon="home" data-iconpos="left"
+                   class="ui-btn-right">
+                    Home
+                </a>
+                <a data-role="button" data-rel="back" href="#page1" data-icon="arrow-l"
+                   data-iconpos="left" class="ui-btn-left">
+                    Back
+                </a>
+                <h1>Results</h1></div>
+            <div data-role="content" id="resultsList">
+
+            </div>
+            <div data-role="footer" data-theme="b" data-position="fixed"><h4>Google Maps</h4></div>
+        </div>
+        <!--Page for directions setup-->
+        <div data-dom-cache="false" data-role="page" id="directions">
+            <div data-role="header" data-theme="b">
+                <a data-role="button" href="index.html" data-icon="home" data-iconpos="left"
+                   class="ui-btn-right">
+                    Home
+                </a>
+                <a data-role="button" data-rel="back" href="#page1" data-icon="arrow-l"
+                   data-iconpos="left" class="ui-btn-left">
+                    Back
+                </a>
+                <h1>Find Direction</h1></div>
+            <div data-role="content" style="padding:0.5em;" >
+
+                <h5>From</h5>
+                <select name="mylocation" id="toggleswitch" data-theme="b" data-role="slider">
+                    <option value="off">
+                        Address
+                    </option>
+                    <option value="on">
+                        My Location
+                    </option>
+                </select>
+                <input name="" id="fromfield" placeholder="from..." value="" type="text">
+                <h5>to</h5>
+                <input name="" id="tofield" placeholder="to..." value="" type="text">
+                <fieldset data-role="controlgroup">
+                    <legend>Mode:</legend>
+                    <input type="radio" name="radio-choice-1" id="radio-choice-1" value="DRIVING" checked="checked" />
+                    <label for="radio-choice-1">Car</label>
+
+                    <input type="radio" name="radio-choice-1" id="radio-choice-2" value="BICYCLING"  />
+                    <label for="radio-choice-2">Bicycle</label>
+
+                    <input type="radio" name="radio-choice-1" id="radio-choice-3" value="TRANSIT"  />
+                    <label for="radio-choice-3">Public transportation</label>
+
+                    <input type="radio" name="radio-choice-1" id="radio-choice-4" value="WALKING"  />
+                    <label for="radio-choice-4">Walk</label>
+                </fieldset>
+                <input type="button" value="Find" onclick="validateDirectionFields();">
+            </div>
+            <div data-role="footer" data-position="fixed" data-theme="b"><h4>Find direction</h4></div>
+        </div>
+
+        <!--Page for direction map-->
+        <div data-dom-cache="false" data-role="page" id="showDirection">
+            <div data-role="header" data-theme="b">
+                <a data-role="button" href="index.html" data-icon="home" data-iconpos="left"
+                   class="ui-btn-right">
+                    Home
+                </a>
+                <a data-role="button" data-rel="back" href="#page1" data-icon="arrow-l"
+                   data-iconpos="left" class="ui-btn-left">
+                    Back
+                </a>
+                <h1 id="directionHeader">Direction</h1></div>
+
+            <div data-role="content" style="padding:0;">
+                <div id="directionMap" style="width:100%;height:100%;"></div>
+            </div>
+
+            <div data-role="footer" data-theme="b" data-position="fixed" ><h4>Find direction</h4></div>
+        </div>
+        <!--Show list of results for address-->
+        <div data-dom-cache="false"  data-role="page" id="findDirections">
+            <div data-role="header" data-theme="b">
+                <a data-role="button" href="index.html" data-icon="home" data-iconpos="left"
+                   class="ui-btn-right">
+                    Home
+                </a>
+                <a data-role="button" data-rel="back" href="#page1" data-icon="arrow-l"
+                   data-iconpos="left" class="ui-btn-left">
+                    Back
+                </a>
+                <h1 id="dirlistHeader">Directions</h1></div>
+            <div data-role="content" id="directionsResultsList">
+
+            </div>
+            <div data-role="footer" data-theme="b" data-position="fixed"><h4>Google Maps</h4></div>
+        </div>
+        <!--Show list of contacts-->
+        <div data-dom-cache="false"  data-role="page" id="contacts">
+            <div data-role="header" data-theme="b">
+                <a data-role="button" href="index.html" data-icon="home" data-iconpos="left"
+                   class="ui-btn-right">
+                    Home
+                </a>
+                <a data-role="button" data-rel="back" href="#page1" data-icon="arrow-l"
+                   data-iconpos="left" class="ui-btn-left">
+                    Back
+                </a>
+                <h1 id="contactsHeader">Contacts</h1></div>
+            <div data-role="content" id="contactsResultsList">
+
+            </div>
+            <div data-role="footer" data-theme="b" data-position="fixed"><h4>Contacts</h4></div>
+        </div>
+        <!--Show list of addresses for contact-->
+        <div data-dom-cache="false"  data-role="page" id="addresses">
+            <div data-role="header" data-theme="b">
+                <a data-role="button" href="index.html" data-icon="home" data-iconpos="left"
+                   class="ui-btn-right">
+                    Home
+                </a>
+                <a data-role="button" data-rel="back" href="#page1" data-icon="arrow-l"
+                   data-iconpos="left" class="ui-btn-left">
+                    Back
+                </a>
+                <h1 id="addressesHeader">Addresses</h1></div>
+            <div data-role="content" id="addressesResultsList">
+
+            </div>
+            <div data-role="footer" data-theme="b" data-position="fixed"><h4>Addresses</h4></div>
+        </div>
+        <!--Translate selected address using Geocoder and show results-->
+        <div data-dom-cache="false" data-role="page" id="showAddress">
+            <div data-role="header" data-theme="b">
+                <a data-role="button" href="index.html" data-icon="home" data-iconpos="left"
+                   class="ui-btn-right">
+                    Home
+                </a>
+                <a data-role="button" data-rel="back" href="#page1" data-icon="arrow-l"
+                   data-iconpos="left" class="ui-btn-left">
+                    Back
+                </a>
+                <h1 id="matchingHeader">Matching Places</h1></div>
+            <div data-role="content" id="matchingAddresses">
+
+            </div>
+            <div data-role="footer" data-theme="b" data-position="fixed"  ><h4>Google Maps</h4></div>
+        </div>
+        <div data-dom-cache="false" data-role="page" id="about">
+            <div data-role="header" data-theme="b">
+                <a data-role="button" href="index.html" data-icon="home" data-iconpos="left"
+                   class="ui-btn-right">
+                    Home
+                </a>
+                <a data-role="button" data-rel="back" href="#page1" data-icon="arrow-l"
+                   data-iconpos="left" class="ui-btn-left">
+                    Back
+                </a>
+                <h1 >About</h1></div>
+            <div data-role="content" id="aboutContent">
+
+            </div> 
+            <div data-role="footer" data-theme="b" data-position="fixed"  ><h4>Sample Map App</h4></div>
+        </div>
+        <!--Compass-->
+        <div data-dom-cache="false" data-role="page" id="compass">
+            <div data-role="header" data-theme="b">
+                <a data-role="button" href="index.html" data-icon="home" data-iconpos="left"
+                   class="ui-btn-right">
+                    Home
+                </a>
+                <a data-role="button" data-rel="back" href="#page1" data-icon="arrow-l"
+                   data-iconpos="left" class="ui-btn-left">
+                    Back
+                </a>
+                <h1>Compass</h1></div>
+            <div data-role="content" id="compassContent" style="text-align: center;">
+                <h4 id="compassInfo"></h4>
+                <img id="compassImg" src="img/compass.png" alt="Compass" width="200" height="200"/>
+            </div>
+            <div data-role="footer" data-theme="b" data-position="fixed"  ><h4>Sample Map App</h4></div>
+        </div>
+        <!--Compass-->
+        <div data-dom-cache="false" data-role="page" id="photos">
+            <div data-role="header" data-theme="b">
+                <a data-role="button" href="index.html" data-icon="home" data-iconpos="left"
+                   class="ui-btn-right">
+                    Home
+                </a>
+                <a data-role="button" data-rel="back" href="#page1" data-icon="arrow-l"
+                   data-iconpos="left" class="ui-btn-left">
+                    Back
+                </a>
+                <h1>Photos Nearby</h1></div>
+            <div data-role="content" style="text-align: center;" id="photosContent">
+
+
+            </div>
+            <div data-role="footer" data-theme="b" data-position="fixed">
+
+                <a data-role="button" data-rel="external" href="#" id="refreshPhotoBt" style="margin: 0.4em; float: right" data-cache="false" data-icon="refresh"
+                   data-iconpos="left" class="ui-btn-left">
+                    Refresh
+                </a>
+                <h4>Google Maps</h4></div>
+        </div>
+    </body>
+</html>

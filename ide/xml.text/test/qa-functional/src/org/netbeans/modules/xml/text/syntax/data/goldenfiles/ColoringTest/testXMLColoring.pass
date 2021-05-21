@@ -1,0 +1,168 @@
+xml-pi-start: <?
+xml-pi-target: xml
+xml-ws:  
+xml-pi-content: version="1.0" encoding="UTF-8" standalone="no"
+xml-pi-end: ?>
+xml-text: 
+
+
+xml-comment: <!-- Created by mschovanek on October 25, 2000, 3:49 PM -->
+xml-text: 
+
+
+xml-pi-start: <?
+xml-pi-target: target
+xml-ws:  
+xml-pi-content: processing instruction data
+xml-pi-end: ?>
+xml-text: 
+
+
+xml-doctype: <!DOCTYPE Books PUBLIC 
+xml-value: "+//XML Test//EN"
+xml-doctype:  
+xml-value: "any.dtd"
+xml-doctype:  [
+xml-text: 
+    
+xml-doctype: <!ELEMENT Books (Product+,Price?)*>
+xml-text:          
+xml-doctype: <!ELEMENT Product (#PCDATA|Descript)*>
+xml-text: 
+    
+xml-doctype: <!ELEMENT Price (#PCDATA)>
+xml-text:                   
+xml-doctype: <!ENTITY % states SYSTEM 
+xml-value: "states.dtd"
+xml-doctype: >
+xml-text: 
+    
+xml-ref: %states;
+xml-text:                                     
+xml-doctype: <!NOTATION eps SYSTEM 
+xml-value: "ghg"
+xml-doctype: >
+xml-text: 
+    
+xml-doctype: <!ENTITY % Y 
+xml-value: "INCLUDE"
+xml-doctype: >
+xml-text:                      
+xml-pi-start: <?
+xml-pi-target: format
+xml-ws:  
+xml-pi-content: Bold!
+xml-pi-end: ?>
+xml-text: 
+    
+xml-doctype: <!ELEMENT XMLwithDTD (#PCDATA|ANY)*>
+xml-text:         
+xml-comment: <!-- FULL ATTLIST -->
+xml-text: 
+    
+xml-doctype: <!NOTATION pdf SYSTEM 
+xml-value: "xpdf"
+xml-doctype: >
+xml-text:                
+xml-doctype: <!ELEMENT Image EMPTY>
+xml-text: 
+    
+xml-doctype: <!ATTLIST Image                             src       ENTITY      #REQUIRED
+      descr     CDATA       #IMPLIED            visible   CDATA       #FIXED      
+xml-value: "true"
+xml-doctype: 
+      format    (jpg | gif) #IMPLIED            os        (unix | os2)             
+xml-value: "unix"
+xml-doctype: 
+      entity    ENTITY      #IMPLIED            entities  ENTITIES    #IMPLIED
+      id        ID          #IMPLIED            idref     IDREF       #IMPLIED
+      idrefs    IDREFS      #IMPLIED            nmtoken   NMTOKEN     #IMPLIED
+      nmtokens  NMTOKENS    #IMPLIED            notation  NOTATION    (pdf|dvi) #IMPLIED>
+xml-text: 
+    
+xml-comment: <!-- GENERAL ENTITY -->
+xml-text:                      
+xml-doctype: <!ENTITY company 
+xml-value: "Tisk &amp; spol."
+xml-doctype: >
+xml-text: 
+    
+xml-doctype: <!ENTITY thorn 
+xml-value: "&#222;"
+xml-doctype: >
+xml-text:                     
+xml-comment: <!-- EXTERNAL ENTITY -->
+xml-text: 
+    
+xml-doctype: <!ENTITY extern SYSTEM 
+xml-value: "externalEntity.xml"
+xml-doctype: >
+xml-comment: <!-- PARAMETR ENTITY -->
+xml-text: 
+   
+xml-doctype: <!ENTITY % sourceinfo 
+xml-value: "lang   CDATA #REQUIRED cprght CDATA #IMPLIED"
+xml-doctype: >
+xml-doctype: 
+]>
+xml-text: 
+
+
+xml-pi-start: <?
+xml-pi-target: target
+xml-ws:  
+xml-pi-content: processing instruction data
+xml-pi-end: ?>
+xml-text: 
+
+
+xml-tag: <Books
+xml-tag: >
+xml-pi-start: <?
+xml-pi-target: pi
+xml-ws:  
+xml-pi-content: data
+xml-pi-end: ?>
+xml-text: 
+  
+xml-tag: <Product
+xml-tag: >
+xml-text: Product 1 - 
+xml-ref: &#100;
+xml-text:  
+xml-ref: &gt;
+xml-text:  
+xml-ref: &#x99;
+xml-text:   
+    
+xml-tag: <Descript
+xml-ws:  
+xml-attribute: lang
+xml-operator: =
+xml-value: "x 
+xml-ref: &lt;
+xml-value:  
+xml-ref: &#100;
+xml-value:  value'''"
+xml-tag: >
+xml-text: text data made in 
+xml-ref: &cz;
+xml-tag: </Descript
+xml-tag: >
+xml-text: 
+    
+xml-cdata-section: <![CDATA[CDATA <a a='"""&#x23;'><!----> <?t d?><!DOCTYPE Books PUBLIC "+//XML Test//EN" "any.dtd" [
+      ]></a>section data]]>
+xml-text: 
+    `1234567890-=\qwertyuiop[]asdfghjkl;'zxcvbnm,./
+    ~!@#$%^*()_+|QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM?
+  
+xml-tag: </Product
+xml-tag: >
+xml-text: 
+
+xml-tag: </Books
+xml-tag: >
+xml-text: 
+
+

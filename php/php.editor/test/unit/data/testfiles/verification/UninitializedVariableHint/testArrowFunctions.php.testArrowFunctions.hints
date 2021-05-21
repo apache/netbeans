@@ -1,0 +1,64 @@
+    $af = fn($u) => $x + $u + $a; // 1a $a
+                               -
+HINT:Variable $a seems to be uninitialized
+    $af = fn(&$u) => $x + $u + $a; // 1b $a
+                                -
+HINT:Variable $a seems to be uninitialized
+    $af = fn(...$u) => $x + count($u) + $a; // 1c $a
+                                         -
+HINT:Variable $a seems to be uninitialized
+    $af = fn(&...$u) => $x + count($u) + $a; // 1d $a
+                                          -
+HINT:Variable $a seems to be uninitialized
+    return fn($u) => $x + $y + $u + $v; // nested1 $v
+                                     -
+HINT:Variable $v seems to be uninitialized
+    return fn(&$u) => $x + $y + $u + $v; // nested2 $v
+                                      -
+HINT:Variable $v seems to be uninitialized
+    return fn(...$u) => $x + $y + $u + $v; // nested3 $v
+                                        -
+HINT:Variable $v seems to be uninitialized
+    return fn(&...$u) => $x + $y + $u + $v; // nested4 $v
+                                         -
+HINT:Variable $v seems to be uninitialized
+    return fn($v) => $u + $x + $y + $v; // nested5 $u
+                      -
+HINT:Variable $u seems to be uninitialized
+    return fn(&$v) => $u + $x + $y + $v; // nested6 $u
+                       -
+HINT:Variable $u seems to be uninitialized
+    return fn(...$v) => $u + $x + $y + $v; // nested7 $u
+                         -
+HINT:Variable $u seems to be uninitialized
+    return fn(&...$v) => $u + $x + $y + $v; // nested8 $u
+                          -
+HINT:Variable $u seems to be uninitialized
+    fn(int $x) => fn($z) => $x + $y + $z + $a; // 3a $y $a
+                                            -
+HINT:Variable $a seems to be uninitialized
+HINT:Variable $y seems to be uninitialized
+    fn(int &$x) => fn($z) => $x + $y + $z + $a; // 3b $y $a
+                                             -
+HINT:Variable $a seems to be uninitialized
+HINT:Variable $y seems to be uninitialized
+    fn(int ...$x) => fn($z) => $x + $y + $z + $a; // 3c $y $a
+                                               -
+HINT:Variable $a seems to be uninitialized
+HINT:Variable $y seems to be uninitialized
+    fn(int &...$x) => fn($z) => $x + $y + $z + $a; // 3d $y $a
+                                                -
+HINT:Variable $a seems to be uninitialized
+HINT:Variable $y seems to be uninitialized
+    fn(int $x) => fn(&$z) => $x + $y + $z + $a; // 3e $y $a
+                                             -
+HINT:Variable $a seems to be uninitialized
+HINT:Variable $y seems to be uninitialized
+    fn(int $x) => fn(...$z) => $x + $y + count($z) + $a; // 3f $y $a
+                                                      -
+HINT:Variable $a seems to be uninitialized
+HINT:Variable $y seems to be uninitialized
+    fn(int $x) => fn(&...$z) => $x + $y + count($z) + $a; // 3g $y $a
+                                                       -
+HINT:Variable $a seems to be uninitialized
+HINT:Variable $y seems to be uninitialized

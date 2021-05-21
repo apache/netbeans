@@ -1,0 +1,2 @@
+class PrefixMatchPackage extends ja {
+}

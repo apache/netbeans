@@ -1,0 +1,3 @@
+ * @method static ?int |>MARK_OCCURRENCES:staticTestNullable<|(?string $param, int $param2) test comment
+        self::|>MARK_OCCURRENCES:staticTestNullable<|($param1, $param2);
+Example::|>MARK_OCCURRENCES:staticTe^stNullable<|($param1, $param2);

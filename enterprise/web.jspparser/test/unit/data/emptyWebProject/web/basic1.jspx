@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Document   : basic
+    Created on : 31.1.2008, 11:05:20
+    Author     : tmysik
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:tst="/TestTagLibrary" version="2.0">
+
+    <jsp:directive.page contentType="text/html" pageEncoding="UTF-8"/>
+
+    <!-- any content can be specified here, e.g.: -->
+    <jsp:element name="text">
+        <jsp:attribute name="lang">EN</jsp:attribute>
+        <jsp:body>
+            Hello World!
+
+            <tst:book title="MyBook">
+                The content of my book.
+            </tst:book>
+
+        </jsp:body>
+    </jsp:element>
+
+  </jsp:root>

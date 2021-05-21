@@ -1,0 +1,10 @@
+[UNBUFFERED_COMMENT_DELIMITER(3)://-][UNBUFFERED_COMMENT(12): index.jade
+][DOCTYPE(7):doctype][WHITESPACE(1): ][DOCTYPE_TEMPLATE(4):html][EOL(1):\n]
+[TAG(4):html][EOL(1):\n]
+[WHITESPACE(2):  ][KEYWORD_INCLUDE(7):include][FILE_PATH(21): ./includes/head.jade][EOL(1):\n]
+[WHITESPACE(2):  ][TAG(4):body][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(2):h1][WHITESPACE(1): ][TEXT(7):My Site][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(1):p][WHITESPACE(1): ][TEXT(30):Welcome to my super lame site.][EOL(1):\n]
+[WHITESPACE(4):    ][KEYWORD_INCLUDE(7):include][FILE_PATH(21): ./includes/foot.jade][EOL(1):\n]
+[EOL(1):\n]
+[EOL(1):\n]

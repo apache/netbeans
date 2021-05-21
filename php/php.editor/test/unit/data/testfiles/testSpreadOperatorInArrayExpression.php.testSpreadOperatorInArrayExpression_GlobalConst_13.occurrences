@@ -1,0 +1,2 @@
+    public const |>MARK_OCCURRENCES:BAR_C^ONSTANT<| = "test";
+const CONSTANT5 = [...CONSTANT2, 100 => 0, ...\Bar\Bar::|>MARK_OCCURRENCES:BAR_CONSTANT<|];

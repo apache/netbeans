@@ -1,0 +1,7 @@
+Detected parser blocks in the file:
+
+{include <1:26> -  file="header.tpl"}
+
+{null <132:138> - $title}
+
+{include <539:564> -  file="footer.tpl"}

@@ -1,0 +1,4 @@
+    var |>MARK_OCCURRENCES:Animal<| = function() {
+    |>MARK_OCCURRENCES:Animal<|.prototype.roar = function() {
+    var animal = new |>MARK_OCCURRENCES:Animal<|();
+    Cat.prototype = new |>MARK_OCCURRENCES:An^imal<|();

@@ -1,0 +1,12 @@
+Code completion result for source line:
+$var = new A|($var, $var2);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO A($var)                         [PUBLIC]   A
+CONSTRUCTO A($var, $var2 = 10)             [PUBLIC]   A
+PACKAGE    ANS                             [PUBLIC]   null
+------------------------------------
+CONSTRUCTO a()                             [PUBLIC]   a
+CLASS      A135618                         [PUBLIC]   issue135618.php
+CLASS      Author                          [PUBLIC]   mixedtypes.php
+CLASS      Author_1                        [PUBLIC]   mixedtypes_1.php
+CLASS      a                               [PUBLIC]   issue137033.php

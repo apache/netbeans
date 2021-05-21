@@ -1,0 +1,9 @@
+Code completion result for source line:
+var testik2 = (new Number(6)).to|Precision(4);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     toExponential(): Number         [PUBLIC]   JS Platform
+METHOD     toFixed(): Number               [PUBLIC]   JS Platform
+METHOD     toLocaleString(): String        [PUBLIC]   JS Platform
+METHOD     toPrecision(): Number           [PUBLIC]   JS Platform
+METHOD     toString(): String              [PUBLIC]   JS Platform

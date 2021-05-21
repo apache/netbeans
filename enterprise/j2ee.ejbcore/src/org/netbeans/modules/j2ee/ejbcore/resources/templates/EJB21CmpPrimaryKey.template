@@ -1,0 +1,18 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+package ${package};
+
+/**
+ *
+ * @author ${user}
+ */
+public final class ${name} implements java.io.Serializable {
+
+    <#list seq as field>
+        ${field.memberType} ${field.memberName};
+    </#list>
+
+}

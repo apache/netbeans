@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xalan="http://xml.apache.org/xslt" xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:jaxws="http://www.netbeans.org/ns/jax-ws/1">
+    <!--
+                ===================
+                JAX-WS WSIMPORT SECTION
+                ===================
+            -->
+    <target name="wsimport-init" depends="init">
+        <mkdir dir="${build.generated.dir}/wsimport/client"/>
+        <taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport">
+            <classpath path="${libs.jaxws21.classpath}"/>
+        </taskdef>
+    </target>
+    <target name="wsimport-client-AddNumbers" depends="wsimport-init">
+        <wsimport xnocompile="true" sourcedestdir="${build.generated.dir}/wsimport/client" destdir="${build.generated.dir}/wsimport/client" extension="true" wsdl="${basedir}/xml-resources/web-service-references/AddNumbers/wsdl/AddNumbers.wsdl" wsdlLocation="file:/E:/hg/main/websvc.kit/test/qa-functional/data/resources/AddNumbers.wsdl" catalog="catalog.xml">
+            <produces dir="${build.generated.dir}/wsimport/client/org/netbeans/websvc/qatests/ws/addnumbers" includes="AddNumbers.java" casesensitive="no"/>
+        </wsimport>
+    </target>
+    <target name="wsimport-client-clean-AddNumbers" depends="-init-project">
+        <delete dir="${build.generated.dir}/wsimport/client/org/netbeans/websvc/qatests/ws/addnumbers"/>
+    </target>
+    <target name="wsimport-client-generate" depends="wsimport-client-AddNumbers"/>
+    <target name="wsimport-client-compile" depends="-pre-pre-compile">
+        <j2seproject3:depend srcdir="${build.generated.dir}/wsimport/client" classpath="${libs.jaxws21.classpath}:${javac.classpath}" destdir="${build.classes.dir}"/>
+        <j2seproject3:javac srcdir="${build.generated.dir}/wsimport/client" classpath="${libs.jaxws21.classpath}:${javac.classpath}" destdir="${build.classes.dir}"/>
+        <copy todir="${build.classes.dir}">
+            <fileset dir="${build.generated.dir}/wsimport/client" includes="**/*.xml"/>
+        </copy>
+    </target>
+</project>

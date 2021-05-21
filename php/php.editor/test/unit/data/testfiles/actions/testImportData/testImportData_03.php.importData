@@ -1,0 +1,28 @@
+Caret position: 142
+Should show uses panel: true
+Defaults:
+ \Nette\Utils\Html
+ \Nette\Application\UI\Presenter
+ \Nette\Http\Request
+ \Nette\Utils\Strings
+
+Names:
+ Html
+ Presenter
+ Request
+ Strings
+
+Variants:
+ \Nette\Utils\Html
+ Don't import.
+
+ \Nette\Application\UI\Presenter
+ Don't import.
+
+ \Nette\Application\Request
+ \Nette\Http\Request
+ Don't import.
+
+ \Nette\Utils\Strings
+ Don't import.
+

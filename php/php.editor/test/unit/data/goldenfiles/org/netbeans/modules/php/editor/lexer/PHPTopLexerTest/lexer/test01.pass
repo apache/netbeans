@@ -1,0 +1,9 @@
+token #0 T_HTML <html>\n    
+token #1 T_PHP_OPEN_DELIMITER <?
+token #2 T_PHP \n        echo "\"''''\''''?>\"";\n        // 
+token #3 T_PHP_CLOSE_DELIMITER ?>
+token #4 T_HTML \n        <body>\n    
+token #5 T_PHP_OPEN_DELIMITER <?
+token #6 T_PHP \n        echo "test";\n    
+token #7 T_PHP_CLOSE_DELIMITER ?>
+token #8 T_HTML \n</html>\n

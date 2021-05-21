@@ -72,12 +72,18 @@ public class ModuleListParserTest extends TestBase {
         Hashtable<String,Object> properties = new Hashtable<>();
         properties.put("nb_all", nball.getAbsolutePath());
         File build = file(nball, "nbbuild/netbeans");
+        properties.put("basedir", new File(nball, "nbbuild").getAbsolutePath());
         properties.put("netbeans.dest.dir", build.getAbsolutePath());
         properties.put("nb.cluster.foo", "beans,clazz");
         properties.put("nb.cluster.foo.dir", "foodir");
         properties.put("nb.cluster.bar", "core.startup");
         properties.put("nb.cluster.bar.dir", "bardir");
-        properties.put("basedir", new File(nball, "nbbuild").getAbsolutePath());
+        properties.put("nb.cluster.java.dir", "java");
+        properties.put("nb.cluster.platform.dir", "platform");
+        properties.put("nb.cluster.ide.dir", "ide");
+        properties.put("nb.clusters.list", "nb.cluster.foo,nb.cluster.bar");
+        properties.put("clusters.config.full.list", "nb.cluster.foo,nb.cluster.bar,nb.cluster.java,nb.cluster.platform,nb.cluster.ide");
+
         long start = System.currentTimeMillis();
         ModuleListParser p = new ModuleListParser(properties, ModuleType.NB_ORG, null);
         System.err.println("Scanned " + nball + " sources in " + (System.currentTimeMillis() - start) + "msec");
@@ -90,9 +96,9 @@ public class ModuleListParserTest extends TestBase {
         assertNotNull("found module in a subdir", e);
         assertEquals("org.netbeans.libs.xerces", e.getCnb());
         assertEquals("unknown module put in extra cluster by default", file(build, "extra/modules/org-netbeans-libs-xerces.jar"), e.getJar());
-        assertEquals("correct CP extensions (using <binary-origin> and relative paths)",
-            Collections.singletonList(file(nball, "libs.xerces/external/xercesImpl-2.8.0.jar")),
-            Arrays.asList(e.getClassPathExtensions()));
+        assertEquals("single classpath extension", 1, e.getClassPathExtensions().length);
+        assertTrue("correct CP extensions (using <binary-origin> and relative paths)",
+            e.getClassPathExtensions()[0].getPath().endsWith("libs.xerces/external/xercesImpl-2.8.0.jar"));
         e = p.findByCodeNameBase("org.netbeans.swing.tabcontrol");
         assertNotNull("found module in a subsubdir", e);
         e = p.findByCodeNameBase("org.netbeans.core.startup");
@@ -135,20 +141,20 @@ public class ModuleListParserTest extends TestBase {
         Hashtable<String,Object> properties = new Hashtable<>();
         properties.put("cluster.path.final", filePath(nball, "nbbuild/netbeans/platform")
                 + File.pathSeparator + filePath(nball, "nbbuild/netbeans/ide"));
-        properties.put("basedir", filePath(nball, "apisupport.ant/test/unit/data/example-external-projects/suite1/action-project"));
-        properties.put("suite.dir", filePath(nball, "apisupport.ant/test/unit/data/example-external-projects/suite1"));
+        properties.put("basedir", filePath(nball, "apisupport/apisupport.ant/test/unit/data/example-external-projects/suite1/action-project"));
+        properties.put("suite.dir", filePath(nball, "apisupport/apisupport.ant/test/unit/data/example-external-projects/suite1"));
         long start = System.currentTimeMillis();
         ModuleListParser p = new ModuleListParser(properties, ModuleType.SUITE, fakeproj);
         System.err.println("Scanned " + nball + " binaries in " + (System.currentTimeMillis() - start) + "msec");
         ModuleListParser.Entry e = p.findByCodeNameBase("org.netbeans.examples.modules.action");
         assertNotNull("found myself", e);
         assertEquals("org.netbeans.examples.modules.action", e.getCnb());
-        assertEquals(file(nball, "apisupport.ant/test/unit/data/example-external-projects/suite1/build/cluster/modules/org-netbeans-examples-modules-action.jar"), e.getJar());
+        assertEquals(file(nball, "apisupport/apisupport.ant/test/unit/data/example-external-projects/suite1/build/cluster/modules/org-netbeans-examples-modules-action.jar"), e.getJar());
         assertEquals(Collections.EMPTY_LIST, Arrays.asList(e.getClassPathExtensions()));
         e = p.findByCodeNameBase("org.netbeans.examples.modules.lib");
         assertNotNull("found sister project in suite", e);
         assertEquals("org.netbeans.examples.modules.lib", e.getCnb());
-        assertEquals(file(nball, "apisupport.ant/test/unit/data/example-external-projects/suite1/build/cluster/modules/org-netbeans-examples-modules-lib.jar"), e.getJar());
+        assertEquals(file(nball, "apisupport/apisupport.ant/test/unit/data/example-external-projects/suite1/build/cluster/modules/org-netbeans-examples-modules-lib.jar"), e.getJar());
         File jar = file(nball, "nbbuild/netbeans/ide/modules/org-netbeans-libs-xerces.jar");
         assertTrue("Build all-libs/xerces first!", jar.isFile());
         e = p.findByCodeNameBase("org.netbeans.libs.xerces");
@@ -228,8 +234,8 @@ public class ModuleListParserTest extends TestBase {
         Hashtable<String,Object> properties = new Hashtable<>();
         properties.put("cluster.path.final", filePath(nball, "nbbuild/netbeans/platform")
                 + File.pathSeparator + getWorkDir());
-        properties.put("basedir", filePath(nball, "apisupport.ant/test/unit/data/example-external-projects/suite1/action-project"));
-        properties.put("suite.dir", filePath(nball, "apisupport.ant/test/unit/data/example-external-projects/suite1"));
+        properties.put("basedir", filePath(nball, "apisupport/apisupport.ant/test/unit/data/example-external-projects/suite1/action-project"));
+        properties.put("suite.dir", filePath(nball, "apisupport/apisupport.ant/test/unit/data/example-external-projects/suite1"));
         long start = System.currentTimeMillis();
         ModuleListParser p = new ModuleListParser(properties, ModuleType.SUITE, fakeproj);
         System.err.println("Scanned " + nball + " binaries in " + (System.currentTimeMillis() - start) + "msec");

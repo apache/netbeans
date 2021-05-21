@@ -1,0 +1,59 @@
+<testresult testFile='arrayDereferencing_04.php'>
+    <scanner>
+        <token id='T_ECHO' start='7' end='11'>
+            <text>echo</text>
+        </token>
+        <token id='T_VARIABLE' start='12' end='17'>
+            <text>$func</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='17' end='18'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='18' end='19'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_RECT' start='19' end='20'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='20' end='21'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='21' end='22'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='22' end='23'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='25' end='28'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='28' end='28'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='27'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <EchoStatement start='7' end='23'>
+                <DereferencedArrayAccess start='12' end='22'>
+                    <ArrayDimension start='19' end='22'>
+                        <Index>
+                            <Scalar start='20' end='21' type='INT' value='0'/>
+                        </Index>
+                    </ArrayDimension>
+                    <FunctionInvocation start='12' end='19'>
+                        <FucntionName start='12' end='17'>
+                            <Variable start='12' end='17' isDollared='true'>
+                                <Identifier start='13' end='17' name='func'/>
+                            </Variable>
+                        </FucntionName>
+                        <Parameters>
+                        </Parameters>
+                    </FunctionInvocation>
+                </DereferencedArrayAccess>
+            </EchoStatement>
+            <EmptyStatement start='25' end='27'/>
+        </Statements>
+    </Program>
+</testresult>

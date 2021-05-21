@@ -1,0 +1,2 @@
+                <br />
+                <h:link outcome="__PAGE_LINK__" value="Show All __ENTITY_NAME__ Items"/>

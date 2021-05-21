@@ -1,0 +1,9 @@
+Display text: if ($role_id == <b>ROLE_ADMIN</b>) {
+File name: Use.php
+Name: ROLE_ADMIN
+Position: BEGIN: 23 END: 33
+
+Display text: define('<b>ROLE_ADMIN</b>', 7);
+File name: index.php
+Name: ROLE_ADMIN
+Position: BEGIN: 15 END: 25

@@ -1,0 +1,467 @@
+<!--
+ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ 
+ Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
+ 
+ The contents of this file are subject to the terms of either the GNU
+ General Public License Version 2 only ("GPL") or the Common Development
+ and Distribution License("CDDL") (collectively, the "License").  You
+ may not use this file except in compliance with the License. You can obtain
+ a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
+ or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
+ language governing permissions and limitations under the License.
+ 
+ When distributing the software, include this License Header Notice in each
+ file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
+ Sun designates this particular file as subject to the "Classpath" exception
+ as provided by Sun in the GPL Version 2 section of the License file that
+ accompanied this code.  If applicable, add the following below the License
+ Header, with the fields enclosed by brackets [] replaced by your own
+ identifying information: "Portions Copyrighted [year]
+ [name of copyright owner]"
+ 
+ Contributor(s):
+ 
+ If you wish your version of this file to be governed by only the CDDL or
+ only the GPL Version 2, indicate your decision by adding "[Contributor]
+ elects to include this software in this distribution under the [CDDL or GPL
+ Version 2] license."  If you don't indicate a single choice of license, a
+ recipient has the option to distribute your version of this file under
+ either the CDDL, the GPL Version 2 or to extend the choice of license to
+ its licensees as provided above.  However, if you add GPL Version 2 code
+ and therefore, elected the GPL Version 2 license, then the option applies
+ only if the new code is made subject to such option by the copyright
+ holder.
+-->
+
+
+<!--
+  XML DTD for Sun Application Server specific J2EE Client Application
+  deployment descriptor. This is a companion DTD to application-client_1_4.xsd
+
+-->
+
+<!-- The PUBLIC ID (defined in DOCTYPE) associated with this dtd is:
+     "-//Sun Microsystems, Inc.//DTD Application Server 8.1 Application Client 1.4//EN"; 
+-->
+
+<!--
+application-client is the root element describing all the runtime bindings 
+of a single application client
+-->
+<!ELEMENT sun-application-client (ejb-ref*, resource-ref*, resource-env-ref*, service-ref*, 
+	message-destination*)>
+
+<!--
+name of a resource reference.
+-->
+<!ELEMENT res-ref-name (#PCDATA)>
+
+<!--
+resource-env-ref holds all the runtime bindings of a resource env reference.
+-->
+<!ELEMENT resource-env-ref ( resource-env-ref-name, jndi-name )>
+
+<!--
+name of a resource env reference.
+-->
+<!ELEMENT resource-env-ref-name (#PCDATA)>
+
+<!--
+resource-ref holds the runtime bindings of a resource reference.
+-->
+<!ELEMENT resource-ref  ( res-ref-name, jndi-name,  default-resource-principal?)>
+
+<!--
+default-resource-principal specifies the default principal that the container 
+will use to access a resource.
+-->
+<!ELEMENT default-resource-principal ( name,  password)>
+
+<!--
+name element holds the user name
+-->
+<!ELEMENT name (#PCDATA)>
+
+<!--
+password element holds a password string.
+-->
+<!ELEMENT password (#PCDATA)>
+
+<!--
+ejb-ref element which binds an ejb reference to a jndi name.
+-->
+<!ELEMENT ejb-ref (ejb-ref-name, jndi-name)>
+
+<!--
+ejb-ref-name locates the name of the ejb reference in the application.
+-->
+<!ELEMENT ejb-ref-name (#PCDATA)>
+
+<!--
+jndi name of the associated entity
+-->
+<!ELEMENT  jndi-name (#PCDATA)>
+
+<!--
+This node holds information about a logical message destination
+-->
+<!ELEMENT message-destination (message-destination-name, jndi-name)>
+
+<!--
+This node holds the name of a logical message destination
+-->
+<!ELEMENT message-destination-name (#PCDATA)>
+
+<!--
+Specifies the name of a durable subscription associated with a message-driven bean's 
+destination.  Required for a Topic destination, if subscription-durability is set to 
+Durable (in ejb-jar.xml)
+-->
+
+<!--
+  			W E B   S E R V I C E S 
+--> 	
+<!--
+Runtime settings for a web service reference.  In the simplest case,
+there is no runtime information required for a service ref.  Runtime info
+is only needed in the following cases :
+ * to define the port that should be used to resolve a container-managed port
+ * to define default Stub/Call property settings for Stub objects
+ * to define the URL of a final WSDL document to be used instead of
+the one packaged with a service-ref
+-->
+<!ELEMENT service-ref ( service-ref-name, port-info*, call-property*, 
+		wsdl-override?, service-impl-class?, service-qname? )>
+		
+<!--
+Coded name (relative to java:comp/env) for a service-reference
+-->
+<!ELEMENT service-ref-name ( #PCDATA )>
+
+<!-- 
+Information for a port within a service-reference.
+
+Either service-endpoint-interface or wsdl-port or both
+(service-endpoint-interface and wsdl-port) should be specified.  
+
+If both are specified, wsdl-port represents the
+port the container should choose for container-managed port selection.
+
+The same wsdl-port value must not appear in
+more than one port-info entry within the same service-ref.
+
+If a particular service-endpoint-interface is using container-managed port
+selection, it must not appear in more than one port-info entry
+within the same service-ref.
+
+The optional message-security-binding element is used to customize the
+port to provider binding; either by binding the port to a specific provider
+or by providing a definition of the message security requirements to be
+enforced by the provider.
+
+-->
+<!ELEMENT port-info ( service-endpoint-interface?, wsdl-port?, stub-property*, call-property*, message-security-binding? )>
+
+<!--
+Fully qualified name of service endpoint interface
+-->
+<!ELEMENT service-endpoint-interface ( #PCDATA )>
+<!-- 
+Port used in port-info.  
+-->
+<!ELEMENT wsdl-port ( namespaceURI, localpart )>
+
+<!-- 
+JAXRPC property values that should be set on a stub before it's returned to 
+to the web service client.  The property names can be any properties supported
+by the JAXRPC Stub implementation. See javadoc for javax.xml.rpc.Stub
+-->
+<!ELEMENT stub-property ( name, value )>
+
+<!-- 
+JAXRPC property values that should be set on a Call object before it's 
+returned to the web service client.  The property names can be any 
+properties supported by the JAXRPC Call implementation.  See javadoc
+for javax.xml.rpc.Call
+-->
+<!ELEMENT call-property ( name, value )>
+
+<!--
+This is a valid URL pointing to a final WSDL document. It is optional.
+If specified, the WSDL document at this URL will be used during
+deployment instead of the WSDL document associated with the
+service-ref in the standard deployment descriptor.
+
+Examples :
+
+  // available via HTTP
+  <wsdl-override>http://localhost:8000/myservice/myport?WSDL</wsdl-override>
+
+  // in a file
+  <wsdl-override>file:/home/user1/myfinalwsdl.wsdl</wsdl-override>
+
+-->
+<!ELEMENT wsdl-override ( #PCDATA )>
+
+<!--
+Name of generated service implementation class. This is not set by the 
+deployer. It is derived during deployment.
+-->
+<!ELEMENT service-impl-class ( #PCDATA )>
+
+<!-- 
+The service-qname element declares the specific WSDL service
+element that is being refered to.  It is not set by the deployer.
+It is derived during deployment.
+-->
+<!ELEMENT service-qname (namespaceURI, localpart)>
+
+<!--
+The localpart element indicates the local part of a QNAME.
+-->
+<!ELEMENT localpart (#PCDATA)>
+
+<!--
+The namespaceURI element indicates a URI.
+-->
+<!ELEMENT namespaceURI (#PCDATA)>
+
+<!--
+This text nodes holds a value string.
+-->
+<!ELEMENT value (#PCDATA)>
+
+<!--
+The message-layer entity is used to define the value of the
+auth-layer attribute of message-security-binding elements.
+
+Used in: message-security-binding
+-->
+<!ENTITY % message-layer    "(SOAP)">
+
+<!--
+The message-security-binding element is used to customize the
+webservice-endpoint or port to provider binding; either by binding the
+webservice-endpoint or port to a specific provider or by providing a
+definition of the message security requirements to be enforced by the
+provider.
+
+These elements are typically NOT created as a result of the
+deployment of an application. They need only be created when the
+deployer or system administrator chooses to customize the 
+webservice-endpoint or port to provider binding.
+
+The optional (repeating) message-security sub-element is used 
+to accomplish the latter; in which case the specified 
+message-security requirements override any defined with the
+provider.
+
+The auth-layer attribute identifies the message layer at which the
+message-security requirements are to be enforced.
+
+The optional provider-id attribute identifies the provider-config 
+and thus the authentication provider that is to be used to satisfy 
+the application specific message security requirements. If a value for 
+the provider-id attribute is not specified, and a default
+provider is defined for the message layer, then it is used. 
+if a value for the provider-id attribute is not specified, and a
+default provider is not defined at the layer, the authentication
+requirements defined in the message-security-binding are not
+enforced. 
+ 
+Default:
+Used in: webservice-endpoint, port-info
+-->
+<!ELEMENT message-security-binding ( message-security* )>
+<!ATTLIST message-security-binding
+          auth-layer  %message-layer; #REQUIRED
+          provider-id CDATA           #IMPLIED >
+
+<!--
+The message-security element describes message security requirements
+that pertain to the request and response messages of the containing 
+endpoint, or port
+
+When contained within a webservice-endpoint this element describes 
+the message security requirements that pertain to the request and 
+response messages of the containing endpoint. When contained within a 
+port-info of a service-ref this element describes the message security
+requirements of the port of the referenced service.
+
+The one or more contained message elements define the methods or operations
+of the containing application, endpoint, or referenced service to which 
+the message security requirements apply.
+
+Multiple message-security elements occur within a containing
+element when it is necessary to define different message
+security requirements for different messages within the encompassing
+context. In such circumstances, the peer elements should not overlap
+in the messages they pertain to. If there is any overlap in the
+identified messages, no message security requirements apply to
+the messages for which more than one message-security element apply.
+
+Also, no message security requirements apply to any messages of
+the encompassing context that are not identified by a message element. 
+ 
+Default:
+Used in: webservice-endpoint, and port-info
+-->
+<!ELEMENT message-security ( message+, request-protection?, response-protection? )>
+
+<!--
+The message element identifies the methods or operations to which
+the message security requirements apply.
+
+The identified methods or operations are methods or operations of
+the resource identified by the context in which the message-security
+element is defined (e.g. the the resource identified by the
+service-qname of the containing webservice-endpoint or service-ref).
+
+An empty message element indicates that the security requirements
+apply to all the methods or operations of the identified resource.
+
+When operation-name is specified, the security
+requirements defined in the containing message-security 
+element apply to all the operations of the endpoint 
+with the specified (and potentially overloaded) operation name.
+
+Default: 
+Used in: message-security
+-->
+<!ELEMENT message ( java-method? | operation-name? )>
+
+<!--
+The java-method element is used to identify a method (or methods
+in the case of an overloaded method-name) of the java class 
+indicated by the context in which the java-method is contained.
+
+Default: 
+Used in: message
+-->
+<!ELEMENT java-method ( method-name, method-params? )>
+
+<!--
+The operation-name element is used to identify the WSDL name of an
+operation of a web service.
+
+Default: 
+Used in: message
+-->
+<!ELEMENT operation-name ( #PCDATA )>
+
+<!--
+The request-protection element describes the authentication requirements
+that apply to a request.
+
+The auth-source attribute defines a requirement for message layer
+sender authentication (e.g. username password) or content authentication 
+(e.g. digital signature).
+
+The auth-recipient attribute defines a requirement for message
+layer authentication of the reciever of a message to its sender (e.g. by 
+XML encryption).
+
+The before-content attribute value indicates that recipient
+authentication (e.g. encryption) is to occur before any 
+content authentication (e.g. encrypt then sign) with respect
+to the target of the containing auth-policy.
+
+An absent request-protection element is the recommended shorthand
+for a request-protection element with unspecified values for both the
+auth-source and auth-recipient attributes.
+
+Default: 
+Used in: message-security
+
+ * Expected evolution to support partial message protection:
+ *
+ * request-protection ( content-auth-policy* )
+ *
+ * If the request-protection element contains one or more
+ * content-auth-policy sub-elements, they define the authentication
+ * requirements to be applied to the identified request content. If multiple
+ * content-auth-policy sub-elements are defined, a request sender must
+ * satisfy the requirements independently, and in the specified order.  
+ *
+ * The content-auth-policy element would be used to associate authentication
+ * requirements with the parts of the request or response object identified
+ * by the contained method-params or part-name-list sub-elements.
+ *
+ * The content-auth-policy element would be defined as follows:
+ * 
+ * content-auth-policy ( method-params | part-name-list )
+ * ATTLIST content-auth-policy 
+ *         auth-source (sender | content) #IMPLIED
+ *	   auth-recipient (before-content | after-content) #IMPLIED
+ * 
+ * The part-name-list and part-name elements would be defined as follows:
+ *
+ * part-name-list ( part-name* )
+ * part-name ( #PCDATA )
+ *
+-->
+<!ELEMENT request-protection EMPTY >
+<!ATTLIST request-protection
+          auth-source (sender | content) #IMPLIED
+	  auth-recipient (before-content | after-content) #IMPLIED>
+
+<!--
+The response-protection element describes the authentication requirements
+that apply to a response.
+
+The auth-source attribute defines a requirement for message layer
+sender authentication (e.g. username password) or content authentication 
+(e.g. digital signature).
+
+The auth-recipient attribute defines a requirement for message
+layer authentication of the reciever of a message to its sender (e.g. by 
+XML encryption).
+
+The before-content attribute value indicates that recipient
+authentication (e.g. encryption) is to occur before any 
+content authentication (e.g. encrypt then sign) with respect
+to the target of the containing auth-policy.
+
+An absent response-protection element is the recommended shorthand
+for a request-protection element with unspecified values for both the
+auth-source and auth-recipient attributes.
+
+Default: 
+Used in: message-security
+
+ * Expected evolution to support partial message protection:
+ *
+ * response-protection ( content-auth-policy* )
+ *
+ * see request-protection element for more details
+ *
+-->
+<!ELEMENT response-protection EMPTY >
+<!ATTLIST response-protection
+          auth-source (sender | content) #IMPLIED
+	  auth-recipient (before-content | after-content) #IMPLIED>
+
+<!--
+The method-name element contains the name of a service method of a web service
+implementation class.
+
+Used in: java-method
+-->
+<!ELEMENT method-name (#PCDATA)>
+<!--
+The method-params element contains a list of the fully-qualified Java
+type names of the method parameters.
+
+Used in: java-method
+-->
+<!ELEMENT method-params (method-param*)>
+
+<!--
+The method-param element contains the fully-qualified Java type name
+of a method parameter.
+
+Used in: method-params
+-->
+<!ELEMENT method-param (#PCDATA)>
+

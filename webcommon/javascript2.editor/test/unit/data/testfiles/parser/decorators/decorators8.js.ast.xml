@@ -1,0 +1,87 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='123'>
+  <hasDeclaredFunctions/>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='122'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='annotation' start='32' end='122'>
+      <hasInit/>
+      <isAssignment/>
+      <isFunctionDeclaration/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='41' end='51'>
+        <name>annotation</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='annotation' kind='NORMAL' start='32' end='122'>
+        <isDeclared/>
+        <!-- FunctionNode Parameters -->
+        <IdentNode start='52' end='58'>
+          <name>target</name>
+        </IdentNode>
+        <!-- FunctionNode Body -->
+        <Block start='60' end='120'>
+          <isFunctionBody/>
+          <!-- Block Statements -->
+          <ExpressionStatement start='96' end='120'>
+            <BinaryNode type='ASSIGN' start='96' end='119'>
+              <isAssignment/>
+              <!-- BinaryNode lhs -->
+              <AccessNode property='annotated' start='96' end='112'>
+                <!-- AccessNode Base -->
+                <IdentNode start='96' end='102'>
+                  <name>target</name>
+                </IdentNode>
+              </AccessNode>
+              <!-- BinaryNode rhs -->
+              <BooleanLiteralNode value='true' start='115' end='119'/>
+            </BinaryNode>
+          </ExpressionStatement>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+    <VarNode name='MyClass' start='0' end='26'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='19' end='26'>
+        <name>MyClass</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ClassNode ident='MyClass' start='0' end='30'>
+        <!-- ClassNode Constructor -->
+        <PropertyNode name='MyClass' start='0' end='30'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='19' end='26'>
+            <name>MyClass</name>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='MyClass' kind='NORMAL' start='0' end='30'>
+            <isClassConstructor/>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='0' end='30'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Elements -->
+        <!-- ClassNode Decorators -->
+        <IdentNode start='1' end='11'>
+          <name>annotation</name>
+        </IdentNode>
+      </ClassNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

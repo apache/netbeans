@@ -1,0 +1,6 @@
+function |>METHOD:myfunc<|() {
+   var |>LOCAL_VARIABLE_DECLARATION:myloc1<| = 20;       
+   for (var |>LOCAL_VARIABLE_DECLARATION:loc2<| = 30, |>CLASS,UNUSED:loc3<| = {}; |>LOCAL_VARIABLE:loc2<| < 100; |>LOCAL_VARIABLE:loc2<|++) {
+      |>LOCAL_VARIABLE:myloc1<| += |>LOCAL_VARIABLE:loc2<|;
+   }
+}

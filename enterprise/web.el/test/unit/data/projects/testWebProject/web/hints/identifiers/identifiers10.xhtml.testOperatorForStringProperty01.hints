@@ -1,0 +1,2 @@
+#{bean.myString.stream().sum()}                --------
+HINT:Unknown method "stream"

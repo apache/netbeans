@@ -1,0 +1,28 @@
+common:
+    php:
+        date.timezone: Europe/Prague
+        # session.save_path: "%tempDir%/sessions"
+        zlib.output_compression: yes
+        default_charset: "UTF-8"
+        some_variable: %someVariable%\whatever::foo()
++thisIsError
+    database:
+        type: mysql
+        driver: mysql # localhost, mysql5
+        dbname: main
+        profiler: TRUE
+        charset: utf8
+
+    services:
+        database:
+            factory: [@factories, 'createNotORM']
+            arguments: [@databasePDO, true]
+# production
+production < common:
+    database:
+        host: mysql
+        username: production_username
+        password: production_password
+    array:
+        - First item
+        - ["second" = 56]

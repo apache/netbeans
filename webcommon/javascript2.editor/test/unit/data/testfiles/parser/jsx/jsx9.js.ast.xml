@@ -1,0 +1,47 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='107'>
+  <hasDeclaredFunctions/>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='107'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='test' start='0' end='107'>
+      <hasInit/>
+      <isAssignment/>
+      <isFunctionDeclaration/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='9' end='13'>
+        <name>test</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='test' kind='NORMAL' start='0' end='107'>
+        <isDeclared/>
+        <!-- FunctionNode Parameters -->
+        <!-- FunctionNode Body -->
+        <Block start='16' end='105'>
+          <isFunctionBody/>
+          <isTerminal/>
+          <!-- Block Statements -->
+          <ReturnNode start='26' end='105'>
+            <JsxElementNode name='Test' start='45' end='94'>
+              <!-- JSX Element Attributes -->
+              <!-- JSX Element Children -->
+              <JsxElementNode name='Inner' start='52' end='86'>
+                <!-- JSX Element Attributes -->
+                <JsxAttributeNode name='a' start='59' end='67'>
+                  <!-- JSX Attribute Value -->
+                  <StringLiteralNode value='ok' start='63' end='65'/>
+                </JsxAttributeNode>
+                <!-- JSX Element Children -->
+                <StringLiteralNode value='inner text' start='68' end='68'/>
+              </JsxElementNode>
+            </JsxElementNode>
+          </ReturnNode>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

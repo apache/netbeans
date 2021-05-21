@@ -1,0 +1,1 @@
+var {p: foo, |>MARK_OCCURRENCES:q^<|: bar, w: abc} = {p: 5, |>MARK_OCCURRENCES:q<|:7};     

@@ -1,0 +1,8 @@
+$fn2 = fn(int $a, |>MARK_OCCURRENCES:ArrowFunctions<| $b) => $a + $b->getNumber() * $y;
+fn(): |>MARK_OCCURRENCES:ArrowFunctions<| => |>MARK_OCCURRENCES:ArrowFunctions<|::new();
+function (): |>MARK_OCCURRENCES:ArrowFunctions<| {
+    return |>MARK_OCCURRENCES:ArrowFunctions<|::new();
+$af = fn(|>MARK_OCCURRENCES:ArrowFunctions<| $x): callable => fn(?|>MARK_OCCURRENCES:ArrowFunctions<| $z): ?|>MARK_OCCURRENCES:ArrowFunctions<| => new |>MARK_OCCURRENCES:ArrowF^unctions<|();
+class |>MARK_OCCURRENCES:ArrowFunctions<|
+        $af = fn(): ?|>MARK_OCCURRENCES:ArrowFunctions<| => $this;
+        return new |>MARK_OCCURRENCES:ArrowFunctions<|();

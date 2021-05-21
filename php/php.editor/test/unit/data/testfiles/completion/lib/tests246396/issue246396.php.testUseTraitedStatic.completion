@@ -1,0 +1,16 @@
+Code completion result for source line:
+static::|privateStaticTraitedMethod();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     privateStaticMethod()           [PRIVATE,  BaseTrait
+METHOD     privateStaticTraitedMethod()    [PRIVATE,  TraitedTrait
+METHOD     protectedStaticMethod()         [PROTECTE  BaseTrait
+METHOD     protectedStaticTraitedMethod()  [PROTECTE  TraitedTrait
+METHOD     publicStaticMethod()            [STATIC]   TraitedTrait
+METHOD     publicStaticTraitedMethod()     [STATIC]   TraitedTrait
+VARIABLE   ? $privateStaticField           [PRIVATE,  BaseTrait
+VARIABLE   ? $privateStaticTraitedField    [PRIVATE,  TraitedTrait
+VARIABLE   ? $protectedStaticField         [PROTECTE  BaseTrait
+VARIABLE   ? $protectedStaticTraitedField  [PROTECTE  TraitedTrait
+VARIABLE   ? $publicStaticField            [STATIC]   BaseTrait
+VARIABLE   ? $publicStaticTraitedField     [STATIC]   TraitedTrait
+CONSTANT   class \TraitedTrait             [PUBLIC]   Magic Constant

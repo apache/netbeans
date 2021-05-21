@@ -1,0 +1,13 @@
+{extends "inheritance.parent.latte"}
+
+{includeblock 'includeblock.inc.latte'}
+
+{block title}Homepage | {include #parent}{include parent}{/block}
+
+{block content}
+	<ul>
+	{foreach $people as $person}
+		<li>{$person}</li>
+	{/foreach}
+	</ul>
+{/block}

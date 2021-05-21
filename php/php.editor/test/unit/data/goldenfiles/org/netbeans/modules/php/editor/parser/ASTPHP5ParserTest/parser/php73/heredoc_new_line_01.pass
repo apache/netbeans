@@ -1,0 +1,109 @@
+<testresult testFile='heredoc_new_line_01.php'>
+    <scanner>
+        <token id='T_STRING' start='815' end='819'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='819' end='820'>
+            <text>(</text>
+        </token>
+        <token id='T_START_HEREDOC' start='820' end='832'>
+            <text>&lt;&lt;&lt; HEREDOC\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='832' end='850'>
+            <text>    foo\n  bar\nqux\n</text>
+        </token>
+        <token id='T_END_HEREDOC' start='850' end='857'>
+            <text>HEREDOC</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='857' end='858'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='858' end='859'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='861' end='867'>
+            <text>$array</text>
+        </token>
+        <token id='T_EQUAL' start='868' end='869'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='870' end='871'>
+            <text>[</text>
+        </token>
+        <token id='T_START_HEREDOC' start='871' end='879'>
+            <text>&lt;&lt;&lt; END\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='879' end='891'>
+            <text>foo\nbar\nbaz\n</text>
+        </token>
+        <token id='T_END_HEREDOC' start='891' end='894'>
+            <text>END</text>
+        </token>
+        <token id='T_COMMA' start='894' end='895'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='896' end='901'>
+            <text>&apos;qux&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='901' end='902'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='902' end='903'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='904' end='904'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='904'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='859'>
+                <FunctionInvocation start='815' end='858'>
+                    <FucntionName start='815' end='819'>
+                        <NamespaceName start='815' end='819' isCurrent='false' isGlobal='false'>
+                            <Identifier start='815' end='819' name='test'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Quote start='820' end='857' type='HEREDOC'>
+                            <Expressions>
+                                <Scalar start='832' end='850' type='STRING' value='    foo\n  bar\nqux\n'/>
+                            </Expressions>
+                        </Quote>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='861' end='903'>
+                <Assignment start='861' end='902' operator='EQUAL'>
+                    <Variable start='861' end='867' isDollared='true'>
+                        <Identifier start='862' end='867' name='array'/>
+                    </Variable>
+                    <ArrayCreation start='870' end='902' type='NEW'>
+                        <ArrayElement start='871' end='894'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Quote start='871' end='894' type='HEREDOC'>
+                                    <Expressions>
+                                        <Scalar start='879' end='891' type='STRING' value='foo\nbar\nbaz\n'/>
+                                    </Expressions>
+                                </Quote>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='896' end='901'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='896' end='901' type='STRING' value='&apos;qux&apos;'/>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Assignment>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

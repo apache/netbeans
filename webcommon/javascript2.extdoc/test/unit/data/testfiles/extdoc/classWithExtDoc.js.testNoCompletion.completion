@@ -1,0 +1,3 @@
+Code completion result for source line:
+* |@param {int} One The first number to add
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)

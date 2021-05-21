@@ -1,0 +1,5 @@
+Code completion result for source line:
+$foo = testOptionalArgsFunc|($a);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     testOptionalArgsFunc($a)        [PUBLIC]   optional_args.php
+METHOD     testOptionalArgsFunc($a, $b =   [PUBLIC]   optional_args.php

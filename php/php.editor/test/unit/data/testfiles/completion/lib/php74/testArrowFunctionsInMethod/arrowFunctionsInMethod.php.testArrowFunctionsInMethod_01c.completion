@@ -1,0 +1,4 @@
+Code completion result for source line:
+$fn = fn() => $af->getNumber() + $nu|mber + $this->getNumber();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   int $number                     [PUBLIC]   arrowFunctionsInMethod.php

@@ -1,0 +1,7 @@
+var |>GLOBAL:a<|, |>GLOBAL:b<|, |>GLOBAL:c<| = 5;   
+     
+({|>GLOBAL:c<|, |>GLOBAL:a<|, |>GLOBAL:b<|} = {|>FIELD:b<|:1, |>FIELD:a<|:|>GLOBAL:c<|});
+
+|>GLOBAL:console<|.log(|>GLOBAL:a<|); // 5
+|>GLOBAL:console<|.log(|>GLOBAL:b<|); // 1
+|>GLOBAL:console<|.log(|>GLOBAL:c<|); // undefined 

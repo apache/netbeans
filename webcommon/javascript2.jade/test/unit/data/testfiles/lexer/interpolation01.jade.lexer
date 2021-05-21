@@ -1,0 +1,7 @@
+[CODE_DELIMITER(1):-][WHITESPACE(1): ][JAVASCRIPT(41):var title = "On Dogs: Man's Best Friend";][EOL(1):\n]
+[CODE_DELIMITER(1):-][WHITESPACE(1): ][JAVASCRIPT(22):var author = "enlore";][EOL(1):\n]
+[CODE_DELIMITER(1):-][WHITESPACE(1): ][JAVASCRIPT(38):var theGreat = "<span>escape!</span>";][EOL(1):\n]
+[EOL(1):\n]
+[TAG(2):h1][CODE_DELIMITER(1):=][WHITESPACE(1): ][JAVASCRIPT(5):title][EOL(1):\n]
+[TAG(1):p][WHITESPACE(1): ][TEXT(21):Written with love by ][EXPRESSION_DELIMITER_OPEN(2):#{][JAVASCRIPT(6):author][EXPRESSION_DELIMITER_CLOSE(1):}][EOL(1):\n]
+[TAG(1):p][WHITESPACE(1): ][TEXT(19):This will be safe: ][EXPRESSION_DELIMITER_OPEN(2):#{][JAVASCRIPT(8):theGreat][EXPRESSION_DELIMITER_CLOSE(1):}]

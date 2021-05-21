@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://xmlns.jcp.org/xml/ns/javaee"
+            xmlns:javaee="http://xmlns.jcp.org/xml/ns/javaee"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:xml="http://www.w3.org/XML/1998/namespace"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified"
+            version="2.2">
+  <xsd:include schemaLocation="javaee_7.xsd"/>
+
+  <xsd:annotation>
+    <xsd:documentation>
+
+      DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+      
+      Copyright (c) 2011-2013 Oracle and/or its affiliates. All rights reserved.
+      
+      The contents of this file are subject to the terms of either the GNU
+      General Public License Version 2 only ("GPL") or the Common Development
+      and Distribution License("CDDL") (collectively, the "License").  You
+      may not use this file except in compliance with the License.  You can
+      obtain a copy of the License at
+      https://glassfish.dev.java.net/public/CDDL+GPL_1_1.html
+      or packager/legal/LICENSE.txt.  See the License for the specific
+      language governing permissions and limitations under the License.
+      
+      When distributing the software, include this License Header Notice in each
+      file and include the License file at packager/legal/LICENSE.txt.
+      
+      GPL Classpath Exception:
+      Oracle designates this particular file as subject to the "Classpath"
+      exception as provided by Oracle in the GPL Version 2 section of the License
+      file that accompanied this code.
+      
+      Modifications:
+      If applicable, add the following below the License Header, with the fields
+      enclosed by brackets [] replaced by your own identifying information:
+      "Portions Copyright [year] [name of copyright owner]"
+      
+      Contributor(s):
+      If you wish your version of this file to be governed by only the CDDL or
+      only the GPL Version 2, indicate your decision by adding "[Contributor]
+      elects to include this software in this distribution under the [CDDL or GPL
+      Version 2] license."  If you don't indicate a single choice of license, a
+      recipient has the option to distribute your version of this file under
+      either the CDDL, the GPL Version 2 or to extend the choice of license to
+      its licensees as provided above.  However, if you add GPL Version 2 code
+      and therefore, elected the GPL Version 2 license, then the option applies
+      only if the new code is made subject to such option by the copyright
+      holder.
+      
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:annotation>
+    <xsd:documentation>
+      <![CDATA[[
+      <p>The XML Schema for the Tag Libraries in the JavaServer Faces
+      Standard Facelets View Declaration Language (Facelets VDL)
+      (Version 2.2).</p>
+      
+      <p>JSF 2.2 Facelet Tag Libraries that wish to conform to this
+      schema must declare it in the following manner.</p>
+      
+      &lt;facelet-taglib xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facelettaglibary_2_2.xsd"
+      version="2.2"&gt;
+      
+      ...
+      
+      &lt;/facelet-taglib&gt;</pre>
+      
+      <p>The instance documents may indicate the published
+      version of the schema using xsi:schemaLocation attribute
+      for javaee namespace with the following location:</p>
+      
+      <p>http://xmlns.jcp.org/xml/ns/javaee/web-facelettaglibary_2_2.xsd</p>
+      
+      ]]>
+    </xsd:documentation>
+  </xsd:annotation>
+
+
+<!-- **************************************************** -->
+
+  <xsd:element name="facelet-taglib"
+               type="javaee:facelet-taglibType">
+    <xsd:unique name="facelet-taglib-tagname-uniqueness">
+      <xsd:annotation>
+        <xsd:documentation><![CDATA[<p>
+
+          tag-names must be unique within a document.
+          
+        </p>]]></xsd:documentation>
+      </xsd:annotation>
+      <xsd:selector xpath="javaee:tag"/>
+      <xsd:field xpath="javaee:tag-name"/>
+    </xsd:unique>
+    <xsd:unique name="faces-config-behavior-ID-uniqueness">
+      <xsd:annotation>
+        <xsd:documentation><![CDATA[<p>
+
+          Behavior IDs must be unique within a document.
+          
+        </p>]]></xsd:documentation>
+      </xsd:annotation>
+      <xsd:selector xpath="javaee:behavior"/>
+      <xsd:field xpath="javaee:behavior-id"/>
+    </xsd:unique>
+    <xsd:unique name="faces-config-converter-ID-uniqueness">
+      <xsd:annotation>
+        <xsd:documentation><![CDATA[<p>
+
+          Converter IDs must be unique within a document.
+          
+        </p>]]></xsd:documentation>
+      </xsd:annotation>
+      <xsd:selector xpath="javaee:converter"/>
+      <xsd:field xpath="javaee:converter-id"/>
+    </xsd:unique>
+    <xsd:unique name="faces-config-validator-ID-uniqueness">
+      <xsd:annotation>
+        <xsd:documentation><![CDATA[<p>
+
+          Validator IDs must be unique within a document.
+          
+        </p>]]></xsd:documentation>
+      </xsd:annotation>
+      <xsd:selector xpath="javaee:validator"/>
+      <xsd:field xpath="javaee:validator-id"/>
+    </xsd:unique>
+  </xsd:element>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="facelet-taglibType">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[<p>
+
+        The top level XML element in a facelet tag library XML file.
+        
+      </p>]]></xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="javaee:descriptionGroup"/>
+      <xsd:choice>
+        <xsd:element name="library-class"
+                     type="javaee:fully-qualified-classType"/>
+        <xsd:sequence>
+          <xsd:element name="namespace"
+                       type="javaee:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="short-name"
+                       type="javaee:string">
+            <xsd:annotation>
+              <xsd:documentation><![CDATA[<p>
+              
+              An advisory short name for usages of tags from this tag library.
+              
+              </p>]]></xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0"
+                       maxOccurs="1"
+                       name="composite-library-name"
+                       type="javaee:string"/>
+          <xsd:choice minOccurs="0"
+                      maxOccurs="unbounded">
+            <xsd:element name="tag"
+                         type="javaee:facelet-taglib-tagType"/>
+            <xsd:element name="function"
+                         type="javaee:facelet-taglib-functionType"/>
+          </xsd:choice>
+        </xsd:sequence>
+      </xsd:choice>
+      <xsd:element name="taglib-extension"
+                   type="javaee:facelet-taglib-extensionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+    <xsd:attribute name="version"
+                   type="javaee:facelet-taglib-versionType"
+                   use="required"/>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="facelet-taglib-extensionType">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[<p>
+
+        Extension element for facelet-taglib. It may contain
+        implementation specific content.
+        
+      </p>]]></xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any namespace="##any"
+               processContents="lax"
+               minOccurs="0"
+               maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="facelet-taglib-tagType">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[
+
+        <p>If the tag library XML
+        file contains individual tag declarations rather than pointing
+        to a library-class or a declaring a composite-library name, the
+        individual tags are enclosed in tag elements.</p>
+
+      ]]></xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="javaee:descriptionGroup"/>
+      <xsd:element name="tag-name"
+                   type="javaee:facelet-taglib-canonical-nameType"/>
+      <xsd:choice>
+        <xsd:element name="handler-class"
+                     type="javaee:fully-qualified-classType"/>
+        <xsd:element name="behavior"
+                     type="javaee:facelet-taglib-tag-behaviorType"/>
+        <xsd:element name="component"
+                     type="javaee:facelet-taglib-tag-componentType"/>
+        <xsd:element name="converter"
+                     type="javaee:facelet-taglib-tag-converterType"/>
+        <xsd:element name="validator"
+                     type="javaee:facelet-taglib-tag-validatorType"/>
+        <xsd:element name="source"
+                     type="javaee:string"/>
+      </xsd:choice>
+      <xsd:element name="attribute"
+                   type="javaee:facelet-taglib-tag-attributeType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="tag-extension"
+                   type="javaee:facelet-taglib-tag-extensionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="facelet-taglib-tag-attributeType">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[<p>
+
+        <p>The attribute element defines an attribute for the nesting
+        tag. The attribute element may have several subelements
+        defining:</p>
+        
+        <dl>
+
+          <dt>description</dt><dd><p> a description of the attribute
+	  </p></dd>
+
+	  <dt>name</dt><dd><p> the name of the attribute
+	  </p></dd>
+        
+	  <dt>required</dt><dd><p> whether the attribute is required or
+        optional
+	  </p></dd>
+
+          <dt>type</dt><dd><p> the type of the attribute
+	  </p></dd>
+
+        </dl>
+        
+      </p>]]></xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="javaee:descriptionGroup"/>
+      <xsd:element name="name"
+                   type="javaee:xsdNMTOKENType"/>
+      <xsd:element name="required"
+                   type="javaee:generic-booleanType"
+                   minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation><![CDATA[
+
+            <p>Defines if the nesting attribute is required or
+            optional.</p>
+            
+            <p>If not present then the default is "false", i.e
+            the attribute is optional.</p>
+            
+          ]]></xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:choice>
+        <xsd:element name="type"
+                     type="javaee:fully-qualified-classType"
+                     minOccurs="0">
+          <xsd:annotation>
+            <xsd:documentation><![CDATA[<p>
+
+              Defines the Java type of the attributes
+              value. If this element is omitted, the
+              expected type is assumed to be
+              "java.lang.Object".</p>
+              
+            ]]></xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="method-signature"
+                     type="javaee:string"
+                     minOccurs="0">
+          <xsd:annotation>
+            <xsd:documentation><![CDATA[<p>
+
+              Defines the method signature for a MethodExpression-
+              enabled attribute.  The syntax of the method-signature
+              element is as follows (taken from the function-signature
+              EBNF in web-jsptaglibrary_2_1.xsd):</p>
+
+<code>
+
+<p>MethodSignature ::= ReturnType S MethodName S? '(' S? Parameters? S? ')'</p>
+
+<p>ReturnType        ::= Type</p>
+
+<p>MethodName        ::= Identifier</p>
+
+<p>Parameters        ::= Parameter | ( Parameter S? ',' S? Parameters )</p>
+
+<p>Parameter         ::= Type</p>
+
+</code>
+
+<p>Where:</p>
+
+<ul>
+
+	  <li><p><code>Type</code> is a basic type or a fully qualified
+	  Java class name (including package name), as per the 'Type'
+	  production in the Java Language Specification, Second Edition,
+	  Chapter 18.</p></li>
+
+	  <li><p><code>Identifier</code> is a Java identifier, as per the
+	  'Identifier' production in the Java Language Specification,
+	  Second Edition, Chapter 18.</p></li>
+
+</ul>
+
+<p>Example:</p>
+
+<p><code>java.lang.String nickName( java.lang.String, int )</code></p>
+
+]]></xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+      </xsd:choice>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="facelet-taglib-tag-extensionType">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[<p>
+
+        Extension element for tag It may contain
+        implementation specific content.
+        
+      </p>]]></xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any namespace="##any"
+               processContents="lax"
+               minOccurs="0"
+               maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="facelet-taglib-functionType">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[<p>
+
+        If the tag library XML file contains individual function
+        declarations rather than pointing to a library-class or a
+        declaring a composite-library name, the individual functions are
+        enclosed in function elements.
+        
+      </p>]]></xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="javaee:descriptionGroup"/>
+      <xsd:element name="function-name"
+                   type="javaee:string"/>
+      <xsd:element name="function-class"
+                   type="javaee:fully-qualified-classType"/>
+      <xsd:element name="function-signature"
+                   type="javaee:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="facelet-taglib-tag-behaviorType">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[<p>
+
+        Within a tag element, the behavior element encapsulates
+        information specific to a JSF Behavior.
+        
+      </p>]]></xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="javaee:descriptionGroup"/>
+      <xsd:element minOccurs="1"
+                   maxOccurs="1"
+                   name="behavior-id"
+                   type="javaee:string"/>
+      <xsd:element minOccurs="0"
+                   maxOccurs="1"
+                   name="handler-class"
+                   type="javaee:fully-qualified-classType"/>
+      <xsd:element name="behavior-extension"
+                   type="javaee:facelet-taglib-tag-behavior-extensionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="facelet-taglib-tag-behavior-extensionType">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[<p>
+
+        Extension element for behavior. It may contain
+        implementation specific content.
+        
+      </p>]]></xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any namespace="##any"
+               processContents="lax"
+               minOccurs="0"
+               maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="facelet-taglib-tag-componentType">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[
+
+      <p><span class="changed_modified_2_2">Within</span> a tag element,
+      the component element encapsulates information specific to a JSF
+      UIComponent.</p>
+
+<div class="changed_added_2_2">
+
+<p>This element must have exactly one of
+<code>&lt;component-type&gt;</code>, <code>&lt;resource-id&gt;</code>,
+or <code>&lt;handler-class&gt;</code> among its child elements.</p>
+
+</div>
+       
+      ]]></xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="javaee:descriptionGroup"/>
+      <xsd:choice minOccurs="0"
+                  maxOccurs="unbounded">
+          <xsd:element name="component-type"
+                       type="javaee:string"/>
+          <xsd:element name="resource-id"
+                       type="javaee:string">
+            <xsd:annotation>
+              <xsd:documentation><![CDATA[
+
+              <p class="changed_added_2_2">A valid resource identifier
+              as specified in the spec prose document section
+              2.6.1.3.  For example:</p>
+
+          <p><code>&lt;resource-id&gt;myCC/ccName.xhtml&lt;/resource-id&gt;</code></p>
+
+              ]]></xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="handler-class"
+                       type="javaee:fully-qualified-classType"/>
+      </xsd:choice>
+      <xsd:element minOccurs="0"
+                   maxOccurs="1"
+                   name="renderer-type"
+                   type="javaee:string"/>
+      <xsd:element name="component-extension"
+                   type="javaee:facelet-taglib-tag-component-extensionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="facelet-taglib-tag-component-extensionType">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[<p>
+
+        Extension element for component It may contain
+        implementation specific content.
+        
+      </p>]]></xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any namespace="##any"
+               processContents="lax"
+               minOccurs="0"
+               maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="facelet-taglib-tag-converterType">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[<p>
+
+        Within a tag element, the converter element encapsulates
+        information specific to a JSF Converter.
+        
+      </p>]]></xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="javaee:descriptionGroup"/>
+      <xsd:element minOccurs="1"
+                   maxOccurs="1"
+                   name="converter-id"
+                   type="javaee:string"/>
+      <xsd:element minOccurs="0"
+                   maxOccurs="1"
+                   name="handler-class"
+                   type="javaee:fully-qualified-classType"/>
+      <xsd:element name="converter-extension"
+                   type="javaee:facelet-taglib-tag-converter-extensionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="facelet-taglib-tag-converter-extensionType">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[<p>
+
+        Extension element for converter It may contain
+        implementation specific content.
+        
+      </p>]]></xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any namespace="##any"
+               processContents="lax"
+               minOccurs="0"
+               maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="facelet-taglib-tag-validatorType">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[<p>
+
+        Within a tag element, the validator element encapsulates
+        information specific to a JSF Validator.
+        
+      </p>]]></xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="javaee:descriptionGroup"/>
+      <xsd:element minOccurs="1"
+                   maxOccurs="1"
+                   name="validator-id"
+                   type="javaee:string"/>
+      <xsd:element minOccurs="0"
+                   maxOccurs="1"
+                   name="handler-class"
+                   type="javaee:fully-qualified-classType"/>
+      <xsd:element name="validator-extension"
+                   type="javaee:facelet-taglib-tag-validator-extensionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="facelet-taglib-tag-validator-extensionType">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[<p>
+
+        Extension element for validator It may contain
+        implementation specific content.
+        
+      </p>]]></xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any namespace="##any"
+               processContents="lax"
+               minOccurs="0"
+               maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+  <xsd:simpleType name="facelet-taglib-versionType">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[<p>
+
+        This type contains the recognized versions of
+        facelet-taglib supported.
+        
+      </p>]]></xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="2.2"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="facelet-taglib-canonical-nameType">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[<p>
+
+        <p>Defines the canonical name of a tag or attribute being
+        defined.</p>
+        
+        <p>The name must conform to the lexical rules for an NCName</p>
+        
+      </p>]]></xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:NCName">
+        <xsd:attribute name="id"
+                       type="xsd:ID"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+</xsd:schema>

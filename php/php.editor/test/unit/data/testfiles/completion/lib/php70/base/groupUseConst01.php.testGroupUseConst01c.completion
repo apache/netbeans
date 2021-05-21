@@ -1,0 +1,5 @@
+Code completion result for source line:
+B\C\C_|C
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CONSTANT   C_C 'C-C'                       [PUBLIC]   A\B\C

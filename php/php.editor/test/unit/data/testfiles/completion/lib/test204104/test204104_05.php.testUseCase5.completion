@@ -1,0 +1,4 @@
+Code completion result for source line:
+$b->|god();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     god()                           [PUBLIC]   Omg

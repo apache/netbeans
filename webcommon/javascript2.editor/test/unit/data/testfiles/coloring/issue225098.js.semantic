@@ -1,0 +1,17 @@
+function |>METHOD:AdDetailCtrl<|($scope, $routeParams, $http) {
+    $http.get($scope.backendUri + 'example/' + $routeParams.id).success(function(data, |>UNUSED:status<|) {
+        $scope.|>FIELD:ad<| = data;
+    });
+}
+
+function |>METHOD:AdDetailCtrl1<|($scope, |>UNUSED:$routeParams<|, $http) {
+    $http.get($scope.backendUri + 'example/').success(function(data, |>UNUSED:status<|) {
+        $scope.|>FIELD:ad<| = data;
+    });
+}
+
+function |>METHOD:AdDetailCtrl2<|($scope, |>UNUSED:$routeParams<|, $http) {
+    $http.get($scope.backendUri + 'example/' + "bar").success(function(data, |>UNUSED:status<|) {
+        $scope.|>FIELD:ad<| = data;
+    });
+}

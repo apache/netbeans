@@ -1,0 +1,6 @@
+if( value1 = value2 ) {
+    ---------------
+HINT:Expected a conditional expression and instead saw an assignment.
+else if( value1 = getValue("condition A") ) {
+         --------------------------------
+HINT:Expected a conditional expression and instead saw an assignment.

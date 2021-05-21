@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<apichanges>
+  <apidefs>
+    <apidef name="templates">Templates API</apidef>
+  </apidefs>
+
+<!-- ACTUAL CHANGES BEGIN HERE: -->
+
+  <changes>
+      <change id="decorators">
+          <api name="templates"/>
+          <summary>Support for decorating the creation process</summary>
+          <version major="1" minor="9"/>
+          <date year="2017" month="3" day="22"/>
+          <compatibility addition="yes" binary="compatible" source="compatible"/>
+          <description>
+              <p>
+                  In addition to provide <code>CreateFromTemplateHandler</code> which overtakes the
+                  template processing, <code>CreateFromTemplateDecorator</code> can participate in
+                  file creation doing pre- and post-creation tasks and edits either in the created file
+                  or other files.
+              </p>
+          </description>
+          <class package="org.netbeans.api.templates" name="CreateFromTemplateDecorator"/>
+      </change>
+      <change id="mavenarchetypes">
+          <api name="templates"/>
+          <summary>Maven Archetypes</summary>
+          <version major="1" minor="8"/>
+          <date year="2016" month="11" day="1"/>
+          <author login="jtulach"/>
+          <compatibility addition="yes" binary="compatible" source="compatible"/>
+          <description>
+              One can now create project wizards that create new projects
+              from Maven archetypes. See the
+              <a href="@TOP@overview-summary.html#html-and-maven">how-to</a>
+              for more details.
+          </description>
+          <class package="org.netbeans.api.templates" name="TemplateRegistration"/>
+          <issue number="268677"/>
+      </change>
+      <change id="composition">
+          <api name="templates"/>
+          <summary>Support for composition</summary>
+          <version major="1" minor="5"/>
+          <date year="2015" month="4" day="23"/>
+          <author login="sdedic"/>
+          <compatibility addition="yes" binary="compatible" source="compatible"/>
+          <description>
+              TemplateHandler may need to create additional files, using the same parameters for creation as a base.
+              Attribute providers may need to be processed in a custom way, which requires to create and manage CreateDescriptor
+              by the client. This change allows to clone information from CreateDescriptor into an independent FileBuilder, and
+              to create a Descriptor out of a Builder.
+          </description>
+          <class package="org.netbeans.api.templates" name="FileBuilder"/>
+          <issue number=""/>
+      </change>
+      <change id="techids">
+          <api name="templates"/>
+          <summary>Support for Technology Ids</summary>
+          <version major="1" minor="4"/>
+          <date year="2015" month="3" day="27"/>
+          <author login="jtulach"/>
+          <compatibility addition="yes" binary="compatible" source="compatible"/>
+          <description>
+              <p>
+                  The <a onclick="target='_blank'" href="http://bits.netbeans.org/html+java/">
+                      HTML UI API for Java
+                  </a>
+                  revision 1.1 supports technolgy identifiers. Now they can
+                  be used via <code>TemplateRegistration</code>
+                  annotation as well.
+              </p>
+          </description>
+          <class package="org.netbeans.api.templates" name="TemplateRegistration"/>
+          <issue number="246133"/>
+      </change>
+      <change id="javaPackageTargetChooser">
+          <api name="templates"/>
+          <summary>Package like Target Chooser for HTML Wizards</summary>
+          <version major="1" minor="3"/>
+          <date day="5" month="2" year="2015"/>
+          <author login="jtulach"/>
+          <compatibility addition="yes" deletion="no" binary="compatible"
+                         source="compatible" deprecation="yes"/>
+          <description>
+              One can use <a href="@TOP@/overview-summary.html#javaTargetChooser">targetChooser:java</a>
+              to request Java-like target chooser showing java packages.
+          </description>
+          <issue number="249891"/>
+      </change>
+      <change id="htmlui.templates">
+          <api name="templates"/>
+          <summary>HTML UI for Templates</summary>
+          <version major="1" minor="2"/>
+          <date day="19" month="12" year="2014"/>
+          <author login="jtulach"/>
+          <compatibility addition="yes" deletion="no" binary="compatible"
+                         source="compatible" deprecation="yes"/>
+          <description>
+              One new attribute
+              <a href="@org-netbeans-api-templates@/org/netbeans/api/templates/TemplateRegistration.html#page--">
+page()</a>
+              to allow usage of HTML based UI driven by Java or JavaScript.
+          </description>
+      </change>
+      <change id="templates.separation">
+          <api name="templates"/>
+          <summary>Separate template handling</summary>
+          <version major="1" minor="0"/>
+          <date day="14" month="10" year="2014"/>
+          <author login="sdedic"/>
+          <compatibility addition="no" deletion="no" binary="compatible"
+                         source="incompatible" deprecation="yes"/>
+          <description>
+              Template handling need not depend on Data System APIs, should be available
+              for clients that only know FileSystems. Relevant interfaces moved to
+              <code>openide.filesystems.templates</code> module; see javadoc for
+              <a href="@org-netbeans-api-templates@/org/netbeans/api/templates/FileBuilder.html">
+                  FileBuilder</a> for details.
+          </description>
+      </change>
+      <change id="org.netbeans.api.templates.TemplateRegistration.targetName">
+          <api name="templates"/>
+          <summary>Introduce targetName for templates.</summary>
+          <version major="0" minor="99"/>
+          <date day="29" month="1" year="2014"/>
+          <author login="jhavlin"/>
+          <compatibility addition="yes" binary="compatible" source="compatible"
+                         semantic="compatible" deprecation="no" deletion="no"
+                         modification="no"/>
+          <description>
+              <p>
+                  By default, files created from templates have name
+                  preinitialized to "new" + template name.
+                  TemplateRegistration.targetName can be used to customize how
+                  the file name will be preinitialized.
+              </p>
+          </description>
+          <class package="org.netbeans.api.templates" name="TemplateRegistration" link="no"/>
+          <issue number="239028"/>
+      </change>
+
+  </changes>
+
+  <!-- Now the surrounding HTML text and document structure: -->
+
+  <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <======================
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+
+-->
+    <head>
+      <title>Change History for the Templates API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="@TOP@">Templates
+API</a>. Please ask on the <code>dev@openide.netbeans.org</code> mailing list
+if you have any questions about the details of a
+change, or are wondering how to convert existing code to be compatible.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+
+      <hr/><standard-changelists module-code-name="org.netbeans.api.templates"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

@@ -1,0 +1,5 @@
+Code completion result for source line:
+InvocationComment/**/::/* aa */ |bar();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     bar()                           [STATIC]   InvocationComment
+CONSTANT   class \InvocationComment        [PUBLIC]   Magic Constant

@@ -1,0 +1,60 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+44C453F60909DFC223552ACE63E05C694215156B;javax.enterprise:cdi-api:1.0
+C51C00206BB913CD8612B24ABD9FA98AE89719B1;commons-cli:commons-cli:1.4
+2852E6E05FBB95076FC091F6D1780F1F8FE35E0F;commons-io:commons-io:2.5
+6505A72A097D9270F7A9E7BF42C4238283247755;org.apache.commons:commons-lang3:3.8.1
+BDAAB946CA5AD20253502D873BA0C3313D141036;com.google.guava:guava:25.1-android
+41E5AB52EC65E60B6C0CED947BECF7BA96402645;com.google.inject:guice:4.2.1:no_aop
+E90CAA31C9B8D748359450D7487F76B05549AE65;org.fusesource.jansi:jansi:1.17.1
+6975DA39A7040257BD51D21A231B76C915872D38;javax.inject:javax.inject:1
+D6DCA1EC36F28ECF286241DEADC790C2D4C8EAA0;org.slf4j:jcl-over-slf4j:1.7.29
+55819A28FC834C2F2BCF4DCDB278524DC3CF088F;org.jsoup:jsoup:1.12.1
+5025422767732A1AB45D93ABFEA846513D742DCF;javax.annotation:jsr250-api:1.0
+F8FF8032903882376E8D000C51E3E16D20FC7DF7;org.apache.maven:maven-artifact:3.6.3
+E9A37AF390009A525D8FAA6B18BD682123F85F9E;org.apache.maven:maven-builder-support:3.6.3
+2A8242398EFBFD533FFE36147864C34A326666DA;org.apache.maven:maven-compat:3.6.3
+ECA800AA73E750EC9A880EB224F0BB68F5B7873B;org.apache.maven:maven-core:3.6.3
+CC8DF86676BCB37F68D2CEAF05DF8EF6FB11D873;org.apache.maven:maven-embedder:3.6.3
+61C7848DCE2FBF7F7AB0FDC8E8A7CC9DA5DD7827;org.apache.maven:maven-model:3.6.3
+4EF1D56F53D3E0A9003B7CC82C89AF9878321E82;org.apache.maven:maven-model-builder:3.6.3
+063FE5967B9C4C1B6FA6004BE76E1C939E8BD1D6;org.apache.maven:maven-plugin-api:3.6.3
+14D28071C85E76B656C46C465DB91D394D6F48F0;org.apache.maven:maven-repository-metadata:3.6.3
+CEEE6B7EA1BC252AFA585FA32F76C2CDA206BDCD;org.apache.maven.resolver:maven-resolver-api:1.4.1
+C213352D609D576641AED35172157D46CD2003D4;org.apache.maven.resolver:maven-resolver-connector-basic:1.4.1
+1658CFA27978C5949C3A92086514A22CA85394E4;org.apache.maven.resolver:maven-resolver-impl:1.4.1
+115240B65C1D0E9745CB2012B977AFC3D1795F94;org.apache.maven:maven-resolver-provider:3.6.3
+905A024FF050E804A8A4DF53EEEE63CC7D153438;org.apache.maven.resolver:maven-resolver-spi:1.4.1
+F3268F4EE92227AB98B7BE0AC5122DAA2ED97E35;org.apache.maven.resolver:maven-resolver-transport-wagon:1.4.1
+3F6D4F4BC3E24B46A776B47CCFEAED9D2ED01549;org.apache.maven.resolver:maven-resolver-util:1.4.1
+BBF4E06DCDB0BB33D1546C080DF5C8D92B535D30;org.apache.maven:maven-settings:3.6.3
+756D46810B8CC7B2B98585CCC787854CDFDE7FD9;org.apache.maven:maven-settings-builder:3.6.3
+08DD4DFB1D2D8B6969F6462790F82670BCD35CE2;org.apache.maven.shared:maven-shared-utils:3.2.1
+DE3B6CF15C2974250AE88820AB6C210FD8F38ED3;org.apache.maven:maven-slf4j-provider:3.6.3
+FC3BE144183F54DC6F5C55E34462C1C2D89D7D96;org.eclipse.sisu:org.eclipse.sisu.inject:0.3.4
+F1335A3B7BC3FD23F67DA88BD60CD5D4C3304EF3;org.eclipse.sisu:org.eclipse.sisu.plexus:0.3.4
+51460409B6CDC2B828540C19C05691F89141EDC2;org.sonatype.plexus:plexus-cipher:1.7
+8587E80FCB38E70B70FAE8D5914B6376BFAD6259;org.codehaus.plexus:plexus-classworlds:2.6.0
+2F2147A6CC6A119A1B51A96F31D45C557F6244B9;org.codehaus.plexus:plexus-component-annotations:2.1.0
+3B37B3335E6A97E11E690BBDC22ADE1A5DEB74D6;org.codehaus.plexus:plexus-interpolation:1.25
+43FDE524E9B94C883727A9FDDB8669181B890EA7;org.sonatype.plexus:plexus-sec-dispatcher:1.4
+13B015768E0D04849D2794E4C47EB02D01A0DE32;org.codehaus.plexus:plexus-utils:3.2.1
+E56BF4473A4C6B71C7DD397A833DCE86D1993D9D;org.slf4j:slf4j-api:1.7.29
+9F4E71EFC815C087E32C2C80341C1ED5D9CBEDD6;org.apache.maven.wagon:wagon-file:3.3.4
+8152D42E1C416AF9B4B146FB1AA082BBCC55C557;org.apache.maven.wagon:wagon-http:3.3.4:shaded
+7A99FDAA534AA8C01F01A447FE1C7AF5CFC7B0D5;org.apache.maven.wagon:wagon-provider-api:3.3.4

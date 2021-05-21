@@ -1,0 +1,9 @@
+services:
+	app2 < application: # inherites from overwritten application
+		autowired: no
+		setup!: # overwrites inherited setup
+
+	application!: # overwrites original application
+		class: MyApp
+		setup:
+			- $errorPresenter(Error)

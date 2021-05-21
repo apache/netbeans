@@ -1,0 +1,5 @@
+<html>
+{*while*}
+text
+{*/^while*}
+</html>

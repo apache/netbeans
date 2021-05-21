@@ -1,0 +1,52 @@
+<testresult testFile='arrowFunctionsParseError_03.php'>
+    <scanner>
+        <token id='T_FN' start='815' end='817'>
+            <text>fn</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='817' end='818'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='818' end='820'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='820' end='821'>
+            <text>)</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='822' end='824'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_DOLLAR' start='825' end='826'>
+            <text>$</text>
+        </token>
+        <token id='T_SEMICOLON' start='826' end='827'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='828' end='828'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='828'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='827'>
+                <ArrowFunctionDeclaration start='815' end='826' isReference='false' isStatic='false'>
+                    <FormalParameter start='818' end='820' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='818' end='820' isDollared='true'>
+                                <Identifier start='819' end='820' name='x'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <ASTErrorExpression start='825' end='826'/>
+                </ArrowFunctionDeclaration>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

@@ -1,0 +1,5 @@
+Code completion result for source line:
+->|fn() // No auto-completion at all
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     fn()                            [PUBLIC]   A
+VARIABLE   ? prop                          [PUBLIC]   A

@@ -1,0 +1,5 @@
+Code completion result for source line:
+function &my_sort9(arr|ay $data1, Collection &$data2) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    array                                      null

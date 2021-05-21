@@ -1,0 +1,6 @@
+myLexer:VARIABLE:[PUBLIC]:ESCAPED{myLexer}<font color="#999999">ESCAPED{ : }Lexer</font>:
+Lexer:CONSTRUCTOR:[PUBLIC]:ESCAPED{Lexer}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Lexer</font>:
+  Lexer:CONSTRUCTOR:[PRIVATE]:ESCAPED{Lexer}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Lexer</font>:
+  prototype:CLASS:[PUBLIC]:ESCAPED{prototype}:
+    method1:METHOD:[PUBLIC]:ESCAPED{method1}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    method2:METHOD:[PUBLIC]:ESCAPED{method2}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

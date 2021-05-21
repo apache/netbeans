@@ -1,0 +1,5 @@
+Code completion result for source line:
+$obj2 = $repo2->|findOrCreate($params);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     findOrCreate(array $params)     [PUBLIC]   \Repo\RepoClass
+METHOD     getAll()                        [PUBLIC]   \Repo\RepoClass

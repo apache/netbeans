@@ -1,0 +1,5 @@
+        var |>MARK_OCCURRENCES:se^lf<| = this;
+            switch (|>MARK_OCCURRENCES:self<|.xmlhttp.readyState) {
+                    |>MARK_OCCURRENCES:self<|.onLoading();
+                    |>MARK_OCCURRENCES:self<|.onLoaded();
+                    |>MARK_OCCURRENCES:self<|.declare = 1; // self is purple

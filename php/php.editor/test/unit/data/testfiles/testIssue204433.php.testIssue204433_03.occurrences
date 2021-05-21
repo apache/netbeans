@@ -1,0 +1,3 @@
+class |>MARK_OCCURRENCES:EditForm<| extends \Zend_Fr {
+    use StudentManager\|>MARK_OCCURRENCES:EditForm<|;
+            $fr = new |>MARK_OCCURRENCES:Edit^Form<|();

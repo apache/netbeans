@@ -1,0 +1,4 @@
+Code completion result for source line:
+public const TEST2 = pri|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   PRIVATE_CONSTANT "private cons  [PRIVATE]  Class1855

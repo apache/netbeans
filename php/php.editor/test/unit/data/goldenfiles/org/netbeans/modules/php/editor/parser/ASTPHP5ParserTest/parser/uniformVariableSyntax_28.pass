@@ -1,0 +1,175 @@
+<testresult testFile='uniformVariableSyntax_28.php'>
+    <scanner>
+        <token id='T_CLASS' start='7' end='12'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='13' end='16'>
+            <text>Bar</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='17' end='18'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='19' end='25'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='26' end='34'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='35' end='43'>
+            <text>__invoke</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='43' end='44'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='44' end='45'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='46' end='47'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='47' end='51'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='52' end='68'>
+            <text>"class __invoke"</text>
+        </token>
+        <token id='T_NEKUDA' start='69' end='70'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='71' end='78'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='78' end='79'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='79' end='80'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='81' end='82'>
+            <text>}</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='83' end='84'>
+            <text>(</text>
+        </token>
+        <token id='T_NEW' start='84' end='87'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='88' end='91'>
+            <text>Bar</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='91' end='92'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='92' end='93'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='93' end='94'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='94' end='95'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='95' end='96'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='96' end='97'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='98' end='99'>
+            <text>(</text>
+        </token>
+        <token id='T_NEW' start='99' end='102'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='103' end='106'>
+            <text>Bar</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='106' end='107'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='107' end='108'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='108' end='109'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='109' end='110'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='111' end='111'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='111'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='7' end='82' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='13' end='16' name='Bar'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='17' end='82' isCurly='true'>
+                    <MethodDeclaration start='19' end='80' modifiers='public'>
+                        <FunctionDeclaration start='26' end='80' isReference='false'>
+                            <Identifier start='35' end='43' name='__invoke'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='46' end='80' isCurly='true'>
+                                <EchoStatement start='47' end='79'>
+                                    <InfixExpression start='52' end='78' operator='CONCAT'>
+                                        <Scalar start='52' end='68' type='STRING' value='"class __invoke"'/>
+                                        <NamespaceName start='71' end='78' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='71' end='78' name='PHP_EOL'/>
+                                        </NamespaceName>
+                                    </InfixExpression>
+                                </EchoStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ExpressionStatement start='83' end='97'>
+                <FunctionInvocation start='83' end='96'>
+                    <FucntionName start='83' end='94'>
+                        <AnonymousObjectVariable start='83' end='94'>
+                            <ClassInstanceCreation start='84' end='93' anonymous='false'>
+                                <ClassName start='88' end='91'>
+                                    <NamespaceName start='88' end='91' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='88' end='91' name='Bar'/>
+                                    </NamespaceName>
+                                </ClassName>
+                                <Parameters>
+                                </Parameters>
+                            </ClassInstanceCreation>
+                        </AnonymousObjectVariable>
+                    </FucntionName>
+                    <Parameters>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='98' end='110'>
+                <FunctionInvocation start='98' end='109'>
+                    <FucntionName start='98' end='107'>
+                        <AnonymousObjectVariable start='98' end='107'>
+                            <ClassInstanceCreation start='99' end='106' anonymous='false'>
+                                <ClassName start='103' end='106'>
+                                    <NamespaceName start='103' end='106' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='103' end='106' name='Bar'/>
+                                    </NamespaceName>
+                                </ClassName>
+                                <Parameters>
+                                </Parameters>
+                            </ClassInstanceCreation>
+                        </AnonymousObjectVariable>
+                    </FucntionName>
+                    <Parameters>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

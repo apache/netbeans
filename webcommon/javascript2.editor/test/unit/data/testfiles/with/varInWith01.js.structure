@@ -1,0 +1,7 @@
+MyContext:CLASS:[PUBLIC]:ESCAPED{MyContext}:
+  okno:CLASS:[PUBLIC]:ESCAPED{okno}:
+    material:FIELD:[PUBLIC]:ESCAPED{material}<font color="#999999">ESCAPED{ : }String</font>:
+    truhlik:CLASS:[PUBLIC]:ESCAPED{truhlik}:
+      kolik:FIELD:[PUBLIC]:ESCAPED{kolik}<font color="#999999">ESCAPED{ : }Number</font>:
+      typ:FIELD:[PUBLIC]:ESCAPED{typ}<font color="#999999">ESCAPED{ : }String</font>:
+myDataVarInWith:VARIABLE:[PUBLIC]:ESCAPED{myDataVarInWith}:

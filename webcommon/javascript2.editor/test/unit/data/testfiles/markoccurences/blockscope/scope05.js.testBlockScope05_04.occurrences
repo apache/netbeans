@@ -1,0 +1,2 @@
+function resolveDay(day, index, days, |>MARK_OCCURRENCES:action<|) {
+            console.log("action: " + |>MARK_OCCURRENCES:ac^tion<|);

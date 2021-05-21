@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            var x = 1;
+            function test() {
+                x = "";
+            }
+        </script>
+    </head>
+</html>

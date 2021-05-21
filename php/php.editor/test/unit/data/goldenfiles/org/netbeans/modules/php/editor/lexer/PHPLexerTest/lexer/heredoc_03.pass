@@ -1,0 +1,16 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n\n
+token #2 PHP_ECHO echo
+token #3 WHITESPACE  
+token #4 PHP_HEREDOC_TAG_START <<<HERE\n
+token #5 PHP_ENCAPSED_AND_WHITESPACE select * from 
+token #6 PHP_VARIABLE $foo
+token #7 PHP_CONSTANT_ENCAPSED_STRING \n
+token #8 PHP_HEREDOC_TAG_END HERE
+token #9 WHITESPACE \n 
+token #10 PHP_TOKEN .
+token #11 WHITESPACE  
+token #12 PHP_CONSTANT_ENCAPSED_STRING " where foo = bar"
+token #13 PHP_SEMICOLON ;
+token #14 WHITESPACE \n
+token #15 PHP_CLOSETAG ?>\n

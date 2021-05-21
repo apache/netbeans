@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<?xml-stylesheet href="../../nbbuild/javadoctools/apichanges.xsl" type="text/xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!-- INFO FOR PEOPLE ADDING CHANGES:
+[most of contents snipped - see openide's apichanges for how-to instructions]
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+-->
+
+<apichanges>
+
+<!-- First, a list of API names you may use: -->
+<apidefs>
+        <apidef name="general">Java Source Firend API</apidef>
+</apidefs>
+
+<!-- ACTUAL CHANGES BEGIN HERE: -->
+
+<changes>
+        <change id="controller-position">
+            <summary>Added a possibility to generate class for java source file</summary>
+            <version major="1" minor="47"/>
+            <date day="28" month="2" year="2017"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Extended the <code>createControllerHandle</code> to locate the most suitable
+                    controller for the passed source code position.
+                </p>
+            </description>
+        </change>
+        <change id="generate-class">
+            <api name="general"/>
+            <summary>Added a possibility to generate class for java source file</summary>
+            <version major="1" minor="42"/>
+            <date day="22" month="8" year="2016"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes" modification="no" semantic="compatible" source="compatible" binary="compatible"/>
+            <description>
+                <p>
+                    Added a possibility to generate class for given java source file.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.java.preprocessorbridge.api" name="JavaSourceUtil"/>
+            <class package="org.netbeans.modules.java.preprocessorbridge.spi" name="JavaSourceUtilImpl"/>
+        </change>
+        <change id="JavaIndexerPlugin">
+            <api name="general"/>
+            <summary>Added a possibility to plug into Java source indexing</summary>
+            <version major="1" minor="22"/>
+            <date day="31" month="8" year="2011"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes" modification="no" semantic="compatible" source="compatible" binary="compatible"/>
+            <description>
+                <p>
+                    Added a possibility to plug into Java source indexing. The indexer plugin is called
+                    on fully attributed compilation unit tree processed by <code>JavaCustomIndexer</code>.
+                    Because the parsing and attribution of Java source was already done by JavaCustomIndexer
+                    the plugin does not introduce any performance impact.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.java.preprocessorbridge.spi" name="JavaIndexerPlugin"/>
+        </change>
+</changes>
+
+  <!-- Now the surrounding HTML text and document structure: -->
+
+  <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <======================
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE xml/api/doc/changes/apichanges.xml
+
+-->
+    <head>
+      <title>Java Source Friend API changes by date</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the Java Source Friend APIs. Please ask on the
+<code>dev@java.netbeans.org</code> or <code>nbdev@netbeans.org</code>
+mailing list if you have any questions about the details of a
+change, or are wondering how to convert existing code to be compatible.</p>
+
+      <hr/><standard-changelists module-code-name="org.netbeans.modules.java.preprocessorbridge"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+</apichanges>

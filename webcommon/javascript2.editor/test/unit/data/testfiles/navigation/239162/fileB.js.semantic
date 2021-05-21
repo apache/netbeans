@@ -1,0 +1,9 @@
+with(|>GLOBAL:cls1<|) {
+    |>GLOBAL:console<|.log(firstName);
+    
+    with(|>GLOBAL:cls2<|) {
+        |>GLOBAL:console<|.log(foo);
+        firstName;
+        secondName;
+    }
+} 

@@ -1,0 +1,70 @@
+$("document").find('.add-bottom');
+^"",$
+$("document").find('.add-bottom');
+ ^$,$
+$("document").find('.add-bottom');
+  ^"",""
+$("document").find('.add-bottom');
+   ^"",""
+$("document").find('.add-bottom');
+    ^d,document
+$("document").find('.add-bottom');
+     ^do,document
+$("document").find('.add-bottom');
+      ^doc,document
+$("document").find('.add-bottom');
+       ^docu,document
+$("document").find('.add-bottom');
+        ^docum,document
+$("document").find('.add-bottom');
+         ^docume,document
+$("document").find('.add-bottom');
+          ^documen,document
+$("document").find('.add-bottom');
+           ^document,document
+$("document").find('.add-bottom');
+            ^"",""
+$("document").find('.add-bottom');
+             ^"",""
+$("document").find('.add-bottom');
+              ^"",""
+$("document").find('.add-bottom');
+               ^f,find
+$("document").find('.add-bottom');
+                ^fi,find
+$("document").find('.add-bottom');
+                 ^fin,find
+$("document").find('.add-bottom');
+                  ^find,find
+$("document").find('.add-bottom');
+                   ^"",""
+$("document").find('.add-bottom');
+                    ^"",""
+$("document").find('.add-bottom');
+                     ^"",.add-bottom
+$("document").find('.add-bottom');
+                      ^a,.add-bottom
+$("document").find('.add-bottom');
+                       ^ad,.add-bottom
+$("document").find('.add-bottom');
+                        ^add,.add-bottom
+$("document").find('.add-bottom');
+                         ^add-,.add-bottom
+$("document").find('.add-bottom');
+                          ^add-b,.add-bottom
+$("document").find('.add-bottom');
+                           ^add-bo,.add-bottom
+$("document").find('.add-bottom');
+                            ^add-bot,.add-bottom
+$("document").find('.add-bottom');
+                             ^add-bott,.add-bottom
+$("document").find('.add-bottom');
+                              ^add-botto,.add-bottom
+$("document").find('.add-bottom');
+                               ^add-bottom,.add-bottom
+$("document").find('.add-bottom');
+                                ^"",""
+$("document").find('.add-bottom');
+                                 ^"",""
+$("document").find('.add-bottom');
+                                  ^"",""

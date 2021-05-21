@@ -1,0 +1,3 @@
+function JobParser(|>MARK_OCCURRENCES:job<|, results) {
+        var test = |>MARK_OCCURRENCES:job<|;
+        return |>MARK_OCCURRENCES:jo^b<|; // this is purple, should be black

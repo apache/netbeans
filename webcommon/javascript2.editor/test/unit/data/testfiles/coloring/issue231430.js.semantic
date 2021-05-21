@@ -1,0 +1,11 @@
+'use strict';
+
+/* App Module */
+
+|>GLOBAL:angular<|.module('phonecat', ['phonecatFilters', 'phonecatServices']).
+  config(['$routeProvider', function($routeProvider) {
+  $routeProvider.
+      when('/phones', {|>FIELD:templateUrl<|: 'partials/phone-list.html',   |>FIELD:controller<|: |>GLOBAL:PhoneListCtrl<|}).
+      when('/phones/:phoneId', {|>FIELD:templateUrl<|: 'partials/phone-detail.html', |>FIELD:controller<|: |>GLOBAL:PhoneDetailCtrl<|}).
+      otherwise({|>FIELD:redirectTo<|: '/phones'});
+}]);

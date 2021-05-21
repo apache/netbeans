@@ -1,0 +1,4 @@
+Code completion result for source line:
+$this->setFl|d(1);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     setFld($fld)                    [PUBLIC]   InsideClass

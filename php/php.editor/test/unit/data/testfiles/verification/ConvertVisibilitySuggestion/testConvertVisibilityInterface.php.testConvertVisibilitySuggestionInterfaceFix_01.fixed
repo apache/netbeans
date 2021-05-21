@@ -1,0 +1,16 @@
+<?php
+// Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.
+
+interface VisibilityInterface {
+
+    public const INTERFACE_IMPLICIT_CONST = "implicit";
+    public const INTERFACE_PUBLIC_CONST = "implicit";
+
+    function interfaceImplicitMethod($param);
+
+    public function interfacePublicMethod($param);
+
+    static function interfaceImplicitStaticMethod();
+
+    public static function interfaceImplicitPublicStaticMethod();
+}

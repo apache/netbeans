@@ -1,0 +1,3 @@
+var |>MARK_OCCURRENCES:Polygon<| = class Polygon2 {
+var p = new |>MARK_OCCURRENCES:Poly^gon<| (10, 20);
+console.log(|>MARK_OCCURRENCES:Polygon<|.test());

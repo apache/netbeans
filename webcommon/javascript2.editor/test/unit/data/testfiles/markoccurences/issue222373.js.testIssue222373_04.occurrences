@@ -1,0 +1,4 @@
+  this.|>MARK_OCCURRENCES:test<| = {
+a.|>MARK_OCCURRENCES:te^st<|.name = "B";
+b.|>MARK_OCCURRENCES:test<|.name = "B";
+c.|>MARK_OCCURRENCES:test<|.name = "c";

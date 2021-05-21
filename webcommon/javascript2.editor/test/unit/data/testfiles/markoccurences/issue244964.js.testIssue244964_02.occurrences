@@ -1,0 +1,2 @@
+var |>MARK_OCCURRENCES:foo<|;
+        |>MARK_OCCURRENCES:f^oo<| = {

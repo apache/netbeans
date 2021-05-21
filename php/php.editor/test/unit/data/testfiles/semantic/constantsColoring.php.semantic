@@ -1,0 +1,15 @@
+<?php
+
+class |>CLASS:ClassName<| {
+
+    const |>FIELD,STATIC:MY_CONS<| = 5;
+
+    function |>METHOD:__construct<|() {
+        self::|>FIELD,STATIC:MY_CONST<|;
+        static::|>FIELD,STATIC:MY_CONST<|;
+        ClassName::|>FIELD,STATIC:MY_CONST<|;
+    }
+
+}
+
+?>

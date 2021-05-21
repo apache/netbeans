@@ -1,0 +1,36 @@
+FUNCTION issue238685_01 [ANONYMOUS: false, DECLARED: true - issue238685_01, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+HudsonReader : OBJECT HudsonReader [ANONYMOUS: false, DECLARED: false - HudsonReader, MODIFIERS: PUBLIC, OBJECT]
+             # PROPERTIES
+             utils : OBJECT utils [ANONYMOUS: false, DECLARED: false - utils, MODIFIERS: PUBLIC, OBJECT]
+                   # PROPERTIES
+                   DB : FUNCTION DB [ANONYMOUS: false, DECLARED: true - DB, MODIFIERS: PUBLIC, CONSTRUCTOR]
+                      # RETURN TYPES
+                      HudsonReader.utils.DB, RESOLVED: true
+                      # PARAMETERS
+                      OBJECT callback [ANONYMOUS: false, DECLARED: true - callback, MODIFIERS: PUBLIC, PARAMETER]
+                      OBJECT logger [ANONYMOUS: false, DECLARED: true - logger, MODIFIERS: PUBLIC, PARAMETER]
+                      # PROPERTIES
+                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                      store     : FUNCTION store [ANONYMOUS: false, DECLARED: true - store, MODIFIERS: PROTECTED, METHOD]
+                                # RETURN TYPES
+                                undefined, RESOLVED: true
+                                # PARAMETERS
+                                OBJECT job [ANONYMOUS: false, DECLARED: true - job, MODIFIERS: PUBLIC, PARAMETER]
+                                OBJECT callback [ANONYMOUS: false, DECLARED: true - callback, MODIFIERS: PUBLIC, PARAMETER]
+                                # PROPERTIES
+                                arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+a            : OBJECT a [ANONYMOUS: false, DECLARED: true - a, MODIFIERS: PUBLIC, VARIABLE]
+             # PROPERTIES
+             store : FUNCTION store [ANONYMOUS: false, DECLARED: false - store, MODIFIERS: PUBLIC, METHOD]
+                   # PROPERTIES
+                   arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+console      : OBJECT console [ANONYMOUS: false, DECLARED: false - console, MODIFIERS: PUBLIC, OBJECT]
+             # PROPERTIES
+             log : FUNCTION log [ANONYMOUS: false, DECLARED: false - log, MODIFIERS: PUBLIC, METHOD]
+                 # PARAMETERS
+                 OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                 # PROPERTIES
+                 arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

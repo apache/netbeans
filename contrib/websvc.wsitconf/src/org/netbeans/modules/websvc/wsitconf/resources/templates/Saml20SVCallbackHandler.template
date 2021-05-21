@@ -1,0 +1,179 @@
+<#-- FreeMarker template (see http://freemarker.org/) -->
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+<#if package?? && package != "">
+package ${package};
+</#if>
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.KeyStore;
+import java.util.GregorianCalendar;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.UnsupportedCallbackException;
+
+import org.w3c.dom.Element;
+
+import com.sun.xml.wss.impl.callback.SAMLCallback;
+import com.sun.xml.wss.saml.Assertion;
+import com.sun.xml.wss.saml.Conditions;
+import com.sun.xml.wss.saml.NameID;
+import com.sun.xml.wss.saml.SAMLAssertionFactory;
+import com.sun.xml.wss.saml.Subject;
+import com.sun.xml.wss.saml.SubjectConfirmation;
+
+/** 
+ *
+ * @author  ${user}
+ * @version
+ * 
+ * SAML 2.0 Sender Vouches Callback Handler
+ */
+public  class Saml20SVCallbackHandler implements CallbackHandler {
+    
+    private String keyStoreURL;
+    private String keyStorePassword;
+    private String keyStoreType;
+    
+    private String trustStoreURL;
+    private String trustStorePassword;
+    private String trustStoreType;
+    
+    private KeyStore keyStore;
+    private KeyStore trustStore;
+    
+    private static final String fileSeparator = System.getProperty("file.separator");
+    
+    private  UnsupportedCallbackException unsupported =
+            new UnsupportedCallbackException(null,
+            "Unsupported Callback Type Encountered");
+    
+    private  static Element svAssertion20 = null;
+    
+    public static final String senderVouchesConfirmation_saml20 =
+            "urn:oasis:names:tc:SAML:2.0:cm:sender-vouches";
+    
+    String glassfish_home = System.getProperty("com.sun.aas.installRoot");
+    String client_priv_key_alias="xws-security-client";
+    
+    public Saml20SVCallbackHandler() {
+        try {
+            this.keyStoreURL = glassfish_home + fileSeparator + "domains" + fileSeparator + "domain1" +
+                    fileSeparator + "config" + fileSeparator + "keystore.jks";
+            this.keyStoreType = "JKS";
+            this.keyStorePassword = "changeit";
+            
+            this.trustStoreURL = glassfish_home + fileSeparator + "domains" + fileSeparator + "domain1" +
+                    fileSeparator + "config" + fileSeparator + "cacerts.jks";
+            this.trustStoreType = "JKS";
+            this.trustStorePassword = "changeit";
+            
+            initKeyStore();
+            initTrustStore();
+        }catch(Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+    
+    public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
+        for (int i=0; i < callbacks.length; i++) {
+            if (callbacks[i] instanceof SAMLCallback) {
+                try{
+                    SAMLCallback samlCallback = (SAMLCallback)callbacks[i];
+                    samlCallback.setConfirmationMethod(samlCallback.SV_ASSERTION_TYPE);
+                    if (samlCallback.getConfirmationMethod().equals(samlCallback.SV_ASSERTION_TYPE)){
+                        samlCallback.setAssertionElement(createSVSAMLAssertion20());
+                        svAssertion20=samlCallback.getAssertionElement();
+                    }else{
+                        throw new Exception("SAML Assertion Type is not matched.");
+                    }
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                }
+            } else {
+                throw unsupported;
+            }
+        }
+    }
+    
+    private static Element createSVSAMLAssertion20() {
+        Assertion assertion = null;
+        try {
+            // create the assertion id
+            String aID = String.valueOf(System.currentTimeMillis());
+            
+            GregorianCalendar c = new GregorianCalendar();
+            long beforeTime = c.getTimeInMillis();
+            // roll the time by one hour
+            long offsetHours = 60*60*1000;
+            
+            c.setTimeInMillis(beforeTime - offsetHours);
+            GregorianCalendar before= (GregorianCalendar)c.clone();
+            
+            c = new GregorianCalendar();
+            long afterTime = c.getTimeInMillis();
+            c.setTimeInMillis(afterTime + offsetHours);
+            GregorianCalendar after = (GregorianCalendar)c.clone();
+            
+            GregorianCalendar issueInstant = new GregorianCalendar();
+            // statements
+            List statements = new LinkedList();
+            
+            SAMLAssertionFactory factory = SAMLAssertionFactory.newInstance(SAMLAssertionFactory.SAML2_0);
+            
+            NameID nmId = factory.createNameID(
+                    "CN=SAML User,OU=SU,O=SAML User,L=Los Angeles,ST=CA,C=US",
+                    null, "urn:oasis:names:tc:SAML:2.0:nameid-format:X509SubjectName");
+            
+            SubjectConfirmation scf =
+                    factory.createSubjectConfirmation(nmId, "urn:oasis:names:tc:SAML:2.0:cm:sender-vouches");
+            
+            Subject subj = factory.createSubject(nmId, scf);
+            
+            List attributes = new LinkedList();
+            
+            List attributeValues = new LinkedList();
+            attributeValues.add("ATTRIBUTE1");
+            attributes.add( factory.createAttribute(
+                    "attribute1", attributeValues));
+            
+            statements.add(
+                    factory.createAttributeStatement(attributes));
+            
+            Conditions conditions = factory.createConditions(before, after, null, null, null, null);
+            
+            assertion = factory.createAssertion(aID, nmId, issueInstant, conditions, null, subj, statements);
+            assertion.setVersion("2.0");
+            
+            return assertion.toElement(null);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    private void initKeyStore() throws IOException {
+        try {
+            keyStore = KeyStore.getInstance(keyStoreType);
+            keyStore.load(new FileInputStream(keyStoreURL), keyStorePassword.toCharArray());
+        } catch (Exception e) {
+            throw new IOException(e.getMessage());
+        }
+    }
+    
+    private void initTrustStore() throws IOException {
+        try {
+            trustStore = KeyStore.getInstance(trustStoreType);
+            trustStore.load(new FileInputStream(trustStoreURL), trustStorePassword.toCharArray());
+        } catch (Exception e) {
+            throw new IOException(e.getMessage());
+        }
+    }        
+}

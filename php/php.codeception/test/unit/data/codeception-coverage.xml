@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1436766630">
+  <project timestamp="1436766630">
+    <package name="App">
+      <file name="/home/junichi11/NetBeansProjects/codeception/src/FizzBuzz.php">
+        <class name="FizzBuzz" namespace="App">
+          <metrics methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="16" coveredstatements="16" elements="19" coveredelements="19"/>
+        </class>
+        <line num="12" type="method" name="__construct" crap="1" count="3"/>
+        <line num="13" type="stmt" count="3"/>
+        <line num="14" type="stmt" count="3"/>
+        <line num="15" type="stmt" count="3"/>
+        <line num="23" type="method" name="exec" crap="6" count="1"/>
+        <line num="24" type="stmt" count="1"/>
+        <line num="25" type="stmt" count="1"/>
+        <line num="26" type="stmt" count="1"/>
+        <line num="27" type="stmt" count="1"/>
+        <line num="28" type="stmt" count="1"/>
+        <line num="29" type="stmt" count="1"/>
+        <line num="30" type="stmt" count="1"/>
+        <line num="31" type="stmt" count="1"/>
+        <line num="32" type="stmt" count="1"/>
+        <line num="33" type="stmt" count="1"/>
+        <line num="35" type="stmt" count="1"/>
+        <line num="36" type="stmt" count="1"/>
+        <line num="39" type="method" name="exec2" crap="1" count="1"/>
+        <line num="40" type="stmt" count="1"/>
+        <metrics loc="42" ncloc="31" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="16" coveredstatements="16" elements="19" coveredelements="19"/>
+      </file>
+    </package>
+    <file name="/home/junichi11/NetBeansProjects/codeception/tests/_support/UnitTester.php">
+      <class name="UnitTester" namespace="global">
+        <metrics methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </class>
+      <metrics loc="26" ncloc="8" classes="1" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <package name="_generated">
+      <file name="/home/junichi11/NetBeansProjects/codeception/tests/_support/_generated/UnitTesterActions.php">
+        <class name="UnitTesterActions" namespace="_generated">
+          <metrics methods="23" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="23" coveredstatements="0" elements="46" coveredelements="0"/>
+        </class>
+        <line num="31" type="method" name="assertEquals" crap="2" count="0"/>
+        <line num="32" type="stmt" count="0"/>
+        <line num="46" type="method" name="assertNotEquals" crap="2" count="0"/>
+        <line num="47" type="stmt" count="0"/>
+        <line num="63" type="method" name="assertSame" crap="2" count="0"/>
+        <line num="64" type="stmt" count="0"/>
+        <line num="78" type="method" name="assertNotSame" crap="2" count="0"/>
+        <line num="79" type="stmt" count="0"/>
+        <line num="93" type="method" name="assertGreaterThan" crap="2" count="0"/>
+        <line num="94" type="stmt" count="0"/>
+        <line num="104" type="method" name="assertGreaterThen" crap="2" count="0"/>
+        <line num="105" type="stmt" count="0"/>
+        <line num="119" type="method" name="assertGreaterThanOrEqual" crap="2" count="0"/>
+        <line num="120" type="stmt" count="0"/>
+        <line num="130" type="method" name="assertGreaterThenOrEqual" crap="2" count="0"/>
+        <line num="131" type="stmt" count="0"/>
+        <line num="145" type="method" name="assertLessThan" crap="2" count="0"/>
+        <line num="146" type="stmt" count="0"/>
+        <line num="160" type="method" name="assertLessThanOrEqual" crap="2" count="0"/>
+        <line num="161" type="stmt" count="0"/>
+        <line num="175" type="method" name="assertContains" crap="2" count="0"/>
+        <line num="176" type="stmt" count="0"/>
+        <line num="190" type="method" name="assertNotContains" crap="2" count="0"/>
+        <line num="191" type="stmt" count="0"/>
+        <line num="205" type="method" name="assertRegExp" crap="2" count="0"/>
+        <line num="206" type="stmt" count="0"/>
+        <line num="220" type="method" name="assertNotRegExp" crap="2" count="0"/>
+        <line num="221" type="stmt" count="0"/>
+        <line num="234" type="method" name="assertEmpty" crap="2" count="0"/>
+        <line num="235" type="stmt" count="0"/>
+        <line num="248" type="method" name="assertNotEmpty" crap="2" count="0"/>
+        <line num="249" type="stmt" count="0"/>
+        <line num="262" type="method" name="assertNull" crap="2" count="0"/>
+        <line num="263" type="stmt" count="0"/>
+        <line num="276" type="method" name="assertNotNull" crap="2" count="0"/>
+        <line num="277" type="stmt" count="0"/>
+        <line num="290" type="method" name="assertTrue" crap="2" count="0"/>
+        <line num="291" type="stmt" count="0"/>
+        <line num="304" type="method" name="assertFalse" crap="2" count="0"/>
+        <line num="305" type="stmt" count="0"/>
+        <line num="318" type="method" name="assertFileExists" crap="2" count="0"/>
+        <line num="319" type="stmt" count="0"/>
+        <line num="332" type="method" name="assertFileNotExists" crap="2" count="0"/>
+        <line num="333" type="stmt" count="0"/>
+        <line num="345" type="method" name="fail" crap="2" count="0"/>
+        <line num="346" type="stmt" count="0"/>
+        <metrics loc="348" ncloc="121" classes="1" methods="23" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="23" coveredstatements="0" elements="46" coveredelements="0"/>
+      </file>
+    </package>
+    <metrics files="3" loc="416" ncloc="160" classes="3" methods="26" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="39" coveredstatements="16" elements="65" coveredelements="19"/>
+  </project>
+</coverage>

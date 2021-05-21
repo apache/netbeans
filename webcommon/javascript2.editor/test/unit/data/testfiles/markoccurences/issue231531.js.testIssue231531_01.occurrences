@@ -1,0 +1,3 @@
+    Animal.prototype.|>MARK_OCCURRENCES:roar<| = function() {
+    var grrr = animal.|>MARK_OCCURRENCES:roar<|(); // here it works            
+    expect(cat.|>MARK_OCCURRENCES:ro^ar<|()).toEqual('rrrr'); // ctr+click does not work on roar

@@ -1,0 +1,7 @@
+Code completion result for source line:
+p|ublic function testAnon() {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    private                                    null
+KEYWORD    protected                                  null
+KEYWORD    public                                     null

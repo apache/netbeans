@@ -1,0 +1,6 @@
+var |>GLOBAL:bav<| = {
+    |>FIELD:field<|: 10,
+    '|>FIELD:field2<|': 20,
+    |>METHOD:test<|: function (){},
+    '|>METHOD:test2<|': function () {}
+}; 

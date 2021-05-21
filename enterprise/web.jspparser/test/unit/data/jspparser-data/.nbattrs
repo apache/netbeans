@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE attributes PUBLIC "-//NetBeans//DTD DefaultAttributes 1.0//EN" "http://www.netbeans.org/dtds/attributes-1_0.dtd">
+<attributes version="1.0">
+    <fileobject name="OpenTestProject.project">
+        <attr name="folderWizardParameter" stringvalue="Wizards/java_nature_composition"/>
+        <attr name="secondaryTemplateWizardIterator" serialvalue=""/>
+        <!-- org.netbeans.modules.projects.ide.wizards.FolderWizardIterator@472e64 [current=_1, iterators.size()=3
+List of iterators: {
+___ org.netbeans.modules.projects.ide.wizards.FolderWizardIterator$1@54ee60
+___ org.netbeans.modules.java.project.wizards.ProjectDefaultsIterator@1583ceb
+___ org.netbeans.modules.java.ui.wizard.ProjectDefaultsIterator@77f8e
+}
+ -->
+    </fileobject>
+</attributes>

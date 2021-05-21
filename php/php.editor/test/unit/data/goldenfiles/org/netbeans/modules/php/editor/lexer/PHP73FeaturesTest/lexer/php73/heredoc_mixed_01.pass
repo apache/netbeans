@@ -1,0 +1,93 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n
+token #2 PHP_COMMENT_START /*
+token #3 PHP_COMMENT \n * Licensed to the Apache Software Foundation (ASF) under one\n * or more contributor license agreements.  See the NOTICE file\n * distributed with this work for additional information\n * regarding copyright ownership.  The ASF licenses this file\n * to you under the Apache License, Version 2.0 (the\n * "License"); you may not use this file except in compliance\n * with the License.  You may obtain a copy of the License at\n *\n *   http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing,\n * software distributed under the License is distributed on an\n * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n * KIND, either express or implied.  See the License for the\n * specific language governing permissions and limitations\n * under the License.\n 
+token #4 PHP_COMMENT_END */
+token #5 WHITESPACE \n\n
+token #6 PHP_LINE_COMMENT //
+token #7 PHP_LINE_COMMENT  allow these in lexer but ParseError will be thrown\n
+token #8 PHP_VARIABLE $array
+token #9 WHITESPACE  
+token #10 PHP_OPERATOR =
+token #11 WHITESPACE  
+token #12 PHP_TOKEN [
+token #13 PHP_HEREDOC_TAG_START <<< END\n
+token #14 PHP_CONSTANT_ENCAPSED_STRING     spaces
+token #15 PHP_CONSTANT_ENCAPSED_STRING \n\ttabs
+token #16 PHP_CONSTANT_ENCAPSED_STRING \nnospaces
+token #17 PHP_CONSTANT_ENCAPSED_STRING \n        \tspaces tabs
+token #18 PHP_CONSTANT_ENCAPSED_STRING \n\t\t        tabs spaces
+token #19 PHP_CONSTANT_ENCAPSED_STRING \n
+token #20 PHP_HEREDOC_TAG_END END
+token #21 PHP_TOKEN ,
+token #22 WHITESPACE  
+token #23 PHP_VARIABLE $test
+token #24 PHP_TOKEN ]
+token #25 PHP_SEMICOLON ;
+token #26 WHITESPACE \n\n
+token #27 PHP_VARIABLE $array2
+token #28 WHITESPACE  
+token #29 PHP_OPERATOR =
+token #30 WHITESPACE  
+token #31 PHP_TOKEN [
+token #32 PHP_HEREDOC_TAG_START <<< END\n
+token #33 PHP_CONSTANT_ENCAPSED_STRING     spaces
+token #34 PHP_CONSTANT_ENCAPSED_STRING \n\ttabs
+token #35 PHP_CONSTANT_ENCAPSED_STRING \n        \tspaces tabs
+token #36 PHP_CONSTANT_ENCAPSED_STRING \n\t\t        tabs spaces
+token #37 PHP_CONSTANT_ENCAPSED_STRING \n
+token #38 PHP_HEREDOC_TAG_END     END
+token #39 PHP_TOKEN ,
+token #40 WHITESPACE  
+token #41 PHP_VARIABLE $test
+token #42 PHP_TOKEN [
+token #43 PHP_NUMBER 0
+token #44 PHP_TOKEN ]
+token #45 PHP_TOKEN ]
+token #46 PHP_SEMICOLON ;
+token #47 WHITESPACE \n\n
+token #48 PHP_VARIABLE $array3
+token #49 WHITESPACE  
+token #50 PHP_OPERATOR =
+token #51 WHITESPACE  
+token #52 PHP_TOKEN [
+token #53 PHP_HEREDOC_TAG_START <<< END\n
+token #54 PHP_ENCAPSED_AND_WHITESPACE     
+token #55 PHP_VARIABLE $test
+token #56 PHP_ENCAPSED_AND_WHITESPACE \n    spaces 
+token #57 PHP_VARIABLE $test
+token #58 PHP_ENCAPSED_AND_WHITESPACE \n\ttabs 
+token #59 PHP_CURLY_OPEN {
+token #60 PHP_VARIABLE $test
+token #61 PHP_CURLY_CLOSE }
+token #62 PHP_ENCAPSED_AND_WHITESPACE \n                spaces tabs 
+token #63 PHP_TOKEN ${
+token #64 PHP_STRING test
+token #65 PHP_CURLY_CLOSE }
+token #66 PHP_ENCAPSED_AND_WHITESPACE \n
+token #67 PHP_VARIABLE $test
+token #68 PHP_CONSTANT_ENCAPSED_STRING \n\t\t        tabs spaces
+token #69 PHP_CONSTANT_ENCAPSED_STRING \nnospaces test
+token #70 PHP_CONSTANT_ENCAPSED_STRING \n
+token #71 PHP_HEREDOC_TAG_END     END
+token #72 PHP_TOKEN ,
+token #73 WHITESPACE  
+token #74 PHP_TOKEN $
+token #75 PHP_CURLY_OPEN {
+token #76 PHP_STRING test
+token #77 PHP_CURLY_CLOSE }
+token #78 PHP_TOKEN ]
+token #79 PHP_SEMICOLON ;
+token #80 WHITESPACE \n\n
+token #81 PHP_VARIABLE $test
+token #82 WHITESPACE  
+token #83 PHP_OPERATOR =
+token #84 WHITESPACE  
+token #85 PHP_HEREDOC_TAG_START <<< END\n
+token #86 PHP_CONSTANT_ENCAPSED_STRING     \t    spaces tabs spaces
+token #87 PHP_CONSTANT_ENCAPSED_STRING \n
+token #88 PHP_HEREDOC_TAG_END         \tEND
+token #89 PHP_SEMICOLON ;
+token #90 WHITESPACE  
+token #91 PHP_LINE_COMMENT //
+token #92 PHP_LINE_COMMENT  spaces tabs\n

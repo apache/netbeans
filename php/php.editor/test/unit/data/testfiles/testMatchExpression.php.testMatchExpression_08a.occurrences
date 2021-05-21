@@ -1,0 +1,2 @@
+    private const |>MARK_OCCURRENCES:matc^h<| = "match"; // context sensitive lexer
+            default =>  MatchExpression::default() . MatchExpression::|>MARK_OCCURRENCES:match<| . $this->match(),

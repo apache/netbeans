@@ -1,0 +1,5 @@
+Code completion result for source line:
+privat|e $afterDocComment = 3;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    private                                    null

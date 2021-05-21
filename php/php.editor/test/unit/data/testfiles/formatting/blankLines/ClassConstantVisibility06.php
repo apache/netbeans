@@ -1,0 +1,7 @@
+<?php
+class ClassConstantVisibility {
+const IMPLICIT_PUBLIC_CONST = 0;
+public        const          PUBLIC_CONST = 1;
+private   const    PRIVATE_CONST = [1, 2];
+protected    const  PROTECTED_CONST = "";
+}

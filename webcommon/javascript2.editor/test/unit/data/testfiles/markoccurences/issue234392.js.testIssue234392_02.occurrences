@@ -1,0 +1,2 @@
+|>MARK_OCCURRENCES:console<|.log("text");
+window.|>MARK_OCCURRENCES:co^nsole<|.log("text");

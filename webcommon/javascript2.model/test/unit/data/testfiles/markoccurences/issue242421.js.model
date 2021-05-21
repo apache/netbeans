@@ -1,0 +1,37 @@
+FUNCTION issue242421 [ANONYMOUS: false, DECLARED: true - issue242421, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+expand : FUNCTION expand [ANONYMOUS: false, DECLARED: false - expand, MODIFIERS: PUBLIC, FUNCTION]
+       # PROPERTIES
+       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+myF    : FUNCTION myF [ANONYMOUS: false, DECLARED: true - myF, MODIFIERS: PUBLIC, FUNCTION]
+       # RETURN TYPES
+       @exp;myF@pro;v, RESOLVED: false
+       # PARAMETERS
+       OBJECT path [ANONYMOUS: false, DECLARED: true - path, MODIFIERS: PUBLIC, PARAMETER]
+       OBJECT ref [ANONYMOUS: false, DECLARED: true - ref, MODIFIERS: PUBLIC, PARAMETER]
+       OBJECT pfx [ANONYMOUS: false, DECLARED: true - pfx, MODIFIERS: PUBLIC, PARAMETER]
+       OBJECT options [ANONYMOUS: false, DECLARED: true - options, MODIFIERS: PUBLIC, PARAMETER]
+               # PROPERTIES
+               option1 : OBJECT option1 [ANONYMOUS: false, DECLARED: false - option1, MODIFIERS: PUBLIC, PROPERTY]
+       # PROPERTIES
+       MyLib_Function : FUNCTION MyLib_Function [ANONYMOUS: false, DECLARED: true - MyLib_Function, MODIFIERS: PRIVATE, FUNCTION]
+                      # RETURN TYPES
+                      @exp;myF@pro;v, RESOLVED: false
+                      # PARAMETERS
+                      OBJECT path [ANONYMOUS: false, DECLARED: true - path, MODIFIERS: PUBLIC, PARAMETER]
+                      OBJECT ref [ANONYMOUS: false, DECLARED: true - ref, MODIFIERS: PUBLIC, PARAMETER]
+                      OBJECT pfx [ANONYMOUS: false, DECLARED: true - pfx, MODIFIERS: PUBLIC, PARAMETER]
+                      OBJECT options [ANONYMOUS: false, DECLARED: true - options, MODIFIERS: PUBLIC, PARAMETER]
+                              # PROPERTIES
+                              option1 : OBJECT option1 [ANONYMOUS: false, DECLARED: false - option1, MODIFIERS: PUBLIC, PROPERTY]
+                      # PROPERTIES
+                      MyLib_Function : CYCLE myF.MyLib_Function
+                      arguments      : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                      v              : OBJECT v [ANONYMOUS: false, DECLARED: true - v, MODIFIERS: PRIVATE, VARIABLE]
+       arguments      : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+       v              : OBJECT v [ANONYMOUS: false, DECLARED: true - v, MODIFIERS: PRIVATE, VARIABLE]
+page   : OBJECT page [ANONYMOUS: false, DECLARED: false - page, MODIFIERS: PUBLIC, OBJECT]
+       # PROPERTIES
+       root : OBJECT root [ANONYMOUS: false, DECLARED: false - root, MODIFIERS: PUBLIC, PROPERTY]

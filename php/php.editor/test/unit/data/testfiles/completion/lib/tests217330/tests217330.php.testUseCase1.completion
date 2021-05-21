@@ -1,0 +1,5 @@
+Code completion result for source line:
+$my->|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     myMethod()                      [PUBLIC]   MyClass

@@ -1,0 +1,15 @@
+Code completion result for source line:
+SingletonClousure.|getArr(); // FAIL: IDE doesn't return type
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      myObj                           [PUBLIC]   SingletonCloser.js
+METHOD     _innerWork(): undefined         [PUBLIC]   SingletonCloser.js
+METHOD     createArr(): Array              [PUBLIC]   SingletonCloser.js
+METHOD     doSome(): undefined             [PUBLIC]   SingletonCloser.js
+METHOD     getArr(): Array                 [PUBLIC]   SingletonCloser.js
+FIELD      myArr: Array                    [PUBLIC]   SingletonCloser.js
+FIELD      myInt: Number                   [PUBLIC]   SingletonCloser.js
+FIELD      myNul                           [PUBLIC]   SingletonCloser.js
+FIELD      myRx: RegExp                    [PUBLIC]   SingletonCloser.js
+FIELD      myStr: String                   [PUBLIC]   SingletonCloser.js
+FIELD      myUnd                           [PUBLIC]   SingletonCloser.js

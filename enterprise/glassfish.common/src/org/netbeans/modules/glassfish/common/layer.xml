@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="GlassFish">
+            <file name="org-netbeans-modules-glassfish-common-actions-ViewAdminConsoleAction.instance"/>
+            <file name="org-netbeans-modules-glassfish-common-actions-ViewServerLogAction.instance"/>
+            <file name="org-netbeans-modules-glassfish-common-actions-ViewUpdateCenterAction.instance"/>
+        </folder>
+    </folder>
+    <folder name="Servers">
+        <file name="GlassfishInstanceProvider.instance">
+            <attr name="instanceCreate" methodvalue="org.netbeans.modules.glassfish.common.GlassfishInstanceProvider.getProvider"/>
+            <attr name="instanceClass" stringvalue="org.netbeans.modules.glassfish.common.GlassfishInstanceProvider"/>
+            <attr name="instanceOf" stringvalue="org.netbeans.spi.server.ServerInstanceProvider"/>
+        </file>
+        <file name="org-netbeans-modules-glassfish-common-wizards-GlassfishWizardProvider.instance">
+            <attr name="instanceCreate" methodvalue="org.netbeans.modules.glassfish.common.wizards.GlassfishWizardProvider.createEe6"/>
+            <attr name="instanceClass" stringvalue="org.netbeans.modules.glassfish.common.wizards.GlassfishWizardProvider"/>
+            <attr name="instanceOf" stringvalue="org.netbeans.spi.server.ServerWizardProvider"/>
+            <attr name="displayName" bundlevalue="org.netbeans.modules.glassfish.common.wizards.Bundle#STR_V3_FAMILY_NAME"/>
+        </file>
+    </folder>
+</filesystem>

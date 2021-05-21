@@ -1,0 +1,1139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+]>
+
+<api-answers
+  question-version="1.28"
+  author="mroskanin@netbeans.org"
+>
+
+  &api-questions;
+
+
+<!--
+        <question id="arch-what" when="init">
+            What is this project good for?
+            <hint>
+            Please provide here a few lines describing the project,
+            what problem it should solve, provide links to documentation,
+            specifications, etc.
+            </hint>
+        </question>
+-->
+<answer id="arch-what">
+Each editor provides an EditorKit which controls the policy of specific MIME content type.
+The policy of content type should be easily registered and found via some lookup mechanism,
+that will provide convenient way of using it either for kit provider or base
+editor infrastructure.  In addition to this, the policy can be inherited, (e.g. in case of embeded
+kits like JSP) and the content types need to be merged in this case. MIME Lookup API should 
+provide all mentioned requierements via easy lookup query, so content type policy 
+user need not to solve this searching and merging on its own side.
+</answer>
+  
+  
+<!--
+        <question id="arch-overall" when="init">
+            Describe the overall architecture. 
+            <hint>
+            What will be API for 
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#design.apiandspi">
+                clients and what support API</a>? 
+            What parts will be pluggable?
+            How will plug-ins be registered? Please use <code>&lt;api type="export"/&gt;</code>
+            to describe your general APIs.
+            If possible please provide 
+            simple diagrams. 
+            </hint>
+        </question>
+-->
+<answer id="arch-overall">
+
+It consists of
+<ul>
+    <li><api name="MimeLookupAPI" group="java" type="export" category="official"/> in <code>org.netbeans.api.editor.mimelookup</code></li>
+    <li><api name="MimeLookupSPI" group="java" type="export" category="official"/> in <code>org.netbeans.spi.editor.mimelookup</code></li>
+</ul>
+
+<p>API contains only two classes:</p>
+
+1. org.netbeans.api.editor.mimelookup.MimeLookup with public methods:
+<ul>
+    <li> <code> static MimeLookup getMimeLookup(String mime) </code> - gets mime specific lookup. </li>
+    <li> <code> static Lookup getLookup(MimePath mimePath) </code> - gets the lookup for the particular mime-path.</li>
+    <li> <code> MimeLookup childLookup(String mime) </code> - gets mime specific child (embeded) lookup. The method was deprecated in favour of 
+        static Lookup getLookup(MimePath mimePath) </li>
+    <li> <code> Object lookup(Class clazz) </code> - Look up an object matching a given interface. </li>
+    <li> <code> Result lookup(Lookup.Template template) </code> - The general lookup method. Callers can get list of all instances and classes
+         that match the given <code>template</code> and attach a listener to
+         this be notified about changes. </li>
+</ul>
+<br/>
+2. org.netbeans.api.editor.mimelookup.MimePath with public methods:
+<ul>
+    <li> <code> static MimePath get(String mimeType) </code> - gets root mime-path for the given mime-type. </li>
+    <li> <code> static MimePath get(MimePath prefix, String mimeType) </code> - gets mime-path corresponding to the mime-type used in the given context
+      mime-path.</li>
+    <li> <code> static MimePath parse(String path) </code> - parses the given mime-path string
+      e.g. "text/x-jsp/text/x-java" and get the corresponding mime-path. </li>
+    <li> <code> String getPath() </code> - gets string path represented by this mime-path. </li>
+    <li> <code> int size() </code> -gets total number of mime-types in the mime-path. </li>
+    <li> <code> String getMimeType(int index) </code> - gets mime type of this mime-path at the given index. </li>
+    <li> <code> MimePath getPrefix(int size) </code> - returns prefix mime-path with the given number of mime-type components
+      ranging from zero till the size of this mime-path. </li>
+</ul>
+<br/>
+<br/>
+<code>MimeLookup</code> is represented via ProxyLookup that collects registered lookups. Particular lookups, 
+responsible for looking up their objects can be registered using interface <code>MimeDataProvider</code> into default lookup
+by META-INF/services registration. Previously used registration via interface <code> MimeLookupInitializer</code> was deprecated.<p/>
+In addition to this basic registration, xml layer folder registration is also available. 
+It is provided by registering implemented interface <code>Class2LayerFolder</code> into default lookup
+ via META-INF/services registration.
+This approach provides a mapping of class to specific subfolder. 
+Using this mapping one can achieve the convenient way of using <code>MimeLookup</code> e.g.
+<p>
+<code>
+    MimeLookup.getMimeLookup("text/x-java").lookup(FoldManagerFactory.class);
+</code>
+</p>
+<p>
+   Using this, an instance of FoldManagerFactory is retrieved from the folder with path 
+   "Editors/text/x-java/FoldManager" provided that FoldManagerFactory.class is registered to
+   a subfolder "FoldManager" via <code>Class2LayerFolder</code> registration.
+</p>
+<p/>
+There <code>InstanceProvider</code> can be used if there are files
+of various types in the layer folder that need additional handling
+before becoming and instance of certain class.
+For more details look at use case of PopupActions creation.
+
+<p>
+The Javadoc documentation can be generated by using
+</p>
+<pre>
+    cd /cvs/editor/mimelookup
+    ant javadoc
+</pre>
+
+</answer>
+
+
+
+<!--
+        <question id="arch-quality" when="init">
+            How will the <a href="http://www.netbeans.org/community/guidelines/q-evangelism.html">quality</a>
+            of your code be tested and 
+            how are future regressions going to be prevented?
+            <hint>
+            What kind of testing do
+            you want to use? How much functionality, in which areas,
+            should be covered by the tests? 
+            </hint>
+        </question>
+-->
+<answer id="arch-quality">
+Unit tests are available.
+<p/>
+There are several testing areas covered:
+<ul>
+    <li> <code>MimeLookupTest.java</code>
+    <ul>
+    <li> Looking up the class that has not registered subfolder via <code>Class2LayerFolder</code>.
+       It should be found in the appropriate mime-type specific folder</li>
+    <li> Looking up the class that has registered subfolder via <code>Class2LayerFolder</code></li>
+    <li> Testing if the <code>MimeLookup</code> is not recursive (see issue #58991 for more details)</li>
+    <li> Testing lazy lookup object creation. Object is instantiated only if it is directly looked up</li>
+    <li> Testing <code>MimeLookupInitializer</code> creation, registration and performing a lookup</li>    
+    </ul>
+    </li>
+    
+    <li> <code>MimeLookupInheritanceTest.java</code>
+    <ul>
+    <li> Testing the inheritance and instance provider functionality as well as
+     sorting of merged elements</li>
+    </ul>
+    </li>
+    
+    <li> <code>MimeLookupPopupItemsChangeTest.java</code>
+    <ul>
+    <li> Testing the dynamic change (addition or removal of a file [looked-up object] 
+        from xml layer folder) in inheritance tree, merging, sorting</li>
+    </ul>
+    </li>
+    
+</ul>
+
+After fixing the <a href="http://www.netbeans.org/issues/show_bug.cgi?id=58941"> issue #58941 </a>
+unit tests of template lookup should be added. All tests was rewritten and adjusted to newly introduced 
+MimePath.
+</answer>
+
+
+
+<!--
+        <question id="arch-time" when="init">
+            What are the time estimates of the work?
+            <hint>
+            Please express your estimates of how long the design, implementation,
+            stabilization are likely to last. How many people will be needed to
+            implement this and what is the expected milestone by which the work should be 
+            ready?
+            </hint>
+        </question>
+-->
+<answer id="arch-time">
+Done.
+</answer>
+
+
+<!--
+        <question id="arch-usecases" when="init">
+            Describe the main <a href="http://openide.netbeans.org/tutorial/api-design.html#usecase">
+            use cases</a> of the new API. Who will use it under
+            what circumstances? What kind of code would typically need to be written
+            to use the module?
+        </question>
+-->
+<answer id="arch-usecases">
+
+<usecase id="per-mime-type-operation" name="Per mime-type operation">
+Operation of the editor module must be parametrized by the type of the file
+being edited. In the past the operation was parametrized by the class
+of the editor kit but that did not show up as being useful enough.
+<br/>
+It is more practical to use a string-based parametrization concretely
+the mime-type. Anyone can then easily register an additional functionality
+for the editor because it's just enough to know the right mime-type and the type
+of the functionality class to be implemented and the xml layer folder
+where the class should be registered.
+</usecase>
+
+<usecase id="provide-lookup-result" name="Provide list of instances as lookup result">
+On the modules' implementation side the registered functionality 
+must be retrieved somehow. It's necessary to instantiate the registered objects
+and react to module enabling/disabling which can affect validity of the registered objects.
+<br/>
+As the most convenient solution appears to use
+<code>org.openide.util.Lookup</code> allowing to provide
+the registered instances as a <code>Lookup.Result</code>
+allowing to listen for changes (e.g. caused by the module enabling/disabling).
+<br/>
+This resulted into creation of <code>class MimeLookup extends Lookup</code> containing
+<code>static MimeLookup getMimeLookup(String mimeType)</code>.
+</usecase>
+
+<usecase id="nested-mime-types" name="Nested mime-types">
+On the lexical level the document can contain nested languages.
+<br/>
+For example JSP document can contain pieces of java code which can further contain
+javadoc comment tokens with nested javadoc language.
+<br/>
+The nested languages should allow for special settings
+such as fonts and colors of nested syntax coloring but even
+things like actions that would be active in the nested document section.
+<br/>
+This resulted into creation of
+<code>static Lookup getLookup(MimePath mimePath)</code> method in <code>MimeLookup</code>. 
+</usecase>
+
+<usecase id="known-clients-summary" name="Known clients summary">
+<b>Fold Manager Factories</b>
+<br/>
+The editor/fold module expects to find the registered
+fold manager factories (<code>org.netbeans.spi.editor.fold.FoldManagerFactory</code> classes).
+<br/>
+<br/>
+<b>Completion Providers</b>
+<br/>
+The editor/completion module expects to find the registered
+completion providers (<code>org.netbeans.spi.editor.completion.CompletionProvider</code> classes).
+<br/>
+<br/>
+<b>Editor Context Menu Actions</b>
+<br/>
+The editor module expects to find the registered
+popup menu actions (<code>javax.swing.Action</code> classes or names of actions
+(i.e. value of Action.NAME attribute) present in editor kit e.g. "goto-source").
+<br/>
+<br/>
+<b>Side Bars</b>
+<br/>
+The editor/lib module expects to find factories for components to be placed on the 
+sides of the editor component (<code>org.netbeans.editor.SideBarFactory</code> classes).
+<br/>
+<br/>
+<b>Hyperlink Providers</b>
+<br/>
+The editor/lib module expects to find hyperlink providers that allow connecting
+an open document with some other documents (<code>org.netbeans.lib.editor.hyperlink.spi.HyperlinkProvider</code> classes).
+<br/>
+<br/>
+<b>Code Template Processors</b>
+<br/>
+The editor/codetemplates module expects to find factories for code template processors
+(<code>org.netbeans.lib.editor.codetemplates.spi.CodeTemplateProcessorFactory</code> classes).
+<br/>
+<br/>
+<b>Hints Providers</b>
+<br/>
+The editor/hints module expects to find editor hints providers
+(<code>org.netbeans.modules.editor.hints.spi.HintsProvider</code> classes).
+</usecase>
+
+<br/>
+<br/>
+<br/>
+<b>
+API Use Cases
+</b>
+<hr/>
+
+<usecase id="find-class-instances-for-mime-type" name="Find class instances for the given mime-type">
+
+An API method
+<p/>
+<code>
+MimeLookup lookup = MimeLookup.getMimeLookup("text/x-java");
+</code>
+<p/>
+can be used for getting the mime specific lookup. Having this we can lookup class
+ or template:
+<p/>
+<code>
+    Object obj = lookup.lookup(LookedUpClass.class);
+</code>
+<p/>
+or
+<p/>
+<code>
+    Lookup.Result result = lookup.lookup(new Lookup.Template(LookedUpClass.class));
+</code>
+</usecase>
+
+<usecase id="find-embedded-lookup" name="Getting embeded mime-type specific Lookup">
+As an example a jsp scriptlet is used. Scriptlet in fact consists of parent "text/x-jsp" mime-type and
+embeded "text/x-java" mime-type. To obtain a scriptlet lookup firstly we need to get a MimePath and then
+get appropriate lookup:
+
+<p/>
+<pre>
+    MimePath scriptletPath = MimePath.parse("text/x-jsp/text/x-java");
+    Lookup lookup = MimeLookup.getLookup(scriptletPath);
+</pre>
+</usecase>
+
+
+<br/>
+<b>
+SPI Use Cases
+</b>
+<hr/>
+
+<usecase id="mime-lookup-initializer" name="Providing implemented MimeLookupInitializer">
+It is the general way of adding mime specific object into the <code>MimeLookup</code>. Implementation of <code>MimeLookupInitializer</code> should be created and
+            registered to default lookup via <code>META-INF/services</code> registration.
+For details, please look at the simplified 
+<code>TestMimeLookupInitializer</code> 
+            in <code>mimelookup/test/unit</code> or <code>LayerMimeLookupInitializer</code>.
+<b> Usage of MimeLookupInitializer is deprecated, please use MimeDataProvider instead in similar way </b>
+</usecase>
+
+</answer>
+
+
+
+
+
+
+<!--
+        <question id="compat-i18n" when="impl">
+            Is your module correctly internationalized?
+            <hint>
+            Correct internationalization means that it obeys instructions 
+            at <a href="@org-openide-modules@/org/openide/modules/doc-files/i18n-branding.html">
+            NetBeans I18N pages</a>.
+            </hint>
+        </question>
+-->
+<answer id="compat-i18n">
+Yes.
+</answer>
+
+
+
+<!--
+        <question id="compat-standards" when="init">
+            Does the module implement or define any standards? Is the 
+            implementation exact or does it deviate somehow?
+        </question>
+-->
+<answer id="compat-standards">
+Compatible with standards.
+</answer>
+
+
+
+<!--
+        <question id="compat-version" when="impl">
+            Can your module coexist with earlier and future
+            versions of itself? Can you correctly read all old settings? Will future
+            versions be able to read your current settings? Can you read
+            or politely ignore settings stored by a future version?
+            
+            <hint>
+            Very helpful for reading settings is to store version number
+            there, so future versions can decide whether how to read/convert
+            the settings and older versions can ignore the new ones.
+            </hint>
+        </question>
+-->
+<answer id="compat-version">
+No persistence is used for <code>MimeLookup</code>
+</answer>
+
+
+
+<!--
+        <question id="dep-jre" when="final">
+            Which version of JRE do you need (1.2, 1.3, 1.4, etc.)?
+            <hint>
+            It is expected that if your module runs on 1.x that it will run 
+            on 1.x+1 if no, state that please. Also describe here cases where
+            you run different code on different versions of JRE and why.
+            </hint>
+        </question>
+-->
+<answer id="dep-jre">
+JDK1.4 and higher can be used.
+</answer>
+
+
+
+<!--
+        <question id="dep-jrejdk" when="final">
+            Do you require the JDK or is the JRE enough?
+        </question>
+-->
+<answer id="dep-jrejdk">
+JRE is sufficient.
+</answer>
+
+
+
+<!--
+        <question id="dep-nb" when="init">
+            What other NetBeans projects and modules does this one depend on?
+            <hint>
+            If you want, describe such projects as imported APIs using
+            the <code>&lt;api name="identification" type="import or export" category="stable" url="where is the description" /&gt;</code>
+            </hint>
+        </question>
+-->
+<answer id="dep-nb">
+  The module needs (i.e. OpenIDE-Module-Needs) the following token: org.netbeans.spi.editor.mimelookup.MimeDataProvider.
+  The implementation of the default <code>MimeDataProvider</code> that serves data
+  from the folder hierarchy underneath the Editors/ folder on the system filesystem
+  is provided by the editor/mimelookup/impl module. This module also provides the token
+  mentioned earlier.
+</answer>
+
+
+
+<!--
+        <question id="dep-non-nb" when="init">
+            What other projects outside NetBeans does this one depend on?
+            
+            <hint>
+            Some non-NetBeans projects are packaged as NetBeans modules
+            (see <a href="http://libs.netbeans.org/">libraries</a>) and
+            it is preferred to use this approach when more modules may
+            depend on such third-party library.
+            </hint>
+        </question>
+-->
+<answer id="dep-non-nb">
+No other projects.
+</answer>
+
+
+
+<!--
+        <question id="dep-platform" when="init">
+            On which platforms does your module run? Does it run in the same
+            way on each?
+            <hint>
+            If your module is using JNI or deals with special differences of
+            OSes like filesystems, etc. please describe here what they are.
+            </hint>
+        </question>
+-->
+<answer id="dep-platform">
+All platforms.
+</answer>
+
+
+
+<answer id="deploy-dependencies">
+Nothing.
+</answer>
+
+
+
+<!--
+        <question id="deploy-jar" when="impl">
+            Do you deploy just module JAR file(s) or other files as well?
+            <hint>
+            If your module consists of just one module JAR file, just confirm that.
+            If it uses more than one JAR, describe where they are located, how
+            they refer to each other. 
+            If it consist of module JAR(s) and other files, please describe
+            what is their purpose, why other files are necessary. Please 
+            make sure that installation/uninstallation leaves the system 
+            in state as it was before installation.
+            </hint>
+        </question>
+-->
+<answer id="deploy-jar">
+No additional files.
+</answer>
+
+
+
+<!--
+        <question id="deploy-nbm" when="impl">
+            Can you deploy an NBM via the Update Center?
+            <hint>
+            If not why?
+            </hint>
+        </question>
+-->
+<answer id="deploy-nbm">
+Yes.
+</answer>
+
+
+
+<!--
+        <question id="deploy-packages" when="init">
+            Are packages of your module made inaccessible by not declaring them
+            public?
+            
+            <hint>
+            NetBeans module system allows restriction of access rights to
+            public classes of your module from other modules. This prevents
+            unwanted dependencies of others on your code and should be used
+            whenever possible (<a href="http://www.netbeans.org/download/javadoc/OpenAPIs/org/openide/doc-files/upgrade.html#3.4-public-packages">
+            public packages
+            </a>). If you do not restrict access to your classes you are
+            making it too easy for other people to misuse your implementation
+            details, that is why you should have good reason for not 
+            restricting package access.
+            </hint>
+        </question>
+-->
+<answer id="deploy-packages">
+Yes, only the API and SPI are public. The implementation is not public.
+</answer>
+
+
+
+<!--
+        <question id="deploy-shared" when="final">
+            Do you need to be installed in the shared location only, or in the user directory only,
+            or can your module be installed anywhere?
+            <hint>
+            Installation location shall not matter, if it does explain why.
+            Consider also whether <code>InstalledFileLocator</code> can help.
+            </hint>
+        </question>
+-->
+<answer id="deploy-shared">
+Anywhere.
+</answer>
+
+
+
+<!--
+        <question id="exec-classloader" when="impl">
+            Does your code create its own class loader(s)?
+            <hint>
+            A bit unusual. Please explain why and what for.
+            </hint>
+        </question>
+-->
+<answer id="exec-classloader">
+No.
+</answer>
+
+
+
+<!--
+        <question id="exec-component" when="impl">
+            Is execution of your code influenced by any (string) property
+            of any of your components?
+            
+            <hint>
+            Often <code>JComponent.getClientProperty</code>, <code>Action.getValue</code>
+            or <code>PropertyDescriptor.getValue</code>, etc. are used to influence
+            a behavior of some code. This of course forms an interface that should
+            be documented. Also if one depends on some interface that an object
+            implements (<code>component instanceof Runnable</code>) that forms an
+            API as well.
+            </hint>
+        </question>
+-->
+<answer id="exec-component">
+No.
+</answer>
+
+
+
+<!--
+        <question id="exec-introspection" when="impl">
+            Does your module use any kind of runtime type information (<code>instanceof</code>,
+            work with <code>java.lang.Class</code>, etc.)?
+            <hint>
+            Check for cases when you have an object of type A and you also
+            expect it to (possibly) be of type B and do some special action. That
+            should be documented. The same applies on operations in meta-level
+            (Class.isInstance(...), Class.isAssignableFrom(...), etc.).
+            </hint>
+        </question>
+-->
+<answer id="exec-introspection">
+No.
+</answer>
+
+
+
+<!--
+        <question id="exec-privateaccess" when="final">
+            Are you aware of any other parts of the system calling some of 
+            your methods by reflection?
+            <hint>
+            If so, describe the "contract" as an API. Likely private or friend one, but
+            still API and consider rewrite of it.
+            </hint>
+        </question>
+-->
+<answer id="exec-privateaccess">
+No.
+</answer>
+
+
+
+<!--
+        <question id="exec-process" when="impl">
+            Do you execute an external process from your module? How do you ensure
+            that the result is the same on different platforms? Do you parse output?
+            Do you depend on result code?
+            <hint>
+            If you feed an input, parse the output please declare that as an API.
+            </hint>
+        </question>
+-->
+<answer id="exec-process">
+No.
+</answer>
+
+
+
+<!--
+        <question id="exec-property" when="impl">
+            Is execution of your code influenced by any environment or
+            Java system (<code>System.getProperty</code>) property?
+            
+            <hint>
+            If there is a property that can change the behavior of your 
+            code, somebody will likely use it. You should describe what it does 
+            and the <a href="http://openide.netbeans.org/tutorial/api-design.html#life">stability category</a>
+            of this API. You may use
+            <pre>
+                &lt;api type="export" group="property" name="id" category="private" url="http://..."&gt;
+                    description of the property, where it is used, what it influence, etc.
+                &lt;/api&gt;            
+            </pre>
+            </hint>
+        </question>
+-->
+<answer id="exec-property">
+      <api name="org.openide.awt.ActionReference.completion" category="devel" group="systemproperty" type="import">
+          The annotation processor for <a href="@TOP@/org/netbeans/api/editor/mimelookup/MimeRegistration.html">MimeRegistration</a>
+          annotation reuses API defined by <a href="@org-openide-awt@/overview-summary.html">UI Utilities API</a>
+          and reads <a href="@JDK@/java/lang/System.html">System.getProperty("org.openide.awt.ActionReference.completion")</a>
+          property. If it 
+          is specified, then the processor
+          tries to load such class, casts it to 
+          <a href="@JDK@/javax/annotation/processing/Processor.html">Processor</a>
+          and asks it for additional completion items for annotation's
+          <code>mimeType</code> attribute. By default, when running inside NetBeans IDE,
+          <code>apisupport.project</code> registers such class and provides
+          items representing valid paths in current project.
+      </api>
+</answer>
+
+
+
+<!--
+        <question id="exec-reflection" when="impl">
+            Does your code use Java Reflection to execute other code?
+            <hint>
+            This usually indicates a missing or insufficient API in the other
+            part of the system. If the other side is not aware of your dependency
+            this contract can be easily broken.
+            </hint>
+        </question>
+-->
+<answer id="exec-reflection">
+No.
+</answer>
+
+
+
+<!--
+        <question id="exec-threading" when="impl">
+            What threading models, if any, does your module adhere to?
+            <hint>
+                If your module calls foreign APIs which have a specific threading model,
+                indicate how you comply with the requirements for multithreaded access
+                (synchronization, mutexes, etc.) applicable to those APIs.
+                If your module defines any APIs, or has complex internal structures
+                that might be used from multiple threads, declare how you protect
+                data against concurrent access, race conditions, deadlocks, etc.,
+                and whether such rules are enforced by runtime warnings, errors, assertions, etc.
+                Examples: a class might be non-thread-safe (like Java Collections); might
+                be fully thread-safe (internal locking); might require access through a mutex
+                (and may or may not automatically acquire that mutex on behalf of a client method);
+                might be able to run only in the event queue; etc.
+                Also describe when any events are fired: synchronously, asynchronously, etc.
+                Ideas: <a href="http://core.netbeans.org/proposals/threading/index.html#recommendations">Threading Recommendations</a> (in progress)
+            </hint>
+        </question>
+-->
+<answer id="exec-threading">
+No special threading models used.
+</answer>
+
+
+
+<!--
+        <question id="format-clipboard" when="impl">
+            Which data flavors (if any) does your code read from or insert to
+            the clipboard (by access to clipboard on means calling methods on <code>java.awt.datatransfer.Transferable</code>?
+            
+            <hint>
+            Often Node's deal with clipboard by usage of <code>Node.clipboardCopy, Node.clipboardCut and Node.pasteTypes</code>.
+            Check your code for overriding these methods.
+            </hint>
+        </question>
+-->
+<answer id="format-clipboard">
+No clipboard support.
+</answer>
+
+
+
+<!--
+        <question id="format-dnd" when="impl">
+            Which protocols (if any) does your code understand during Drag &amp; Drop?
+            <hint>
+            Often Node's deal with clipboard by usage of <code>Node.drag, Node.getDropType</code>. 
+            Check your code for overriding these methods. Btw. if they are not overridden, they
+            by default delegate to <code>Node.clipboardCopy, Node.clipboardCut and Node.pasteTypes</code>.
+            </hint>
+        </question>
+-->
+<answer id="format-dnd">
+No D&amp;D.
+</answer>
+
+
+
+<!--
+        <question id="format-types" when="impl">
+            Which protocols and file formats (if any) does your module read or write on disk,
+            or transmit or receive over the network?
+        </question>
+-->
+<answer id="format-types">
+No files read or written to the disk.
+</answer>
+
+
+
+<!--
+        <question id="lookup-lookup" when="init">
+            Does your module use <code>org.openide.util.Lookup</code>
+            or any similar technology to find any components to communicate with? Which ones?
+            
+            <hint>
+            Please describe the interfaces you are searching for, where 
+            are defined, whether you are searching for just one or more of them,
+            if the order is important, etc. Also classify the stability of such
+            API contract.
+            </hint>
+        </question>
+-->
+<answer id="lookup-lookup">
+Yes. 
+MimeLookup in API extends Lookup and it searches the default lookup for instances of
+<code>MimeLookupInitializer</code> (this is already deprecated) and <code>MimeDataProvider</code>.
+</answer>
+
+
+
+<!--
+        <question id="lookup-register" when="final">
+            Do you register anything into lookup for other code to find?
+            <hint>
+            Do you register using layer file or using <code>META-INF/services</code>?
+            Who is supposed to find your component?
+            </hint>
+        </question>
+-->
+<answer id="lookup-register">
+    No.
+</answer>
+
+
+
+<!--
+        <question id="lookup-remove" when="final">
+            Do you remove entries of other modules from lookup?
+            <hint>
+            Why? Of course, that is possible, but it can be dangerous. Is the module
+            your are masking resource from aware of what you are doing?
+            </hint>
+        </question>
+-->
+<answer id="lookup-remove">
+No.
+</answer>
+
+
+
+<!--
+        <question id="perf-exit" when="final">
+            Does your module run any code on exit?
+        </question>
+-->
+<answer id="perf-exit">
+No.
+</answer>
+
+
+
+<!--
+        <question id="perf-huge_dialogs" when="final">
+            Does your module contain any dialogs or wizards with a large number of
+            GUI controls such as combo boxes, lists, trees, or text areas?
+        </question>
+-->
+<answer id="perf-huge_dialogs">
+No.
+</answer>
+
+
+
+<!--
+        <question id="perf-limit" when="init">
+            Are there any hard-coded or practical limits in the number or size of
+            elements your code can handle?
+        </question>
+-->
+<answer id="perf-limit">
+No limits.
+</answer>
+
+
+
+<!--
+        <question id="perf-mem" when="final">
+            How much memory does your component consume? Estimate
+            with a relation to the number of windows, etc.
+        </question>
+-->
+<answer id="perf-mem">
+<code>MimeLookup</code> caches instances of mime sensitive MimeLookups in static Map, instances of children
+MimeLookups in Map, InitializerListeners and Initializers in Lists.
+<code>LayerMimeLookupInitializer</code> also caches mime sensitive LayerMimeLookupInitializers and LazyLookups.
+</answer>
+
+
+
+<!--
+        <question id="perf-menus" when="final">
+            Does your module use dynamically updated context menus, or
+            context-sensitive actions with complicated enablement logic?
+        </question>
+-->
+<answer id="perf-menus">
+No.
+</answer>
+
+
+
+<!--
+        <question id="perf-progress" when="final">
+            Does your module execute any long-running tasks?
+            
+            <hint>Long running tasks should never block 
+            AWT thread as it badly hurts the UI
+            <a href="http://performance.netbeans.org/responsiveness/issues.html">
+            responsiveness</a>.
+            Tasks like connecting over
+            network, computing huge amount of data, compilation
+            be done asynchronously (for example
+            using <code>RequestProcessor</code>), definitively it should 
+            not block AWT thread.
+            </hint>
+        </question>
+-->
+<answer id="perf-progress">
+No.
+</answer>
+
+
+
+<!--
+        <question id="perf-scale" when="init">
+            Which external criteria influence the performance of your
+            program (size of file in editor, number of files in menu, 
+            in source directory, etc.) and how well your code scales?
+            <hint>
+            Please include some estimates, there are other more detailed 
+            questions to answer in later phases of implementation. 
+            </hint>
+        </question>
+-->
+<answer id="perf-scale">
+Number of initialized MimeLookups. Since the <code>MimeLookup</code> delegates to ProxyLookup performance
+during lookup depends on the performance of ProxyLookup. <code>LayerMimeLookupInitializer</code> instantiates
+the object found in the layer only during direct lookup of the particular class using LazyLookup (inner class defined in <code>LayerMimeLookupInitializer</code>).
+</answer>
+
+
+
+<!--
+        <question id="perf-spi" when="init">
+            How the performance of the plugged in code will be enforced?
+            <hint>
+            If you allow foreign code to be plugged into your own module, how
+            do you enforce that it will behave correctly and quickly and will not
+            negatively influence the performance of your own module?
+            </hint>
+        </question>
+-->
+<answer id="perf-spi">
+Pluggins are just clients lookups that are installed into <code>MimeLookup</code>. The performance
+should be influenced by the lookupable object gathering by clients lookups. <code>LayerMimeLookupInitializer</code> 
+(client lookup provided by mimelookup module)
+provides a LazyLookup, it instantiates the object found in the layer only
+during direct lookup of the particular class.
+Otherwise performance should be similar as ProxyLookup.
+</answer>
+
+
+
+<!--
+        <question id="perf-startup" when="final">
+            Does your module run any code on startup?
+        </question>
+-->
+<answer id="perf-startup">
+No.
+</answer>
+
+
+
+<!--
+        <question id="perf-wakeup" when="final">
+            Does any piece of your code wake up periodically and do something
+            even when the system is otherwise idle (no user interaction)?
+        </question>
+-->
+<answer id="perf-wakeup">
+No.
+</answer>
+
+
+
+<!--
+        <question id="resources-file" when="final">
+            Does your module use <code>java.io.File</code> directly?
+            
+            <hint>
+            NetBeans provide a logical wrapper over plain files called 
+            <code>org.openide.filesystems.FileObject</code> that
+            provides uniform access to such resources and is the preferred
+            way that should be used. But of course there can be situations when
+            this is not suitable.
+            </hint>
+        </question>
+-->
+<answer id="resources-file">
+Only in tests.
+</answer>
+
+
+
+<!--
+        <question id="resources-layer" when="final">
+            Does your module provide own layer? Does it create any files or
+            folders in it? What it is trying to communicate by that and with which 
+            components?
+            
+            <hint>
+            NetBeans allows automatic and declarative installation of resources 
+            by module layers. Module register files into appropriate places
+            and other components use that information to perform their task
+            (build menu, toolbar, window layout, list of templates, set of
+            options, etc.). 
+            </hint>
+        </question>
+-->
+<answer id="resources-layer">
+No. 
+</answer>
+
+
+
+<!--
+        <question id="resources-mask" when="final">
+            Does your module mask/hide/override any resources provided by other modules in
+            their layers?
+            
+            <hint>
+            If you mask a file provided by another module, you probably depend
+            on that and do not want the other module to (for example) change
+            the file's name. That module shall thus make that file available as an API
+            of some stability category.
+            </hint>
+        </question>
+-->
+<answer id="resources-mask">
+No.
+</answer>
+
+
+
+<!--
+        <question id="resources-read" when="final">
+            Does your module read any resources from layers? For what purpose?
+            
+            <hint>
+            As this is some kind of intermodule dependency, it is a kind of API.
+            Please describe it and classify according to 
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            common stability categories</a>.
+            </hint>
+        </question>
+-->
+<answer id="resources-read">
+    No.
+</answer>
+
+
+
+<!--
+        <question id="security-grant" when="final">
+            Does your code grant addition rights to some code?
+            <hint>Avoid using a classloder that adds some extra
+            permissions to loaded code unless realy necessary.
+            Also note that your API implementation
+            can also expose unneeded permissions to enemy code by
+            AccessController.doPrilileged() calls.</hint>
+        </question>
+-->
+<answer id="security-grant">
+No.
+</answer>
+
+
+
+<!--
+        <question id="security-policy" when="final">
+            Does your functionality require standard policy file modification?
+            <hint>Your code may pass control to third party code not
+            coming from trusted domain. It covers code downloaded over
+            network or code coming from libraries that are not bundled
+            with NetBeans. Which permissions it needs to grant to which domain?</hint>
+        </question>
+-->
+<answer id="security-policy">
+No.
+</answer>
+
+
+<!--
+        <question id="exec-ant-tasks" when="impl">
+            Do you define or register any ant tasks that other can use?
+            
+            <hint>
+            If you provide an ant task that users can use, you need to be very
+            careful about its syntax and behaviour, as it most likely forms an
+	          API for end users and as there is a lot of end users, their reaction
+            when such API gets broken can be pretty strong.
+            </hint>
+        </question>
+-->
+<answer id="exec-ant-tasks">
+No.
+</answer>
+
+<!--
+        <question id="arch-where" when="init">
+            Where one can find sources for your module?
+            <hint>
+                Please provide link to the CVS web client at
+                http://www.netbeans.org/download/source_browse.html
+                or just use tag defaultanswer generate='here'
+            </hint>
+        </question>
+-->
+ <answer id="arch-where">
+    Sources can be found in editor/mimelookup module.
+ </answer>
+
+
+
+
+<!--
+        <question id="compat-deprecation" when="init">
+            How the introduction of your project influences functionality
+            provided by previous version of the product?
+            <hint>
+            If you are planning to deprecate/remove/change any existing APIs,
+            list them here accompanied with the reason explaining why you
+            are doing so.
+            </hint>
+        </question>
+-->
+<answer id="compat-deprecation">
+    As the module's API/SPI has been naturaly evolving over the time the module contains
+    several deprecated classes. All of them are still fully supported and the
+    module remains backward compatible.
+</answer>
+
+</api-answers>

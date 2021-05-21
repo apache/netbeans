@@ -1,0 +1,4 @@
+Code completion result for source line:
+public function traitParameterType(?\M|y\Sub\Foo $foo, ?string $stirng): Foo { // CC
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    My                              [PUBLIC]   null

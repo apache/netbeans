@@ -1,0 +1,206 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+package org.netbeans.modules.websvc.wsitconf.ui.client.subpanels;
+
+import org.netbeans.modules.websvc.wsitconf.wsdlmodelext.ProprietarySecurityPolicyModelHelper;
+import org.netbeans.modules.xml.wsdl.model.WSDLComponent;
+import javax.swing.*;
+import org.netbeans.api.project.Project;
+
+/**
+ *
+ * @author Martin Grebac
+ */
+public class KerberosConfigPanel extends JPanel {
+
+    private WSDLComponent comp;
+    private Project project = null;    
+    private boolean inSync = false;
+    
+    public KerberosConfigPanel(WSDLComponent comp, Project p) {
+        super();
+        this.comp = comp;
+        this.project = p;
+        
+        initComponents();
+
+        /* issue 232988: the background color issues with dark metal L&F
+        loginModuleCombo.setBackground(SectionVisualTheme.getDocumentBackgroundColor());
+        loginModuleLabel.setBackground(SectionVisualTheme.getDocumentBackgroundColor());
+        servicePrincipalLabel.setBackground(SectionVisualTheme.getDocumentBackgroundColor());
+        servicePrincipalField.setBackground(SectionVisualTheme.getDocumentBackgroundColor());
+        credDelegationChBox.setBackground(SectionVisualTheme.getDocumentBackgroundColor());
+        */
+
+        sync();
+    }
+
+    private String getLoginModule() {
+        return (String) this.loginModuleCombo.getSelectedItem();
+    }
+
+    private void setLoginModule(String alias) {
+        this.loginModuleCombo.setSelectedItem(alias);
+    }
+
+    private String getServicePrincipal() {
+        return String.valueOf(this.servicePrincipalField.getText());
+    }
+
+    private void setServicePrincipal(String principal) {
+        this.servicePrincipalField.setText(principal);
+    }
+    
+    String servicePrincipal = null;
+    String loginModule = null;
+    boolean credentialDelegation = false;
+    
+    public void sync() {
+        inSync = true;
+
+        servicePrincipal = ProprietarySecurityPolicyModelHelper.getServicePrincipal(comp);
+        if (servicePrincipal != null) {
+            setServicePrincipal(servicePrincipal);
+        }
+
+        loginModule = ProprietarySecurityPolicyModelHelper.getLoginModule(comp);
+        if (loginModule != null) {
+            setLoginModule(loginModule);
+        }
+
+        credentialDelegation = ProprietarySecurityPolicyModelHelper.isCredentialDelegation(comp);
+        setChBox(credDelegationChBox, credentialDelegation);
+
+        //        enableDisable();
+
+        inSync = false;
+    }
+
+//    private void enableDisable() {
+//        boolean gf = Util.isGlassfish(project);
+//        keyPasswordField.setEnabled(!gf);
+//        keyPasswordLabel.setEnabled(!gf);
+//    }
+        
+    public void storeState() {
+        loginModule = getLoginModule();
+        if ((loginModule == null) || (loginModule.length() == 0)) {
+            ProprietarySecurityPolicyModelHelper.setLoginModule(comp, null, true);
+        } else {
+            ProprietarySecurityPolicyModelHelper.setLoginModule(comp, loginModule, true);
+        }
+
+        servicePrincipal = getServicePrincipal();
+        if ((servicePrincipal == null) || (servicePrincipal.length() == 0)) {
+            ProprietarySecurityPolicyModelHelper.setServicePrincipal(comp, null, true);
+        } else {
+            ProprietarySecurityPolicyModelHelper.setServicePrincipal(comp, servicePrincipal, true);
+        }
+        
+        credentialDelegation = getChBox(credDelegationChBox);
+        ProprietarySecurityPolicyModelHelper.setCredentialDelegation(comp, credentialDelegation, true);        
+    }
+    
+    public Boolean getChBox(JCheckBox chBox) {
+        if (chBox.isSelected()) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+    
+    private void setChBox(JCheckBox chBox, Boolean enable) {
+        if (enable == null) {
+            chBox.setSelected(false);
+        } else {
+            chBox.setSelected(enable);
+        }
+    }
+    
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        servicePrincipalLabel = new javax.swing.JLabel();
+        loginModuleLabel = new javax.swing.JLabel();
+        loginModuleCombo = new javax.swing.JComboBox();
+        credDelegationChBox = new javax.swing.JCheckBox();
+        servicePrincipalField = new javax.swing.JTextField();
+
+        org.openide.awt.Mnemonics.setLocalizedText(servicePrincipalLabel, org.openide.util.NbBundle.getMessage(KerberosConfigPanel.class, "LBL_KerberosConfigPanel_ServicePrincipal")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(loginModuleLabel, org.openide.util.NbBundle.getMessage(KerberosConfigPanel.class, "LBL_KerberosConfigPanel_LoginModule")); // NOI18N
+
+        loginModuleCombo.setEditable(true);
+
+        org.openide.awt.Mnemonics.setLocalizedText(credDelegationChBox, org.openide.util.NbBundle.getMessage(KerberosConfigPanel.class, "LBL_KerberosPanel_CredentialDelegation")); // NOI18N
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(loginModuleLabel)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(servicePrincipalLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(servicePrincipalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(loginModuleCombo, 0, 171, Short.MAX_VALUE)))
+                    .addComponent(credDelegationChBox))
+                .addContainerGap())
+        );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {loginModuleCombo, servicePrincipalField});
+
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(13, 13, 13)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(loginModuleLabel)
+                    .addComponent(loginModuleCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(servicePrincipalLabel)
+                    .addComponent(servicePrincipalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(credDelegationChBox)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {loginModuleCombo, servicePrincipalField});
+
+    }// </editor-fold>//GEN-END:initComponents
+        
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox credDelegationChBox;
+    private javax.swing.JComboBox loginModuleCombo;
+    private javax.swing.JLabel loginModuleLabel;
+    private javax.swing.JTextField servicePrincipalField;
+    private javax.swing.JLabel servicePrincipalLabel;
+    // End of variables declaration//GEN-END:variables
+    
+}

@@ -1,0 +1,21 @@
+<Program start='0' end='112'>
+    <Comments>
+    </Comments>
+    <Statements>
+        <NamespaceDeclaration start='7' end='111' isBracketed='false'>
+            <NamespaceName start='17' end='23' isCurrent='false' isGlobal='false'>
+                <Identifier start='17' end='19' name='My'/>
+                <Identifier start='20' end='23' name='Sub'/>
+            </NamespaceName>
+            <Block start='24' end='111' isCurly='true'>
+                <InterfaceDeclaration start='26' end='111'>
+                    <Name>
+                        <Identifier start='36' end='62' name='NullableTypesInterfaceTest'/>
+                    </Name>
+                    <Block start='63' end='111' isCurly='true'>
+                    </Block>
+                </InterfaceDeclaration>
+            </Block>
+        </NamespaceDeclaration>
+    </Statements>
+</Program>

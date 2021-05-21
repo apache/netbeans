@@ -1,0 +1,4 @@
+Code completion result for source line:
+use F|irst\Cls1;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    First                           [PUBLIC]   null

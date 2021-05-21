@@ -1,0 +1,8 @@
+Code completion result for source line:
+Math.E.M|IN_VALUE;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      MAX_SAFE_INTEGER: Number        [PUBLIC,   JS Platform
+FIELD      MAX_VALUE: Number               [PUBLIC,   JS Platform
+FIELD      MIN_SAFE_INTEGER: Number        [PUBLIC,   JS Platform
+FIELD      MIN_VALUE: Number               [PUBLIC,   JS Platform

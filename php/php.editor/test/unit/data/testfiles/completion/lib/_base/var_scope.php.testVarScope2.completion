@@ -1,0 +1,4 @@
+Code completion result for source line:
+print $glo|bal_var;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   int $global_var                 [PUBLIC]   var_scope.php

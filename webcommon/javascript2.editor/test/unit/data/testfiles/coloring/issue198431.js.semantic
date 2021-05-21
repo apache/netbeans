@@ -1,0 +1,9 @@
+function |>METHOD:test<|(){
+
+    function |>METHOD:doit<|(){
+    }
+
+    doit();// Becomes green if statement below is added
+    this.|>METHOD:doitPublic<| = doit;
+
+}

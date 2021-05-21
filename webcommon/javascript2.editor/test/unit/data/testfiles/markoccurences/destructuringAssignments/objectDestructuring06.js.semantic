@@ -1,0 +1,4 @@
+var {|>FIELD:a<|:|>GLOBAL:ab<|=10, |>GLOBAL:bb<|=5} = {|>FIELD:a<|: 3}; 
+  
+|>GLOBAL:console<|.log(|>GLOBAL:ab<|); // 3
+|>GLOBAL:console<|.log(|>GLOBAL:bb<|); // 5

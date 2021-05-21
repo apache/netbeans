@@ -1,0 +1,79 @@
+package beans;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeListener;
+import java.beans.VetoableChangeSupport;
+
+public class Beans {
+
+    private String string;
+
+    public static final String PROP_STRING = "string";
+
+    /**
+     * Get the value of string
+     *
+     * @return the value of string
+     */
+    public String getString() {
+        return string;
+    }
+
+    /**
+     * Set the value of string
+     *
+     * @param string new value of string
+     * @throws java.beans.PropertyVetoException
+     */
+    public void setString(String string) throws PropertyVetoException {
+        String oldString = this.string;
+        vetoableChangeSupport.fireVetoableChange(PROP_STRING, oldString, string);
+        this.string = string;
+        propertyChangeSupport.firePropertyChange(PROP_STRING, oldString, string);
+    }
+
+    private transient final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+
+    /**
+     * Add PropertyChangeListener.
+     *
+     * @param listener
+     */
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    /**
+     * Remove PropertyChangeListener.
+     *
+     * @param listener
+     */
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
+    }
+
+    private transient final VetoableChangeSupport vetoableChangeSupport = new VetoableChangeSupport(this);
+
+    /**
+     * Add VetoableChangeListener.
+     *
+     * @param listener
+     */
+    public void addVetoableChangeListener(VetoableChangeListener listener) {
+        vetoableChangeSupport.addVetoableChangeListener(listener);
+    }
+
+    /**
+     * Remove VetoableChangeListener.
+     *
+     * @param listener
+     */
+    public void removeVetoableChangeListener(VetoableChangeListener listener) {
+        vetoableChangeSupport.removeVetoableChangeListener(listener);
+    }
+    
+   
+}
+

@@ -1,0 +1,5 @@
+Code completion result for source line:
+echo $Barrr->|Interface2Function();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     Interface1Function()            [PUBLIC,   Interface1
+METHOD     Interface2Function()            [PUBLIC,   Interface2

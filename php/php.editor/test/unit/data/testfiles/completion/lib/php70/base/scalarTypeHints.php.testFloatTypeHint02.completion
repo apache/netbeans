@@ -1,0 +1,6 @@
+Code completion result for source line:
+function floatTypeHint(flo|at $arg) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      FloatClass                      [PUBLIC]   scalarTypeHints.php
+------------------------------------
+KEYWORD    float                                      null

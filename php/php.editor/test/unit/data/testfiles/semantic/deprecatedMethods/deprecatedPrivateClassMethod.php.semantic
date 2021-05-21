@@ -1,0 +1,8 @@
+<?php
+
+class |>CLASS:ClassName<| {
+    /** @deprecated */
+    private function |>DEPRECATED,METHOD,UNUSED:bar3<|() {}
+}
+
+?>

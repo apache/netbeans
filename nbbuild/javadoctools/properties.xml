@@ -228,3 +228,14 @@
 <property name="javadoc.docs.org-netbeans-modules-xml-lexer" value="${javadoc.web.root}/org-netbeans-modules-xml-lexer"/>
 <property name="javadoc.docs.org-netbeans-modules-xml-text" value="${javadoc.web.root}/org-netbeans-modules-xml-text"/>
 <property name="javadoc.docs.org-netbeans-core-network" value="${javadoc.web.root}/org-netbeans-core-network"/>
+<property name="javadoc.docs.org-netbeans-api-scripting" value="${javadoc.web.root}/org-netbeans-api-scripting"/>
+<property name="javadoc.docs.org-netbeans-libs-graalsdk" value="${javadoc.web.root}/org-netbeans-libs-graalsdk"/>
+<property name="javadoc.docs.org-netbeans-modules-gradle" value="${javadoc.web.root}/org-netbeans-modules-gradle"/>
+<property name="javadoc.docs.org-netbeans-modules-gradle-java" value="${javadoc.web.root}/org-netbeans-modules-gradle-java"/>
+<property name="javadoc.docs.org-netbeans-modules-textmate-lexer" value="${javadoc.web.root}/org-netbeans-modules-textmate-lexer"/>
+<property name="javadoc.docs.org-netbeans-modules-jumpto" value="${javadoc.web.root}/org-netbeans-modules-jumpto"/>
+<property name="javadoc.docs.org-netbeans-modules-java-editor-lib" value="${javadoc.web.root}/org-netbeans-modules-java-editor-lib"/>
+<property name="javadoc.docs.org-netbeans-modules-web-common" value="${javadoc.web.root}/org-netbeans-modules-web-common"/>
+<property name="javadoc.docs.org-netbeans-modules-db-core" value="${javadoc.web.root}/org-netbeans-modules-db-core"/>
+<property name="javadoc.docs.org-netbeans-modules-nativeimage-api" value="${javadoc.web.root}/org-netbeans-modules-nativeimage-api"/>
+<property name="javadoc.docs.org-netbeans-api-lsp" value="${javadoc.web.root}/org-netbeans-api-lsp"/>

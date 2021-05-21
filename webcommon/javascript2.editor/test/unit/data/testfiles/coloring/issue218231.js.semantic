@@ -1,0 +1,7 @@
+var |>METHOD:stylizeDisplayName<| = function(|>UNUSED:displayname<|, |>UNUSED:column<|, record) {
+    var |>LOCAL_VARIABLE_DECLARATION:displayname<| = record.get("local display name");
+    return |>LOCAL_VARIABLE:displayname<|;
+};
+
+|>GLOBAL:formatter<|.println("Start");
+|>GLOBAL:formatter<|.println(stylizeDisplayName("global display name", 10, 20));

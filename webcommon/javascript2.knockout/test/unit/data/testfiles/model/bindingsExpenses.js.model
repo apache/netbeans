@@ -1,0 +1,175 @@
+FUNCTION bindingsExpenses [ANONYMOUS: false, DECLARED: true - bindingsExpenses, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+init     : FUNCTION init [ANONYMOUS: false, DECLARED: true - init, MODIFIERS: PUBLIC, FUNCTION]
+         # RETURN TYPES
+         undefined, RESOLVED: true
+         # PROPERTIES
+         Expense       : FUNCTION Expense [ANONYMOUS: false, DECLARED: true - Expense, MODIFIERS: PRIVATE, CONSTRUCTOR]
+                       # RETURN TYPES
+                       undefined, RESOLVED: true
+                       # PARAMETERS
+                       OBJECT description [ANONYMOUS: false, DECLARED: true - description, MODIFIERS: PUBLIC, PARAMETER]
+                       OBJECT type [ANONYMOUS: false, DECLARED: true - type, MODIFIERS: PUBLIC, PARAMETER]
+                       OBJECT price [ANONYMOUS: false, DECLARED: true - price, MODIFIERS: PUBLIC, PARAMETER]
+                       # PROPERTIES
+                       arguments                : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                       attemptedPrice           : OBJECT attemptedPrice [ANONYMOUS: false, DECLARED: true - attemptedPrice, MODIFIERS: PUBLIC, PROPERTY]
+                       bindingsExpensesAnonym$0 : OBJECT bindingsExpensesAnonym$0 [ANONYMOUS: true, DECLARED: true, MODIFIERS: PRIVATE, ANONYMOUS_OBJECT]
+                                                # PROPERTIES
+                                                read  : OBJECT read [ANONYMOUS: false, DECLARED: true - read, MODIFIERS: PUBLIC, PROPERTY]
+                                                write : FUNCTION write [ANONYMOUS: false, DECLARED: true - write, MODIFIERS: PUBLIC, METHOD]
+                                                      # RETURN TYPES
+                                                      undefined, RESOLVED: true
+                                                      # PARAMETERS
+                                                      OBJECT value [ANONYMOUS: false, DECLARED: true - value, MODIFIERS: PUBLIC, PARAMETER]
+                                                      # PROPERTIES
+                                                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                       date                     : OBJECT date [ANONYMOUS: false, DECLARED: true - date, MODIFIERS: PUBLIC, PROPERTY]
+                       description              : OBJECT description [ANONYMOUS: false, DECLARED: true - description, MODIFIERS: PUBLIC, PROPERTY]
+                       price                    : OBJECT price [ANONYMOUS: false, DECLARED: true - price, MODIFIERS: PUBLIC, PROPERTY]
+                       priceStatus              : OBJECT priceStatus [ANONYMOUS: false, DECLARED: true - priceStatus, MODIFIERS: PUBLIC, PROPERTY]
+                       self                     : OBJECT self [ANONYMOUS: false, DECLARED: true - self, MODIFIERS: PRIVATE, VARIABLE]
+                       type                     : OBJECT type [ANONYMOUS: false, DECLARED: true - type, MODIFIERS: PUBLIC, PROPERTY]
+         ExpenseType   : FUNCTION ExpenseType [ANONYMOUS: false, DECLARED: true - ExpenseType, MODIFIERS: PRIVATE, CONSTRUCTOR]
+                       # RETURN TYPES
+                       undefined, RESOLVED: true
+                       # PARAMETERS
+                       OBJECT name [ANONYMOUS: false, DECLARED: true - name, MODIFIERS: PUBLIC, PARAMETER]
+                       # PROPERTIES
+                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                       name      : OBJECT name [ANONYMOUS: false, DECLARED: true - name, MODIFIERS: PUBLIC, PROPERTY]
+                       self      : OBJECT self [ANONYMOUS: false, DECLARED: true - self, MODIFIERS: PRIVATE, VARIABLE]
+         ExpensesModel : FUNCTION ExpensesModel [ANONYMOUS: false, DECLARED: true - ExpensesModel, MODIFIERS: PRIVATE, CONSTRUCTOR]
+                       # RETURN TYPES
+                       init.ExpensesModel, RESOLVED: true
+                       # PROPERTIES
+                       addExpense                                    : FUNCTION addExpense [ANONYMOUS: false, DECLARED: true - addExpense, MODIFIERS: PUBLIC, METHOD]
+                                                                     # RETURN TYPES
+                                                                     undefined, RESOLVED: true
+                                                                     # PROPERTIES
+                                                                     arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                       addType                                       : FUNCTION addType [ANONYMOUS: false, DECLARED: true - addType, MODIFIERS: PROTECTED, METHOD]
+                                                                     # RETURN TYPES
+                                                                     undefined, RESOLVED: true
+                                                                     # PROPERTIES
+                                                                     arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                       arguments                                     : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                       bindingsExpensesAnonym$1                      : OBJECT bindingsExpensesAnonym$1 [ANONYMOUS: true, DECLARED: true, MODIFIERS: PRIVATE, ANONYMOUS_OBJECT]
+                       bindingsExpensesAnonym$2                      : OBJECT bindingsExpensesAnonym$2 [ANONYMOUS: true, DECLARED: true, MODIFIERS: PRIVATE, ANONYMOUS_OBJECT]
+                       bindingsExpensesinit#ExpensesModel#totalPrice : FUNCTION bindingsExpensesinit#ExpensesModel#totalPrice [ANONYMOUS: true, DECLARED: true - bindingsExpensesinit#ExpensesModel#totalPrice, MODIFIERS: PRIVATE, METHOD]
+                                                                     # RETURN TYPES
+                                                                     @exp;init@pro;ExpensesModel@pro;bindingsExpensesinit#ExpensesModel#totalPrice@pro;total, RESOLVED: false
+                                                                     # PROPERTIES
+                                                                     arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                                                     i         : OBJECT i [ANONYMOUS: false, DECLARED: true - i, MODIFIERS: PRIVATE, VARIABLE]
+                                                                     total     : OBJECT total [ANONYMOUS: false, DECLARED: true - total, MODIFIERS: PRIVATE, VARIABLE]
+                       expenses                                      : OBJECT expenses [ANONYMOUS: false, DECLARED: true - expenses, MODIFIERS: PUBLIC, PROPERTY]
+                                                                     # PROPERTIES
+                                                                     length : OBJECT length [ANONYMOUS: false, DECLARED: false - length, MODIFIERS: PUBLIC, PROPERTY]
+                                                                     push   : FUNCTION push [ANONYMOUS: false, DECLARED: false - push, MODIFIERS: PUBLIC, METHOD]
+                                                                            # PARAMETERS
+                                                                            OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                                                                            # PROPERTIES
+                                                                            arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                                                     remove : FUNCTION remove [ANONYMOUS: false, DECLARED: false - remove, MODIFIERS: PUBLIC, METHOD]
+                                                                            # PARAMETERS
+                                                                            OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                                                                            # PROPERTIES
+                                                                            arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                       removeExpense                                 : FUNCTION removeExpense [ANONYMOUS: false, DECLARED: true - removeExpense, MODIFIERS: PUBLIC, METHOD]
+                                                                     # RETURN TYPES
+                                                                     undefined, RESOLVED: true
+                                                                     # PARAMETERS
+                                                                     OBJECT expense [ANONYMOUS: false, DECLARED: true - expense, MODIFIERS: PUBLIC, PARAMETER]
+                                                                     # PROPERTIES
+                                                                     arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                       self                                          : OBJECT self [ANONYMOUS: false, DECLARED: true - self, MODIFIERS: PRIVATE, VARIABLE]
+                       totalPrice                                    : OBJECT totalPrice [ANONYMOUS: false, DECLARED: true - totalPrice, MODIFIERS: PUBLIC, PROPERTY]
+                       types                                         : OBJECT types [ANONYMOUS: false, DECLARED: true - types, MODIFIERS: PUBLIC, PROPERTY]
+                                                                     # PROPERTIES
+                                                                     push : FUNCTION push [ANONYMOUS: false, DECLARED: false - push, MODIFIERS: PUBLIC, METHOD]
+                                                                          # PARAMETERS
+                                                                          OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                                                                          # PROPERTIES
+                                                                          arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+         arguments     : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+isNaN    : FUNCTION isNaN [ANONYMOUS: false, DECLARED: false - isNaN, MODIFIERS: PUBLIC, FUNCTION]
+         # PROPERTIES
+         arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+ko       : OBJECT ko [ANONYMOUS: false, DECLARED: false - ko, MODIFIERS: PUBLIC, OBJECT]
+         # PROPERTIES
+         $bindings       : OBJECT $bindings [ANONYMOUS: false, DECLARED: true - $bindings, MODIFIERS: PUBLIC, OBJECT]
+                         # PROPERTIES
+                         addExpense                                    : FUNCTION addExpense [ANONYMOUS: false, DECLARED: true - addExpense, MODIFIERS: PUBLIC, METHOD]
+                                                                       # RETURN TYPES
+                                                                       undefined, RESOLVED: true
+                                                                       # PROPERTIES
+                                                                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                         addType                                       : FUNCTION addType [ANONYMOUS: false, DECLARED: true - addType, MODIFIERS: PROTECTED, METHOD]
+                                                                       # RETURN TYPES
+                                                                       undefined, RESOLVED: true
+                                                                       # PROPERTIES
+                                                                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                         bindingsExpensesAnonym$1                      : OBJECT bindingsExpensesAnonym$1 [ANONYMOUS: false, DECLARED: true - bindingsExpensesAnonym$1, MODIFIERS: PRIVATE, OBJECT_LITERAL]
+                         bindingsExpensesAnonym$2                      : OBJECT bindingsExpensesAnonym$2 [ANONYMOUS: false, DECLARED: true - bindingsExpensesAnonym$2, MODIFIERS: PRIVATE, OBJECT_LITERAL]
+                         bindingsExpensesinit#ExpensesModel#totalPrice : FUNCTION bindingsExpensesinit#ExpensesModel#totalPrice [ANONYMOUS: false, DECLARED: true - bindingsExpensesinit#ExpensesModel#totalPrice, MODIFIERS: PRIVATE, METHOD]
+                                                                       # RETURN TYPES
+                                                                       @exp;init@pro;ExpensesModel@pro;bindingsExpensesinit#ExpensesModel#totalPrice@pro;total, RESOLVED: false
+                                                                       # PROPERTIES
+                                                                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                                                       i         : OBJECT i [ANONYMOUS: false, DECLARED: true - i, MODIFIERS: PRIVATE, VARIABLE]
+                                                                       total     : OBJECT total [ANONYMOUS: false, DECLARED: true - total, MODIFIERS: PRIVATE, VARIABLE]
+                         expenses                                      : OBJECT expenses [ANONYMOUS: false, DECLARED: true - expenses, MODIFIERS: PUBLIC, PROPERTY]
+                                                                       # PROPERTIES
+                                                                       length : OBJECT length [ANONYMOUS: false, DECLARED: false - length, MODIFIERS: PUBLIC, PROPERTY]
+                                                                       push   : FUNCTION push [ANONYMOUS: false, DECLARED: false - push, MODIFIERS: PUBLIC, METHOD]
+                                                                              # PARAMETERS
+                                                                              OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                                                                              # PROPERTIES
+                                                                              arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                                                       remove : FUNCTION remove [ANONYMOUS: false, DECLARED: false - remove, MODIFIERS: PUBLIC, METHOD]
+                                                                              # PARAMETERS
+                                                                              OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                                                                              # PROPERTIES
+                                                                              arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                         removeExpense                                 : FUNCTION removeExpense [ANONYMOUS: false, DECLARED: true - removeExpense, MODIFIERS: PUBLIC, METHOD]
+                                                                       # RETURN TYPES
+                                                                       undefined, RESOLVED: true
+                                                                       # PARAMETERS
+                                                                       OBJECT expense [ANONYMOUS: false, DECLARED: true - expense, MODIFIERS: PUBLIC, PARAMETER]
+                                                                       # PROPERTIES
+                                                                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                         self                                          : OBJECT self [ANONYMOUS: false, DECLARED: true - self, MODIFIERS: PRIVATE, VARIABLE]
+                         totalPrice                                    : OBJECT totalPrice [ANONYMOUS: false, DECLARED: true - totalPrice, MODIFIERS: PUBLIC, PROPERTY]
+                         types                                         : OBJECT types [ANONYMOUS: false, DECLARED: true - types, MODIFIERS: PUBLIC, PROPERTY]
+                                                                       # PROPERTIES
+                                                                       push : FUNCTION push [ANONYMOUS: false, DECLARED: false - push, MODIFIERS: PUBLIC, METHOD]
+                                                                            # PARAMETERS
+                                                                            OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                                                                            # PROPERTIES
+                                                                            arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+         applyBindings   : FUNCTION applyBindings [ANONYMOUS: false, DECLARED: false - applyBindings, MODIFIERS: PUBLIC, METHOD]
+                         # PARAMETERS
+                         OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                         # PROPERTIES
+                         arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+         computed        : FUNCTION computed [ANONYMOUS: false, DECLARED: false - computed, MODIFIERS: PUBLIC, METHOD]
+                         # PARAMETERS
+                         OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                         # PROPERTIES
+                         arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+         observable      : FUNCTION observable [ANONYMOUS: false, DECLARED: false - observable, MODIFIERS: PUBLIC, METHOD]
+                         # PARAMETERS
+                         OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                         # PROPERTIES
+                         arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+         observableArray : FUNCTION observableArray [ANONYMOUS: false, DECLARED: false - observableArray, MODIFIERS: PUBLIC, METHOD]
+                         # PARAMETERS
+                         OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                         # PROPERTIES
+                         arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+parseInt : FUNCTION parseInt [ANONYMOUS: false, DECLARED: false - parseInt, MODIFIERS: PUBLIC, FUNCTION]
+         # PROPERTIES
+         arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

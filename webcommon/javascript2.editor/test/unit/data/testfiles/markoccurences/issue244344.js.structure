@@ -1,0 +1,6 @@
+SeLiteMisc:CLASS:[PUBLIC]:ESCAPED{SeLiteMisc}:
+  isInstance:METHOD:[PUBLIC]:ESCAPED{isInstance}ESCAPED{(}ESCAPED{object}ESCAPED{, }ESCAPED{classes}ESCAPED{, }ESCAPED{className}ESCAPED{, }ESCAPED{message}ESCAPED{)}<font color="#999999">ESCAPED{ : }Boolean</font>:
+    arr:VARIABLE:[PRIVATE]:ESCAPED{arr}<font color="#999999">ESCAPED{ : }Array</font>:
+    clazz:VARIABLE:[PRIVATE]:ESCAPED{clazz}<font color="#999999">ESCAPED{ : }Array</font>:
+    i:VARIABLE:[PRIVATE]:ESCAPED{i}<font color="#999999">ESCAPED{ : }Number</font>:
+    isPrdca:METHOD:[PRIVATE]:ESCAPED{isPrdca}ESCAPED{(}ESCAPED{object}ESCAPED{, }ESCAPED{classes}ESCAPED{, }ESCAPED{className}ESCAPED{, }ESCAPED{message}ESCAPED{)}<font color="#999999">ESCAPED{ : }Boolean</font>:

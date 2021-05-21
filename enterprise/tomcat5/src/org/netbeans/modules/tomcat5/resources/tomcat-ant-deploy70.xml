@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project default="-deploy-ant" basedir=".">
+    <target name="-init" if="deploy.ant.enabled">
+        <property file="${deploy.ant.properties.file}"/>
+        <tempfile property="temp.module.folder" prefix="tomcat" destdir="${java.io.tmpdir}"/>
+        <unwar src="${deploy.ant.archive}" dest="${temp.module.folder}">
+            <patternset includes="META-INF/context.xml"/>
+        </unwar>
+        <xmlproperty file="${temp.module.folder}/META-INF/context.xml"/>
+        <delete dir="${temp.module.folder}"/>
+    </target>
+    <target name="-check-credentials" if="deploy.ant.enabled" depends="-init">
+        <fail message="Tomcat password has to be passed as tomcat.password property.">
+            <condition>
+                <not>
+                    <isset property="tomcat.password"/>
+                </not>
+            </condition>
+        </fail>
+    </target>
+    <target name="-deploy-ant" if="deploy.ant.enabled" depends="-init,-check-credentials">
+        <echo message="Deploying ${deploy.ant.archive} to ${Context(path)}"/>
+        <taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask">
+            <classpath>
+                <pathelement path="${tomcat.home}/lib/catalina-ant.jar"/>
+                <pathelement path="${tomcat.home}/lib/tomcat-coyote.jar"/>
+                <pathelement path="${tomcat.home}/lib/tomcat-util.jar"/>
+                <pathelement path="${tomcat.home}/bin/tomcat-juli.jar"/>
+            </classpath>
+        </taskdef>
+        <deploy url="${tomcat.url}/manager/text" username="${tomcat.username}"
+                password="${tomcat.password}" path="${Context(path)}"
+                war="${deploy.ant.archive}"/>
+        <property name="deploy.ant.client.url" value="${tomcat.url}${Context(path)}"/>
+    </target>
+    <target name="-undeploy-ant" if="deploy.ant.enabled" depends="-init,-check-credentials">
+        <echo message="Undeploying ${Context(path)}"/>
+        <taskdef name="undeploy"  classname="org.apache.catalina.ant.UndeployTask">
+            <classpath>
+                <pathelement path="${tomcat.home}/lib/catalina-ant.jar"/>
+                <pathelement path="${tomcat.home}/lib/tomcat-coyote.jar"/>
+                <pathelement path="${tomcat.home}/lib/tomcat-util.jar"/>
+                <pathelement path="${tomcat.home}/bin/tomcat-juli.jar"/>
+            </classpath>
+        </taskdef>
+        <undeploy url="${tomcat.url}/manager/text" username="${tomcat.username}" 
+                  password="${tomcat.password}" path="${Context(path)}"/>
+    </target>
+</project>

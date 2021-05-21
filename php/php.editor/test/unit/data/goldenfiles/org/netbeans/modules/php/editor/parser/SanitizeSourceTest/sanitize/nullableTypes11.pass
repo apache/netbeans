@@ -1,0 +1,13 @@
+<Program start='0' end='30'>
+    <Comments>
+    </Comments>
+    <Statements>
+        <FunctionDeclaration start='7' end='29' isReference='false'>
+            <Identifier start='16' end='22' name='mytest'/>
+            <FormalParameters>
+            </FormalParameters>
+            <Block start='26' end='29' isCurly='true'>
+            </Block>
+        </FunctionDeclaration>
+    </Statements>
+</Program>

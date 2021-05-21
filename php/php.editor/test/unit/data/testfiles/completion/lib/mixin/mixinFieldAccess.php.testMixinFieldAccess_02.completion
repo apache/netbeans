@@ -1,0 +1,21 @@
+Code completion result for source line:
+$fieldAccess->Mixin->|publicMethodC1(); // CC
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     publicMethodC1()                [PUBLIC]   C1
+METHOD     publicMethodC2()                [PUBLIC]   C2
+METHOD     publicMethodC3()                [PUBLIC]   C3
+METHOD     publicMethodC4()                [PUBLIC]   C4
+METHOD     publicMethodC5()                [PUBLIC]   C5
+METHOD     publicStaticMethodC1()          [STATIC]   C1
+METHOD     publicStaticMethodC2()          [STATIC]   C2
+METHOD     publicStaticMethodC3()          [STATIC]   C3
+METHOD     publicStaticMethodC4()          [STATIC]   C4
+METHOD     publicStaticMethodC5()          [STATIC]   C5
+METHOD     test()                          [PUBLIC]   Mixin
+METHOD     testParent()                    [PUBLIC]   MixinParent
+VARIABLE   ? publicFieldC1                 [PUBLIC]   C1
+VARIABLE   ? publicFieldC2                 [PUBLIC]   C2
+VARIABLE   ? publicFieldC3                 [PUBLIC]   C3
+VARIABLE   ? publicFieldC4                 [PUBLIC]   C4
+VARIABLE   ? publicFieldC5                 [PUBLIC]   C5

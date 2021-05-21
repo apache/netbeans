@@ -1,0 +1,748 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+]>
+
+<api-answers
+  question-version="1.29"
+  author="sdedic@netbeans.org"
+>
+
+  &api-questions;
+
+ <answer id="arch-overall">
+  <p>
+      API allows to create new files based on templates. Scripting engines can be specified for
+      processing the template, or custom Handlers may be registered to process certain templates.
+  </p>
+  <p>
+      A template can use places substituable with parameter values; certain well-known parameters are
+      predefined, if the caller does not provide its custom values.
+  </p>
+ </answer>
+ <answer id="arch-quality">
+  <p>
+   The feature will be fully covered by unit tests.
+  </p>
+ </answer>
+ <answer id="arch-time">
+  <p>
+   October 2014
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="arch-usecases" when="init">
+            <hint>
+                Content of this answer will be displayed as part of page at
+                http://www.netbeans.org/download/dev/javadoc/usecases.html 
+                You can use tags &lt;usecase name="name&gt; regular html description &lt;/usecase&gt;
+                and if you want to use an URL you can prefix if with @TOP@ to begin
+                at the root of your javadoc
+            </hint>
+        
+            Describe the main <a href="http://wiki.netbeans.org/API_Design#The_Importance_of_Being_Use_Case_Oriented">
+            use cases</a> of the new API. Who will use it under
+            what circumstances? What kind of code would typically need to be written
+            to use the module?
+        </question>
+-->
+ <answer id="arch-usecases">
+     <usecase id="template" name="Use boilerplates">
+         <p>
+             An existing file can be used as a boilerplate for creation of a new file.
+             The boiler plate can contain necessary skeleton, comments, content. As the
+             boilerplate resides on config filesystem, it is also customizable by the user
+             and the user can eventually develop custom templates.
+         </p>
+         <p>
+             In previous NetBeans versions, templating system was built into 
+             <api name="DataSystemsAPI" category="official" group="java" type="export" 
+                url="@org-openide-loaders@/index.html"/>.
+         </p>
+     </usecase>
+     <usecase id="templateHandler" name="Custom template handlers">
+        <p>
+            Often many people require ability to create a "clever" template - e.g.
+            write piece of simple text and at the time of its 
+            <a href="@TOP@/org/netbeans/api/templates/FileBuilder.html#createFromTemplate-org.openide.filesystems.FileObject-org.openide.filesystems.FileObject-java.lang.String-java.util.Map-org.netbeans.api.templates.FileBuilder.Mode-">
+                processing
+            </a> 
+            do some advanced changes to it using either 
+            <a name="scripting">scripting or templating</a> languages.
+        </p>
+        <p>
+            This traditionally used to be a bit complicated task (hacking into DataObject implementation), however since 
+            version 6.1 there are interface in 
+            <api name="org.openide.loaders.CreateFromTemplateHandler" category="deprecated" group="lookup" type="export"
+                 url="@org-openide-loaders@/org/openide/loaders/CreateFromTemplateHandler.html">
+                DataSystem API
+            </api>
+            and finally
+            <api name="org.netbeans.api.templates.CreateFromTemplateHandler" category="official" group="lookup" type="export"
+             url="@TOP@/org/netbeans/api/templates/CreateFromTemplateHandler.html">
+                that can be registered as a services in a lookup and it is reponsible
+                for handling the whole copy of the template file(s) to the destination
+                folder.
+            </api>
+        </p>
+     </usecase>
+     <usecase id="templateAttributes" name="Custom attributes for processing">
+         <p>
+            Runtime or project-related values may be supplied by 
+           <api name="org.openide.loaders.CreateFromTemplateAttributes" category="official" group="lookup" type="export"
+           url="@TOP@/org/netbeans/api/templates/CreateFromTemplateAttributes.html">
+               that can be registered as a services in a lookup and it is reponsible
+               for providing "hints" - e.g. map mapping strings to various objects.
+           </api> and these interfaces allow anyone to extend the behaviour during
+           creation of new files.
+         </p>
+         <p>
+             The <a href="@TOP@/org/netbeans/api/templates/CreateFromTemplateAttributes.html">CreateFromTemplateAttribute</a> implementation
+             knows which template is being used, where the outcome should be placed, so it can derive appropriate values for both 
+             the template and the target location.
+         </p>
+     </usecase>
+     <usecase id="script" name="Using Scripting and Templating Languages" >
+        <p>
+        There is a built in <a href="@org-netbeans-api-scripting@/overview-summary.html">support for scripting languages</a>
+        in the NetBeans Platform. If a template is annotated with
+        <api name="javax.script.ScriptEngine" category="official" group="property" type="export">
+            a property that can be associated to templates that either should
+            return real instance of <code>ScriptEngine</code> interface or
+            a <code>String</code> name of the engine that is then used to
+            search for it in the <code>javax.script.ScriptEngineManager</code>.
+            Usually the <a href="http://freemarker.sourceforge.net/">freemarker</a> engine is the one that is 
+            supported by the NetBeans IDE - if your module wants to use it
+            then include a token dependency <code>OpenIDE-Module-Needs: javax.script.ScriptEngine.freemarker</code>
+            in your manifest file (also accessible through project customizer GUI)
+            to indicate to the system that you need it.
+        </api>
+        then the scripting engine is then used to process the template and
+        generate the output file. While running the engine one can rely
+        on few predefined properties:
+        </p>
+
+        <ul>
+            <li><api name="name" category="stable" group="property" type="export"> contains the name of the <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html">DataObject</a> that is being created</api></li>
+            <li><api name="user" category="stable" group="property" type="export"> contains the name the user</api></li>
+            <li><api name="nameAndExt" category="stable" group="property" type="export"> contains the name and extension of the file that is being created</api></li>
+            <li><api name="date" category="stable" group="property" type="export"> contains <code>String</code> representing the current day like <code>23. 3. 2007</code></api></li>
+            <li><api name="time" category="stable" group="property" type="export"> contains <code>String</code> the current time like <code>17:18:30</code></api></li>
+            <li><api name="dateTime" category="stable" group="property" type="export"> contains <code>java.util.Date</code> representing current data and time like</api></li>
+            <li><api name="encoding" category="stable" group="property" type="export"> contains <code>String</code> the file encoding of the template instance</api></li>
+        </ul>
+        
+        <p>
+        Other properties can indeed be provided by
+        <a href="@TOP@/org/netbeans/api/templates/CreateFromTemplateAttributes.html">CreateFromTemplateAttributes</a>s.
+        After processing, the output is also sent to appropriate
+        <code>org.openide.text.IndentEngine</code> associated
+        with the mime type of the template, for formating.
+        </p>
+
+        <p style="margin-left: 0.2in; margin-right: 0.2in; margin-top: 0.2in; margin-bottom: 0.2in; border: 1.00pt solid #9999cc; padding: 0.1in; color: #666699">
+            <b>Smart Templating Quick How-To</b>
+            <br/>
+            
+            First of all create a file in your module layer located somewhere
+            under the <code>Templates/</code> folder. Make it a template by
+            adding &lt;attr name="template" boolvalue="true"/&gt;. Associate
+            this template with a scripting language, for example by
+            &lt;attr name="javax.script.ScriptEngine" stringvalue="freemarker"/&gt;.
+            Now make sure that the scripting language integration is also available
+            by requesting a token in standard format, for freemarker just put
+            <code>OpenIDE-Module-Needs: javax.script.ScriptEngine.freemarker</code>
+            in your manifest. This tells the NetBeans module system that a 
+            module providing integration with such scripting engine has to be 
+            enabled. Now you can use regular script language tags inside of
+            your template file. When you write your <code>instantiate</code>
+            method in your wizard, you can create a Map&lt;String,Object&gt; and
+            fill it with parameters collected from your wizard and then pass it 
+            to
+            <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html">                
+                createFromTemplate(targetFolder, targetName, mapWithParameters)
+            </a>. This will invoke the scripting language and make the 
+            <code>mapWithParameters</code> values available to it. Beyond this 
+            there is few standard parameters predefined including <code>name</code>, <code>user</code>, <code>date</code>, <code>time</code>, etc.
+            and also additional parameters are collected from all registered
+            <a href="@org-openide-loaders@/org/openide/loaders/CreateFromTemplateAttributesProvider.html">CreateFromTemplateAttributesProvider</a>s.
+        </p>
+        
+     </usecase>
+    <usecase id="file-sets" name="Create sets of files" >
+        <p>
+            A <a href="@TOP@/org/netbeans/api/templates/CreateFromTemplateHandler.html">CreateFromTemplateHandler</a>
+            should be able to create multiple files, one of them <i>important</i> so it will open after user 
+            initiates the creation action. The template of set of related files may be represented by a folder with
+            a handler attached, and the operation deploys multiple files in the target directory.
+        </p>
+    </usecase>
+    <usecase id="js-wizard" name="Use HTML and JavaScript">
+        <a name="html-and-js"></a>
+        <p>
+            There is a way to create a portable wizard (e.g. one that can
+            be executed inside of NetBeans as well as in a browser). The 
+            most portable UI these days is written in HTML. To
+            register such HTML based wizard with your file template, 
+            use <a href="@TOP@/org/netbeans/api/templates/TemplateRegistration.html">@TemplateRegistration</a>
+            annotation and include <code>page()</code> attribute referencing
+            your own HTML page:
+        </p>
+        <pre>
+<b>public class</b> X {
+    {@code @TemplateRegistration}(
+        page = "x.html",
+        scriptEngine = "freemarker",
+        displayName = "JS Wizard",
+        folder = "Other",
+        content = "x.fmk"
+    )
+    <b>public static</b> String jsWizard() {
+        <b>return</b> "yourInitializationCode();";
+    }
+}            
+        </pre>
+        <p>
+            the return value of the annotated method (named <code>jsWizard</code>)
+            should be of type String and its content should be snippet of 
+            JavaScript code to execute inside of your specified HTML page 
+            (e.g. <code>x.html</code>) to create an instance of 
+            <a href="http://knockoutjs.com">KnockoutJS model</a> to 
+            drive the wizard. Here is a sample code for the model:     
+        </p>        
+        <pre>
+<b>function</b> yourInitializationCode() {
+    <b>var</b> ok = ko.observable(false);
+    <b>var</b> msg = ko.observable('');
+    <b>var</b> current = ko.observable('Init');
+    <b>var</b> data = {
+        'errorCode': ko.computed(function() {
+            if ('Init' == current()) <b>return</b> 0;
+            if (!ok()) <b>return</b> 1;
+            if (msg()) <b>return</b> 0;
+            <b>return</b> 2;
+        }),
+        'current': current,
+        'ok': ok,
+        'msg' : msg
+    }
+    ko.applyBindings(data);
+    <b>return</b> data;
+}
+</pre>
+    <p>
+        The model defines wizard composed of few panels (defined in following
+        HTML file) and a verification function (registered as <code>errorCode</code>) 
+        to check if everything is OK. In addition to that it defines 
+        proprietary text value <code>msg</code> which is 
+        going to be filled by the wizard and cannot be empty. Each
+        page of the wizard is registered using a custom
+        <a href="http://knockoutjs.com">Knockout.js</a> binding called
+        <code>step</code>. Here is an HTML page defining three steps:
+    </p>
+<pre>
+&lt;<b>section</b> data-bind="step: { 'id' : 'init', text : 'Initial Page'}" &gt;
+    &lt;<b>p</b>&gt;
+        Write your UI in portable HTML and display it in NetBeans 
+        or on web! Read more at &lt;a href="http://wiki.netbeans.org/HtmlUIForTemplates"&gt;our wiki&lt;/a&gt;...
+    &lt;/<b>p</b>&gt;
+&lt;/<b>section</b>&gt;
+
+&lt;<b>section</b> data-bind="step: 'info'" &gt;
+    &lt;<b>p</b>&gt;
+        Use &lt;a href="http://knockoutjs.com"&gt;knockout.js&lt;/a&gt; bindings 
+        to isolate your view model from the actual look of your HTML
+        page. Bind your view to model written in Java or JavaScript.
+    &lt;/<b>p</b>&gt;
+    &lt;<b>h3</b>&gt;Is everything OK?&lt;/<b>h3</b>&gt;
+    &lt;<b>input</b> type="checkbox" data-bind="checked: ok"/&gt;
+    &lt;<b>h3</b>&gt;How do you feel?&lt;/<b>h3</b>&gt;
+    &lt;<b>input</b> type='text' data-bind="textInput: msg"/&gt;
+&lt;/<b>section</b>&gt;
+
+&lt;<b>section</b> data-bind="step: { 'id' : 'summary' }" &gt;
+    &lt;<b>p</b>&gt;
+        You are feeling &lt;<b>span</b> data-bind="text: msg"&gt;&lt;/<b>span</b>&gt;!
+        Let's proceed to create a file which will express your 
+        feeling by using &lt;<b>a</b> href="http://freemarker.org/"&gt;Freemarker&lt;/<b>a</b>&gt;
+        templating engine and values filled in this wizard.
+    &lt;/<b>p</b>&gt;
+&lt;/<b>section</b>&gt;
+</pre>
+<p>
+    The Next/Finish buttons are controlled by the <code>errorCode</code> property. 
+    If it is non-zero, there is an error and these buttons are disabled. 
+    Also once can use that inside of the HTML page to display user related errors: 
+</p>
+<pre>
+&lt;<b>div</b> data-bind="visible: errorCode() == 1"&gt;
+    &lt;<b>span</b> style="color: red"&gt;Please check you are OK!&lt;/<b>span</b>&gt;
+&lt;/<b>div</b>&gt;
+ 
+&lt;<b>div</b> data-bind="visible: errorCode() == 2"&gt;
+    &lt;<b>span</b> style="color: red"&gt;Tell us how do you feel!&lt;/<b>span</b>&gt;
+&lt;/<b>div</b>&gt;    
+</pre>
+<p>
+The L10N of the wizard is done on the level of HTML pages. 
+The whole page gets translated into different language with appropriate 
+suffix like <code>x_cs.html</code> and it is then 
+selected instead of the default one, when user runs in such locale.
+</p>
+<p>
+When the wizard is successfully finished, all the values 
+specified in the model (except system ones like <code>current</code>,
+<code>errorCode</code>, etc.) are transfered to the templating engine, 
+so they can influence the content of created files. 
+Here is a sample <code>x.fmt</code> content which reuses the <code>msg</code> 
+value provided by the wizard:     
+</p>
+<pre>
+Hi,
+I am Freemarker.
+I feel ${wizard.msg}.    
+</pre>
+<p>
+    When such file is instantiated, the <code>${wizard.msg}</code> is
+    replaced by the actual value taken from the wizard.    
+</p>
+    </usecase>
+    
+    <usecase id="java-html" name="Use HTML and Java">
+        <a name="html-and-java"></a>
+        <p>
+            Some people would rather use Java instead of Java script while
+            getting the portability of the <em>HTML</em>. There is a simple
+            way to rewrite the <a href="#html-and-js">HTML and JavaScript sample</a>
+            to <b>Java</b>
+            (and possibly run it in a plugin-less browser via 
+            <a onclick="target='_blank'" href="http://bck2brwsr.apidesign.org">bck2brwsr VM</a>). Keep the
+            same HTML, <a onclick="target='_blank'" href="http://freemarker.org/">Freemarker</a>, etc.
+            files - just instead of encoding the logic in JavaScript use Java:
+        </p>
+<pre>
+{@link net.java.html.json.Model @Model}(className = "JavaWizard", properties = {
+    {@link net.java.html.json.Property @Property}(name = "current", type = String.<b>class</b>),
+    {@link net.java.html.json.Property @Property}(name = "ok", type = <b>boolean</b>.<b>class</b>),
+    {@link net.java.html.json.Property @Property}(name = "msg", type = String.<b>class</b>)
+})
+<b>public class</b> JavaWizardCntrl {
+    {@link net.java.html.json.ComputedProperty @ComputedProperty} <b>static int</b> errorCode(
+        String current, boolean ok, String msg
+    ) {
+        if ("Init".equals(current)) <b>return</b> 0;
+        if (!ok) <b>return</b> 1;
+        if (msg == null || msg.isEmpty()) <b>return</b> 2;
+        <b>return</b> 0;
+    }
+ 
+ 
+    {@code @TemplateRegistration}(
+        page = "x.html",
+        scriptEngine = "freemarker",
+        displayName = "HTML/Java Wizard",
+        folder = "Java",
+        content = "x.fmk"
+    )
+    <b>public static</b> JavaWizard javaWizardFactory() {
+        return new JavaWizard("Init", false, "");
+    }
+}            
+</pre>        
+<p>
+    The return value of the annotated method is now an
+    <a onclick="target='_blank'" href="http://bits.netbeans.org/html+java/">HTML/Java</a>
+    model class which can naturally represent the essential 
+    <a onclick="target='_blank'" href="http://knockoutjs.com">Knockout.js</a> objects
+    in Java. 
+</p>
+    </usecase>
+    <usecase id="target-chooser" name="Selecting target location with HTML UI">
+        <a name="targetchooser"></a>
+        <p>
+        It is very common that the HTML file creation wizards (either 
+        controled by <a href="#html-and-js">JavaScript</a> or by
+        <a href="#html-and-java">Java</a>) need to allow user to specify 
+        target location of their file. To simplify such common task and
+        to ensure its UI is consistent with the rest of the environment,
+        one can just include following code snippet in the HTML file and
+        leave its actual rendering on the system:
+        </p>
+<pre>
+&lt;<b>section</b> data-bind="step: 'targetChooser'" &gt;
+&lt;/<b>section</b>&gt;
+</pre>     
+<p>   
+        Such section will then be replaced by a panel which provides appropriate
+        UI for choosing target directory as well as name for the newly created
+        file.
+</p>
+<a name="javaTargetChooser"></a>
+<p>
+        In case one prefers more Java-like chooser, it is possible to use
+        <code>'targetChooser:java'</code> as name of the step. Then all 
+        Java source groups in target project will be listed and presented
+        in a typical Java package view selection mode. Once can use different
+        suffix than <code>java</code> to list other types of source groups.
+        This feature requires presence of <code>org.netbeans.modules.java.project.ui</code>
+        module, otherwise the target chooser falls back to classical one. 
+</p>
+    </usecase>    
+    <usecase id="maven-wizard" name="UI for Maven Archetypes">
+        <a name="html-and-maven"></a>
+        <p>
+            There is a way to create a portable wizard (with logic either
+            in <a href="#html-and-js">JavaScript</a> or in 
+            <a href="#html-and-java">Java</a>) to instantiate a <b>Maven</b>
+            archetype. This way one merges the <em>project templating</em>
+            functionality of <b>Maven</b> with flexible and tailored UI
+            provided by HTML and JS/Java.
+        </p>
+        <p>
+            The definition of the UI is the same as in 
+            <a href="#html-and-js">previous</a>
+            <a href="#html-and-java">cases</a>, just as a <a href="#targetchooser">target chooser</a>
+            one can also use dedicated <b>Maven</b> one - just use
+            <code>'targetChooser:archetype'</code> to get a panel 
+            with options to select directory, <code>archetypeId</code>,
+            <code>groupId</code> and <code>version</code> of the project to
+            create.
+            This feature requires presence of <code>org.netbeans.api.maven</code>
+            module, otherwise the target chooser falls back to classical one. 
+        </p>
+        <p>
+            The archetype registration is then a classical one. Here is an
+            example of the UI being in <code>x.html</code> and the archetype
+            described in <code>x.archetype</code> one:
+        </p>
+        <pre>
+    {@code @TemplateRegistration}(
+        page = "x.html",
+        displayName = "HTML/Java Wizard",
+        folder = "Java",
+        content = "x.archetype"
+    )
+    <b>public static</b> MavenWizard mavenArchetype() {
+        <b>return new</b> MavenWizard(<em>/*...*/</em>);
+    }
+        </pre>
+        <p>
+            The <code>x.archetype</code> file describes the archetype to use
+            and has following properties-like syntax:
+        </p>
+        <pre>
+archetypeGroupId=org.codehaus.mojo.archetypes
+archetypeArtifactId=javafx
+archetypeVersion=0.6
+archetypeBuild=false # or true to build the project once created
+archetypeOpen=src/main/java/.*/Main.java,src/main/resources/default.config # regexp to 
+# find files that should be opened once the project is created
+        </pre>
+        <p>
+            The values <code>archetypeArtifactId</code>,
+            <code>archetypeGroupId</code> and <code>archetypeVersion</code>
+            are by default taken from the archetype definition file, but the
+            wizard model can define these properties as well and in such case
+            they would take precedence. These values define what Maven 
+            archetype will be used to initialized the project structure.
+        </p>
+        <p>
+            Any properties defined by the model (in the above example
+            the <code>MavenWizard</code>) are going to be passed into 
+            <b>Maven</b> archetype execution and can thus influence the 
+            the behavior of the archetype - this is the way to write an
+            HTML UI for <b>Maven</b> archetype.
+        </p>
+    </usecase>
+ </answer>
+ <answer id="arch-what">
+  <p>
+   This utility standardizes the process to use files as blueprints to create new files.
+  </p>
+ </answer>
+ <answer id="arch-where">
+  <defaultanswer generate='here' />
+ </answer>
+ <answer id="compat-deprecation">
+  <p>
+   This module replaces some implementation in DataSystem APIs so the implementation
+    is usable even without DataSystems API itself. DataSystems API will use this
+    library.
+  </p>
+ </answer>
+ <answer id="compat-i18n">
+  <p>
+   Yes.
+  </p>
+ </answer>
+ <answer id="compat-standards">
+  <p>
+   No.
+  </p>
+ </answer>
+ <answer id="compat-version">
+  <p>
+   Yes.
+  </p>
+ </answer>
+ <answer id="dep-jre">
+  <p>
+   Requires JRE 7, for implementation reasons (AutoCloseable).
+  </p>
+ </answer>
+ <answer id="dep-jrejdk">
+  <p>
+   JRE
+  </p>
+ </answer>
+ <answer id="dep-nb">
+  <defaultanswer generate='here' />
+ </answer>
+ <answer id="dep-non-nb">
+  <p>
+   None.
+  </p>
+ </answer>
+ <answer id="dep-platform">
+  <p>
+   No native platform dependencies.
+  </p>
+ </answer>
+ <answer id="deploy-dependencies">
+  <p>
+   No specific deploy dependencies.
+  </p>
+ </answer>
+ <answer id="deploy-jar">
+  <p>
+   JARs only.
+  </p>
+ </answer>
+ <answer id="deploy-nbm">
+  <p>
+   Yes.
+  </p>
+ </answer>
+ <answer id="deploy-packages">
+  <p>
+   Yes, except API.
+  </p>
+ </answer>
+ <answer id="deploy-shared">
+  <p>
+   Anywhere.
+  </p>
+ </answer>
+ <answer id="exec-ant-tasks">
+  <p>
+   No.
+  </p>
+ </answer>
+ <answer id="exec-classloader">
+  <p>
+   No.
+  </p>
+ </answer>
+ <answer id="exec-component">
+  <p>
+   No.
+  </p>
+ </answer>
+ <answer id="exec-introspection">
+  <p>
+   No.
+  </p>
+ </answer>
+ <answer id="exec-privateaccess">
+  <p>
+   No.
+  </p>
+ </answer>
+ <answer id="exec-process">
+  <p>
+   No.
+  </p>
+ </answer>
+ <answer id="exec-property">
+  <p>
+    <api name="org.netbeans.api.templates.IndentEngine" category="friend" group="property" type="export">
+    A special ScriptEngine type is required to perform indentation on the produced sources.
+    The ScriptEngine must provide a name "<code>org.netbeans.api.templates.IndentEngine</code>". 
+    The only attribute property passed to the ScriptContext is <code>mimeType</code> of the 
+    text being formatted.
+    </api>
+  </p>
+  <p>
+      <api name="freeFileExtension" category="stable" group="property" type="export">
+          A parameter for template creation, possibly specified as a template file layer attribute that controls
+          how the extension for the new file is computed. See <a href="@TOP@/org/netbeans/api/templates/CreateDescriptor.html#FREE_FILE_EXTENSION">
+        CreateDescriptor javadoc </a> for the details.
+      </api>
+  </p>
+  <p>
+      <api name="org-netbeans-modules-java-preformattedSource" category="stable" group="property" type="export">
+          A parameter for template creation, possibly specified as a template file layer attribute that controls
+          formatting of the produced text. See <a href="@TOP@/org/netbeans/api/templates/CreateDescriptor.html#PREFORMATTED_TEMPLATE">
+        CreateDescriptor javadoc </a> for the details.
+      </api>
+  </p>
+ </answer>
+ <answer id="exec-reflection">
+  <p>
+      <api name="JavaPackageChooser" category="friend" type="import" group="java">
+          Uses reflection to access <code>JavaTemplates</code> from module
+          <code>org.netbeans.modules.java.project.ui</code> in order to
+          create Java-like package chooser. If the module is not available,
+          the wizard falls back to classical target chooser.
+      </api>
+  </p>
+ </answer>
+ <answer id="exec-threading">
+  <p>
+   Yes.
+  </p>
+ </answer>
+ <answer id="format-clipboard">
+  <p>
+   None.
+  </p>
+ </answer>
+ <answer id="format-dnd">
+  <p>
+   None.
+  </p>
+ </answer>
+ <answer id="format-types">
+  <p>
+   None.
+  </p>
+ </answer>
+ <answer id="lookup-lookup">
+  <p>
+      Yes, looks up <a href="@TOP@/org/netbeans/api/templates/CreateFromTemplateAttributes.html">CreateFromTemplateAttributes</a>
+      and <a href="@TOP@/org/netbeans/api/templates/CreateFromTemplateHandler.html">CreateFromTemplateHandler</a>.
+  </p>
+ </answer>
+ <answer id="lookup-register">
+  <p>
+      Registers handler, which integrates scripting engines using <code>javax.script</code> API. Provides an annotation
+      processor, so it is easy to register - see 
+      <a href="@TOP@/org/netbeans/api/templates/TemplateRegistration.html">TemplateRegistration</a> annotation.
+  </p>
+ </answer>
+ <answer id="lookup-remove">
+  <p>
+   No.
+  </p>
+ </answer>
+ <answer id="perf-exit">
+  <p>
+   No.
+  </p>
+ </answer>
+ <answer id="perf-huge_dialogs">
+  <p>
+   No UI.
+  </p>
+ </answer>
+ <answer id="perf-limit">
+  <p>
+   Files are processed in-memory in documents; practical limits are imposed
+    by the platform's Document implementation.
+  </p>
+ </answer>
+ <answer id="perf-mem">
+  <p>
+   See 'perf-limit'
+  </p>
+ </answer>
+ <answer id="perf-menus">
+  <p>
+   No UI.
+  </p>
+ </answer>
+ <answer id="perf-progress">
+  <p>
+   No.
+  </p>
+ </answer>
+ <answer id="perf-scale">
+  <p>
+   XXX no answer for perf-scale
+  </p>
+ </answer>
+ <answer id="perf-spi">
+  <p>
+   No practical enforcement.
+  </p>
+ </answer>
+ <answer id="perf-startup">
+  <p>
+   No.
+  </p>
+ </answer>
+ <answer id="perf-wakeup">
+  <p>
+   No.
+  </p>
+ </answer>
+ <answer id="resources-file">
+  <p>
+   No.
+  </p>
+ </answer>
+ <answer id="resources-layer">
+  <p>
+   No.
+  </p>
+ </answer>
+ <answer id="resources-mask">
+  <p>
+   No.
+  </p>
+ </answer>
+ <answer id="resources-preferences">
+  <p>
+   No.
+  </p>
+ </answer>
+ <answer id="resources-read">
+  <p>
+   No.
+  </p>
+ </answer>
+ <answer id="security-grant">
+  <p>
+   No.
+  </p>
+ </answer>
+ <answer id="security-policy">
+  <p>
+   No.
+  </p>
+ </answer>
+
+</api-answers>

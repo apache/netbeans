@@ -1,0 +1,45 @@
+<testresult testFile='expressionArrayAccess_01.php'>
+    <scanner>
+        <token id='T_ECHO' start='6' end='10'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='11' end='16'>
+            <text>&apos;PHP&apos;</text>
+        </token>
+        <token id='T_OPEN_RECT' start='16' end='17'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='17' end='18'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='18' end='19'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='19' end='20'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='21' end='24'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='24' end='24'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='23'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <EchoStatement start='6' end='20'>
+                <ExpressionArrayAccess start='11' end='19'>
+                    <Identifier start='11' end='16' name=''PHP''/>
+                    <ArrayDimension start='16' end='19'>
+                        <Index>
+                            <Scalar start='17' end='18' type='INT' value='0'/>
+                        </Index>
+                    </ArrayDimension>
+                </ExpressionArrayAccess>
+            </EchoStatement>
+            <EmptyStatement start='21' end='23'/>
+        </Statements>
+    </Program>
+</testresult>

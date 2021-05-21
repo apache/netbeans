@@ -1,0 +1,5 @@
+Code completion result for source line:
+var mess = require('./simpleModule').m|essage;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      message: Message                [PUBLIC]   simpleModule.js

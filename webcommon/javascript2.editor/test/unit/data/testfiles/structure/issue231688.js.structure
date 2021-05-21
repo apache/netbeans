@@ -1,0 +1,7 @@
+Test:CONSTRUCTOR:[PUBLIC]:ESCAPED{Test}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Test</font>:
+  logger:CLASS:[PUBLIC]:ESCAPED{logger}:
+    hiddenFnc:METHOD:[PRIVATE]:ESCAPED{hiddenFnc}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    log:METHOD:[PROTECTED]:ESCAPED{log}ESCAPED{(}ESCAPED{title}ESCAPED{, }ESCAPED{msgs}ESCAPED{, }ESCAPED{level}ESCAPED{, }ESCAPED{style}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    msg:FIELD:[PUBLIC]:ESCAPED{msg}<font color="#999999">ESCAPED{ : }String</font>:
+    print:FIELD:[PUBLIC]:ESCAPED{print}<font color="#999999">ESCAPED{ : }Boolean</font>:
+  test:VARIABLE:[PRIVATE]:ESCAPED{test}<font color="#999999">ESCAPED{ : }Test</font>:

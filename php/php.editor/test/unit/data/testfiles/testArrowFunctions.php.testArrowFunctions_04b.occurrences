@@ -1,0 +1,2 @@
+$fn1b = function ($|>MARK_OCCURRENCES:x<|) use ($y) {
+    return $^|>MARK_OCCURRENCES:x<| + $y;

@@ -1,0 +1,3 @@
+ * @param {Date} |>MARK_OCCURRENCES:a^a<|
+var Utils223891 = function(|>MARK_OCCURRENCES:aa<|) {
+    this.test = |>MARK_OCCURRENCES:aa<|.getDay();

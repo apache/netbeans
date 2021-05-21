@@ -1,0 +1,4 @@
+    var |>MARK_OCCURRENCES:coo^rd<|;
+    |>MARK_OCCURRENCES:coord<|[0] = 1; //OK
+        |>MARK_OCCURRENCES:coord<|[0] = 1; //marked as not declared!
+        |>MARK_OCCURRENCES:coord<| = 1; //OK

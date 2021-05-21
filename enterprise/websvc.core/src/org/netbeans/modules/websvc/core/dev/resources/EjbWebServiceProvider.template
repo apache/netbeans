@@ -1,0 +1,28 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+<#if package?? && package != "">
+package ${package};
+
+</#if>
+import javax.ejb.Stateless;
+import javax.xml.ws.ServiceMode;
+import javax.xml.ws.WebServiceProvider;
+
+/**
+ *
+ * @author ${user}
+ */
+@Stateless()
+@ServiceMode(value = javax.xml.ws.Service.Mode.PAYLOAD)
+public class ${name} implements javax.xml.ws.Provider<javax.xml.transform.Source> {
+
+    @Override
+    public javax.xml.transform.Source invoke(javax.xml.transform.Source source) {
+        //TODO implement this method
+        throw new UnsupportedOperationException("Not implemented yet.");
+    }
+    
+}

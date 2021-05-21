@@ -1,0 +1,2 @@
+        |>MARK_OCCURRENCES:description<|: "some description",
+    app.|>MARK_OCCURRENCES:des^cription<| = "new description";

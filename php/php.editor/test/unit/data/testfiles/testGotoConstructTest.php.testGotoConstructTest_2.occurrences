@@ -1,0 +1,2 @@
+class |>MARK_OCCURRENCES:MyClassConstr2<| extends MyClassConstr  {}//MyClassConstr2
+$b = new |>MARK_OCCURRENCES:MyClass^Constr2<|();

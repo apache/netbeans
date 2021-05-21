@@ -1,0 +1,26 @@
+common:
+	parameters:
+		zone: "Europe/Prague"
+		foo: %bar% world
+		foo3: overwritten
+		bar: hello
+
+	constants:
+		BAR: %foo%
+
+	php:
+		date.timezone: %zone%
+
+
+# Production site configuration data
+production < common:
+	database:
+		dsn: "sqlite2::memory:"
+		user: dbuser
+		password: secret
+
+# Staging site configuration data
+development < common:
+	database:
+		user: dev_user
+		password: dev_secret

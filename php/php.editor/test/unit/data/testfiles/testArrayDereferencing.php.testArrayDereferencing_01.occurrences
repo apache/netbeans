@@ -1,0 +1,3 @@
+$|>MARK_OCCURRENCES:myClass<| = new MyClass();
+$|>MARK_OCCURRENCES:myCl^ass<|->field[0]->getArray()[][]->foo();
+$|>MARK_OCCURRENCES:myClass<|->getArray()[0][]->foo();

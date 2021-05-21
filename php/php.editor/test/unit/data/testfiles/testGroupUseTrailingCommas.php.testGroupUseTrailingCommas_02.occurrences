@@ -1,0 +1,3 @@
+class |>MARK_OCCURRENCES:Foo<| {
+    |>MARK_OCCURRENCES:Fo^o<|,
+$foo = new |>MARK_OCCURRENCES:Foo<|();

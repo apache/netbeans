@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xalan="http://xml.apache.org/xslt" xmlns:ejbjarproject2="http://www.netbeans.org/ns/j2ee-ejbjarproject/2" xmlns:jaxws="http://www.netbeans.org/ns/jax-ws/1">
+    <!--
+                ===================
+                JAX-WS WSGEN SECTION
+                ===================
+            -->
+    <!--
+                ===================
+                JAX-WS WSIMPORT SECTION
+                ===================
+            -->
+    <target name="wsimport-init" depends="init">
+        <mkdir dir="${build.generated.dir}/wsimport/service"/>
+        <mkdir dir="${build.generated.dir}/wsimport/binaries"/>
+        <mkdir dir="${classes.dir}"/>
+        <taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport">
+            <classpath path="${j2ee.platform.wsimport.classpath}"/>
+        </taskdef>
+    </target>
+    <target name="wsimport-service-check-FromWSDL" depends="wsimport-init">
+        <condition property="wsimport-service-FromWSDL.notRequired">
+            <available file="${build.generated.dir}/wsimport/service/org/example/duke/AddNumbersService.java"/>
+        </condition>
+    </target>
+    <target name="wsimport-service-FromWSDL" depends="wsimport-init,wsimport-service-check-FromWSDL" unless="wsimport-service-FromWSDL.notRequired">
+        <property name="service-wsdl-FromWSDL" location="${meta.inf}/xml-resources/web-services/FromWSDL/wsdl/AddNumbers.wsdl"/>
+        <wsimport sourcedestdir="${build.generated.dir}/wsimport/service" destdir="${build.generated.dir}/wsimport/binaries" wsdl="${service-wsdl-FromWSDL}" catalog="catalog.xml" extension="true" verbose="true" xnocompile="true"/>
+        <property name="targetLocation-FromWSDL" location="${meta.inf}/wsdl/FromWSDL"/>
+        <property name="sourceLocation-FromWSDL" location="${meta.inf}/xml-resources/web-services/FromWSDL/wsdl/"/>
+        <copy todir="${targetLocation-FromWSDL}">
+            <fileset dir="${sourceLocation-FromWSDL}"/>
+        </copy>
+    </target>
+    <target name="wsimport-service-clean-FromWSDL" depends="-init-project">
+        <delete dir="${build.generated.dir}/wsimport/service/org/example/duke"/>
+    </target>
+    <target name="wsimport-service-generate" depends="wsimport-service-FromWSDL"/>
+    <target name="wsimport-service-compile" depends="wsimport-service-generate">
+        <ejbjarproject2:javac srcdir="${build.generated.dir}/wsimport/service" classpath="${j2ee.platform.wsimport.classpath}:${javac.classpath}" destdir="${classes.dir}"/>
+    </target>
+</project>

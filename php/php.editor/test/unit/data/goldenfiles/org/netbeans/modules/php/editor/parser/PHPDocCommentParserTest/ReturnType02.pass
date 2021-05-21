@@ -1,0 +1,10 @@
+<PHPDocBlock start='3' end='58'>
+    <Tags>
+        <PHPDocTypeTag start='23' end='60' kind='return'>
+            <Types>
+                <PHPDocTypeNode start='31' end='37' value='string' isArray='false'/>
+                <PHPDocTypeNode start='38' end='41' value='int' isArray='false'/>
+            </Types>
+        </PHPDocTypeTag>
+    </Tags>
+</PHPDocBlock>

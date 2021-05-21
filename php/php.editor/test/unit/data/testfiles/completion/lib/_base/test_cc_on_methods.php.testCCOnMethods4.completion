@@ -1,0 +1,4 @@
+Code completion result for source line:
+parent::parentInstance()->pa|rentInstance();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     parentInstance()                [PUBLIC]   TestCCOnMethodsParentClass

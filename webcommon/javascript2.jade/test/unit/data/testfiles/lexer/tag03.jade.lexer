@@ -1,0 +1,34 @@
+[CODE_DELIMITER(1):-][WHITESPACE(1): ][JAVASCRIPT(19):var name = "Jitule"][EOL(1):\n]
+[TAG(1):p][OPERATOR_DIVISION(1):/][EOL(1):\n]
+[EOL(1):\n]
+[COMMENT_DELIMITER(2)://][COMMENT(49): test javascript with escaped test
+    new line
+
+][TAG(1):p][CODE_DELIMITER(1):=][WHITESPACE(1): ][JAVASCRIPT(30):'This code is' + ' <escaped>!'][EOL(1):\n]
+[EOL(1):\n]
+[COMMENT_DELIMITER(2)://][COMMENT(49): test javascript with escaped test
+    new line
+
+][TAG(1):p][EOL(1):\n]
+[WHITESPACE(2):  ][CODE_DELIMITER(1):=][JAVASCRIPT(37):'This code is' + name + ' <escaped>!'][EOL(1):\n]
+[EOL(1):\n]
+[COMMENT_DELIMITER(2)://][COMMENT(49): test javascript with escaped test
+    new line
+
+][TAG(1):p][EOL(1):\n]
+[WHITESPACE(2):  ][CODE_DELIMITER(1):=][JAVASCRIPT(25):'This code is <escaped>!'][EOL(1):\n]
+[EOL(1):\n]
+[COMMENT_DELIMITER(2)://][COMMENT(49): test javascript with escaped test
+    new line
+
+][TAG(1):p][EOL(1):\n]
+[WHITESPACE(2):  ][CODE_DELIMITER(2):!=][JAVASCRIPT(38):'This code is ' + name + ' <escaped>!'][EOL(1):\n]
+[EOL(1):\n]
+[EOL(1):\n]
+[COMMENT_DELIMITER(2)://][COMMENT(49): test javascript with escaped test
+    new line
+
+][TAG(1):p][EOL(1):\n]
+[WHITESPACE(2):  ][CODE_DELIMITER(2):!=][WHITESPACE(1): ][JAVASCRIPT(4):name][EOL(1):\n]
+[EOL(1):\n]
+[TAG(1):p][CODE_DELIMITER(2):!=][JAVASCRIPT(4):name][EOL(1):\n]

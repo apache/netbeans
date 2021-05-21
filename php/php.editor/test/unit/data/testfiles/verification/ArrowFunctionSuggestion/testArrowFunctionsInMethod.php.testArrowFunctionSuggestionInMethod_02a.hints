@@ -1,0 +1,4 @@
+        $test = function&(array $test1, &...$test2, ...$test3, &$test4)^ use ($param): ?int {
+--------------------------------------------------------------------------------------------
+HINT:You can use arrow function
+FIX:Use Arrow Function

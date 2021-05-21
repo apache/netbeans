@@ -1,0 +1,9 @@
+1..3
+not ok 1 # TODO tests\units\netbeans\sample\Calculator::testAdd()
+# /var/www/Atom2/tests/unit/netbeans/sample/Calculator.php
+not ok 2 - tests\units\netbeans\sample\Calculator::testAddDie2()
+#
+# /var/www/Atom2/tests/unit/netbeans/sample/Calculator.php
+not ok 3 - tests\units\netbeans\sample\Calculator::testAddDie()
+# E_USER_ERROR : Argument of mageekguy\atoum\asserters\integer::isEqualTo() must be an integer
+# /var/www/Atom2/tests/unit/netbeans/sample/Calculator.php:25

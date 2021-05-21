@@ -1,0 +1,6 @@
+[FILTER(9)::markdown][FILTER_TEXT(71):
+        # Markdown
+        I often like including markdown documents. ][EXPRESSION_DELIMITER_OPEN(2):#{][JAVASCRIPT(7):friends][EXPRESSION_DELIMITER_CLOSE(1):}][FILTER_TEXT(10): continue
+][WHITESPACE(6):      ][TAG(6):script][EOL(1):\n]
+[WHITESPACE(8):        ][FILTER(7)::coffee][FILTER_TEXT(46):
+           console.log 'This is coffee script][EXPRESSION_DELIMITER_OPEN(2):#{][JAVASCRIPT(7):friends][EXPRESSION_DELIMITER_CLOSE(1):}][FILTER_TEXT(1):']

@@ -1,0 +1,5 @@
+            var |>MARK_OCCURRENCES:B<| = function() {
+            |>MARK_OCCURRENCES:B<|.prototype = new A;
+            |>MARK_OCCURRENCES:B<|.prototype.constructor = |>MARK_OCCURRENCES:B<|;
+            |>MARK_OCCURRENCES:B<|.prototype.test = function() {
+            var b = new |>MARK_OCCURRENCES:B^<|();

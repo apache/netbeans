@@ -1,0 +1,5 @@
+Code completion result for source line:
+echo Hello146648::|AAAABB;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   AAAABB 1                        [PUBLIC]   Hello146648
+CONSTANT   class \Hello146648              [PUBLIC]   Magic Constant

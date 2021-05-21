@@ -1,0 +1,141 @@
+<?php
+/*
+ * $LastChangedDate: 2010-04-14 03:44:57 +0200 (Wed, 14 Apr 2010) $
+ * $Rev: 1550 $
+ * $Id: Recruiters.php 1550 2010-04-14 01:44:57Z goran $
+ */
+
+class Https_Institution_Get_Recruiters extends Subject implements IBuilder, IXHTMLable {
+
+    /**
+     * Holds atom signature
+     *
+     * @var string
+     */
+    private $atom = '';
+
+    /**
+     * Holds mode in which profile is opened
+     *
+     * @var Https_Institutions_Get_View
+     */
+    private $mode = null;
+
+    /**
+     * Class constructor
+     *
+     * @return void
+     */
+    function __construct() {
+        parent::__construct();
+    }
+
+    /**
+     * Implement IBuilder method for this page
+     *
+     * @access public
+     * @return void
+     *
+     */
+    public function build() {
+        $this->setCss();
+        $this->atom = Request::get()->string('rest', 'view');
+        $this->checkAccess();
+        $this->mode->modeBuild($this->atom);
+        $this->notify();
+    }
+
+    private function checkAccess() {
+        $ACObject = new AccessControl_Institution();
+        $ACObject->setAction(IAccessControl::view);
+        $ACObject->setAXOValue($this->atom);
+
+        if (false === Access::check()->run($ACObject)) :
+            throw new Exception('Cannot perform action: NOT AUTHORISED.', 2005);
+        else :
+
+            $ACObject->setAction(IAccessControl::update);
+
+            if (true === Access::check()->run($ACObject)) :
+                $this->mode = new Https_Institution_Get_Edit($this->atom);
+            else :
+                $this->mode = new Https_Institution_Get_View($this->atom);
+            endif;
+
+        endif;
+    }
+
+    /**
+     * Gets page specific CSS
+     */
+    public function setCSS() {
+        ob_start();
+        ?>
+        <link	rel="stylesheet"
+              href=":server:/js/dojox/form/resources/FileInput.css?:version:"
+              type="text/css" />
+        <?php
+        $this->css = ob_get_contents();
+        ob_end_clean();
+    }
+
+    /**
+     * Implements IBuilder method build() for this page
+     *
+     * @access public
+     * @return void
+     */
+    public function setHeader() {
+        
+    }
+
+    /**
+     * Implements IBuilder method for this page
+     *
+     * @access public
+     * @return void
+     *
+     */
+    public function setFooter() {
+        
+    }
+
+    /**
+     * Gets page specific JavaScript
+     *
+     * @access private
+     * @return void
+     */
+    public function setJavaScript() {
+        
+    }
+
+    /**
+     * Gets current state of observed class property
+     *
+     * @param $variable mixed
+     *
+     * @access public
+     * @return mixed
+     */
+    public function getState($variable) {
+        if ("css" === $variable) :
+            return $this->css;
+        else :
+            return $this->mode->getModeState($variable);
+        endif;
+    }
+
+    /**
+     * Implements XHTMLable methot toXHTML()
+     * Renders employers registration page body
+     *
+     * @access public
+     * @return void
+     */
+    public function toXHTML() {
+        $this->mode->modeToXHTML();
+    }
+
+}
+?>

@@ -1,0 +1,64 @@
+<?php
+
+class Example{
+
+    public function ifExample($a, $b){
+        if (convert($a) > $b){
+            echo "a is bigger than b";
+        } elseif ($a == $b){
+            echo $a . " is equal to " . $b[0];
+        } else{
+            echo $this->property;
+        }
+        $result = $a < $b ? $a : $b;
+    }
+
+    public function forExample(){
+        for ($i = 1; $i <= 10; $i++){
+            echo 'Item: ';
+            echo $i;
+        }
+    }
+
+    public function foreachEample(){
+        $arr = array(1, 2, 3, 4, "b" => 5, "a" => 6);
+        foreach ($arr as &$value){
+            $value = (int) $value * 2;
+        }
+    }
+
+    public function whileExample(){
+        $i = 1;
+        while ($i <= 10){
+            echo $i++;
+        }
+    }
+
+    public function doWhileExample($i){
+        do{
+            echo $i--;
+        } while ($i > 0);
+    }
+
+    public function switchExample(){
+        switch ($i){
+            case 0:
+                echo "i equals 0";
+                break;
+            case 1:
+                echo "i equals 1";
+                break;
+        }
+    }
+
+    public function tryExample(){
+        try{
+            echo inverse(5) . "\n";
+        } catch (Exception $e){
+            echo 'Caught exception: ' . $e->getMessage() . "\n";
+        }
+    }
+
+}
+
+?>

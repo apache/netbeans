@@ -1,0 +1,4 @@
+    private $|>MARK_OCCURRENCES:field_array<| = array('', 'thousand ', 'million ', 'billion ');
+        $result .= $this->|>MARK_OCCURRENCES:field_array<|[$idx++];
+        $result .= $this->|>MARK_OCCURRENCES:fiel^d_array<|[$instance_array[$idx]];
+        $result .= $this->|>MARK_OCCURRENCES:field_array<|[$instance_array[$GLOBALS['name']]];

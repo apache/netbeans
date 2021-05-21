@@ -1,0 +1,3 @@
+         * @param {String} |>MARK_OCCURRENCES:par1<|
+        test: function(|>MARK_OCCURRENCES:pa^r1<|) {
+            this.par1 = |>MARK_OCCURRENCES:par1<|; // par1 after = is marked green as member variable

@@ -1,0 +1,8 @@
+Code completion result for source line:
+return $this->|prop2 + $this->prop3 + $this->func1();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     func1()                         [PROTECTE  \My\Outer
+METHOD     func2()                         [PUBLIC]   \My\Outer
+METHOD     func3()                         [PUBLIC]   {}
+VARIABLE   ? prop2                         [PROTECTE  \My\Outer
+VARIABLE   ? prop3                         [PRIVATE]  {}

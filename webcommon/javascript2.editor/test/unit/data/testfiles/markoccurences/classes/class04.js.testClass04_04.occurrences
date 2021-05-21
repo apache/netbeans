@@ -1,0 +1,2 @@
+        const |>MARK_OCCURRENCES:d^x<| = a.x - b.x;
+        return Math.sqrt(|>MARK_OCCURRENCES:dx<|*|>MARK_OCCURRENCES:dx<| + dy*dy);

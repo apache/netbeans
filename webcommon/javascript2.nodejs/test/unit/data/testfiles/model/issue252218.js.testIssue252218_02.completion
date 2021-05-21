@@ -1,0 +1,5 @@
+Code completion result for source line:
+no|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+PARAMETER  note                            [PUBLIC]   issue252218.js

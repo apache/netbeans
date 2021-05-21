@@ -1,0 +1,42 @@
+$test = "ok";
+ ----
+HINT:You should use only:
+1 assignment(s) (2 used)
+to a variable:
+$test
+to avoid accidentally overwriting it and make your code easier to read.
+$test = "2 - should fail";
+ ----
+HINT:You should use only:
+1 assignment(s) (2 used)
+to a variable:
+$test
+to avoid accidentally overwriting it and make your code easier to read.
+function b($bb = true) {
+            --
+HINT:You should use only:
+1 assignment(s) (2 used)
+to a variable:
+$bb
+to avoid accidentally overwriting it and make your code easier to read.
+    $bb = false;
+     --
+HINT:You should use only:
+1 assignment(s) (2 used)
+to a variable:
+$bb
+to avoid accidentally overwriting it and make your code easier to read.
+function c($cc) {
+            --
+HINT:You should use only:
+1 assignment(s) (2 used)
+to a variable:
+$cc
+to avoid accidentally overwriting it and make your code easier to read.
+    $cc = false;
+     --
+HINT:You should use only:
+1 assignment(s) (2 used)
+to a variable:
+$cc
+to avoid accidentally overwriting it and make your code easier to read.

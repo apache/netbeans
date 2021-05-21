@@ -1,0 +1,4 @@
+    function __construct($par^am) {
+                         ------
+HINT:Initialize Field: $param
+FIX:Initialize Field: $param

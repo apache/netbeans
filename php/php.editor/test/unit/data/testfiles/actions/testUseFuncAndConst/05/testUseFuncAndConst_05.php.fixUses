@@ -1,0 +1,20 @@
+<?php
+
+use Name\Space\Bar,
+    Name\Space\Bar2;
+use const Name\Space\FOO,
+    Name\Space\FOO2;
+use function Name\Space\fnc,
+    Name\Space\fnc2;
+
+class ClassName {
+
+    function __construct() {
+        fnc();
+        fnc2();
+        new Bar();
+        new Bar2();
+    }
+
+}
+?>

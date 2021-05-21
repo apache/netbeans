@@ -1,0 +1,7 @@
+Code completion result for source line:
+use |; //trt
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    First                           [PUBLIC]   null
+------------------------------------
+PACKAGE    Second                          [PUBLIC]   First
+CLASS      ThirdT                          [PUBLIC]   First\Second

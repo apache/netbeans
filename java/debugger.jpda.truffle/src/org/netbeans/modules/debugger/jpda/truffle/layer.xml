@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Editors">
+        <folder name="GlyphGutterActions">
+            <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                <attr name="position" intvalue="1000"/>
+            </file>
+        </folder>
+        <folder name="text">
+            <folder name="javascript">
+                <folder name="ToolTips">
+                    <file name="org-netbeans-modules-debugger-jpda-truffle-vars-tooltip-ToolTipAnnotation.instance"/>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="Actions">
+        <folder name="Debug">
+            <file name="org-netbeans-modules-debugger-jpda-truffle-actions-PauseInScriptAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction"/>
+                <attr name="instanceOf" stringvalue="javax.swing.Action"/>;
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.debugger.jpda.truffle.actions.PauseInGraalScriptActionProvider.createAction"/>
+                <attr name="action" stringvalue="pauseInGraalScript"/>
+                <attr name="name" bundlevalue="org.netbeans.modules.debugger.jpda.truffle.actions.Bundle#CTL_PauseInGraalScriptAction"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/debugger/jpda/truffle/resources/PauseInGraalScript.png"/>
+            </file>
+        </folder>
+    </folder>
+
+    <folder name="Toolbars">
+        <folder name="Debug">
+            <file name="org-netbeans-modules-debugger-jpda-truffle-actions-PauseInScriptAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-jpda-truffle-actions-PauseInScriptAction.instance"/>
+                <attr name="position" intvalue="930"/>
+            </file>
+        </folder>
+    </folder>
+
+    <folder name="debugger">
+        <folder name="jpda">
+            <folder name="options">
+                <file name="org-netbeans-modules-debugger-jpda-truffle-options-TruffleOptionsProvider.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.debugger.jpda.truffle.options.TruffleOptionsProvider"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.debugger.jpda.ui.options.StorablePanel$Provider"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="TruffleASTDebugView.settings" url="resources/TruffleASTDebugView.settings"/>
+        </folder>
+
+        <folder name="Modes">
+            <folder name="navigator">
+                <file name="TruffleASTDebugView.wstcref" url="resources/TruffleASTDebugView.wstcref">
+                    <attr name="position" intvalue="1000"/>
+                </file>
+            </folder>
+        </folder>
+        
+        <!--folder name="Groups">
+            <folder name="debugger">
+                <file name="resultsView.wstcgrp" url="groups/debugger/results.wstcgrp"/>
+            </folder>
+        </folder-->
+    </folder>
+
+</filesystem>

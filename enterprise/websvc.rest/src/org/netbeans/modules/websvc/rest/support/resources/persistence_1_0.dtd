@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!--element and attribute declarations-->
+<!ELEMENT persistence (persistence-unit*)>
+<!ATTLIST persistence
+	version CDATA #FIXED "1.0"
+
+>
+<!ELEMENT persistence-unit (description?, provider?, jta-data-source?, non-jta-data-source?, mapping-file*, jar-file*, class*, exclude-unlisted-classes?, properties?)>
+<!ATTLIST persistence-unit
+	name CDATA #REQUIRED
+	transaction-type (JTA | RESOURCE_LOCAL) #IMPLIED
+>
+<!--
+
+                    Textual description of this persistence unit.
+
+                  -->
+<!ELEMENT description (#PCDATA)>
+<!--
+
+                    Provider class that supplies EntityManagers for this 
+                    persistence unit.
+
+                  -->
+<!ELEMENT provider (#PCDATA)>
+<!--
+
+                    The container-specific name of the JTA datasource to use.
+
+                  -->
+<!ELEMENT jta-data-source (#PCDATA)>
+<!--
+
+                    The container-specific name of a non-JTA datasource to use.
+
+                  -->
+<!ELEMENT non-jta-data-source (#PCDATA)>
+<!--
+
+                    File containing mapping information. Loaded as a resource 
+                    by the persistence provider.
+
+                  -->
+<!ELEMENT mapping-file (#PCDATA)>
+<!--
+
+                    Jar file that should be scanned for entities. 
+                    Not applicable to Java SE persistence units.
+
+                  -->
+<!ELEMENT jar-file (#PCDATA)>
+<!--
+
+                    Class to scan for annotations.  It should be annotated 
+                    with either @Entity, @Embeddable or @MappedSuperclass.
+
+                  -->
+<!ELEMENT class (#PCDATA)>
+<!--
+
+                    When set to true then only listed classes and jars will 
+                    be scanned for persistent classes, otherwise the enclosing 
+                    jar or directory will also be scanned. Not applicable to 
+                    Java SE persistence units.
+
+                  -->
+<!ELEMENT exclude-unlisted-classes (#PCDATA)>
+<!--
+
+                    A list of vendor-specific properties.
+
+                  -->
+<!ELEMENT properties (property*)>
+<!--
+                          A name-value pair.
+                        -->
+<!ELEMENT property EMPTY>
+<!ATTLIST property
+	name CDATA #REQUIRED
+	value CDATA #REQUIRED
+>

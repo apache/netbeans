@@ -1,0 +1,4 @@
+        return $param1 + ^$param2;
+---------------------------------
+HINT:You can use arrow function
+FIX:Use Arrow Function

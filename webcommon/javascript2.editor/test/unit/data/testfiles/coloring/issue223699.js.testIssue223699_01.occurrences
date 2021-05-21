@@ -1,0 +1,3 @@
+        this[a].init( a, |>MARK_OCCURRENCES:bug<|, this );  // this is blue, but bug variable shouldbe Global, its not defined                    
+        this[|>MARK_OCCURRENCES:bug<|].init( a, |>MARK_OCCURRENCES:b^ug<|, this );
+        this[|>MARK_OCCURRENCES:bug<|] = |>MARK_OCCURRENCES:bug<|; // right bug variable should be Global, its not defined                    

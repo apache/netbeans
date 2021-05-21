@@ -1,0 +1,8 @@
+Code completion result for source line:
+/**/foo|();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     foo($x = -5)                    [PUBLIC]   issue200178.php
+METHOD     foo()                           [PUBLIC]   issue200178.php
+------------------------------------
+METHOD     foo($func_arg)                  [PUBLIC]   var_scope.php
+METHOD     foo_TestCCOnMethods()           [PUBLIC]   test_cc_on_methods.php

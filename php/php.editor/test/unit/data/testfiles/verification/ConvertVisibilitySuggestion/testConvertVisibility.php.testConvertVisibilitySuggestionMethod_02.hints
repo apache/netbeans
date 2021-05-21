@@ -1,0 +1,5 @@
+    public function publicMethod($para^m) {
+------------------------------------------
+HINT:You can convert the visibility if needed
+FIX:Convert Visibility to "private"
+FIX:Convert Visibility to "protected"

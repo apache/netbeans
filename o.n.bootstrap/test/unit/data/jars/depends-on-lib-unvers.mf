@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.dol
-OpenIDE-Module-Name: Depends on unversioned library
-OpenIDE-Module-Package-Dependencies: pkg.subpkg[Something]
-Class-Path: library-unvers.jar
-

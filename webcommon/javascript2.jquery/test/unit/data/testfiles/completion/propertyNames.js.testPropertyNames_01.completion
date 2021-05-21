@@ -1,0 +1,5 @@
+Code completion result for source line:
+e|rror: function(jqXHR, textStatus, errorThrown) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+PROPERTY   error: Function                            jQuery

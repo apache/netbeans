@@ -1,0 +1,18 @@
+function |>METHOD:Test<|() {
+    this.|>METHOD:onLoading<| = function() {};
+    this.|>METHOD:runAJAX<| = function(urlstring) {
+        this.|>FIELD:responseStatus<| = new Array(2);
+        var |>LOCAL_VARIABLE_DECLARATION:self<| = this;
+        this.xmlhttp.open(this.method, urlstring, this.asynchronous);
+        this.xmlhttp.|>METHOD:onreadystatechange<| = function() {
+            switch (|>LOCAL_VARIABLE:self<|.xmlhttp.readyState) {
+                case 1:
+                    |>LOCAL_VARIABLE:self<|.onLoading();
+                    break;
+                case 2:
+                    |>LOCAL_VARIABLE:self<|.onLoaded();
+                    |>LOCAL_VARIABLE:self<|.|>FIELD:declare<| = 1; // self is purple
+                    break;
+            }};
+    };
+}  

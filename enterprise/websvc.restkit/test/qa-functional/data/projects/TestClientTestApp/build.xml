@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project name="CustomerTestApp" default="default" basedir=".">
+
+    <property name="tlib.dir" location="${java.io.tmpdir}/rest-client-app-lib"/>
+    <property name="jar.tellurium" value="${tlib.dir}/tellurium-0.5.0.jar"/>
+    <property name="jar.groovyall" value="${tlib.dir}/groovy-all-1.5.6.jar"/>
+    <property name="jar.seleniumserver" value="${tlib.dir}/selenium-server.jar"/>
+    <property name="jar.seleniumdriver" value="${tlib.dir}/selenium-java-client-driver.jar"/>
+
+    <description>Builds, tests, and runs the project CustomerTestApp.</description>
+    <import file="nbproject/build-impl.xml"/>
+
+    <target name="-pre-init" depends="init-download, get-tellurium, get-groovyall, get-seleniumserver, get-seleniumdriver"/>
+
+    <target name="init-download">
+        <mkdir dir="${tlib.dir}"/>
+        <condition property="have.tellurium">
+            <available file="${jar.tellurium}"/>
+        </condition>
+        <condition property="have.groovyall">
+            <available file="${jar.groovyall}"/>
+        </condition>
+        <condition property="have.seleniumdriver">
+            <available file="${jar.seleniumdriver}"/>
+        </condition>
+        <condition property="have.seleniumserver">
+            <available file="${jar.seleniumserver}"/>
+        </condition>
+    </target>
+
+    <target name="get-tellurium" unless="have.tellurium">
+        <get src="http://aost.googlecode.com/files/tellurium-0.5.0.jar" dest="${jar.tellurium}" verbose="true"/>
+    </target>
+
+    <target name="get-groovyall" unless="have.groovyall">
+        <get src="http://repository.codehaus.org/org/codehaus/groovy/groovy-all/1.5.6/groovy-all-1.5.6.jar" dest="${jar.groovyall}" verbose="true"/>
+    </target>
+
+    <target name="get-seleniumserver" unless="have.seleniumserver">
+        <get src="http://aost.googlecode.com/svn/tags/tellurium-0.5.0/lib/selenium-server.jar" dest="${jar.seleniumserver}" verbose="true"/>
+        <!-- see http://jira.openqa.org/browse/SIDE-171 -->
+        <!-- see http://www.spacevatican.org/2008/9/27/selenium-and-firefox-3 -->
+        <mkdir dir="${java.io.tmpdir}/rest-client-test-tmp"/>
+        <patternset id="to.patch">
+            <include name="customProfileDirCUSTFFCHROME/extensions/readystate@openqa.org/install.rdf"/>
+            <include name="customProfileDirCUSTFFCHROME/extensions/{538F0036-F358-4f84-A764-89FB437166B4}/install.rdf"/>
+            <include name="customProfileDirCUSTFFCHROME/extensions/{503A0CD4-EDC8-489b-853B-19E0BAA8F0A4}/install.rdf"/>
+            <include name="customProfileDirCUSTFF/extensions/readystate@openqa.org/install.rdf"/>
+            <include name="customProfileDirCUSTFF/extensions/{538F0036-F358-4f84-A764-89FB437166B4}/install.rdf"/>
+        </patternset>
+        <unzip src="${jar.seleniumserver}" dest="${java.io.tmpdir}/rest-client-test-tmp">
+            <patternset refid="to.patch"/>
+        </unzip>
+        <replace dir="${java.io.tmpdir}/rest-client-test-tmp" token="2.0.0.*" value="3.0.*.*"/>
+        <jar destfile="${jar.seleniumserver}" duplicate="preserve" update="true" basedir="${java.io.tmpdir}/rest-client-test-tmp" includes="**/*.rdf"/>
+    </target>
+
+    <target name="get-seleniumdriver" unless="have.seleniumdriver">
+        <get src="http://aost.googlecode.com/svn/tags/tellurium-0.5.0/lib/selenium-java-client-driver.jar" dest="${jar.seleniumdriver}" verbose="true"/>
+    </target>
+
+</project>

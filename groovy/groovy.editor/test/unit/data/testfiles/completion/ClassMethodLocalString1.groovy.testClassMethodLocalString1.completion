@@ -1,0 +1,8 @@
+Code completion result for source line:
+localString.toL|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     toList()                                   List
+METHOD     toLong()                                   Long
+METHOD     toLowerCase()                   [PUBLIC]   String
+METHOD     toLowerCase(Locale)             [PUBLIC]   String

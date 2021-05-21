@@ -1,0 +1,31 @@
+<jsp:useBean id="locales" scope="application"
+  class="mypkg.MyLocales"/>
+
+<form name="localeForm" action="index.jsp" method="post">
+<c:set var="selectedLocaleString" value="${param.locale}" />
+<c:set var="selectedFlag" 
+  value="${!empty selectedLocaleString}" />
+<b>Locale:</b>
+<select name=locale>
+<c:forEach var="localeString" items="${locales.localeNames}" >
+<c:choose>
+  <c:when test="${selectedFlag}">
+    <c:choose>
+      <c:when 
+        test="${f:equals(selectedLocaleString,
+          localeString)}" >
+        <option selected>${localeString}</option>
+      </c:when>
+      <c:otherwise>
+        <option>${localeString}</option>
+      </c:otherwise>
+    </c:choose>
+  </c:when>
+  <c:otherwise>
+    <option>${localeString}</option>
+  </c:otherwise>
+</c:choose>
+</c:forEach>
+</select>
+<input type="submit" name="Submit" value="Get Date">
+</form>

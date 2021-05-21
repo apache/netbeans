@@ -1,0 +1,12 @@
+<div class="span5 definitions" ng-show="definitions">
+    <h4>Definitions</h4>
+    <div ng-repeat="item in definitions">
+        <a href="#" ng-click="setWord(item)"
+           class="defname">{{item.word | capitalize}}</a> &mdash;
+        <ol style="display:inline"> 
+            <span ng-repeat="(id, def) in item.definitions | lastModified">
+                <i ng-show="item.definitions">{{id + 1}}.</i> {{def.def}}
+            </span>
+        </ol>
+    </div>
+</div>

@@ -1,0 +1,4 @@
+services:
+        compone#ntsFactory:
+                class: Component#sFactory
+                arguments: [@#component]

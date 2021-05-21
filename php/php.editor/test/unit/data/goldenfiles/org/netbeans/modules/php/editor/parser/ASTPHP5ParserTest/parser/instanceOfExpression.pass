@@ -1,0 +1,78 @@
+<testresult testFile='instanceOfExpression.php'>
+    <scanner>
+        <token id='T_IF' start='6' end='8'>
+            <text>if</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='9' end='10'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='10' end='14'>
+            <text>$foo</text>
+        </token>
+        <token id='T_INSTANCEOF' start='15' end='25'>
+            <text>instanceof</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='26' end='27'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='27' end='30'>
+            <text>Bar</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='30' end='31'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='31' end='34'>
+            <text>Baz</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='34' end='35'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='35' end='38'>
+            <text>Bat</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='38' end='39'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='40' end='41'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='43' end='44'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='45' end='48'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='48' end='48'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='47'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <IfStatement start='6' end='44'>
+                <Condition>
+                    <InstanceOfExpression start='10' end='38'>
+                        <Variable start='10' end='14' isDollared='true'>
+                            <Identifier start='11' end='14' name='foo'/>
+                        </Variable>
+                        <ClassName start='26' end='38'>
+                            <NamespaceName start='26' end='38' isCurrent='false' isGlobal='true'>
+                                <Identifier start='27' end='30' name='Bar'/>
+                                <Identifier start='31' end='34' name='Baz'/>
+                                <Identifier start='35' end='38' name='Bat'/>
+                            </NamespaceName>
+                        </ClassName>
+                    </InstanceOfExpression>
+                </Condition>
+                <Then>
+                    <Block start='40' end='44' isCurly='true'>
+                    </Block>
+                </Then>
+                <Else>
+                </Else>
+            </IfStatement>
+            <EmptyStatement start='45' end='47'/>
+        </Statements>
+    </Program>
+</testresult>

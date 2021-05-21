@@ -1,0 +1,11 @@
+FUNCTION issue252655 [ANONYMOUS: false, DECLARED: true - issue252655, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+initGa : FUNCTION initGa [ANONYMOUS: false, DECLARED: true - initGa, MODIFIERS: PUBLIC, FUNCTION]
+       # RETURN TYPES
+       undefined, RESOLVED: true
+       # PROPERTIES
+       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+       varName   : OBJECT varName [ANONYMOUS: false, DECLARED: true - varName, MODIFIERS: PRIVATE, VARIABLE]
+window : OBJECT window [ANONYMOUS: false, DECLARED: false - window, MODIFIERS: PUBLIC, VARIABLE]

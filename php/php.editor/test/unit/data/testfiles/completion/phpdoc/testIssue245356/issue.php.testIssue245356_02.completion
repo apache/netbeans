@@ -1,0 +1,8 @@
+Code completion result for source line:
+* @see Name\Space\Bar::|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     method($foo = "")               [PUBLIC]   \Name\Space\Bar
+METHOD     method()                        [PUBLIC]   \Name\Space\Bar
+VARIABLE   ? $baz                          [PUBLIC]   \Name\Space\Bar
+CONSTANT   BAG 1                           [PUBLIC]   \Name\Space\Bar

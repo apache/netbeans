@@ -1,0 +1,23 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+4FF29B93C50F6768C9A73040AE818E96EB2E68DB org.eclipse.lsp4j:org.eclipse.lsp4j:0.9.0
+DA453B2A6C9BBD9369DE41365C59E88574EC1F0B org.eclipse.lsp4j:org.eclipse.lsp4j.generator:0.9.0
+1CF7FCE1E2F4DFA76C3B91E4C2D72EA0C6899945 org.eclipse.lsp4j:org.eclipse.lsp4j.jsonrpc:0.9.0
+751B324BED8C077BF6B7B8C2055595EB8C28509D org.eclipse.xtend:org.eclipse.xtend.lib:2.19.0
+F3626A047A3ABFA47CF62D76BDEF1D246F7985F6 org.eclipse.xtend:org.eclipse.xtend.lib.macro:2.19.0
+997BA9935D0069B3F1CD2F93B56B91D24E9C60A0 org.eclipse.xtext:org.eclipse.xtext.xbase.lib:2.19.0

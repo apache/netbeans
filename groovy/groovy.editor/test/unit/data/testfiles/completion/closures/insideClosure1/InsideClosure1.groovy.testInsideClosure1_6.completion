@@ -1,0 +1,7 @@
+Code completion result for source line:
+def t2 = {test1,test2,test3 -> println test|}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   test1                                      Object
+VARIABLE   test2                                      Object
+VARIABLE   test3                                      Object

@@ -1,0 +1,2 @@
+        var |>MARK_OCCURRENCES:prom224462_1<| = "ahoj";
+        formatter.println(|>MARK_OCCURRENCES:prom^224462_1<|);

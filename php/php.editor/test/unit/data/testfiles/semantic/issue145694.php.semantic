@@ -1,0 +1,30 @@
+<?php
+
+class |>CLASS:Country<| {
+    public $|>FIELD:name<|;
+    public $|>FIELD:code<|;
+}
+
+class |>CLASS:Address<| {
+    public $|>FIELD:street<|;
+    public $|>FIELD:city<|;
+    /**
+     *
+     * @var Country
+     */
+    public $|>FIELD:country<|;
+}
+
+class |>CLASS:Person<| {
+    /**
+     *
+     * @var Address
+     */
+    private $|>FIELD:address<|;
+
+    function |>METHOD:getCity<|() {
+        $this->|>FIELD:address<|->|>FIELD:city<|;
+        $this->|>FIELD:address<|->|>FIELD:country<|->|>FIELD:name<|;
+    }
+}
+?>

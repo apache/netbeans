@@ -1,0 +1,24 @@
+<Program start='0' end='71'>
+    <Comments>
+    </Comments>
+    <Statements>
+        <NamespaceDeclaration start='6' end='68' isBracketed='true'>
+            <NamespaceName start='16' end='23' isCurrent='false' isGlobal='false'>
+                <Identifier start='16' end='23' name='MySpace'/>
+            </NamespaceName>
+            <Block start='23' end='68' isCurly='true'>
+                <ClassDeclaration start='27' end='66' modifier='NONE'>
+                    <ClassName>
+                        <Identifier start='33' end='40' name='MyClass'/>
+                    </ClassName>
+                    <SuperClassName>
+                    </SuperClassName>
+                    <Interfaces>
+                    </Interfaces>
+                    <Block start='40' end='66' isCurly='true'>
+                    </Block>
+                </ClassDeclaration>
+            </Block>
+        </NamespaceDeclaration>
+    </Statements>
+</Program>

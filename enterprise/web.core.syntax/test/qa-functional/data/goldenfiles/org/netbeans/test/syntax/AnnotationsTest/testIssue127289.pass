@@ -1,0 +1,29 @@
+Quirky doctype. Expected "".
+From line 5, column 4; to line 6, column 63
+(Rule Category: Doctype)
+----
+(Alt-Enter shows hints)
+Unexpected symbol(s) found:"@TEXT"
+----
+(Alt-Enter shows hints)
+Unexpected symbol(s) found:":"
+----
+(Alt-Enter shows hints)
+Unexpected symbol(s) found:";"
+
+Unexpected symbol(s) found:"
+            "
+----
+(Alt-Enter shows hints)
+Unexpected symbol(s) found:"@"
+----
+(Alt-Enter shows hints)
+Unexpected symbol(s) found:")"
+----
+(Alt-Enter shows hints)
+Unexpected symbol(s) found:":"
+----
+(Alt-Enter shows hints)
+Unexpected value token ,
+----
+(Alt-Enter shows hints)

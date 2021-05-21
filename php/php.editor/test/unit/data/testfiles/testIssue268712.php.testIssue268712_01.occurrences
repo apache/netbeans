@@ -1,0 +1,3 @@
+    const |>MARK_OCCURRENCES:TES^T1<| = [0, 1];
+    const TEST3 = \|>MARK_OCCURRENCES:TEST1<|[0];
+    $const1 = \|>MARK_OCCURRENCES:TEST1<|[0];

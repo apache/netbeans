@@ -1,0 +1,5 @@
+Code completion result for source line:
+{$item|l|}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+RULE       length                                     Helper
+RULE       lower                                      Helper

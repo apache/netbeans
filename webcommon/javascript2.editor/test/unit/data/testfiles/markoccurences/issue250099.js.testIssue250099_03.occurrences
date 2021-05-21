@@ -1,0 +1,2 @@
+ * @typedef {Object} |>MARK_OCCURRENCES:Name<| keep information about the name
+ * @param {|>MARK_OCCURRENCES:Na^me<|} name

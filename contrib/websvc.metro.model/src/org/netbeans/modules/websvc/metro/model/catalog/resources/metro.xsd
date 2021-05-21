@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+    Copyright (c) 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+    The contents of this file are subject to the terms of either the GNU
+    General Public License Version 2 only ("GPL") or the Common Development
+    and Distribution License("CDDL") (collectively, the "License").  You
+    may not use this file except in compliance with the License.  You can
+    obtain a copy of the License at
+    https://glassfish.dev.java.net/public/CDDL+GPL_1_1.html
+    or packager/legal/LICENSE.txt.  See the License for the specific
+    language governing permissions and limitations under the License.
+
+    When distributing the software, include this License Header Notice in each
+    file and include the License file at packager/legal/LICENSE.txt.
+
+    GPL Classpath Exception:
+    Oracle designates this particular file as subject to the "Classpath"
+    exception as provided by Oracle in the GPL Version 2 section of the License
+    file that accompanied this code.
+
+    Modifications:
+    If applicable, add the following below the License Header, with the fields
+    enclosed by brackets [] replaced by your own identifying information:
+    "Portions Copyright [year] [name of copyright owner]"
+
+    Contributor(s):
+    If you wish your version of this file to be governed by only the CDDL or
+    only the GPL Version 2, indicate your decision by adding "[Contributor]
+    elects to include this software in this distribution under the [CDDL or GPL
+    Version 2] license."  If you don't indicate a single choice of license, a
+    recipient has the option to distribute your version of this file under
+    either the CDDL, the GPL Version 2 or to extend the choice of license to
+    its licensees as provided above.  However, if you add GPL Version 2 code
+    and therefore, elected the GPL Version 2 license, then the option applies
+    only if the new code is made subject to such option by the copyright
+    holder.
+
+-->
+
+<!--
+    This XML schema document describes format of the Metro configuration file
+    (metro.xml).
+
+    Naming conventiotns:
+    - Simple XSD types are suffixed with "SType"
+    - Complex XSD types are suffixed with "CType"
+-->
+
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:tns="http://java.sun.com/xml/ns/metro/config"
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+
+    targetNamespace="http://java.sun.com/xml/ns/metro/config"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    jaxb:version="2.1">
+
+    <xsd:annotation>
+        <xsd:documentation>
+            This file defines the XML schema for metro.xml configuration file.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <jaxb:schemaBindings>
+                <jaxb:package name="com.sun.xml.ws.runtime.config" />
+            </jaxb:schemaBindings>
+        </xsd:appinfo>
+    </xsd:annotation>
+
+    <!-- Element Definitions -->
+    <xsd:element name="metro">
+        <xsd:annotation>
+            <xsd:documentation>
+                The root element in Metro configuration file.
+            </xsd:documentation>
+            <xsd:appinfo>
+                <jaxb:class name="MetroConfig" />
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:tubelines" minOccurs="0" maxOccurs="1" />
+                <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="version" type="tns:metroConfigVersionSType" use="required">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Atribute defining version of the Metro configuration used in the
+                        file.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:anyAttribute namespace="##other" processContents="lax" />
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="tubelines" type="tns:tubelinesConfigCType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Element defining borders of the section dedicated to tubeline
+                definitions and tubeline-to-endpoint or tubeline-to-client
+                mappings.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="tubeline-mapping" type="tns:tubelineMappingCType">
+        <xsd:annotation>
+            <xsd:documentation>
+                The content of the element defines actual mapping between
+                a tubeline definition and a specific web service endpoint
+                or client.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="tubeline" type="tns:tubelineDefinitionCType">
+        <xsd:annotation>
+            <xsd:documentation>
+                The content of this element contains a tubeline definition
+                that may be attached to endpoints and/or endpoint clients using
+                one of the mechanisms described above. The tubeline definition
+                consist of an ordered list(s) of tube factories specific for
+                client and/or server side and is always composed in the
+                Client->Endpoint message processing direction.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <!-- Simple Type Definitions -->
+    <xsd:simpleType name="metroConfigVersionSType">
+        <xsd:annotation>
+            <xsd:documentation>
+                The restricted string type for the metro configuration file
+                version attribute.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="1.0"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <!-- Complex Type Definitions -->
+
+    <xsd:complexType name="tubelinesConfigCType">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <jaxb:class name="Tubelines" />
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element ref="tns:tubeline-mapping" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <jaxb:property name="tubelineMappings" />
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element ref="tns:tubeline" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <jaxb:property name="tubelineDefinitions" />
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="default" type="xsd:anyURI" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>
+                    This optional attribute, if specified, defines a URI of a
+                    custom tubeline definition that should be used as a default
+                    tubeline for all endpoints and clients in the application.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##other" processContents="lax" />
+    </xsd:complexType>
+
+    <xsd:complexType name="tubelineMappingCType">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <jaxb:class name="TubelineMapping" />
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="endpoint-ref" type="xsd:anyURI">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        The element contains an URI to the web service endpoint
+                        and/or its client that is part of tubeline-endpoint and/or
+                        tubeline-endpoint client mapping
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="tubeline-ref" type="xsd:anyURI">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        The element contains an URI to the tubeline definition
+                        that is part of the tubeline-endpoint and/or tubeline-endpoint
+                        client mapping
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:anyAttribute namespace="##other" processContents="lax" />
+    </xsd:complexType>
+
+    <xsd:complexType name="tubelineDefinitionCType">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <jaxb:class name="TubelineDefinition" />
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="client-side" type="tns:tubeFactoryListCType" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Contains the client-side specific ordered list of tube factories.
+                        If this optional element is omitted, default application tubeline
+                        definition is used. If default application tubeline definition
+                        also omits this optional element, default Metro tubeline is used.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="endpoint-side" type="tns:tubeFactoryListCType" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Contains the endpoint-side specific ordered list of tube
+                        factories. If this optional element is omitted, default
+                        application tubeline definition is used. If default application
+                        tubeline definition also omits this optional element,
+                        default Metro tubeline definition is used.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:ID" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>
+                    This attribute uniquely identifies each tubeline definition.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##other" processContents="lax" />
+    </xsd:complexType>
+
+    <xsd:complexType name="tubeFactoryListCType">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <jaxb:class name="TubeFactoryList" />
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="tube-factory" maxOccurs="unbounded" type="tns:tubeFactoryCType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        The  element holds information necessary for instantiating
+                        the tube factory. Each tube factory implements a specific interface
+                        that declares methods invoked during a tubeline construction
+                        in the Metro tubeline assembler.
+                    </xsd:documentation>
+                    <xsd:appinfo>
+                        <jaxb:property name="tubeFactoryConfigs" />
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:anyAttribute namespace="##other" processContents="lax" />
+    </xsd:complexType>
+
+    <xsd:complexType name="tubeFactoryCType">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <jaxb:class name="TubeFactoryConfig" />
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="className" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>
+                    This required attribute holds the fully qualified name of a tube factory
+                    class implementation. Each tube factory implements a specific interface
+                    that declares methods invoked during a tubeline construction in the Metro
+                    tubeline assembler.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##other" processContents="lax" />
+    </xsd:complexType>
+</xsd:schema>

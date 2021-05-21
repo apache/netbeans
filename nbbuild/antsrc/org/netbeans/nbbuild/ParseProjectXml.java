@@ -85,7 +85,7 @@ public final class ParseProjectXml extends Task {
     static final String PROJECT_NS = "http://www.netbeans.org/ns/project/1";
     static final String NBM_NS2 = "http://www.netbeans.org/ns/nb-module-project/2";
     static final String NBM_NS3 = "http://www.netbeans.org/ns/nb-module-project/3";
-
+    
     private File moduleProject;
     /**
      * Set the NetBeans module project to work on.
@@ -690,7 +690,7 @@ public final class ParseProjectXml extends Task {
         }
         
         private String implementationVersionOf(ModuleListParser modules, String cnb) throws BuildException {
-            File jar = computeClasspathModuleLocation(modules, cnb, null, null, false);
+            File jar = computeClasspathModuleLocation(modules, cnb, null, null, false, Collections.emptyList());
             try {
                 try (JarFile jarFile = new JarFile(jar, false)) {
                     return jarFile.getManifest().getMainAttributes().getValue("OpenIDE-Module-Implementation-Version");
@@ -836,6 +836,24 @@ public final class ParseProjectXml extends Task {
         if (moduleAutoDeps.isEmpty()) {
             return;
         }
+        // determine warning level
+        int warnLevel = Project.MSG_WARN;
+        String s = getProject().getProperty("nbbuild.warn.missing.autodeps");
+        if (null != s) {
+            if (Boolean.TRUE.toString().equalsIgnoreCase(s)) {
+                warnLevel = Project.MSG_WARN;
+            } else if (Boolean.FALSE.toString().equalsIgnoreCase(s)) {
+                warnLevel = Project.MSG_DEBUG + 100; // should be ignored even when -d is present
+            } else switch (s.toLowerCase()) {
+                case "warn":    warnLevel = Project.MSG_WARN; break;
+                case "err":     warnLevel = Project.MSG_ERR; break;
+                case "info":    warnLevel = Project.MSG_INFO; break;
+                case "verbose": warnLevel = Project.MSG_VERBOSE; break;
+                case "debug":   warnLevel = Project.MSG_DEBUG; break;
+                default:
+                    throw new BuildException("Invalid value of nbbuild.warn.missing.autodeps property (" + s + "). See Project MSG_ constants.");
+            }
+        }
         Set<String> depsS = new HashSet<>();
         String result;
         AntClassLoader loader = new AntClassLoader();
@@ -854,7 +872,7 @@ public final class ParseProjectXml extends Task {
             }
             File jar = entry.getJar();
             if (!jar.isFile()) {
-                log("Cannot translate according to " + moduleAutoDeps + " because could not find " + jar, Project.MSG_WARN);
+                log("Cannot translate according to " + moduleAutoDeps + " because could not find " + jar, warnLevel);
                 return;
             }
             loader.addPathComponent(jar);
@@ -953,12 +971,14 @@ public final class ParseProjectXml extends Task {
                 continue;
             }
             String cnb = dep.codenamebase;
-            File depJar = computeClasspathModuleLocation(modules, cnb, clusterPath, excludedModules, runtime);
+            List<String> path = new ArrayList<>();
+            path.add(myCNB);
+            File depJar = computeClasspathModuleLocation(modules, cnb, clusterPath, excludedModules, runtime, path);
 
             List<File> additions = new ArrayList<>();
             additions.add(depJar);
             if (recursive) {
-                addRecursiveDeps(additions, modules, cnb, clusterPath, excludedModules, new HashSet<>(), runtime);
+                addRecursiveDeps(additions, modules, cnb, clusterPath, excludedModules, new HashSet<>(), runtime, path);
             }
             
             // #52354: look for <class-path-extension>s in dependent modules.
@@ -1024,7 +1044,7 @@ public final class ParseProjectXml extends Task {
     }
     
     private void addRecursiveDeps(List<File> additions, ModuleListParser modules, String cnb, 
-            Set<File> clusterPath, Set<String> excludedModules, Set<String> skipCnb, boolean runtime) {
+            Set<File> clusterPath, Set<String> excludedModules, Set<String> skipCnb, boolean runtime, List<String> path) {
         if (!skipCnb.add(cnb)) {
             return;
         }
@@ -1050,19 +1070,21 @@ public final class ParseProjectXml extends Task {
                 additions.add(f);
             }
         }
+        List<String> inPath = new ArrayList<>(path);
+        inPath.add(cnb);
         for (String nextModule : deps) {
             log("  Added dep " + nextModule + " due to " + cnb, Project.MSG_DEBUG);
-            File depJar = computeClasspathModuleLocation(modules, nextModule, clusterPath, excludedModules, true);
+            File depJar = computeClasspathModuleLocation(modules, nextModule, clusterPath, excludedModules, true, inPath);
             if (!additions.contains(depJar)) {
                 additions.add(depJar);
             }
-            addRecursiveDeps(additions, modules, nextModule, clusterPath, excludedModules, skipCnb, runtime);
+            addRecursiveDeps(additions, modules, nextModule, clusterPath, excludedModules, skipCnb, runtime, inPath);
         }
     }
 
     static final String DO_NOT_RECURSE = "do.not.recurse";
     private File computeClasspathModuleLocation(ModuleListParser modules, String cnb,
-            Set<File> clusterPath, Set<String> excludedModules, boolean runtime) throws BuildException {
+            Set<File> clusterPath, Set<String> excludedModules, boolean runtime, List<String> path) throws BuildException {
         ModuleListParser.Entry module = modules.findByCodeNameBase(cnb);
         if (module == null && cnb.contains("-")) {
             final String alternativeCnb = cnb.replace('-', '_');
@@ -1092,7 +1114,7 @@ public final class ParseProjectXml extends Task {
             throw new BuildException(msg, getLocation());
         }
         if (excludedModules != null && excludedModules.contains(cnb)) { // again #68716
-            throw new BuildException("Module " + cnb + " excluded from the target platform", getLocation());
+            throw new BuildException("Module " + cnb + " excluded from the target platform; the path is: " + path.toString(), getLocation());
         }
         if (!jar.isFile()) {
             File srcdir = module.getSourceLocation();
@@ -1261,7 +1283,7 @@ public final class ParseProjectXml extends Task {
                } else {
                    builder.append("\nYou need to download and install org-netbeans-libs-junit4.nbm into the platform to run tests.");
                    builder.append("\nIf you have Maven and agree to http://www.opensource.org/licenses/cpl1.0.txt it suffices to run:");
-                   builder.append("\nmvn dependency:get -Dartifact=junit:junit:4.8.2 -DrepoUrl=http://repo1.maven.org/maven2/");
+                   builder.append("\nmvn dependency:get -Dartifact=junit:junit:4.8.2 -DrepoUrl=https://repo1.maven.org/maven2/");
                }
            }
            if (!missingEntries.isEmpty()) {

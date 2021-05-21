@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="WebModuleAPI">Web Module API</apidef>
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+        <change id="Adding_WebModuleExtender_Savable">
+            <api name="WebModuleAPI"/>
+            <summary>Adding <code>WebModuleExtender.Savable</code> interface</summary>
+            <version major="1" minor="26"/>
+            <date day="26" month="9" year="2011"/>
+            <author login="marfous@netbeans.org"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added interface <code>WebModuleExtender.Savable</code> for ability to 
+                    save framework settings of already included extender after confirming
+                    project customizer.
+                </p>
+            </description>
+        </change>
+        <change id="ListenableWebModuleImplementation2">
+            <api name="WebModuleAPI"/>
+            <summary>Adding ability to listen on WebModuleImplementation2 changes</summary>
+            <version major="1" minor="16"/>
+            <date day="21" month="9" year="2009"/>
+            <author login="dkonecny"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Adding ability to listen on changes of document base or
+                    WEB-INF folder. WebModuleImplementation2 was introduced in this
+                    release so I'm taking advantage of it and adding requested methods.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.web.spi.webmodule" name="WebModuleImplementation2"/>
+            <issue number="154944"/>
+        </change>
+        <change id="Adding_requresWebXml">
+            <api name="WebModuleAPI"/>
+            <summary>Adding method requiresWebXml</summary>
+            <version major="1" minor="15"/>
+            <date day="1" month="7" year="2009"/>
+            <author login="pslechta@netbeans.org"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    New method requiresWebXml added. Framework specifies via this method if it reqires web.xml DD or not.
+                </p>
+            </description>
+        </change>
+        <change id="Making_WebModuleAPI_Public">
+            <api name="WebModuleAPI"/>
+            <summary>Making the WebModule API public</summary>
+            <version major="1" minor="10"/>
+            <date day="28" month="9" year="2007"/>
+            <author login="abadea@netbeans.org"/>
+            <compatibility modification="yes"/>
+            <description>
+                <p>
+                    Made the WebModule API public with the stability level "under development".
+                </p>
+            </description>
+            <issue number="112441"/>
+        </change>
+        <change id="Deprecating_WebFrameworkProvider_Methods">
+            <api name="WebModuleAPI"/>
+            <summary>Deprecating <code>WebFrameworkProvider.extend()</code> and <code>WebFrameworkProvider.getConfigurationPanel()</code></summary>
+            <version major="1" minor="9"/>
+            <date day="14" month="9" year="2007"/>
+            <author login="abadea@netbeans.org"/>
+            <compatibility deprecation="yes"/>
+            <description>
+                <p>
+                    Deprecated methods <code>WebFrameworkProvider.extend()</code> and <code>WebFrameworkProvider.getConfigurationPanel()</code>.
+                    Class <code>WebConfigurationPanel</code> has been deprecated too.
+                </p>
+                <p>
+                    Introduced a <code>WebModuleExtender</code> class and a <code>WebModule.createWebModuleExtender()</code> method returning it.
+                    This allows for better encapsulation of the web module extending process.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.web.spi.webmodule" name="FrameworkConfigurationPanel"/>
+            <class package="org.netbeans.modules.web.spi.webmodule" name="WebFrameworkProvider"/>
+            <class package="org.netbeans.modules.web.spi.webmodule" name="WebModuleExtender"/>
+        </change>
+        <change id="Deprecating_getJavaSources">
+            <api name="WebModuleAPI"/>
+            <summary>Deprecating <code>WebModule.getJavaSources</code></summary>
+            <version major="1" minor="9"/>
+            <date day="14" month="9" year="2007"/>
+            <author login="abadea@netbeans.org"/>
+            <compatibility deprecation="yes"/>
+            <description>
+                <p>
+                    Deprecated <code>WebModule.getJavaSources</code> because its return value is not generic enough.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.web.api.webmodule" name="WebModule"/>
+        </change>
+        <change id="Adding_getServletPath">
+            <api name="WebModuleAPI"/>
+            <summary>Adding <code>WebFrameworkProvider.getServletPath()</code></summary>
+            <version major="1" minor="5"/>
+            <date day="8" month="3" year="2006"/>
+            <author login="ppisl@netbeans.org"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added method <code>WebFrameworkProvider.getServletPath()</code> for obtaining the servlet path for a JSP. 
+                </p>
+            </description>
+            <class package="org.netbeans.modules.web.spi.webmodule" name="WebFrameworkProvider"/>
+        </change>
+        <change id="Adding_Framework_Support">
+            <api name="WebModuleAPI"/>
+            <summary>Adding web framework support</summary>
+            <version major="1" minor="4"/>
+            <date day="28" month="7" year="2005"/>
+            <author login="ppisl@netbeans.org"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    There are some frameworks like Struts, JSF, Spring etc., which extend the web applications. 
+                    This change introduces the concept of a web framework provider to the Web Module API/SPI
+                    which allows to implement supporting these frameworks.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.web.api.webmodule" name="WebFrameworks"/>
+            <class package="org.netbeans.modules.web.spi.webmodule" name="WebFrameworkProvider"/>
+        </change>
+         
+        <change id="Remove_URLCookie">
+            <api name="WebModuleAPI"/>
+            <summary>Replace URLCookie with a RequestParametersQuery API and RequestParametersQueryImplementation SPI</summary>
+            <version major="1" minor="2"/>
+            <date day="27" month="1" year="2005"/>
+            <author login="pbuzek@netbeans.org"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="no"/>
+            <description>
+                <p>
+                    Node.Cookie should not be exposed in API. The URLCookie has been replaced with a query pattern
+                    with a corresponding SPI.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.web.api.webmodule" name="URLCookie" link="no" />
+            <class package="org.netbeans.modules.web.api.webmodule" name="RequestParametersQuery"/>
+            <class package="org.netbeans.modules.web.spi.webmodule" name="RequestParametersQueryImplementation"/>
+         </change>
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE web/webapi/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the WebModule API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="@TOP@overview-summary.html">WebModule API</a>.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.api.web.webmodule"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

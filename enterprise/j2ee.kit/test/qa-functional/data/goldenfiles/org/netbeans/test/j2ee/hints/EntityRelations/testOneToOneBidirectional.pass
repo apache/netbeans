@@ -1,0 +1,162 @@
+26:6-26:7:verifier:The entity relationship is not defined.
+28:12-28:17:verifier:The multi-valued entity relationship is not defined.
+30:13-30:19:verifier:The multi-valued entity relationship is not defined.
+48:15-48:23:verifier:Add @Override Annotation
+54:19-54:25:verifier:Add @Override Annotation
+60:12-60:31:verifier:Long values compared using == or !=
+60:8-60:10:verifier:The if statement is redundant
+64:18-64:26:verifier:Add @Override Annotation
+Add @Override Annotation
+Add @Override Annotation
+Add @Override Annotation
+Configure "Boxed value identity comparison" Hint
+Create bidirectional ManyToMany relationship...
+Create bidirectional ManyToMany relationship...
+Create bidirectional ManyToOne relationship...
+Create bidirectional OneToMany relationship...
+Create bidirectional OneToMany relationship...
+Create bidirectional OneToOne relationship...
+Create unidirectional ManyToOne relationship
+Create unidirectional OneToMany relationship
+Create unidirectional OneToMany relationship
+Create unidirectional OneToOne relationship
+The if statement is redundant
+---------------------
+/*
+ * B.java
+ *
+ * Created on June 19, 2006, 6:37 PM
+ *
+ * To change this template, choose Tools | Template Manager
+ * and open the template in the editor.
+ */
+
+package hints;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Queue;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
+/**
+ *
+ * @author jindra
+ */
+@Entity
+public class B implements Serializable {
+
+    @OneToOne
+    A a;
+     
+    List<A> listA;
+  
+    Queue<A> queueA;
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    
+    /** Creates a new instance of B */
+    public B() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public int hashCode() {
+        int hash = 0;
+        hash += (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
+
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof B)) {
+            return false;
+        }
+        B other = (B)object;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) { return false; }
+        return true;
+    }
+
+    public String toString() {
+        return "hints.B[id=" + id + "]";
+    }
+    
+}
+
+----SECOND FILE-----
+/*
+ * A.java
+ *
+ * Created on June 19, 2006, 6:36 PM
+ *
+ * To change this template, choose Tools | Template Manager
+ * and open the template in the editor.
+ */
+
+package hints;
+
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
+/**
+ *
+ * @author jindra
+ */
+@Entity
+public class A implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @OneToOne(mappedBy = "a")
+    private B b;
+    
+    /** Creates a new instance of A */
+    public A() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public int hashCode() {
+        int hash = 0;
+        hash += (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
+
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof A)) {
+            return false;
+        }
+        A other = (A)object;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) { return false; }
+        return true;
+    }
+
+    public String toString() {
+        return "hints.A[id=" + id + "]";
+    }
+    
+}
+

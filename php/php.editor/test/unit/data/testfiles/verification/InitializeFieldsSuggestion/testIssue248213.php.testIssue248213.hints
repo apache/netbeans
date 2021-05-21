@@ -1,0 +1,4 @@
+    function __construct(&...$f^oo) {
+                         --------
+HINT:Initialize Field: $foo
+FIX:Initialize Field: $foo

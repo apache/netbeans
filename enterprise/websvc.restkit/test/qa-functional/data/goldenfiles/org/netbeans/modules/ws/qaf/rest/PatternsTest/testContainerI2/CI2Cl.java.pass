@@ -1,0 +1,66 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package o.n.m.ws.qaf.rest.patterns;
+
+import java.util.logging.Level;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.PUT;
+import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
+import javax.ws.rs.DELETE;
+
+/**
+ * REST Web Service
+ *
+ * @author jskrivanek
+ */
+public class CI2Cl {
+
+    private String CI2URI;
+
+    /**
+     * Creates a new instance of CI2Cl
+     */
+    private CI2Cl(String CI2URI) {
+        this.CI2URI = CI2URI;
+    }
+
+    /**
+     * Get instance of the CI2Cl
+     */
+    public static CI2Cl getInstance(String CI2URI) {
+        // The user may use some kind of persistence mechanism
+        // to store and restore instances of CI2Cl class.
+        return new CI2Cl(CI2URI);
+    }
+
+    /**
+     * Retrieves representation of an instance of o.n.m.ws.qaf.rest.patterns.CI2Cl
+     * @return an instance of java.util.logging.Level
+     */
+    @GET
+    @Produces("text/plain")
+    public Level getText() {
+        //TODO return proper representation object
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * PUT method for updating or creating an instance of CI2Cl
+     * @param content representation for the resource
+     * @return an HTTP response with content of the updated or created resource.
+     */
+    @PUT
+    @Consumes("text/plain")
+    public void putText(Level content) {
+    }
+
+    /**
+     * DELETE method for resource CI2Cl
+     */
+    @DELETE
+    public void delete() {
+    }
+}

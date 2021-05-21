@@ -1,0 +1,35 @@
+Code completion result for source line:
+require("./complexModule").|literalRef.propX.iprop;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CONSTRUCTO Car                             [PUBLIC]   complexModule.js
+CONSTRUCTO Out                             [PUBLIC]   simpleModule.js
+CONSTRUCTO constr                          [PUBLIC]   complexModule.js
+CLASS      ale2                            [PUBLIC]   func.js
+CLASS      jejda                           [PUBLIC]   literal.js
+CLASS      jejda2                          [PUBLIC]   literal.js
+CLASS      literal                         [PUBLIC]   complexModule.js
+CLASS      ox                              [PUBLIC]   literalRef.js
+CLASS      stObj                           [PUBLIC]   func.js
+METHOD     bar(): Date                     [PROTECTE  func.js
+METHOD     getAttempt(): funcAnonym$0      [PUBLIC]   func.js
+METHOD     justCall(): Date                [PUBLIC]   complexModule.js
+METHOD     justCallLit(): complexModuleAn  [PUBLIC]   complexModule.js
+METHOD     justCallObj(): SampleClass      [PUBLIC]   complexModule.js
+METHOD     resolve()                       [PUBLIC]   <font color=#999999>NodeJS</font>
+FIELD      ale: Number                     [PUBLIC]   func.js
+FIELD      attempt: Number                 [PUBLIC]   func.js
+FIELD      cache                           [PUBLIC]   <font color=#999999>NodeJS</font>
+FIELD      extensions                      [PUBLIC]   <font color=#999999>NodeJS</font>
+FIELD      inn: InnerCl                    [PUBLIC,   func.js
+FIELD      inst: WizardInst                [PUBLIC]   complexModule.js
+FIELD      instRef                         [PUBLIC]   complexModule.js
+FIELD      literalRef: lRef                [PUBLIC]   complexModule.js
+FIELD      message: Message                [PUBLIC]   simpleModule.js
+FIELD      neco2: Number                   [PUBLIC]   literalRef.js
+FIELD      obj2: Runner2                   [PUBLIC]   literalRef.js
+FIELD      obj: Runner                     [PUBLIC]   literal.js
+FIELD      pokus2: Date                    [PUBLIC]   literalRef.js
+FIELD      pokus: Date                     [PUBLIC]   literal.js
+FIELD      stDate: Date                    [PUBLIC,   func.js
+FIELD      stNumber: Number                [PUBLIC,   func.js

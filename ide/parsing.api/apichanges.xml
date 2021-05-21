@@ -1,0 +1,819 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC
+	"-//NetBeans//DTD API changes list 1.0//EN"
+        "../../nbbuild/javadoctools/apichanges.dtd"
+>
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, this will be done periodically; just
+change the XML. If you can, validate the XML against the DTD, if not
+do not worry about it. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+  <!-- First, a list of API names you may use: -->
+  <apidefs>
+    <!-- org.netbeans.modules.parsing.api -->
+    <apidef name="ParsingAPI">Parsing API</apidef>
+  </apidefs>
+
+<!-- ACTUAL CHANGES BEGIN HERE: -->
+
+  <changes>
+      <change id="Source.Context.Lookup">
+          <api name="ParsingAPI"/>
+          <summary>Source provides access to Lookup</summary>
+          <version major="9" minor="2"/>
+          <date day="18" month="6" year="2014"/>
+          <author login="sdedic"/>
+          <compatibility source="compatible" binary="compatible" addition="yes"/>
+          <description>
+              <p>
+                  In the presence of multiple scopes or users, the parsing system needs
+                  to access the proper context even though the work is done by different 
+                  threads. It also has to propagate the proper context back to the user
+                  tasks.
+              </p>
+              <p>
+                  Source can now be created with a Lookup that provides such proper context,
+                  or automatically uses Lookup.getDefault if no explicit Lookup is given.
+              </p>
+          </description>
+          <issue number="247161"/>
+      </change>
+    <change id="Parsing.Netbeans.Cleanup">
+          <api name="ParsingAPI"/>
+          <summary>Parsing API cleaned up from IDE dependencies</summary>
+          <version major="9" minor="1"/>
+          <date day="6" month="5" year="2014"/>
+          <author login="sdedic"/>
+          <compatibility source="compatible" binary="compatible" semantic="incompatible" modification="yes"/>
+          <description>
+              <p>
+                The Parsing API dependended on Windows System, Editor Registry, Data Systems and other IDE artifacts. All those
+                dependencies were externalized as 'private SPIs' in the package <code>org.netbeans.modules.parsing.impspi</code>.
+                The implementation that uses the other NetBeans IDE APIs resides in module <code>parsing.nb</code>.
+                No API change was done, but the execution now relies on a proper binding to be present in the running application
+                or a testsuite.
+              </p>
+              <p>
+                Basic testing environment was provided in unit tests, which implements basic of the externalized functions. However
+                if a test need to check reparsing after document change, or data object change. Full implementation may be needed -
+                the implementor can use a <code>test-dependency</code> to the <code>org.netbeans.modules.parsing.nb</code> module.
+              </p>
+<!--              <p>
+                  Please refer to the <a href="@org-netbeans-modules-parsing-nb@/apichanges.html">API Changes document</a>
+                  of the new module for entries related to moved classes.
+              </p>-->
+          </description>
+      </change>
+      <change id="Separate.Parsing.Indexing">
+          <api name="ParsingAPI"/>
+          <summary>Indexing API separated to its own module</summary>
+          <version major="9" minor="0"/>
+          <date day="20" month="4" year="2014"/>
+          <author login="sdedic"/>
+          <compatibility source="incompatible" binary="compatible" semantic="compatible" modification="yes"/>
+          <description>
+              <p>
+                  Historically the module offered both APIs for Parsing (invoking parser, implementing parser) and
+                  Indexing (refresh index, index SPIs). Those APIs are typically used by unrelated pieces of code,
+                  possibly with the exception of "refresh" actions.
+              </p>
+              <p>
+                  The indexing now resides separately in its <code>parsing.indexing</code> module. Binary compatibility
+                  is kept by using module-auto-deps.xml.
+              </p>
+              <p>
+                  Please refer to the <a href="@org-netbeans-modules-parsing-indexing@/apichanges.html">API Changes document</a>
+                  of the new module for entries related to moved classes.
+              </p>
+          </description>
+      </change>
+      <change id="SuspendStatus.isSuspendSupported">
+          <api name="ParsingAPI"/>
+          <summary>Added <code>SuspendStatus.isSuspendSupported</code></summary>
+          <version major="1" minor="78"/>
+          <date day="7" month="7" year="2014"/>
+          <author login="tzezula"/>
+          <compatibility source="compatible" binary="compatible" semantic="compatible" addition="yes"/>
+          <description>
+              Added <code>SuspendStatus.isSuspendSupported</code> which test if active indexing task
+              supports suspending.
+          </description>
+          <class package="org.netbeans.modules.parsing.spi.indexing" name="SuspendStatus" link="no"/>
+      </change>
+      <change id="QuerySupport.per-project-roots">
+          <api name="ParsingAPI"/>
+          <summary>Added <code>QuerySupport.findRoots</code> mapping class paths roots by projects.</summary>
+          <version major="1" minor="76"/>
+          <date day="7" month="7" year="2014"/>
+          <author login="tzezula"/>
+          <compatibility source="compatible" binary="compatible" semantic="compatible" addition="yes"/>
+          <description>
+              Added <code>QuerySupport.findRoots</code> mapping class paths roots by projects.
+          </description>
+          <class package="org.netbeans.modules.parsing.spi.indexing.support" name="QuerySupport" link="no"/>
+      </change>
+      <change id="QuerySupport.Query.file">
+          <api name="ParsingAPI"/>
+          <summary>Added <code>QuerySupport.Query.file</code> factory for query searching index documents created for given file.</summary>
+          <version major="1" minor="75"/>
+          <date day="13" month="6" year="2014"/>
+          <author login="tzezula"/>
+          <compatibility source="compatible" binary="compatible" semantic="compatible" addition="yes"/>
+          <description>
+              Added <code>QuerySupport.Query.file</code> factory for query searching index documents created for given file.
+          </description>
+          <class package="org.netbeans.modules.parsing.spi.indexing.support" name="QuerySupport" link="no"/>
+      </change>
+      <change id="CancelSupport">
+          <api name="ParsingAPI"/>
+          <summary>Added <code>CancelSupport</code> for thread safe testing of <code>SchedulerTask</code> cancelling.</summary>
+          <version major="1" minor="74"/>
+          <date day="2" month="5" year="2014"/>
+          <author login="tzezula"/>
+          <compatibility source="compatible" binary="compatible" semantic="compatible" addition="yes"/>
+          <description>
+              Added <code>CancelSupport</code> for thread safe testing of <code>SchedulerTask</code> cancelling.
+          </description>
+          <class package="org.netbeans.modules.parsing.spi.support" name="CancelSupport"/>
+      </change>
+      <change id="Scheduler.getSource">
+          <api name="ParsingAPI"/>
+          <summary>Added <code>Sheduler.getSource</code> method for obtaining the active source</summary>
+          <version major="1" minor="69"/>
+          <date day="19" month="8" year="2013"/>
+          <author login="tzezula"/>
+          <compatibility source="compatible" binary="compatible" semantic="compatible" addition="yes"/>
+          <description>
+              <p>Added protected final method <code>Schedulter.getSource</code> allowing <code>Scheduler</code> subclasses
+              to obtain the active <code>Source</code> rather than caching it itself.
+              </p>
+          </description>
+          <class package="org.netbeans.modules.parsing.spi" name="Scheduler"/>
+          <issue number="199357"/>
+      </change>
+      <change id="EmbeddingIndexer.refresh">
+          <api name="ParsingAPI"/>
+          <summary>Allow refresh of <code>EmbeddingIndexer</code></summary>
+          <version major="1" minor="67"/>
+          <date day="10" month="5" year="2013"/>
+          <author login="sdedic"/>
+          <compatibility source="compatible" binary="compatible" semantic="compatible" addition="yes"/>
+          <description>
+              <p>
+                  <code>IndexingManager.refreshAllIndices</code> now accepts names of <code>EmbeddingIndexers</code>
+                  so that embeddings can be reindexed.
+              </p>
+          </description>
+          <class package="org.netbeans.modules.parsing.api.indexing" name="IndexingManager" link="no"/>
+          <issue number="218534"/>
+      </change>
+  <change id="QuerySupport.Query">
+      <api name="ParsingAPI"/>
+      <summary>Extended the <code>QuerySupport</code> to allow composite queries.</summary>
+      <version major="1" minor="64"/>
+      <date day="2" month="5" year="2013"/>
+      <author login="tzezula"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Extended the <code>QuerySupport</code> to allow composite queries with bool operators.
+          </p>
+      </description>
+      <class package="org.netbeans.modules.parsing.spi.indexing.support" name="QuerySupport" link="no"/>
+      <issue number="170915"/>
+  </change>
+  <change id="QuerySupport.findDependentRoots">
+      <api name="ParsingAPI"/>
+      <summary>Added <code>QuerySupport.findDependentRoots</code> to find out source roots depending on given source root.</summary>
+      <version major="1" minor="64"/>
+      <date day="18" month="3" year="2013"/>
+      <author login="tzezula"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Added a <code>QuerySupport.findDependentRoots</code> method returning the dependent source roots for given source root.
+              It returns all the source roots which have either direct or transitive dependency on the given source root.
+          </p>
+      </description>
+      <class package="org.netbeans.modules.parsing.spi.indexing.support" name="QuerySupport" link="no"/>
+      <issue number="227363"/>
+  </change>
+  <change id="EmbeddingProvider.Registration">
+      <api name="ParsingAPI"/>
+      <summary>Added <code>EmbeddingProvider.Registration</code> annotation to register <code>EmbeddingProvider</code>s.</summary>
+      <version major="1" minor="57"/>
+      <date day="16" month="9" year="2012"/>
+      <author login="tzezula"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+               Added <code>EmbeddingProvider.Registration</code> annotation to register <code>EmbeddingProvider</code>s.
+               The registration provides a mime type of a generated embedding which allows the infrastructure to correctly
+               handle embedded indexes.
+          </p>
+      </description>
+      <class package="org.netbeans.modules.parsing.spi" name="EmbeddingProvider"/>
+      <issue number="218148"/>
+  </change>
+  <change id="SuspendStatus">
+      <api name="ParsingAPI"/>
+      <summary>Added <code>SuspendStatus</code> service which can be used by indexers to find out if
+      indexing is suspended.</summary>
+      <version major="1" minor="52"/>
+      <date day="17" month="2" year="2012"/>
+      <author login="tzezula"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+               The indexing is suspended by the infrastructure when high priority request like index query or execution
+               of <code>UserTask</code>, <code>ParserResultTask</code> is in progress. The <code>SuspendStatus</code>
+               allows indexers to find out that indexing is suspended or to park while it's suspended.
+          </p>
+      </description>
+      <class package="org.netbeans.modules.parsing.spi.indexing" name="SuspendStatus" link="no"/>
+      <class package="org.netbeans.modules.parsing.spi.indexing" name="Context" link="no"/>
+      <issue number="208378"/>
+  </change>
+  <change id="IndexingAwareParserResultTask">
+      <api name="ParsingAPI"/>
+      <summary>Added <code>IndexingAwareParserResultTask</code> which is a specialization of <code>ParserResultTask</code>
+      which can be executed during scan.</summary>
+      <version major="1" minor="52"/>
+      <date day="26" month="1" year="2012"/>
+      <author login="tzezula"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              The <code>ParserResultTask</code>s are not executed during the scan to keep the semantic backward compatibility.
+              A specialization of the <code>ParserResultTask</code> the <code>IndexingAwareParserResultTask</code> was added.
+              The <code>IndexingAwareParserResultTask</code> can be executed during the scan.
+          </p>
+      </description>
+      <class package="org.netbeans.modules.parsing.spi" name="IndexingAwareParserResultTask"/>
+      <class package="org.netbeans.modules.parsing.spi" name="TaskIndexingMode"/>
+      <issue number="207459"/>
+  </change>
+  <change id="ConstrainedBinaryIndexer-namePattern">
+      <api name="ParsingAPI"/>
+      <summary>Added <code>ConstrainedBinaryIndexer.Registration.namePattern</code> to allow indexers to use name pattern rather than expensive
+      mime type.</summary>
+      <version major="1" minor="50"/>
+      <date day="29" month="11" year="2011"/>
+      <author login="tzezula"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Added <code>ConstrainedBinaryIndexer.Registration.namePattern</code> to allow indexers to use name pattern rather than expensive
+             mime type for those indexers which do not have required resource and use mime type which require reading of content.
+          </p>
+      </description>
+      <class package="org.netbeans.modules.parsing.spi.indexing" name="ConstrainedBinaryIndexer" link="no"/>
+      <issue number="205574"/>
+  </change>
+  <change id="ConstrainedBinaryIndexer">
+      <api name="ParsingAPI"/>
+      <summary>Added <code>ConstrainedBinaryIndexer</code> to prevent indexer creation when constrained are not fulfilled.</summary>
+      <version major="1" minor="48"/>
+      <date day="10" month="11" year="2011"/>
+      <author login="tzezula"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Added <code>ConstrainedBinaryIndexer</code> to prevent indexer creation and calling when declared
+              constraints are not fulfilled. The <code>ConstrainedBinaryIndexer</code> allows an indexer to specify
+              constraints which need to be fulfilled, the check is done by infrastructure before the indexer is loaded.
+          </p>
+      </description>
+      <class package="org.netbeans.modules.parsing.spi.indexing" name="ConstrainedBinaryIndexer" link="no"/>
+      <issue number="200050"/>
+  </change>
+  <change id="IndexingManager-refreshIndexAndWait-checkEditor">
+      <api name="ParsingAPI"/>
+      <summary>Adding refreshIndexAndWait method into the IndexingManager allowing to specify if indexers should use modified content of editors</summary>
+      <version major="1" minor="40"/>
+      <date day="28" month="3" year="2011"/>
+      <author login="tzezula"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Adding refreshIndexAndWait method into the IndexingManager allowing to specify if indexers should use modified content of editors.
+          </p>
+      </description>
+      <class package="org.netbeans.modules.parsing.api.indexing" name="IndexingManager" link="no"/>
+      <issue number="196930"/>
+  </change>
+  <change id="IndexingManager-refreshIndex-checkEditor">
+      <api name="ParsingAPI"/>
+      <summary>Adding refreshIndex method into the IndexingManager allowing to specify if indexers should use modified content of editors</summary>
+      <version major="1" minor="37"/>
+      <date day="24" month="1" year="2011"/>
+      <author login="tzezula"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Adding refreshIndex method into the IndexingManager allowing to specify if indexers should use modified content of editors.
+          </p>
+      </description>
+      <class package="org.netbeans.modules.parsing.api.indexing" name="IndexingManager" link="no"/>
+      <issue number="194564"/>
+  </change>
+  <change id="parser-cancelling">
+      <api name="ParsingAPI"/>
+      <summary>Adding Parser.cancel method with parameters describing the reason of cancel</summary>
+      <version major="1" minor="36"/>
+      <date day="18" month="10" year="2010"/>
+      <author login="tzezula"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Adding Parser.cancel method with parameters describing the reason of cancel. This information can be used by the
+              parser to optimize the cancel behavior.
+          </p>
+      </description>
+      <class package="org.netbeans.modules.parsing.spi" name="SourceModificationEvent"/>
+      <class package="org.netbeans.modules.parsing.spi" name="Parser"/>
+      <issue number="190933"/>
+  </change>
+  <change id="adding-PathRecognizerRegistration-annotation">
+      <api name="ParsingAPI"/>
+      <summary>Adding PathRecognizerRegistration annotation</summary>
+      <version major="1" minor="32"/>
+      <date day="26" month="1" year="2010"/>
+      <author login="vstejskal"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Added <code>PathRecognizerRegistration</code> annotation that simplyfies registering <code>PathRecognizer</code>s.
+          </p>
+      </description>
+      <class package="org.netbeans.modules.parsing.spi.indexing" name="PathRecognizerRegistration" link="no"/>
+      <issue number="169991"/>
+  </change>
+  <change id="errors-cache">
+      <api name="ParsingAPI"/>
+      <summary>Adding ErrorsCache</summary>
+      <version major="1" minor="30"/>
+      <date day="21" month="1" year="2010"/>
+      <author login="jlahoda"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Added <code>ErrorsCache</code>, that allows the indexers to simply set errors that should be show as badges in the projects tab and
+              in the tasklist.
+          </p>
+      </description>
+      <class package="org.netbeans.modules.parsing.spi.indexing" name="ErrorsCache" link="no"/>
+      <issue number="179459"/>
+  </change>
+  <change id="BinaryIndexerFactory-scanStarted-scanFinished">
+      <api name="ParsingAPI"/>
+      <summary>Methods scanStarted and scanFinished added to BinaryIndexerFactory</summary>
+      <version major="1" minor="29"/>
+      <date day="18" month="1" year="2010"/>
+      <author login="vstejskal"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              The methods <code>scanStarted</code> and <code>scanFinished</code> were added to
+              <code>BinaryIndexerFactory</code> class in order to notifying binary indexers
+              that a binary root is going to be scanned or that its scanning just finished.
+          </p>
+      </description>
+  </change>
+  <change id="vcs-indexing-bridge">
+      <api name="ParsingAPI"/>
+      <summary>IndexingManager extended to support integration with VCS</summary>
+      <version major="1" minor="24"/>
+      <date day="1" month="10" year="2009"/>
+      <author login="vstejskal"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="yes"/>
+      <description>
+          <p>
+              Added <code>IndexingManager.refreshAllIndices(boolean fullRescan, boolean wait, File... filesOrFolders)</code>,
+              <code>&lt;T&gt; T IndexingManager.runProtected(Callable&lt;T&gt; operation)</code>
+          </p>
+      </description>
+      <issue number="167098"/>
+  </change>
+  <change id="IndexingManager.refreshAllIndices">
+      <api name="ParsingAPI"/>
+      <summary>Added IndexingManager.refreshAllIndices(boolean fullRescan, boolean wait, FileObject... folders)</summary>
+      <version major="1" minor="23"/>
+      <date day="7" month="9" year="2009"/>
+      <author login="vstejskal"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Added <code>refreshAllIndices(boolean fullRescan, boolean wait, FileObject... folders)</code>.
+          </p>
+      </description>
+      <issue number="168237"/>
+  </change>
+  <change id="IndexingSupport.createDocument-IndexResult.getIndexable">
+      <api name="ParsingAPI"/>
+      <summary>Added IndexingSupport.createDocument(FileObject) and IndexResult.getIndexable()</summary>
+      <version major="1" minor="22"/>
+      <date day="1" month="9" year="2009"/>
+      <author login="tzezula"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Added methods <code>IndexingSupport.createDocument(FileObject)</code> and <code>IndexResult.getIndexable()</code>
+              in order to allow <code>CustomIndexer</code>s and <code>BinaryIndexer</code>s to use
+              <code>IndexingSupport</code>.
+          </p>
+      </description>
+  </change>
+  <change id="IndexingSupport.isValid">
+      <api name="ParsingAPI"/>
+      <summary>Added a method for checking an index validity</summary>
+      <version major="1" minor="21"/>
+      <date day="24" month="8" year="2009"/>
+      <author login="tzezula"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Added a method for checking an index validity. The method should be called by IndexerFactories to check the index integrity and
+              prevent exceptions during the run on the IDE when the index is broken (for example the IDE was killed during write to the index).
+          </p>
+      </description>
+  </change>
+  <change id="SourceIndexerFactory">
+      <api name="ParsingAPI"/>
+      <summary>Added methods scanStarted and scanFinished. Moved up common methods of EmbeddingIndexerFactory and CustomIndexerFactory</summary>
+      <version major="1" minor="20"/>
+      <date day="19" month="8" year="2009"/>
+      <author login="tzezula"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Added scanStarted and scanFinished methods for notifying indexers about start and finish of the indexing of given root.
+              Refactored EmbeddingIndexerFactory and CustomIndexerFactory to move up common methods into super class SourceIndexerFactory.
+          </p>
+      </description>
+  </change>
+  <change id="removing-of-unused-roots">
+      <api name="ParsingAPI"/>
+      <summary>Notifying indexers about unused roots</summary>
+      <version major="1" minor="19"/>
+      <date day="12" month="8" year="2009"/>
+      <author login="tzezula"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Modified <code>CustomIndexerFactory</code>, <code>EmbeddingIndexerFactory</code> and <code>BinaryIndexerFactory</code>
+              to have a method <code>rootsRemoved(Iterable&lt;? extends URL&gt;)</code>.This method is used to notify indexers about unused roots.
+              Indexers may do a clean up of memory caches or close indexes.
+          </p>
+      </description>
+  </change>
+  <change id="modifying-filesDeleted-filesDirty">
+      <api name="ParsingAPI"/>
+      <summary>Modifying CustomIndexerFactory and EmbeddingIndexerFactory</summary>
+      <version major="1" minor="18"/>
+      <date day="3" month="7" year="2009"/>
+      <author login="vstejskal"/>
+      <compatibility source="incompatible" binary="incompatible" semantic="compatible" deletion="no" addition="no" modification="yes"/>
+      <description>
+          <p>
+              Modified <code>CustomIndexerFactory</code> and <code>EmbeddingIndexerFactory</code>
+              to have methods <code>filesDeleted(Iterable&lt;? extends Indexable&gt; deleted, Context context);</code>
+              and <code>filesDirty(Iterable&lt;? extends Indexable&gt; deleted, Context context);</code>.
+          </p>
+          <p>
+              These two methods supersede thier older version, which accepted <code>Collection</code> rather
+              than <code>Iterable</code>. The new methods allow the infrastructure to optimize files crawling
+              and improve the overall performance of scanning.
+          </p>
+      </description>
+      <issue number="166340"/>
+  </change>
+
+  <change id="adding-context-isSourceForBinaryRootIndexing">
+      <api name="ParsingAPI"/>
+      <summary>Adding Context.isSourceForBinaryRootIndexing()</summary>
+      <version major="1" minor="17"/>
+      <date day="23" month="6" year="2009"/>
+      <author login="vstejskal"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Added <code>Context.isSourceForBinaryRootIndexing()</code> in order to further
+              optimize java indexing.
+          </p>
+      </description>
+  </change>
+
+  <change id="adding-forceRefresh">
+      <api name="ParsingAPI"/>
+      <summary>Adding IndexingManager.refreshIndex methods with forceRefresh parameter</summary>
+      <version major="1" minor="16"/>
+      <date day="10" month="6" year="2009"/>
+      <author login="vstejskal"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Added <code>IndexingManager.refreshIndex(URL root, Collection&lt;? extends URL&gt; files, boolean forceRefresh)</code>
+              and <code>IndexingManager.refreshIndexAndWait(URL root, Collection&lt;? extends URL&gt; files, boolean forceRefresh)</code>.
+          </p>
+      </description>
+  </change>
+
+  <change id="changes-Indexable-Context">
+      <api name="ParsingAPI"/>
+      <summary>Tweaking Indexable and Context</summary>
+      <version major="1" minor="13"/>
+      <date day="21" month="5" year="2009"/>
+      <author login="vstejskal"/>
+      <compatibility source="incompatible" binary="incompatible" semantic="compatible" deletion="yes" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Added <code>Indexable.getMimeType()</code>, <code>Context.isCancelled()</code>.
+              Removed <code>Indexabe.getName()</code>, <code>Indexable.getLastModified()</code>,
+              <code>Indexable.openInputStream()</code>.
+          </p>
+      </description>
+  </change>
+
+  <change id="typo-IndexingManager-refreshAllIndices">
+      <api name="ParsingAPI"/>
+      <summary>Fixing typo: IndexingManager.refreshAllIndices()</summary>
+      <version major="1" minor="12"/>
+      <date day="20" month="4" year="2009"/>
+      <author login="vstejskal"/>
+      <compatibility source="incompatible" binary="incompatible" semantic="compatible" deletion="no" addition="no" modification="yes"/>
+      <description>
+          <p>
+              Fixing typo in <code>IndexingManager.refreshAllIndicies(String)</code> method
+              name. Technically this method was removed and a new one called
+              <code>IndexingManager.refreshAllIndices(String)</code> was created. The same happened
+              for <code>IndexingManager.refreshAllIndicies(FileObject...)</code>.
+          </p>
+      </description>
+  </change>
+
+  <change id="Context-checkForEditorModifications">
+      <api name="ParsingAPI"/>
+      <summary>Adding Context.checkForEditorModifications</summary>
+      <version major="1" minor="10"/>
+      <date day="15" month="4" year="2009"/>
+      <author login="vstejskal"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Adding <code>Context.checkForEditorModifications()</code> in order to
+              signal indexers whether they should or should not care about editor documents.
+          </p>
+      </description>
+  </change>
+
+  <change id="IndexResult-getRoot-getRelativePath">
+      <api name="ParsingAPI"/>
+      <summary>Adding IndexResult.getRoot and getRelativePath</summary>
+      <version major="1" minor="9"/>
+      <date day="2" month="4" year="2009"/>
+      <author login="vstejskal"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Adding <code>IndexResult.getRoot()</code> and <code>IndexResult.getRelativePath()</code>
+              methods.
+          </p>
+      </description>
+  </change>
+
+  <change id="IndexingManager-refreshAllIndicies">
+      <api name="ParsingAPI"/>
+      <summary>Adding IndexingManager.refreshAllIndicies()</summary>
+      <version major="1" minor="8"/>
+      <date day="27" month="3" year="2009"/>
+      <author login="vstejskal"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Adding <code>IndexingManager.refreshAllIndicies(String)</code> method
+              for refreshing all indices created by a given indexer.
+          </p>
+      </description>
+  </change>
+
+  <change id="QuerySupport-findRoots">
+      <api name="ParsingAPI"/>
+      <summary>Adding QuerySupport.findRoots(...) methods</summary>
+      <version major="1" minor="7"/>
+      <date day="27" month="3" year="2009"/>
+      <author login="vstejskal"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Adding two <code>QuerySupport.findRoots(...)</code> methods that can be used
+              for finding classpath roots from classpaths marked with specific IDs
+              and supplied by specific project.
+          </p>
+      </description>
+  </change>
+
+  <change id="IndexingManager-refreshIndexAndWait">
+      <api name="ParsingAPI"/>
+      <summary>Adding IndexingManager.refreshIndexAndWait()</summary>
+      <version major="1" minor="6"/>
+      <date day="2" month="3" year="2009"/>
+      <author login="vstejskal"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Adding <code>IndexingManager.refreshIndexAndWait(URL, Collection&lt;? extends URL&gt;)</code>
+              for synchronous index refreshing.
+          </p>
+      </description>
+  </change>
+
+  <change id="Support-for-dirty-files">
+      <api name="ParsingAPI"/>
+      <summary>Support for marking files dirty</summary>
+      <version major="1" minor="4"/>
+      <date day="1" month="3" year="2009"/>
+      <author login="vstejskal"/>
+      <compatibility source="incompatible" binary="incompatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Adding <code>CustomIndexerFactory.filesDirty</code>,
+              <code>EmbeddingIndexerFactory.filesDirty</code> and <code>IndexingSupport.markDirtyDocuments</code>
+              in order to support on-the-fly reindexing of files modified in the
+              editor.
+          </p>
+      </description>
+  </change>
+
+  <change id="Explicit-index-refresh">
+      <api name="ParsingAPI"/>
+      <summary>Support for explicit index refreshing</summary>
+      <version major="1" minor="6"/>
+      <date day="26" month="2" year="2009"/>
+      <author login="vstejskal"/>
+      <compatibility source="incompatible" binary="incompatible" semantic="compatible" deletion="yes" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Adding <code>IndexingManager</code> class, which allows requesting
+              to reindex a set of files. Also adding <code>addSupplemntaryFiles</code>
+              and <code>isSupplementaryFilesIndexing</code> methods to <code>Context</code>
+              class in order to allow indexers to request reindexing of additional files.
+          </p>
+      </description>
+  </change>
+
+  <change id="Context.addIndexingJob">
+      <api name="ParsingAPI"/>
+      <summary>Adding Context.addIndexingJob</summary>
+      <version major="1" minor="2"/>
+      <date day="25" month="2" year="2009"/>
+      <author login="vstejskal"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+      </description>
+  </change>
+
+  <change id="Snapshot.getTokenHierarchy">
+      <api name="ParsingAPI"/>
+      <summary>Adding Snapshot.getTokenHierarchy</summary>
+      <version major="1" minor="1"/>
+      <date day="20" month="2" year="2009"/>
+      <author login="vstejskal"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+        <p>
+            Adding <code>Snapshot.getTokenHierarchy()</code> in order to provide
+            effective way for accessing lexer tokens created from a <code>Snapshot</code>.
+        </p>
+      </description>
+  </change>
+
+  <change id="ParsingAPI-created">
+      <api name="ParsingAPI"/>
+      <summary>Parsing API created</summary>
+      <version major="1" minor="0"/>
+      <date day="1" month="1" year="2009"/>
+      <author login="jjancura"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+        <p>
+            Creating Parsing API.
+        </p>
+      </description>
+      <issue number="133900"/>
+  </change>
+
+  </changes>
+
+  <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <======================
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE parsing.api/apichanges.xml
+
+-->
+    <head>
+        <title>Change History for the Parsing &amp; Indexing API</title>
+        <link rel="stylesheet" href="prose.css" type="text/css"/>
+        <meta name="CATEGORY" content="OtherDevelopmentDoc"/>
+        <meta name="DESCRIPTION" content="A cross-indexed list of all changes made to the Parsing &amp; Indexing API."/>
+    </head>
+    <body>
+        <p class="overviewlink">
+            <a href="overview-summary.html">Overview</a>
+        </p>
+        <h1>Introduction</h1>
+        <h2>What do the Dates Mean?</h2>
+        <p>
+            The supplied dates indicate when the API change was made, on the CVS
+            trunk. From this you can generally tell whether the change should be
+            present in a given build or not; for trunk builds, simply whether it
+            was made before or after the change; for builds on a stabilization
+            branch, whether the branch was made before or after the given date. In
+            some cases corresponding API changes have been made both in the trunk
+            and in an in-progress stabilization branch, if they were needed for a
+            bug fix; this ought to be marked in this list.
+        </p>
+        <hr/>
+        <standard-changelists module-code-name="$codebase"/>
+        <hr/>
+        <p>@FOOTER@</p>
+    </body>
+  </htmlcontents>
+
+</apichanges>

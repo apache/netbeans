@@ -1,0 +1,4 @@
+Code completion result for source line:
+public static function interfaceReturnTypeStatic(): ?F|oo; // CC
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Foo                             [PUBLIC]   My\Sub

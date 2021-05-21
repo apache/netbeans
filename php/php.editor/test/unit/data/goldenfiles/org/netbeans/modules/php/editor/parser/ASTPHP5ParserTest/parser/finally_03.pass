@@ -1,0 +1,45 @@
+<testresult testFile='finally_03.php'>
+    <scanner>
+        <token id='T_TRY' start='7' end='10'>
+            <text>try</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='11' end='12'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='14' end='15'>
+            <text>}</text>
+        </token>
+        <token id='T_FINALLY' start='16' end='23'>
+            <text>finally</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='24' end='25'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='27' end='28'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='30' end='33'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='33' end='33'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='32'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <TryStatement start='7' end='28'>
+                <CatchClauses>
+                </CatchClauses>
+                <FinallyClause start='16' end='28'>
+                    <Block start='24' end='28' isCurly='true'>
+                    </Block>
+                </FinallyClause>
+                <Block start='11' end='15' isCurly='true'>
+                </Block>
+            </TryStatement>
+            <EmptyStatement start='30' end='32'/>
+        </Statements>
+    </Program>
+</testresult>

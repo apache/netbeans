@@ -1,0 +1,4 @@
+    var |>MARK_OCCURRENCES:LoginService<| = {};
+            |>MARK_OCCURRENCES:LoginService<|.authProvider = "google";
+            |>MARK_OCCURRENCES:LoginSe^rvice<|.test = "google";
+        return |>MARK_OCCURRENCES:LoginService<|;

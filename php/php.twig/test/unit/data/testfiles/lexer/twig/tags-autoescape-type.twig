@@ -1,0 +1,35 @@
+1. autoescape true |escape('js')
+
+{% autoescape true %}
+<a onclick="alert(&quot;{{ msg|escape('js') }}&quot;)"></a>
+{% endautoescape %}
+
+2. autoescape true html |escape('js')
+
+{% autoescape true html %}
+<a onclick="alert(&quot;{{ msg|escape('js') }}&quot;)"></a>
+{% endautoescape %}
+
+3. autoescape true js |escape('js')
+
+{% autoescape true js %}
+<a onclick="alert(&quot;{{ msg|escape('js') }}&quot;)"></a>
+{% endautoescape %}
+
+4. no escape
+
+{% autoescape false %}
+<a onclick="alert(&quot;{{ msg }}&quot;)"></a>
+{% endautoescape %}
+
+5. |escape('js')|escape('html')
+
+{% autoescape false %}
+<a onclick="alert(&quot;{{ msg|escape('js')|escape('html') }}&quot;)"></a>
+{% endautoescape %}
+
+6. autoescape true html |escape('js')|escape('html')
+
+{% autoescape true html %}
+<a onclick="alert(&quot;{{ msg|escape('js')|escape('html') }}&quot;)"></a>
+{% endautoescape %}

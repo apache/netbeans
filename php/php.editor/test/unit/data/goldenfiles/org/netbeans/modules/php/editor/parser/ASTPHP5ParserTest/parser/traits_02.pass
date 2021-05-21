@@ -1,0 +1,58 @@
+<testresult testFile='traits_02.php'>
+    <scanner>
+        <token id='T_TRAIT' start='6' end='11'>
+            <text>trait</text>
+        </token>
+        <token id='T_STRING' start='12' end='22'>
+            <text>MyTrait_02</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='23' end='24'>
+            <text>{</text>
+        </token>
+        <token id='T_USE' start='29' end='32'>
+            <text>use</text>
+        </token>
+        <token id='T_STRING' start='33' end='40'>
+            <text>MyTrait</text>
+        </token>
+        <token id='T_SEMICOLON' start='40' end='41'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='42' end='43'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='44' end='47'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='47' end='47'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='46'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <TraitDeclaration start='6' end='43'>
+                <TraitName>
+                    <Identifier start='12' end='22' name='MyTrait_02'/>
+                </TraitName>
+                <Block start='23' end='43' isCurly='true'>
+                    <UseTraitStatement start='29' end='41'>
+                        <Parts>
+                            <UseTraitStatementPart start='33' end='40'>
+                                <Name>
+                                    <NamespaceName start='33' end='40' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='33' end='40' name='MyTrait'/>
+                                    </NamespaceName>
+                                </Name>
+                            </UseTraitStatementPart>
+                        </Parts>
+                        <Body>
+                        </Body>
+                    </UseTraitStatement>
+                </Block>
+            </TraitDeclaration>
+            <EmptyStatement start='44' end='46'/>
+        </Statements>
+    </Program>
+</testresult>

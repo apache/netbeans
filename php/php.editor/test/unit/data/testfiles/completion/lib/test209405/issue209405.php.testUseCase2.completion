@@ -1,0 +1,4 @@
+Code completion result for source line:
+$c["y"]->|f();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     f()                             [PUBLIC]   Abc

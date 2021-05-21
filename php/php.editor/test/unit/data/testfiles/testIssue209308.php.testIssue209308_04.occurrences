@@ -1,0 +1,5 @@
+    use \Foo\Bar as |>MARK_OCCURRENCES:Omg<|;
+        /** @var |>MARK_OCCURRENCES:Om^g<|\AliasedClassName */
+         * @return |>MARK_OCCURRENCES:Omg<|\AliasedClassName
+         * @param |>MARK_OCCURRENCES:Omg<|\AliasedClassName $p
+        function bar(|>MARK_OCCURRENCES:Omg<|\AliasedClassName $p, Cls $a, \Foo\Bar\AliasedClassName $name) {}

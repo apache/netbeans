@@ -1,0 +1,8 @@
+Code completion result for source line:
+$('.|notMe')
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+RULE       .colored                                   null
+RULE       .myClas                                    null
+RULE       .myClass                                   null
+RULE       .notMe                                     null

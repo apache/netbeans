@@ -1,0 +1,30 @@
+<testresult testFile='numericLiteralSeparatorParseError_04.php'>
+    <scanner>
+        <token id='T_DNUMBER' start='815' end='817'>
+            <text>1.</text>
+        </token>
+        <token id='T_STRING' start='817' end='819'>
+            <text>_0</text>
+        </token>
+        <token id='T_SEMICOLON' start='819' end='820'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='821' end='821'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='821'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ASTError start='815' end='817'/>
+            <ExpressionStatement start='817' end='820'>
+                <NamespaceName start='817' end='819' isCurrent='false' isGlobal='false'>
+                    <Identifier start='817' end='819' name='_0'/>
+                </NamespaceName>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

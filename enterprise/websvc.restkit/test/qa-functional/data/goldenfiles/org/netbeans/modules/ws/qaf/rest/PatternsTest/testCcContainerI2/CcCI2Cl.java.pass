@@ -1,0 +1,66 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package o.n.m.ws.qaf.rest.patterns;
+
+import java.util.logging.Level;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.PUT;
+import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
+import javax.ws.rs.DELETE;
+
+/**
+ * REST Web Service
+ *
+ * @author jskrivanek
+ */
+public class CcCI2Cl {
+
+    private String CcCI2URI;
+
+    /**
+     * Creates a new instance of CcCI2Cl
+     */
+    private CcCI2Cl(String CcCI2URI) {
+        this.CcCI2URI = CcCI2URI;
+    }
+
+    /**
+     * Get instance of the CcCI2Cl
+     */
+    public static CcCI2Cl getInstance(String CcCI2URI) {
+        // The user may use some kind of persistence mechanism
+        // to store and restore instances of CcCI2Cl class.
+        return new CcCI2Cl(CcCI2URI);
+    }
+
+    /**
+     * Retrieves representation of an instance of o.n.m.ws.qaf.rest.patterns.CcCI2Cl
+     * @return an instance of java.util.logging.Level
+     */
+    @GET
+    @Produces("text/plain")
+    public Level getText() {
+        //TODO return proper representation object
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * PUT method for updating or creating an instance of CcCI2Cl
+     * @param content representation for the resource
+     * @return an HTTP response with content of the updated or created resource.
+     */
+    @PUT
+    @Consumes("text/plain")
+    public void putText(Level content) {
+    }
+
+    /**
+     * DELETE method for resource CcCI2Cl
+     */
+    @DELETE
+    public void delete() {
+    }
+}

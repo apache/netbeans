@@ -1,0 +1,2 @@
+  var |>MARK_OCCURRENCES:us^er<| = {};
+  fooBar(function () { |>MARK_OCCURRENCES:user<|.password = false; });

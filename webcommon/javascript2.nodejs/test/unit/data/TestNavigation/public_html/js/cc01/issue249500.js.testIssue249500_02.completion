@@ -1,0 +1,5 @@
+Code completion result for source line:
+ke|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   kes: Number                     [PRIVATE]  issue249500.js

@@ -1,0 +1,4 @@
+hello:METHOD:[PUBLIC]:ESCAPED{hello}ESCAPED{(}ESCAPED{$scope}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  $scope:PARAMETER:[PUBLIC]:ESCAPED{$scope}:
+    cancel:METHOD:[PUBLIC]:ESCAPED{cancel}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+greetings:METHOD:[PUBLIC]:ESCAPED{greetings}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

@@ -1,0 +1,5 @@
+Code completion result for source line:
+$thisA->|bar();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     bar()                           [PUBLIC]   Bar
+METHOD     getFoo()                        [PUBLIC]   Bar

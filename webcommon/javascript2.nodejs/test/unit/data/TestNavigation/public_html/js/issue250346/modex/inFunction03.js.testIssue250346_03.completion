@@ -1,0 +1,8 @@
+Code completion result for source line:
+simpleRef.|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      ox                              [PUBLIC]   literalRef.js
+FIELD      neco2: Number                   [PUBLIC]   literalRef.js
+FIELD      obj2: Runner2                   [PUBLIC]   literalRef.js
+FIELD      pokus2: Date                    [PUBLIC]   literalRef.js

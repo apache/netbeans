@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="database_explorer_api">Database Explorer API</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+        <change>
+            <api name="database_explorer_api"/>
+            <summary>
+                Configure usage of scrollable cursors.
+            </summary>
+            <version major="1" minor="57"/>
+            <date day="10" month="6" year="2013"/>
+            <author login="jhavlin"/>
+            <compatibility addition="yes"/>
+            <description>
+                Users can enable or disable using of scrollable cursors, which
+                can make queries faster, but also can cause problems for some
+                drivers.
+            </description>
+            <class package="org.netbeans.api.db.explorer" name="DatabaseConnection"/>
+            <issue number="231030"/>
+        </change>
+        <change>
+            <api name="database_explorer_api"/>
+            <summary>
+                Enable editting of connection properties for db connections
+            </summary>
+            <version major="1" minor="53"/>
+            <date day="13" month="2" year="2013"/>
+            <author login="matthias42"/>
+            <compatibility addition="yes"/>
+            <description>
+                Users can specify connection properties in the UI now.
+                The properties can be retrieved using new method
+                DatabaseConnection.getConnectionProperties(). There is also a
+                new factory method DatabaseConnection.create() that accepts an
+                object with additional connection properties.
+            </description>
+            <class package="org.netbeans.api.db.explorer" name="DatabaseConnection"/>
+            <issue number="197408"/>
+        </change>
+        <change>
+            <api name="database_explorer_api"/>
+            <summary>Allow specify display name of the DatabaseConnection</summary>
+            <version major="1" minor="42"/>
+            <date day="22" month="11" year="2010"/>
+            <author login="jrechtacek"/>
+            <compatibility addition="yes"/>
+            <description>
+                Allow to specify the display name of the connection as it shows
+                under the Databases node. Added new factory method to create
+                database connection with given display name.
+            </description>
+            <class package="org.netbeans.api.db.explorer" name="DatabaseConnection"/>
+            <issue number="192150"/>
+        </change>
+        <change>
+            <api name="database_explorer_api"/>
+            <summary>Add a DatabaseConnection.getJDBCDriver() method</summary>
+            <version major="1" minor="32"/>
+            <date day="6" month="5" year="2009"/>
+            <author login="jrechtacek"/>
+            <compatibility addition="yes"/>
+            <description>
+                Currently there is no easy way to get the JDBCDriver instance that a
+                DatabaseConnection will use / used to connect to a database. A
+                <code>DatabaseConnection.getJDBCDriver()</code> method should be added.
+            </description>
+            <class package="org.netbeans.api.db.explorer" name="DatabaseConnection"/>
+            <issue number="90210"/>
+        </change>
+        <change>
+            <api name="database_explorer_api"/>
+            <summary>Add ability to ensure a JDBC connection is valid</summary>
+            <version major="1" minor="30"/>
+            <date day="27" month="8" year="2008"/>
+            <author login="davidvc"/>
+            <compatibility addition="yes"/>
+            <description>
+                This change allows you to ensure that the physical database connection
+                obtained from a DatabaseConnection is valid or is null  .
+            </description>
+            <class package="org.netbeans.api.db.explorer" name="DatabaseConnection"/>
+            <issue number="143837"/>
+        </change>
+        <change>
+            <api name="database_explorer_api"/>
+            <summary>Add support for always quoting and for unquoting SQL identifiers.</summary>
+            <version major="1" minor="29"/>
+            <date day="15" month="8" year="2008"/>
+            <author login="abadea"/>
+            <compatibility addition="yes"/>
+            <description>
+                Add support for always quoting and for unquoting SQL identifiers.
+            </description>
+            <class package="org.netbeans.api.db.sql.support" name="SQLIdentifiers"/>
+            <issue number="143441"/>
+        </change>
+        <change>
+            <api name="database_explorer_api"/>
+            <summary>Add ability to get the underlying JDBC Driver instance for a JDBCDriver</summary>
+            <version major="1" minor="28"/>
+            <date day="27" month="6" year="2008"/>
+            <author login="davidvc"/>
+            <compatibility addition="yes"/>
+            <description>
+                This change makes it possible to get the underlying Driver class.  Without
+                this, the only way you can obtain the driver is to create your own classloader that
+                has the driver classpath URLs in its search list and then load the driver.
+                This makes things much easier.
+            </description>
+            <class package="org.netbeans.api.db.explorer" name="JDBCDriver"/>
+            <issue number="134309"/>
+        </change>
+        <change>
+            <api name="database_explorer_api"/>
+            <summary>Add ability to show the Add JDBC Driver dialog synchronously</summary>
+            <version major="1" minor="27"/>
+            <date day="27" month="6" year="2008"/>
+            <author login="davidvc"/>
+            <compatibility addition="yes"/>
+            <description>
+                Add the ability to show the Add Driver dialog synchronously.  This
+                must be run on the AWT event thread, but it returns the <code>JDBCDriver</code> that was added.
+            </description>
+            <class package="org.netbeans.api.db.explorer" name="JDBCDriverManager"/>
+            <issue number="129633"/>
+        </change>
+        <change>
+            <api name="database_explorer_api"/>
+            <summary>Add ability to connect a database connection directly with no UI</summary>
+            <version major="1" minor="26"/>
+            <date day="26" month="6" year="2008"/>
+            <author login="davidvc"/>
+            <compatibility addition="yes"/>
+            <description>
+                Add the ability to connect a database connection directly from the API
+                without having any kind of UI pop up, be it a dialog or a progress window.
+            </description>
+            <class package="org.netbeans.api.db.explorer" name="ConnectionManager"/>
+            <issue number="128546"/>
+        </change>
+        <change>
+            <api name="database_explorer_api"/>
+            <summary>Add ability to remove a database connection</summary>
+            <version major="1" minor="25"/>
+            <date day="26" month="2" year="2008"/>
+            <author login="davidvc"/>
+            <compatibility addition="yes"/>
+            <description>
+                Add the ability to remove a database connection from the Database
+                Explorer connection list.
+            </description>
+            <class package="org.netbeans.api.db.explorer" name="ConnectionManager"/>
+            <issue number="128502"/>
+        </change>
+
+        <change>
+            <api name="database_explorer_api"/>
+            <summary>Made Database Explorer API stable</summary>
+            <version major="1" minor="24"/>
+            <date day="1" month="11" year="2007"/>
+            <author login="abadea"/>
+            <compatibility modification="yes"/>
+            <description>
+                The stability level of the Database Explorer API is changed to stable.
+            </description>
+            <issue number="120097"/>
+        </change>
+        <change>
+            <api name="database_explorer_api"/>
+            <summary>Allow user to save password</summary>
+            <version major="1" minor="23"/>
+            <date day="5" month="10" year="2007"/>
+            <author login="davidvc"/>
+            <compatibility addition="yes"/>
+            <description>
+                This change updated the connection DTD to 1.1, adding a password
+                element.  In the Database Explorer implementation, we allow the
+                user to indicate they want to save the password.  This works across
+                invocations of the VM.
+            </description>
+            <issue number="87600"/>
+        </change>
+        <change>
+            <api name="database_explorer_api"/>
+            <summary>Added utility class for working with SQL identifiers</summary>
+            <version major="1" minor="22"/>
+            <date day="12" month="9" year="2007"/>
+            <author login="davidvc"/>
+            <compatibility addition="yes"/>
+            <description>
+                This change adds a <code>SQLIdentifiers.Quoter</code> class which
+                provides a utility method for quoting SQL identifiers.
+            </description>
+            <class package="org.netbeans.api.db.sql.support" name="SQLIdentifiers"/>
+            <issue number="115075"/>
+        </change>
+        <change>
+            <api name="database_explorer_api"/>
+            <summary>Added support for dragging and dropping nodes from the Database Explorer</summary>
+            <version major="1" minor="21"/>
+            <date day="17" month="6" year="2007"/>
+            <author login="abadea"/>
+            <compatibility addition="yes"/>
+            <description>
+                This change adds a <code>DatabaseMetaDataTransfer</code> class which
+                contains <code>DataFlavor</code>s for database objects and nested classes
+                representing those database objects during a drag and drop transfer.
+            </description>
+            <class package="org.netbeans.api.db.explorer" name="DatabaseMetaDataTransfer"/>
+            <issue number="96200"/>
+        </change>
+        <change>
+            <api name="database_explorer_api"/>
+            <summary>Addded a method to open the NewConnectionDialog with an user and password pre-filled and methods which open the NewConnectionDialog and return the newly added database connection</summary>
+            <version major="1" minor="19"/>
+            <date day="20" month="7" year="2006"/>
+            <author login="abadea"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" deprecation="no" addition="yes" deletion="no" modification="no"/>
+            <description>
+                This change adds a <code>showAddConnectionDialog</code> which opens the
+                New Connection Dialog while pre-filling a specified database user and password.
+                It also adds <code>showAddConnectionDialogFromEventThread</code> methods
+                which are counterparts to the <code>showAddConnectionDialog</code> methods,
+                with the difference that they return the newly added database connection,
+                but must be called from the event dispatching thread.
+            </description>
+            <class package="org.netbeans.api.db.explorer" name="ConnectionManager"/>
+            <issue number="80629"/>
+        </change>
+        <change>
+            <api name="database_explorer_api"/>
+            <summary>Addded an utility method to fill a combo box with database connections</summary>
+            <version major="1" minor="18"/>
+            <date day="17" month="3" year="2006"/>
+            <author login="abadea"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" deprecation="no" addition="yes" deletion="no" modification="no"/>
+            <description>
+                This change adds the <code>DatabaseExplorerUIs.connect()</code>
+                method, which populates a <code>JComboBox</code> with the list of connections
+                from a <code>ConnectionManager</code>.
+            </description>
+            <class package="org.netbeans.api.db.explorer.support" name="DatabaseExplorerUIs"/>
+            <issue number="73713"/>
+        </change>
+        <change>
+            <api name="database_explorer_api"/>
+            <summary>Initial version released</summary>
+            <version major="1" minor="13"/>
+            <date day="12" month="9" year="2005"/>
+            <author login="abadea"/>
+            <compatibility addition="yes"/>
+            <description>
+                First initial release of the Database Explorer API.
+            </description>
+        </change>
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE CHANGEME/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Database Explorer API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the Database Explorer API/SPI.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+
+      <hr/><standard-changelists module-code-name="org.netbeans.api.db.explorer"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

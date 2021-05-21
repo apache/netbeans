@@ -1,0 +1,4 @@
+Code completion result for source line:
+function fc142091(cls14209|1 $p) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      cls142091                       [PUBLIC]   issue142091.php

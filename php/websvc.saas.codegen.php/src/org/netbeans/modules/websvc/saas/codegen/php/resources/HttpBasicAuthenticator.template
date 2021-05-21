@@ -1,0 +1,102 @@
+<?php
+    include_once "__NAME__Profile.php";
+
+    define("_ATTR_PREFIX", "__NAME__");
+    define("_RETURN_URL", "__GROUP__return_url");
+    define("_USERNAME", "__GROUP__username");
+    define("_PASSWORD", "__GROUP__password");
+    define("_EXPIRE", "3600");
+    
+    class __NAME__ {
+
+        private static $inited = false;
+        private static $useAppUsernamePassword;
+        private static $appUsername;
+        private static $appPassword;
+        private static $LOGIN_URL;
+
+        public static function init() {
+            if(self::$inited)
+              return;
+            self::$LOGIN_URL = "__GROUP__/".str_replace("Authenticator", "Login", _ATTR_PREFIX).".php";
+
+            self::$appUsername = __NAME__Profile::getUsername();
+            self::$appPassword = __NAME__Profile::getPassword();
+            if (self::$appUsername != null && strlen(self::$appUsername) > 0 &&
+                self::$appPassword != null || strlen(self::$appPassword) > 0) {
+                self::$useAppUsernamePassword = true;
+            } else {
+                self::$useAppUsernamePassword = false;
+            }
+            self::$inited = true;
+        }
+
+        public static function login() {
+            self::init();
+            if (self::$useAppUsernamePassword) {
+                self::saveSession(_USERNAME, self::$appUsername);
+                self::saveSession(_PASSWORD, self::$appPassword);
+            } else {
+                $sessionUsername = self::getSession(_USERNAME);
+                $sessionPassword = self::getSession(_PASSWORD);
+                if ($sessionUsername == null || strlen($sessionUsername) == 0 ||
+                    $sessionPassword == null || strlen($sessionPassword) == 0) {
+                    self::doRedirect(self::$LOGIN_URL."?rUrl=".$_SERVER['REQUEST_URI']);
+                    exit(0);
+                } else {
+                    self::saveSession(_USERNAME, $sessionUsername);
+                    self::saveSession(_PASSWORD, $sessionPassword);
+                    $returnUrl = self::getSession(_RETURN_URL);
+                    if ($returnUrl != null) {
+                        self::deleteSession(_RETURN_URL);
+                        self::doRedirect($returnUrl);
+                        exit(0);
+                    }
+                }
+            }
+        }
+        
+        private static function sessionInit() {
+            session_start();
+            $_SESSION = array();
+            if (isset($_COOKIE[session_name()])) {
+                setcookie(session_name(), '', time()-42000, '/');
+            }
+            session_destroy();
+        }
+        
+        public static function getSession($name) {
+            if($_SESSION[$name] != null)
+              return $_SESSION[$name];
+            else
+              return $_COOKIE[$name];
+        }
+
+        public static function saveSession($name, $value) {
+            setcookie($name, $value, time() + _EXPIRE, "/");
+            $_SESSION[$name] = $value;
+        }
+
+        public static function deleteSession($name) {
+            setcookie($name, "", time() - _EXPIRE, "/");
+            $_SESSION[$name] = null;
+        }
+
+        public static function doRedirect($url) {
+            printf("<html>");
+            printf("<head>");
+            printf("<title></title>");
+            printf("<meta http-equiv=\"refresh\" content=\"3; URL=".$url."\">");
+            printf("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">");
+            printf("</head>");
+            printf("<body>");
+            printf("<p align=\"center\">Redirecting...</p>");
+            printf("<p align=\"center\">");
+            printf("<a href= \"".$url."\">".$url."</a></p>");
+            printf("<p align=\"center\">If you are not redirected automatically within a few seconds then please click on the link above.</p>");
+            printf("</body>");
+            printf("</html>");
+        }
+    }
+
+?>

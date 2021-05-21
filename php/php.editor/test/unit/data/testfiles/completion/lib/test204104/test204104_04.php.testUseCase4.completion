@@ -1,0 +1,3 @@
+Code completion result for source line:
+$b->|testHinting();  // myClass type hinting doesn't work here
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)

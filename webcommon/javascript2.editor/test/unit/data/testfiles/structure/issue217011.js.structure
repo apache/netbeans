@@ -1,0 +1,13 @@
+a217011:VARIABLE:[PUBLIC]:ESCAPED{a217011}<font color="#999999">ESCAPED{ : }Player217011</font>:
+Hrac217011:CLASS:[PUBLIC]:ESCAPED{Hrac217011}:
+  dva:FIELD:[PUBLIC]:ESCAPED{dva}<font color="#999999">ESCAPED{ : }String</font>:
+  init:METHOD:[PUBLIC]:ESCAPED{init}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  jedna:FIELD:[PUBLIC]:ESCAPED{jedna}<font color="#999999">ESCAPED{ : }String</font>:
+Player217011:CONSTRUCTOR:[PUBLIC]:ESCAPED{Player217011}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Player217011</font>:
+  Bar:CONSTRUCTOR:[PRIVATE]:ESCAPED{Bar}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Player217011.Bar</font>:
+    tp:FIELD:[PUBLIC]:ESCAPED{tp}<font color="#999999">ESCAPED{ : }Number</font>:
+  b:FIELD:[PUBLIC]:ESCAPED{b}<font color="#999999">ESCAPED{ : }Player217011.Bar</font>:
+  dirtFactor:FIELD:[PUBLIC]:ESCAPED{dirtFactor}<font color="#999999">ESCAPED{ : }Number</font>:
+  factor:METHOD:[PROTECTED]:ESCAPED{factor}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  getinfo:METHOD:[PROTECTED]:ESCAPED{getinfo}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+  name:FIELD:[PUBLIC]:ESCAPED{name}<font color="#999999">ESCAPED{ : }String</font>:

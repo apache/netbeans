@@ -1,0 +1,4 @@
+pp:CLASS:[PUBLIC]:ESCAPED{pp}:
+  m:CLASS:[PUBLIC]:ESCAPED{m}:
+    Building:CONSTRUCTOR:[PUBLIC]:ESCAPED{Building}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }pp.m.Building</font>:
+      buildingId:FIELD:[PUBLIC]:ESCAPED{buildingId}<font color="#999999">ESCAPED{ : }Number</font>:

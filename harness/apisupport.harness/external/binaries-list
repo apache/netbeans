@@ -1,0 +1,23 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+# Please keep the jsearch-2.0_05.jar commented out until the dependency
+# with JavaHelp is ruled out.
+# D4EF66C1CC8A5B3C97E0CC7C210227AAEC1F1086 jsearch-2.0_05.jar
+A806D99716C5E9441BFD8B401176FDDEFC673022 bindex-2.2.jar
+6FF4C411EE231AB8042C9047373F87FC64D0299D harness-launchers-8.2.zip
+EF35F672941F60C32B28E3C6ECB031A37950DCBE harness-launchers-10.0.zip

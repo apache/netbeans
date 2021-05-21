@@ -1,0 +1,16 @@
+x
+y
+clone#00#()
+delta#01#(Point)
+delta3d#01#(Point3d)
+equals#01#(Object)
+finalize#00#()
+getClass#00#()
+hashCode#00#()
+moveAlso#02#(int,int)
+notify#00#()
+notifyAll#00#()
+toString#00#()
+wait#00#()
+wait#01#(long)
+wait#02#(long,int)

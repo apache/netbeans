@@ -1,0 +1,6 @@
+Code completion result for source line:
+Url::|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     simpleUrl()                     [STATIC]   \foo\lib\url\Url
+METHOD     simpleUrl2()                    [STATIC]   \foo\lib\url\Url
+CONSTANT   class \foo\lib\url\Url          [PUBLIC]   Magic Constant

@@ -1,0 +1,80 @@
+__netbeans_import__('js/knockout-3.0.0.js');
+
+(function(){
+var $element;
+var $root = ko.$bindings;
+var $parentContext = undefined;
+var $context = {
+$parentContext :undefined,
+$root : ko.$bindings,
+};
+$context.$parentContext.$data = undefined;
+$parentContext.$data = undefined;
+var $parent = undefined;
+var $parents = [];
+var $data = ko.$bindings;
+with ($data) {
+({ name: 'person-template', foreach: people });}
+});
+(function(){
+var $element;
+var $root = ko.$bindings;
+var $index = 0;
+var $parentContext = {
+$parentContext :undefined,
+$root : ko.$bindings,
+};
+var $context = {
+$parentContext :{
+$parentContext :undefined,
+$root : ko.$bindings,
+},
+$root : ko.$bindings,
+$index : 0,
+};
+var $parent = ko.$bindings;
+$context.$parentContext.$data = ko.$bindings;
+$parentContext.$data = ko.$bindings;
+var $parents = [$parentContext.$data];
+with (ko.$bindings) {
+var $data = (people)[0];
+}
+with ($data) {
+ ;}
+});
+(function(){
+var $element;
+var $root = ko.$bindings;
+var $index = 0;
+var $parentContext = {
+$parentContext :undefined,
+$root : ko.$bindings,
+};
+var $context = {
+$parentContext :{
+$parentContext :undefined,
+$root : ko.$bindings,
+},
+$root : ko.$bindings,
+$index : 0,
+};
+var $parent = ko.$bindings;
+$context.$parentContext.$data = ko.$bindings;
+$parentContext.$data = ko.$bindings;
+var $parents = [$parentContext.$data];
+with (ko.$bindings) {
+var $data = (people)[0];
+}
+with ($data) {
+(credits);}
+});
+
+
+ function MyViewModel() {
+     this.people = [
+         { name: 'Franklin', credits: 250 },
+         { name: 'Mario', credits: 5800 }
+     ]
+ }
+ ko.applyBindings(new MyViewModel());
+

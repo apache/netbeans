@@ -1,0 +1,16 @@
+<?php
+
+    class ClassName
+    {
+        static $me;
+        protected $login;
+        protected $user;
+
+        protected function __construct()
+        {
+
+        }
+
+    }
+
+?>

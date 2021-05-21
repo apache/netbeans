@@ -1,0 +1,2 @@
+    |>MARK_OCCURRENCES:TEST<| = {
+    |>MARK_OCCURRENCES:TE^ST<|.test();

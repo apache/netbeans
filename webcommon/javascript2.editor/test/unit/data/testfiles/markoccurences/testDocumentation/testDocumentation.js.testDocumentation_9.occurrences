@@ -1,0 +1,4 @@
+ * @return {|>MARK_OCCURRENCES:Add^ress<|} address
+function |>MARK_OCCURRENCES:Address<| (street, town, country) {
+ * @return {|>MARK_OCCURRENCES:Address<|} address
+object = new |>MARK_OCCURRENCES:Address<|("V Parku", "Prague", "Czech Republic");

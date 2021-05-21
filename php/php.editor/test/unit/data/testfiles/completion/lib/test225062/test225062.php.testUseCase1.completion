@@ -1,0 +1,5 @@
+Code completion result for source line:
+new \Test\Space\Space| // CC here
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO Space($arg)                     [PUBLIC]   Test\Space
+CLASS      SpaceUniverse                   [PUBLIC]   Test\Space

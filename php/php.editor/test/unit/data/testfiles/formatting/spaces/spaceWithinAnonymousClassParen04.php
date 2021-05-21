@@ -1,0 +1,5 @@
+<?php
+
+$instance = new class   () {
+    
+};

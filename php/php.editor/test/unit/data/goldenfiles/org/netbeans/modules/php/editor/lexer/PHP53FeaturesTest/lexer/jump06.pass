@@ -1,0 +1,10 @@
+token #0 T_INLINE_HTML --TEST--\njump 06: goto to undefined label\n--FILE--\n
+token #1 PHP_OPENTAG <?php
+token #2 WHITESPACE \n
+token #3 PHP_GOTO goto
+token #4 WHITESPACE  
+token #5 PHP_STRING L1
+token #6 PHP_SEMICOLON ;
+token #7 WHITESPACE \n
+token #8 PHP_CLOSETAG ?>
+token #9 T_INLINE_HTML \n--EXPECTF--\nFatal error: 'goto' to undefined label 'L1' in %sjump06.php on line 2\n

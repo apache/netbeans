@@ -1,0 +1,2 @@
+function |>MARK_OCCURRENCES:foo<|() { }
+    someElement.onfocus = |>MARK_OCCURRENCES:fo^o<|;

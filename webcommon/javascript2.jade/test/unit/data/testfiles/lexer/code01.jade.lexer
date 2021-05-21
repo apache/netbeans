@@ -1,0 +1,2 @@
+[CODE_DELIMITER(1):-][WHITESPACE(1): ][JAVASCRIPT(27):for (var x = 0; x < 3; x++)][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(2):li][WHITESPACE(1): ][TEXT(4):item]

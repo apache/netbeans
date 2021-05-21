@@ -1,0 +1,3 @@
+trait |>MARK_OCCURRENCES:D^D<| {
+    use AA, BB, CC, |>MARK_OCCURRENCES:DD<| {
+		|>MARK_OCCURRENCES:DD<|::bar as foo;

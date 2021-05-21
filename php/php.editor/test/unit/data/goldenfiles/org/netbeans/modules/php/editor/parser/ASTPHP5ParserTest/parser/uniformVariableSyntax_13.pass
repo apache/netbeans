@@ -1,0 +1,66 @@
+<testresult testFile='uniformVariableSyntax_13.php'>
+    <scanner>
+        <token id='T_STRING' start='7' end='10'>
+            <text>Foo</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='10' end='12'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='12' end='15'>
+            <text>bar</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='15' end='16'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='16' end='17'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='17' end='18'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='18' end='19'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='19' end='20'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='21' end='21'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='21'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='20'>
+                <FunctionInvocation start='7' end='19'>
+                    <FucntionName start='7' end='17'>
+                        <StaticMethodInvocation start='7' end='17'>
+                            <NamespaceName start='7' end='10' isCurrent='false' isGlobal='false'>
+                                <Identifier start='7' end='10' name='Foo'/>
+                            </NamespaceName>
+                            <Member>
+                                <FunctionInvocation start='12' end='17'>
+                                    <FucntionName start='12' end='15'>
+                                        <Identifier start='12' end='15' name='bar'/>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </Member>
+                            <FunctionInvocation start='12' end='17'>
+                                <FucntionName start='12' end='15'>
+                                    <Identifier start='12' end='15' name='bar'/>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </StaticMethodInvocation>
+                    </FucntionName>
+                    <Parameters>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

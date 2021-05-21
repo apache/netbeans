@@ -1,0 +1,12 @@
+{
+    "message": "",
+    "command": "list-jdbc-resources AdminCommand",
+    "exit_code": "SUCCESS",
+    "children": [{
+        "message": "jdbc\/__TimerPool",
+        "properties": {}
+    }, {
+        "message": "jdbc\/__default",
+        "properties": {}
+    }]
+}

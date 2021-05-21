@@ -1,0 +1,4 @@
+Code completion result for source line:
+global |    //CC
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   ? $aaa                          [PUBLIC]   test209255.php

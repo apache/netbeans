@@ -1,0 +1,4 @@
+    get |>MARK_OCCURRENCES:years<|() {return this.old;},
+    set |>MARK_OCCURRENCES:yea^rs<|(count){this.old = count + 1;},
+Dog.|>MARK_OCCURRENCES:years<| = 10;
+formatter.println("The dos is old " + Dog.|>MARK_OCCURRENCES:years<| + " years.");

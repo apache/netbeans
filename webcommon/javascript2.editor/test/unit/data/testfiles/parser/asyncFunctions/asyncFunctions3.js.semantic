@@ -1,0 +1,17 @@
+|>CUSTOM2:async<| x => {
+    x
+};
+
+ |>CUSTOM2:async<| function |>METHOD:foo<| () {
+  |>CUSTOM2:await<| 1;    
+ }
+ 
+ class |>CLASS,GLOBAL:X<| {
+     |>CUSTOM2:static<| |>CUSTOM2:async<| |>METHOD:ddddd<|() {
+         |>CUSTOM2:await<| |>GLOBAL:x<|;
+     }
+ }
+ 
+ |>CUSTOM2:async<| function |>METHOD:r<|(|>UNUSED:awai<|) {
+     
+ }

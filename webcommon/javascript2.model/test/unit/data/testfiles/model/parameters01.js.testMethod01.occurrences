@@ -1,0 +1,2 @@
+   this.|>MARK_OCCURRENCES:getName<| = function () {
+       formatter.println("Name: " + this.|>MARK_OCCURRENCES:getNa^me<|());

@@ -1,0 +1,162 @@
+[<% LinkedList<B|, Boolean, <% LinkedList<Boolean, 990]
+Boolean
+BootstrapMethodError
+Byte
+End cursor position = 1012
+[<% list.|, Boolean element (), <% list.element(), 1050]
+boolean add (Boolean e )
+void add (int index , Boolean 
+boolean addAll (Collection <? 
+boolean addAll (int index , Co
+void addFirst (Boolean e )
+void addLast (Boolean e )
+void clear ()
+Object clone ()
+boolean contains (Object o )
+boolean containsAll (Collectio
+Iterator <Boolean> descendingI
+Boolean element ()
+boolean equals (Object o )
+Boolean get (int index )
+Class  getClass ()
+Boolean getFirst ()
+Boolean getLast ()
+int hashCode ()
+int indexOf (Object o )
+boolean isEmpty ()
+Iterator <Boolean> iterator ()
+int lastIndexOf (Object o )
+ListIterator <Boolean> listIte
+ListIterator <Boolean> listIte
+void notify ()
+void notifyAll ()
+boolean offer (Boolean e )
+boolean offerFirst (Boolean e 
+boolean offerLast (Boolean e )
+Boolean peek ()
+Boolean peekFirst ()
+Boolean peekLast ()
+Boolean poll ()
+Boolean pollFirst ()
+Boolean pollLast ()
+Boolean pop ()
+void push (Boolean e )
+Boolean remove ()
+boolean remove (Object o )
+Boolean remove (int index )
+boolean removeAll (Collection 
+Boolean removeFirst ()
+boolean removeFirstOccurrence 
+Boolean removeLast ()
+boolean removeLastOccurrence (
+boolean retainAll (Collection 
+Boolean set (int index , Boole
+int size ()
+List <Boolean> subList (int fr
+Object[] toArray ()
+T[] toArray (T[] a )
+String toString ()
+void wait ()
+void wait (long timeout )
+void wait (long timeout , int 
+new
+End cursor position = 1068
+[<% for (Boolean b : list)  b.|, boolean booleanValue (), <% for (Boolean b : list)  b.booleanValue(), 1186]
+boolean booleanValue ()
+int compareTo (Boolean b )
+boolean equals (Object obj )
+Class  getClass ()
+int hashCode ()
+void notify ()
+void notifyAll ()
+String toString ()
+void wait ()
+void wait (long timeout )
+void wait (long timeout , int 
+End cursor position = 1230
+[<% for (String str : a) a.|, int length, <% for (String str : a) a.length, 1271]
+int length
+Object clone ()
+boolean equals (Object obj )
+Class  getClass ()
+int hashCode ()
+void notify ()
+void notifyAll ()
+String toString ()
+void wait ()
+void wait (long timeout )
+void wait (long timeout , int 
+End cursor position = 1304
+[<% suit.|, Suit DIAMONDS, <% suit.DIAMONDS, 1341]
+Suit CLUBS
+Suit DIAMONDS
+Suit HEARTS
+Suit SPADES
+int compareTo (Suit o )
+boolean equals (Object other )
+Class  getClass ()
+Class <Suit> getDeclaringClass
+int hashCode ()
+String name ()
+void notify ()
+void notifyAll ()
+int ordinal ()
+String toString ()
+void wait ()
+void wait (long timeout )
+void wait (long timeout , int 
+End cursor position = 1358
+[<% @Card.|, RequestForEnhancement, <% @Card.RequestForEnhancement, 1454]
+RequestForEnhancement
+Second
+End cursor position = 1485
+[<% @Card.RequestForEnhancement(|)%>, String date = "[unimplemented]", <% @Card.RequestForEnhancement(date = )%>, 1577]
+String date = "[unimplemented]
+String engineer = "[unassigned
+int id
+String synopsis
+End cursor position = 1616
+[<% D| %>, int DECEMBER, <% DECEMBER %>, 1627]
+int DATE
+int DAY_OF_MONTH
+int DAY_OF_WEEK
+int DAY_OF_WEEK_IN_MONTH
+int DAY_OF_YEAR
+int DECEMBER
+int DST_OFFSET
+void destroy ()
+void doDelete (HttpServletRequ
+void doGet (HttpServletRequest
+void doHead (HttpServletReques
+void doOptions (HttpServletReq
+void doPost (HttpServletReques
+void doPut (HttpServletRequest
+void doTrace (HttpServletReque
+do
+double
+Deprecated
+DispatcherType
+Double
+End cursor position = 1639
+[<% get| %>, Calendar getInstance, <% getInstance() %>, 1692]
+Locale[] getAvailableLocales (
+Class  getClass ()
+String getInitParameter (Strin
+Enumeration <String> getInitPa
+Calendar getInstance ()
+Calendar getInstance (Locale a
+Calendar getInstance (TimeZone
+Calendar getInstance (TimeZone
+long getLastModified (HttpServ
+ServletConfig getServletConfig
+ServletContext getServletConte
+String getServletInfo ()
+String getServletName ()
+End cursor position = 1709
+[<jsp:useBean id="bean" scope="application" class="B|", Boolean, <jsp:useBean id="bean" scope="application" class="Boolean", 1909]
+boolean
+byte
+Boolean
+BootstrapMethodError
+Byte
+End cursor position = 1967

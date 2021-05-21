@@ -1,0 +1,214 @@
+{
+
+    "_pluginName": {
+        "message": "NetBeans Connector"
+    },
+    "_pluginDescription": {
+        "message": "The NetBeans Connector provides deep integration between the award winning NetBeans IDE and the Google Chrome browser."
+    },
+
+    "_OK": {
+        "message": "OK"
+    },
+    "_Cancel": {
+        "message": "Cancel"
+    },
+    "_Reset": {
+        "message": "Reset"
+    },
+    "_New": {
+        "message": "New"
+    },
+    "_Remove": {
+        "message": "Remove"
+    },
+    "_Done": {
+        "message": "Done"
+    },
+    "_More_hellip": {
+        "message": "More..."
+    },
+    "_Less_hellip": {
+        "message": "Less..."
+    },
+
+    "_StartSelectMode": {
+        "message": "Start Inspect in NetBeans Mode (Ctrl+Shift+S)"
+    },
+    "_StopSelectMode": {
+        "message": "Stop Inspect in NetBeans Mode (Ctrl+Shift+S)"
+    },
+
+    "_Desktop": {
+        "message": "Desktop"
+    },
+    "_Netbook": {
+        "message": "Netbook"
+    },
+    "_Widescreen": {
+        "message": "Widescreen"
+    },
+    "_TabletLandscape": {
+        "message": "Tablet Landscape"
+    },
+    "_TabletPortrait": {
+        "message": "Tablet Portrait"
+    },
+    "_SmartphoneLandscape": {
+        "message": "Smartphone Landscape"
+    },
+    "_SmartphonePortrait": {
+        "message": "Smartphone Portrait"
+    },
+
+
+    "_CloseWithoutSaving": {
+        "message": "Close without Saving"
+    },
+    "_CustomizeWindowSettings": {
+        "message": "Customize Window Settings"
+    },
+    "_ConfigureSizesInfo": {
+        "message": "Configure window size options and control which appear in the NetBeans Actions menu."
+    },
+    "_DisplaySizes": {
+        "message": "Display Sizes:"
+    },
+    "_Type": {
+        "message": "Type"
+    },
+    "_Name": {
+        "message": "Name"
+    },
+    "_Width": {
+        "message": "Width"
+    },
+    "_Height": {
+        "message": "Height"
+    },
+    "_Toolbar": {
+        "message": "Toolbar"
+    },
+    "_AddSize": {
+        "message": "Add Size"
+    },
+    "_RemoveSize": {
+        "message": "Remove Size"
+    },
+    "_MoveUp": {
+        "message": "Move Up"
+    },
+    "_MoveSizeUp": {
+        "message": "Move Size Up"
+    },
+    "_MoveDown": {
+        "message": "Move Down"
+    },
+    "_MoveSizeDown": {
+        "message": "Move Size Down"
+    },
+    "_SaveAndClose": {
+        "message": "Save and Close"
+    },
+    "_WindowSettingsNotAvailable": {
+        "message": "Window settings not available (is any project running from NetBeans IDE?)."
+    },
+    "_New_hellip": {
+        "message": "New..."
+    },
+    "_Help_Step1": {
+        "message": "Modify the type, name and dimensions of a display size by editing the fields in the table."
+    },
+    "_Help_Step2": {
+        "message": "Create a display size by clicking New and editing the fields in the new row."
+    },
+    "_Help_Step3": {
+        "message": "Change the order that a display size is listed in the menu by clicking in a row to select the row and using the Move Up and Move Down buttons."
+    },
+    "_Help_Step4": {
+        "message": "Remove a display size from the menu by click in a row to select the row and clicking Remove."
+    },
+    "_Help_FinalStep": {
+        "message": "Click OK to save your changes and close this tab."
+    },
+    "_Warnings": {
+        "message": "Warnings"
+    },
+    "_ResetAllWarningDialogs": {
+        "message": "Reset all warning dialogs"
+    },
+
+
+    "_ActualWindowSize": {
+        "message": "Actual Window Size"
+    },
+    "_SizeToFit": {
+        "message": "Size to Fit"
+    },
+    "_CustomizeWindowSettings_hellip": {
+        "message": "Customize Window Settings..."
+    },
+    "_Customize_hellip": {
+        "message": "Customize..."
+    },
+    "_SwitchSelectionMode": {
+        "message": "Switch NetBeans Mode"
+    },
+    "_SelectMode": {
+        "message": "Inspect in NetBeans Mode"
+    },
+    "_DebugInNetBeans": {
+        "message": "Debug in NetBeans"
+    },
+    "_PresetTitle": {
+        "message": "$PRESET$ ($WIDTH$ x $HEIGHT$)",
+        "placeholders": {
+            "PRESET": {
+                "content": "$1"
+            },
+            "WIDTH": {
+                "content": "$2"
+            },
+            "HEIGHT": {
+                "content": "$3"
+            }
+        }
+    },
+    "_PresetWidthHeight": {
+        "message": "$WIDTH$ x $HEIGHT$",
+        "placeholders": {
+            "WIDTH": {
+                "content": "$1"
+            },
+            "HEIGHT": {
+                "content": "$2"
+            }
+        }
+    },
+
+
+    "_Warning_DoNotShowMeThisAgain": {
+        "message": "Do not show this message again"
+    },
+    "_Warning_DisconnectedDebuggerTitle": {
+        "message": "NetBeans Connector has Closed"
+    },
+    "_Warning_DisconnectedDebuggerPerex": {
+        "message": "To run the NetBeans Connector without the debugging infobar, select the Enable Silent Debugging flag in Chrome."
+    },
+    "_Warning_DisconnectedDebuggerBody": {
+        "message": "It looks like you closed the debugging infobar by clicking its Cancel button or Close icon.  Unless you enable silent debugging, Chrome requires that this remain open while working with the NetBeans extension. Note: although the NetBeans Connector has closed, changes in Chrome and NetBeans are still synchronized."
+    },
+
+    "_Warning_WindowTooSmallTitle": {
+        "message": "Window cannot be resized properly"
+    },
+    "_Warning_WindowTooSmallPerex": {
+        "message": "Unfortunately, on OS X, the minimal width of the Chrome window is 400 pixels."
+    },
+
+    "_DevTools_PropagateChangesToNetBeans": {
+        "message": "Propagate changes done in the CDT back to the NetBeans IDE and save them"
+    }
+
+}

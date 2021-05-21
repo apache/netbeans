@@ -1,0 +1,2 @@
+org.netbeans.modules.web.debug.JspBreakpointAnnotationListener
+org.netbeans.modules.web.debug.breakpoints.PersistenceManager

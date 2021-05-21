@@ -1,0 +1,3 @@
+class |>MARK_OCCURRENCES:C^lsABC<| {
+    B\C\|>MARK_OCCURRENCES:ClsABC<|,
+$abc = new |>MARK_OCCURRENCES:ClsABC<|();

@@ -1,0 +1,2 @@
+    $.timepicker.|>MARK_OCCURRENCES:region^al<|["cs"] = {
+    $.timepicker.setDefaults($.timepicker.|>MARK_OCCURRENCES:regional<|['cs']);

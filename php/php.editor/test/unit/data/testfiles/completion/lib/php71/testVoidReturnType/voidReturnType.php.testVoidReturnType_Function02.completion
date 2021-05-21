@@ -1,0 +1,5 @@
+Code completion result for source line:
+function voidReturnType(): vo|id { // func
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    void                                       null

@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.websvc.customization
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/websvc/customization/Bundle.properties
+AutoUpdate-Show-In-Client: false
+

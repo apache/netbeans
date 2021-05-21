@@ -1,0 +1,2 @@
+        this.|>MARK_OCCURRENCES:x^<| = x;
+        const dx = a.|>MARK_OCCURRENCES:x<| - b.|>MARK_OCCURRENCES:x<|;

@@ -1,0 +1,3 @@
+ * @method static ?Example |>MARK_OCCURRENCES:g^etDefault<|() Description
+        self::|>MARK_OCCURRENCES:getDefault<|();
+Example::|>MARK_OCCURRENCES:getDefault<|();

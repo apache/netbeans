@@ -1,0 +1,32 @@
+ExampleDefaults:CLASS:[PUBLIC]:ESCAPED{ExampleDefaults}:
+  height:FIELD:[PUBLIC]:ESCAPED{height}<font color="#999999">ESCAPED{ : }String</font>:
+  width:FIELD:[PUBLIC]:ESCAPED{width}<font color="#999999">ESCAPED{ : }String</font>:
+App:CLASS:[PUBLIC]:ESCAPED{App}:
+  SchedulerDemo:CLASS:[PUBLIC]:ESCAPED{SchedulerDemo}:
+    init:METHOD:[PUBLIC]:ESCAPED{init}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+      end:VARIABLE:[PRIVATE]:ESCAPED{end}:
+      endRepas:VARIABLE:[PRIVATE]:ESCAPED{endRepas}:
+      runner:VARIABLE:[PRIVATE]:ESCAPED{runner}<font color="#999999">ESCAPED{ : }Ext.util.TaskRunner</font>:
+      sched:CLASS:[PRIVATE]:ESCAPED{sched}:
+        eventResizeHandles:FIELD:[PUBLIC]:ESCAPED{eventResizeHandles}<font color="#999999">ESCAPED{ : }String</font>:
+      start:VARIABLE:[PRIVATE]:ESCAPED{start}:
+      startRepas:VARIABLE:[PRIVATE]:ESCAPED{startRepas}:
+      ta:VARIABLE:[PRIVATE]:ESCAPED{ta}<font color="#999999">ESCAPED{ : }MyTimeAxis</font>:
+      task:CLASS:[PRIVATE]:ESCAPED{task}:
+        interval:FIELD:[PUBLIC]:ESCAPED{interval}<font color="#999999">ESCAPED{ : }Number</font>:
+        run:METHOD:[PUBLIC]:ESCAPED{run}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    onEventContextMenu:METHOD:[PUBLIC]:ESCAPED{onEventContextMenu}ESCAPED{(}ESCAPED{s}ESCAPED{, }ESCAPED{rec}ESCAPED{, }ESCAPED{e}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    onEventDblClick:METHOD:[PUBLIC]:ESCAPED{onEventDblClick}ESCAPED{(}ESCAPED{s}ESCAPED{, }ESCAPED{rec}ESCAPED{, }ESCAPED{e}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    onScheduleContextMenu:METHOD:[PUBLIC]:ESCAPED{onScheduleContextMenu}ESCAPED{(}ESCAPED{scheduler}ESCAPED{, }ESCAPED{date}ESCAPED{, }ESCAPED{index}ESCAPED{, }ESCAPED{resource}ESCAPED{, }ESCAPED{e}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    zonePlugin:FIELD:[PUBLIC]:ESCAPED{zonePlugin}:
+MyTimeAxis:CLASS:[PUBLIC]:ESCAPED{MyTimeAxis}:
+  continuous:FIELD:[PUBLIC]:ESCAPED{continuous}<font color="#999999">ESCAPED{ : }Boolean</font>:
+  extend:FIELD:[PUBLIC]:ESCAPED{extend}<font color="#999999">ESCAPED{ : }String</font>:
+  generateTicks:METHOD:[PUBLIC]:ESCAPED{generateTicks}ESCAPED{(}ESCAPED{start}ESCAPED{, }ESCAPED{end}ESCAPED{, }ESCAPED{unit}ESCAPED{, }ESCAPED{increment}ESCAPED{)}<font color="#999999">ESCAPED{ : }Array</font>:
+zoneStore:VARIABLE:[PUBLIC]:ESCAPED{zoneStore}:
+Zone:CLASS:[PUBLIC]:ESCAPED{Zone}:
+  extend:FIELD:[PUBLIC]:ESCAPED{extend}<font color="#999999">ESCAPED{ : }String</font>:
+  fields:FIELD:[PUBLIC]:ESCAPED{fields}<font color="#999999">ESCAPED{ : }Array</font>:
+Event:CLASS:[PUBLIC]:ESCAPED{Event}:
+  extend:FIELD:[PUBLIC]:ESCAPED{extend}<font color="#999999">ESCAPED{ : }String</font>:
+  fields:FIELD:[PUBLIC]:ESCAPED{fields}<font color="#999999">ESCAPED{ : }Array</font>:

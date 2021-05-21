@@ -1,0 +1,5 @@
+Code completion result for source line:
+public static function traitReturnTypeStatic(): ?\My\S|ub\Foo { // CC
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+PACKAGE    Sub                             [PUBLIC]   My

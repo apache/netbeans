@@ -1,0 +1,24 @@
+/**
+ * @class
+ */
+function |>METHOD:Requester<|() {}
+
+/**
+ * Send a request.
+ * @param {Requester~requestCallback} cb - The callback that handles the response.
+ */
+Requester.prototype.|>METHOD:send<| = function(|>UNUSED:cb<|) {
+    // code
+};
+
+/**
+ * This callback is displayed as part of the Requester class.
+ * @callback Requester~requestCallback
+ * @param {number} responseCode
+ * @param {string} responseMessage
+ */
+
+
+var |>GLOBAL:r<| = new Requester();
+
+

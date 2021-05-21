@@ -1,0 +1,5 @@
+Code completion result for source line:
+test|2
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     test1()                         [PUBLIC]   GroupUse1
+METHOD     test2()                         [PUBLIC]   GroupUse1

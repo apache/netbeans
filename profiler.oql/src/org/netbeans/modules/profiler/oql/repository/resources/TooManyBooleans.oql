@@ -1,3 +1,0 @@
-select toHtml(a) + " = " + a.value from java.lang.Boolean a
-    where objectid(a.clazz.statics.TRUE) != objectid(a) &&
-          objectid(a.clazz.statics.FALSE) != objectid(a)

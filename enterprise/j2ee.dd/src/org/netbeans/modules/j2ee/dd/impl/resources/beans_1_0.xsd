@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+   <!--
+      JBoss, Home of Professional Open Source Copyright 2008, Red Hat
+      Middleware LLC, and individual contributors by the @authors tag.
+      See the copyright.txt in the distribution for a full listing of
+      individual contributors. Licensed under the Apache License,
+      Version 2.0 (the "License"); you may not use this file except in
+      compliance with the License. You may obtain a copy of the License
+      at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+      applicable law or agreed to in writing, software distributed under
+      the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
+      OR CONDITIONS OF ANY KIND, either express or implied. See the
+      License for the specific language governing permissions and
+      limitations under the License.
+   -->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   elementFormDefault="qualified" targetNamespace="http://java.sun.com/xml/ns/javaee"
+   xmlns:javaee="http://java.sun.com/xml/ns/javaee" version="1.0">
+
+   <xs:annotation>
+      <xs:documentation>
+         Contexts and Dependency Injection (CDI) defines
+         a set of complementary services that help improve the structure
+         of application code. beans.xml is used to enable CDI services
+         for the current bean archive as well as to enable named
+         interceptors, decorators and alternatives for the current bean
+         archive.
+      </xs:documentation>
+   </xs:annotation>
+
+   <xs:element name="beans">
+      <xs:annotation>
+         <xs:documentation>
+            Bean classes of enabled beans must be
+            deployed in bean archives. A library jar, EJB jar,
+            application client jar or rar archive is a bean archive if
+            it has a file named beans.xml in the META-INF directory. The
+            WEB-INF/classes directory of a war is a bean archive if
+            there is a file named beans.xml in the WEB-INF directory of
+            the war. A directory in the JVM classpath is a bean archive
+            if it has a file named beans.xml in the META-INF directory.
+         </xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:all>
+            <xs:element ref="javaee:interceptors" minOccurs="0" />
+            <xs:element ref="javaee:decorators" minOccurs="0" />
+            <xs:element ref="javaee:alternatives" minOccurs="0" />
+         </xs:all>
+      </xs:complexType>
+   </xs:element>
+
+   <xs:element name="interceptors">
+      <xs:annotation>
+         <xs:documentation>
+            By default, a bean archive has no enabled
+            interceptors bound via interceptor bindings. An interceptor
+            must be explicitly enabled by listing its class under the
+            &lt;interceptors&gt; element of the beans.xml file of the
+            bean archive. The order of the interceptor declarations
+            determines the interceptor ordering. Interceptors which
+            occur earlier in the list are called first. If the same
+            class is listed twice under the &lt;interceptors&gt;
+            element, the container automatically detects the problem and
+            treats it as a deployment problem.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="class" type="xs:string">
+               <xs:annotation>
+                  <xs:documentation>
+                     Each child &lt;class&gt; element
+                     must specify the name of an interceptor class. If
+                     there is no class with the specified name, or if
+                     the class with the specified name is not an
+                     interceptor class, the container automatically
+                     detects the problem and treats it as a deployment
+                     problem.
+                  </xs:documentation>
+               </xs:annotation>
+            </xs:element>
+         </xs:choice>
+      </xs:complexType>
+   </xs:element>
+
+   <xs:element name="decorators">
+      <xs:annotation>
+         <xs:documentation>
+            By default, a bean archive has no enabled
+            decorators. A decorator must be explicitly enabled by
+            listing its bean class under the &lt;decorators&gt; element
+            of the beans.xml file of the bean archive. The order of the
+            decorator declarations determines the decorator ordering.
+            Decorators which occur earlier in the list are called first.
+            If the same class is listed twice under the
+            &lt;decorators&gt; element, the container automatically
+            detects the problem and treats it as a deployment problem.
+         </xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="class" type="xs:string">
+               <xs:annotation>
+                  <xs:documentation>
+                     Each child &lt;class&gt; element
+                     must specify the name of a decorator class. If
+                     there is no class with the specified name, or if
+                     the class with the specified name is not a
+                     decorator class, the container automatically
+                     detects the problem and treats it as a deployment
+                     problem.
+                  </xs:documentation>
+               </xs:annotation>
+            </xs:element>
+         </xs:choice>
+      </xs:complexType>
+   </xs:element>
+
+   <xs:element name="alternatives">
+      <xs:annotation>
+         <xs:documentation>
+            An alternative is a bean that must be
+            explicitly declared in the beans.xml file if it should be
+            available for lookup, injection or EL resolution. By
+            default, a bean archive has no selected alternatives. An
+            alternative must be explicitly declared using the
+            &lt;alternatives&gt; element of the beans.xml file of the
+            bean archive. The &lt;alternatives&gt; element contains a
+            list of bean classes and stereotypes. An alternative is
+            selected for the bean archive if either: the alternative is
+            a managed bean or session bean and the bean class of the
+            bean is listed, or the alternative is a producer method,
+            field or resource, and the bean class that declares the
+            method or field is listed, or any @Alternative stereotype of
+            the alternative is listed.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="class" type="xs:string">
+               <xs:annotation>
+                  <xs:documentation>
+                     Each child &lt;class&gt; element
+                     must specify the name of an alternative bean class.
+                     If there is no class with the specified name, or if
+                     the class with the specified name is not an
+                     alternative bean class, the container automatically
+                     detects the problem and treats it as a deployment
+                     problem. If the same class is listed twice under
+                     the &lt;alternatives&gt; element, the container
+                     automatically detects the problem and treats it as
+                     a deployment problem.
+                  </xs:documentation>
+               </xs:annotation>
+            </xs:element>
+
+            <xs:element name="stereotype" type="xs:string">
+               <xs:annotation>
+                  <xs:documentation>
+                     Each child &lt;stereotype&gt;
+                     element must specify the name of an @Alternative
+                     stereotype annotation. If there is no annotation
+                     with the specified name, or the annotation is not
+                     an @Alternative stereotype, the container
+                     automatically detects the problem and treats it as
+                     a deployment problem. If the same stereotype is
+                     listed twice under the &lt;alternatives&gt;
+                     element, the container automatically detects the
+                     problem and treats it as a deployment problem.
+                  </xs:documentation>
+               </xs:annotation>
+            </xs:element>
+         </xs:choice>
+      </xs:complexType>
+   </xs:element>
+
+</xs:schema>

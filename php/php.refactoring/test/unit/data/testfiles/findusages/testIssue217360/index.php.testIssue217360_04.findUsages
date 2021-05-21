@@ -1,0 +1,14 @@
+Display text: public function <b>getTwo</b>() //Two
+File name: Two.php
+Name: getTwo
+Position: BEGIN: 40 END: 46
+
+Display text: return $two-><b>getTwo</b>();
+File name: index.php
+Name: getTwo
+Position: BEGIN: 187 END: 193
+
+Display text: (new Two)-><b>getTwo</b>();
+File name: index.php
+Name: getTwo
+Position: BEGIN: 216 END: 222

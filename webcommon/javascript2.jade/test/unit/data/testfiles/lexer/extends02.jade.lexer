@@ -1,0 +1,8 @@
+[UNBUFFERED_COMMENT_DELIMITER(3)://-][UNBUFFERED_COMMENT(12): index.jade
+][KEYWORD_EXTENDS(7):extends][FILE_PATH(14): ./layout.jade][EOL(1):\n]
+[EOL(1):\n]
+[KEYWORD_BLOCK(5):block][WHITESPACE(1): ][BLOCK_NAME(5):title][EOL(1):\n]
+[WHITESPACE(2):  ][TAG(5):title][WHITESPACE(1): ][TEXT(13):Article Title][EOL(1):\n]
+[EOL(1):\n]
+[KEYWORD_BLOCK(5):block][WHITESPACE(1): ][BLOCK_NAME(7):content][EOL(1):\n]
+[WHITESPACE(2):  ][TAG(2):h1][WHITESPACE(1): ][TEXT(10):My Article][EOL(1):\n]

@@ -1,0 +1,30 @@
+[<b|, body, <body, 464]
+<b >
+<base >
+<bdo >
+<blockquote >
+<body >
+<br >
+<button >
+<bvar >
+End cursor position = 470
+[<%@|, attribute, <%@attribute  %>, 692]
+<%@ attribute % >
+<%@ include % >
+<%@ tag % >
+<%@ taglib % >
+<%@ variable % >
+End cursor position = 706
+[<%@tag |, large-icon, <%@tag large-icon="", 786]
+body-content
+description
+display-name
+dynamic-attributes
+example
+import
+isELIgnored
+language
+large-icon
+pageEncoding
+small-icon
+End cursor position = 806

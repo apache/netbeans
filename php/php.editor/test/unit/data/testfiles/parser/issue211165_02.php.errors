@@ -1,0 +1,16 @@
+[[27,31]-Syntax error
+ unexpected:	identifier 'file'
+ after:	String '"<form action="'
+ expected:	instanceof, as, =>, {, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', [, ], (, ), :, ??] 27-31:Syntax error
+ unexpected:	identifier 'file'
+ after:	String '"<form action="'
+ expected:	instanceof, as, =>, {, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', [, ], (, ), :, ??
+[[35,43]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	String '" name="'] 35-43:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	String '" name="'
+[[43,51]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	identifier 'testform'] 43-51:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	identifier 'testform'
+[[51,54]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	String '">"'] 51-54:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	String '">"'

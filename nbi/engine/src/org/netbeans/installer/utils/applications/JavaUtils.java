@@ -415,7 +415,13 @@ public class JavaUtils {
                 if (matcher.find()) {
                     version = Version.getVersion(matcher.group());
                 }
-                
+                // For JDK release version like 12, java.vm.version = 12+33 
+                // which doesn't match above pattern string
+                // hence use java.version string 12
+                if (version == null) {
+                    version = Version.getVersion(javaVersion);
+                }
+
                 // if the version was created successfully, then we can provide a
                 // JavaInfo object
                 if (version != null) {

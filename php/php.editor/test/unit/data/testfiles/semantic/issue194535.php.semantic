@@ -1,0 +1,13 @@
+<?php
+class |>CLASS:Tomas<| {
+    
+    private $|>FIELD:test<|;
+
+    function |>METHOD:mama<|($neco) {
+        $a = $this->|>FIELD:test<|[$neco];
+        return $this->|>FIELD:test<|[$neco]['name'];
+    }
+} 
+
+
+?>

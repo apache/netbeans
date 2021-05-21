@@ -1,0 +1,21 @@
+'token image' [offset, length]; tokenID name; tokenID id; token category name; <list of token context names>
+--------------------
+
+'<' [0, 1]; tag-open-symbol; 14; tag; HtmlTokenContext, JspMultiTokenContext
+'a' [1, 1]; open-tag; 4; tag; HtmlTokenContext, JspMultiTokenContext
+' ' [2, 1]; ws; 2; -; HtmlTokenContext, JspMultiTokenContext
+'href' [3, 4]; argument; 6; -; HtmlTokenContext, JspMultiTokenContext
+'=' [7, 1]; operator; 7; -; HtmlTokenContext, JspMultiTokenContext
+'"' [8, 1]; value; 8; -; HtmlTokenContext, JspMultiTokenContext
+'<%=' [9, 3]; scriptlet-delimiter; 5; -; JspTagTokenContext, JspMultiTokenContext
+' ' [12, 1]; whitespace; 5; -; JavaTokenContext, JspJavaFakeTokenContext$JavaExpressionTokenContext, JspMultiTokenContext
+'1' [13, 1]; int-literal; 11; numeric-literals; JavaTokenContext, JspJavaFakeTokenContext$JavaExpressionTokenContext, JspMultiTokenContext
+' ' [14, 1]; whitespace; 5; -; JavaTokenContext, JspJavaFakeTokenContext$JavaExpressionTokenContext, JspMultiTokenContext
+'%>' [15, 2]; scriptlet-delimiter; 5; -; JspTagTokenContext, JspMultiTokenContext
+'"' [17, 1]; value; 8; -; HtmlTokenContext, JspMultiTokenContext
+'  ' [18, 2]; ws; 2; -; HtmlTokenContext, JspMultiTokenContext
+'>' [20, 1]; tag-close-symbol; 15; tag; HtmlTokenContext, JspMultiTokenContext
+'Destination' [21, 11]; text; 1; -; HtmlTokenContext, JspMultiTokenContext
+'</' [32, 2]; tag-open-symbol; 14; tag; HtmlTokenContext, JspMultiTokenContext
+'a' [34, 1]; close-tag; 5; tag; HtmlTokenContext, JspMultiTokenContext
+'>' [35, 1]; tag-close-symbol; 15; tag; HtmlTokenContext, JspMultiTokenContext

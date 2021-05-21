@@ -1,0 +1,2 @@
+            beasties.Animal.prototype.|>MARK_OCCURRENCES:roar<| = function() {return 'rrrr';};
+            expect(animal.|>MARK_OCCURRENCES:ro^ar<|()).toEqual('rrrr'); // ctr+click does not work on roar

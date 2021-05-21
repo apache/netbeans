@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+     Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+ <licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB21BmpEjbClass.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB21BmpLocal.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB21BmpLocalHome.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB21BmpRemote.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB21BmpRemoteHome.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB21CmpEjbClass.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB21CmpLocal.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB21CmpLocalHome.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB21CmpPrimaryKey.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB21CmpRemote.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB21CmpRemoteHome.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB21MessageDrivenEjbClass.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB21SessionEjbClass.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB21SessionLocal.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB21SessionLocalHome.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB21SessionRemote.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB21SessionRemoteHome.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB30MessageDrivenBean.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB30SessionLocal.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB30SessionRemote.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB30StatefulEjbClass.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB30StatelessEjbClass.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB31SingletonEjbClass.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/CachingServiceLocator.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/ServiceLocator.template</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="TEMPLATE_MINIMAL_IP"/>
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/BusinessMethodIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/CMFieldContainerIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/CMPFieldIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/CMRFieldIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/CreateMethodIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/FinderMethodIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/HomeMethodIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/LocalMethodContainerIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/LocalMethodContainerIconOpen.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/MethodContainerIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/MethodContainerIconOpen.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/RemoteMethodContainerIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/RemoteMethodContainerIconOpen.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/ui/logicalview/ejb/entity/EntityNodeIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/ui/logicalview/ejb/entity/EntityNodeIconOpen.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/ui/logicalview/ejb/mdb/MessageNodeIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/ui/logicalview/ejb/mdb/MessageNodeIconOpen.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/ui/logicalview/ejb/session/SessionNodeIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/ui/logicalview/ejb/session/SessionNodeIconOpen.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/ui/logicalview/ejbcontainer/EjbContainerNodeIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/ui/logicalview/ejbcontainer/EjbContainerNodeIconOpen.gif</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/ui/logicalview/ejbcontainer/webservicegroup.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

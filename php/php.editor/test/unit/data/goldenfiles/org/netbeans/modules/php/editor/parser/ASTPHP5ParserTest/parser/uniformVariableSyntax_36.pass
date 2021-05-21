@@ -1,0 +1,348 @@
+<testresult testFile='uniformVariableSyntax_36.php'>
+    <scanner>
+        <token id='T_OPEN_PARENTHESE' start='7' end='8'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='8' end='10'>
+            <text>$a</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='10' end='11'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_RECT' start='11' end='12'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='12' end='15'>
+            <text>&apos;0&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='15' end='16'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='16' end='17'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='18' end='19'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='19' end='21'>
+            <text>$a</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='21' end='22'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='22' end='23'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='23' end='24'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='24' end='25'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='26' end='27'>
+            <text>(</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='27' end='28'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='28' end='30'>
+            <text>$a</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='30' end='31'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_RECT' start='31' end='32'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='32' end='35'>
+            <text>&apos;0&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='35' end='36'>
+            <text>]</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='36' end='37'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='37' end='38'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='38' end='39'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='39' end='40'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='41' end='42'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='42' end='49'>
+            <text>Example</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='49' end='51'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='51' end='54'>
+            <text>bar</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='54' end='55'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='55' end='56'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='56' end='57'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='57' end='58'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='59' end='60'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='60' end='67'>
+            <text>Example</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='67' end='69'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='69' end='73'>
+            <text>$bar</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='73' end='74'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_RECT' start='74' end='75'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='75' end='81'>
+            <text>&apos;test&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='81' end='82'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='82' end='83'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='84' end='85'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='85' end='92'>
+            <text>Example</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='92' end='94'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='94' end='98'>
+            <text>$bar</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='98' end='99'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_RECT' start='99' end='100'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='100' end='105'>
+            <text>&apos;baz&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='105' end='106'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='106' end='107'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='107' end='108'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='108' end='109'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='110' end='111'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='111' end='120'>
+            <text>getString</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='120' end='121'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='121' end='122'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='122' end='123'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='123' end='124'>
+            <text>{</text>
+        </token>
+        <token id='T_LNUMBER' start='124' end='125'>
+            <text>0</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='125' end='126'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='126' end='127'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='128' end='128'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='128'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='17'>
+                <DereferencedArrayAccess start='7' end='16'>
+                    <ArrayDimension start='11' end='16'>
+                        <Index>
+                            <Scalar start='12' end='15' type='STRING' value='&apos;0&apos;'/>
+                        </Index>
+                    </ArrayDimension>
+                    <DereferencableVariable start='7' end='11'>
+                        <Variable start='8' end='10' isDollared='true'>
+                            <Identifier start='9' end='10' name='a'/>
+                        </Variable>
+                    </DereferencableVariable>
+                </DereferencedArrayAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='18' end='25'>
+                <FunctionInvocation start='18' end='24'>
+                    <FucntionName start='18' end='22'>
+                        <DereferencableVariable start='18' end='22'>
+                            <Variable start='19' end='21' isDollared='true'>
+                                <Identifier start='20' end='21' name='a'/>
+                            </Variable>
+                        </DereferencableVariable>
+                    </FucntionName>
+                    <Parameters>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='26' end='40'>
+                <FunctionInvocation start='26' end='39'>
+                    <FucntionName start='26' end='37'>
+                        <DereferencableVariable start='26' end='37'>
+                            <DereferencedArrayAccess start='27' end='36'>
+                                <ArrayDimension start='31' end='36'>
+                                    <Index>
+                                        <Scalar start='32' end='35' type='STRING' value='&apos;0&apos;'/>
+                                    </Index>
+                                </ArrayDimension>
+                                <DereferencableVariable start='27' end='31'>
+                                    <Variable start='28' end='30' isDollared='true'>
+                                        <Identifier start='29' end='30' name='a'/>
+                                    </Variable>
+                                </DereferencableVariable>
+                            </DereferencedArrayAccess>
+                        </DereferencableVariable>
+                    </FucntionName>
+                    <Parameters>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='41' end='58'>
+                <DereferencableVariable start='41' end='57'>
+                    <StaticMethodInvocation start='42' end='56'>
+                        <NamespaceName start='42' end='49' isCurrent='false' isGlobal='false'>
+                            <Identifier start='42' end='49' name='Example'/>
+                        </NamespaceName>
+                        <Member>
+                            <FunctionInvocation start='51' end='56'>
+                                <FucntionName start='51' end='54'>
+                                    <Identifier start='51' end='54' name='bar'/>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Member>
+                        <FunctionInvocation start='51' end='56'>
+                            <FucntionName start='51' end='54'>
+                                <Identifier start='51' end='54' name='bar'/>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </StaticMethodInvocation>
+                </DereferencableVariable>
+            </ExpressionStatement>
+            <ExpressionStatement start='59' end='83'>
+                <DereferencedArrayAccess start='59' end='82'>
+                    <ArrayDimension start='74' end='82'>
+                        <Index>
+                            <Scalar start='75' end='81' type='STRING' value='&apos;test&apos;'/>
+                        </Index>
+                    </ArrayDimension>
+                    <DereferencableVariable start='59' end='74'>
+                        <StaticFieldAccess start='60' end='73'>
+                            <NamespaceName start='60' end='67' isCurrent='false' isGlobal='false'>
+                                <Identifier start='60' end='67' name='Example'/>
+                            </NamespaceName>
+                            <Field>
+                                <Variable start='69' end='73' isDollared='true'>
+                                    <Identifier start='70' end='73' name='bar'/>
+                                </Variable>
+                            </Field>
+                            <Member>
+                                <Variable start='69' end='73' isDollared='true'>
+                                    <Identifier start='70' end='73' name='bar'/>
+                                </Variable>
+                            </Member>
+                        </StaticFieldAccess>
+                    </DereferencableVariable>
+                </DereferencedArrayAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='84' end='109'>
+                <FunctionInvocation start='84' end='108'>
+                    <FucntionName start='84' end='106'>
+                        <DereferencedArrayAccess start='84' end='106'>
+                            <ArrayDimension start='99' end='106'>
+                                <Index>
+                                    <Scalar start='100' end='105' type='STRING' value='&apos;baz&apos;'/>
+                                </Index>
+                            </ArrayDimension>
+                            <DereferencableVariable start='84' end='99'>
+                                <StaticFieldAccess start='85' end='98'>
+                                    <NamespaceName start='85' end='92' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='85' end='92' name='Example'/>
+                                    </NamespaceName>
+                                    <Field>
+                                        <Variable start='94' end='98' isDollared='true'>
+                                            <Identifier start='95' end='98' name='bar'/>
+                                        </Variable>
+                                    </Field>
+                                    <Member>
+                                        <Variable start='94' end='98' isDollared='true'>
+                                            <Identifier start='95' end='98' name='bar'/>
+                                        </Variable>
+                                    </Member>
+                                </StaticFieldAccess>
+                            </DereferencableVariable>
+                        </DereferencedArrayAccess>
+                    </FucntionName>
+                    <Parameters>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='110' end='127'>
+                <DereferencedArrayAccess start='110' end='126'>
+                    <ArrayDimension start='123' end='126'>
+                        <Index>
+                            <Scalar start='124' end='125' type='INT' value='0'/>
+                        </Index>
+                    </ArrayDimension>
+                    <DereferencableVariable start='110' end='123'>
+                        <FunctionInvocation start='111' end='122'>
+                            <FucntionName start='111' end='120'>
+                                <NamespaceName start='111' end='120' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='111' end='120' name='getString'/>
+                                </NamespaceName>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </DereferencableVariable>
+                </DereferencedArrayAccess>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

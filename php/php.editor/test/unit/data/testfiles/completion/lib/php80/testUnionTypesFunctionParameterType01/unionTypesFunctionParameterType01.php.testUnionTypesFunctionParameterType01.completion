@@ -1,0 +1,16 @@
+Code completion result for source line:
+function union_types(int||)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    Test                            [PUBLIC]   null
+CLASS      UnionTypes                      [PUBLIC]   Test
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    callable                                   null
+KEYWORD    false                                      null
+KEYWORD    float                                      null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    null                                       null
+KEYWORD    object                                     null
+KEYWORD    string                                     null

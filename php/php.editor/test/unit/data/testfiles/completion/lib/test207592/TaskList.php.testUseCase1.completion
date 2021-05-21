@@ -1,0 +1,5 @@
+Code completion result for source line:
+$this->presenter->|redirect('this');
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   ? YESS                          [PUBLIC]   \Nette\Application\UI\Presenter

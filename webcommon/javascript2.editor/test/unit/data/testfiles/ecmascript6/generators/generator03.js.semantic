@@ -1,0 +1,29 @@
+function |>METHOD:Name<| (name) {
+    this.|>FIELD:name<| = name;
+    
+    this.|>METHOD:used<| = function* () {
+        yield "Pavel";
+        yield* privateGen();
+        yield "Honza";
+        yield "Jitka";
+    };
+    
+    function* |>METHOD:privateGen<|() {
+        var |>LOCAL_VARIABLE_DECLARATION:index<| = 1;
+        while (|>LOCAL_VARIABLE:index<| < 3) {
+            yield |>LOCAL_VARIABLE:index<|++;
+        }
+    }
+}
+
+Name.prototype.|>METHOD:getName<| = function () {
+    return this.|>FIELD:name<|;
+};
+
+var |>GLOBAL:n<| = new Name("Petr");
+|>GLOBAL:console<|.log(|>GLOBAL:n<|.getName());
+var |>GLOBAL:t<| = |>GLOBAL:n<|.used();
+|>GLOBAL:console<|.log(|>GLOBAL:n<|.used().next());
+|>GLOBAL:console<|.log(|>GLOBAL:t<|.next());
+|>GLOBAL:console<|.log(|>GLOBAL:n<|.used().next());
+|>GLOBAL:console<|.log(|>GLOBAL:t<|.next());

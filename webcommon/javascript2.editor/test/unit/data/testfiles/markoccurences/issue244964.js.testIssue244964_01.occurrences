@@ -1,0 +1,3 @@
+        var |>MARK_OCCURRENCES:bar<|;
+                if (!|>MARK_OCCURRENCES:bar<|) {
+                    |>MARK_OCCURRENCES:b^ar<| = {};      // "bar" has global variable color

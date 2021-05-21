@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project name="platform/o.n.swing.tabcontrol" default="build" basedir=".">
+
+    <import file="../../nbbuild/templates/projectized.xml"/>
+
+    <target name="demo-init" depends="build-init">
+        <path id="demo.cp">
+            <path refid="cp"/>
+            <pathelement location="${cluster}/${module.jar}"/>
+        </path>
+        <path id="demo.run.cp">
+            <path refid="demo.cp"/>
+            <pathelement location="build/democlasses"/>
+            <pathelement location="${o.n.swing.plaf.dir}/core/org-netbeans-swing-plaf.jar"/>
+        </path>
+    </target>
+
+    <target name="compile-demo" depends="demo-init,jar">
+        <mkdir dir="build/democlasses"/>
+        <javac srcdir="demosrc" destdir="build/democlasses" debug="true" source="1.4" deprecation="false" includeantruntime="false">
+            <classpath refid="demo.cp"/>
+        </javac>
+    </target>
+    
+    <target name="demo" depends="compile-demo" description="Run a demo">
+        <echo message="Demo args: ${application.args}"/>
+        <java fork="true" classname="org.netbeans.swing.tabcontrol.demo.TestFrame" args="${application.args}">
+            <classpath refid="demo.run.cp"/>
+        </java>
+    </target>
+    
+    <target name="chiclet" depends="compile-demo" description="Run a demo">
+        <echo message="Demo args: ${application.args}"/>
+        <java fork="true" classname="org.netbeans.swing.tabcontrol.plaf.ChicletDemo" args="${application.args}">
+            <classpath refid="demo.run.cp"/>
+        </java>
+    </target>
+</project>

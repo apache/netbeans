@@ -1,0 +1,11 @@
+Code completion result for source line:
+ExtendedClass::|privateStaticExtendedClassMethod();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     privateStaticExtendedClassMeth  [PRIVATE,  ExtendedClass
+METHOD     protectedStaticBaseTrait1Metho  [PROTECTE  BaseTrait1
+METHOD     protectedStaticExtendedClassMe  [PROTECTE  ExtendedClass
+METHOD     publicStaticBaseTrait1Method()  [STATIC]   BaseTrait1
+METHOD     publicStaticExtendedClassMetho  [STATIC]   ExtendedClass
+VARIABLE   ? $protectedStaticBaseTrait1Fi  [PROTECTE  BaseTrait1
+VARIABLE   ? $publicStaticBaseTrait1Field  [STATIC]   BaseTrait1
+CONSTANT   class \ExtendedClass            [PUBLIC]   Magic Constant

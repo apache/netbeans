@@ -1,0 +1,2 @@
+    const |>MARK_OCCURRENCES:S^UB<| = ["sub" => "sub"];
+    echo Sub\|>MARK_OCCURRENCES:SUB<|["sub"] . PHP_EOL;

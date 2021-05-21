@@ -1,0 +1,2 @@
+A.f1 = function |>MARK_OCCURRENCES:f1<| (cont) {
+            |>MARK_OCCURRENCES:f^1<|(false);

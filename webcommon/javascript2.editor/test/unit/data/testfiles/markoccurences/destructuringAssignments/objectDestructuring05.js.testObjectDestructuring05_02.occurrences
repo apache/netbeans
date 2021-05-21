@@ -1,0 +1,2 @@
+var {p: |>MARK_OCCURRENCES:fo^o<|, q: bar} = o;    
+console.log(|>MARK_OCCURRENCES:foo<|); // 42 

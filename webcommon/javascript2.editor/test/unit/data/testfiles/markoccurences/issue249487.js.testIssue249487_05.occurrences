@@ -1,0 +1,1 @@
+    this.myEvent = new |>MARK_OCCURRENCES:MyA^pi<|.Event(myEventArgs);

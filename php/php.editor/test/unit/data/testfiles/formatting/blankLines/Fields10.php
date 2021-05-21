@@ -1,0 +1,13 @@
+<?php
+
+class Connection {
+/**
+ * comment for field1
+ */
+public $field1;
+/**
+ * comment for field2
+ */
+public $field2;
+}
+?>

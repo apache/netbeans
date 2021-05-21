@@ -1,0 +1,2 @@
+    protected $|>MARK_OCCURRENCES:pro^p2<| = 2;
+                return $this->|>MARK_OCCURRENCES:prop2<| + $this->prop3 + $this->func1();

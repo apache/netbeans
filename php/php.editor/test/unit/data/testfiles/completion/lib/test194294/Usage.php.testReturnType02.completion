@@ -1,0 +1,6 @@
+Code completion result for source line:
+Cls1::getInstance()->getName()->|getName();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getInstance()                   [STATIC]   Cls1
+METHOD     getName()                       [PUBLIC]   Cls1

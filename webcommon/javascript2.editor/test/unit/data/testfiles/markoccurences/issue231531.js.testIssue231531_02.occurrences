@@ -1,0 +1,4 @@
+    var |>MARK_OCCURRENCES:Cat<| = function() {
+    |>MARK_OCCURRENCES:Cat<|.prototype = new Animal();
+    |>MARK_OCCURRENCES:Cat<|.prototype.mieow = function() {
+    var cat = new |>MARK_OCCURRENCES:C^at<|(); 

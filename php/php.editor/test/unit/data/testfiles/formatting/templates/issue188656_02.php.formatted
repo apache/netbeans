@@ -1,0 +1,18 @@
+<?php
+
+class ClassName
+{
+    static protected $me;
+
+    public function newName()
+    {
+        return;
+    }
+    function __construct()
+    {
+
+    }
+
+}
+
+?>

@@ -1,0 +1,4 @@
+Code completion result for source line:
+$e->|testMethod();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     testMethod()                    [PUBLIC]   Exception

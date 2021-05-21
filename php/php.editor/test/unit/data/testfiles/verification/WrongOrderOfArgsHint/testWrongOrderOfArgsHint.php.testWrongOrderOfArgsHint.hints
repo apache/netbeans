@@ -1,0 +1,8 @@
+    function wrongArgs($optional = null, $mandatory, $secondOpt = array()) {
+                       --------------------------------------------------
+HINT:Wrong order of arguments
+FIX:Rearrange arguments of the method or function: wrongArgs
+function wrongArgsFnc($optional = null, $mandatory, $secondOpt = array()) {
+                      --------------------------------------------------
+HINT:Wrong order of arguments
+FIX:Rearrange arguments of the method or function: wrongArgsFnc

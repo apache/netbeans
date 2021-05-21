@@ -1,0 +1,3 @@
+token #0 T_HTML --TEST--\nHeredoc with double quotes syntax but missing second quote\n--FILE--\n
+token #1 T_PHP_OPEN_DELIMITER <?php
+token #2 T_PHP \n$test = "foo";\n$var = <<<"MYLABEL\ntest: $test\nMYLABEL;\necho $var;\n?>\n--EXPECTF--\nParse error: syntax error, unexpected T_SL in %sheredoc_014.php on line %d\n

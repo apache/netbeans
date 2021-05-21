@@ -1,0 +1,5 @@
+function |>METHOD:initGa<|() {
+    var |>LOCAL_VARIABLE_DECLARATION:varName<| = "dummy";
+    
+    (|>GLOBAL:window<|[|>LOCAL_VARIABLE:varName<|].q = |>GLOBAL:window<|[|>LOCAL_VARIABLE:varName<|].q || []);
+}

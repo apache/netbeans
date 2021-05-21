@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE taglib
+        PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+        "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_2.dtd">
+<taglib>
+  <tlib-version>1.0</tlib-version>
+  <jsp-version>1.2</jsp-version>
+  <short-name>permittedTaglibs</short-name>
+  <uri>http://jakarta.apache.org/taglibs/standard/permittedTaglibs</uri>
+  <description>
+    Validates JSP pages to restrict 'taglib' directives
+  </description>
+
+  <validator>
+    <validator-class>
+	javax.servlet.jsp.jstl.tlv.PermittedTaglibsTLV
+    </validator-class>
+    <init-param>
+      <param-name>permittedTaglibs</param-name>
+      <param-value>
+	http://java.sun.com/jstl/core
+	http://java.sun.com/jstl/fmt
+	http://java.sun.com/jstl/sql
+	http://java.sun.com/jstl/xml
+      </param-value>
+      <description>
+        Whitespace-separated list of taglib URIs to permit.  This example
+	TLD for the Standard Taglib allows only JSTL 'el' taglibs to be
+	imported.
+      </description>
+    </init-param>
+  </validator>
+
+  <!-- Every TLD needs at least one 'tag' element.  We happily oblige. -->
+
+  <tag>
+    <name>noop</name>
+    <tag-class>javax.servlet.jsp.tagext.TagSupport</tag-class>
+    <body-content>empty</body-content>
+    <description>Does nothing.</description>
+  </tag>
+</taglib>

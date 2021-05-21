@@ -1,0 +1,15 @@
+Code completion result for source line:
+pri| // test3
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     privateMethod($param)           [PRIVATE]  Class1855
+METHOD     privateStaticMethod($param, $p  [PRIVATE,  Class1855
+METHOD     privateTraitMethod($param)      [PRIVATE]  Trait1855
+METHOD     privateTraitStaticMethod($para  [PRIVATE,  Trait1855
+VARIABLE   ? $privateStaticProperty        [PRIVATE,  Class1855
+VARIABLE   ? $privateTraitStaticProperty   [PRIVATE,  Trait1855
+VARIABLE   ? privateProperty               [PRIVATE]  Class1855
+VARIABLE   ? privateTraitProperty          [PRIVATE]  Trait1855
+CONSTANT   PRIVATE_CONSTANT "private cons  [PRIVATE]  Class1855
+------------------------------------
+KEYWORD    print '';                                  Language Construct
+KEYWORD    private                                    null

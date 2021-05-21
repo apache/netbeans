@@ -1,0 +1,107 @@
+<testresult testFile='uniformVariableSyntax_31.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='7' end='9'>
+            <text>$a</text>
+        </token>
+        <token id='T_EQUAL' start='10' end='11'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='12' end='20'>
+            <text>"strlen"</text>
+        </token>
+        <token id='T_SEMICOLON' start='20' end='21'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='22' end='24'>
+            <text>$b</text>
+        </token>
+        <token id='T_EQUAL' start='25' end='26'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='27' end='30'>
+            <text>"a"</text>
+        </token>
+        <token id='T_SEMICOLON' start='30' end='31'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='32' end='36'>
+            <text>echo</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='37' end='38'>
+            <text>(</text>
+        </token>
+        <token id='T_DOLLAR' start='38' end='39'>
+            <text>$</text>
+        </token>
+        <token id='T_VARIABLE' start='39' end='41'>
+            <text>$b</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='41' end='42'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='42' end='43'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='43' end='48'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='48' end='49'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDA' start='50' end='51'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='52' end='59'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='59' end='60'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='61' end='61'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='61'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='21'>
+                <Assignment start='7' end='20' operator='EQUAL'>
+                    <Variable start='7' end='9' isDollared='true'>
+                        <Identifier start='8' end='9' name='a'/>
+                    </Variable>
+                    <Scalar start='12' end='20' type='STRING' value='"strlen"'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='22' end='31'>
+                <Assignment start='22' end='30' operator='EQUAL'>
+                    <Variable start='22' end='24' isDollared='true'>
+                        <Identifier start='23' end='24' name='b'/>
+                    </Variable>
+                    <Scalar start='27' end='30' type='STRING' value='"a"'/>
+                </Assignment>
+            </ExpressionStatement>
+            <EchoStatement start='32' end='60'>
+                <InfixExpression start='37' end='59' operator='CONCAT'>
+                    <FunctionInvocation start='37' end='49'>
+                        <FucntionName start='37' end='42'>
+                            <DereferencableVariable start='37' end='42'>
+                                <ReflectionVariable start='38' end='41'>
+                                    <Variable start='39' end='41' isDollared='true'>
+                                        <Identifier start='40' end='41' name='b'/>
+                                    </Variable>
+                                </ReflectionVariable>
+                            </DereferencableVariable>
+                        </FucntionName>
+                        <Parameters>
+                            <Scalar start='43' end='48' type='STRING' value='"foo"'/>
+                        </Parameters>
+                    </FunctionInvocation>
+                    <NamespaceName start='52' end='59' isCurrent='false' isGlobal='false'>
+                        <Identifier start='52' end='59' name='PHP_EOL'/>
+                    </NamespaceName>
+                </InfixExpression>
+            </EchoStatement>
+        </Statements>
+    </Program>
+</testresult>

@@ -1,0 +1,5 @@
+new TestCase().|>MARK_OCCURRENCES:method1<|()
+c.|>MARK_OCCURRENCES:method1<|()
+TestCase.create().|>MARK_OCCURRENCES:method1<|()
+        |>MARK_OCCURRENCES:method1<|()
+        this.|>MARK_OCCURRENCES:meth^od1<|()

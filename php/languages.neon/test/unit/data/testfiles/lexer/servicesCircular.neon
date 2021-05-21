@@ -1,0 +1,7 @@
+services:
+	lorem:
+		class: Lorem
+
+	ipsum:
+		class: Ipsum
+		run: yes

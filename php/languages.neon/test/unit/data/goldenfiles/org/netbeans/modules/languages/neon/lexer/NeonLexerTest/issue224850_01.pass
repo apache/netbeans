@@ -1,0 +1,15 @@
+token #0 NEON_BLOCK servicename
+token #1 NEON_INTERPUNCTION :
+token #2 NEON_WHITESPACE \n
+token #3 NEON_WHITESPACE     
+token #4 NEON_VALUED_BLOCK class
+token #5 NEON_INTERPUNCTION :
+token #6 NEON_WHITESPACE  
+token #7 NEON_LITERAL Model
+token #8 NEON_INTERPUNCTION (
+token #9 NEON_STRING "\ClassA\"
+token #10 NEON_INTERPUNCTION ,
+token #11 NEON_WHITESPACE  
+token #12 NEON_STRING "\ClassB\"
+token #13 NEON_INTERPUNCTION )
+token #14 NEON_WHITESPACE \n

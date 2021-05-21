@@ -1,0 +1,4 @@
+Code completion result for source line:
+@$cls163432->|myfnc();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     myfnc()                         [PUBLIC]   cls163432

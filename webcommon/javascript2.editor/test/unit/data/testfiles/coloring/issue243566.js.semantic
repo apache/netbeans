@@ -1,0 +1,11 @@
+var |>GLOBAL:ABC<| = {
+    |>FIELD:x<|: '',
+
+    |>METHOD:y<|: function () {
+        var |>LOCAL_VARIABLE_DECLARATION:x<|;
+
+        |>LOCAL_VARIABLE:x<| = 'abc';
+
+        this.|>FIELD:x<| = |>LOCAL_VARIABLE:x<|; // wrong hint: The global variable 'x' is not declared
+    }
+};

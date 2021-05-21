@@ -1,0 +1,5 @@
+Code completion result for source line:
+function &bar(): \My\Fi|rm\Comment {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+PACKAGE    Firm                            [PUBLIC]   My

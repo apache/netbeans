@@ -1,0 +1,5 @@
+tv223423:CLASS:[PUBLIC]:ESCAPED{tv223423}:
+  reklama:METHOD:[PUBLIC]:ESCAPED{reklama}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+document:CLASS:[PUBLIC]:ESCAPED{document}:
+  getElementById:CLASS:[PUBLIC]:ESCAPED{getElementById}:
+    test:FIELD:[PUBLIC]:ESCAPED{test}<font color="#999999">ESCAPED{ : }String</font>:

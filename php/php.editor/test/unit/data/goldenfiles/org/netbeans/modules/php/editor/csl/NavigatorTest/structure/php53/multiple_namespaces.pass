@@ -1,0 +1,6 @@
+|-MyProject [17, 69] : ESCAPED{MyProject}
+|--Connection [34, 47] : ESCAPED{Connection}
+|--connect [57, 69] : ESCAPED{connect}ESCAPED{(}ESCAPED{)}
+|-AnotherProject [80, 141] : ESCAPED{AnotherProject}
+|--Connection [102, 115] : ESCAPED{Connection}
+|--connect [125, 137] : ESCAPED{connect}ESCAPED{(}ESCAPED{)}

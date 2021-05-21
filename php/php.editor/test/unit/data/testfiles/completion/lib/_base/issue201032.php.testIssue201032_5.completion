@@ -1,0 +1,4 @@
+Code completion result for source line:
+$this->matchNames|($first, $second);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     matchNames($first, $second)     [PRIVATE]  SmartCompletion

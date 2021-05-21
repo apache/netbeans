@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/web/taglib/resources/TaglibCatalog.gif</file>
+        <file>src/org/netbeans/modules/web/taglib/resources/tag.gif</file>
+        <file>src/org/netbeans/modules/web/taglib/resources/tags.gif</file>
+        <file>src/org/netbeans/modules/web/core/resources/jspObject32.gif</file>
+        <file>src/org/netbeans/modules/web/core/resources/xml_error_glyph.gif</file>
+        <file>src/org/netbeans/modules/web/core/resources/tag.gif</file>
+        <file>src/org/netbeans/modules/web/core/resources/servletSettings.gif</file>
+        <file>src/org/netbeans/modules/web/core/resources/badge_error.png</file>
+        <file>src/org/netbeans/modules/web/core/resources/servletSettings32.gif</file>
+        <file>src/org/netbeans/modules/web/core/resources/jspObject.gif</file>
+        <file>src/org/netbeans/modules/web/core/resources/jsp-fragment16.gif</file>
+        <file>src/org/netbeans/modules/web/core/resources/jsp-xml16.gif</file>
+        <file>src/org/netbeans/modules/web/core/resources/tag16.gif</file>
+        <file>src/org/netbeans/modules/web/core/resources/jsp16.gif</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/Report16.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/ForEach16.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/Query16.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/UseBean16.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/GetProperty16.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/GetProperty32.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/If32.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/If16.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/SetProperty16.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/Update16.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/UseBean32.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/Delete16.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/Insert16.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/Choose16.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/ForEach32.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/Report32.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/Update32.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/Delete32.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/SetProperty32.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/Query32.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/Choose32.png</file>
+        <file>src/org/netbeans/modules/web/core/palette/items/resources/Insert32.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/web/core/resources/templates/AdvancedFilter.template</file>
+        <file>src/org/netbeans/modules/web/core/resources/templates/BlankTagLibrary.template</file>
+        <file>src/org/netbeans/modules/web/core/resources/templates/BlankTagLibrary_1_2.template</file>
+        <file>src/org/netbeans/modules/web/core/resources/templates/BlankTagLibrary_2_0.template</file>
+        <file>src/org/netbeans/modules/web/core/resources/templates/BodyTagHandler.template</file>
+        <file>src/org/netbeans/modules/web/core/resources/templates/JSP.template</file>
+        <file>src/org/netbeans/modules/web/core/resources/templates/JSPDoc.template</file>
+        <file>src/org/netbeans/modules/web/core/resources/templates/JSPDocX.template</file>
+        <file>src/org/netbeans/modules/web/core/resources/templates/JSPF.template</file>
+        <file>src/org/netbeans/modules/web/core/resources/templates/Servlet.template</file>
+        <file>src/org/netbeans/modules/web/core/resources/templates/ServletListener.template</file>
+        <file>src/org/netbeans/modules/web/core/resources/templates/SimpleFilter.template</file>
+        <file>src/org/netbeans/modules/web/core/resources/templates/SimpleTagHandler.template</file>
+        <file>src/org/netbeans/modules/web/core/resources/templates/TagFile.template</file>
+        <file>src/org/netbeans/modules/web/core/resources/templates/TagFileF.template</file>
+        <file>src/org/netbeans/modules/web/core/resources/templates/TagFileFX.template</file>
+        <file>src/org/netbeans/modules/web/core/resources/templates/TagFileX.template</file>
+        <file>src/org/netbeans/modules/web/core/resources/templates/WebModule.template</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="TEMPLATE_MINIMAL_IP" />
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/web/taglib/resources/xml.xsd</file>
+        <license ref="W3C2" />
+        <comment type="CATEGORY_B" />
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/web/taglib/resources/j2ee_1_4.xsd</file>
+        <file>src/org/netbeans/modules/web/taglib/resources/j2ee_web_services_client_1_1.xsd</file>
+        <file>src/org/netbeans/modules/web/taglib/resources/javaee_5.xsd</file>
+        <file>src/org/netbeans/modules/web/taglib/resources/javaee_web_services_client_1_2.xsd</file>
+        <file>src/org/netbeans/modules/web/taglib/resources/web-jsptaglibrary_1_1.dtd</file>
+        <file>src/org/netbeans/modules/web/taglib/resources/web-jsptaglibrary_1_2.dtd</file>
+        <file>src/org/netbeans/modules/web/taglib/resources/web-jsptaglibrary_2_0.xsd</file>
+        <file>src/org/netbeans/modules/web/taglib/resources/web-jsptaglibrary_2_1.xsd</file>
+        <file>src/org/netbeans/modules/web/taglib/resources/web-jsptaglibrary_2_1.mdd</file>
+        <license ref="CDDL-1.1" />
+        <comment type="CATEGORY_B" />
+    </fileset>
+</licenseinfo>

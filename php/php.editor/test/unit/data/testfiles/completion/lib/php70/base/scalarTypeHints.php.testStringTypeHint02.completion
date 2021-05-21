@@ -1,0 +1,6 @@
+Code completion result for source line:
+function stringTypeHint(strin|g $arg) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      StringClass                     [PUBLIC]   scalarTypeHints.php
+------------------------------------
+KEYWORD    string                                     null

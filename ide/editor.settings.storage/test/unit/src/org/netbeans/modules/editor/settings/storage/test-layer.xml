@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+
+    <folder name="Editors">
+        <folder name="NetBeans">
+            <folder name="Defaults">
+                <file name="defaultColoring.xml" url="fonts-and-colors-all-languages.xml"/>
+            </folder>
+        </folder>
+        
+        <folder name="text">
+            <folder name="x-type-A">
+                <folder name="NetBeans">
+                    <folder name="Defaults">
+                        <file name="coloring.xml" url="fonts-and-colors.xml"/>
+                    </folder>
+                </folder>
+                <folder name="Defaults">
+                    <file name="keybindings.xml" url="key-bindings.xml"/> 
+                </folder>
+            </folder>
+            
+            <folder name="x-type-B">
+                <folder name="NetBeans">
+                    <folder name="Defaults">
+                        <file name="coloring.xml" url="fonts-and-colors-2.xml"/>
+                    </folder>
+                </folder>
+
+                <folder name="text">
+                    <folder name="x-type-A">
+                        <folder name="NetBeans">
+                            <folder name="Defaults">
+                                <file name="coloring.xml" url="fonts-and-colors-5.xml"/>
+                            </folder>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+            
+            <folder name="x-type-B6">
+                <folder name="NetBeans">
+                    <folder name="Defaults">
+                        <file name="coloring.xml" url="fonts-and-colors-6.xml"/>
+                    </folder>
+                </folder>
+
+                <folder name="text">
+                    <folder name="x-type-A">
+                        <folder name="NetBeans">
+                            <folder name="Defaults">
+                                <file name="coloring.xml" url="fonts-and-colors-5.xml"/>
+                            </folder>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+
+            <folder name="x-orig">
+                <file name="marker.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.settings.storage.SettingsProviderTest.createMarker" />
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.editor.settings.storage.SettingsProviderTest$Marker" />
+                </file>
+            </folder>
+
+            <folder name="ant+xml">
+                <folder name="NetBeans">
+                    <folder name="Defaults">
+                        <file name="coloring.xml" url="fonts-and-colors-3.xml"/>
+                    </folder>
+                </folder>
+            </folder>
+
+            <folder name="xml">
+                <folder name="NetBeans">
+                    <folder name="Defaults">
+                        <file name="coloring.xml" url="fonts-and-colors-4.xml"/>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+
+        <folder name="text">
+            <folder name="x-type-C">
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="module-coloring.xml">
+<![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
+
+<fontscolors>
+    <fontcolor name="test-module" foreColor="000011" bgColor="000022">
+        <font style="italic"/>
+    </fontcolor>
+    <fontcolor name="test-module-and-user" foreColor="BB0000" bgColor="AA0000">
+        <font style="bold"/>
+    </fontcolor>
+</fontscolors>
+                            ]]></file>
+                        </folder>
+                        <file name="user-coloring.xml">
+<![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
+
+<fontscolors>
+    <fontcolor name="test-module-and-user" bgColor="CC0000"/>
+</fontscolors>
+                            ]]></file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+
+        <folder name="text">
+            <folder name="x-StorageFilterTest">
+                <folder name="Preferences">
+                    <folder name="Defaults">
+                        <file name="preferences.xml" url="preferences.xml"/>
+                    </folder>
+                </folder>
+                <folder name="Keybindings">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="keybindings.xml" url="key-bindings.xml"/> 
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+
+</filesystem>

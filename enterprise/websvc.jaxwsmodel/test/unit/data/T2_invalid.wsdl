@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+ xmlns:tns="http://xml.netbeans.org/examples/targetNS"
+ xmlns:ns="http://xml.netbeans.org/examples/targetNS" 
+ xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+ xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+ name="Foo" 
+ targetNamespace="http://xml.netbeans.org/examples/targetNS">
+<types>
+    <xsd:schema targetNamespace="http://xml.netbeans.org/examples/targetNS">
+      <xsd:element name="id" type="xsd:string"/>
+      <xsd:element name="item" type="ns:ItemType"/>
+      <xsd:complexType name="ItemType">
+        <xsd:sequence>
+          <xsd:element ref="ns:id"/>
+          <xsd:element name="productName" type="xsd:string"/>
+          <xsd:element name="price" type="xsd:double"/>
+          <xsd:element name="quantity" type="xsd:integer"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="error" type="xsd:string"/>
+    </xsd:schema>
+  </types>
+<message name="FooRequest">
+    <part name="id" element="ns:id1"/>
+  </message>
+<message name="FooResponse">
+    <part name="item" element="ns:item"/>
+
+  </message>
+<message name="FooError">
+    <part name="error" element="ns:error"/>
+  </message>
+<portType name="FooPortType">
+    <operation name="FooOperation">
+      <input message="tns:FooRequest"/>
+      <output message="tns:FooResponse"/>
+      <fault message="tns:FooError" name="err"/>
+    </operation>
+
+  </portType>
+<binding name="FooBinding" type="tns:FooPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    <operation name="FooOperation">
+      <soap:operation soapAction="REPLACE_WITH_ACTION_URL"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+
+        <soap:body use="literal"/>
+      </output>
+      <fault name="err">
+        <soap:fault name="error" use="literal"/>
+      </fault>
+    </operation>
+  </binding>
+<wsdl:service name="Test2WS">
+<wsdl:port name="FooPortTypePort" binding="tns:FooBinding">
+<soap:address location="http://localhost:8080/wp1/Test2WS"/>
+
+</wsdl:port>
+</wsdl:service>
+</definitions>

@@ -1,0 +1,2 @@
+class Bar { }
+class Foo { }

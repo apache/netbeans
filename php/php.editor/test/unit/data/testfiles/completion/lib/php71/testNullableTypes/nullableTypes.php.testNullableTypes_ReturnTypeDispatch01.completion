@@ -1,0 +1,6 @@
+Code completion result for source line:
+$nullableType->classReturnType()->|publicFooMethod(); // CC
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicFooMethod()               [PUBLIC]   \My\Sub\Foo
+METHOD     publicStaticFooMethod()         [STATIC]   \My\Sub\Foo
+VARIABLE   ? publicFooField                [PUBLIC]   \My\Sub\Foo

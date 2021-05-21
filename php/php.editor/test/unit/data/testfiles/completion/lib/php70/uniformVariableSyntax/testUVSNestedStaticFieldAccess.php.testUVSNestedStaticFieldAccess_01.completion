@@ -1,0 +1,6 @@
+Code completion result for source line:
+UVS1::|$INSTANCE2::$INSTANCE3::MAX;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   UVS2 $INSTANCE2                 [STATIC]   UVS1
+CONSTANT   MAX 99                          [PUBLIC]   UVS1
+CONSTANT   class \UVS1                     [PUBLIC]   Magic Constant

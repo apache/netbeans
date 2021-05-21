@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module-Specification-Version: 3.35
+OpenIDE-Module: org.netbeans.modules.websvc.wsitconf
+OpenIDE-Module-Layer: org/netbeans/modules/websvc/wsitconf/resources/mf-layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/websvc/wsitconf/Bundle.properties

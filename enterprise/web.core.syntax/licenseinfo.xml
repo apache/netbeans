@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/web/core/syntax/completion/resources/class_16.png</file>
+        <file>src/org/netbeans/modules/web/core/syntax/completion/resources/bean_16.png</file>
+        <file>src/org/netbeans/modules/web/core/syntax/completion/resources/function_16.png</file>
+        <file>src/org/netbeans/modules/web/core/syntax/completion/resources/property_16.png</file>
+        <file>src/org/netbeans/modules/web/core/syntax/completion/resources/map_16.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/web/core/syntax/resources/ELExample</file>
+        <file>src/org/netbeans/modules/web/core/syntax/resources/JSPExample</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="GUI_USABILITY"/>
+    </fileset>
+    <fileset>
+        <file>tlddoc/xslt/alltags-frame.html.xsl</file>
+        <file>tlddoc/xslt/alltags-noframe.html.xsl</file>
+        <file>tlddoc/xslt/function.html.xsl</file>
+        <file>tlddoc/xslt/help-doc.html.xsl</file>
+        <file>tlddoc/xslt/index.html.xsl</file>
+        <file>tlddoc/xslt/overview-frame.html.xsl</file>
+        <file>tlddoc/xslt/overview-summary.html.xsl</file>
+        <file>tlddoc/xslt/tag.html.xsl</file>
+        <file>tlddoc/xslt/tld-frame.html.xsl</file>
+        <file>tlddoc/xslt/tld-summary.html.xsl</file>
+        <file>tlddoc/xslt/tld1_1-tld1_2.xsl</file>
+        <file>tlddoc/xslt/tld1_2-tld2_0.xsl</file>
+        <file>tlddoc/xslt/tld2_0-tld2_1.xsl</file>
+        <file>tlddoc/xslt/tld2_1-tld2_1.xsl</file>
+        <license ref="BSD-tldxslt" />
+        <sourceOnly />
+    </fileset>
+</licenseinfo>

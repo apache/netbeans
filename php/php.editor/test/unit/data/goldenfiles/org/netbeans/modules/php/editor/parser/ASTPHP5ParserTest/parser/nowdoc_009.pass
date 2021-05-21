@@ -1,0 +1,129 @@
+<testresult testFile='nowdoc_009.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='58'>
+            <text>--TEST--\nTorture the T_END_NOWDOC rules (nowdoc)\n--FILE--\n</text>
+        </token>
+        <token id='T_REQUIRE_ONCE' start='65' end='77'>
+            <text>require_once</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='78' end='90'>
+            <text>&apos;nowdoc.inc&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='90' end='91'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='93' end='98'>
+            <text>print</text>
+        </token>
+        <token id='T_START_NOWDOC' start='99' end='116'>
+            <text>&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='116' end='197'>
+            <text>ENDOFNOWDOC    ;\n    ENDOFNOWDOC;\nENDOFNOWDOC    \n    ENDOFNOWDOC\n$ENDOFNOWDOC;\n\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='197' end='208'>
+            <text>ENDOFNOWDOC</text>
+        </token>
+        <token id='T_SEMICOLON' start='208' end='209'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='211' end='213'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='214' end='215'>
+            <text>=</text>
+        </token>
+        <token id='T_START_NOWDOC' start='216' end='233'>
+            <text>&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='233' end='314'>
+            <text>ENDOFNOWDOC    ;\n    ENDOFNOWDOC;\nENDOFNOWDOC    \n    ENDOFNOWDOC\n$ENDOFNOWDOC;\n\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='314' end='325'>
+            <text>ENDOFNOWDOC</text>
+        </token>
+        <token id='T_SEMICOLON' start='325' end='326'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='328' end='333'>
+            <text>print</text>
+        </token>
+        <token id='T_QUATE' start='334' end='335'>
+            <text>"</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='335' end='336'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='336' end='338'>
+            <text>$x</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='338' end='339'>
+            <text>}</text>
+        </token>
+        <token id='T_QUATE' start='339' end='340'>
+            <text>"</text>
+        </token>
+        <token id='T_SEMICOLON' start='340' end='341'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='343' end='346'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='T_INLINE_HTML' start='346' end='518'>
+            <text>--EXPECT--\nENDOFNOWDOC    ;\n    ENDOFNOWDOC;\nENDOFNOWDOC    \n    ENDOFNOWDOC\n$ENDOFNOWDOC;\nENDOFNOWDOC    ;\n    ENDOFNOWDOC;\nENDOFNOWDOC    \n    ENDOFNOWDOC\n$ENDOFNOWDOC;\n\n</text>
+        </token>
+        <token id='EOF' start='518' end='518'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='518'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='58'/>
+            <ExpressionStatement start='65' end='91'>
+                <Include start='65' end='90' type='REQUIRE_ONCE'>
+                    <Scalar start='78' end='90' type='STRING' value='&apos;nowdoc.inc&apos;'/>
+                </Include>
+            </ExpressionStatement>
+            <ExpressionStatement start='93' end='209'>
+                <FunctionInvocation start='93' end='208'>
+                    <FucntionName start='93' end='98'>
+                        <Identifier start='93' end='98' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='99' end='208' type='STRING' value='ENDOFNOWDOC    ;\n    ENDOFNOWDOC;\nENDOFNOWDOC    \n    ENDOFNOWDOC\n$ENDOFNOWDOC;\n\n'/>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='211' end='326'>
+                <Assignment start='211' end='325' operator='EQUAL'>
+                    <Variable start='211' end='213' isDollared='true'>
+                        <Identifier start='212' end='213' name='x'/>
+                    </Variable>
+                    <Scalar start='216' end='325' type='STRING' value='ENDOFNOWDOC    ;\n    ENDOFNOWDOC;\nENDOFNOWDOC    \n    ENDOFNOWDOC\n$ENDOFNOWDOC;\n\n'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='328' end='341'>
+                <FunctionInvocation start='328' end='340'>
+                    <FucntionName start='328' end='333'>
+                        <Identifier start='328' end='333' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Quote start='334' end='340' type='QUOTE'>
+                            <Expressions>
+                                <ReflectionVariable start='335' end='339'>
+                                    <Variable start='336' end='338' isDollared='true'>
+                                        <Identifier start='337' end='338' name='x'/>
+                                    </Variable>
+                                </ReflectionVariable>
+                            </Expressions>
+                        </Quote>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='343' end='346'/>
+            <InLineHtml start='346' end='518'/>
+        </Statements>
+    </Program>
+</testresult>

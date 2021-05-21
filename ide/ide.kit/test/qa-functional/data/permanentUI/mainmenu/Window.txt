@@ -1,0 +1,24 @@
+| Window |                  W (mnemonics)
+==========
+Projects                    j
+Files                       F
+Classes                     C
+Favorites                   v
+Services                    S
+Navigator                   N
+Action Items                M
+Tasks                       k
+Output                      O
+Editor                      E
+Debugging               >   b
+Profiling               >   g
+Web                     >   W
+IDE Tools               >   T
+=========================
+Configure Window        >   u
+Reset Windows               W
+=========================
+Close Window                i
+Close All Documents         A
+Close Other Documents       h
+Documents...                D

@@ -1,0 +1,142 @@
+<testresult testFile='nullableTypes_02.php'>
+    <scanner>
+        <token id='T_FUNCTION' start='7' end='15'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='16' end='19'>
+            <text>say</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='19' end='20'>
+            <text>(</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='20' end='21'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='21' end='27'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='28' end='32'>
+            <text>$msg</text>
+        </token>
+        <token id='T_COMMA' start='32' end='33'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='34' end='37'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='38' end='42'>
+            <text>$num</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='42' end='43'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='44' end='45'>
+            <text>{</text>
+        </token>
+        <token id='T_IF' start='50' end='52'>
+            <text>if</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='53' end='54'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='54' end='58'>
+            <text>$msg</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='58' end='59'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='60' end='61'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='70' end='74'>
+            <text>echo</text>
+        </token>
+        <token id='T_VARIABLE' start='75' end='79'>
+            <text>$msg</text>
+        </token>
+        <token id='T_NEKUDA' start='80' end='81'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='82' end='89'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='89' end='90'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='95' end='96'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='97' end='98'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='99' end='99'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='99'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <FunctionDeclaration start='7' end='98' isReference='false'>
+                <Identifier start='16' end='19' name='say'/>
+                <FormalParameters>
+                    <FormalParameter start='20' end='32' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                            <NullableType start='20' end='27'>
+                                <NamespaceName start='21' end='27' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='21' end='27' name='string'/>
+                                </NamespaceName>
+                            </NullableType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='28' end='32' isDollared='true'>
+                                <Identifier start='29' end='32' name='msg'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='34' end='42' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                            <NamespaceName start='34' end='37' isCurrent='false' isGlobal='false'>
+                                <Identifier start='34' end='37' name='int'/>
+                            </NamespaceName>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='38' end='42' isDollared='true'>
+                                <Identifier start='39' end='42' name='num'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <Block start='44' end='98' isCurly='true'>
+                    <IfStatement start='50' end='96'>
+                        <Condition>
+                            <Variable start='54' end='58' isDollared='true'>
+                                <Identifier start='55' end='58' name='msg'/>
+                            </Variable>
+                        </Condition>
+                        <Then>
+                            <Block start='60' end='96' isCurly='true'>
+                                <EchoStatement start='70' end='90'>
+                                    <InfixExpression start='75' end='89' operator='CONCAT'>
+                                        <Variable start='75' end='79' isDollared='true'>
+                                            <Identifier start='76' end='79' name='msg'/>
+                                        </Variable>
+                                        <NamespaceName start='82' end='89' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='82' end='89' name='PHP_EOL'/>
+                                        </NamespaceName>
+                                    </InfixExpression>
+                                </EchoStatement>
+                            </Block>
+                        </Then>
+                        <Else>
+                        </Else>
+                    </IfStatement>
+                </Block>
+            </FunctionDeclaration>
+        </Statements>
+    </Program>
+</testresult>

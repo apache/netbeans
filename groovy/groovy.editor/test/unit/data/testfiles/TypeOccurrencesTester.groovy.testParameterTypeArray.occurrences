@@ -1,0 +1,27 @@
+import java.lang.|>MARK_OCCURRENCES:String<|
+class TypeOccurrencesTester extends |>MARK_OCCURRENCES:String<| {
+    protected |>MARK_OCCURRENCES:String<| fieldString
+    private |>MARK_OCCURRENCES:String<|[] fieldArrayString
+    private List<|>MARK_OCCURRENCES:String<|> fieldList
+    |>MARK_OCCURRENCES:String<| propertyString
+    |>MARK_OCCURRENCES:String<|[] propertyArrayString
+    List<|>MARK_OCCURRENCES:String<|> propertyList = new ArrayList<|>MARK_OCCURRENCES:String<|>();
+    TypeOccurrencesTester(|>MARK_OCCURRENCES:String<| constructorParam) {
+    TypeOccurrencesTester(|>MARK_OCCURRENCES:String<|[] constructorParam) {
+    TypeOccurrencesTester(List<|>MARK_OCCURRENCES:String<|> constructorParam) {
+    public |>MARK_OCCURRENCES:String<| returnType() {}
+    public |>MARK_OCCURRENCES:String<|[] arrayReturnType() {}
+    public List<|>MARK_OCCURRENCES:String<|> listReturnType() {}
+    public void parameterType(|>MARK_OCCURRENCES:String<| parameterType, Number test) {}
+    public void arrayParameterType(|>MARK_OCCURRENCES:St^ring<|[] parameterType, Number test) {}
+    public void listParameterType(List<|>MARK_OCCURRENCES:String<|> parameterType, Number test) {}
+        |>MARK_OCCURRENCES:String<| string
+        |>MARK_OCCURRENCES:String<| stringInit = new String()
+        |>MARK_OCCURRENCES:String<|[] stringArray
+        |>MARK_OCCURRENCES:String<|[] stringArrayInit = new |>MARK_OCCURRENCES:String<|[1]
+        List<|>MARK_OCCURRENCES:String<|> stringList
+        List<|>MARK_OCCURRENCES:String<|> stringListInit = new ArrayList<|>MARK_OCCURRENCES:String<|>()
+        |>MARK_OCCURRENCES:String<|.CASE_INSENSITIVE_ORDER
+        if (val instanceof |>MARK_OCCURRENCES:String<|) {
+        for (|>MARK_OCCURRENCES:String<| sss : somearray) {
+            |>MARK_OCCURRENCES:String<| innerString = sss.concat("");

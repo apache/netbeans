@@ -1,0 +1,87 @@
+FUNCTION issue252218 [ANONYMOUS: false, DECLARED: true - issue252218, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+NoteDao         : OBJECT NoteDao [ANONYMOUS: false, DECLARED: false - NoteDao, MODIFIERS: PUBLIC, OBJECT]
+                # PROPERTIES
+                prototype : OBJECT prototype [ANONYMOUS: false, DECLARED: false - prototype, MODIFIERS: PUBLIC, OBJECT]
+                          # PROPERTIES
+                          edit : FUNCTION edit [ANONYMOUS: false, DECLARED: true - edit, MODIFIERS: PUBLIC, METHOD]
+                               # RETURN TYPES
+                               Promise, RESOLVED: true
+                               # PARAMETERS
+                               OBJECT note [ANONYMOUS: false, DECLARED: true - note, MODIFIERS: PUBLIC, PARAMETER]
+                                       # PROPERTIES
+                                       id        : OBJECT id [ANONYMOUS: false, DECLARED: false - id, MODIFIERS: PUBLIC, PROPERTY]
+                                       tripDayId : OBJECT tripDayId [ANONYMOUS: false, DECLARED: false - tripDayId, MODIFIERS: PUBLIC, PROPERTY]
+                               # PROPERTIES
+                               arguments           : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                               issue252218edit#L#3 : FUNCTION issue252218edit#L#3 [ANONYMOUS: true, DECLARED: true - issue252218edit#L#3, MODIFIERS: PRIVATE, METHOD]
+                                                   # RETURN TYPES
+                                                   undefined, RESOLVED: true
+                                                   # PARAMETERS
+                                                   OBJECT resolve [ANONYMOUS: false, DECLARED: true - resolve, MODIFIERS: PUBLIC, PARAMETER]
+                                                   OBJECT reject [ANONYMOUS: false, DECLARED: true - reject, MODIFIERS: PUBLIC, PARAMETER]
+                                                   # PROPERTIES
+                                                   arguments               : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                                   issue252218edit#L#3#L#6 : FUNCTION issue252218edit#L#3#L#6 [ANONYMOUS: true, DECLARED: true - issue252218edit#L#3#L#6, MODIFIERS: PRIVATE, METHOD]
+                                                                           # RETURN TYPES
+                                                                           undefined, RESOLVED: true
+                                                                           # PARAMETERS
+                                                                           OBJECT day [ANONYMOUS: false, DECLARED: true - day, MODIFIERS: PUBLIC, PARAMETER]
+                                                                                   # PROPERTIES
+                                                                                   data : OBJECT data [ANONYMOUS: false, DECLARED: false - data, MODIFIERS: PUBLIC, OBJECT]
+                                                                                        # PROPERTIES
+                                                                                        id : FUNCTION id [ANONYMOUS: false, DECLARED: false - id, MODIFIERS: PUBLIC, METHOD]
+                                                                                           # PARAMETERS
+                                                                                           OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                                                                                           # PROPERTIES
+                                                                                           arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                                                                           convert   : FUNCTION convert [ANONYMOUS: false, DECLARED: false - convert, MODIFIERS: PUBLIC, METHOD]
+                                                                                                     # PARAMETERS
+                                                                                                     OBJECT param1 [ANONYMOUS: false, DECLARED: true - param1, MODIFIERS: PUBLIC, PARAMETER]
+                                                                                                     OBJECT param2 [ANONYMOUS: false, DECLARED: true - param2, MODIFIERS: PUBLIC, PARAMETER]
+                                                                                                     # PROPERTIES
+                                                                                                     arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                                                                   save : FUNCTION save [ANONYMOUS: false, DECLARED: false - save, MODIFIERS: PUBLIC, METHOD]
+                                                                                        # PARAMETERS
+                                                                                        OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                                                                                        # PROPERTIES
+                                                                                        arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                                                           # PROPERTIES
+                                                                           arguments                    : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                                                           issue252218edit#L#3#L#6#L#10 : FUNCTION issue252218edit#L#3#L#6#L#10 [ANONYMOUS: true, DECLARED: true - issue252218edit#L#3#L#6#L#10, MODIFIERS: PRIVATE, METHOD]
+                                                                                                        # RETURN TYPES
+                                                                                                        undefined, RESOLVED: true
+                                                                                                        # PARAMETERS
+                                                                                                        OBJECT err [ANONYMOUS: false, DECLARED: true - err, MODIFIERS: PUBLIC, PARAMETER]
+                                                                                                        # PROPERTIES
+                                                                                                        arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                                                           result                       : OBJECT result [ANONYMOUS: false, DECLARED: true - result, MODIFIERS: PRIVATE, VARIABLE]
+Promise         : FUNCTION Promise [ANONYMOUS: false, DECLARED: false - Promise, MODIFIERS: PUBLIC, FUNCTION]
+                # PROPERTIES
+                arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+TPError         : OBJECT TPError [ANONYMOUS: false, DECLARED: false - TPError, MODIFIERS: PUBLIC, OBJECT]
+                # PROPERTIES
+                DatabaseError : OBJECT DatabaseError [ANONYMOUS: false, DECLARED: false - DatabaseError, MODIFIERS: PUBLIC, PROPERTY]
+nm$_issue252218 : FUNCTION nm$_issue252218 [ANONYMOUS: true, DECLARED: true - nm$_issue252218, MODIFIERS: PUBLIC, FUNCTION]
+                # PROPERTIES
+                arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                module    : OBJECT module [ANONYMOUS: false, DECLARED: false - module, MODIFIERS: PUBLIC, OBJECT]
+                          # PROPERTIES
+                          exports : OBJECT exports [ANONYMOUS: false, DECLARED: true - exports, MODIFIERS: PUBLIC, PROPERTY]
+no              : OBJECT no [ANONYMOUS: false, DECLARED: false - no, MODIFIERS: PUBLIC, VARIABLE]
+re              : OBJECT re [ANONYMOUS: false, DECLARED: false - re, MODIFIERS: PUBLIC, VARIABLE]
+tripDayCtrl     : OBJECT tripDayCtrl [ANONYMOUS: false, DECLARED: false - tripDayCtrl, MODIFIERS: PUBLIC, OBJECT]
+                # PROPERTIES
+                get : FUNCTION get [ANONYMOUS: false, DECLARED: false - get, MODIFIERS: PUBLIC, METHOD]
+                    # PARAMETERS
+                    OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                    # PROPERTIES
+                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                    then      : FUNCTION then [ANONYMOUS: false, DECLARED: false - then, MODIFIERS: PUBLIC, METHOD]
+                              # PARAMETERS
+                              OBJECT param1 [ANONYMOUS: false, DECLARED: true - param1, MODIFIERS: PUBLIC, PARAMETER]
+                              OBJECT param2 [ANONYMOUS: false, DECLARED: true - param2, MODIFIERS: PUBLIC, PARAMETER]
+                              # PROPERTIES
+                              arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

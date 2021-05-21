@@ -1,0 +1,3 @@
+var |>MARK_OCCURRENCES:MyContext<| = {};
+|>MARK_OCCURRENCES:MyContext<|.CarDescription = {
+ * @param {|>MARK_OCCURRENCES:MyC^ontext<|.CarDescription} carDescription

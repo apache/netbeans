@@ -1,0 +1,2 @@
+Name.prototype.|>MARK_OCCURRENCES:getName<| = function () {
+console.log(n.|>MARK_OCCURRENCES:get^Name<|());

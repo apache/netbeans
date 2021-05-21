@@ -1,0 +1,4 @@
+    |>MARK_OCCURRENCES:values<| : function* () {
+console.log(Utils.|>MARK_OCCURRENCES:values<|().next().done);
+console.log(Utils.|>MARK_OCCURRENCES:val^ues<|().next().value);
+console.log(Utils.|>MARK_OCCURRENCES:values<|().next().value);

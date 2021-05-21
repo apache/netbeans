@@ -1,0 +1,6 @@
+|>GLOBAL:superGlobal<| = 1;
+function |>METHOD:drawResolvedFixedChart<|(|>UNUSED:object<|) {
+    var |>CLASS,UNUSED:a<| = {
+        |>FIELD:value<|: |>GLOBAL:superGlobal<|
+    }
+}

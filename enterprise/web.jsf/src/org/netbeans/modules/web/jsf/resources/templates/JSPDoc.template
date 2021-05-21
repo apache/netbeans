@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="${encoding}"?>
+
+<!-- 
+    Document   : ${name}
+    Created on : ${date}, ${time}
+    Author     : ${user}
+-->
+
+<jsp:root version="2.1" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">
+    <jsp:directive.page contentType="text/html; charset=${encoding}" pageEncoding="${encoding}"/>
+    <f:view>
+        <html xmlns="http://www.w3.org/1999/xhtml">
+            <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=${encoding}"/>
+                <title>JSP Page</title>
+            </head>
+            <body>
+                <h1><h:outputText value="Hello World!"/></h1>
+            </body>
+        </html>
+    </f:view>
+</jsp:root>

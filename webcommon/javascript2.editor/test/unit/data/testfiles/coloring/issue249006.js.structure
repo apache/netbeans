@@ -1,0 +1,3 @@
+LoginService:CLASS:[PRIVATE]:ESCAPED{LoginService}:
+  authProvider:FIELD:[PUBLIC]:ESCAPED{authProvider}<font color="#999999">ESCAPED{ : }String</font>:
+  test:FIELD:[PUBLIC]:ESCAPED{test}<font color="#999999">ESCAPED{ : }String</font>:

@@ -1,0 +1,5 @@
+var |>GLOBAL:o<| = {|>FIELD:p<|: 42, |>FIELD:q<|: true};
+var {|>GLOBAL:p<|, |>GLOBAL:q<|} = |>GLOBAL:o<|;
+
+|>GLOBAL:console<|.log(|>GLOBAL:p<|); // 42
+|>GLOBAL:console<|.log(|>GLOBAL:q<|); // true

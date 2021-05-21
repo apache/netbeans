@@ -1,0 +1,3 @@
+public void test(int permanent, String... variable)
+public void test(String permanent1, String permanent2)
+public void test(String permanent, String... variable)

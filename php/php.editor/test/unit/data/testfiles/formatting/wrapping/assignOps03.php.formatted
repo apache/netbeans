@@ -1,0 +1,7 @@
+<?php
+
+$foo = $bar = 10;
+
+$fooooooooooooooooooooooooooooooooooooooooooooooooooooooo = $baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaar
+        = 10;
+?>

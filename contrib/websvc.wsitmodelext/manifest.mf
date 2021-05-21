@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Specification-Version: 3.31
+OpenIDE-Module: org.netbeans.modules.websvc.wsitmodelext
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/websvc/wsitmodelext/Bundle.properties
+OpenIDE-Module-Layer: org/netbeans/modules/websvc/wsitmodelext/resources/mf-layer.xml

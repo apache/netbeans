@@ -1,0 +1,13 @@
+[[223,224]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}] 223-224:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}
+[[35,40]-Syntax error
+ unexpected:	variable '$this'
+ after:	{
+ expected:	function, const, use, var, }, VAR_COMMENT, static, abstract, final, private, protected, public] 35-40:Syntax error
+ unexpected:	variable '$this'
+ after:	{
+ expected:	function, const, use, var, }, VAR_COMMENT, static, abstract, final, private, protected, public
+[[72,80]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	function] 72-80:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	function

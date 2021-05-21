@@ -1,0 +1,2 @@
+    private static $|>MARK_OCCURRENCES:staticProperty<| = [
+        $instance1 = new self::$|>MARK_OCCURRENCES:stati^cProperty<|[self::getIndex()];

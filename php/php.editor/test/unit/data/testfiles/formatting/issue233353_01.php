@@ -1,0 +1,7 @@
+<?php
+
+$closure = function ($param) {
+    return 1;
+};
+
+?>

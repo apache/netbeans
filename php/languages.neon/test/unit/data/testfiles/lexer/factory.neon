@@ -1,0 +1,21 @@
+parameters:
+	class: Ipsum
+
+services:
+	one:
+		class: %class%
+		arguments: [1]
+
+	two:
+		class: %class%(1)
+
+	three:
+		class: Lorem
+		factory: Factory::createLorem
+		arguments: [1]
+
+	four:
+		factory: Factory::createLorem(1)
+
+	five:
+		factory: [Factory, createLorem](1)

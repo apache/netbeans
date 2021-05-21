@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="BaseProjectUIAPI">Project UI API</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+        <change id="ProjectConvertors-delegatingLookup">
+            <api name="BaseProjectUIAPI"/>
+            <summary>Added a support method into <code>ProjectConvertors</code> creating a <code>Lookup</code> delegating to the owner project.</summary>
+            <version major="1" minor="85"/>
+            <date day="24" month="5" year="2016"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added a support method into <code>ProjectConvertors</code> creating a <code>Lookup</code> delegating to the owner project.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="ProjectConvertors"/>
+            <issue number="256585"/>
+        </change>
+        <change id="ProjectConvertors-lookup">
+            <api name="BaseProjectUIAPI"/>
+            <summary>Added support methods into <code>ProjectConvertors</code> for easier convertor project implementation.</summary>
+            <version major="1" minor="82"/>
+            <date day="21" month="7" year="2015"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added support methods into the <code>ProjectConvertors</code> for easier <code>ProjectConvertor</code> lookup
+                    and queries implementation.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="ProjectConvertors"/>
+            <issue number="253338"/>
+        </change>
+        <change id="ProjectConvertors-unregister">
+            <api name="BaseProjectUIAPI"/>
+            <summary>Added <code>unregisterConvertorProject</code>into <code>ProjectConvertors</code>.</summary>
+            <version major="1" minor="81"/>
+            <date day="16" month="7" year="2015"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added <code>unregisterConvertorProject</code>into <code>ProjectConvertors</code> to allow
+                    project generators to unload the artifical convertor project before creating a new one.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="ProjectConvertors"/>
+            <issue number="250268"/>
+        </change>
+        <change id="ProjectConvertors">
+            <api name="BaseProjectUIAPI"/>
+            <summary>Added <code>ProjectConvertors</code> the support for <code>ProjectConvertor</code>s.</summary>
+            <version major="1" minor="80"/>
+            <date day="15" month="7" year="2015"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added <code>ProjectConvertors</code> providing a support for <code>ProjectConvertor</code>s.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="ProjectConvertors"/>
+            <issue number="250232"/>
+        </change>
+         <change id="ProjectConvertor">
+            <api name="BaseProjectUIAPI"/>
+            <summary>Added <code>ProjectConvertor</code> adding an ability to convert a folder into a project.</summary>
+            <version major="1" minor="79"/>
+            <date day="31" month="10" year="2014"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added an ability to convert a folder into a project.
+                    For a folder accepted by the <code>ProjectConvertor</code> an artifical in memory
+                    project is created causing the folder looks like a regular <code>Project</code> in the UI.
+                    The folder is converted into a regular <code>Project</code> when the artificial <code>Project</code>
+                    is opened.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui" name="ProjectConvertor"/>
+            <issue number="246846"/>
+        </change>
+         <change id="server.is.free">
+            <api name="BaseProjectUIAPI"/>
+            <summary>Split the api into a desktop (swing, awt) and NetBeans dependent and independent part.</summary>
+            <version major="1" minor="78"/>
+            <date day="26" month="5" year="2014"/>
+            <author login="tstupka"/>
+            <compatibility addition="yes">
+                <p>
+                    Runtime compatibility remains, compile time compatibility is
+                    mostly preserved too. It is however recommended to upgrade
+                    dependencies of client modules. Try running
+                    <code>ant fix-dependencies</code> in your Ant module.
+                </p>     
+            </compatibility>               
+            <description>
+                <p>
+                    The following classes were moved from the
+                    <a href="@org-netbeans-modules-projectuiapi@/overview-summary.html">org.netbeans.modules.projectuiapi</a> module:
+                </p>
+                <ul>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/api/project/ui/OpenProjects.html">OpenProjects</a></li>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/api/project/ui/ProjectGroup.html">ProjectGroup</a></li>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/api/project/ui/ProjectGroupChangeEvent.html">ProjectGroupChangeEvent</a></li>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/api/project/ui/ProjectGroupChangeListener.html">ProjectGroupChangeListener</a></li>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/spi/project/ui/PrivilegedTemplates.html">PrivilegedTemplates</a></li>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/spi/project/ui/ProjectOpenedHook.html">ProjectOpenedHook</a></li>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/spi/project/ui/ProjectProblemResolver.html">ProjectProblemResolver</a></li>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/spi/project/ui/ProjectProblemsProvider.html">ProjectProblemsProvider</a></li>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/spi/project/ui/RecommendedTemplates.html">RecommendedTemplates</a></li>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/spi/project/ui/support/ProjectProblemsProviderSupport.html">ProjectProblemsProviderSupport</a></li>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/spi/project/ui/support/UILookupMergerSupport.html">UILookupMergerSupport</a></li>
+                </ul>
+            </description>
+        </change>
+    
+    
+</changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE projects/projectuiapi/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Project UI API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="@org-netbeans-modules-projectuiapi-base@/index.html">Project UI API</a>.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.modules.projectuiapi/1"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

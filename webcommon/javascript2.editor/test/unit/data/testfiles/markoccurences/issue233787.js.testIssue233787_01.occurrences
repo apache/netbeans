@@ -1,0 +1,2 @@
+        |>MARK_OCCURRENCES:street<|: "",
+ondra.address.|>MARK_OCCURRENCES:str^eet<| = "Piseckeho";

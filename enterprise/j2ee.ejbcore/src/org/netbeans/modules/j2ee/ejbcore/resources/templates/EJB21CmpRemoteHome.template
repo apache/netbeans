@@ -1,0 +1,23 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+package ${package};
+
+import java.rmi.RemoteException;
+import javax.ejb.CreateException;
+import javax.ejb.EJBHome;
+import javax.ejb.FinderException;
+
+/**
+ *
+ * @author ${user}
+ */
+public interface ${name} extends EJBHome {
+    
+    ${remoteInterface} findByPrimaryKey(${primaryKey} key)  throws FinderException, RemoteException;
+    
+    ${remoteInterface} create(${primaryKey} key)  throws CreateException, RemoteException;
+
+}

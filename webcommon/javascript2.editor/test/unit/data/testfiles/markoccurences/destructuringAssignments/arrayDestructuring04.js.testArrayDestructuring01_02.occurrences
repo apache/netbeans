@@ -1,0 +1,2 @@
+var [a, , |>MARK_OCCURRENCES:b^<|] = f();
+console.log(|>MARK_OCCURRENCES:b<|); // 3

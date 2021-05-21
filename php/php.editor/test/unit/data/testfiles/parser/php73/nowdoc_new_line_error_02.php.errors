@@ -1,0 +1,16 @@
+[[866,867]-Syntax error
+ unexpected:	{
+ after:	END_NOWDOC
+ expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ], ), :, ??] 866-867:Syntax error
+ unexpected:	{
+ after:	END_NOWDOC
+ expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ], ), :, ??
+[[872,873]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}] 872-873:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}
+[[877,878]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	','] 877-878:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	','
+[[884,885]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	]] 884-885:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	]

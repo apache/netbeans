@@ -1,0 +1,5 @@
+Code completion result for source line:
+use First\C|ls1;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      CIface1                         [PUBLIC]   First
+CLASS      Cls1                            [PUBLIC]   First

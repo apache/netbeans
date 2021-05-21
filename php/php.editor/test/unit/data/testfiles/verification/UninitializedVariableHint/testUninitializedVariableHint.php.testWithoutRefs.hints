@@ -1,0 +1,27 @@
+        foreach ($array as $key => $value) {
+                  -----
+HINT:Variable $array seems to be uninitialized
+        $this->foo($uninit);
+                    ------
+HINT:Variable $uninit seems to be uninitialized
+        if ($uninitIf) {
+             --------
+HINT:Variable $uninitIf seems to be uninitialized
+        } while ($uninitDo);
+                  --------
+HINT:Variable $uninitDo seems to be uninitialized
+        while ($uninitWhile) {
+                -----------
+HINT:Variable $uninitWhile seems to be uninitialized
+        for ($index = 0; $index < $uninitFor; $index++) {
+                                   ---------
+HINT:Variable $uninitFor seems to be uninitialized
+        } elseif ($uninitElseif) {
+                   ------------
+HINT:Variable $uninitElseif seems to be uninitialized
+     bar($myVar);
+          -----
+HINT:Variable $myVar seems to be uninitialized
+    fnc239089("ok", $shouldBeOkInRefs);
+                     ----------------
+HINT:Variable $shouldBeOkInRefs seems to be uninitialized

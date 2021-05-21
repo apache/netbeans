@@ -1,0 +1,69 @@
+<testresult testFile='heredoc_014.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='77'>
+            <text>--TEST--\nHeredoc with double quotes syntax but missing second quote\n--FILE--\n</text>
+        </token>
+        <token id='T_VARIABLE' start='83' end='88'>
+            <text>$test</text>
+        </token>
+        <token id='T_EQUAL' start='89' end='90'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='91' end='96'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_SEMICOLON' start='96' end='97'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='98' end='102'>
+            <text>$var</text>
+        </token>
+        <token id='T_EQUAL' start='103' end='104'>
+            <text>=</text>
+        </token>
+        <token id='T_SL' start='105' end='107'>
+            <text>&lt;&lt;</text>
+        </token>
+        <token id='T_RGREATER' start='107' end='108'>
+            <text>&lt;</text>
+        </token>
+        <token id='T_QUATE' start='108' end='109'>
+            <text>"</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='109' end='123'>
+            <text>MYLABEL\ntest: </text>
+        </token>
+        <token id='T_VARIABLE' start='123' end='128'>
+            <text>$test</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='128' end='143'>
+            <text>\nMYLABEL;\necho </text>
+        </token>
+        <token id='T_VARIABLE' start='143' end='147'>
+            <text>$var</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='147' end='239'>
+            <text>;\n?&gt;\n--EXPECTF--\nParse error: syntax error, unexpected T_SL in %sheredoc_014.php on line %d\n</text>
+        </token>
+        <token id='EOF' start='239' end='239'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='239'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='77'/>
+            <ExpressionStatement start='83' end='97'>
+                <Assignment start='83' end='96' operator='EQUAL'>
+                    <Variable start='83' end='88' isDollared='true'>
+                        <Identifier start='84' end='88' name='test'/>
+                    </Variable>
+                    <Scalar start='91' end='96' type='STRING' value='"foo"'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ASTError start='98' end='104'/>
+            <ASTError start='108' end='239'/>
+        </Statements>
+    </Program>
+</testresult>

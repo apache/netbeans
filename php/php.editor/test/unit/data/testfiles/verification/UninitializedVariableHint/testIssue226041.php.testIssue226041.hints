@@ -1,0 +1,6 @@
+    echo $insideScope;
+          -----------
+HINT:Variable $insideScope seems to be uninitialized
+    echo $outsideScope;
+          ------------
+HINT:Variable $outsideScope seems to be uninitialized

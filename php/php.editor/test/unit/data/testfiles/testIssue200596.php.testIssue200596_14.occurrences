@@ -1,0 +1,8 @@
+    class |>MARK_OCCURRENCES:ClassName<| {
+    use \Foo\Bar\|>MARK_OCCURRENCES:ClassName<|;
+            (new |>MARK_OCCURRENCES:ClassName<|())->bar();
+            new |>MARK_OCCURRENCES:Class^Name<|();
+            |>MARK_OCCURRENCES:ClassName<|::bar();
+            |>MARK_OCCURRENCES:ClassName<|::BAR;
+            |>MARK_OCCURRENCES:ClassName<|::$bar;
+            if ($x instanceof |>MARK_OCCURRENCES:ClassName<|) {}

@@ -1,0 +1,65 @@
+<FunctionNode name='importExport01.js' kind='MODULE' start='0' end='67'>
+  <isProgram/>
+  <ImportNode start='0' end='24'>
+    <ImportClauseNode start='7' end='12'>
+      <IdentNode start='7' end='12'>
+        <name>Ember</name>
+      </IdentNode>
+    </ImportClauseNode>
+    <FromNode start='13' end='24'>
+      <StringLiteralNode value='ember' start='19' end='17'/>
+    </FromNode>
+  </ImportNode>
+  <ExportNode start='28' end='66'>
+    <CallNode start='43' end='66'>
+      <!-- CallNode Arguments -->
+      <ObjectNode start='62' end='65'>
+        <!-- ObjectNode Elements -->
+      </ObjectNode>
+      <!-- CallNode Function -->
+      <AccessNode property='extend' start='43' end='61'>
+        <!-- AccessNode Base -->
+        <AccessNode property='Route' start='43' end='54'>
+          <!-- AccessNode Base -->
+          <IdentNode start='43' end='48'>
+            <name>Ember</name>
+          </IdentNode>
+        </AccessNode>
+      </AccessNode>
+    </CallNode>
+  </ExportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='67'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='*default*' start='43' end='66'>
+      <hasInit/>
+      <isAssignment/>
+      <isExport/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='43' end='66'>
+        <name>*default*</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <CallNode start='43' end='66'>
+        <!-- CallNode Arguments -->
+        <ObjectNode start='62' end='65'>
+          <!-- ObjectNode Elements -->
+        </ObjectNode>
+        <!-- CallNode Function -->
+        <AccessNode property='extend' start='43' end='61'>
+          <!-- AccessNode Base -->
+          <AccessNode property='Route' start='43' end='54'>
+            <!-- AccessNode Base -->
+            <IdentNode start='43' end='48'>
+              <name>Ember</name>
+            </IdentNode>
+          </AccessNode>
+        </AccessNode>
+      </CallNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

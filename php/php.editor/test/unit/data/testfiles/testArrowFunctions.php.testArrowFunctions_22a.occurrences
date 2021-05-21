@@ -1,0 +1,2 @@
+        $^|>MARK_OCCURRENCES:y<| = 100;
+        $af = fn($x): ?int => $x + $|>MARK_OCCURRENCES:y<|;

@@ -1,0 +1,9 @@
+[TAG_AND_KEYWORD]div#id[CSS_CLASS].left.container([ATTRIBUTE]class='user user-' + name)[NONE]
+[TAG_AND_KEYWORD]  h1[CSS_CLASS].title=[NONE] name
+[TAG_AND_KEYWORD]  form
+    //-[NONE] unbuffered comment :)
+    // An example of attributes.[TAG_AND_KEYWORD]
+    input([ATTRIBUTE]type='text' name='user[name]' value=name)[NONE]
+[TAG_AND_KEYWORD]    input([ATTRIBUTE]checked, type='checkbox', name='user[blocked]')[NONE]
+[TAG_AND_KEYWORD]    input([ATTRIBUTE]type='submit', value='Update')[NONE]
+[TAG_AND_KEYWORD]    div[CSS_CLASS].pre#

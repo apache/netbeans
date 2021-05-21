@@ -1,0 +1,153 @@
+FUNCTION person [ANONYMOUS: false, DECLARED: true - person, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+Math          : OBJECT Math [ANONYMOUS: false, DECLARED: false - Math, MODIFIERS: PUBLIC, OBJECT]
+              # PROPERTIES
+              random : FUNCTION random [ANONYMOUS: false, DECLARED: false - random, MODIFIERS: PUBLIC, METHOD]
+                     # PROPERTIES
+                     arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+              round  : FUNCTION round [ANONYMOUS: false, DECLARED: false - round, MODIFIERS: PUBLIC, METHOD]
+                     # PARAMETERS
+                     OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                     # PROPERTIES
+                     arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+Person        : FUNCTION Person [ANONYMOUS: false, DECLARED: true - Person, MODIFIERS: PUBLIC, CONSTRUCTOR]
+              # RETURN TYPES
+              Person, RESOLVED: true
+              # PARAMETERS
+              OBJECT n [ANONYMOUS: false, DECLARED: true - n, MODIFIERS: PUBLIC, PARAMETER]
+              OBJECT race [ANONYMOUS: false, DECLARED: true - race, MODIFIERS: PUBLIC, PARAMETER]
+              # PROPERTIES
+              age            : OBJECT age [ANONYMOUS: false, DECLARED: true - age, MODIFIERS: PRIVATE, VARIABLE]
+              alive          : OBJECT alive [ANONYMOUS: false, DECLARED: true - alive, MODIFIERS: PRIVATE, VARIABLE]
+              arguments      : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+              clothing       : OBJECT clothing [ANONYMOUS: false, DECLARED: true - clothing, MODIFIERS: PUBLIC, PROPERTY]
+              constructor    : OBJECT constructor [ANONYMOUS: false, DECLARED: false - constructor, MODIFIERS: PUBLIC, OBJECT]
+                             # PROPERTIES
+                             population : OBJECT population [ANONYMOUS: false, DECLARED: false - population, MODIFIERS: PUBLIC, PROPERTY]
+              dirtFactor     : OBJECT dirtFactor [ANONYMOUS: false, DECLARED: true - dirtFactor, MODIFIERS: PUBLIC, PROPERTY]
+              eat            : FUNCTION eat [ANONYMOUS: false, DECLARED: true - eat, MODIFIERS: PROTECTED, METHOD]
+                             # RETURN TYPES
+                             Number, RESOLVED: true
+                             # PROPERTIES
+                             arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+              exercise       : FUNCTION exercise [ANONYMOUS: false, DECLARED: true - exercise, MODIFIERS: PROTECTED, METHOD]
+                             # RETURN TYPES
+                             Number, RESOLVED: true
+                             # PROPERTIES
+                             arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+              getAge         : FUNCTION getAge [ANONYMOUS: false, DECLARED: true - getAge, MODIFIERS: PROTECTED, METHOD]
+                             # RETURN TYPES
+                             @exp;Person@pro;age, RESOLVED: false
+                             # PROPERTIES
+                             arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+              getName        : FUNCTION getName [ANONYMOUS: false, DECLARED: true - getName, MODIFIERS: PROTECTED, METHOD]
+                             # RETURN TYPES
+                             @exp;Person@pro;myName, RESOLVED: false
+                             # PROPERTIES
+                             arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+              getRace        : FUNCTION getRace [ANONYMOUS: false, DECLARED: true - getRace, MODIFIERS: PROTECTED, METHOD]
+                             # PROPERTIES
+                             arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+              makeOlder      : FUNCTION makeOlder [ANONYMOUS: false, DECLARED: true - makeOlder, MODIFIERS: PRIVATE, METHOD]
+                             # RETURN TYPES
+                             Boolean, RESOLVED: true
+                             # PROPERTIES
+                             arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+              maxAge         : OBJECT maxAge [ANONYMOUS: false, DECLARED: true - maxAge, MODIFIERS: PRIVATE, VARIABLE]
+              muchTimePasses : FUNCTION muchTimePasses [ANONYMOUS: false, DECLARED: true - muchTimePasses, MODIFIERS: PROTECTED, METHOD]
+                             # RETURN TYPES
+                             undefined, RESOLVED: true
+                             # PROPERTIES
+                             arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+              myName         : OBJECT myName [ANONYMOUS: false, DECLARED: true - myName, MODIFIERS: PRIVATE, VARIABLE]
+              population     : OBJECT population [ANONYMOUS: false, DECLARED: true - population, MODIFIERS: PUBLIC, STATIC, PROPERTY]
+              prototype      : OBJECT prototype [ANONYMOUS: false, DECLARED: false - prototype, MODIFIERS: PUBLIC, OBJECT]
+                             # PROPERTIES
+                             amputate : FUNCTION amputate [ANONYMOUS: false, DECLARED: true - amputate, MODIFIERS: PUBLIC, METHOD]
+                                      # RETURN TYPES
+                                      undefined, RESOLVED: true
+                                      # PROPERTIES
+                                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                             beCool   : FUNCTION beCool [ANONYMOUS: false, DECLARED: true - beCool, MODIFIERS: PUBLIC, METHOD]
+                                      # RETURN TYPES
+                                      undefined, RESOLVED: true
+                                      # PROPERTIES
+                                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                             legs     : OBJECT legs [ANONYMOUS: false, DECLARED: true - legs, MODIFIERS: PUBLIC, PROPERTY]
+                             showLegs : FUNCTION showLegs [ANONYMOUS: false, DECLARED: true - showLegs, MODIFIERS: PUBLIC, METHOD]
+                                      # RETURN TYPES
+                                      undefined, RESOLVED: true
+                                      # PROPERTIES
+                                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                             shower   : FUNCTION shower [ANONYMOUS: false, DECLARED: true - shower, MODIFIERS: PUBLIC, METHOD]
+                                      # RETURN TYPES
+                                      undefined, RESOLVED: true
+                                      # PROPERTIES
+                                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+              toString       : FUNCTION toString [ANONYMOUS: false, DECLARED: true - toString, MODIFIERS: PROTECTED, METHOD]
+                             # RETURN TYPES
+                             @exp;Person@pro;myName, RESOLVED: false
+                             # PROPERTIES
+                             arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+              weigh          : FUNCTION weigh [ANONYMOUS: false, DECLARED: true - weigh, MODIFIERS: PROTECTED, METHOD]
+                             # RETURN TYPES
+                             @exp;Person@pro;weight, RESOLVED: false
+                             # PROPERTIES
+                             arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+              weight         : OBJECT weight [ANONYMOUS: false, DECLARED: true - weight, MODIFIERS: PRIVATE, VARIABLE]
+RunGavinsLife : FUNCTION RunGavinsLife [ANONYMOUS: false, DECLARED: true - RunGavinsLife, MODIFIERS: PUBLIC, FUNCTION]
+              # RETURN TYPES
+              undefined, RESOLVED: true
+              # PROPERTIES
+              arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+              gk        : OBJECT gk [ANONYMOUS: false, DECLARED: true - gk, MODIFIERS: PRIVATE, OBJECT]
+                        # PROPERTIES
+                        amputate       : FUNCTION amputate [ANONYMOUS: false, DECLARED: false - amputate, MODIFIERS: PUBLIC, METHOD]
+                                       # PROPERTIES
+                                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                        beCool         : FUNCTION beCool [ANONYMOUS: false, DECLARED: false - beCool, MODIFIERS: PUBLIC, METHOD]
+                                       # RETURN TYPES
+                                       undefined, RESOLVED: true
+                                       # PROPERTIES
+                                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                        clothing       : OBJECT clothing [ANONYMOUS: false, DECLARED: false - clothing, MODIFIERS: PUBLIC, PROPERTY]
+                        dirtFactor     : OBJECT dirtFactor [ANONYMOUS: false, DECLARED: false - dirtFactor, MODIFIERS: PUBLIC, PROPERTY]
+                        eat            : FUNCTION eat [ANONYMOUS: false, DECLARED: false - eat, MODIFIERS: PUBLIC, METHOD]
+                                       # PROPERTIES
+                                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                        exercise       : FUNCTION exercise [ANONYMOUS: false, DECLARED: false - exercise, MODIFIERS: PUBLIC, METHOD]
+                                       # PROPERTIES
+                                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                        getAge         : FUNCTION getAge [ANONYMOUS: false, DECLARED: false - getAge, MODIFIERS: PUBLIC, METHOD]
+                                       # PROPERTIES
+                                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                        getRace        : FUNCTION getRace [ANONYMOUS: false, DECLARED: false - getRace, MODIFIERS: PUBLIC, METHOD]
+                                       # PROPERTIES
+                                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                        muchTimePasses : FUNCTION muchTimePasses [ANONYMOUS: false, DECLARED: false - muchTimePasses, MODIFIERS: PUBLIC, METHOD]
+                                       # PROPERTIES
+                                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                        race           : OBJECT race [ANONYMOUS: false, DECLARED: true - race, MODIFIERS: PUBLIC, PROPERTY]
+                        showLegs       : FUNCTION showLegs [ANONYMOUS: false, DECLARED: false - showLegs, MODIFIERS: PUBLIC, METHOD]
+                                       # PROPERTIES
+                                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                        shower         : FUNCTION shower [ANONYMOUS: false, DECLARED: false - shower, MODIFIERS: PUBLIC, METHOD]
+                                       # PROPERTIES
+                                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                        weigh          : FUNCTION weigh [ANONYMOUS: false, DECLARED: false - weigh, MODIFIERS: PUBLIC, METHOD]
+                                       # PROPERTIES
+                                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+              lk        : OBJECT lk [ANONYMOUS: false, DECLARED: true - lk, MODIFIERS: PRIVATE, VARIABLE]
+                        # PROPERTIES
+                        showLegs : FUNCTION showLegs [ANONYMOUS: false, DECLARED: false - showLegs, MODIFIERS: PUBLIC, METHOD]
+                                 # PROPERTIES
+                                 arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+formatter     : OBJECT formatter [ANONYMOUS: false, DECLARED: false - formatter, MODIFIERS: PUBLIC, OBJECT]
+              # PROPERTIES
+              println : FUNCTION println [ANONYMOUS: false, DECLARED: false - println, MODIFIERS: PUBLIC, METHOD]
+                      # PARAMETERS
+                      OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                      # PROPERTIES
+                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

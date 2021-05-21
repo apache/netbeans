@@ -1,0 +1,2 @@
+    fn1: function (|>MARK_OCCURRENCES:d^ata<|) {
+        var xxx = |>MARK_OCCURRENCES:data<|;

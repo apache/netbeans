@@ -1,0 +1,5 @@
+Code completion result for source line:
+#{bean.myL|ist}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+PROPERTY   myList                          [PUBLIC]   List<String>

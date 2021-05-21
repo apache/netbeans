@@ -1,0 +1,3 @@
+formatter.println(b221228.|>MARK_OCCURRENCES:msg<|);
+b221228.|>MARK_OCCURRENCES:ms^g<| = "from b";           // create new property of object b
+formatter.println(b221228.|>MARK_OCCURRENCES:msg<|);   

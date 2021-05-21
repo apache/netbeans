@@ -1,0 +1,1 @@
+var gid = "g" + (scripts[1].g ? scripts[1].g : "0");

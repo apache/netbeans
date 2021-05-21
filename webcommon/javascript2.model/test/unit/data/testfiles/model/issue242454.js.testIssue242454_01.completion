@@ -1,0 +1,5 @@
+Code completion result for source line:
+myLib.|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     publicInnerFunc(arg: String):   [PUBLIC]   issue242454.js

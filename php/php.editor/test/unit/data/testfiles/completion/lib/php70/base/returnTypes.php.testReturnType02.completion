@@ -1,0 +1,14 @@
+Code completion result for source line:
+function current(): Comm|ent;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Comment                         [PUBLIC]   My\Firm
+CLASS      CommentsIterator                [PUBLIC]   My\Firm
+------------------------------------
+CLASS      Comment                         [PUBLIC]   returnTypesTyping05.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping06.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping07.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping08.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping09.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping10.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping11.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping12.php

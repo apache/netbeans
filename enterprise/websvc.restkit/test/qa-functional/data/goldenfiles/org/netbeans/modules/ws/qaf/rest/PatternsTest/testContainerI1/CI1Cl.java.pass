@@ -1,0 +1,65 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package o.n.m.ws.qaf.rest.patterns;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.PUT;
+import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
+import javax.ws.rs.DELETE;
+
+/**
+ * REST Web Service
+ *
+ * @author jskrivanek
+ */
+public class CI1Cl {
+
+    private String CI1URI;
+
+    /**
+     * Creates a new instance of CI1Cl
+     */
+    private CI1Cl(String CI1URI) {
+        this.CI1URI = CI1URI;
+    }
+
+    /**
+     * Get instance of the CI1Cl
+     */
+    public static CI1Cl getInstance(String CI1URI) {
+        // The user may use some kind of persistence mechanism
+        // to store and restore instances of CI1Cl class.
+        return new CI1Cl(CI1URI);
+    }
+
+    /**
+     * Retrieves representation of an instance of o.n.m.ws.qaf.rest.patterns.CI1Cl
+     * @return an instance of java.lang.String
+     */
+    @GET
+    @Produces("application/json")
+    public String getJson() {
+        //TODO return proper representation object
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * PUT method for updating or creating an instance of CI1Cl
+     * @param content representation for the resource
+     * @return an HTTP response with content of the updated or created resource.
+     */
+    @PUT
+    @Consumes("application/json")
+    public void putJson(String content) {
+    }
+
+    /**
+     * DELETE method for resource CI1Cl
+     */
+    @DELETE
+    public void delete() {
+    }
+}

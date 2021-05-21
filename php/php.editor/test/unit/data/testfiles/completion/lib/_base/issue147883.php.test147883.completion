@@ -1,0 +1,4 @@
+Code completion result for source line:
+echo $a->|test();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     test()                          [PUBLIC]   Test147883B

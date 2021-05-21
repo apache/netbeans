@@ -1,0 +1,5 @@
+Code completion result for source line:
+C|2
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      C1                              [PUBLIC]   GroupUse1
+CLASS      C2                              [PUBLIC]   GroupUse1

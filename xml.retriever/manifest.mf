@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module-Specification-Version: 1.32
-OpenIDE-Module: org.netbeans.modules.xml.retriever/1
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/xml/retriever/Bundle.properties

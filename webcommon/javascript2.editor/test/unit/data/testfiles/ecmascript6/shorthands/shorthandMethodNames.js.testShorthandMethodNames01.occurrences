@@ -1,0 +1,4 @@
+    get |>MARK_OCCURRENCES:property<|() { 
+console.log(o.|>MARK_OCCURRENCES:pro^perty<|);
+o.|>MARK_OCCURRENCES:property<| = 20;
+console.log(o.|>MARK_OCCURRENCES:property<|);

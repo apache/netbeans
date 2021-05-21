@@ -1,0 +1,5 @@
+<?php
+trait |>CLASS:MyTrait_02<| {
+    use MyTrait;
+}
+?>

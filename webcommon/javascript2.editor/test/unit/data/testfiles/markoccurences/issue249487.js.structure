@@ -1,0 +1,6 @@
+test:VARIABLE:[PUBLIC]:ESCAPED{test}<font color="#999999">ESCAPED{ : }TestCls</font>:
+TestCls:CONSTRUCTOR:[PUBLIC]:ESCAPED{TestCls}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }TestCls</font>:
+  iArg:FIELD:[PUBLIC]:ESCAPED{iArg}<font color="#999999">ESCAPED{ : }Number</font>:
+  myEvent:FIELD:[PUBLIC]:ESCAPED{myEvent}<font color="#999999">ESCAPED{ : }MyApi.Event</font>:
+  myEventArgs:CONSTRUCTOR:[PROTECTED]:ESCAPED{myEventArgs}ESCAPED{(}ESCAPED{iArg}ESCAPED{)}<font color="#999999">ESCAPED{ : }TestCls.myEventArgs</font>:
+    iArg:FIELD:[PUBLIC]:ESCAPED{iArg}:

@@ -1,0 +1,4 @@
+Code completion result for source line:
+$this->multipleReturnTagsAndStatements()->publicDelegateMethod()->|publicDelegateMethod(); // test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicDelegateMethod()          [PUBLIC]   \Foo\Bar\Baz\Delegate

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sun-cmp-mappings>
+  <sun-cmp-mapping>
+    <schema>TestCMP</schema>
+    <entity-mapping>
+      <ejb-name>CustomerBean</ejb-name>
+      <table-name>customer</table-name>
+      <cmp-field-mapping>
+        <field-name>id</field-name>
+        <column-name>customer.id</column-name>
+        <fetched-with>
+          <default/>
+        </fetched-with>
+      </cmp-field-mapping>
+      <cmp-field-mapping>
+        <field-name>lastName</field-name>
+        <column-name>customer.lastName</column-name>
+        <fetched-with>
+          <default/>
+        </fetched-with>
+      </cmp-field-mapping>
+      <cmp-field-mapping>
+        <field-name>firstName</field-name>
+        <column-name>customer.firstName</column-name>
+        <fetched-with>
+          <default/>
+        </fetched-with>
+      </cmp-field-mapping>
+    </entity-mapping>
+  </sun-cmp-mapping>
+</sun-cmp-mappings>

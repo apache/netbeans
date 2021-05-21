@@ -1,0 +1,17 @@
+<?php
+
+class Foo {
+
+    public function getStylesheets() {
+        $e = "\n";
+        $t = "\t";
+        $cond = null;
+        $styleSheetsHTML = $e;
+        for($i = 0; $i < sizeof($this->stylesheets); $i++) {
+            //
+        }
+    }
+
+}
+
+?>

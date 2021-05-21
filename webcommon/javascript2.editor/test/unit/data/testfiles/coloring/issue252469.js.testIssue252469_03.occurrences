@@ -1,0 +1,4 @@
+        var |>MARK_OCCURRENCES:handlers<| = _events[evtId];
+        if( !|>MARK_OCCURRENCES:handlers<| )
+            _events[evtId] = |>MARK_OCCURRENCES:hand^lers<| = []; // <-- related line
+        return |>MARK_OCCURRENCES:handlers<|.push(handler); // <-- here

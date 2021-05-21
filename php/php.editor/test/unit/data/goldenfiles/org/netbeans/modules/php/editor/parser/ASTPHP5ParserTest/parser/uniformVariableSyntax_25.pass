@@ -1,0 +1,64 @@
+<testresult testFile='uniformVariableSyntax_25.php'>
+    <scanner>
+        <token id='T_OPEN_PARENTHESE' start='7' end='8'>
+            <text>(</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='8' end='9'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='9' end='14'>
+            <text>$func</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='14' end='15'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='15' end='16'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='16' end='17'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='17' end='18'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='18' end='19'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='19' end='20'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='20' end='21'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='22' end='22'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='22'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='21'>
+                <FunctionInvocation start='7' end='20'>
+                    <FucntionName start='7' end='18'>
+                        <DereferencableVariable start='7' end='18'>
+                            <FunctionInvocation start='8' end='17'>
+                                <FucntionName start='8' end='15'>
+                                    <DereferencableVariable start='8' end='15'>
+                                        <Variable start='9' end='14' isDollared='true'>
+                                            <Identifier start='10' end='14' name='func'/>
+                                        </Variable>
+                                    </DereferencableVariable>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </DereferencableVariable>
+                    </FucntionName>
+                    <Parameters>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

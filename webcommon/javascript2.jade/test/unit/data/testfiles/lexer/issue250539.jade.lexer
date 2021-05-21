@@ -1,0 +1,8 @@
+[DOCTYPE(7):doctype][WHITESPACE(1): ][DOCTYPE_TEMPLATE(4):html][EOL(1):\n]
+[TAG(4):html][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(5):title][WHITESPACE(1): ][TEXT(19):TODO supply a title][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(4):body][EOL(1):\n]
+[WHITESPACE(8):        ][CSS_CLASS(4):.pet][EOL(1):\n]
+[WHITESPACE(10):          ][CODE_DELIMITER(1):-][JAVASCRIPT(33):var pet = {name : "pepa", age :2}][EOL(1):\n]
+[WHITESPACE(10):          ][TAG(2):h2][CODE_DELIMITER(1):=][WHITESPACE(1): ][JAVASCRIPT(8):pet.name][EOL(1):\n]
+[WHITESPACE(10):          ][TAG(1):p][WHITESPACE(1): ][EXPRESSION_DELIMITER_OPEN(2):#{][JAVASCRIPT(8):pet.name][EXPRESSION_DELIMITER_CLOSE(1):}][TEXT(8): is <em>][EXPRESSION_DELIMITER_OPEN(2):#{][JAVASCRIPT(7):pet.age][EXPRESSION_DELIMITER_CLOSE(1):}][TEXT(18):</em> year(s) old.][EOL(1):\n]

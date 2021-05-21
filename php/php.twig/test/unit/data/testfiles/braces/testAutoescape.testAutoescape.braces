@@ -1,0 +1,5 @@
+<html>
+{% *auto^escape* %}
+text
+{% *endautoescape* %}
+</html>

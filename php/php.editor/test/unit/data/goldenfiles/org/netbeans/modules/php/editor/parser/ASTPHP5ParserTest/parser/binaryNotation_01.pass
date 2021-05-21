@@ -1,0 +1,37 @@
+<testresult testFile='binaryNotation_01.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='7' end='11'>
+            <text>$int</text>
+        </token>
+        <token id='T_EQUAL' start='12' end='13'>
+            <text>=</text>
+        </token>
+        <token id='T_DNUMBER' start='14' end='17'>
+            <text>0b1</text>
+        </token>
+        <token id='T_SEMICOLON' start='17' end='18'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='20' end='23'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='23' end='23'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='22'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='18'>
+                <Assignment start='7' end='17' operator='EQUAL'>
+                    <Variable start='7' end='11' isDollared='true'>
+                        <Identifier start='8' end='11' name='int'/>
+                    </Variable>
+                    <Scalar start='14' end='17' type='REAL' value='0b1'/>
+                </Assignment>
+            </ExpressionStatement>
+            <EmptyStatement start='20' end='22'/>
+        </Statements>
+    </Program>
+</testresult>

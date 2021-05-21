@@ -1,0 +1,7 @@
+function |>METHOD:UnusedParameter<|(ctl)
+{
+	var |>LOCAL_VARIABLE_DECLARATION:type<| = ctl.options.selectedIndex,
+		|>CLASS:ctl<| = |>GLOBAL:document<|.getElementById('reuseControlVariable');
+
+	ctl.|>FIELD:value<| = |>LOCAL_VARIABLE:type<|;
+}

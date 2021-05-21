@@ -1,0 +1,5 @@
+Code completion result for source line:
+$arg->|parentInterfaceFunction();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     childInterfaceFunction()        [PUBLIC,   ChildInterface
+METHOD     parentInterfaceFunction()       [PUBLIC,   ParentInterface

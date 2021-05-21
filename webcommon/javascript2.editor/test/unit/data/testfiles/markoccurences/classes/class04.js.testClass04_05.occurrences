@@ -1,0 +1,4 @@
+     * @param {Point} |>MARK_OCCURRENCES:a<| 
+    static distance(|>MARK_OCCURRENCES:a<|, b) {
+        const dx = |>MARK_OCCURRENCES:a^<|.x - b.x;
+        const dy = |>MARK_OCCURRENCES:a<|.y - b.y;

@@ -1,0 +1,10 @@
+A:CLASS:[PUBLIC]:ESCAPED{A}:
+  B:CLASS:[PUBLIC]:ESCAPED{B}:
+    c:FIELD:[PUBLIC]:ESCAPED{c}:
+    createBuf:METHOD:[PUBLIC]:ESCAPED{createBuf}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    getName:METHOD:[PUBLIC]:ESCAPED{getName}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  getInfo:METHOD:[PUBLIC]:ESCAPED{getInfo}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  getName:METHOD:[PUBLIC]:ESCAPED{getName}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  monitor:FIELD:[PUBLIC]:ESCAPED{monitor}<font color="#999999">ESCAPED{ : }Number</font>:
+getInfo:METHOD:[PUBLIC]:ESCAPED{getInfo}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+getGlobal:METHOD:[PUBLIC]:ESCAPED{getGlobal}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

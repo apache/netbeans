@@ -1,0 +1,2 @@
+console.log(Utils.values().next().|>MARK_OCCURRENCES:val^ue<|);
+console.log(Utils.values().next().|>MARK_OCCURRENCES:value<|);

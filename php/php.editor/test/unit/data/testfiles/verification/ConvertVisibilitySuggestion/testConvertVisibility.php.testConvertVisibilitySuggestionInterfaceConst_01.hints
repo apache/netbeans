@@ -1,0 +1,4 @@
+    const INTERFACE_IMPLICIT_CONST = "implici^t";
+------------------------------------------------
+HINT:You can convert the visibility if needed
+FIX:Convert Visibility to "public"

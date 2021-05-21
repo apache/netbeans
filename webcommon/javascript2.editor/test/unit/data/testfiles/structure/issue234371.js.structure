@@ -1,0 +1,6 @@
+d:VARIABLE:[PUBLIC]:ESCAPED{d}<font color="#999999">ESCAPED{ : }Player</font>:
+Player:CONSTRUCTOR:[PUBLIC]:ESCAPED{Player}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Player</font>:
+  brand:FIELD:[PUBLIC]:ESCAPED{brand}<font color="#999999">ESCAPED{ : }String</font>:
+  play:METHOD:[PROTECTED]:ESCAPED{play}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+post:VARIABLE:[PUBLIC]:ESCAPED{post}<font color="#999999">ESCAPED{ : }Number</font>:
+dost:VARIABLE:[PUBLIC]:ESCAPED{dost}<font color="#999999">ESCAPED{ : }Number</font>:

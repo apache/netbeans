@@ -1,0 +1,6 @@
+import java.lang.|>MARK_OCCURRENCES:Deprecated<|
+@|>MARK_OCCURRENCES:Deprecated<| class AnnotationOccurrencesTester {
+    @|>MARK_OCCURRENCES:Deprecated<| protected String field
+    @|>MARK_OCCURRENCES:Deprecated<| String property
+    @|>MARK_OCCURRENCES:Depr^ecated<| AnnotationOccurrencesTester() {}
+    @|>MARK_OCCURRENCES:Deprecated<| public String method() {}

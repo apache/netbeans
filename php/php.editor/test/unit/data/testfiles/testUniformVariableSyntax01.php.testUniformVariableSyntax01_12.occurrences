@@ -1,0 +1,2 @@
+    public $|>MARK_OCCURRENCES:test<| = null;
+UVS3::myStatic3()->myStatic2()::myStatic1()->|>MARK_OCCURRENCES:te^st<|;

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- completion for tags -->
+<%--CC
+<|
+jsp:root
+<jsp:root
+--%>
+
+<!-- completion for attributes -->
+<%--CC
+<jsp:directive.page |
+language
+<jsp:directive.page language=""
+--%>
+
+<!-- completion for end tags -->
+<%--CC
+<jsp:body><html></|
+/jsp:body
+<jsp:body><html></jsp:body>
+--%>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sun-web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Application Server 8.1 Servlet 2.4//EN" "http://www.sun.com/software/appserver/dtds/sun-web-app_2_4-1.dtd">
+<sun-web-app error-url="">
+  <context-root>/Secure-WebModule</context-root>
+  <class-loader delegate="true"/>
+  <jsp-config>
+    <property name="classdebuginfo" value="true">
+      <description>Enable debug info compilation in the generated servlet class</description>
+    </property>
+    <property name="mappedfile" value="true">
+      <description>Maintain a one-to-one correspondence between static content and the generated servlet class' java code</description>
+    </property>
+  </jsp-config>
+</sun-web-app>

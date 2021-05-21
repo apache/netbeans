@@ -1,0 +1,19 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+D24515DC253E77E54B73DF97E1FB2EB7FAF34FDD org.testng:testng:6.14.3
+A3927DE9BD6F351429BCF763712C9890629D8F51 com.beust:jcommander:1.78
+650BE4AF41D397EB818393068E03C595576CF1B9 org.testng:testng:6.13.1:javadoc

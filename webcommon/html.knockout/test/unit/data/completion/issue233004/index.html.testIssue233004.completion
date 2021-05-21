@@ -1,0 +1,5 @@
+Code completion result for source line:
+<div data-bind="text: j| "></div>
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      jmeno                           [PUBLIC]   newjavascript.js

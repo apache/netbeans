@@ -1,0 +1,3 @@
+with(pavel.|>MARK_OCCURRENCES:address<|) {
+pavel.|>MARK_OCCURRENCES:addr^ess<|.city = "Praha";
+console.log(pavel.|>MARK_OCCURRENCES:address<|.print());

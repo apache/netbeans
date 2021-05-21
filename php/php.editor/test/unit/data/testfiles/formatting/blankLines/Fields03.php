@@ -1,0 +1,13 @@
+<?php
+class Simple {
+
+
+
+
+
+                    /**
+                     * A comment
+                     * @var int
+                     */
+                    public $field1 = 22;
+}

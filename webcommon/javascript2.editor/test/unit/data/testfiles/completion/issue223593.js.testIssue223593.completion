@@ -1,0 +1,7 @@
+Code completion result for source line:
+obj.|propertyC = "B";
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     methodA(): undefined            [PROTECTE  issue223593.js
+FIELD      propertyA: String               [PUBLIC]   issue223593.js
+FIELD      propertyC: String               [PUBLIC]   issue223593.js

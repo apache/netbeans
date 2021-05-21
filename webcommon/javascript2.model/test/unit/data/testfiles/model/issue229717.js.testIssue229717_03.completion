@@ -1,0 +1,7 @@
+Code completion result for source line:
+self.|types.push(type);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     addType(type): undefined        [PUBLIC]   issue229717.js
+METHOD     publicFnc(): undefined          [PUBLIC]   issue229717.js
+FIELD      types: Array                    [PUBLIC]   issue229717.js

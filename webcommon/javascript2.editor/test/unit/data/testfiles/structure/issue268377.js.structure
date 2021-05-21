@@ -1,0 +1,9 @@
+Editor:CLASS:[PUBLIC]:ESCAPED{Editor}:
+  constructor:CONSTRUCTOR:[PUBLIC]:ESCAPED{constructor}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Editor</font>:
+  field:FIELD:[PUBLIC]:ESCAPED{field}<font color="#999999">ESCAPED{ : }Number</font>:
+Base:CLASS:[PUBLIC]:ESCAPED{Base}:
+  constructor:CONSTRUCTOR:[PUBLIC]:ESCAPED{constructor}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Base</font>:
+  field:FIELD:[PUBLIC]:ESCAPED{field}<font color="#999999">ESCAPED{ : }Number</font>:
+Child:CLASS:[PUBLIC]:ESCAPED{Child}<font color="#999999">ESCAPED{ :: }ESCAPED{Base}</font>:
+  constructor:CONSTRUCTOR:[PUBLIC]:ESCAPED{constructor}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Child</font>:
+  field:FIELD:[PUBLIC]:ESCAPED{field}<font color="#999999">ESCAPED{ : }Number</font>:

@@ -1,0 +1,7 @@
+[TAG(2):ul][EOL(1):\n]
+[WHITESPACE(2):  ][KEYWORD_EACH(4):each][WHITESPACE(1): ][JAVASCRIPT(10):val, index][WHITESPACE(1): ][KEYWORD_IN(2):in][WHITESPACE(1): ][JAVASCRIPT(27):{1:'one',2:'two',3:'three'}][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(2):li][CODE_DELIMITER(1):=][WHITESPACE(1): ][JAVASCRIPT(18):index + ': ' + val][EOL(1):\n]
+[EOL(1):\n]
+[TAG(2):ul][EOL(1):\n]
+[WHITESPACE(2):  ][KEYWORD_FOR(3):for][WHITESPACE(1): ][JAVASCRIPT(10):val, index][WHITESPACE(1): ][KEYWORD_IN(2):in][WHITESPACE(1): ][JAVASCRIPT(27):{1:'one',2:'two',3:'three'}][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(2):li][CODE_DELIMITER(1):=][WHITESPACE(1): ][JAVASCRIPT(18):index + ': ' + val][EOL(1):\n]

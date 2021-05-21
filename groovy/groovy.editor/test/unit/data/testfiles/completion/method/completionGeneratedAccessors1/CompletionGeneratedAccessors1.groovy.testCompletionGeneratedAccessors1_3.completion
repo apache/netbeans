@@ -1,0 +1,7 @@
+Code completion result for source line:
+new Test().is|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     is(Object)                                 boolean
+METHOD     isCase(Object)                             boolean
+METHOD     isOkDef()                       [PUBLIC]   boolean

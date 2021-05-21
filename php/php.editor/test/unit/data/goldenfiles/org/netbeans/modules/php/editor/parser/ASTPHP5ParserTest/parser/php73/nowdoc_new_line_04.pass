@@ -1,0 +1,68 @@
+<testresult testFile='nowdoc_new_line_04.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='815' end='821'>
+            <text>$array</text>
+        </token>
+        <token id='T_EQUAL' start='822' end='823'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='824' end='825'>
+            <text>[</text>
+        </token>
+        <token id='T_START_NOWDOC' start='825' end='835'>
+            <text>&lt;&lt;&lt; &apos;END&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='835' end='876'>
+            <text>    foo END\n    $test bar\n        ENDING\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='876' end='879'>
+            <text>END</text>
+        </token>
+        <token id='T_COMMA' start='879' end='880'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='881' end='886'>
+            <text>&apos;qux&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='886' end='887'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='887' end='888'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='889' end='889'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='889'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='888'>
+                <Assignment start='815' end='887' operator='EQUAL'>
+                    <Variable start='815' end='821' isDollared='true'>
+                        <Identifier start='816' end='821' name='array'/>
+                    </Variable>
+                    <ArrayCreation start='824' end='887' type='NEW'>
+                        <ArrayElement start='825' end='879'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='825' end='879' type='STRING' value='    foo END\n    $test bar\n        ENDING\n'/>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='881' end='886'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='881' end='886' type='STRING' value='&apos;qux&apos;'/>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Assignment>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

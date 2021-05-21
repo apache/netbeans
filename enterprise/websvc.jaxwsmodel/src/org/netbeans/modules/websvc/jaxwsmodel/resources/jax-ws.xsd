@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<xs:schema
+  xmlns='http://www.netbeans.org/ns/jax-ws/1'
+  xmlns:xs='http://www.w3.org/2001/XMLSchema'
+  targetNamespace='http://www.netbeans.org/ns/jax-ws/1'
+  xmlns:t='http://www.netbeans.org/ns/jax-ws/1' elementFormDefault='qualified'>
+
+ <xs:element name='jax-ws'>
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element ref='t:services'/>
+    <xs:element ref='t:clients'/>
+    <xs:element name='jsr109' type='xs:string' minOccurs='0' maxOccurs='1'/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
+
+ <xs:element name='services'>
+  <xs:complexType>
+   <xs:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xs:element ref='t:service'/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
+
+ <xs:element name='service'>
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element name='implementation-class' type='xs:string'/>
+    <xs:element name='wsdl-url' type='xs:string' minOccurs='0' maxOccurs='1'/>
+    <xs:element name='local-wsdl-file' type='xs:string' minOccurs='0' maxOccurs='1'/>
+    <xs:element name='service-name' type='xs:string' minOccurs='0' maxOccurs='1'/>
+    <xs:element name='port-name' type='xs:string' minOccurs='0' maxOccurs='1'/>
+    <xs:element ref='t:package-name' minOccurs='0' maxOccurs='1'/>
+    <xs:element name='catalog-file' type='xs:string' minOccurs='0' maxOccurs='1'/>
+    <xs:sequence minOccurs='0' maxOccurs='unbounded'>
+     <xs:element ref='t:binding'/>
+    </xs:sequence>
+    <xs:element name='handler-binding-file' type='xs:string' minOccurs='0' maxOccurs='1'/>
+    <xs:element name='use-provider' type='xs:string' minOccurs='0' maxOccurs='1'/>
+    <xs:element ref='t:wsimport-options' minOccurs='0' maxOccurs='1'/>
+    <xs:element name='jvmarg' type='xs:string' minOccurs='0' maxOccurs='unbounded'/>
+   </xs:sequence>
+   <xs:attribute name='name' type='xs:string' use='required'/>
+  </xs:complexType>
+ </xs:element>
+
+ <xs:element name='package-name'>
+  <xs:complexType mixed='true'>
+   <xs:attribute name='forceReplace' use='optional'>
+    <xs:simpleType>
+     <xs:restriction base='xs:string'/>
+    </xs:simpleType>
+   </xs:attribute>
+  </xs:complexType>
+ </xs:element>
+
+ <xs:element name='binding'>
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element name='file-name' type='xs:string'/>
+    <xs:element name='original-file-url' type='xs:string'/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
+
+ <xs:element name='wsimport-options'>
+  <xs:complexType>
+   <xs:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xs:element ref='t:wsimport-option'/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
+
+ <xs:element name='wsimport-option'>
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element name='wsimport-option-name' type='xs:string'/>
+    <xs:element name='wsimport-option-value' type='xs:string'/>
+    <xs:element name='jaxboption' type='xs:string' minOccurs='0' maxOccurs='1'/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
+
+ <xs:element name='clients'>
+  <xs:complexType>
+   <xs:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xs:element ref='t:client'/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
+
+ <xs:element name='client'>
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element name='wsdl-url' type='xs:string'/>
+    <xs:element name='local-wsdl-file' type='xs:string'/>
+    <xs:element ref='t:package-name' minOccurs='0' maxOccurs='1'/>
+    <xs:element name='catalog-file' type='xs:string' minOccurs='0' maxOccurs='1'/>
+    <xs:sequence minOccurs='0' maxOccurs='unbounded'>
+     <xs:element ref='t:binding'/>
+    </xs:sequence>
+    <xs:element name='handler-binding-file' type='xs:string' minOccurs='0' maxOccurs='1'/>
+    <xs:element name='use-dispatch' type='xs:string' minOccurs='0' maxOccurs='1'/>
+    <xs:element ref='t:wsimport-options' minOccurs='0' maxOccurs='1'/>
+    <xs:element name='jvmarg' type='xs:string' minOccurs='0' maxOccurs='unbounded'/>
+   </xs:sequence>
+   <xs:attribute name='name' type='xs:string' use='required'/>
+  </xs:complexType>
+ </xs:element>
+</xs:schema>

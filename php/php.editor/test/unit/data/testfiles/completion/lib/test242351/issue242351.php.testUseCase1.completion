@@ -1,0 +1,5 @@
+Code completion result for source line:
+$foo->|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     clsFnc($param)                  [PUBLIC]   Cls1
+METHOD     faceFnc($param)                 [PUBLIC,   Iface1

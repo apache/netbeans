@@ -1,0 +1,21 @@
+{var $var = 10}
+
+{block static}
+	Static block #{$var}
+{/block}
+
+
+{foreach [dynamic, static] as $name}
+	{block $name}
+		Dynamic block #{$var}
+	{/block}
+{/foreach}
+
+{include #dynamic var => 20}
+
+{include #static var => 30}
+
+{include #$name var => 40}
+
+{block word$name}{/block}
+{block "word$name"}{/block}

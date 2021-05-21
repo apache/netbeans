@@ -228,3 +228,14 @@
 <replacefilter token="@org-netbeans-modules-xml-lexer@" value="${javadoc.docs.org-netbeans-modules-xml-lexer}"/>
 <replacefilter token="@org-netbeans-modules-xml-text@" value="${javadoc.docs.org-netbeans-modules-xml-text}"/>
 <replacefilter token="@org-netbeans-core-network@" value="${javadoc.docs.org-netbeans-core-network}"/>
+<replacefilter token="@org-netbeans-api-scripting@" value="${javadoc.docs.org-netbeans-api-scripting}"/>
+<replacefilter token="@org-netbeans-libs-graalsdk@" value="${javadoc.docs.org-netbeans-libs-graalsdk}"/>
+<replacefilter token="@org-netbeans-modules-gradle@" value="${javadoc.docs.org-netbeans-modules-gradle}"/>
+<replacefilter token="@org-netbeans-modules-gradle-java@" value="${javadoc.docs.org-netbeans-modules-gradle-java}"/>
+<replacefilter token="@org-netbeans-modules-textmate-lexer@" value="${javadoc.docs.org-netbeans-modules-textmate-lexer}"/>
+<replacefilter token="@org-netbeans-modules-jumpto@" value="${javadoc.docs.org-netbeans-modules-jumpto}"/>
+<replacefilter token="@org-netbeans-modules-java-editor-lib@" value="${javadoc.docs.org-netbeans-modules-java-editor-lib}"/>
+<replacefilter token="@org-netbeans-modules-web-common@" value="${javadoc.docs.org-netbeans-modules-web-common}"/>
+<replacefilter token="@org-netbeans-modules-db-core@" value="${javadoc.docs.org-netbeans-modules-db-core}"/>
+<replacefilter token="@org-netbeans-modules-nativeimage-api@" value="${javadoc.docs.org-netbeans-modules-nativeimage-api}"/>
+<replacefilter token="@org-netbeans-api-lsp@" value="${javadoc.docs.org-netbeans-api-lsp}"/>

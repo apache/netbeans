@@ -1,0 +1,6 @@
+Code completion result for source line:
+<h3 data-bind="text: simple.| "></h3>
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      credits: Number                 [PUBLIC]   index.html
+FIELD      name: String                    [PUBLIC]   index.html

@@ -1,0 +1,24 @@
+    $a === "";
+    ---------
+HINT:Possible accidental comparison found. Check if you wanted to use '=' instead.
+FIX:Change Comparison to Assignment
+    $b == "";
+    --------
+HINT:Possible accidental comparison found. Check if you wanted to use '=' instead.
+FIX:Change Comparison to Assignment
+    $c === "";
+    ---------
+HINT:Possible accidental comparison found. Check if you wanted to use '=' instead.
+FIX:Change Comparison to Assignment
+    $d == "";
+    --------
+HINT:Possible accidental comparison found. Check if you wanted to use '=' instead.
+FIX:Change Comparison to Assignment
+$e === "";
+---------
+HINT:Possible accidental comparison found. Check if you wanted to use '=' instead.
+FIX:Change Comparison to Assignment
+$f == "";
+--------
+HINT:Possible accidental comparison found. Check if you wanted to use '=' instead.
+FIX:Change Comparison to Assignment

@@ -1,0 +1,4 @@
+$|>MARK_OCCURRENCES:foo<| = new Foo();
+$anon3 = function() use (&$|>MARK_OCCURRENCES:f^oo<|) {
+    if($a instanceof $|>MARK_OCCURRENCES:foo<|) {
+        echo get_class($|>MARK_OCCURRENCES:foo<|) . PHP_EOL;

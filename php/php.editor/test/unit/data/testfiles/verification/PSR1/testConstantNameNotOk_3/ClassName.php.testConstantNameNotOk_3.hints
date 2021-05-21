@@ -1,0 +1,4 @@
+    const foobar = 1;
+          ------
+HINT:PSR-1 Violation:
+Class constants MUST be declared in all upper case with underscore separators.

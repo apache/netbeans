@@ -1,0 +1,205 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="content-type"
+ content="text/html; charset=ISO-8859-1">
+  <title>Plugin layer.xml Declarations</title>
+</head>
+<body>
+<h2>J2EE Deployment Plugin Info Declared in Module layer XML file</h2>
+<h3>Plugin info:<br>
+</h3>
+To register the standard J2EE Deployment API implementation, the
+NetBeans module need to have the following&nbsp; folders, files and
+attributes under folder filesystem/J2EE/DeploymentPlugins/[plugin-name]:<br>
+<br>
+1.&nbsp; A file entry 'Descriptor' for relative location of the
+<a href="netbeans-deployment-dtd.txt">additional descriptor XML file</a>:<br>
+<small style="font-family: courier new,courier,monospace;">&nbsp;
+&nbsp; &lt;file name="Descriptor" url="nbdep.xml"&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;attr name="needsFindServerUI" stringvalue="true"/&gt; &lt;!--
+default is false --&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small><span style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;
+&lt;/file&gt;</span><br
+ style="font-family: courier new,courier,monospace;">
+<br>
+</small>2.&nbsp; NetBeans instance class declaration of
+DeploymentFactory SPI:<br>
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;
+&lt;file name="Factory.instance"&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;attr name="instanceClass" </small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+stringvalue="org.netbeans.tests.j2eeserver.plugin.jsr88.DepFactory"/&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;
+&lt;/file&gt;</small><br
+ style="font-family: courier new,courier,monospace;"><br>
+<small>
+See also org.netbeans.modules.j2ee.deployment.plugins.spi.support.ProxyDeploymentFactory.
+<br>
+<br>
+</small>3.&nbsp; NetBeans instance class declaration of
+RegistryNodeFactory:<br>
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;
+&lt;file name="TestRegistryNodeFactory.instance"&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;attr name="instanceClass"
+stringvalue="org.netbeans.tests.j2eeserver.plugin.registry.NodeFactory"/&gt;
+</small><br style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;attr name="instanceOf"
+stringvalue="org.netbeans.modules.j2ee.deployment.plugins.api.RegistryNodeFactory"/&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;
+&lt;/file&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<br>
+4.&nbsp; NetBeans instance class declaration of
+OptionalDeploymentManagerFactory:<br>
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;
+&lt;file name="OptionalFactory.instance"&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;attr name="instanceClass"
+stringvalue="org.netbeans.tests.j2eeserver.plugin.ManagerWrapperFactory"/&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;attr name="instanceOf"
+stringvalue="org.netbeans.modules.j2ee.deployment.plugins.api.OptionalDeploymentManagerFactory"/&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;
+&lt;/file&gt;<br>
+</small><br>
+5.&nbsp; NetBeans instance class declaration of
+J2eePlatformFactory:<br>
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;
+&lt;file name="PlatformFactory.instance"&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;attr name="instanceClass"
+stringvalue="org.netbeans.tests.j2eeserver.plugin.PlatformFactory"/&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;attr name="instanceOf"
+stringvalue="org.netbeans.modules.j2ee.deployment.plugins.api.J2eePlatformFactory"/&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;
+&lt;/file&gt;<br>
+</small><br>
+6.&nbsp; A folder entry 'DeployementFileNames' with subfolders 'WAR',
+'EJB' or 'EAR' for server specific deployment descriptor filenames:<small><br>
+</small><small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;
+&lt;folder name="DeploymentFileNames"&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;folder name="WAR"&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;file name="WEB-INF/sun-web.xml"/&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;/folder&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small><span style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;
+&lt;/folder&gt;</span><br>
+<br>
+<br>
+</small>
+<h3>Plugin pre-installed server instance info:<br>
+</h3>
+To pre-declare a default admin server instance, have a file under
+folder /filesystem/J2EE/InstalledServers:<br>
+<small><br>
+<span style="font-family: courier new,courier,monospace;">&nbsp;&lt;filesystem&gt;</span></small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;
+</small><small style="font-family: courier new,courier,monospace;">&lt;J2EE&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;</small><small
+ style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;
+&lt;folder
+name="InstalledServers"&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;file
+name="FooServer1"&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;attr name="url" stringvalue="fooservice:locahost:1234"/&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;attr name="username" stringvalue="Adminuser"/&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;attr name="password" stringvalue="Adminpasswd"/&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;/file&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&nbsp;&nbsp;&nbsp;
+&lt;/folder&gt;<br>
+</small><small style="font-family: courier new,courier,monospace;">&nbsp;
+</small><small style="font-family: courier new,courier,monospace;">&lt;/J2EE&gt;</small><br
+ style="font-family: courier new,courier,monospace;">
+<small style="font-family: courier new,courier,monospace;">&lt;/filesystem&gt;</small><br>
+<br>
+<h3>Declare default server instance through NetBeans installer:</h3>
+The installer could add an entry for 'j2eeserver.defautl' in
+&lt;netbeans&gt;/system/install.properties to specify default server
+instance configured at post-install time or at package time.&nbsp; For
+example, if the entry value is:<br>
+<br>
+<small><span style="font-family: courier new,courier,monospace;">j2eeserver.default=config/J2EE/InstalledServers/J2EESDK.properties</span><br>
+</small><br>
+The file J2EESDK.properties should contains entries for
+j2eeserver-defined properties like 'serverName', 'url', 'username',
+'password', or any plugin-defined instance properties:<br>
+<br>
+<small><span style="font-family: courier new,courier,monospace;">serverName=J2EESDK
+</span><br style="font-family: courier new,courier,monospace;">
+<span style="font-family: courier new,courier,monospace;">url=deployer:Sun:AppServer::localhost:4848
+</span><br style="font-family: courier new,courier,monospace;">
+<span style="font-family: courier new,courier,monospace;">username=admin
+</span><br style="font-family: courier new,courier,monospace;">
+<span style="font-family: courier new,courier,monospace;">password=adminadmin</span><br
+ style="font-family: courier new,courier,monospace;">
+</small><br>
+The J2EESDK instance with the specifed url will be created if not
+already exist and will have the specify properties values.&nbsp; These
+value will override the values preset in the plugin layer.xml file.<br>
+<br>
+<br>
+<br>
+<br>
+<pre style="font-family: courier new,courier,monospace;"><small><br></small></pre>
+<small style="font-family: courier new,courier,monospace;"><br>
+</small>
+</body>
+</html>

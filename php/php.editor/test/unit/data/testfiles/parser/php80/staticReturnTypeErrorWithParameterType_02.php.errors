@@ -1,0 +1,13 @@
+[[866,872]-Syntax error
+ unexpected:	static
+ after:	?
+ expected:	identifier, array, callable, namespace, \, define] 866-872:Syntax error
+ unexpected:	static
+ after:	?
+ expected:	identifier, array, callable, namespace, \, define
+[[879,880]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	)] 879-880:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	)
+[[895,896]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}] 895-896:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}

@@ -1,0 +1,2 @@
+    use Zend\Stdlib2\DispatchableInterface2 as |>MARK_OCCURRENCES:Dispatch^able2<|;
+    class AbstractController implements |>MARK_OCCURRENCES:Dispatchable2<| {

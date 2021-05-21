@@ -1,0 +1,82 @@
+? web/external/jsf-1.1
+Index: j2ee/clientproject/src/org/netbeans/modules/j2ee/clientproject/api/AppClientProjectGenerator.java
+===================================================================
+RCS file: /cvs/j2ee/clientproject/src/org/netbeans/modules/j2ee/clientproject/api/AppClientProjectGenerator.java,v
+retrieving revision 1.10
+diff -w -u -r1.10 AppClientProjectGenerator.java
+--- j2ee/clientproject/src/org/netbeans/modules/j2ee/clientproject/api/AppClientProjectGenerator.java	30 May 2007 08:30:28 -0000	1.10
++++ j2ee/clientproject/src/org/netbeans/modules/j2ee/clientproject/api/AppClientProjectGenerator.java	1 Jun 2007 15:00:25 -0000
+@@ -338,7 +338,7 @@
+         //XXX the name of the dist.ear.jar file should be different, but now it cannot be since the name is used as a key in module provider mapping
+         ep.setProperty(AppClientProjectProperties.DIST_EAR_JAR, "${"+AppClientProjectProperties.DIST_DIR+"}/" + "${" + AppClientProjectProperties.JAR_NAME + "}"); // NOI18N
+         ep.setProperty(AppClientProjectProperties.JAR_NAME, PropertyUtils.getUsablePropertyName(name) + ".jar"); // NOI18N
+-        ep.setProperty(AppClientProjectProperties.BUILD_EAR_CLASSES_DIR, "${"+AppClientProjectProperties.BUILD_DIR+"}/ear-module"); // NOI18N
++        ep.setProperty(AppClientProjectProperties.BUILD_EAR_CLASSES_DIR, "${"+AppClientProjectProperties.BUILD_DIR+"}/jar"); // NOI18N
+         
+         ep.setProperty("dist.dir", "dist"); // NOI18N
+         ep.setComment("dist.dir", new String[] {"# " + NbBundle.getMessage(AppClientProjectGenerator.class, "COMMENT_dist.dir")}, false); // NOI18N
+Index: j2ee/ejbjarproject/src/org/netbeans/modules/j2ee/ejbjarproject/api/EjbJarProjectGenerator.java
+===================================================================
+RCS file: /cvs/j2ee/ejbjarproject/src/org/netbeans/modules/j2ee/ejbjarproject/api/EjbJarProjectGenerator.java,v
+retrieving revision 1.10
+diff -w -u -r1.10 EjbJarProjectGenerator.java
+--- j2ee/ejbjarproject/src/org/netbeans/modules/j2ee/ejbjarproject/api/EjbJarProjectGenerator.java	31 May 2007 12:48:26 -0000	1.10
++++ j2ee/ejbjarproject/src/org/netbeans/modules/j2ee/ejbjarproject/api/EjbJarProjectGenerator.java	1 Jun 2007 15:00:25 -0000
+@@ -349,7 +349,7 @@
+         ep.setProperty(EjbJarProjectProperties.BUILD_TEST_RESULTS_DIR, "${build.dir}/test/results"); // NOI18N
+         ep.setProperty(EjbJarProjectProperties.BUILD_GENERATED_DIR, "${"+EjbJarProjectProperties.BUILD_DIR+"}/generated");
+         ep.setProperty(EjbJarProjectProperties.BUILD_CLASSES_DIR, "${"+EjbJarProjectProperties.BUILD_DIR+"}/jar");
+-        ep.setProperty(EjbJarProjectProperties.BUILD_EAR_CLASSES_DIR, "${"+EjbJarProjectProperties.BUILD_DIR+"}/ear-module");
++        ep.setProperty(EjbJarProjectProperties.BUILD_EAR_CLASSES_DIR, "${"+EjbJarProjectProperties.BUILD_DIR+"}/jar");
+         ep.setProperty(EjbJarProjectProperties.BUILD_CLASSES_EXCLUDES, "**/*.java,**/*.form,**/.nbattrs");
+         ep.setProperty(EjbJarProjectProperties.DIST_JAVADOC_DIR, "${"+EjbJarProjectProperties.DIST_DIR+"}/javadoc");
+         ep.setProperty(EjbJarProjectProperties.JAVA_PLATFORM, "default_platform");
+Index: j2eeserver/src/org/netbeans/modules/j2ee/deployment/config/ConfigSupportImpl.java
+===================================================================
+RCS file: /cvs/j2eeserver/src/org/netbeans/modules/j2ee/deployment/config/ConfigSupportImpl.java,v
+retrieving revision 1.50
+diff -w -u -r1.50 ConfigSupportImpl.java
+--- j2eeserver/src/org/netbeans/modules/j2ee/deployment/config/ConfigSupportImpl.java	15 Apr 2007 15:58:30 -0000	1.50
++++ j2eeserver/src/org/netbeans/modules/j2ee/deployment/config/ConfigSupportImpl.java	1 Jun 2007 15:00:27 -0000
+@@ -729,7 +729,7 @@
+                 }
+             }
+             // TODO child module was not found
+-            return null;
++            return moduleUri == null ? j2eeModule : null;
+         }
+         return j2eeModule;
+     }
+Index: j2eeserver/src/org/netbeans/modules/j2ee/deployment/impl/Bundle.properties
+===================================================================
+RCS file: /cvs/j2eeserver/src/org/netbeans/modules/j2ee/deployment/impl/Bundle.properties,v
+retrieving revision 1.37
+diff -w -u -r1.37 Bundle.properties
+--- j2eeserver/src/org/netbeans/modules/j2ee/deployment/impl/Bundle.properties	18 Apr 2007 11:27:20 -0000	1.37
++++ j2eeserver/src/org/netbeans/modules/j2ee/deployment/impl/Bundle.properties	1 Jun 2007 15:00:27 -0000
+@@ -170,3 +170,5 @@
+ MSG_ServerStartupCancelled=Starting of server {0} has been cancelled.
+ MSG_ServerSuspended=Cannot perform required operation, since the server is currently \
+ in suspended state and thus cannot handle any requests.
+\ No newline at end of file
++
++MSG_NoContents=No content for {0}
+\ No newline at end of file
+Index: j2eeserver/src/org/netbeans/modules/j2ee/deployment/impl/InitialServerFileDistributor.java
+===================================================================
+RCS file: /cvs/j2eeserver/src/org/netbeans/modules/j2ee/deployment/impl/InitialServerFileDistributor.java,v
+retrieving revision 1.19
+diff -w -u -r1.19 InitialServerFileDistributor.java
+--- j2eeserver/src/org/netbeans/modules/j2ee/deployment/impl/InitialServerFileDistributor.java	29 Mar 2007 23:04:55 -0000	1.19
++++ j2eeserver/src/org/netbeans/modules/j2ee/deployment/impl/InitialServerFileDistributor.java	1 Jun 2007 15:00:27 -0000
+@@ -148,8 +148,7 @@
+             if (! dir.exists())
+                 dir.mkdirs();
+             
+-            File parent = dir.getParentFile();
+-            FileObject destRoot = FileUtil.toFileObject(parent);
++            FileObject destRoot = FileUtil.toFileObject(dir);
+             
+             FileObject[] garbages = destRoot.getChildren();
+             for (int i=0; i<garbages.length; i++) {
+

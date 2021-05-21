@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<apichanges>
+    <apidefs>
+        <apidef name="api">DB Metadata Model API</apidef>
+    </apidefs>
+
+    <changes>
+        <change id="public-api">
+            <api name="db.metadata.model.api"/>
+            <summary>Making o.n.m.db.metadata.model.api and o.n.m.db.metadata.model.spi public API</summary>
+            <version major="1" minor="17"/>
+            <date day="02" month="11" year="2019"/>
+            <author login="jgauravgupta"/>
+            <compatibility addition="no" deletion="no" modification="no" binary="compatible" source="compatible"/>
+            <description>
+                <p>
+                    The packages <code>o.n.m.db.metadata.model.api</code> and <code>o.n.m.db.metadata.model.spi</code> changed to 
+                    public API from the friend API. They contained API and SPI classes which are used by Jeddict plugin to 
+                    visualize database tables diagram in modeler.
+                </p>
+            </description>
+        </change>
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+        <head>
+            <title>Change History for the DB Metadata Model API</title>
+            <link rel="stylesheet" href="prose.css" type="text/css"/>
+        </head>
+        <body>
+
+            <p class="overviewlink">
+                <a href="@org-netbeans-modules-db-metadata-model@/overview-summary.html">Overview</a>
+            </p>
+
+            <h1>Introduction</h1>
+            <p>This document lists changes made to the <a href="@org-netbeans-modules-db-metadata-model@/overview-summary.html">DB Metadata Model API</a>.</p>
+
+            <hr/>
+            <standard-changelists module-code-name="org.netbeans.modules.db.metadata.model"/>
+            <hr/>
+            <p>@FOOTER@</p>
+
+        </body>
+    </htmlcontents>
+    
+</apichanges>

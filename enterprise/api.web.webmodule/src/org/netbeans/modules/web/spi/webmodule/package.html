@@ -1,0 +1,44 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<body>
+
+SPI for providers of J2EE web modules and frameworks.
+
+<p>This API will typically be used by modules that implement project types for
+J2EE web module (various implementations of web module project, web module with
+web services, portlets, etc.). It can be also used for implementation of web
+module that is not based on Projects API. Another use case is implementing
+support for web frameworks such as Struts or JSF.</p>
+
+<p>A module that implements this API needs to expose an implementation of
+{@link org.netbeans.modules.web.spi.webmodule.WebModuleProvider} either in
+the project lookup (for implementations based on the Projects API) or in the global lookup.
+The module will implement {@link org.netbeans.modules.web.spi.webmodule.WebModuleImplementation}
+and use {@link org.netbeans.modules.web.spi.webmodule.WebModuleFactory}
+to create a {@link org.netbeans.modules.web.api.webmodule.WebModule}.</p>
+
+<p>A module wanting to provide support for a web framework needs to implement
+{@link org.netbeans.modules.web.spi.webmodule.WebFrameworkProvider} and usually
+also {@link org.netbeans.modules.web.spi.webmodule.WebModuleExtender}.</p>
+
+</body>
+</html>

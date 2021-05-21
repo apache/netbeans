@@ -1,0 +1,3 @@
+	var |>MARK_OCCURRENCES:new_link<| = callingSomeFucntion();
+	var content = |>MARK_OCCURRENCES:new_link<|+1;
+	return |>MARK_OCCURRENCES:new_l^ink<|;

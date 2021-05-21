@@ -1,0 +1,7 @@
+token #0 T_MACRO_START [include]
+token #1 T_WHITESPACE [ ]
+token #2 T_STRING ["uiiii/{]
+token #3 T_VARIABLE [$first]
+token #4 T_STRING [}/foo/{]
+token #5 T_VARIABLE [$second]
+token #6 T_STRING [}/bar.latte"]

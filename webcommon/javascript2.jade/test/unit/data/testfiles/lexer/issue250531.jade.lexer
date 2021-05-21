@@ -1,0 +1,6 @@
+[TAG(3):foo][BRACKET_LEFT_PAREN(1):(][ATTRIBUTE(3):bar][OPERATOR_ASSIGNMENT(1):=][JAVASCRIPT(5):'baz'][BRACKET_RIGHT_PAREN(1):)][OPERATOR_DIVISION(1):/][EOL(1):\n]
+[EOL(1):\n]
+[EOL(1):\n]
+[WHITESPACE(4):    ][COMMENT_DELIMITER(2)://][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(2):As][WHITESPACE(1): ][TEXT(21):much text as you want][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(3):can][WHITESPACE(1): ][TEXT(8):go here.][EOL(1):\n]

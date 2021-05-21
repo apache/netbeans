@@ -1,0 +1,11 @@
+Code completion result for source line:
+$base->multipleReturnTags()->|multipleReturnStatements(); // test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     multipleReturnStatements()      [PUBLIC]   \Foo\Bar\Baz\BaseClass
+METHOD     multipleReturnTags()            [PUBLIC]   \Foo\Bar\Baz\BaseClass
+METHOD     multipleReturnTagsAndStatement  [PUBLIC]   \Foo\Bar\Baz\BaseClass
+METHOD     publicBaseMethod()              [PUBLIC]   \Foo\Bar\Baz\BaseClass
+METHOD     publicBaseVoidMethod()          [PUBLIC]   \Foo\Bar\Baz\BaseClass
+METHOD     publicDelegateMethod()          [PUBLIC]   \Foo\Bar\Baz\Delegate
+METHOD     returnTagWithOldThis()          [PUBLIC]   \Foo\Bar\Baz\BaseClass
+METHOD     setDelegate($delegate)          [PUBLIC]   \Foo\Bar\Baz\BaseClass

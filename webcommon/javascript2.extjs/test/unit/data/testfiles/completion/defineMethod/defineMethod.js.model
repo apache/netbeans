@@ -1,0 +1,36 @@
+FUNCTION defineMethod [ANONYMOUS: false, DECLARED: true - defineMethod, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+Ext                  : OBJECT Ext [ANONYMOUS: false, DECLARED: false - Ext, MODIFIERS: PUBLIC, OBJECT]
+                     # PROPERTIES
+                     define : FUNCTION define [ANONYMOUS: false, DECLARED: false - define, MODIFIERS: PUBLIC, METHOD]
+                            # PARAMETERS
+                            OBJECT param1 [ANONYMOUS: false, DECLARED: true - param1, MODIFIERS: PUBLIC, PARAMETER]
+                            OBJECT param2 [ANONYMOUS: false, DECLARED: true - param2, MODIFIERS: PUBLIC, PARAMETER]
+                            # PROPERTIES
+                            arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+NetBeans             : OBJECT NetBeans [ANONYMOUS: false, DECLARED: true - NetBeans, MODIFIERS: PUBLIC, OBJECT]
+                     # PROPERTIES
+                     stuff : OBJECT stuff [ANONYMOUS: false, DECLARED: true - stuff, MODIFIERS: PUBLIC, OBJECT]
+                           # PROPERTIES
+                           engineer : OBJECT engineer [ANONYMOUS: false, DECLARED: true - engineer, MODIFIERS: PUBLIC, OBJECT]
+                                    # PROPERTIES
+                                    developer : OBJECT developer [ANONYMOUS: false, DECLARED: true - developer, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+                                              # PROPERTIES
+                                              address : OBJECT address [ANONYMOUS: false, DECLARED: true - address, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+                                                      # PROPERTIES
+                                                      city   : OBJECT city [ANONYMOUS: false, DECLARED: true - city, MODIFIERS: PUBLIC, PROPERTY]
+                                                      street : OBJECT street [ANONYMOUS: false, DECLARED: true - street, MODIFIERS: PUBLIC, PROPERTY]
+                                                      zip    : OBJECT zip [ANONYMOUS: false, DECLARED: true - zip, MODIFIERS: PUBLIC, PROPERTY]
+                                              name    : OBJECT name [ANONYMOUS: false, DECLARED: true - name, MODIFIERS: PUBLIC, PROPERTY]
+                                              surname : OBJECT surname [ANONYMOUS: false, DECLARED: true - surname, MODIFIERS: PUBLIC, PROPERTY]
+defineMethodAnonym$0 : OBJECT defineMethodAnonym$0 [ANONYMOUS: true, DECLARED: true, MODIFIERS: PUBLIC, ANONYMOUS_OBJECT]
+                     # PROPERTIES
+                     address : OBJECT address [ANONYMOUS: false, DECLARED: true - address, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+                             # PROPERTIES
+                             city   : OBJECT city [ANONYMOUS: false, DECLARED: true - city, MODIFIERS: PUBLIC, PROPERTY]
+                             street : OBJECT street [ANONYMOUS: false, DECLARED: true - street, MODIFIERS: PUBLIC, PROPERTY]
+                             zip    : OBJECT zip [ANONYMOUS: false, DECLARED: true - zip, MODIFIERS: PUBLIC, PROPERTY]
+                     name    : OBJECT name [ANONYMOUS: false, DECLARED: true - name, MODIFIERS: PUBLIC, PROPERTY]
+                     surname : OBJECT surname [ANONYMOUS: false, DECLARED: true - surname, MODIFIERS: PUBLIC, PROPERTY]

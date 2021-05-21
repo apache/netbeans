@@ -1,0 +1,7 @@
+Code completion result for source line:
+{{ a| }}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     attribute(object, method, argu             Function
+KEYWORD    and                                        Operator
+KEYWORD    as                                         Operator
+RULE       abs                                        Filter

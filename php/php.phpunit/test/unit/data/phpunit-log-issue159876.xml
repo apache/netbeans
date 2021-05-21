@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="LoginTest" file="/Library/WebServer/Documents/acalog/tests/EmptyTest.php" tests="2" assertions="0" failures="0" errors="0" time="13.530644">
+    <testsuite name="LoginTest: Firefox on Windows" tests="1" assertions="0" failures="0" errors="0" time="6.520020">
+      <testcase name="testLogin" class="LoginTest" file="/Library/WebServer/Documents/acalog/tests/EmptyTest.php" line="28" assertions="0" time="6.520020"/>
+    </testsuite>
+    <testsuite name="LoginTest: Internet Explorer on Windows" tests="1" assertions="0" failures="0" errors="0" time="7.010624">
+      <testcase name="testLogin" class="LoginTest" file="/Library/WebServer/Documents/acalog/tests/EmptyTest.php" line="28" assertions="0" time="7.010624"/>
+    </testsuite>
+  </testsuite>
+</testsuites>

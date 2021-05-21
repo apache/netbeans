@@ -1,0 +1,9 @@
+Code completion result for source line:
+\Test1\UnionTypes1|Test|Class $object, // static
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    Test1                           [PUBLIC]   null
+PACKAGE    Test2                           [PUBLIC]   null
+CLASS      TestAbstractClass               [PUBLIC,   Test2
+CLASS      TestChildClass                  [PUBLIC]   Test2
+CLASS      TestClass                       [PUBLIC]   Test2
+CLASS      TestInterface                   [PUBLIC]   Test2

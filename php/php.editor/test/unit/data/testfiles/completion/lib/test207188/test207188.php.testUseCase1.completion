@@ -1,0 +1,4 @@
+Code completion result for source line:
+}$x|ar;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   int $xar                        [PUBLIC]   test207188.php

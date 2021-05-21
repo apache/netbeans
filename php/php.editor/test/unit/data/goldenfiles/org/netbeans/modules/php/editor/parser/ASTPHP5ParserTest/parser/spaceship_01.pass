@@ -1,0 +1,34 @@
+<testresult testFile='spaceship_01.php'>
+    <scanner>
+        <token id='T_ECHO' start='6' end='10'>
+            <text>echo</text>
+        </token>
+        <token id='T_LNUMBER' start='11' end='12'>
+            <text>1</text>
+        </token>
+        <token id='T_SPACESHIP' start='13' end='16'>
+            <text>&lt;=&gt;</text>
+        </token>
+        <token id='T_LNUMBER' start='17' end='18'>
+            <text>2</text>
+        </token>
+        <token id='T_SEMICOLON' start='18' end='19'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='20' end='20'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='20'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <EchoStatement start='6' end='19'>
+                <InfixExpression start='11' end='18' operator='SPACESHIP'>
+                    <Scalar start='11' end='12' type='INT' value='1'/>
+                    <Scalar start='17' end='18' type='INT' value='2'/>
+                </InfixExpression>
+            </EchoStatement>
+        </Statements>
+    </Program>
+</testresult>

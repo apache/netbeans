@@ -1,0 +1,1 @@
+    return fn(...$|>MARK_OCCURRENCES:args<|) => !$f(...$|>MARK_OCCURRENCES:ar^gs<|);

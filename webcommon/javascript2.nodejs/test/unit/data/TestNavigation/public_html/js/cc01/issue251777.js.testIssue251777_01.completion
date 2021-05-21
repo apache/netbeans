@@ -1,0 +1,10 @@
+Code completion result for source line:
+ist|;// cc here 01
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   ist                             [PUBLIC]   issue251777.js
+VARIABLE   istPromise: Module promise      [PRIVATE]  issue251777.js
+VARIABLE   istTPError: Module promiseErro  [PRIVATE]  issue251777.js
+VARIABLE   istpes: Number                  [PRIVATE]  issue251777.js
+VARIABLE   isttripDayCtrl: Module control  [PRIVATE]  issue251777.js
+PARAMETER  istnote                         [PUBLIC]   issue251777.js

@@ -1,0 +1,2 @@
+                    <li style="cursor: pointer" onclick="operator.|>MARK_OCCURRENCES:r^emoveMe<|(this);">Remove me (breakpoint on node removal + breakpoint on nonDOM line)</li>
+                            this.|>MARK_OCCURRENCES:removeMe<| = function(el) { // public

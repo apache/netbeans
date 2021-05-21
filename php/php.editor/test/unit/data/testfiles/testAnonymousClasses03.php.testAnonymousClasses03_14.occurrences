@@ -1,0 +1,3 @@
+class |>MARK_OCCURRENCES:Outer<| {
+        return new class($this->prop) extends |>MARK_OCCURRENCES:Outer<| {
+echo (new |>MARK_OCCURRENCES:Out^er<|)->func2()->func3() . PHP_EOL;

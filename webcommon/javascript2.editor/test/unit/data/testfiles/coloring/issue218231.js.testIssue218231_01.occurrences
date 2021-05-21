@@ -1,0 +1,2 @@
+    var |>MARK_OCCURRENCES:displayname<| = record.get("local display name");
+    return |>MARK_OCCURRENCES:displa^yname<|;

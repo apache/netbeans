@@ -1,0 +1,72 @@
+public  function setInstanceArray(array $$instanceArray): void {
+$$this->instanceArray = $instanceArray;
+}
+
+public  function setInstanceInt(int $$instanceInt): void {
+$$this->instanceInt = $instanceInt;
+}
+
+public  function setInstanceString(string $$instanceString): void {
+$$this->instanceString = $instanceString;
+}
+
+public  function setInstanceBool(bool $$instanceBool): void {
+$$this->instanceBool = $instanceBool;
+}
+
+public  function setInstanceNull($$instanceNull): void {
+$$this->instanceNull = $instanceNull;
+}
+
+public  function setInstanceNullable(?string $$instanceNullable): void {
+$$this->instanceNullable = $instanceNullable;
+}
+
+public  function setInstanceArrayNullable(?array $$instanceArrayNullable): void {
+$$this->instanceArrayNullable = $instanceArrayNullable;
+}
+
+public  function setInstanceClass(Test53 $$instanceClass): void {
+$$this->instanceClass = $instanceClass;
+}
+
+public static function setStaticInt(int $$staticInt): void {
+self::$$staticInt = $staticInt;
+}
+
+public static function setStaticNullable(?int $$staticNullable): void {
+self::$$staticNullable = $staticNullable;
+}
+
+public  function setInstanceInt74($$instanceInt74): void {
+$$this->instanceInt74 = $instanceInt74;
+}
+
+public  function setInstanceString74($$instanceString74): void {
+$$this->instanceString74 = $instanceString74;
+}
+
+public  function setInstanceBool74($$instanceBool74): void {
+$$this->instanceBool74 = $instanceBool74;
+}
+
+public  function setInstanceNullable74($$instanceNullable74): void {
+$$this->instanceNullable74 = $instanceNullable74;
+}
+
+public static function setStaticInt74($$staticInt74): void {
+self::$$staticInt74 = $staticInt74;
+}
+
+public static function setStaticString74($$staticString74): void {
+self::$$staticString74 = $staticString74;
+}
+
+public static function setStaticBool74($$staticBool74): void {
+self::$$staticBool74 = $staticBool74;
+}
+
+public static function setStaticNullable74($$staticNullable74): void {
+self::$$staticNullable74 = $staticNullable74;
+}
+

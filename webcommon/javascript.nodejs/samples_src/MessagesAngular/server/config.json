@@ -1,0 +1,11 @@
+{
+    "name": "sample_server",
+    "server": {
+        "port": 13131,
+        "paths": {
+            "api": "./api/",
+            "static": "../client"
+        }
+
+    }
+}

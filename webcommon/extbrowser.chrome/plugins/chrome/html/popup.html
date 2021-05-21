@@ -1,0 +1,86 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../css/popup.css">
+        <script type="text/javascript" src="../i18n/i18n.js"></script>
+        <script type="text/javascript" src="../i18n/popup.js"></script>
+        <script type="text/javascript" src="../js/popup.js"></script>
+    </head>
+    <body>
+        <div id="presetMenu">
+            <a href="#" id="debugInNetBeansMenu" title="_DebugInNetBeans" tabindex="-1">
+                <div class="form-item">
+                    <input type="checkbox" class="hidden" tabindex="-1">
+                </div>
+                <div class="icon">
+                    <img src="../img/netbeans16.png" id="debugInNetBeansIcon" alt="_DebugInNetBeans" title="_DebugInNetBeans">
+                </div>
+                <div class="label">
+                    <div id="debugInNetBeans" class="main i18n">_DebugInNetBeans</div>
+                </div>
+            </a>
+            <hr id="debugInNetBeansSeparator">
+            <a href="#" id="selectionModeMenu" title="_SwitchSelectionMode" tabindex="-1">
+                <div class="form-item">
+                    <input type="checkbox" id="selectionModeCheckBox" tabindex="1">
+                </div>
+                <div class="icon">
+                    <img src="../img/presets/selectionMode.png" id="selectModeIcon" alt="_SelectMode" title="_SelectMode">
+                </div>
+                <div  class="label">
+                    <div id="selectMode" class="main i18n">_SelectMode</div>
+                </div>
+            </a>
+            <hr id="selectionModeSeparator">
+            <div id="menuPresets" class="clear"></div>
+            <a href="#" id="autoPresetMenu" title="_ActualWindowSize" tabindex="-1">
+                <div class="form-item">
+                    <input type="radio" id="autoPresetRadio" tabindex="-1">
+                </div>
+                <div class="icon">
+                    <img src="../img/presets/sizeToFit.png" id="sizeToFitIcon" alt="_SizeToFit" title="_SizeToFit">
+                </div>
+                <div  class="label">
+                    <div id="sizeToFit" class="main i18n">_SizeToFit</div>
+                </div>
+            </a>
+            <hr>
+            <a href="#" id="customizePresetsMenu" title="_CustomizeWindowSettings_hellip" tabindex="-1">
+                <div class="form-item">
+                    <input type="checkbox" class="hidden" tabindex="-1">
+                </div>
+                <div class="icon">
+                    <img src="../img/presets/customize.png" id="customizeIcon" alt="_Customize_hellip" title="_Customize_hellip">
+                </div>
+                <div  class="label">
+                    <div id="customize" class="main i18n">_Customize_hellip</div>
+                </div>
+            </a>
+            <div class="clear"></div>
+        </div>
+
+    </body>
+</html>

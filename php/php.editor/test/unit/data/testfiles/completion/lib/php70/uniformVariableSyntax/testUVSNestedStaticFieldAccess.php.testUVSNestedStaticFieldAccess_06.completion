@@ -1,0 +1,4 @@
+Code completion result for source line:
+test()::$INSTANCE1::$INSTANCE2::M|AX;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   MAX 100                         [PUBLIC]   UVS2

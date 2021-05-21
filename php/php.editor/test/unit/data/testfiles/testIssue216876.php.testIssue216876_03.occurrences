@@ -1,0 +1,3 @@
+class |>MARK_OCCURRENCES:MyNewClass123<| {
+    public function |>MARK_OCCURRENCES:MyNewClass123<|($foo) {
+$c = new \Foo\|>MARK_OCCURRENCES:MyNewCl^ass123<|();

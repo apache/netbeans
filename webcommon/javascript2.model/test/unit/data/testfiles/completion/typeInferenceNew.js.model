@@ -1,0 +1,61 @@
+FUNCTION typeInferenceNew [ANONYMOUS: false, DECLARED: true - typeInferenceNew, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+Address   : FUNCTION Address [ANONYMOUS: false, DECLARED: true - Address, MODIFIERS: PUBLIC, CONSTRUCTOR]
+          # RETURN TYPES
+          Address, RESOLVED: true
+          # PARAMETERS
+          OBJECT street [ANONYMOUS: false, DECLARED: true - street, MODIFIERS: PUBLIC, PARAMETER]
+          OBJECT town [ANONYMOUS: false, DECLARED: true - town, MODIFIERS: PUBLIC, PARAMETER]
+          OBJECT country [ANONYMOUS: false, DECLARED: true - country, MODIFIERS: PUBLIC, PARAMETER]
+          # PROPERTIES
+          arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+          country   : OBJECT country [ANONYMOUS: false, DECLARED: true - country, MODIFIERS: PUBLIC, PROPERTY]
+          street    : OBJECT street [ANONYMOUS: false, DECLARED: true - street, MODIFIERS: PUBLIC, PROPERTY]
+          town      : OBJECT town [ANONYMOUS: false, DECLARED: true - town, MODIFIERS: PUBLIC, PROPERTY]
+Car       : FUNCTION Car [ANONYMOUS: false, DECLARED: true - Car, MODIFIERS: PUBLIC, CONSTRUCTOR]
+          # RETURN TYPES
+          Car, RESOLVED: true
+          # PARAMETERS
+          OBJECT color [ANONYMOUS: false, DECLARED: true - color, MODIFIERS: PUBLIC, PARAMETER]
+          OBJECT maker [ANONYMOUS: false, DECLARED: true - maker, MODIFIERS: PUBLIC, PARAMETER]
+          # PROPERTIES
+          arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+          color     : OBJECT color [ANONYMOUS: false, DECLARED: true - color, MODIFIERS: PUBLIC, PROPERTY]
+          getColor  : FUNCTION getColor [ANONYMOUS: false, DECLARED: true - getColor, MODIFIERS: PROTECTED, METHOD]
+                    # PROPERTIES
+                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+          getMaker  : FUNCTION getMaker [ANONYMOUS: false, DECLARED: true - getMaker, MODIFIERS: PROTECTED, METHOD]
+                    # PROPERTIES
+                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+          maker     : OBJECT maker [ANONYMOUS: false, DECLARED: true - maker, MODIFIERS: PUBLIC, PROPERTY]
+Context   : OBJECT Context [ANONYMOUS: false, DECLARED: true - Context, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+          # PROPERTIES
+          id   : OBJECT id [ANONYMOUS: false, DECLARED: true - id, MODIFIERS: PUBLIC, PROPERTY]
+          user : OBJECT user [ANONYMOUS: false, DECLARED: true - user, MODIFIERS: PUBLIC, PROPERTY]
+formatter : OBJECT formatter [ANONYMOUS: false, DECLARED: false - formatter, MODIFIERS: PUBLIC, OBJECT]
+          # PROPERTIES
+          addIndent    : FUNCTION addIndent [ANONYMOUS: false, DECLARED: false - addIndent, MODIFIERS: PUBLIC, METHOD]
+                       # PARAMETERS
+                       OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                       # PROPERTIES
+                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+          println      : FUNCTION println [ANONYMOUS: false, DECLARED: false - println, MODIFIERS: PUBLIC, METHOD]
+                       # PARAMETERS
+                       OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                       # PROPERTIES
+                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+          removeIndent : FUNCTION removeIndent [ANONYMOUS: false, DECLARED: false - removeIndent, MODIFIERS: PUBLIC, METHOD]
+                       # PARAMETERS
+                       OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                       # PROPERTIES
+                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+object    : OBJECT object [ANONYMOUS: false, DECLARED: true - object, MODIFIERS: PUBLIC, VARIABLE]
+          # PROPERTIES
+          getColor : FUNCTION getColor [ANONYMOUS: false, DECLARED: false - getColor, MODIFIERS: PUBLIC, METHOD]
+                   # PROPERTIES
+                   arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+          maker    : OBJECT maker [ANONYMOUS: false, DECLARED: false - maker, MODIFIERS: PUBLIC, PROPERTY]
+          street   : OBJECT street [ANONYMOUS: false, DECLARED: false - street, MODIFIERS: PUBLIC, PROPERTY]
+          town     : OBJECT town [ANONYMOUS: false, DECLARED: false - town, MODIFIERS: PUBLIC, PROPERTY]

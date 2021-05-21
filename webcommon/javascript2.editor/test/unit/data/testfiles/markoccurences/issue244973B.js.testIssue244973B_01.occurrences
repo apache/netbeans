@@ -1,0 +1,9 @@
+    PagesManager.prototype.|>MARK_OCCURRENCES:_implem^entation<| = null;
+        if (!this.|>MARK_OCCURRENCES:_implementation<|) {
+        this.|>MARK_OCCURRENCES:_implementation<|.loadPage(id, callback);
+        if (!this.|>MARK_OCCURRENCES:_implementation<|) {
+        this.|>MARK_OCCURRENCES:_implementation<|.getIds(callback);
+        if (!this.|>MARK_OCCURRENCES:_implementation<|) {
+        this.|>MARK_OCCURRENCES:_implementation<|.storePage(page);
+        if (this.|>MARK_OCCURRENCES:_implementation<|) {
+        this.|>MARK_OCCURRENCES:_implementation<| = impl;

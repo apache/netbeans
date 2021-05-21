@@ -1,0 +1,5 @@
+Code completion result for source line:
+function iteratorReturnType(): iter|able {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    iterable                                   null

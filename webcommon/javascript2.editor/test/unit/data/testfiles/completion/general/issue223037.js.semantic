@@ -1,0 +1,30 @@
+var |>GLOBAL:slideIndex<| = {
+    |>FIELD:host<|: |>GLOBAL:host<|,
+    |>CLASS:content<|: {
+        |>FIELD:title<|: "",
+        |>FIELD:numberOfSlide<|: 0,
+        |>CLASS:slides<|: {
+            |>FIELD:titles<|: [],
+            |>FIELD:simpleSlide<|: []
+
+        }
+    },
+    |>METHOD:sendResponse<|: function() {
+        this.content.slides.|>FIELD:titles<|[0] = {};
+        var |>LOCAL_VARIABLE_DECLARATION:index<| = 0;
+        for (|>LOCAL_VARIABLE:index<|; |>LOCAL_VARIABLE:index<| < 10; |>LOCAL_VARIABLE:index<|++) {
+            this.content.slides.|>FIELD:titles<|[|>LOCAL_VARIABLE:index<|] = {
+                |>FIELD:note<|: " some note"
+            };
+        }
+
+        this.content.slides.|>FIELD:titles<|[2] = {
+            |>FIELD:author<|: "Matous",
+            |>FIELD:note<|: "another note" ,
+            |>METHOD:getDescription<| : function () {
+                return this.|>FIELD:note<| + this.|>FIELD:author<|;
+            }
+        };
+        this.content.slides.|>FIELD:titles<|.reverse();
+    }
+};

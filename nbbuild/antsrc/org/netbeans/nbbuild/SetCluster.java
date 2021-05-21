@@ -19,14 +19,17 @@
 
 package org.netbeans.nbbuild;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.Property;
 
 /** Settigns the given property to cluster value
  *
@@ -78,43 +81,52 @@ public class SetCluster extends Task {
             throw new BuildException("The name of current module have to be set", getLocation());
         }
 
-        Map<String,String> clusterByModule = new HashMap<>(); // e.g. "serverplugins/jboss4" => "j2ee"
-        for (Object key : getProject().getProperties().keySet()) {
-            String property = (String) key;
-            String clusterDir = getProject().getProperty(property + ".dir");
-            if (clusterDir == null) {
-                continue;
+        Property faketask = new Property();
+        faketask.setProject(getProject());
+        faketask.setLocation(this.getLocation());
+
+        String[] clusterDir = { null };
+        Map<String, Object> properties = getProject().getProperties();
+        findClusterAndId(name, clusterDir, properties, thisModuleName, faketask, defaultLocation);
+    }
+
+    static String findClusterAndId(String propertyName, String[] clusterDir, Map<String, Object> properties, String path, Property faketask, final String fallback) throws BuildException {
+        String id = null;
+        clusterDir[0] = findClusterForAModule(propertyName, properties, path, clusterDir[0], faketask);
+        if (clusterDir[0] == null && path.contains("/")) {
+            final String shortPath = path.substring(path.lastIndexOf('/') + 1);
+            clusterDir[0] = findClusterForAModule(propertyName, properties, shortPath, clusterDir[0], faketask);
+            if (clusterDir[0] != null) {
+                id = shortPath;
             }
-            String list = this.getProject().getProperty( property );
-            assert list != null : property;
-            Set<String> modules = new HashSet<>();
-            StringTokenizer modTokens = new StringTokenizer(list," \t\n\f\r,");
-            while (modTokens.hasMoreTokens()) {
-                String module = modTokens.nextToken();
-                if (module.equals(thisModuleName)) {
-                    // We found the list referring to this module
-                    log( "Property: " + name + " will be set to " + clusterDir, Project.MSG_VERBOSE);
-                    this.getProject().setProperty( name, clusterDir ); // XXX setNewProperty?
-		    if (clusterName != null) { // Set also cluster name property
-                        log( "Property: " + clusterName + " will be set to " + property, Project.MSG_VERBOSE);
-			this.getProject().setProperty( clusterName, property ); // XXX setNewProperty?
-		    }
-                    return;
-                }
-                String otherCluster = clusterByModule.put(module, clusterDir);
-                if (otherCluster != null && !otherCluster.equals(clusterDir)) {
-                    throw new BuildException("Module " + module + " found in two clusters: " + otherCluster + " and " + clusterDir, getLocation());
-                }
-                if (!modules.add(module)) {
-                    throw  new BuildException("Module " + module + " repeated in cluster definition " + property, getLocation());
+        }
+        if (clusterDir[0] == null) {
+            if (fallback == null) {
+                throw new BuildException("No default cluster location defined", faketask.getLocation());
+            }
+
+            clusterDir[0] = fallback;   // fallback
+        }
+        return id;
+    }
+
+    private static String findClusterForAModule(String propertyName, Map<String, Object> properties, String path, String clusterDir, Property faketask) throws BuildException {
+        // not found, try indirect nbbuild/cluster.properties
+        for (Map.Entry<String,Object> entry : properties.entrySet()) {
+            String val = (String) entry.getValue();
+            String[] modules = val.split(", *");
+            if (Arrays.asList(modules).contains(path)) {
+                String key = entry.getKey();
+                clusterDir = (String) properties.get(key + ".dir");
+                if (clusterDir != null) {
+                    faketask.setName(propertyName);
+                    faketask.setValue(clusterDir);
+                    faketask.execute();
+                    break;
                 }
             }
         }
-       log("No cluster list with this module: " + thisModuleName + " was found. Using default cluster location: " + defaultLocation, Project.MSG_WARN);
-       if (defaultLocation == null)
-           throw new BuildException("No default cluster location defined", this.getLocation());
-
-       log( "Property: " + name + " will be set to " + defaultLocation, Project.MSG_VERBOSE);
-       this.getProject().setProperty( name, defaultLocation );
+        return clusterDir;
     }
+
 }

@@ -1,0 +1,5 @@
+interface |>MARK_OCCURRENCES:ifaceDeclaration<| {}
+interface ifaceDeclaration2 extends |>MARK_OCCURRENCES:ifaceDeclaration<|  {}
+class clsDeclaration implements |>MARK_OCCURRENCES:ifaceDeclaration<| {}
+class clsDeclaration2 implements |>MARK_OCCURRENCES:ifaceDecla^ration<|, ifaceDeclaration2 {}
+    |>MARK_OCCURRENCES:ifaceDeclaration<| $ifaceDeclarationVar,

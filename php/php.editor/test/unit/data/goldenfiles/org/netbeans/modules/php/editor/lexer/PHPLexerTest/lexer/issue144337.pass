@@ -1,0 +1,42 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n\n
+token #2 PHPDOC_COMMENT_START /**
+token #3 PHPDOC_COMMENT  @
+token #4 PHPDOC_COMMENT_END */
+token #5 WHITESPACE \n
+token #6 PHP_CLASS class
+token #7 WHITESPACE  
+token #8 PHP_STRING ATest
+token #9 WHITESPACE \n
+token #10 PHP_CURLY_OPEN {
+token #11 WHITESPACE \n    
+token #12 PHP_PRIVATE private
+token #13 WHITESPACE  
+token #14 PHP_VARIABLE $val
+token #15 WHITESPACE  
+token #16 PHP_OPERATOR =
+token #17 PHP_NUMBER 0
+token #18 PHP_SEMICOLON ;
+token #19 WHITESPACE \n\n    
+token #20 PHP_FUNCTION function
+token #21 WHITESPACE  
+token #22 PHP_STRING testfunc
+token #23 PHP_TOKEN (
+token #24 PHP_TOKEN )
+token #25 WHITESPACE \n    
+token #26 PHP_CURLY_OPEN {
+token #27 WHITESPACE \n        
+token #28 PHP_VARIABLE $this
+token #29 PHP_OBJECT_OPERATOR ->
+token #30 PHP_STRING val
+token #31 WHITESPACE  
+token #32 PHP_OPERATOR =
+token #33 WHITESPACE  
+token #34 PHP_NUMBER 121
+token #35 PHP_SEMICOLON ;
+token #36 WHITESPACE \n    
+token #37 PHP_CURLY_CLOSE }
+token #38 WHITESPACE \n\n
+token #39 PHP_CURLY_CLOSE }
+token #40 WHITESPACE \n\n
+token #41 PHP_CLOSETAG ?>\n

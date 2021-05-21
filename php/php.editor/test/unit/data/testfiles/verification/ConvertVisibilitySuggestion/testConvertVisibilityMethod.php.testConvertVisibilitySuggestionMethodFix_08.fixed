@@ -1,0 +1,30 @@
+<?php
+// Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.
+
+class Visibility {
+
+    function implicitMethod($param) {
+    }
+
+    public function publicMethod($param) {
+    }
+
+    private function privateMethod($param) {
+    }
+
+    protected function protectedMethod($param) {
+    }
+
+    static function implicitStaticMethod($param) {
+    }
+
+    public static function publicStaticMethod($param) {
+    }
+
+    private static function privateStaticMethod($param) {
+    }
+
+    public static function protectedStaticMethod($param) {
+    }
+
+}

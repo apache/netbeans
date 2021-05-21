@@ -1,0 +1,3 @@
+    this.|>MARK_OCCURRENCES:real^name<| = name;
+        return this.|>MARK_OCCURRENCES:realname<|;
+    pe234390.|>MARK_OCCURRENCES:realname<| = "Doe";

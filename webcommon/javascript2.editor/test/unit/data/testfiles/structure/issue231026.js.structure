@@ -1,0 +1,4 @@
+Test:METHOD:[PRIVATE]:ESCAPED{Test}ESCAPED{(}ESCAPED{$scope}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  $scope:PARAMETER:[PUBLIC]:ESCAPED{$scope}:
+    labels:FIELD:[PUBLIC]:ESCAPED{labels}:
+  loadLabels:METHOD:[PRIVATE]:ESCAPED{loadLabels}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

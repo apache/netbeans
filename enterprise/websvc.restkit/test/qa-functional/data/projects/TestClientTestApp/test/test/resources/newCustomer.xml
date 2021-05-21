@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customer>
+    <addressline1>V Parku 8</addressline1>
+    <addressline2>Floor 99</addressline2>
+    <city>Brno</city>
+    <creditLimit>1000000</creditLimit>
+    <customerId>1001</customerId>
+    <discountCode uri="http://localhost:8080/CustomerDB/resources/discountCodes/H/"/>
+    <email>nb@nb.org</email>
+    <fax>305-777-4635</fax>
+    <name>NetBeansQE</name>
+    <phone>305-777-4632</phone>
+    <state>CZ</state>
+    <zip>11150</zip>
+</customer>

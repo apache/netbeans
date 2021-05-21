@@ -1,0 +1,6 @@
+Code completion result for source line:
+InsideClass::|$stfld;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   ? $stfld                        [STATIC]   InsideClass
+CONSTANT   INS_CONST 1                     [PUBLIC]   InsideClass
+CONSTANT   class \InsideClass              [PUBLIC]   Magic Constant

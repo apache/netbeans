@@ -1,0 +1,5 @@
+Code completion result for source line:
+\MC\MockClass::|$a;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   ? $a                            [STATIC]   \MC\MockClass
+CONSTANT   class \MC\MockClass             [PUBLIC]   Magic Constant

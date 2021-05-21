@@ -1,0 +1,45 @@
+<Unnamed test>
+KEYWORD_FUNCTION  "function", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+IDENTIFIER      "test", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+BRACKET_LEFT_PAREN  "(", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+BRACKET_RIGHT_PAREN  ")", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+BRACKET_LEFT_CURLY  "{", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      "   ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      "        ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+KEYWORD_RETURN  "return", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+BRACKET_LEFT_PAREN  "(", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      "          ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+JSX_TEXT        "<Test>", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[1]}
+JSX_EXP_BEGIN   "{", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[JSX], jsxBalances=[1]}
+TEMPLATE_BEGIN  "`", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[JSX], jsxBalances=[1]}
+TEMPLATE        "template", la=2, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[JSX], jsxBalances=[1]}
+TEMPLATE_EXP_BEGIN  "${", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[TEMPLATE, JSX], jsxBalances=[1]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[TEMPLATE, JSX], jsxBalances=[1]}
+IDENTIFIER      "x", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[TEMPLATE, JSX], jsxBalances=[1]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[TEMPLATE, JSX], jsxBalances=[1]}
+OPERATOR_ASSIGNMENT  "=", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[TEMPLATE, JSX], jsxBalances=[1]}
+WHITESPACE      " ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[TEMPLATE, JSX], jsxBalances=[1]}
+JSX_TEXT        "<Inner a=", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[TEMPLATE, JSX], jsxBalances=[1, 1]}
+JSX_EXP_BEGIN   "{", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[JSX, TEMPLATE, JSX], jsxBalances=[1, 1]}
+STRING_BEGIN    """, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[JSX, TEMPLATE, JSX], jsxBalances=[1, 1]}
+STRING          "ok", la=1, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[JSX, TEMPLATE, JSX], jsxBalances=[1, 1]}
+STRING_END      """, st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[JSX, TEMPLATE, JSX], jsxBalances=[1, 1]}
+JSX_EXP_END     "}", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[TEMPLATE, JSX], jsxBalances=[1, 1]}
+JSX_TEXT        ">inner text</Inner>", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[TEMPLATE, JSX], jsxBalances=[1]}
+TEMPLATE_EXP_END  "}", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[JSX], jsxBalances=[1]}
+TEMPLATE_END    "`", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[JSX], jsxBalances=[1]}
+JSX_EXP_END     "}", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[1]}
+JSX_TEXT        "</Test>", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+WHITESPACE      "        ", la=1, st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+BRACKET_RIGHT_PAREN  ")", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+OPERATOR_SEMICOLON  ";", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+EOL             "\n", st=LexerState{canFollowLiteral=true, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+BRACKET_RIGHT_CURLY  "}", st=LexerState{canFollowLiteral=false, canFollowKeyword=true, braceBalances=[], jsxBalances=[]}
+----- EOF -----
+

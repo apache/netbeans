@@ -1,0 +1,163 @@
+<testresult testFile='issue268496_01.php'>
+    <scanner>
+        <token id='T_FUNCTION' start='7' end='15'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='16' end='20'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='20' end='21'>
+            <text>(</text>
+        </token>
+        <token id='T_CALLABLE' start='21' end='29'>
+            <text>callable</text>
+        </token>
+        <token id='T_VARIABLE' start='30' end='39'>
+            <text>$callable</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='39' end='40'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='41' end='42'>
+            <text>:</text>
+        </token>
+        <token id='T_CALLABLE' start='43' end='51'>
+            <text>callable</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='52' end='53'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='58' end='64'>
+            <text>return</text>
+        </token>
+        <token id='T_VARIABLE' start='65' end='74'>
+            <text>$callable</text>
+        </token>
+        <token id='T_SEMICOLON' start='74' end='75'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='76' end='77'>
+            <text>}</text>
+        </token>
+        <token id='T_TRAIT' start='79' end='84'>
+            <text>trait</text>
+        </token>
+        <token id='T_STRING' start='85' end='92'>
+            <text>MyTrait</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='93' end='94'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='100' end='106'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='107' end='115'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='116' end='120'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='120' end='121'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='121' end='127'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='127' end='128'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='129' end='130'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='139' end='143'>
+            <text>echo</text>
+        </token>
+        <token id='T_TRAIT_C' start='144' end='153'>
+            <text>__TRAIT__</text>
+        </token>
+        <token id='T_NEKUDA' start='154' end='155'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='156' end='163'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='163' end='164'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='169' end='170'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='172' end='173'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='174' end='174'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='174'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <FunctionDeclaration start='7' end='77' isReference='false'>
+                <Identifier start='16' end='20' name='test'/>
+                <FormalParameters>
+                    <FormalParameter start='21' end='39' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                            <Identifier start='21' end='29' name='callable'/>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='30' end='39' isDollared='true'>
+                                <Identifier start='31' end='39' name='callable'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <Identifier start='43' end='51' name='callable'/>
+                <Block start='52' end='77' isCurly='true'>
+                    <ReturnStatement start='58' end='75'>
+                        <Variable start='65' end='74' isDollared='true'>
+                            <Identifier start='66' end='74' name='callable'/>
+                        </Variable>
+                    </ReturnStatement>
+                </Block>
+            </FunctionDeclaration>
+            <TraitDeclaration start='79' end='173'>
+                <TraitName>
+                    <Identifier start='85' end='92' name='MyTrait'/>
+                </TraitName>
+                <Block start='93' end='173' isCurly='true'>
+                    <MethodDeclaration start='100' end='170' modifiers='public'>
+                        <FunctionDeclaration start='107' end='170' isReference='false'>
+                            <Identifier start='116' end='120' name='test'/>
+                            <FormalParameters>
+                                <FormalParameter start='121' end='127' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='121' end='127' isDollared='true'>
+                                            <Identifier start='122' end='127' name='param'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <Block start='129' end='170' isCurly='true'>
+                                <EchoStatement start='139' end='164'>
+                                    <InfixExpression start='144' end='163' operator='CONCAT'>
+                                        <Scalar start='144' end='153' type='SYSTEM' value='__TRAIT__'/>
+                                        <NamespaceName start='156' end='163' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='156' end='163' name='PHP_EOL'/>
+                                        </NamespaceName>
+                                    </InfixExpression>
+                                </EchoStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </TraitDeclaration>
+        </Statements>
+    </Program>
+</testresult>

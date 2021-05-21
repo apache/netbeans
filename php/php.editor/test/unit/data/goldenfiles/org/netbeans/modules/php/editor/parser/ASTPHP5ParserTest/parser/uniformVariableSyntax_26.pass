@@ -1,0 +1,80 @@
+<testresult testFile='uniformVariableSyntax_26.php'>
+    <scanner>
+        <token id='T_OPEN_PARENTHESE' start='7' end='8'>
+            <text>(</text>
+        </token>
+        <token id='T_FUNCTION' start='8' end='16'>
+            <text>function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='16' end='17'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='17' end='18'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='18' end='19'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='19' end='23'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='24' end='44'>
+            <text>"anonymous function"</text>
+        </token>
+        <token id='T_NEKUDA' start='45' end='46'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='47' end='54'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='54' end='55'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='55' end='56'>
+            <text>}</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='56' end='57'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='57' end='58'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='58' end='59'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='59' end='60'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='61' end='61'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='61'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='60'>
+                <FunctionInvocation start='7' end='59'>
+                    <FucntionName start='7' end='57'>
+                        <ParenthesisExpression start='7' end='57'>
+                            <LambdaFunctionDeclaration start='8' end='56' isReference='false'>
+                                <Block start='18' end='56' isCurly='true'>
+                                    <EchoStatement start='19' end='55'>
+                                        <InfixExpression start='24' end='54' operator='CONCAT'>
+                                            <Scalar start='24' end='44' type='STRING' value='"anonymous function"'/>
+                                            <NamespaceName start='47' end='54' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='47' end='54' name='PHP_EOL'/>
+                                            </NamespaceName>
+                                        </InfixExpression>
+                                    </EchoStatement>
+                                </Block>
+                            </LambdaFunctionDeclaration>
+                        </ParenthesisExpression>
+                    </FucntionName>
+                    <Parameters>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

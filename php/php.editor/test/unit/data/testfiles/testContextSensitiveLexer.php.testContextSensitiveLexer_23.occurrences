@@ -1,0 +1,2 @@
+    public function |>MARK_OCCURRENCES:foreach<|($test) {
+$child->|>MARK_OCCURRENCES:for^each<|("test");

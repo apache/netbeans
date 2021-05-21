@@ -1,0 +1,2 @@
+ * @property {number}  defaults.treasure.|>MARK_OCCURRENCES:gold<| - How much gold the party starts with.
+config.defaults.treasure.|>MARK_OCCURRENCES:g^old<| = 1;

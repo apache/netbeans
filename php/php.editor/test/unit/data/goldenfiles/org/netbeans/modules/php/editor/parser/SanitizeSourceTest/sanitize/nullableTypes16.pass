@@ -1,0 +1,45 @@
+<Program start='0' end='74'>
+    <Comments>
+    </Comments>
+    <Statements>
+        <FunctionDeclaration start='7' end='73' isReference='false'>
+            <Identifier start='16' end='22' name='mytest'/>
+            <FormalParameters>
+                <FormalParameter start='23' end='41' isMandatory='true' isVariadic='false'>
+                    <ParametrType>
+                        <NullableType start='23' end='31'>
+                            <NamespaceName start='24' end='31' isCurrent='false' isGlobal='false'>
+                                <Identifier start='24' end='31' name='MyClass'/>
+                            </NamespaceName>
+                        </NullableType>
+                    </ParametrType>
+                    <ParametrName>
+                        <Variable start='32' end='41' isDollared='true'>
+                            <Identifier start='33' end='41' name='myClass1'/>
+                        </Variable>
+                    </ParametrName>
+                    <DefaultValue>
+                    </DefaultValue>
+                </FormalParameter>
+                <FormalParameter start='50' end='68' isMandatory='true' isVariadic='false'>
+                    <ParametrType>
+                        <NullableType start='50' end='58'>
+                            <NamespaceName start='51' end='58' isCurrent='false' isGlobal='false'>
+                                <Identifier start='51' end='58' name='MyClass'/>
+                            </NamespaceName>
+                        </NullableType>
+                    </ParametrType>
+                    <ParametrName>
+                        <Variable start='59' end='68' isDollared='true'>
+                            <Identifier start='60' end='68' name='myClass3'/>
+                        </Variable>
+                    </ParametrName>
+                    <DefaultValue>
+                    </DefaultValue>
+                </FormalParameter>
+            </FormalParameters>
+            <Block start='70' end='73' isCurly='true'>
+            </Block>
+        </FunctionDeclaration>
+    </Statements>
+</Program>

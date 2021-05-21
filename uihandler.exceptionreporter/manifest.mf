@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.uihandler.exceptionreporter
-OpenIDE-Module-Install: org/netbeans/modules/uihandler/exceptionreporter/Installer.class
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/uihandler/exceptionreporter/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.30
-AutoUpdate-Show-In-Client: false
-

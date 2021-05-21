@@ -1,0 +1,7 @@
+xWipe:CLASS:[PRIVATE]:ESCAPED{xWipe}:
+  types:CLASS:[PUBLIC]:ESCAPED{types}:
+App:CONSTRUCTOR:[PRIVATE]:ESCAPED{App}ESCAPED{(}<font color="#999999">ESCAPED{type}ESCAPED{ }</font>ESCAPED{appDiv}ESCAPED{)}<font color="#999999">ESCAPED{ : }App.appESCAPED{|}xWipe.Pagelet</font>:
+  app:CLASS:[PRIVATE]:ESCAPED{app}:
+    resize:METHOD:[PUBLIC]:ESCAPED{resize}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+window:PARAMETER:[PUBLIC]:ESCAPED{window}:
+  xWipe:FIELD:[PUBLIC]:ESCAPED{xWipe}:

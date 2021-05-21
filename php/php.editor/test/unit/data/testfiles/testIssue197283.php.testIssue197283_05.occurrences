@@ -1,0 +1,2 @@
+$|>MARK_OCCURRENCES:another^Obj<| = 'AnotherObj';
+$y = new $|>MARK_OCCURRENCES:anotherObj<|();

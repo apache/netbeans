@@ -1,0 +1,17 @@
+menu:CLASS:[PUBLIC]:ESCAPED{menu}:
+  id:FIELD:[PUBLIC]:ESCAPED{id}<font color="#999999">ESCAPED{ : }Number</font>:
+  popup:CLASS:[PUBLIC]:ESCAPED{popup}:
+    menuitem:FIELD:[PUBLIC]:ESCAPED{menuitem}<font color="#999999">ESCAPED{ : }Array</font>:
+      simpleAnonym$1:CLASS:[PUBLIC]:ESCAPED{{...}}:
+        onclick:FIELD:[PUBLIC]:ESCAPED{onclick}<font color="#999999">ESCAPED{ : }String</font>:
+        value:FIELD:[PUBLIC]:ESCAPED{value}<font color="#999999">ESCAPED{ : }String</font>:
+      simpleAnonym$2:CLASS:[PUBLIC]:ESCAPED{{...}}:
+        onclick:FIELD:[PUBLIC]:ESCAPED{onclick}<font color="#999999">ESCAPED{ : }String</font>:
+        value:FIELD:[PUBLIC]:ESCAPED{value}<font color="#999999">ESCAPED{ : }String</font>:
+      simpleAnonym$3:CLASS:[PUBLIC]:ESCAPED{{...}}:
+        onclick:FIELD:[PUBLIC]:ESCAPED{onclick}<font color="#999999">ESCAPED{ : }String</font>:
+        value:FIELD:[PUBLIC]:ESCAPED{value}<font color="#999999">ESCAPED{ : }String</font>:
+  q:FIELD:[PUBLIC]:ESCAPED{q}<font color="#999999">ESCAPED{ : }Number</font>:
+  value:FIELD:[PUBLIC]:ESCAPED{value}<font color="#999999">ESCAPED{ : }String</font>:
+  x:FIELD:[PUBLIC]:ESCAPED{x}<font color="#999999">ESCAPED{ : }Number</font>:
+  y:FIELD:[PUBLIC]:ESCAPED{y}<font color="#999999">ESCAPED{ : }Number</font>:

@@ -1,0 +1,12 @@
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.
+
+The EL impl library in external/el-impl.jar is patched with file from the 'https://netbeans.org/bugzilla/show_bug.cgi?id=271419'.
+
+Steps for creation of the patched el-impl.jar:
+1. checkout the EL project from http://java.net/projects/el-spec/sources
+2. Download the patch file 'el3_0_4.diff' from 'https://netbeans.org/bugzilla/show_bug.cgi?id=271419'
+3. Store the patch file 'el3_0_4.diff' at location {COMPLETE_HG_REPO}/libs.elimpl/patches/ 
+4. apply the patch over the sources - the patch must correspond with the downloaded version:
+{PATH_TO_THE_REPOSITORY}/el-spec~source-code$ patch -p0 < {COMPLETE_HG_REPO}/libs.elimpl/patches/el3_0_4.diff
+5. build the Expression Language project
+6. from the JAR remove the public API - classes of the 'javax.' package

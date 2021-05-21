@@ -1,0 +1,5 @@
+This is a broken project (th source and test roots and the configuration files
+directory are specified in project.{xml|properties}, but they are not
+physically present). It can be used to test the behavior of the EJB project for
+such projects.
+

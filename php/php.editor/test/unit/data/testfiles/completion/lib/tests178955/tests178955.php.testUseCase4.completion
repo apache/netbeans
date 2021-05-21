@@ -1,0 +1,4 @@
+Code completion result for source line:
+/*use case 4*/$foo->|getBar2();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     getBar2()                       [PUBLIC]   foo2

@@ -1,0 +1,6 @@
+Code completion result for source line:
+$anon = new class |{
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    extends                                    null
+KEYWORD    implements                                 null

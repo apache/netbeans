@@ -179,7 +179,7 @@ public class RepositoryMavenCPProvider implements ClassPathProvider {
         items.add(ClassPathSupport.createResource(FileUtil.urlForArchiveOrDir(binary)));
         if (project != null) {
             for (Artifact s : project.getCompileArtifacts()) {
-                File file = s.getFile();
+                File file = s.getFile(); // TODO perhaps needs patching
                 if (file == null) continue;
                 URL u = FileUtil.urlForArchiveOrDir(file);
                 if(u != null) {

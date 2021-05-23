@@ -588,7 +588,7 @@ public class DriverListUtilTest extends TestCase {
         if (type == null) {
             assertEquals(name, url.getDisplayName());
         } else {
-            assertEquals(name + " / " + type, url.getDisplayName());
+            assertEquals(name + " (" + type + ")", url.getDisplayName());
         }
         
         assertEquals(className, url.getClassName());

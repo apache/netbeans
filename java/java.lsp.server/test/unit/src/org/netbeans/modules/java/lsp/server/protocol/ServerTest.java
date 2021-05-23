@@ -215,7 +215,7 @@ public class ServerTest extends NbTestCase {
         OpenProjects.getDefault().close(OpenProjects.getDefault().getOpenProjects());
     }
     
-    List<Diagnostic>[] diags = new List[1];
+    final List<Diagnostic>[] diags = new List[1];
     Set<String> diagnosticURIs = Collections.synchronizedSet(new HashSet<>());
     
     void clearDiagnostics() {
@@ -4253,6 +4253,58 @@ public class ServerTest extends NbTestCase {
         
         // and finally check that the build interrupted before reaching 100%
         assertTrue(lc.perCent < 100);
+    }
+
+    public void testFileModificationDiags() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test {\n" +
+                      "    public void run(String str) {\n" +
+                      "        System.err.println(1);\n" +
+                      "        String s = str.substring(0);\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient(), client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeResult result = server.initialize(new InitializeParams()).get();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        assertDiags(diags);//errors
+        assertDiags(diags, "Warning:3:15-3:16");//hints
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(toURI(src), 0);
+        CountDownLatch waitForErrorLatch = new CountDownLatch(1);
+        TextDocumentServiceImpl.computeDiagsCallback = key -> {
+            if ("errors".equals(key)) {
+                waitForErrorLatch.countDown();
+                server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 27), new Position(2, 28)), 1, "1"))));
+                TextDocumentServiceImpl.computeDiagsCallback = null;
+            }
+        };
+        server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 27), new Position(2, 27)), 0, "d"))));
+        assertDiags(diags, "Warning:3:15-3:16");//errors
+        assertDiags(diags, "Warning:3:15-3:16");//hints
+        //verify no more diags coming:
+        synchronized (diags) {
+            long timeout = 1000;
+            long start = System.currentTimeMillis();
+            while (diags[0] == null && (System.currentTimeMillis() - start) < timeout) {
+                try {
+                    diags.wait(timeout / 10);
+                } catch (InterruptedException ex) {
+                    //ignore
+                }
+            }
+            assertNull(diags[0]);
+        }
+        server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 1), new Position(2, 1)), 0, "    \n    "))));
+        assertDiags(diags, "Warning:4:15-4:16");//errors
+        assertDiags(diags, "Warning:4:15-4:16");//hints
+        server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(4, 1), new Position(4, 1)), 0, " "))));
+        assertDiags(diags);//errors
+        assertDiags(diags, "Warning:4:16-4:17");//hints
     }
 
     static {

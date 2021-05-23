@@ -4303,7 +4303,7 @@ public class ServerTest extends NbTestCase {
         assertDiags(diags, "Warning:4:15-4:16");//errors
         assertDiags(diags, "Warning:4:15-4:16");//hints
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(4, 1), new Position(4, 1)), 0, " "))));
-        assertDiags(diags);//errors
+        assertDiags(diags, "Warning:4:16-4:17");//errors
         assertDiags(diags, "Warning:4:16-4:17");//hints
     }
 

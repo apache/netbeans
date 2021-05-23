@@ -258,7 +258,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         Set<String> documents = new HashSet<>(openedDocuments.keySet());
 
         for (String doc : documents) {
-            runDiagnosticTasks(doc, Collections.emptyList());
+            runDiagnosticTasks(doc);
         }
     }
 
@@ -1433,7 +1433,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             
             // attempt to open the directly owning project, delay diagnostics after project open:
             server.asyncOpenFileOwner(file).thenRun(() ->
-                runDiagnosticTasks(params.getTextDocument().getUri(), Collections.emptyList())
+                runDiagnosticTasks(params.getTextDocument().getUri())
             );
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
@@ -1447,7 +1447,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         String uri = params.getTextDocument().getUri();
         upToDateTests.put(uri, Boolean.FALSE);
         Document doc = openedDocuments.get(uri);
-        List<javax.swing.text.Position[]> modifiedSpans = new ArrayList<>();
         if (doc != null) {
             NbDocument.runAtomic((StyledDocument) doc, () -> {
                 for (TextDocumentContentChangeEvent change : params.getContentChanges()) {
@@ -1456,17 +1455,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         int end   = Utils.getOffset(doc, change.getRange().getEnd());
                         doc.remove(start, end - start);
                         doc.insertString(start, change.getText(), null);
-                        modifiedSpans.add(new javax.swing.text.Position[] {
-                            doc.createPosition(LineDocumentUtils.getLineStart((LineDocument) doc, start)),
-                            doc.createPosition(LineDocumentUtils.getLineEnd((LineDocument) doc, end))
-                        });
                     } catch (BadLocationException ex) {
                         throw new IllegalStateException(ex);
                     }
                 }
             });
         }
-        runDiagnosticTasks(params.getTextDocument().getUri(), modifiedSpans);
+        runDiagnosticTasks(params.getTextDocument().getUri());
         reportNotificationDone("didChange", params);
     }
 
@@ -1593,17 +1588,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         return CompletableFuture.completedFuture(location);
     }
 
-    private void runDiagnosticTasks(String uri, List<javax.swing.text.Position[]> modifiedSpans) {
+    private void runDiagnosticTasks(String uri) {
         if (server.openedProjects().getNow(null) == null) {
             return;
-        }
-        {
-            Document originalDoc = openedDocuments.get(uri);
-            if (originalDoc != null) {
-                BACKGROUND_TASKS.post(() -> {
-                    filterDiags(originalDoc, modifiedSpans);
-                });
-            }
         }
         diagnosticTasks.computeIfAbsent(uri, u -> {
             return BACKGROUND_TASKS.create(() -> {
@@ -1688,27 +1675,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     private static final int DELAY = 500;
     static Consumer<String> computeDiagsCallback; //for tests
-
-    private void filterDiags(Document doc, List<javax.swing.text.Position[]> modifiedSpans) {
-        for (String k : ERROR_KEYS) {
-            Map<String, ErrorDescription> errors = (Map<String, ErrorDescription>) doc.getProperty("lsp-errors-" + k);
-            if (errors != null) {
-                errors = new HashMap<>(errors);
-                OUTER: for (Iterator<Entry<String, ErrorDescription>> it = errors.entrySet().iterator(); it.hasNext();) {
-                    Entry<String, ErrorDescription> e = it.next();
-                    int start = e.getValue().getRange().getBegin().getOffset();
-                    int end = e.getValue().getRange().getEnd().getOffset();
-                    for (javax.swing.text.Position[] span : modifiedSpans) {
-                        if (!(end < span[0].getOffset() || start > span[1].getOffset())) {
-                            it.remove();
-                            continue OUTER;
-                        }
-                    }
-                }
-                doc.putProperty("lsp-errors-" + k, errors);
-            }
-        }
-    }
 
     private List<Diagnostic> computeDiags(String uri, ProduceErrors produceErrors, String keyPrefix) {
         List<Diagnostic> result = new ArrayList<>();

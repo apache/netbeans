@@ -175,13 +175,15 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     return CompletableFuture.completedFuture(Collections.emptyList());
                 }
                 return server.asyncOpenFileOwner(file).thenApply(project -> {
-                    List<String> roots = new ArrayList<>();
+                    HashSet<FileObject> roots = new HashSet<>();
                     if (project != null) {
-                        for (FileObject root : ClasspathInfo.create(project.getProjectDirectory()).getClassPath(kind).getRoots()) {
-                            roots.add(Utils.toUri(root));
+                        for(SourceGroup sourceGroup : ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
+                            for (FileObject root : ClasspathInfo.create(sourceGroup.getRootFolder()).getClassPath(kind).getRoots()) {
+                                roots.add(root);
+                            }
                         }
                     }
-                    return roots;
+                    return roots.stream().map(fo -> Utils.toUri(fo)).collect(Collectors.toList());
                 });
             }
             case Server.JAVA_GET_PROJECT_PACKAGES: {
@@ -200,9 +202,13 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return server.asyncOpenFileOwner(file).thenApply(project -> {
                     if (project != null) {
                         EnumSet<ClassIndex.SearchScope> scope = srcOnly ? EnumSet.of(ClassIndex.SearchScope.SOURCE) : EnumSet.allOf(ClassIndex.SearchScope.class);
-                        ArrayList<String> packages = new ArrayList<>(ClasspathInfo.create(project.getProjectDirectory()).getClassIndex().getPackageNames("", false, scope));
-                        Collections.sort(packages);
-                        return packages;
+                        HashSet<String> packages = new HashSet<>();
+                        for(SourceGroup sourceGroup : ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
+                            packages.addAll(ClasspathInfo.create(sourceGroup.getRootFolder()).getClassIndex().getPackageNames("", false, scope));
+                        }
+                        ArrayList<String> ret = new ArrayList<>(packages);
+                        Collections.sort(ret);
+                        return ret;
                     }
                     return Collections.emptyList();
                 });

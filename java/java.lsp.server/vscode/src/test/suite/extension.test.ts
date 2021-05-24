@@ -263,6 +263,13 @@ class Main {
             assert.strictEqual(res.length, 1, `Invalid number of compile classpath roots returned`);
             assert.strictEqual(res[0], path.join('file:', folder, 'target', 'classes') + path.sep, `Invalid compile classpath root returned`);
 
+            console.log("Test: get project source classpath");
+            res = await vscode.commands.executeCommand("java.get.project.classpath", Uri.file(folder).toString(), 'SOURCE');
+            console.log(`Test: get project source classpath finished with ${res}`);
+            assert.ok(res, "No source classpath returned");
+            assert.strictEqual(res.length, 1, `Invalid number of source classpath roots returned`);
+            assert.strictEqual(res[0], path.join('file:', folder, 'src', 'main', 'java') + path.sep, `Invalid source classpath root returned`);
+
             console.log("Test: get project boot classpath");
             res = await vscode.commands.executeCommand("java.get.project.classpath", Uri.file(folder).toString(), 'BOOT');
             console.log(`Test: get project boot classpath finished with ${res}`);
@@ -274,6 +281,13 @@ class Main {
             console.log(`Test: get all project packages finished with ${res}`);
             assert.ok(res, "No packages returned");
             assert.ok(res.length > 0, `Invalid number of packages returned`);
+
+            console.log("Test: get project source packages");
+            res = await vscode.commands.executeCommand("java.get.project.packages", Uri.file(folder).toString(), true);
+            console.log(`Test: get project source packages finished with ${res}`);
+            assert.ok(res, "No packages returned");
+            assert.strictEqual(res.length, 1, `Invalid number of packages returned`);
+            assert.strictEqual(res[0], 'pkg', `Invalid package returned`);
         } catch (error) {
             dumpJava();
             throw error;

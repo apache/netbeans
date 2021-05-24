@@ -87,7 +87,8 @@ public class StepTest extends AbstractDebugTest {
 
         assertStoppedAt(source.toURI(), 6);
 
-        engine.getActionsManager().doAction(ActionsManager.ACTION_KILL);
+        engine.getActionsManager().doAction(ActionsManager.ACTION_CONTINUE);
+        assertEquals(0, waitAppProcessExit());
     }
 
     public static Test suite() {

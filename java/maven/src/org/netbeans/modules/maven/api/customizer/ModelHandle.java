@@ -66,6 +66,11 @@ public final class ModelHandle {
     
     
     static class AccessorImpl extends CustomizerProviderImpl.ModelAccessor {
+
+        @Override
+        public void setConfigurationId(Configuration cfg, String id) {
+            cfg.setId(id);
+        }
         
          public @Override ModelHandle createHandle(POMModel model,
                                         MavenProject proj, 
@@ -288,5 +293,5 @@ public final class ModelHandle {
      * 
      */
     public static class Configuration extends ModelHandle2.Configuration {
-        }
-        }
+    }
+}

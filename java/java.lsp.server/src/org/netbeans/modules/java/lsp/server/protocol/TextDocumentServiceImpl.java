@@ -49,11 +49,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
@@ -149,7 +146,6 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
-import org.netbeans.api.java.source.ui.ElementJavadoc;
 import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.lsp.Completion;
@@ -162,7 +158,6 @@ import org.netbeans.modules.editor.java.GoToSupport;
 import org.netbeans.modules.editor.java.GoToSupport.Context;
 import org.netbeans.modules.editor.java.GoToSupport.GoToTarget;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController.TestMethod;
-import org.netbeans.modules.java.completion.JavaDocumentationTask;
 import org.netbeans.modules.java.editor.base.fold.JavaElementFoldVisitor;
 import org.netbeans.modules.java.editor.base.fold.JavaElementFoldVisitor.FoldCreator;
 import org.netbeans.modules.java.editor.base.semantic.MarkOccurrencesHighlighterBase;
@@ -450,52 +445,21 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         if (server.openedProjects().getNow(null) == null) {
             return CompletableFuture.completedFuture(null);
         }
-        try {
-            String uri = params.getTextDocument().getUri();
-            FileObject file = fromURI(uri);
-            if (file == null) {
-                return CompletableFuture.completedFuture(null);
-            }
-            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
-            Document doc = ec.openDocument();
-            final JavaDocumentationTask<Future<String>> task = JavaDocumentationTask.create(Utils.getOffset(doc, params.getPosition()), null, new JavaDocumentationTask.DocumentationFactory<Future<String>>() {
-                @Override
-                public Future<String> create(CompilationInfo compilationInfo, Element element, Callable<Boolean> cancel) {
-                    return ElementJavadoc.create(compilationInfo, element, cancel).getTextAsync();
-                }
-            }, () -> false);
-            ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
-                @Override
-                public void run(ResultIterator resultIterator) throws Exception {
-                    task.run(resultIterator);
-                }
-            });
-            Future<String> futureJavadoc = task.getDocumentation();
-            CompletableFuture<Hover> result = new CompletableFuture<Hover>() {
-                @Override
-                public boolean cancel(boolean mayInterruptIfRunning) {
-                    return futureJavadoc != null && futureJavadoc.cancel(mayInterruptIfRunning) && super.cancel(mayInterruptIfRunning);
-                }
-            };
-            JAVADOC_WORKER.post(() -> {
-                try {
-                    String javadoc = futureJavadoc != null ? futureJavadoc.get() : null;
-                    if (javadoc != null) {
-                        MarkupContent markup = new MarkupContent();
-                        markup.setKind("markdown");
-                        markup.setValue(html2MD(javadoc));
-                        result.complete(new Hover(markup));
-                    } else {
-                        result.complete(null);
-                    }
-                } catch (ExecutionException | InterruptedException ex) {
-                    result.completeExceptionally(ex);
-                }
-            });
-            return result;
-        } catch (IOException | ParseException ex) {
-            throw new IllegalStateException(ex);
+        String uri = params.getTextDocument().getUri();
+        FileObject file = fromURI(uri);
+        Document doc = openedDocuments.get(uri);
+        if (file == null || doc == null) {
+            return CompletableFuture.completedFuture(null);
         }
+        return org.netbeans.api.lsp.Hover.getContent(doc, Utils.getOffset(doc, params.getPosition())).thenApply(content -> {
+            if (content != null) {
+                MarkupContent markup = new MarkupContent();
+                markup.setKind("markdown");
+                markup.setValue(html2MD(content));
+                return new Hover(markup);
+            }
+            return null;
+        });
     }
 
     @Override

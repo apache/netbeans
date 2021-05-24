@@ -387,6 +387,15 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         final FileObject inhMain = createFile(src, "D1.java","class D1 { public static void main (String... args){}} class D1X extends D1 {}");
         assertMain(new String[] {"D1","D1X"}, SourceUtils.getMainClasses(inhMain));
     }
+
+    public void testIsClassFile() throws Exception {
+        final File wd = getWorkDir();
+        final FileObject src = FileUtil.createFolder(new File (wd,"src"));
+        final FileObject emptyJava = createFile(src, "C1.java","class C1 {}");
+        assertFalse(SourceUtils.isClassFile(emptyJava));
+        final FileObject emptyClass = createFile(src, "C1.class","");
+        assertTrue(SourceUtils.isClassFile(emptyClass));
+    }
     
     public void testGenerateReadableParameterName() throws Exception {
         System.out.println("testGenerateReadableParameterName");

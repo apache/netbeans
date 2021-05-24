@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -48,9 +49,13 @@ import org.openide.util.Lookup;
  *
  * @author sdedic
  */
-@ProjectServiceProvider(service = ProjectConfigurationProvider.class, projectType = "org-netbeans-modules-gradle")
+@ProjectServiceProvider(service = {
+    ProjectConfigurationProvider.class,
+    ProjectConfigurationUpdater.class
+    }, projectType = "org-netbeans-modules-gradle"
+)
 public class GradleProjectConfigProvider implements 
-        ProjectConfigurationProvider<GradleExecConfiguration>, ChangeListener {
+        ProjectConfigurationProvider<GradleExecConfiguration>, ProjectConfigurationUpdater, ChangeListener {
     private final PropertyChangeSupport supp = new PropertyChangeSupport(this);
     private final Project project;
 
@@ -107,8 +112,7 @@ public class GradleProjectConfigProvider implements
     
     @Override
     public GradleExecConfiguration getActiveConfiguration() {
-        NbGradleProject gp = NbGradleProject.get(project);
-        GradleExecConfiguration cfg = ProjectConfigurationSupport.getExplicitConfiguration(gp, Lookup.EMPTY);
+        GradleExecConfiguration cfg = ProjectConfigurationSupport.getExplicitConfiguration(project, Lookup.EMPTY);
         if (cfg != null) {
             return cfg;
         }
@@ -229,7 +233,13 @@ public class GradleProjectConfigProvider implements
      * @param nonShared  list of all unshared (private) configurations to save.
      */
     public void setConfigurations(List<GradleExecConfiguration> shared, List<GradleExecConfiguration> nonShared) {
+        GradleExecConfiguration a = getActiveConfiguration();
+        String aid = a == null ? null : a.getId();
         ProjectManager.mutex(false, project). writeAccess(() -> {
+            
+            ConfigPersistenceUtils.writeConfigurations(shared, aux, null, true);
+            ConfigPersistenceUtils.writeConfigurations(nonShared, aux, aid, false);
+            
             Map<String, GradleExecConfiguration> mapShared = new LinkedHashMap<>();
             Map<String, GradleExecConfiguration> mapPrivate = new LinkedHashMap<>();
             shared.forEach(c -> mapShared.put(c.getId(), c));
@@ -270,7 +280,7 @@ public class GradleProjectConfigProvider implements
             lst.add(newCfg.remove(GradleExecConfiguration.DEFAULT));
             lst.addAll(newCfg.values());
             if (stamp < 0 || stamp == serial.get()) {
-                changed = configurations != null && configurations.equals(lst);
+                changed = configurations != null && !configurations.equals(lst);
                 this.configurations = lst;
                 this.sharedConfigs = newShared;
                 this.privateConfigs = newPrivate;
@@ -285,17 +295,34 @@ public class GradleProjectConfigProvider implements
         }
         return lst;
     }
+
+    @Override
+    public Collection<GradleExecConfiguration> getSharedConfigurations() {
+        return sharedConfigs.values();
+    }
+
+    @Override
+    public Collection<GradleExecConfiguration> getPrivateConfigurations() {
+        return privateConfigs.values();
+    }
     
     /**
      * Reads a list of configurations from the providers and from the disk
      * files.
      * @return 
      */
-    private Map<String, GradleExecConfiguration> buildConfigurations(Map<String, GradleExecConfiguration> sharedOut, Map<String, GradleExecConfiguration> privateOut) {
+    private Map<String, GradleExecConfiguration> buildConfigurations(Map<String, GradleExecConfiguration> sharedConf, Map<String, GradleExecConfiguration> privateConf) {
         Map<String, GradleExecConfiguration> result = new HashMap<>();
-        result.putAll(sharedOut);
-        result.putAll(privateOut);
-        
+        result.putAll(sharedConf);
+        result.putAll(privateConf);
+        for (GradleExecConfiguration c : getFixedConfigurations()) {
+            result.putIfAbsent(c.getId(), c);
+        }
+        return result;
+    }
+    
+    public Collection<GradleExecConfiguration> getFixedConfigurations() {
+        Collection<GradleExecConfiguration> result = new LinkedHashSet<>();
         if (configProvider == null) {
             ConfigurableActionProvider p = project.getLookup().lookup(ConfigurableActionProvider.class);
             if (p == null) {
@@ -326,12 +353,14 @@ public class GradleProjectConfigProvider implements
                 }
             }
         }
-        
+        boolean defPresent = false;
         for (GradleExecConfiguration c : configProvider.findConfigurations()) {
-            result.putIfAbsent(c.getId(), c);
+            // rely on that equals on id
+            defPresent |= GradleExecConfiguration.DEFAULT.equals(c.getId());
+            result.add(c);
         }
-        if (!result.containsKey(GradleExecConfiguration.DEFAULT)) {
-            result.put(GradleExecConfiguration.DEFAULT, GradleExecAccessor.createDefault());
+        if (!defPresent) {
+            result.add(GradleExecAccessor.createDefault());
         }
         return result;
     }

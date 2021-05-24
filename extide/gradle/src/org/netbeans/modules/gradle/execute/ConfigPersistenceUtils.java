@@ -19,6 +19,7 @@
 package org.netbeans.modules.gradle.execute;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.spi.project.AuxiliaryConfiguration;
@@ -27,7 +28,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /**
- *
+ * Handles (de)serialization of {@link GradleExecConfiguration} and the default config selection.
  * @author sdedic
  */
 public final class ConfigPersistenceUtils {
@@ -47,8 +48,65 @@ public final class ConfigPersistenceUtils {
     public static final String CONFIG_ATTRIBUTE_NAME = "name"; // NOI18N
     public static final String CONFIG_ATTRIBUTE_DISPLAY = "displayName"; // NOI18N
     
+    public static void writeConfigurations(List<GradleExecConfiguration> configs, AuxiliaryConfiguration aux, String configId, boolean shared) {
+        Element el = aux.getConfigurationFragment(CONFIG_ELEMENT_CONFIGURATIONS, CONFIG_NAMESPACE, shared);
+        boolean defConfig = (null == configId || GradleExecConfiguration.DEFAULT.equals(configId));
+        if (el == null) {
+            if (configs.isEmpty()) {
+                return;
+            }
+            el = XMLUtil.createDocument(CONFIG_ELEMENT_CONFIGURATIONS, CONFIG_NAMESPACE, null, null).getDocumentElement();
+            if (!defConfig) {
+                el.setAttribute(CONFIG_ATTRIBUTE_ACTIVE, configId);
+            }
+        } else {
+            if (configs.isEmpty() && defConfig) {
+                aux.removeConfigurationFragment(CONFIG_ELEMENT_CONFIGURATIONS, CONFIG_NAMESPACE, shared);
+            }
+        }
+        
+        // remove all:
+        NodeList list = el.getElementsByTagNameNS(CONFIG_NAMESPACE, CONFIG_ELEMENT_CONFIGURATION);
+        for (int i = 0; i < list.getLength(); i++) {
+            el.removeChild(list.item(i));
+        }
+        for (GradleExecConfiguration cfg : configs) {
+            Element child  = el.getOwnerDocument().createElementNS(CONFIG_NAMESPACE, CONFIG_ELEMENT_CONFIGURATION);
+            el.appendChild(child);
+            child.setAttribute(CONFIG_ATTRIBUTE_ID, cfg.getId());
+            if (cfg.getName() != null) {
+                child.setAttribute(CONFIG_ATTRIBUTE_DISPLAY, cfg.getName());
+            }
+            Map<String, String> projectProps = cfg.getProjectProperties();
+            if (!(projectProps == null || projectProps.isEmpty())) {
+                for (String s : projectProps.keySet()) {
+                    if (s == null || s.trim().isEmpty()) {
+                        continue;
+                    }
+                    String k = s.trim();
+                    String v = projectProps.get(s);
+                    if (v == null) {
+                        v = ""; // NOI18N
+                    }
+                    Element prop  = el.getOwnerDocument().createElementNS(CONFIG_NAMESPACE, CONFIG_ELEMENT_PROPERTY);
+                    prop.setAttribute(CONFIG_ATTRIBUTE_NAME, k);
+                    prop.setTextContent(v);
+                    child.appendChild(prop);
+                }
+            }
+            String args = cfg.getCommandLineArgs();
+            if (!(args == null || args.trim().isEmpty())) {
+                Element argsEl  = el.getOwnerDocument().createElementNS(CONFIG_NAMESPACE, CONFIG_ELEMENT_ARGS);
+                argsEl.setTextContent(args.trim());
+                child.appendChild(argsEl);
+            }
+        }
+        
+        aux.putConfigurationFragment(el, shared);
+    }
+    
     public static Map<String, GradleExecConfiguration> readConfigurations(Map<String, GradleExecConfiguration> result, AuxiliaryConfiguration aux, boolean shared) {
-        Element el = aux.getConfigurationFragment(CONFIG_ELEMENT_CONFIGURATIONS, CONFIG_NAMESPACE, false);
+        Element el = aux.getConfigurationFragment(CONFIG_ELEMENT_CONFIGURATIONS, CONFIG_NAMESPACE, shared);
         if (el != null) {
             NodeList nl = el.getElementsByTagNameNS(CONFIG_NAMESPACE, CONFIG_ELEMENT_CONFIGURATION);
             for (int i = 0; i < nl.getLength(); i++) {
@@ -62,11 +120,11 @@ public final class ConfigPersistenceUtils {
                 String cmdArgs = null;
                 
                 NodeList props = el.getElementsByTagNameNS(CONFIG_NAMESPACE, CONFIG_ELEMENT_PROPERTY);
-                for (int pi = 0; i < props.getLength(); pi++) {
-                    Element p = (Element)nl.item(pi);
+                for (int pi = 0; pi < props.getLength(); pi++) {
+                    Element p = (Element)props.item(pi);
                     String n = p.getAttribute(CONFIG_ATTRIBUTE_NAME);
                     String v = p.getTextContent();
-                    if (n != null) {
+                    if (n != null && !n.isEmpty()) {
                         if (v == null) {
                             v = ""; // NOI18N
                         }

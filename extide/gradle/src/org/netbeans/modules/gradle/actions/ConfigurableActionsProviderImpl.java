@@ -302,7 +302,7 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
         }
         
         private GradleExecConfiguration mergeConfigurations(GradleExecConfiguration one, GradleExecConfiguration two) {
-            String dispName = one.getDisplayName();
+            String dispName = one.getName();
             Map<String, String> props = new HashMap<>(one.getProjectProperties());
             props.putAll(two.getProjectProperties());
             String args = String.join(" ", one.getCommandLineArgs(), two.getCommandLineArgs());

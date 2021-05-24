@@ -24,10 +24,8 @@ import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.spi.actions.GradleActionsProvider;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.openide.util.Lookup;
 import org.netbeans.modules.gradle.execute.ConfigurableActionProvider;
@@ -90,10 +88,9 @@ public final class ActionToTaskUtils {
         }
 
         ProjectActionMappingProvider mappingProvider = project.getLookup().lookup(ProjectActionMappingProvider.class);
-        NbGradleProject p = NbGradleProject.get(project);
         // in case the Mapping Provider asks for the configuration, it should get some:
         return mappingProvider != null ? ProjectConfigurationSupport.executeWithConfiguration(
-                p, c, () -> mappingProvider.findMapping(action)) : null;
+                project, c, () -> mappingProvider.findMapping(action)) : null;
     }
 
 }

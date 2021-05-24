@@ -166,8 +166,8 @@ public class ActionProviderImpl implements ActionProvider {
             
         }
         NbGradleProject gp = NbGradleProject.get(project);
-        GradleExecConfiguration execCfg = ProjectConfigurationSupport.getEffectiveConfiguration(gp, context);
-        ProjectConfigurationSupport.executeWithConfiguration(gp, execCfg, () -> {
+        GradleExecConfiguration execCfg = ProjectConfigurationSupport.getEffectiveConfiguration(project, context);
+        ProjectConfigurationSupport.executeWithConfiguration(project, execCfg, () -> {
             ActionMapping mapping = ActionToTaskUtils.getActiveMapping(command, project, context);
             invokeProjectAction2(project, mapping, execCfg, context, false);
         });
@@ -244,9 +244,8 @@ public class ActionProviderImpl implements ActionProvider {
     }
 
     private static void invokeProjectAction(final Project project, final ActionMapping mapping, Lookup context, boolean showUI) {
-        NbGradleProject gp = NbGradleProject.get(project);
-        GradleExecConfiguration execCfg = ProjectConfigurationSupport.getEffectiveConfiguration(gp, context);
-        ProjectConfigurationSupport.executeWithConfiguration(gp, execCfg, () -> 
+        GradleExecConfiguration execCfg = ProjectConfigurationSupport.getEffectiveConfiguration(project, context);
+        ProjectConfigurationSupport.executeWithConfiguration(project, execCfg, () -> 
                 invokeProjectAction2(project, mapping, execCfg, context, showUI));
     }
     
@@ -257,7 +256,6 @@ public class ActionProviderImpl implements ActionProvider {
             return;
         }
         final StringWriter writer = new StringWriter();
-        final NbGradleProject gp = NbGradleProject.get(project);
         PrintWriter out = new PrintWriter(writer);
         Lookup ctx = project.getLookup().lookup(BeforeBuildActionHook.class).beforeAction(action, context, out);
 
@@ -325,6 +323,7 @@ public class ActionProviderImpl implements ActionProvider {
             final ActionProgress g = ActionProgress.start(context);
             final Lookup outerCtx = ctx;
             task.addTaskListener((Task t) -> {
+                ProjectConfigurationSupport.executeWithConfiguration(project, execCfg, () -> {
                     try {
                         OutputWriter out1 = task.getInputOutput().getOut();
                         boolean canReload = project.getLookup().lookup(BeforeReloadActionHook.class).beforeReload(action, outerCtx, task.result(), out1);

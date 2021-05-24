@@ -21,29 +21,51 @@ package org.netbeans.modules.gradle.spi.actions;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
-import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.openide.util.Lookup;
 
 /**
- *
+ * Allows temporary configuration activation for length of some {@link Runnable} or {@link Supplier} invocation. During that time,
+ * {@link ProjectConfigurationProvider#getActiveConfiguration()} returns the temporary config as the active one.
+ * <p/>
+ * Used for execution when an explicit configuration can be requested by the caller, but older code (before configurations were introduced) may
+ * call methods that rely on the active configuration. So during the hooks or invocations, the requested config will be in effect.
+ * 
  * @author sdedic
  */
 public final class ProjectConfigurationSupport {
     
-    private static final ThreadLocal<Map<NbGradleProject, GradleExecConfiguration>> selectedConfigs = new ThreadLocal<Map<NbGradleProject, GradleExecConfiguration>>();
+    /**
+     * For each thread that executes {@link #executeWithConfiguration(org.netbeans.api.project.Project, org.netbeans.modules.gradle.api.execute.GradleExecConfiguration, java.lang.Runnable)}
+     * contains a Map of overriden projects. The map is copied+modified and restored in nested executeWith() invocations.
+     */
+    private static final ThreadLocal<Map<Project, GradleExecConfiguration>> selectedConfigs = new ThreadLocal<>();
     
-    public static <T, E extends Exception> T executeWithConfiguration(NbGradleProject gp, GradleExecConfiguration c, Supplier<T> task) {
-        ProjectConfigurationProvider<GradleExecConfiguration> pcp = gp.projectLookup(ProjectConfigurationProvider.class);
+    /**
+     * Executes the passed {@link Supplier} with temporarily active configuration. During Supplier invocation, the 
+     * {@link ProjectConfigurationProvider#getActiveConfiguration()} will return `c'.
+     * 
+     * @param <T> type of return value
+     * @param project project to apply on
+     * @param c the selected configuration. Use {@code null} to reset to the globally active one.
+     * @param task task to execute
+     * @return value returned from the Supplier.
+     */
+    public static <T> T executeWithConfiguration(Project project, GradleExecConfiguration c, Supplier<T> task) {
+        ProjectConfigurationProvider<GradleExecConfiguration> pcp = project.getLookup().lookup(ProjectConfigurationProvider.class);
         if (pcp == null) {
             // the project does not support configurations.
             return task.get();
         }
-        Map<NbGradleProject, GradleExecConfiguration> m = selectedConfigs.get();
+        Map<Project, GradleExecConfiguration> m = selectedConfigs.get();
         try {
-            Map<NbGradleProject, GradleExecConfiguration> n = new HashMap<>(m);
-            m.put(gp, c);
+            Map<Project, GradleExecConfiguration> n = m == null ? new HashMap<>() : new HashMap<>(m);
+            n.put(project, c);
             selectedConfigs.set(n);
             return task.get();
         } finally {
@@ -51,42 +73,61 @@ public final class ProjectConfigurationSupport {
         }
     }
     
-    private static <E extends Exception> void throwActualException(Exception exception) throws E {
-        throw (E) exception;
-    }
-
-    public static void executeWithConfiguration(NbGradleProject gp, GradleExecConfiguration c, Runnable task) {
-        ProjectConfigurationProvider<GradleExecConfiguration> pcp = gp.projectLookup(ProjectConfigurationProvider.class);
+    /**
+     * Executes the passed {@link Runnable} with temporarily active configuration. During invocation, the 
+     * {@link ProjectConfigurationProvider#getActiveConfiguration()} will return `c'.
+     * 
+     * @param project project to apply on
+     * @param c the selected configuration. Use {@code null} to reset to the globally active one.
+     * @param task task to execute
+     */
+    public static void executeWithConfiguration(Project project, GradleExecConfiguration c, Runnable task) {
+        ProjectConfigurationProvider<GradleExecConfiguration> pcp = project.getLookup().lookup(ProjectConfigurationProvider.class);
         if (pcp == null) {
             // the project does not support configurations.
             task.run();
             return;
         }
-        Map<NbGradleProject, GradleExecConfiguration> m = selectedConfigs.get();
+        Map<Project, GradleExecConfiguration> m = selectedConfigs.get();
         try {
-            Map<NbGradleProject, GradleExecConfiguration> n = new HashMap<>(m);
-            m.put(gp, c);
+            Map<Project, GradleExecConfiguration> n = new HashMap<>(m);
+            m.put(project, c);
             selectedConfigs.set(n);
             task.run();
         } finally {
             selectedConfigs.set(m);
         }
     }
-    
-    public static GradleExecConfiguration getExplicitConfiguration(NbGradleProject p, Lookup context) {
-        Map<NbGradleProject, GradleExecConfiguration> m = selectedConfigs.get();
+
+    /**
+     * Finds an explicit configuration requested. Can be either a configuration passed in the context, or one set by {@link #executeWithConfiguration(org.netbeans.api.project.Project, org.netbeans.modules.gradle.api.execute.GradleExecConfiguration, java.lang.Runnable)}.
+     * If no explicit configuration is in effect, returns {@code null} (= active configuration is to be used).
+     * @param p the project
+     * @param context context Lookup, i.e. action context one
+     * @return explicitly requested configuration or {@code null}
+     */
+    public static @CheckForNull GradleExecConfiguration getExplicitConfiguration(@NonNull Project p, @NullAllowed Lookup context) {
+        Map<Project, GradleExecConfiguration> m = selectedConfigs.get();
         if (m == null) {
-            return null;
+            return context != null ? context.lookup(GradleExecConfiguration.class) : null;
         }
         return m.get(p);
     }
     
-    public static GradleExecConfiguration getEffectiveConfiguration(NbGradleProject p, Lookup context) {
+    /**
+     * Returns the configuration in effect. Either the {@link #getExplicitConfiguration(org.netbeans.api.project.Project, org.openide.util.Lookup)}, if defined, or
+     * the project's active configuration.
+     * 
+     * @param p the project
+     * @param context context, i.e. action Lookup
+     * @return the effective configuration
+     */
+    public static GradleExecConfiguration getEffectiveConfiguration(Project p, Lookup context) {
         GradleExecConfiguration c = getExplicitConfiguration(p, context);
         if (c != null) {
             return null;
         }
-        ProjectConfigurationProvider<GradleExecConfiguration> pcp = p.projectLookup(ProjectConfigurationProvider.class);
+        ProjectConfigurationProvider<GradleExecConfiguration> pcp = p.getLookup().lookup(ProjectConfigurationProvider.class);
         if (pcp == null) {
             return null;
         }

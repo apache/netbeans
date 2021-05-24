@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.gradle.api.execute;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -83,8 +84,7 @@ public final class GradleExecConfiguration implements ProjectConfiguration {
         return id;
     }
 
-    @Override
-    public String getDisplayName() {
+    public String getName() {
         return displayName;
     }
 
@@ -96,8 +96,9 @@ public final class GradleExecConfiguration implements ProjectConfiguration {
         return commandLineArgs;
     }
     
-    public @NonNull String getName() {
-        if (displayName != null) {
+    @Override
+    public @NonNull String getDisplayName() {
+        if (displayName != null && !displayName.isEmpty()) {
             return displayName;
         } else {
             return id;
@@ -105,7 +106,11 @@ public final class GradleExecConfiguration implements ProjectConfiguration {
     }
     
     void setDisplayName(String displayName) {
-        this.displayName = displayName;
+        if (displayName == null || "".equals(displayName.trim())) {
+            this.displayName = null;
+        } else {
+            this.displayName = displayName.trim();
+        }
     }
 
     void setProjectProperties(Map<String, String> projectProperties) {
@@ -141,14 +146,18 @@ public final class GradleExecConfiguration implements ProjectConfiguration {
         return true;
     }
     
+    public boolean isDefault() {
+        return DEFAULT.equals(getId());
+    }
+    
     static {
         GradleExecAccessor.setInstance(new GradleExecAccessor() {
             @Override
             public GradleExecConfiguration create(String id, String dispName, Map<String, String> projectProps, String cmdline) {
                 GradleExecConfiguration cfg = new GradleExecConfiguration(id);
-                cfg.setDisplayName(dispName);
-                cfg.setCommandLineArgs(cmdline);
-                cfg.setProjectProperties(new HashMap<>(projectProps));
+                cfg.setDisplayName(dispName == null ? "" : dispName);
+                cfg.setCommandLineArgs(cmdline == null ? "" : cmdline);
+                cfg.setProjectProperties(new HashMap<>(projectProps == null ? Collections.emptyMap() : projectProps));
                 return cfg;
             }
 

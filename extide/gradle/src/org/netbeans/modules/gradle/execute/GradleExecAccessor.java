@@ -25,7 +25,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
- *
+ * Accessor to manipulate {@link GradleExecConfiguration} in ways not exposed in the API.
  * @author sdedic
  */
 public abstract class GradleExecAccessor {
@@ -38,15 +38,57 @@ public abstract class GradleExecAccessor {
         return INSTANCE;
     }
     
+    /**
+     * Creates a new configuration instance.
+     * @param id unique ID
+     * @param dispName human-readable name, can be {@code null}.
+     * @param projectProps project properties, can be {@code null} if none defined.
+     * @param cmdline additional arguments, can be {@code null} if none defined.
+     * @return new instance
+     */
     public abstract GradleExecConfiguration create(
             String id, String dispName, Map<String, String> projectProps, String cmdline);
 
+    /**
+     * Updates an existing instance. Cannot change the {@link GradleExecConfiguration#getId()}.
+     * @param conf the configuration to update
+     * @param dispName new display name, or {@code null} to reset
+     * @param projectProps new project properties, use {@code null} for none.
+     * @param cmdline additional arguments, use {@code null} to undefine.
+     * @return updated configuration instance.
+     */
     public abstract GradleExecConfiguration update(
             GradleExecConfiguration conf,
             String dispName, Map<String, String> projectProps, String cmdline);
 
+    /**
+     * Makes a copy of an existing configuration.
+     * @param orig original
+     * @return copy
+     */
     public GradleExecConfiguration copy(GradleExecConfiguration orig) {
-        return create(orig.getId(), orig.getDisplayName(), orig.getProjectProperties(), orig.getCommandLineArgs());
+        return create(orig.getId(), orig.getName(), orig.getProjectProperties(), orig.getCommandLineArgs());
+    }
+
+    /**
+     * Makes a copy of an existing configuration.
+     * @param orig original
+     * @return copy
+     */
+    public GradleExecConfiguration copy(GradleExecConfiguration orig, String newId) {
+        return create(newId, orig.getName(), orig.getProjectProperties(), orig.getCommandLineArgs());
+    }
+
+    /**
+     * Creates the default configuration instance.
+     * @return default instance.
+     */
+    @NbBundle.Messages({
+        "CONFIG_DefaultConfigName=<default>"
+    })
+    public static GradleExecConfiguration createDefault() {
+        return instance().create(GradleExecConfiguration.DEFAULT, Bundle.CONFIG_DefaultConfigName(), 
+                Collections.emptyMap(), null);
     }
     
     protected GradleExecAccessor() {
@@ -57,14 +99,6 @@ public abstract class GradleExecAccessor {
             throw new IllegalStateException();
         }
         INSTANCE = inst;
-    }
-    
-    @NbBundle.Messages({
-        "CONFIG_DefaultConfigName=<default>"
-    })
-    public static GradleExecConfiguration createDefault() {
-        return instance().create(GradleExecConfiguration.DEFAULT, Bundle.CONFIG_DefaultConfigName(), 
-                Collections.emptyMap(), null);
     }
     
     static {

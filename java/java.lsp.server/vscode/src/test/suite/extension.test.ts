@@ -276,6 +276,12 @@ class Main {
             assert.ok(res, "No boot classpath returned");
             assert.ok(res.length > 0, `Invalid number of boot classpath roots returned`);
 
+            console.log("Test: get project boot source classpath");
+            res = await vscode.commands.executeCommand("java.get.project.classpath", Uri.file(folder).toString(), 'BOOT', true);
+            console.log(`Test: get project boot source classpath finished with ${res}`);
+            assert.ok(res, "No boot source classpath returned");
+            assert.ok(res.length > 0, `Invalid number of boot source classpath roots returned`);
+
             console.log("Test: get all project packages");
             res = await vscode.commands.executeCommand("java.get.project.packages", Uri.file(folder).toString());
             console.log(`Test: get all project packages finished with ${res}`);

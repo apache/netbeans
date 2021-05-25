@@ -60,6 +60,7 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.java.project.JavaProjectConstants;
+import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -148,11 +149,19 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             case Server.JAVA_GET_PROJECT_CLASSPATH: {
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 ClasspathInfo.PathKind kind = params.getArguments().size() > 1 ? ClasspathInfo.PathKind.valueOf(((JsonPrimitive) params.getArguments().get(1)).getAsString()) : ClasspathInfo.PathKind.COMPILE;
+                boolean preferSources = params.getArguments().size() > 2 ? ((JsonPrimitive) params.getArguments().get(2)).getAsBoolean() : false;
                 return getSourceRoots(uri, JavaProjectConstants.SOURCES_TYPE_JAVA).thenApply(roots -> {
                     HashSet<FileObject> cpRoots = new HashSet<>();
                     for(FileObject root : roots) {
                         for (FileObject cpRoot : ClasspathInfo.create(root).getClassPath(kind).getRoots()) {
-                            cpRoots.add(cpRoot);
+                            FileObject[] srcRoots = preferSources ? SourceForBinaryQuery.findSourceRoots(cpRoot.toURL()).getRoots() : null;
+                            if (srcRoots != null && srcRoots.length > 0) {
+                                for (FileObject srcRoot : srcRoots) {
+                                    cpRoots.add(srcRoot);
+                                }
+                            } else {
+                                cpRoots.add(cpRoot);
+                            }
                         }
                     }
                     return cpRoots.stream().map(fo -> Utils.toUri(fo)).collect(Collectors.toList());

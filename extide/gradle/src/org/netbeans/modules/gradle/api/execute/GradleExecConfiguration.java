@@ -20,6 +20,7 @@ package org.netbeans.modules.gradle.api.execute;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import org.netbeans.api.annotations.common.NonNull;
@@ -155,18 +156,18 @@ public final class GradleExecConfiguration implements ProjectConfiguration {
             @Override
             public GradleExecConfiguration create(String id, String dispName, Map<String, String> projectProps, String cmdline) {
                 GradleExecConfiguration cfg = new GradleExecConfiguration(id);
-                cfg.setDisplayName(dispName == null ? "" : dispName);
-                cfg.setCommandLineArgs(cmdline == null ? "" : cmdline);
-                cfg.setProjectProperties(new HashMap<>(projectProps == null ? Collections.emptyMap() : projectProps));
+                cfg.setDisplayName(dispName == null || dispName.trim().isEmpty() ? null : dispName.trim());
+                cfg.setCommandLineArgs(cmdline == null || cmdline.trim().isEmpty() ? "" : cmdline.trim());
+                cfg.setProjectProperties(new LinkedHashMap<>(projectProps == null ? Collections.emptyMap() : projectProps));
                 return cfg;
             }
 
             public GradleExecConfiguration update(
                     GradleExecConfiguration conf,
                     String dispName, Map<String, String> projectProps, String cmdline) {
-                conf.setDisplayName(dispName);
-                conf.setProjectProperties(projectProps);
-                conf.setCommandLineArgs(cmdline);
+                conf.setDisplayName(dispName == null || dispName.trim().isEmpty() ? null : dispName.trim());
+                conf.setCommandLineArgs(cmdline == null || cmdline.trim().isEmpty() ? "" : cmdline.trim());
+                conf.setProjectProperties(new LinkedHashMap<>(projectProps == null ? Collections.emptyMap() : projectProps));
                 return conf;
             }
         });

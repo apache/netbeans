@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.gradle.actions;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -34,13 +36,20 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.xml.parsers.ParserConfigurationException;
 import org.netbeans.api.project.Project;
+import static org.netbeans.modules.gradle.api.NbGradleProject.PROP_PROJECT_INFO;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.execute.ConfigurableActionProvider;
 import org.netbeans.modules.gradle.execute.GradleExecAccessor;
 import org.netbeans.modules.gradle.spi.actions.GradleActionsProvider;
 import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
+import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;
+import org.openide.filesystems.FileChangeAdapter;
+import org.openide.filesystems.FileChangeListener;
+import org.openide.filesystems.FileEvent;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileRenameEvent;
 import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
@@ -62,6 +71,40 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
     
     private final Project project;
     
+    final PropertyChangeListener pcl = new PropertyChangeListener() {
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
+                reload();
+            }
+        }
+    };
+    
+    final FileChangeListener fcl = new FileChangeAdapter() {
+        @Override
+        public void fileRenamed(FileRenameEvent fe) {
+            actionFileChanged(fe.getFile(), fe.getName());
+        }
+
+        @Override
+        public void fileDeleted(FileEvent fe) {
+            actionFileChanged(fe.getFile(), null);
+        }
+
+        @Override
+        public void fileChanged(FileEvent fe) {
+            actionFileChanged(fe.getFile(), null);
+        }
+
+        @Override
+        public void fileDataCreated(FileEvent fe) {
+            actionFileChanged(fe.getFile(), null);
+        }
+    };
+    
+    private ProjectConfigurationProvider confProvider;
+
+    // @GuardedBy(this)
     private List<ChangeListener> listeners = new ArrayList<>();
     
     /**
@@ -82,9 +125,16 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
     
     // @GuardedBy(this)
     private Set<String> actionIDs = new HashSet<>();
-
-    public ConfigurableActionsProviderImpl(Project project) {
+    
+    public ConfigurableActionsProviderImpl(Project project, Lookup l) {
         this.project = project;
+    }
+    
+    private ProjectConfigurationProvider conf() {
+        if (confProvider != null) {
+            return confProvider;
+        }
+        return confProvider = project.getLookup().lookup(ProjectConfigurationProvider.class);
     }
 
     @Override
@@ -95,7 +145,8 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
 
     @Override
     public Set<String> customizedActions() {
-        return Collections.emptySet();
+        ActionData ad = getActionData(GradleExecConfiguration.DEFAULT);
+        return ad == null ? Collections.emptySet() : ad.mappings.keySet();
     }
 
     @Override
@@ -141,17 +192,18 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
                     ActionMapping m = null;
                     
                     if (ad != null) {
-                        m = ad.mappings.get(action);
+                        m = ad.getAction(action);
                     }
                     if (m == null) {
-                        m = getActionData(GradleExecConfiguration.DEFAULT).mappings.get(action);
+                        m = getActionData(GradleExecConfiguration.DEFAULT).getAction(action);
                     }
                     return m;
                 }
 
                 @Override
                 public Set<String> customizedActions() {
-                    return Collections.emptySet();
+                    ActionData ad = getActionData(configurationId);
+                    return ad == null ? Collections.emptySet() : ad.customizedMappings.keySet();
                 }
             };
         }
@@ -257,7 +309,6 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
         Map<String, ActionData> actionMap = new HashMap<>();
         
         public void run() {
-            Collection x = Lookups.forPath("Projects/org-netbeans-modules-gradle/Plugins/io.micronaut.application/Lookup").lookupAll(Object.class);
             Collection<? extends GradleActionsProvider> lst = providers();
             for (GradleActionsProvider p : lst) {
                 actionIDs.addAll(p.getSupportedActions());
@@ -301,6 +352,9 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
             }
         }
         
+        private void loadCustomActions(GradleExecConfiguration cfg, Map<String, ActionMapping> mapping) {
+        }
+        
         private GradleExecConfiguration mergeConfigurations(GradleExecConfiguration one, GradleExecConfiguration two) {
             String dispName = one.getName();
             Map<String, String> props = new HashMap<>(one.getProjectProperties());
@@ -322,10 +376,32 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
     private static class ActionData {
         private final GradleExecConfiguration cfg;
         private final Map<String, ActionMapping>  mappings = new HashMap<>();
+        private final Map<String, ActionMapping>  customizedMappings = new HashMap<>();
 
         public ActionData(GradleExecConfiguration cfg) {
             this.cfg = cfg;
         }
+        
+        ActionMapping getAction(String id) {
+            ActionMapping am = customizedMappings.get(id);
+            return am != null ? am : mappings.get(id);
+        }
+    }
+    
+    private void reload() {
+        synchronized (this) {
+            cache = null;
+        }
+    }
+    
+    /**
+     * Informs that action file has been changed, created or renamed. On rename, originalName
+     * should be non-null.
+     * @param af
+     * @param originalName 
+     */
+    private void actionFileChanged(FileObject af, String originalName) {
+        reload();
     }
     
 }

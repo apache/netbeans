@@ -312,7 +312,7 @@ public class GradleProjectConfigProvider implements
      * @return 
      */
     private Map<String, GradleExecConfiguration> buildConfigurations(Map<String, GradleExecConfiguration> sharedConf, Map<String, GradleExecConfiguration> privateConf) {
-        Map<String, GradleExecConfiguration> result = new HashMap<>();
+        Map<String, GradleExecConfiguration> result = new LinkedHashMap<>();
         result.putAll(sharedConf);
         result.putAll(privateConf);
         for (GradleExecConfiguration c : getFixedConfigurations()) {
@@ -322,7 +322,6 @@ public class GradleProjectConfigProvider implements
     }
     
     public Collection<GradleExecConfiguration> getFixedConfigurations() {
-        Collection<GradleExecConfiguration> result = new LinkedHashSet<>();
         if (configProvider == null) {
             ConfigurableActionProvider p = project.getLookup().lookup(ConfigurableActionProvider.class);
             if (p == null) {
@@ -354,14 +353,17 @@ public class GradleProjectConfigProvider implements
             }
         }
         boolean defPresent = false;
+        List<GradleExecConfiguration> collected = new ArrayList<>();
         for (GradleExecConfiguration c : configProvider.findConfigurations()) {
             // rely on that equals on id
             defPresent |= GradleExecConfiguration.DEFAULT.equals(c.getId());
-            result.add(c);
+            collected.add(c);
         }
+        Collection<GradleExecConfiguration> result = new LinkedHashSet<>();
         if (!defPresent) {
             result.add(GradleExecAccessor.createDefault());
         }
+        result.addAll(collected);
         return result;
     }
 

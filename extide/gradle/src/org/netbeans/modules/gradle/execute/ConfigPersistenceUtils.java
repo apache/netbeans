@@ -19,6 +19,7 @@
 package org.netbeans.modules.gradle.execute;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
@@ -49,11 +50,16 @@ public final class ConfigPersistenceUtils {
     public static final String CONFIG_ATTRIBUTE_DISPLAY = "displayName"; // NOI18N
     
     public static void writeConfigurations(List<GradleExecConfiguration> configs, AuxiliaryConfiguration aux, String configId, boolean shared) {
+        writeConfigurations0(configs, aux, configId, shared);
+    }
+
+    // for testing purposes
+    static Element writeConfigurations0(List<GradleExecConfiguration> configs, AuxiliaryConfiguration aux, String configId, boolean shared) {
         Element el = aux.getConfigurationFragment(CONFIG_ELEMENT_CONFIGURATIONS, CONFIG_NAMESPACE, shared);
-        boolean defConfig = (null == configId || GradleExecConfiguration.DEFAULT.equals(configId));
+        boolean defConfig = shared || (null == configId || GradleExecConfiguration.DEFAULT.equals(configId));
         if (el == null) {
-            if (configs.isEmpty()) {
-                return;
+            if (configs.isEmpty() && defConfig) {
+                return null;
             }
             el = XMLUtil.createDocument(CONFIG_ELEMENT_CONFIGURATIONS, CONFIG_NAMESPACE, null, null).getDocumentElement();
             if (!defConfig) {
@@ -62,6 +68,7 @@ public final class ConfigPersistenceUtils {
         } else {
             if (configs.isEmpty() && defConfig) {
                 aux.removeConfigurationFragment(CONFIG_ELEMENT_CONFIGURATIONS, CONFIG_NAMESPACE, shared);
+                return null;
             }
         }
         
@@ -103,6 +110,7 @@ public final class ConfigPersistenceUtils {
         }
         
         aux.putConfigurationFragment(el, shared);
+        return null;
     }
     
     public static Map<String, GradleExecConfiguration> readConfigurations(Map<String, GradleExecConfiguration> result, AuxiliaryConfiguration aux, boolean shared) {
@@ -116,10 +124,10 @@ public final class ConfigPersistenceUtils {
                     continue;
                 }
                 String dispString = c.getAttribute(CONFIG_ATTRIBUTE_DISPLAY);
-                Map<String, String> projectProps = new HashMap<>();
+                Map<String, String> projectProps = new LinkedHashMap<>();
                 String cmdArgs = null;
                 
-                NodeList props = el.getElementsByTagNameNS(CONFIG_NAMESPACE, CONFIG_ELEMENT_PROPERTY);
+                NodeList props = c.getElementsByTagNameNS(CONFIG_NAMESPACE, CONFIG_ELEMENT_PROPERTY);
                 for (int pi = 0; pi < props.getLength(); pi++) {
                     Element p = (Element)props.item(pi);
                     String n = p.getAttribute(CONFIG_ATTRIBUTE_NAME);
@@ -131,7 +139,7 @@ public final class ConfigPersistenceUtils {
                         projectProps.put(n, v);
                     }
                 }
-                Element argsEl = XMLUtil.findElement(el, CONFIG_ELEMENT_ARGS, CONFIG_NAMESPACE);
+                Element argsEl = XMLUtil.findElement(c, CONFIG_ELEMENT_ARGS, CONFIG_NAMESPACE);
                 if (argsEl != null) {
                     cmdArgs = argsEl.getTextContent();
                 }

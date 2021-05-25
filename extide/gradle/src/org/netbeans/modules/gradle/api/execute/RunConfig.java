@@ -42,13 +42,19 @@ public final class RunConfig {
     final String action;
     final String displayName;
 
+    final GradleExecConfiguration execConfig;
 
     public RunConfig(Project project, String action, String displayName, Set<ExecFlag> execFlags, GradleCommandLine commandLine) {
+        this(project, action, displayName, execFlags, commandLine, null);
+    }
+    
+    public RunConfig(Project project, String action, String displayName, Set<ExecFlag> execFlags, GradleCommandLine commandLine, GradleExecConfiguration execConfig) {
         this.project = project;
         this.action = action;
         this.displayName = displayName;
         this.execFlags = Collections.unmodifiableSet(execFlags);
         this.commandLine = commandLine;
+        this.execConfig = execConfig;
     }
 
     public Project getProject() {
@@ -75,4 +81,7 @@ public final class RunConfig {
         return action;
     }
 
+    public GradleExecConfiguration getExecConfig() {
+        return execConfig;
+    }
 }

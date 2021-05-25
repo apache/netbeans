@@ -23,7 +23,6 @@ import java.awt.Component;
 import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Objects;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
@@ -62,7 +61,7 @@ public class ConfigurationsPanel extends javax.swing.JPanel implements HelpCtx.P
     }
 
     @NbBundle.Messages({
-        "CONF_DisplayNameAndId={0} ({1}",
+        "CONF_DisplayNameAndId={0} ({1})",
         "CONF_DisplayNameOnly={0}"
     })
     ConfigurationsPanel(ProjectConfigurationUpdater updater, ConfigurationSnapshot handle,  NbGradleProject project) {

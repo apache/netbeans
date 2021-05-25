@@ -36,6 +36,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import org.netbeans.modules.gradle.spi.actions.ProjectConfigurationSupport;
@@ -312,7 +313,7 @@ public class GradleProjectConfigProvider implements
      * @return 
      */
     private Map<String, GradleExecConfiguration> buildConfigurations(Map<String, GradleExecConfiguration> sharedConf, Map<String, GradleExecConfiguration> privateConf) {
-        Map<String, GradleExecConfiguration> result = new LinkedHashMap<>();
+        Map<String, GradleExecConfiguration> result = new HashMap<>();
         result.putAll(sharedConf);
         result.putAll(privateConf);
         for (GradleExecConfiguration c : getFixedConfigurations()) {
@@ -322,11 +323,17 @@ public class GradleProjectConfigProvider implements
     }
     
     public Collection<GradleExecConfiguration> getFixedConfigurations() {
+        Collection<GradleExecConfiguration> result = new LinkedHashSet<>();
         if (configProvider == null) {
             ConfigurableActionProvider p = project.getLookup().lookup(ConfigurableActionProvider.class);
             if (p == null) {
                 // configurae null provider.
                 p = new ConfigurableActionProvider() {
+                    @Override
+                    public ActionMapping findDefaultMapping(String configurationId, String action) {
+                        return null;
+                    }
+
                     @Override
                     public void addChangeListener(ChangeListener l) {
                     }
@@ -353,17 +360,14 @@ public class GradleProjectConfigProvider implements
             }
         }
         boolean defPresent = false;
-        List<GradleExecConfiguration> collected = new ArrayList<>();
         for (GradleExecConfiguration c : configProvider.findConfigurations()) {
             // rely on that equals on id
             defPresent |= GradleExecConfiguration.DEFAULT.equals(c.getId());
-            collected.add(c);
+            result.add(c);
         }
-        Collection<GradleExecConfiguration> result = new LinkedHashSet<>();
         if (!defPresent) {
             result.add(GradleExecAccessor.createDefault());
         }
-        result.addAll(collected);
         return result;
     }
 

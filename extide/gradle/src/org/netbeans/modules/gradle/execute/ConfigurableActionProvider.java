@@ -22,6 +22,7 @@ package org.netbeans.modules.gradle.execute;
 import java.util.List;
 import javax.swing.event.ChangeListener;
 import org.gradle.internal.impldep.javax.annotation.Nullable;
+import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import org.netbeans.spi.project.ProjectConfiguration;
@@ -60,4 +61,12 @@ public interface ConfigurableActionProvider {
      * @return the action mapping for the action or {@code null} if none found
      */
     ProjectActionMappingProvider findActionProvider(@Nullable String configurationId);
+    
+    /**
+     * Returns a default mapping for the configuration
+     * @param configurationId
+     * @param action
+     * @return 
+     */
+    ActionMapping findDefaultMapping(@Nullable String configurationId, String action);
 }

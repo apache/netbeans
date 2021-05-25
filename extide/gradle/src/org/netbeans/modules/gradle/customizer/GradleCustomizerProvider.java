@@ -36,6 +36,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JComponent;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.gradle.configurations.ConfigurationSnapshot;
 import org.netbeans.modules.gradle.spi.customizer.support.FilterPanelProvider;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
@@ -161,7 +162,9 @@ public class GradleCustomizerProvider implements CustomizerProvider2 {
             @Override
             public JComponent createComponent(ProjectCustomizer.Category category, Lookup context) {
                 Project project = context.lookup(Project.class);
-                BuildActionsCustomizer customizer = new BuildActionsCustomizer(project);
+                ConfigurationSnapshot snap = ConfigurationSnapshot.forProject(context, 
+                        project, (r) -> category.setCloseListener(e -> r.run()));
+                BuildActionsCustomizer customizer = new BuildActionsCustomizer(project, snap);
                 category.setStoreListener((ActionEvent e) -> customizer.save());
                 return customizer;
             }

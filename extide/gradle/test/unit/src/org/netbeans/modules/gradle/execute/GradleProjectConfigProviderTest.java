@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Rule;
@@ -45,7 +46,6 @@ import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.test.TestFileUtils;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.xml.XMLUtil;
 import org.w3c.dom.Element;
@@ -61,6 +61,11 @@ public class GradleProjectConfigProviderTest {
     
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
+    
+    @After
+    public void cleanUp() {
+        mappingURL = null;
+    }
     
     private File dataFile(String fn) throws IOException, URISyntaxException {
         URL u = getClass().getResource(fn);
@@ -159,13 +164,27 @@ public class GradleProjectConfigProviderTest {
     @Test
     public void testProvidedConfigurationsPresent() throws Exception {
         projectFolder = FileUtil.toFileObject(tempFolder.newFolder());
+        FileUtil.createFolder(projectFolder, "src/main/java");
         TestFileUtils.writeFile(projectFolder, "build.gradle",
                 "apply plugin: 'java'\n"
                             
         );
+        Project p = ProjectManager.getDefault().findProject(projectFolder);
+        
+        mappingURL = dataFile("action-mapping.xml").toURL();
+        
+        ProjectConfigurationProvider<GradleExecConfiguration> pcp = p.getLookup().lookup(ProjectConfigurationProvider.class);
+        List<? extends GradleExecConfiguration> configs = new ArrayList<>(pcp.getConfigurations());
+        assertEquals(2, configs.size());
+        
+        ConfigPersistenceUtilsTest.assertConfiguration(
+                GradleExecAccessor.createDefault(), configs.get(0));
+        
+        GradleExecConfiguration provided = configs.get(1);
+        assertEquals("continuous", provided.getId());
     }
     
-    static URL mappingURL = null;
+    static volatile URL mappingURL = null;
     
     @ProjectServiceProvider(service = GradleActionsProvider.class, 
             projectType = "org-netbeans-modules-gradle/Plugins/java")
@@ -184,7 +203,7 @@ public class GradleProjectConfigProviderTest {
             @Override
             public InputStream defaultActionMapConfig() {
                 try {
-                    return mappingURL.openStream();
+                    return mappingURL == null ? null : mappingURL.openStream();
                 } catch (IOException ex) {
                     return null;
                 }

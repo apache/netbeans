@@ -267,7 +267,7 @@ public class ActionProviderImpl implements ActionProvider {
         if (showUI) {
             GradleExecutorOptionsPanel pnl = new GradleExecutorOptionsPanel(project);
             DialogDescriptor dd = new DialogDescriptor(pnl, TIT_Run_Gradle());
-            pnl.setCommandLine(cfg.getCommandLine());
+            pnl.setCommandLine(cfg.getCommandLine(), execCfg);
             Object retValue = DialogDisplayer.getDefault().notify(dd);
 
             if (retValue == DialogDescriptor.OK_OPTION) {

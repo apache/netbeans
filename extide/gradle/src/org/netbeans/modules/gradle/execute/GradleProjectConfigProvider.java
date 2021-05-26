@@ -314,7 +314,7 @@ public class GradleProjectConfigProvider implements
      * @return 
      */
     private Map<String, GradleExecConfiguration> buildConfigurations(Map<String, GradleExecConfiguration> sharedConf, Map<String, GradleExecConfiguration> privateConf) {
-        Map<String, GradleExecConfiguration> result = new HashMap<>();
+        Map<String, GradleExecConfiguration> result = new LinkedHashMap<>();
         result.putAll(sharedConf);
         result.putAll(privateConf);
         for (GradleExecConfiguration c : getFixedConfigurations()) {

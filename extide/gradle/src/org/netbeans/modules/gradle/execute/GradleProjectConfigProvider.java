@@ -39,7 +39,6 @@ import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.configurations.ConfigurationsPanelProvider;
 import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
-import org.netbeans.modules.gradle.spi.actions.ProjectConfigurationSupport;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.AuxiliaryConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;

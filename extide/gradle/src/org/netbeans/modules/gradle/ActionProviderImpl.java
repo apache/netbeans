@@ -78,7 +78,7 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
-import org.netbeans.modules.gradle.spi.actions.ProjectConfigurationSupport;
+import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.support.ProjectOperations;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;

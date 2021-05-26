@@ -78,7 +78,7 @@ public abstract class GradleExecAccessor {
     public GradleExecConfiguration copy(GradleExecConfiguration orig, String newId) {
         return create(newId, orig.getName(), orig.getProjectProperties(), orig.getCommandLineArgs());
     }
-
+    
     /**
      * Creates the default configuration instance.
      * @return default instance.

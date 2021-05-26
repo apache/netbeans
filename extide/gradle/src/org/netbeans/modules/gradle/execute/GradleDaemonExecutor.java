@@ -175,6 +175,9 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             GradleCommandLine cmd = config.getCommandLine();
 
             GradleExecConfiguration cfg = config.getExecConfig();
+            if (cfg == null) {
+                cfg = ProjectConfigurationSupport.getEffectiveConfiguration(config.getProject(), Lookup.EMPTY);
+            }
             if (cfg != null) {
                 GradleCommandLine addConfigParts = null;
                 

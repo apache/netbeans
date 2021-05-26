@@ -23,8 +23,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.execute.GradleExecAccessor;
+import org.netbeans.modules.gradle.spi.actions.BeforeBuildActionHook;
+import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
 import org.netbeans.spi.project.ProjectConfiguration;
+import org.netbeans.spi.project.ProjectConfigurationProvider;
+import org.openide.util.Lookup;
 
 /**
  * Represents a configuration for the Gradle project.  Configurations can modify the build
@@ -166,6 +172,21 @@ public final class GradleExecConfiguration implements ProjectConfiguration {
         }
         sb.append('}');
         return sb.toString();
+    }
+    
+    /**
+     * Attempts to find an effective configuration for the project. The effective configuration is the 
+     * {@link ProjectConfigurationProvider#getActiveConfiguration()}, unless it has been overriden by contents of 
+     * the `context` {@link Lookup}, or by some caller. Can be used from implementations of {@link AfterBuildActionHoo},
+     * {@link BeforeBuildActionHook} etc.
+     * 
+     * @param prj project
+     * @param context optional additional context, can be {@code null}.
+     * @return effective configuraiton, or the default one.
+     */
+    public static @NonNull GradleExecConfiguration findEffectiveConfiguration(@NonNull Project prj, @NullAllowed Lookup context) {
+        GradleExecConfiguration cfg = ProjectConfigurationSupport.getEffectiveConfiguration(prj, context == null ? Lookup.EMPTY : context);
+        return cfg != null ? cfg : GradleExecAccessor.createDefault();
     }
     
     static {

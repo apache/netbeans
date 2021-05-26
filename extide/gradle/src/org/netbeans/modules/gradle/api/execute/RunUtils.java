@@ -59,7 +59,7 @@ import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
 import org.netbeans.modules.gradle.spi.GradleSettings;
-import org.netbeans.modules.gradle.spi.actions.ProjectConfigurationSupport;
+import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
 import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.DialogDescriptor;
@@ -125,6 +125,14 @@ public final class RunUtils {
      */
     public static ExecutorTask executeGradle(RunConfig config, String initialOutput) {
         LifecycleManager.getDefault().saveAll();
+        
+        if (config.getExecConfig() == null) {
+            // enhance the RunConfig with the active Configuration.
+            config = new RunConfig(config.getProject(), config.getActionName(), 
+                    config.getTaskDisplayName(), config.getExecFlags(), config.getCommandLine(), 
+                    ProjectConfigurationSupport.getEffectiveConfiguration(config.getProject(), Lookup.EMPTY)
+            );
+        }
 
         GradleDaemonExecutor exec = new GradleDaemonExecutor(config);
         ExecutorTask task = executeGradleImpl(config.getTaskDisplayName(), exec, initialOutput);

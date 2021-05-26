@@ -34,7 +34,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.execute.GradleExecAccessor;
 import org.netbeans.modules.gradle.execute.ProjectConfigurationUpdater;
-import org.netbeans.modules.gradle.spi.actions.ProjectConfigurationSupport;
+import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
 import org.openide.util.Lookup;
 
 /**

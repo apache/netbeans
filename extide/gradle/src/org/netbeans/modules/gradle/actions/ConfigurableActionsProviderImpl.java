@@ -38,6 +38,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.xml.parsers.ParserConfigurationException;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.api.GradleBaseProject;
 import static org.netbeans.modules.gradle.api.NbGradleProject.PROP_PROJECT_INFO;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
@@ -148,6 +149,9 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
     // @GuardedBy(this)
     private Set<String> actionIDs = new HashSet<>();
     
+    // @GuardedBy(this)
+    private Set<String> plugins;
+    
     public ConfigurableActionsProviderImpl(Project project, Lookup l) {
         this.project = project;
         this.projectDirectory = project.getProjectDirectory();
@@ -187,7 +191,7 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
     @Override
     public ActionMapping findMapping(String action) {
         ActionData ad = getActionData(GradleExecConfiguration.DEFAULT);
-        return ad == null ? null : ad.mappings.get(action);
+        return ad == null ? null : ad.getAction(action);
     }
 
     @Override
@@ -272,13 +276,28 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
             snap = updateCache(serial.incrementAndGet(), null);
         }
         ActionData ad = snap.get(configurationId);
-        if (ad == null) {
-            ad = snap.get(GradleExecConfiguration.DEFAULT);
+        if (ad != null) {
+            ActionMapping result = ad.getDefaultAction(action);
+            if (result != null) {
+                return result;
+            }
         }
-        return ad == null ? null : ad.getAction(action);
+        ActionData def = snap.get(GradleExecConfiguration.DEFAULT);
+        if (def != ad && def != null) {
+            return def.getDefaultAction(action);
+        }
+        return null;
     }
     
-    
+    private synchronized Set<String> getPlugins() {
+        synchronized(this) {
+            if (plugins == null) {
+                GradleBaseProject gbp = GradleBaseProject.get(project);
+                plugins = gbp.getPlugins();
+            }
+            return plugins;
+        }
+    }
     
     private Collection<? extends GradleActionsProvider> providers() {
         if (providers != null) {
@@ -339,6 +358,7 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
     private void refresh() {
         Set<String> confIds;
         synchronized (this) {
+            plugins = null;
             confIds = cache == null ? null : cache.keySet();
             cache = null;
             if (pendingTask != null) {
@@ -566,9 +586,8 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
                 }
                 Set<String> newEntries = new HashSet<>();
                 for (ActionMapping m : defaultMappings) {
-                    if (ad.mappings.putIfAbsent(m.getName(), m) == null) {
-                        newEntries.add(m.getName());
-                    }
+                    ad.mappings.add(m);
+                    newEntries.add(m.getName());
                 }
                 LOG.log(Level.FINER, "Loaded actions: {0}", newEntries);
                 
@@ -592,9 +611,8 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
                     }
                     newEntries = new HashSet<>();
                     for (ActionMapping m : mapp.get(c)) {
-                        if (ad.mappings.putIfAbsent(m.getName(), m) == null) {
-                            newEntries.add(m.getName());
-                        }
+                        ad.mappings.add(m);
+                        newEntries.add(m.getName());
                     }
                     LOG.log(Level.FINER, "Loaded config actions: {0}", newEntries);
                 }
@@ -617,9 +635,9 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
         }
     }
     
-    private static class ActionData {
+    private class ActionData {
         private final GradleExecConfiguration cfg;
-        private final Map<String, ActionMapping>  mappings = new HashMap<>();
+        private final List<ActionMapping>  mappings = new ArrayList<>();
         private final boolean fromProvider;
         private FileObject monitoringFile;
         
@@ -635,8 +653,24 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
         }
         
         ActionMapping getAction(String id) {
-            ActionMapping am = customizedMappings.get(id);
-            return am != null ? am : mappings.get(id);
+            ActionMapping result = customizedMappings.get(id);
+            if (result != null) {
+                return result;
+            } else {
+                return getDefaultAction(id);
+            }
+        }
+        
+        ActionMapping getDefaultAction(String id) {
+            ActionMapping result = null;
+            for (ActionMapping mapping : mappings) {
+                if (mapping.getName().equals(id) && mapping.isApplicable(getPlugins())) {
+                    if (result == null || result.compareTo(mapping) < 0) {
+                        result = mapping;
+                    }
+                }
+            }
+            return result;
         }
         
         // @GuardedBy(ConfigurableActionProvider.this)

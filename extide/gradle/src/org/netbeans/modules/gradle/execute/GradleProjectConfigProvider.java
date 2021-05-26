@@ -35,15 +35,16 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
+import org.netbeans.modules.gradle.configurations.ConfigurationsPanelProvider;
 import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import org.netbeans.modules.gradle.spi.actions.ProjectConfigurationSupport;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.AuxiliaryConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;
+import org.netbeans.spi.project.ui.CustomizerProvider2;
 import org.openide.util.Lookup;
 
 /**
@@ -181,12 +182,13 @@ public class GradleProjectConfigProvider implements
 
     @Override
     public boolean hasCustomizer() {
-        return false;
+        return project.getLookup().lookup(CustomizerProvider2.class) != null;
     }
 
     @Override
     public void customize() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        CustomizerProvider2 provider = project.getLookup().lookup(CustomizerProvider2.class);
+        provider.showCustomizer(ConfigurationsPanelProvider.PANEL_CONFIGURATIONS, null);
     }
 
     @Override

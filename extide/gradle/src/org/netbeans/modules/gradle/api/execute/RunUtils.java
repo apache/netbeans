@@ -59,6 +59,7 @@ import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
 import org.netbeans.modules.gradle.spi.GradleSettings;
+import org.netbeans.modules.gradle.spi.actions.ProjectConfigurationSupport;
 import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.DialogDescriptor;
@@ -146,6 +147,14 @@ public final class RunUtils {
      * @since 1.5
      */
     public static RunConfig createRunConfig(Project project, String action, String displayName, Set<ExecFlag> flags, String... args) {
+        return createRunConfig(project, action, displayName, Lookup.EMPTY, ProjectConfigurationSupport.getEffectiveConfiguration(project, Lookup.EMPTY), flags, args);
+    }
+    
+    public static RunConfig createRunConfig(Project project, String action, String displayName, Lookup context, 
+            GradleExecConfiguration cfg, Set<ExecFlag> flags, String... args) {
+        if (cfg == null) {
+            cfg = ProjectConfigurationSupport.getEffectiveConfiguration(project, context);
+        }
         GradleBaseProject gbp = GradleBaseProject.get(project);
 
         GradleCommandLine syscmd = GradleCommandLine.getDefaultCommandLine();
@@ -167,7 +176,7 @@ public final class RunUtils {
 
 
         GradleCommandLine cmd = GradleCommandLine.combine(basecmd, new GradleCommandLine(args));
-        RunConfig ret = new RunConfig(project, action, displayName, flags, cmd);
+        RunConfig ret = new RunConfig(project, action, displayName, flags, cmd, cfg);
         return ret;
     }
 

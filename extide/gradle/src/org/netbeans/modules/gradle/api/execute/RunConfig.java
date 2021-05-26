@@ -66,7 +66,7 @@ public final class RunConfig {
     }
 
     public RunConfig withCommandLine(GradleCommandLine cmd) {
-        return new RunConfig(project, action, displayName, execFlags, cmd);
+        return new RunConfig(project, action, displayName, execFlags, cmd, execConfig);
     }
 
     public Set<ExecFlag> getExecFlags() {
@@ -81,6 +81,11 @@ public final class RunConfig {
         return action;
     }
 
+    /**
+     * Selected executable configuration. Should be never {@code null}, as the default
+     * configuration always exists.
+     * @return configuration.
+     */
     public GradleExecConfiguration getExecConfig() {
         return execConfig;
     }

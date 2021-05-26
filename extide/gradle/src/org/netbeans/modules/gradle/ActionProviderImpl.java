@@ -262,7 +262,7 @@ public class ActionProviderImpl implements ActionProvider {
         final NbGradleProjectImpl prj = project.getLookup().lookup(NbGradleProjectImpl.class);
         final String[] args = RunUtils.evaluateActionArgs(project, action, argLine, ctx);
         Set<ExecFlag> flags = mapping.isRepeatable() ? EnumSet.of(ExecFlag.REPEATABLE) : EnumSet.noneOf(ExecFlag.class);
-        RunConfig cfg = RunUtils.createRunConfig(project, action, taskName(project, action, ctx), flags, args);
+        RunConfig cfg = RunUtils.createRunConfig(project, action, taskName(project, action, ctx), ctx, execCfg, flags, args);
 
         if (showUI) {
             GradleExecutorOptionsPanel pnl = new GradleExecutorOptionsPanel(project);

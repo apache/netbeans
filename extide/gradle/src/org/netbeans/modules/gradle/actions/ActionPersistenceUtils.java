@@ -34,7 +34,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- *
+ * Serialization and deserialization helpers to persist user mapping customizations for
+ * individual configurations.
+ * 
  * @author sdedic
  */
 public class ActionPersistenceUtils {
@@ -54,13 +56,18 @@ public class ActionPersistenceUtils {
      * Prefix for the configuration-specific action mappings in the project directory. The 
      * entire filename is formed as {@link #NBACTIONS_CONFIG_PREFIX} + [configurationId] + {@link #NBACTIONS_XML_EXT}.
      */
-    static final String NBACTIONS_CONFIG_PREFIX = "nb-actions-";
+    static final String NBACTIONS_CONFIG_PREFIX = "nb-actions-"; // NOI18N
     
     /**
      * Extension for the configuration-specific mappings.
      */
-    static final String NBACTIONS_XML_EXT = ".xml";
+    static final String NBACTIONS_XML_EXT = ".xml"; // NOI18N
     
+    /**
+     * Derives the action config filename from config ID.
+     * @param configId configuration ID
+     * @return filename
+     */
     public static String getActionsFileName(String configId) {
         if (configId == null || GradleExecConfiguration.DEFAULT.equals(configId)) {
             return GradleFiles.GRADLE_PROPERTIES_NAME;
@@ -69,10 +76,22 @@ public class ActionPersistenceUtils {
         }
     }
 
+    /**
+     * Returns FileObject (if exists) for configuration's customizations.
+     * @param projectDirectory project directory
+     * @param configId configuration ID
+     * @return file instance, if it exists.
+     */
     public static FileObject findActionsFile(FileObject projectDirectory, String configId) {
         return projectDirectory.getFileObject(getActionsFileName(configId));
     }
     
+    /**
+     * Saves actions for the default configuration into gradle.properties.
+     * @param projectDirectory project directory
+     * @param actions actions to save.
+     * @throws IOException on I/O error
+     */
     public static void saveDefaultActions(FileObject projectDirectory, List<ActionMapping> actions) throws IOException {
         EditableProperties props = new EditableProperties(false);
         FileObject fo = findActionsFile(projectDirectory, null);
@@ -118,6 +137,13 @@ public class ActionPersistenceUtils {
         }
     }
     
+    /**
+     * Writes actions for the specific configuration. Handles default/nondefault dichotomy (gradle.properties / XMLs).
+     * @param projectDirectory
+     * @param configId
+     * @param mappings
+     * @throws IOException 
+     */
     public static void writeActions(FileObject projectDirectory, String configId, List<ActionMapping> mappings) throws IOException {
         if (GradleExecConfiguration.DEFAULT.equals(configId)) {
             saveDefaultActions(projectDirectory, mappings);

@@ -26,12 +26,9 @@ import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.DefaultComboBoxModel;
@@ -48,10 +45,7 @@ import org.netbeans.modules.gradle.actions.CustomActionRegistrationSupport;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.configurations.ConfigurationSnapshot;
 import org.netbeans.spi.project.ActionProvider;
-import org.openide.awt.NotificationDisplayer;
-import org.openide.awt.NotificationDisplayer.Priority;
 import org.openide.text.CloneableEditorSupport;
-import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 
 /**

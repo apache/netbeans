@@ -19,7 +19,6 @@
 package org.netbeans.modules.gradle.api.execute;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -149,6 +148,24 @@ public final class GradleExecConfiguration implements ProjectConfiguration {
     
     public boolean isDefault() {
         return DEFAULT.equals(getId());
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Config[").append(id).append("]{");
+        if (displayName != null) {
+            sb.append('"').append(displayName).append(", ");
+        }
+        if (projectProperties != null && !projectProperties.isEmpty()) {
+            sb.append("props=").append(projectProperties.keySet());
+            sb.append(", ");
+        }
+        if (commandLineArgs != null & !commandLineArgs.isEmpty()) {
+            sb.append(", cmd=").append(commandLineArgs);
+        }
+        sb.append('}');
+        return sb.toString();
     }
     
     static {

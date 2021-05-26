@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.gradle.spi.actions;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -90,8 +91,8 @@ public final class ProjectConfigurationSupport {
         }
         Map<Project, GradleExecConfiguration> m = selectedConfigs.get();
         try {
-            Map<Project, GradleExecConfiguration> n = new HashMap<>(m);
-            m.put(project, c);
+            Map<Project, GradleExecConfiguration> n = m == null ? new HashMap<>() : new HashMap<>(m);
+            n.put(project, c);
             selectedConfigs.set(n);
             task.run();
         } finally {

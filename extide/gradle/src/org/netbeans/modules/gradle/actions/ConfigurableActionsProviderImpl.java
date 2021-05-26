@@ -68,6 +68,11 @@ import org.xml.sax.SAXException;
  * And action definition files are loaded for defined configurations, especially the user-defined, which is managed by the {@link ProjectConfigurationProvider} implementation.
  * So these two impls listen for each other firing their own change events + guard against loops.
  * <p/>
+ * Caching here is desinged as follows: Once data is loaded, it is valid until a refresh. Customized actions are loaded lazily, on query for a specific configuration, or
+ * during the refresh. Once the customizations are loaded, the service listens on the file - if the content changes, customizations are invalidated and loaded during next query.
+ * Refresh is caused by a change to the set of configurations and to the set of {@link GradleActionProvider}s - which may occur e.g. when the project is reloaded and 
+ * new set of plugins is detected.
+ * 
  * @author sdedic
  */
 @ProjectServiceProvider(service = { ConfigurableActionProvider.class, ProjectActionMappingProvider.class }, projectType = "org-netbeans-modules-gradle")
@@ -92,7 +97,7 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
     };
 
     /**
-     * Multiplexing listener for individual action files and the project directory.
+     * Listener for individual action files and the project directory.
      */
     final FileChangeListener fcl = new FileChangeAdapter() {
         @Override
@@ -147,7 +152,12 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
         this.project = project;
         this.projectDirectory = project.getProjectDirectory();
         
-        FileChangeListener wl =  WeakListeners.create(FileChangeListener.class, fcl, this.projectDirectory);
+        FileChangeListener wl =  WeakListeners.create(FileChangeListener.class, new FileChangeAdapter() {
+            @Override
+            public void fileDataCreated(FileEvent fe) {
+                actionFileChanged(fe.getFile(), null, false);
+            }
+        }, this.projectDirectory);
         projectDirectory.addFileChangeListener(wl);
         
         LOG.log(Level.FINER, "Initializing ConfigurableAP for {0}", project);
@@ -334,7 +344,12 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
             if (pendingTask != null) {
                 pendingTask.cancel();
             }
-            pendingTask = ACTIONS_REFRESH_RP.post(() -> updateCache(serial.incrementAndGet(), confIds));
+            pendingTask = ACTIONS_REFRESH_RP.post(() -> {
+                synchronized (this) {
+                    pendingTask = null;
+                }
+                updateCache(serial.incrementAndGet(), confIds);
+            });
         }
     }
     
@@ -347,11 +362,14 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
             if (snap != null) {
                 ActionData ad = cache.get(id);
                 if (ad != null) {
-                    return ad;
-                }
-                foundConfig = configs.stream().filter(c -> c.getId().equals(id)).findAny().orElse(null);
-                if (foundConfig == null) {
-                    return null;
+                    if (ad.customizedMappings != null) {
+                        return ad;
+                    }
+                } else {
+                    foundConfig = configs.stream().filter(c -> c.getId().equals(id)).findAny().orElse(null);
+                    if (foundConfig == null) {
+                        return null;
+                    }
                 }
                 // may need a refresh ... some custom config is not in yet:
             }
@@ -363,16 +381,21 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
                 if (snap == cache) {
                     ActionData ad = cache.get(id);
                     if (ad != null) {
-                        return ad;
+                        if (ad.customizedMappings != null) {
+                            return ad;
+                        } else {
+                            ad.customizedMappings = map;
+                        }
+                    } else {
+                        ad = new ActionData(false, foundConfig);
+                        cache.put(id, ad);
                     }
-                    ad = new ActionData(false, foundConfig);
                     ad.customizedMappings = map;
                     FileObject f = ActionPersistenceUtils.findActionsFile(projectDirectory, id);
-                    if (f != null) {
-                        ad.listener = WeakListeners.create(FileChangeListener.class, fcl, f);
-                        f.addFileChangeListener(ad.listener);
+                    if (LOG.isLoggable(Level.FINER)) {
+                        LOG.log(Level.FINER, "Adding listener for: {0} - {1}", new Object[] { id, f });
                     }
-                    cache.put(id, ad);
+                    ad.attach(projectDirectory, f, fcl);
                     return ad;
                 } else {
                     return cache.get(id);
@@ -383,6 +406,10 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
         }
     }
     
+    /**
+     * Refreshes using Refresher, then atomically updates the cache and updates file listeners.
+     * @return new configuration Map.
+     */
     private Map<String, ActionData> updateCache(int serial, Set<String> oldConfigs) {
         LOG.log(Level.FINER, "Updating action cache for {0}, serial {1}, oldConfigs {2}", new Object[] { project, serial, oldConfigs });
         Refresher r = new Refresher();
@@ -391,8 +418,6 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
         List<ChangeListener> ll;
         Map<String, ActionData> oldCache;
         Map<String, ActionData> newCache;
-        Set<String> toRemove;
-        Set<String> toAdd;
         
         synchronized (this) {
             if (serial != this.serial.get()) {
@@ -412,6 +437,17 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
             }
             this.configurations = confs;
             this.actionIDs = r.actionIDs;
+            
+            if (oldCache != null) {
+                for (String id : oldCache.keySet()) {
+                    ActionData ad = oldCache.get(id);
+                    ad.detach();
+                }
+            }
+            for (String id : newCache.keySet()) {
+                ActionData ad = newCache.get(id);
+                ad.attach(projectDirectory, null, fcl);
+            }
             if (newCache.keySet().equals(oldConfigs)) {
                 // no change, no configurations added/removed.
                 LOG.log(Level.FINER, "No configuraiton change - stop.");
@@ -419,37 +455,20 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
             }
             ll = new ArrayList<>(listeners);
             
-            toRemove = new HashSet<>(oldCache == null ? Collections.emptySet() : oldCache.keySet());
-            toRemove.removeAll(newCache.keySet());
-            
-            toAdd = new HashSet<>(newCache.keySet());
-            if (oldCache != null) {
-                toAdd.remove(oldCache.keySet());
-            }
             if (LOG.isLoggable(Level.FINER)) {
-                LOG.log(Level.FINER, "Removed config: {0}, added config: {1}", new Object[] { toRemove, toAdd });
-            }
-            // update the set of listeners
-            for (String s : toAdd) {
-                FileObject f = ActionPersistenceUtils.findActionsFile(projectDirectory, s);
-                if (f != null) {
-                    FileChangeListener w = WeakListeners.create(FileChangeListener.class, fcl, f);
-                    r.actionMap.get(s).listener = w;
-                    f.addFileChangeListener(w);
-                }
-            }
-            for (String s : toRemove) {
-                FileObject f = ActionPersistenceUtils.findActionsFile(projectDirectory, s);
-                ActionData d = oldCache.get(s);
-                if (d != null && d.listener != null) {
-                    if (f != null) {
-                        f.removeFileChangeListener(d.listener);
-                    } else {
-                        d.listener = null;
-                    }
-                }
-            }
+                Set<String> toRemove;
+                Set<String> toAdd;
+                toRemove = new HashSet<>(oldCache == null ? Collections.emptySet() : oldCache.keySet());
+                toRemove.removeAll(newCache.keySet());
 
+                toAdd = new HashSet<>(newCache.keySet());
+                if (oldCache != null) {
+                    toAdd.remove(oldCache.keySet());
+                }
+                if (LOG.isLoggable(Level.FINER)) {
+                    LOG.log(Level.FINER, "Removed config: {0}, added config: {1}", new Object[] { toRemove, toAdd });
+                }
+            }
             if (oldConfigs == null) {
                 return cache;
             }
@@ -522,6 +541,7 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
         public void run() {
             Collection<? extends GradleActionsProvider> lst = providers();
             for (GradleActionsProvider p : lst) {
+                LOG.log(Level.FINER, "Loading defaults from provider {0}", p);
                 actionIDs.addAll(p.getSupportedActions());
                 
                 Set<ActionMapping> defaultMappings;
@@ -536,22 +556,27 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
                     continue;
                 }
                 
-                
                 ActionData ad = actionMap.get(GradleExecConfiguration.DEFAULT);
                 currentData = ad;
                 if (ad == null) {
                     ad = new ActionData(true, GradleExecAccessor.createDefault());
                     actionMap.put(GradleExecConfiguration.DEFAULT, ad);
+                    ad.customizedMappings = loadCustomActions(ad.cfg.getId());
+                    LOG.log(Level.FINER, "Loaded customizations for <default>: {0}", ad.customizedMappings.keySet());
                 }
-                
+                Set<String> newEntries = new HashSet<>();
                 for (ActionMapping m : defaultMappings) {
-                    ad.mappings.putIfAbsent(m.getName(), m);
+                    if (ad.mappings.putIfAbsent(m.getName(), m) == null) {
+                        newEntries.add(m.getName());
+                    }
                 }
-                ad.customizedMappings = loadCustomActions(ad.cfg.getId());
+                LOG.log(Level.FINER, "Loaded actions: {0}", newEntries);
                 
                 for (GradleExecConfiguration c : mapp.keySet()) {
+                    LOG.log(Level.FINER, "Loading config {0}", c.getId());
                     GradleExecConfiguration existing = config.get(c.getId());
                     if (existing != null) {
+                        LOG.log(Level.FINER, "Merging {0} with {1}", new Object[] { existing, c });
                         existing = mergeConfigurations(existing, c);
                     } else {
                         existing = c;
@@ -562,11 +587,16 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
                     if (ad == null) {
                         ad = new ActionData(true, existing);
                         actionMap.put(existing.getId(), ad);
+                        ad.customizedMappings = loadCustomActions(ad.cfg.getId());
+                        LOG.log(Level.FINER, "Loaded customizations for config {1}: {0}", new Object[] { ad.customizedMappings.keySet(), existing.getId() });
                     }
+                    newEntries = new HashSet<>();
                     for (ActionMapping m : mapp.get(c)) {
-                        ad.mappings.putIfAbsent(m.getName(), m);
+                        if (ad.mappings.putIfAbsent(m.getName(), m) == null) {
+                            newEntries.add(m.getName());
+                        }
                     }
-                    ad.customizedMappings = loadCustomActions(ad.cfg.getId());
+                    LOG.log(Level.FINER, "Loaded config actions: {0}", newEntries);
                 }
             }
         }
@@ -591,12 +621,13 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
         private final GradleExecConfiguration cfg;
         private final Map<String, ActionMapping>  mappings = new HashMap<>();
         private final boolean fromProvider;
+        private FileObject monitoringFile;
         
         // @GuardedBy(ConfigurableActionProvider.this)
         private FileChangeListener listener;
         
         // @GuardedBy(ConfigurableActionProvider.this)
-        private Map<String, ActionMapping>  customizedMappings = new HashMap<>();
+        private Map<String, ActionMapping>  customizedMappings = null;
 
         public ActionData(boolean provided, GradleExecConfiguration cfg) {
             this.fromProvider = provided;
@@ -606,6 +637,41 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
         ActionMapping getAction(String id) {
             ActionMapping am = customizedMappings.get(id);
             return am != null ? am : mappings.get(id);
+        }
+        
+        // @GuardedBy(ConfigurableActionProvider.this)
+        void clearCustomMappings() {
+            customizedMappings = Collections.emptyMap();
+            detach();
+        }
+        
+        void attach(FileObject projectDir, FileObject f, FileChangeListener fcl) {
+            if (listener != null) {
+                return;
+            }
+            if (f == null) {
+                f = ActionPersistenceUtils.findActionsFile(projectDir, cfg.getId());
+                if (f == null) {
+                    return;
+                }
+            }
+            LOG.log(Level.FINER, "Started to monitor {0}", f);
+            monitoringFile = f;
+            listener = WeakListeners.create(FileChangeListener.class, fcl, f);
+            f.addFileChangeListener(listener);
+        }
+        
+        void detach() {
+            if (monitoringFile == null) {
+                listener = null;
+                return;
+            }
+            if (listener != null) {
+                LOG.log(Level.FINER, "Stopped monitoring {0}", monitoringFile);
+                monitoringFile.removeFileChangeListener(listener);
+            }
+            monitoringFile = null;
+            listener = null;
         }
     }
     
@@ -624,70 +690,44 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
     }
     
     private boolean actionFileChanged0(FileObject af, String originalName, boolean delete) {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Action file changed: {0}, orig: {1}, deleted: {2}", new Object[] { af.getNameExt(), originalName, delete });
+        }
         String name = af.getName();
         if (af.getParent() != project.getProjectDirectory()) {
             return false;
         }
         
-        String selectedId;
+        String selectedId = findConfigurationId(af.getNameExt());
         ActionData dataHolder = null;
-        boolean reloadCache = false;
         synchronized (this) {
-            if (GradleFiles.GRADLE_PROPERTIES_NAME.equals(af.getNameExt())) {
-                selectedId = GradleExecConfiguration.DEFAULT;
-            } else if (!name.startsWith(ActionPersistenceUtils.NBACTIONS_CONFIG_PREFIX)) {
-                selectedId = name.substring(ActionPersistenceUtils.NBACTIONS_CONFIG_PREFIX.length());
-            } else {
-                return false;
-            }
-            if (cache != null) {
+            if (cache != null && selectedId != null) {
                 dataHolder = cache.get(selectedId);
+                LOG.log(Level.FINER, "selectedId: {0}, holder: {1}", new Object[] { selectedId, dataHolder });
                 if (dataHolder == null) {
                     // no known configuration, go away; configurations ought to
                     // be loaded first.
                     return false;
                 }
-                
-                // the simplest thing is delete: just nix the custom actions
+                // just clear, will be loaded on first query.
+                LOG.log(Level.FINER, "Invalidating holder");
                 if (delete) {
-                    dataHolder.customizedMappings = Collections.emptyMap();
-                    return true;
-                }
-            } else {
-                reloadCache = true;
-            }
-        }
-        
-        if (reloadCache) {
-            updateCache(serial.incrementAndGet(), null);
-            return false;
-        }
-        Map<String, ActionMapping> map = loadCustomActions(selectedId);
-        synchronized (this) {
-            if (cache == null) {
-                return false;
-            }
-            ActionData check = cache.get(selectedId);
-            if (check != dataHolder) {
-                return false;
-            }
-            if (originalName != null) {
-                // delete from the original name:
-                String renamedId = null;
-                if (GradleFiles.GRADLE_PROPERTIES_NAME.equals(originalName)) {
-                    renamedId = GradleExecConfiguration.DEFAULT;
-                } else if (originalName.startsWith(ActionPersistenceUtils.NBACTIONS_CONFIG_PREFIX) && originalName.endsWith(ActionPersistenceUtils.NBACTIONS_XML_EXT)) {
-                    renamedId = originalName.substring(ActionPersistenceUtils.NBACTIONS_CONFIG_PREFIX.length(), originalName.length() - ActionPersistenceUtils.NBACTIONS_XML_EXT.length());
-                }
-                if (renamedId != null) {
-                    ActionData toRemove = cache.get(renamedId);
-                    if (toRemove != null) {
-                        toRemove.customizedMappings = Collections.emptyMap();
-                    }
+                    dataHolder.clearCustomMappings();
+                } else {
+                    dataHolder.customizedMappings = null;
+                    dataHolder.attach(projectDirectory, af, fcl);
                 }
             }
-            check.customizedMappings = map;
         }
         return true;
+    }
+    
+    private String findConfigurationId(String fileNameExt) {
+        if (GradleFiles.GRADLE_PROPERTIES_NAME.equals(fileNameExt)) {
+            return GradleExecConfiguration.DEFAULT;
+        } else if (fileNameExt.startsWith(ActionPersistenceUtils.NBACTIONS_CONFIG_PREFIX) && fileNameExt.endsWith(ActionPersistenceUtils.NBACTIONS_XML_EXT)) {
+            return fileNameExt.substring(ActionPersistenceUtils.NBACTIONS_CONFIG_PREFIX.length(), fileNameExt.length() - ActionPersistenceUtils.NBACTIONS_XML_EXT.length());
+        }
+        return null;
     }
 }

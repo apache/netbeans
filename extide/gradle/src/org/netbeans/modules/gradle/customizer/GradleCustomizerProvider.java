@@ -33,7 +33,6 @@ import static org.netbeans.modules.gradle.customizer.Bundle.*;
 import java.awt.Dialog;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JComponent;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.gradle.configurations.ConfigurationSnapshot;

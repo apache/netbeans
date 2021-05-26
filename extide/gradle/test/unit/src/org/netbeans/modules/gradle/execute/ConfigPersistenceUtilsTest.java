@@ -39,11 +39,9 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.junit.rules.TestName;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.spi.project.AuxiliaryConfiguration;
-import org.openide.filesystems.FileObject;
 import org.openide.xml.XMLUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -263,7 +261,7 @@ public class ConfigPersistenceUtilsTest {
         assertNull(aux.nonShared.confElement);
     }
     
-    static void assertConfiguration(GradleExecConfiguration golden, GradleExecConfiguration compare) {
+    public static void assertConfiguration(GradleExecConfiguration golden, GradleExecConfiguration compare) {
         assertNotNull("Configuration " + golden.getId() + " exists", compare);
         assertEquals(golden.getId(), compare.getId());
         assertEquals(golden.getName(), compare.getName());

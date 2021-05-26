@@ -28,6 +28,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.execute.GradleExecAccessor;
 import org.netbeans.modules.gradle.spi.actions.BeforeBuildActionHook;
 import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
+import org.netbeans.modules.gradle.spi.actions.DefaultGradleActionsProvider;
 import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.openide.util.Lookup;
@@ -37,7 +38,23 @@ import org.openide.util.Lookup;
  * by supplying specific project properties (-P), or specific commandline arguments (--debug)
  * for all executed tasks. In addition, individual actions can be customized in the configuration
  * to take different parameters.
+ * <p>
+ * The configuration can be defined by the user using the UI. There are no API calls (yet) to 
+ * create or manage Configurations.
+ * <p>
+ * <a name="request-for-invocation">One can <b>request action invocation</b> in a specific {@link GradleExecConfiguration}. In that
+ * case, {@link ActionMapping} for the action specific for the selected configuration (if defined) will be used. Also, if the {@link #getCommandLineArgs()}
+ * or {@link #getProjectProperties()} are not empty, their values will be combined with the {@link ActionMapping} settings.
+ * To invoke a Project Action with a specific Configuration, place the Configuration instance in the Action's context Lookup:
+ * <div class="nonnormative">
+ * {@codesnippet invokeActionWithConfiguraiton}
+ * </div>
+ * <p>
+ * GradleExecConfigurations can be also declared by a Plugin that implements a
+ * <a href="@TOP@/org/netbeans/spi/GradleActionsProvider.html#define-configuration">GradleActionsProvider</a>,
+ * or which uses {@link DefaultGradleActionsProvider#forProjectLayer(org.openide.filesystems.FileObject)}.
  * 
+ * @since 2.13
  * @author sdedic
  */
 public final class GradleExecConfiguration implements ProjectConfiguration {
@@ -182,7 +199,7 @@ public final class GradleExecConfiguration implements ProjectConfiguration {
      * 
      * @param prj project
      * @param context optional additional context, can be {@code null}.
-     * @return effective configuraiton, or the default one.
+     * @return effective configuration, or the default one.
      */
     public static @NonNull GradleExecConfiguration findEffectiveConfiguration(@NonNull Project prj, @NullAllowed Lookup context) {
         GradleExecConfiguration cfg = ProjectConfigurationSupport.getEffectiveConfiguration(prj, context == null ? Lookup.EMPTY : context);

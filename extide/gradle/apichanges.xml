@@ -83,6 +83,39 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="configurations">
+            <api name="general"/>
+            <summary>
+                Support for Project Configurations
+            </summary>
+            <version major="2" minor="13"/>
+            <date day="30" month="5" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Concept of <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ProjectConfiguration.html">ProjectConfigurations</a> was implemented for
+                    Gradle projects with <a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleExecConfiguration.html">GradleExecConfiguration</a> class. Configurations
+                    can be created by the user and are stored in project private/shared configuration storage. Configurations can be contributed by Plugins using 
+                    <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/GradleActionsProvider.html#define-configuration">GradleActionsProvider</a>. A configuration 
+                    <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ProjectConfigurationProvider.html#setActiveConfiguration--">can be activated</a> or 
+                    explicitly requested for <a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleExecConfiguration.html#request-for-invocation">action invocation.</a>.
+                </p>
+                <p>
+                    Actions can have different <a href="@TOP@/org/netbeans/modules/gradle/api/actions/ActionMapping.html">ActionMappings</a> in individual Configurations, user-defined
+                    or provided for specific configuration by <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/GradleActionsProvider.html">GradleActionsProvider</a>.
+                </p>
+                <p>
+                    Action providers can be added fully declarative, using XML layer: See <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/DefaultGradleActionsProvider.html##forProjectLayer-org.openide.filesystems.FileObject-">
+                    DefaultGradleActionsProvider.forProjectLayer</a>
+                </p>
+                
+            </description>
+            <class package="org.netbeans.modules.gradle.api.execute" name="GradleExecConfiguration"/>
+            <class package="org.netbeans.modules.gradle.api.execute" name="RunUtils"/>
+            <class package="org.netbeans.modules.gradle.api.execute" name="RunConfig"/>
+            <class package="org.netbeans.modules.gradle.spi.actions" name="GradleActionsProvider"/>
+        </change>
         <change id="reload-to-quality">
             <api name="general"/>
             <summary>

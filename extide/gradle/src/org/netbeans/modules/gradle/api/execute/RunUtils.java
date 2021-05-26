@@ -52,6 +52,7 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.function.Function;
 import org.netbeans.api.project.ProjectInformation;
 
 import org.netbeans.api.project.ui.OpenProjects;
@@ -61,6 +62,7 @@ import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
 import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
+import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -112,7 +114,12 @@ public final class RunUtils {
         }
         return files.toArray(new FileObject[files.size()]);
     }
-
+    
+    /**
+     * Testing support: test can replace and mock the execution.
+     */
+    static Function<RunConfig, GradleExecutor> EXECUTOR_FACTORY = GradleDaemonExecutor::new;
+    
     /**
      * Executes a Gradle build with the given configuration. It can also take an
      * initial message, which is printed to the output tab before the actual
@@ -134,7 +141,7 @@ public final class RunUtils {
             );
         }
 
-        GradleDaemonExecutor exec = new GradleDaemonExecutor(config);
+        GradleExecutor exec = EXECUTOR_FACTORY.apply(config);
         ExecutorTask task = executeGradleImpl(config.getTaskDisplayName(), exec, initialOutput);
         GRADLE_TASKS.put(config, exec);
 
@@ -158,6 +165,23 @@ public final class RunUtils {
         return createRunConfig(project, action, displayName, Lookup.EMPTY, ProjectConfigurationSupport.getEffectiveConfiguration(project, Lookup.EMPTY), flags, args);
     }
     
+    /**
+     * Create Gradle execution configuration (context). It applies the default
+     * setting from the project and the Global Gradle configuration on the
+     * command line. The passed {@link GradleExecConfiguration} is recorded in
+     * the {@link RunConfig#getExecConfig()}. If {@code null} is passed, the
+     * active project's configuration is recorded.
+     * 
+     * @param project The Gradle project
+     * @param action The name of the IDE action that's going to be executed
+     * @param displayName The display name of the output tab
+     * @param flags Execution flags.
+     * @param args Gradle command line arguments
+     * @return the Gradle execution configuration.
+     * @param context action infocation context
+     * @param cfg the desired configuration, or {@code null}.
+     * @since 2.13
+     */
     public static RunConfig createRunConfig(Project project, String action, String displayName, Lookup context, 
             GradleExecConfiguration cfg, Set<ExecFlag> flags, String... args) {
         if (cfg == null) {

@@ -186,8 +186,12 @@ public class GradleProjectConfigProviderTest {
     
     static volatile URL mappingURL = null;
     
+    /*
     @ProjectServiceProvider(service = GradleActionsProvider.class, 
             projectType = "org-netbeans-modules-gradle/Plugins/java")
+            */
+    // annotation not used, as I need generated-layer.xml for documentation purposes 
+    // the annotation would overwrite it in build/ dir.
     public static GradleActionsProvider createTestProvider() {
         return new GradleActionsProvider() {
             @Override

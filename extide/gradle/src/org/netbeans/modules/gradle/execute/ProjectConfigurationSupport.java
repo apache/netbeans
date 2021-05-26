@@ -125,7 +125,7 @@ public final class ProjectConfigurationSupport {
     public static GradleExecConfiguration getEffectiveConfiguration(Project p, Lookup context) {
         GradleExecConfiguration c = getExplicitConfiguration(p, context);
         if (c != null) {
-            return null;
+            return c;
         }
         ProjectConfigurationProvider<GradleExecConfiguration> pcp = p.getLookup().lookup(ProjectConfigurationProvider.class);
         if (pcp == null) {

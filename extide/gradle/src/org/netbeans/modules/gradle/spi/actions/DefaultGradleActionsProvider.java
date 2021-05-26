@@ -69,7 +69,29 @@ public abstract class DefaultGradleActionsProvider implements GradleActionsProvi
         return getClass().getResourceAsStream("action-mapping.xml"); //NOI18N
     }
 
-    static LookupProvider fromLayer(FileObject fo) throws IOException {
+    /**
+     * Defines a {@link GradleActionsProvider} for a project based on layer information.
+     * It should be invoked for a {@link FileObject} from the XML layer, that has the
+     * following attributes:
+     * <ul>
+     * <li>{@code resource} : String - URL of the resource that will be streamed from
+     * {@link GradleActionsProvider#defaultActionMapConfig()}
+     * </ul>
+     * <div class="nonnormative">
+     * An example of how an action or configuration contribution can be declared in the
+     * action definition stream:
+     * {@codesnippet configuration-declaration-xml}
+     * It can be then included in either Gradle Project's generic Lookup (folder
+     * {@code Projects/org-netbeans-modules-gradle/Lookup} or in a plugin-specific folder:
+     * {@codesnippet configprovider-declaration-xml}
+     * </div>
+     * 
+     * @param fo the layer file
+     * @return LookupProvider instance that can be inserted into project's Lookup.
+     * @throws IOException in case of an error.
+     * @since 2.13
+     */
+    public static LookupProvider forProjectLayer(FileObject fo) throws IOException {
         Object r = fo.getAttribute("resource");
         if (!(r instanceof String)) {
             throw new IllegalArgumentException("Resource URL not found: " + fo);

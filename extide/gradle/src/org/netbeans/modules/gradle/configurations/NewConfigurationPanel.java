@@ -27,9 +27,14 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
+import javax.swing.text.EditorKit;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
+import org.netbeans.modules.gradle.execute.GradleCliEditorKit;
 import org.openide.NotificationLineSupport;
 import org.openide.filesystems.FileUtil;
+import org.openide.text.CloneableEditorSupport;
 import org.openide.util.NbBundle;
 
 /**
@@ -39,15 +44,19 @@ import org.openide.util.NbBundle;
 public class NewConfigurationPanel extends javax.swing.JPanel implements DocumentListener {
 
     private final Supplier<Collection<? extends GradleExecConfiguration>> configProvider;
-
+    private final Project project;
+    
     private NotificationLineSupport notifications;
     
     @SuppressWarnings("LeakingThisInConstructor")
-    public NewConfigurationPanel(Supplier<Collection<? extends GradleExecConfiguration>> confProvider, boolean isNew) {
+    public NewConfigurationPanel(Project project, Supplier<Collection<? extends GradleExecConfiguration>> confProvider, boolean isNew) {
+        this.project = project;
         this.configProvider = confProvider;
 
         initComponents();
-        
+        EditorKit kit = CloneableEditorSupport.getEditorKit(GradleCliEditorKit.MIME_TYPE);
+        txParameters.setEditorKit(kit);
+        txParameters.getDocument().putProperty(Document.StreamDescriptionProperty, project);
         if (isNew) {
             txId.getDocument().addDocumentListener(this);
             txId.getDocument().addDocumentListener(this);
@@ -223,8 +232,9 @@ public class NewConfigurationPanel extends javax.swing.JPanel implements Documen
         jScrollPane1 = new javax.swing.JScrollPane();
         txProperties = new javax.swing.JEditorPane();
         jLabel3 = new javax.swing.JLabel();
-        txParameters = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txParameters = new javax.swing.JEditorPane();
 
         txId.setText(org.openide.util.NbBundle.getMessage(NewConfigurationPanel.class, "NewConfigurationPanel.txId.text")); // NOI18N
 
@@ -243,9 +253,9 @@ public class NewConfigurationPanel extends javax.swing.JPanel implements Documen
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(NewConfigurationPanel.class, "NewConfigurationPanel.jLabel3.text")); // NOI18N
 
-        txParameters.setText(org.openide.util.NbBundle.getMessage(NewConfigurationPanel.class, "NewConfigurationPanel.txParameters.text")); // NOI18N
-
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(NewConfigurationPanel.class, "NewConfigurationPanel.jLabel4.text")); // NOI18N
+
+        jScrollPane3.setViewportView(txParameters);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -266,7 +276,7 @@ public class NewConfigurationPanel extends javax.swing.JPanel implements Documen
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cbPrivate)
                         .addGap(0, 103, Short.MAX_VALUE))
-                    .addComponent(txParameters))
+                    .addComponent(jScrollPane3))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -287,10 +297,10 @@ public class NewConfigurationPanel extends javax.swing.JPanel implements Documen
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txParameters, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -302,9 +312,10 @@ public class NewConfigurationPanel extends javax.swing.JPanel implements Documen
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextField txId;
     private javax.swing.JTextField txLabel;
-    private javax.swing.JTextField txParameters;
+    private javax.swing.JEditorPane txParameters;
     private javax.swing.JEditorPane txProperties;
     // End of variables declaration//GEN-END:variables
 }

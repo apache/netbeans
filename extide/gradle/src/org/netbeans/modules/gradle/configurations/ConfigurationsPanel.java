@@ -29,7 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.execute.GradleExecAccessor;
 import org.netbeans.modules.gradle.execute.ProjectConfigurationUpdater;
@@ -50,7 +50,7 @@ import org.openide.util.NbBundle;
 })
 @SuppressWarnings("serial")
 public class ConfigurationsPanel extends javax.swing.JPanel implements HelpCtx.Provider {
-    private NbGradleProject project;
+    private final Project project;
     private final ProjectConfigurationUpdater updater;
     private GradleExecConfiguration activeConfig;
     private ConfigurationSnapshot handle;
@@ -64,7 +64,7 @@ public class ConfigurationsPanel extends javax.swing.JPanel implements HelpCtx.P
         "CONF_DisplayNameAndId={0} ({1})",
         "CONF_DisplayNameOnly={0}"
     })
-    ConfigurationsPanel(ProjectConfigurationUpdater updater, ConfigurationSnapshot handle,  NbGradleProject project) {
+    ConfigurationsPanel(ProjectConfigurationUpdater updater, ConfigurationSnapshot handle,  Project project) {
         initComponents();
         this.handle = handle;
         this.project = project;
@@ -265,7 +265,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
     "CONF_CloneOfDefault=default_clone"
 })
 private void makeNewConfiguration(GradleExecConfiguration cfg, String title, String accDescr) {
-    NewConfigurationPanel pnl = new NewConfigurationPanel(() -> handle.getConfigurations(), true);
+    NewConfigurationPanel pnl = new NewConfigurationPanel(project, () -> handle.getConfigurations(), true);
     pnl.setShared(false);
     pnl.setConfigurationId(cfg.getId());
     pnl.setDisplayName(cfg.getName());
@@ -307,7 +307,7 @@ private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
     if (cfg == null) {
         return;
     }
-    NewConfigurationPanel pnl = new NewConfigurationPanel(() -> handle.getConfigurations(), false);
+    NewConfigurationPanel pnl = new NewConfigurationPanel(project, () -> handle.getConfigurations(), false);
     pnl.setShared(handle.isShared(cfg));
     pnl.setConfigurationId(cfg.getId());
     pnl.setDisplayName(cfg.getName());
@@ -419,6 +419,6 @@ private void btnActivateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
     @Override
     public HelpCtx getHelpCtx() {
-        return null;
+        return HelpCtx.DEFAULT_HELP;
     }
 }

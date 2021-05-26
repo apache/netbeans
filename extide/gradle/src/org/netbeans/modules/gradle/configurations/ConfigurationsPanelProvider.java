@@ -21,7 +21,6 @@ package org.netbeans.modules.gradle.configurations;
 import java.io.IOException;
 import javax.swing.JComponent;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.execute.ProjectConfigurationUpdater;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
@@ -54,8 +53,7 @@ public class ConfigurationsPanelProvider implements CompositeCategoryProvider {
         Project project = context.lookup(Project.class);
         ConfigurationSnapshot snap = ConfigurationSnapshot.forProject(context, project, (r) -> category.setCloseListener((e) -> r.run()));
         ProjectConfigurationUpdater upd = project.getLookup().lookup(ProjectConfigurationUpdater.class);
-        NbGradleProject gradleProj = project.getLookup().lookup(NbGradleProject.class);
-        ConfigurationsPanel panel = new ConfigurationsPanel(upd, snap, gradleProj);
+        ConfigurationsPanel panel = new ConfigurationsPanel(upd, snap, project);
         
         category.setStoreListener((e) -> updateConfigurations(project, snap));
         return panel;

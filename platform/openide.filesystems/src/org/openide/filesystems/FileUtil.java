@@ -2165,7 +2165,7 @@ public final class FileUtil extends Object {
      * </pre>
      * <p/>
      * In multi-user setup, this method returns instance specific for the executing user.
-     * <b>Important<b>: it returns user-specific instance even though the object is configured in
+     * <b>Important</b>: it returns user-specific instance even though the object is configured in
      * a XML layer, or system-wide configuration; still, the instance will be tied to the user-specific
      * file as served by {@link #getConfigFile}.
      * 
@@ -2352,6 +2352,7 @@ public final class FileUtil extends Object {
      * Determines whether the string forms a valid filename (without a path component).
      * @param fileName candidate string
      * @return true, if the string can be used to name a file.
+     * @since 9.24
      */
     public static boolean isValidFileName(String fileName) {
         if (ILLEGAL_FILENAME_CHARACTERS.matcher(fileName).find()) {

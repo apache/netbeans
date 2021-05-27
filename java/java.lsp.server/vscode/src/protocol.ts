@@ -96,3 +96,10 @@ export interface TestCase {
 export namespace TestProgressNotification {
     export const type = new NotificationType<TestProgressParams, void>('window/notifyTestProgress');
 };
+
+export interface DebugConnector {
+    name: string;
+    type: string;
+    arguments: string[];
+    defaultValues: string[];
+}

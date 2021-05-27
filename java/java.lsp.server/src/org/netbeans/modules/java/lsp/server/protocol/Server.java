@@ -606,9 +606,18 @@ public final class Server {
                 capabilities.setImplementationProvider(true);
                 capabilities.setDocumentHighlightProvider(true);
                 capabilities.setReferencesProvider(true);
-                List<String> commands = new ArrayList<>(Arrays.asList(JAVA_NEW_FROM_TEMPLATE, JAVA_BUILD_WORKSPACE, JAVA_GET_PROJECT_SOURCE_ROOTS,
-                        JAVA_GET_PROJECT_CLASSPATH, JAVA_GET_PROJECT_PACKAGES,JAVA_LOAD_WORKSPACE_TESTS, GRAALVM_PAUSE_SCRIPT, JAVA_SUPER_IMPLEMENTATION,
-                        JAVA_FIND_CONFIGURATIONS));
+                List<String> commands = new ArrayList<>(Arrays.asList(
+                        GRAALVM_PAUSE_SCRIPT,
+                        JAVA_BUILD_WORKSPACE,
+                        JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS,
+                        JAVA_FIND_DEBUG_PROCESS_TO_ATTACH,
+                        JAVA_FIND_PROJECT_CONFIGURATIONS,
+                        JAVA_GET_PROJECT_CLASSPATH,
+                        JAVA_GET_PROJECT_PACKAGES,
+                        JAVA_GET_PROJECT_SOURCE_ROOTS,
+                        JAVA_LOAD_WORKSPACE_TESTS,
+                        JAVA_NEW_FROM_TEMPLATE,
+                        JAVA_SUPER_IMPLEMENTATION));
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     commands.addAll(codeGenerator.getCommands());
                 }
@@ -731,8 +740,16 @@ public final class Server {
     /**
      * Enumerates project configurations.
      */
-    public static final String JAVA_FIND_CONFIGURATIONS = "java.project.configurations";
-            
+    public static final String JAVA_FIND_PROJECT_CONFIGURATIONS = "java.project.configurations";
+    /**
+     * Enumerates attach debugger configurations.
+     */
+    public static final String JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS = "java.attachDebugger.configurations";
+    /**
+     * Enumerates JVM processes eligible for debugger attach.
+     */
+    public static final String JAVA_FIND_DEBUG_PROCESS_TO_ATTACH = "java.attachDebugger.pickProcess";
+
     static final String INDEXING_COMPLETED = "Indexing completed.";
     static final String NO_JAVA_SUPPORT = "Cannot initialize Java support on JDK ";
 

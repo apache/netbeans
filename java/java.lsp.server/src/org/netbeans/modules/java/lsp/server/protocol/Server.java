@@ -92,7 +92,6 @@ import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
@@ -607,7 +606,9 @@ public final class Server {
                 capabilities.setImplementationProvider(true);
                 capabilities.setDocumentHighlightProvider(true);
                 capabilities.setReferencesProvider(true);
-                List<String> commands = new ArrayList<>(Arrays.asList(JAVA_NEW_FROM_TEMPLATE, JAVA_BUILD_WORKSPACE, JAVA_LOAD_WORKSPACE_TESTS, GRAALVM_PAUSE_SCRIPT, JAVA_SUPER_IMPLEMENTATION));
+                List<String> commands = new ArrayList<>(Arrays.asList(JAVA_NEW_FROM_TEMPLATE, JAVA_BUILD_WORKSPACE, JAVA_GET_PROJECT_SOURCE_ROOTS,
+                        JAVA_GET_PROJECT_CLASSPATH, JAVA_GET_PROJECT_PACKAGES,JAVA_LOAD_WORKSPACE_TESTS, GRAALVM_PAUSE_SCRIPT, JAVA_SUPER_IMPLEMENTATION,
+                        JAVA_FIND_CONFIGURATIONS));
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     commands.addAll(codeGenerator.getCommands());
                 }
@@ -720,9 +721,18 @@ public final class Server {
     
     public static final String JAVA_BUILD_WORKSPACE =  "java.build.workspace";
     public static final String JAVA_NEW_FROM_TEMPLATE =  "java.new.from.template";
+    public static final String JAVA_GET_PROJECT_SOURCE_ROOTS = "java.get.project.source.roots";
+    public static final String JAVA_GET_PROJECT_CLASSPATH = "java.get.project.classpath";
+    public static final String JAVA_GET_PROJECT_PACKAGES = "java.get.project.packages";
     public static final String JAVA_LOAD_WORKSPACE_TESTS =  "java.load.workspace.tests";
     public static final String JAVA_SUPER_IMPLEMENTATION =  "java.super.implementation";
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
+    
+    /**
+     * Enumerates project configurations.
+     */
+    public static final String JAVA_FIND_CONFIGURATIONS = "java.project.configurations";
+            
     static final String INDEXING_COMPLETED = "Indexing completed.";
     static final String NO_JAVA_SUPPORT = "Cannot initialize Java support on JDK ";
 

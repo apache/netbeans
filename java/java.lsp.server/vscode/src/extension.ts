@@ -657,6 +657,49 @@ class NetBeansDebugAdapterDescriptionFactory implements vscode.DebugAdapterDescr
 
 class NetBeansConfigurationProvider implements vscode.DebugConfigurationProvider {
 
+    provideDebugConfigurations(folder: vscode.WorkspaceFolder | undefined, token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration[]> {
+       return this.doProvideDebugConfigurations(folder, token);
+    }
+
+    async doProvideDebugConfigurations(folder: vscode.WorkspaceFolder | undefined, _token?:  vscode.CancellationToken):  Promise<vscode.DebugConfiguration[]> {
+        let c : LanguageClient = await client;
+        if (!folder) {
+            return [];
+        }
+        var u : vscode.Uri | undefined;
+        if (folder && folder.uri) {
+            u = folder.uri;
+        } else {
+            u = vscode.window.activeTextEditor?.document?.uri
+        }
+        const configNames : string[] | null | undefined = await vscode.commands.executeCommand('java.project.configurations', u?.toString());
+        if (!configNames) {
+            return [];
+        }
+        let result : vscode.DebugConfiguration[] = [];
+        let first : boolean = true;
+        for (let cn of configNames) {
+            let cname : string;
+
+            if (first) {
+                // ignore the default config, comes first.
+                first = false;
+                continue;
+            } else {
+                cname = "Launch Java: " + cn;
+            }
+            const debugConfig : vscode.DebugConfiguration = {
+                name: cname,
+                type: "java8+",
+                request: "launch",
+                mainClass: '${file}',
+                launchConfiguration: cn,
+            };
+            result.push(debugConfig);
+        }
+        return result;
+    }
+
     resolveDebugConfiguration(_folder: vscode.WorkspaceFolder | undefined, config: vscode.DebugConfiguration, _token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration> {
         if (!config.type) {
             config.type = 'java8+';

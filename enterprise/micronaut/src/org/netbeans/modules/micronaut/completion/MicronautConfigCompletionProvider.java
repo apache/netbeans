@@ -110,7 +110,7 @@ public class MicronautConfigCompletionProvider implements CompletionProvider {
             if (element == null) {
                 element = MicronautConfigUtilities.resolveProperty(doc, caretOffset, null, null);
             }
-            resultSet.setDocumentation(new MicronautConfigDocumentation(element));
+            resultSet.setDocumentation(element != null ? new MicronautConfigDocumentation(element) : null);
             resultSet.finish();
         }
     }

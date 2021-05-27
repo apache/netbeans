@@ -124,6 +124,13 @@
 								],
 								"description": "Arguments for the Java VM",
 								"default": null
+							},
+							"launchConfiguration" : {
+								"type": [
+									"string",
+									"null"
+								],
+								"description": "Mode and default behaviour for launch"
 							}
 						}
 					}

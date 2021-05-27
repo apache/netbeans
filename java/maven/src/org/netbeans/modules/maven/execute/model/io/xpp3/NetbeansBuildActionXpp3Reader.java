@@ -262,6 +262,8 @@ public class NetbeansBuildActionXpp3Reader {
         while ( parser.nextTag() == XmlPullParser.START_TAG ) {
             if (parser.getName().equals("id")) {
                 p.setId(parser.nextText());
+            } else if (parser.getName().equals("displayName")) { // NOI18N
+                p.setDisplayName(parser.nextText());
             } else if (parser.getName().equals("actions")) {
                 while (parser.nextTag() == XmlPullParser.START_TAG && parser.getName().equals("action")) {
                     NetbeansActionMapping r = parseNetbeansActionMapping("actions", parser, strict);

@@ -815,6 +815,16 @@
      </p>
     </api>
    </li>
+   <li>
+    <api category="devel" group="branding" name="org.netbeans.modules.java.source.usages.USE_FULL_INDEX" type="export">
+     <p>
+      Brand the <code>USE_FULL_INDEX</code> key in a
+      <code>org.netbeans.modules.java.source.usages.Bundle</code> file
+      with the value <code>true</code> to create a full index of elements used in
+      binary files.
+     </p>
+    </api>
+   </li>
   </ul>
  </answer>
 

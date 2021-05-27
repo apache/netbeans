@@ -206,6 +206,102 @@ class Main {
     }
 
     test("Maven run termination", async() => mavenTerminateWithoutDebugger());
+
+    async function getProjectInfo() {
+        let folder: string = assertWorkspace();
+
+        await fs.promises.writeFile(path.join(folder, 'pom.xml'), `
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.netbeans.demo.vscode.t1</groupId>
+    <artifactId>basicapp</artifactId>
+    <version>1.0</version>
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+</project>
+		`);
+
+        let pkg = path.join(folder, 'src', 'main', 'java', 'pkg');
+        let resources = path.join(folder, 'src', 'main', 'resources');
+        let mainJava = path.join(pkg, 'Main.java');
+
+        await fs.promises.mkdir(pkg, { recursive: true });
+        await fs.promises.mkdir(resources, { recursive: true });
+
+        await fs.promises.writeFile(mainJava, `
+package pkg;
+class Main {
+	public static void main(String... args) {
+		System.out.println("Hello World!");
+	}
+}
+		`);
+
+        vscode.workspace.saveAll();
+
+        try {
+            console.log("Test: get project java source roots");
+            let res: any = await vscode.commands.executeCommand("java.get.project.source.roots", Uri.file(folder).toString());
+            console.log(`Test: get project java source roots finished with ${res}`);
+            assert.ok(res, "No java source root rertuned");
+            assert.strictEqual(res.length, 1, `Invalid number of java roots returned`);
+            assert.strictEqual(res[0], path.join('file:', folder, 'src', 'main', 'java') + path.sep, `Invalid java source root returned`);
+
+            console.log("Test: get project resource roots");
+            res = await vscode.commands.executeCommand("java.get.project.source.roots", Uri.file(folder).toString(), 'resources');
+            console.log(`Test: get project resource roots finished with ${res}`);
+            assert.ok(res, "No resource root returned");
+            assert.strictEqual(res.length, 1, `Invalid number of resource roots returned`);
+            assert.strictEqual(res[0], path.join('file:', resources) + path.sep, `Invalid resource root returned`);
+
+            console.log("Test: get project compile classpath");
+            res = await vscode.commands.executeCommand("java.get.project.classpath", Uri.file(folder).toString());
+            console.log(`Test: get project compile classpath finished with ${res}`);
+            assert.ok(res, "No compile classpath returned");
+            assert.strictEqual(res.length, 1, `Invalid number of compile classpath roots returned`);
+            assert.strictEqual(res[0], path.join('file:', folder, 'target', 'classes') + path.sep, `Invalid compile classpath root returned`);
+
+            console.log("Test: get project source classpath");
+            res = await vscode.commands.executeCommand("java.get.project.classpath", Uri.file(folder).toString(), 'SOURCE');
+            console.log(`Test: get project source classpath finished with ${res}`);
+            assert.ok(res, "No source classpath returned");
+            assert.strictEqual(res.length, 1, `Invalid number of source classpath roots returned`);
+            assert.strictEqual(res[0], path.join('file:', folder, 'src', 'main', 'java') + path.sep, `Invalid source classpath root returned`);
+
+            console.log("Test: get project boot classpath");
+            res = await vscode.commands.executeCommand("java.get.project.classpath", Uri.file(folder).toString(), 'BOOT');
+            console.log(`Test: get project boot classpath finished with ${res}`);
+            assert.ok(res, "No boot classpath returned");
+            assert.ok(res.length > 0, `Invalid number of boot classpath roots returned`);
+
+            console.log("Test: get project boot source classpath");
+            res = await vscode.commands.executeCommand("java.get.project.classpath", Uri.file(folder).toString(), 'BOOT', true);
+            console.log(`Test: get project boot source classpath finished with ${res}`);
+            assert.ok(res, "No boot source classpath returned");
+            assert.ok(res.length > 0, `Invalid number of boot source classpath roots returned`);
+
+            console.log("Test: get all project packages");
+            res = await vscode.commands.executeCommand("java.get.project.packages", Uri.file(folder).toString());
+            console.log(`Test: get all project packages finished with ${res}`);
+            assert.ok(res, "No packages returned");
+            assert.ok(res.length > 0, `Invalid number of packages returned`);
+
+            console.log("Test: get project source packages");
+            res = await vscode.commands.executeCommand("java.get.project.packages", Uri.file(folder).toString(), true);
+            console.log(`Test: get project source packages finished with ${res}`);
+            assert.ok(res, "No packages returned");
+            assert.strictEqual(res.length, 1, `Invalid number of packages returned`);
+            assert.strictEqual(res[0], 'pkg', `Invalid package returned`);
+        } catch (error) {
+            dumpJava();
+            throw error;
+        }
+    }
+
+    test("Get project sources, classpath, and packages", async() => getProjectInfo());
+
 });
 
 function assertWorkspace(): string {

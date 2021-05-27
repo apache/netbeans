@@ -50,8 +50,17 @@ import org.springframework.boot.configurationmetadata.ConfigurationMetadataSourc
  *
  * @author Dusan Balek
  */
-@MimeRegistration(mimeType = "text/x-yaml", service = HyperlinkProviderExt.class, position = 1250)
 public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
+
+    @MimeRegistration(mimeType = "text/x-yaml", service = HyperlinkProviderExt.class, position = 1250)
+    public static MicronautConfigHyperlinkProvider createYamlProvider() {
+        return new MicronautConfigHyperlinkProvider();
+    }
+
+    @MimeRegistration(mimeType = "text/x-properties", service = HyperlinkProviderExt.class, position = 1250)
+    public static MicronautConfigHyperlinkProvider createPropertiesProvider() {
+        return new MicronautConfigHyperlinkProvider();
+    }
 
     @Override
     public Set<HyperlinkType> getSupportedHyperlinkTypes() {
@@ -66,8 +75,9 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
     @Override
     public int[] getHyperlinkSpan(Document doc, int offset, HyperlinkType type) {
         int[] span = new int[2];
-        ConfigurationMetadataProperty property = MicronautConfigUtilities.resolveProperty(doc, offset, span, null);
-        return property != null ? span : null;
+        List<ConfigurationMetadataSource> sources = new ArrayList<>();
+        ConfigurationMetadataProperty property = MicronautConfigUtilities.resolveProperty(doc, offset, span, sources);
+        return property != null || !sources.isEmpty() ? span : null;
     }
 
     @Override
@@ -134,8 +144,17 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
         return handle[0];
     }
 
-    @MimeRegistration(mimeType = "text/x-yaml", service = HyperlinkLocationProvider.class)
     public static class LocationProvider implements HyperlinkLocationProvider {
+
+        @MimeRegistration(mimeType = "text/x-yaml", service = HyperlinkLocationProvider.class)
+        public static LocationProvider createYamlProvider() {
+            return new LocationProvider();
+        }
+
+        @MimeRegistration(mimeType = "text/x-properties", service = HyperlinkLocationProvider.class)
+        public static LocationProvider createPropertiesProvider() {
+            return new LocationProvider();
+        }
 
         @Override
         public CompletableFuture<HyperlinkLocation> getHyperlinkLocation(Document doc, int offset) {

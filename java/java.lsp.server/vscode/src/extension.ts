@@ -41,7 +41,7 @@ import { testExplorerExtensionId, TestHub } from 'vscode-test-adapter-api';
 import { TestAdapterRegistrar } from 'vscode-test-adapter-util';
 import * as launcher from './nbcode';
 import {NbTestAdapter} from './testAdapter';
-import { StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification } from './protocol';
+import { StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification, DebugConnector } from './protocol';
 
 const API_VERSION : string = "1.0";
 let client: Promise<LanguageClient>;
@@ -173,7 +173,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
 
     //register debugger:
     let configProvider = new NetBeansConfigurationProvider();
-    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java8+', configProvider));
+    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java8+', configProvider, vscode.DebugConfigurationProviderTriggerKind.Dynamic));
     let configNativeProvider = new NetBeansConfigurationNativeProvider();
     context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('nativeimage', configNativeProvider));
 
@@ -672,30 +672,43 @@ class NetBeansConfigurationProvider implements vscode.DebugConfigurationProvider
         } else {
             u = vscode.window.activeTextEditor?.document?.uri
         }
-        const configNames : string[] | null | undefined = await vscode.commands.executeCommand('java.project.configurations', u?.toString());
-        if (!configNames) {
-            return [];
-        }
         let result : vscode.DebugConfiguration[] = [];
-        let first : boolean = true;
-        for (let cn of configNames) {
-            let cname : string;
+        const configNames : string[] | null | undefined = await vscode.commands.executeCommand('java.project.configurations', u?.toString());
+        if (configNames) {
+            let first : boolean = true;
+            for (let cn of configNames) {
+                let cname : string;
 
-            if (first) {
-                // ignore the default config, comes first.
-                first = false;
-                continue;
-            } else {
-                cname = "Launch Java: " + cn;
+                if (first) {
+                    // ignore the default config, comes first.
+                    first = false;
+                    continue;
+                } else {
+                    cname = "Launch Java: " + cn;
+                }
+                const debugConfig : vscode.DebugConfiguration = {
+                    name: cname,
+                    type: "java8+",
+                    request: "launch",
+                    mainClass: '${file}',
+                    launchConfiguration: cn,
+                };
+                result.push(debugConfig);
             }
-            const debugConfig : vscode.DebugConfiguration = {
-                name: cname,
-                type: "java8+",
-                request: "launch",
-                mainClass: '${file}',
-                launchConfiguration: cn,
-            };
-            result.push(debugConfig);
+        }
+        const attachConnectors : DebugConnector[] | null | undefined = await vscode.commands.executeCommand('java.attachDebugger.configurations');
+        if (attachConnectors) {
+            for (let ac of attachConnectors) {
+                const debugConfig : vscode.DebugConfiguration = {
+                    name: ac.name,
+                    type: ac.type,
+                    request: "attach",
+                };
+                for (let i = 0; i < ac.arguments.length; i++) {
+                    debugConfig[ac.arguments[i]] = ac.defaultValues[i];
+                }
+                result.push(debugConfig)
+            }
         }
         return result;
     }
@@ -707,7 +720,7 @@ class NetBeansConfigurationProvider implements vscode.DebugConfigurationProvider
         if (!config.request) {
             config.request = 'launch';
         }
-        if (!config.mainClass) {
+        if ('launch' == config.request && !config.mainClass) {
             config.mainClass = '${file}';
         }
         if (!config.classPaths) {

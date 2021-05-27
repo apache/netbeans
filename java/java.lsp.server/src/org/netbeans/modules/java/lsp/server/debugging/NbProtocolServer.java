@@ -19,19 +19,15 @@
 package org.netbeans.modules.java.lsp.server.debugging;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.lsp4j.debug.Capabilities;
@@ -41,7 +37,6 @@ import org.eclipse.lsp4j.debug.ContinueResponse;
 import org.eclipse.lsp4j.debug.DisconnectArguments;
 import org.eclipse.lsp4j.debug.EvaluateArguments;
 import org.eclipse.lsp4j.debug.EvaluateResponse;
-import org.eclipse.lsp4j.debug.ExceptionBreakMode;
 import org.eclipse.lsp4j.debug.ExceptionBreakpointsFilter;
 import org.eclipse.lsp4j.debug.ExceptionInfoArguments;
 import org.eclipse.lsp4j.debug.ExceptionInfoResponse;
@@ -79,10 +74,11 @@ import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.api.debugger.jpda.Variable;
 import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable;
 import org.netbeans.modules.java.lsp.server.LspSession;
+import org.netbeans.modules.java.lsp.server.debugging.breakpoints.NbBreakpointsRequestHandler;
+import org.netbeans.modules.java.lsp.server.debugging.attach.NbAttachRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDebugSession;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDisconnectRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbLaunchRequestHandler;
-import org.netbeans.modules.java.lsp.server.debugging.breakpoints.NbBreakpointsRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.variables.NbVariablesRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.nativeimage.api.debug.EvaluateException;
@@ -99,6 +95,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
 
     private final DebugAdapterContext context;
     private final NbLaunchRequestHandler launchRequestHandler = new NbLaunchRequestHandler();
+    private final NbAttachRequestHandler attachRequestHandler = new NbAttachRequestHandler();
     private final NbDisconnectRequestHandler disconnectRequestHandler = new NbDisconnectRequestHandler();
     private final NbBreakpointsRequestHandler breakpointsRequestHandler = new NbBreakpointsRequestHandler();
     private final NbVariablesRequestHandler variablesRequestHandler = new NbVariablesRequestHandler();
@@ -169,6 +166,11 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
     @Override
     public CompletableFuture<Void> launch(Map<String, Object> args) {
         return launchRequestHandler.launch(args, context);
+    }
+
+    @Override
+    public CompletableFuture<Void> attach(Map<String, Object> args) {
+        return attachRequestHandler.attach(args, context);
     }
 
     @Override

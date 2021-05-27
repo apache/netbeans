@@ -28,7 +28,8 @@
 		"workspaceContains:**/*.java",
 		"workspaceContains:pom.xml",
 		"workspaceContains:build.gradle",
-		"onDebug"
+		"onDebug",
+		"onDebugDynamicConfigurations"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -125,12 +126,40 @@
 								"description": "Arguments for the Java VM",
 								"default": null
 							},
-							"launchConfiguration" : {
+							"launchConfiguration": {
 								"type": [
 									"string",
 									"null"
 								],
 								"description": "Mode and default behaviour for launch"
+							}
+						}
+					},
+					"attach": {
+						"properties": {
+							"hostName": {
+								"type": "string",
+								"default": "localhost",
+								"description": "Host name or IP address to which to attach"
+							},
+							"port": {
+								"type": "string",
+								"default": "8000",
+								"description": "Port number to which to attach"
+							},
+							"sharedMemoryName": {
+								"type": "string",
+								"description": "Shared memory name of the debuggee"
+							},
+							"processId": {
+								"type": "string",
+								"default": "${command:java.attachDebugger.pickProcess}",
+								"description": "Process Id of the debuggee"
+							},
+							"timeout": {
+								"type": "string",
+								"default": "30000",
+								"description": "Timeout while waiting to attach"
 							}
 						}
 					}
@@ -297,16 +326,16 @@
 		"nbjavac": "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install .*nbjavac.*"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.49.0",
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^7.0.2",
 		"@types/node": "^13.11.0",
 		"@types/ps-node": "^0.1.0",
+		"@types/vscode": "^1.49.0",
 		"glob": "^7.1.6",
 		"mocha": "^7.1.2",
+		"ps-node": "^0.1.6",
 		"typescript": "^3.8.3",
-		"vscode-test": "^1.3.0",
-		"ps-node": "^0.1.6"
+		"vscode-test": "^1.3.0"
 	},
 	"dependencies": {
 		"vscode-debugadapter": "1.42.1",

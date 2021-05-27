@@ -1076,6 +1076,48 @@ public class ServerTest extends NbTestCase {
         assertEquals(13, loc.getRange().getEnd().getCharacter());
     }
 
+    public void testFindDebugAttachConfigurations() throws Exception {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        server.initialize(new InitializeParams()).get();
+        Object ret = server.getWorkspaceService().executeCommand(new ExecuteCommandParams(Server.JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS, Collections.emptyList())).get();
+        assertNotNull(ret);
+        DebugConnector[] connectors = gson.fromJson(gson.toJsonTree(ret).getAsJsonArray(), DebugConnector[].class);
+        assertTrue(connectors.length > 0);
+        boolean haveAttachToPort = false;
+        boolean haveAttachToProcess = false;
+        for (DebugConnector c : connectors) {
+            if ("Attach to Port".equals(c.getName())) {
+                haveAttachToPort = true;
+                checkAttachToPort(c);
+            }
+            if ("Attach to Process".equals(c.getName())) {
+                haveAttachToProcess = true;
+                checkAttachToProcess(c);
+            }
+        }
+        assertTrue(Arrays.toString(connectors), haveAttachToPort && haveAttachToProcess);
+    }
+
+    private void checkAttachToPort(DebugConnector c) {
+        assertEquals("java8+", c.getType());
+        List<String> arguments = c.getArguments();
+        assertEquals(2, arguments.size());
+        assertEquals("hostName", arguments.get(0));
+        assertEquals("port", arguments.get(1));
+        assertEquals(2, c.getDefaultValues().size());
+    }
+
+    private void checkAttachToProcess(DebugConnector c) {
+        assertEquals("java8+", c.getType());
+        List<String> arguments = c.getArguments();
+        assertEquals(1, arguments.size());
+        assertEquals("processId", arguments.get(0));
+        assertEquals(1, c.getDefaultValues().size());
+    }
+
     public void testOpenProjectOpenJDK() throws Exception {
         getWorkDir().mkdirs();
 

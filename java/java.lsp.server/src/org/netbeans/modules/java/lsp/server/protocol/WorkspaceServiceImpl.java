@@ -78,6 +78,7 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaTypeProvider;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
@@ -219,7 +220,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 Position pos = gson.fromJson(gson.toJson(params.getArguments().get(1)), Position.class);
                 return (CompletableFuture)((TextDocumentServiceImpl)server.getTextDocumentService()).superImplementations(uri, pos);
                 
-            case Server.JAVA_FIND_CONFIGURATIONS: {
+            case Server.JAVA_FIND_PROJECT_CONFIGURATIONS: {
                 String fileUri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 
                 FileObject file;
@@ -231,6 +232,12 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
 
                 return findProjectConfigurations(file);
+            }
+            case Server.JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS: {
+                return AttachConfigurations.findConnectors();
+            }
+            case Server.JAVA_FIND_DEBUG_PROCESS_TO_ATTACH: {
+                return AttachConfigurations.findProcessAttachTo(client);
             }
             default:
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
@@ -249,8 +256,10 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             }
             ProjectConfigurationProvider<ProjectConfiguration> provider = p.getLookup().lookup(ProjectConfigurationProvider.class);
             List<String> configDispNames = new ArrayList<>();
-            for (ProjectConfiguration c : provider.getConfigurations()) {
-                configDispNames.add(c.getDisplayName());
+            if (provider != null) {
+                for (ProjectConfiguration c : provider.getConfigurations()) {
+                    configDispNames.add(c.getDisplayName());
+                }
             }
             return configDispNames;
         });

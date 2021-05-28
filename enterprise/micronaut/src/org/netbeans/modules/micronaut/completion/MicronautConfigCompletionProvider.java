@@ -38,13 +38,22 @@ import org.springframework.boot.configurationmetadata.ConfigurationMetadataPrope
  *
  * @author Dusan Balek
  */
-@MimeRegistration(mimeType = "text/x-yaml", service = CompletionProvider.class)
 public class MicronautConfigCompletionProvider implements CompletionProvider {
+
+    @MimeRegistration(mimeType = "text/x-yaml", service = CompletionProvider.class)
+    public static MicronautConfigCompletionProvider createYamlProvider() {
+        return new MicronautConfigCompletionProvider();
+    }
+
+    @MimeRegistration(mimeType = "text/x-properties", service = CompletionProvider.class)
+    public static MicronautConfigCompletionProvider createPropertiesProvider() {
+        return new MicronautConfigCompletionProvider();
+    }
 
     @Override
     public CompletionTask createTask(int queryType, JTextComponent component) {
         FileObject fo = EditorDocumentUtils.getFileObject(component.getDocument());
-        if (fo != null && "application.yml".equalsIgnoreCase(fo.getNameExt())) {
+        if (MicronautConfigUtilities.isMicronautConfigFile(fo)) {
             Project project = FileOwnerQuery.getOwner(fo);
             if (project != null) {
                 if (MicronautConfigProperties.hasConfigMetadata(project)) {

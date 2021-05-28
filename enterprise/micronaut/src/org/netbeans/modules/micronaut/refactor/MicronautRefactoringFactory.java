@@ -19,7 +19,9 @@
 package org.netbeans.modules.micronaut.refactor;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -122,8 +124,13 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
                             SourceGroup[] sourceGroups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_RESOURCES);
                             for (SourceGroup sourceGroup : sourceGroups) {
                                 FileObject rootFolder = sourceGroup.getRootFolder();
-                                FileObject fo = rootFolder.getFileObject("application.yml");
-                                if (fo != null) {
+                                List<FileObject> configFiles = new ArrayList<>();
+                                for (FileObject fo : rootFolder.getChildren()) {
+                                    if (MicronautConfigUtilities.isMicronautConfigFile(fo)) {
+                                        configFiles.add(fo);
+                                    }
+                                }
+                                if (!configFiles.isEmpty()) {
                                     if (info == null) {
                                         info = getInfo();
                                     }
@@ -134,9 +141,11 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
                                                 for (ConfigurationMetadataProperty property : source.getProperties().values()) {
                                                     String name = "set" + property.getName().replaceAll("-", "");
                                                     if (name.equalsIgnoreCase(info.methodName)) {
-                                                        MicronautConfigUtilities.collectUsages(fo, property.getId(), usage -> {
-                                                            refactoringElements.add(refactoring, new WhereUsedRefactoringElement(usage.getFileObject(), usage.getStartOffset(), usage.getEndOffset(), usage.getText()));
-                                                        });
+                                                        for (FileObject configFile : configFiles) {
+                                                            MicronautConfigUtilities.collectUsages(configFile, property.getId(), usage -> {
+                                                                refactoringElements.add(refactoring, new WhereUsedRefactoringElement(usage.getFileObject(), usage.getStartOffset(), usage.getEndOffset(), usage.getText()));
+                                                            });
+                                                        }
                                                     }
                                                 }
                                             }

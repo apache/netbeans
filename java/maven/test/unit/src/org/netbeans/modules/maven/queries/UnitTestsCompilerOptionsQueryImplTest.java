@@ -37,7 +37,8 @@ public class UnitTestsCompilerOptionsQueryImplTest extends NbTestCase {
 
     protected @Override void setUp() throws Exception {
         clearWorkDir();
-        wd = FileUtil.toFileObject(getWorkDir());
+        File withSpace = new File(getWorkDir(), "path with space");
+        wd = FileUtil.createFolder(withSpace);
     }
 
     public void testNoCompilerPluginSpecified() throws Exception {

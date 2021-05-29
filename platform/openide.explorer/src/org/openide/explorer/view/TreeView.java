@@ -155,6 +155,8 @@ public abstract class TreeView extends JScrollPane {
     /** Property indicating whether the default action is enabled. */
     transient boolean defaultActionEnabled;
 
+    transient boolean entireRowClickable;
+
     /** not null if popup menu enabled */
     transient PopupAdapter popupListener;
 
@@ -386,6 +388,30 @@ public abstract class TreeView extends JScrollPane {
             // Switch off.
             tree.unregisterKeyboardAction(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false));
         }
+    }
+
+    /**
+     * Permit the entire row of a node to be clickable, rather than just the actual width of the
+     * node. This applies to left clicks, right clicks, and drag-and-drop operations, except when
+     * the LAF already forces such behavior. In particular, simple left clicks always exhibit this
+     * behavior on FlatLAF. False by default.
+     *
+     * <p>Enabling this option makes it easier to click nodes, while making it harder to open the
+     * root-level context menu which otherwise appears if the user right-clicks anywhere outside
+     * the area of any one particular node.
+     *
+     * <p>The area to the <em>left-hand</em> side of each node still works as normal, with respect
+     * to expansion handles and such.
+     *
+     * @param entireRowClickable true if a mouse click on the right-hand side of a node should be
+     *        interpreted as a click on said node
+     */
+    public void setEntireRowClickable(boolean entireRowClickable) {
+        this.entireRowClickable = entireRowClickable;
+    }
+
+    public boolean isEntireRowClickable() {
+        return entireRowClickable;
     }
 
     /**
@@ -1533,7 +1559,10 @@ public abstract class TreeView extends JScrollPane {
             }
 
             if ((selRow != -1) || !isRootVisible()) {
-                Point p = SwingUtilities.convertPoint(e.getComponent(), e.getX(), e.getY(), TreeView.this);
+                int x = (e instanceof RepositionedMouseEvent) ?
+                        ((RepositionedMouseEvent) e).getOriginalX() : e.getX();
+                int y = e.getY();
+                Point p = SwingUtilities.convertPoint(e.getComponent(), x, y, TreeView.this);
 
                 createPopup((int) p.getX(), (int) p.getY());
             }
@@ -2290,6 +2319,61 @@ public abstract class TreeView extends JScrollPane {
                 this.index = index;
             }
             
+        }
+
+        /**
+         * If {@link #isEntireRowClickable()} is true, and the mouse event's position is located in
+         * the empty space to the right of a node's bounds, adjust the event object to simulate a
+         * click within the node's bounds instead. This allows the empty space to the right of a
+         * node to be used as a click target for that node.
+         */
+        private MouseEvent repositionMouseEvent(MouseEvent evt) {
+            if (!isEntireRowClickable()) {
+                return evt;
+            }
+            int x = evt.getX();
+            int y = evt.getY();
+            TreePath path = getClosestPathForLocation(x, y);
+            if (path == null) {
+                return evt;
+            }
+            Rectangle bounds = getPathBounds(path);
+            if (bounds == null || y < bounds.y || y > (bounds.y + bounds.height)) {
+                return evt;
+            }
+            if (x > (bounds.x + bounds.width)) {
+                x = bounds.x + bounds.width - 1;
+                return new RepositionedMouseEvent(
+                        (Component) evt.getSource(), evt.getID(), evt.getWhen(), evt.getModifiersEx(),
+                        x, evt.getY(),
+                        evt.getXOnScreen() + (x - evt.getX()),
+                        evt.getYOnScreen(),
+                        evt.getClickCount(), evt.isPopupTrigger(), evt.getButton(),
+                        /* Pass along the original X coordinate, in case we need it for popup menu
+                        positioning in PopupAdapter.showPopup. */
+                        evt.getX());
+            }
+            return evt;
+        }
+
+        @Override
+        protected void processMouseEvent(MouseEvent evt) {
+            super.processMouseEvent(repositionMouseEvent(evt));
+        }
+    }
+
+    private static class RepositionedMouseEvent extends MouseEvent {
+        private final int originalX;
+
+        public RepositionedMouseEvent(Component source, int id, long when, int modifiers, int x, int y,
+                int xAbs, int yAbs, int clickCount, boolean popupTrigger, int button, int originalX)
+        {
+            super(source, id, when, modifiers, x, y, xAbs, yAbs, clickCount, popupTrigger, button);
+            this.originalX = originalX;
+        }
+
+        public int getOriginalX() {
+            return originalX;
         }
     }
     

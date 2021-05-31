@@ -489,12 +489,12 @@ public final class NbGradleProjectImpl implements Project {
     private CompletableFuture<GradleProject>    primingBuild;
     
     boolean isProjectPrimingRequired() {
-        return getPrimedProject() != null;
+        return getPrimedProject() == null;
     }
 
     GradleProject getPrimedProject() {
         GradleProject gp = projectWithQuality(null, EVALUATED, false, false);
-        return (gp.getQuality().notBetterThan(EVALUATED) || !gp.getProblems().isEmpty()) ? gp : null;
+        return !(gp.getQuality().notBetterThan(EVALUATED) || !gp.getProblems().isEmpty()) ? gp : null;
     }
     
     /**

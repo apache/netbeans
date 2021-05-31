@@ -18,9 +18,12 @@
  */
 package org.netbeans.modules.java.lsp.server.ui;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import org.openide.util.Lookup;
+import org.openide.util.io.NullInputStream;
 
 public abstract class IOContext {
     private static Reference<IOContext> lastCtx = new WeakReference<>(null);
@@ -44,12 +47,28 @@ public abstract class IOContext {
         return ctx;
     }
 
+    protected void stdIn(String line) throws IOException {
+        // no op
+    }
+    protected InputStream getStdIn() throws IOException {
+        return new NullInputStream();
+    }
     protected abstract void stdOut(String chunk);
     protected abstract void stdErr(String chunk);
     protected abstract boolean isValid();
 
     private static final class StdErrContext extends IOContext {
         static final StdErrContext DEFAULT = new StdErrContext();
+
+        @Override
+        protected void stdIn(String line) throws IOException {
+            // no op
+        }
+
+        @Override
+        protected InputStream getStdIn() throws IOException {
+            return System.in;
+        }
 
         @Override
         protected void stdOut(String chunk) {

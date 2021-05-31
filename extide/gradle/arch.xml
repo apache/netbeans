@@ -268,6 +268,13 @@ publishPlugins&lt;/args&gt;
 &lt;/actions&gt;
              </pre>
          </api>
+         <api category="devel" group="java.io.File" name="nb-actions-config.xml" type="export">
+             <p>
+                 An extension of <a href="#nb-actions-config.xml">nb-actions.config</a> is a per-Configuration action mapping.
+                 It can be placed in <b>nb-actions-</b><i>configurationID</i><b>.xml</b> with the same format and will apply only
+                 if that specific Project Configuration is in effect.
+             </p>
+         </api>
      </p>
  </answer>
 
@@ -908,6 +915,10 @@ publishPlugins&lt;/args&gt;
          can be placed into <code>lookup</code>. It is then notified when the
          execution of the action is finished. Useful when writing tests.
      </p>
+    </api>
+    <api group="lookup" name="project-actions" type="export" category="private">
+        The <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/GradleActionsProvider.html">GradleActionProviders</a> can be also activated for individual Plugins; 
+        register them for project type <code>org-netbeans-modules-gradle/Plugins/&lt;plugin-id></code>. 
     </api>
   </p>
  </answer>

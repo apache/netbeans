@@ -41,7 +41,7 @@ import org.openide.modules.DummyInstalledFileLocator;
  */
 public class AbstractGradleProjectTestCase extends NbTestCase {
 
-    @org.openide.util.lookup.ServiceProvider(service=org.openide.modules.InstalledFileLocator.class)
+    @org.openide.util.lookup.ServiceProvider(service=org.openide.modules.InstalledFileLocator.class, position = 1000)
     public static class InstalledFileLocator extends DummyInstalledFileLocator {
     }
 

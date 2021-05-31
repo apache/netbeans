@@ -24,23 +24,19 @@ import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.spi.actions.GradleActionsProvider;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.openide.util.Lookup;
+import org.netbeans.modules.gradle.execute.ConfigurableActionProvider;
+import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
+import org.netbeans.spi.project.ProjectConfigurationProvider;
 
 /**
  *
  * @author Laszlo Kishalmi
  */
 public final class ActionToTaskUtils {
-
-    private static final String MAPPING
-            = "defaultActionMapping.properties";
-
-    private static MappingContainer defaultActionMappings;
-    private static Map<String, List<ActionMapping>> defaultActionMapping;
-
     private ActionToTaskUtils() {
     }
 
@@ -52,7 +48,7 @@ public final class ActionToTaskUtils {
     }
 
     public static boolean isActionEnabled(String action, Project project, Lookup lookup) {
-        ActionMapping mapping = getActiveMapping(action, project);
+        ActionMapping mapping = getActiveMapping(action, project, lookup);
         if (mapping != null) {
             List<? extends GradleActionsProvider> providers = actionProviders(project);
             for (GradleActionsProvider provider : providers) {
@@ -63,11 +59,38 @@ public final class ActionToTaskUtils {
         }
         return false;
     }
+    
+    public static GradleExecConfiguration findProjectConfiguration(Project p) {
+        ProjectConfigurationProvider<GradleExecConfiguration> pcp = p.getLookup().lookup(ProjectConfigurationProvider.class);
+        return pcp == null ? null : pcp.getActiveConfiguration();
+    }
 
 
-    public static ActionMapping getActiveMapping(String action, Project project) {
+    public static ActionMapping getActiveMapping(String action, Project project, Lookup context) {
+        GradleExecConfiguration c = context.lookup(GradleExecConfiguration.class);
+        ConfigurableActionProvider contextProvider = project.getLookup().lookup(ConfigurableActionProvider.class);
+        
+        if (c == null) {
+            ProjectConfigurationProvider<GradleExecConfiguration> cprov = project.getLookup().lookup(ProjectConfigurationProvider.class);
+            if (cprov != null) {
+                c = cprov.getActiveConfiguration();
+            }
+        }
+        
+        if (c != null) {
+            ProjectActionMappingProvider mp = contextProvider.findActionProvider(c == null ? null : c.getId());
+            if (mp != null) {
+                ActionMapping m = mp.findMapping(action);
+                if (m != null) {
+                    return m;
+                }
+            }
+        }
+
         ProjectActionMappingProvider mappingProvider = project.getLookup().lookup(ProjectActionMappingProvider.class);
-        return mappingProvider != null ? mappingProvider.findMapping(action) : null;
+        // in case the Mapping Provider asks for the configuration, it should get some:
+        return mappingProvider != null ? ProjectConfigurationSupport.executeWithConfiguration(
+                project, c, () -> mappingProvider.findMapping(action)) : null;
     }
 
 }

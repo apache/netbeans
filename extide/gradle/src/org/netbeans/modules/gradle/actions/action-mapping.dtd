@@ -20,11 +20,13 @@
 
 -->
 
-<!ELEMENT actions (action*,apply-for*)>
+<!ELEMENT actions (action*,apply-for*,profiles)>
 <!ELEMENT apply-for (action+)>
 <!ELEMENT action (args?, reload?)>
 <!ELEMENT reload (args?)>
 <!ELEMENT args (#PCDATA)>
+<!ELEMENT profiles (profile*)>
+<!ELEMENT profile (property*,args,actions)>
 
 <!ATTLIST apply-for plugins CDATA #REQUIRED>
 <!ATTLIST reload rule (NEVER|DEFAULT|ALWAYS|ALWAYS_ONLINE) "DEFAULT">
@@ -32,3 +34,6 @@
 <!ATTLIST action displayName CDATA #IMPLIED>
 <!ATTLIST action repeatable (false|true) "true">
 <!ATTLIST action priority CDATA #IMPLIED>
+<!ATTLIST profile id CDATA #REQUIRED>
+<!ATTLIST profile displayName CDATA #IMPLIED>
+<!ATTLIST property name CDATA #REQUIRED>

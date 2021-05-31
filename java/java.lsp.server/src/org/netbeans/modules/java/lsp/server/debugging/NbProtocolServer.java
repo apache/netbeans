@@ -19,6 +19,8 @@
 package org.netbeans.modules.java.lsp.server.debugging;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
@@ -410,17 +412,35 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
         }
         return future;
     }
+    
+    private EvaluateResponse passToApplication(String args) {
+        Writer w = context.getInputSink();
+        if (w != null) {
+            try {
+                w.write(args);
+            } catch (IOException ex) {
+                // TBD: handle.
+            }
+        }
+        EvaluateResponse resp = new EvaluateResponse();
+        resp.setResult("");
+        return resp;
+    }
 
     @Override
     public CompletableFuture<EvaluateResponse> evaluate(EvaluateArguments args) {
         return CompletableFuture.supplyAsync(() -> {
             String expression = args.getExpression();
+            ThreadObjects obs = context.getThreadsProvider().getThreadObjects();
+            if (args.getFrameId() == null || obs == null) {
+                return passToApplication(args.getExpression());
+            }
             if (StringUtils.isBlank(expression)) {
                 throw ErrorUtilities.createResponseErrorException(
                     "Empty expression cannot be evaluated.",
                     ResponseErrorCode.InvalidParams);
             }
-            NbFrame stackFrame = (NbFrame) context.getThreadsProvider().getThreadObjects().getObject(args.getFrameId());
+            NbFrame stackFrame = (NbFrame)obs.getObject(args.getFrameId());
             if (stackFrame == null) {
                 throw ErrorUtilities.createResponseErrorException(
                     "Unknown frame " + args.getFrameId(),

@@ -24,9 +24,11 @@ import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import org.netbeans.modules.gradle.execute.GradleCliEditorKit;
 import java.awt.CardLayout;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.DefaultComboBoxModel;
@@ -40,6 +42,8 @@ import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.actions.CustomActionRegistrationSupport;
+import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
+import org.netbeans.modules.gradle.configurations.ConfigurationSnapshot;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.text.CloneableEditorSupport;
 import org.openide.util.NbBundle.Messages;
@@ -56,7 +60,8 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
     private static final String CARD_DETAILS = "details"; //NOI18N
 
     final Project project;
-
+    final ConfigurationSnapshot configSnapshot;
+    final DefaultComboBoxModel<GradleExecConfiguration> configModel = new DefaultComboBoxModel<>();
     final DefaultListModel<CustomActionMapping> customActionsModel = new DefaultListModel<>();
     final DefaultComboBoxModel<String> availableActionsModel = new DefaultComboBoxModel<>();
     final CustomActionRegistrationSupport actionRegistry;
@@ -84,8 +89,10 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
     /**
      * Creates new form BuildActionsCustomizer
      */
-    public BuildActionsCustomizer(Project project) {
+    public BuildActionsCustomizer(Project project, ConfigurationSnapshot snapshot) {
         this.project = project;
+        this.configSnapshot = snapshot;
+        
         initComponents();
         actionRegistry = new CustomActionRegistrationSupport(project);
         lsActions.setCellRenderer(new MyListCellRenderer());
@@ -96,24 +103,101 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         taArgs.getDocument().addDocumentListener(applyListener);
         initDefaultModels();
         comboReady = true;
+        
+        cbConfiguration.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (!(value instanceof GradleExecConfiguration) || !(c instanceof JLabel)) {
+                    return c;
+                }
+                JLabel l = (JLabel)c;
+                GradleExecConfiguration conf = (GradleExecConfiguration)value;
+                l.setText(conf.getDisplayName());
+                if (conf.equals(configSnapshot.getActiveConfiguration())) {
+                    l.setFont(l.getFont().deriveFont(Font.BOLD));
+                }
+                return c;
+            }
+        });
+        cbConfiguration.setModel(configModel);
+        cbConfiguration.addActionListener(this::configurationChanged);
+    }
+    
+    private void configurationChanged(ActionEvent e) {
+        if (!comboReady) {
+            return;
+        }
+        GradleExecConfiguration cfg = (GradleExecConfiguration)cbConfiguration.getSelectedItem();
+        if (cfg == null) {
+            // will recursively fire here
+            cbConfiguration.setSelectedItem(configSnapshot.getActiveConfiguration());
+            return;
+        }
+        actionRegistry.setActiveConfiguration(cfg);
+        initDefaultModels();
     }
 
     private void initDefaultModels() {
-        ActionProvider actionProvider = project.getLookup().lookup(ActionProvider.class);
+        boolean saved = comboReady;
+        try {
+            comboReady = false;
+            ActionProvider actionProvider = project.getLookup().lookup(ActionProvider.class);
 
-        Set<String> allAvailableActions = new TreeSet<>(Arrays.asList(actionProvider.getSupportedActions()));
+            Set<String> allAvailableActions = new TreeSet<>(Arrays.asList(actionProvider.getSupportedActions()));
 
-        actionRegistry.getCustomActions().forEach((CustomActionMapping mapping) -> {
-            customActionsModel.addElement(mapping);
-        });
-        availableActionsModel.addElement(CUSTOM_ACTION);
+            customActionsModel.removeAllElements();
+            actionRegistry.getCustomActions().forEach((CustomActionMapping mapping) -> {
+                customActionsModel.addElement(mapping);
+            });
+            availableActionsModel.removeAllElements();
+            availableActionsModel.addElement(CUSTOM_ACTION);
 
-        // Add those actions to the combo box which were not customized yet.
-        for (String action : allAvailableActions) {
-            if (actionRegistry.getCustomAction(action) == null) {
-                availableActionsModel.addElement(action);
+            // Add those actions to the combo box which were not customized yet.
+            for (String action : allAvailableActions) {
+                if (actionRegistry.getCustomAction(action) == null) {
+                    availableActionsModel.addElement(action);
+                }
             }
+        } finally {
+            comboReady = saved;
         }
+    }
+
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        updateConfigurations();
+    }
+    
+    private void updateConfigurations() {
+        boolean saved = comboReady;
+        
+        GradleExecConfiguration toSelect = null;
+        try {
+            comboReady = false;
+            // resync the configuration combo with the Snapshot, just in case when some configuration was defined
+            // in the other panel.
+            GradleExecConfiguration cur = (GradleExecConfiguration)configModel.getSelectedItem();
+            GradleExecConfiguration act = configSnapshot.getActiveConfiguration();
+            configModel.removeAllElements();;
+            for (GradleExecConfiguration c : configSnapshot.getConfigurations()) {
+                configModel.addElement(c);
+                if (cur != null) {
+                    if (c.equals(cur)) {
+                        toSelect = c;
+                     }
+                } else if (c.equals(act)) {
+                    toSelect = act;
+                }
+            }
+        } finally {
+            comboReady = saved;
+        }
+        if (toSelect == null) {
+            toSelect = configSnapshot.getActiveConfiguration();
+        }
+        configModel.setSelectedItem(toSelect);
     }
 
     /**
@@ -125,11 +209,16 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lbTitle = new javax.swing.JLabel();
+        lbConfiguration = new javax.swing.JLabel();
+        cbConfiguration = new javax.swing.JComboBox<>();
+        jSeparator1 = new javax.swing.JSeparator();
         lbActions = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         lsActions = new javax.swing.JList<>();
+        jLabel1 = new javax.swing.JLabel();
+        cbAdd = new javax.swing.JComboBox<>();
         pnDetailsPanel = new javax.swing.JPanel();
-        lbNoAction = new javax.swing.JLabel();
         pnDetails = new javax.swing.JPanel();
         lbName = new javax.swing.JLabel();
         lbLabel = new javax.swing.JLabel();
@@ -143,9 +232,11 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         taArgs = new javax.swing.JEditorPane();
         lbReloadHints = new javax.swing.JLabel();
-        cbAdd = new javax.swing.JComboBox<>();
-        lbTitle = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        lbNoAction = new javax.swing.JLabel();
+
+        org.openide.awt.Mnemonics.setLocalizedText(lbTitle, org.openide.util.NbBundle.getMessage(BuildActionsCustomizer.class, "BuildActionsCustomizer.lbTitle.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(lbConfiguration, org.openide.util.NbBundle.getMessage(BuildActionsCustomizer.class, "BuildActionsCustomizer.lbConfiguration.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(lbActions, org.openide.util.NbBundle.getMessage(BuildActionsCustomizer.class, "BuildActionsCustomizer.lbActions.text")); // NOI18N
 
@@ -158,11 +249,16 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         });
         jScrollPane2.setViewportView(lsActions);
 
-        pnDetailsPanel.setLayout(new java.awt.CardLayout());
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(BuildActionsCustomizer.class, "BuildActionsCustomizer.jLabel1.text")); // NOI18N
 
-        lbNoAction.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(lbNoAction, org.openide.util.NbBundle.getMessage(BuildActionsCustomizer.class, "BuildActionsCustomizer.lbNoAction.text")); // NOI18N
-        pnDetailsPanel.add(lbNoAction, "empty");
+        cbAdd.setModel(availableActionsModel);
+        cbAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbAddActionPerformed(evt);
+            }
+        });
+
+        pnDetailsPanel.setLayout(new java.awt.CardLayout());
 
         pnDetails.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -235,7 +331,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cbReloadRule, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(cbRepeatable, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE))
+                                .addComponent(cbRepeatable, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnDetailsLayout.createSequentialGroup()
                                 .addGap(6, 6, 6)
                                 .addComponent(jScrollPane3))
@@ -266,56 +362,56 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
                     .addComponent(cbReloadRule, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cbRepeatable))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbReloadHints)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbReloadHints, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btRemove)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pnDetailsPanel.add(pnDetails, "details");
 
-        cbAdd.setModel(availableActionsModel);
-        cbAdd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbAddActionPerformed(evt);
-            }
-        });
-
-        org.openide.awt.Mnemonics.setLocalizedText(lbTitle, org.openide.util.NbBundle.getMessage(BuildActionsCustomizer.class, "BuildActionsCustomizer.lbTitle.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(BuildActionsCustomizer.class, "BuildActionsCustomizer.jLabel1.text")); // NOI18N
+        lbNoAction.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        org.openide.awt.Mnemonics.setLocalizedText(lbNoAction, org.openide.util.NbBundle.getMessage(BuildActionsCustomizer.class, "BuildActionsCustomizer.lbNoAction.text")); // NOI18N
+        pnDetailsPanel.add(lbNoAction, "empty");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1)
+                    .addComponent(lbTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lbTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbActions)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbActions))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(pnDetailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(pnDetailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(cbAdd, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))))
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(cbAdd, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lbConfiguration)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbConfiguration, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(8, 8, 8)
                 .addComponent(lbTitle)
-                .addGap(10, 10, 10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbConfiguration, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbConfiguration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbActions)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -324,8 +420,8 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
                             .addComponent(cbAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pnDetailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2))
+                        .addComponent(pnDetailsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -405,7 +501,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
     }
 
     void save() {
-        actionRegistry.save();
+        actionRegistry.saveAndReportErrors();
     }
 
     static class MyListCellRenderer extends DefaultListCellRenderer {
@@ -428,13 +524,16 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRemove;
     private javax.swing.JComboBox<String> cbAdd;
+    private javax.swing.JComboBox<GradleExecConfiguration> cbConfiguration;
     private javax.swing.JComboBox<String> cbReloadRule;
     private javax.swing.JCheckBox cbRepeatable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lbActions;
     private javax.swing.JLabel lbArgs;
+    private javax.swing.JLabel lbConfiguration;
     private javax.swing.JLabel lbLabel;
     private javax.swing.JLabel lbName;
     private javax.swing.JLabel lbNoAction;
@@ -448,4 +547,11 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
     private javax.swing.JTextField tfLabel;
     private javax.swing.JTextField tfName;
     // End of variables declaration//GEN-END:variables
+
+    private static Map<String, ConfigData>  actionConfigMap = new HashMap<>();
+    
+    static class ConfigData {
+        final DefaultListModel<CustomActionMapping> customActionsModel = new DefaultListModel<>();
+        final DefaultComboBoxModel<String> availableActionsModel = new DefaultComboBoxModel<>();
+    }
 }

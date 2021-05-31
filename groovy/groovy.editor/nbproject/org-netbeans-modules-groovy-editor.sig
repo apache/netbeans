@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.74
+#Version 1.76
 
 CLSS public abstract interface java.io.Serializable
 
@@ -21,7 +21,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public abstract interface java.lang.Iterable<%0 extends java.lang.Object>
 meth public abstract java.util.Iterator<{java.lang.Iterable%0}> iterator()
@@ -44,24 +43,19 @@ meth public java.lang.String toString()
 
 CLSS public org.codehaus.groovy.ast.ASTNode
 cons public init()
-meth public <%0 extends java.lang.Object> {%%0} getNodeMetaData(java.lang.Object)
-meth public boolean equals(java.lang.Object)
+intf org.codehaus.groovy.ast.NodeMetaDataHandler
 meth public int getColumnNumber()
 meth public int getLastColumnNumber()
 meth public int getLastLineNumber()
 meth public int getLineNumber()
-meth public int hashCode()
-meth public java.lang.Object putNodeMetaData(java.lang.Object,java.lang.Object)
 meth public java.lang.String getText()
-meth public java.util.Map<?,?> getNodeMetaData()
-meth public org.codehaus.groovy.util.ListHashMap getMetaDataMap()
+meth public java.util.Map<?,?> getMetaDataMap()
 meth public void copyNodeMetaData(org.codehaus.groovy.ast.ASTNode)
-meth public void removeNodeMetaData(java.lang.Object)
 meth public void setColumnNumber(int)
 meth public void setLastColumnNumber(int)
 meth public void setLastLineNumber(int)
 meth public void setLineNumber(int)
-meth public void setNodeMetaData(java.lang.Object,java.lang.Object)
+meth public void setMetaDataMap(java.util.Map<?,?>)
 meth public void setSourcePosition(org.codehaus.groovy.ast.ASTNode)
 meth public void visit(org.codehaus.groovy.ast.GroovyCodeVisitor)
 supr java.lang.Object
@@ -72,6 +66,7 @@ cons public init()
 intf org.codehaus.groovy.ast.GroovyClassVisitor
 intf org.codehaus.groovy.transform.ErrorCollecting
 meth protected abstract org.codehaus.groovy.control.SourceUnit getSourceUnit()
+meth protected void visitAnnotation(org.codehaus.groovy.ast.AnnotationNode)
 meth protected void visitClassCodeContainer(org.codehaus.groovy.ast.stmt.Statement)
 meth protected void visitConstructorOrMethod(org.codehaus.groovy.ast.MethodNode,boolean)
 meth protected void visitObjectInitializerStatements(org.codehaus.groovy.ast.ClassNode)
@@ -107,8 +102,7 @@ supr org.codehaus.groovy.ast.CodeVisitorSupport
 CLSS public abstract org.codehaus.groovy.ast.CodeVisitorSupport
 cons public init()
 intf org.codehaus.groovy.ast.GroovyCodeVisitor
-meth protected void visitEmptyStatement(org.codehaus.groovy.ast.stmt.EmptyStatement)
-meth protected void visitListOfExpressions(java.util.List<? extends org.codehaus.groovy.ast.expr.Expression>)
+meth protected void afterSwitchConditionExpressionVisited(org.codehaus.groovy.ast.stmt.SwitchStatement)
 meth public void visitArgumentlistExpression(org.codehaus.groovy.ast.expr.ArgumentListExpression)
 meth public void visitArrayExpression(org.codehaus.groovy.ast.expr.ArrayExpression)
 meth public void visitAssertStatement(org.codehaus.groovy.ast.stmt.AssertStatement)
@@ -130,16 +124,19 @@ meth public void visitConstructorCallExpression(org.codehaus.groovy.ast.expr.Con
 meth public void visitContinueStatement(org.codehaus.groovy.ast.stmt.ContinueStatement)
 meth public void visitDeclarationExpression(org.codehaus.groovy.ast.expr.DeclarationExpression)
 meth public void visitDoWhileLoop(org.codehaus.groovy.ast.stmt.DoWhileStatement)
+meth public void visitEmptyStatement(org.codehaus.groovy.ast.stmt.EmptyStatement)
 meth public void visitExpressionStatement(org.codehaus.groovy.ast.stmt.ExpressionStatement)
 meth public void visitFieldExpression(org.codehaus.groovy.ast.expr.FieldExpression)
 meth public void visitForLoop(org.codehaus.groovy.ast.stmt.ForStatement)
 meth public void visitGStringExpression(org.codehaus.groovy.ast.expr.GStringExpression)
 meth public void visitIfElse(org.codehaus.groovy.ast.stmt.IfStatement)
+meth public void visitLambdaExpression(org.codehaus.groovy.ast.expr.LambdaExpression)
 meth public void visitListExpression(org.codehaus.groovy.ast.expr.ListExpression)
 meth public void visitMapEntryExpression(org.codehaus.groovy.ast.expr.MapEntryExpression)
 meth public void visitMapExpression(org.codehaus.groovy.ast.expr.MapExpression)
 meth public void visitMethodCallExpression(org.codehaus.groovy.ast.expr.MethodCallExpression)
 meth public void visitMethodPointerExpression(org.codehaus.groovy.ast.expr.MethodPointerExpression)
+meth public void visitMethodReferenceExpression(org.codehaus.groovy.ast.expr.MethodReferenceExpression)
 meth public void visitNotExpression(org.codehaus.groovy.ast.expr.NotExpression)
 meth public void visitPostfixExpression(org.codehaus.groovy.ast.expr.PostfixExpression)
 meth public void visitPrefixExpression(org.codehaus.groovy.ast.expr.PrefixExpression)
@@ -196,11 +193,13 @@ meth public abstract void visitFieldExpression(org.codehaus.groovy.ast.expr.Fiel
 meth public abstract void visitForLoop(org.codehaus.groovy.ast.stmt.ForStatement)
 meth public abstract void visitGStringExpression(org.codehaus.groovy.ast.expr.GStringExpression)
 meth public abstract void visitIfElse(org.codehaus.groovy.ast.stmt.IfStatement)
+meth public abstract void visitLambdaExpression(org.codehaus.groovy.ast.expr.LambdaExpression)
 meth public abstract void visitListExpression(org.codehaus.groovy.ast.expr.ListExpression)
 meth public abstract void visitMapEntryExpression(org.codehaus.groovy.ast.expr.MapEntryExpression)
 meth public abstract void visitMapExpression(org.codehaus.groovy.ast.expr.MapExpression)
 meth public abstract void visitMethodCallExpression(org.codehaus.groovy.ast.expr.MethodCallExpression)
 meth public abstract void visitMethodPointerExpression(org.codehaus.groovy.ast.expr.MethodPointerExpression)
+meth public abstract void visitMethodReferenceExpression(org.codehaus.groovy.ast.expr.MethodReferenceExpression)
 meth public abstract void visitNotExpression(org.codehaus.groovy.ast.expr.NotExpression)
 meth public abstract void visitPostfixExpression(org.codehaus.groovy.ast.expr.PostfixExpression)
 meth public abstract void visitPrefixExpression(org.codehaus.groovy.ast.expr.PrefixExpression)
@@ -221,6 +220,20 @@ meth public abstract void visitUnaryMinusExpression(org.codehaus.groovy.ast.expr
 meth public abstract void visitUnaryPlusExpression(org.codehaus.groovy.ast.expr.UnaryPlusExpression)
 meth public abstract void visitVariableExpression(org.codehaus.groovy.ast.expr.VariableExpression)
 meth public abstract void visitWhileLoop(org.codehaus.groovy.ast.stmt.WhileStatement)
+meth public void visitEmptyExpression(org.codehaus.groovy.ast.expr.EmptyExpression)
+meth public void visitEmptyStatement(org.codehaus.groovy.ast.stmt.EmptyStatement)
+meth public void visitListOfExpressions(java.util.List<? extends org.codehaus.groovy.ast.expr.Expression>)
+
+CLSS public abstract interface org.codehaus.groovy.ast.NodeMetaDataHandler
+meth public <%0 extends java.lang.Object> {%%0} getNodeMetaData(java.lang.Object)
+meth public <%0 extends java.lang.Object> {%%0} getNodeMetaData(java.lang.Object,java.util.function.Function<?,? extends {%%0}>)
+meth public abstract java.util.Map<?,?> getMetaDataMap()
+meth public abstract void setMetaDataMap(java.util.Map<?,?>)
+meth public java.lang.Object putNodeMetaData(java.lang.Object,java.lang.Object)
+meth public java.util.Map<?,?> getNodeMetaData()
+meth public void copyNodeMetaData(org.codehaus.groovy.ast.NodeMetaDataHandler)
+meth public void removeNodeMetaData(java.lang.Object)
+meth public void setNodeMetaData(java.lang.Object,java.lang.Object)
 
 CLSS public abstract interface org.codehaus.groovy.transform.ErrorCollecting
 meth public abstract void addError(java.lang.String,org.codehaus.groovy.ast.ASTNode)

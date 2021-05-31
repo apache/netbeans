@@ -127,13 +127,14 @@ public abstract class ExecutionEngine extends Object {
             private RequestProcessor.Task task;
             private int resultValue;
             private final String name;
-            private InputOutput io;
+            private final InputOutput io;
             
             public ET(Runnable run, String name, InputOutput io) {
                 super(run);
                 this.originalLookup = Lookup.getDefault();
                 this.resultValue = resultValue;
                 this.name = name;
+                this.io = io;
                 task = RequestProcessor.getDefault().post(this);
             }
             

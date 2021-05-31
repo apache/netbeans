@@ -72,6 +72,8 @@ public final class Windows8LFCustoms extends LFCustoms {
         "FormattedTextField.font", "TextField.font", "Spinner.font", "Button.font", "EditorPane.font",
         "Label.font", "ComboBox.font", "Tree.font", "TextArea.font" }; //NOI18N
 
+    final Color TAB_CONTENT_BORDER_COLOR = new Color(156, 156, 156);
+
     @Override
     public Object[] createLookAndFeelCustomizationKeysAndValues() {
         /* Don't try to fetch this font size from the LAF; it won't work reliably for HiDPI
@@ -110,6 +112,18 @@ public final class Windows8LFCustoms extends LFCustoms {
             /* Note that menu separators are still 3 pixels too tall on Windows compared to native
             apps. Fixing that would be a bigger job, though (replacing WindowsPopupMenuSeparatorUI
             to override getPreferredSize). */
+
+            /* Let the quick search area be flush with the rest of the menu bar. There's already a
+            thin border under the menu bar, and the quick search icon + the "Search (Ctrl+I)" string
+            to show the user that the quick search component is there. */
+            "nb.quicksearch.border", new EmptyBorder(0, 0, 0, 0),
+
+            // Let the HeapView component be flush with the toolbar background.
+            "nb.heapview.background", new Color(240, 240, 240),
+            "nb.heapview.foreground", new Color(45, 45, 45),
+            "nb.heapview.highlight", new Color(240, 240, 240, 240),
+            // Use the same color as EditorTab/ViewTab.underlineColor.
+            "nb.heapview.chart", new Color(61, 129, 245)
         };
         List<Object> result = new ArrayList<>();
         result.addAll(Arrays.asList(constants));
@@ -186,8 +200,6 @@ public final class Windows8LFCustoms extends LFCustoms {
                 }
             }
         }
-        result.add("nb.quicksearch.border");
-        result.add(new DPIUnscaledBorder(UIManager.getDefaults().getBorder("TextField.border")));
 
         /* JSpinner has an odd border, and seemingly two borders on top of each other. Setting an
         empty border for Spinner.border makes the component look better on various HiDPI
@@ -218,8 +230,8 @@ public final class Windows8LFCustoms extends LFCustoms {
 
             // Use the same neutral grey as in the Windows 10 "Settings" app sidebar.
             DESKTOP_BACKGROUND, new Color(230, 230, 230), //NOI18N
-            SCROLLPANE_BORDER_COLOR, new Color(140, 140, 140),
-            SCROLLPANE_BORDER_COLOR2, new Color(140, 140, 140),
+            SCROLLPANE_BORDER_COLOR, TAB_CONTENT_BORDER_COLOR,
+            SCROLLPANE_BORDER_COLOR2, TAB_CONTENT_BORDER_COLOR,
             DESKTOP_BORDER, new EmptyBorder(6, 5, 4, 6),
             SCROLLPANE_BORDER, new DPIUnscaledBorder((Border) UIManager.get("ScrollPane.border")),
             EXPLORER_STATUS_BORDER, new StatusLineBorder(StatusLineBorder.TOP),
@@ -236,7 +248,11 @@ public final class Windows8LFCustoms extends LFCustoms {
 
             WORKPLACE_FILL, new Color(230, 230, 230), // Same as DESKTOP_BACKGROUND
 
-            DESKTOP_SPLITPANE_BORDER, BorderFactory.createEmptyBorder(4, 0, 0, 0),
+            DESKTOP_SPLITPANE_BORDER, BorderFactory.createEmptyBorder(0, 0, 0, 0),
+
+            "MenuBar.border", new DPIUnscaledBorder(new MatteBorder(0, 0, 1, 0, TAB_CONTENT_BORDER_COLOR)),
+            "nb.quicksearch.background", Color.WHITE, // Match text box background.
+
             SLIDING_BUTTON_UI, "org.netbeans.swing.tabcontrol.plaf.WinVistaSlidingButtonUI",
 
             // progress component related

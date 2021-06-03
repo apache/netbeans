@@ -79,7 +79,8 @@ public final class AttachConfigurations {
         }, RP);
     }
 
-    @Messages({"LBL_ConnectorPort=port of the debuggee JVM", "LBL_ConnectorShmemName=shared memory name"})
+    @Messages({"DESC_HostName=Name of host machine to connect to", "DESC_Port=Port number to connect to",
+               "DESC_ShMem=Shared memory transport address at which the target VM is listening"})
     private static List<DebugConnector> listAttachingConnectors() {
         VirtualMachineManager vmm = Bootstrap.virtualMachineManager ();
         List<AttachingConnector> attachingConnectors = vmm.attachingConnectors();
@@ -91,40 +92,42 @@ public final class AttachConfigurations {
             DebugConnector connector;
             switch (connectorName) {
                 case CONNECTOR_PROCESS:
-                    connector = new DebugConnector(NAME_ATTACH_PROCESS, type,
+                    connector = new DebugConnector(connectorName, NAME_ATTACH_PROCESS, type,
                             Collections.singletonList(PROCESS_ARG_PID),
-                            Collections.singletonList("${command:" + Server.JAVA_FIND_DEBUG_PROCESS_TO_ATTACH + "}"));    // NOI18N
+                            Collections.singletonList("${command:" + Server.JAVA_FIND_DEBUG_PROCESS_TO_ATTACH + "}"),   // NOI18N
+                            Collections.singletonList(""));
                     break;
                 case CONNECTOR_SOCKET: {
                     String hostName = getArgumentOrDefault(defaultArguments.get("hostname"), "localhost");          // NOI18N
-                    String port = getArgumentOrDefault(defaultArguments.get("port"), "<"+Bundle.LBL_ConnectorPort()+">"); // NOI18N
-                    connector = new DebugConnector(NAME_ATTACH_SOCKET, type,
+                    String port = getArgumentOrDefault(defaultArguments.get("port"), "8000"); // NOI18N
+                    connector = new DebugConnector(connectorName, NAME_ATTACH_SOCKET, type,
                             Arrays.asList(SOCKET_ARG_HOST, SOCKET_ARG_PORT),
-                            Arrays.asList(hostName, port));
+                            Arrays.asList(hostName, port),
+                            Arrays.asList(Bundle.DESC_HostName(), Bundle.DESC_Port()));
                     break;
                 }
                 case CONNECTOR_SHMEM: {
-                    String name = getArgumentOrDefault(defaultArguments.get("name"), "<"+Bundle.LBL_ConnectorShmemName()+">");       // NOI18N
-                    connector = new DebugConnector(NAME_ATTACH_SHMEM, type,
+                    String name = getArgumentOrDefault(defaultArguments.get("name"), "");       // NOI18N
+                    connector = new DebugConnector(connectorName, NAME_ATTACH_SHMEM, type,
                             Collections.singletonList(SHMEM_ARG_NAME),
-                            Collections.singletonList(name));
+                            Collections.singletonList(name),
+                            Collections.singletonList(Bundle.DESC_ShMem()));
                     break;
                 }
                 default: {
                     List<String> names = new ArrayList<>();
                     List<String> values = new ArrayList<>();
+                    List<String> descriptions = new ArrayList<>();
                     for (Connector.Argument arg : defaultArguments.values()) {
                         if (arg.mustSpecify()) {
                             names.add(arg.name());
                             String value = arg.value();
-                            if (value.isEmpty()) {
-                                value = "<" + arg.description()+ ">";   // NOI18N
-                            }
                             values.add(value);
+                            descriptions.add(arg.description());
                         }
                     }
-                    connector = new DebugConnector(NAME_ATTACH_BY + connectorName, type,
-                            names, values);
+                    connector = new DebugConnector(connectorName, NAME_ATTACH_BY + connectorName, type,
+                            names, values, descriptions);
                 }
             }
             connectors.add(connector);

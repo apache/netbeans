@@ -98,8 +98,10 @@ export namespace TestProgressNotification {
 };
 
 export interface DebugConnector {
+    id: string;
     name: string;
     type: string;
     arguments: string[];
     defaultValues: string[];
+    descriptions: string[];
 }

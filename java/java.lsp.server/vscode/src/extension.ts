@@ -172,10 +172,14 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     });
 
     //register debugger:
-    let configProvider = new NetBeansConfigurationProvider();
-    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java8+', configProvider, vscode.DebugConfigurationProviderTriggerKind.Dynamic));
-    let configNativeProvider = new NetBeansConfigurationNativeProvider();
-    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('nativeimage', configNativeProvider));
+    let configInitialProvider = new NetBeansConfigurationInitialProvider();
+    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java8+', configInitialProvider, vscode.DebugConfigurationProviderTriggerKind.Initial));
+    let configDynamicProvider = new NetBeansConfigurationDynamicProvider(context);
+    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java8+', configDynamicProvider, vscode.DebugConfigurationProviderTriggerKind.Dynamic));
+    let configResolver = new NetBeansConfigurationResolver();
+    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java8+', configResolver));
+    let configNativeResolver = new NetBeansConfigurationNativeResolver();
+    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('nativeimage', configNativeResolver));
 
     let debugDescriptionFactory = new NetBeansDebugAdapterDescriptionFactory();
     context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('java8+', debugDescriptionFactory));
@@ -655,7 +659,7 @@ class NetBeansDebugAdapterDescriptionFactory implements vscode.DebugAdapterDescr
 }
 
 
-class NetBeansConfigurationProvider implements vscode.DebugConfigurationProvider {
+class NetBeansConfigurationInitialProvider implements vscode.DebugConfigurationProvider {
 
     provideDebugConfigurations(folder: vscode.WorkspaceFolder | undefined, token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration[]> {
        return this.doProvideDebugConfigurations(folder, token);
@@ -696,6 +700,29 @@ class NetBeansConfigurationProvider implements vscode.DebugConfigurationProvider
                 result.push(debugConfig);
             }
         }
+        return result;
+    }
+}
+
+class NetBeansConfigurationDynamicProvider implements vscode.DebugConfigurationProvider {
+
+    context: ExtensionContext;
+    commandValues = new Map<string, string>();
+
+    constructor(context: ExtensionContext) {
+        this.context = context;
+    }
+
+    provideDebugConfigurations(folder: vscode.WorkspaceFolder | undefined, token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration[]> {
+       return this.doProvideDebugConfigurations(folder, this.context, this.commandValues, token);
+    }
+
+    async doProvideDebugConfigurations(folder: vscode.WorkspaceFolder | undefined, context: ExtensionContext, commandValues: Map<string, string>, _token?:  vscode.CancellationToken):  Promise<vscode.DebugConfiguration[]> {
+        let c : LanguageClient = await client;
+        if (!folder) {
+            return [];
+        }
+        let result : vscode.DebugConfiguration[] = [];
         const attachConnectors : DebugConnector[] | null | undefined = await vscode.commands.executeCommand('java.attachDebugger.configurations');
         if (attachConnectors) {
             for (let ac of attachConnectors) {
@@ -705,13 +732,38 @@ class NetBeansConfigurationProvider implements vscode.DebugConfigurationProvider
                     request: "attach",
                 };
                 for (let i = 0; i < ac.arguments.length; i++) {
-                    debugConfig[ac.arguments[i]] = ac.defaultValues[i];
+                    let defaultValue: string = ac.defaultValues[i];
+                    if (!defaultValue.startsWith("${command:")) {
+                        // Create a command that asks for the argument value:
+                        let cmd: string = "java.attachDebugger.connector." + ac.id + "." + ac.arguments[i];
+                        debugConfig[ac.arguments[i]] = "${command:" + cmd + "}";
+                        if (!commandValues.has(cmd)) {
+                            commandValues.set(cmd, ac.defaultValues[i]);
+                            let description: string = ac.descriptions[i];
+                            context.subscriptions.push(commands.registerCommand(cmd, async (ctx) => {
+                                return vscode.window.showInputBox({
+                                    prompt: description,
+                                    value: commandValues.get(cmd),
+                                }).then((value) => {
+                                    if (value) {
+                                        commandValues.set(cmd, value);
+                                    }
+                                    return value;
+                                });
+                            }));
+                        }
+                    } else {
+                        debugConfig[ac.arguments[i]] = defaultValue;
+                    }
                 }
-                result.push(debugConfig)
+                result.push(debugConfig);
             }
         }
         return result;
     }
+}
+
+class NetBeansConfigurationResolver implements vscode.DebugConfigurationProvider {
 
     resolveDebugConfiguration(_folder: vscode.WorkspaceFolder | undefined, config: vscode.DebugConfiguration, _token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration> {
         if (!config.type) {
@@ -734,7 +786,7 @@ class NetBeansConfigurationProvider implements vscode.DebugConfigurationProvider
     }
 }
 
-class NetBeansConfigurationNativeProvider implements vscode.DebugConfigurationProvider {
+class NetBeansConfigurationNativeResolver implements vscode.DebugConfigurationProvider {
 
     resolveDebugConfiguration(_folder: vscode.WorkspaceFolder | undefined, config: vscode.DebugConfiguration, _token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration> {
         if (!config.type) {

@@ -32,6 +32,12 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public final class DebugConnector {
 
     /**
+     * The identifier of the connector.
+     */
+    @NonNull
+    private String id;
+
+    /**
      * The display name identifier of the connector.
      */
     @NonNull
@@ -55,11 +61,28 @@ public final class DebugConnector {
     @NonNull
     private List<String> defaultValues;
 
-    public DebugConnector(String name, String type, List<String> arguments, List<String> defaultValues) {
+    /**
+     * Descriptions of debug connector arguments.
+     */
+    @NonNull
+    private List<String> descriptions;
+
+    public DebugConnector(String id, String name, String type, List<String> arguments, List<String> defaultValues, List<String> descriptions) {
+        this.id = id;
         this.name = name;
         this.type = type;
         this.arguments = arguments;
         this.defaultValues = defaultValues;
+        this.descriptions = descriptions;
+    }
+
+    @Pure
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Pure
@@ -99,13 +122,22 @@ public final class DebugConnector {
     }
 
     @Pure
+    public List<String> getDescriptions() {
+        return descriptions;
+    }
+
+    public void setDescriptions(List<String> descriptions) {
+        this.descriptions = descriptions;
+    }
+
+    @Pure
     @Override
     public int hashCode() {
         int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.id);
         hash = 37 * hash + Objects.hashCode(this.name);
         hash = 37 * hash + Objects.hashCode(this.type);
         hash = 37 * hash + Objects.hashCode(this.arguments);
-        hash = 37 * hash + Objects.hashCode(this.defaultValues);
         return hash;
     }
 
@@ -122,6 +154,9 @@ public final class DebugConnector {
             return false;
         }
         final DebugConnector other = (DebugConnector) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
         if (!Objects.equals(this.name, other.name)) {
             return false;
         }
@@ -131,9 +166,6 @@ public final class DebugConnector {
         if (!Objects.equals(this.arguments, other.arguments)) {
             return false;
         }
-        if (!Objects.equals(this.defaultValues, other.defaultValues)) {
-            return false;
-        }
         return true;
     }
 
@@ -141,10 +173,12 @@ public final class DebugConnector {
     @Override
     public String toString() {
         ToStringBuilder b = new ToStringBuilder(this);
+        b.add("id", id);
         b.add("name", name);
         b.add("type", type);
         b.add("arguments", arguments.toString());
         b.add("defaultValues", defaultValues.toString());
+        b.add("descriptions", descriptions.toString());
         return b.toString();
     }
 

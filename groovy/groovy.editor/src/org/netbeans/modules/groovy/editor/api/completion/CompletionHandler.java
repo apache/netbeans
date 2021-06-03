@@ -22,12 +22,18 @@ import groovy.lang.MetaMethod;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.lang.model.element.Element;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.codehaus.groovy.ast.ASTNode;
@@ -36,6 +42,8 @@ import org.codehaus.groovy.ast.expr.ArgumentListExpression;
 import org.codehaus.groovy.reflection.CachedClass;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
+import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.ui.ElementJavadoc;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
@@ -53,12 +61,14 @@ import org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId;
 import org.netbeans.modules.groovy.editor.api.lexer.LexUtilities;
 import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
+import org.netbeans.modules.groovy.editor.java.JavaElementHandle;
 import org.netbeans.modules.groovy.support.api.GroovySettings;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 
-public class CompletionHandler implements CodeCompletionHandler {
+public class CompletionHandler implements CodeCompletionHandler2 {
 
     private static final Logger LOG = Logger.getLogger(CompletionHandler.class.getName());
     private final PropertyChangeListener docListener;
@@ -433,7 +443,7 @@ public class CompletionHandler implements CodeCompletionHandler {
 
         String error = NbBundle.getMessage(CompletionHandler.class, "GroovyCompletion_NoJavaDocFound");
         String doctext = null;
-
+        
         if (element instanceof ASTMethod) {
             ASTMethod ame = (ASTMethod) element;
 
@@ -629,5 +639,44 @@ public class CompletionHandler implements CodeCompletionHandler {
             return ParameterInfo.NONE;
         }
         return ParameterInfo.NONE;
+    }
+
+    @Override
+    public Documentation documentElement(ParserResult info, ElementHandle handle, Callable<Boolean> cancel) {
+        if (handle instanceof JavaElementHandle) {
+            // let Java support do the hard work.
+            ElementJavadoc jdoc;
+            try {
+                jdoc = ((JavaElementHandle)handle).extract(info, new JavaElementHandle.ElementFunction<ElementJavadoc>() {
+                    @Override
+                    public ElementJavadoc apply(CompilationInfo info, Element el) {
+                        return ElementJavadoc.create(info, el);
+                    }
+                });
+            } catch (IOException ex) {
+                // TBR
+                return null;
+            }
+            
+            if (jdoc != null) {
+                Boolean b;
+                Future<String> content = jdoc.getTextAsync();
+                try {
+                    while (((b = cancel.call()) == null) || !b.booleanValue()) {
+                        try {
+                            return Documentation.create(content.get(250, TimeUnit.MILLISECONDS),
+                                    jdoc.getURL());
+                        } catch (TimeoutException te) {}
+                    }
+                } catch (Exception ex) {
+                    Exceptions.printStackTrace(ex);
+                    return null;
+                }
+                return null;
+            }
+        }
+        
+         String s = document(info, handle);
+         return s == null ? null : Documentation.create(s);
     }
 }

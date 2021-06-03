@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  *
@@ -34,7 +35,7 @@ import java.util.Map;
 class HprofGCRoots {
 
     final HprofHeap heap;
-    private ThreadObjectHprofGCRoot lastThreadObjGC;
+    private Map<Integer,ThreadObjectHprofGCRoot> threadObjGC;
     final private Object lastThreadObjGCLock = new Object();
     private Map gcRoots;
     final private Object gcRootLock = new Object();
@@ -96,26 +97,25 @@ class HprofGCRoots {
     }
     
     ThreadObjectGCRoot getThreadGCRoot(int threadSerialNumber) {
+        Map<Integer, ThreadObjectHprofGCRoot> map;
         synchronized (lastThreadObjGCLock) { 
-            if (lastThreadObjGC != null && threadSerialNumber == lastThreadObjGC.getThreadSerialNumber()) {
-                return lastThreadObjGC;
-            }
-            
-            Iterator gcRootsIt = heap.getGCRoots().iterator();
+            if (threadObjGC == null) {
+                Iterator gcRootsIt = heap.getGCRoots().iterator();
+                map = new TreeMap<>();
+                while(gcRootsIt.hasNext()) {
+                    Object gcRoot = gcRootsIt.next();
 
-            while(gcRootsIt.hasNext()) {
-                Object gcRoot = gcRootsIt.next();
-
-                if (gcRoot instanceof ThreadObjectHprofGCRoot) {
-                    ThreadObjectHprofGCRoot threadObjGC = (ThreadObjectHprofGCRoot) gcRoot;
-                    if (threadSerialNumber == threadObjGC.getThreadSerialNumber()) {
-                        lastThreadObjGC = threadObjGC;
-                        return threadObjGC;
+                    if (gcRoot instanceof ThreadObjectHprofGCRoot) {
+                        ThreadObjectHprofGCRoot threadObjGC = (ThreadObjectHprofGCRoot) gcRoot;
+                        map.put(threadObjGC.getThreadSerialNumber(), threadObjGC);
                     }
                 }
+                threadObjGC = map;
+            } else {
+                map = threadObjGC;
             }
-            return null;
         }
+        return map.get(threadSerialNumber);
     }
     
 

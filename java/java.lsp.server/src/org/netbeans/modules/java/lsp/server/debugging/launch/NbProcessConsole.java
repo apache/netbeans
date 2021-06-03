@@ -71,7 +71,18 @@ public final class NbProcessConsole extends IOContext {
     protected InputStream getStdIn() throws IOException {
         synchronized (this) {
             if (inputSink == null) {
-                inputSink = new PipedInputStream(inputSource);
+                inputSink = new PipedInputStream(inputSource) {
+                    @Override
+                    public void close() throws IOException {
+                        synchronized(this) {
+                            super.close();
+                            // Bug in Piped*Stream: in.close() closes, but does
+                            // not unblock waiters, nor returns -1 from writer to
+                            // stop waiting. Close the writer - will also notifyAll().
+                            inputSource.close();
+                        }
+                    }
+                };
             }
         }
         return inputSink;
@@ -85,6 +96,7 @@ public final class NbProcessConsole extends IOContext {
         }
         inputBuffer.write(line);
         inputBuffer.newLine();
+        inputBuffer.flush();
     }
 
     @Override

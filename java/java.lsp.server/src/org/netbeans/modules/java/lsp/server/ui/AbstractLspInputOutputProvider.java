@@ -30,7 +30,6 @@ import org.netbeans.api.io.OutputColor;
 import org.netbeans.api.io.ShowOperation;
 import org.netbeans.modules.java.lsp.server.ui.AbstractLspInputOutputProvider.LspIO;
 import org.netbeans.spi.io.InputOutputProvider;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
 public abstract class AbstractLspInputOutputProvider implements InputOutputProvider<LspIO, PrintWriter, Void, Void> {
@@ -145,7 +144,14 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
             this.err = new PrintWriter(new LspWriter(false));
             Reader in;
             try {
-                in = new InputStreamReader(ioCtx.getStdIn(), "UTF-8");
+                in = new InputStreamReader(ioCtx.getStdIn(), "UTF-8") {
+                    @Override
+                    public void close() throws IOException {
+                        // the underlying StreamDecoder would just block on synchronized read(); close the underlying stream.
+                        ioCtx.getStdIn().close();
+                        super.close();
+                    }
+                };
             } catch (IOException ex) {
                 err.write(ex.getLocalizedMessage());
                 in = new CharArrayReader(new char[0]) {

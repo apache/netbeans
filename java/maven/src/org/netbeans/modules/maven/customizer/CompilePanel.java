@@ -21,13 +21,8 @@ package org.netbeans.modules.maven.customizer;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -66,8 +61,6 @@ import org.netbeans.modules.maven.options.MavenVersionSettings;
 import org.netbeans.spi.project.AuxiliaryProperties;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.awt.HtmlBrowser;
-import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
@@ -100,17 +93,6 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
         comJavaPlatform.setRenderer(new PlatformsRenderer());
 
         origComPlatformFore = comJavaPlatform.getForeground();
-        btnLearnMore.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnLearnMore.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    HtmlBrowser.URLDisplayer.getDefault().showURL(new URL("http://wiki.netbeans.org/FaqCompileOnSave#Using_Compile_on_Save_in_Maven_Projects"));
-                } catch (MalformedURLException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-        });
         initValues();
     }
 
@@ -359,7 +341,6 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
         cbDebug = new javax.swing.JCheckBox();
         cbDeprecate = new javax.swing.JCheckBox();
         cbCompileOnSave = new javax.swing.JCheckBox();
-        btnLearnMore = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(576, 303));
 
@@ -383,11 +364,6 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
 
         org.openide.awt.Mnemonics.setLocalizedText(cbCompileOnSave, org.openide.util.NbBundle.getMessage(CompilePanel.class, "CompilePanel.cbCompileOnSave.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(btnLearnMore, org.openide.util.NbBundle.getMessage(CompilePanel.class, "CompilePanel.btnLearnMore.text")); // NOI18N
-        btnLearnMore.setBorderPainted(false);
-        btnLearnMore.setContentAreaFilled(false);
-        btnLearnMore.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -400,7 +376,7 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
                             .addComponent(cbDeprecate)
                             .addComponent(lblHint1)
                             .addComponent(lblHint2))
-                        .addGap(0, 24, Short.MAX_VALUE))
+                        .addGap(0, 68, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(cbCompileOnSave, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -411,10 +387,6 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnMngPlatform)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(btnLearnMore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -430,12 +402,10 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblHint2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnLearnMore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbDebug)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbDeprecate)
-                .addContainerGap(108, Short.MAX_VALUE))
+                .addContainerGap(159, Short.MAX_VALUE))
         );
 
         btnMngPlatform.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(CompilePanel.class, "CompilePanel.btnMngPlatform.AccessibleContext.accessibleDescription")); // NOI18N
@@ -448,7 +418,6 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnLearnMore;
     private javax.swing.JButton btnMngPlatform;
     private javax.swing.JCheckBox cbCompileOnSave;
     private javax.swing.JCheckBox cbDebug;

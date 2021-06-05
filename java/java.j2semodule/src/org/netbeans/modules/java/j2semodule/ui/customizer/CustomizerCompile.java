@@ -239,7 +239,7 @@ public class CustomizerCompile extends JPanel implements HelpCtx.Provider {
                                 .addComponent(processorOptionsLabel)
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(processorOptionsScrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
+                                        .addComponent(processorOptionsScrollPane, javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(AnnotationProcessorsScrollPane))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -263,7 +263,7 @@ public class CustomizerCompile extends JPanel implements HelpCtx.Provider {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(additionalJavacParamsField)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(additionalJavacParamsExample)
+                        .addComponent(additionalJavacParamsExample, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -308,7 +308,7 @@ public class CustomizerCompile extends JPanel implements HelpCtx.Provider {
                     .addComponent(additionalJavacParamsLabel)
                     .addComponent(additionalJavacParamsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(additionalJavacParamsExample))
+                .addComponent(additionalJavacParamsExample, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         compileOnSave.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(CustomizerCompile.class, "AD_CustomizerCompile.CompileOnSave")); // NOI18N

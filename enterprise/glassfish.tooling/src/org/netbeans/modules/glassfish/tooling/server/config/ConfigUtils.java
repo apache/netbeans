@@ -30,6 +30,7 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import org.netbeans.modules.glassfish.tooling.data.GlassFishLibrary;
 import org.netbeans.modules.glassfish.tooling.logging.Logger;
+import org.openide.util.BaseUtilities;
 
 /**
  *
@@ -57,7 +58,7 @@ public class ConfigUtils {
      */
     static URL fileToURL(File file) {
         try {
-            return file != null ? file.toURI().normalize().toURL() : null;
+            return file != null ? BaseUtilities.normalizeURI(file.toURI()).toURL() : null;
         } catch (MalformedURLException ex) {
             Logger.log(Level.WARNING, "Unable to convert file "
                     + file.getAbsolutePath() + " to URL", ex);

@@ -1670,7 +1670,7 @@ public final class FileUtil extends Object {
     private static File normalizeFileOnUnixAlike(File file) {
         // On Unix, do not want to traverse symlinks.
         // URI.normalize removes ../ and ./ sequences nicely.
-        file = BaseUtilities.toFile(BaseUtilities.toURI(file).normalize()).getAbsoluteFile();
+        file = BaseUtilities.toFile(BaseUtilities.normalizeURI(BaseUtilities.toURI(file))).getAbsoluteFile();
         while (file.getAbsolutePath().startsWith("/../")) { // NOI18N
             file = new File(file.getAbsolutePath().substring(3));
         }
@@ -1684,7 +1684,7 @@ public final class FileUtil extends Object {
     private static File normalizeFileOnMac(final File file) {
         File retVal = file;
 
-        File absoluteFile = BaseUtilities.toFile(BaseUtilities.toURI(file).normalize());
+        File absoluteFile = BaseUtilities.toFile(BaseUtilities.normalizeURI(BaseUtilities.toURI(file)));
         String absolutePath = absoluteFile.getAbsolutePath();
         if (absolutePath.equals("/..")) { // NOI18N
             // Special treatment.

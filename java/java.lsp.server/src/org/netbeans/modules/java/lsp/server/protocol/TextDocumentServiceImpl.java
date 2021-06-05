@@ -208,6 +208,7 @@ import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.text.NbDocument;
 import org.openide.text.PositionBounds;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
@@ -1621,7 +1622,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 if (file != null ) {
                     file.refresh(true);
                 } else {
-                    URI parentU = URI.create(uri).resolve("..").normalize();
+                    URI parentU = BaseUtilities.normalizeURI(URI.create(uri).resolve(".."));
                     FileObject parentF = Utils.fromUri(parentU.toString());
                     if (parentF != null) {
                         parentF.refresh(true);

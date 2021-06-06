@@ -47,8 +47,7 @@ public class LabelsTest extends GeneratorTestBase {
         //System.err.println(testFile.getAbsoluteFile().toString());
     }
     
-    //nb-javac: the MethodTrees for constructor have void as their return type:
-    public void NB_JAVAC_testIdentifiers() throws IOException {
+    public void testIdentifiers() throws IOException {
         process(new LabelVisitor());
         assertFiles("testIdentifiers.pass");
     }

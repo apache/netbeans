@@ -343,8 +343,7 @@ public class UseNbBundleMessagesTest {
                        "}\n");
     }
 
-    //nb-javac: JDK's javac does not attribute package clause
-    /*@Test*/ public void NB_JAVAC_annotationOnPackage() throws Exception {
+    @Test public void annotationOnPackage() throws Exception {
         HintTest.create().classpath(cp()).
                 input("test/package-info.java",
                        "@A(comments=\"#k\")\n" +

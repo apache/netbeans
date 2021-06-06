@@ -1019,8 +1019,7 @@ public class CopyFinderTest extends NbTestCase {
                              true);
     }
 
-    //nb-javac: JDK's javac does not attribute package clause
-    public void NB_JAVAC_testSearchPackageClause() throws Exception {
+    public void testSearchPackageClause() throws Exception {
         performVariablesTest("package test.a; public class Test { }",
                              "test.$1",
                              new Pair[] {

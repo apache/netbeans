@@ -1428,29 +1428,24 @@ public abstract class NbTestCase extends TestCase implements NbTest {
             public @Override void run() {
         List<byte[]> alloc = new ArrayList<byte[]>();
         int size = 100000;
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 50; i++) {
             if (ref.get() == null) {
                 return;
             }
             try {
                 System.gc();
             } catch (OutOfMemoryError error) {
-                error.printStackTrace();
                 // OK
             }
             try {
                 System.runFinalization();
             } catch (OutOfMemoryError error) {
-                error.printStackTrace();
                 // OK
             }
             try {
-                System.err.println("size=" + size);
                 alloc.add(new byte[size]);
-                System.err.println("success");
                 size = (int)(((double)size) * 1.3);
             } catch (OutOfMemoryError error) {
-                error.printStackTrace();
                 size = size / 2;
             }
             try {

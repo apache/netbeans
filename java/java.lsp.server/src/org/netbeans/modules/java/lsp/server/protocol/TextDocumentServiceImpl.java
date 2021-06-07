@@ -46,14 +46,17 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,6 +69,8 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
@@ -131,6 +136,9 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.editor.EditorUtilities;
+import org.netbeans.api.editor.document.LineDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.CompilationController;
@@ -153,6 +161,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import org.netbeans.editor.DocumentUtilities;
 import org.netbeans.modules.editor.java.GoToSupport;
 import org.netbeans.modules.editor.java.GoToSupport.GoToTarget;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController.TestMethod;
@@ -247,7 +256,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         Set<String> documents = new HashSet<>(openedDocuments.keySet());
 
         for (String doc : documents) {
-            runDiagnoticTasks(doc);
+            runDiagnosticTasks(doc);
         }
     }
 
@@ -1356,7 +1365,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             
             // attempt to open the directly owning project, delay diagnostics after project open:
             server.asyncOpenFileOwner(file).thenRun(() ->
-                runDiagnoticTasks(params.getTextDocument().getUri())
+                runDiagnosticTasks(params.getTextDocument().getUri())
             );
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
@@ -1384,7 +1393,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 }
             });
         }
-        runDiagnoticTasks(params.getTextDocument().getUri());
+        runDiagnosticTasks(params.getTextDocument().getUri());
         reportNotificationDone("didChange", params);
     }
 
@@ -1511,41 +1520,101 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         return CompletableFuture.completedFuture(location);
     }
 
-    private void runDiagnoticTasks(String uri) {
+    private void runDiagnosticTasks(String uri) {
         if (server.openedProjects().getNow(null) == null) {
             return;
         }
-        //XXX: cancelling/deferring the tasks!
         diagnosticTasks.computeIfAbsent(uri, u -> {
             return BACKGROUND_TASKS.create(() -> {
-                computeDiags(u, (info, doc) -> {
+                Document originalDoc = openedDocuments.get(uri);
+                long originalVersion = documentVersion(originalDoc);
+                List<Diagnostic> errorDiags = computeDiags(u, (info, doc) -> {
                     ErrorHintsProvider ehp = new ErrorHintsProvider();
-                    return ehp.computeErrors(info, doc, "text/x-java"); //TODO: mimetype?
-                }, "errors", false);
-                BACKGROUND_TASKS.create(() -> {
-                    computeDiags(u, (info, doc) -> {
-                        Set<Severity> disabled = org.netbeans.modules.java.hints.spiimpl.Utilities.disableErrors(info.getFileObject());
-                        if (disabled.size() == Severity.values().length) {
-                            return Collections.emptyList();
+                    class CancelListener implements DocumentListener {
+                        @Override
+                        public void insertUpdate(DocumentEvent e) {
+                            checkCancel();
                         }
-                        return new HintsInvoker(HintsSettings.getGlobalSettings(), new AtomicBoolean()).computeHints(info)
-                                                                                                       .stream()
-                                                                                                       .filter(ed -> !disabled.contains(ed.getSeverity()))
-                                                                                                       .collect(Collectors.toList());
-                    }, "hints", true);
-                }).schedule(DELAY);
+                        @Override
+                        public void removeUpdate(DocumentEvent e) {
+                            checkCancel();
+                        }
+                        private void checkCancel() {
+                            if (documentVersion(doc) != originalVersion) {
+                                ehp.cancel();
+                            }
+                        }
+                        @Override
+                        public void changedUpdate(DocumentEvent e) {}
+                    }
+                    CancelListener l = new CancelListener();
+                    try {
+                        doc.addDocumentListener(l);
+                        l.checkCancel();
+                        return ehp.computeErrors(info, doc, "text/x-java"); //TODO: mimetype?
+                    } finally {
+                        doc.removeDocumentListener(l);
+                    }
+                }, "errors");
+                if (documentVersion(originalDoc) == originalVersion) {
+                    publishDiagnostics(uri, errorDiags);
+                    BACKGROUND_TASKS.create(() -> {
+                        List<Diagnostic> hintDiags = computeDiags(u, (info, doc) -> {
+                            Set<Severity> disabled = org.netbeans.modules.java.hints.spiimpl.Utilities.disableErrors(info.getFileObject());
+                            if (disabled.size() == Severity.values().length) {
+                                return Collections.emptyList();
+                            }
+                            AtomicBoolean cancel = new AtomicBoolean();
+                            HintsInvoker invoker = new HintsInvoker(HintsSettings.getGlobalSettings(), cancel);
+                            class CancelListener implements DocumentListener {
+                                @Override
+                                public void insertUpdate(DocumentEvent e) {
+                                    checkCancel();
+                                }
+                                @Override
+                                public void removeUpdate(DocumentEvent e) {
+                                    checkCancel();
+                                }
+                                private void checkCancel() {
+                                    if (documentVersion(doc) != originalVersion) {
+                                        cancel.set(true);
+                                    }
+                                }
+                                @Override
+                                public void changedUpdate(DocumentEvent e) {}
+                            }
+                            CancelListener l = new CancelListener();
+                            try {
+                                doc.addDocumentListener(l);
+                                l.checkCancel();
+                                return invoker.computeHints(info)
+                                              .stream()
+                                              .filter(ed -> !disabled.contains(ed.getSeverity()))
+                                              .collect(Collectors.toList());
+                            } finally {
+                                doc.removeDocumentListener(l);
+                            }
+                        }, "hints");
+                        Document doc = openedDocuments.get(uri);
+                        if (documentVersion(doc) == originalVersion) {
+                            publishDiagnostics(uri, hintDiags);
+                        }
+                    }).schedule(DELAY);
+                }
             });
         }).schedule(DELAY);
     }
 
     private static final int DELAY = 500;
+    static Consumer<String> computeDiagsCallback; //for tests
 
-    private void computeDiags(String uri, ProduceErrors produceErrors, String keyPrefix, boolean update) {
+    private List<Diagnostic> computeDiags(String uri, ProduceErrors produceErrors, String keyPrefix) {
+        List<Diagnostic> result = new ArrayList<>();
         try {
             FileObject file = fromURI(uri);
             if (file == null) {
                 // the file does not exist.
-                return;
+                return result;
             }
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
@@ -1555,16 +1624,31 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     CompilationController cc = CompilationController.get(it.getParserResult());
                     if (cc != null) {
                         cc.toPhase(JavaSource.Phase.RESOLVED);
+                        if (computeDiagsCallback != null) {
+                            computeDiagsCallback.accept(keyPrefix);
+                        }
                         Map<String, ErrorDescription> id2Errors = new HashMap<>();
-                        List<Diagnostic> diags = new ArrayList<>();
-                        int idx = 0;
                         List<ErrorDescription> errors = produceErrors.computeErrors(cc, doc);
                         if (errors == null) {
                             errors = Collections.emptyList();
                         }
+                        int idx = 0;
                         for (ErrorDescription err : errors) {
-                            Diagnostic diag = new Diagnostic(new Range(Utils.createPosition(cc.getCompilationUnit(), err.getRange().getBegin().getOffset()),
-                                                                       Utils.createPosition(cc.getCompilationUnit(), err.getRange().getEnd().getOffset())),
+                            String id = keyPrefix + ":" + idx++ + "-" + err.getId();
+                            id2Errors.put(id, err);
+                        }
+                        doc.putProperty("lsp-errors-" + keyPrefix, id2Errors);
+                        Map<String, ErrorDescription> mergedId2Errors = new HashMap<>();
+                        for (String k : ERROR_KEYS) {
+                            Map<String, ErrorDescription> prevErrors = (Map<String, ErrorDescription>) doc.getProperty("lsp-errors-" + k);
+                            if (prevErrors != null) {
+                                mergedId2Errors.putAll(prevErrors);
+                            }
+                        }
+                        for (Entry<String, ErrorDescription> id2Error : mergedId2Errors.entrySet()) {
+                            ErrorDescription err = id2Error.getValue();
+                            Diagnostic diag = new Diagnostic(new Range(Utils.createPosition(cc.getFileObject(), err.getRange().getBegin().getOffset()),
+                                                                       Utils.createPosition(cc.getFileObject(), err.getRange().getEnd().getOffset())),
                                                              err.getDescription());
                             switch (err.getSeverity()) {
                                 case ERROR: diag.setSeverity(DiagnosticSeverity.Error); break;
@@ -1573,34 +1657,17 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                 case HINT: diag.setSeverity(DiagnosticSeverity.Hint); break;
                                 default: diag.setSeverity(DiagnosticSeverity.Information); break;
                             }
-                            String id = keyPrefix + ":" + idx++ + "-" + err.getId();
-                            diag.setCode(id);
-                            id2Errors.put(id, err);
-                            diags.add(diag);
-                        }
-                        doc.putProperty("lsp-errors-" + keyPrefix, id2Errors);
-                        doc.putProperty("lsp-errors-diags-" + keyPrefix, diags);
-                        Map<String, ErrorDescription> mergedId2Errors = new HashMap<>();
-                        List<Diagnostic> mergedDiags = new ArrayList<>();
-                        for (String k : ERROR_KEYS) {
-                            Map<String, ErrorDescription> prevErrors = (Map<String, ErrorDescription>) doc.getProperty("lsp-errors-" + k);
-                            if (prevErrors != null) {
-                                mergedId2Errors.putAll(prevErrors);
-                            }
-                            List<Diagnostic> prevDiags = (List<Diagnostic>) doc.getProperty("lsp-errors-diags-" + k);
-                            if (prevDiags != null) {
-                                mergedDiags.addAll(prevDiags);
-                            }
+                            diag.setCode(id2Error.getKey());
+                            result.add(diag);
                         }
                         doc.putProperty("lsp-errors", mergedId2Errors);
-                        doc.putProperty("lsp-errors-diags", mergedDiags);
-                        publishDiagnostics(uri, mergedDiags);
                     }
                 }
             });
         } catch (IOException | ParseException ex) {
             throw new IllegalStateException(ex);
         }
+        return result;
     }
     
     private FileObject fromURI(String uri) {
@@ -1741,6 +1808,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             qualifiedName = handle.getQualifiedName();
         }
         return qualifiedName != null ? qualifiedName.replace('.', '/') + ".class" : null;
+    }
+
+    private static long documentVersion(Document doc) {
+        Object ver = doc != null ? doc.getProperty("version") : null;
+        return ver instanceof Number ? ((Number) ver).longValue() : -1;
     }
 
     private static void reportNotificationDone(String s, Object parameter) {

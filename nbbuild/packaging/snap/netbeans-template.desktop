@@ -17,10 +17,10 @@
 [Desktop Entry]
 Type=Application
 Encoding=UTF-8
-Name=Apache NetBeans
+Name=Apache NetBeans @DESKTOP_VERSION@
 Comment=Apache NetBeans, The Smarter Way to Code
-Exec=netbeans %F
+Exec=@DESKTOP_EXEC@ %F
 Categories=Development;IDE
 Icon=${SNAP}/meta/gui/icon.png
 Terminal=false
-
+StartupWMClass=Apache NetBeans IDE @DESKTOP_VERSION@

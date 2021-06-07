@@ -61,4 +61,13 @@ public final class Utils {
         sb.append ("</html>");
         return sb.toString ();
     }
+
+    public static String stringOrNull(String str) {
+        if ("null".equals(str)) {
+            return null;
+        } else {
+            return str;
+        }
+    }
+    
 }

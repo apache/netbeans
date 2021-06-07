@@ -86,6 +86,7 @@ import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
 import org.netbeans.modules.debugger.jpda.truffle.LanguageName;
 import org.netbeans.modules.debugger.jpda.truffle.RemoteServices;
 import org.netbeans.modules.debugger.jpda.truffle.TruffleDebugManager;
+import org.netbeans.modules.debugger.jpda.truffle.Utils;
 import org.netbeans.modules.debugger.jpda.truffle.actions.StepActionProvider;
 import org.netbeans.modules.debugger.jpda.truffle.ast.TruffleNode;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame;
@@ -497,7 +498,12 @@ public class TruffleAccess implements JPDABreakpointListener {
             return null;
         }
         long id = (Long) varSrcId.createMirrorObject();
-        String sourceSection = (String) sourcePositionVar.getField(VAR_SRC_SOURCESECTION).createMirrorObject();
+        Field varSourceSection = sourcePositionVar.getField(VAR_SRC_SOURCESECTION);
+        String sourceSection = (String) varSourceSection.createMirrorObject();
+        if (sourceSection == null) {
+            // No source section information
+            return null;
+        }
         Source src = Source.getExistingSource(debugger, id);
         if (src == null) {
             String name = (String) sourcePositionVar.getField(VAR_SRC_NAME).createMirrorObject();
@@ -582,26 +588,26 @@ public class TruffleAccess implements JPDABreakpointListener {
             sourceName = sourceDef.substring(i1, i2);
             i1 = i2 + 1;
             i2 = sourceDef.indexOf('\n', i1);
-            hostMethodName = sourceDef.substring(i1, i2);
-            if ("null".equals(hostMethodName)) {
-                hostMethodName = null;
-            }
+            hostMethodName = Utils.stringOrNull(sourceDef.substring(i1, i2));
             i1 = i2 + 1;
             i2 = sourceDef.indexOf('\n', i1);
             sourcePath = sourceDef.substring(i1, i2);
             i1 = i2 + 1;
             i2 = sourceDef.indexOf('\n', i1);
-            try {
-                sourceURI = new URI(sourceDef.substring(i1, i2));
-            } catch (URISyntaxException usex) {
-                throw new IllegalStateException("Bad URI: "+sourceDef.substring(i1, i2), usex);
+            String uriStr = Utils.stringOrNull(sourceDef.substring(i1, i2));
+            if (uriStr != null) {
+                try {
+                    sourceURI = new URI(uriStr);
+                } catch (URISyntaxException usex) {
+                    Exceptions.printStackTrace(new IllegalStateException("Bad URI: "+sourceDef.substring(i1, i2), usex));
+                    sourceURI = null;
+                }
+            } else {
+                sourceURI = null;
             }
             i1 = i2 + 1;
             i2 = sourceDef.indexOf('\n', i1);
-            mimeType = sourceDef.substring(i1, i2);
-            if ("null".equals(mimeType)) {
-                mimeType = null;
-            }
+            mimeType = Utils.stringOrNull(sourceDef.substring(i1, i2));
             i1 = i2 + 1;
             i2 = sourceDef.indexOf('\n', i1);
             if (i2 < 0) {

@@ -46,6 +46,8 @@
                 <package>org.codehaus.groovy.control.customizers.builder</package>
                 <package>org.codehaus.groovy.control.messages</package>
                 <package>org.codehaus.groovy.reflection</package>
+                <package>org.codehaus.groovy.runtime</package>
+                <package>org.codehaus.groovy.runtime.callsite</package>
                 <package>org.codehaus.groovy.syntax</package>
                 <package>org.codehaus.groovy.transform</package>
                 <package>org.codehaus.groovy.transform.stc</package>

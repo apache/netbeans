@@ -104,6 +104,7 @@ METHOD     split(Closure)                             Collection
 METHOD     sprintf(String, Object)                    String
 METHOD     sprintf(String, Object)                    String
 METHOD     step(Number, Number, Closure)              void
+METHOD     stream()                                   Stream
 METHOD     tap(Closure)                               Object
 METHOD     times(Closure)                             void
 METHOD     toBigDecimal()                             BigDecimal

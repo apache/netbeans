@@ -109,6 +109,7 @@ METHOD     splitEachLine(String, Closure)             Object
 METHOD     splitEachLine(String, String,              Object
 METHOD     sprintf(String, Object)                    String
 METHOD     sprintf(String, Object)                    String
+METHOD     stream()                                   Stream
 METHOD     tap(Closure)                               Object
 METHOD     toExternalForm()                [PUBLIC]   String
 METHOD     toString()                      [PUBLIC]   String

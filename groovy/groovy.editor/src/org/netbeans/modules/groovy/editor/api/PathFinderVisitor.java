@@ -594,6 +594,11 @@ public class PathFinderVisitor extends ClassCodeVisitorSupport {
             return addToPath ? true : false;
         }
 
+        if (node instanceof ArgumentListExpression || node instanceof TupleExpression) {
+            beginColumn++;
+            endColumn--;
+        }
+
         boolean result = false;
 
         if (beginLine == endLine) {

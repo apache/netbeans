@@ -161,7 +161,9 @@ public class GroovyParser extends Parser {
         int offset = context.caretOffset;
 
         // Let caretOffset represent the offset of the portion of the buffer we'll be operating on
-        if ((sanitizing == Sanitize.ERROR_DOT) || (sanitizing == Sanitize.ERROR_LINE)) {
+        if (sanitizing == Sanitize.ERROR_DOT) {
+            offset = context.errorOffset + 1;
+        } else if (sanitizing == Sanitize.ERROR_LINE || sanitizing == Sanitize.PRIOR_ERROR_LINE) {
             offset = context.errorOffset;
         }
 
@@ -249,6 +251,41 @@ public class GroovyParser extends Parser {
                         context.sanitizedSource = sb.toString();
                         context.sanitizedContents = doc.substring(lineStart, lineEnd);
                         return true;
+                    }
+                } else if  (sanitizing == Sanitize.PRIOR_ERROR_LINE) {
+                    int errRowStart = GroovyUtils.getRowStart(doc, offset);
+                    if (errRowStart > 0) {
+                        int lineEnd = GroovyUtils.getRowLastNonWhite(doc, errRowStart - 1);
+                        if (lineEnd != -1) {
+                            lineEnd++; // lineEnd is exclusive, not inclusive
+                            StringBuilder sb = new StringBuilder(doc.length());
+                            int lineStart = GroovyUtils.getRowStart(doc, errRowStart - 1);
+                            if (lineEnd >= lineStart+2) {
+                                sb.append(doc.substring(0, lineStart));
+                                sb.append("//");
+                                int rest = lineStart + 2;
+                                if (rest < doc.length()) {
+                                    sb.append(doc.substring(rest, doc.length()));
+                                }
+                            } else {
+                                // A line with just one character - can't replace with a comment
+                                // Just replace the char with a space
+                                sb.append(doc.substring(0, lineStart));
+                                sb.append(" ");
+                                int rest = lineStart + 1;
+                                if (rest < doc.length()) {
+                                    sb.append(doc.substring(rest, doc.length()));
+                                }
+
+                            }
+
+                            assert sb.length() == doc.length();
+
+                            context.sanitizedRange = new OffsetRange(lineStart, lineEnd);
+                            context.sanitizedSource = sb.toString();
+                            context.sanitizedContents = doc.substring(lineStart, lineEnd);
+                            return true;
+                        }
                     }
                 } else {
                     assert sanitizing == Sanitize.ERROR_DOT || sanitizing == Sanitize.EDITED_DOT;
@@ -365,9 +402,16 @@ public class GroovyParser extends Parser {
         // Fall through to try the next trick
         case ERROR_LINE:
 
-            // Messing with the error line didn't work - we could try "around" the error line
-            // but I'm not attempting that now.
-            // Finally try removing the whole line around the user editing position
+            // We've tried removing error line - now try removing line prior the the error position
+            if (context.errorOffset != -1) {
+                return parseBuffer(context, Sanitize.PRIOR_ERROR_LINE);
+            }
+
+        // Fall through to try the next trick
+        case PRIOR_ERROR_LINE:
+
+            // Messing with the error line and the line prior didn't work -
+            // finally try removing the whole line around the user editing position
             // (which could be far from where the error is showing up - but if you're typing
             // say a new "def" statement in a class, this will show up as an error on a mismatched
             // "end" statement rather than here
@@ -709,6 +753,8 @@ public class GroovyParser extends Parser {
         ERROR_DOT,
         /** Try to cut out the error line */
         ERROR_LINE,
+        /** Try to cut out line prior the error line */
+        PRIOR_ERROR_LINE,
         /** Try to cut out the current edited line, if known */
         EDITED_LINE,
         /** Attempt to add an "end" to the end of the buffer to make it compile */

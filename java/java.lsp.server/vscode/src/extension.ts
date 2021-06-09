@@ -490,7 +490,13 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         // Options to control the language client
         let clientOptions: LanguageClientOptions = {
             // Register the server for java documents
-            documentSelector: [{ language: 'java' }, { language: 'yaml', pattern: '**/{application,bootstrap}*.yml' }, { language: 'properties', pattern: '**/{application,bootstrap}*.properties' }, { language: 'jackpot-hint' }],
+            documentSelector: [
+                { language: 'java' },
+                { language: 'groovy' },
+                { language: 'yaml', pattern: '**/{application,bootstrap}*.yml' },
+                { language: 'properties', pattern: '**/{application,bootstrap}*.properties' },
+                { language: 'jackpot-hint' }
+            ],
             synchronize: {
                 configurationSection: 'java',
                 fileEvents: [

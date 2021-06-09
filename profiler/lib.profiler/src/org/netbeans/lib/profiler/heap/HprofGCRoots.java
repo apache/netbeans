@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  *
@@ -34,38 +35,38 @@ import java.util.Map;
 class HprofGCRoots {
 
     final HprofHeap heap;
-    private ThreadObjectHprofGCRoot lastThreadObjGC;
+    private Map<Integer, ThreadObjectHprofGCRoot> threadObjGC;
     final private Object lastThreadObjGCLock = new Object();
-    private Map gcRoots;
+    private Map<Long,GCRoot> gcRoots;
     final private Object gcRootLock = new Object();
     private List gcRootsList;
 
     HprofGCRoots(HprofHeap h) {
         heap = h;
     }
-    
-    Collection getGCRoots() {
+
+    Collection<GCRoot> getGCRoots() {
         synchronized (gcRootLock) {
             if (gcRoots == null) {
-                gcRoots = computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_UNKNOWN));
-                gcRoots.putAll(computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_JNI_GLOBAL)));
-                gcRoots.putAll(computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_JNI_LOCAL)));
-                gcRoots.putAll(computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_JAVA_FRAME)));
-                gcRoots.putAll(computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_NATIVE_STACK)));
-                gcRoots.putAll(computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_STICKY_CLASS)));
-                gcRoots.putAll(computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_THREAD_BLOCK)));
-                gcRoots.putAll(computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_MONITOR_USED)));
-                gcRoots.putAll(computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_THREAD_OBJECT)));
+                List<GCRoot> rootList = new ArrayList<>();
+                computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_UNKNOWN), rootList);
+                computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_JNI_GLOBAL), rootList);
+                computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_JNI_LOCAL), rootList);
+                computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_JAVA_FRAME), rootList);
+                computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_NATIVE_STACK), rootList);
+                computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_STICKY_CLASS), rootList);
+                computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_THREAD_BLOCK), rootList);
+                computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_MONITOR_USED), rootList);
+                computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_THREAD_OBJECT), rootList);
 
                 // HPROF HEAP 1.0.3
-                gcRoots.putAll(computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_INTERNED_STRING)));
-                gcRoots.putAll(computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_FINALIZING)));
-                gcRoots.putAll(computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_DEBUGGER)));
-                gcRoots.putAll(computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_REFERENCE_CLEANUP)));
-                gcRoots.putAll(computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_VM_INTERNAL)));
-                gcRoots.putAll(computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_JNI_MONITOR)));
+                computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_INTERNED_STRING), rootList);
+                computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_FINALIZING), rootList);
+                computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_DEBUGGER), rootList);
+                computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_REFERENCE_CLEANUP), rootList);
+                computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_VM_INTERNAL), rootList);
+                computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_JNI_MONITOR), rootList);
 
-                List rootList = new ArrayList(gcRoots.values());
                 Collections.sort(rootList, new Comparator() {
                     public int compare(Object o1, Object o2) {
                         HprofGCRoot r1 = (HprofGCRoot) o1;
@@ -84,47 +85,51 @@ class HprofGCRoots {
             return gcRootsList;
         }
     }
-    
+
     GCRoot getGCRoot(Long instanceId) {
         synchronized (gcRootLock) {
+            Map<Long,GCRoot> roots;
             if (gcRoots == null) {
                 heap.getGCRoots();
+                roots = new HashMap<>();
+                for (GCRoot r : getGCRoots()) {
+                    roots.put(r.getInstance().getInstanceId(), r);
+                }
+                gcRoots = roots;
+            } else {
+                roots = gcRoots;
             }
 
-            return (GCRoot) gcRoots.get(instanceId);
+            return (GCRoot) roots.get(instanceId);
         }
     }
-    
+
     ThreadObjectGCRoot getThreadGCRoot(int threadSerialNumber) {
-        synchronized (lastThreadObjGCLock) { 
-            if (lastThreadObjGC != null && threadSerialNumber == lastThreadObjGC.getThreadSerialNumber()) {
-                return lastThreadObjGC;
-            }
-            
-            Iterator gcRootsIt = heap.getGCRoots().iterator();
+        Map<Integer, ThreadObjectHprofGCRoot> map;
+        synchronized (lastThreadObjGCLock) {
+            if (threadObjGC == null) {
+                Iterator gcRootsIt = heap.getGCRoots().iterator();
+                map = new TreeMap<>();
+                while (gcRootsIt.hasNext()) {
+                    Object gcRoot = gcRootsIt.next();
 
-            while(gcRootsIt.hasNext()) {
-                Object gcRoot = gcRootsIt.next();
-
-                if (gcRoot instanceof ThreadObjectHprofGCRoot) {
-                    ThreadObjectHprofGCRoot threadObjGC = (ThreadObjectHprofGCRoot) gcRoot;
-                    if (threadSerialNumber == threadObjGC.getThreadSerialNumber()) {
-                        lastThreadObjGC = threadObjGC;
-                        return threadObjGC;
+                    if (gcRoot instanceof ThreadObjectHprofGCRoot) {
+                        ThreadObjectHprofGCRoot tohGC = (ThreadObjectHprofGCRoot) gcRoot;
+                        map.put(tohGC.getThreadSerialNumber(), tohGC);
                     }
                 }
+                threadObjGC = map;
+            } else {
+                map = threadObjGC;
             }
-            return null;
         }
+        return map.get(threadSerialNumber);
     }
-    
 
-    private Map computeGCRootsFor(TagBounds tagBounds) {
-        Map roots = new HashMap();
-
+    private void computeGCRootsFor(TagBounds tagBounds, Collection<GCRoot> roots) {
         if (tagBounds != null) {
             int rootTag = tagBounds.tag;
-            long[] offset = new long[] { tagBounds.startOffset };
+            long[] offset = new long[]{tagBounds.startOffset};
 
             while (offset[0] < tagBounds.endOffset) {
                 long start = offset[0];
@@ -132,16 +137,15 @@ class HprofGCRoots {
                 if (heap.readDumpTag(offset) == rootTag) {
                     HprofGCRoot root;
                     if (rootTag == HprofHeap.ROOT_THREAD_OBJECT) {
-                        root = new ThreadObjectHprofGCRoot(this, start);                        
+                        root = new ThreadObjectHprofGCRoot(this, start);
                     } else if (rootTag == HprofHeap.ROOT_JAVA_FRAME) {
                         root = new JavaFrameHprofGCRoot(this, start);
                     } else {
                         root = new HprofGCRoot(this, start);
                     }
-                    roots.put(Long.valueOf(root.getInstanceId()), root);
+                    roots.add(root);
                 }
             }
         }
-        return roots;
     }
 }

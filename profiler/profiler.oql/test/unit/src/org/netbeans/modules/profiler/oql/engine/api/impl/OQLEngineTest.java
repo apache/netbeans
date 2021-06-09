@@ -24,12 +24,12 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.netbeans.lib.profiler.heap.HeapFactory;
 import org.netbeans.lib.profiler.heap.Instance;
@@ -37,6 +37,7 @@ import org.netbeans.lib.profiler.heap.JavaClass;
 import org.netbeans.modules.profiler.oql.engine.api.OQLEngine;
 import org.netbeans.modules.profiler.oql.engine.api.OQLEngine.ObjectVisitor;
 import static org.junit.Assert.*;
+import org.netbeans.lib.profiler.heap.GCRoot;
 
 /**
  *
@@ -165,6 +166,7 @@ public class OQLEngineTest {
     @Test
     public void testHeapRoots() throws Exception {
         System.out.println("heap.roots");
+        Set<Object> unique = new HashSet<>();
         final int[] counter = new int[1];
 
         String query = "select heap.roots()";
@@ -172,11 +174,13 @@ public class OQLEngineTest {
         instance.executeQuery(query, new ObjectVisitor() {
 
             public boolean visit(Object o) {
+                unique.add(o);
                 counter[0]++;
                 return false;
             }
         });
-        assertTrue(counter[0] == 404);
+        assertEquals(404, unique.size());
+        assertEquals(491, counter[0]);
     }
 
     @Test

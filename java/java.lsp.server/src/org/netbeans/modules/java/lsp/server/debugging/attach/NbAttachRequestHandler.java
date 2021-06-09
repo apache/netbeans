@@ -201,6 +201,8 @@ public final class NbAttachRequestHandler {
                     if (!finished.getAndSet(true)) {
                         notifyTerminated(context);
                     }
+                } else {
+                    context.getClient().initialized();
                 }
                 return ;
             }

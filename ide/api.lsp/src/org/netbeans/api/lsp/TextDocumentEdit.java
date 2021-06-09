@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * A list of {@code TextEdit}s in a particular document.
  *
- * @since 1.1
+ * @since 1.3
  */
 public class TextDocumentEdit {
     private final String document;

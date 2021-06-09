@@ -30,6 +30,7 @@ import org.openide.util.HelpCtx;
 
 public class ChoosingConnectionNamePanel implements AddConnectionWizard.Panel {
 
+    private final int stepIndex;
     /**
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
@@ -38,6 +39,10 @@ public class ChoosingConnectionNamePanel implements AddConnectionWizard.Panel {
     private AddConnectionWizard pw;
     private static HelpCtx CHOOSING_SCHEMA_PANEL_HELPCTX = new HelpCtx(ChoosingConnectionNamePanel.class);
     private boolean blockEventListener = false;
+
+    public ChoosingConnectionNamePanel(int stepIndex) {
+        this.stepIndex = stepIndex;
+    }
 
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
@@ -51,7 +56,7 @@ public class ChoosingConnectionNamePanel implements AddConnectionWizard.Panel {
             }
             assert pw != null : "ChoosingConnectionNamePanel must be initialized.";
             component = new ConnectionNamePanel(pw, pw.getDatabaseConnection().getDisplayName());
-            component.setName(pw.getSteps()[3]);
+            component.setName(pw.getSteps()[stepIndex]);
             component.addPropertyChangeListener(ConnectionNamePanel.PROP_CONNECTION_NAME,
                     new PropertyChangeListener() {
                 @Override

@@ -126,6 +126,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
     public static enum Options {
 
         ALL_COMPLETION,
+        COMBINED_COMPLETION,
         SKIP_ACCESSIBILITY_CHECK
     }
 
@@ -743,16 +744,15 @@ public final class JavaCompletionTask<T> extends BaseTask {
             if (last != null && last.token().id() == JavaTokenId.IMPORT && Utilities.startsWith(STATIC_KEYWORD, prefix)) {
                 addKeyword(env, STATIC_KEYWORD, SPACE, false);
             }
-            addPackages(env, null, false);
-        }
-        if (options.contains(Options.ALL_COMPLETION)) {
-            EnumSet<ElementKind> classKinds = EnumSet.of(CLASS, INTERFACE, ENUM, ANNOTATION_TYPE);
-            if (isRecordSupported(env)) {
-                classKinds.add(TreeShims.getRecordKind());
+            if (options.contains(Options.ALL_COMPLETION) || options.contains(Options.COMBINED_COMPLETION)) {
+                EnumSet<ElementKind> classKinds = EnumSet.of(CLASS, INTERFACE, ENUM, ANNOTATION_TYPE);
+                if (isRecordSupported(env)) {
+                    classKinds.add(TreeShims.getRecordKind());
+                }
+                addTypes(env, classKinds, null);
+            } else {
+                addPackages(env, null, false);
             }
-            addTypes(env, classKinds, null);
-        } else {
-            hasAdditionalClasses = true;
         }
     }
 
@@ -4122,7 +4122,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
     }
 
     private void addTypes(Env env, EnumSet<ElementKind> kinds, DeclaredType baseType) throws IOException {
-        if (options.contains(Options.ALL_COMPLETION)) {
+        if (options.contains(Options.ALL_COMPLETION) || options.contains(Options.COMBINED_COMPLETION)) {
             if (baseType == null) {
                 addAllTypes(env, kinds);
             } else {

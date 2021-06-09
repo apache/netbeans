@@ -18,11 +18,13 @@
  */
 package org.netbeans.modules.micronaut;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.document.EditorDocumentUtils;
@@ -30,6 +32,7 @@ import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.csl.api.StructureItem;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.core.Language;
@@ -53,51 +56,64 @@ import org.springframework.boot.configurationmetadata.ConfigurationMetadataSourc
  */
 public class MicronautConfigUtilities {
 
+    private static final Pattern REGEXP = Pattern.compile("^(application|bootstrap)(-\\w*)*\\.(yml|properties)$", Pattern.CASE_INSENSITIVE);
+
+    public static boolean isMicronautConfigFile(FileObject fo) {
+        return fo != null && REGEXP.matcher(fo.getNameExt()).matches();
+    }
+
     public static ConfigurationMetadataProperty resolveProperty(Document doc, int offset, int[] span, List<ConfigurationMetadataSource> sources) {
         LineDocument lineDocument = LineDocumentUtils.as(doc, LineDocument.class);
         if (lineDocument != null) {
             FileObject fo = EditorDocumentUtils.getFileObject(doc);
-            if (fo != null && "application.yml".equalsIgnoreCase(fo.getNameExt())) {
+            if (isMicronautConfigFile(fo)) {
                 Project project = FileOwnerQuery.getOwner(fo);
                 if (project != null) {
                     if (MicronautConfigProperties.hasConfigMetadata(project)) {
                         try {
                             int lineStart = LineDocumentUtils.getLineStart(lineDocument, offset);
-                            String text = lineDocument.getText(lineStart, offset - lineStart);
-                            if (!text.contains("#")) {
-                                int idx = text.indexOf(':');
-                                if (idx < 0) {
-                                    final ConfigurationMetadataProperty[] property = new ConfigurationMetadataProperty[]{null};
-                                    ParserManager.parse(Collections.singleton(Source.create(lineDocument)), new UserTask() {
-                                        public @Override void run(ResultIterator resultIterator) throws Exception {
-                                            Parser.Result r = resultIterator.getParserResult();
-                                            if (r instanceof ParserResult) {
-                                                Language language = LanguageRegistry.getInstance().getLanguageByMimeType(resultIterator.getSnapshot().getMimeType());
-                                                if (language != null) {
-                                                    StructureScanner scanner = language.getStructure();
-                                                    if (scanner != null) {
-                                                        List<? extends StructureItem> structures = scanner.scan((ParserResult) r);
-                                                        List<StructureItem> context = getContext(structures, offset);
-                                                        if (!context.isEmpty()) {
-                                                            StructureItem item = context.get(context.size() - 1);
-                                                            int start = (int) item.getPosition();
-                                                            int end = (int) item.getPosition() + item.getName().length();
-                                                            if (span != null && span.length == 2) {
-                                                                span[0] = start;
-                                                                span[1] = end;
-                                                            }
-                                                            if (start <= offset && offset <= end && item.getName().equals(lineDocument.getText(start, end - start))) {
-                                                                String propertyName = getPropertyName(context);
-                                                                for (Map.Entry<String, ConfigurationMetadataGroup> groupEntry : MicronautConfigProperties.getGroups(project).entrySet()) {
-                                                                    String groupKey = groupEntry.getKey();
-                                                                    if (Pattern.matches(groupKey.replaceAll("\\.", "\\\\.").replaceAll("\\*", "\\\\w*") + ".*", propertyName)) {
-                                                                        ConfigurationMetadataGroup group = groupEntry.getValue();
-                                                                        for (Map.Entry<String, ConfigurationMetadataProperty> propertyEntry : group.getProperties().entrySet()) {
-                                                                            String propertyKey = propertyEntry.getKey();
-                                                                            if (Pattern.matches(propertyKey.replaceAll("\\.", "\\\\.").replaceAll("\\*", "\\\\w*"), propertyName)) {
-                                                                                property[0] = propertyEntry.getValue();
-                                                                                if (sources != null) {
-                                                                                    sources.addAll(group.getSources().values());
+                            String mimeType = DocumentUtilities.getMimeType(doc);
+                            if ("text/x-yaml".equals(mimeType)) {
+                                String text = lineDocument.getText(lineStart, offset - lineStart);
+                                if (!text.startsWith("#")) {
+                                    int idx = text.indexOf(':');
+                                    if (idx < 0) {
+                                        final ConfigurationMetadataProperty[] property = new ConfigurationMetadataProperty[]{null};
+                                        ParserManager.parse(Collections.singleton(Source.create(lineDocument)), new UserTask() {
+                                            public @Override void run(ResultIterator resultIterator) throws Exception {
+                                                Parser.Result r = resultIterator.getParserResult();
+                                                if (r instanceof ParserResult) {
+                                                    Language language = LanguageRegistry.getInstance().getLanguageByMimeType(resultIterator.getSnapshot().getMimeType());
+                                                    if (language != null) {
+                                                        StructureScanner scanner = language.getStructure();
+                                                        if (scanner != null) {
+                                                            List<? extends StructureItem> structures = scanner.scan((ParserResult) r);
+                                                            List<StructureItem> context = getContext(structures, offset);
+                                                            if (!context.isEmpty()) {
+                                                                StructureItem item = context.get(context.size() - 1);
+                                                                int start = (int) item.getPosition();
+                                                                int end = (int) item.getPosition() + item.getName().length();
+                                                                if (span != null && span.length == 2) {
+                                                                    span[0] = start;
+                                                                    span[1] = end;
+                                                                }
+                                                                if (start <= offset && offset <= end && item.getName().equals(lineDocument.getText(start, end - start))) {
+                                                                    String propertyName = getPropertyName(context);
+                                                                    for (Map.Entry<String, ConfigurationMetadataGroup> groupEntry : MicronautConfigProperties.getGroups(project).entrySet()) {
+                                                                        String groupKey = groupEntry.getKey();
+                                                                        if (groupKey.endsWith(".*")) {
+                                                                            groupKey = groupKey.substring(0, groupKey.length() - 2);
+                                                                        }
+                                                                        if (Pattern.matches(groupKey.replaceAll("\\.", "\\\\.").replaceAll("\\*", "\\\\w*") + ".*", propertyName)) {
+                                                                            ConfigurationMetadataGroup group = groupEntry.getValue();
+                                                                            if (sources != null) {
+                                                                                sources.addAll(group.getSources().values());
+                                                                            }
+                                                                            for (Map.Entry<String, ConfigurationMetadataProperty> propertyEntry : group.getProperties().entrySet()) {
+                                                                                String propertyKey = propertyEntry.getKey();
+                                                                                if (Pattern.matches(propertyKey.replaceAll("\\.", "\\\\.").replaceAll("\\*", "\\\\w*"), propertyName)) {
+                                                                                    property[0] = propertyEntry.getValue();
+                                                                                    return;
                                                                                 }
                                                                             }
                                                                         }
@@ -108,9 +124,47 @@ public class MicronautConfigUtilities {
                                                     }
                                                 }
                                             }
+                                        });
+                                        return property[0];
+                                    }
+                                }
+                            } else {
+                                int lineEnd = LineDocumentUtils.getLineEnd(lineDocument, offset);
+                                String text = lineDocument.getText(lineStart, lineEnd - lineStart);
+                                if (!text.startsWith("#") && !text.startsWith("!")) {
+                                    int colIdx = text.indexOf(':');
+                                    int eqIdx = text.indexOf('=');
+                                    int endIdx = Math.min(colIdx, eqIdx);
+                                    if (endIdx < 0) {
+                                        endIdx = Math.max(colIdx, eqIdx);
+                                    }
+                                    if (endIdx < 0 || offset < lineStart + endIdx) {
+                                        if (endIdx > 0) {
+                                            text = text.substring(0, endIdx);
                                         }
-                                    });
-                                    return property[0];
+                                        String propertyName = text.trim();
+                                        int idx = text.indexOf(propertyName);
+                                        if (propertyName != null && !propertyName.isEmpty() && lineStart + idx <= offset && lineStart + idx + propertyName.length() >= offset) {
+                                            for (Map.Entry<String, ConfigurationMetadataGroup> groupEntry : MicronautConfigProperties.getGroups(project).entrySet()) {
+                                                String groupKey = groupEntry.getKey();
+                                                if (groupKey.endsWith(".*")) {
+                                                    groupKey = groupKey.substring(0, groupKey.length() - 2);
+                                                }
+                                                if (Pattern.matches(groupKey.replaceAll("\\.", "\\\\.").replaceAll("\\*", "\\\\w*") + ".*", propertyName)) {
+                                                    ConfigurationMetadataGroup group = groupEntry.getValue();
+                                                    if (sources != null) {
+                                                        sources.addAll(group.getSources().values());
+                                                    }
+                                                    for (Map.Entry<String, ConfigurationMetadataProperty> propertyEntry : group.getProperties().entrySet()) {
+                                                        String propertyKey = propertyEntry.getKey();
+                                                        if (Pattern.matches(propertyKey.replaceAll("\\.", "\\\\.").replaceAll("\\*", "\\\\w*"), propertyName)) {
+                                                            return propertyEntry.getValue();
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         } catch (Exception ex) {
@@ -125,21 +179,35 @@ public class MicronautConfigUtilities {
 
     public static void collectUsages(FileObject fo, String propertyName, Consumer<Usage> consumer) {
         try {
-            ParserManager.parse(Collections.singleton(Source.create(fo)), new UserTask() {
-                public @Override void run(ResultIterator resultIterator) throws Exception {
-                    Parser.Result r = resultIterator.getParserResult();
-                    if (r instanceof ParserResult) {
-                        Language language = LanguageRegistry.getInstance().getLanguageByMimeType(resultIterator.getSnapshot().getMimeType());
-                        if (language != null) {
-                            StructureScanner scanner = language.getStructure();
-                            if (scanner != null) {
-                                find(fo, propertyName, scanner.scan((ParserResult) r), r.getSnapshot().getText(), consumer);
+            String mimeType = fo.getMIMEType();
+            if ("text/x-yaml".equals(mimeType)) {
+                ParserManager.parse(Collections.singleton(Source.create(fo)), new UserTask() {
+                    public @Override void run(ResultIterator resultIterator) throws Exception {
+                        Parser.Result r = resultIterator.getParserResult();
+                        if (r instanceof ParserResult) {
+                            Language language = LanguageRegistry.getInstance().getLanguageByMimeType(resultIterator.getSnapshot().getMimeType());
+                            if (language != null) {
+                                StructureScanner scanner = language.getStructure();
+                                if (scanner != null) {
+                                    find(fo, propertyName, scanner.scan((ParserResult) r), r.getSnapshot().getText(), consumer);
+                                }
                             }
                         }
                     }
+                });
+            } else {
+                String[] lines = fo.asText().split("\n");
+                Pattern pattern = Pattern.compile("^\\s*(" + propertyName.replaceAll("\\.", "\\\\.").replaceAll("\\*", "\\\\w*") + ")\\s*([=:].*)?$");
+                int off = 0;
+                for (String line : lines) {
+                    Matcher matcher = pattern.matcher(line);
+                    if (matcher.matches()) {
+                        consumer.accept(new Usage(fo, off + matcher.start(1), off + matcher.end(1), line.trim()));
+                    }
+                    off += line.length() + 1;
                 }
-            });
-        } catch (ParseException ex) {
+            }
+        } catch (ParseException | IOException ex) {
             Exceptions.printStackTrace(ex);
         }
     }

@@ -81,6 +81,7 @@ public class MicronautProjectWizardIterator implements WizardDescriptor.Progress
     public static final String JAVA_VERSION = "java.version";
     public static final String LANGUAGE = "language";
     public static final String BUILD_TOOL = "build.tool";
+    public static final String TEST_FRAMEWORK = "test.framework";
     public static final String FEATURES = "features";
 
     private transient int index;
@@ -100,6 +101,7 @@ public class MicronautProjectWizardIterator implements WizardDescriptor.Progress
                     (String) wiz.getProperty(JAVA_VERSION),
                     (String) wiz.getProperty(LANGUAGE),
                     (String) wiz.getProperty(BUILD_TOOL),
+                    (String) wiz.getProperty(TEST_FRAMEWORK),
                     (Set<MicronautLaunchService.Feature>) wiz.getProperty(FEATURES));
             handle.progress(2);
             FileObject projDir = FileUtil.toFileObject(projFile);

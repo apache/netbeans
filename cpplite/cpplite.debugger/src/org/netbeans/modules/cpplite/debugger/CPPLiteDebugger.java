@@ -36,6 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -93,6 +94,7 @@ public final class CPPLiteDebugger {
     private final ThreadsCollector      threadsCollector = new ThreadsCollector(this);
     private volatile CPPThread          currentThread;
     private volatile CPPFrame           currentFrame;
+    private AtomicInteger               exitCode = new AtomicInteger();
 
     public CPPLiteDebugger(ContextProvider contextProvider) {
         this.contextProvider = contextProvider;
@@ -118,6 +120,8 @@ public final class CPPLiteDebugger {
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
+            // Debug I/O has finished.
+            finish(false);
         }).start();
 
         proxy.waitStarted();
@@ -356,14 +360,23 @@ public final class CPPLiteDebugger {
         proxy.send(new Command("-exec-continue --all"));
     }
 
-    void finish () {
+    void finish (boolean sendExit) {
+        finish(sendExit, 0);
+    }
+
+    private void finish (boolean sendExit, int exitCode) {
+        if (exitCode != 0) {
+            this.exitCode.set(exitCode);
+        }
         LOGGER.fine("CPPLiteDebugger.finish()");
         if (finished) {
             LOGGER.fine("finish(): already finished.");
             return ;
         }
         breakpointsHandler.dispose();
-        proxy.send(new Command("-gdb-exit"));
+        if (sendExit) {
+            proxy.send(new Command("-gdb-exit"));
+        }
         Utils.unmarkCurrent ();
         engineProvider.getDestructor().killEngine();
         finished = true;
@@ -405,7 +418,7 @@ public final class CPPLiteDebugger {
         } catch (InterruptedException ex) {
             return null;
         }
-        return versionRecord.results().toString();
+        return versionRecord.command().getConsoleStream();
     }
 
     ContextProvider getContextProvider() {
@@ -423,6 +436,7 @@ public final class CPPLiteDebugger {
         private final CountDownLatch runningLatch = new CountDownLatch(1);
         private final CountDownLatch runningCommandLatch = new CountDownLatch(0);
         private final Semaphore runningCommandSemaphore = new Semaphore(1);
+        private final Object sendLock = new Object();
 
         LiteMIProxy(MICommandInjector injector, String prompt, String encoding) {
             super(injector, prompt, encoding);
@@ -457,29 +471,43 @@ public final class CPPLiteDebugger {
                         }
                         CPPThread thread = threadsCollector.get(threadId);
                         String reason = results.getConstValue("reason", "");
-                        switch (reason) {
-                            case "exited-normally":
-                                if ('*' == record.type()) {
-                                    finish();
+                        if (reason.startsWith("exited")) {
+                            if ('*' == record.type()) {
+                                int exitCode;
+                                if ("exited-normally".equals(reason)) {
+                                    exitCode = 0;
                                 } else {
-                                    threadsCollector.remove(threadId);
-                                }
-                                break;
-                            default:
-                                MITList topFrameList = (MITList) results.valueOf("frame");
-                                CPPFrame frame = topFrameList != null ? CPPFrame.create(thread, topFrameList) : null;
-                                thread.setTopFrame(frame);
-                                setSuspended(true, thread, frame);
-                                if (frame != null) {
-                                    Line currentLine = frame.location();
-                                    if (currentLine != null) {
-                                        Annotatable[] lines = new Annotatable[] {currentLine};
-                                        CPPLiteDebugger.this.currentLine = lines;
-                                        Utils.markCurrent(lines);
-                                        Utils.showLine(lines);
+                                    String exitCodeStr = results.getConstValue("exit-code", null);
+                                    if (exitCodeStr != null) {
+                                        if (exitCodeStr.startsWith("0x")) {
+                                            exitCode = Integer.parseInt(exitCodeStr, 16);
+                                        } else if (exitCodeStr.startsWith("0")) {
+                                            exitCode = Integer.parseInt(exitCodeStr, 8);
+                                        } else {
+                                            exitCode = Integer.parseInt(exitCodeStr);
+                                        }
+                                    } else {
+                                        exitCode = 0;
                                     }
                                 }
-                                break;
+                                finish(true, exitCode);
+                            } else {
+                                threadsCollector.remove(threadId);
+                            }
+                        } else {
+                            MITList topFrameList = (MITList) results.valueOf("frame");
+                            CPPFrame frame = topFrameList != null ? CPPFrame.create(thread, topFrameList) : null;
+                            thread.setTopFrame(frame);
+                            setSuspended(true, thread, frame);
+                            if (frame != null) {
+                                Line currentLine = frame.location();
+                                if (currentLine != null) {
+                                    Annotatable[] lines = new Annotatable[] {currentLine};
+                                    CPPLiteDebugger.this.currentLine = lines;
+                                    Utils.markCurrent(lines);
+                                    Utils.showLine(lines);
+                                }
+                            }
                         }
                         break;
                     case "running":
@@ -551,7 +579,9 @@ public final class CPPLiteDebugger {
                     Exceptions.printStackTrace(ex);
                 }
                 LOGGER.log(Level.FINE, "MIProxy.send({0})", cmd);
-                super.send(cmd);
+                synchronized (sendLock) {
+                    super.send(cmd);
+                }
             }
         }
 
@@ -564,7 +594,9 @@ public final class CPPLiteDebugger {
                 Exceptions.printStackTrace(ex);
             }
             LOGGER.log(Level.FINE, "MIProxy.send({0})", cmd);
-            super.send(cmd);
+            synchronized (sendLock) {
+                super.send(cmd);
+            }
         }
 
         @Override
@@ -659,6 +691,7 @@ public final class CPPLiteDebugger {
             }
         });
         debugger.setDebuggee(debuggee);
+        AtomicInteger exitCode = debugger.exitCode;
 
         return Pair.of(es[0], new Process() {
             @Override
@@ -677,8 +710,14 @@ public final class CPPLiteDebugger {
             }
 
             @Override
+            public boolean isAlive() {
+                return debuggee.isAlive();
+            }
+
+            @Override
             public int waitFor() throws InterruptedException {
-                return debuggee.waitFor();
+                debuggee.waitFor();
+                return exitCode.get();
             }
 
             @Override

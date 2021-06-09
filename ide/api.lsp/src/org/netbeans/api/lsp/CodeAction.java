@@ -21,7 +21,7 @@ package org.netbeans.api.lsp;
 /**
  *An action over the code.
  *
- * @since 1.1
+ * @since 1.3
  */
 public class CodeAction {
 

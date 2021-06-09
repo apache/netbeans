@@ -31,7 +31,6 @@ import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
-import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.lsp.ErrorProvider;
 import org.openide.util.Exceptions;
 

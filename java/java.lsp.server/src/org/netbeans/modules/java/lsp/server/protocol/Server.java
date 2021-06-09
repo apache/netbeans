@@ -85,15 +85,16 @@ import static org.netbeans.api.project.ProjectUtils.parentOf;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.java.lsp.server.LspServerState;
+import org.netbeans.modules.java.lsp.server.LspSession;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -120,28 +121,24 @@ public final class Server {
                 DISPATCHERS.get() != null;
     }
     
-    public static void launchServer(InputStream in, OutputStream out) {
+    public static NbLspServer launchServer(Pair<InputStream, OutputStream> io, LspSession session) {
         LanguageServerImpl server = new LanguageServerImpl();
         ConsumeWithLookup msgProcessor = new ConsumeWithLookup(server.getSessionLookup());
-        Launcher<NbCodeLanguageClient> serverLauncher = createLauncher(server, in, out, msgProcessor::attachLookup);
+        Launcher<NbCodeLanguageClient> serverLauncher = createLauncher(server, io, msgProcessor::attachLookup);
         NbCodeLanguageClient remote = serverLauncher.getRemoteProxy();
         ((LanguageClientAware) server).connect(remote);
         msgProcessor.attachClient(server.client);
         Future<Void> runningServer = serverLauncher.startListening();
-        try {
-            runningServer.get();
-        } catch (InterruptedException | ExecutionException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+        return new NbLspServer(server, runningServer);
     }
     
-    private static Launcher<NbCodeLanguageClient> createLauncher(LanguageServerImpl server, InputStream in, OutputStream out,
+    private static Launcher<NbCodeLanguageClient> createLauncher(LanguageServerImpl server, Pair<InputStream, OutputStream> io,
             Function<MessageConsumer, MessageConsumer> processor) {
         return new LSPLauncher.Builder<NbCodeLanguageClient>()
             .setLocalService(server)
             .setRemoteInterface(NbCodeLanguageClient.class)
-            .setInput(in)
-            .setOutput(out)
+            .setInput(io.first())
+            .setOutput(io.second())
             .wrapMessages(processor)
 //                .traceMessages(new java.io.PrintWriter(System.err))
             .create();
@@ -342,7 +339,7 @@ public final class Server {
         @NbBundle.Messages({
             "PROMPT_AskOpenProjectForFile=File {0} belongs to project {1}. To enable all features, the project should be opened"
                     + " and initialized by the Language Server. Do you want to proceed ?",
-            "PROMPT_AskOpenProjectForFileNoName=File {0} belongs to a project. To enable all features, the project should be opened"
+            "PROMPT_AskOpenProject=To enable all features of project {0}, it should be opened"
                     + " and initialized by the Language Server. Do you want to proceed ?",
             "PROMPT_AskOpenProjectForFile_Yes=Open and initialize",
             "PROMPT_AskOpenProjectForFile_No=No",
@@ -399,10 +396,10 @@ public final class Server {
                         yes,
                         new MessageActionItem(Bundle.PROMPT_AskOpenProjectForFile_No())
                     ));
-                    if (dispName.equals(prj.getProjectDirectory().getPath())) {
-                        smrp.setMessage(Bundle.PROMPT_AskOpenProjectForFileNoName(file.getPath()));
+                    if (prj.getProjectDirectory() == file) {
+                        smrp.setMessage(Bundle.PROMPT_AskOpenProject(dispName));
                     } else {
-                        smrp.setMessage(Bundle.PROMPT_AskOpenProjectForFile(file.getPath(), dispName));
+                        smrp.setMessage(Bundle.PROMPT_AskOpenProjectForFile(file.getNameExt(), dispName));
                     }
                     smrp.setType(MessageType.Info);
 
@@ -605,11 +602,22 @@ public final class Server {
                 capabilities.setCodeActionProvider(new CodeActionOptions(Arrays.asList(CodeActionKind.QuickFix, CodeActionKind.Source)));
                 capabilities.setDocumentSymbolProvider(true);
                 capabilities.setDefinitionProvider(true);
+                capabilities.setTypeDefinitionProvider(true);
                 capabilities.setImplementationProvider(true);
                 capabilities.setDocumentHighlightProvider(true);
                 capabilities.setReferencesProvider(true);
                 List<String> commands = new ArrayList<>(Arrays.asList(
-                        JAVA_BUILD_WORKSPACE, JAVA_LOAD_WORKSPACE_TESTS, GRAALVM_PAUSE_SCRIPT, JAVA_SUPER_IMPLEMENTATION));
+                        GRAALVM_PAUSE_SCRIPT,
+                        JAVA_BUILD_WORKSPACE,
+                        JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS,
+                        JAVA_FIND_DEBUG_PROCESS_TO_ATTACH,
+                        JAVA_FIND_PROJECT_CONFIGURATIONS,
+                        JAVA_GET_PROJECT_CLASSPATH,
+                        JAVA_GET_PROJECT_PACKAGES,
+                        JAVA_GET_PROJECT_SOURCE_ROOTS,
+                        JAVA_LOAD_WORKSPACE_TESTS,
+                        JAVA_NEW_FROM_TEMPLATE,
+                        JAVA_SUPER_IMPLEMENTATION));
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     commands.addAll(codeGenerator.getCommands());
                 }
@@ -721,9 +729,27 @@ public final class Server {
     }
     
     public static final String JAVA_BUILD_WORKSPACE =  "java.build.workspace";
+    public static final String JAVA_NEW_FROM_TEMPLATE =  "java.new.from.template";
+    public static final String JAVA_GET_PROJECT_SOURCE_ROOTS = "java.get.project.source.roots";
+    public static final String JAVA_GET_PROJECT_CLASSPATH = "java.get.project.classpath";
+    public static final String JAVA_GET_PROJECT_PACKAGES = "java.get.project.packages";
     public static final String JAVA_LOAD_WORKSPACE_TESTS =  "java.load.workspace.tests";
     public static final String JAVA_SUPER_IMPLEMENTATION =  "java.super.implementation";
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
+    
+    /**
+     * Enumerates project configurations.
+     */
+    public static final String JAVA_FIND_PROJECT_CONFIGURATIONS = "java.project.configurations";
+    /**
+     * Enumerates attach debugger configurations.
+     */
+    public static final String JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS = "java.attachDebugger.configurations";
+    /**
+     * Enumerates JVM processes eligible for debugger attach.
+     */
+    public static final String JAVA_FIND_DEBUG_PROCESS_TO_ATTACH = "java.attachDebugger.pickProcess";
+
     static final String INDEXING_COMPLETED = "Indexing completed.";
     static final String NO_JAVA_SUPPORT = "Cannot initialize Java support on JDK ";
 

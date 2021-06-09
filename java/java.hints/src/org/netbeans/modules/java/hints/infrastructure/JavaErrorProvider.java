@@ -73,6 +73,7 @@ import org.netbeans.spi.editor.hints.Severity;
 import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.lsp.ErrorProvider;
 import org.openide.filesystems.FileObject;
+import org.openide.text.PositionBounds;
 import org.openide.util.Exceptions;
 import org.openide.util.Union2;
 
@@ -82,6 +83,8 @@ import org.openide.util.Union2;
  */
 @MimeRegistration(mimeType="text/x-java", service=ErrorProvider.class)
 public class JavaErrorProvider implements ErrorProvider {
+
+    public static Consumer<ErrorProvider.Kind> computeDiagsCallback; //for tests
 
     @Override
     public List<? extends Diagnostic> computeErrors(Context context) {
@@ -93,16 +96,22 @@ public class JavaErrorProvider implements ErrorProvider {
                 public void run(ResultIterator it) throws Exception {
                     CompilationController cc = CompilationController.get(it.getParserResult());
                     if (cc != null) {
+                        if (computeDiagsCallback != null) {
+                            computeDiagsCallback.accept(context.errorKind());
+                        }
                         cc.toPhase(JavaSource.Phase.RESOLVED);
                         switch (context.errorKind()) {
                             case ERRORS:
                                 ErrorHintsProvider ehp = new ErrorHintsProvider();
+                                context.registerCancelCallback(() -> ehp.cancel());
                                 result.addAll(convert2Diagnostic(context.errorKind(), ehp.computeErrors(cc, cc.getSnapshot().getSource().getDocument(true), "text/x-java"), err -> true));
                                 break;
                             case HINTS:
                                 Set<Severity> disabled = org.netbeans.modules.java.hints.spiimpl.Utilities.disableErrors(cc.getFileObject());
                                 if (disabled.size() != Severity.values().length) {
-                                    result.addAll(convert2Diagnostic(context.errorKind(), new HintsInvoker(HintsSettings.getGlobalSettings(), new AtomicBoolean()).computeHints(cc), ed -> !disabled.contains(ed.getSeverity())));
+                                    AtomicBoolean cancel = new AtomicBoolean();
+                                    context.registerCancelCallback(() -> cancel.set(true));
+                                    result.addAll(convert2Diagnostic(context.errorKind(), new HintsInvoker(HintsSettings.getGlobalSettings(), cancel).computeHints(cc), ed -> !disabled.contains(ed.getSeverity())));
                                 }
                                 break;
                         }
@@ -117,13 +126,18 @@ public class JavaErrorProvider implements ErrorProvider {
     }
 
     public static List<Diagnostic> convert2Diagnostic(Kind errorKind, List<ErrorDescription> errors, Predicate<ErrorDescription> filter) {
+        if (errors == null) {
+            return Collections.emptyList();
+        }
+
         int idx = 0;
         List<Diagnostic> result = new ArrayList<>();
 
         for (ErrorDescription err : errors) {
             if (!filter.test(err)) continue;
 
-            Builder diagBuilder = Builder.create(err.getRange().getBegin().getOffset(), err.getRange().getEnd().getOffset(), err.getDescription());
+            PositionBounds range = err.getRange();
+            Builder diagBuilder = Builder.create(() -> range.getBegin().getOffset(), () -> range.getEnd().getOffset(), err.getDescription());
 
             switch (err.getSeverity()) {
                 case ERROR: diagBuilder.setSeverity(Diagnostic.Severity.Error); break;

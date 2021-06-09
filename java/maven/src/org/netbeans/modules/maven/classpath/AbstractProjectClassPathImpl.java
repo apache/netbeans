@@ -22,6 +22,7 @@ package org.netbeans.modules.maven.classpath;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.maven.artifact.Artifact;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.spi.java.classpath.ClassPathImplementation;
@@ -43,6 +45,9 @@ import org.openide.util.Utilities;
  * @author mkleint
  */
 public abstract class AbstractProjectClassPathImpl implements ClassPathImplementation {
+
+    private static final Logger LOGGER = Logger.getLogger(AbstractProjectClassPathImpl.class.getName());
+
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private List<PathResourceImplementation> resources;
     private NbMavenProjectImpl project;
@@ -204,6 +209,40 @@ public abstract class AbstractProjectClassPathImpl implements ClassPathImplement
 
     @Override public final int hashCode() {
         return project.hashCode() ^ getClass().hashCode();
+    }
+
+    /**
+     * Like {@link Artifact#getFile} but when a timestamped snapshot is locally downloaded, uses that instead.
+     */
+    protected static File getFile(Artifact art) {
+        File f = art.getFile();
+        if (f != null) {
+            String baseVersion = art.getBaseVersion();
+            if (art.isSnapshot() && !art.getVersion().equals(baseVersion)) {
+                String name = f.getName();
+                int endOfVersion = name.lastIndexOf(/* DefaultRepositoryLayout.GROUP_SEPARATOR */'.');
+                String classifier = art.getClassifier();
+                if (classifier != null) {
+                    endOfVersion -= classifier.length() + /* "-" */1;
+                }
+                if (endOfVersion > 0 && name.substring(0, endOfVersion).endsWith(baseVersion)) {
+                    File f2 = new File(f.getParentFile(), name.substring(0, endOfVersion - baseVersion.length()) + art.getVersion() + name.substring(endOfVersion));
+                    if (f2.isFile()) {
+                        LOGGER.log(Level.FINE, "swapped {0} → {1}", new Object[] {f, f2});
+                        return f2;
+                    } else {
+                        LOGGER.log(Level.FINE, "did not find predicted {0}", f2);
+                    }
+                } else {
+                    LOGGER.log(Level.FINE, "failed to match file pattern for {0} from {1}", new Object[] {f, art});
+                }
+            } else {
+                LOGGER.log(Level.FINEST, "not touching {0}", f);
+            }
+        } else {
+            LOGGER.log(Level.FINER, "no file for {0}", art);
+        }
+        return f;
     }
 
 }

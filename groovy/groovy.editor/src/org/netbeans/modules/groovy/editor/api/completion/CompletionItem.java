@@ -42,6 +42,8 @@ import org.netbeans.modules.groovy.editor.api.elements.ElementHandleSupport;
 import org.netbeans.modules.groovy.editor.api.elements.GroovyElement;
 import org.netbeans.modules.groovy.editor.api.elements.KeywordElement;
 import org.netbeans.modules.groovy.editor.api.elements.common.MethodElement.MethodParameter;
+import org.netbeans.modules.groovy.editor.completion.provider.CompletionAccessor;
+import org.netbeans.modules.groovy.editor.java.JavaElementHandle;
 import org.netbeans.modules.groovy.editor.java.Utilities;
 import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 import org.netbeans.modules.groovy.support.api.GroovySources;
@@ -61,8 +63,47 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
     private static volatile ImageIcon groovyIcon;
     private static volatile ImageIcon javaIcon;
     private static volatile ImageIcon newConstructorIcon;
-
     
+    static {
+        CompletionAccessor.setInstance(new CompletionAccessor() {
+            @Override
+            public CompletionItem assignHandle(CompletionItem item, JavaElementHandle jh) {
+                synchronized (item) {
+                    if (item instanceof ConstructorItem) {
+                        ((ConstructorItem)item).assignHandle(jh);
+                    } else if (item instanceof JavaFieldItem) {
+                        ((JavaFieldItem)item).assignHandle(jh);
+                    } else if (item instanceof JavaMethodItem) {
+                        ((JavaMethodItem)item).assignHandle(jh);
+                    } else if (item instanceof TypeItem) {
+                        ((TypeItem)item).assignHandle(jh);
+                    } else {
+                        throw new IllegalArgumentException(item.getClass() + ":" + item.toString());
+                    }
+                }
+                return item;
+            }
+
+            @Override
+            public ConstructorItem createConstructor(JavaElementHandle h, List<MethodParameter> parameters, int anchorOffset, boolean expand) {
+                ConstructorItem ci = new ConstructorItem(h.getIn(), h.getName(), parameters, anchorOffset, expand);
+                synchronized (ci) {
+                    ci.handle = h;
+                }
+                return ci;
+            }
+
+            @Override
+            public TypeItem createType(JavaElementHandle h, String qn, String n, int anchorOffset, javax.lang.model.element.ElementKind ek) {
+                TypeItem ti = new TypeItem(qn, n, anchorOffset, ek);
+                synchronized (ti) {
+                    ti.handle = h;
+                }
+                return ti;
+            }
+        });
+    }
+
     private CompletionItem(GroovyElement element, int anchorOffset) {
         this.element = element;
         this.anchorOffset = anchorOffset;
@@ -145,7 +186,7 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
     public static CompletionItem forDynamicField(int anchorOffset, String name, String type) {
         return new DynamicFieldItem(anchorOffset, name, type);
     }
-
+    
     private static class JavaMethodItem extends CompletionItem {
 
         private final String className;
@@ -155,7 +196,8 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
         private final Set<javax.lang.model.element.Modifier> modifiers;
         private final boolean emphasise;
         private final boolean nameOnly;
-
+        private ElementHandle handle;
+        
         
         public JavaMethodItem(String className, String simpleName, List<String> parameters, TypeMirror returnType,
                 Set<javax.lang.model.element.Modifier> modifiers, int anchorOffset, boolean emphasise, boolean nameOnly) {
@@ -233,7 +275,12 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
 
         @Override
         public ElementHandle getElement() {
-            return ElementHandleSupport.createHandle(className, simpleName, ElementKind.METHOD, getModifiers());
+            synchronized (this) {
+                if (handle == null) {
+                    handle = ElementHandleSupport.createHandle(className, simpleName, ElementKind.METHOD, getModifiers());
+                }
+                return handle;
+            }
         }
 
         @Override
@@ -244,6 +291,9 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
             return super.getCustomInsertTemplate();
         }
 
+        public void assignHandle(ElementHandle h) {
+            this.handle = h;
+        }
     }
 
     public static class DynamicFieldItem extends CompletionItem {
@@ -637,6 +687,7 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
         private final String fqn;
         private final String name;
         private final javax.lang.model.element.ElementKind ek;
+        private ElementHandle handle;
 
         public TypeItem(String fqn, String name, int anchorOffset, javax.lang.model.element.ElementKind ek) {
             super(null, anchorOffset);
@@ -668,32 +719,49 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
         public Set<Modifier> getModifiers() {
             return Collections.emptySet();
         }
+        
+        void assignHandle(ElementHandle h) {
+            this.handle = h;
+        }
 
         @Override
         public ElementHandle getElement() {
-            // For completion documentation
-            // return ElementHandleSupport.createHandle(request.info, new ClassElement(name));
-            return null;
+            synchronized (this) {
+                if (handle == null) {
+                    handle = ElementHandleSupport.createHandle(fqn, name, elementKind, Collections.emptySet());
+                }
+                return handle;
+            }
         }
     }
-
+    
     public static class ConstructorItem extends CompletionItem {
 
         private static final String NEW_CSTR   = "org/netbeans/modules/groovy/editor/resources/new_constructor_16.png"; //NOI18N
         private final boolean expand; // should this item expand to a constructor body?
         private final String name;
+        private final String className;
         private final String paramListString;
         private final List<MethodParameter> parameters;
+        private ElementHandle handle;
 
 
         public ConstructorItem(String name, List<MethodParameter> parameters, int anchorOffset, boolean expand) {
+            this(null, name, parameters, anchorOffset, expand);
+        }
+        
+        /**
+         * Package private; use {@link CompletionAccessor} to make instances of this.
+         */
+        ConstructorItem(String clazzName, String name, List<MethodParameter> parameters, int anchorOffset, boolean expand) {
             super(null, anchorOffset);
+            this.className = clazzName;
             this.name = name;
             this.expand = expand;
             this.parameters = parameters;
             this.paramListString = parseParams();
         }
-
+        
         private String parseParams() {
             StringBuilder sb = new StringBuilder();
             if (!parameters.isEmpty()) {
@@ -746,9 +814,16 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
 
         @Override
         public ElementHandle getElement() {
-            // For completion documentation
-            // return ElementHandleSupport.createHandle(request.info, new ClassElement(name));
-            return null;
+            synchronized (this) {
+                if (handle == null) {
+                    handle = ElementHandleSupport.createHandle(className, name, ElementKind.CONSTRUCTOR, getModifiers());
+                }
+                return handle;
+            }
+        }
+        
+        void assignHandle(ElementHandle h) {
+            this.handle = handle;
         }
 
         // Constructors are smart by definition (have to be place above others)
@@ -840,7 +915,7 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
             return hash;
         }
     }
-
+    
     public static class NamedParameter extends CompletionItem {
 
         private final String typeName;
@@ -917,6 +992,7 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
         private final TypeMirror type;
         private final Set<javax.lang.model.element.Modifier> modifiers;
         private final boolean emphasise;
+        private ElementHandle handle;
 
         
         public JavaFieldItem(String className, String name, TypeMirror type,
@@ -961,10 +1037,19 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
         public Set<Modifier> getModifiers() {
             return Utilities.modelModifiersToGsf(modifiers);
         }
+        
+        void assignHandle(ElementHandle h) {
+            this.handle = h;
+        }
 
         @Override
         public ElementHandle getElement() {
-            return ElementHandleSupport.createHandle(className, name, ElementKind.FIELD, getModifiers());
+            synchronized (this) {
+                if (handle == null) {
+                    handle = ElementHandleSupport.createHandle(className, name, ElementKind.FIELD, getModifiers());
+                }
+                return handle;
+            }
         }
     }
 

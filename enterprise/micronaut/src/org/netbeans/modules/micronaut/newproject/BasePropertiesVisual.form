@@ -27,6 +27,8 @@
     </Component>
     <Component class="javax.swing.ButtonGroup" name="languageButtonGroup">
     </Component>
+    <Component class="javax.swing.ButtonGroup" name="testFrameworkButtonGroup">
+    </Component>
   </NonVisualComponents>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="1"/>
@@ -46,45 +48,55 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="javaVersionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="groupLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="languageLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="customRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="artifactLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="applicationTypeLabel" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
+                  <Component id="versionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="snapshotRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="defaultRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="serviceURLLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="testFrameworkLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="javaVersionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="groupLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="languageLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="customRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="artifactLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="applicationTypeLabel" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
-                          <Component id="versionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="snapshotRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="defaultRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="javaVersionComboBox" min="-2" pref="63" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="javaRadioButton" min="-2" pref="50" max="-2" attributes="0"/>
+                                  <Component id="junitRadioButton" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="spockRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="kotlinRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="groovyRadioButton" min="-2" max="-2" attributes="0"/>
+                                  <Component id="kotestRadioButton" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="357" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="defaultURLLabel" max="32767" attributes="0"/>
-                          <Component id="versionTextField" pref="566" max="32767" attributes="0"/>
+                          <Component id="versionTextField" max="32767" attributes="0"/>
                           <Component id="snapshotURLLabel" alignment="0" max="32767" attributes="0"/>
                           <Component id="customTextField" alignment="0" max="32767" attributes="0"/>
                           <Component id="applicationTypeComboBox" alignment="1" max="32767" attributes="0"/>
                           <Component id="artifactTextField" alignment="1" max="32767" attributes="0"/>
                           <Component id="groupTextField" max="32767" attributes="0"/>
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="javaVersionComboBox" min="-2" pref="63" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="javaRadioButton" min="-2" pref="50" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="kotlinRadioButton" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="groovyRadioButton" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
                       </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -101,7 +113,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="snapshotRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="snapshotURLLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="snapshotURLLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -140,7 +152,14 @@
                   <Component id="kotlinRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="groovyRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="36" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="testFrameworkLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="junitRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="spockRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="kotestRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="28" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -342,6 +361,47 @@
           <ResourceString bundle="org/netbeans/modules/micronaut/newproject/Bundle.properties" key="LBL_Groovy" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
         <Property name="actionCommand" type="java.lang.String" value="GROOVY"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="testFrameworkLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/micronaut/newproject/Bundle.properties" key="LBL_TestFramework" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="junitRadioButton">
+      <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="testFrameworkButtonGroup"/>
+        </Property>
+        <Property name="selected" type="boolean" value="true"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/micronaut/newproject/Bundle.properties" key="LBL_JUnit" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+        <Property name="actionCommand" type="java.lang.String" value="JUNIT"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="spockRadioButton">
+      <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="testFrameworkButtonGroup"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/micronaut/newproject/Bundle.properties" key="LBL_Spock" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+        <Property name="actionCommand" type="java.lang.String" value="SPOCK"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="kotestRadioButton">
+      <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="testFrameworkButtonGroup"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/micronaut/newproject/Bundle.properties" key="LBL_Kotest" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+        <Property name="actionCommand" type="java.lang.String" value="KOTEST"/>
       </Properties>
     </Component>
   </SubComponents>

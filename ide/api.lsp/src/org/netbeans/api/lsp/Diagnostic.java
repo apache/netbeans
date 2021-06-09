@@ -24,21 +24,21 @@ import java.util.function.Consumer;
 /**
  * A diagnostic for LSP. Use a {@link Diagnostic.Builder} to create an instance.
  *
- * @since 1.1
+ * @since 1.3
  */
 public class Diagnostic {
 
-    private final int startOffset;
-    private final int endOffset;
+    private final Position startPosition;
+    private final Position endPosition;
     private final String description;
     private final Severity severity;
     private final String code;
     private final LazyCodeActions actions;
 
-    private Diagnostic(int startOffset, int endOffset, String description,
+    private Diagnostic(Position startPosition, Position endPosition, String description,
                        Severity severity, String code, LazyCodeActions actions) {
-        this.startOffset = startOffset;
-        this.endOffset = endOffset;
+        this.startPosition = startPosition;
+        this.endPosition = endPosition;
         this.description = description;
         this.severity = severity;
         this.code = code;
@@ -50,16 +50,16 @@ public class Diagnostic {
      *
      * @return the start offset of the diagnostic
      */
-    public int getStartOffset() {
-        return startOffset;
+    public Position getStartPosition() {
+        return startPosition;
     }
 
     /**
      * The end offset of the diagnostic.
      * @return the end offset of the diagnostic
      */
-    public int getEndOffset() {
-        return endOffset;
+    public Position getEndPosition() {
+        return endPosition;
     }
 
     /**
@@ -105,16 +105,16 @@ public class Diagnostic {
      * The build for the Diagnostic.
      */
     public static final class Builder {
-        private final int startOffset;
-        private final int endOffset;
+        private final Position startPosition;
+        private final Position endPosition;
         private final String description;
         private Severity severity;
         private String code;
         private LazyCodeActions actions;
 
-        private Builder(int startOffset, int endOffset, String description) {
-            this.startOffset = startOffset;
-            this.endOffset = endOffset;
+        private Builder(Position startPosition, Position endPosition, String description) {
+            this.startPosition = startPosition;
+            this.endPosition = endPosition;
             this.description = description;
         }
 
@@ -126,8 +126,8 @@ public class Diagnostic {
          * @param description the description of the diagnostic
          * @return a new builder
          */
-        public static Builder create(int startOffset, int endOffset, String description) {
-            return new Builder(startOffset, endOffset, description);
+        public static Builder create(Position startPosition, Position endPosition, String description) {
+            return new Builder(startPosition, endPosition, description);
         }
 
         /**
@@ -169,7 +169,7 @@ public class Diagnostic {
          * @return the new Diagnostic
          */
         public Diagnostic build() {
-            return new Diagnostic(startOffset, endOffset, description, severity, code, actions);
+            return new Diagnostic(startPosition, endPosition, description, severity, code, actions);
         }
     }
 

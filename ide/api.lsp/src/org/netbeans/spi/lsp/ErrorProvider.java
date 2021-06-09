@@ -18,6 +18,7 @@
  */
 package org.netbeans.spi.lsp;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
@@ -28,7 +29,7 @@ import org.openide.filesystems.FileObject;
  * A provided for errors/warnings for a given file.
  * Should be registered in the {@link MimeLookup}.
  *
- * @since 1.1
+ * @since 1.3
  */
 public interface ErrorProvider {
 
@@ -47,6 +48,7 @@ public interface ErrorProvider {
         private final FileObject file;
         private final Kind errorKind;
         private final AtomicBoolean cancel = new AtomicBoolean();
+        private final List<Runnable> cancelCallbacks = new ArrayList<>();
 
         /**
          * Construct a new {@code Context}.
@@ -91,6 +93,23 @@ public interface ErrorProvider {
          */
         public void cancel() {
             cancel.set(true);
+            List<Runnable> callbacks;
+            synchronized (this) {
+                callbacks = new ArrayList<>(cancelCallbacks);
+            }
+            for (Runnable r : callbacks) {
+                r.run();
+            }
+        }
+        
+        /**
+         * Register a {@linkplain Runnable} which will be called when this
+         * computation is cancelled.
+         *
+         * @param r the cancel callback
+         */
+        public synchronized void registerCancelCallback(Runnable r) {
+            cancelCallbacks.add(r);
         }
     }
 

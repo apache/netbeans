@@ -21,7 +21,7 @@ package org.netbeans.api.lsp;
 /**
  * An operation that affects files, not their content.
  *
- * @since 1.1
+ * @since 1.3
  */
 public class ResourceOperation {
 

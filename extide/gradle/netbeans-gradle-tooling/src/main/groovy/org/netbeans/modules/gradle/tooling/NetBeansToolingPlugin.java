@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
+import org.gradle.api.GradleException;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.tooling.provider.model.ToolingModelBuilder;
@@ -97,12 +98,21 @@ public class NetBeansToolingPlugin implements Plugin<Project> {
                 pw.println(ex.toString());
                 ex.printStackTrace(pw);
 
-                BaseModel ret = new NbProjectInfoModel();
+                NbProjectInfoModel ret = new NbProjectInfoModel();
                 ret.setGradleException(sw.toString());
+
+                Throwable cause = ex;
+                while ((cause != null) || (cause.getCause() != cause)) {
+                    if (cause instanceof GradleException) {
+                        ret.noteProblem((GradleException) cause);
+                        break;
+                    }
+                    cause = cause.getCause();
+                }
                 return ret;
             }
         }
-
+        
     }
 
 }

@@ -54,8 +54,8 @@
     <change id="ErrorProvider">
         <api name="LSP_API"/>
         <summary>Adding ErrorProvider</summary>
-        <version major="1" minor="1"/>
-        <date day="25" month="4" year="2021"/>
+        <version major="1" minor="3"/>
+        <date day="10" month="6" year="2021"/>
         <author login="jlahoda"/>
         <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
         <description>
@@ -64,24 +64,47 @@
         </description>
         <class package="org.netbeans.api.lsp" name="ErrorProvider"/>
     </change>
+    <change id="HoverProvider">
+        <api name="LSP_API"/>
+        <summary>Adding Hover and HoverProvider</summary>
+        <version major="1" minor="2"/>
+        <date day="13" month="5" year="2021"/>
+        <author login="dbalek"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            A <code>Hover</code> class and <code>HoverProvider</code> interface introduced
+            that allows to resolve a hover information at a given document offset and
+            return its content.
+        </description>
+        <class package="org.netbeans.api.lsp" name="Hover"/>
+        <class package="org.netbeans.spi.lsp" name="HoverProvider"/>
+    </change>
+    <change id="HyperlinkTypeDefLocationProvider">
+        <api name="LSP_API"/>
+        <summary>Adding HyperlinkTypeDefLocationProvider</summary>
+        <version major="1" minor="1"/>
+        <date day="5" month="5" year="2021"/>
+        <author login="dbalek"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            A <code>HyperlinkTypeDefLocationProvider</code> interface introduced that allows to
+            compute hyperlinks to type definition locations.
+        </description>
+        <class package="org.netbeans.spi.lsp" name="HyperlinkTypeDefLocationProvider"/>
+    </change>
 </changes>
 
   <!-- Now the surrounding HTML text and document structure: -->
 
   <htmlcontents>
 <!--
-
                             NO NO NO NO NO!
-
          ==============>    DO NOT EDIT ME!  <======================
-
           AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
-
                 SEE xml/api/doc/changes/apichanges.xml
-
 -->
     <head>
-      <title>Debugger Core API changes by date</title>
+      <title>LSP API changes by date</title>
       <link rel="stylesheet" href="prose.css" type="text/css"/>
     </head>
     <body>

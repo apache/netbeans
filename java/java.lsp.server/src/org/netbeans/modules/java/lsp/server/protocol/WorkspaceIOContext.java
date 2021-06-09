@@ -18,14 +18,27 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import java.io.IOException;
+import java.io.InputStream;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.netbeans.modules.java.lsp.server.ui.IOContext;
 
 abstract class WorkspaceIOContext extends IOContext {
-
+    private final InputStream inputSink = new EmptyBlockingInputStream();
+    
     WorkspaceIOContext() {
+    }
+
+    @Override
+    protected void stdIn(String line) throws IOException {
+        // no op
+    }
+
+    @Override
+    protected InputStream getStdIn() throws IOException {
+        return inputSink;
     }
 
     @Override
@@ -54,4 +67,28 @@ abstract class WorkspaceIOContext extends IOContext {
     }
 
     protected abstract LanguageClient client();
+    
+    private static class EmptyBlockingInputStream extends InputStream {
+        @Override
+        public int read() throws IOException {
+            synchronized (this) {
+                try {
+                    wait();
+                } catch (InterruptedException ex) {
+                    throw new IOException(ex);
+                }
+            }
+            return -1;
+        }
+
+        @Override
+        public boolean markSupported() {
+            return false;
+        }
+
+        @Override
+        public int available() throws IOException {
+            return 0;
+        }
+    }
 }

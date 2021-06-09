@@ -22,6 +22,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,6 +41,7 @@ import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.DebuggerManagerAdapter;
 import org.netbeans.api.debugger.Session;
@@ -64,11 +66,15 @@ import org.netbeans.modules.java.nativeimage.debugger.api.NIDebugRunner;
 import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.ProjectConfiguration;
+import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.netbeans.spi.project.SingleMethod;
+
 import org.openide.filesystems.FileObject;
 import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.Pair;
+import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
@@ -77,6 +83,9 @@ import org.openide.util.lookup.ProxyLookup;
  * @author martin
  */
 public abstract class NbLaunchDelegate {
+
+    private final RequestProcessor requestProcessor = new RequestProcessor(NbLaunchDelegate.class);
+
     public abstract void preLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
 
     public abstract void postLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
@@ -113,8 +122,31 @@ public abstract class NbLaunchDelegate {
             }
         };
         if (toRun != null) {
+            class W extends Writer {
+                @Override
+                public void write(char[] cbuf, int off, int len) throws IOException {
+                    write(String.copyValueOf(cbuf, off, len));
+                }
+
+                @Override
+                public void write(String str) throws IOException {
+                    ioContext.stdIn(str);
+                }
+
+                @Override
+                public void flush() throws IOException {
+                    // nop 
+                }
+
+                @Override
+                public void close() throws IOException {
+                    // nop
+                }
+            }
+            W writer = new W();
             CompletableFuture<Pair<ActionProvider, String>> commandFuture = findTargetWithPossibleRebuild(toRun, singleMethod, debug, testRun, ioContext);
             commandFuture.thenAccept((providerAndCommand) -> {
+                context.setInputSinkProvider(() -> writer);
                 if (debug) {
                     DebuggerManager.getDebuggerManager().addDebuggerListener(new DebuggerManagerAdapter() {
                         @Override
@@ -166,13 +198,35 @@ public abstract class NbLaunchDelegate {
                         testProgressHandler != null ? Lookups.fixed(toRun, ioContext, progress, testProgressHandler) : Lookups.fixed(toRun, ioContext, progress),
                         Lookup.getDefault()
                 );
-
+                
+                ProjectConfiguration selectConfiguration = null;
+                Object o = launchArguments.get("launchConfiguration");
+                if (o instanceof String) {
+                    Project p = FileOwnerQuery.getOwner(toRun);
+                    if (p != null) {
+                        ProjectConfigurationProvider<ProjectConfiguration> pcp = p.getLookup().lookup(ProjectConfigurationProvider.class);
+                        if (pcp != null) {
+                            String n = (String)o;
+                            selectConfiguration = pcp.getConfigurations().stream().filter(c -> n.equals(c.getDisplayName())).findAny().orElse(null);
+                        }
+                    }
+                }
+                List<? super Object> runContext = new ArrayList<>();
+                runContext.add(toRun);
+                runContext.add(params);
+                runContext.add(ioContext);
+                runContext.add(progress);
+                
                 Lookup lookup;
                 if (singleMethod != null) {
-                    lookup = Lookups.fixed(toRun, singleMethod, params, ioContext, progress);
-                } else {
-                    lookup = Lookups.fixed(toRun, ioContext, params, progress);
+                    runContext.add(singleMethod);
                 }
+                if (selectConfiguration != null) {
+                    runContext.add(selectConfiguration);
+                }
+                
+                lookup = Lookups.fixed(runContext.toArray(new Object[runContext.size()]));
+                
                 Lookups.executeWith(launchCtx, () -> {
                     providerAndCommand.first().invokeAction(providerAndCommand.second(), lookup);
 
@@ -192,14 +246,28 @@ public abstract class NbLaunchDelegate {
                     Lookup.getDefault()
             );
             List<String> args = argsToStringList(launchArguments.get("args"));
-            Lookups.executeWith(launchCtx, () -> {
-                if (debug) {
-                    String miDebugger = (String) launchArguments.get("miDebugger");
-                    startNativeDebug(nativeImageFile, args, miDebugger, context, executionDescriptor, launchFuture);
-                } else {
-                    execNative(nativeImageFile, args, context, executionDescriptor, launchFuture);//, success);
-                }
-            });
+            // Add session's lookup, it may override dialog displayer, etc.
+            Lookup execLookup = new ProxyLookup(launchCtx, context.getLspSession().getLookup());
+            if (debug) {
+                requestProcessor.post(() -> {
+                    ActionProgress debugProgress = ActionProgress.start(launchCtx);
+                    ExecutionDescriptor ed = executionDescriptor.postExecution((@NullAllowed Integer exitCode) -> {
+                        debugProgress.finished(exitCode != null && exitCode == 0);
+                    });
+                    Lookups.executeWith(execLookup, () -> {
+                        String miDebugger = (String) launchArguments.get("miDebugger");
+                        startNativeDebug(nativeImageFile, args, miDebugger, context, ed, launchFuture, debugProgress);
+                    });
+                });
+            } else {
+                ExecutionDescriptor ed = executionDescriptor.postExecution((@NullAllowed Integer exitCode) -> {
+                    ioContext.stop();
+                    notifyFinished(context, exitCode != null && exitCode == 0);
+                });
+                Lookups.executeWith(execLookup, () -> {
+                    execNative(nativeImageFile, args, context, ed, launchFuture);
+                });
+            }
         }
         return launchFuture;
     }
@@ -226,8 +294,7 @@ public abstract class NbLaunchDelegate {
         return joined;
     }
 
-    private static void startNativeDebug(File nativeImageFile, List<String> args, String miDebugger, DebugAdapterContext context, ExecutionDescriptor executionDescriptor, CompletableFuture<Void> launchFuture) {
-        AtomicReference<NIDebugger> niDebuggerRef = new AtomicReference<>();
+    private static void startNativeDebug(File nativeImageFile, List<String> args, String miDebugger, DebugAdapterContext context, ExecutionDescriptor executionDescriptor, CompletableFuture<Void> launchFuture, ActionProgress debugProgress) {
         AtomicReference<NbDebugSession> debugSessionRef = new AtomicReference<>();
         NIDebugger niDebugger;
         try {
@@ -235,10 +302,6 @@ public abstract class NbLaunchDelegate {
                 Session session = engine.lookupFirst(null, Session.class);
                 NbDebugSession debugSession = new NbDebugSession(session);
                 debugSessionRef.set(debugSession);
-                NIDebugger niDebugger_ = niDebuggerRef.get();
-                if (niDebugger_ != null) {
-                    debugSession.setNIDebugger(niDebugger_);
-                }
                 context.setDebugSession(debugSession);
                 launchFuture.complete(null);
                 context.getConfigurationSemaphore().waitForConfigurationDone();
@@ -247,13 +310,11 @@ public abstract class NbLaunchDelegate {
             ErrorUtilities.completeExceptionally(launchFuture,
                 "Failed to launch debuggee native image. " + ex.getLocalizedMessage(),
                 ResponseErrorCode.serverErrorStart);
+            debugProgress.finished(false);
             return ;
         }
-        niDebuggerRef.set(niDebugger);
         NbDebugSession debugSession = debugSessionRef.get();
-        if (debugSession != null) {
-            debugSession.setNIDebugger(niDebugger);
-        }
+        debugSession.setNIDebugger(niDebugger);
     }
 
     @NonNull

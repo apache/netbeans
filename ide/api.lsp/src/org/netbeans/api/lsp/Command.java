@@ -22,7 +22,7 @@ package org.netbeans.api.lsp;
  * A command. The exact list of known commands depends on
  * the implementation of the server.
  *
- * @since 1.1
+ * @since 1.3
  */
 public class Command {
 

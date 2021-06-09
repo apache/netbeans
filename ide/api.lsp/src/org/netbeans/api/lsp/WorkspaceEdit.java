@@ -26,7 +26,7 @@ import org.openide.util.Union2;
 /**
  * A set of edits over the workspace.
  *
- * @since 1.1
+ * @since 1.3
  */
 public class WorkspaceEdit {
 

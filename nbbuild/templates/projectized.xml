@@ -87,7 +87,7 @@
     </target>
 
     <target name="-init-compile-bootclasspath-nb-vanilla" depends="basic-init,jdk-8-check,set-buildnumber,-define-custom-javac-task">
-        <property name="bootclasspath.prepend.nb" value="${nb_all}/java/libs.javacapi/external/nb-javac-15.0.0.2-api.jar${path.separator}${nb_all}/java/libs.javacimpl/external/nb-javac-15.0.0.2.jar" />
+        <property name="bootclasspath.prepend.nb" value="${nb_all}/java/libs.javacapi/external/nb-javac-16.0.0.0-api.jar${path.separator}${nb_all}/java/libs.javacimpl/external/nb-javac-16.0.0.0.jar" />
         <property name="bootclasspath.prepend.vanilla" value="${nb_all}/nbbuild/external/vanilla-javac-api.jar${path.separator}${nb_all}/nbbuild/external/vanilla-javac-impl.jar" />
     </target>
     <target name="-init-bootclasspath-prepend-compile" depends="-init-compile-bootclasspath-nb-vanilla">
@@ -705,7 +705,7 @@
         <property name="sigtest.public.packages" value="${public.packages}"/>
         <property name="sigtest.fail.on.error" value="true"/>
         <taskdef name="sigtest" classname="org.netbeans.nbbuild.Sigtest" classpath="${nbantext.jar}"/>
-        <property name="sigtest.jar" location="${nb_all}/nbbuild/external/sigtest-maven-plugin-1.2.jar"/>
+        <property name="sigtest.jar" location="${nb_all}/nbbuild/external/sigtest-maven-plugin-1.4.jar"/>
         <loadproperties srcFile="${manifest.mf}" prefix="mf.">
             <filterchain>
                 <replaceregex pattern="[\n\r]+ ([^ ][^\n\r]*)"
@@ -757,6 +757,7 @@
                  classpath="${sigtest.class.path}"
                  version="${mf.OpenIDE-Module-Specification-Version}"
                  action="generate"
+                 release="${javac.target}"
                  packages="${sigtest.public.packages}"
                  report="${sigtest.output.dir}/generate-${code.name.base.dashes}.xml"
                  failonerror="${sigtest.gen.fail.on.error}"
@@ -769,6 +770,7 @@
                  sigtestJar="${sigtest.jar}"
                  classpath="${sigtest.class.path}"
                  version="${mf.OpenIDE-Module-Specification-Version}"
+                 release="${javac.target}"
                  action="${sigtest.check.type}"
                  packages="${sigtest.public.packages}"
                  report="${sigtest.output.dir}/${code.name.base.dashes}.xml"

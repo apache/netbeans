@@ -28,4 +28,9 @@
             <file name="pluginportal-update-provider.instance_hidden"/>
         </folder>
     </folder>
+    <folder name="Templates">
+        <folder name="XML">
+            <file name="XMLCatalog.xml_hidden"/>
+        </folder>
+    </folder>
 </filesystem>

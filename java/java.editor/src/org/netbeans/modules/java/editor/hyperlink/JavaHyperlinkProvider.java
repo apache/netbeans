@@ -32,6 +32,7 @@ import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.netbeans.modules.editor.java.GoToSupport;
 import org.netbeans.modules.java.editor.overridden.GoToImplementation;
 import org.netbeans.spi.lsp.HyperlinkLocationProvider;
+import org.netbeans.spi.lsp.HyperlinkTypeDefLocationProvider;
 
 /**
  * Implementation of the hyperlink provider for java language.
@@ -88,7 +89,16 @@ public final class JavaHyperlinkProvider implements HyperlinkProviderExt {
 
         @Override
         public CompletableFuture<HyperlinkLocation> getHyperlinkLocation(Document doc, int offset) {
-            return GoToSupport.getGoToLocation(doc, offset);
+            return GoToSupport.getGoToLocation(doc, offset, false);
+        }
+    }
+
+    @MimeRegistration(mimeType = "text/x-java", service = HyperlinkTypeDefLocationProvider.class)
+    public static class TypeDefLocationProvider implements HyperlinkTypeDefLocationProvider {
+
+        @Override
+        public CompletableFuture<HyperlinkLocation> getHyperlinkTypeDefLocation(Document doc, int offset) {
+            return GoToSupport.getGoToLocation(doc, offset, true);
         }
     }
 }

@@ -44,15 +44,19 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
+import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.ElementUtilities.ElementAcceptor;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
+import org.netbeans.api.java.source.TypeUtilities;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
-import org.netbeans.modules.groovy.editor.api.completion.CompletionHandler;
 import org.netbeans.modules.groovy.editor.api.completion.FieldSignature;
 import org.netbeans.modules.groovy.editor.api.completion.MethodSignature;
 import org.netbeans.modules.groovy.editor.completion.AccessLevel;
+import org.netbeans.modules.groovy.editor.java.JavaElementHandle;
+import org.netbeans.modules.groovy.editor.java.Utilities;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -78,16 +82,18 @@ public final class JavaElementHandler {
     public Map<MethodSignature, CompletionItem> getMethods(String className,
             String prefix, int anchor, String[] typeParameters, boolean emphasise, Set<AccessLevel> levels, boolean nameOnly) {
         JavaSource javaSource = createJavaSource();
-
+        
         if (javaSource == null) {
             return Collections.emptyMap();
         }
+        
+        FileObject f = info.getSnapshot().getSource().getFileObject();
 
         CountDownLatch cnt = new CountDownLatch(1);
 
         Map<MethodSignature, CompletionItem> result = Collections.synchronizedMap(new HashMap<MethodSignature, CompletionItem>());
         try {
-            javaSource.runUserActionTask(new MethodCompletionHelper(cnt, javaSource, className, typeParameters,
+            javaSource.runUserActionTask(new MethodCompletionHelper(cnt, javaSource, f, className, typeParameters,
                     levels, prefix, anchor, result, emphasise, nameOnly), true);
         } catch (IOException ex) {
             LOG.log(Level.FINEST, "Problem in runUserActionTask :  {0}", ex.getMessage());
@@ -114,8 +120,9 @@ public final class JavaElementHandler {
         CountDownLatch cnt = new CountDownLatch(1);
 
         Map<FieldSignature, CompletionItem> result = Collections.synchronizedMap(new HashMap<FieldSignature, CompletionItem>());
+        FileObject f = info.getSnapshot().getSource().getFileObject();
         try {
-            javaSource.runUserActionTask(new FieldCompletionHelper(cnt, javaSource, className,
+            javaSource.runUserActionTask(new FieldCompletionHelper(cnt, javaSource, f, className,
                     Collections.singleton(AccessLevel.PUBLIC), prefix, anchor, result, emphasise), true);
         } catch (IOException ex) {
             LOG.log(Level.FINEST, "Problem in runUserActionTask :  {0}", ex.getMessage());
@@ -154,6 +161,8 @@ public final class JavaElementHandler {
 
         private final JavaSource javaSource;
 
+        private final FileObject groovySource;
+
         private final String className;
 
         private final String[] typeParameters;
@@ -170,12 +179,13 @@ public final class JavaElementHandler {
 
         private final boolean nameOnly;
 
-        public MethodCompletionHelper(CountDownLatch cnt, JavaSource javaSource, String className,
+        public MethodCompletionHelper(CountDownLatch cnt, JavaSource javaSource, FileObject groovySource, String className, 
                 String[] typeParameters, Set<AccessLevel> levels, String prefix, int anchor,
                 Map<MethodSignature, CompletionItem> proposals, boolean emphasise, boolean nameOnly) {
 
             this.cnt = cnt;
             this.javaSource = javaSource;
+            this.groovySource = groovySource;
             this.className = className;
             this.typeParameters = typeParameters;
             this.levels = levels;
@@ -219,13 +229,29 @@ public final class JavaElementHandler {
                     if (simpleName.toUpperCase(Locale.ENGLISH).startsWith(prefix.toUpperCase(Locale.ENGLISH)) &&
                         !simpleName.contains("$")) {
                         
-                        proposals.put(getSignature(te, element, typeParameters, info.getTypes()), CompletionItem.forJavaMethod(
-                                className, simpleName, params, returnType, element.getModifiers(), anchor, emphasise, nameOnly));
+                        JavaElementHandle h = new JavaElementHandle(
+                                simpleName, className, ElementHandle.create(element),
+                                signatureOf(info, element), Utilities.modelModifiersToGsf(element.getModifiers()));
+                        
+                        CompletionItem ci = CompletionItem.forJavaMethod(
+                                        className, simpleName, params, returnType, element.getModifiers(), anchor, emphasise, nameOnly);
+                        proposals.put(getSignature(te, element, typeParameters, info.getTypes()), 
+                                CompletionAccessor.instance().assignHandle(ci, h)
+                        );
                     }
                 }
             }
 
             cnt.countDown();
+        }
+        
+        private List<String> signatureOf(CompilationInfo info, ExecutableElement exe) {
+            List<String> fqns = new ArrayList<>(exe.getParameters().size());
+            for (VariableElement v : exe.getParameters()) {
+                fqns.add(info.getTypeUtilities().getTypeName(v.asType(), TypeUtilities.TypeNameOptions.PRINT_FQN).
+                        toString());
+            }
+            return fqns;
         }
         
         private List<String> getParameterListForMethod(ExecutableElement exe) {
@@ -312,13 +338,16 @@ public final class JavaElementHandler {
         private final boolean emphasise;
 
         private final Map<FieldSignature, CompletionItem> proposals;
-
-        public FieldCompletionHelper(CountDownLatch cnt, JavaSource javaSource, String className,
+        
+        private final FileObject groovySource;
+        
+        public FieldCompletionHelper(CountDownLatch cnt, JavaSource javaSource, FileObject groovySource, String className,
                 Set<AccessLevel> levels, String prefix, int anchor,
                 Map<FieldSignature, CompletionItem> proposals, boolean emphasise) {
 
             this.cnt = cnt;
             this.javaSource = javaSource;
+            this.groovySource = groovySource;
             this.className = className;
             this.levels = levels;
             this.prefix = prefix;
@@ -360,9 +389,15 @@ public final class JavaElementHandler {
                             if (LOG.isLoggable(Level.FINEST)) {
                                 LOG.log(Level.FINEST, simpleName + " " + type.toString());
                             }
+                            
+                            JavaElementHandle jh = new JavaElementHandle(
+                                    simpleName, className, ElementHandle.create(element), null, 
+                                    Utilities.modelModifiersToGsf(element.getModifiers()));
 
-                            proposals.put(getSignature(te, element), new CompletionItem.JavaFieldItem(
-                                    className, simpleName, type, element.getModifiers(), anchor, emphasise));
+                            CompletionItem ci = new CompletionItem.JavaFieldItem(
+                                        className, simpleName, type, element.getModifiers(), anchor, emphasise);
+                            proposals.put(getSignature(te, element), 
+                                CompletionAccessor.instance().assignHandle(ci, jh));
                         }
                     }
                 }

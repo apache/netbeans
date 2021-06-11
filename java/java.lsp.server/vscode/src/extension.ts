@@ -207,6 +207,35 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             throw `Client ${c} doesn't support new from template`;
         }
     }));
+    context.subscriptions.push(commands.registerCommand('java.workspace.newproject', async (ctx) => {
+        let c : LanguageClient = await client;
+        const commands = await vscode.commands.getCommands();
+        if (commands.includes('java.new.project')) {
+            function ctxUri(): vscode.Uri | undefined {
+                if (ctx && ctx.fsPath) {
+                    return ctx as vscode.Uri;
+                }
+                return vscode.window.activeTextEditor?.document?.uri;
+            }
+
+            const res = await vscode.commands.executeCommand('java.new.project', ctxUri()?.toString());
+            if (typeof res === 'string') {
+                let newProject = vscode.Uri.parse(res as string);
+
+                const OPEN_IN_NEW_WINDOW = 'Open in new window';
+                const ADD_TO_CURRENT_WORKSPACE = 'Add to current workspace';
+
+                const value = await vscode.window.showInformationMessage('New project created', OPEN_IN_NEW_WINDOW, ADD_TO_CURRENT_WORKSPACE);
+                if (value === OPEN_IN_NEW_WINDOW) {
+                    await vscode.commands.executeCommand('vscode.openFolder', newProject, true);
+                } else if (value === ADD_TO_CURRENT_WORKSPACE) {
+                    vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders.length : 0, undefined, { uri: newProject });
+                }
+            }
+        } else {
+            throw `Client ${c} doesn't support new project`;
+        }
+    }));
     context.subscriptions.push(commands.registerCommand('java.workspace.compile', () => {
         return window.withProgress({ location: ProgressLocation.Window }, p => {
             return new Promise(async (resolve, reject) => {
@@ -525,7 +554,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             }
         }
 
-        
+
         let c = new LanguageClient(
                 'java',
                 'NetBeans Java',

@@ -26,7 +26,9 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
@@ -41,6 +43,7 @@ import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
+import org.openide.loaders.TemplateWizard;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -118,8 +121,13 @@ class LspTemplateUI {
             try {
                 DataObject source = sourceAndTarget[0];
                 DataFolder target = (DataFolder) sourceAndTarget[1];
-                DataObject newPrj = source.createFromTemplate(target, name);
-                return (Object) newPrj.getPrimaryFile().toURI().toString();
+                Map<String,String> prjParams = new HashMap<String,String>();
+                prjParams.put("version", "1.0-SNAPSHOT");
+                prjParams.put("artifactId", name);
+                prjParams.put("groupId", target.getName());
+
+                DataObject newObject = source.createFromTemplate(target, name, prjParams);
+                return (Object) newObject.getPrimaryFile().toURI().toString();
             } catch (IOException ex) {
                 throw raise(RuntimeException.class, ex);
             }

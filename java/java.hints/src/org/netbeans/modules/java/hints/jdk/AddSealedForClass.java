@@ -43,6 +43,7 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.TreeMaker;
+import org.netbeans.modules.editor.java.TreeShims;
 import org.netbeans.modules.java.editor.overridden.ComputeOverriders;
 import org.netbeans.modules.java.editor.overridden.ElementDescription;
 import org.netbeans.modules.java.source.builder.TreeFactory;
@@ -106,37 +107,20 @@ public class AddSealedForClass {
         
         AtomicBoolean cancel = new AtomicBoolean();
         cancel.set(false);
-        Map<ElementHandle<? extends Element>, List<ElementDescription>> subClasses = new ComputeOverriders(cancel).process(info, null, null, false);
+        Map<ElementHandle<? extends Element>, List<ElementDescription>> subClasses = new ComputeOverriders(cancel).processOneClass(info, null, null, false,typeElement.getQualifiedName().toString());
+        if(subClasses.isEmpty())return null;
         Iterator<ElementHandle<? extends Element>> iterator = subClasses.keySet().iterator();
-        List<ElementDescription> currentSubClasses = new ArrayList<>();
-        while (iterator.hasNext()) {
-            ElementHandle eh = iterator.next();
-            if (eh.getBinaryName().substring(eh.getQualifiedName().lastIndexOf(".") + 1).equals(cls.getSimpleName().toString())) {
-                currentSubClasses = subClasses.get(eh);
-                break;
-            }
-        }
-       
-        Set<ElementDescription> subClassesToRemove = new HashSet<>();
-        for (int i = 0; i < currentSubClasses.size(); i++) {
-            subClassesToRemove.addAll(subClasses.getOrDefault(currentSubClasses.get(i).getHandle(), new ArrayList<>()));
-        }
+        ElementHandle currentClassHandle=iterator.next();
+        List<ElementDescription> currentSubClasses=subClasses.get(currentClassHandle);
+        //Set<ElementDescription> subClassesToRemove = new HashSet<>();
+        
         PackageElement currentPackageElement = (PackageElement) info.getElementUtilities().outermostTypeElement(typeElement).getEnclosingElement();
-        boolean isModule=info.getElements().getModuleOf(typeElement).isUnnamed();
+        boolean isModule=!info.getElements().getModuleOf(typeElement).isUnnamed();
         if(!isModule){
             for (int i = 0; i < currentSubClasses.size(); i++) {
                 String currentSubClass = currentSubClasses.get(i).getHandle().getQualifiedName();
                 if(!currentSubClass.substring(0,currentSubClass.lastIndexOf(".")).equals(currentPackageElement.getQualifiedName().toString())){
                     return null;
-                }
-            }
-        }
-        for (int i = 0; i < currentSubClasses.size(); i++) {
-            for (ElementDescription elementDescription : subClassesToRemove) {
-                if (currentSubClasses.get(i).getHandle().getQualifiedName().equals(elementDescription.getHandle().getQualifiedName())) {
-                    currentSubClasses.remove(i);
-                    i--;
-                    break;
                 }
             }
         }

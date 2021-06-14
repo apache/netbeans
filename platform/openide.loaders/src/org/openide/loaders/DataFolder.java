@@ -835,10 +835,11 @@ public class DataFolder extends MultiDataObject implements DataObject.Container 
         DataFolder newFolder = (DataFolder)super.handleCreateFromTemplate (f, name);
         Enumeration<DataObject> en = children ();
 
+        Map<String, Object> params = CreateAction.getCallParameters(null);
         while (en.hasMoreElements ()) {
             try {
                 DataObject obj = en.nextElement ();
-                obj.createFromTemplate (newFolder);
+                obj.createFromTemplate (newFolder, null, params);
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }

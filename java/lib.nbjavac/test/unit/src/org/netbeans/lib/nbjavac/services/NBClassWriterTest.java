@@ -39,7 +39,6 @@ import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 import org.netbeans.junit.NbTestCase;
 
-import static org.netbeans.lib.nbjavac.services.Utilities.DEV_NULL;
 
 /**
  *
@@ -88,7 +87,7 @@ public class NBClassWriterTest extends NbTestCase {
         std.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singleton(workingDir));
 
         Context context = new Context();
-        NBLog.preRegister(context, DEV_NULL, DEV_NULL, DEV_NULL);
+        NBLog.preRegister(context);
         final JavacTaskImpl ct = (JavacTaskImpl) ((JavacTool)tool).getTask(null, std, null, Arrays.asList("-source", "1.7", "-target", "1.7"), null, Arrays.asList(new MyFileObject(code)), context);
 
         NBClassReader.preRegister(ct.getContext());
@@ -107,7 +106,7 @@ public class NBClassWriterTest extends NbTestCase {
         std.setLocation(StandardLocation.CLASS_PATH, Collections.singleton(workingDir));
 
         Context context = new Context();
-        NBLog.preRegister(context, DEV_NULL, DEV_NULL, DEV_NULL);
+        NBLog.preRegister(context);
         JavacTaskImpl ct = (JavacTaskImpl)((JavacTool)tool).getTask(null, std, null, Arrays.asList("-source", "1.8", "-target", "1.8"), null, Arrays.<JavaFileObject>asList(), context);
 
         NBClassReader.preRegister(ct.getContext());

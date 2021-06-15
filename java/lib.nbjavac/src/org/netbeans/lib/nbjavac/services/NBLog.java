@@ -22,7 +22,6 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.Log;
-import java.io.PrintWriter;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,11 +47,8 @@ public final class NBLog extends Log {
     private Set<Integer> seenPartialReparsePositions = new HashSet<>();
 
     private NBLog(
-            final Context context,
-            final PrintWriter errWriter,
-            final PrintWriter warnWriter,
-            final PrintWriter noticeWriter) {
-        super(context, errWriter, warnWriter, noticeWriter);
+            final Context context) {
+        super(context);
     }
 
     public static NBLog instance(Context context) {
@@ -63,18 +59,11 @@ public final class NBLog extends Log {
         return (NBLog) log;
     }
     
-    public static void preRegister(Context context,
-                                   final PrintWriter errWriter,
-                                   final PrintWriter warnWriter,
-                                   final PrintWriter noticeWriter) {
+    public static void preRegister(Context context) {
         context.put(logKey, new Context.Factory<Log>() {
             @Override
             public Log make(Context c) {
-                return new NBLog(
-                    c,
-                    errWriter,
-                    warnWriter,
-                    noticeWriter);
+                return new NBLog(c);
             }
         });
     }

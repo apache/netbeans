@@ -832,18 +832,21 @@ public class DataFolder extends MultiDataObject implements DataObject.Container 
     protected DataObject handleCreateFromTemplate (
         DataFolder f, String name
     ) throws IOException {
-        DataFolder newFolder = (DataFolder)super.handleCreateFromTemplate (f, name);
-        Enumeration<DataObject> en = children ();
+        int[] fileBuilderUsed = { 0 };
+        DataFolder newFolder = (DataFolder)super.handleCreateFromTemplate (f, name, fileBuilderUsed);
+        if (fileBuilderUsed[0] == 0) {
+            Enumeration<DataObject> en = children ();
 
-        while (en.hasMoreElements ()) {
-            try {
-                DataObject obj = en.nextElement ();
-                obj.createFromTemplate (newFolder);
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
+            Map<String, Object> params = CreateAction.getCallParameters(null);
+            while (en.hasMoreElements ()) {
+                try {
+                    DataObject obj = en.nextElement ();
+                    obj.createFromTemplate (newFolder, null, params);
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
         }
-
         return newFolder;
     }
 

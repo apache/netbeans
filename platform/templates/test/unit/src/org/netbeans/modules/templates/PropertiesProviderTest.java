@@ -20,18 +20,18 @@
 package org.netbeans.modules.templates;
 
 import java.awt.Dialog;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.api.templates.CreateDescriptor;
+import org.netbeans.api.templates.CreateFromTemplateHandler;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.spi.queries.FileEncodingQueryImplementation;
@@ -233,16 +233,74 @@ public class PropertiesProviderTest extends NbTestCase {
         }
     }
 
-    private static String readChars(FileObject fo, Charset set) throws IOException {
-        CharBuffer arr = CharBuffer.allocate((int)fo.getSize() * 2);
-        BufferedReader r = new BufferedReader(new InputStreamReader(fo.getInputStream(), set));
-        while (r.read(arr) != -1) {
-            // again
+    public static final class JustCreateFolderHandler extends CreateFromTemplateHandler {
+        @Override
+        protected boolean accept(CreateDescriptor desc) {
+            return Boolean.TRUE.equals(desc.getTemplate().getAttribute("justCreate"));
         }
-        r.close();
 
-        arr.flip();
-        return arr.toString();
+        @Override
+        protected List<FileObject> createFromTemplate(CreateDescriptor desc) throws IOException {
+            FileObject folder = desc.getTarget().createFolder(desc.getName());
+            for (Map.Entry<String, Object> entry : desc.getParameters().entrySet()) {
+                folder.setAttribute(entry.getKey(), entry.getValue());
+            }
+            return Collections.nCopies(1, folder);
+        }
+
+    }
+
+    public void testFolderTemplateHandledByHandler() throws Exception {
+        MockServices.setServices(JustCreateFolderHandler.class);
+
+        FileObject root = FileUtil.createMemoryFileSystem().getRoot();
+        FileObject tmplt = root.createFolder("tmplt");
+        tmplt.setAttribute("justCreate", true);
+        FileObject fo = FileUtil.createData(tmplt, "simpleObject.txt");
+        {
+            OutputStream os = fo.getOutputStream();
+            String txt =
+                "print('<html><h1>');print(firstName);print('</h1>');" +
+                "print('<h2>');print(lastName);print('</h2>');" +
+                "print('<h3>');print(title);print('</h3>');" +
+                "print('</html>');";
+            os.write(txt.getBytes());
+            os.close();
+        }
+        fo.setAttribute("javax.script.ScriptEngine", "js");
+
+
+        FileObject props = FileUtil.createData(FileUtil.getConfigRoot(),
+            "Templates/Properties/my.properties"
+        );
+
+        {
+            for (FileObject f : props.getChildren()) {
+                f.delete();
+            }
+            props.delete();
+        }
+
+        DataObject obj = DataObject.find(tmplt);
+
+        DataFolder folder = DataFolder.findFolder(FileUtil.createFolder(root, "target"));
+
+        Map<String,String> parameters = new HashMap<>();
+        parameters.put("firstName", "Yarda");
+        parameters.put("lastName", "Tulach");
+        parameters.put("title", "Anarchitect");
+        DataObject n = obj.createFromTemplate(folder, "complex", parameters);
+
+        assertEquals("Created in right place", folder, n.getFolder());
+        assertTrue("Folder created", n instanceof DataFolder);
+        assertEquals("Created with right name", "complex", n.getName());
+
+        DataFolder nf = (DataFolder) n;
+        DataObject[] arr = nf.getChildren();
+        assertEquals("No object created", 0, arr.length);
+        assertEquals("Yarda", nf.getPrimaryFile().getAttribute("firstName"));
+        assertEquals("Tulach", nf.getPrimaryFile().getAttribute("lastName"));
+        assertEquals("Anarchitect", nf.getPrimaryFile().getAttribute("title"));
     }
 
     public static final class DD extends DialogDisplayer {

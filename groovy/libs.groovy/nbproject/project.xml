@@ -53,11 +53,11 @@
                 <package>org.codehaus.groovy.transform.stc</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/groovy.jar</runtime-relative-path>
+                <runtime-relative-path>ext/groovy-3.0.8.jar</runtime-relative-path>
                 <binary-origin>external/groovy-3.0.8.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/groovy-ant.jar</runtime-relative-path>
+                <runtime-relative-path>ext/groovy-ant-3.0.8.jar</runtime-relative-path>
                 <binary-origin>external/groovy-ant-3.0.8.jar</binary-origin>
             </class-path-extension>
         </data>

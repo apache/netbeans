@@ -425,10 +425,12 @@ public final class Server {
         private void asyncOpenSelectedProjects0(CompletableFuture<Project[]> f, List<FileObject> projectCandidates, boolean asWorkspaceProjects) {
             List<Project> projects = new ArrayList<>();
             try {
-                for (FileObject candidate : projectCandidates) {
-                    Project prj = FileOwnerQuery.getOwner(candidate);
-                    if (prj != null) {
-                        projects.add(prj);
+                if (projectCandidates != null) {
+                    for (FileObject candidate : projectCandidates) {
+                        Project prj = FileOwnerQuery.getOwner(candidate);
+                        if (prj != null) {
+                            projects.add(prj);
+                        }
                     }
                 }
                 Project[] previouslyOpened;

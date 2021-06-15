@@ -43,7 +43,6 @@ import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
-import org.openide.loaders.TemplateWizard;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -125,6 +124,7 @@ class LspTemplateUI {
                 prjParams.put("version", "1.0-SNAPSHOT");
                 prjParams.put("artifactId", name);
                 prjParams.put("groupId", target.getName());
+                prjParams.put("packageBase", target.getName());
 
                 DataObject newObject = source.createFromTemplate(target, name, prjParams);
                 return (Object) newObject.getPrimaryFile().toURI().toString();

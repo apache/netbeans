@@ -42,7 +42,14 @@ import org.openide.util.NbBundle.Messages;
  *
  * @author mkleint
  */
-@TemplateRegistration(folder=ArchetypeWizards.TEMPLATE_FOLDER, position=100, displayName="#LBL_Maven_Quickstart_Archetype", iconBase="org/netbeans/modules/maven/resources/jaricon.png", description="quickstart.html")
+@TemplateRegistration(
+    id = "JavaApplication",
+    displayName="#LBL_Maven_Quickstart_Archetype",
+    iconBase="org/netbeans/modules/maven/resources/jaricon.png",
+    description="quickstart.html",
+    folder=ArchetypeWizards.TEMPLATE_FOLDER,
+    position=100
+)
 @Messages("LBL_Maven_Quickstart_Archetype=Java Application")
 public class SimpleJavaNativeMWI extends IDENativeMavenWizardIterator {
 

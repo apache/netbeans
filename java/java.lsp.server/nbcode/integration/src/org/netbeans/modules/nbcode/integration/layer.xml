@@ -32,7 +32,6 @@
         <folder name="Project">
             <file name="AntJava_hidden"/>
             <file name="ClientSide_hidden"/>
-            <file name="Gradle_hidden"/>
             <file name="Import_hidden"/>
             <folder name="Maven2">
                 <file name="org-netbeans-modules-fish-payara-micro-project-ui-MicroProjectWizardIterator-createWebAppIterator_hidden"/>
@@ -43,7 +42,6 @@
                 <file name="org-netbeans-modules-maven-newproject-ExistingWizardIterator_hidden"/>
                 <file name="org-netbeans-modules-maven-newproject-MavenWizardIterator_hidden"/>
                 <file name="org-netbeans-modules-maven-newproject-idenative-PomJavaNativeMWI_hidden"/>
-                <file name="org-netbeans-modules-maven-newproject-idenative-SimpleJavaNativeMWI_hidden"/>
                 <file name="org-netbeans-modules-maven-osgi-templates-BundleWizard-create_hidden"/>
                 <file name="org-netbeans-modules-micronaut-newproject-MicronautProjectWizardIterator-MavenMicronautProject_hidden"/>
             </folder>

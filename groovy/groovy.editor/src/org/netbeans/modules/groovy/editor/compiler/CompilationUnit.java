@@ -70,7 +70,7 @@ public final class CompilationUnit extends org.codehaus.groovy.control.Compilati
         private final ClassNodeCache cache;
         private final GroovyParser parser;
         private final JavaSource javaSource;
-
+        private final HashMap<String, ClassNode> temp = new HashMap<>();
 
         public CompileUnit(GroovyParser parser, GroovyClassLoader classLoader,
                 CodeSource codeSource, CompilerConfiguration config,
@@ -90,6 +90,11 @@ public final class CompilationUnit extends org.codehaus.groovy.control.Compilati
             }
 
             ClassNode classNode = cache.get(name);
+            if (classNode != null) {
+                return classNode;
+            }
+
+            classNode = temp.get(name);
             if (classNode != null) {
                 return classNode;
             }
@@ -116,13 +121,19 @@ public final class CompilationUnit extends org.codehaus.groovy.control.Compilati
                         Elements elements = controller.getElements();
                         TypeElement typeElement = ElementSearch.getClass(elements, name);
                         if (typeElement != null) {
-                            final ClassNode node = createClassNode(name, typeElement);
-                            if (node != null) {
-                                cache.put(name, node);
+                            try {
+                                final ClassNode node = createClassNode(name, 0, null, ClassNode.EMPTY_ARRAY, null);
+                                temp.put(name, node);
+                                initClassNode(node, typeElement);
+                                if (node != null) {
+                                    cache.put(name, node);
+                                }
+                                //else type exists but groovy support cannot create it from javac
+                                //delegate to slow class loading, workaround of fix of issue # 206811
+                                holder[0] = node;
+                            } finally {
+                                temp.remove(name);
                             }
-                            //else type exists but groovy support cannot create it from javac
-                            //delegate to slow class loading, workaround of fix of issue # 206811
-                            holder[0] = node;
                         } else {
                             cache.put(name, null);
                         }
@@ -136,22 +147,23 @@ public final class CompilationUnit extends org.codehaus.groovy.control.Compilati
             return null;
         }
 
-        private ClassNode createClassNode(String name, TypeElement typeElement) {
+        private void initClassNode(ClassNode node, TypeElement typeElement) {
             ElementKind kind = typeElement.getKind();
             if (kind == ElementKind.ANNOTATION_TYPE) {
-                return createAnnotationType(name, typeElement);
+                initAnnotationType(node, typeElement);
             } else if (kind == ElementKind.INTERFACE) {
-                return createInterfaceKind(name, typeElement);
+                initInterfaceKind(node, typeElement);
             } else {
-                return createClassType(name, typeElement);
+                initClassType(node, typeElement);
             }
         }
 
-        private ClassNode createAnnotationType(String name, TypeElement typeElement) {
-            return new ClassNode(name, Opcodes.ACC_ANNOTATION, ClassHelper.Annotation_TYPE, null, MixinNode.EMPTY_ARRAY);
+        private void initAnnotationType(ClassNode node, TypeElement typeElement) {
+            node.setModifiers(Opcodes.ACC_ANNOTATION);
+            node.setSuperClass(ClassHelper.Annotation_TYPE);
         }
 
-        private ClassNode createInterfaceKind(String name, TypeElement typeElement) {
+        private void initInterfaceKind(ClassNode node, TypeElement typeElement) {
             int modifiers = 0;
             Set<ClassNode> interfaces = new HashSet<ClassNode>();
             Set<GenericsType> generics = new HashSet<>();
@@ -168,10 +180,12 @@ public final class CompilationUnit extends org.codehaus.groovy.control.Compilati
             for (TypeMirror interfaceType : typeElement.getInterfaces()) {
                 interfaces.add(new ClassNode(Utilities.getClassName(interfaceType).toString(), Opcodes.ACC_INTERFACE, null));
             }
-            return createClassNode(name, modifiers, null, interfaces.toArray(new ClassNode[interfaces.size()]), generics);
+            node.setModifiers(modifiers);
+            node.setInterfaces(interfaces.toArray(new ClassNode[interfaces.size()]));
+            node.setGenericsTypes(generics.toArray(new GenericsType[generics.size()]));
         }
 
-        private ClassNode createClassType(String name, TypeElement typeElement) {
+        private void initClassType(ClassNode node, TypeElement typeElement) {
             // initialize supertypes
             // super class is required for try {} catch block exception type
             Stack<DeclaredType> supers = new Stack<DeclaredType>();
@@ -217,7 +231,8 @@ public final class CompilationUnit extends org.codehaus.groovy.control.Compilati
                 superClass = createClassNode(Utilities.getClassName(supers.pop()).toString(), 0, superClass, new ClassNode[0], generics);
             }
 
-            return createClassNode(name, 0, superClass, new ClassNode[0], generics);
+            node.setSuperClass(superClass);
+            node.setGenericsTypes(generics.toArray(new GenericsType[generics.size()]));
         }
 
         private ClassNode createClassNode(String name, int modifiers, ClassNode superClass, ClassNode[] interfaces, Set<GenericsType> generics) {

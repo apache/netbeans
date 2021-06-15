@@ -22,13 +22,10 @@
 <licenseinfo>
     <fileset>
         <file>windows/netbeans.ico</file>
-        <file>macosx/NetBeansLauncher/netbeans.icns</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
     <fileset>
-        <file>macosx/NetBeansLauncher/English.lproj/InfoPlist.strings</file>
-        <file>macosx/NetBeansLauncher/English.lproj/Localizable.strings</file>
         <file>windows/netbeans.exe.manifest</file>
         <file>windows/netbeans64.exe.manifest</file>
         <license ref="Apache-2.0-ASF" />

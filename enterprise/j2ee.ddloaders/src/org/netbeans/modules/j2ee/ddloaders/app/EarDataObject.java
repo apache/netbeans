@@ -92,7 +92,7 @@ public class EarDataObject extends DD2beansDataObject
     private boolean unparsable=true;
     
     /** List of updates to ejbs that should be processed */
-    private Vector updates;
+    private Vector<DDChangeEvent> updates;
     
     private RequestProcessor.Task updateTask;
 
@@ -142,7 +142,7 @@ public class EarDataObject extends DD2beansDataObject
     }
 
     private void refreshSourceFolders () {
-        ArrayList srcRootList = new ArrayList ();
+        List<FileObject> srcRootList = new ArrayList<>();
         
         Project project = FileOwnerQuery.getOwner (getPrimaryFile ());
         if (project != null) {
@@ -353,7 +353,7 @@ public class EarDataObject extends DD2beansDataObject
     public void deploymentChange (DDChangeEvent evt) {
         synchronized (this) {
             if (updates == null) {
-                updates = new Vector ();
+                updates = new Vector<>();
             }
             updates.addElement (evt);
         }

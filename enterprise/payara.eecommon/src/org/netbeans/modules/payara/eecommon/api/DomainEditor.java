@@ -460,7 +460,7 @@ public class DomainEditor {
     
 
     public HashMap<String,Map> getSunDatasourcesFromXml(){
-        HashMap<String,Map> dSources = new HashMap<String,Map>();
+        HashMap<String,Map> dSources = new HashMap<>();
         Document domainDoc = getDomainDocument();
         if (domainDoc != null) {
             HashMap<String,NamedNodeMap> dsMap = getDataSourcesAttrMap(domainDoc);
@@ -526,7 +526,7 @@ public class DomainEditor {
     }
 
     public HashMap<String,Map> getConnPoolsFromXml(){
-        HashMap<String,Map> pools = new HashMap<String,Map>();
+        HashMap<String,Map> pools = new HashMap<>();
         Document domainDoc = getDomainDocument();
         if (domainDoc != null) {
             HashMap<String,Node> cpMap = getConnPoolsNodeMap(domainDoc);

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.27
+#Version 1.29
 
 CLSS public abstract interface java.io.Serializable
 
@@ -362,13 +362,14 @@ cons public init(java.lang.Class<?>,junit.framework.JUnit4TestAdapterCache)
 intf junit.framework.Test
 intf org.junit.runner.Describable
 intf org.junit.runner.manipulation.Filterable
-intf org.junit.runner.manipulation.Sortable
+intf org.junit.runner.manipulation.Orderable
 meth public int countTestCases()
 meth public java.lang.Class<?> getTestClass()
 meth public java.lang.String toString()
 meth public java.util.List<junit.framework.Test> getTests()
 meth public org.junit.runner.Description getDescription()
 meth public void filter(org.junit.runner.manipulation.Filter) throws org.junit.runner.manipulation.NoTestsRemainException
+meth public void order(org.junit.runner.manipulation.Orderer) throws org.junit.runner.manipulation.InvalidOrderingException
 meth public void run(junit.framework.TestResult)
 meth public void sort(org.junit.runner.manipulation.Sorter)
 supr java.lang.Object
@@ -1001,7 +1002,11 @@ intf java.lang.annotation.Annotation
 CLSS public org.junit.Assert
 cons protected init()
 meth public static <%0 extends java.lang.Object> void assertThat(java.lang.String,{%%0},org.hamcrest.Matcher<? super {%%0}>)
+ anno 0 java.lang.Deprecated()
 meth public static <%0 extends java.lang.Object> void assertThat({%%0},org.hamcrest.Matcher<? super {%%0}>)
+ anno 0 java.lang.Deprecated()
+meth public static <%0 extends java.lang.Throwable> {%%0} assertThrows(java.lang.Class<{%%0}>,org.junit.function.ThrowingRunnable)
+meth public static <%0 extends java.lang.Throwable> {%%0} assertThrows(java.lang.String,java.lang.Class<{%%0}>,org.junit.function.ThrowingRunnable)
 meth public static void assertArrayEquals(boolean[],boolean[])
 meth public static void assertArrayEquals(byte[],byte[])
 meth public static void assertArrayEquals(char[],char[])
@@ -1062,6 +1067,7 @@ supr java.lang.Object
 
 CLSS public org.junit.Assume
 cons public init()
+ anno 0 java.lang.Deprecated()
 meth public !varargs static void assumeNotNull(java.lang.Object[])
 meth public static <%0 extends java.lang.Object> void assumeThat(java.lang.String,{%%0},org.hamcrest.Matcher<{%%0}>)
 meth public static <%0 extends java.lang.Object> void assumeThat({%%0},org.hamcrest.Matcher<{%%0}>)
@@ -1095,6 +1101,7 @@ CLSS public abstract interface !annotation org.junit.ClassRule
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD, METHOD])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault int order()
 
 CLSS public org.junit.ComparisonFailure
 cons public init(java.lang.String,java.lang.String,java.lang.String)
@@ -1120,7 +1127,9 @@ meth public abstract !hasdefault java.lang.String value()
 CLSS public abstract interface !annotation org.junit.Rule
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD, METHOD])
+fld public final static int DEFAULT_ORDER = -1
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault int order()
 
 CLSS public abstract interface !annotation org.junit.Test
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -1133,6 +1142,11 @@ meth public abstract !hasdefault long timeout()
 CLSS public static org.junit.Test$None
  outer org.junit.Test
 supr java.lang.Throwable
+hfds serialVersionUID
+
+CLSS public org.junit.TestCouldNotBeSkippedException
+cons public init(org.junit.internal.AssumptionViolatedException)
+supr java.lang.RuntimeException
 hfds serialVersionUID
 
 CLSS public org.junit.internal.AssumptionViolatedException
@@ -1156,10 +1170,11 @@ CLSS public org.junit.internal.runners.JUnit38ClassRunner
 cons public init(java.lang.Class<?>)
 cons public init(junit.framework.Test)
 intf org.junit.runner.manipulation.Filterable
-intf org.junit.runner.manipulation.Sortable
+intf org.junit.runner.manipulation.Orderable
 meth public junit.framework.TestListener createAdaptingListener(org.junit.runner.notification.RunNotifier)
 meth public org.junit.runner.Description getDescription()
 meth public void filter(org.junit.runner.manipulation.Filter) throws org.junit.runner.manipulation.NoTestsRemainException
+meth public void order(org.junit.runner.manipulation.Orderer) throws org.junit.runner.manipulation.InvalidOrderingException
 meth public void run(org.junit.runner.notification.RunNotifier)
 meth public void sort(org.junit.runner.manipulation.Sorter)
 supr org.junit.runner.Runner
@@ -1208,11 +1223,13 @@ meth public <%0 extends java.lang.Object> void checkThat(java.lang.String,{%%0},
 meth public <%0 extends java.lang.Object> void checkThat({%%0},org.hamcrest.Matcher<{%%0}>)
 meth public <%0 extends java.lang.Object> {%%0} checkSucceeds(java.util.concurrent.Callable<{%%0}>)
 meth public void addError(java.lang.Throwable)
+meth public void checkThrows(java.lang.Class<? extends java.lang.Throwable>,org.junit.function.ThrowingRunnable)
 supr org.junit.rules.Verifier
 hfds errors
 
 CLSS public org.junit.rules.ExpectedException
 intf org.junit.rules.TestRule
+meth public final boolean isAnyExceptionExpected()
 meth public org.junit.rules.ExpectedException handleAssertionErrors()
  anno 0 java.lang.Deprecated()
 meth public org.junit.rules.ExpectedException handleAssumptionViolatedExceptions()
@@ -1220,9 +1237,10 @@ meth public org.junit.rules.ExpectedException handleAssumptionViolatedExceptions
 meth public org.junit.rules.ExpectedException reportMissingExceptionWithMessage(java.lang.String)
 meth public org.junit.runners.model.Statement apply(org.junit.runners.model.Statement,org.junit.runner.Description)
 meth public static org.junit.rules.ExpectedException none()
+ anno 0 java.lang.Deprecated()
 meth public void expect(java.lang.Class<? extends java.lang.Throwable>)
 meth public void expect(org.hamcrest.Matcher<?>)
-meth public void expectCause(org.hamcrest.Matcher<? extends java.lang.Throwable>)
+meth public void expectCause(org.hamcrest.Matcher<?>)
 meth public void expectMessage(java.lang.String)
 meth public void expectMessage(org.hamcrest.Matcher<java.lang.String>)
 supr java.lang.Object
@@ -1255,7 +1273,7 @@ meth public void evaluate() throws java.lang.Throwable
 supr org.junit.runners.model.Statement
 hfds statement
 
-CLSS public abstract org.junit.rules.Stopwatch
+CLSS public org.junit.rules.Stopwatch
 cons public init()
 intf org.junit.rules.TestRule
 meth protected void failed(long,java.lang.Throwable,org.junit.runner.Description)
@@ -1269,8 +1287,10 @@ hfds clock,endNanos,startNanos
 hcls Clock,InternalWatcher
 
 CLSS public org.junit.rules.TemporaryFolder
+cons protected init(org.junit.rules.TemporaryFolder$Builder)
 cons public init()
 cons public init(java.io.File)
+innr public static Builder
 meth protected void after()
 meth protected void before() throws java.lang.Throwable
 meth public !varargs java.io.File newFolder(java.lang.String[]) throws java.io.IOException
@@ -1279,10 +1299,20 @@ meth public java.io.File newFile() throws java.io.IOException
 meth public java.io.File newFile(java.lang.String) throws java.io.IOException
 meth public java.io.File newFolder() throws java.io.IOException
 meth public java.io.File newFolder(java.lang.String) throws java.io.IOException
+meth public static org.junit.rules.TemporaryFolder$Builder builder()
 meth public void create() throws java.io.IOException
 meth public void delete()
 supr org.junit.rules.ExternalResource
-hfds folder,parentFolder
+hfds TEMP_DIR_ATTEMPTS,TMP_PREFIX,assureDeletion,folder,parentFolder
+
+CLSS public static org.junit.rules.TemporaryFolder$Builder
+ outer org.junit.rules.TemporaryFolder
+cons protected init()
+meth public org.junit.rules.TemporaryFolder build()
+meth public org.junit.rules.TemporaryFolder$Builder assureDeletion()
+meth public org.junit.rules.TemporaryFolder$Builder parentFolder(java.io.File)
+supr java.lang.Object
+hfds assureDeletion,parentFolder
 
 CLSS public org.junit.rules.TestName
 cons public init()
@@ -1368,6 +1398,7 @@ CLSS public org.junit.runner.Description
 fld public final static org.junit.runner.Description EMPTY
 fld public final static org.junit.runner.Description TEST_MECHANISM
 intf java.io.Serializable
+meth public !varargs static org.junit.runner.Description createSuiteDescription(java.lang.Class<?>,java.lang.annotation.Annotation[])
 meth public !varargs static org.junit.runner.Description createSuiteDescription(java.lang.String,java.io.Serializable,java.lang.annotation.Annotation[])
 meth public !varargs static org.junit.runner.Description createSuiteDescription(java.lang.String,java.lang.annotation.Annotation[])
 meth public !varargs static org.junit.runner.Description createTestDescription(java.lang.Class<?>,java.lang.String,java.lang.annotation.Annotation[])
@@ -1426,6 +1457,18 @@ meth public void removeListener(org.junit.runner.notification.RunListener)
 supr java.lang.Object
 hfds notifier
 
+CLSS public abstract interface !annotation org.junit.runner.OrderWith
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.Class<? extends org.junit.runner.manipulation.Ordering$Factory> value()
+
+CLSS public final org.junit.runner.OrderWithValidator
+cons public init()
+meth public java.util.List<java.lang.Exception> validateAnnotatedClass(org.junit.runners.model.TestClass)
+supr org.junit.validator.AnnotationValidator
+
 CLSS public abstract org.junit.runner.Request
 cons public init()
 meth public !varargs static org.junit.runner.Request classes(java.lang.Class<?>[])
@@ -1433,6 +1476,7 @@ meth public !varargs static org.junit.runner.Request classes(org.junit.runner.Co
 meth public abstract org.junit.runner.Runner getRunner()
 meth public org.junit.runner.Request filterWith(org.junit.runner.Description)
 meth public org.junit.runner.Request filterWith(org.junit.runner.manipulation.Filter)
+meth public org.junit.runner.Request orderWith(org.junit.runner.manipulation.Ordering)
 meth public org.junit.runner.Request sortWith(java.util.Comparator<org.junit.runner.Description>)
 meth public static org.junit.runner.Request aClass(java.lang.Class<?>)
 meth public static org.junit.runner.Request classWithoutSuiteMethod(java.lang.Class<?>)
@@ -1445,6 +1489,7 @@ CLSS public org.junit.runner.Result
 cons public init()
 intf java.io.Serializable
 meth public boolean wasSuccessful()
+meth public int getAssumptionFailureCount()
 meth public int getFailureCount()
 meth public int getIgnoreCount()
 meth public int getRunCount()
@@ -1452,7 +1497,7 @@ meth public java.util.List<org.junit.runner.notification.Failure> getFailures()
 meth public long getRunTime()
 meth public org.junit.runner.notification.RunListener createListener()
 supr java.lang.Object
-hfds count,failures,ignoreCount,runTime,serialPersistentFields,serialVersionUID,serializedForm,startTime
+hfds assumptionFailureCount,count,failures,ignoreCount,runTime,serialPersistentFields,serialVersionUID,serializedForm,startTime
 hcls Listener,SerializedForm
 
 CLSS public abstract interface !annotation org.junit.runner.RunWith
@@ -1470,6 +1515,13 @@ meth public abstract void run(org.junit.runner.notification.RunNotifier)
 meth public int testCount()
 supr java.lang.Object
 
+CLSS public final org.junit.runner.manipulation.Alphanumeric
+cons public init()
+intf org.junit.runner.manipulation.Ordering$Factory
+meth public org.junit.runner.manipulation.Ordering create(org.junit.runner.manipulation.Ordering$Context)
+supr org.junit.runner.manipulation.Sorter
+hfds COMPARATOR
+
 CLSS public abstract org.junit.runner.manipulation.Filter
 cons public init()
 fld public final static org.junit.runner.manipulation.Filter ALL
@@ -1483,10 +1535,49 @@ supr java.lang.Object
 CLSS public abstract interface org.junit.runner.manipulation.Filterable
 meth public abstract void filter(org.junit.runner.manipulation.Filter) throws org.junit.runner.manipulation.NoTestsRemainException
 
+CLSS public org.junit.runner.manipulation.InvalidOrderingException
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+supr java.lang.Exception
+hfds serialVersionUID
+
 CLSS public org.junit.runner.manipulation.NoTestsRemainException
 cons public init()
 supr java.lang.Exception
 hfds serialVersionUID
+
+CLSS public abstract interface org.junit.runner.manipulation.Orderable
+intf org.junit.runner.manipulation.Sortable
+meth public abstract void order(org.junit.runner.manipulation.Orderer) throws org.junit.runner.manipulation.InvalidOrderingException
+
+CLSS public final org.junit.runner.manipulation.Orderer
+meth public java.util.List<org.junit.runner.Description> order(java.util.Collection<org.junit.runner.Description>) throws org.junit.runner.manipulation.InvalidOrderingException
+meth public void apply(java.lang.Object) throws org.junit.runner.manipulation.InvalidOrderingException
+supr java.lang.Object
+hfds ordering
+
+CLSS public abstract org.junit.runner.manipulation.Ordering
+cons public init()
+innr public abstract interface static Factory
+innr public static Context
+meth protected abstract java.util.List<org.junit.runner.Description> orderItems(java.util.Collection<org.junit.runner.Description>)
+meth public static org.junit.runner.manipulation.Ordering definedBy(java.lang.Class<? extends org.junit.runner.manipulation.Ordering$Factory>,org.junit.runner.Description) throws org.junit.runner.manipulation.InvalidOrderingException
+meth public static org.junit.runner.manipulation.Ordering definedBy(org.junit.runner.manipulation.Ordering$Factory,org.junit.runner.Description) throws org.junit.runner.manipulation.InvalidOrderingException
+meth public static org.junit.runner.manipulation.Ordering shuffledBy(java.util.Random)
+meth public void apply(java.lang.Object) throws org.junit.runner.manipulation.InvalidOrderingException
+supr java.lang.Object
+hfds CONSTRUCTOR_ERROR_FORMAT
+
+CLSS public static org.junit.runner.manipulation.Ordering$Context
+ outer org.junit.runner.manipulation.Ordering
+meth public org.junit.runner.Description getTarget()
+supr java.lang.Object
+hfds description
+
+CLSS public abstract interface static org.junit.runner.manipulation.Ordering$Factory
+ outer org.junit.runner.manipulation.Ordering
+meth public abstract org.junit.runner.manipulation.Ordering create(org.junit.runner.manipulation.Ordering$Context)
 
 CLSS public abstract interface org.junit.runner.manipulation.Sortable
 meth public abstract void sort(org.junit.runner.manipulation.Sorter)
@@ -1495,9 +1586,10 @@ CLSS public org.junit.runner.manipulation.Sorter
 cons public init(java.util.Comparator<org.junit.runner.Description>)
 fld public final static org.junit.runner.manipulation.Sorter NULL
 intf java.util.Comparator<org.junit.runner.Description>
+meth protected final java.util.List<org.junit.runner.Description> orderItems(java.util.Collection<org.junit.runner.Description>)
 meth public int compare(org.junit.runner.Description,org.junit.runner.Description)
 meth public void apply(java.lang.Object)
-supr java.lang.Object
+supr org.junit.runner.manipulation.Ordering
 hfds comparator
 
 CLSS public org.junit.runner.notification.Failure
@@ -1506,6 +1598,7 @@ intf java.io.Serializable
 meth public java.lang.String getMessage()
 meth public java.lang.String getTestHeader()
 meth public java.lang.String getTrace()
+meth public java.lang.String getTrimmedTrace()
 meth public java.lang.String toString()
 meth public java.lang.Throwable getException()
 meth public org.junit.runner.Description getDescription()
@@ -1522,6 +1615,8 @@ meth public void testIgnored(org.junit.runner.Description) throws java.lang.Exce
 meth public void testRunFinished(org.junit.runner.Result) throws java.lang.Exception
 meth public void testRunStarted(org.junit.runner.Description) throws java.lang.Exception
 meth public void testStarted(org.junit.runner.Description) throws java.lang.Exception
+meth public void testSuiteFinished(org.junit.runner.Description) throws java.lang.Exception
+meth public void testSuiteStarted(org.junit.runner.Description) throws java.lang.Exception
 supr java.lang.Object
 
 CLSS public abstract interface static !annotation org.junit.runner.notification.RunListener$ThreadSafe
@@ -1542,6 +1637,8 @@ meth public void fireTestIgnored(org.junit.runner.Description)
 meth public void fireTestRunFinished(org.junit.runner.Result)
 meth public void fireTestRunStarted(org.junit.runner.Description)
 meth public void fireTestStarted(org.junit.runner.Description)
+meth public void fireTestSuiteFinished(org.junit.runner.Description)
+meth public void fireTestSuiteStarted(org.junit.runner.Description)
 meth public void pleaseStop()
 meth public void removeListener(org.junit.runner.notification.RunListener)
 supr java.lang.Object
@@ -1558,9 +1655,11 @@ cons public init(java.lang.Class<?>) throws java.lang.Throwable
 supr org.junit.internal.runners.SuiteMethod
 
 CLSS public org.junit.runners.BlockJUnit4ClassRunner
+cons protected init(org.junit.runners.model.TestClass) throws org.junit.runners.model.InitializationError
 cons public init(java.lang.Class<?>) throws org.junit.runners.model.InitializationError
 meth protected boolean isIgnored(org.junit.runners.model.FrameworkMethod)
 meth protected java.lang.Object createTest() throws java.lang.Exception
+meth protected java.lang.Object createTest(org.junit.runners.model.FrameworkMethod) throws java.lang.Exception
 meth protected java.lang.String testName(org.junit.runners.model.FrameworkMethod)
 meth protected java.util.List<org.junit.rules.MethodRule> rules(java.lang.Object)
 meth protected java.util.List<org.junit.rules.TestRule> getTestRules(java.lang.Object)
@@ -1585,7 +1684,8 @@ meth protected void validateOnlyOneConstructor(java.util.List<java.lang.Throwabl
 meth protected void validateTestMethods(java.util.List<java.lang.Throwable>)
 meth protected void validateZeroArgConstructor(java.util.List<java.lang.Throwable>)
 supr org.junit.runners.ParentRunner<org.junit.runners.model.FrameworkMethod>
-hfds methodDescriptions
+hfds CURRENT_RULE_CONTAINER,PUBLIC_CLASS_VALIDATOR,methodDescriptions
+hcls RuleCollector
 
 CLSS public final org.junit.runners.JUnit4
 cons public init(java.lang.Class<?>) throws org.junit.runners.model.InitializationError
@@ -1595,20 +1695,33 @@ CLSS public final !enum org.junit.runners.MethodSorters
 fld public final static org.junit.runners.MethodSorters DEFAULT
 fld public final static org.junit.runners.MethodSorters JVM
 fld public final static org.junit.runners.MethodSorters NAME_ASCENDING
-meth public final static org.junit.runners.MethodSorters[] values()
 meth public java.util.Comparator<java.lang.reflect.Method> getComparator()
 meth public static org.junit.runners.MethodSorters valueOf(java.lang.String)
+meth public static org.junit.runners.MethodSorters[] values()
 supr java.lang.Enum<org.junit.runners.MethodSorters>
 hfds comparator
 
 CLSS public org.junit.runners.Parameterized
 cons public init(java.lang.Class<?>) throws java.lang.Throwable
+innr public abstract interface static !annotation AfterParam
+innr public abstract interface static !annotation BeforeParam
 innr public abstract interface static !annotation Parameter
 innr public abstract interface static !annotation Parameters
 innr public abstract interface static !annotation UseParametersRunnerFactory
-meth protected java.util.List<org.junit.runner.Runner> getChildren()
 supr org.junit.runners.Suite
-hfds DEFAULT_FACTORY,NO_RUNNERS,runners
+hcls AssumptionViolationRunner,RunnersFactory
+
+CLSS public abstract interface static !annotation org.junit.runners.Parameterized$AfterParam
+ outer org.junit.runners.Parameterized
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface static !annotation org.junit.runners.Parameterized$BeforeParam
+ outer org.junit.runners.Parameterized
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+intf java.lang.annotation.Annotation
 
 CLSS public abstract interface static !annotation org.junit.runners.Parameterized$Parameter
  outer org.junit.runners.Parameterized
@@ -1634,12 +1747,14 @@ meth public abstract !hasdefault java.lang.Class<? extends org.junit.runners.par
 
 CLSS public abstract org.junit.runners.ParentRunner<%0 extends java.lang.Object>
 cons protected init(java.lang.Class<?>) throws org.junit.runners.model.InitializationError
+cons protected init(org.junit.runners.model.TestClass) throws org.junit.runners.model.InitializationError
 intf org.junit.runner.manipulation.Filterable
-intf org.junit.runner.manipulation.Sortable
+intf org.junit.runner.manipulation.Orderable
 meth protected abstract java.util.List<{org.junit.runners.ParentRunner%0}> getChildren()
 meth protected abstract org.junit.runner.Description describeChild({org.junit.runners.ParentRunner%0})
 meth protected abstract void runChild({org.junit.runners.ParentRunner%0},org.junit.runner.notification.RunNotifier)
 meth protected boolean isIgnored({org.junit.runners.ParentRunner%0})
+meth protected final org.junit.runners.model.Statement withInterruptIsolation(org.junit.runners.model.Statement)
 meth protected final void runLeaf(org.junit.runners.model.Statement,org.junit.runner.Description,org.junit.runner.notification.RunNotifier)
 meth protected java.lang.String getName()
 meth protected java.lang.annotation.Annotation[] getRunnerAnnotations()
@@ -1649,16 +1764,19 @@ meth protected org.junit.runners.model.Statement classBlock(org.junit.runner.not
 meth protected org.junit.runners.model.Statement withAfterClasses(org.junit.runners.model.Statement)
 meth protected org.junit.runners.model.Statement withBeforeClasses(org.junit.runners.model.Statement)
 meth protected org.junit.runners.model.TestClass createTestClass(java.lang.Class<?>)
+ anno 0 java.lang.Deprecated()
 meth protected void collectInitializationErrors(java.util.List<java.lang.Throwable>)
 meth protected void validatePublicVoidNoArgMethods(java.lang.Class<? extends java.lang.annotation.Annotation>,boolean,java.util.List<java.lang.Throwable>)
 meth public final org.junit.runners.model.TestClass getTestClass()
 meth public org.junit.runner.Description getDescription()
 meth public void filter(org.junit.runner.manipulation.Filter) throws org.junit.runner.manipulation.NoTestsRemainException
+meth public void order(org.junit.runner.manipulation.Orderer) throws org.junit.runner.manipulation.InvalidOrderingException
 meth public void run(org.junit.runner.notification.RunNotifier)
 meth public void setScheduler(org.junit.runners.model.RunnerScheduler)
 meth public void sort(org.junit.runner.manipulation.Sorter)
 supr org.junit.runner.Runner
 hfds VALIDATORS,childrenLock,filteredChildren,scheduler,testClass
+hcls ClassRuleCollector
 
 CLSS public org.junit.runners.Suite
 cons protected init(java.lang.Class<?>,java.lang.Class<?>[]) throws org.junit.runners.model.InitializationError
@@ -1687,6 +1805,7 @@ meth public abstract <%0 extends java.lang.annotation.Annotation> {%%0} getAnnot
 meth public abstract java.lang.annotation.Annotation[] getAnnotations()
 
 CLSS public org.junit.runners.model.FrameworkField
+cons public init(java.lang.reflect.Field)
 meth protected int getModifiers()
 meth public <%0 extends java.lang.annotation.Annotation> {%%0} getAnnotation(java.lang.Class<{%%0}>)
 meth public boolean isShadowedBy(org.junit.runners.model.FrameworkField)
@@ -1742,11 +1861,23 @@ meth public java.util.List<java.lang.Throwable> getCauses()
 supr java.lang.Exception
 hfds fErrors,serialVersionUID
 
+CLSS public org.junit.runners.model.InvalidTestClassError
+cons public init(java.lang.Class<?>,java.util.List<java.lang.Throwable>)
+meth public java.lang.String getMessage()
+supr org.junit.runners.model.InitializationError
+hfds message,serialVersionUID
+
+CLSS public abstract interface org.junit.runners.model.MemberValueConsumer<%0 extends java.lang.Object>
+meth public abstract void accept(org.junit.runners.model.FrameworkMember<?>,{org.junit.runners.model.MemberValueConsumer%0})
+
 CLSS public org.junit.runners.model.MultipleFailureException
 cons public init(java.util.List<java.lang.Throwable>)
 meth public java.lang.String getMessage()
 meth public java.util.List<java.lang.Throwable> getFailures()
 meth public static void assertEmpty(java.util.List<java.lang.Throwable>) throws java.lang.Exception
+meth public void printStackTrace()
+meth public void printStackTrace(java.io.PrintStream)
+meth public void printStackTrace(java.io.PrintWriter)
 supr java.lang.Exception
 hfds fErrors,serialVersionUID
 
@@ -1775,6 +1906,8 @@ meth protected static <%0 extends org.junit.runners.model.FrameworkMember<{%%0}>
 meth protected void scanAnnotatedMembers(java.util.Map<java.lang.Class<? extends java.lang.annotation.Annotation>,java.util.List<org.junit.runners.model.FrameworkMethod>>,java.util.Map<java.lang.Class<? extends java.lang.annotation.Annotation>,java.util.List<org.junit.runners.model.FrameworkField>>)
 meth public <%0 extends java.lang.Object> java.util.List<{%%0}> getAnnotatedFieldValues(java.lang.Object,java.lang.Class<? extends java.lang.annotation.Annotation>,java.lang.Class<{%%0}>)
 meth public <%0 extends java.lang.Object> java.util.List<{%%0}> getAnnotatedMethodValues(java.lang.Object,java.lang.Class<? extends java.lang.annotation.Annotation>,java.lang.Class<{%%0}>)
+meth public <%0 extends java.lang.Object> void collectAnnotatedFieldValues(java.lang.Object,java.lang.Class<? extends java.lang.annotation.Annotation>,java.lang.Class<{%%0}>,org.junit.runners.model.MemberValueConsumer<{%%0}>)
+meth public <%0 extends java.lang.Object> void collectAnnotatedMethodValues(java.lang.Object,java.lang.Class<? extends java.lang.annotation.Annotation>,java.lang.Class<{%%0}>,org.junit.runners.model.MemberValueConsumer<{%%0}>)
 meth public <%0 extends java.lang.annotation.Annotation> {%%0} getAnnotation(java.lang.Class<{%%0}>)
 meth public boolean equals(java.lang.Object)
 meth public boolean isANonStaticInnerClass()
@@ -1798,4 +1931,19 @@ meth public java.util.concurrent.TimeUnit getTimeUnit()
 meth public long getTimeout()
 supr java.lang.Exception
 hfds serialVersionUID,timeUnit,timeout
+
+CLSS public abstract org.junit.validator.AnnotationValidator
+cons public init()
+meth public java.util.List<java.lang.Exception> validateAnnotatedClass(org.junit.runners.model.TestClass)
+meth public java.util.List<java.lang.Exception> validateAnnotatedField(org.junit.runners.model.FrameworkField)
+meth public java.util.List<java.lang.Exception> validateAnnotatedMethod(org.junit.runners.model.FrameworkMethod)
+supr java.lang.Object
+hfds NO_VALIDATION_ERRORS
+
+CLSS public abstract interface !annotation org.junit.validator.ValidateWith
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.Class<? extends org.junit.validator.AnnotationValidator> value()
 

@@ -47,6 +47,7 @@ import org.netbeans.modules.maven.execute.model.io.xpp3.NetbeansBuildActionXpp3R
 import org.netbeans.modules.maven.execute.model.io.xpp3.NetbeansBuildActionXpp3Writer;
 import org.netbeans.modules.maven.spi.actions.AbstractMavenActionsProvider;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.ProjectConfiguration;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
@@ -100,8 +101,13 @@ public final class ActionToGoalUtils {
     }
 
     public static RunConfig createRunConfig(String action, NbMavenProjectImpl project, Lookup lookup) {
+        return createRunConfig(action, project, null, lookup);
+    }
+    
+    public static RunConfig createRunConfig(String action, NbMavenProjectImpl project, ProjectConfiguration c, Lookup lookup) {
         M2ConfigProvider configs = project.getLookup().lookup(M2ConfigProvider.class);
-        RunConfig rc = configs.getActiveConfiguration().createConfigForDefaultAction(action, project, lookup);
+        M2Configuration requested = (c instanceof M2Configuration) ? (M2Configuration)c : configs.getActiveConfiguration();
+        RunConfig rc = requested.createConfigForDefaultAction(action, project, lookup);
 
 // #241340 let's comment this out and see if it's actually used, it's a bit unsystemic (something gets executed that was never visible in UI)
 //        
@@ -132,13 +138,18 @@ public final class ActionToGoalUtils {
 //            }
 //        }
         if(rc==null){
-            for (MavenActionsProvider add : actionProviders(project)) {
-                        if (add.isActionEnable(action, project, lookup)) {
-                            rc = add.createConfigForDefaultAction(action, project, lookup);
-                            if (rc != null) {
-                                break;
+            M2Configuration save = configs.setLocalConfiguration(requested);
+            try {
+                for (MavenActionsProvider add : actionProviders(project)) {
+                            if (add.isActionEnable(action, project, lookup)) {
+                                rc = add.createConfigForDefaultAction(action, project, lookup);
+                                if (rc != null) {
+                                    break;
+                                }
                             }
-                        }
+                }
+            } finally {
+                configs.setLocalConfiguration(save);
             }
         }
         if (rc != null ) {
@@ -147,10 +158,10 @@ public final class ActionToGoalUtils {
             }
             List<String> acts = new ArrayList<String>(); 
             acts.addAll(rc.getActivatedProfiles());
-            acts.addAll(configs.getActiveConfiguration().getActivatedProfiles());
+            acts.addAll(requested.getActivatedProfiles());
             rc.setActivatedProfiles(acts);
             Map<String, String> props = new HashMap<String, String>(rc.getProperties());
-            props.putAll(configs.getActiveConfiguration().getProperties());
+            props.putAll(requested.getProperties());
             rc.addProperties(props);
         }
         return rc;
@@ -171,12 +182,17 @@ public final class ActionToGoalUtils {
             return packaging;
         }
     }
+    
     public static boolean isActionEnable(String action, NbMavenProjectImpl project, Lookup lookup) {
-       
+        return isActionEnable(action, project, null, lookup);
+    }
+    
+    public static boolean isActionEnable(String action, NbMavenProjectImpl project, ProjectConfiguration c, Lookup lookup) {
         PackagingProvider packProv = new PackagingProvider(project);
         M2ConfigProvider configs = project.getLookup().lookup(M2ConfigProvider.class);
-        M2Configuration activeConfiguration = configs.getActiveConfiguration();        
-        if(isActionEnable(activeConfiguration, action, project, packProv, lookup)) {
+        M2Configuration active = configs.getActiveConfiguration();
+        M2Configuration useConfiguration = (c instanceof M2Configuration) ? (M2Configuration)c : active;        
+        if(isActionEnable(useConfiguration, action, project, packProv, lookup)) {
             return true;
         }
         //check fallback default config as well..
@@ -194,10 +210,16 @@ public final class ActionToGoalUtils {
             }
         }
         
-        for (MavenActionsProvider add : actionProviders(project)) {
-            if(isActionEnable(add, action, project, packProv, lookup)) {
-                return true;
+        // MavenActionsProvider can query back for the active configuration.
+        M2Configuration save = configs.setLocalConfiguration(useConfiguration);
+        try {
+            for (MavenActionsProvider add : actionProviders(project)) {
+                if(isActionEnable(add, action, project, packProv, lookup)) {
+                    return true;
+                }
             }
+        } finally {
+            configs.setLocalConfiguration(save);
         }
         return false;
     }

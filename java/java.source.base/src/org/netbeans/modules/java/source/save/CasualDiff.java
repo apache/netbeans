@@ -137,6 +137,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import static java.util.logging.Level.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -171,6 +172,7 @@ import org.openide.util.NbCollections;
 import javax.lang.model.type.TypeKind;
 import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.builder.TreeFactory;
+import org.netbeans.modules.java.source.transform.TreeHelpers;
 
 public class CasualDiff {
 
@@ -586,8 +588,10 @@ public class CasualDiff {
         int localPointer = diffPackage(oldT.getPackage(), newT.getPackage(), elementBounds[0]);
         PositionEstimator est = EstimatorFactory.imports(oldT.getImports(), newT.getImports(), diffContext);
         localPointer = diffList(oldT.getImports(), newT.getImports(), localPointer, est, Measure.DEFAULT, printer);
-        est = EstimatorFactory.toplevel(oldT.getTypeDecls(), newT.getTypeDecls(), diffContext);
-        localPointer = diffList(oldT.getTypeDecls(), newT.getTypeDecls(), localPointer, est, Measure.REAL_MEMBER, printer);
+        List<JCTree> oldTopLevelDecls = (List<JCTree>) TreeHelpers.getCombinedTopLevelDecls(oldT);
+        List<JCTree> newTopLevelDecls = (List<JCTree>) TreeHelpers.getCombinedTopLevelDecls(newT);
+        est = EstimatorFactory.toplevel(oldTopLevelDecls, newTopLevelDecls, diffContext);
+        localPointer = diffList(oldTopLevelDecls, newTopLevelDecls, localPointer, est, Measure.REAL_MEMBER, printer);
         checkLocalPointer(oldT, newT, localPointer);
         printer.print(origText.substring(localPointer));
     }
@@ -1197,6 +1201,9 @@ public class CasualDiff {
     }
 
     protected int diffMethodDef(JCMethodDecl oldT, JCMethodDecl newT, int[] bounds) {
+        JCExpression oldRestype = oldT.name != names.init ? oldT.restype : null;
+        JCExpression newRestype = newT.name != names.init ? newT.restype : null;
+
         int localPointer = bounds[0];
         // match modifiers and annotations
         if (!matchModifiers(oldT.mods, newT.mods)) {
@@ -1211,8 +1218,8 @@ public class CasualDiff {
                 int oldPos = getOldPos(oldT.mods);
                 copyTo(localPointer, oldPos);
                 if (oldT.typarams.isEmpty()) {
-                    if (oldT.restype != null) {
-                        localPointer = getOldPos(oldT.restype);
+                    if (oldRestype != null) {
+                        localPointer = getOldPos(oldRestype);
                     } else {
                         localPointer = oldT.pos;
                     }
@@ -1235,8 +1242,8 @@ public class CasualDiff {
         // ii) constructor - start position of tree - i.e. first token after
         //                   modifiers.
         int pos = oldT.typarams.isEmpty() ?
-            oldT.restype != null ?
-                getOldPos(oldT.restype) :
+            oldRestype != null ?
+                getOldPos(oldRestype) :
                 oldT.pos :
             getOldPos(oldT.typarams.head);
 
@@ -1257,21 +1264,21 @@ public class CasualDiff {
                 printer.print(" "); // print the space after type parameter
             }
         }
-        if (oldT.restype != null) { // means constructor, skip return type gen.
-            int[] restypeBounds = getBounds(oldT.restype);
+        if (oldRestype != null) { // means constructor, skip return type gen.
+            int[] restypeBounds = getBounds(oldRestype);
             copyTo(localPointer, restypeBounds[0]);
-            localPointer = diffTree(oldT.restype, newT.restype, restypeBounds);
+            localPointer = diffTree(oldRestype, newRestype, restypeBounds);
             if (restypeBounds[1] > localPointer)
                 copyTo(localPointer, localPointer = restypeBounds[1]);
-        } else if(oldT.restype == null && newT.restype != null) {
+        } else if(oldRestype == null && newRestype != null) {
             copyTo(localPointer, localPointer = oldT.pos);
-            printer.print(newT.restype);
+            printer.print(newRestype);
             printer.print(" "); // print the space after return type
         }
         
         int posHint;
         if (oldT.typarams.isEmpty()) {
-            posHint = oldT.restype != null ? oldT.restype.getStartPosition() : oldT.getStartPosition();
+            posHint = oldRestype != null ? oldRestype.getStartPosition() : oldT.getStartPosition();
         } else {
             posHint = oldT.typarams.iterator().next().getStartPosition();
         }
@@ -1431,11 +1438,26 @@ public class CasualDiff {
         int localPointer = bounds[0];
         // check that it is not enum constant. If so, match it in special way
         if ((oldT.mods.flags & Flags.ENUM) != 0) {
+            JCModifiers mods = oldT.getModifiers();
+            int startPos = mods.pos != Position.NOPOS ? getOldPos(mods) : getOldPos(oldT);
+
+            localPointer = diffAnnotationsLists(mods.getAnnotations(), newT.getModifiers().getAnnotations(), startPos, localPointer);
+
             if (nameChanged(oldT.name, newT.name)) {
-                copyTo(localPointer, oldT.pos);
+                //TODO: correct broken enum position - should also be fixed in the JDK???
+                int namePos = oldT.pos;
+                if (!mods.getAnnotations().isEmpty()) {
+                    int annotationsEnd = endPos(mods.getAnnotations());
+                    tokenSequence.move(annotationsEnd);
+                    moveToSrcRelevant(tokenSequence, Direction.FORWARD);
+                    if (tokenSequence.token().id() == JavaTokenId.IDENTIFIER) {
+                        namePos = tokenSequence.offset();
+                    }
+                }
+                copyTo(localPointer, namePos);
                 printer.print(newT.name);
-                diffInfo.put(oldT.pos, NbBundle.getMessage(CasualDiff.class,"TXT_RenameEnumConstant",oldT.name));
-                localPointer = oldT.pos + oldT.name.length();
+                diffInfo.put(namePos, NbBundle.getMessage(CasualDiff.class,"TXT_RenameEnumConstant",oldT.name));
+                localPointer = namePos + oldT.name.length();
             }
             JCNewClass oldInit = (JCNewClass) oldT.init;
             JCNewClass newInit = (JCNewClass) newT.init;
@@ -1909,7 +1931,14 @@ public class CasualDiff {
         copyTo(localPointer, localPointer = tokenSequence.offset());
         PositionEstimator est = EstimatorFactory.cases(oldT.getCases(), newT.getCases(), diffContext);
         localPointer = diffList(oldT.cases, newT.cases, localPointer, est, Measure.MEMBER, printer);
-
+        
+        List<JCCase> cases = newT.cases;
+        if (cases.size() != 0) {
+            String caseKind = String.valueOf(CasualDiff.getCaseKind(cases.get(0)));
+            if (caseKind.equals("RULE")) { // NOI18N
+                printer.newline();
+            }
+        }
         copyTo(localPointer, bounds[1]);
         return bounds[1];
     }
@@ -1964,6 +1993,9 @@ public class CasualDiff {
             endpos = endPos(oldPatterns.get(oldPatterns.size() - 1));
 
             if (newPatterns.isEmpty()) {
+                moveFwdToOneOfTokens(tokenSequence, bounds[0], EnumSet.of(JavaTokenId.CASE));
+                copyTo = tokenSequence.offset();
+                copyTo(localPointer, copyTo);
                 localPointer = copyTo = posHint = endpos;
                 printer.print("default");
             }
@@ -4161,6 +4193,7 @@ public class CasualDiff {
                         match = wasInFieldGroup;
                         for (Iterator<JCTree> it = deletedItems.iterator(); !match && it.hasNext(); ) {
                             ld = it.next();
+                            // The condition inside if is meant to be an assignment operation and not a comparison
                             if (match = treesMatch(item.element, ld, false)) {
                                 it.remove();
                             }
@@ -5905,7 +5938,7 @@ public class CasualDiff {
     }
 
     private boolean matchTypeTest(JCInstanceOf t1, JCInstanceOf t2) {
-        return treesMatch(t1.clazz, t2.clazz) && treesMatch(t1.expr, t2.expr);
+        return treesMatch(getPattern(t1), getPattern(t2)) && treesMatch(t1.expr, t2.expr);
     }
 
     private boolean matchIndexed(JCArrayAccess t1, JCArrayAccess t2) {

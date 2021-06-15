@@ -27,6 +27,7 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.loaders.JavaDataSupport;
+import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.source.TreeMaker;
@@ -100,6 +101,9 @@ public final class JavaDataObject extends MultiDataObject {
             final String originalName) throws IOException 
     {
         JavaSource javaSource = JavaSource.forFileObject (fileToUpdate);
+        if (javaSource == null) {
+            return;
+        }
 
         Task<WorkingCopy> task = new Task<WorkingCopy>() {
             
@@ -130,6 +134,7 @@ public final class JavaDataObject extends MultiDataObject {
                 }
             }                
         };
-        javaSource.runModificationTask(task).commit();
+        final ModificationResult taskResult = javaSource.runModificationTask(task);
+        taskResult.commit();
     }
 }

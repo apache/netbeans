@@ -114,7 +114,7 @@ public final class RepositoryImpl<R, Q, I> {
                     if(LOG.isLoggable(Level.FINE)) {
                         LOG.log(Level.FINE, "firing query list change {0} - rImpl: {1} - r: {2}", new Object[]{getDisplayName(), this, r}); // NOI18N
                     }
-                    Collection<QueryImpl> queries = new ArrayList<QueryImpl>(getQueries());
+                    Collection<QueryImpl> queries = new ArrayList<>(getQueries());
                     synchronized(queryMap) {
                         List<Q> toRemove = new LinkedList<Q>();
                         for(Entry<Q, WeakReference<QueryImpl>> e : queryMap.entrySet()) {
@@ -218,7 +218,7 @@ public final class RepositoryImpl<R, Q, I> {
         if(is == null || is.isEmpty()) {
             return Collections.emptyList();
         }
-        List<IssueImpl> ret = new ArrayList<IssueImpl>(is.size());
+        List<IssueImpl> ret = new ArrayList<>(is.size());
         for (I i : is) {
             IssueImpl impl = getIssue(i);
             if(impl != null) {
@@ -255,7 +255,7 @@ public final class RepositoryImpl<R, Q, I> {
     
     public Collection<IssueImpl> simpleSearch(String criteria) {
         Collection<I> issues = repositoryProvider.simpleSearch(r, criteria);
-        List<IssueImpl> ret = new ArrayList<IssueImpl>(issues.size());
+        List<IssueImpl> ret = new ArrayList<>(issues.size());
         for (I i : issues) {
             ret.add(getIssue(i));
         }
@@ -428,7 +428,7 @@ public final class RepositoryImpl<R, Q, I> {
         if (issues == null || issues.isEmpty()) {
             return Collections.<IssueImpl>emptyList();
         }
-        List<IssueImpl> ret = new ArrayList<IssueImpl>(issues.size());
+        List<IssueImpl> ret = new ArrayList<>(issues.size());
         for (I i : issues) {
             IssueImpl impl = getIssue(i);
             if(impl != null) {

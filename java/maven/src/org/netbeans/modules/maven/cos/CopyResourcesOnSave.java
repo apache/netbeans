@@ -36,6 +36,7 @@ import org.apache.maven.model.Resource;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.java.api.common.project.BaseActionProvider;
 import org.netbeans.modules.maven.api.FileUtilities;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.execute.RunUtils;
@@ -350,7 +351,7 @@ public class CopyResourcesOnSave extends FileChangeAdapter {
         FileObject target;
         //now figure the destination output folder
         File fil = nbproj.getOutputDirectory(test);
-        File stamp = new File(fil, CosChecker.NB_COS);
+        File stamp = new File(fil, BaseActionProvider.AUTOMATIC_BUILD_TAG);
         if (stamp.exists()) {
             target = FileUtil.toFileObject(fil);
         } else {

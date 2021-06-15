@@ -22,10 +22,13 @@ package org.netbeans.modules.php.phpdoc.ui.customizer;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.io.File;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -34,10 +37,10 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
-import org.netbeans.modules.php.api.util.FileUtils;
-import org.netbeans.modules.php.api.util.StringUtils;
+import org.netbeans.modules.php.api.validation.ValidationResult;
 import org.netbeans.modules.php.phpdoc.PhpDocumentorProvider;
 import org.netbeans.modules.php.phpdoc.ui.PhpDocPreferences;
+import org.netbeans.modules.php.phpdoc.ui.PhpDocPreferencesValidator;
 import org.openide.awt.Mnemonics;
 import org.openide.filesystems.FileChooserBuilder;
 import org.openide.filesystems.FileUtil;
@@ -66,10 +69,29 @@ final class PhpDocPanel extends JPanel {
     private void init() {
         targetTextField.setText(PhpDocPreferences.getPhpDocTarget(phpModule, false));
         titleTextField.setText(PhpDocPreferences.getPhpDocTitle(phpModule));
+        configurationTextField.setText(PhpDocPreferences.getPhpDocConfigurationPath(phpModule));
+        configurationCheckBox.setSelected(PhpDocPreferences.isConfigurationEnabled(phpModule));
+        enableComponents(configurationCheckBox.isSelected(), getConfigurationFileComponents());
+        addListeners();
+    }
 
+    private void addListeners() {
         DocumentListener defaultDocumentListener = new DefaultDocumentListener();
         targetTextField.getDocument().addDocumentListener(defaultDocumentListener);
         titleTextField.getDocument().addDocumentListener(defaultDocumentListener);
+        configurationTextField.getDocument().addDocumentListener(defaultDocumentListener);
+        configurationCheckBox.addItemListener((ItemEvent e) -> {
+            enableComponents(e.getStateChange() == ItemEvent.SELECTED, getConfigurationFileComponents());
+            fireChange();
+        });
+    }
+
+    private JComponent[] getConfigurationFileComponents() {
+        return new JComponent[] {
+            configurationLabel,
+            configurationTextField,
+            configurationBrowseButton
+        };
     }
 
     public void addChangeListener(ChangeListener listener) {
@@ -88,27 +110,33 @@ final class PhpDocPanel extends JPanel {
         return titleTextField.getText().trim();
     }
 
+    private String getPhpDocConfigurationPath() {
+        return configurationTextField.getText().trim();
+    }
+
+    private boolean isPhpDocConfigurationEnabled() {
+        return configurationCheckBox.isSelected();
+    }
+
     boolean isValidData() {
-        return getErrorMessage() == null;
+        ValidationResult result = getValidationResult();
+        return !result.hasErrors();
     }
 
     public String getErrorMessage() {
-        String phpDocTarget = getPhpDocTarget();
-        if (StringUtils.hasText(phpDocTarget)) {
-            String error = FileUtils.validateDirectory(phpDocTarget, true);
-            if (error != null) {
-                return error;
-            }
-        }
-        if (!StringUtils.hasText(getPhpDocTitle())) {
-            return NbBundle.getMessage(PhpDocPanel.class, "MSG_InvalidTitle");
+        ValidationResult result = getValidationResult();
+        ValidationResult.Message error = result.getFirstError();
+        if (error != null) {
+            return error.getMessage();
         }
         return null;
     }
 
     public String getWarningMessage() {
-        if (!StringUtils.hasText(getPhpDocTarget())) {
-            return NbBundle.getMessage(PhpDocPanel.class, "MSG_NbWillAskForDir");
+        ValidationResult result = getValidationResult();
+        ValidationResult.Message warning = result.getFirstWarning();
+        if (warning != null) {
+            return warning.getMessage();
         }
         return null;
     }
@@ -116,6 +144,22 @@ final class PhpDocPanel extends JPanel {
     public void storeData() {
         PhpDocPreferences.setPhpDocTarget(phpModule, getPhpDocTarget());
         PhpDocPreferences.setPhpDocTitle(phpModule, getPhpDocTitle());
+        PhpDocPreferences.setPhpDocConfigurationPath(phpModule, getPhpDocConfigurationPath());
+        PhpDocPreferences.setConfigurationEnabled(phpModule, isPhpDocConfigurationEnabled());
+    }
+
+    private ValidationResult getValidationResult() {
+        return new PhpDocPreferencesValidator()
+                .validateTarget(getPhpDocTarget())
+                .validateTitle(getPhpDocTitle())
+                .validateConfiguration(isPhpDocConfigurationEnabled(), getPhpDocConfigurationPath())
+                .getResult();
+    }
+
+    void enableComponents(boolean enabled, JComponent... components) {
+        for (JComponent component : components) {
+            component.setEnabled(enabled);
+        }
     }
 
     void fireChange() {
@@ -136,10 +180,15 @@ final class PhpDocPanel extends JPanel {
         targetButton = new JButton();
         titleLabel = new JLabel();
         titleTextField = new JTextField();
+        configurationCheckBox = new JCheckBox();
+        configurationLabel = new JLabel();
+        configurationTextField = new JTextField();
+        configurationBrowseButton = new JButton();
 
         targetLabel.setLabelFor(targetTextField);
-        Mnemonics.setLocalizedText(targetLabel, NbBundle.getMessage(PhpDocPanel.class, "PhpDocPanel.targetLabel.text"));
-        Mnemonics.setLocalizedText(targetButton, NbBundle.getMessage(PhpDocPanel.class, "PhpDocPanel.targetButton.text"));
+        Mnemonics.setLocalizedText(targetLabel, NbBundle.getMessage(PhpDocPanel.class, "PhpDocPanel.targetLabel.text")); // NOI18N
+
+        Mnemonics.setLocalizedText(targetButton, NbBundle.getMessage(PhpDocPanel.class, "PhpDocPanel.targetButton.text")); // NOI18N
         targetButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 targetButtonActionPerformed(evt);
@@ -147,12 +196,25 @@ final class PhpDocPanel extends JPanel {
         });
 
         titleLabel.setLabelFor(titleTextField);
-        Mnemonics.setLocalizedText(titleLabel, NbBundle.getMessage(PhpDocPanel.class, "PhpDocPanel.titleLabel.text"));
+        Mnemonics.setLocalizedText(titleLabel, NbBundle.getMessage(PhpDocPanel.class, "PhpDocPanel.titleLabel.text")); // NOI18N
+
+        Mnemonics.setLocalizedText(configurationCheckBox, NbBundle.getMessage(PhpDocPanel.class, "PhpDocPanel.configurationCheckBox.text")); // NOI18N
+
+        configurationLabel.setLabelFor(configurationTextField);
+        Mnemonics.setLocalizedText(configurationLabel, NbBundle.getMessage(PhpDocPanel.class, "PhpDocPanel.configurationLabel.text")); // NOI18N
+
+        configurationTextField.setText(NbBundle.getMessage(PhpDocPanel.class, "PhpDocPanel.configurationTextField.text")); // NOI18N
+
+        Mnemonics.setLocalizedText(configurationBrowseButton, NbBundle.getMessage(PhpDocPanel.class, "PhpDocPanel.configurationBrowseButton.text")); // NOI18N
+        configurationBrowseButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                configurationBrowseButtonActionPerformed(evt);
+            }
+        });
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(Alignment.LEADING)
                     .addComponent(targetLabel)
@@ -163,10 +225,19 @@ final class PhpDocPanel extends JPanel {
                         .addComponent(targetTextField)
                         .addPreferredGap(ComponentPlacement.RELATED)
                         .addComponent(targetButton))
-                    .addComponent(titleTextField, GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE)))
+                    .addComponent(titleTextField)))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(configurationCheckBox)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(configurationLabel)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(configurationTextField)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(configurationBrowseButton))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
                     .addComponent(targetLabel)
@@ -176,6 +247,13 @@ final class PhpDocPanel extends JPanel {
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
                     .addComponent(titleLabel)
                     .addComponent(titleTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(ComponentPlacement.UNRELATED)
+                .addComponent(configurationCheckBox)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(Alignment.BASELINE)
+                    .addComponent(configurationLabel)
+                    .addComponent(configurationTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(configurationBrowseButton))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -193,8 +271,25 @@ final class PhpDocPanel extends JPanel {
         }
     }//GEN-LAST:event_targetButtonActionPerformed
 
+    @NbBundle.Messages("PhpDocPanel.chooser.configuration=Select phpDocumentor XML configuration file")
+    private void configurationBrowseButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_configurationBrowseButtonActionPerformed
+        File configurationFile = new FileChooserBuilder(PhpDocumentorProvider.class.getName() + PhpDocumentorProvider.PHPDOC_LAST_FOLDER_SUFFIX + phpModule.getName())
+                .setTitle(Bundle.PhpDocPanel_chooser_configuration())
+                .setFilesOnly(true)
+                .setDefaultWorkingDirectory(FileUtil.toFile(phpModule.getSourceDirectory()))
+                .showOpenDialog();
+        if (configurationFile != null) {
+            configurationFile = FileUtil.normalizeFile(configurationFile);
+            configurationTextField.setText(configurationFile.getAbsolutePath());
+        }
+    }//GEN-LAST:event_configurationBrowseButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private JButton configurationBrowseButton;
+    private JCheckBox configurationCheckBox;
+    private JLabel configurationLabel;
+    private JTextField configurationTextField;
     private JButton targetButton;
     private JLabel targetLabel;
     private JTextField targetTextField;

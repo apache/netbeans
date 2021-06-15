@@ -105,6 +105,15 @@ public class IndentationCounter {
                     }
                     return result;
                 }
+
+                if (isAttributeCloseBracket(ts)) {
+                    // e.g.
+                    // #[A(1, "param")]
+                    //                 ^ Enter here
+                    int attributeIndent = Utilities.getRowIndent(doc, caretLineStart);
+                    return new IndentationImpl(attributeIndent < 0 ? 0 : attributeIndent);
+                }
+
                 if (ts.token().id() == PHPTokenId.WHITESPACE && ts.moveNext()) {
                     movePrevious = true;
                 }
@@ -230,6 +239,7 @@ public class IndentationCounter {
                         break;
                     } else {
                         if (ts.token().id() == PHPTokenId.PHP_TOKEN
+                                || ts.token().id() == PHPTokenId.PHP_ATTRIBUTE
                                 || (ts.token().id() == PHPTokenId.PHP_OPERATOR && TokenUtilities.textEquals("=", ts.token().text()))) { // NOI18N
                             char ch = ts.token().text().charAt(0);
                             boolean continualIndent = false;
@@ -272,6 +282,12 @@ public class IndentationCounter {
                                 default:
                                     //no-op
                             }
+                            if (ts.token().id() == PHPTokenId.PHP_ATTRIBUTE) { // #[
+                                if (squaredBalance == 0) {
+                                    indent = true;
+                                }
+                                squaredBalance--;
+                            }
                             if (continualIndent || indent) {
                                 ts.move(caretOffset);
                                 ts.movePrevious();
@@ -286,6 +302,8 @@ public class IndentationCounter {
                                         } else if (isInMatchExpression(startExpression, ts)
                                                 && isFirstCommaAfterDoubleArrow(startExpression, caretOffset, ts)) {
                                             newIndent = Utilities.getRowIndent(doc, startExpression);
+                                        } else if (isInAttributeExpression(caretOffset, ts)) {
+                                            newIndent = Utilities.getRowIndent(doc, startExpression) + indentSize;
                                         } else {
                                             newIndent = Utilities.getRowIndent(doc, startExpression) + continuationSize;
                                         }
@@ -511,6 +529,53 @@ public class IndentationCounter {
         return result;
     }
 
+    private boolean isInAttributeExpression(int caretOffset, TokenSequence ts) {
+        boolean result = false;
+        int originalOffset = ts.offset();
+        ts.move(caretOffset);
+        if (ts.moveNext()) {
+            if (ts.token().id() == PHPTokenId.PHP_ATTRIBUTE
+                    && ts.offset() + ts.token().length() <= caretOffset) {
+                result = true;
+            }
+        }
+        // check brakets balance for param list
+        // e.g.
+        // function foo(#[A(1)] $a, #[A(2)] $b, #[A(3)] $c) {}
+        //                                          ^ Enter here
+        // #[A("foo")]
+        // function foo(#[A(1)] $a, #[A(2)] $b, #[A(3)] $c) {}
+        //                         ^ Enter here
+        int bracketBalance = 0;
+        int parenBlance = 0;
+        while (!result && ts.movePrevious()) {
+            TokenId tokenId = ts.token().id();
+            if (isCloseBracket(ts.token())) {
+                bracketBalance--;
+            } else if (isOpenBracket(ts.token())) {
+                bracketBalance++;
+            } else if (isCloseParen(ts.token())) {
+                parenBlance--;
+            } else if (isOpenParen(ts.token())) {
+                parenBlance++;
+            }
+            if (tokenId == PHPTokenId.PHP_SEMICOLON
+                    || tokenId == PHPTokenId.PHP_CURLY_CLOSE) {
+                break;
+            }
+            if (tokenId == PHPTokenId.PHP_ATTRIBUTE) {
+                bracketBalance++;
+                if (bracketBalance != 0 && parenBlance == 0) {
+                    result = true;
+                }
+                break;
+            }
+        }
+        ts.move(originalOffset);
+        ts.moveNext();
+        return result;
+    }
+
     private int findMatchExpressionStart(TokenSequence<? extends PHPTokenId> ts) {
         int originalOffset = ts.offset();
         Token<? extends PHPTokenId> matchToken = LexUtilities.findPreviousToken(ts, Arrays.asList(PHPTokenId.PHP_MATCH));
@@ -652,6 +717,73 @@ public class IndentationCounter {
             }
         }
         return null;
+    }
+
+    /**
+     * Check whether the token on the caret is an attribute close bracket for
+     * class, method/function, or feilds.
+     *
+     * @param ts the token sequence
+     * @return {@code true} if the token is an attribute close bracket,
+     * otherwise {@code false}
+     */
+    private boolean isAttributeCloseBracket(TokenSequence ts) {
+        int originalOffset = ts.offset();
+        boolean result = false;
+        Token findPrevious = LexUtilities.findPrevious(ts, Arrays.asList(PHPTokenId.WHITESPACE));
+        if (findPrevious != null && isCloseBracket(findPrevious)) {
+            int balance = -1;
+            while (ts.movePrevious()) {
+                if (isOpenBracket(ts.token())) {
+                    balance++;
+                } else if (isCloseBracket(ts.token())) {
+                    balance--;
+                } else if (ts.token().id() == PHPTokenId.PHP_ATTRIBUTE) {
+                    balance++;
+                    if (balance == 0) {
+                        result = true;
+                    }
+                    break;
+                }
+                if (balance == 0) {
+                    break;
+                }
+            }
+        }
+        if (result) {
+            // check whether there is tokens other than whitespace for parameters, anonymous function/class
+            int lineStart = LineDocumentUtils.getLineStart(doc, LineDocumentUtils.getLineStart(doc, ts.offset()) - 1);
+            while (ts.movePrevious() && ts.offset() >= lineStart) {
+                if (ts.token().id() != PHPTokenId.WHITESPACE) {
+                    result = false;
+                    break;
+                }
+            }
+        }
+
+        ts.move(originalOffset);
+        ts.moveNext();
+        return result;
+    }
+
+    private static boolean isOpenBracket(Token token) {
+        return token.id() == PHPTokenId.PHP_TOKEN
+                && TokenUtilities.textEquals(token.text(), "["); // NOI18N
+    }
+
+    private static boolean isCloseBracket(Token token) {
+        return token.id() == PHPTokenId.PHP_TOKEN
+                && TokenUtilities.textEquals(token.text(), "]"); // NOI18N
+    }
+
+    private static boolean isOpenParen(Token token) {
+        return token.id() == PHPTokenId.PHP_TOKEN
+                && TokenUtilities.textEquals(token.text(), "("); // NOI18N
+    }
+
+    private static boolean isCloseParen(Token token) {
+        return token.id() == PHPTokenId.PHP_TOKEN
+                && TokenUtilities.textEquals(token.text(), ")"); // NOI18N
     }
 
     //~ Inner classes

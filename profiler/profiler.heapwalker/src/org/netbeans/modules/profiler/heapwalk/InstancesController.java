@@ -98,7 +98,8 @@ public class InstancesController extends AbstractTopLevelController implements F
             public void refresh() { setJavaClass(selectedClass); }
         };
         instancesListController = new InstancesListController(this);
-        fieldsBrowserController = new FieldsBrowserController(this, FieldsBrowserController.ROOT_INSTANCE);
+        boolean showClassLoaders = heapFragmentWalker.countClassLoaders() > 1;
+        fieldsBrowserController = new FieldsBrowserController(this, FieldsBrowserController.ROOT_INSTANCE, showClassLoaders);
         referencesBrowserController = new ReferencesBrowserController(this);
 
         classPresenter.setHeapFragmentWalker(heapFragmentWalker);

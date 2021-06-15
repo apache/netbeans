@@ -268,6 +268,13 @@ public class ModelHandle2 {
     public static Configuration createProfileConfiguration(String id) {
         return ModelHandle.createProfileConfiguration(id);
     }
+
+    public static Configuration createProvidedConfiguration(String id) {
+        ModelHandle.Configuration conf = new ModelHandle.Configuration();
+        conf.setId(id);
+        conf.setDefault(true);
+        return conf;
+    }
     
     public static Configuration createDefaultConfiguration() {
         return ModelHandle.createDefaultConfiguration();
@@ -358,6 +365,7 @@ public class ModelHandle2 {
      */
     public static class Configuration {
         private String id;
+        private String displayName;
         private boolean profileBased = false;
         private boolean defaul = false;
 
@@ -372,8 +380,31 @@ public class ModelHandle2 {
             return M2Configuration.getFileNameExt(id);
         }
 
+        /**
+         * Identifies the default configuration.
+         * @return true for just the default configuration
+         * @since 2.148
+         */
         public boolean isDefault() {
+            return defaul && M2Configuration.DEFAULT.equals(id);
+        }
+
+        /**
+         * True, if the configuration was provided but not default or profile.
+         * @return true for provided configuration
+         * @since 2.148
+         */
+        public boolean isProvided() {
             return defaul;
+        }
+        
+        /**
+         * Sets the display name of this configuration.
+         * @param dn 
+         * @since 2.148
+         */
+        public void setDisplayName(String dn) {
+            this.displayName = dn;
         }
 
         public void setDefault(boolean def) {
@@ -400,20 +431,25 @@ public class ModelHandle2 {
         @Messages({
             "DefaultConfig=<default config>",
             "# {0} - config ID", "ProfileConfig={0} (Profile)",
+            "# {0} - config ID", "ProvidedConfig={0} (provided)",
             "# {0} - config ID", "# {1} - list of profiles", "CustomConfig1={0} (Profiles: {1})",
             "# {0} - config ID", "CustomConfig2={0}"
         })
         public String getDisplayName() {
+            String n = displayName == null ? id : displayName;
             if (isDefault()) {
                 return DefaultConfig();
             }
             if (isProfileBased()) {
-                return ProfileConfig(id);
+                return ProfileConfig(n);
+            }
+            if (isProvided()) {
+                return ProvidedConfig(n);
             }
             if (getActivatedProfiles() != null && getActivatedProfiles().size() > 0) {
-                return CustomConfig1(id, Arrays.toString(getActivatedProfiles().toArray()));
+                return CustomConfig1(n, Arrays.toString(getActivatedProfiles().toArray()));
             }
-            return CustomConfig2(id);
+            return CustomConfig2(n);
         }
 
         public String getId() {

@@ -260,7 +260,7 @@ public class ThreadsCache implements Executor {
         }
         List<ThreadReference> threads = threadMap.get(group);
         if (threads == null) {
-            threads = Collections.emptyList();
+            threads = Collections.<ThreadReference>emptyList();
         } else {
             threads = Collections.<List<ThreadReference>>unmodifiableList(new ArrayList(threads));
         }
@@ -283,7 +283,7 @@ public class ThreadsCache implements Executor {
             groupMap.put(group, groups);
         }
         if (groups == null) {
-            groups = Collections.emptyList();
+            groups = Collections.<ThreadGroupReference>emptyList();
         } else {
             groups = Collections.<List<ThreadReference>>unmodifiableList(new ArrayList(groups));
         }

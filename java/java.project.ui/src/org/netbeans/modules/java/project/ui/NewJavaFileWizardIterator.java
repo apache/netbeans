@@ -26,9 +26,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
@@ -97,6 +99,8 @@ import org.openide.util.NbBundle;
 public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousInstantiatingIterator<WizardDescriptor> {
 
     private static final String SOURCE_TYPE_GROOVY = "groovy"; // NOI18N
+    private static final String SUPERCLASS = "superclass"; // NOI18N
+    private static final String INTERFACES = "interfaces"; // NOI18N
 
     static final String FOLDER = "Classes";
 
@@ -159,7 +163,7 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
         else {
             final List<WizardDescriptor.Panel<?>> panels = new ArrayList<>();
             if (this.type == Type.FILE) {
-                panels.add(JavaTemplates.createPackageChooser( project, groups ));
+                panels.add(JavaTemplates.createPackageChooser(project, groups, new ExtensionAndImplementationWizardPanel(wizardDescriptor)));
             } else if (type == Type.PKG_INFO) {
                 panels.add(new JavaTargetChooserPanel(project, groups, null, Type.PKG_INFO, true));
             } else if (type == Type.MODULE_INFO) {
@@ -321,8 +325,19 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
                     Collections.singletonMap("moduleName", moduleName)); //NOI18N
             createdFile = dobj.getPrimaryFile();
         } else {
-            DataObject dTemplate = DataObject.find( template );                
-            DataObject dobj = dTemplate.createFromTemplate( df, targetName );
+            DataObject dTemplate = DataObject.find(template);
+            Object superclassProperty = wiz.getProperty(SUPERCLASS);
+            String superclass = superclassProperty != null ? (String) superclassProperty : ""; //NOI18N
+            Object interfacesProperty = wiz.getProperty(INTERFACES);
+            String interfaces = interfacesProperty != null ? (String) interfacesProperty : ""; //NOI18N
+            Map<String, String> parameters = new HashMap<>(Short.BYTES);
+            if (!superclass.isEmpty()) {
+                parameters.put(SUPERCLASS, superclass);
+            }
+            if (!interfaces.isEmpty()) {
+                parameters.put(INTERFACES, interfaces);
+            }
+            DataObject dobj = dTemplate.createFromTemplate(df, targetName, parameters);
             createdFile = dobj.getPrimaryFile();
         }
         final Set<FileObject> res = new HashSet<>();

@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.java;
 
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.modules.gradle.java.api.GradleJavaProject;
 import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet;
@@ -32,7 +31,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.netbeans.api.project.Project;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -42,7 +40,6 @@ import org.openide.util.Lookup;
  *
  * @author Laszlo Kishalmi
  */
-@ProjectServiceProvider(service = ReplaceTokenProvider.class, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public class GradleJavaTokenProvider implements ReplaceTokenProvider {
 
     private static final String SELECTED_CLASS      = "selectedClass";     //NOI18N
@@ -137,11 +134,13 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
             GradleJavaSourceSet sourceSet = gjp.containingSourceSet(f);
             if (sourceSet != null) {
                 String relPath = sourceSet.relativePath(f);
-                ret = (relPath.lastIndexOf('.') > 0 ?
-                        relPath.substring(0, relPath.lastIndexOf('.')) :
-                        relPath).replace('/', '.');
-                if (fo.isFolder()) {
-                    ret = ret + '*';
+                if (relPath != null) {
+                    ret = (relPath.lastIndexOf('.') > 0 ?
+                            relPath.substring(0, relPath.lastIndexOf('.')) :
+                            relPath).replace('/', '.');
+                    if (fo.isFolder()) {
+                        ret = ret + '*';
+                    }
                 }
             }
         }

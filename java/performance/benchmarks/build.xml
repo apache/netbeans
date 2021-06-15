@@ -64,7 +64,7 @@
         <mkdir dir="build/classes"/>
         <mkdir dir="build/classes-generated"/>
         <mkdir dir="build/classes-generated/org/netbeans/performance/benchmarks/bde/generated"/>
-        <copy file="../external/javacc-3.2.jar" tofile="build/javacc.jar"/>
+        <copy file="../external/javacc-7.0.10.jar" tofile="build/javacc.jar"/>
 
         <jjtree 
         javacchome="build"

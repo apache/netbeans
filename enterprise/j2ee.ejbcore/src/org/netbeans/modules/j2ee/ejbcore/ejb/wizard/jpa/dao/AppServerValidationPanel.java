@@ -59,7 +59,8 @@ public final class AppServerValidationPanel extends DelegatingWizardDescriptorPa
         if (wm != null && (wm.getJ2eeProfile() == Profile.JAVA_EE_6_FULL || wm.getJ2eeProfile() == Profile.JAVA_EE_6_WEB ||
                 wm.getJ2eeProfile() == Profile.JAVA_EE_7_FULL || wm.getJ2eeProfile() == Profile.JAVA_EE_7_WEB ||
                 wm.getJ2eeProfile() == Profile.JAVA_EE_8_FULL || wm.getJ2eeProfile() == Profile.JAVA_EE_8_WEB ||
-                wm.getJ2eeProfile() == Profile.JAKARTA_EE_8_FULL || wm.getJ2eeProfile() == Profile.JAKARTA_EE_8_WEB)) {
+                wm.getJ2eeProfile() == Profile.JAKARTA_EE_8_FULL || wm.getJ2eeProfile() == Profile.JAKARTA_EE_8_WEB ||
+                wm.getJ2eeProfile() == Profile.JAKARTA_EE_9_FULL || wm.getJ2eeProfile() == Profile.JAKARTA_EE_9_WEB)) {
             // check that server is EJB lite sufficient
             EjbSupport ejbSupport = EjbSupport.getInstance(j2eePlatform);
             if (!ejbSupport.isEjb31LiteSupported(j2eePlatform)) {

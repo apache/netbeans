@@ -24,6 +24,7 @@ import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.model.JavacElements;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCLambda;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import com.sun.tools.javac.util.Context;
@@ -39,6 +40,7 @@ import javax.lang.model.util.Elements;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.modules.java.source.GeneratorUtilitiesAccessor;
 import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.builder.ASTService;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
@@ -542,11 +544,13 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
         importAnalysis.setImports(imps);
         
         List<? extends AnnotationTree> annotations = translate(tree.getPackageAnnotations());
-        List<? extends Tree> types = translate(tree.getTypeDecls());
+        List<? extends Tree> types = translate(TreeHelpers.getCombinedTopLevelDecls(tree));
         
         Set<? extends Element> newImports = importAnalysis.getImports();
         if (copy != null && newImports != null && !newImports.isEmpty()) {
-            imps = GeneratorUtilities.get(copy).addImports(tree, newImports).getImports();
+            imps = GeneratorUtilitiesAccessor.getInstance()
+                                             .addImports(GeneratorUtilities.get(copy), tree, imps, newImports)
+                                             .getImports();
         }
         
 	if (!annotations.equals(tree.getPackageAnnotations()) || pid!=tree.getPackageName() || !imps.equals(tree.getImports()) ||

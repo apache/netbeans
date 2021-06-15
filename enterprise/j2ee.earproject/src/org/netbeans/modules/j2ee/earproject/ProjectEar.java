@@ -147,10 +147,12 @@ public final class ProjectEar extends J2eeApplicationProvider
         return project.getLookup().lookup(ClassPathProvider.class);
     }
     
+    @Override
     public FileObject getArchive () {
         return project.getFileObject (EarProjectProperties.DIST_JAR); //NOI18N
     }
     
+    @Override
     public synchronized J2eeModule getJ2eeModule () {
         if (j2eeApplication == null) {
             j2eeApplication = J2eeModuleFactory.createJ2eeApplication(this);
@@ -158,6 +160,7 @@ public final class ProjectEar extends J2eeApplicationProvider
         return j2eeApplication;
     }
     
+    @Override
     public ModuleChangeReporter getModuleChangeReporter () {
         return this;
     }
@@ -172,6 +175,7 @@ public final class ProjectEar extends J2eeApplicationProvider
         return project.getServerID(); //helper.getStandardPropertyEvaluator ().getProperty (EarProjectProperties.J2EE_SERVER_TYPE);
     }
     
+    @Override
     public void setServerInstanceID(String severInstanceID) {
         // TODO: implement when needed
     }
@@ -186,12 +190,14 @@ public final class ProjectEar extends J2eeApplicationProvider
      * If the J2eeModule instance describes a j2ee application, the result should not 
      * contain module archives.
      */
+    @Override
     public Iterator getArchiveContents () throws IOException {
         FileObject content = getContentDirectory();
         content.refresh();
         return new IT(this, content);
     }
 
+    @Override
     public FileObject getContentDirectory() {
         return project.getFileObject (EarProjectProperties.BUILD_DIR); //NOI18N
     }
@@ -210,6 +216,7 @@ public final class ProjectEar extends J2eeApplicationProvider
         return metadataModel;
     }
 
+    @Override
     public <T> MetadataModel<T> getMetadataModel(Class<T> type) {
         if (type == ApplicationMetadata.class) {
             @SuppressWarnings("unchecked") // NOI18N
@@ -279,38 +286,48 @@ public final class ProjectEar extends J2eeApplicationProvider
             p = Profile.JAVA_EE_7_FULL;
         }
         FileObject dd = DDHelper.createApplicationXml(p, root, true);
-
         application = DDProvider.getDefault().getDDRoot(dd);
         application.setDisplayName(ProjectUtils.getInformation(project).getDisplayName());
         for (ClassPathSupport.Item item : EarProjectProperties.getJarContentAdditional(project)) {
             EarProjectProperties.addItemToAppDD(project, application, item);
         }
-
         return application;
     }
 
+    @Override
     public EjbChangeDescriptor getEjbChanges (long timestamp) {
         return this;
     }
 
+    @Override
     public J2eeModule.Type getModuleType () {
         return J2eeModule.Type.EAR;
     }
 
+    @Override
     public String getModuleVersion () {
         Profile p = Profile.fromPropertiesString(project.evaluator().getProperty(EarProjectProperties.J2EE_PLATFORM));
         if (p == null) {
-            p = Profile.JAVA_EE_6_FULL;
+            p = Profile.JAVA_EE_7_FULL;
         }
-        if (Profile.JAVA_EE_5.equals(p)) {
+        if (Profile.JAKARTA_EE_8_FULL.equals(p)) {
+            return Application.VERSION_8;
+        } else if (Profile.JAVA_EE_8_FULL.equals(p)) {
+            return Application.VERSION_8;
+        } else if (Profile.JAVA_EE_7_FULL.equals(p)) {
+            return Application.VERSION_7;
+        } else if (Profile.JAVA_EE_6_FULL.equals(p)) {
+            return Application.VERSION_6;
+        } else if (Profile.JAVA_EE_5.equals(p)) {
             return Application.VERSION_5;
         } else if (Profile.J2EE_14.equals(p)) {
             return Application.VERSION_1_4;
         } else {
-            return Application.VERSION_6;
+            return Application.VERSION_7;
         }
     }
     
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(Application.PROPERTY_VERSION)) {
             String oldVersion = (String) evt.getOldValue();
@@ -331,10 +348,12 @@ public final class ProjectEar extends J2eeApplicationProvider
         }
     }
         
+    @Override
     public String getUrl () {
         return "";
     }
 
+    @Override
     public boolean isManifestChanged (long timestamp) {
         return false;
     }
@@ -343,10 +362,12 @@ public final class ProjectEar extends J2eeApplicationProvider
         throw new UnsupportedOperationException ("Cannot customize URL of web module"); // NOI18N
     }
 
+    @Override
     public boolean ejbsChanged () {
         return false;
     }
 
+    @Override
     public String[] getChangedEjbs () {
         return new String[] {};
     }
@@ -381,8 +402,7 @@ public final class ProjectEar extends J2eeApplicationProvider
                 try {
                     modArchive = mods[i].getArchive();
                 } catch (java.io.IOException ioe) {
-                    Logger.getLogger(ProjectEar.class.getName()).log(Level.FINER,
-                            null,ioe);
+                    LOGGER.log(Level.FINER, null, ioe);
                     continue;
                 }
                 if (modArchive != null) {
@@ -407,14 +427,17 @@ public final class ProjectEar extends J2eeApplicationProvider
             it = filteredContent.iterator();
         }
         
+        @Override
         public boolean hasNext() {
             return it.hasNext();
         }
         
+        @Override
         public Object next() {
             return new FSRootRE(root, it.next());
         }
         
+        @Override
         public void remove () {
             throw new UnsupportedOperationException ();
         }
@@ -430,10 +453,12 @@ public final class ProjectEar extends J2eeApplicationProvider
             this.root = root;
         }
         
+        @Override
         public FileObject getFileObject () {
             return f;
         }
         
+        @Override
         public String getRelativePath () {
             return FileUtil.getRelativePath (root, f);
         }
@@ -448,6 +473,7 @@ public final class ProjectEar extends J2eeApplicationProvider
         this.mods = mods;
     }
     
+    @Override
     public J2eeModule[] getModules() {
         J2eeModule[] retVal = new J2eeModule[mods.size()];
         int i = 0;
@@ -481,7 +507,7 @@ public final class ProjectEar extends J2eeApplicationProvider
             try {
                 ml.addModule(jm);
             } catch (RuntimeException rex) {
-                Logger.getLogger("global").log(Level.INFO, rex.getLocalizedMessage());
+                LOGGER.log(Level.INFO, rex.getLocalizedMessage());
             }
         }
     }
@@ -491,15 +517,17 @@ public final class ProjectEar extends J2eeApplicationProvider
             try {
                 ml.removeModule(jm);
             } catch (RuntimeException rex) {
-                Logger.getLogger("global").log(Level.FINE, rex.getLocalizedMessage());
+                LOGGER.log(Level.FINE, rex.getLocalizedMessage());
             }
         }
     }
     
+    @Override
     public void addModuleListener(ModuleListener ml) {
         modListeners.add(ml);
     }
     
+    @Override
     public void removeModuleListener(ModuleListener ml){
         modListeners.remove(ml);
     }
@@ -509,6 +537,7 @@ public final class ProjectEar extends J2eeApplicationProvider
      * @param uri the child module URI within the J2EE application.
      * @return J2eeModuleProvider object
      */
+    @Override
     public J2eeModuleProvider getChildModuleProvider(String uri) {
         return mods.get(uri);
     }
@@ -517,6 +546,7 @@ public final class ProjectEar extends J2eeApplicationProvider
      * Returns list of providers of every child J2EE module of this J2EE app.
      * @return array of J2eeModuleProvider objects.
      */
+    @Override
     public  J2eeModuleProvider[] getChildModuleProviders() {
         return mods.values().toArray(new J2eeModuleProvider[mods.size()]);
     }
@@ -532,6 +562,7 @@ public final class ProjectEar extends J2eeApplicationProvider
             !Boolean.parseBoolean(project.evaluator().getProperty(EarProjectProperties.J2EE_DEPLOY_ON_SAVE));
     }
     
+    @Override
     public File getDeploymentConfigurationFile(String name) {
         String path = getConfigSupport().getContentRelativePath(name);
         if (path == null) {
@@ -584,10 +615,12 @@ public final class ProjectEar extends J2eeApplicationProvider
         }
     }
 
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         getPropertyChangeSupport().addPropertyChangeListener(listener);
     }
 
+    @Override
     public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
         if (propertyChangeSupport == null) {
             return;
@@ -681,6 +714,7 @@ public final class ProjectEar extends J2eeApplicationProvider
             ProjectEar.this.getConfigSupport().removeDeployOnSaveListener(this);
         }
 
+        @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (EarProjectProperties.RESOURCE_DIR.equals(evt.getPropertyName()) ||
                     EarProjectProperties.J2EE_COMPILE_ON_SAVE.equals(evt.getPropertyName())) {
@@ -814,6 +848,7 @@ public final class ProjectEar extends J2eeApplicationProvider
             super();
         }
 
+        @Override
         public synchronized void addArtifactListener(ArtifactListener listener) {
             copyOnSaveSupport.addArtifactListener(listener);
 
@@ -832,6 +867,7 @@ public final class ProjectEar extends J2eeApplicationProvider
             }
         }
 
+        @Override
         public synchronized void removeArtifactListener(ArtifactListener listener) {
             copyOnSaveSupport.removeArtifactListener(listener);
 
@@ -849,6 +885,7 @@ public final class ProjectEar extends J2eeApplicationProvider
             }
         }
 
+        @Override
         public boolean containsIdeArtifacts() {
             for (J2eeModuleProvider provider : getChildModuleProviders()) {
                 DeployOnSaveSupport support = provider.getDeployOnSaveSupport();
@@ -862,6 +899,7 @@ public final class ProjectEar extends J2eeApplicationProvider
         }
 
         
+        @Override
         public void artifactsUpdated(Iterable<Artifact> artifacts) {
             List<Artifact> recomputed = new ArrayList<Artifact>();
             String buildDirName = project.evaluator().getProperty(EarProjectProperties.BUILD_DIR);
@@ -905,6 +943,7 @@ public final class ProjectEar extends J2eeApplicationProvider
 
     private class EarResourceChangeReporter implements ResourceChangeReporterImplementation {
 
+        @Override
         public boolean isServerResourceChanged(long lastDeploy) {
             File resDir = getResourceDirectory();
             if (resDir != null && resDir.exists() && resDir.isDirectory()) {

@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.netbeans.modules.debugger.jpda.models.CallStackFrameImpl;
 import org.netbeans.modules.debugger.jpda.spi.StrataProvider;
+import org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 
 /**
@@ -61,9 +62,14 @@ public class TruffleStrataProvider implements StrataProvider {
     @Override
     public int getStrataLineNumber(CallStackFrameImpl csf, String stratum) {
         if (TRUFFLE_STRATUM.equals(stratum) && isInTruffleAccessPoint(csf)) {
-            CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(csf.getThread());
+            CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentGuestPCInfo(csf.getThread());
             if (currentPCInfo != null) {
-                return currentPCInfo.getSourcePosition().getStartLine();
+                SourcePosition sourcePosition = currentPCInfo.getSourcePosition();
+                if (sourcePosition != null) {
+                    return sourcePosition.getStartLine();
+                } else {
+                    return 0;
+                }
             }
         }
         return csf.getLineNumber(stratum);

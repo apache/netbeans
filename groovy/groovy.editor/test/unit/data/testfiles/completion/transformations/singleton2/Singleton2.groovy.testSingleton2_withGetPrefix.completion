@@ -5,7 +5,7 @@ Singleton2.get|
 METHOD     getAt(String)                              Object
 METHOD     getClass()                      [PUBLIC]   Class<?>
 METHOD     getInstance()                   [STATIC]   Singleton2
-METHOD     getMetaClass()                             MetaClass
+METHOD     getMetaClass()                  [PUBLIC]   MetaClass
 METHOD     getMetaPropertyValues()                    List
 METHOD     getProperties()                            Map
 METHOD     getProperty(String)             [PUBLIC]   Object

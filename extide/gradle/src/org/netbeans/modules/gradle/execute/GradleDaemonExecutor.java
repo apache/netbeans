@@ -19,7 +19,7 @@
 
 package org.netbeans.modules.gradle.execute;
 
-import org.netbeans.modules.gradle.GradleDaemon;
+import org.netbeans.modules.gradle.loaders.GradleDaemon;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.api.execute.RunConfig;
@@ -50,13 +50,12 @@ import org.gradle.tooling.GradleConnectionException;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProgressEvent;
 import org.gradle.tooling.ProjectConnection;
+import org.gradle.tooling.events.ProgressListener;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
-import org.netbeans.modules.gradle.NbGradleProjectImpl;
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
+import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
 import org.netbeans.modules.gradle.spi.execute.GradleJavaPlatformProvider;
@@ -64,10 +63,12 @@ import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
 import org.openide.awt.StatusDisplayer;
 import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 import org.openide.util.io.ReaderInputStream;
+import org.openide.util.lookup.Lookups;
 import org.openide.windows.IOColorPrint;
 import org.openide.windows.IOColors;
 import org.openide.windows.InputOutput;
@@ -91,7 +92,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
     @SuppressWarnings("LeakingThisInConstructor")
     public GradleDaemonExecutor(RunConfig config) {
         super(config);
-        handle = ProgressHandleFactory.createHandle(config.getTaskDisplayName(), this, new AbstractAction() {
+        handle = ProgressHandle.createHandle(config.getTaskDisplayName(), this, new AbstractAction() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -129,6 +130,23 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
         final InputOutput ioput = getInputOutput();
         actionStatesAtStart();
         handle.start();
+
+        // BuildLauncher creates its own threads, need to note the effective Lookup and re-establish it in the listeners
+        final Lookup execLookup = Lookup.getDefault();
+
+        class ProgressLookupListener implements org.gradle.tooling.events.ProgressListener {
+            private final org.gradle.tooling.events.ProgressListener delegate;
+
+            public ProgressLookupListener(ProgressListener delegate) {
+                this.delegate = delegate;
+            }
+
+            @Override
+            public void statusChanged(org.gradle.tooling.events.ProgressEvent event) {
+                Lookups.executeWith(execLookup, () -> delegate.statusChanged(event));
+            }
+        }
+
         try {
 
             BuildExecutionSupport.registerRunningItem(item);
@@ -155,15 +173,40 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             BuildLauncher buildLauncher = pconn.newBuild();
 
             GradleCommandLine cmd = config.getCommandLine();
+
+            GradleExecConfiguration cfg = config.getExecConfig();
+            if (cfg == null) {
+                cfg = ProjectConfigurationSupport.getEffectiveConfiguration(config.getProject(), Lookup.EMPTY);
+            }
+            if (cfg != null) {
+                GradleCommandLine addConfigParts = null;
+                
+                if (cfg.getCommandLineArgs() != null && !cfg.getCommandLineArgs().isEmpty()) {
+                    addConfigParts = new GradleCommandLine(cfg.getCommandLineArgs());
+                }
+                for (Map.Entry<String, String> pe : cfg.getProjectProperties().entrySet()) {
+                    if (addConfigParts == null) {
+                        addConfigParts = new GradleCommandLine();
+                    }
+                    addConfigParts.addProjectProperty(pe.getKey(), pe.getValue());
+                }
+                if (addConfigParts != null) {
+                    cmd = GradleCommandLine.combine(addConfigParts, cmd);
+                }
+            }
+            
+            // will not show augmented in the output
+            GradleCommandLine augmented = cmd;
+
             if (RunUtils.isAugmentedBuildEnabled(config.getProject())) {
-                cmd = new GradleCommandLine(cmd);
-                cmd.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, GradleDaemon.INIT_SCRIPT);
-                cmd.addSystemProperty(GradleDaemon.PROP_TOOLING_JAR, GradleDaemon.TOOLING_JAR);
+                augmented = new GradleCommandLine(cmd);
+                augmented.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, GradleDaemon.INIT_SCRIPT);
+                augmented.addSystemProperty(GradleDaemon.PROP_TOOLING_JAR, GradleDaemon.TOOLING_JAR);
             }
             GradleBaseProject gbp = GradleBaseProject.get(config.getProject());
-            cmd.configure(buildLauncher, gbp != null ? gbp.getRootDir() : null);
+            augmented.configure(buildLauncher, gbp != null ? gbp.getRootDir() : null);
 
-            printCommandLine();
+            printCommandLine(cmd);
             GradleJavaPlatformProvider platformProvider = config.getProject().getLookup().lookup(GradleJavaPlatformProvider.class);
             if (platformProvider != null) {
                 try {
@@ -188,14 +231,14 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             buildLauncher.setStandardOutput(outStream);
             buildLauncher.setStandardError(errStream);
             buildLauncher.addProgressListener((ProgressEvent pe) -> {
-                handle.progress(pe.getDescription());
+                Lookups.executeWith(execLookup, () -> handle.progress(pe.getDescription()));
             });
 
             buildLauncher.withCancellationToken(cancelTokenSource.token());
             if (config.getProject() != null) {
                 Collection<? extends GradleProgressListenerProvider> providers = config.getProject().getLookup().lookupAll(GradleProgressListenerProvider.class);
                 for (GradleProgressListenerProvider provider : providers) {
-                    buildLauncher.addProgressListener(provider.getProgressListener(), provider.getSupportedOperationTypes());
+                    buildLauncher.addProgressListener(new ProgressLookupListener(provider.getProgressListener()), provider.getSupportedOperationTypes());
                 }
             }
             buildLauncher.run();
@@ -206,6 +249,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
         } catch (UncheckedException | BuildException ex) {
             if (!cancelling) {
                 StatusDisplayer.getDefault().setStatusText(Bundle.BUILD_FAILED(getProjectName()));
+                gradleTask.finish(1);
             } else {
                 // This can happen if cancelling a Gradle build which is running
                 // an external aplication
@@ -241,7 +285,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
         return info.getDisplayName();
     }
 
-    private void printCommandLine() {
+    private void printCommandLine(GradleCommandLine cmd) {
         StringBuilder commandLine = new StringBuilder(1024);
 
         String userHome = GradleSettings.getDefault().getPreferences().get(GradleSettings.PROP_GRADLE_USER_HOME, null);
@@ -280,7 +324,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                 }
             }
 
-        for (String arg : config.getCommandLine().getSupportedCommandLine()) {
+        for (String arg : cmd.getSupportedCommandLine()) {
             commandLine.append(' ');
             if (arg.contains(" ") || arg.contains("*")) { //NOI18N
                 commandLine.append('\'').append(arg).append('\'');

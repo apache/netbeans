@@ -147,6 +147,7 @@ public class PHPFormatterBlankLinesTest extends PHPFormatterTestBase {
 
     public void testAlternativeSyntaxPlacement01() throws Exception {
         HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_MAX_PRESERVED, 2);
         reformatFileContents("testfiles/formatting/blankLines/AlternativeSyntaxPlacement01.php", options);
     }
 
@@ -166,6 +167,7 @@ public class PHPFormatterBlankLinesTest extends PHPFormatterTestBase {
     public void testBLAnonymousClass01() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.INITIAL_INDENT, 0);
+        options.put(FmtOptions.BLANK_LINES_MAX_PRESERVED, 6);
         reformatFileContents("testfiles/formatting/blankLines/AnonymousClass01.php", options);
     }
 
@@ -294,7 +296,7 @@ public class PHPFormatterBlankLinesTest extends PHPFormatterTestBase {
     public void testBLFields11() throws Exception {
         HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
         options.put(FmtOptions.BLANK_LINES_BETWEEN_FIELDS, 2);
-        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC, false);
+        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, false);
         reformatFileContents("testfiles/formatting/blankLines/Fields11.php", options);
     }
 
@@ -1031,6 +1033,29 @@ public class PHPFormatterBlankLinesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/blankLines/OpenClosePHPTag05.php", options);
     }
 
+    public void testOpenClosePHPTag06() throws Exception {
+        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/blankLines/OpenClosePHPTag06.php", options);
+    }
+
+    public void testMaxPreservedBlankLines01() throws Exception {
+        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_MAX_PRESERVED, 0);
+        reformatFileContents("testfiles/formatting/blankLines/MaxPreservedLines01.php", options);
+    }
+
+    public void testMaxPreservedBlankLines02() throws Exception {
+        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_MAX_PRESERVED, 1);
+        reformatFileContents("testfiles/formatting/blankLines/MaxPreservedLines02.php", options);
+    }
+
+    public void testMaxPreservedBlankLines03() throws Exception {
+        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_MAX_PRESERVED, 2);
+        reformatFileContents("testfiles/formatting/blankLines/MaxPreservedLines03.php", options);
+    }
+
     public void testIssue229703() throws Exception {
         HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
         reformatFileContents("testfiles/formatting/blankLines/issue229703.php", options);
@@ -1241,56 +1266,56 @@ public class PHPFormatterBlankLinesTest extends PHPFormatterTestBase {
     public void testIssue268710_07() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.BLANK_LINES_BETWEEN_FIELDS, 1);
-        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC, false);
+        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, false);
         reformatFileContents("testfiles/formatting/blankLines/issue268710_07.php", options);
     }
 
     public void testIssue268710_08() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.BLANK_LINES_BETWEEN_FIELDS, 1);
-        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC, false);
+        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, false);
         reformatFileContents("testfiles/formatting/blankLines/issue268710_08.php", options);
     }
 
     public void testIssue268710_09() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.BLANK_LINES_BETWEEN_FIELDS, 0);
-        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC, false);
+        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, false);
         reformatFileContents("testfiles/formatting/blankLines/issue268710_09.php", options);
     }
 
     public void testIssue268710_10() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.BLANK_LINES_BETWEEN_FIELDS, 0);
-        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC, false);
+        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, false);
         reformatFileContents("testfiles/formatting/blankLines/issue268710_10.php", options);
     }
 
     public void testIssue268710_11() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.BLANK_LINES_BETWEEN_FIELDS, 1);
-        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC, true);
+        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, true);
         reformatFileContents("testfiles/formatting/blankLines/issue268710_11.php", options);
     }
 
     public void testIssue268710_12() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.BLANK_LINES_BETWEEN_FIELDS, 1);
-        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC, true);
+        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, true);
         reformatFileContents("testfiles/formatting/blankLines/issue268710_12.php", options);
     }
 
     public void testIssue268710_13() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.BLANK_LINES_BETWEEN_FIELDS, 0);
-        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC, true);
+        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, true);
         reformatFileContents("testfiles/formatting/blankLines/issue268710_13.php", options);
     }
 
     public void testIssue268710_14() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.BLANK_LINES_BETWEEN_FIELDS, 0);
-        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC, true);
+        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, true);
         reformatFileContents("testfiles/formatting/blankLines/issue268710_14.php", options);
     }
 
@@ -1317,14 +1342,14 @@ public class PHPFormatterBlankLinesTest extends PHPFormatterTestBase {
     public void testClassConstantVisibility05() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.BLANK_LINES_BETWEEN_FIELDS, 1);
-        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC, false);
+        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, false);
         reformatFileContents("testfiles/formatting/blankLines/ClassConstantVisibility05.php", options);
     }
 
     public void testClassConstantVisibility06() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.BLANK_LINES_BETWEEN_FIELDS, 1);
-        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC, false);
+        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, false);
         reformatFileContents("testfiles/formatting/blankLines/ClassConstantVisibility06.php", options);
     }
 
@@ -1444,8 +1469,181 @@ public class PHPFormatterBlankLinesTest extends PHPFormatterTestBase {
     public void testTypedProperties20_11() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.BLANK_LINES_BETWEEN_FIELDS, 2);
-        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC, false);
+        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, false);
         reformatFileContents("testfiles/formatting/blankLines/TypedProperties20_11.php", options);
+    }
+
+    // [NETBEANS-4443] PHP 8.0
+    public void testAttributeSyntaxBeforeClass_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS, 0);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxBeforeClass_01a.php", options);
+    }
+
+    public void testAttributeSyntaxBeforeClass_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS, 2);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxBeforeClass_01b.php", options);
+    }
+
+    public void testAttributeSyntaxAfterClass_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_CLASS, 0);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxAfterClass_01a.php", options);
+    }
+
+    public void testAttributeSyntaxAfterClass_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_CLASS, 2);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxAfterClass_01b.php", options);
+    }
+
+    public void testAttributeSyntaxBeforeInterface_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS, 0);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxBeforeInterface_01a.php", options);
+    }
+
+    public void testAttributeSyntaxBeforeInterface_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS, 1);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxBeforeInterface_01b.php", options);
+    }
+
+    public void testAttributeSyntaxAfterInterface_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_CLASS, 0);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxAfterInterface_01a.php", options);
+    }
+
+    public void testAttributeSyntaxAfterInterface_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_CLASS, 1);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxAfterInterface_01b.php", options);
+    }
+
+    public void testAttributeSyntaxBeforeTrait_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS, 0);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxBeforeTrait_01a.php", options);
+    }
+
+    public void testAttributeSyntaxBeforeTrait_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_CLASS, 1);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxBeforeTrait_01b.php", options);
+    }
+
+    public void testAttributeSyntaxAfterTrait_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_CLASS, 0);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxAfterTrait_01a.php", options);
+    }
+
+    public void testAttributeSyntaxAfterTrait_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_CLASS, 1);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxAfterTrait_01b.php", options);
+    }
+
+    public void testAttributeSyntaxBeforeFunction_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 0);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxBeforeFunction_01a.php", options);
+    }
+
+    public void testAttributeSyntaxBeforeFunction_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 2);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxBeforeFunction_01b.php", options);
+    }
+
+    public void testAttributeSyntaxAfterFunction_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_FUNCTION, 0);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxAfterFunction_01a.php", options);
+    }
+
+    public void testAttributeSyntaxAfterFunction_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_FUNCTION, 1);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxAfterFunction_01b.php", options);
+    }
+
+    public void testAttributeSyntaxBeforeFields_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 0);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxBeforeFields_01a.php", options);
+    }
+
+    public void testAttributeSyntaxBeforeFields_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 1);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxBeforeFields_01b.php", options);
+    }
+
+    public void testAttributeSyntaxBeforeFields_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 0);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxBeforeFields_02a.php", options);
+    }
+
+    public void testAttributeSyntaxBeforeFields_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 1);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxBeforeFields_02b.php", options);
+    }
+
+    public void testAttributeSyntaxBetweenFields_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_FIELDS, 0);
+        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, false);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxBetweenFields_01a.php", options);
+    }
+
+    public void testAttributeSyntaxBetweenFields_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_FIELDS, 1);
+        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, false);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxBetweenFields_01b.php", options);
+    }
+
+    public void testAttributeSyntaxBetweenFields_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_FIELDS, 0);
+        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, true);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxBetweenFields_02a.php", options);
+    }
+
+    public void testAttributeSyntaxBetweenFields_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_FIELDS, 1);
+        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, true);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxBetweenFields_02b.php", options);
+    }
+
+    public void testAttributeSyntaxAfterFields_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_FIELDS, 0);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxAfterFields_01a.php", options);
+    }
+
+    public void testAttributeSyntaxAfterFields_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_FIELDS, 1);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxAfterFields_01b.php", options);
+    }
+
+    public void testAttributeSyntaxAfterFields_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_FIELDS, 0);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxAfterFields_02a.php", options);
+    }
+
+    public void testAttributeSyntaxAfterFields_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_FIELDS, 1);
+        reformatFileContents("testfiles/formatting/blankLines/php80/AttributeSyntaxAfterFields_02b.php", options);
     }
 
 }

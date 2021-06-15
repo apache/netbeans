@@ -94,6 +94,19 @@ is the proper place.
 
         <change>
             <api name="extexecution_api"/>
+            <summary>postExecution callback with exit code value</summary>
+            <version major="1" minor="61"/>
+            <date day="12" month="5" year="2021"/>
+            <author login="jtulach"/>
+            <compatibility addition="yes"/>
+            <description>
+                Use overloaded <code>ExecutionDescriptor.postExecution</code>
+                method to obtain exit code of just finished application.
+            </description>
+            <class package="org.netbeans.api.extexecution" name="ExecutionDescriptor"/>
+        </change>
+        <change>
+            <api name="extexecution_api"/>
             <summary>Rerun action callback</summary>
             <version major="1" minor="46"/>
             <date day="18" month="5" year="2015"/>

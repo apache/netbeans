@@ -22,12 +22,13 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
-import com.sun.source.tree.Scope;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+import java.awt.GraphicsEnvironment;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -47,6 +48,7 @@ import javax.swing.JButton;
 import javax.swing.text.Document;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreePathHandle;
@@ -147,7 +149,7 @@ final class IntroduceExpressionBasedMethodFix extends IntroduceFixBase implement
         allIfaces.set(allInterfaces);
         return targets;
     }
-    
+
     private final TypeMirrorHandle     returnType;
     private final List<TreePathHandle> parameters;
     private final Set<TypeMirrorHandle> thrownTypes;
@@ -192,7 +194,26 @@ final class IntroduceExpressionBasedMethodFix extends IntroduceFixBase implement
         final TargetDescription target = panel.getSelectedTarget();
         final MemberSearchResult searchResult = val.getResult();
         final boolean redoReferences = panel.isRefactorExisting();
-        js.runModificationTask(new Task<WorkingCopy>() {
+        getModificationResult(name, target, replaceOther, access, redoReferences, searchResult).commit();
+        return null;
+    }
+
+    @Override
+    public ModificationResult getModificationResult() throws IOException {
+        ModificationResult result = null;
+        int counter = 0;
+        do {
+            try {
+                result = getModificationResult("method" + (counter != 0 ? String.valueOf(counter) : ""), targets.iterator().next(), true, EnumSet.of(Modifier.PRIVATE), false, null);
+            } catch (Exception e) {
+                counter++;
+            }
+        } while (result == null && counter < 10);
+        return result;
+    }
+
+    private ModificationResult getModificationResult(final String name, final TargetDescription target, final boolean replaceOther, final Set<Modifier> access, final boolean redoReferences, final MemberSearchResult searchResult) throws IOException {
+        return js.runModificationTask(new Task<WorkingCopy>() {
             public void run(WorkingCopy copy) throws Exception {
                 copy.toPhase(JavaSource.Phase.RESOLVED);
                 TreePath expression = IntroduceExpressionBasedMethodFix.this.handle.resolve(copy);
@@ -211,6 +232,7 @@ final class IntroduceExpressionBasedMethodFix extends IntroduceFixBase implement
                 returnType = Utilities.convertIfAnonymous(Utilities.resolveTypeForDeclaration(copy, returnType));
                 final TreeMaker make = copy.getTreeMaker();
                 Tree returnTypeTree = make.Type(returnType);
+                copy.tag(returnTypeTree, TYPE_TAG);
                 List<VariableElement> parameters = IntroduceHint.resolveVariables(copy, IntroduceExpressionBasedMethodFix.this.parameters);
                 List<ExpressionTree> realArguments = IntroduceHint.realArguments(make, parameters);
                 ExpressionTree invocation = make.MethodInvocation(Collections.<ExpressionTree>emptyList(), make.Identifier(name), realArguments);
@@ -243,11 +265,11 @@ final class IntroduceExpressionBasedMethodFix extends IntroduceFixBase implement
                     //handle duplicates
                     Document doc = copy.getDocument();
                     Pattern p = Pattern.createPatternWithRemappableVariables(expression, parameters, true);
-                    for (Occurrence desc : Matcher.create(copy).setCancel(new AtomicBoolean()).match(p)) {
+                    for (Occurrence desc : Matcher.create(copy).setSearchRoot(pathToClass).setCancel(new AtomicBoolean()).match(p)) {
                         TreePath firstLeaf = desc.getOccurrenceRoot();
                         int startOff = (int) copy.getTrees().getSourcePositions().getStartPosition(copy.getCompilationUnit(), firstLeaf.getLeaf());
                         int endOff = (int) copy.getTrees().getSourcePositions().getEndPosition(copy.getCompilationUnit(), firstLeaf.getLeaf());
-                        if (!IntroduceHint.shouldReplaceDuplicate(doc, startOff, endOff)) {
+                        if (!GraphicsEnvironment.isHeadless() && !IntroduceHint.shouldReplaceDuplicate(doc, startOff, endOff)) {
                             continue;
                         }
                         //XXX:
@@ -282,13 +304,12 @@ final class IntroduceExpressionBasedMethodFix extends IntroduceFixBase implement
                 
                 if (redoReferences) {
                     new ReferenceTransformer(
-                        copy, ElementKind.METHOD,  searchResult,
-                        name, 
-                        targetType).scan(pathToClass, null);
+                            copy, ElementKind.METHOD,  searchResult,
+                            name,
+                            targetType).scan(pathToClass, null);
                 }
             }
-        }).commit();
-        return null;
+        });
     }
-    
+
 }

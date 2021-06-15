@@ -21,7 +21,7 @@ $foo = new Foo('constructor',
 $foo->bar('method',
         'bar',);
 
-$bar = function(...$args) {
+$bar = function (...$args) {
     echo "closure" . PHP_EOL;
 };
 $bar('closure',

@@ -153,7 +153,7 @@ public class TruffleVariablesTableModel implements TableModelFilter, TableHTMLMo
                         CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(debugger.getCurrentThread());
                         if (currentPCInfo != null) {
                             TruffleStackFrame selectedStackFrame = currentPCInfo.getSelectedStackFrame();
-                            frameLanguage = selectedStackFrame.getLanguage();
+                            frameLanguage = selectedStackFrame != null ? selectedStackFrame.getLanguage() : LanguageName.NONE;
                         }
                         LanguageName valueLanguage = tv.getLanguage();
                         if (!LanguageName.NONE.equals(valueLanguage) && !frameLanguage.equals(valueLanguage)) {

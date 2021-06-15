@@ -23,7 +23,7 @@ function union_types(int | float | bool | string | array | object | iterable | c
     return null;
 }
 
-$closure = function(Type1 | \Union\Type2 | null $param1, callable | false $prame2): \Union\Type1 | int | float | null {
+$closure = function (Type1 | \Union\Type2 | null $param1, callable | false $prame2): \Union\Type1 | int | float | null {
     return null;
 };
 

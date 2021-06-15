@@ -30,7 +30,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -777,13 +776,27 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
     public abstract OutputStream getOutputStream(FileLock lock)
     throws IOException;
 
-    /** Get output stream.
+    /** Get output stream. This method does its best even
+     * when this file object is {@linkplain #isValid() invalid} - since
+     * version 9.23 it tries to recreate the parent hierarchy
+     * and really open the stream.
+     *
      * @return output stream to overwrite the contents of this file
-     * @throws IOException if an error occurs (the file is invalid, etc.)
+     * @throws IOException if an error occurs
      * @throws FileAlreadyLockedException if the file is already locked
      * @since 6.6
      */
     public final OutputStream getOutputStream() throws FileAlreadyLockedException, IOException  {
+        if (!isValid()) {
+            final FileObject recreate = FileUtil.createData(getFileSystem().getRoot(), getPath());
+            if (recreate != null) {
+                return recreate.getOutputStreamImpl();
+            }
+        }
+        return getOutputStreamImpl();
+    }
+
+    private OutputStream getOutputStreamImpl() throws IOException {
         final FileLock lock = lock();
         final OutputStream os;
         try {
@@ -942,6 +955,23 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
     * @exception IllegalArgumentException if <code>this</code> is not a folder
     */
     public FileObject getFileObject(String relativePath) {
+        return getFileObject(relativePath, true);
+    }
+
+    /** Retrieve file or folder relative to a current folder, with a given relative path.
+    * <em>Note</em> that neither file nor folder is created on disk. This method isn't final since revision 1.93.
+    * Since 7.45 common implementations of this method
+    * accept also ".." which is interpreted as a reference to parent.
+    *
+    * @param relativePath is just basename of the file or (since 4.16) the relative path delimited by '/'
+    * @param onlyExisting if <code>false</code> then a non-<code>null</code> (but {@link #isValid() invalid}
+    *   file object is returned even if it doesn't exist
+    * @return the object representing requested file or <CODE>null</CODE> (when <code>onlyExisting</code> is true)
+    *   if the file or folder does not exist
+    * @exception IllegalArgumentException if <code>this</code> is not a folder
+    * @since 9.23
+    */
+    public FileObject getFileObject(String relativePath, boolean onlyExisting) {
         if (relativePath.startsWith("/") && !relativePath.startsWith("//")) {
             relativePath = relativePath.substring(1);
         }
@@ -959,7 +989,15 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
                 myObj = myObj.getParent();
             } else {
                 if (!nameExt.equals(".")) {
-                    myObj = myObj.getFileObject(nameExt, null);
+                    FileObject nextObj = myObj.getFileObject(nameExt, null);
+                    if (nextObj == null && !onlyExisting) {
+                        try {
+                            nextObj = new VirtualFileObject(myObj.getFileSystem(), myObj, nameExt, st.hasMoreTokens());
+                        } catch (FileStateInvalidException ex) {
+                            throw new IllegalStateException(ex);
+                        }
+                    }
+                    myObj = nextObj;
                 }
             }
         }
@@ -1213,6 +1251,10 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
      * @since 7.57
     */
     public final URL toURL() {
+        return computeURL();
+    }
+
+    URL computeURL() {
         return URLMapper.findURL(this, URLMapper.INTERNAL);
     }
 

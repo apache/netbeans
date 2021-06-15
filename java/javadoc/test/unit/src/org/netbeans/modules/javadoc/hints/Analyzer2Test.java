@@ -346,4 +346,19 @@ public class Analyzer2Test extends NbTestCase {
                 .run(JavadocHint.class)
                 .assertContainsWarnings("2:3-2:11:warning:End Tag Missing: </strong>");
     }
+    
+    public void testOptionalEndTag() throws Exception {
+        HintTest.create()
+                .input(
+                "package test;\n" +
+                "/**\n" +
+                " * <ul><li>One<li>Two</li></ul>\n" +
+                " */\n" +
+                "class Zima {\n" +
+                "}\n")
+                .preference(AVAILABILITY_KEY + true, true)
+                .preference(SCOPE_KEY, "private")
+                .run(JavadocHint.class)
+                .assertWarnings();
+    }    
 }

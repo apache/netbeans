@@ -18,8 +18,10 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import java.util.concurrent.CompletableFuture;
+import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
-import org.eclipse.lsp4j.services.LanguageClient;
+import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.netbeans.modules.java.lsp.server.ui.UIContext;
 import org.openide.awt.StatusDisplayer;
 
@@ -37,6 +39,11 @@ class WorkspaceUIContext extends UIContext {
     @Override
     protected boolean isValid() {
         return true;
+    }
+
+    @Override
+    protected CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams msg) {
+        return client.showMessageRequest(msg);
     }
 
     @Override

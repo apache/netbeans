@@ -56,6 +56,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionName;
 import org.netbeans.modules.php.editor.parser.astnodes.GroupUseStatementPart;
@@ -63,6 +64,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
+import org.netbeans.modules.php.editor.parser.astnodes.NamedArgument;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeNode;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPVarComment;
@@ -114,6 +116,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
     public static final EnumSet<ColoringAttributes> ANNOTATION_TYPE_SET = EnumSet.of(ColoringAttributes.ANNOTATION_TYPE);
     public static final EnumSet<ColoringAttributes> METHOD_INVOCATION_SET = EnumSet.of(ColoringAttributes.CUSTOM1);
     public static final EnumSet<ColoringAttributes> STATIC_METHOD_INVOCATION_SET = EnumSet.of(ColoringAttributes.STATIC, ColoringAttributes.CUSTOM1);
+    public static final EnumSet<ColoringAttributes> PARAMETER_NAME_SET = EnumSet.of(ColoringAttributes.CUSTOM2);
     private static final Logger LOGGER = Logger.getLogger(SemanticAnalysis.class.getName());
     private static boolean isLogged = false;
     private volatile boolean cancelled;
@@ -213,6 +216,8 @@ public class SemanticAnalysis extends SemanticAnalyzer {
         }
 
         Map<OffsetRange, Set<ColoringAttributes>> highlights;
+        // for unsed private constant: name, identifier
+        private final Map<UnusedIdentifier, ASTNodeColoring> privateUnusedConstants;
         // for unused private fields: name, varible
         // if isused, then it's deleted from the list and marked as the field
         private final Map<UnusedIdentifier, ASTNodeColoring> privateFieldsUnused;
@@ -241,6 +246,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
 
         public SemanticHighlightVisitor(Map<OffsetRange, Set<ColoringAttributes>> highlights, Snapshot snapshot, Model model) {
             this.highlights = highlights;
+            privateUnusedConstants = new HashMap<>();
             privateFieldsUnused = new HashMap<>();
             privateUnusedMethods = new HashMap<>();
             this.snapshot = snapshot;
@@ -306,6 +312,15 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             }
         }
 
+        private void addColoringForNamedArgument(NamedArgument node, Set<ColoringAttributes> coloring) {
+            int start = snapshot.getOriginalOffset(node.getStartOffset());
+            if (start > -1) {
+                int end = start + node.getExpression().getStartOffset() - node.getStartOffset();
+                assert coloring != null : snapshot.getText().toString();
+                highlights.put(new OffsetRange(start, end), coloring);
+            }
+        }
+
         private void addColoringForUnusedPrivateFields() {
             // are there unused private fields?
             for (ASTNodeColoring item : privateFieldsUnused.values()) {
@@ -325,6 +340,16 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             }
         }
 
+        private void addColoringForUnusedPrivateConstants() {
+            for (ASTNodeColoring item : privateUnusedConstants.values()) {
+                if (item.coloring.contains(ColoringAttributes.DEPRECATED)) {
+                    addColoringForNode(item.identifier, DEPRECATED_UNUSED_STATIC_FIELD_SET);
+                } else {
+                    addColoringForNode(item.identifier, UNUSED_STATIC_FIELD_SET);
+                }
+            }
+        }
+        
         @Override
         public void scan(ASTNode node) {
             if (!isCancelled()) {
@@ -364,6 +389,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             }
             addToPath(cldec);
             typeInfo = new TypeDeclarationTypeInfo(cldec);
+            scan(cldec.getAttributes());
             scan(cldec.getSuperClass());
             scan(cldec.getInterfaes());
             Identifier name = cldec.getName();
@@ -377,6 +403,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                     Block block = needToScan.remove(0);
                     block.accept(this);
                 }
+                addColoringForUnusedPrivateConstants();
                 addColoringForUnusedPrivateFields();
             }
             removeFromPath();
@@ -440,6 +467,19 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (isCancelled()) {
                 return;
             }
+            if (CodeUtils.isConstructor(md)) {
+                // [NETBEANS-4443] PHP 8.0 Constructor Property Promotion
+                for (FormalParameter formalParameter : md.getFunction().getFormalParameters()) {
+                    if (isCancelled()) {
+                        return;
+                    }
+                    FieldsDeclaration fieldsDeclaration = FieldsDeclaration.create(formalParameter);
+                    if (fieldsDeclaration != null) {
+                        scan(fieldsDeclaration);
+                    }
+                }
+            }
+            scan(md.getAttributes());
             scan(md.getFunction().getFormalParameters());
             boolean isPrivate = Modifier.isPrivate(md.getModifier());
             Identifier identifier = md.getFunction().getFunctionName();
@@ -538,6 +578,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (node.isAnonymous()) {
                 addToPath(node);
                 typeInfo = new ClassInstanceCreationTypeInfo(node);
+                scan(node.getAttributes());
                 scan(node.getSuperClass());
                 scan(node.getInterfaces());
                 needToScan = new ArrayList<>();
@@ -550,6 +591,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                         Block block = needToScan.remove(0);
                         block.accept(this);
                     }
+                    addColoringForUnusedPrivateConstants();
                     addColoringForUnusedPrivateFields();
                 }
                 removeFromPath();
@@ -574,6 +616,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (isCancelled()) {
                 return;
             }
+            scan(node.getAttributes());
             typeInfo = new TypeDeclarationTypeInfo(node);
             Identifier name = node.getName();
             addColoringForNode(name, createTypeNameColoring(name));
@@ -727,11 +770,15 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                 parentNode = path.get(1);
             }
             if (parentNode instanceof ClassDeclaration || parentNode instanceof InterfaceDeclaration
-                    || parentNode instanceof TraitDeclaration) {
+                    || parentNode instanceof ClassInstanceCreation) {
+                boolean isPrivate = Modifier.isPrivate(node.getModifier());
                 List<Identifier> names = node.getNames();
-                if (!names.isEmpty()) {
-                    for (Identifier identifier : names) {
-                        addColoringForNode(identifier, createConstantDeclarationColoring(identifier));
+                for (Identifier identifier : names) {
+                    Set<ColoringAttributes> coloring = createConstantDeclarationColoring(identifier);
+                    if (!isPrivate) {
+                        addColoringForNode(identifier, coloring);
+                    } else {
+                        privateUnusedConstants.put(new UnusedIdentifier(identifier.getName(), typeInfo), new ASTNodeColoring(identifier, coloring));
                     }
                 }
             }
@@ -770,6 +817,10 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             }
             Identifier constant = node.getConstantName();
             if (constant != null) {
+                ASTNodeColoring item = privateUnusedConstants.remove(new UnusedIdentifier(constant.getName(), typeInfo));
+                if (item != null) {
+                    addColoringForNode(item.identifier, item.coloring);
+                }
                 addColoringForNode(constant, ColoringAttributes.STATIC_FIELD_SET);
             }
             super.visit(node);
@@ -842,6 +893,15 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                     assert false : "Unexpected class type: " + useStatementPart.getClass().getName(); // NOI18N
                 }
             }
+        }
+
+        @Override
+        public void visit(NamedArgument node) {
+            if (isCancelled()) {
+                return;
+            }
+            addColoringForNamedArgument(node, PARAMETER_NAME_SET);
+            super.visit(node);
         }
 
         private class FieldAccessVisitor extends DefaultVisitor {

@@ -37,7 +37,6 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.api.FileUtilities;
 import org.netbeans.modules.maven.api.NbMavenProject;
@@ -294,7 +293,7 @@ public abstract class AbstractMavenExecutor extends OutputTabMaintainer<Abstract
                 return;
             }
             final AtomicReference<Thread> t = new AtomicReference<Thread>();
-            final ProgressHandle handle = ProgressHandleFactory.createHandle(ResumeAction_scanning(), new Cancellable() {
+            final ProgressHandle handle = ProgressHandle.createHandle(ResumeAction_scanning(), new Cancellable() {
                 @Override public boolean cancel() {
                     Thread _t = t.get();
                     if (_t != null) {

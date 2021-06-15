@@ -21,6 +21,7 @@ package org.netbeans.modules.debugger.jpda.truffle.breakpoints.impl;
 
 import com.sun.jdi.AbsentInformationException;
 import com.sun.jdi.ArrayReference;
+import com.sun.jdi.BooleanValue;
 import com.sun.jdi.ClassNotLoadedException;
 import com.sun.jdi.ClassType;
 import com.sun.jdi.IncompatibleThreadStateException;
@@ -192,6 +193,12 @@ public class TruffleBreakpointsHandler {
             if (bp.isEnabled()) {
                 bpImpl = setLineBreakpoint(debugManager, t, uri, bp.getLineNumber(),
                                            getIgnoreCount(bp), bp.getCondition());
+                // Find out whether the breakpoint was resolved already during the submission:
+                try {
+                    updateResolved(bp, bpImpl, t.getThreadReference());
+                } catch (Exception ex) {
+                    Exceptions.printStackTrace(Exceptions.attachMessage(ex, "Testing resolved breakpoint at "+uri+":"+bp.getLineNumber()));
+                }
             } else {
                 bpImpl = null;
             }
@@ -207,6 +214,15 @@ public class TruffleBreakpointsHandler {
                 }
                 impls.add(bpEntry.getValue());
             }
+        }
+    }
+
+    private void updateResolved(JSLineBreakpoint breakpoint, ObjectReference bp, ThreadReference tr) throws InternalExceptionWrapper, VMDisconnectedExceptionWrapper, ClassNotPreparedExceptionWrapper, InvalidTypeException, ClassNotLoadedException, IncompatibleThreadStateException, InvocationException, ObjectCollectedExceptionWrapper {
+        ClassType breakpointClass = (ClassType) bp.referenceType();
+        Method isResolvedMethod = ClassTypeWrapper.concreteMethodByName(breakpointClass, "isResolved", "()Z");
+        BooleanValue isResolvedValue = (BooleanValue) ObjectReferenceWrapper.invokeMethod(bp, tr, isResolvedMethod, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
+        if (isResolvedValue.value()) {
+            JSBreakpointStatus.setValid(breakpoint, "resolved");
         }
     }
 
@@ -301,10 +317,16 @@ public class TruffleBreakpointsHandler {
                                     ObjectReference.INVOKE_SINGLE_THREADED);
                             ret.disableCollection();
                             bpRef[0] = ret;
+                            // Find out whether the breakpoint was resolved already during the submission:
+                            for (Value v : ret.getValues()) {
+                                if (v instanceof ObjectReference) {
+                                    updateResolved(bp, (ObjectReference) v, tr);
+                                }
+                            }
                         } catch (InvalidTypeException | ClassNotLoadedException |
                                  IncompatibleThreadStateException | UnsupportedOperationExceptionWrapper |
                                  InternalExceptionWrapper | VMDisconnectedExceptionWrapper |
-                                 ObjectCollectedExceptionWrapper ex) {
+                                 ObjectCollectedExceptionWrapper | ClassNotPreparedExceptionWrapper ex) {
                             Exceptions.printStackTrace(Exceptions.attachMessage(ex, "Setting breakpoint to "+uri+":"+line));
                         } finally {
                             persistents.collect();

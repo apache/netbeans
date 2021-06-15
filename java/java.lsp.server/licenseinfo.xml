@@ -37,6 +37,7 @@
         <license ref="Apache-2.0" />
     </fileset>
     <fileset>
+        <file>vscode/images/Apache_NetBeans_Logo.png</file>
         <file>script/etc/nbcode.clusters</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />

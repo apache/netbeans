@@ -59,9 +59,11 @@ export function launch(
     }
 
     let clusterPath = info.clusters.join(path.delimiter);
-    let ideArgs: string[] = [];
+    let ideArgs: string[] = [
+        '--userdir', userDir
+    ];
     if (info.jdkHome) {
-        ideArgs = ['--jdkhome', info.jdkHome as string];
+        ideArgs.push('--jdkhome', info.jdkHome as string);
     }
     if (info.verbose) {
         ideArgs.push('-J-Dnetbeans.logger.console=true');
@@ -86,7 +88,8 @@ if (typeof process === 'object' && process.argv0 === 'node') {
     }
     let clusters = fs.readdirSync(nbcode).filter(c => c !== 'bin' && c !== 'etc').map(c => path.join(nbcode, c));
     let args = process.argv.slice(2);
-    let globalStorage = path.join(os.homedir(), '.config', 'Code', 'User', 'globalStorage', 'jlahoda.apache-netbeans-java');
+    let json = JSON.parse("" + fs.readFileSync(path.join(extension, 'package.json')));
+    let globalStorage = path.join(os.homedir(), '.config', 'Code', 'User', 'globalStorage', json.publisher + '.' + json.name);
     let info = {
         clusters : clusters,
         extensionPath: extension,

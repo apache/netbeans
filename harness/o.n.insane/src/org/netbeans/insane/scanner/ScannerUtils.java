@@ -244,7 +244,7 @@ public final class ScannerUtils {
     }
 
     @SuppressWarnings("deprecation")
-    private static void suspendAllThreads(Set except) {
+    private static void suspendAllThreads(Set<Thread> except) {
         Thread[] threads = getAllThreads();
         
         for (int i=0; i<threads.length; i++) {

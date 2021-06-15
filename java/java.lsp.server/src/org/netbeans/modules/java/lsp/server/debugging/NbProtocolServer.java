@@ -18,13 +18,18 @@
  */
 package org.netbeans.modules.java.lsp.server.debugging;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.Writer;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.lsp4j.debug.Capabilities;
@@ -34,7 +39,6 @@ import org.eclipse.lsp4j.debug.ContinueResponse;
 import org.eclipse.lsp4j.debug.DisconnectArguments;
 import org.eclipse.lsp4j.debug.EvaluateArguments;
 import org.eclipse.lsp4j.debug.EvaluateResponse;
-import org.eclipse.lsp4j.debug.ExceptionBreakMode;
 import org.eclipse.lsp4j.debug.ExceptionBreakpointsFilter;
 import org.eclipse.lsp4j.debug.ExceptionInfoArguments;
 import org.eclipse.lsp4j.debug.ExceptionInfoResponse;
@@ -65,17 +69,23 @@ import org.eclipse.lsp4j.debug.services.IDebugProtocolServer;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.DebuggerManager;
+import org.netbeans.api.debugger.Session;
 import org.netbeans.api.debugger.jpda.InvalidExpressionException;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.api.debugger.jpda.Variable;
 import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable;
+import org.netbeans.modules.java.lsp.server.LspSession;
+import org.netbeans.modules.java.lsp.server.debugging.breakpoints.NbBreakpointsRequestHandler;
+import org.netbeans.modules.java.lsp.server.debugging.attach.NbAttachRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDebugSession;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDisconnectRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbLaunchRequestHandler;
-import org.netbeans.modules.java.lsp.server.debugging.breakpoints.NbBreakpointsRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.variables.NbVariablesRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
+import org.netbeans.modules.nativeimage.api.debug.EvaluateException;
+import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
+import org.netbeans.modules.nativeimage.api.debug.NIVariable;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVFrame;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVThread;
 
@@ -83,14 +93,16 @@ import org.netbeans.spi.debugger.ui.DebuggingView.DVThread;
  *
  * @author Dusan Balek
  */
-public final class NbProtocolServer implements IDebugProtocolServer {
+public final class NbProtocolServer implements IDebugProtocolServer, LspSession.ScheduledServer {
 
     private final DebugAdapterContext context;
     private final NbLaunchRequestHandler launchRequestHandler = new NbLaunchRequestHandler();
+    private final NbAttachRequestHandler attachRequestHandler = new NbAttachRequestHandler();
     private final NbDisconnectRequestHandler disconnectRequestHandler = new NbDisconnectRequestHandler();
     private final NbBreakpointsRequestHandler breakpointsRequestHandler = new NbBreakpointsRequestHandler();
     private final NbVariablesRequestHandler variablesRequestHandler = new NbVariablesRequestHandler();
     private boolean initialized = false;
+    private Future<Void> runningServer;
 
     public NbProtocolServer(DebugAdapterContext context) {
         this.context = context;
@@ -139,6 +151,7 @@ public final class NbProtocolServer implements IDebugProtocolServer {
         return CompletableFuture.completedFuture(caps);
     }
 
+    @Override
     public CompletableFuture<Void> configurationDone(ConfigurationDoneArguments args) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         NbDebugSession debugSession = context.getDebugSession();
@@ -155,6 +168,11 @@ public final class NbProtocolServer implements IDebugProtocolServer {
     @Override
     public CompletableFuture<Void> launch(Map<String, Object> args) {
         return launchRequestHandler.launch(args, context);
+    }
+
+    @Override
+    public CompletableFuture<Void> attach(Map<String, Object> args) {
+        return attachRequestHandler.attach(args, context);
     }
 
     @Override
@@ -183,8 +201,8 @@ public final class NbProtocolServer implements IDebugProtocolServer {
             }
             response.setAllThreadsContinued(false);
         } else {
-            JPDADebugger debugger = context.getDebugSession().getDebugger();
-            debugger.getSession().getCurrentEngine().getActionsManager().doAction("continue");
+            Session session = context.getDebugSession().getSession();
+            session.getCurrentEngine().getActionsManager().doAction("continue");
             context.getThreadsProvider().getThreadObjects().cleanAll();
             response.setAllThreadsContinued(true);
         }
@@ -245,8 +263,8 @@ public final class NbProtocolServer implements IDebugProtocolServer {
                 ev = null;
             }
         } else {
-            JPDADebugger debugger = context.getDebugSession().getDebugger();
-            debugger.getSession().getCurrentEngine().getActionsManager().doAction("pause");
+            Session session = context.getDebugSession().getSession();
+            session.getCurrentEngine().getActionsManager().doAction("pause");
             ev = new StoppedEventArguments();
             ev.setReason("pause");
             ev.setThreadId(0);
@@ -286,11 +304,33 @@ public final class NbProtocolServer implements IDebugProtocolServer {
                     stackFrame.setId(frameId);
                     stackFrame.setName(frame.getName());
                     URI sourceURI = frame.getSourceURI();
-                    if (sourceURI != null && sourceURI.getPath() != null) {
+                    if (sourceURI != null) {
                         Source source = new Source();
-                        source.setName(Paths.get(sourceURI.getPath()).getFileName().toString());
-                        source.setPath(sourceURI.getPath());
-                        source.setSourceReference(0);
+                        String scheme = sourceURI.getScheme();
+                        if (null == scheme || scheme.isEmpty() || "file".equalsIgnoreCase(scheme)) {
+                            source.setName(Paths.get(sourceURI).getFileName().toString());
+                            source.setPath(sourceURI.getPath());
+                            source.setSourceReference(0);
+                        } else {
+                            int ref = context.createSourceReference(sourceURI, frame.getSourceMimeType());
+                            String path = sourceURI.getPath();
+                            if (path == null) {
+                                path = sourceURI.getSchemeSpecificPart();
+                            }
+                            if (path != null) {
+                                int sepIndex = Math.max(path.lastIndexOf('/'), path.lastIndexOf(File.separatorChar));
+                                source.setName(path.substring(sepIndex + 1));
+                                if ("jar".equalsIgnoreCase(scheme)) {
+                                    try {
+                                        path = new URI(path).getPath();
+                                    } catch (URISyntaxException ex) {
+                                        // ignore, we just tried
+                                    }
+                                }
+                                source.setPath(path);
+                            }
+                            source.setSourceReference(ref);
+                        }
                         stackFrame.setSource(source);
                     }
                     stackFrame.setLine(line);
@@ -343,10 +383,10 @@ public final class NbProtocolServer implements IDebugProtocolServer {
         if (sourceReference <= 0) {
             ErrorUtilities.completeExceptionally(future, "SourceRequest: property 'sourceReference' is missing, null, or empty", ResponseErrorCode.InvalidParams);
         } else {
-            String uri = context.getSourceUri(sourceReference);
+            URI uri = context.getSourceUri(sourceReference);
             NbSourceProvider sourceProvider = context.getSourceProvider();
             SourceResponse response = new SourceResponse();
-            response.setMimeType("text/x-java"); // Set mimeType to tell clients to recognize the source contents as java source
+            response.setMimeType(context.getSourceMimeType(sourceReference));
             response.setContent(sourceProvider.getSourceContents(uri));
             future.complete(response);
         }
@@ -372,65 +412,113 @@ public final class NbProtocolServer implements IDebugProtocolServer {
         }
         return future;
     }
+    
+    private EvaluateResponse passToApplication(String args) {
+        Writer w = context.getInputSink();
+        if (w != null) {
+            try {
+                w.write(args);
+            } catch (IOException ex) {
+                // TBD: handle.
+            }
+        }
+        EvaluateResponse resp = new EvaluateResponse();
+        resp.setResult("");
+        return resp;
+    }
 
     @Override
     public CompletableFuture<EvaluateResponse> evaluate(EvaluateArguments args) {
         return CompletableFuture.supplyAsync(() -> {
             String expression = args.getExpression();
+            ThreadObjects obs = context.getThreadsProvider().getThreadObjects();
+            if (args.getFrameId() == null || obs == null) {
+                return passToApplication(args.getExpression());
+            }
             if (StringUtils.isBlank(expression)) {
                 throw ErrorUtilities.createResponseErrorException(
-                    "Failed to evaluate. Reason: Empty expression cannot be evaluated.",
+                    "Empty expression cannot be evaluated.",
                     ResponseErrorCode.InvalidParams);
             }
-            NbFrame stackFrame = (NbFrame) context.getThreadsProvider().getThreadObjects().getObject(args.getFrameId());
+            NbFrame stackFrame = (NbFrame)obs.getObject(args.getFrameId());
             if (stackFrame == null) {
                 throw ErrorUtilities.createResponseErrorException(
-                    "Failed to evaluate. Reason: Unknown frame " + args.getFrameId(),
+                    "Unknown frame " + args.getFrameId(),
                     ResponseErrorCode.InvalidParams);
             }
             stackFrame.getDVFrame().makeCurrent(); // The evaluation is always performed with respect to the current frame
             DVThread dvThread = stackFrame.getDVFrame().getThread();
             int threadId = context.getThreadsProvider().getId(dvThread);
-            JPDADebugger debugger = context.getDebugSession().getDebugger();
-            Variable variable;
-            try {
-                variable = debugger.evaluate(expression);
-            } catch (InvalidExpressionException ex) {
-                throw ErrorUtilities.createResponseErrorException(
-                    "Failed to evaluate. Reason: " + ex.getLocalizedMessage(),
-                    ResponseErrorCode.ParseError);
-            }
             EvaluateResponse response = new EvaluateResponse();
-            TruffleVariable truffleVariable = TruffleVariable.get(variable);
-            if (truffleVariable != null) {
-                int referenceId = context.getThreadsProvider().getThreadObjects().addObject(threadId, truffleVariable);
-                response.setResult(truffleVariable.getDisplayValue());
-                response.setVariablesReference(referenceId);
-                response.setType(truffleVariable.getType());
-                response.setIndexedVariables(truffleVariable.isLeaf() ? 0 : Integer.MAX_VALUE);
+            JPDADebugger debugger = context.getDebugSession().getJPDADebugger();
+            if (debugger != null) {
+                evaluateJPDA(debugger, expression, threadId, response);
             } else {
-                if (variable instanceof ObjectVariable) {
-                    int referenceId = context.getThreadsProvider().getThreadObjects().addObject(threadId, variable);
-                    int indexedVariables = ((ObjectVariable) variable).getFieldsCount();
-                    String toString;
-                    try {
-                        toString = ((ObjectVariable) variable).getToStringValue();
-                    } catch (InvalidExpressionException ex) {
-                        toString = variable.getValue();
-                    }
-                    response.setResult(toString);
-                    response.setVariablesReference(referenceId);
-                    response.setType(variable.getType());
-                    response.setIndexedVariables(Math.max(indexedVariables, 0));
-                } else {
-                    response.setResult(variable.getValue());
-                    response.setVariablesReference(0);
-                    response.setType(variable.getType());
-                    response.setIndexedVariables(0);
-                }
+                NIDebugger niDebugger = context.getDebugSession().getNIDebugger();
+                evaluateNative(niDebugger, expression, threadId, response);
             }
             return response;
         });
+    }
+
+    private void evaluateJPDA(JPDADebugger debugger, String expression, int threadId, EvaluateResponse response) {
+        Variable variable;
+        try {
+            variable = debugger.evaluate(expression);
+        } catch (InvalidExpressionException ex) {
+            throw ErrorUtilities.createResponseErrorException(
+                ex.getLocalizedMessage(),
+                ResponseErrorCode.ParseError);
+        }
+        TruffleVariable truffleVariable = TruffleVariable.get(variable);
+        if (truffleVariable != null) {
+            int referenceId = context.getThreadsProvider().getThreadObjects().addObject(threadId, truffleVariable);
+            response.setResult(truffleVariable.getDisplayValue());
+            response.setVariablesReference(referenceId);
+            response.setType(truffleVariable.getType());
+            response.setIndexedVariables(truffleVariable.isLeaf() ? 0 : truffleVariable.getChildren().length);
+        } else {
+            if (variable instanceof ObjectVariable) {
+                int referenceId = context.getThreadsProvider().getThreadObjects().addObject(threadId, variable);
+                int indexedVariables = ((ObjectVariable) variable).getFieldsCount();
+                String toString;
+                try {
+                    toString = ((ObjectVariable) variable).getToStringValue();
+                } catch (InvalidExpressionException ex) {
+                    toString = variable.getValue();
+                }
+                response.setResult(toString);
+                response.setVariablesReference(referenceId);
+                response.setType(variable.getType());
+                response.setIndexedVariables(Math.max(indexedVariables, 0));
+            } else {
+                response.setResult(variable.getValue());
+                //response.setVariablesReference(0);
+                response.setType(variable.getType());
+                //response.setIndexedVariables(0);
+            }
+        }
+    }
+
+    private void evaluateNative(NIDebugger niDebugger, String expression, int threadId, EvaluateResponse response) {
+        try {
+            NIVariable variable = niDebugger.evaluate(expression, null, null);
+            int numChildren = variable.getNumChildren();
+            if (numChildren > 0) {
+                int referenceId = context.getThreadsProvider().getThreadObjects().addObject(threadId, variable);
+                response.setResult(variable.getValue());
+                response.setVariablesReference(referenceId);
+                response.setType(variable.getType());
+                response.setIndexedVariables(numChildren);
+            } else {
+                response.setResult(variable.getValue());
+                response.setType(variable.getType());
+            }
+        } catch (EvaluateException ex) {
+            throw ErrorUtilities.createResponseErrorException(
+                ex.getLocalizedMessage(),
+                ResponseErrorCode.ParseError);
+        }
     }
 
     @Override
@@ -440,7 +528,6 @@ public final class NbProtocolServer implements IDebugProtocolServer {
         if (exceptionVariable == null) {
             ErrorUtilities.completeExceptionally(future, "No exception exists in thread " + args.getThreadId(), ResponseErrorCode.InvalidParams);
         } else {
-            JPDADebugger debugger = context.getDebugSession().getDebugger();
             Throwable exception = (Throwable) exceptionVariable.createMirrorObject();
             String typeName = exception.getLocalizedMessage(); // TODO
             String exceptionToString = exception.toString();
@@ -452,5 +539,14 @@ public final class NbProtocolServer implements IDebugProtocolServer {
             future.complete(response);
         }
         return future;
+    }
+
+    void setRunningFuture(Future<Void> runningServer) {
+        this.runningServer = runningServer;
+    }
+
+    @Override
+    public Future<Void> getRunningFuture() {
+        return runningServer;
     }
 }

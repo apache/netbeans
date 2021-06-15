@@ -247,12 +247,15 @@ public final class CompletionContext {
         // now were heading to the beginning to the document ...
 
         boolean classDefBeforePosition = false;
+        boolean openBraceBeforePosition = false;
 
         ts.move(position);
 
         while (ts.isValid() && ts.movePrevious() && ts.offset() >= 0) {
             Token<GroovyTokenId> t = ts.token();
-            if (t.id() == GroovyTokenId.LITERAL_class || t.id() == GroovyTokenId.LITERAL_interface || t.id() == GroovyTokenId.LITERAL_trait) {
+            if (t.id() == GroovyTokenId.LBRACE) {
+                openBraceBeforePosition = true;
+            } else if (t.id() == GroovyTokenId.LITERAL_class || t.id() == GroovyTokenId.LITERAL_interface || t.id() == GroovyTokenId.LITERAL_trait) {
                 classDefBeforePosition = true;
                 break;
             }
@@ -296,6 +299,10 @@ public final class CompletionContext {
                     }
                 }
             }
+        }
+
+        if (classDefBeforePosition && !openBraceBeforePosition) {
+            return null;
         }
 
         if (!scriptMode && !classDefBeforePosition && classDefAfterPosition) {

@@ -245,7 +245,24 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
     public Collection<? extends TypeScope> getReturnTypes(boolean resolveSemiTypes, Collection<? extends TypeScope> callerTypes) {
         assert callerTypes != null;
         String types = getReturnType();
-        Collection<? extends TypeScope> result = getReturnTypesDescriptor(types, resolveSemiTypes, callerTypes).getModifiedResult(callerTypes);
+        // NETBEANS-5062
+        Scope inScope = getInScope();
+        Set<TypeScope> cTypes = new HashSet<>();
+        List<String> typeNames = StringUtils.explode(types, Type.SEPARATOR);
+        if (typeNames.contains(Type.STATIC)
+                && inScope instanceof TypeScope) {
+            TypeScope typeScope = (TypeScope) inScope;
+            for (TypeScope callerType : callerTypes) {
+                if (callerType.isSubTypeOf(typeScope)) {
+                    cTypes.add(callerType);
+                } else {
+                    cTypes.add(typeScope);
+                }
+            }
+        } else {
+            cTypes.addAll(callerTypes);
+        }
+        Collection<? extends TypeScope> result = getReturnTypesDescriptor(types, resolveSemiTypes, cTypes).getModifiedResult(cTypes);
         if (!declaredReturnType) {
             updateReturnTypes(types, result);
         }

@@ -531,6 +531,16 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
     @Override
     public void visit(MethodDeclaration node) {
         if (lazyScan) {
+            if (CodeUtils.isConstructor(node)) {
+                // [NETBEANS-4443] PHP 8.0 Constructor Property Promotion
+                for (FormalParameter formalParameter : node.getFunction().getFormalParameters()) {
+                    // scan promoted parameters as fields
+                    FieldsDeclaration fieldsDeclaration = FieldsDeclaration.create(formalParameter);
+                    if (fieldsDeclaration != null) {
+                        scan(fieldsDeclaration);
+                    }
+                }
+            }
             modelBuilder.build(node, occurencesBuilder, this);
             markerBuilder.prepare(node, modelBuilder.getCurrentScope());
             scan(node.getFunction().getReturnType());

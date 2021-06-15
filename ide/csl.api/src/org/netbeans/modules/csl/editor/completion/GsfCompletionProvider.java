@@ -561,7 +561,7 @@ public class GsfCompletionProvider implements CompletionProvider {
                                     }
                                 });
                                 // TODO - find some way to show the multiple overloaded methods?
-                                if (documentation.getText() != null && documentation.getText().length() > 0) {
+                                if (documentation != null && documentation.getText() != null && documentation.getText().length() > 0) {
                                     // Make sure we at least pick an alternative that has documentation
                                     break;
                                 }

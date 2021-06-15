@@ -19,7 +19,7 @@
 
 package org.netbeans.modules.payara.common.wizards;
 
-import org.netbeans.modules.payara.common.ServerDetails;
+import org.netbeans.modules.payara.common.PayaraPlatformDetails;
 import org.netbeans.spi.server.ServerWizardProvider;
 import org.openide.WizardDescriptor.InstantiatingIterator;
 import org.openide.util.NbBundle;
@@ -76,7 +76,7 @@ public class PayaraWizardProvider implements ServerWizardProvider {
      */
     @Override
     public InstantiatingIterator getInstantiatingIterator() {
-        return ServerDetails.getInstantiatingIterator();
+        return PayaraPlatformDetails.getInstantiatingIterator();
     }
 
 }

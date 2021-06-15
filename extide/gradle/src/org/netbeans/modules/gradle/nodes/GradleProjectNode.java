@@ -53,7 +53,6 @@ public class GradleProjectNode extends AbstractNode {
     public GradleProjectNode(Lookup lookup, NbGradleProjectImpl proj) {
         super(NodeFactorySupport.createCompositeChildren(proj, "Projects/" + NbGradleProject.GRADLE_PROJECT_TYPE + "/Nodes"), lookup); //NOI18N
         this.project = proj;
-        setName(proj.getProjectDirectory().getNameExt());
         info = ProjectUtils.getInformation(project);
         info.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
@@ -77,20 +76,14 @@ public class GradleProjectNode extends AbstractNode {
         });
         ProjectProblemsProvider problems = proj.getLookup().lookup(ProjectProblemsProvider.class);
         if (problems != null) {
-            problems.addPropertyChangeListener(new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (ProjectProblemsProvider.PROP_PROBLEMS.equals(evt.getPropertyName())) {
-                        SwingUtilities.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                fireNameChange(null, getName());
-                                fireDisplayNameChange(null, getDisplayName());
-                                fireShortDescriptionChange(null, getShortDescription());
-                            }
-                        });
+            problems.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+                if (ProjectProblemsProvider.PROP_PROBLEMS.equals(evt.getPropertyName())) {
+                    SwingUtilities.invokeLater(() -> {
+                        fireNameChange(null, getName());
+                        fireDisplayNameChange(null, getDisplayName());
+                        fireShortDescriptionChange(null, getShortDescription());
+                    });
 
-                    }
                 }
             });
         }
@@ -99,7 +92,7 @@ public class GradleProjectNode extends AbstractNode {
 
     public @Override
     String getName() {
-        return project.getProjectDirectory().toURI().toString();
+        return info.getName();
     }
 
     @Override

@@ -422,6 +422,7 @@
                 </test-type>
             </test-dependencies>
             <friend-packages>
+                <friend>org.netbeans.modules.gradle.groovy</friend>
                 <friend>org.netbeans.modules.groovy.antproject</friend>
                 <friend>org.netbeans.modules.groovy.editor</friend>
                 <friend>org.netbeans.modules.groovy.grails</friend>

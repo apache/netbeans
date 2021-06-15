@@ -39,17 +39,17 @@ import org.netbeans.modules.xml.spi.dom.*;
 class DTDGrammar implements ExtendedGrammarQuery {
     
     // element name keyed
-    private Map elementDecls, attrDecls;
+    private Map<String, Set>  elementDecls, attrDecls;
     
     // Map<elementName:String, model:String || model:ContentModel || null>
     // this map is filled asynchronously as it takes some time
     private Map contentModels;
     
     // Map<elementname + " " + attributename, List<String>>
-    private Map attrEnumerations;
+    private Map<String, List> attrEnumerations;
     
     // Map<elementname + " " + attributename, String>
-    private Map defaultAttributeValues;
+    private Map<String, String> defaultAttributeValues;
     
     private Set<String> entities, notations;
 
@@ -138,7 +138,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
         
         NamedNodeMap existingAttributes = el.getAttributes();        
         
-        Set possibleAttributes = (Set) attrDecls.get(el.getTagName());
+        Set<String> possibleAttributes = (Set<String>) attrDecls.get(el.getTagName());
         if (possibleAttributes == null) return org.openide.util.Enumerations.empty();
         
         String prefix = ctx.getCurrentPrefix();
@@ -171,7 +171,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
         if (elementDecls == null) return org.openide.util.Enumerations.empty();;
         
         Node node = ((Node)ctx).getParentNode();        
-        Set elements = null;
+        Set<String> elements = null;
         
         if (node instanceof Element) {
             Element el = (Element) node;
@@ -195,7 +195,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
                 Enumeration en = ((ContentModel)model).whatCanFollow(new PreviousEnumeration(el, ctx));
                 if (en == null) return org.openide.util.Enumerations.empty();
                 String prefix = ctx.getCurrentPrefix();
-                elements = new TreeSet();
+                elements = new TreeSet<>();
                 while (en.hasMoreElements()) {
                     String next = (String) en.nextElement();
                     if (next.startsWith(prefix)) {

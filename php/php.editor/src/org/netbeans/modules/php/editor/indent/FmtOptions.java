@@ -101,18 +101,21 @@ public final class FmtOptions {
     public static final String BLANK_LINES_BEFORE_FIELDS = "blankLinesBeforeField"; //NOI18N
     public static final String BLANK_LINES_BETWEEN_FIELDS = "blankLinesBetweenField"; //NOI18N
     public static final String BLANK_LINES_AFTER_FIELDS = "blankLinesAfterField"; //NOI18N
-    public static final String BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC = "blankLinesGroupFieldsWithoutDoc"; //NOI18N
+    public static final String BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES = "blankLinesGroupFieldsWithoutDocAndAttributes"; //NOI18N
     public static final String BLANK_LINES_BEFORE_FUNCTION = "blankLinesBeforeFunction"; //NOI18N
     public static final String BLANK_LINES_AFTER_FUNCTION = "blankLinesAfterFunction"; //NOI18N
     public static final String BLANK_LINES_BEFORE_FUNCTION_END = "blankLinesBeforeFunctionEnd"; //NOI18N
     public static final String BLANK_LINES_AFTER_OPEN_PHP_TAG = "blankLinesAfterOpenPHPTag"; //NOI18N
     public static final String BLANK_LINES_AFTER_OPEN_PHP_TAG_IN_HTML = "blankLinesAfterOpenPHPTagInHTML"; //NOI18N
     public static final String BLANK_LINES_BEFORE_CLOSE_PHP_TAG = "blankLinesBeforeClosePHPTag"; //NOI18N
+    public static final String BLANK_LINES_MAX_PRESERVED = "blankLinesMaxPreserved"; //NOI18N
     public static final String SPACE_BEFORE_WHILE = "spaceBeforeWhile"; //NOI18N
     public static final String SPACE_BEFORE_ELSE = "spaceBeforeElse"; //NOI18N
     public static final String SPACE_BEFORE_CATCH = "spaceBeforeCatch"; //NOI18N
     public static final String SPACE_BEFORE_FINALLY = "spaceBeforeFinally"; //NOI18N
     public static final String SPACE_BEFORE_ANONYMOUS_CLASS_PAREN = "spaceBeforeAnonymousClassParen"; //NOI18N
+    public static final String SPACE_BEFORE_ANONYMOUS_FUNCTION_PAREN = "spaceBeforeAnonymousFunctionParen"; //NOI18N
+    public static final String SPACE_BEFORE_ATTRIBUTE_DECL_PAREN = "spaceBeforeAttributeDeclParen"; //NOI18N
     public static final String SPACE_BEFORE_METHOD_DECL_PAREN = "spaceBeforeMethodDeclParen"; //NOI18N
     public static final String SPACE_BEFORE_METHOD_CALL_PAREN = "spaceBeforeMethodCallParen"; //NOI18N
     public static final String SPACE_BEFORE_IF_PAREN = "spaceBeforeIfParen"; //NOI18N
@@ -158,6 +161,8 @@ public final class FmtOptions {
     public static final String SPACE_WITHIN_CATCH_PARENS = "spaceWithinCatchParens"; //NOI18N
     public static final String SPACE_WITHIN_TYPE_CAST_PARENS = "spaceWithinTypeCastParens"; //NOI18N
     public static final String SPACE_WITHIN_ARRAY_BRACKETS = "spaceWithinArrayBrackets"; //NOI18N
+    public static final String SPACE_WITHIN_ATTRIBUTE_BRACKETS = "spaceWithinAttributeBrackets"; //NOI18N
+    public static final String SPACE_WITHIN_ATTRIBUTE_DECL_PARENS = "spaceWithinAttributeDeclParens"; //NOI18N
     public static final String SPACE_BEFORE_COMMA = "spaceBeforeComma"; //NOI18N
     public static final String SPACE_AFTER_COMMA = "spaceAfterComma"; //NOI18N
     public static final String SPACE_BEFORE_SEMI = "spaceBeforeSemi"; //NOI18N
@@ -275,7 +280,7 @@ public final class FmtOptions {
             {BLANK_LINES_AFTER_CLASS_HEADER, "0"}, //NOI18N
             {BLANK_LINES_BEFORE_CLASS_END, "0"}, //NOI18N
             {BLANK_LINES_BEFORE_FIELDS, "1"}, //NOI18N
-            {BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC, TRUE}, //NOI18N
+            {BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, TRUE}, //NOI18N
             {BLANK_LINES_BETWEEN_FIELDS, "1"}, //NOI18N
             {BLANK_LINES_AFTER_FIELDS, "1"}, //NOI18N
             {BLANK_LINES_BEFORE_FUNCTION, "1"}, //NOI18N
@@ -284,12 +289,15 @@ public final class FmtOptions {
             {BLANK_LINES_AFTER_OPEN_PHP_TAG, "1"}, //NOI18N
             {BLANK_LINES_AFTER_OPEN_PHP_TAG_IN_HTML, "0"}, //NOI18N
             {BLANK_LINES_BEFORE_CLOSE_PHP_TAG, "0"}, //NOI18N
+            {BLANK_LINES_MAX_PRESERVED, "1"}, //NOI18N
 
             {SPACE_BEFORE_WHILE, TRUE},
             {SPACE_BEFORE_ELSE, TRUE},
             {SPACE_BEFORE_CATCH, TRUE},
             {SPACE_BEFORE_FINALLY, TRUE},
             {SPACE_BEFORE_ANONYMOUS_CLASS_PAREN, FALSE},
+            {SPACE_BEFORE_ANONYMOUS_FUNCTION_PAREN, TRUE},
+            {SPACE_BEFORE_ATTRIBUTE_DECL_PAREN, FALSE},
             {SPACE_BEFORE_METHOD_DECL_PAREN, FALSE},
             {SPACE_BEFORE_METHOD_CALL_PAREN, FALSE},
             {SPACE_BEFORE_IF_PAREN, TRUE},
@@ -334,6 +342,8 @@ public final class FmtOptions {
             {SPACE_WITHIN_CATCH_PARENS, FALSE},
             {SPACE_WITHIN_TYPE_CAST_PARENS, FALSE},
             {SPACE_WITHIN_ARRAY_BRACKETS, FALSE},
+            {SPACE_WITHIN_ATTRIBUTE_BRACKETS, FALSE},
+            {SPACE_WITHIN_ATTRIBUTE_DECL_PARENS, FALSE},
             {SPACE_BEFORE_COMMA, FALSE},
             {SPACE_AFTER_COMMA, TRUE},
             {SPACE_BEFORE_SEMI, FALSE},

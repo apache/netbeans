@@ -20,6 +20,8 @@ package org.netbeans.modules.editor.java;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.regex.Pattern;
 import javax.lang.model.SourceVersion;
@@ -31,6 +33,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 
 import org.netbeans.api.java.lexer.JavaTokenId;
@@ -48,6 +51,7 @@ import org.netbeans.modules.editor.java.GoToSupport.UiUtilsCaller;
 import org.netbeans.modules.java.source.TreeShims;
 //import org.netbeans.modules.java.source.TreeLoader;
 import org.netbeans.modules.java.source.parsing.JavacParser;
+import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -55,6 +59,7 @@ import org.openide.filesystems.LocalFileSystem;
 import org.openide.filesystems.Repository;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -1066,7 +1071,7 @@ public class GoToSupportTest extends NbTestCase {
         performTest(code, new UiUtilsCaller() {
             @Override public boolean open(FileObject fo, int pos) {
                 assertTrue(source == fo);
-                assertEquals(code.indexOf("o instanceof String str"), pos);
+                assertEquals(code.indexOf("String str"), pos);
                 wasCalled[0] = true;
                 return true;
             }
@@ -1148,8 +1153,8 @@ public class GoToSupportTest extends NbTestCase {
                 fail("Should not be called.");
             }
         }, true, false);
-
-        assertEquals("<html><body>final java.lang.String <b>str</b>", tooltip);
+        //as per JEP 394 : Lift the restriction that pattern variables are implicitly final
+        assertEquals("<html><body>java.lang.String <b>str</b>", tooltip);
     }
 
     private String sourceLevel = "1.5";
@@ -1291,7 +1296,9 @@ public class GoToSupportTest extends NbTestCase {
     public void testRecords1() throws Exception {
         if (!hasRecords()) return ;
         final boolean[] wasCalled = new boolean[1];
-        this.sourceLevel = "1.14";
+        this.sourceLevel = "1.15";
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         final String code = "package test;\n" +
                       "public class Test {\n" +
                       "    public record R(int ff) {}\n" +
@@ -1325,7 +1332,9 @@ public class GoToSupportTest extends NbTestCase {
 
     public void testRecords2() throws Exception {
         if (!hasRecords()) return ;
-        this.sourceLevel = "1.14";
+        this.sourceLevel = "1.15";
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         final String code = "package test;\n" +
                       "public class Test {\n" +
                       "    public record R(int ff) {}\n" +
@@ -1358,7 +1367,9 @@ public class GoToSupportTest extends NbTestCase {
 
     public void testRecords3() throws Exception {
         if (!hasRecords()) return ;
-        this.sourceLevel = "1.14";
+        this.sourceLevel = "1.15";
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         final String code = "package test;\n" +
                       "public class Test {\n" +
                       "    public record RR(int ff) {}\n" +
@@ -1392,7 +1403,9 @@ public class GoToSupportTest extends NbTestCase {
     public void testRecords4() throws Exception {
         if (!hasRecords()) return ;
         final boolean[] wasCalled = new boolean[1];
-        this.sourceLevel = "1.14";
+        this.sourceLevel = "1.15";
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         final String code = "package test;\n" +
                       "public class Test {\n" +
                       "    private static void method(Auxiliary r) {\n" +
@@ -1439,7 +1452,9 @@ public class GoToSupportTest extends NbTestCase {
     public void testRecords5() throws Exception {
         if (!hasRecords()) return ;
         final boolean[] wasCalled = new boolean[1];
-        this.sourceLevel = "1.14";
+        this.sourceLevel = "1.15";
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         final String code = "package test;\n" +
                       "public class Test {\n" +
                       "    private static void method(Auxi|liary r) {\n" +
@@ -1502,4 +1517,27 @@ public class GoToSupportTest extends NbTestCase {
         }
     }
 
+    private static final List<String> EXTRA_OPTIONS = new ArrayList<>();
+    @ServiceProvider(service = CompilerOptionsQueryImplementation.class, position = 100)
+    public static class TestCompilerOptionsQueryImplementation implements CompilerOptionsQueryImplementation {
+
+        @Override
+        public CompilerOptionsQueryImplementation.Result getOptions(FileObject file) {
+            return new CompilerOptionsQueryImplementation.Result() {
+                @Override
+                public List<? extends String> getArguments() {
+                    return EXTRA_OPTIONS;
+                }
+
+                @Override
+                public void addChangeListener(ChangeListener listener) {
+                }
+
+                @Override
+                public void removeChangeListener(ChangeListener listener) {
+                }
+            };
+        }
+
+    }
 }

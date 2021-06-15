@@ -21,13 +21,13 @@
 
 // no parameters
 $array = [
-    "test", function() {
+    "test", function () {
         echo "test";
     },
 ];
 
 $array = [
-    "test", function() use (
+    "test", function () use (
             $var1,
             $var2
     ) {
@@ -36,7 +36,7 @@ $array = [
 ];
 
 $array = [
-    "test", function()
+    "test", function ()
     use (
             $var1,
             $var2
@@ -46,7 +46,7 @@ $array = [
 ];
 
 $array = [
-    "test", function() use (
+    "test", function () use (
             $var1,
             $var2
     ): void {
@@ -55,7 +55,7 @@ $array = [
 ];
 
 $array = [
-    "test", function()
+    "test", function ()
     use (
             $var1,
             $var2
@@ -66,14 +66,14 @@ $array = [
 
 $array = [
     "test",
-    function() {
+    function () {
         echo "test";
     },
 ];
 
 $array = [
     "test",
-    function() use (
+    function () use (
             $var1,
             $var2
     ) {
@@ -83,7 +83,7 @@ $array = [
 
 $array = [
     "test",
-    function()
+    function ()
     use (
             $var1,
             $var2
@@ -94,7 +94,7 @@ $array = [
 
 $array = [
     "test",
-    function() use (
+    function () use (
             $var1,
             $var2
     ): void {
@@ -104,7 +104,7 @@ $array = [
 
 $array = [
     "test",
-    function()
+    function ()
     use (
             $var1,
             $var2
@@ -115,7 +115,7 @@ $array = [
 
 // has parameters
 $array = [
-    "test", function(
+    "test", function (
             $param1,
             $param2,
     ) {
@@ -124,7 +124,7 @@ $array = [
 ];
 
 $array = [
-    "test", function(
+    "test", function (
             $param1,
             $param2,
     ) use (
@@ -136,7 +136,7 @@ $array = [
 ];
 
 $array = [
-    "test", function(
+    "test", function (
             $param1,
             $param2,
     ) use (
@@ -150,7 +150,7 @@ $array = [
 
 $array = [
     "test",
-    function(
+    function (
             $param1,
             $param2,
     ) {
@@ -160,7 +160,7 @@ $array = [
 
 $array = [
     "test",
-    function(
+    function (
             $param1,
             $param2,
     ) use (
@@ -173,7 +173,7 @@ $array = [
 
 $array = [
     "test",
-    function(
+    function (
             $param1,
             $param2,
     ) use (
@@ -187,13 +187,13 @@ $array = [
 // key => value
 // no parameters
 $array = [
-    "test", "key" => function() {
+    "test", "key" => function () {
         echo "test";
     }, $test
 ];
 
 $array = [
-    "test", "key" => function() use (
+    "test", "key" => function () use (
             $var1,
             $var2
     ) {
@@ -202,7 +202,7 @@ $array = [
 ];
 
 $array = [
-    "test", "key" => function()
+    "test", "key" => function ()
     use (
             $var1,
             $var2
@@ -212,7 +212,7 @@ $array = [
 ];
 
 $array = [
-    "test", "key" => function() use (
+    "test", "key" => function () use (
             $var1,
             $var2
     ): void {
@@ -221,7 +221,7 @@ $array = [
 ];
 
 $array = [
-    "test", "key" => function()
+    "test", "key" => function ()
     use (
             $var1,
             $var2
@@ -232,14 +232,14 @@ $array = [
 
 $array = [
     "test",
-    "key" => function() {
+    "key" => function () {
         echo "test";
     },
 ];
 
 $array = [
     "test",
-    "key" => function() use (
+    "key" => function () use (
             $var1,
             $var2
     ) {
@@ -249,7 +249,7 @@ $array = [
 
 $array = [
     "test",
-    "key" => function()
+    "key" => function ()
     use (
             $var1,
             $var2
@@ -260,7 +260,7 @@ $array = [
 
 $array = [
     "test",
-    "key" => function() use (
+    "key" => function () use (
             $var1,
             $var2
     ): void {
@@ -270,7 +270,7 @@ $array = [
 
 $array = [
     "test",
-    "key" => function()
+    "key" => function ()
     use (
             $var1,
             $var2
@@ -281,7 +281,7 @@ $array = [
 
 // has parameters
 $array = [
-    "test", "key" => function(
+    "test", "key" => function (
             $param1,
             $param2,
     ) {
@@ -290,7 +290,7 @@ $array = [
 ];
 
 $array = [
-    "test", "key" => function(
+    "test", "key" => function (
             $param1,
             $param2,
     ) use (
@@ -302,7 +302,7 @@ $array = [
 ];
 
 $array = [
-    "test", "key" => function(
+    "test", "key" => function (
             $param1,
             $param2,
     ) use (
@@ -316,7 +316,7 @@ $array = [
 
 $array = [
     "test",
-    "key" => function(
+    "key" => function (
             $param1,
             $param2,
     ) {
@@ -326,7 +326,7 @@ $array = [
 
 $array = [
     "test",
-    "key" => function(
+    "key" => function (
             $param1,
             $param2,
     ) use (
@@ -340,7 +340,7 @@ $array = [
 
 $array = [
     "test",
-    "key" => function(
+    "key" => function (
             $param1,
             $param2,
     ) use (

@@ -36,8 +36,10 @@ public final class ImportantFilesImpl implements ImportantFilesImplementation {
             CodeSniffer.DOT_CONFIG_FILE_NAME,
             CodeSniffer.DIST_CONFIG_FILE_NAME,
             CodeSniffer.DIST_DOT_CONFIG_FILE_NAME,
-            CodingStandardsFixer.CONFIG_FILE_NAME,
-            CodingStandardsFixer.DIST_CONFIG_FILE_NAME,
+            CodingStandardsFixer.CONFIG_FILE_NAME_V2,
+            CodingStandardsFixer.DIST_CONFIG_FILE_NAME_V2,
+            CodingStandardsFixer.CONFIG_FILE_NAME_V3,
+            CodingStandardsFixer.DIST_CONFIG_FILE_NAME_V3,
             PHPStan.CONFIG_FILE_NAME,
             PHPStan.DIST_CONFIG_FILE_NAME};
 

@@ -35,6 +35,7 @@
 /nbi/engine/native/*/*/dist/
 /nb-javac/
 /java.source.nbjavac/test/test-nb-javac/nbproject/private/
+/java/java.lsp.server/vscode/.vscode-test/
 /harness/apisupport.harness/windows-launcher-src/*.exe
 /harness/apisupport.harness/windows-launcher-src/*.res
 /ide/versioning/test/qa-functional/data/tck.properties
@@ -71,16 +72,20 @@ derby.log
 /ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/SQLParserTokenManager.java
 /ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/Token.java
 /ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/TokenMgrError.java
-/debugger.jpda.ui/test/qa-functional/data/debugTestProject/nbproject/private/
-/debugger.jpda.ui/test/qa-functional/data/debugTestProjectAnt/nbproject/private/
 /profiler/lib.profiler/release/lib/
 /websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/jaxb/
 /websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/oauth/
 /websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/wadl/
+/javafx2.samples/FXML-LoginDemo/nbproject/private/
+
+# OS generated files - test related #
+#####################################
+/debugger.jpda.ui/test/qa-functional/data/debugTestProject/nbproject/private/
+/debugger.jpda.ui/test/qa-functional/data/debugTestProjectAnt/nbproject/private/
+/platform/o.n.bootstrap/test/unit/data/jars
 /xml/test/qa-functional/data/DTDActionsTestProject/nbproject/private/
 /xml/test/qa-functional/data/ActionsTestProject/nbproject/private/
 /xml/test/qa-functional/data/CoreTemplatesTestProject/nbproject/private/
-/javafx2.samples/FXML-LoginDemo/nbproject/private/
 
 # Snapcraft Generated files #
 #######################

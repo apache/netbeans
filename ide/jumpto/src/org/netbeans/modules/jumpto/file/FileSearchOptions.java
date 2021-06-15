@@ -33,6 +33,7 @@ public class FileSearchOptions  {
     private static final String CASE_SENSITIVE = "caseSensitive"; // NOI18N
     private static final String SHOW_HIDDEN_FILES = "showHiddenFiles"; // NOI18N 
     private static final String PREFER_MAIN_PROJECT = "preferMainProject"; // NOI18N    
+    private static final String SEARCH_BY_FOLDERS = "searchByFolders"; // NOI18N
     private static final String WIDTH = "width"; // NOI18N
     private static final String HEIGHT = "height"; // NOI18N
 
@@ -62,6 +63,14 @@ public class FileSearchOptions  {
         getNode().putBoolean(PREFER_MAIN_PROJECT, preferMainProject);
     }
     
+    public static void setSearchByFolders(boolean preferMainProject) {
+        getNode().putBoolean(SEARCH_BY_FOLDERS, preferMainProject);
+    }
+
+    public static boolean getSearchByFolders() {
+        return getNode().getBoolean(SEARCH_BY_FOLDERS, false);
+    }
+
     public static int getHeight() {
         return getNode().getInt(HEIGHT, 460);
     }

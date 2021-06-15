@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 6.49
+#Version 6.51
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1377,8 +1377,8 @@ meth public static void setBranding(java.lang.String)
 meth public static void setClassLoaderFinder(org.openide.util.NbBundle$ClassLoaderFinder)
  anno 0 java.lang.Deprecated()
 supr java.lang.Object
-hfds LOG,USE_DEBUG_LOADER,brandingToken,bundleCache,localizedFileCache
-hcls AttributesMap,DebugLoader,LocaleIterator,MergedBundle,PBundle
+hfds LOG,USE_DEBUG_LOADER,brandingToken,bundleCache,localizedFileCache,utfThenIsoCharset,utfThenIsoCharsetOnlyUTF8
+hcls AttributesMap,DebugLoader,LocaleIterator,MergedBundle,PBundle,UtfThenIsoCharset
 
 CLSS public abstract interface static org.openide.util.NbBundle$ClassLoaderFinder
  outer org.openide.util.NbBundle

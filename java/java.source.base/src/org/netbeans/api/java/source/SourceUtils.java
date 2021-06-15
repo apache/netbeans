@@ -105,6 +105,7 @@ import org.netbeans.modules.java.source.ModuleNames;
 import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.indexing.FQN2Files;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
+import org.netbeans.modules.java.source.parsing.ClassParser;
 import org.netbeans.modules.java.source.parsing.ClasspathInfoProvider;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.Hacks;
@@ -834,7 +835,17 @@ public class SourceUtils {
     }
         
     //Helper methods
-    
+
+    /**
+     * Returns true if the given file is a class file
+     * @param file
+     * @return true if the given file is a class file
+     * @since 2.51
+     */
+    public static boolean isClassFile(@NonNull final FileObject file) {
+        return FileObjects.CLASS.equals(file.getExt()) || ClassParser.MIME_TYPE.equals(file.getMIMEType(ClassParser.MIME_TYPE));
+    }
+
     /**
      * Returns classes declared in the given source file which have the main method.
      * @param fo source file

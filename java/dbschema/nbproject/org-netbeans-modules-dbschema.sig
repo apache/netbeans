@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.50.0
+#Version 1.52.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1407,7 +1407,7 @@ meth public abstract void setKeyName(java.lang.String) throws java.lang.Exceptio
 CLSS public org.netbeans.modules.dbschema.SchemaElement
 cons public init()
 cons public init(org.netbeans.modules.dbschema.SchemaElement$Impl)
-fld protected static java.util.Map schemaCache
+fld protected static java.util.Map<java.lang.String,org.netbeans.modules.dbschema.SchemaElement> schemaCache
 fld public final static int CURRENT_VERSION_NO = 2
 fld public final static int STATUS_ERROR = 1
 fld public final static int STATUS_NOT = 0

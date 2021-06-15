@@ -47,6 +47,7 @@ import org.netbeans.modules.cpplite.editor.spi.CProjectConfigurationProvider;
 import org.netbeans.modules.cpplite.editor.spi.CProjectConfigurationProvider.ProjectConfiguration;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.Places;
+import org.openide.util.Pair;
 
 /**
  *
@@ -66,7 +67,7 @@ public class LanguageServerImpl implements LanguageServerProvider {
 
     private static final Logger LOG = Logger.getLogger(LanguageServerImpl.class.getName());
 
-    private Map<Project, LanguageServerDescription> prj2Server = new HashMap<>();
+    private static final Map<Project, Pair<Process, LanguageServerDescription>> prj2Server = new HashMap<>();
 
     @Override
     public LanguageServerDescription startServer(Lookup lookup) {
@@ -88,7 +89,10 @@ public class LanguageServerImpl implements LanguageServerProvider {
         String ccls = Utils.getCCLSPath();
         String clangd = Utils.getCLANGDPath();
         if (ccls != null || clangd != null) {
-            return prj2Server.computeIfAbsent(prj, (Project p) -> {
+            return prj2Server.compute(prj, (p, pair) -> {
+                if (pair != null && pair.first().isAlive()) {
+                    return pair;
+                }
                 try {
                     List<String> command = new ArrayList<>();
 
@@ -117,15 +121,25 @@ public class LanguageServerImpl implements LanguageServerProvider {
                             command.add("--clang-tidy");
                             command.add("--completion-style=detailed");
                         }
-                        Process process = new ProcessBuilder(command).redirectError(Redirect.INHERIT).start();
-                        return LanguageServerDescription.create(new CopyInput(process.getInputStream(), System.err), new CopyOutput(process.getOutputStream(), System.err), process);
+                        ProcessBuilder builder = new ProcessBuilder(command);
+                        if (LOG.isLoggable(Level.FINEST)) {
+                            builder.redirectError(Redirect.INHERIT);
+                        }
+                        Process process = builder.start();
+                        InputStream in = process.getInputStream();
+                        OutputStream out = process.getOutputStream();
+                        if (LOG.isLoggable(Level.FINEST)) {
+                            in = new CopyInput(in, System.err);
+                            out = new CopyOutput(out, System.err);
+                        }
+                        return Pair.of(process, LanguageServerDescription.create(in, out, process));
                     }
                     return null;
                 } catch (IOException ex) {
                     LOG.log(Level.FINE, null, ex);
                     return null;
                 }
-            });
+            }).second();
         }
         return null;
     }
@@ -158,7 +172,13 @@ public class LanguageServerImpl implements LanguageServerProvider {
     private static File getCompileCommandsDir(CProjectConfigurationProvider configProvider) {
         ProjectConfiguration config = configProvider.getProjectConfiguration();
 
-        if (config.commandJsonCommand != null || config.commandJsonPath != null || config.commandJsonContent != null) {
+        if (config == null) {
+            return null;
+        }
+
+        File commandsPath = config.commandJsonPath != null ? new File(config.commandJsonPath) : null;
+
+        if (config.commandJsonCommand != null || (commandsPath != null && commandsPath.canRead()) || config.commandJsonContent != null) {
             File tempFile = Places.getCacheSubfile("cpplite/compile_commands/" + tempDirIndex++ + "/compile_commands.json");
             if (config.commandJsonCommand != null) {
                 try {
@@ -167,16 +187,13 @@ public class LanguageServerImpl implements LanguageServerProvider {
                     LOG.log(Level.WARNING, null, ex);
                     return null;
                 }
-            } else if (config.commandJsonPath != null) {
-                File commandsPath = new File(config.commandJsonPath);
-                if (commandsPath.canRead()) {
-                    try (InputStream in = new FileInputStream(commandsPath);
-                         OutputStream out = new FileOutputStream(tempFile)) {
-                        FileUtil.copy(in, out);
-                    } catch (IOException ex) {
-                        LOG.log(Level.WARNING, null, ex);
-                        return null;
-                    }
+            } else if (commandsPath != null && commandsPath.canRead()) {
+                try (InputStream in = new FileInputStream(commandsPath);
+                     OutputStream out = new FileOutputStream(tempFile)) {
+                    FileUtil.copy(in, out);
+                } catch (IOException ex) {
+                    LOG.log(Level.WARNING, null, ex);
+                    return null;
                 }
             } else if (config.commandJsonContent != null) {
                 try (OutputStream out = new FileOutputStream(tempFile)) {

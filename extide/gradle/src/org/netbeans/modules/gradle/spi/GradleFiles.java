@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.api.annotations.common.NonNull;
@@ -64,6 +65,8 @@ public final class GradleFiles implements Serializable {
         public static final Set<Kind> PROJECT_FILES = EnumSet.of(ROOT_SCRIPT, BUILD_SCRIPT, SETTINGS_SCRIPT, PROJECT_PROPERTIES, ROOT_PROPERTIES);
     }
 
+    private static final Logger LOG = Logger.getLogger(GradleFiles.class.getName());
+    
     public static final String SETTINGS_FILE_NAME     = "settings.gradle"; //NOI18N
     public static final String SETTINGS_FILE_NAME_KTS = "settings.gradle.kts"; //NOI18N
     public static final String BUILD_FILE_NAME        = "build.gradle"; //NOI18N
@@ -85,6 +88,7 @@ public final class GradleFiles implements Serializable {
     }
     
     public GradleFiles(File dir, boolean knownProject) {
+        LOG.fine("Gradle Files for: " + dir.getAbsolutePath());
         this.knownProject = knownProject;
         try {
             dir = dir.getCanonicalFile();

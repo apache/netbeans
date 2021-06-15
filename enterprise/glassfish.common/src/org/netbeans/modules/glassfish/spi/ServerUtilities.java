@@ -95,6 +95,12 @@ public final class ServerUtilities {
                 GlassfishWizardProvider.createJakartaEe8());
     }
 
+    public static ServerUtilities getJakartaEe9Utilities() {
+        GlassfishInstanceProvider gip = GlassfishInstanceProvider.getProvider();
+        return null == gip ? null : new ServerUtilities(gip,
+                GlassfishWizardProvider.createJakartaEe9());
+    }
+
 //    public static ServerUtilities getEe6WCUtilities() {
 //        GlassfishInstanceProvider gip = GlassfishInstanceProvider.getProvider();
 //        return null == gip ? null : new ServerUtilities(gip,

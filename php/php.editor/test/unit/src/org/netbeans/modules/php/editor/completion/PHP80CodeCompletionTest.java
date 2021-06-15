@@ -943,6 +943,200 @@ public class PHP80CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion(getTestPath("nullsafeOperatorWithComments"), "$obj/**/?->\n// aa\n^foo();", false);
     }
 
+    public void testConstructorPropertyPromotion01a() throws Exception {
+        // one line
+        checkCompletion(getTestPath("constructorPropertyPromotion01a"), "    public function __construct(^", false);
+    }
+
+    public void testConstructorPropertyPromotion01b() throws Exception {
+        // multiple lines
+        checkCompletion(getTestPath("constructorPropertyPromotion01b"), "            ^", false);
+    }
+
+    public void testConstructorPropertyPromotion02a() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion02a"), "    public function __construct(pr^", false);
+    }
+
+    public void testConstructorPropertyPromotion02b() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion02b"), "            pr^", false);
+    }
+
+    public void testConstructorPropertyPromotion03a() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion03a"), "    public function __construct(private ^) {", false);
+    }
+
+    public void testConstructorPropertyPromotion03b() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion03b"), "            private ^", false);
+    }
+
+    public void testConstructorPropertyPromotion04a() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion04a"), "    public function __construct(private ?^) {", false);
+    }
+
+    public void testConstructorPropertyPromotion04b() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion04b"), "            private ?^", false);
+    }
+
+    public void testConstructorPropertyPromotion05a() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion05a"), "    public function __construct(private string|^) {", false);
+    }
+
+    public void testConstructorPropertyPromotion05b() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion05b"), "            private string|^", false);
+    }
+
+    public void testConstructorPropertyPromotion06a() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion06a"), "    public function __construct(private string|int $param1, ^) {", false);
+    }
+
+    public void testConstructorPropertyPromotion06b() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion06b"), "            ^// test", false);
+    }
+
+    public void testConstructorPropertyPromotion07a() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion07a"), "    public function __construct(private string|int $param1, protected ^) {", false);
+    }
+
+    public void testConstructorPropertyPromotion07b() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion07b"), "            protected ^", false);
+    }
+
+    public void testConstructorPropertyPromotion08a() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion08a"), "    public function __construct(private string|int $param1, protected ?string $param2 = ^) {", false);
+    }
+
+    public void testConstructorPropertyPromotion08b() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion08b"), "            protected ?string $param2 = ^", false);
+    }
+
+    public void testConstructorPropertyPromotion09a() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion09a"), "    public function __construct(private string|int $param1, protected ?string $param2 = ^,) {", false);
+    }
+
+    public void testConstructorPropertyPromotion09b() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion09b"), "            protected ?string $param2 = ^,", false);
+    }
+
+    public void testNamedArgumentsFunction01() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsFunction01"), "test(^)", false);
+    }
+
+    public void testNamedArgumentsFunction02() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsFunction02"), "test(ar^);", false);
+    }
+
+    public void testNamedArgumentsFunction03() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsFunction03"), "test(1, ^);", false);
+    }
+
+    public void testNamedArgumentsFunction04() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsFunction04"), "test(1, defa^);", false);
+    }
+
+    public void testNamedArgumentsFunction05_a() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsFunction05"), "test(param1: 1,^ default: \"test\");", false);
+    }
+
+    public void testNamedArgumentsFunction05_b() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsFunction05"), "test(param1: 1, ^default: \"test\");", false);
+    }
+
+    public void testNamedArgumentsFunction05_c() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsFunction05"), "test(param1: 1, arr^default: \"test\");", false);
+    }
+
+    public void testNamedArgumentsFunction06() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsFunction06"), "test(param1: ^);", false);
+    }
+
+    public void testNamedArgumentsFunctionNested01() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsFunctionNested01"), "test(1, default: test(^));", false);
+    }
+
+    public void testNamedArgumentsFunctionNested02() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsFunctionNested02"), "test(1, default: test(param^));", false);
+    }
+
+    public void testNamedArgumentsFunctionNested03() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsFunctionNested03"), "test(1, default: test(param1: 1, ^));", false);
+    }
+
+    public void testNamedArgumentsFunctionNested04() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsFunctionNested04"), "test(1, default: test(param1: 1, arr^));", false);
+    }
+
+    public void testNamedArgumentsMethod01() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsMethod01"), "$this->test(^)", false);
+    }
+
+    public void testNamedArgumentsMethod02_a() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsMethod02"), "$this->test(arr^);", false);
+    }
+
+    public void testNamedArgumentsMethod02_b() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsMethod02"), "$instance->test(^)", false);
+    }
+
+    public void testNamedArgumentsMethod03() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsMethod03"), "$this->test(1, ^)", false);
+    }
+
+    public void testNamedArgumentsMethod04() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsMethod04"), "$this->test(1, defa^);", false);
+    }
+
+    public void testNamedArgumentsMethod05_a() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsMethod05"), "$this->test(param1: 1,^ default: \"test\");", false);
+    }
+
+    public void testNamedArgumentsMethod05_b() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsMethod05"), "$this->test(param1: 1, ^default: \"test\");", false);
+    }
+
+    public void testNamedArgumentsMethod05_c() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsMethod05"), "$this->test(param1: 1, arr^default: \"test\");", false);
+    }
+
+    public void testNamedArgumentsMethod06() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsMethod06"), "$this->test(^)", false);
+    }
+
+    public void testNamedArgumentsStaticMethod01() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsStaticMethod01"), "self::test(^)", false);
+    }
+
+    public void testNamedArgumentsStaticMethod02_a() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsStaticMethod02"), "static::test(arr^);", false);
+    }
+
+    public void testNamedArgumentsStaticMethod02_b() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsStaticMethod02"), "NamedArguments::test(^)", false);
+    }
+
+    public void testNamedArgumentsStaticMethod03() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsStaticMethod03"), "self::test(1, ^);", false);
+    }
+
+    public void testNamedArgumentsStaticMethod04() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsStaticMethod04"), "self::test(1, defa^);", false);
+    }
+
+    public void testNamedArgumentsStaticMethod05_a() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsStaticMethod05"), "self::test(param1: 1,^ default: \"test\");", false);
+    }
+
+    public void testNamedArgumentsStaticMethod05_b() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsStaticMethod05"), "self::test(param1: 1, ^default: \"test\");", false);
+    }
+
+    public void testNamedArgumentsStaticMethod05_c() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsStaticMethod05"), "self::test(param1: 1, arr^default: \"test\");", false);
+    }
+
+    public void testNamedArgumentsStaticMethod06() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsStaticMethod06"), "self::test(^)", false);
+    }
+
     public void testStaticReturnTypeOverrideMethod01() throws Exception {
         checkCompletionCustomTemplateResult(getTestPath("testStaticReturnTypeOverrideMethod01"), "    test^",
                 new DefaultFilter(PhpVersion.PHP_80, "test"), true);

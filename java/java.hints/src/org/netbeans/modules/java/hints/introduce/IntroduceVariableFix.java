@@ -19,7 +19,6 @@
 package org.netbeans.modules.java.hints.introduce;
 
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
@@ -29,7 +28,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -41,9 +39,9 @@ import javax.lang.model.type.TypeMirror;
 import javax.swing.JButton;
 import javax.swing.text.BadLocationException;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreeMaker;
@@ -127,9 +125,9 @@ final class IntroduceVariableFix extends IntroduceFixBase implements Fix {
     public ChangeInfo implement() throws IOException, BadLocationException {
         JButton btnOk = new JButton(NbBundle.getMessage(IntroduceHint.class, "LBL_Ok"));
         JButton btnCancel = new JButton(NbBundle.getMessage(IntroduceHint.class, "LBL_Cancel"));
-        IntroduceFieldPanel panel = new IntroduceFieldPanel(guessedName, null, duplicatesCount, 
-                true, handle.getKind() == Tree.Kind.VARIABLE, 
-                IntroduceFieldPanel.VARIABLE, 
+        IntroduceFieldPanel panel = new IntroduceFieldPanel(guessedName, null, duplicatesCount,
+                true, handle.getKind() == Tree.Kind.VARIABLE,
+                IntroduceFieldPanel.VARIABLE,
                 "introduceVariable", btnOk);
         String caption = NbBundle.getMessage(IntroduceHint.class, "CAP_" + getKeyExt()); //NOI18N
         DialogDescriptor dd = new DialogDescriptor(panel, caption, true, new Object[]{btnOk, btnCancel}, btnOk, DialogDescriptor.DEFAULT_ALIGN, null, null);
@@ -145,7 +143,17 @@ final class IntroduceVariableFix extends IntroduceFixBase implements Fix {
         final boolean replaceAll = panel.isReplaceAll();
         final boolean declareFinal = panel.isDeclareFinal();
         final MemberSearchResult search = val.getLastResult();
-        js.runModificationTask(new Task<WorkingCopy>() {
+        getModificationResult(replaceAll, name, declareFinal, refactor, search).commit();
+        return null;
+    }
+
+    @Override
+    public ModificationResult getModificationResult() throws IOException {
+        return getModificationResult(true, guessedName, false, false, null);
+    }
+
+    private ModificationResult getModificationResult(final boolean replaceAll, final String name, final boolean declareFinal, final boolean refactor, final MemberSearchResult search) throws IOException {
+        return js.runModificationTask(new Task<WorkingCopy>() {
             public void run(WorkingCopy parameter) throws Exception {
                 parameter.toPhase(JavaSource.Phase.RESOLVED);
                 TreePath resolved = handle.resolve(parameter);
@@ -158,7 +166,7 @@ final class IntroduceVariableFix extends IntroduceFixBase implements Fix {
                 }
                 tm = Utilities.convertIfAnonymous(Utilities.resolveTypeForDeclaration(parameter, tm));
                 if (!Utilities.isValidType(tm)) {
-                    return; // TODO... 
+                    return; // TODO...
                 }
                 Element targetEl = null;
                 TreePath targetPath = null;
@@ -212,7 +220,9 @@ final class IntroduceVariableFix extends IntroduceFixBase implements Fix {
                 List<StatementTree> nueStatements;
                 GeneratorUtilities.get(parameter).importComments(IntroduceHint.getStatementOrBlock(statement).getLeaf(), parameter.getCompilationUnit());
                 mods = make.Modifiers(declareFinal ? EnumSet.of(Modifier.FINAL) : EnumSet.noneOf(Modifier.class));
-                VariableTree newVariable = make.Variable(mods, name, make.Type(tm), expression);
+                Tree varType = make.Type(tm);
+                VariableTree newVariable = make.Variable(mods, name, varType, expression);
+                parameter.tag(varType, TYPE_TAG);
                 nueStatements = new ArrayList<>();
                 nueStatements.add(make.asReplacementOf(newVariable, resolved.getLeaf(), true));
                 if (expressionStatement) {
@@ -220,20 +230,19 @@ final class IntroduceVariableFix extends IntroduceFixBase implements Fix {
                 } else {
                     Utilities.insertStatement(parameter, statement, nueStatements, null);
                 }
-                
+
                 if (!expressionStatement) {
                     Tree origParent = resolved.getParentPath().getLeaf();
-                    Tree newParent = parameter.getTreeUtilities().translate(origParent, Collections.singletonMap(resolved.getLeaf(), 
+                    Tree newParent = parameter.getTreeUtilities().translate(origParent, Collections.singletonMap(resolved.getLeaf(),
                             make.asNew(make.Identifier(name))));
                     parameter.rewrite(origParent, newParent);
                 }
-                
+
                 if (refactor) {
-                    new ReferenceTransformer(parameter, ElementKind.LOCAL_VARIABLE, 
+                    new ReferenceTransformer(parameter, ElementKind.LOCAL_VARIABLE,
                             search, name, targetEl).scan(statement.getParentPath(), null);
                 }
             }
-        }).commit();
-        return null;
+        });
     }
 }

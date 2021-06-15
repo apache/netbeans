@@ -745,7 +745,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 tl.moveToOffset(end);
                 Token t = tl.currentToken();
                 int pos;
-                if (t.id() == JavaTokenId.WHITESPACE && (pos = t.text().toString().indexOf("\n")) != -1) {
+                if (t != null && t.id() == JavaTokenId.WHITESPACE && (pos = t.text().toString().indexOf("\n")) != -1) {
                     TypeMirror type = info.getTrees().getTypeMirror(tp);
                     String typeName = info.getTypeUtilities().getTypeName(type).toString();
                     if (typeToPosition.isEmpty() || !typeName.equals(typeToPosition.get(typeToPosition.size() - 1).first())) {
@@ -979,6 +979,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 String tokenText = t.text().toString();
                 String[] lines = tokenText.split("\n");
                 int indent = Arrays.stream(lines, 1, lines.length)
+                                   .filter(l -> !l.trim().isEmpty())
                                    .mapToInt(this::leadingIndent)
                                    .min()
                                    .orElse(0);
@@ -1009,12 +1010,6 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 if (t != null) {
                     contextKeywords.add(t);
                 }
-            } else if (tree != null && TreeShims.BINDING_PATTERN.equals(tree.getKind().name())) {
-                super.scan(tree, p);
-                TreePath tp = new TreePath(getCurrentPath(), tree);
-                handlePossibleIdentifier(tp, true, info.getTrees().getElement(tp));
-                tl.moveToOffset(sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), TreeShims.getBindingPatternType(tree)));
-                firstIdentifier(tp, TreeShims.getBinding(tree).toString());
             } else if (tree != null && tree.getKind().equals(Kind.MODIFIERS)) {
                visitModifier(tree);
             }

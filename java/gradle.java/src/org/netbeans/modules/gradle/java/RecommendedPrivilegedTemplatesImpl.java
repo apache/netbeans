@@ -19,8 +19,6 @@
 
 package org.netbeans.modules.gradle.java;
 
-import org.netbeans.modules.gradle.api.NbGradleProject;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.PrivilegedTemplates;
 import org.netbeans.spi.project.ui.RecommendedTemplates;
 
@@ -28,7 +26,6 @@ import org.netbeans.spi.project.ui.RecommendedTemplates;
  *
  * @author Laszlo Kishalmi
  */
-@ProjectServiceProvider(service = {RecommendedTemplates.class, PrivilegedTemplates.class}, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public class RecommendedPrivilegedTemplatesImpl implements RecommendedTemplates, PrivilegedTemplates {
 
     // List of primarily supported templates categories

@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.spi.newproject;
 
-import org.netbeans.modules.gradle.GradleProjectCache;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import java.io.File;
 import java.io.IOException;
@@ -52,6 +51,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.modules.gradle.GradleProjectLoader;
 import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.api.GradleProjects;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
@@ -263,7 +263,10 @@ public final class TemplateOperation implements Runnable {
                         NbGradleProjectImpl nbProject = project.getLookup().lookup(NbGradleProjectImpl.class);
                         if (nbProject != null) {
                             //Just load the project into the cache.
-                            GradleProjectCache.loadProject(nbProject, Quality.FULL_ONLINE, true, false);
+                            GradleProjectLoader loader = nbProject.getLookup().lookup(GradleProjectLoader.class);
+                            if (loader != null) {
+                                loader.loadProject(Quality.FULL_ONLINE, null, true, false);
+                            }
                         }
                         return Collections.singleton(projectDir);
                     }

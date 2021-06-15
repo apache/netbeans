@@ -195,7 +195,7 @@ public abstract class AbstractGradleExecutor extends OutputTabMaintainer<Abstrac
             if (debug) {
                 GradleExecutorOptionsPanel pnl = new GradleExecutorOptionsPanel(config.getProject());
                 DialogDescriptor dd = new DialogDescriptor(pnl, TIT_Run_Gradle());
-                pnl.setCommandLine(config.getCommandLine());
+                pnl.setCommandLine(config.getCommandLine(), config.getExecConfig());
                 Object retValue = DialogDisplayer.getDefault().notify(dd);
                 if (retValue == DialogDescriptor.OK_OPTION) {
                     GradleCommandLine cmd = pnl.getCommandLine();

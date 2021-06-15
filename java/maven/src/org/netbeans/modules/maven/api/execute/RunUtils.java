@@ -97,7 +97,7 @@ public final class RunUtils {
      */
     public static ExecutorTask executeMaven(final RunConfig config) {
         return MavenCommandLineExecutor.executeMaven(config, null, null);
-                }
+    }
 
     public static RunConfig createRunConfig(File execDir, Project prj, String displayName, List<String> goals)
     {

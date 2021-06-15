@@ -98,6 +98,22 @@ public class UnusedVariableHintTest extends PHPHintsTestBase {
         checkHints(new UnusedVariableHintStub(false), "testMatchExpression_01.php");
     }
 
+    public void testConstructorPropertyPromotion_01() throws Exception {
+        checkHints(new UnusedVariableHintStub(true, true), "testConstructorPropertyPromotion.php");
+    }
+
+    public void testConstructorPropertyPromotion_02() throws Exception {
+        checkHints(new UnusedVariableHintStub(true, false), "testConstructorPropertyPromotion.php");
+    }
+
+    public void testConstructorPropertyPromotion_03() throws Exception {
+        checkHints(new UnusedVariableHintStub(false, true), "testConstructorPropertyPromotion.php");
+    }
+
+    public void testConstructorPropertyPromotion_04() throws Exception {
+        checkHints(new UnusedVariableHintStub(false, false), "testConstructorPropertyPromotion.php");
+    }
+
     private class UnusedVariableHintStub extends UnusedVariableHint {
         private final boolean unusedFormalParameters;
         private final boolean inheritedMethodParameters;

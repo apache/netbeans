@@ -56,10 +56,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.netbeans.nbbuild.JUnitReportWriter;
-import org.netbeans.nbbuild.extlibs.DownloadBinaries.MavenCoordinate;
 import org.netbeans.nbbuild.extlibs.licenseinfo.Fileset;
 import org.netbeans.nbbuild.extlibs.licenseinfo.Licenseinfo;
-import org.netbeans.nbbuild.extlibs.licenseinfo.Licenseinfos;
 
 /**
  * Task to check that external libraries have legitimate licenses, etc.

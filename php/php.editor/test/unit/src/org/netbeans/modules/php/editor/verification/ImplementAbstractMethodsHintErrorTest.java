@@ -217,6 +217,18 @@ public class ImplementAbstractMethodsHintErrorTest extends PHPHintsTestBase {
         applyHint(new ImplementAbstractMethodsHintError(), "testMixedTypeImplementMethod01.php", "class Chil^d implements MixedType {", "Implement");
     }
 
+    public void testNetbeans5370() throws Exception {
+        checkHints(new ImplementAbstractMethodsHintError(), "testNetbeans5370.php");
+    }
+
+    public void testNetbeans5370Fix_01() throws Exception {
+        applyHint(new ImplementAbstractMethodsHintError(), "testNetbeans5370.php", "class Test^Class1 extends TestAbstractClass", "Implement");
+    }
+
+    public void testNetbeans5370Fix_02() throws Exception {
+        applyHint(new ImplementAbstractMethodsHintError(), "testNetbeans5370.php", "class TestCl^ass2 implements TestInterface", "Implement");
+    }
+
     //~ Inner classes
     private static final class ImplementAbstractMethodsHintErrorStub extends ImplementAbstractMethodsHintError {
 

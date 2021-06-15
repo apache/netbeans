@@ -415,7 +415,7 @@ public class ViewModelListener extends DebuggerManagerAdapter {
         if (View.LOCALS_VIEW_NAME.equals(viewType) && (VariablesViewButtons.isResultsViewNested() ||
                 VariablesViewButtons.isWatchesViewNested())) {
 
-            hyperModels = new ArrayList();
+            hyperModels = new ArrayList<>();
             if (VariablesViewButtons.isResultsViewNested()) {
                 hyperModels.add(createCompound(View.RESULTS_VIEW_NAME));
             }

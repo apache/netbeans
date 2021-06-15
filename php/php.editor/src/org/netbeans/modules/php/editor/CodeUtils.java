@@ -33,6 +33,7 @@ import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.model.nodes.NamespaceDeclarationInfo;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
@@ -568,6 +569,11 @@ public final class CodeUtils {
     @CheckForNull
     public static String getParamDefaultValue(FormalParameter param) {
         Expression expr = param.getDefaultValue();
+        return getParamDefaultValue(expr);
+    }
+
+    @CheckForNull
+    private static String getParamDefaultValue(Expression expr) {
         //TODO: can be improved
         Operator operator = null;
         if (expr instanceof UnaryOperation) {
@@ -582,7 +588,7 @@ public final class CodeUtils {
         } else if (expr instanceof NamespaceName) {
             return extractQualifiedName((NamespaceName) expr);
         } else if (expr instanceof ArrayCreation) {
-            return "array()"; //NOI18N
+            return getParamDefaultValue((ArrayCreation) expr);
         } else if (expr instanceof StaticConstantAccess) {
             StaticConstantAccess staticConstantAccess = (StaticConstantAccess) expr;
             Expression dispatcher = staticConstantAccess.getDispatcher();
@@ -596,6 +602,25 @@ public final class CodeUtils {
             }
         }
         return expr == null ? null : " "; //NOI18N
+    }
+    
+    private static String getParamDefaultValue(ArrayCreation param) {
+        StringBuilder sb = new StringBuilder("["); //NOI18N
+        List<ArrayElement> arrayElements = param.getElements();
+        if (arrayElements.size() > 0) {
+            ArrayElement firstElement = arrayElements.get(0);
+            Expression key = firstElement.getKey();
+            if (key != null) {
+                sb.append(getParamDefaultValue(key));
+                sb.append(" => "); //NOI18N
+            }
+            sb.append(getParamDefaultValue(firstElement.getValue()));
+        }
+        if (arrayElements.size() > 1) {
+            sb.append(",..."); //NOI18N
+        }
+        sb.append("]"); //NOI18N
+        return sb.toString();
     }
 
     public static String getParamDisplayName(FormalParameter param) {

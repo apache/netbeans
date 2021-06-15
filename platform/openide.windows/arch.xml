@@ -685,7 +685,7 @@ Yes. Component can control its persistence and way how they are displayed in con
          Or use -J-DNB.WinSys.Mode.Closing.Enabled=false command-line switch to override.
     </api>
     
-    <api type="export" group="branding" name="WinSys.Show.Hide.MainWindow.While.Switching.Role" category="stable">
+    <api type="export" group="branding" name="org.netbeans.core.windows.WinSys.Show.Hide.MainWindow.While.Switching.Role" category="stable">
          Name of resource bundle property which controls whether the main IDE
          window may hide temporarily (<code>true</code>) when switching window
          layout role or whether the main window should stay visible when switching
@@ -694,7 +694,7 @@ Yes. Component can control its persistence and way how they are displayed in con
          Or use -J-DNB.WinSys.WinSys.Show.Hide.MainWindow.While.Switching.Role=true command-line switch to override.
     </api>
     
-    <api type="export" group="branding" name="WinSys.Open.New.Editors.Docked" category="stable">
+    <api type="export" group="branding" name="org.netbeans.core.windows.WinSys.Open.New.Editors.Docked" category="stable">
          Name of resource bundle property which when set to <code>true</code> will
          force opening of new editor windows docked into the main IDE window.
          When set to <code>false</code> new editor windows will open tabbed
@@ -704,7 +704,7 @@ Yes. Component can control its persistence and way how they are displayed in con
          Or use -J-DNB.WinSys.WinSys.Open.New.Editors.Docked=true command-line switch to override.
     </api>
 
-    <api type="export" group="branding" name="WinSys.DragAndDrop.Sliding.Enabled" category="stable">
+    <api type="export" group="branding" name="org.netbeans.core.windows.WinSys.DragAndDrop.Sliding.Enabled" category="stable">
          Name of resource bundle property which enables/disables drag and drop
          of TopComponents into sliding Modes. When set to <code>true</code> then user can
          drag a TopComponent and drop it into a sliding bar to minimize it.
@@ -713,7 +713,7 @@ Yes. Component can control its persistence and way how they are displayed in con
          Or use -J-DNB.WinSys.WinSys.DragAndDrop.Sliding.Enabled=true command-line switch to override.
     </api>
 
-    <api type="export" group="branding" name="WinSys.TabControl.SimpleTabs.Enabled" category="stable">
+    <api type="export" group="branding" name="org.netbeans.core.windows.WinSys.TabControl.SimpleTabs.Enabled" category="stable">
          Name of resource bundle property which allows replacing the custom TabbedContainer
          with plain Swing JTabbedPane implementation when the property value is <code>true</code>.
          The default value is <code>false</code>.
@@ -721,7 +721,7 @@ Yes. Component can control its persistence and way how they are displayed in con
          Or use -J-DNB.WinSys.WinSys.TabControl.SimpleTabs.Enabled=true command-line switch to override.
     </api>
 
-    <api type="export" group="branding" name="WinSys.TabControl.SimpleTabs.Placement" category="stable">
+    <api type="export" group="branding" name="org.netbeans.core.windows.WinSys.TabControl.SimpleTabs.Placement" category="stable">
          Name of resource bundle property which defines the placement of window tabs.
          The possible values are <code>top</code> (default), <code>bottom</code>,
          <code>left</code>, <code>right</code>. Branding of this property has no effect when
@@ -729,7 +729,7 @@ Yes. Component can control its persistence and way how they are displayed in con
          The property value can be adjusted by branding of <code>org.netbeans.core.windows</code> module.
     </api>
 
-    <api type="export" group="branding" name="WinSys.TabControl.SimpleTabs.MultiRow" category="stable">
+    <api type="export" group="branding" name="org.netbeans.core.windows.WinSys.TabControl.SimpleTabs.MultiRow" category="stable">
          Name of resource bundle property which defines the tab layout when JTabbedPane
          implementation of tab control is being used. When set to <code>true</code>
          window tabs will be organized into multiple rows, when set to <code>false</code>
@@ -739,7 +739,7 @@ Yes. Component can control its persistence and way how they are displayed in con
          The property value can be adjusted by branding of <code>org.netbeans.core.windows</code> module.
     </api>
 
-    <api type="export" group="branding" name="WinSys.CtrlTabSwitching.In.JTable.Enabled" category="stable">
+    <api type="export" group="branding" name="org.netbeans.core.windows.WinSys.CtrlTabSwitching.In.JTable.Enabled" category="stable">
          Name of resource bundle property which can disable window switching 
          when the input focus is in JTable or JTabbedPane.<br/>
          Ctrl+Tab and Ctrl+Shift+Tab key strokes are hard-coded to switch between

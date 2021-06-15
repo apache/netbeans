@@ -64,8 +64,8 @@ import org.openide.util.RequestProcessor;
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
 @Messages({
-    "FixUsesLabel=Fix Uses...",
-    "LongName=Fix Uses in Current Namespace"
+    "FixUsesLabel=Fix Imports...",
+    "LongName=Fix Imports in Current Namespace"
 })
 @EditorActionRegistration(
     name = FixUsesAction.ACTION_NAME,

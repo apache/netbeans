@@ -18,7 +18,9 @@
  */
 package org.netbeans.modules.java.hints.introduce;
 
+import java.io.IOException;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.spi.editor.hints.Fix;
 
@@ -28,8 +30,10 @@ import org.netbeans.spi.editor.hints.Fix;
  * @author sdedic
  */
 public abstract class IntroduceFixBase implements Fix {
+
+    protected static final String TYPE_TAG = "typeTag";
     protected final JavaSource js;
-    protected final TreePathHandle  handle; 
+    protected final TreePathHandle  handle;
     protected final int duplicatesCount;
     protected final int offset;
     protected boolean targetIsInterface;
@@ -45,4 +49,10 @@ public abstract class IntroduceFixBase implements Fix {
         this.targetIsInterface = f;
     }
 
+    public abstract ModificationResult getModificationResult() throws IOException;
+
+    public int getNameOffset(ModificationResult result) {
+        int[] span = result.getSpan(TYPE_TAG);
+        return span != null ? span[1] + 1 : -1;
+    }
 }

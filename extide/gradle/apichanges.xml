@@ -83,6 +83,106 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="configurations">
+            <api name="general"/>
+            <summary>
+                Support for Project Configurations
+            </summary>
+            <version major="2" minor="13"/>
+            <date day="30" month="5" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Concept of <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ProjectConfiguration.html">ProjectConfigurations</a> was implemented for
+                    Gradle projects with <a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleExecConfiguration.html">GradleExecConfiguration</a> class. Configurations
+                    can be created by the user and are stored in project private/shared configuration storage. Configurations can be contributed by Plugins using 
+                    <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/GradleActionsProvider.html#define-configuration">GradleActionsProvider</a>. A configuration 
+                    <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ProjectConfigurationProvider.html#setActiveConfiguration--">can be activated</a> or 
+                    explicitly requested for <a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleExecConfiguration.html#request-for-invocation">action invocation.</a>.
+                </p>
+                <p>
+                    Actions can have different <a href="@TOP@/org/netbeans/modules/gradle/api/actions/ActionMapping.html">ActionMappings</a> in individual Configurations, user-defined
+                    or provided for specific configuration by <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/GradleActionsProvider.html">GradleActionsProvider</a>.
+                </p>
+                <p>
+                    Action providers can be added fully declarative, using XML layer: See <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/DefaultGradleActionsProvider.html##forProjectLayer-org.openide.filesystems.FileObject-">
+                    DefaultGradleActionsProvider.forProjectLayer</a>
+                </p>
+                
+            </description>
+            <class package="org.netbeans.modules.gradle.api.execute" name="GradleExecConfiguration"/>
+            <class package="org.netbeans.modules.gradle.api.execute" name="RunUtils"/>
+            <class package="org.netbeans.modules.gradle.api.execute" name="RunConfig"/>
+            <class package="org.netbeans.modules.gradle.spi.actions" name="GradleActionsProvider"/>
+        </change>
+        <change id="reload-to-quality">
+            <api name="general"/>
+            <summary>
+                Added API to reload Gradle project information. 
+            </summary>
+            <version major="2" minor="11"/>
+            <date day="18" month="4" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                Project information can be refreshed to a desired quality using <a href="@TOP@/org/netbeans/modules/gradle/api/NbGradleProject.html#toQuality-java.lang.String-org.netbeans.modules.gradle.api.NbGradleProject.Quality-boolean-">NbGradleProject.toQuality</a>. 
+                The caller may chain after reload completes or block until the project is loaded.
+            </description>
+            <class package="org.netbeans.modules.gradle.api" name="NbGradleProject"/>
+            <issue number="NETBEANS-5627"/>
+        </change>
+        <change id="local-gradle-version-discovery">
+            <api name="general"/>
+            <summary>GradleDistributionManager can detect local Gradle Distributions</summary>
+            <version major="2" minor="10"/>
+            <date day="12" month="4" year="2021"/>
+            <author login="lkishalmi"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                Added <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleDistributionManager.html#availableLocalDistributions--">GradleDistributionManager.availableLocalDistributions()</a></code> 
+                method to help detection the already available GradleDistribution-s installed in the system.
+            </description>
+        </change>
+        <change id="tooling-runJvmArgs">
+            <api name="general"/>
+            <summary>NetBeans Tooling plugin recognizes "runJvmArgs" property</summary>
+            <version major="2" minor="9"/>
+            <date day="27" month="3" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                Introduced <code>runJvmArgs</code> project property that can be passed to NetBeans Tooling plugin in order to inject user JVM parameters
+                into gradle JavaExec task configurations. The property value shall contain whitespace-separated JVM arguments.
+            </description>
+        </change>
+        <change id="trust-question-branding">
+            <api name="general"/>
+            <summary>Project trust dialog can be customized by branding</summary>
+            <version major="2" minor="8"/>
+            <date day="3" month="3" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                Branding API can be used to select and order options present in "Trust Gradle project for execution" confirmation
+                dialog. See <a href="@TOP@/org/netbeans/modules/gradle/api/execute/RunUtils.html#isProjectTrusted-org.netbeans.api.project.Project-boolean-">RunUtils.isProjectTrusted</a>.
+            </description>
+        </change>
+        <change id="deprecate-experimental-settings">
+            <api name="general"/>
+            <summary>Make ProjectActionMappingProvider available for other modules.</summary>
+            <version major="2" minor="7"/>
+            <date day="1" month="1" year="2021"/>
+            <author login="lkishalmi"/>
+            <compatibility semantic="incompatible" deprecation="yes"/>
+            <description>
+                <p>
+                    Experimental settings, <code>openLazy</code> and <code>disableDiskCache</code> in
+                    <a href="@TOP@/org/netbeans/modules/gradle/spi/GradleSettings.html">GradleSettings</a>
+                    made deprecated and no longer affect the IDE behavior.
+                </p>
+            </description>
+        </change>
         <change id="expose-project-action-mapping-provider">
             <api name="general"/>
             <summary>Make ProjectActionMappingProvider available for other modules.</summary>

@@ -21,6 +21,7 @@ package org.openide.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,6 +29,14 @@ import java.lang.annotation.Target;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.CoderResult;
+import java.nio.charset.CodingErrorAction;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -68,7 +77,10 @@ public class NbBundle extends Object {
 
     private static final boolean USE_DEBUG_LOADER = Boolean.getBoolean("org.openide.util.NbBundle.DEBUG"); // NOI18N
     private static String brandingToken = null;
-
+    
+    private static final UtfThenIsoCharset utfThenIsoCharset = new UtfThenIsoCharset(false);
+    private static final UtfThenIsoCharset utfThenIsoCharsetOnlyUTF8 = new UtfThenIsoCharset(true);    
+    
     /**
      * Cache of URLs for localized files.
      * Keeps only weak references to the class loaders.
@@ -538,8 +550,16 @@ public class NbBundle extends Object {
                         (loader != null ? loader.getResourceAsStream(res) : ClassLoader.getSystemResourceAsStream(res)) :
                             u.openStream();
 
+                    // #NETBEANS-5181
+                    String encoding = System.getProperty("java.util.PropertyResourceBundle.encoding");
+                    UtfThenIsoCharset charset = "UTF-8".equals(encoding) ? utfThenIsoCharsetOnlyUTF8 : utfThenIsoCharset;
+                    InputStreamReader reader = new InputStreamReader(is,
+                            "ISO-8859-1".equals(encoding)
+                            ? StandardCharsets.ISO_8859_1.newDecoder()
+                            : charset.newDecoder());
+
                     try {
-                        p.load(is);
+                        p.load(reader);
                     } finally {
                         is.close();
                     }
@@ -1458,4 +1478,86 @@ public class NbBundle extends Object {
 
         }
     }
+    
+    
+    /**
+     * Local charset to decode using UTF-8 by default, but automatically switching to ISO-8859-1 if UTF-8 decoding fails.
+     * 
+     */
+    static private class UtfThenIsoCharset extends Charset {
+
+        private final boolean onlyUTF8;
+
+        /**
+         *
+         * @param acceptOnlyUTF8 If true there is no automatic switch to ISO-8859-1 if UTF-8 decoding fails.
+         */
+        public UtfThenIsoCharset(boolean acceptOnlyUTF8) {
+            super(UtfThenIsoCharset.class.getCanonicalName(), null);
+            this.onlyUTF8 = acceptOnlyUTF8;
+        }
+
+        @Override
+        public boolean contains(Charset arg0) {
+            return this.equals(arg0);
+        }
+
+        @Override
+        public CharsetDecoder newDecoder() {
+            return new UtfThenIsoDecoder(this, 1.0f, 1.0f);
+        }
+
+        @Override
+        public CharsetEncoder newEncoder() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+         private final class UtfThenIsoDecoder extends CharsetDecoder {
+
+            private CharsetDecoder decoderUTF;
+            private CharsetDecoder decoderISO;  // Not null means we switched to ISO
+
+            protected UtfThenIsoDecoder(Charset cs, float averageCharsPerByte, float maxCharsPerByte) {
+                super(cs, averageCharsPerByte, maxCharsPerByte);
+
+                decoderUTF = StandardCharsets.UTF_8.newDecoder()
+                        .onMalformedInput(CodingErrorAction.REPORT) // We want to be informed of this error
+                        .onUnmappableCharacter(CodingErrorAction.REPORT);  // We want to be informed of this error                
+            }
+
+            @Override
+            protected CoderResult decodeLoop(ByteBuffer in, CharBuffer out) {
+
+                if (decoderISO != null) {
+                    // No turning back once we've switched to ISO
+                    return decoderISO.decode(in, out, false);
+                }
+
+                // To rewind if need to retry with ISO decoding
+                in.mark();
+                out.mark();
+
+                
+                // UTF decoding
+                CoderResult cr = decoderUTF.decode(in, out, false);
+                if (cr.isUnderflow() || cr.isOverflow()) {
+                    // Normal results
+                    return cr;
+                }
+
+                // If we're here there was a malformed-input or unmappable-character error with the UTF decoding
+                if (UtfThenIsoCharset.this.onlyUTF8) {
+                    // But can't switch to ISO
+                    return cr;
+                }
+
+                // Switch to ISO
+                in.reset();
+                out.reset();
+                decoderISO = StandardCharsets.ISO_8859_1.newDecoder();
+                return decoderISO.decode(in, out, false);
+            }
+        }
+    }
+    
 }

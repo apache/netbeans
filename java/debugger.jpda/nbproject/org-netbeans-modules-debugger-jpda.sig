@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.116.0
+#Version 1.119.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -570,6 +570,7 @@ meth public boolean getBreakpointsActive()
 meth public java.util.List<org.netbeans.api.debugger.jpda.JPDAClassType> getAllClasses()
 meth public java.util.List<org.netbeans.api.debugger.jpda.JPDAClassType> getClassesByName(java.lang.String)
 meth public long[] getInstanceCounts(java.util.List<org.netbeans.api.debugger.jpda.JPDAClassType>)
+meth public org.netbeans.api.debugger.Session getSession()
 meth public org.netbeans.api.debugger.jpda.JPDAStep createJPDAStep(int,int)
 meth public org.netbeans.api.debugger.jpda.ThreadsCollector getThreadsCollector()
 meth public org.netbeans.api.debugger.jpda.Variable createMirrorVar(java.lang.Object) throws java.io.InvalidObjectException
@@ -595,10 +596,13 @@ fld public final static int STEP_OUT = 3
 fld public final static int STEP_OVER = 2
 fld public final static java.lang.String PROP_STATE_EXEC = "exec"
 meth protected void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
+meth public !varargs void addSteppingFilters(java.lang.String[])
 meth public abstract void addStep(org.netbeans.api.debugger.jpda.JPDAThread)
 meth public boolean getHidden()
+meth public boolean isStepThroughFilters()
 meth public int getDepth()
 meth public int getSize()
+meth public java.lang.String[] getSteppingFilters()
 meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void addPropertyChangeListener(java.lang.String,java.beans.PropertyChangeListener)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
@@ -606,8 +610,9 @@ meth public void removePropertyChangeListener(java.lang.String,java.beans.Proper
 meth public void setDepth(int)
 meth public void setHidden(boolean)
 meth public void setSize(int)
+meth public void setStepThroughFilters(boolean)
 supr java.lang.Object
-hfds depth,hidden,pcs,size
+hfds classFilters,depth,hidden,pcs,size,stepThroughFilters
 
 CLSS public abstract interface org.netbeans.api.debugger.jpda.JPDAThread
 fld public final static int STATE_MONITOR = 3
@@ -937,7 +942,7 @@ meth public void setSuspend(int)
 meth public void suspend()
 meth public void waitRunning() throws org.netbeans.api.debugger.jpda.DebuggerStartException
 supr org.netbeans.api.debugger.jpda.JPDADebugger
-hfds COMPUTING_INTERFACES,LOCK2,SINGLE_THREAD_STEPPING,allInterfacesMap,altCSF,attachingCookie,breakpointsActive,canBeModified,canBeModifiedLock,compoundSmartSteppingListener,currentCallStackFrame,currentSuspendedNoFireThread,currentThread,currentThreadAndFrameLock,deadlockDetector,doContinue,engineContext,expressionPool,finishing,interestedThreadGroups,io,javaEngineProvider,jsr45EngineProviders,jvmVersionPattern,languages,lastStratumn,localsTranslation,logger,lookupProvider,lvGenericSignatureMethod,markedObjectLabels,markedObjects,methodCallsUnsupportedExc,operator,pcs,preferredTopFrame,ptd,singleThreadStepResumeDecision,smartSteppingFilter,starting,state,stateLock,stepInterruptByBptResumeDecision,suspend,tcGenericSignatureMethod,threadsCache,threadsCollector,threadsCollectorLock,threadsTranslation,throwable,virtualMachine,virtualMachineLock,vmSuspended
+hfds COMPUTING_INTERFACES,LOCK2,SINGLE_THREAD_STEPPING,allInterfacesMap,altCSF,attachingCookie,breakpointsActive,canBeModified,canBeModifiedLock,compoundSmartSteppingListener,currentCallStackFrame,currentSuspendedNoFireThread,currentThread,currentThreadAndFrameLock,deadlockDetector,doContinue,engineContext,expressionPool,finishing,interestedThreadGroups,io,javaEngineProvider,jsr45EngineProviders,jvmVersionPattern,languages,localsTranslation,logger,lookupProvider,lvGenericSignatureMethod,markedObjectLabels,markedObjects,methodCallsUnsupportedExc,operator,pcs,preferredTopFrame,ptd,singleThreadStepResumeDecision,smartSteppingFilter,starting,state,stateLock,stepInterruptByBptResumeDecision,suspend,tcGenericSignatureMethod,threadsCache,threadsCollector,threadsCollectorLock,threadsTranslation,throwable,virtualMachine,virtualMachineLock,vmSuspended
 hcls DebuggerReentrantReadWriteLock,PeriodicThreadsDump
 
 CLSS public org.netbeans.modules.debugger.jpda.JPDAStepImpl
@@ -1626,6 +1631,7 @@ meth public java.lang.Throwable getCause()
 meth public org.netbeans.modules.debugger.jpda.expr.InvocationExceptionTranslated preload(org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl)
 meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
+meth public void resetInvocationMessage()
 meth public void setPreferredThread(org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl)
 supr java.lang.Exception
 hfds cause,createdAt,debugger,exeption,invocationMessage,localizedMessage,logger,message,preferredThread,stackTrace
@@ -2623,9 +2629,10 @@ meth public org.netbeans.api.debugger.jpda.JPDAClassType getClassType()
 meth public org.netbeans.api.debugger.jpda.Variable clone()
 meth public void setFromMirrorObject(java.lang.Object) throws java.io.InvalidObjectException
 meth public void setObject(java.lang.Object)
+meth public void setSilentChange(boolean)
 meth public void setValue(java.lang.String) throws org.netbeans.api.debugger.jpda.InvalidExpressionException
 supr java.lang.Object
-hfds cloneNumber,debugger,id,listeners,value
+hfds cloneNumber,debugger,id,listeners,silent,value
 
 CLSS public org.netbeans.modules.debugger.jpda.models.ArgumentObjectVariable
 cons public init(org.netbeans.modules.debugger.jpda.JPDADebuggerImpl,com.sun.jdi.ObjectReference,java.lang.String,java.lang.String)
@@ -3012,15 +3019,17 @@ cons public init(com.sun.jdi.VirtualMachine,org.netbeans.modules.debugger.jpda.J
 fld public final static java.lang.String SILENT_EVENT_PROPERTY = "silent"
 meth public static com.sun.jdi.ThreadReference getEventThread(com.sun.jdi.event.Event) throws org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper,org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper
 meth public static void dumpThreadsStatus(com.sun.jdi.VirtualMachine,java.util.logging.Level)
+meth public void addEventInterceptor(java.util.function.Function<com.sun.jdi.event.EventSet,java.lang.Boolean>)
 meth public void notifyMethodInvokeDone(com.sun.jdi.ThreadReference)
 meth public void notifyMethodInvoking(com.sun.jdi.ThreadReference)
 meth public void register(com.sun.jdi.request.EventRequest,org.netbeans.modules.debugger.jpda.util.Executor) throws org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper,org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper
+meth public void removeEventInterceptor(java.util.function.Function<com.sun.jdi.event.EventSet,java.lang.Boolean>)
 meth public void start()
 meth public void stop()
 meth public void unregister(com.sun.jdi.request.EventRequest) throws org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper,org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper
 meth public void waitForParallelEventsToProcess() throws java.lang.InterruptedException
 supr java.lang.Object
-hfds canInterrupt,debugger,eventHandler,eventHandlers,haveParallelEventsToProcess,logger,loopControl,methodInvokingThreads,parallelEvents,stop,thread,threadsResumedForEvents
+hfds canInterrupt,debugger,eventHandler,eventHandlers,eventsInterceptors,haveParallelEventsToProcess,logger,loopControl,methodInvokingThreads,parallelEvents,stop,thread,threadsResumedForEvents
 hcls HandlerTask,LoopControl,SuspendControllersSupport,SuspendCount
 
 CLSS public final org.netbeans.modules.debugger.jpda.util.WeakCacheMap<%0 extends java.lang.Object, %1 extends org.netbeans.modules.debugger.jpda.util.WeakCacheMap$KeyedValue<{org.netbeans.modules.debugger.jpda.util.WeakCacheMap%0}>>

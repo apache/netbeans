@@ -22,18 +22,14 @@ package org.netbeans.modules.gradle.htmlui;
 import org.netbeans.modules.gradle.spi.newproject.SimpleGradleWizardIterator;
 import org.netbeans.modules.gradle.spi.newproject.TemplateOperation;
 import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.netbeans.api.project.Project;
-import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.loaders.TemplateWizard;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 
 @Messages("template.htmlUIProject=Java Frontend Application")
@@ -57,47 +53,24 @@ public class HtmlJavaApplicationProjectWizard extends SimpleGradleWizardIterator
 
     @Override
     protected void collectOperations(TemplateOperation ops, Map<String, Object> params) {
-        super.collectOperations(ops, params);
-        String packageBase = (String) params.get(PROP_PACKAGE_BASE);
-        String mainClassName = (String) params.get("mainClassName");
-        
-        File projectDir = (File) params.get("projectDir");
+        String name = (String) params.get(PROP_NAME);
+        File loc = (File) params.get(CommonProjectActions.PROJECT_PARENT_FOLDER);
 
-        File mainJava = (File) params.get(PROP_MAIN_JAVA_DIR);
-        File packageDir = new File(mainJava, packageBase.replace('.', '/'));
-        Map<String, Object> mainParams = new HashMap<>(params);
-        mainParams.put("project", new DummyProject());
-        mainParams.put("package", packageBase); //NOI18N
-        mainParams.put("name", mainClassName); //NOI18N
+        File rootDir = new File(loc, name);
+        params.put(PROP_PROJECT_ROOT, rootDir);
+        
+        ops.createFolder(rootDir);
+
 
         FileObject folder = ((TemplateWizard)this.getData()).getTemplate().getPrimaryFile();
-        ops.addConfigureProject(projectDir, new CopyTree(folder, projectDir, mainParams));
-    }
+        GradleArchetype ga = new GradleArchetype(folder, rootDir, params);
+        ga.copyTemplates(ops);
 
-    private static class CopyTree implements TemplateOperation.ProjectConfigurator {
-        private final FileObject templateFolder;
-        private final File projectDir;
-        private final Map<String, Object> params;
-
-        private CopyTree(FileObject templateFolder, File projectDir, Map<String, Object> params) {
-            this.projectDir = projectDir;
-            this.params = params;
-            this.templateFolder = templateFolder;
+        Boolean initWrapper = (Boolean) params.get(PROP_INIT_WRAPPER);
+        if ((initWrapper != null) && initWrapper) {
+            ops.addWrapperInit(rootDir);
         }
 
-        @Override
-        public void configure(Project project) {
-            FileObject projectFo = FileUtil.toFileObject(projectDir);
-
-            GradleArchetype ga = new GradleArchetype(templateFolder, projectFo, params);
-            try {
-                ga.copyTemplates();
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            } finally {
-                NbGradleProject.fireGradleProjectReload(project);
-            }
-        }
     }
 
     public static class DummyProject {

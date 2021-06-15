@@ -47,6 +47,10 @@ public class SemanticAnalyzerTest extends SemanticAnalysisTestBase {
         checkSemantic("testfiles/semantic/class002.php");
     }
 
+    public void testAnalysisUnusedPrivateConstant() throws Exception {
+        checkSemantic("testfiles/semantic/unusedPrivateConst.php");
+    }
+
     public void testAnalysisUnusedPrivateField() throws Exception {
         checkSemantic("testfiles/semantic/class003.php");
     }
@@ -188,5 +192,13 @@ public class SemanticAnalyzerTest extends SemanticAnalysisTestBase {
 
     public void testUniformVariableSyntax_02() throws Exception {
         checkSemantic("testfiles/semantic/uniformVariableSyntax/uniformVariableSyntax_02.php");
+    }
+
+    public void testConstrucotorPropertyPromotion() throws Exception {
+        checkSemantic("testfiles/semantic/constructorPropertyPromotion.php");
+    }
+
+    public void testNamedArgumentsColoring() throws Exception {
+        checkSemantic("testfiles/semantic/namedArgumentsColoring.php");
     }
 }

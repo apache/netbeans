@@ -251,12 +251,12 @@
     <Component class="javax.swing.JComboBox" name="chooseServerComboBox">
       <Properties>
         <Property name="selectedItem" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="wizardIterator.downloadableValues[0]" type="code"/>
+          <Connection code="wizardIterator.downloadableValues.get(0)" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JComboBox&lt;ServerDetails&gt;(wizardIterator.downloadableValues)"/>
-        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;ServerDetails&gt;"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JComboBox&lt;PayaraVersion&gt;(wizardIterator.downloadableValues.toArray(new PayaraVersion[0]))"/>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;PayaraVersion&gt;"/>
       </AuxValues>
     </Component>
   </SubComponents>

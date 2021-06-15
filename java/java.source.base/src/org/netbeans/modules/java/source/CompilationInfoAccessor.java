@@ -20,6 +20,7 @@ package org.netbeans.modules.java.source;
 
 import com.sun.source.util.JavacTask;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.modules.java.source.parsing.CompilationInfoImpl;
 
 /**
  *
@@ -61,5 +62,6 @@ public abstract class CompilationInfoAccessor {
     }
     
     public abstract JavacTask getJavacTask(CompilationInfo info);
+    public abstract CompilationInfoImpl getCompilationInfoImpl(CompilationInfo info);
 
 }

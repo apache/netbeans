@@ -82,8 +82,9 @@ public class ReactorCheckerTest extends NbTestCase {
     }
 
     public void testFindReactorFromExplicitParentPath() throws Exception {
-        project("root", "<groupId>g</groupId><artifactId>p</artifactId><version>0</version><packaging>pom</packaging><modules><module>../m</module></modules>");
-        project("m", "<parent><groupId>g</groupId><artifactId>p</artifactId><version>0</version><relativePath>../root/pom.xml</relativePath></parent><artifactId>m</artifactId>");
+        // PENDING: uses unique artifact coordinates g:px:0 instead of g:p:0, see NETBEANS-5316
+        project("root", "<groupId>g</groupId><artifactId>px</artifactId><version>0</version><packaging>pom</packaging><modules><module>../m</module></modules>");
+        project("m", "<parent><groupId>g</groupId><artifactId>px</artifactId><version>0</version><relativePath>../root/pom.xml</relativePath></parent><artifactId>m</artifactId>");
         NbMavenProject p = load("root");
         assertEquals(p, ReactorChecker.findReactor(load("m")));
     }

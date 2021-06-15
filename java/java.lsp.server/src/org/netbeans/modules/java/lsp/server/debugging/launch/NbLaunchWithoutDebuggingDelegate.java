@@ -36,6 +36,12 @@ public final class NbLaunchWithoutDebuggingDelegate extends NbLaunchDelegate {
     }
 
     @Override
+    protected void notifyFinished(DebugAdapterContext ctx, boolean success) {
+        super.notifyFinished(ctx, success);
+        onFinishCallback.accept(ctx);
+    }
+
+    @Override
     public void postLaunch(Map<String, Object> launchArguments, DebugAdapterContext context) {
         // Do not send InitializedEvent, so that we do not get DAP requests.
         return;

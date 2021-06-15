@@ -41,7 +41,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.spi.java.classpath.ClassPathFactory;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -49,12 +48,12 @@ import org.openide.util.Utilities;
 
 import static org.netbeans.api.java.classpath.ClassPath.*;
 import static org.netbeans.api.java.classpath.JavaClassPathConstants.*;
+import org.openide.util.NbBundle;
+import org.openide.util.WeakListeners;
 /**
  *
  * @author Laszlo Kishalmi
  */
-@ProjectServiceProvider(service = {ClassPathProvider.class, ProjectOpenedHook.class},
-        projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public final class ClassPathProviderImpl extends ProjectOpenedHook implements ClassPathProvider {
 
     public static final String MODULE_INFO_JAVA = "module-info.java"; // NOI18N
@@ -73,45 +72,96 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
     ));
 
 
-    private final Map<String, SourceSetCP> groups = new HashMap<>();
     private final Project project;
     private final PropertyChangeListener pcl;
+    private final PropertyChangeListener wPcl;
+
+    // @GuardedBy(this)
+    private volatile Map<String, SourceSetCP> groups = new HashMap<>();
 
     public ClassPathProviderImpl(Project project) {
         this.project = project;
         this.pcl = (PropertyChangeEvent evt) -> {
             if (NbGradleProject.PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
-                GradleJavaProject p = GradleJavaProject.get(ClassPathProviderImpl.this.project);
-                if (p != null) {
-                    updateGroups(p.getSourceSets().keySet());
-                } else {
-                    //We are no longer a Java Project
-                    updateGroups(Collections.<String>emptySet());
-
-                }
+                updateGroups();
             }
             if (NbGradleProject.PROP_RESOURCES.endsWith(evt.getPropertyName())) {
                 URI uri = (URI) evt.getNewValue();
-                if ((uri != null) && (uri.getPath() != null) && uri.getPath().endsWith(MODULE_INFO_JAVA)) {
-                    GradleJavaProject gjp = GradleJavaProject.get(ClassPathProviderImpl.this.project);
-                    if (gjp != null) {
-                        GradleJavaSourceSet ss = gjp.containingSourceSet(Utilities.toFile(uri));
-                        if ((ss != null) && (groups.get(ss.getName()) != null)) {
-                            groups.get(ss.getName()).reset();
-                        }
-                    }
-                }
+                updateResources(uri);
             }
         };
+        this.wPcl = WeakListeners.propertyChange(pcl, null, project);
+        // by some miracle, the project might have been loaded!
+        NbGradleProject gp = NbGradleProject.get(project);
+        if (gp.isGradleProjectLoaded()) {
+            updateGroups();
+        }
+        NbGradleProject.addPropertyChangeListener(project, wPcl);
     }
+    
+    private void updateResources(URI uri) {
+        if ((uri != null) && (uri.getPath() != null) && uri.getPath().endsWith(MODULE_INFO_JAVA)) {
+            GradleJavaProject gjp = GradleJavaProject.get(project);
+            if (gjp != null) {
+                GradleJavaSourceSet ss = gjp.containingSourceSet(Utilities.toFile(uri));
+                if (ss == null) {
+                    return;
+                }
+                SourceSetCP ssp = groups.get(ss.getName());
+                if (ssp != null) {
+                    // reset may fire events
+                    ssp.reset();
+                }
+            }
+        }
+    }
+    
+    private void updateGroups() {
+        GradleJavaProject p = GradleJavaProject.get(ClassPathProviderImpl.this.project);
+        if (p != null) {
+            updateGroups(p.getSourceSets().keySet());
+        } else {
+            //We are no longer a Java Project
+            updateGroups(Collections.<String>emptySet());
+        }
+    }
+    
+    /**
+     * If true, the impl has attempted project load upon CP request.
+     * Will try once.
+     */
+    private boolean lateProjectLoadAttempted;
 
+    @NbBundle.Messages({
+        "MSG_ObtainClasspath=Attempting to obtain classpath"
+    })
     @Override
     public ClassPath findClassPath(FileObject fo, String type) {
         GradleJavaProject prj = GradleJavaProject.get(project);
         if (!SUPPORTED_PATHS.contains(type) || (prj == null)) {
             return null;
         }
-
+        NbGradleProject ngp = NbGradleProject.get(project);
+        if (ngp != null) {
+            boolean attempt;
+            if (ngp.getQuality().worseThan(NbGradleProject.Quality.EVALUATED)) {
+                synchronized (this) {
+                    attempt = !lateProjectLoadAttempted;
+                    lateProjectLoadAttempted = true;
+                }
+            } else {
+                attempt = false;
+            }
+            if (attempt) {
+                // someone is asking for a classpath. Try to go for FULL at least. Runs asynchronously.
+                ngp.toQuality(Bundle.MSG_ObtainClasspath(), NbGradleProject.Quality.FULL, false).
+                    thenAccept((p) -> {
+                        if (p.getQuality().atLeast(NbGradleProject.Quality.EVALUATED)) {
+                            updateGroups();
+                        }
+                    });
+            }
+        }
         GradleJavaSourceSet sourceSet = prj.containingSourceSet(FileUtil.toFile(fo));
         return sourceSet != null ? getSourceSetPath(type, sourceSet) : null;
     }
@@ -123,7 +173,6 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
 
     @Override
     protected void projectOpened() {
-        NbGradleProject.addPropertyChangeListener(project, pcl);
         GradleJavaProject p = GradleJavaProject.get(project);
         if (p != null) {
             updateGroups(p.getSourceSets().keySet());
@@ -132,13 +181,13 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
 
     @Override
     protected void projectClosed() {
-        updateGroups(Collections.<String>emptySet());
         NbGradleProject.removePropertyChangeListener(project, pcl);
     }
 
     private void updateGroups(Set<String> newGroups) {
-        synchronized(groups) {
-            Iterator<Map.Entry<String, SourceSetCP>> it = groups.entrySet().iterator();
+        synchronized(this) {
+            Map<String, SourceSetCP> g = new HashMap<>(groups);
+            Iterator<Map.Entry<String, SourceSetCP>> it = g.entrySet().iterator();
             while(it.hasNext()) {
                 Map.Entry<String, SourceSetCP> oldGroup = it.next();
                 if (!newGroups.contains(oldGroup.getKey())) {
@@ -146,11 +195,12 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
                 }
             }
             for (String newGroup : newGroups) {
-                if (!groups.containsKey(newGroup)) {
+                if (!g.containsKey(newGroup)) {
                     SourceSetCP scp = new SourceSetCP(newGroup);
-                    groups.put(newGroup, scp);
+                    g.put(newGroup, scp);
                 }
             }
+            this.groups = g;
         }
     }
 
@@ -174,7 +224,9 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
         ClassPath moduleLegacyRuntime;
 
         final String group;
-        List<SourceSetAwareSelector> selectors = new ArrayList<>();
+        
+        // @GuardedBy(this)
+        final List<SourceSetAwareSelector> selectors = new ArrayList<>();
 
         SourceSetCP(String group) {
             this.group = group;
@@ -311,6 +363,7 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
             return moduleCompile;
         }
 
+        // @GuardedBy(this)
         private ClassPath createMultiplexClassPath(ClassPath modulePath, ClassPath classPath) {
             SourceSetAwareSelector selector = new SourceSetAwareSelector(modulePath, classPath);
             selectors.add(selector);
@@ -324,7 +377,12 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
         }
 
         public void reset() {
-            for (SourceSetAwareSelector selector : selectors) {
+            List<SourceSetAwareSelector> copy;
+            synchronized (this) {
+                copy = new ArrayList<>(selectors);
+            }
+            // fire events outside lock
+            for (SourceSetAwareSelector selector : copy) {
                 selector.reset();
             }
         }
@@ -361,11 +419,14 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
             }
 
             private void reset() {
-                ClassPath oldActive = active;
-                active = hasModuleInfo() ? modulePath : classPath;
-                if (oldActive != active) {
-                    support.firePropertyChange(PROP_ACTIVE_CLASS_PATH, null, null);
+                synchronized (this) {
+                    ClassPath oldActive = active;
+                    active = hasModuleInfo() ? modulePath : classPath;
+                    if (oldActive == active) {
+                        return;
+                    }
                 }
+                support.firePropertyChange(PROP_ACTIVE_CLASS_PATH, null, null);
             }
         }
     }

@@ -29,6 +29,8 @@ import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
+import org.netbeans.modules.php.editor.parser.astnodes.Attribute;
+import org.netbeans.modules.php.editor.parser.astnodes.AttributeDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.BackTickExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.BreakStatement;
@@ -71,6 +73,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.MatchArm;
 import org.netbeans.modules.php.editor.parser.astnodes.MatchExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
+import org.netbeans.modules.php.editor.parser.astnodes.NamedArgument;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocBlock;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocMethodTag;
@@ -201,6 +204,20 @@ public class DefaultTreePathVisitor extends DefaultVisitor {
     @Override
     public void visit(ASTErrorExpression astErrorExpression) {
         super.visit(astErrorExpression);
+    }
+
+    @Override
+    public void visit(Attribute node) {
+        addToPath(node);
+        super.visit(node);
+        removeFromPath();
+    }
+
+    @Override
+    public void visit(AttributeDeclaration node) {
+        addToPath(node);
+        super.visit(node);
+        removeFromPath();
     }
 
     @Override
@@ -485,6 +502,13 @@ public class DefaultTreePathVisitor extends DefaultVisitor {
 
     @Override
     public void visit(MethodInvocation node) {
+        addToPath(node);
+        super.visit(node);
+        removeFromPath();
+    }
+
+    @Override
+    public void visit(NamedArgument node) {
         addToPath(node);
         super.visit(node);
         removeFromPath();

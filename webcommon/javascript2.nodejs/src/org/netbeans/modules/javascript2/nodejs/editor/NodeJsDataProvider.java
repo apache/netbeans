@@ -50,7 +50,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.Documentation;
@@ -634,7 +633,7 @@ public class NodeJsDataProvider {
     private void startLoading() {
         LOG.fine("start loading doc"); //NOI18N
         loadingStarted = true;
-        progress = ProgressHandleFactory.createHandle(Bundle.doc_building());
+        progress = ProgressHandle.createHandle(Bundle.doc_building());
         progress.start(1);
     }
     

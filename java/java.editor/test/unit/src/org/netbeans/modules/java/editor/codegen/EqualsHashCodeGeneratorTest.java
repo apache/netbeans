@@ -41,6 +41,7 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -71,7 +72,7 @@ public class EqualsHashCodeGeneratorTest extends NbTestCase {
             @Override public String getSourceLevel(FileObject javaFile) {
                 return sourceLevel != null ? sourceLevel : "1.5";
             }
-        } }, getClass().getClassLoader());
+        }, BootClassPathUtil.getBootClassPathProvider() }, getClass().getClassLoader());
     }
     
     

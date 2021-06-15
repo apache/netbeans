@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.47
+#Version 1.49.0
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
@@ -297,6 +297,7 @@ supr org.netbeans.editor.ext.MultiSyntax
 hfds HTML_ON,ISI_ERROR
 
 CLSS public abstract org.netbeans.editor.ext.java.JavaFoldManager
+ anno 0 java.lang.Deprecated()
 cons public init()
 fld public final static org.netbeans.api.editor.fold.FoldType CODE_BLOCK_FOLD_TYPE
 fld public final static org.netbeans.api.editor.fold.FoldType IMPORTS_FOLD_TYPE

@@ -18,59 +18,74 @@
  */
 package org.netbeans.modules.gradle.htmlui;
 
-import java.io.IOException;
+import java.io.File;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import org.netbeans.api.project.ProjectManager;
-import org.netbeans.api.templates.FileBuilder;
-import org.netbeans.api.templates.FileBuilder.Mode;
+import org.netbeans.modules.gradle.spi.newproject.TemplateOperation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.MapFormat;
 
 public final class GradleArchetype {
     private final FileObject templates;
-    private final FileObject projectFo;
+    private final File rootDir;
     private final Map<String, Object> params;
 
-    public GradleArchetype(FileObject templates, FileObject projectFo, Map<String, Object> params) {
+    public GradleArchetype(FileObject templates, File rootDir, Map<String, Object> params) {
         this.templates = templates;
-        this.projectFo = projectFo;
+        this.rootDir = rootDir;
         this.params = params;
     }
 
-    public final void copyTemplates() throws IOException {
+    public final void copyTemplates(TemplateOperation ops) {
         MapFormat mf = new MapFormat(params);
         mf.setLeftBrace("${"); // NOI18N
         mf.setRightBrace("}"); // NOI18N
+        List<File> projectDirs = new LinkedList<>();
+        projectDirs.add(rootDir);
+        
         Enumeration<? extends FileObject> en = templates.getChildren(true);
         while (en.hasMoreElements()) {
             FileObject template = en.nextElement();
-            if (!template.isData()) {
-                continue;
+            String relativePath = FileUtil.getRelativePath(templates, template);
+            if (template.isFolder()) {
+                File dir = new File(rootDir, relativePath);
+                ops.createFolder(dir);
+                Object projectAttr = template.getAttribute("project"); // NOI18N
+                if (Boolean.TRUE == projectAttr) {
+                    projectDirs.add(dir);
+                }
+            } else if (template.isData()) {
+                Object packageAttr = template.getAttribute("package"); // NOI18N
+                if (packageAttr instanceof String) {
+                    String relativeParent = FileUtil.getRelativePath(templates, template.getParent());
+                    String packageName = mf.format(packageAttr);
+                    File sourceRoot = new File(rootDir, relativeParent);
+                    ops.createPackage(sourceRoot, packageName);
+                    File packageDir = new File(sourceRoot, packageName.replace('.', '/'));
+
+                    Map<String, Object> pparams = new HashMap<>(params);
+                    pparams.put("package", packageName); //NOI18N
+                    copyDataTemplate(ops, template, new File(packageDir, template.getNameExt()), pparams);
+                } else {
+                    copyDataTemplate(ops, template, new File(rootDir, relativePath), params);
+                }
             }
-            String relativeParent = FileUtil.getRelativePath(templates, template.getParent());
-            Object packageAttr = template.getAttribute("package"); // NOI18N
-            if (packageAttr instanceof String) {
-                String packageName = mf.format(packageAttr).replace('.', '/');
-                relativeParent += "/" + packageName;
-            }
-            FileObject destinationFolder = FileUtil.createFolder(projectFo, relativeParent);
-
-            FileObject previous = destinationFolder.getFileObject(template.getNameExt());
-            if (previous != null) {
-                previous.delete();
-            }
-
-            FileBuilder fb = new FileBuilder(template, destinationFolder);
-            fb.withParameters(params);
-            fb.defaultMode(Mode.COPY);
-
-            FileObject copied = fb.build().iterator().next();
-
-            assert copied != null && copied.getNameExt().equals(template.getNameExt()) : "Created " + copied;
         }
-        ProjectManager.getDefault().clearNonProjectCache();
-        assert ProjectManager.getDefault().findProject(projectFo) != null : "Project found for " + projectFo;
+        for (File projectDir : projectDirs) {
+            ops.addProjectPreload(projectDir);
+        }
+    }
+
+    private static void copyDataTemplate(TemplateOperation ops, FileObject template, File target, Map<String, Object> params) {
+        Object importantAttr = template.getAttribute("important");
+        if (importantAttr == Boolean.TRUE) {
+            ops.openFromTemplate(template.getPath(), target, params);
+        } else {
+            ops.copyFromTemplate(template.getPath(), target, params);
+        }
     }
 }

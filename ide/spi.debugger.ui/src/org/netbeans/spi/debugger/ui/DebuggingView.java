@@ -477,11 +477,21 @@ public final class DebuggingView {
         void makeCurrent();
 
         /**
-         * Gen URI of the source file associated with this frame, if any.
+         * Get URI of the source file associated with this frame, if any.
          * @return a source URI, or <code>null</code> if the file is unknown.
          * @since 2.65
          */
         URI getSourceURI();
+
+        /**
+         * Get the source MIME type, if known.
+         * @return the source MIME type, or <code>null</code> if the source, or
+         * its MIME type is unknown.
+         * @since 2.67
+         */
+        default String getSourceMimeType() {
+            return null;
+        }
 
         /**
          * Line location of the frame in the source code at {@link #getSourceURI()}.

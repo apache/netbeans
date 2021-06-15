@@ -20,6 +20,7 @@ package org.netbeans.modules.java.lsp.server.ui;
 
 import java.io.CharArrayReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
@@ -92,7 +93,7 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
 
     @Override
     public final boolean isIOClosed(LspIO io) {
-        return false;
+        return io.closed;
     }
 
     @Override
@@ -133,6 +134,7 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
         final Reader in;
         final PrintWriter out;
         final PrintWriter err;
+        volatile boolean closed;
 
         LspIO(String name, IOContext ioCtx, Lookup lookup) {
             this.name = name;
@@ -140,11 +142,25 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
             this.lookup = lookup;
             this.out = new PrintWriter(new LspWriter(true));
             this.err = new PrintWriter(new LspWriter(false));
-            this.in = new CharArrayReader(new char[0]) {
-                @Override
-                public void close() {
-                }
-            };
+            Reader in;
+            try {
+                in = new InputStreamReader(ioCtx.getStdIn(), "UTF-8") {
+                    @Override
+                    public void close() throws IOException {
+                        // the underlying StreamDecoder would just block on synchronized read(); close the underlying stream.
+                        ioCtx.getStdIn().close();
+                        super.close();
+                    }
+                };
+            } catch (IOException ex) {
+                err.write(ex.getLocalizedMessage());
+                in = new CharArrayReader(new char[0]) {
+                    @Override
+                    public void close() {
+                    }
+                };
+            }
+            this.in = in;
         }
 
         private final class LspWriter extends Writer {
@@ -170,6 +186,7 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
 
             @Override
             public void close() throws IOException {
+                closed = true;
             }
         }
     }

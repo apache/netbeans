@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.60
+#Version 3.62
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1536,7 +1536,7 @@ fld public final static int DIRECT_CONNECTION = 0
 fld public final static int MANUAL_SET_PAC = 4
 fld public final static int MANUAL_SET_PROXY = 2
 fld public final static java.lang.String DIRECT = "DIRECT"
-fld public final static java.lang.String HTTP_CONNECTION_TEST_URL = "http://netbeans.org"
+fld public final static java.lang.String HTTP_CONNECTION_TEST_URL = "https://netbeans.apache.org"
 fld public final static java.lang.String NOT_PROXY_HOSTS = "proxyNonProxyHosts"
 fld public final static java.lang.String PAC = "PAC"
 fld public final static java.lang.String PROXY_AUTHENTICATION_PASSWORD = "proxyAuthenticationPassword"

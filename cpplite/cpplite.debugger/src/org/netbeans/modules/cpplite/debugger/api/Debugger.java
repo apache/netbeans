@@ -18,18 +18,28 @@
  */
 package org.netbeans.modules.cpplite.debugger.api;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger;
 import org.netbeans.modules.cpplite.debugger.CPPLiteDebuggerConfig;
+import org.openide.util.Pair;
 
 /**
  *
  * @author lahvac
  */
 public class Debugger {
-    
+
+    @Deprecated
     public static Process startInDebugger(List<String> command) throws IOException {
-        return CPPLiteDebugger.startDebugging(new CPPLiteDebuggerConfig(command)).second();
+        return startInDebugger(command, new File(System.getProperty("user.dir")));
+    }
+
+    public static Process startInDebugger(List<String> command, File directory) throws IOException {
+        Pair<DebuggerEngine, Process> engineProcess = CPPLiteDebugger.startDebugging(new CPPLiteDebuggerConfig(command, directory, "gdb"));
+        engineProcess.first().lookupFirst(null, CPPLiteDebugger.class).execRun();
+        return engineProcess.second();
     }
 }

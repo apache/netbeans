@@ -98,7 +98,7 @@ public final class LocalFileSystemEx extends LocalFileSystem {
         }
     }
 
-    private static Set<String> getInvalid (Set names) {
+    private static Set<String> getInvalid (Set<String> names) {
         LOGGER.finest("133616 - checking invalid");
         Set<String> invalid = new HashSet<String>();
         Iterator<String> i = names.iterator();

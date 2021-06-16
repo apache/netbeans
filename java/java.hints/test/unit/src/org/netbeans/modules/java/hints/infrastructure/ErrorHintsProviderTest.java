@@ -25,6 +25,7 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
+import javax.lang.model.SourceVersion;
 import javax.swing.text.Document;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
@@ -230,9 +231,14 @@ public class ErrorHintsProviderTest extends NbTestCase {
     }
     
     public void testTestUnicodeError() throws Exception {
-        if (TreeShims.isJDKVersionRelease16_Or_Above()) {
-            performTest("TestUnicodeError", false);
+        //only run this test with javac 17 and higher, there were adjustments to the
+        //diagnostics in previous versions:
+        try {
+            SourceVersion.valueOf("RELEASE_17");
+        } catch (IllegalArgumentException ex) {
+            return ;
         }
+        performTest("TestUnicodeError", false);
     }
     
     public void testOverrideAnnotation() throws Exception {

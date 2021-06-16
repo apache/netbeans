@@ -181,6 +181,8 @@ import org.netbeans.modules.java.hints.introduce.IntroduceHint;
 import org.netbeans.modules.java.hints.introduce.IntroduceKind;
 import org.netbeans.modules.java.hints.project.IncompleteClassPath;
 import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
+import org.netbeans.modules.java.hints.spiimpl.MessageImpl;
+import org.netbeans.modules.java.hints.spiimpl.RulesManager;
 import org.netbeans.modules.java.hints.spiimpl.hints.HintsInvoker;
 import org.netbeans.modules.java.hints.spiimpl.options.HintsSettings;
 import org.netbeans.modules.java.lsp.server.LspServerState;
@@ -930,8 +932,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 }
                 //introduce hints
                 Range range = params.getRange();
+                int startOffset = Utils.getOffset(doc, range.getStart());
+                int endOffset = Utils.getOffset(doc, range.getEnd());
                 if (!range.getStart().equals(range.getEnd())) {
-                    for (ErrorDescription err : IntroduceHint.computeError(cc, Utils.getOffset(doc, range.getStart()), Utils.getOffset(doc, range.getEnd()), new EnumMap<IntroduceKind, Fix>(IntroduceKind.class), new EnumMap<IntroduceKind, String>(IntroduceKind.class), new AtomicBoolean())) {
+                    for (ErrorDescription err : IntroduceHint.computeError(cc, startOffset, endOffset, new EnumMap<IntroduceKind, Fix>(IntroduceKind.class), new EnumMap<IntroduceKind, String>(IntroduceKind.class), new AtomicBoolean())) {
                         for (Fix fix : err.getFixes().getFixes()) {
                             if (fix instanceof IntroduceFixBase) {
                                 try {
@@ -968,6 +972,39 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         }
                     }
                 }
+                HintsInvoker.join(new HintsInvoker(HintsSettings.getGlobalSettings(), startOffset, endOffset, new AtomicBoolean())
+                        // compute nonrecursive hints
+                        .computeHints(cc, new TreePath(cc.getCompilationUnit()), false, RulesManager.getInstance().readHints(cc, null, new AtomicBoolean()).values().stream().collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll), new ArrayList<MessageImpl>()))
+                        .stream().forEach(err -> {
+                            // check if cursor/selection is in errors range
+                            if (err.getRange().getBegin().getOffset() <= startOffset && err.getRange().getEnd().getOffset() >= endOffset) {
+                                for (Fix f : err.getFixes().getFixes()) {
+                                    if (f instanceof JavaFixImpl) {
+                                        try {
+                                            JavaFix jf = ((JavaFixImpl) f).jf;
+                                            List<TextEdit> edits = modify2TextEdits(js, wc -> {
+                                                wc.toPhase(JavaSource.Phase.RESOLVED);
+                                                Map<FileObject, byte[]> resourceContentChanges = new HashMap<FileObject, byte[]>();
+                                                JavaFixImpl.Accessor.INSTANCE.process(jf, wc, true, resourceContentChanges, /*Ignored in editor:*/ new ArrayList<>());
+                                            });
+                                            // check for edit presence
+                                            if (edits.size() > 0 && !containsEdit(result, edits)) {
+                                                TextDocumentEdit te = new TextDocumentEdit(new VersionedTextDocumentIdentifier(params.getTextDocument().getUri(), -1), edits);
+                                                CodeAction action = new CodeAction(f.getText());
+                                                action.setKind(CodeActionKind.RefactorRewrite);
+                                                action.setEdit(new WorkspaceEdit(Collections.singletonList(Either.forLeft(te))));
+                                                result.add(Either.forRight(action));
+                                                // add only first relevant fix
+                                                break;
+                                            }
+                                        } catch (IOException ex) {
+                                            //TODO: include stack trace:
+                                            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                                        }
+                                    }
+                                }
+                            }
+                        });
             }, true);
         } catch (IOException ex) {
             //TODO: include stack trace:
@@ -975,6 +1012,20 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
 
         return CompletableFuture.completedFuture(result);
+    }
+
+    private boolean containsEdit(List<Either<Command, CodeAction>> results, List<TextEdit> edit) {
+        for (Either<Command, CodeAction> result : results) {
+            List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = result.getRight().getEdit().getDocumentChanges();
+            if (documentChanges != null) {
+                for (Either<TextDocumentEdit, ResourceOperation> change : documentChanges) {
+                    if (change.getLeft().getEdits().equals(edit)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     //TODO: copied from spi.editor.hints/.../FixData:

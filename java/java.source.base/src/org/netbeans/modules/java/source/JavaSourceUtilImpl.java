@@ -50,9 +50,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
+import javax.tools.Diagnostic.Kind;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
@@ -216,11 +218,19 @@ public final class JavaSourceUtilImpl extends org.netbeans.modules.java.preproce
                     false,
                     jfmProvider);
             final APTUtils aptUtils = APTUtils.get(srcRoot);
+            boolean[] hasErrors = new boolean[1];
+            DiagnosticListener<? super JavaFileObject> diagnosticsDelegate = diagnostics != null ?
+                            diagnostics :
+                            new Diags();
+            DiagnosticListener<JavaFileObject> errors = d -> {
+                if (d.getKind() == Kind.ERROR) {
+                    hasErrors[0] = true;
+                }
+                diagnosticsDelegate.report(d);
+            };
             final JavacTaskImpl  jt = JavacParser.createJavacTask(
                     cpInfo,
-                    diagnostics != null ?
-                            diagnostics :
-                            new Diags(),
+                    errors,
                     r.getSourceLevel(),
                     r.getProfile(),
                     null,
@@ -228,8 +238,11 @@ public final class JavaSourceUtilImpl extends org.netbeans.modules.java.preproce
                     aptUtils,
                     null,
                     Arrays.asList(toCompile));
+            Iterable<? extends Element> attributed = jt.analyze(jt.enter(jt.parse()));
+            if (hasErrors[0])
+                return Collections.emptyMap();
             final Iterable<? extends JavaFileObject> generated = jt.generate(
-                    StreamSupport.stream(jt.analyze(jt.enter(jt.parse())).spliterator(), false)
+                    StreamSupport.stream(attributed.spliterator(), false)
                             .filter((e) -> e.getKind().isClass() || e.getKind().isInterface())
                             .map((e) -> (TypeElement)e)
                             .collect(Collectors.toList()));

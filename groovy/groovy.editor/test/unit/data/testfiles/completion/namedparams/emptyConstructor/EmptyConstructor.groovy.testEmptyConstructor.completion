@@ -10,8 +10,8 @@ PARAMETER  e: Object                                  null
 PACKAGE    com                                        null
 PACKAGE    groovy                                     null
 PACKAGE    groovyjarjarantlr                          null
+PACKAGE    groovyjarjarantlr4                         null
 PACKAGE    groovyjarjarasm                            null
-PACKAGE    groovyjarjarcommonscli                     null
 PACKAGE    groovyjarjarpicocli                        null
 PACKAGE    java                                       null
 PACKAGE    javax                                      null
@@ -186,6 +186,7 @@ CLASS      GroovyRuntimeException                     null
 CLASS      GroovyScriptEngine                         null
 CLASS      GroovyShell                                null
 CLASS      GroovySystem                               null
+CLASS      Groovydoc                                  null
 CLASS      HashMap                                    null
 CLASS      HashSet                                    null
 CLASS      Hashtable                                  null
@@ -447,7 +448,15 @@ CLASS      TracingInterceptor                         null
 CLASS      TreeMap                                    null
 CLASS      TreeSet                                    null
 CLASS      Tuple                                      null
+CLASS      Tuple0                                     null
 CLASS      Tuple1                                     null
+CLASS      Tuple10                                    null
+CLASS      Tuple11                                    null
+CLASS      Tuple12                                    null
+CLASS      Tuple13                                    null
+CLASS      Tuple14                                    null
+CLASS      Tuple15                                    null
+CLASS      Tuple16                                    null
 CLASS      Tuple2                                     null
 CLASS      Tuple3                                     null
 CLASS      Tuple4                                     null

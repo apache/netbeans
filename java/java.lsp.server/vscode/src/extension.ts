@@ -283,7 +283,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             ]);
         }
     }));
-    const runDebug = async (noDebug: boolean, testRun: boolean, uri: string, methodName?: string) => {
+    const runDebug = async (noDebug: boolean, testRun: boolean, uri: string, methodName?: string, launchConfiguration?: string) => {
         const docUri = uri ? vscode.Uri.file(uri) : window.activeTextEditor?.document.uri;
         if (docUri) {
             const workspaceFolder = vscode.workspace.getWorkspaceFolder(docUri);
@@ -293,6 +293,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                 request: "launch",
                 mainClass: uri,
                 methodName,
+                launchConfiguration,
                 testRun
             };
             const debugOptions : vscode.DebugSessionOptions = {
@@ -307,14 +308,14 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             }) : ret;
         }
     };
-    context.subscriptions.push(commands.registerCommand('java.run.test', async (uri, methodName?) => {
-        await runDebug(true, true, uri, methodName);
+    context.subscriptions.push(commands.registerCommand('java.run.test', async (uri, methodName?, launchConfiguration?) => {
+        await runDebug(true, true, uri, methodName, launchConfiguration);
     }));
-    context.subscriptions.push(commands.registerCommand('java.run.single', async (uri, methodName?) => {
-        await runDebug(true, false, uri, methodName);
+    context.subscriptions.push(commands.registerCommand('java.run.single', async (uri, methodName?, launchConfiguration?) => {
+        await runDebug(true, false, uri, methodName, launchConfiguration);
     }));
-    context.subscriptions.push(commands.registerCommand('java.debug.single', async (uri, methodName?) => {
-        await runDebug(false, false, uri, methodName);
+    context.subscriptions.push(commands.registerCommand('java.debug.single', async (uri, methodName?, launchConfiguration?) => {
+        await runDebug(false, false, uri, methodName, launchConfiguration);
     }));
 
 	// get the Test Explorer extension and register TestAdapter

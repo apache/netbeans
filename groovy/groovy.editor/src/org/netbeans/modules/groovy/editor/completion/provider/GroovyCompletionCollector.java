@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.groovy.editor.completion.provider;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -83,27 +84,41 @@ public class GroovyCompletionCollector implements CompletionCollector {
         this.lkp = lkp;
     }
     
-    @Override
-    public boolean collectCompletions(Document doc, int offset, Completion.Context context, Consumer<Completion> consumer) {
+    private GroovyCompletionImpl impl() {
         if (cService == null) {
             cService = lkp.lookup(GroovyCompletionImpl.class);
         }
+        return cService;
+    }
+    
+    @Override
+    public boolean collectCompletions(Document doc, int offset, Completion.Context context, Consumer<Completion> consumer) {
+        
         try {
-            Source src = Source.create(doc);
-            if (src == null) {
+            CompletionTask task = collectCompletions2(doc, offset, context, consumer);
+            if (task == null) {
                 return true;
             }
-            CompletionTask task = new CompletionTask(offset, QueryType.ALL_COMPLETION, context, consumer);
-            
-            ParserManager.parse(Collections.singleton(src), task);
             return task.complete;
-            
         } catch (ParseException ex) {
             Exceptions.printStackTrace(ex);
             return true;
         }
     }
     
+    public CompletionTask collectCompletions2(Document doc, int offset, Completion.Context context, Consumer<Completion> consumer) throws ParseException {
+        Source src = Source.create(doc);
+        if (src == null) {
+            return null;
+        }
+        CompletionTask task = new CompletionTask(offset, QueryType.COMPLETION, context, consumer);
+
+        ParserManager.parse(Collections.singleton(src), task);
+        return task;
+    }
+    
+    // the ORDER_* constnats values follow those of JavaComplectionCollector for non-smart
+    // items.
     private static final int ORDER_CONSTRUCTOR = 1550;
     private static final int ORDER_METHOD = 1500;
     private static final int ORDER_META_METHOD = 1650;
@@ -118,7 +133,8 @@ public class GroovyCompletionCollector implements CompletionCollector {
     private static int ORDER_PACKAGE = 1900;
     
     
-    class CompletionTask extends UserTask {
+    // fpr testing only
+    public class CompletionTask extends UserTask {
         final int offset;
         final Consumer<Completion> consumer;
         final Completion.Context lspContext;
@@ -127,6 +143,7 @@ public class GroovyCompletionCollector implements CompletionCollector {
         GroovyParserResult groovyResult;
         boolean complete = true;
         CompletionImplResult groovyCompletion;
+        final List<CompletionProposal> proposals = new ArrayList<>();
 
         public CompletionTask(int offset, QueryType queryType, Completion.Context context, Consumer<Completion> consumer) {
             this.offset = offset;
@@ -147,6 +164,10 @@ public class GroovyCompletionCollector implements CompletionCollector {
             }
         }
         
+        public List<CompletionProposal> getOriginalProposals() {
+            return proposals;
+        }
+        
         void process(Parser.Result r) {
             if (!(r instanceof GroovyParserResult)) {
                 return;
@@ -155,7 +176,7 @@ public class GroovyCompletionCollector implements CompletionCollector {
             // CSL context for completion
             cslContext = new CompletionRequestContext(offset,  queryType, groovyResult, true);
             
-            List<CompletionProposal> proposals = cService.makeProposals(cslContext).getProposals();
+            proposals.addAll(impl().makeProposals(cslContext).getProposals());
             for (CompletionProposal cp : proposals) {
                 Completion.Kind k = lspCompletionKind(cp.getKind());
                 if (k == null) {
@@ -294,7 +315,7 @@ public class GroovyCompletionCollector implements CompletionCollector {
         }
         
         Builder buildPackage(CompletionItem item) {
-            return builder.sortText(String.format("%04d%s#%s", ORDER_PACKAGE, item.getName()));
+            return builder.sortText(String.format("%04d%s", ORDER_PACKAGE, item.getName()));
         }
         
         Builder buildExecutable(CompletionItem item, String simpleName, String sortParams, int cnt) {
@@ -452,7 +473,6 @@ public class GroovyCompletionCollector implements CompletionCollector {
         
         int offset;
         String prefix;
-        CodeCompletionHandler completionHandler;
 
         public CompletionRequestContext(int offset, QueryType queryType, ParserResult parserResult, boolean prefixMatch) {
             this.offset = offset;
@@ -460,13 +480,6 @@ public class GroovyCompletionCollector implements CompletionCollector {
             this.prefixMatch = prefixMatch;
             this.queryType = queryType;
             init();
-        }
-        
-        CodeCompletionHandler getCompletionHandler() {
-            if (completionHandler == null) {
-                completionHandler = MimeLookup.getLookup(parserResult.getSnapshot().getMimeType()).lookup(CodeCompletionHandler.class);
-            }
-            return completionHandler;
         }
         
         void init() {
@@ -477,10 +490,6 @@ public class GroovyCompletionCollector implements CompletionCollector {
                 offset = length;
             }
             
-            CodeCompletionHandler completer = getCompletionHandler();
-            if (completer == null) {
-                return;
-            }
             try {
                 if (doc != null) {
                     int[] blk =

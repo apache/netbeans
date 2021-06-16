@@ -48,7 +48,7 @@ METHOD     findLastIndexOf(int, Closure)              int
 METHOD     findResult(Closure)                        Object
 METHOD     findResult(Object, Closure)                Object
 METHOD     findResults(Closure)                       Collection
-METHOD     forEach(BiConsumer<? super K,?  [PUBLIC]   void
+METHOD     forEach(BiConsumer<? super K,   [PUBLIC]   void
 METHOD     get(Object)                     [PUBLIC]   V
 METHOD     get(Object, Object)                        Object
 METHOD     getAt(Object)                              Object
@@ -97,7 +97,7 @@ METHOD     println(Object)                            void
 METHOD     println(PrintWriter)                       void
 METHOD     put(K, V)                       [PUBLIC]   V
 METHOD     putAll(Collection)                         Map
-METHOD     putAll(Map<? extends K,? exten  [PUBLIC]   void
+METHOD     putAll(Map<? extends K, ? exte  [PUBLIC]   void
 METHOD     putAt(Object, Object)                      Object
 METHOD     putAt(String, Object)                      void
 METHOD     putIfAbsent(K, V)               [PUBLIC]   V

@@ -75,15 +75,15 @@ public final class GroovyElementsProvider implements CompletionProvider {
                                 indexedMethod.getModifiers());
                     }
                     
-                    CompletionItem ci = CompletionItem.forJavaMethod(
-                                context.getTypeName(),
-                                indexedMethod.getName(),
-                                indexedMethod.getParameterTypes(),
-                                indexedMethod.getReturnType(),
-                                Utilities.gsfModifiersToModel(indexedMethod.getModifiers(), Modifier.PUBLIC),
-                                context.getAnchor(),
-                                false,
-                                context.isNameOnly());
+                    CompletionItem ci = CompletionAccessor.instance().createJavaMethod(
+                            context.getTypeName(),
+                            indexedMethod.getName(),
+                            indexedMethod.getParameters(),
+                            indexedMethod.getReturnType(),
+                            Utilities.gsfModifiersToModel(indexedMethod.getModifiers(), Modifier.PUBLIC),
+                            context.getAnchor(),
+                            false,
+                            context.isNameOnly());
                     
                     result.put(getMethodSignature(indexedMethod), 
                         CompletionAccessor.instance().assignHandle(ci, jeh)

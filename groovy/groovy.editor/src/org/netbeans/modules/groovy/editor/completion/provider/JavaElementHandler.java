@@ -54,6 +54,7 @@ import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 import org.netbeans.modules.groovy.editor.api.completion.FieldSignature;
 import org.netbeans.modules.groovy.editor.api.completion.MethodSignature;
+import org.netbeans.modules.groovy.editor.api.elements.common.MethodElement.MethodParameter;
 import org.netbeans.modules.groovy.editor.completion.AccessLevel;
 import org.netbeans.modules.groovy.editor.java.JavaElementHandle;
 import org.netbeans.modules.groovy.editor.java.Utilities;
@@ -222,10 +223,9 @@ public final class JavaElementHandler {
                     }
 
                     String simpleName = element.getSimpleName().toString();
-                    List<String> params = getParameterListForMethod(element);
                     // FIXME this should be more accurate
                     TypeMirror returnType = element.getReturnType();
-
+                    String returnTypeString = info.getTypeUtilities().getTypeName(returnType, TypeUtilities.TypeNameOptions.PRINT_FQN).toString();
                     if (simpleName.toUpperCase(Locale.ENGLISH).startsWith(prefix.toUpperCase(Locale.ENGLISH)) &&
                         !simpleName.contains("$")) {
                         
@@ -233,8 +233,10 @@ public final class JavaElementHandler {
                                 simpleName, className, ElementHandle.create(element),
                                 signatureOf(info, element), Utilities.modelModifiersToGsf(element.getModifiers()));
                         
-                        CompletionItem ci = CompletionItem.forJavaMethod(
-                                        className, simpleName, params, returnType, element.getModifiers(), anchor, emphasise, nameOnly);
+                        CompletionItem ci = CompletionAccessor.instance().createJavaMethod(
+                                className, simpleName, getParametersForElement(info, element), returnTypeString, 
+                                element.getModifiers(), anchor, emphasise, nameOnly);
+
                         proposals.put(getSignature(te, element, typeParameters, info.getTypes()), 
                                 CompletionAccessor.instance().assignHandle(ci, h)
                         );
@@ -254,32 +256,25 @@ public final class JavaElementHandler {
             return fqns;
         }
         
-        private List<String> getParameterListForMethod(ExecutableElement exe) {
-            List<String> parameters = new ArrayList<String>();
+        private List<MethodParameter> getParametersForElement(CompilationController info, ExecutableElement exe) {
+            List<MethodParameter> result = new ArrayList<>();
+            if (exe == null) {
+                return result;
+            }
+            List<? extends VariableElement> params = exe.getParameters(); // this can cause NPE's
 
-            if (exe != null) {
-                // generate a list of parameters
-                // unfortunately, we have to work around # 139695 in an ugly fashion
-
-                try {
-                    List<? extends VariableElement> params = exe.getParameters(); // this can cause NPE's
-
-                    for (VariableElement variableElement : params) {
-                        TypeMirror tm = variableElement.asType();
-
-                        if (tm.getKind() == TypeKind.DECLARED || tm.getKind() == TypeKind.ARRAY) {
-                            parameters.add(GroovyUtils.stripPackage(tm.toString()));
-                        } else {
-                            parameters.add(tm.toString());
-                        }
-                    }
-                } catch (NullPointerException e) {
-                    // simply do nothing.
+            for (VariableElement variableElement : params) {
+                TypeMirror tm = variableElement.asType();
+                String fullName = info.getTypeUtilities().getTypeName(tm, TypeUtilities.TypeNameOptions.PRINT_FQN).toString();
+                if (tm.getKind() == TypeKind.DECLARED || tm.getKind() == TypeKind.ARRAY) {
+                    result.add(new MethodParameter(fullName, GroovyUtils.stripPackage(tm.toString()), variableElement.getSimpleName().toString()));
+                } else {
+                    result.add(new MethodParameter(fullName, fullName, variableElement.getSimpleName().toString()));
                 }
             }
-            return parameters;
+            return result;
         }
-
+        
         private MethodSignature getSignature(TypeElement classElement, ExecutableElement element, String[] typeParameters, Types types) {
             String name = element.getSimpleName().toString();
             String[] parameters = new String[element.getParameters().size()];

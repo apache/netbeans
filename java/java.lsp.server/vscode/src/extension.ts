@@ -494,7 +494,8 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 { language: 'java' },
                 { language: 'groovy' },
                 { language: 'yaml', pattern: '**/{application,bootstrap}*.yml' },
-                { language: 'properties', pattern: '**/{application,bootstrap}*.properties' }
+                { language: 'properties', pattern: '**/{application,bootstrap}*.properties' },
+                { language: 'jackpot-hint' }
             ],
             synchronize: {
                 configurationSection: 'java',

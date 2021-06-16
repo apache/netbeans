@@ -86,7 +86,7 @@ public final class Source {
         this.mimeType = mimeType;
         this.hash = hash;
     }
-    
+
     public static Source getExistingSource(JPDADebugger debugger, long id) {
         synchronized (KNOWN_SOURCES) {
             Map<Long, Source> dbgSources = KNOWN_SOURCES.get(debugger);
@@ -146,6 +146,9 @@ public final class Source {
                                    URI uri,
                                    String mimeType,
                                    StringReference codeRef) {
+        if (uri == null && codeRef == null) {
+            return null;
+        }
         synchronized (KNOWN_SOURCES) {
             Map<Long, Source> dbgSources = KNOWN_SOURCES.get(debugger);
             if (dbgSources != null) {
@@ -209,6 +212,9 @@ public final class Source {
     }
 
     public String getContent() {
+        if (codeRef == null) {
+            return null;
+        }
         synchronized (this) {
             if (content == null) {
                 try {

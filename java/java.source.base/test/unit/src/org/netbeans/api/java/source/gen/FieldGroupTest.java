@@ -32,6 +32,7 @@ import javax.lang.model.util.Elements;
 import org.netbeans.api.java.source.*;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.junit.NbTestSuite;
+import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbCollections;
 
@@ -1615,6 +1616,7 @@ public class FieldGroupTest extends GeneratorTestMDRCompat {
         JavaSource testSource = JavaSource.create(ClasspathInfo.create(FileUtil.toFileObject(source)), FileUtil.toFileObject(source), FileUtil.toFileObject(target));
         Task<WorkingCopy> task = new Task<WorkingCopy>() {
             public void run(WorkingCopy workingCopy) throws java.io.IOException {
+                SourceUtils.forceSource(workingCopy, FileUtil.toFileObject(source));
                 assertEquals(Phase.UP_TO_DATE, workingCopy.toPhase(Phase.UP_TO_DATE));
                 if ("Target".equals(workingCopy.getFileObject().getName())) {
                     TypeElement source = workingCopy.getElements().getTypeElement("test.Source");

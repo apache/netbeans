@@ -52,7 +52,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -167,13 +166,17 @@ import org.netbeans.modules.java.editor.overridden.ElementDescription;
 import org.netbeans.modules.java.hints.introduce.IntroduceFixBase;
 import org.netbeans.modules.java.hints.introduce.IntroduceHint;
 import org.netbeans.modules.java.hints.introduce.IntroduceKind;
+import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
+import org.netbeans.modules.java.hints.spiimpl.MessageImpl;
+import org.netbeans.modules.java.hints.spiimpl.RulesManager;
+import org.netbeans.modules.java.hints.spiimpl.hints.HintsInvoker;
+import org.netbeans.modules.java.hints.spiimpl.options.HintsSettings;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.impl.indexing.implspi.ActiveDocumentProvider.IndexingAware;
-import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RefactoringElement;
@@ -190,6 +193,7 @@ import org.netbeans.modules.refactoring.spi.RefactoringElementImplementation;
 import org.netbeans.modules.refactoring.spi.Transaction;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
+import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.lsp.ErrorProvider;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
@@ -819,8 +823,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 }
                 //introduce hints
                 Range range = params.getRange();
+                int startOffset = Utils.getOffset(doc, range.getStart());
+                int endOffset = Utils.getOffset(doc, range.getEnd());
                 if (!range.getStart().equals(range.getEnd())) {
-                    for (ErrorDescription err : IntroduceHint.computeError(cc, Utils.getOffset(doc, range.getStart()), Utils.getOffset(doc, range.getEnd()), new EnumMap<IntroduceKind, Fix>(IntroduceKind.class), new EnumMap<IntroduceKind, String>(IntroduceKind.class), new AtomicBoolean())) {
+                    for (ErrorDescription err : IntroduceHint.computeError(cc, startOffset, endOffset, new EnumMap<IntroduceKind, Fix>(IntroduceKind.class), new EnumMap<IntroduceKind, String>(IntroduceKind.class), new AtomicBoolean())) {
                         for (Fix fix : err.getFixes().getFixes()) {
                             if (fix instanceof IntroduceFixBase) {
                                 try {
@@ -857,6 +863,39 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         }
                     }
                 }
+                HintsInvoker.join(new HintsInvoker(HintsSettings.getGlobalSettings(), startOffset, endOffset, new AtomicBoolean())
+                        // compute nonrecursive hints
+                        .computeHints(cc, new TreePath(cc.getCompilationUnit()), false, RulesManager.getInstance().readHints(cc, null, new AtomicBoolean()).values().stream().collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll), new ArrayList<MessageImpl>()))
+                        .stream().forEach(err -> {
+                            // check if cursor/selection is in errors range
+                            if (err.getRange().getBegin().getOffset() <= startOffset && err.getRange().getEnd().getOffset() >= endOffset) {
+                                for (Fix f : err.getFixes().getFixes()) {
+                                    if (f instanceof JavaFixImpl) {
+                                        try {
+                                            JavaFix jf = ((JavaFixImpl) f).jf;
+                                            List<TextEdit> edits = modify2TextEdits(js, wc -> {
+                                                wc.toPhase(JavaSource.Phase.RESOLVED);
+                                                Map<FileObject, byte[]> resourceContentChanges = new HashMap<FileObject, byte[]>();
+                                                JavaFixImpl.Accessor.INSTANCE.process(jf, wc, true, resourceContentChanges, /*Ignored in editor:*/ new ArrayList<>());
+                                            });
+                                            // check for edit presence
+                                            if (edits.size() > 0 && !containsEdit(result, edits)) {
+                                                TextDocumentEdit te = new TextDocumentEdit(new VersionedTextDocumentIdentifier(params.getTextDocument().getUri(), -1), edits);
+                                                CodeAction action = new CodeAction(f.getText());
+                                                action.setKind(CodeActionKind.RefactorRewrite);
+                                                action.setEdit(new WorkspaceEdit(Collections.singletonList(Either.forLeft(te))));
+                                                result.add(Either.forRight(action));
+                                                // add only first relevant fix
+                                                break;
+                                            }
+                                        } catch (IOException ex) {
+                                            //TODO: include stack trace:
+                                            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                                        }
+                                    }
+                                }
+                            }
+                        });
             }, true);
         } catch (IOException ex) {
             //TODO: include stack trace:
@@ -864,6 +903,20 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
 
         return CompletableFuture.completedFuture(result);
+    }
+
+    private boolean containsEdit(List<Either<Command, CodeAction>> results, List<TextEdit> edit) {
+        for (Either<Command, CodeAction> result : results) {
+            List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = result.getRight().getEdit().getDocumentChanges();
+            if (documentChanges != null) {
+                for (Either<TextDocumentEdit, ResourceOperation> change : documentChanges) {
+                    if (change.getLeft().getEdits().equals(edit)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private ConcurrentHashMap<String, Boolean> upToDateTests = new ConcurrentHashMap<>();

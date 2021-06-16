@@ -71,11 +71,11 @@ public final class ArchetypeTemplateHandler extends CreateFromTemplateHandler {
             throw new IOException(Bundle.MSG_NoVersion());
         }
         String artifactId = archetype.getProperty("artifactId"); // NOI18N
-        if (version == null) {
+        if (artifactId == null) {
             throw new IOException(Bundle.MSG_NoArtifactId());
         }
         String groupId = archetype.getProperty("groupId"); // NOI18N
-        if (version == null) {
+        if (groupId == null) {
             throw new IOException(Bundle.MSG_NoGroupId());
         }
         String packageName = archetype.getProperty("package"); // NOI18N

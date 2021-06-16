@@ -64,6 +64,7 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
+import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.classpath.CacheClassPath;
 import org.netbeans.modules.java.source.parsing.CompilationInfoImpl;
 import org.netbeans.modules.java.source.parsing.DocPositionRegion;
@@ -294,6 +295,10 @@ public class JavaSourceTest extends NbTestCase {
     }
 
     public void testMultipleFilesSameJavac() throws Exception {
+        if (!NoJavacHelper.hasNbJavac()) {
+            //nb-javac (NB_JAVAC_): JDK's javac we currently don't correctly run JavaSource with multiple files:
+            return ;
+        }
         final FileObject testFile1 = createTestFile("Test1");
         final FileObject testFile2 = createTestFile("Test2");
         final ClassPath bootPath = createBootPath();

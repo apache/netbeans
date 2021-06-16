@@ -102,6 +102,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
@@ -661,9 +662,15 @@ final class VanillaCompileWorker extends CompileWorker {
                                       com.sun.tools.javac.util.List.of(make.Literal(message)),
                                       null);
                 nct.type = syms.runtimeExceptionType;
-                nct.constructor = syms.runtimeExceptionType.tsym.members().getSymbols(
-                        s -> s.getKind() == ElementKind.CONSTRUCTOR && s.type.getParameterTypes().size() == 1 && s.type.getParameterTypes().head.tsym == syms.stringType.tsym
-                ).iterator().next();
+                //find the constructor for RuntimeException(String):
+                for (Element el : ElementFilter.constructorsIn(syms.runtimeExceptionType.tsym.getEnclosedElements())) {
+                    Symbol s = (Symbol) el;
+
+                    if (s.getKind() == ElementKind.CONSTRUCTOR && s.type.getParameterTypes().size() == 1 && s.type.getParameterTypes().head.tsym == syms.stringType.tsym) {
+                        nct.constructor = s;
+                        break;
+                    }
+                }
                 return make.Throw(nct);
             }
 

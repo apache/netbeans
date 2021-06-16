@@ -22,8 +22,10 @@ import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.InstanceOfTree;
+import com.sun.source.tree.ModuleTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -316,7 +318,24 @@ public class TreeShims {
         return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(PATTERN_MATCHING_INSTANCEOF_PREVIEW_JDK_VERSION) <= 0;
     }
 	
-	public static boolean isJDKVersionRelease16_Or_Above(){
+    public static boolean isJDKVersionRelease16_Or_Above(){
         return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(16) >= 0;
+    }
+
+    public static ModuleTree getModule(CompilationUnitTree cut) {
+        try {
+            return (ModuleTree) CompilationUnitTree.class.getDeclaredMethod("getModule").invoke(cut);
+        } catch (NoSuchMethodException | SecurityException ex) {
+            final List<? extends Tree> typeDecls = cut.getTypeDecls();
+            if (!typeDecls.isEmpty()) {
+                final Tree typeDecl = typeDecls.get(0);
+                if (typeDecl.getKind() == Tree.Kind.MODULE) {
+                    return (ModuleTree)typeDecl;
+                }
+            }
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throwAny(ex);
+        }
+        return null;
     }
 }

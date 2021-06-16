@@ -80,7 +80,6 @@ public class NBClassWriterTest extends NbTestCase {
     }
 
     private void compile(String code) throws Exception {
-        final String bootPath = System.getProperty("sun.boot.class.path"); //NOI18N
         final JavaCompiler tool = ToolProvider.getSystemJavaCompiler();
         assert tool != null;
 
@@ -90,7 +89,7 @@ public class NBClassWriterTest extends NbTestCase {
 
         Context context = new Context();
         NBLog.preRegister(context, DEV_NULL, DEV_NULL, DEV_NULL);
-        final JavacTaskImpl ct = (JavacTaskImpl) ((JavacTool)tool).getTask(null, std, null, Arrays.asList("-bootclasspath",  bootPath, "-source", "1.7", "-target", "1.7"), null, Arrays.asList(new MyFileObject(code)), context);
+        final JavacTaskImpl ct = (JavacTaskImpl) ((JavacTool)tool).getTask(null, std, null, Arrays.asList("-source", "1.7", "-target", "1.7"), null, Arrays.asList(new MyFileObject(code)), context);
 
         NBClassReader.preRegister(ct.getContext());
         NBClassWriter.preRegister(ct.getContext());
@@ -99,7 +98,6 @@ public class NBClassWriterTest extends NbTestCase {
     }
 
     private void testEnclosedByPackage(String packageName, String... expectedClassNames) throws IOException {
-        final String bootPath = System.getProperty("sun.boot.class.path"); //NOI18N
         final JavaCompiler tool = ToolProvider.getSystemJavaCompiler();
         assert tool != null;
 
@@ -110,7 +108,7 @@ public class NBClassWriterTest extends NbTestCase {
 
         Context context = new Context();
         NBLog.preRegister(context, DEV_NULL, DEV_NULL, DEV_NULL);
-        JavacTaskImpl ct = (JavacTaskImpl)((JavacTool)tool).getTask(null, std, null, Arrays.asList("-bootclasspath",  bootPath, "-source", "1.8", "-target", "1.8"), null, Arrays.<JavaFileObject>asList(), context);
+        JavacTaskImpl ct = (JavacTaskImpl)((JavacTool)tool).getTask(null, std, null, Arrays.asList("-source", "1.8", "-target", "1.8"), null, Arrays.<JavaFileObject>asList(), context);
 
         NBClassReader.preRegister(ct.getContext());
         NBClassWriter.preRegister(ct.getContext());

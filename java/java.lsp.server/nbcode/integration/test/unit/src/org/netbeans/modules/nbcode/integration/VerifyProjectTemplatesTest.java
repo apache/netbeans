@@ -74,8 +74,8 @@ public class VerifyProjectTemplatesTest extends NbTestCase {
                 continue;
             }
             try {
-                verifySingleTemplate(cnt, template);
-                pw.append("Successfully instantiated ").append(fo.getPath());
+                verifySingleTemplate(++cnt, template);
+                pw.append("Successfully instantiated ").append(fo.getPath()).append("\n");
             } catch (Exception | Error ex) {
                 pw.append("Exception instantiating ").append(fo.getPath()).append("\n");
                 ex.printStackTrace(pw);
@@ -84,7 +84,7 @@ public class VerifyProjectTemplatesTest extends NbTestCase {
         }
         pw.flush();
         if (err > 0) {
-            throw new IOException(w.toString());
+            throw new IOException("Some projects failed (" + err + "/" + cnt + "):\n" + w.toString());
         }
     }
 
@@ -104,6 +104,19 @@ public class VerifyProjectTemplatesTest extends NbTestCase {
         Project prj = ProjectManager.getDefault().findProject(newPrj.getPrimaryFile());
         assertNotNull("Project found for " + newPrj, prj);
 
+        tryProjectAction(prj, ActionProvider.COMMAND_PRIME);
+        assertProjectAction(prj, ActionProvider.COMMAND_BUILD);
+    }
+
+    private static void tryProjectAction(Project prj, final String action) throws IllegalArgumentException, InterruptedException {
+        invokeProjectAction(prj, action, true);
+    }
+
+    private static void assertProjectAction(Project prj, final String action) throws IllegalArgumentException, InterruptedException {
+        invokeProjectAction(prj, action, false);
+    }
+
+    private static void invokeProjectAction(Project prj, final String action, boolean canBeMissing) throws IllegalArgumentException, InterruptedException {
         boolean[] status = { false, false };
         CountDownLatch cdl = new CountDownLatch(1);
         ActionProgress progress = new ActionProgress() {
@@ -123,10 +136,14 @@ public class VerifyProjectTemplatesTest extends NbTestCase {
         final Lookup lkp = new ProxyLookup(prj.getLookup(), Lookups.fixed(progress));
         ActionProvider ap = lkp.lookup(ActionProvider.class);
         assertNotNull("Action provider found", ap);
-        assertTrue("build action supported", ap.isActionEnabled(ActionProvider.COMMAND_BUILD, lkp));
-        ap.invokeAction(ActionProvider.COMMAND_BUILD, lkp);
-        assertTrue("Build action started for " + prj, status[0]);
+        final boolean enabled = ap.isActionEnabled(action, lkp);
+        if (!enabled && canBeMissing) {
+            return;
+        }
+        assertTrue("action " + action + " is supported", enabled);
+        ap.invokeAction(action, lkp);
+        assertTrue(action + " action started for " + prj, status[0]);
         cdl.await();
-        assertTrue("Build finished for " + prj, status[1]);
+        assertTrue(action + " finished for " + prj.getProjectDirectory(), status[1]);
     }
 }

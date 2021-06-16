@@ -37,6 +37,7 @@ import java.net.URI;
 import java.net.URL;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
@@ -51,6 +52,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.IntFunction;
 import java.util.logging.Level;
@@ -148,6 +150,7 @@ import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.lsp.Completion;
 import org.netbeans.api.lsp.HyperlinkLocation;
+import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
@@ -189,12 +192,17 @@ import org.netbeans.modules.refactoring.spi.Transaction;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.lsp.ErrorProvider;
+import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.ProjectConfiguration;
+import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.text.NbDocument;
 import org.openide.text.PositionBounds;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
+import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Union2;
 import org.openide.util.WeakSet;
@@ -207,6 +215,9 @@ import org.openide.util.lookup.ServiceProvider;
  */
 public class TextDocumentServiceImpl implements TextDocumentService, LanguageClientAware {
     private static final Logger LOG = Logger.getLogger(TextDocumentServiceImpl.class.getName());
+    
+    private static final String COMMAND_RUN_SINGLE = "java.run.single";         // NOI18N
+    private static final String COMMAND_DEBUG_SINGLE = "java.debug.single";     // NOI18N
     
     private static final RequestProcessor BACKGROUND_TASKS = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
     private static final RequestProcessor WORKER = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
@@ -884,6 +895,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     private ConcurrentHashMap<String, Boolean> upToDateTests = new ConcurrentHashMap<>();
 
+    @NbBundle.Messages({"# {0} - method name", "LBL_Run=Run {0}",
+                        "# {0} - method name", "LBL_Debug=Debug {0}",
+                        "# {0} - method name", "# {1} - configuration name", "LBL_RunWith=Run {0} with {1}",
+                        "# {0} - method name", "# {1} - configuration name", "LBL_DebugWith=Debug {0} with {1}"})
     @Override
     public CompletableFuture<List<? extends CodeLens>> codeLens(CodeLensParams params) {
         // shortcut: if the projects are not yet initialized, return empty:
@@ -932,18 +947,36 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 }
                 //look for main methods:
                 List<CodeLens> lens = new ArrayList<>();
+                AtomicReference<List<Pair<String, String>>> projectConfigurations = new AtomicReference<>();
                 new TreePathScanner<Void, Void>() {
                     public Void visitMethod(MethodTree tree, Void p) {
                         Element el = cc.getTrees().getElement(getCurrentPath());
                         if (el != null && el.getKind() == ElementKind.METHOD && SourceUtils.isMainMethod((ExecutableElement) el)) {
                             Range range = Utils.treeRange(cc, tree);
                             List<Object> arguments = Collections.singletonList(params.getTextDocument().getUri());
+                            String method = el.getSimpleName().toString();
                             lens.add(new CodeLens(range,
-                                                  new Command("Run main", "java.run.single", arguments),
+                                                  new Command(Bundle.LBL_Run(method), COMMAND_RUN_SINGLE, arguments),
                                                   null));
                             lens.add(new CodeLens(range,
-                                                  new Command("Debug main", "java.debug.single", arguments),
+                                                  new Command(Bundle.LBL_Debug(method), COMMAND_DEBUG_SINGLE, arguments),
                                                   null));
+                            // Run and Debug configurations:
+                            List<Pair<String, String>> configs = projectConfigurations.accumulateAndGet(null, (l, nul) -> l == null ? getProjectConfigurations(source) : l);
+                            for (Pair<String, String> config : configs) {
+                                String runConfig = config.first();
+                                if (runConfig != null) {
+                                    lens.add(new CodeLens(range,
+                                                          new Command(Bundle.LBL_RunWith(method, runConfig), COMMAND_RUN_SINGLE, Arrays.asList(params.getTextDocument().getUri(), null, runConfig)),
+                                                          null));
+                                }
+                                String debugConfig = config.second();
+                                if (debugConfig != null) {
+                                    lens.add(new CodeLens(range,
+                                                          new Command(Bundle.LBL_DebugWith(method, debugConfig), COMMAND_DEBUG_SINGLE, Arrays.asList(params.getTextDocument().getUri(), null, debugConfig)),
+                                                          null));
+                                }
+                            }
                         }
                         return null;
                     }
@@ -954,6 +987,45 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             result.completeExceptionally(ex);
         }
         return result;
+    }
+
+    private List<Pair<String, String>> getProjectConfigurations(JavaSource source) {
+        for (FileObject fo : source.getFileObjects()) {
+            Project p = FileOwnerQuery.getOwner(fo);
+            if (p != null) {
+                ProjectConfigurationProvider<ProjectConfiguration> configProvider = p.getLookup().lookup(ProjectConfigurationProvider.class);
+                ActionProvider actionProvider = p.getLookup().lookup(ActionProvider.class);
+                List<Pair<String, String>> configDispNames = new ArrayList<>();
+                if (configProvider != null && actionProvider != null) {
+                    boolean skippedFirst = false;
+                    for (ProjectConfiguration configuration : configProvider.getConfigurations()) {
+                        if (skippedFirst) {
+                            String runConfig = null;
+                            String debugConfig = null;
+                            Lookup configLookup = Lookups.fixed(fo, configuration);
+                            if (isConfigurationAction(configProvider, actionProvider, configLookup, ActionProvider.COMMAND_RUN_SINGLE)) {
+                                runConfig = configuration.getDisplayName();
+                            }
+                            if (isConfigurationAction(configProvider, actionProvider, configLookup, ActionProvider.COMMAND_DEBUG_SINGLE)) {
+                                debugConfig = configuration.getDisplayName();
+                            }
+                            if (runConfig != null || debugConfig != null) {
+                                configDispNames.add(Pair.of(runConfig, debugConfig));
+                            }
+                        } else {
+                            // Ignore the default config
+                            skippedFirst = true;
+                        }
+                    }
+                }
+                return configDispNames;
+            }
+        }
+        return Collections.emptyList();
+    }
+
+    private static boolean isConfigurationAction(ProjectConfigurationProvider<ProjectConfiguration> configProvider, ActionProvider actionProvider, Lookup configLookup, String action) {
+        return configProvider.configurationsAffectAction(action) && actionProvider.isActionEnabled(action, configLookup);
     }
 
     @Override

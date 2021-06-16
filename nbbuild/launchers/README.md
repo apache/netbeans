@@ -26,7 +26,7 @@ This directory allows to build and release NetBeans' Windows launchers on the Ma
 To produce a source release:
 
 ```
-$ ant -Dbuildnum=<VERSION> build-source-zip
+$ ant -DVERSION=<VERSION> build-source-zip
 ```
 
 To build binaries, only Linux OS is known to work, using the MinGW project. On Ubuntu,
@@ -39,11 +39,11 @@ $ apt install mingw-w64 mingw-w64-tools
 The command to build the launchers:
 
 ```
-$ ant -Dbuildnum=<VERSION> build-launchers
+$ ant -DVERSION=<VERSION> build-launchers
 ```
 
 To publish the launchers to a Maven repository:
 
 ```
-$ ant -Dbuildnum=<VERSION> build-and-publish
+$ ant -DVERSION=<VERSION> build-and-publish
 ```

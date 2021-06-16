@@ -29,15 +29,15 @@
         </condition>
     </fail>
 
-    <import file="../default.xml"/>
+    <property name="VERSION" value="dev" />
+    <property name="nb_all" location="${basedir}/../.." />
+    <property name="nb.build.dir" location="${basedir}/../build/" />
 
     <target name="build-source-zip"
-            depends="set-buildnumber"
             description="Packages sources needed to compile launchers">
-        <property name="buildnum" value="${buildnumber}"/>
-        <zip zipfile="${nb.build.dir}/netbeans-windows-launchers-src-${buildnum}.zip" duplicate="preserve">
+        <zip zipfile="${nb.build.dir}/netbeans-windows-launchers-src-${VERSION}.zip" duplicate="preserve">
             <zipfileset dir="${nb_all}">
-                <include name="nbbuild/**" />
+                <include name="nbbuild/launchers/**" />
                 <include name="harness/apisupport.harness/windows-launcher-src/**" />
                 <include name="nb/ide.launcher/windows/**" />
                 <include name="platform/o.n.bootstrap/launcher/windows/**" />
@@ -49,7 +49,7 @@
         </zip>
     </target>
 
-    <target name="build-launchers" depends="set-buildnumber">
+    <target name="build-launchers">
         <property name="launchers.dest.dir" location="${nb.build.dir}/launchers/windows" />
         <mkdir dir="${launchers.dest.dir}" />
         <exec executable="make" dir="${nb_all}/harness/apisupport.harness/windows-launcher-src/">
@@ -74,7 +74,7 @@
             <fileset dir="${nb_all}/platform/o.n.bootstrap/launcher/windows" includes="nbexec*.exe"/>
             <fileset dir="${nb_all}/platform/o.n.bootstrap/launcher/windows" includes="nbexec*.dll"/>
         </copy>
-        <zip zipfile="${nb.build.dir}/netbeans-windows-launchers-bin-${buildnum}.zip" duplicate="preserve">
+        <zip zipfile="${nb.build.dir}/netbeans-windows-launchers-bin-${VERSION}.zip" duplicate="preserve">
             <zipfileset dir="${launchers.dest.dir}" includes="**"/>
             <zipfileset file="${nb_all}/LICENSE"/>
             <zipfileset file="${nb_all}/NOTICE"/>
@@ -82,12 +82,12 @@
     </target>
 
     <target name="build-and-publish" depends="build-source-zip,build-launchers">
-        <zip file="${nb.build.dir}/netbeans-windows-launchers-javadoc-${buildnum}.zip">
+        <zip file="${nb.build.dir}/netbeans-windows-launchers-javadoc-${VERSION}.zip">
             <zipfileset file="javadoc.txt"/>
         </zip>
         <property name="build.maven.repo" location="${nb.build.dir}/.m2" />
         <exec dir="${basedir}" executable="mvn" failonerror="true">
-            <arg line="deploy:deploy-file -Dfile=${nb.build.dir}/netbeans-windows-launchers-bin-${buildnum}.zip -Djavadoc=${nb.build.dir}/netbeans-windows-launchers-javadoc-${buildnum}.zip -Dsources=${nb.build.dir}/netbeans-windows-launchers-src-${buildnum}.zip -DgroupId=org.apache.netbeans.launchers -DartifactId=windows-launchers -Dversion=${buildnum} -Dpackaging=jar -DgeneratePom=true -DaltDeploymentRepository=temp::default::file://${build.maven.repo} -Durl=file://${build.maven.repo}" />
+            <arg line="deploy:deploy-file -Dfile=${nb.build.dir}/netbeans-windows-launchers-bin-${VERSION}.zip -Djavadoc=${nb.build.dir}/netbeans-windows-launchers-javadoc-${VERSION}.zip -Dsources=${nb.build.dir}/netbeans-windows-launchers-src-${VERSION}.zip -DgroupId=org.apache.netbeans.launchers -DartifactId=windows-launchers -Dversion=${VERSION} -Dpackaging=jar -DgeneratePom=true -DaltDeploymentRepository=temp::default::file://${build.maven.repo} -Durl=file://${build.maven.repo}" />
         </exec>
     </target>
 </project>

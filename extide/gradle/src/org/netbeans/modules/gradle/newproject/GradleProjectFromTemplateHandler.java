@@ -72,7 +72,10 @@ public final class GradleProjectFromTemplateHandler extends CreateFromTemplateHa
             if (FileUtil.isParentOf(a, b)) {
                 return -1;
             }
-            return 1;
+            if (FileUtil.isParentOf(b, a)) {
+                return 1;
+            }
+            return 0;
         });
         return files;
     }

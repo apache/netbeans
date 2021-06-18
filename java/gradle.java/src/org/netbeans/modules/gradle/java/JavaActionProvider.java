@@ -97,8 +97,11 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
                                 break;
                             case COMMAND_DEBUG_SINGLE:
                             case COMMAND_RUN_SINGLE:
-                                ProjectActionMappingProvider pamp = project.getLookup().lookup(ProjectActionMappingProvider.class);
-                                ActionMapping runSingleMapping = pamp.findMapping(COMMAND_RUN_SINGLE);
+                                ProjectActionMappingProvider pamp = RunUtils.findActionProvider(project, context);
+                                ActionMapping runSingleMapping = pamp.findMapping(action);
+                                if (ActionMapping.isDisabled(runSingleMapping)) {
+                                    return false;
+                                }
                                 GradleCommandLine cli = new GradleCommandLine(RunUtils.evaluateActionArgs(project, action, runSingleMapping.getArgs(), context));
                                 Set<String> runSingleTasks = cli.getTasks();
                                 if (gbp.getTaskNames().containsAll(runSingleTasks) || RunUtils.isAugmentedBuildEnabled(project)) {

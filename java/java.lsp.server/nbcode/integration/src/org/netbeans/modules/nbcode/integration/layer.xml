@@ -32,6 +32,9 @@
         <folder name="Project">
             <file name="AntJava_hidden"/>
             <file name="ClientSide_hidden"/>
+            <folder name="Gradle">
+                <file name="org-netbeans-modules-micronaut-newproject-MicronautProjectWizardIterator-GradleMicronautProject_hidden"/>
+            </folder>
             <file name="Import_hidden"/>
             <folder name="Maven2">
                 <file name="JavaApplication_hidden"/>

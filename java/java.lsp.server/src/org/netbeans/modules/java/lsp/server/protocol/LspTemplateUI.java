@@ -251,14 +251,8 @@ class LspTemplateUI {
         if (description != null) {
             try (ByteArrayOutputStream os = new ByteArrayOutputStream(); InputStream is = description.openStream()) {
                 FileUtil.copy(is, os);
-                descriptionText = os.toString("UTF-8");
-                int bodyBegin = descriptionText.toUpperCase().indexOf("<BODY>");
-                int bodyEnd = descriptionText.toUpperCase().indexOf("</BODY>");
-                if (bodyBegin >= 0 && bodyEnd > bodyBegin) {
-                    descriptionText = descriptionText.substring(bodyBegin + 6, bodyEnd);
-                } else {
-                    descriptionText = null;
-                }
+                String s = os.toString("UTF-8");
+                descriptionText = stripHtml(s);
             } catch (IOException ex) {
                 Exceptions.printStackTrace(Exceptions.attachSeverity(ex, Level.FINE));
                 return descriptionText;
@@ -267,6 +261,26 @@ class LspTemplateUI {
         return descriptionText;
     }
 
+    static String stripHtml(String s) {
+        boolean inTag = false;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (inTag) {
+                if (ch == '>') {
+                    inTag = false;
+                }
+            } else {
+                if (ch == '<') {
+                    inTag = true;
+                    continue;
+                }
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
+    }
+    
     private static <T extends Exception> T raise(Class<T> clazz, Exception ex) throws T {
         throw (T)ex;
     }

@@ -42,11 +42,14 @@ mainClassName = '${packageBase}.BrowserMain'
 def commonProject = project.parent
 
 dependencies {
-    compile commonProject
+    implementation commonProject
+    implementation "com.dukescript.api:javafx.beaninfo:0.5"
+    runtimeOnly "com.dukescript.api:javafx.base:8.60.11"
 }
 
 configurations.bck2brwsr {
     exclude group: 'org.jetbrains', module: 'annotations'
+    extendsFrom configurations.runtimeClasspath
 }
 
 bck2brwsrPages.from {

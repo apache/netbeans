@@ -44,6 +44,13 @@
                     <file name="settings.gradle" url="settings.gradle.fmk">
                         <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                     </file>
+                    <folder name="gradle">
+                        <folder name="wrapper">
+                            <file name="gradle-wrapper.properties" url="gradle-wrapper.properties.fmk">
+                                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                            </file>
+                        </folder>
+                    </folder>
                     <folder name="app">
                         <file name="build.gradle" url="app_build.gradle.fmk">
                             <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>

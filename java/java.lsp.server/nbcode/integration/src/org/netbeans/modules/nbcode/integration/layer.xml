@@ -32,13 +32,6 @@
         <folder name="Project">
             <file name="AntJava_hidden"/>
             <file name="ClientSide_hidden"/>
-            <folder name="Gradle">
-                <file name="org-netbeans-modules-gradle-htmlui-HtmlJavaApplicationProjectWizard_hidden"/>
-                <file name="org-netbeans-modules-gradle-java-newproject-SimpleLibraryProjectWizard_hidden"/>
-                <file name="org-netbeans-modules-gradle-javaee-web-newproject-WebApplicationProjectWizard_hidden"/>
-                <file name="org-netbeans-modules-gradle-newproject-GradleMultiWizardIterator_hidden"/>
-                <file name="org-netbeans-modules-micronaut-newproject-MicronautProjectWizardIterator-GradleMicronautProject_hidden"/>
-            </folder>
             <file name="Import_hidden"/>
             <folder name="Maven2">
                 <file name="JavaApplication_hidden"/>

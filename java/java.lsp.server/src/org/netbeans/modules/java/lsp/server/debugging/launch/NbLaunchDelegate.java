@@ -29,15 +29,20 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
+import org.eclipse.lsp4j.debug.TerminatedEventArguments;
 
 import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
+import org.eclipse.lsp4j.services.LanguageClient;
 
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
@@ -73,6 +78,7 @@ import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
 import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
@@ -82,6 +88,19 @@ import org.openide.util.lookup.ProxyLookup;
  *
  * @author martin
  */
+@NbBundle.Messages({
+    "ERR_UnsupportedLaunchDebug=Debugging is not supported in this project.",
+    "ERR_UnsupportedLaunch=Running  is not supported in this project.",
+    "# {0} - the selected configuration",
+    "# {1} - the suggested configuration",
+    "ERR_UnsupportedLaunchDebugConfig=Debugging is not supported in configuration \"{0}\", please switch to {1}",
+    "# {0} - the selected configuration",
+    "# {1} - the suggested configuration",
+    "ERR_UnsupportedLaunchConfig=Running is not supported in configuration \"{0}\", please switch to {1}.",
+    "ERR_LaunchDefaultConfiguration=the default one.",
+    "# {0} - the recommended configuration",
+    "ERR_LaunchSupportiveConfigName=\"{0}\"",
+})
 public abstract class NbLaunchDelegate {
 
     private final RequestProcessor requestProcessor = new RequestProcessor(NbLaunchDelegate.class);
@@ -146,6 +165,104 @@ public abstract class NbLaunchDelegate {
             W writer = new W();
             CompletableFuture<Pair<ActionProvider, String>> commandFuture = findTargetWithPossibleRebuild(toRun, singleMethod, debug, testRun, ioContext);
             commandFuture.thenAccept((providerAndCommand) -> {
+                List<String> args = argsToStringList(launchArguments.get("args"));
+                List<String> vmArgs = argsToStringList(launchArguments.get("vmArgs"));
+                ExplicitProcessParameters params = ExplicitProcessParameters.empty();
+                if (!(args.isEmpty() && vmArgs.isEmpty())) {
+                    ExplicitProcessParameters.Builder bld = ExplicitProcessParameters.builder();
+                    bld.launcherArgs(vmArgs);
+                    bld.args(args);
+                    bld.replaceArgs(false);
+                    params = bld.build();
+                }
+                OperationContext ctx = OperationContext.find(Lookup.getDefault());
+                ctx.addProgressOperationListener(null, new ProgressOperationListener() {
+                    @Override
+                    public void progressHandleCreated(ProgressOperationEvent e) {
+                        context.setProcessExecutorHandle(e.getProgressHandle());
+                    }
+                });
+                TestProgressHandler testProgressHandler = ctx.getClient().getNbCodeCapabilities().hasTestResultsSupport() ? new TestProgressHandler(ctx.getClient(), context.getClient(), Utils.toUri(toRun)) : null;
+                Lookup launchCtx = new ProxyLookup(
+                        testProgressHandler != null ? Lookups.fixed(toRun, ioContext, progress, testProgressHandler) : Lookups.fixed(toRun, ioContext, progress),
+                        Lookup.getDefault()
+                );
+                
+                ProjectConfiguration selectConfiguration = null;
+                ProjectConfigurationProvider<ProjectConfiguration> pcp = null;
+                
+                Object o = launchArguments.get("launchConfiguration");
+                if (o instanceof String) {
+                    Project p = FileOwnerQuery.getOwner(toRun);
+                    if (p != null) {
+                        pcp = p.getLookup().lookup(ProjectConfigurationProvider.class);
+                        if (pcp != null) {
+                            String n = (String)o;
+                            selectConfiguration = pcp.getConfigurations().stream().filter(c -> n.equals(c.getDisplayName())).findAny().orElse(null);
+                        }
+                    }
+                }
+                List<? super Object> runContext = new ArrayList<>();
+                runContext.add(toRun);
+                runContext.add(params);
+                runContext.add(ioContext);
+                runContext.add(progress);
+                
+                Lookup lookup;
+                if (singleMethod != null) {
+                    runContext.add(singleMethod);
+                }
+                if (selectConfiguration != null) {
+                    runContext.add(selectConfiguration);
+                }
+                
+                lookup = Lookups.fixed(runContext.toArray(new Object[runContext.size()]));
+                // the execution Lookup is fully populated now. If the Project supports Configurations,
+                // check if the action is actually enabled in the prescribed configuration. If it is not, 
+                if (pcp != null) {
+                    final ActionProvider ap = providerAndCommand.first();
+                    final String cmd = providerAndCommand.second();
+                    if (!ap.isActionEnabled(cmd, lookup)) {
+                        
+                        // attempt to locate a different configuration that enables the action:
+                        ProjectConfiguration supportive = null;
+                        int confIndex = runContext.indexOf(selectConfiguration);
+                        if (confIndex == -1) {
+                            runContext.add(null);
+                            confIndex = runContext.size() - 1;
+                        }
+                        boolean defConfig = true;
+                        for (ProjectConfiguration c : pcp.getConfigurations()) {
+                            runContext.set(confIndex, c);
+                            Lookup tryConf = Lookups.fixed(runContext.toArray(new Object[runContext.size()]));
+                            if (ap.isActionEnabled(cmd, tryConf)) {
+                                supportive = c;
+                                break;
+                            }
+                            defConfig = false;
+                        }
+                        String msg;
+                        String recommended = defConfig ? Bundle.ERR_LaunchDefaultConfiguration(): Bundle.ERR_LaunchSupportiveConfigName(supportive.getDisplayName());
+                        if (debug) {
+                            msg = supportive == null ? 
+                                 Bundle.ERR_UnsupportedLaunchDebug() : Bundle.ERR_UnsupportedLaunchDebugConfig(selectConfiguration.getDisplayName(),  recommended);
+                        } else {
+                            msg = supportive == null ? 
+                                 Bundle.ERR_UnsupportedLaunch() : Bundle.ERR_UnsupportedLaunchConfig(selectConfiguration.getDisplayName(), recommended);
+                        }
+                        LanguageClient client = context.getLspSession().getLookup().lookup(LanguageClient.class);
+                        if (client != null) {
+                            client.showMessage(new MessageParams(MessageType.Warning, msg));
+                            // first complete the future
+                            launchFuture.complete(null);
+                            // and then fake debuggee termination.
+                            context.getClient().terminated(new TerminatedEventArguments());
+                        } else {
+                            launchFuture.completeExceptionally(new CancellationException());
+                        }
+                    }
+                }
+
                 context.setInputSinkProvider(() -> writer);
                 if (debug) {
                     DebuggerManager.getDebuggerManager().addDebuggerListener(new DebuggerManagerAdapter() {
@@ -176,56 +293,6 @@ public abstract class NbLaunchDelegate {
                 } else {
                     launchFuture.complete(null);
                 }
-                List<String> args = argsToStringList(launchArguments.get("args"));
-                List<String> vmArgs = argsToStringList(launchArguments.get("vmArgs"));
-                ExplicitProcessParameters params = ExplicitProcessParameters.empty();
-                if (!(args.isEmpty() && vmArgs.isEmpty())) {
-                    ExplicitProcessParameters.Builder bld = ExplicitProcessParameters.builder();
-                    bld.launcherArgs(vmArgs);
-                    bld.args(args);
-                    bld.replaceArgs(false);
-                    params = bld.build();
-                }
-                OperationContext ctx = OperationContext.find(Lookup.getDefault());
-                ctx.addProgressOperationListener(null, new ProgressOperationListener() {
-                    @Override
-                    public void progressHandleCreated(ProgressOperationEvent e) {
-                        context.setProcessExecutorHandle(e.getProgressHandle());
-                    }
-                });
-                TestProgressHandler testProgressHandler = ctx.getClient().getNbCodeCapabilities().hasTestResultsSupport() ? new TestProgressHandler(ctx.getClient(), context.getClient(), Utils.toUri(toRun)) : null;
-                Lookup launchCtx = new ProxyLookup(
-                        testProgressHandler != null ? Lookups.fixed(toRun, ioContext, progress, testProgressHandler) : Lookups.fixed(toRun, ioContext, progress),
-                        Lookup.getDefault()
-                );
-                
-                ProjectConfiguration selectConfiguration = null;
-                Object o = launchArguments.get("launchConfiguration");
-                if (o instanceof String) {
-                    Project p = FileOwnerQuery.getOwner(toRun);
-                    if (p != null) {
-                        ProjectConfigurationProvider<ProjectConfiguration> pcp = p.getLookup().lookup(ProjectConfigurationProvider.class);
-                        if (pcp != null) {
-                            String n = (String)o;
-                            selectConfiguration = pcp.getConfigurations().stream().filter(c -> n.equals(c.getDisplayName())).findAny().orElse(null);
-                        }
-                    }
-                }
-                List<? super Object> runContext = new ArrayList<>();
-                runContext.add(toRun);
-                runContext.add(params);
-                runContext.add(ioContext);
-                runContext.add(progress);
-                
-                Lookup lookup;
-                if (singleMethod != null) {
-                    runContext.add(singleMethod);
-                }
-                if (selectConfiguration != null) {
-                    runContext.add(selectConfiguration);
-                }
-                
-                lookup = Lookups.fixed(runContext.toArray(new Object[runContext.size()]));
                 
                 Lookups.executeWith(launchCtx, () -> {
                     providerAndCommand.first().invokeAction(providerAndCommand.second(), lookup);
@@ -335,6 +402,12 @@ public abstract class NbLaunchDelegate {
         } else {
             throw new IllegalArgumentException("Expected String or String list");
         }
+    }
+    
+    private static CompletableFuture<Pair<ActionProvider, String>> findEnabledTarget(FileObject toRun, SingleMethod singleMethod, boolean debug, boolean testRun, NbProcessConsole ioContext) throws IllegalArgumentException {
+        return findTargetWithPossibleRebuild(toRun, singleMethod, debug, testRun, ioContext).thenApply((Pair<ActionProvider, String> actionAndCommand) -> {
+            return null;
+        });
     }
 
     private static CompletableFuture<Pair<ActionProvider, String>> findTargetWithPossibleRebuild(FileObject toRun, SingleMethod singleMethod, boolean debug, boolean testRun, NbProcessConsole ioContext) throws IllegalArgumentException {

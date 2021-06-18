@@ -41,6 +41,11 @@ import org.openide.util.Lookup;
  * that must be present in the project in order for the {@link GradleActionsProvider} to activate. In that case, use 
  * {@link ProjectServiceProvider#projectType()} = {@code "org-netbeans-modules-gradle/Plugins/<plugin-id>"}.
  * <p>
+ * <b>From version 2.14</b> the {@code InputStream} returned by {@link #defaultActionMapConfig()} can request <b>disabling</b> an action.
+ * Overridance rules (priority, strength, ...) apply as usual.
+ * <div class="nonnormative">
+ * This is an example, how to disable e.g. {@code debug.single} action in a specific configuration the user may activate:
+ * {@codesnippet disable-action-xml}
  * 
  * @author Laszlo Kishalmi
  * @author Svata Dedic

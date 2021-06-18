@@ -37,6 +37,9 @@
                         <args>run --continuous ${javaExec.jvmArgs} ${javaExec.args}</args>
                     </action>
                 </apply-for>
+                <action name="debug.single">
+                    <reload rule="NEVER"/>
+                </action>
             </actions>
         </profile>
     </profiles>
@@ -103,4 +106,8 @@
             <args>gatlingRun-${selectedClass}</args>
         </action>
     </apply-for>
+    
+    <action name="run.single">
+        <args>run</args>
+    </action>
 </actions>

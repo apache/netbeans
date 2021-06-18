@@ -9,7 +9,7 @@ apply plugin: '${plugin}'
 
 description = '${description}'
 </#if>
-<#if group != "">
+<#if group?? && group != "">
     group = '${group}'
 </#if>
 <#if mainClassName??>

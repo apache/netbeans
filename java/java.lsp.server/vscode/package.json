@@ -269,6 +269,11 @@
 				"category": "Java"
 			},
 			{
+				"command": "java.workspace.newproject",
+				"title": "New Project...",
+				"category": "Java"
+			},
+			{
 				"command": "java.goto.super.implementation",
 				"title": "Go to Super Implementation",
 				"category": "Java"
@@ -316,6 +321,10 @@
 			"commandPalette": [
 				{
 					"command": "java.workspace.new",
+					"when": "nbJavaLSReady"
+				},
+				{
+					"command": "java.workspace.newproject",
 					"when": "nbJavaLSReady"
 				},
 				{

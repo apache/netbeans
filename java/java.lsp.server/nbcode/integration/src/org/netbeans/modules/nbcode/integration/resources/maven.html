@@ -1,4 +1,4 @@
-<#--
+<!--
 
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -18,29 +18,11 @@
     under the License.
 
 -->
-<#noparse>
-plugins {
-    id "me.tatarka.retrolambda" version "3.7.1"
-}
-
-apply plugin: 'java'
-
-group 'com.dukescript.demo'
-version '1.0-SNAPSHOT'
-
-allprojects {
-    repositories {
-        mavenCentral()
-    }
-}
-
-targetCompatibility = '1.8'
-sourceCompatibility = '1.8'
-
-dependencies {
-    implementation "org.netbeans.html:net.java.html.json:1.6.1"
-    implementation "com.dukescript.api:javafx.base:8.60.11"
-    implementation "com.dukescript.api:javafx.beaninfo:0.5"
-    runtimeOnly "org.netbeans.html:ko4j:1.6.1"
-}
-</#noparse>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        A simple Java SE application using Maven. You are recommended to begin here, if you are new to Java!
+    </body>
+</html>

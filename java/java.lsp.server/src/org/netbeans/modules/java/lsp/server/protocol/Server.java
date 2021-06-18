@@ -425,10 +425,12 @@ public final class Server {
         private void asyncOpenSelectedProjects0(CompletableFuture<Project[]> f, List<FileObject> projectCandidates, boolean asWorkspaceProjects) {
             List<Project> projects = new ArrayList<>();
             try {
-                for (FileObject candidate : projectCandidates) {
-                    Project prj = FileOwnerQuery.getOwner(candidate);
-                    if (prj != null) {
-                        projects.add(prj);
+                if (projectCandidates != null) {
+                    for (FileObject candidate : projectCandidates) {
+                        Project prj = FileOwnerQuery.getOwner(candidate);
+                        if (prj != null) {
+                            projects.add(prj);
+                        }
                     }
                 }
                 Project[] previouslyOpened;
@@ -617,6 +619,7 @@ public final class Server {
                         JAVA_GET_PROJECT_SOURCE_ROOTS,
                         JAVA_LOAD_WORKSPACE_TESTS,
                         JAVA_NEW_FROM_TEMPLATE,
+                        JAVA_NEW_PROJECT,
                         JAVA_SUPER_IMPLEMENTATION));
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     commands.addAll(codeGenerator.getCommands());
@@ -730,6 +733,7 @@ public final class Server {
     
     public static final String JAVA_BUILD_WORKSPACE =  "java.build.workspace";
     public static final String JAVA_NEW_FROM_TEMPLATE =  "java.new.from.template";
+    public static final String JAVA_NEW_PROJECT =  "java.new.project";
     public static final String JAVA_GET_PROJECT_SOURCE_ROOTS = "java.get.project.source.roots";
     public static final String JAVA_GET_PROJECT_CLASSPATH = "java.get.project.classpath";
     public static final String JAVA_GET_PROJECT_PACKAGES = "java.get.project.packages";

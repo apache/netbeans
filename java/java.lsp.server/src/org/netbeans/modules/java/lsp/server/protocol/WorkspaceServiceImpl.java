@@ -128,6 +128,8 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return CompletableFuture.completedFuture(true);
             case Server.JAVA_NEW_FROM_TEMPLATE:
                 return LspTemplateUI.createFromTemplate("Templates", client, params);
+            case Server.JAVA_NEW_PROJECT:
+                return LspTemplateUI.createProject("Templates/Project", client, params);
             case Server.JAVA_BUILD_WORKSPACE: {
                 final CommandProgress progressOfCompilation = new CommandProgress();
                 final Lookup ctx = Lookups.singleton(progressOfCompilation);

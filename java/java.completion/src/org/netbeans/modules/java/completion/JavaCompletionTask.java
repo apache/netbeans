@@ -2492,6 +2492,13 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 }
             }
         } else {
+            for(ExpressionTree caseExpression : caseTreeList){
+                if(caseExpression != null && caseExpression.getKind() == Tree.Kind.IDENTIFIER){
+                    TreePath tPath = new TreePath(path, caseExpression);
+                    insideExpression(env, tPath);
+                    return;
+                }
+            }
             TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, cst, offset);
             if (ts != null && ts.token().id() != JavaTokenId.DEFAULT) {
                 localResult(env);

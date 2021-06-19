@@ -30,7 +30,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.util.lookup.ServiceProvider;
 /**
  *
- * @author arusinha
+ * @author aksinsin
  */
 public class JavaCompletionTask117FeaturesTest extends CompletionTestBase {
 

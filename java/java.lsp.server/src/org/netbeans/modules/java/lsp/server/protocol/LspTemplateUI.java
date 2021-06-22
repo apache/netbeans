@@ -339,12 +339,8 @@ abstract class LspTemplateUI {
             if (display) {
                 String detail = findDetail(obj);
                 final String displayName = n.getDisplayName();
-                String description = n.getShortDescription();
-                if (description != null && description.equals(displayName)) {
-                    description = null;
-                }
                 categories.add(new QuickPickItem(
-                    displayName, description, detail,
+                    displayName, null, detail,
                     false, fo.getNameExt()
                 ));
             }

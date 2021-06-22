@@ -110,6 +110,17 @@ public interface Model<C extends Component<C>> extends Referenceable {
     State getState();
     
     /**
+     * @return a status message describing the error when {@link #getState()} is
+     * not {@link State#VALID}. Can be <code>null</code> when the error is unknown.
+     * The default implementation returns <code>null</code>.
+     *
+     * @since 1.45
+     */
+    default String getStatusMessage() {
+        return null;
+    }
+    
+    /**
      * Be very careful while using this method. It returns only current state
      * and doesn't inform if the transaction has been started by current thread.
      * Only the thread, which owns the transaction can use it and do changes to

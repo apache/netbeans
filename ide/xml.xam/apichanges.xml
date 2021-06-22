@@ -82,7 +82,19 @@ is the proper place.
 
     <!-- ACTUAL CHANGES BEGIN HERE: -->
     <changes>
-        
+
+        <change id="getStatusMessage">
+            <api name="org.netbeans.modules.xml.xam"/>
+            <summary>Method Model.getStatusMessage() is added to provide a message when status is invalid.</summary>
+            <version major="1" minor="45"/>
+            <date day="22" month="6" year="2021"/>
+            <author login="mentlicher"/>
+            <compatibility binary="compatible" source="compatible" addition="yes"/>
+            <description>
+                Introduced default method <code>Model.getStatusMessage()</code> to provide a message when status is invalid.
+            </description>
+            <class package="org.netbeans.modules.xml.xam" name="Model"/>
+        </change>
         <change id="findEndPosition">
             <api name="org.netbeans.modules.xml.xam"/>
             <summary>Method AbstractDocumentModel.prepareChangeInfo() is replaced with a new one.</summary>

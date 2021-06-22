@@ -21,6 +21,7 @@ package org.netbeans.modules.gradle;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -107,6 +108,11 @@ public class VerifyGradleProjectTemplatesTest extends NbTestCase {
 
         tryProjectAction(prj, ActionProvider.COMMAND_PRIME);
         assertProjectAction(prj, ActionProvider.COMMAND_BUILD);
+
+        assertGradlew("Gradlew properties", prj, "gradle/wrapper/gradle-wrapper.properties");
+        assertGradlew("Gradlew JAR", prj, "gradle/wrapper/gradle-wrapper.jar");
+        assertGradlew("Gradlew shell", prj, "gradlew");
+        assertGradlew("Gradlew bat", prj, "gradlew.bat");
     }
 
     private static void tryProjectAction(Project prj, final String action) throws IllegalArgumentException, InterruptedException {
@@ -146,5 +152,25 @@ public class VerifyGradleProjectTemplatesTest extends NbTestCase {
         assertTrue(action + " action started for " + prj, status[0]);
         cdl.await();
         assertTrue(action + " finished for " + prj.getProjectDirectory(), status[1]);
+    }
+
+    private void assertGradlew(String msg, Project prj, String path) {
+        final FileObject pd = prj.getProjectDirectory();
+        pd.refresh(true);
+        final FileObject fo = pd.getFileObject(path);
+        if (fo == null) {
+            fail(names(msg + " cannot find " + path + " in " + pd + " only found: ", pd));
+        }
+    }
+
+    private static String names(String msg, final FileObject pd) {
+        StringBuilder sb = new StringBuilder(msg);
+        String sep = ": ";
+        for (FileObject fo : pd.getChildren()) {
+            sb.append(sep);
+            sb.append(fo.getNameExt());
+            sep = ", ";
+        }
+        return sb.toString();
     }
 }

@@ -32,11 +32,14 @@ import org.w3c.dom.Element;
  */
 public class POMModelImpl extends POMModel {
     
+    private static QName PROJECT_NS = POMQName.createQName("project", true, false); // NOI18N
+    private static QName PROJECT_NSS = POMQName.createQName("project", true, true); // NOI18N
+    private static QName PROJECT = POMQName.createQName("project", false, false); // NOI18N
+
     private POMComponent rootComponent;
     private POMComponentFactory componentFactory;
     private POMQNames pomqnames;
-    private QName PROJECT_NS = POMQName.createQName("project", true); ///NOI18N
-    private QName PROJECT = POMQName.createQName("project", false); ///NOI18N
+    private boolean secureNS = false;
     
     public POMModelImpl(ModelSource source) {
         super(source);
@@ -46,6 +49,11 @@ public class POMModelImpl extends POMModel {
     @Override
     public POMComponent getRootComponent() {
         return rootComponent;
+    }
+
+    @Override
+    public boolean hasSecureNS() {
+        return secureNS;
     }
 
     @Override
@@ -63,10 +71,14 @@ public class POMModelImpl extends POMModel {
         QName q = root == null ? null : AbstractDocumentComponent.getQName(root);
         if (root != null ) {
             if (PROJECT.equals(q)) {
-                pomqnames = new POMQNames(false);
+                pomqnames = new POMQNames(false, false);
                 rootComponent = new ProjectImpl(this, root);
             } else if (PROJECT_NS.equals(q)) {
-                pomqnames = new POMQNames(true);
+                pomqnames = new POMQNames(true, false);
+                rootComponent = new ProjectImpl(this, root);
+            } else if (PROJECT_NSS.equals(q)) {
+                secureNS = true;
+                pomqnames = new POMQNames(true, true);
                 rootComponent = new ProjectImpl(this, root);
             }
         } 

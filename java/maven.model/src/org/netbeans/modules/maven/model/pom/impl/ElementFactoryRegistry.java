@@ -18,16 +18,11 @@
  */
 package org.netbeans.modules.maven.model.pom.impl;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.namespace.QName;
+
 import org.netbeans.modules.maven.model.pom.spi.ElementFactory;
-import org.netbeans.modules.xml.xam.dom.AbstractDocumentModel;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
@@ -71,74 +66,14 @@ public class ElementFactoryRegistry {
         }
     }
     
-    public void register(ElementFactory factory) {
+    private void register(ElementFactory factory) {
         for (QName q : factory.getElementQNames()) {
             factories.put(q, factory);
         }
-        resetQNameCache();
-    }
-    
-    public void unregister(ElementFactory fac){
-        for (QName q : fac.getElementQNames()) {
-            factories.remove(q);
-        }
-        resetQNameCache();
     }
     
     public ElementFactory get(QName type) {
         return factories.get(type);
     }
     
-    private Set<Class> knownEmbeddedModelTypes = null;
-    private Set<QName> knownQNames = null;
-    private Set<String> knownNames = null;
-    
-    public void resetQNameCache() {
-        knownEmbeddedModelTypes = null;
-        knownQNames = null;
-        knownNames = null;
-    }
-    
-    public Set<QName> getKnownQNames() {
-        return Collections.unmodifiableSet(knownQNames());
-    }
-    
-    private Set<QName> knownQNames() {
-        if (knownQNames == null) {
-            knownQNames = new HashSet<QName>();
-            for (ElementFactory f : factories.values()) {
-                for (QName q : f.getElementQNames()) {
-                    if (! knownQNames.add(q)) {
-                        String msg = "Duplicate factory for: "+q;
-                        Logger.getLogger(this.getClass().getName()).log(Level.FINE, "getKnownQNames", msg); // NOI18N
-                    }
-                }
-            }
-        }
-        return knownQNames;
-    }
-
-    public Set<String> getKnownElementNames() {
-        return Collections.unmodifiableSet(knownElementNames());
-    }
-    
-    private Set<String> knownElementNames() {
-        if (knownNames == null) {
-            knownNames = new HashSet<String>();
-            for (QName q : knownQNames()) {
-                knownNames.add(q.getLocalPart());
-            }
-        }
-        return knownNames;
-    }
-    
-    public void addEmbeddedModelQNames(AbstractDocumentModel<?> embeddedModel) {
-        if (knownEmbeddedModelTypes == null) {
-            knownEmbeddedModelTypes = new HashSet<>();
-        }
-        if (! knownEmbeddedModelTypes.contains(embeddedModel.getClass())) {
-            knownQNames().addAll(embeddedModel.getQNames());
-            knownNames = null;
-        }
-    }
 }

@@ -159,7 +159,7 @@ public class POMModelPanel extends javax.swing.JPanel implements ExplorerManager
                 POMComponent pc = (POMComponent) objs[layer];
                 int pos;
                 if (elementName != null) {
-                    QName qn = POMQName.createQName(elementName, pc.getModel().getPOMQNames().isNSAware());
+                    QName qn = POMQName.createQName(elementName, pc.getModel().getPOMQNames().isNSAware(), pc.getModel().hasSecureNS());
                     NodeList nl = pc.getPeer().getElementsByTagName(qn.getLocalPart());
                     if (nl != null && nl.getLength() > 0) {
                         if (nl.getLength() == 1) {

@@ -175,7 +175,7 @@ public class MavenPackageModifierImpl implements PackageModifierImplementation {
                         }
                         if (export) {
                             for (String exp : packagesToExport) {
-                                POMExtensibilityElement pack = model.getFactory().createPOMExtensibilityElement(POMQName.createQName("publicPackage"));
+                                POMExtensibilityElement pack = model.getFactory().createPOMExtensibilityElement(POMQName.createQName("publicPackage", true, model.hasSecureNS()));
                                 publicPackages.addExtensibilityElement(pack);
                                 pack.setElementText(exp);
                             }
@@ -234,7 +234,7 @@ public class MavenPackageModifierImpl implements PackageModifierImplementation {
                                 }
                             }
                         }
-                        POMExtensibilityElement toRet = conf.getModel().getFactory().createPOMExtensibilityElement(POMQName.createQName("publicPackages"));
+                        POMExtensibilityElement toRet = conf.getModel().getFactory().createPOMExtensibilityElement(POMQName.createQName("publicPackages", true, p.getModel().hasSecureNS()));
                         conf.addExtensibilityElement(toRet);
                         return toRet;
                     }

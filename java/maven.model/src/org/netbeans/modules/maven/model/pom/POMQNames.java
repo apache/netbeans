@@ -183,157 +183,165 @@ public final class POMQNames {
 
     private final boolean ns;
 
+    /**
+     * @deprecated Use {@link POMQNames(boolean, boolean)}
+     */
+    @Deprecated
     public POMQNames(boolean ns) {
+        this(ns, false);
+    }
+
+    public POMQNames(boolean ns, boolean secure) {
         this.ns = ns;
-        PROJECT = new POMQName("project",ns);
-        PARENT = new POMQName("parent",ns);
-        ORGANIZATION = new POMQName("organization",ns);
-        DISTRIBUTIONMANAGEMENT = new POMQName("distributionManagement",ns);
-        SITE = new POMQName("site",ns);
-        DIST_REPOSITORY = new POMQName("repository",ns);
-        DIST_SNAPSHOTREPOSITORY = new POMQName("snapshotRepository",ns);
-        PREREQUISITES = new POMQName("prerequisites",ns);
-        CONTRIBUTOR = new POMQName("contributor",ns);
-        SCM = new POMQName("scm",ns);
-        ISSUEMANAGEMENT = new POMQName("issueManagement",ns);
-        CIMANAGEMENT = new POMQName("ciManagement",ns);
-        NOTIFIER = new POMQName("notifier",ns);
-        REPOSITORY = new POMQName("repository",ns);
-        PLUGINREPOSITORY = new POMQName("pluginRepository",ns);
-        RELEASES = new POMQName("releases",ns);
-        SNAPSHOTS = new POMQName("snapshots",ns);
-        PROFILE = new POMQName("profile",ns);
-        PLUGIN = new POMQName("plugin",ns);
-        DEPENDENCY = new POMQName("dependency",ns);
-        EXCLUSION = new POMQName("exclusion",ns);
-        EXECUTION = new POMQName("execution",ns);
-        RESOURCE = new POMQName("resource",ns);
-        TESTRESOURCE = new POMQName("testResource",ns);
-        PLUGINMANAGEMENT = new POMQName("pluginManagement",ns);
-        REPORTING = new POMQName("reporting",ns);
-        REPORTPLUGIN = new POMQName("plugin",ns);
-        REPORTSET = new POMQName("reportSet",ns);
-        ACTIVATION = new POMQName("activation",ns);
-        ACTIVATIONPROPERTY = new POMQName("property",ns);
-        ACTIVATIONOS = new POMQName("os",ns);
-        ACTIVATIONFILE = new POMQName("file",ns);
-        ACTIVATIONCUSTOM = new POMQName("custom",ns);
-        DEPENDENCYMANAGEMENT = new POMQName("dependencyManagement",ns);
-        BUILD = new POMQName("build",ns);
-        EXTENSION = new POMQName("extension",ns);
-        LICENSE = new POMQName("license",ns);
-        MAILINGLIST = new POMQName("mailingList",ns);
-        DEVELOPER = new POMQName("developer",ns);
+        PROJECT = new POMQName("project",ns,secure);
+        PARENT = new POMQName("parent",ns,secure);
+        ORGANIZATION = new POMQName("organization",ns,secure);
+        DISTRIBUTIONMANAGEMENT = new POMQName("distributionManagement",ns,secure);
+        SITE = new POMQName("site",ns,secure);
+        DIST_REPOSITORY = new POMQName("repository",ns,secure);
+        DIST_SNAPSHOTREPOSITORY = new POMQName("snapshotRepository",ns,secure);
+        PREREQUISITES = new POMQName("prerequisites",ns,secure);
+        CONTRIBUTOR = new POMQName("contributor",ns,secure);
+        SCM = new POMQName("scm",ns,secure);
+        ISSUEMANAGEMENT = new POMQName("issueManagement",ns,secure);
+        CIMANAGEMENT = new POMQName("ciManagement",ns,secure);
+        NOTIFIER = new POMQName("notifier",ns,secure);
+        REPOSITORY = new POMQName("repository",ns,secure);
+        PLUGINREPOSITORY = new POMQName("pluginRepository",ns,secure);
+        RELEASES = new POMQName("releases",ns,secure);
+        SNAPSHOTS = new POMQName("snapshots",ns,secure);
+        PROFILE = new POMQName("profile",ns,secure);
+        PLUGIN = new POMQName("plugin",ns,secure);
+        DEPENDENCY = new POMQName("dependency",ns,secure);
+        EXCLUSION = new POMQName("exclusion",ns,secure);
+        EXECUTION = new POMQName("execution",ns,secure);
+        RESOURCE = new POMQName("resource",ns,secure);
+        TESTRESOURCE = new POMQName("testResource",ns,secure);
+        PLUGINMANAGEMENT = new POMQName("pluginManagement",ns,secure);
+        REPORTING = new POMQName("reporting",ns,secure);
+        REPORTPLUGIN = new POMQName("plugin",ns,secure);
+        REPORTSET = new POMQName("reportSet",ns,secure);
+        ACTIVATION = new POMQName("activation",ns,secure);
+        ACTIVATIONPROPERTY = new POMQName("property",ns,secure);
+        ACTIVATIONOS = new POMQName("os",ns,secure);
+        ACTIVATIONFILE = new POMQName("file",ns,secure);
+        ACTIVATIONCUSTOM = new POMQName("custom",ns,secure);
+        DEPENDENCYMANAGEMENT = new POMQName("dependencyManagement",ns,secure);
+        BUILD = new POMQName("build",ns,secure);
+        EXTENSION = new POMQName("extension",ns,secure);
+        LICENSE = new POMQName("license",ns,secure);
+        MAILINGLIST = new POMQName("mailingList",ns,secure);
+        DEVELOPER = new POMQName("developer",ns,secure);
 
-        MAILINGLISTS = new POMQName("mailingLists",ns);
-        DEPENDENCIES = new POMQName("dependencies",ns);
-        DEVELOPERS = new POMQName("developers",ns);
-        CONTRIBUTORS = new POMQName("contributors",ns);
-        LICENSES = new POMQName("licenses",ns);
-        PROFILES = new POMQName("profiles",ns);
-        REPOSITORIES = new POMQName("repositories",ns);
-        PLUGINREPOSITORIES = new POMQName("pluginRepositories",ns);
-        EXCLUSIONS = new POMQName("exclusions",ns);
-        EXECUTIONS = new POMQName("executions",ns);
-        PLUGINS = new POMQName("plugins",ns);
-        EXTENSIONS = new POMQName("extensions",ns);
-        RESOURCES = new POMQName("resources",ns);
-        TESTRESOURCES = new POMQName("testResources",ns);
-        REPORTPLUGINS = new POMQName("plugins",ns);
-        REPORTSETS = new POMQName("reportSets",ns);
+        MAILINGLISTS = new POMQName("mailingLists",ns,secure);
+        DEPENDENCIES = new POMQName("dependencies",ns,secure);
+        DEVELOPERS = new POMQName("developers",ns,secure);
+        CONTRIBUTORS = new POMQName("contributors",ns,secure);
+        LICENSES = new POMQName("licenses",ns,secure);
+        PROFILES = new POMQName("profiles",ns,secure);
+        REPOSITORIES = new POMQName("repositories",ns,secure);
+        PLUGINREPOSITORIES = new POMQName("pluginRepositories",ns,secure);
+        EXCLUSIONS = new POMQName("exclusions",ns,secure);
+        EXECUTIONS = new POMQName("executions",ns,secure);
+        PLUGINS = new POMQName("plugins",ns,secure);
+        EXTENSIONS = new POMQName("extensions",ns,secure);
+        RESOURCES = new POMQName("resources",ns,secure);
+        TESTRESOURCES = new POMQName("testResources",ns,secure);
+        REPORTPLUGINS = new POMQName("plugins",ns,secure);
+        REPORTSETS = new POMQName("reportSets",ns,secure);
 
 
-        ID = new POMQName("id",ns);
-        GROUPID = new POMQName("groupId",ns);
-        ARTIFACTID = new POMQName("artifactId",ns);
-        VERSION = new POMQName("version",ns);
-        CONFIGURATION = new POMQName("configuration",ns);
-        PROPERTIES = new POMQName("properties",ns);
+        ID = new POMQName("id",ns,secure);
+        GROUPID = new POMQName("groupId",ns,secure);
+        ARTIFACTID = new POMQName("artifactId",ns,secure);
+        VERSION = new POMQName("version",ns,secure);
+        CONFIGURATION = new POMQName("configuration",ns,secure);
+        PROPERTIES = new POMQName("properties",ns,secure);
 
-        RELATIVEPATH = new POMQName("relativePath",ns);
+        RELATIVEPATH = new POMQName("relativePath",ns,secure);
 
-        MODELVERSION = new POMQName("modelVersion",ns);
-        PACKAGING = new POMQName("packaging",ns);
-        URL = new POMQName("url",ns);
-        NAME = new POMQName("name",ns);
-        DESCRIPTION = new POMQName("description",ns);
-        INCEPTIONYEAR = new POMQName("inceptionYear",ns);
+        MODELVERSION = new POMQName("modelVersion",ns,secure);
+        PACKAGING = new POMQName("packaging",ns,secure);
+        URL = new POMQName("url",ns,secure);
+        NAME = new POMQName("name",ns,secure);
+        DESCRIPTION = new POMQName("description",ns,secure);
+        INCEPTIONYEAR = new POMQName("inceptionYear",ns,secure);
 
-        TYPE = new POMQName("type",ns);
-        CLASSIFIER = new POMQName("classifier",ns);
-        SCOPE = new POMQName("scope",ns);
-        SYSTEMPATH = new POMQName("systemPath",ns);
-        OPTIONAL = new POMQName("optional",ns);
+        TYPE = new POMQName("type",ns,secure);
+        CLASSIFIER = new POMQName("classifier",ns,secure);
+        SCOPE = new POMQName("scope",ns,secure);
+        SYSTEMPATH = new POMQName("systemPath",ns,secure);
+        OPTIONAL = new POMQName("optional",ns,secure);
 
-        INHERITED = new POMQName("inherited",ns);
-        PHASE = new POMQName("phase",ns);
+        INHERITED = new POMQName("inherited",ns,secure);
+        PHASE = new POMQName("phase",ns,secure);
 
-        CIMANAG_SYSTEM = new POMQName("system",ns);
+        CIMANAG_SYSTEM = new POMQName("system",ns,secure);
 
-        DIRECTORY = new POMQName("directory",ns);
-        DEFAULTGOAL = new POMQName("defaultGoal",ns);
-        FINALNAME = new POMQName("finalName",ns);
+        DIRECTORY = new POMQName("directory",ns,secure);
+        DEFAULTGOAL = new POMQName("defaultGoal",ns,secure);
+        FINALNAME = new POMQName("finalName",ns,secure);
 
-        SOURCEDIRECTORY = new POMQName("sourceDirectory",ns);
-        SCRIPTSOURCEDIRECTORY = new POMQName("scriptSourceDirectory",ns);
-        TESTSOURCEDIRECTORY = new POMQName("testSourceDirectory",ns);
-        OUTPUTDIRECTORY = new POMQName("outputDirectory",ns);
-        TESTOUTPUTDIRECTORY = new POMQName("testOutputDirectory",ns);
+        SOURCEDIRECTORY = new POMQName("sourceDirectory",ns,secure);
+        SCRIPTSOURCEDIRECTORY = new POMQName("scriptSourceDirectory",ns,secure);
+        TESTSOURCEDIRECTORY = new POMQName("testSourceDirectory",ns,secure);
+        OUTPUTDIRECTORY = new POMQName("outputDirectory",ns,secure);
+        TESTOUTPUTDIRECTORY = new POMQName("testOutputDirectory",ns,secure);
 
-        EXCLUDEDEFAULTS = new POMQName("excludeDefaults",ns);
+        EXCLUDEDEFAULTS = new POMQName("excludeDefaults",ns,secure);
 
-        VALUE = new POMQName("value",ns);
+        VALUE = new POMQName("value",ns,secure);
 
-        LAYOUT = new POMQName("layout",ns);
+        LAYOUT = new POMQName("layout",ns,secure);
 
-        GOALS = new POMQName("goals",ns);
-        GOAL = new POMQName("goal",ns);
+        GOALS = new POMQName("goals",ns,secure);
+        GOAL = new POMQName("goal",ns,secure);
 
-        MODULES = new POMQName("modules",ns);
-        MODULE = new POMQName("module",ns);
+        MODULES = new POMQName("modules",ns,secure);
+        MODULE = new POMQName("module",ns,secure);
 
-        EXISTS = new POMQName("exists",ns);
-        MISSING = new POMQName("missing",ns);
+        EXISTS = new POMQName("exists",ns,secure);
+        MISSING = new POMQName("missing",ns,secure);
 
-        FAMILY = new POMQName("family",ns);
-        ARCH = new POMQName("arch",ns);
+        FAMILY = new POMQName("family",ns,secure);
+        ARCH = new POMQName("arch",ns,secure);
 
-        TARGETPATH = new POMQName("targetPath",ns);
-        FILTERING = new POMQName("filtering",ns);
-        INCLUDES = new POMQName("includes",ns);
-        INCLUDE = new POMQName("include",ns);
-        EXCLUDES = new POMQName("excludes",ns);
-        EXCLUDE = new POMQName("exclude",ns);
+        TARGETPATH = new POMQName("targetPath",ns,secure);
+        FILTERING = new POMQName("filtering",ns,secure);
+        INCLUDES = new POMQName("includes",ns,secure);
+        INCLUDE = new POMQName("include",ns,secure);
+        EXCLUDES = new POMQName("excludes",ns,secure);
+        EXCLUDE = new POMQName("exclude",ns,secure);
 
-        TAG = new POMQName("tag",ns);
-        CONNECTION = new POMQName("connection",ns);
-        DEVELOPERCONNECTION = new POMQName("developerConnection",ns);
+        TAG = new POMQName("tag",ns,secure);
+        CONNECTION = new POMQName("connection",ns,secure);
+        DEVELOPERCONNECTION = new POMQName("developerConnection",ns,secure);
 
-        SYSTEM = new POMQName("system",ns);
+        SYSTEM = new POMQName("system",ns,secure);
 
-        ORGANIZATIONURL = new POMQName("organizationUrl",ns);
-        EMAIL = new POMQName("email",ns);
-        TIMEZONE = new POMQName("timezone",ns);
+        ORGANIZATIONURL = new POMQName("organizationUrl",ns,secure);
+        EMAIL = new POMQName("email",ns,secure);
+        TIMEZONE = new POMQName("timezone",ns,secure);
         //when adding items here, need to add them to the set below as well.
 
-        SUBSCRIBE = new POMQName("subscribe",ns);
-        UNSUBSCRIBE = new POMQName("unsubscribe",ns);
-        POST = new POMQName("post",ns);
-        ARCHIVE = new POMQName("archive",ns);
+        SUBSCRIBE = new POMQName("subscribe",ns,secure);
+        UNSUBSCRIBE = new POMQName("unsubscribe",ns,secure);
+        POST = new POMQName("post",ns,secure);
+        ARCHIVE = new POMQName("archive",ns,secure);
 
-        DOWNLOADURL = new POMQName("downloadUrl",ns);
+        DOWNLOADURL = new POMQName("downloadUrl",ns,secure);
 
-        MAVEN = new POMQName("maven",ns);
+        MAVEN = new POMQName("maven",ns,secure);
 
-        REPORTS = new POMQName("reports",ns);
-        REPORT = new POMQName("report",ns);
+        REPORTS = new POMQName("reports",ns,secure);
+        REPORT = new POMQName("report",ns,secure);
 
-        ENABLED = new POMQName("enabled",ns);
-        UPDATEPOLICY = new POMQName("updatePolicy",ns);
-        CHECKSUMPOLICY = new POMQName("checksumPolicy",ns);
-        COMMENTS = new POMQName("comments",ns);
-        ROLES = new POMQName("roles",ns);
-        ROLE = new POMQName("role",ns);
+        ENABLED = new POMQName("enabled",ns,secure);
+        UPDATEPOLICY = new POMQName("updatePolicy",ns,secure);
+        CHECKSUMPOLICY = new POMQName("checksumPolicy",ns,secure);
+        COMMENTS = new POMQName("comments",ns,secure);
+        ROLES = new POMQName("roles",ns,secure);
+        ROLE = new POMQName("role",ns,secure);
     }
 
     public boolean isNSAware() {

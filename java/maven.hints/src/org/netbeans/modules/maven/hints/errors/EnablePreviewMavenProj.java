@@ -202,10 +202,10 @@ public class EnablePreviewMavenProj implements ErrorRule<Void> {
 
             Plugin oldPlugin = searchMavenCompilerPlugin(build);
             if (oldPlugin == null) {
-                build.addPlugin(createMavenCompilerPlugin());
+                build.addPlugin(createMavenCompilerPlugin(model.hasSecureNS()));
             } else {
 
-                Plugin newPlugin = updateMavenCompilerPlugin(oldPlugin);
+                Plugin newPlugin = updateMavenCompilerPlugin(oldPlugin, model.hasSecureNS());
 
                 build.removePlugin(oldPlugin);
                 build.addPlugin(newPlugin);
@@ -225,15 +225,15 @@ public class EnablePreviewMavenProj implements ErrorRule<Void> {
             return null;
         }
 
-        private Plugin createMavenCompilerPlugin() {
+        private Plugin createMavenCompilerPlugin(boolean secureNS) {
             Plugin plugin = factory.createPlugin();
             plugin.setGroupId(MAVEN_COMPILER_GROUP_ID);
             plugin.setArtifactId(MAVEN_COMPILER_ARTIFACT_ID);
             plugin.setVersion(MAVEN_COMPILER_VERSION);
             plugin.setConfiguration(createConfiguration());
             Configuration config = factory.createConfiguration();
-            POMExtensibilityElement compilerArgs = factory.createPOMExtensibilityElement(POMQName.createQName(COMPILER_ARG));
-            compilerArgs.setChildElementText(COMPILER_ID_PROPERTY, ENABLE_PREVIEW_FLAG, POMQName.createQName(ARG));
+            POMExtensibilityElement compilerArgs = factory.createPOMExtensibilityElement(POMQName.createQName(COMPILER_ARG, true, secureNS));
+            compilerArgs.setChildElementText(COMPILER_ID_PROPERTY, ENABLE_PREVIEW_FLAG, POMQName.createQName(ARG, true, secureNS));
             config.addExtensibilityElement(compilerArgs);
             plugin.setConfiguration(config);
             return plugin;
@@ -244,7 +244,7 @@ public class EnablePreviewMavenProj implements ErrorRule<Void> {
             return configuration;
         }
 
-        private Plugin updateMavenCompilerPlugin(final Plugin oldPlugin) {
+        private Plugin updateMavenCompilerPlugin(final Plugin oldPlugin, boolean secureNS) {
 
             Configuration currenConfig = oldPlugin.getConfiguration();
             Configuration newConfiguration = createConfiguration();
@@ -259,8 +259,8 @@ public class EnablePreviewMavenProj implements ErrorRule<Void> {
                     }
                     if (newElement.getQName().getLocalPart().equals(COMPILER_ARG)) {
                         isCompilerArgsElementPresent = true;
-                        POMExtensibilityElement compilerArgs = factory.createPOMExtensibilityElement(POMQName.createQName(COMPILER_ARG));
-                        newElement.setChildElementText(COMPILER_ID_PROPERTY, ENABLE_PREVIEW_FLAG, POMQName.createQName(ARG));
+                        POMExtensibilityElement compilerArgs = factory.createPOMExtensibilityElement(POMQName.createQName(COMPILER_ARG, true, secureNS));
+                        newElement.setChildElementText(COMPILER_ID_PROPERTY, ENABLE_PREVIEW_FLAG, POMQName.createQName(ARG, true, secureNS));
                     }
                     for (POMExtensibilityElement childElement : element.getAnyElements()) {
 
@@ -274,8 +274,8 @@ public class EnablePreviewMavenProj implements ErrorRule<Void> {
 
                 }
                 if (!isCompilerArgsElementPresent) {
-                    POMExtensibilityElement compilerArgs = factory.createPOMExtensibilityElement(POMQName.createQName(COMPILER_ARG));
-                    compilerArgs.setChildElementText(COMPILER_ID_PROPERTY, ENABLE_PREVIEW_FLAG, POMQName.createQName(ARG));
+                    POMExtensibilityElement compilerArgs = factory.createPOMExtensibilityElement(POMQName.createQName(COMPILER_ARG, true, secureNS));
+                    compilerArgs.setChildElementText(COMPILER_ID_PROPERTY, ENABLE_PREVIEW_FLAG, POMQName.createQName(ARG, true, secureNS));
                     newConfiguration.addExtensibilityElement(compilerArgs);
                 }
             }

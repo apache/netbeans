@@ -232,22 +232,22 @@ public class MavenSchemaCompiler implements SchemaCompiler {
         Configuration config = model.getFactory().createConfiguration();
         exec.setConfiguration(config);
 
-        QName qname = POMQName.createQName("schemaIncludes", model.getPOMQNames().isNSAware()); //NOI18N
+        QName qname = POMQName.createQName("schemaIncludes", model.getPOMQNames().isNSAware(), model.hasSecureNS()); //NOI18N
         POMExtensibilityElement schemaIncludes = model.getFactory().createPOMExtensibilityElement(qname);
         config.addExtensibilityElement(schemaIncludes);
 
-        qname = POMQName.createQName("include", model.getPOMQNames().isNSAware()); //NOI18N
+        qname = POMQName.createQName("include", model.getPOMQNames().isNSAware(), model.hasSecureNS()); //NOI18N
         POMExtensibilityElement include = model.getFactory().createPOMExtensibilityElement(qname);
         include.setElementText("jaxb/"+id+"/*.xsd"); //NOI18N
         schemaIncludes.addExtensibilityElement(include);
 
-        qname = POMQName.createQName("episodeFile", model.getPOMQNames().isNSAware()); //NOI18N
+        qname = POMQName.createQName("episodeFile", model.getPOMQNames().isNSAware(), model.hasSecureNS()); //NOI18N
         POMExtensibilityElement episodeFile = model.getFactory().createPOMExtensibilityElement(qname);
         episodeFile.setElementText("${project.build.directory}/generated-sources/xjc/META-INF/jaxb-"+id+".episode"); //NOI18N
         config.addExtensibilityElement(episodeFile);
 
         if (packageName != null) {
-            qname = POMQName.createQName("generatePackage", model.getPOMQNames().isNSAware()); //NOI18N
+            qname = POMQName.createQName("generatePackage", model.getPOMQNames().isNSAware(), model.hasSecureNS()); //NOI18N
             POMExtensibilityElement generatePackage = model.getFactory().createPOMExtensibilityElement(qname);
             generatePackage.setElementText(packageName); //NOI18N
             config.addExtensibilityElement(generatePackage);

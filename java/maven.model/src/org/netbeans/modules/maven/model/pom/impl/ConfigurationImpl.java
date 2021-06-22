@@ -69,7 +69,7 @@ public class ConfigurationImpl extends POMComponentImpl implements Configuration
             }
         }
         if (value != null) {
-            POMExtensibilityElement el = getModel().getFactory().createPOMExtensibilityElement(POMQName.createQName(parameter));
+            POMExtensibilityElement el = getModel().getFactory().createPOMExtensibilityElement(POMQName.createQName(parameter, true, ((POMModel) getModel()).hasSecureNS()));
             el.setElementText(value);
             addExtensibilityElement(el);
         }

@@ -36,6 +36,8 @@ public abstract class POMModel extends AbstractDocumentModel<POMComponent> {
 
     public abstract POMQNames getPOMQNames();
 
+    public abstract boolean hasSecureNS();
+    
     /**
      * Gets domain-specific root component.
      */

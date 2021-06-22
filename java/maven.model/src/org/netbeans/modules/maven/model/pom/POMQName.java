@@ -27,24 +27,41 @@ import javax.xml.namespace.QName;
 public final class POMQName {
 
     public static final String NS_URI = "http://maven.apache.org/POM/4.0.0";  // NOI18N
+    public static final String NSS_URI = "https://maven.apache.org/POM/4.0.0";  // NOI18N
     public static final String NS_PREFIX = "pom";   // NOI18N        
     
-    public static QName createQName(String localName, boolean ns) {
+    public static QName createQName(String localName, boolean ns, boolean secure) {
         if (ns) {
-            return new QName(NS_URI, localName, NS_PREFIX);
+            if (secure) {
+                return new QName(NSS_URI, localName, NS_PREFIX);
+            } else {
+                return new QName(NS_URI, localName, NS_PREFIX);
+            }
         } else {
             return new QName("", localName);
         }
     }
 
+    /**
+     * @deprecated Use {@link #createQName(String, boolean, boolean)}
+     */
+    @Deprecated
+    public static QName createQName(String localName, boolean ns) {
+        return createQName(localName, ns, false);
+    }
+
+    /**
+     * @deprecated Use {@link #createQName(String, boolean, boolean)}
+     */
+    @Deprecated
     public static QName createQName(String localName) {
         return createQName(localName, true);
     }
 
     private final QName qName;
 
-    POMQName(String localName, boolean ns) {
-        qName = createQName(localName, ns);
+    POMQName(String localName, boolean ns, boolean secure) {
+        qName = createQName(localName, ns, secure);
     }
     
     public QName getQName() {

@@ -36,14 +36,16 @@ import org.w3c.dom.Element;
 @ServiceProvider(service=ElementFactory.class)
 public class POMElementFactoryProvider implements ElementFactory {
 
-    private POMQNames ns = new POMQNames(true);
-    private POMQNames nonns = new POMQNames(false);
+    private POMQNames ns = new POMQNames(true, false);
+    private POMQNames nss = new POMQNames(true, true);
+    private POMQNames nonns = new POMQNames(false, false);
     private Set<QName> all;
 
 
     public POMElementFactoryProvider() {
         all = new HashSet<QName>();
         all.addAll(ns.getElementQNames());
+        all.addAll(nss.getElementQNames());
         all.addAll(nonns.getElementQNames());
     }
 

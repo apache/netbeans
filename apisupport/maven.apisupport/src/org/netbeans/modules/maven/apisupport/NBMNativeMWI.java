@@ -374,10 +374,10 @@ final class NBMNativeMWI {
                     }
                     Configuration c = model.getFactory().createConfiguration();
                     if (new ComparableVersion(managedPVersion).compareTo(new ComparableVersion(JAR_PLUGIN_VERSION_MANIFEST_CONFIG_CHANGE)) >= 0) {
-                        QName archiveqname = POMQName.createQName("archive", model.getPOMQNames().isNSAware());
+                        QName archiveqname = POMQName.createQName("archive", model.getPOMQNames().isNSAware(), model.hasSecureNS());
                         POMExtensibilityElement archiveelement = model.getFactory().createPOMExtensibilityElement(archiveqname);
                         
-                        QName manifestqname = POMQName.createQName("manifestFile", model.getPOMQNames().isNSAware());
+                        QName manifestqname = POMQName.createQName("manifestFile", model.getPOMQNames().isNSAware(), model.hasSecureNS());
                         POMExtensibilityElement manifestelement = model.getFactory().createPOMExtensibilityElement(manifestqname);
                         manifestelement.setElementText("${project.build.outputDirectory}/META-INF/MANIFEST.MF");
                         archiveelement.addAnyElement(manifestelement, 0);

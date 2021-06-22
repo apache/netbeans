@@ -154,7 +154,7 @@ public final class MavenModelUtils {
         POMExtensibilityElement webResources = findChild(config.getConfigurationElements(), "webResources");
         if (webResources == null) {
             webResources = model.getFactory().createPOMExtensibilityElement(
-                    POMQName.createQName("webResources", model.getPOMQNames().isNSAware()));
+                    POMQName.createQName("webResources", model.getPOMQNames().isNSAware(), model.hasSecureNS()));
             config.addExtensibilityElement(webResources);
         }
         //check for resource containing jax-ws-catalog.xml
@@ -250,42 +250,41 @@ public final class MavenModelUtils {
         Configuration config = model.getFactory().createConfiguration();
         exec.setConfiguration(config);
 
-        QName qname = POMQName.createQName("wsdlFiles", model.getPOMQNames().isNSAware()); //NOI18N
+        QName qname = POMQName.createQName("wsdlFiles", model.getPOMQNames().isNSAware(), model.hasSecureNS()); //NOI18N
         POMExtensibilityElement wsdlFiles = model.getFactory().createPOMExtensibilityElement(qname);
         config.addExtensibilityElement(wsdlFiles);
 
         if (packageName != null) {
-            qname = POMQName.createQName("packageName", model.getPOMQNames().isNSAware()); //NOI18N
+            qname = POMQName.createQName("packageName", model.getPOMQNames().isNSAware(), model.hasSecureNS()); //NOI18N
             POMExtensibilityElement packageNameElement = model.getFactory().createPOMExtensibilityElement(qname);
             packageNameElement.setElementText(packageName);
             config.addExtensibilityElement(packageNameElement);
         }
 
-        qname = POMQName.createQName("wsdlFile", model.getPOMQNames().isNSAware()); //NOI18N
+        qname = POMQName.createQName("wsdlFile", model.getPOMQNames().isNSAware(), model.hasSecureNS()); //NOI18N
         POMExtensibilityElement wsdlFile = model.getFactory().createPOMExtensibilityElement(qname);
         wsdlFile.setElementText(wsdlPath);
         wsdlFiles.addExtensibilityElement(wsdlFile);
 
         //adding <vmArgs><vmArg>-Djavax.xml.accessExternalSchema=all</vmArg></vmArgs>; see issue #244891
-        qname = POMQName.createQName("vmArgs", model.getPOMQNames().isNSAware()); //NOI18N
+        qname = POMQName.createQName("vmArgs", model.getPOMQNames().isNSAware(), model.hasSecureNS()); //NOI18N
         POMExtensibilityElement vmArgs = model.getFactory().createPOMExtensibilityElement(qname);
         config.addExtensibilityElement(vmArgs);
 
-        qname = POMQName.createQName("vmArg", model.getPOMQNames().isNSAware()); //NOI18N
+        qname = POMQName.createQName("vmArg", model.getPOMQNames().isNSAware(), model.hasSecureNS()); //NOI18N
         POMExtensibilityElement vmArg = model.getFactory().createPOMExtensibilityElement(qname);
         vmArg.setElementText("-Djavax.xml.accessExternalSchema=all"); //NOI18N
         vmArgs.addExtensibilityElement(vmArg);
 
         if ( originalUrl != null ){
-            qname = POMQName.createQName("wsdlLocation", model.getPOMQNames().
-                    isNSAware()); //NOI18N
+            qname = POMQName.createQName("wsdlLocation", model.getPOMQNames().isNSAware(), model.hasSecureNS()); //NOI18N
             POMExtensibilityElement wsdlLocation = 
                 model.getFactory().createPOMExtensibilityElement(qname);
             wsdlLocation.setElementText(originalUrl);
             config.addExtensibilityElement(wsdlLocation);
         }
 
-        qname = POMQName.createQName("staleFile", model.getPOMQNames().isNSAware()); //NOI18N
+        qname = POMQName.createQName("staleFile", model.getPOMQNames().isNSAware(), model.hasSecureNS()); //NOI18N
         POMExtensibilityElement staleFile = model.getFactory().createPOMExtensibilityElement(qname);
         staleFile.setElementText(STALE_FILE_DIRECTORY+uniqueId+STALE_FILE_EXTENSION);
         config.addExtensibilityElement(staleFile);
@@ -305,7 +304,7 @@ public final class MavenModelUtils {
                 if (execId.equals(exec.getId())) {
                     Configuration config = exec.getConfiguration();
                     if (config != null) {
-                        QName qname = POMQName.createQName("bindingDirectory", model.getPOMQNames().isNSAware()); //NOI18N
+                        QName qname = POMQName.createQName("bindingDirectory", model.getPOMQNames().isNSAware(), model.hasSecureNS()); //NOI18N
                         if (config.getChildElementText(qname) == null) {
                             POMExtensibilityElement bindingDir = model.getFactory().createPOMExtensibilityElement(qname);
                             bindingDir.setElementText("${basedir}/src/jaxws-bindings");
@@ -314,7 +313,7 @@ public final class MavenModelUtils {
                         POMExtensibilityElement bindingFiles =
                                 findChild(config.getConfigurationElements(), "bindingFiles"); //NOI18N
                         if (bindingFiles == null) {
-                            qname = POMQName.createQName("bindingFiles", model.getPOMQNames().isNSAware()); //NOI18N
+                            qname = POMQName.createQName("bindingFiles", model.getPOMQNames().isNSAware(), model.hasSecureNS()); //NOI18N
                             bindingFiles = model.getFactory().createPOMExtensibilityElement(qname);
                             config.addExtensibilityElement(bindingFiles);
                         }
@@ -322,7 +321,7 @@ public final class MavenModelUtils {
                         POMExtensibilityElement bindingFile =
                                 findElementForValue(bindingFiles.getExtensibilityElements(), bindingFilePath);
                         if (bindingFile == null) {
-                            qname = POMQName.createQName("bindingFile", model.getPOMQNames().isNSAware()); //NOI18N
+                            qname = POMQName.createQName("bindingFile", model.getPOMQNames().isNSAware(), model.hasSecureNS()); //NOI18N
                             bindingFile = model.getFactory().createPOMExtensibilityElement(qname);
                             bindingFile.setElementText(bindingFilePath);
                             bindingFiles.addExtensibilityElement(bindingFile);
@@ -575,25 +574,25 @@ public final class MavenModelUtils {
     private static void addResource(POMModel model, POMExtensibilityElement webResources,
             String targetPath, List<String> includes) {
         POMExtensibilityElement res = model.getFactory().createPOMExtensibilityElement(
-                POMQName.createQName("resource", model.getPOMQNames().isNSAware()));
+                POMQName.createQName("resource", model.getPOMQNames().isNSAware(), model.hasSecureNS()));
         webResources.addExtensibilityElement(res);
         POMExtensibilityElement dir = model.getFactory().createPOMExtensibilityElement(
-                POMQName.createQName("directory", model.getPOMQNames().isNSAware()));
+                POMQName.createQName("directory", model.getPOMQNames().isNSAware(), model.hasSecureNS()));
         dir.setElementText("src");
         res.addExtensibilityElement(dir);
 
         POMExtensibilityElement tp = model.getFactory().createPOMExtensibilityElement(POMQName.createQName("targetPath",
-                model.getPOMQNames().isNSAware()));
+                model.getPOMQNames().isNSAware(), model.hasSecureNS()));
         tp.setElementText(targetPath);
         res.addExtensibilityElement(tp);
 
         POMExtensibilityElement in = model.getFactory().createPOMExtensibilityElement(POMQName.createQName("includes",
-                model.getPOMQNames().isNSAware()));
+                model.getPOMQNames().isNSAware(), model.hasSecureNS()));
         res.addExtensibilityElement(in);
 
         for (String includeString : includes) {
             POMExtensibilityElement include = model.getFactory().createPOMExtensibilityElement(POMQName.createQName("include",
-                    model.getPOMQNames().isNSAware()));
+                    model.getPOMQNames().isNSAware(), model.hasSecureNS()));
             include.setElementText(includeString);
             in.addExtensibilityElement(include);
         }

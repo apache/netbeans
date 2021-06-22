@@ -43,17 +43,20 @@ public class PropertiesImpl extends POMComponentImpl implements Properties {
 
     // child elements
 
+    private boolean hasSecureNS() {
+        return ((POMModel) getModel()).hasSecureNS();
+    }
 
     @Override
     public void setProperty(String key, String value) {
-        QName qname = POMQName.createQName(key, getModel().getPOMQNames().isNSAware());
+        QName qname = POMQName.createQName(key, getModel().getPOMQNames().isNSAware(), hasSecureNS());
         setChildElementText(qname.getLocalPart(), value,
                 qname);
     }
 
     @Override
     public String getProperty(String key) {
-        return getChildElementText(POMQName.createQName(key, getModel().getPOMQNames().isNSAware()));
+        return getChildElementText(POMQName.createQName(key, getModel().getPOMQNames().isNSAware(), hasSecureNS()));
     }
 
     @Override
@@ -63,7 +66,7 @@ public class PropertiesImpl extends POMComponentImpl implements Properties {
         for (POMComponent pc : chlds) {
             Element el = pc.getPeer();
             String key = el.getLocalName();
-            String val = getChildElementText(POMQName.createQName(key, getModel().getPOMQNames().isNSAware()));
+            String val = getChildElementText(POMQName.createQName(key, getModel().getPOMQNames().isNSAware(), hasSecureNS()));
             toRet.put(key, val);
         }
         return toRet;

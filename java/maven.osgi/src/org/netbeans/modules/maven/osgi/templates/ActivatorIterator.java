@@ -164,7 +164,7 @@ public class ActivatorIterator implements TemplateWizard.AsynchronousInstantiati
             }
         }
         if (instructions == null) {
-            instructions = mdl.getFactory().createPOMExtensibilityElement(POMQName.createQName(OSGiConstants.PARAM_INSTRUCTIONS, mdl.getPOMQNames().isNSAware()));
+            instructions = mdl.getFactory().createPOMExtensibilityElement(POMQName.createQName(OSGiConstants.PARAM_INSTRUCTIONS, mdl.getPOMQNames().isNSAware(), mdl.hasSecureNS()));
             conf.addExtensibilityElement(instructions);
         }
         elems = instructions.getExtensibilityElements();
@@ -176,7 +176,7 @@ public class ActivatorIterator implements TemplateWizard.AsynchronousInstantiati
             }
         }
         if (activator == null) {
-            activator = mdl.getFactory().createPOMExtensibilityElement(POMQName.createQName(OSGiConstants.BUNDLE_ACTIVATOR, mdl.getPOMQNames().isNSAware()));
+            activator = mdl.getFactory().createPOMExtensibilityElement(POMQName.createQName(OSGiConstants.BUNDLE_ACTIVATOR, mdl.getPOMQNames().isNSAware(), mdl.hasSecureNS()));
             instructions.addExtensibilityElement(activator);
         }
         activator.setElementText(path);

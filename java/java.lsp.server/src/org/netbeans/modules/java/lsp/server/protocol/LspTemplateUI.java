@@ -98,10 +98,14 @@ abstract class LspTemplateUI {
         CompletionStage<DataObject> findTemplate = findTemplate(templates, client);
         CompletionStage<Pair<DataFolder, String>> findTargetFolderAndName = findTargetAndName(findTemplate, client, params);
         return findTargetFolderAndName.thenCombine(findTemplate, (targetAndName, source) -> {
+            final String name = targetAndName.second();
+            if (name == null || name.isEmpty()) {
+                throw raise(RuntimeException.class, new UserCancelException());
+            }
             try {
                 DataFolder target = targetAndName.first();
                 Map<String,String> prjParams = new HashMap<>();
-                DataObject newObject = source.createFromTemplate(target, targetAndName.second(), prjParams);
+                DataObject newObject = source.createFromTemplate(target, name, prjParams);
                 return (Object) newObject.getPrimaryFile().toURI().toString();
             } catch (IOException ex) {
                 throw raise(RuntimeException.class, ex);
@@ -299,7 +303,7 @@ abstract class LspTemplateUI {
     }
 
     private static String removeExtensionFromFileName(String nameWithExtension, String templateExtension) {
-        if (nameWithExtension.endsWith('.' + templateExtension)) {
+        if (nameWithExtension != null && nameWithExtension.endsWith('.' + templateExtension)) {
             return nameWithExtension.substring(0, nameWithExtension.length() - templateExtension.length() - 1);
         } else {
             return nameWithExtension;
@@ -335,12 +339,8 @@ abstract class LspTemplateUI {
             if (display) {
                 String detail = findDetail(obj);
                 final String displayName = n.getDisplayName();
-                String description = n.getShortDescription();
-                if (description != null && description.equals(displayName)) {
-                    description = null;
-                }
                 categories.add(new QuickPickItem(
-                    displayName, description, detail,
+                    displayName, null, detail,
                     false, fo.getNameExt()
                 ));
             }

@@ -111,7 +111,7 @@ public class JavaErrorProvider implements ErrorProvider {
                                 if (disabled.size() != Severity.values().length) {
                                     AtomicBoolean cancel = new AtomicBoolean();
                                     context.registerCancelCallback(() -> cancel.set(true));
-                                    result.addAll(convert2Diagnostic(context.errorKind(), new HintsInvoker(HintsSettings.getGlobalSettings(), cancel).computeHints(cc), ed -> !disabled.contains(ed.getSeverity())));
+                                    result.addAll(convert2Diagnostic(context.errorKind(), new HintsInvoker(HintsSettings.getGlobalSettings(), context.getOffset(), cancel).computeHints(cc), ed -> !disabled.contains(ed.getSeverity())));
                                 }
                                 break;
                         }
@@ -241,7 +241,7 @@ public class JavaErrorProvider implements ErrorProvider {
                     }
                     String newFilePath = null;
                     for (File newFile : newFiles) {
-                        newFilePath = newFile.getPath();
+                        newFilePath = newFile.toURI().toString();
                         documentChanges.add(Union2.createSecond(new CreateFile(newFilePath)));
                     }
                     outer: for (FileObject fileObject : changes.getModifiedFileObjects()) {

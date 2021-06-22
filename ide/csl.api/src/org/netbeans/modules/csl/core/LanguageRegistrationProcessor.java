@@ -44,6 +44,7 @@ import org.netbeans.modules.csl.editor.fold.GsfFoldManagerFactory;
 import org.netbeans.modules.csl.editor.hyperlink.GsfHyperlinkProvider;
 import org.netbeans.modules.csl.editor.semantic.HighlightsLayerFactoryImpl;
 import org.netbeans.modules.csl.editor.semantic.OccurrencesMarkProviderCreator;
+import org.netbeans.modules.csl.hints.GsfErrorProvider;
 import org.netbeans.modules.csl.hints.GsfUpToDateStateProviderFactory;
 import org.netbeans.modules.csl.navigation.ClassMemberPanel;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
@@ -124,7 +125,7 @@ public class LanguageRegistrationProcessor extends LayerGeneratingProcessor {
                     if (methods.containsKey("getParser")) { //NOI18N
                         registerParser(lb, mimeType);
                     }
-                        if (methods.containsKey("getIndexerFactory")) { //NOI18N
+                    if (methods.containsKey("getIndexerFactory")) { //NOI18N
                         registerIndexer(lb, mimeType);
                         if (!isAnnotatedByPathRecognizerRegistration) {
                             registerPathRecognizer(lb, mimeType);
@@ -135,6 +136,9 @@ public class LanguageRegistrationProcessor extends LayerGeneratingProcessor {
                     registerCodeTemplates(lb, mimeType);
                     if (methods.containsKey("getDeclarationFinder")) { //NOI18N
                         registerHyperlinks(lb, mimeType);
+                    }
+                    if (methods.containsKey("getHintsProvider")) { //NOI18N
+                        registerErrorProvider(lb, mimeType);
                     }
                     registerSemanticHighlighting(lb, mimeType);
                     registerUpToDateStatus(lb, mimeType);
@@ -306,6 +310,10 @@ public class LanguageRegistrationProcessor extends LayerGeneratingProcessor {
 //
 //        // Highlighting Factories
 //        item = createFile(doc, mimeFolder, "org-netbeans-modules-csl-editor-semantic-HighlightsLayerFactoryImpl.instance"); // NOI18N
+    }
+
+    private static void registerErrorProvider(LayerBuilder b, String mimeType) {
+        instanceFile(b, "Editors/" + mimeType, null, GsfErrorProvider.class, null).write(); //NOI18N
     }
 
     private void registerStructureScanner(LayerBuilder b, String mimeType) {

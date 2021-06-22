@@ -797,9 +797,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                             file = Utils.fromUri(params.getTextDocument().getUri());
                                         }
                                         FileObject fo = file;
-                                        List<TextEdit> edits = parts.first().getEdits().stream().map(te -> new TextEdit(new Range(Utils.createPosition(fo, te.getStartOffset()), Utils.createPosition(fo, te.getEndOffset())), te.getNewText())).collect(Collectors.toList());
-                                        TextDocumentEdit tde = new TextDocumentEdit(new VersionedTextDocumentIdentifier(docUri, -1), edits);
-                                        documentChanges.add(Either.forLeft(tde));
+                                        if (fo != null) {
+                                            List<TextEdit> edits = parts.first().getEdits().stream().map(te -> new TextEdit(new Range(Utils.createPosition(fo, te.getStartOffset()), Utils.createPosition(fo, te.getEndOffset())), te.getNewText())).collect(Collectors.toList());
+                                            TextDocumentEdit tde = new TextDocumentEdit(new VersionedTextDocumentIdentifier(docUri, -1), edits);
+                                            documentChanges.add(Either.forLeft(tde));
+                                        }
                                     } catch (Exception ex) {
                                         client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
                                     }

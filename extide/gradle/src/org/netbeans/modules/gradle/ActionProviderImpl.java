@@ -95,7 +95,6 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.Presenter;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
-import org.openide.windows.InputOutput;
 import org.openide.windows.OutputWriter;
 
 /**
@@ -251,6 +250,14 @@ public class ActionProviderImpl implements ActionProvider {
     
     private static void invokeProjectAction2(final Project project, final ActionMapping mapping, final GradleExecConfiguration execCfg, Lookup context, boolean showUI) {
         final String action = mapping.getName();
+        if (ActionMapping.isDisabled(mapping)) {
+            LOG.log(Level.FINE, "Attempt to run a config-disabled action: {0}", action);
+            return;
+        }
+        if (!ActionToTaskUtils.isActionEnabled(action, project, context)) {
+            LOG.log(Level.FINE, "Attempt to run action that is not enabled: {0}", action);
+            return;
+        }
         String argLine = askInputArgs(mapping.getDisplayName(), mapping.getArgs());
         if (argLine == null) {
             return;
@@ -522,12 +529,17 @@ public class ActionProviderImpl implements ActionProvider {
 
                 @Override
                 public void run() {
+                    // should also handle the active configuration.
                     ProjectActionMappingProvider provider = project.getLookup().lookup(ProjectActionMappingProvider.class);
 
                     final List<Action> acts = new ArrayList<>();
                     for (String action : provider.customizedActions()) {
                         if (action.startsWith(CustomActionMapping.CUSTOM_PREFIX)) {
                             ActionMapping mapp = provider.findMapping(action);
+                            if (ActionMapping.isDisabled(mapp)) {
+                                // action is disabled.
+                                continue;
+                            }
                             Action act = createCustomGradleAction(project, mapp.getName(), mapp, lookup, false);
                             String displayName = INPUT_PROP_REGEXP.matcher(mapp.getArgs()).find() ? mapp.getDisplayName() + "..." : mapp.getDisplayName();
 

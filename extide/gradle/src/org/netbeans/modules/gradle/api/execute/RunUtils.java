@@ -59,10 +59,12 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
+import org.netbeans.modules.gradle.execute.ConfigurableActionProvider;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
+import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
-import org.netbeans.spi.project.ProjectConfigurationProvider;
+import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -538,6 +540,23 @@ public final class RunUtils {
                 return Collections.singletonMap(token, value);
             }
         };
+    }
+    
+    /**
+     * Returns an action mapping provider for the specified project and context. Specifically 
+     * supports {@link ProjectConfiguration}s, so the returned provider will 
+     * @param p the project
+     * @param context the action invocation context
+     * @return action provider suitable for the project/context.
+     * @since 2.14
+     */
+    public static ProjectActionMappingProvider findActionProvider(Project p, Lookup context) {
+        ConfigurableActionProvider cap = p.getLookup().lookup(ConfigurableActionProvider.class);
+        if (cap == null) {
+            return p.getLookup().lookup(ProjectActionMappingProvider.class);
+        }
+        GradleExecConfiguration cfg = ProjectConfigurationSupport.getEffectiveConfiguration(p, context);
+        return cap.findActionProvider(cfg.getId());
     }
 
     /**

@@ -260,6 +260,7 @@ public abstract class NbLaunchDelegate {
                         } else {
                             launchFuture.completeExceptionally(new CancellationException());
                         }
+                        return;
                     }
                 }
 

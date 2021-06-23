@@ -404,12 +404,6 @@ public abstract class NbLaunchDelegate {
         }
     }
     
-    private static CompletableFuture<Pair<ActionProvider, String>> findEnabledTarget(FileObject toRun, SingleMethod singleMethod, boolean debug, boolean testRun, NbProcessConsole ioContext) throws IllegalArgumentException {
-        return findTargetWithPossibleRebuild(toRun, singleMethod, debug, testRun, ioContext).thenApply((Pair<ActionProvider, String> actionAndCommand) -> {
-            return null;
-        });
-    }
-
     private static CompletableFuture<Pair<ActionProvider, String>> findTargetWithPossibleRebuild(FileObject toRun, SingleMethod singleMethod, boolean debug, boolean testRun, NbProcessConsole ioContext) throws IllegalArgumentException {
         Pair<ActionProvider, String> providerAndCommand = findTarget(toRun, singleMethod, debug, testRun);
         if (providerAndCommand != null) {

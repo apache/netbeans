@@ -40,6 +40,22 @@
 					"text/javascript",
 					"application/javascript"
 				]
+			},
+			{
+				"id": "jackpot-hint",
+				"extensions": [
+					".hint"
+				],
+				"aliases": [
+					"Java Hints"
+				]
+			}
+		],
+		"grammars": [
+			{
+				"language": "jackpot-hint",
+				"scopeName": "source.java",
+				"path": "./syntaxes/java.tmLanguage.json"
 			}
 		],
 		"configuration": {
@@ -253,6 +269,11 @@
 				"category": "Java"
 			},
 			{
+				"command": "java.workspace.newproject",
+				"title": "New Project...",
+				"category": "Java"
+			},
+			{
 				"command": "java.goto.super.implementation",
 				"title": "Go to Super Implementation",
 				"category": "Java"
@@ -300,6 +321,10 @@
 			"commandPalette": [
 				{
 					"command": "java.workspace.new",
+					"when": "nbJavaLSReady"
+				},
+				{
+					"command": "java.workspace.newproject",
 					"when": "nbJavaLSReady"
 				},
 				{

@@ -149,7 +149,7 @@ public class ActionProviderImpl implements ActionProvider {
                 prjImpl.primeProject().
                         thenAccept(gp -> {
                             LOG.log(Level.FINER, "Priming build of {0} finished with status {1}, ", new Object[] { project, prjImpl.isProjectPrimingRequired() });
-                            prg.finished(prjImpl.isProjectPrimingRequired());
+                            prg.finished(!prjImpl.isProjectPrimingRequired());
                         }).
                         exceptionally((e) -> { 
                             LOG.log(Level.FINER, e, () -> String.format("Priming build errored: %s", project));

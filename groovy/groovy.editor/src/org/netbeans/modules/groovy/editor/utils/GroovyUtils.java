@@ -38,6 +38,16 @@ public final class GroovyUtils {
      * @return singe typename without package, or method without type
      */
     public static String stripPackage(String fqn) {
+        if (fqn.contains("<")) {
+            // TODO: This does not handle inner classes well - NETBEANS-5787
+            int first = fqn.indexOf('<');
+            int last = fqn.lastIndexOf('>');
+            if (last > first) {
+                return stripPackage(fqn.substring(0, first)) + "<" +
+                        stripPackage(fqn.substring(first + 1, last)) + ">";
+                        
+            }
+        }
         if (fqn.contains(".")) {
             int idx = fqn.lastIndexOf(".");
             fqn = fqn.substring(idx + 1);

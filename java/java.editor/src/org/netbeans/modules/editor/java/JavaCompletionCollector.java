@@ -111,7 +111,16 @@ public class JavaCompletionCollector implements CompletionCollector {
             ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
                 @Override
                 public void run(ResultIterator resultIterator) throws Exception {
-                    TokenSequence<JavaTokenId> ts = resultIterator.getSnapshot().getTokenHierarchy().tokenSequence(JavaTokenId.language());
+                    TokenSequence<JavaTokenId> ts = null;
+                    for (TokenSequence<?> cand : resultIterator.getSnapshot().getTokenHierarchy().embeddedTokenSequences(offset, false)) {
+                        if (cand.language() == JavaTokenId.language()) {
+                            ts = (TokenSequence<JavaTokenId>) cand;
+                            break;
+                        }
+                    }
+                    if (ts == null) {//No Java on this offset
+                        return ;
+                    }
                     if (ts.move(offset) == 0 || !ts.moveNext()) {
                         if (!ts.movePrevious()) {
                             ts.moveNext();

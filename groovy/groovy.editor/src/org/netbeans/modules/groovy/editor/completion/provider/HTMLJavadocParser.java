@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.groovy.editor.api.completion;
+package org.netbeans.modules.groovy.editor.completion.provider;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -21,7 +21,6 @@ package org.netbeans.modules.java.lsp.server.protocol;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
@@ -31,7 +30,6 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -39,15 +37,13 @@ import java.net.URI;
 import java.net.URL;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -56,7 +52,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -136,15 +131,11 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.netbeans.api.annotations.common.CheckForNull;
-import org.netbeans.api.editor.EditorUtilities;
-import org.netbeans.api.editor.document.LineDocument;
-import org.netbeans.api.editor.document.LineDocumentUtils;
+import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.project.JavaProjectConstants;
-import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
-import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.ModificationResult;
@@ -161,7 +152,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
-import org.netbeans.editor.DocumentUtilities;
+import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.java.GoToSupport;
 import org.netbeans.modules.editor.java.GoToSupport.GoToTarget;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController.TestMethod;
@@ -172,27 +163,15 @@ import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.java.editor.options.MarkOccurencesSettings;
 import org.netbeans.modules.java.editor.overridden.ComputeOverriding;
 import org.netbeans.modules.java.editor.overridden.ElementDescription;
-import org.netbeans.modules.java.hints.errors.CreateFixBase;
-import org.netbeans.modules.java.hints.errors.ImportClass;
-import org.netbeans.modules.java.hints.infrastructure.CreatorBasedLazyFixList;
-import org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider;
 import org.netbeans.modules.java.hints.introduce.IntroduceFixBase;
 import org.netbeans.modules.java.hints.introduce.IntroduceHint;
 import org.netbeans.modules.java.hints.introduce.IntroduceKind;
-import org.netbeans.modules.java.hints.project.IncompleteClassPath;
-import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
-import org.netbeans.modules.java.hints.spiimpl.hints.HintsInvoker;
-import org.netbeans.modules.java.hints.spiimpl.options.HintsSettings;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods;
-import org.netbeans.modules.parsing.api.ParserManager;
-import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
-import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.impl.indexing.implspi.ActiveDocumentProvider.IndexingAware;
-import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RefactoringElement;
@@ -207,12 +186,9 @@ import org.netbeans.modules.refactoring.plugins.FileRenamePlugin;
 import org.netbeans.modules.refactoring.spi.RefactoringCommit;
 import org.netbeans.modules.refactoring.spi.RefactoringElementImplementation;
 import org.netbeans.modules.refactoring.spi.Transaction;
-import org.netbeans.spi.editor.hints.EnhancedFix;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
-import org.netbeans.spi.editor.hints.LazyFixList;
-import org.netbeans.spi.editor.hints.Severity;
-import org.netbeans.spi.java.hints.JavaFix;
+import org.netbeans.spi.lsp.ErrorProvider;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.text.NbDocument;
@@ -220,6 +196,7 @@ import org.openide.text.PositionBounds;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
+import org.openide.util.Union2;
 import org.openide.util.WeakSet;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
@@ -781,194 +758,122 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         if (doc == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
-        JavaSource js = JavaSource.forDocument(doc);
-        if (js == null) {
-            return CompletableFuture.completedFuture(Collections.emptyList());
-        }
-        Map<String, ErrorDescription> id2Errors = (Map<String, ErrorDescription>) doc.getProperty("lsp-errors");
+
+        Range range = params.getRange();
+        int startOffset = Utils.getOffset(doc, range.getStart());
+        int endOffset = Utils.getOffset(doc, range.getEnd());
+
+        ArrayList<Diagnostic> diagnostics = new ArrayList<>(params.getContext().getDiagnostics());
+        diagnostics.addAll(computeDiags(params.getTextDocument().getUri(), startOffset, ErrorProvider.Kind.HINTS, documentVersion(doc)));
+
+        Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = (Map<String, org.netbeans.api.lsp.Diagnostic>) doc.getProperty("lsp-errors");
         List<Either<Command, CodeAction>> result = new ArrayList<>();
         if (id2Errors != null) {
-        for (Diagnostic diag : params.getContext().getDiagnostics()) {
-            ErrorDescription err = id2Errors.get(diag.getCode().getLeft());
+            for (Diagnostic diag : diagnostics) {
+                org.netbeans.api.lsp.Diagnostic err = id2Errors.get(diag.getCode().getLeft());
 
-            if (err == null) {
-                client.logMessage(new MessageParams(MessageType.Log, "Cannot resolve error, code: " + diag.getCode().getLeft()));
-                continue;
-            }
-
-            TreePathHandle[] topLevelHandle = new TreePathHandle[1];
-            LazyFixList lfl = err.getFixes();
-
-            if (lfl instanceof CreatorBasedLazyFixList) {
-                try {
-                    js.runUserActionTask(cc -> {
-                        cc.toPhase(JavaSource.Phase.RESOLVED);
-                        ((CreatorBasedLazyFixList) lfl).compute(cc, new AtomicBoolean());
-                        topLevelHandle[0] = TreePathHandle.create(new TreePath(cc.getCompilationUnit()), cc);
-                    }, true);
-                } catch (IOException ex) {
-                    //TODO: include stack trace:
-                    client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                if (err == null) {
+                    client.logMessage(new MessageParams(MessageType.Log, "Cannot resolve error, code: " + diag.getCode().getLeft()));
+                    continue;
                 }
-            }
-            List<Fix> fixes = sortFixes(lfl.getFixes());
-
-            //TODO: ordering
-
-            for (Fix f : fixes) {
-                if (f instanceof IncompleteClassPath.ResolveFix) {
-                    CodeAction action = new CodeAction(f.getText());
-                    action.setDiagnostics(Collections.singletonList(diag));
-                    action.setKind(CodeActionKind.QuickFix);
-                    action.setCommand(new Command(f.getText(), Server.JAVA_BUILD_WORKSPACE));
-                    result.add(Either.forRight(action));
-                }
-                if (f instanceof ImportClass.FixImport) {
-                    //TODO: FixImport is not a JavaFix, create one. Is there a better solution?
-                    String text = f.getText();
-                    CharSequence sortText = ((ImportClass.FixImport) f).getSortText();
-                    ElementHandle<Element> toImport = ((ImportClass.FixImport) f).getToImport();
-                    f = new JavaFix(topLevelHandle[0], sortText != null ? sortText.toString() : null) {
-                        @Override
-                        protected String getText() {
-                            return text;
-                        }
-                        @Override
-                        protected void performRewrite(JavaFix.TransformationContext ctx) throws Exception {
-                            Element resolved = toImport.resolve(ctx.getWorkingCopy());
-                            if (resolved == null) {
-                                return ;
-                            }
-                            WorkingCopy copy = ctx.getWorkingCopy();
-                            CompilationUnitTree cut = GeneratorUtilities.get(copy).addImports(
-                                copy.getCompilationUnit(),
-                                Collections.singleton(resolved)
-                            );
-                            copy.rewrite(copy.getCompilationUnit(), cut);
-                        }
-                    }.toEditorFix();
-                }
-                if (f instanceof JavaFixImpl) {
-                    try {
-                        JavaFix jf = ((JavaFixImpl) f).jf;
-                        List<TextEdit> edits = modify2TextEdits(js, wc -> {
-                            wc.toPhase(JavaSource.Phase.RESOLVED);
-                            Map<FileObject, byte[]> resourceContentChanges = new HashMap<FileObject, byte[]>();
-                            JavaFixImpl.Accessor.INSTANCE.process(jf, wc, true, resourceContentChanges, /*Ignored in editor:*/new ArrayList<>());
-                        });
-                        TextDocumentEdit te = new TextDocumentEdit(new VersionedTextDocumentIdentifier(params.getTextDocument().getUri(),
-                                                                                                       -1),
-                                                                   edits);
-                        CodeAction action = new CodeAction(f.getText());
+                org.netbeans.api.lsp.Diagnostic.LazyCodeActions actions = err.getActions();
+                if (actions != null) {
+                    for (org.netbeans.api.lsp.CodeAction inputAction : actions.computeCodeActions(ex -> client.logMessage(new MessageParams(MessageType.Error, ex.getMessage())))) {
+                        CodeAction action = new CodeAction(inputAction.getTitle());
                         action.setDiagnostics(Collections.singletonList(diag));
-                        action.setKind(CodeActionKind.QuickFix);
-                        action.setEdit(new WorkspaceEdit(Collections.singletonList(Either.forLeft(te))));
-                        result.add(Either.forRight(action));
-                    } catch (IOException ex) {
-                        //TODO: include stack trace:
-                        client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-                    }
-                }
-                if (f instanceof CreateFixBase) {
-                    try {
-                        CreateFixBase cf = (CreateFixBase) f;
-                        ModificationResult changes = cf.getModificationResult();
-                        List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
-                        Set<File> newFiles = changes.getNewFiles();
-                        if (newFiles.size() > 1) {
-                            throw new IllegalStateException();
+                        action.setKind(kind(err.getSeverity()));
+                        if (inputAction.getCommand() != null) {
+                            action.setCommand(new Command(inputAction.getCommand().getTitle(), inputAction.getCommand().getCommand()));
                         }
-                        String newFilePath = null;
-                        for (File newFile : newFiles) {
-                            newFilePath = newFile.getPath();
-                            documentChanges.add(Either.forRight(new CreateFile(newFilePath)));
-                        }
-                        outer: for (FileObject fileObject : changes.getModifiedFileObjects()) {
-                            List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
-                            if (diffs != null) {
-                                List<TextEdit> edits = new ArrayList<>();
-                                for (ModificationResult.Difference diff : diffs) {
-                                    String newText = diff.getNewText();
-                                    if (diff.getKind() == ModificationResult.Difference.Kind.CREATE) {
-                                        if (newFilePath != null) {
-                                            documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(newFilePath, -1),
-                                                    Collections.singletonList(new TextEdit(new Range(Utils.createPosition(fileObject, 0), Utils.createPosition(fileObject, 0)),
-                                                            newText != null ? newText : "")))));
+                        if (inputAction.getEdit() != null) {
+                            org.netbeans.api.lsp.WorkspaceEdit edit = inputAction.getEdit();
+                            List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
+                            for (Union2<org.netbeans.api.lsp.TextDocumentEdit, org.netbeans.api.lsp.ResourceOperation> parts : edit.getDocumentChanges()) {
+                                if (parts.hasFirst()) {
+                                    String docUri = parts.first().getDocument();
+                                    try {
+                                        FileObject file = Utils.fromUri(docUri);
+                                        if (file == null) {
+                                            file = Utils.fromUri(params.getTextDocument().getUri());
                                         }
-                                        continue outer;
+                                        FileObject fo = file;
+                                        if (fo != null) {
+                                            List<TextEdit> edits = parts.first().getEdits().stream().map(te -> new TextEdit(new Range(Utils.createPosition(fo, te.getStartOffset()), Utils.createPosition(fo, te.getEndOffset())), te.getNewText())).collect(Collectors.toList());
+                                            TextDocumentEdit tde = new TextDocumentEdit(new VersionedTextDocumentIdentifier(docUri, -1), edits);
+                                            documentChanges.add(Either.forLeft(tde));
+                                        }
+                                    } catch (Exception ex) {
+                                        client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                                    }
+                                } else {
+                                    if (parts.second() instanceof org.netbeans.api.lsp.ResourceOperation.CreateFile) {
+                                        documentChanges.add(Either.forRight(new CreateFile(((org.netbeans.api.lsp.ResourceOperation.CreateFile) parts.second()).getNewFile())));
                                     } else {
-                                        edits.add(new TextEdit(new Range(Utils.createPosition(fileObject, diff.getStartPosition().getOffset()),
-                                                                         Utils.createPosition(fileObject, diff.getEndPosition().getOffset())),
-                                                               newText != null ? newText : ""));
+                                        throw new IllegalStateException(String.valueOf(parts.second()));
                                     }
                                 }
-                                documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toUri(fileObject), -1), edits)));
                             }
+
+                            action.setEdit(new WorkspaceEdit(documentChanges));
                         }
-                        if (!documentChanges.isEmpty()) {
-                            CodeAction codeAction = new CodeAction(f.getText());
-                            codeAction.setKind(CodeActionKind.QuickFix);
-                            codeAction.setEdit(new WorkspaceEdit(documentChanges));
-                            result.add(Either.forRight(codeAction));
-                        }
-                    } catch (IOException ex) {
-                        client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                        result.add(Either.forRight(action));
                     }
                 }
             }
-        }
         }
 
         try {
-            js.runUserActionTask(cc -> {
-                cc.toPhase(JavaSource.Phase.RESOLVED);
-                //code generators:
-                for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
-                    for (CodeAction codeAction : codeGenerator.getCodeActions(cc, params)) {
-                        result.add(Either.forRight(codeAction));
+            JavaSource js = JavaSource.forDocument(doc);
+            if (js != null) {
+                js.runUserActionTask(cc -> {
+                    cc.toPhase(JavaSource.Phase.RESOLVED);
+                    //code generators:
+                    for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
+                        for (CodeAction codeAction : codeGenerator.getCodeActions(cc, params)) {
+                            result.add(Either.forRight(codeAction));
+                        }
                     }
-                }
-                //introduce hints
-                Range range = params.getRange();
-                if (!range.getStart().equals(range.getEnd())) {
-                    for (ErrorDescription err : IntroduceHint.computeError(cc, Utils.getOffset(doc, range.getStart()), Utils.getOffset(doc, range.getEnd()), new EnumMap<IntroduceKind, Fix>(IntroduceKind.class), new EnumMap<IntroduceKind, String>(IntroduceKind.class), new AtomicBoolean())) {
-                        for (Fix fix : err.getFixes().getFixes()) {
-                            if (fix instanceof IntroduceFixBase) {
-                                try {
-                                    ModificationResult changes = ((IntroduceFixBase) fix).getModificationResult();
-                                    if (changes != null) {
-                                        List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
-                                        Set<? extends FileObject> fos = changes.getModifiedFileObjects();
-                                        if (fos.size() == 1) {
-                                            FileObject fileObject = fos.iterator().next();
-                                            List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
-                                            if (diffs != null) {
-                                                List<TextEdit> edits = new ArrayList<>();
-                                                for (ModificationResult.Difference diff : diffs) {
-                                                    String newText = diff.getNewText();
-                                                    edits.add(new TextEdit(new Range(Utils.createPosition(fileObject, diff.getStartPosition().getOffset()),
-                                                                                     Utils.createPosition(fileObject, diff.getEndPosition().getOffset())),
-                                                                           newText != null ? newText : ""));
+                    //introduce hints
+                    if (!range.getStart().equals(range.getEnd())) {
+                        for (ErrorDescription err : IntroduceHint.computeError(cc, startOffset, endOffset, new EnumMap<IntroduceKind, Fix>(IntroduceKind.class), new EnumMap<IntroduceKind, String>(IntroduceKind.class), new AtomicBoolean())) {
+                            for (Fix fix : err.getFixes().getFixes()) {
+                                if (fix instanceof IntroduceFixBase) {
+                                    try {
+                                        ModificationResult changes = ((IntroduceFixBase) fix).getModificationResult();
+                                        if (changes != null) {
+                                            List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
+                                            Set<? extends FileObject> fos = changes.getModifiedFileObjects();
+                                            if (fos.size() == 1) {
+                                                FileObject fileObject = fos.iterator().next();
+                                                List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
+                                                if (diffs != null) {
+                                                    List<TextEdit> edits = new ArrayList<>();
+                                                    for (ModificationResult.Difference diff : diffs) {
+                                                        String newText = diff.getNewText();
+                                                        edits.add(new TextEdit(new Range(Utils.createPosition(fileObject, diff.getStartPosition().getOffset()),
+                                                                                         Utils.createPosition(fileObject, diff.getEndPosition().getOffset())),
+                                                                               newText != null ? newText : ""));
+                                                    }
+                                                    documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toUri(fileObject), -1), edits)));
                                                 }
-                                                documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toUri(fileObject), -1), edits)));
+                                                CodeAction codeAction = new CodeAction(fix.getText());
+                                                codeAction.setKind(CodeActionKind.RefactorExtract);
+                                                codeAction.setEdit(new WorkspaceEdit(documentChanges));
+                                                int renameOffset = ((IntroduceFixBase) fix).getNameOffset(changes);
+                                                if (renameOffset >= 0) {
+                                                    codeAction.setCommand(new Command("Rename", "java.rename.element.at", Collections.singletonList(renameOffset)));
+                                                }
+                                                result.add(Either.forRight(codeAction));
                                             }
-                                            CodeAction codeAction = new CodeAction(fix.getText());
-                                            codeAction.setKind(CodeActionKind.RefactorExtract);
-                                            codeAction.setEdit(new WorkspaceEdit(documentChanges));
-                                            int renameOffset = ((IntroduceFixBase) fix).getNameOffset(changes);
-                                            if (renameOffset >= 0) {
-                                                codeAction.setCommand(new Command("Rename", "java.rename.element.at", Collections.singletonList(renameOffset)));
-                                            }
-                                            result.add(Either.forRight(codeAction));
                                         }
+                                    } catch (GeneratorUtils.DuplicateMemberException dme) {
                                     }
-                                } catch (GeneratorUtils.DuplicateMemberException dme) {
                                 }
                             }
                         }
                     }
-                }
-            }, true);
+                }, true);
+            }
         } catch (IOException ex) {
             //TODO: include stack trace:
             client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
@@ -976,43 +881,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
         return CompletableFuture.completedFuture(result);
     }
-
-    //TODO: copied from spi.editor.hints/.../FixData:
-    private List<Fix> sortFixes(Collection<Fix> fixes) {
-        List<Fix> result = new ArrayList<Fix>(fixes);
-
-        Collections.sort(result, new FixComparator());
-
-        return result;
-    }
-
-    private static final String DEFAULT_SORT_TEXT = "\uFFFF";
-
-    private static CharSequence getSortText(Fix f) {
-        if (f instanceof EnhancedFix) {
-            return ((EnhancedFix) f).getSortText();
-        } else {
-            return DEFAULT_SORT_TEXT;
-        }
-    }
-    private static final class FixComparator implements Comparator<Fix> {
-        public int compare(Fix o1, Fix o2) {
-            return compareText(getSortText(o1), getSortText(o2));
-        }
-    }
-
-    private static int compareText(CharSequence text1, CharSequence text2) {
-        int len = Math.min(text1.length(), text2.length());
-        for (int i = 0; i < len; i++) {
-            char ch1 = text1.charAt(i);
-            char ch2 = text2.charAt(i);
-            if (ch1 != ch2) {
-                return ch1 - ch2;
-            }
-        }
-        return text1.length() - text2.length();
-    }
-    //end copied
 
     private ConcurrentHashMap<String, Boolean> upToDateTests = new ConcurrentHashMap<>();
 
@@ -1528,77 +1396,15 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             return BACKGROUND_TASKS.create(() -> {
                 Document originalDoc = openedDocuments.get(uri);
                 long originalVersion = documentVersion(originalDoc);
-                List<Diagnostic> errorDiags = computeDiags(u, (info, doc) -> {
-                    ErrorHintsProvider ehp = new ErrorHintsProvider();
-                    class CancelListener implements DocumentListener {
-                        @Override
-                        public void insertUpdate(DocumentEvent e) {
-                            checkCancel();
-                        }
-                        @Override
-                        public void removeUpdate(DocumentEvent e) {
-                            checkCancel();
-                        }
-                        private void checkCancel() {
-                            if (documentVersion(doc) != originalVersion) {
-                                ehp.cancel();
-                            }
-                        }
-                        @Override
-                        public void changedUpdate(DocumentEvent e) {}
-                    }
-                    CancelListener l = new CancelListener();
-                    try {
-                        doc.addDocumentListener(l);
-                        l.checkCancel();
-                        return ehp.computeErrors(info, doc, "text/x-java"); //TODO: mimetype?
-                    } finally {
-                        doc.removeDocumentListener(l);
-                    }
-                }, "errors");
+                List<Diagnostic> errorDiags = computeDiags(u, -1, ErrorProvider.Kind.ERRORS, originalVersion);
                 if (documentVersion(originalDoc) == originalVersion) {
                     publishDiagnostics(uri, errorDiags);
                     BACKGROUND_TASKS.create(() -> {
-                        List<Diagnostic> hintDiags = computeDiags(u, (info, doc) -> {
-                            Set<Severity> disabled = org.netbeans.modules.java.hints.spiimpl.Utilities.disableErrors(info.getFileObject());
-                            if (disabled.size() == Severity.values().length) {
-                                return Collections.emptyList();
-                            }
-                            AtomicBoolean cancel = new AtomicBoolean();
-                            HintsInvoker invoker = new HintsInvoker(HintsSettings.getGlobalSettings(), cancel);
-                            class CancelListener implements DocumentListener {
-                                @Override
-                                public void insertUpdate(DocumentEvent e) {
-                                    checkCancel();
-                                }
-                                @Override
-                                public void removeUpdate(DocumentEvent e) {
-                                    checkCancel();
-                                }
-                                private void checkCancel() {
-                                    if (documentVersion(doc) != originalVersion) {
-                                        cancel.set(true);
-                                    }
-                                }
-                                @Override
-                                public void changedUpdate(DocumentEvent e) {}
-                            }
-                            CancelListener l = new CancelListener();
-                            try {
-                                doc.addDocumentListener(l);
-                                l.checkCancel();
-                                return invoker.computeHints(info)
-                                              .stream()
-                                              .filter(ed -> !disabled.contains(ed.getSeverity()))
-                                              .collect(Collectors.toList());
-                            } finally {
-                                doc.removeDocumentListener(l);
-                            }
-                        }, "hints");
+                        List<Diagnostic> hintDiags = computeDiags(u, -1, ErrorProvider.Kind.HINTS, originalVersion);
                         Document doc = openedDocuments.get(uri);
                         if (documentVersion(doc) == originalVersion) {
                             publishDiagnostics(uri, hintDiags);
-                        }
+                }
                     }).schedule(DELAY);
                 }
             });
@@ -1606,70 +1412,110 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     private static final int DELAY = 500;
-    static Consumer<String> computeDiagsCallback; //for tests
 
-    private List<Diagnostic> computeDiags(String uri, ProduceErrors produceErrors, String keyPrefix) {
+    private List<Diagnostic> computeDiags(String uri, int offset, ErrorProvider.Kind errorKind, long originalVersion) {
         List<Diagnostic> result = new ArrayList<>();
+        FileObject file = fromURI(uri);
+        if (file == null) {
+            // the file does not exist.
+            return result;
+        }
         try {
-            FileObject file = fromURI(uri);
-            if (file == null) {
-                // the file does not exist.
-                return result;
-            }
+            String keyPrefix = key(errorKind);
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
-            ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
-                @Override
-                public void run(ResultIterator it) throws Exception {
-                    CompilationController cc = CompilationController.get(it.getParserResult());
-                    if (cc != null) {
-                        cc.toPhase(JavaSource.Phase.RESOLVED);
-                        if (computeDiagsCallback != null) {
-                            computeDiagsCallback.accept(keyPrefix);
-                        }
-                        Map<String, ErrorDescription> id2Errors = new HashMap<>();
-                        List<ErrorDescription> errors = produceErrors.computeErrors(cc, doc);
-                        if (errors == null) {
-                            errors = Collections.emptyList();
-                        }
-                        int idx = 0;
-                        for (ErrorDescription err : errors) {
-                            String id = keyPrefix + ":" + idx++ + "-" + err.getId();
-                            id2Errors.put(id, err);
-                        }
-                        doc.putProperty("lsp-errors-" + keyPrefix, id2Errors);
-                        Map<String, ErrorDescription> mergedId2Errors = new HashMap<>();
-                        for (String k : ERROR_KEYS) {
-                            Map<String, ErrorDescription> prevErrors = (Map<String, ErrorDescription>) doc.getProperty("lsp-errors-" + k);
-                            if (prevErrors != null) {
-                                mergedId2Errors.putAll(prevErrors);
-                            }
-                        }
-                        for (Entry<String, ErrorDescription> id2Error : mergedId2Errors.entrySet()) {
-                            ErrorDescription err = id2Error.getValue();
-                            Diagnostic diag = new Diagnostic(new Range(Utils.createPosition(cc.getFileObject(), err.getRange().getBegin().getOffset()),
-                                                                       Utils.createPosition(cc.getFileObject(), err.getRange().getEnd().getOffset())),
-                                                             err.getDescription());
-                            switch (err.getSeverity()) {
-                                case ERROR: diag.setSeverity(DiagnosticSeverity.Error); break;
-                                case VERIFIER:
-                                case WARNING: diag.setSeverity(DiagnosticSeverity.Warning); break;
-                                case HINT: diag.setSeverity(DiagnosticSeverity.Hint); break;
-                                default: diag.setSeverity(DiagnosticSeverity.Information); break;
-                            }
-                            diag.setCode(id2Error.getKey());
-                            result.add(diag);
-                        }
-                        doc.putProperty("lsp-errors", mergedId2Errors);
+            Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = new HashMap<>();
+            ErrorProvider errorProvider = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc))
+                                                    .lookup(ErrorProvider.class);
+            List<? extends org.netbeans.api.lsp.Diagnostic> errors;
+            if (errorProvider != null) {
+                ErrorProvider.Context context = new ErrorProvider.Context(file, offset, errorKind);
+                class CancelListener implements DocumentListener {
+                    @Override
+                    public void insertUpdate(DocumentEvent e) {
+                        checkCancel();
                     }
+                    @Override
+                    public void removeUpdate(DocumentEvent e) {
+                        checkCancel();
+                    }
+                    private void checkCancel() {
+                        if (documentVersion(doc) != originalVersion) {
+                            context.cancel();
+                        }
+                    }
+                    @Override
+                    public void changedUpdate(DocumentEvent e) {}
                 }
-            });
-        } catch (IOException | ParseException ex) {
+                CancelListener l = new CancelListener();
+                try {
+                    doc.addDocumentListener(l);
+                    l.checkCancel();
+                    errors = errorProvider.computeErrors(context);
+                } finally {
+                    doc.removeDocumentListener(l);
+                }
+            } else {
+                errors = null;
+            }
+            if (errors == null) {
+                errors = Collections.emptyList();
+            }
+            if (documentVersion(doc) != originalVersion) {
+                return result;
+            }
+            for (org.netbeans.api.lsp.Diagnostic err : errors) {
+                String id = err.getCode();
+                id2Errors.put(id, err);
+            }
+            if (offset < 0) {
+                doc.putProperty("lsp-errors-" + keyPrefix, id2Errors);
+            }
+            Map<String, org.netbeans.api.lsp.Diagnostic> mergedId2Errors = new HashMap<>();
+            for (String k : ERROR_KEYS) {
+                Map<String, org.netbeans.api.lsp.Diagnostic> prevErrors = (Map<String, org.netbeans.api.lsp.Diagnostic>) doc.getProperty("lsp-errors-" + k);
+                if (prevErrors != null) {
+                    mergedId2Errors.putAll(prevErrors);
+                }
+            }
+            for (Entry<String, org.netbeans.api.lsp.Diagnostic> id2Error : (offset < 0 ? mergedId2Errors : id2Errors).entrySet()) {
+                org.netbeans.api.lsp.Diagnostic err = id2Error.getValue();
+                Diagnostic diag = new Diagnostic(new Range(Utils.createPosition(file, err.getStartPosition().getOffset()),
+                                                           Utils.createPosition(file, err.getEndPosition().getOffset())),
+                                                 err.getDescription());
+                switch (err.getSeverity()) {
+                    case Error: diag.setSeverity(DiagnosticSeverity.Error); break;
+                    case Warning: diag.setSeverity(DiagnosticSeverity.Warning); break;
+                    case Hint: diag.setSeverity(DiagnosticSeverity.Hint); break;
+                    case Information: diag.setSeverity(DiagnosticSeverity.Information); break;
+                    default: throw new IllegalStateException("Unknown severity: " + err.getSeverity());
+                }
+                diag.setCode(id2Error.getKey());
+                result.add(diag);
+            }
+            if (offset >= 0) {
+                mergedId2Errors.putAll(id2Errors);
+            }
+            doc.putProperty("lsp-errors", mergedId2Errors);
+        } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
         return result;
     }
     
+    private String key(ErrorProvider.Kind errorKind) {
+        return errorKind.name().toLowerCase(Locale.ROOT);
+    }
+
+    private String kind(org.netbeans.api.lsp.Diagnostic.Severity severity) {
+        switch (severity) {
+            case Hint:
+                return CodeActionKind.RefactorRewrite;
+            default:
+                return CodeActionKind.QuickFix;
+        }
+    }
+
     private FileObject fromURI(String uri) {
         return fromURI(uri, false);
     }
@@ -1770,7 +1616,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
     }
 
-    public static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) throws IOException {
+    public static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) throws IOException {//TODO: is this still used?
         FileObject[] file = new FileObject[1];
         LineMap[] lm = new LineMap[1];
         ModificationResult changes = js.runModificationTask(wc -> {

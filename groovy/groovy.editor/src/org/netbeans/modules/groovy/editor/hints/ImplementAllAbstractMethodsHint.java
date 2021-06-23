@@ -35,6 +35,7 @@ import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.HintSeverity;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.csl.api.PreviewableFix;
 import org.netbeans.modules.csl.api.RuleContext;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId;
@@ -70,7 +71,7 @@ public final class ImplementAllAbstractMethodsHint extends GroovyErrorRule {
 
             OffsetRange range = HintUtils.getLineOffset(context, error);
             if (range != null) {
-                result.add(new Hint(this, fix.getDescription(), fo, range, Collections.<HintFix>singletonList(fix), 100));
+                result.add(new Hint(this, error.getDescription(), fo, range, Collections.<HintFix>singletonList(fix), 100));
             }
         }
         
@@ -134,7 +135,7 @@ public final class ImplementAllAbstractMethodsHint extends GroovyErrorRule {
      * Fix representing possibility to add empty method stubs directly to the source
      * code.
      */
-    private static class AddMethodStubsFix implements HintFix {
+    private static class AddMethodStubsFix implements PreviewableFix {
 
         private final GroovyError error;
         private final List<String> missingMethods;
@@ -151,41 +152,44 @@ public final class ImplementAllAbstractMethodsHint extends GroovyErrorRule {
 
         @Override
         public void implement() throws Exception {
-            BaseDocument baseDoc = LexUtilities.getDocument(error.getFile(), true);
-            if (baseDoc == null) {
-                return;
-            }
-
-            EditList edits = new EditList(baseDoc);
-            for (int i = 0; i < missingMethods.size(); i++) {
-                StringBuilder sb = new StringBuilder();
-                
-                // Add one additional new line before the first method stub
-                if (i == 0) {
-                    sb.append("\n"); // NOI18N
-                }
-                sb.append("public " ); // NOI18N
-                sb.append(missingMethods.get(i));
-                sb.append(" {\n"); // NOI18N
-                
-                for (int space = 0; space < IndentUtils.indentLevelSize(baseDoc); space++) {
-                    sb.append(" "); // NOI18N
-                }
-                sb.append("throw new UnsupportedOperationException(\"Not supported yet.\");\n"); // NOI18N
-                sb.append("}"); // NOI18N
-                
-                // In the last inserted stub, add only one additional new line
-                if (i == missingMethods.size() - 1) {
-                    sb.append("\n"); // NOI18N
-                } else {
-                    sb.append("\n\n"); // NOI18N
-                }
-                
-                edits.replace(getInsertPosition(baseDoc), 0, sb.toString(), true, 0);
-            }
-            edits.apply();
+            getEditList().apply();
         }
-        
+
+        @Override
+        public EditList getEditList() throws Exception {
+            BaseDocument baseDoc = LexUtilities.getDocument(error.getFile(), true);
+            EditList edits = new EditList(baseDoc);
+            if (baseDoc != null) {
+                for (int i = 0; i < missingMethods.size(); i++) {
+                    StringBuilder sb = new StringBuilder();
+
+                    // Add one additional new line before the first method stub
+                    if (i == 0) {
+                        sb.append("\n"); // NOI18N
+                    }
+                    sb.append("public " ); // NOI18N
+                    sb.append(missingMethods.get(i));
+                    sb.append(" {\n"); // NOI18N
+
+                    for (int space = 0; space < IndentUtils.indentLevelSize(baseDoc); space++) {
+                        sb.append(" "); // NOI18N
+                    }
+                    sb.append("throw new UnsupportedOperationException(\"Not supported yet.\");\n"); // NOI18N
+                    sb.append("}"); // NOI18N
+
+                    // In the last inserted stub, add only one additional new line
+                    if (i == missingMethods.size() - 1) {
+                        sb.append("\n"); // NOI18N
+                    } else {
+                        sb.append("\n\n"); // NOI18N
+                    }
+
+                    edits.replace(getInsertPosition(baseDoc), 0, sb.toString(), true, 0);
+                }
+            }
+            return edits;
+        }
+
         private int getInsertPosition(BaseDocument doc) {
             TokenSequence<GroovyTokenId> ts = LexUtilities.getGroovyTokenSequence(doc, 1);
 
@@ -269,6 +273,11 @@ public final class ImplementAllAbstractMethodsHint extends GroovyErrorRule {
         @Override
         public boolean isInteractive() {
             return false;
+        }
+
+        @Override
+        public boolean canPreview() {
+            return true;
         }
     }
 }

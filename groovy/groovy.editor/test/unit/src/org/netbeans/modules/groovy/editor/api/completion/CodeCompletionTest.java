@@ -21,21 +21,22 @@ package org.netbeans.modules.groovy.editor.api.completion;
 
 import java.util.Collections;
 import java.util.Set;
-import org.netbeans.modules.groovy.editor.test.GroovyTestBase;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author schmidtm
  */
-public class CodeCompletionTest extends GroovyTestBase {
+public class CodeCompletionTest extends GroovyCCTestBase {
 
     String TEST_BASE = "testfiles/completion/";
 
     public CodeCompletionTest(String testName) {
         super(testName);
-        Logger.getLogger(CompletionHandler.class.getName()).setLevel(Level.FINEST);
+    }
+
+    @Override
+    protected String getTestType() {
+        return ".";
     }
 
     @Override

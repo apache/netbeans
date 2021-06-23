@@ -63,7 +63,6 @@ import org.openide.loaders.DataObject;
  * @author Laszlo Kishalmi
  */
 public final class TemplateOperation implements Runnable {
-
     public interface ProjectConfigurator {
         void configure(Project project);
     }

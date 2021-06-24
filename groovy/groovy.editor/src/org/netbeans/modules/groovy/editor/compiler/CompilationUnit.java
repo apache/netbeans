@@ -236,9 +236,6 @@ public final class CompilationUnit extends org.codehaus.groovy.control.Compilati
         }
 
         private ClassNode createClassNode(String name, int modifiers, ClassNode superClass, ClassNode[] interfaces, Set<GenericsType> generics) {
-            if ("java.lang.Object".equals(name) && superClass == null) { // NOI18N
-                return ClassHelper.OBJECT_TYPE;
-            }
             ClassNode classNode = new ClassNode(name, modifiers, superClass, interfaces, MixinNode.EMPTY_ARRAY);
             if (generics != null) {
                 classNode.setGenericsTypes(generics.toArray(new GenericsType[generics.size()]));

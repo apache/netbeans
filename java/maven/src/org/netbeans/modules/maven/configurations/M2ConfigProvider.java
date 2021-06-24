@@ -427,7 +427,13 @@ public class M2ConfigProvider implements ProjectConfigurationProvider<M2Configur
                                         // silently ignore
                                     }
                                     ActionToGoalMapping m = new ActionToGoalMapping();
-                                    ActionToGoalMapping allMappings = ((AbstractMavenActionsProvider) p).getRawMappings();
+                                    ActionToGoalMapping allMappings;
+                                    M2Configuration save = setLocalConfiguration(getDefaultConfig());
+                                    try {
+                                        allMappings = ((AbstractMavenActionsProvider) p).getRawMappings();
+                                    } finally {
+                                        setLocalConfiguration(save);
+                                    }
                                     List<NetbeansActionProfile> profiles = ((AbstractMavenActionsProvider) p).getRawMappings().getProfiles();
                                     for (NetbeansActionProfile p : profiles) {
                                         if (prof.getId().equals(p.getId())) {

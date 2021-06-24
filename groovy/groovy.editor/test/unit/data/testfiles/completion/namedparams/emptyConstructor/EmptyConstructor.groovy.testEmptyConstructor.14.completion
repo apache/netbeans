@@ -376,6 +376,7 @@ CLASS      Range                                      null
 CLASS      ReadOnlyPropertyException                  null
 CLASS      Readable                                   null
 CLASS      Reader                                     null
+CLASS      Record                                     null
 CLASS      Reference                                  null
 CLASS      ReflectiveOperationException               null
 CLASS      ResourceBundle                             null

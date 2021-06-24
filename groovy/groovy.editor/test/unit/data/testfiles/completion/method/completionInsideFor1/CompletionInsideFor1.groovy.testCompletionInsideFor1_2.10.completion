@@ -23,7 +23,7 @@ METHOD     computeIfAbsent(K, Function<?   [PUBLIC]   V
 METHOD     computeIfPresent(K, BiFunction  [PUBLIC]   V
 METHOD     containsKey(Object)             [PUBLIC]   boolean
 METHOD     containsValue(Object)           [PUBLIC]   boolean
-METHOD     copyOf(Map<? extends K,? exten  [STATIC,   Map<K, V>
+METHOD     copyOf(Map<? extends K, ? exte  [STATIC,   Map<K, V>
 METHOD     count(Closure)                             Number
 METHOD     countBy(Closure)                           Map
 METHOD     drop(int)                                  Map
@@ -50,7 +50,7 @@ METHOD     findLastIndexOf(int, Closure)              int
 METHOD     findResult(Closure)                        Object
 METHOD     findResult(Object, Closure)                Object
 METHOD     findResults(Closure)                       Collection
-METHOD     forEach(BiConsumer<? super K,?  [PUBLIC]   void
+METHOD     forEach(BiConsumer<? super K,   [PUBLIC]   void
 METHOD     get(Object)                     [PUBLIC]   V
 METHOD     get(Object, Object)                        Object
 METHOD     getAt(Object)                              Object
@@ -99,7 +99,7 @@ METHOD     of(K, V, K, V, K, V, K, V, K,   [STATIC,   Map<K, V>
 METHOD     of(K, V, K, V, K, V, K, V, K,   [STATIC,   Map<K, V>
 METHOD     of(K, V, K, V, K, V, K, V, K,   [STATIC,   Map<K, V>
 METHOD     of(K, V, K, V, K, V, K, V, K,   [STATIC,   Map<K, V>
-METHOD     ofEntries(Entry<? extends K,?   [STATIC,   Map<K, V>
+METHOD     ofEntries(Entry<? extends K, ?  [STATIC,   Map<K, V>
 METHOD     plus(Collection)                           Map
 METHOD     plus(Map)                                  Map
 METHOD     print(Object)                              void
@@ -111,7 +111,7 @@ METHOD     println(Object)                            void
 METHOD     println(PrintWriter)                       void
 METHOD     put(K, V)                       [PUBLIC]   V
 METHOD     putAll(Collection)                         Map
-METHOD     putAll(Map<? extends K,? exten  [PUBLIC]   void
+METHOD     putAll(Map<? extends K, ? exte  [PUBLIC]   void
 METHOD     putAt(Object, Object)                      Object
 METHOD     putAt(String, Object)                      void
 METHOD     putIfAbsent(K, V)               [PUBLIC]   V

@@ -130,7 +130,7 @@ METHOD     isLong()                                   boolean
 METHOD     isNumber()                                 boolean
 METHOD     iterator()                                 Iterator
 METHOD     join(CharSequence, CharSequenc  [STATIC,   String
-METHOD     join(CharSequence, CharSequenc  [STATIC,   String
+METHOD     join(CharSequence, Iterable<?   [STATIC,   String
 METHOD     lastIndexOf(String)             [PUBLIC]   int
 METHOD     lastIndexOf(String, int)        [PUBLIC]   int
 METHOD     lastIndexOf(int)                [PUBLIC]   int

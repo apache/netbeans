@@ -1,5 +1,5 @@
 Code completion result for source line:
-['cat', 'elephant']*.|
+println "Hello $name!".|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 METHOD     addShutdownHook(Closure)                   void
@@ -133,7 +133,7 @@ METHOD     isLong()                                   boolean
 METHOD     isNumber()                                 boolean
 METHOD     iterator()                                 Iterator
 METHOD     join(CharSequence, CharSequenc  [STATIC,   String
-METHOD     join(CharSequence, CharSequenc  [STATIC,   String
+METHOD     join(CharSequence, Iterable<?   [STATIC,   String
 METHOD     lastIndexOf(String)             [PUBLIC]   int
 METHOD     lastIndexOf(String, int)        [PUBLIC]   int
 METHOD     lastIndexOf(int)                [PUBLIC]   int
@@ -255,7 +255,7 @@ METHOD     tokenize()                                 List
 METHOD     tokenize(CharSequence)                     List
 METHOD     tokenize(Character)                        List
 METHOD     tr(CharSequence, CharSequence)             String
-METHOD     transform(String,? extends R>)  [PUBLIC]   R
+METHOD     transform(Function<? super Str  [PUBLIC]   R
 METHOD     translateEscapes()              [PUBLIC]   String
 METHOD     trim()                          [PUBLIC]   String
 METHOD     uncapitalize()                             String

@@ -260,8 +260,13 @@ public class M2ConfigProvider implements ProjectConfigurationProvider<M2Configur
         M2Configuration _active;
         Collection<M2Configuration> confs;
         Boolean b = inConfigInit.get();
+        _active  = activeOverride.get();
+        if (_active != null) {
+            // explicit temporary override, skip all the 'is still there' & fire change logic.
+            return _active;
+        }
         synchronized (this) {
-            _active = internalActive();
+            _active = active;
             confs = getConfigurations(false);
             String initAct = getInitialActive();
             OUTER: if (initAct != null) {

@@ -80,10 +80,8 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
 
     public static List<PayaraPlatformVersionAPI> getVersions() {
         if (versions.isEmpty()) {
-            InputStream input = null;
-            try {
+            try(InputStream input = new URL(METADATA_URL).openStream();) {
                 MetadataXpp3Reader reader = new MetadataXpp3Reader();
-                input = new URL(METADATA_URL).openStream();
                 Metadata data = reader.read(new InputStreamReader(input));
                 versions.clear();
                 for (String version : data.getVersioning().getVersions()) {
@@ -98,12 +96,6 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
                 }
             } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);
-            } finally {
-                try {
-                    input.close();
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
             }
         }
         return new ArrayList<>(versions.values());

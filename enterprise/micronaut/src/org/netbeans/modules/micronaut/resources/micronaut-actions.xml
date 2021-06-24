@@ -52,6 +52,45 @@
                         <exec.classpathScope>${classPathScope}</exec.classpathScope>
                     </properties>
                 </action>
+
+                <action>
+                    <actionName>debug</actionName>
+                    <packagings>
+                        <packaging>jar</packaging>
+                    </packagings>
+                </action>
+
+                <action>
+                    <actionName>debug.single.main</actionName>
+                    <packagings>
+                        <packaging>*</packaging>
+                    </packagings>
+                </action>
+
+
+                <action>
+                    <actionName>debug.test.single</actionName>
+                    <packagings>
+                        <packaging>*</packaging>
+                    </packagings>
+                </action>
+
+                <action>
+                    <actionName>debug.integration-test.single</actionName>
+                    <packagings>
+                        <packaging>*</packaging>
+                    </packagings>
+                </action>
+
+                <action>
+                    <actionName>debug.fix</actionName>
+                    <packagings>
+                        <packaging>*</packaging>
+                    </packagings>
+                    <goals>
+                        <goal>compile</goal>
+                    </goals>
+                </action>
             </actions>
         </profile>
     </profiles>

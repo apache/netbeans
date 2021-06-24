@@ -387,7 +387,9 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
         chooseServerLabel.setLabelFor(hk2HomeTextField);
         org.openide.awt.Mnemonics.setLocalizedText(chooseServerLabel, org.openide.util.NbBundle.getMessage(AddServerLocationVisualPanel.class, "LBL_ChooseOne")); // NOI18N
 
-        chooseServerComboBox.setSelectedItem(wizardIterator.downloadableValues.get(0));
+        if (!wizardIterator.downloadableValues.isEmpty()) {
+            chooseServerComboBox.setSelectedItem(wizardIterator.downloadableValues.get(0));
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

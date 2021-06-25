@@ -26,8 +26,6 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.netbeans.modules.java.lsp.server.ui.IOContext;
 
 abstract class WorkspaceIOContext extends IOContext {
-    private final InputStream inputSink = new EmptyBlockingInputStream();
-    
     WorkspaceIOContext() {
     }
 
@@ -38,7 +36,7 @@ abstract class WorkspaceIOContext extends IOContext {
 
     @Override
     protected InputStream getStdIn() throws IOException {
-        return inputSink;
+        return new EmptyBlockingInputStream();
     }
 
     @Override
@@ -68,19 +66,39 @@ abstract class WorkspaceIOContext extends IOContext {
 
     protected abstract LanguageClient client();
     
+    /**
+     * This should mimic Streams provided by core.output2 module; those InputStreams
+     * support asynchronous close() without blocking, but close only temporarilyl the 
+     * first reader gets -1, then the stream resets internally and is ready to be read
+     * again (i.e. reused tab).
+     */
     private static class EmptyBlockingInputStream extends InputStream {
+        private boolean closed = false;
+        
         @Override
         public int read() throws IOException {
             synchronized (this) {
-                try {
-                    wait();
-                } catch (InterruptedException ex) {
-                    throw new IOException(ex);
+                if (!closed) {
+                    try {
+                        wait();
+                    } catch (InterruptedException ex) {
+                        throw new IOException(ex);
+                    }
                 }
+                closed = false;
             }
             return -1;
         }
 
+        @Override
+        public void close() throws IOException {
+            synchronized (this) {
+                closed = true;
+                notifyAll();
+            }
+            return;
+        }
+        
         @Override
         public boolean markSupported() {
             return false;

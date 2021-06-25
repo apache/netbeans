@@ -28,6 +28,7 @@ import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.EnumSet;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -38,11 +39,13 @@ import javax.swing.text.Document;
 import org.netbeans.api.actions.Editable;
 import org.netbeans.api.actions.Openable;
 import org.netbeans.api.editor.EditorRegistry;
+import org.netbeans.api.lsp.HyperlinkLocation;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
+import org.netbeans.spi.lsp.HyperlinkLocationProvider;
 import org.openide.awt.HtmlBrowser.URLDisplayer;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
@@ -55,11 +58,18 @@ import org.openide.util.NbPreferences;
  *
  * @author Jan Lahoda
  */
-public class HyperlinkImpl implements HyperlinkProviderExt {
+public final class HyperlinkImpl implements HyperlinkProviderExt, HyperlinkLocationProvider {
     public static final Logger LOG = Logger.getLogger(HyperlinkImpl.class.getName());
-
+    private static final HyperlinkImpl INSTANCE = new HyperlinkImpl();
     private static final int TIME_VALID = 24 * 60 * 60 * 1000;
     private static final int TIME_INVALID = 60 * 1000;
+
+    private HyperlinkImpl() {
+    }
+
+    public static HyperlinkImpl getDefault() {
+        return INSTANCE;
+    }
 
     public Set<HyperlinkType> getSupportedHyperlinkTypes() {
         return EnumSet.of(HyperlinkType.GO_TO_DECLARATION);
@@ -73,7 +83,7 @@ public class HyperlinkImpl implements HyperlinkProviderExt {
         if (!(doc instanceof BaseDocument)) {
             return null;
         }
-        
+
         try {
             BaseDocument bdoc = (BaseDocument) doc;
             int start = Utilities.getRowStart(bdoc, offset);
@@ -153,7 +163,7 @@ public class HyperlinkImpl implements HyperlinkProviderExt {
             URL url = new URL(urlText);
 
             Preferences p = NbPreferences.forModule(HyperlinkImpl.class);
-            
+
             p = p.node("url");
 
             String timestampKey = url.toExternalForm() + "-timestamp";//NOI18N
@@ -200,7 +210,7 @@ public class HyperlinkImpl implements HyperlinkProviderExt {
         ByteArrayOutputStream baos = null;
         InputStream ins = null;
         URLConnection c = null;
-        
+
         try {
             c = url.openConnection();
 
@@ -220,7 +230,7 @@ public class HyperlinkImpl implements HyperlinkProviderExt {
             ins = c.getInputStream();
 
             int read;
-            
+
             int numBytesRead = 0;
             while ((read = ins.read()) != (-1) && numBytesRead < MAX_NUM_BYTES_TO_READ) {
                 baos.write(read);
@@ -263,4 +273,20 @@ public class HyperlinkImpl implements HyperlinkProviderExt {
 
         return null;
     }
+
+    @Override
+    public CompletableFuture<HyperlinkLocation> getHyperlinkLocation(Document doc, int offset) {
+        int[] span = this.getHyperlinkSpan(doc, offset, HyperlinkType.GO_TO_DECLARATION);
+
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                String urlText = doc.getText(span[0], span[1] - span[0]);
+                FileObject fo = URLMapper.findFileObject(new URL(urlText));
+                return HyperlinkLocationProvider.createHyperlinkLocation(fo, span[0], span[1]);
+            } catch (BadLocationException | MalformedURLException ex) {
+                throw new IllegalStateException(ex);
+            }
+        });
+    }
+
 }

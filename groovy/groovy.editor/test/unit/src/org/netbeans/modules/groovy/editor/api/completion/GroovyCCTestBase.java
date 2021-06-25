@@ -154,7 +154,7 @@ public abstract class GroovyCCTestBase extends GroovyTestBase {
     protected void assertDescriptionApproxMatches(String relFilePath, 
             String description, boolean includeTestName, String ext) throws Exception {
         super.assertDescriptionMatches(relFilePath, 
-                removeSpuriousCompletionItemsFromDescription(description), includeTestName, ext, true, true);            
+                removeSpuriousCompletionItemsFromDescription(description), includeTestName, true, ext, true, true);
     }    
     
     private String getSourceLine(String s, int offset) {

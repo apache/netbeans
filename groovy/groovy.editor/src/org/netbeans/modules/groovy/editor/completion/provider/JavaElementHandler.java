@@ -51,7 +51,6 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TypeUtilities;
 import org.netbeans.modules.csl.spi.ParserResult;
-import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 import org.netbeans.modules.groovy.editor.api.completion.FieldSignature;
 import org.netbeans.modules.groovy.editor.api.completion.MethodSignature;
 import org.netbeans.modules.groovy.editor.api.elements.common.MethodElement.MethodParameter;
@@ -266,11 +265,8 @@ public final class JavaElementHandler {
             for (VariableElement variableElement : params) {
                 TypeMirror tm = variableElement.asType();
                 String fullName = info.getTypeUtilities().getTypeName(tm, TypeUtilities.TypeNameOptions.PRINT_FQN).toString();
-                if (tm.getKind() == TypeKind.DECLARED || tm.getKind() == TypeKind.ARRAY) {
-                    result.add(new MethodParameter(fullName, GroovyUtils.stripPackage(tm.toString()), variableElement.getSimpleName().toString()));
-                } else {
-                    result.add(new MethodParameter(fullName, fullName, variableElement.getSimpleName().toString()));
-                }
+                String typeName = info.getTypeUtilities().getTypeName(tm).toString();
+                result.add(new MethodParameter(fullName, typeName, variableElement.getSimpleName().toString()));
             }
             return result;
         }

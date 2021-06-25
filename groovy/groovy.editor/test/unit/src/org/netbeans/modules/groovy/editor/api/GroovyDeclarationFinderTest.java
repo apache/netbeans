@@ -20,13 +20,9 @@
 package org.netbeans.modules.groovy.editor.api;
 
 import java.util.Collections;
-import java.util.Map;
-import org.netbeans.api.java.classpath.ClassPath;
+import java.util.Set;
 import org.netbeans.modules.csl.api.DeclarationFinder.DeclarationLocation;
 import org.netbeans.modules.groovy.editor.test.GroovyTestBase;
-import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 
 /**
  *
@@ -40,13 +36,9 @@ public class GroovyDeclarationFinderTest extends GroovyTestBase {
         super(testName);
     }
 
-    protected @Override Map<String, ClassPath> createClassPathsForTest() {
-        return Collections.singletonMap(
-            ClassPath.SOURCE,
-            ClassPathSupport.createClassPath(new FileObject[] {
-                FileUtil.toFileObject(getDataFile("/testfiles/declarationfinder"))
-            })
-        );
+    @Override
+    protected Set<String> additionalSourceClassPath() {
+        return Collections.singleton("/testfiles/declarationfinder");
     }
 
     // this test is for variables defined and used in the same CU.

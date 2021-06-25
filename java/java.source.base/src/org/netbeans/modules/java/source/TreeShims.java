@@ -55,11 +55,24 @@ public class TreeShims {
     public static final String BINDING_VARIABLE = "BINDING_VARIABLE"; //NOI18N
     public static final String RECORD = "RECORD"; //NOI18N
     public static final int PATTERN_MATCHING_INSTANCEOF_PREVIEW_JDK_VERSION = 15; //NOI18N
+    public static final String DEFAULT_CASE_LABEL = "DEFAULT_CASE_LABEL"; //NOI18N
+    public static final String NULL_LITERAL = "NULL_LITERAL"; //NOI18N
     
     public static List<? extends ExpressionTree> getExpressions(CaseTree node) {
         try {
             Method getExpressions = CaseTree.class.getDeclaredMethod("getExpressions");
             return (List<? extends ExpressionTree>) getExpressions.invoke(node);
+        } catch (NoSuchMethodException ex) {
+            return Collections.singletonList(node.getExpression());
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
+    public static List<? extends Tree> getLabels(CaseTree node) {
+        try {
+            Method getLabels = CaseTree.class.getDeclaredMethod("getLabels");
+            return (List<? extends Tree>) getLabels.invoke(node);
         } catch (NoSuchMethodException ex) {
             return Collections.singletonList(node.getExpression());
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {

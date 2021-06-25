@@ -2930,20 +2930,42 @@ public class Reformatter implements ReformatTask {
 
         @Override
         public Boolean visitCase(CaseTree node, Void p) {
-            List<? extends ExpressionTree> exprs = TreeShims.getExpressions(node);
-            if (exprs.size() > 0) {
+            if (TreeShims.getLabels(node).size() > 0) {
+                List<? extends Tree> labels = TreeShims.getLabels(node);
+                if (tokens.token().id() == JavaTokenId.DEFAULT && labels.get(0).getKind().toString().equals(TreeShims.DEFAULT_CASE_LABEL)) {
+                    accept(DEFAULT);
+                } else {
+                    accept(CASE);
+                    space();
+                    for (Tree label : labels) {
+                        if (label.getKind().toString().equals(TreeShims.DEFAULT_CASE_LABEL)) {
+                            clearWhiteSpace(JavaTokenId.DEFAULT);
+                            accept(DEFAULT);
+                        } else if (label.getKind().toString().equals(TreeShims.BINDING_PATTERN)) {
+                            clearWhiteSpace(JavaTokenId.IDENTIFIER);
+                            scan(label, p);
+                        } else if (label.getKind().toString().equals(TreeShims.NULL_LITERAL)) {
+                            clearWhiteSpace(JavaTokenId.NULL);
+                            scan(label, p);
+                        } else {
+                            scan(label, p);
+                        }
+                    }
+                }
+            } else if (TreeShims.getExpressions(node).size() > 0) {
+                List<? extends ExpressionTree> exprs = TreeShims.getExpressions(node);
                 accept(CASE);
                 space();
-                for (ExpressionTree exp : exprs) {
+                exprs.forEach(exp -> {
                     scan(exp, p);
-                }
+                });
             } else {
                 accept(DEFAULT);
             }
             List<? extends StatementTree> statements = node.getStatements();
             Tree caseBody = null;
             if(statements != null)
-            accept(COLON);
+                accept(COLON);
             else {
                 space();
                 accept(ARROW);
@@ -2977,6 +2999,24 @@ public class Reformatter implements ReformatTask {
             }
             indent = old;
             return true;
+        }
+
+        private void clearWhiteSpace(JavaTokenId forToken) {
+            do {
+                if (tokens.offset() >= endPos) {
+                    break;
+                }
+                if (tokens.token().id() == forToken) {
+                    break;
+                }
+                if (tokens.token().id() == WHITESPACE) {
+                    String text = tokens.token().text().toString();
+                    String ind = getIndent();
+                    if (!ind.equals(text)) {
+                        addDiff(new Diff(tokens.offset(), tokens.offset() + tokens.token().length(), " "));
+                    }
+                }
+            } while (tokens.moveNext());
         }
 
         @Override

@@ -35,7 +35,6 @@ import org.openide.util.NbBundle;
 import org.netbeans.modules.gradle.api.GradleProjects;
 
 import static org.netbeans.modules.gradle.Bundle.*;
-import org.netbeans.modules.gradle.api.GradleBaseProject;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FULL_ONLINE;
 
 /**
@@ -78,14 +77,7 @@ public class ReloadAction  extends AbstractAction implements ContextAwareAction 
         for (Project project : reload) {
             if (project instanceof NbGradleProjectImpl) {
                 NbGradleProjectImpl impl = (NbGradleProjectImpl) project;
-                NbGradleProjectImpl.RELOAD_RP.submit(() -> {
-                    // A bit low level calls, just to allow UI interaction to
-                    // Trust the project.
-                    GradleProjectLoader loader = impl.getLookup().lookup(GradleProjectLoader.class);
-                    GradleBaseProject gbp = GradleBaseProject.get(project);
-                    impl.project = loader.loadProject(FULL_ONLINE, ACT_ReloadingProject(), true, true);
-                    NbGradleProjectImpl.ACCESSOR.doFireReload(NbGradleProject.get(impl));
-                });
+                impl.forceReloadProject(ACT_ReloadingProject(), true, FULL_ONLINE);
             }
         }
     }
@@ -93,6 +85,5 @@ public class ReloadAction  extends AbstractAction implements ContextAwareAction 
     @Override public Action createContextAwareInstance(Lookup actionContext) {
         return new ReloadAction(actionContext);
     }
-
 
 }

@@ -47,7 +47,9 @@ import org.netbeans.modules.groovy.editor.api.elements.index.IndexedClass;
 import org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId;
 import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
+import org.netbeans.modules.groovy.editor.completion.provider.CompletionAccessor;
 import org.netbeans.modules.groovy.editor.imports.ImportUtils;
+import org.netbeans.modules.groovy.editor.java.JavaElementHandle;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 import org.openide.filesystems.FileObject;
 
@@ -313,14 +315,18 @@ public class TypesCompletion extends BaseCompletion {
         }
 
         // We are dealing with prefix for some class type
+        JavaElementHandle jh = null;
+        if (type.getHandle() != null) {
+            jh = new JavaElementHandle(fqnTypeName, typeName, type.getHandle(), Collections.emptyList(), Collections.emptySet());
+        }
         if (isPrefixed(request, typeName)) {
             alreadyPresent.add(type);
-            proposals.add(new CompletionItem.TypeItem(fqnTypeName, typeName, anchor, type.getKind()));
+            proposals.add(CompletionAccessor.instance().createType(jh, fqnTypeName, typeName, anchor, type.getKind()));
         }
 
         // We are dealing with CamelCase completion for some class type
         if (CamelCaseUtil.compareCamelCase(typeName, request.getPrefix())) {
-            CompletionItem.TypeItem camelCaseProposal = new CompletionItem.TypeItem(fqnTypeName, typeName, anchor, ElementKind.CLASS);
+            CompletionItem.TypeItem camelCaseProposal = CompletionAccessor.instance().createType(jh, fqnTypeName, typeName, anchor, ElementKind.CLASS);
             
             if (!proposals.contains(camelCaseProposal)) {
                 proposals.add(camelCaseProposal);
@@ -357,7 +363,7 @@ public class TypesCompletion extends BaseCompletion {
                                     || samePackage && (modifiers.contains(Modifier.PROTECTED)
                                     || (!modifiers.contains(Modifier.PUBLIC) && !modifiers.contains(Modifier.PRIVATE)))) {
 
-                                    result.add(new TypeHolder(element.toString(), element.getKind()));
+                                    result.add(new TypeHolder(element.toString(), org.netbeans.api.java.source.ElementHandle.create(element)));
                                 }
                             }
                         }
@@ -374,7 +380,7 @@ public class TypesCompletion extends BaseCompletion {
                                     || samePackage && (modifiers.contains(Modifier.PROTECTED)
                                     || (!modifiers.contains(Modifier.PUBLIC) && !modifiers.contains(Modifier.PRIVATE)))) {
 
-                                    result.add(new TypeHolder(element.toString(), element.getKind()));
+                                    result.add(new TypeHolder(element.toString(), org.netbeans.api.java.source.ElementHandle.create(element)));
                                 }
                             }
                         }
@@ -392,6 +398,7 @@ public class TypesCompletion extends BaseCompletion {
 
         private final String name;
         private final ElementKind kind;
+        private final org.netbeans.api.java.source.ElementHandle handle;
 
         public TypeHolder(IndexedClass indexedClass) {
             this.name = indexedClass.getFqn();
@@ -401,11 +408,23 @@ public class TypesCompletion extends BaseCompletion {
             } else {
                 this.kind = ElementKind.INTERFACE;
             }
+            this.handle = null;
         }
         
         public TypeHolder(String name, ElementKind kind) {
             this.name = name;
             this.kind = kind;
+            this.handle = null;
+        }
+        
+        public TypeHolder(String name, org.netbeans.api.java.source.ElementHandle handle) {
+            this.name = name;
+            this.handle = handle;
+            this.kind = handle.getKind();
+        }
+
+        public org.netbeans.api.java.source.ElementHandle getHandle() {
+            return handle;
         }
 
         public ElementKind getKind() {

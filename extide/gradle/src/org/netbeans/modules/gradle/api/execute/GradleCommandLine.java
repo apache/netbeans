@@ -103,6 +103,7 @@ public final class GradleCommandLine implements Serializable {
         NO_BUILD_CACHE(PARAM, "--no-build-cache"),
         NO_CONFIGURE_ON_DEMAND(PARAM, "--no-configure-on-demand"),
         NO_PARALLEL(PARAM, "--no-parallel"),
+        CONTINUOUS(PARAM, "--continuous", "-t"),
         SCAN(PARAM, "--scan"),
         NO_SCAN(PARAM, "--no-scan"),
         DAEMON(UNSUPPORTED, "--no-daemon"),
@@ -112,7 +113,6 @@ public final class GradleCommandLine implements Serializable {
         GUI(UNSUPPORTED, "--gui"),
         STATUS(UNSUPPORTED, "--status"),
         STOP(UNSUPPORTED, "--stop"),
-        CONTINUOUS(UNSUPPORTED, "--continuous", "-t"),
         NO_SEARCH_UPWARD(UNSUPPORTED, "--no-search-upward", "-u"),
         RECOMPILE_SCRIPTS(UNSUPPORTED, "--recompile-scripts"),
         VERSION(UNSUPPORTED, "--version", "-v");

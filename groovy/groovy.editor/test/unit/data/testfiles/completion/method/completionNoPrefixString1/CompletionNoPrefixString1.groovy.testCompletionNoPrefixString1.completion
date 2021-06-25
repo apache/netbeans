@@ -21,11 +21,13 @@ METHOD     collect()                                  Collection
 METHOD     collect(Closure)                           List
 METHOD     collect(Collection, Closure)               Collection
 METHOD     collectReplacements(Closure)               String
+METHOD     collectReplacements(List)                  String
 METHOD     compareTo(String)               [PUBLIC]   int
 METHOD     compareTo(T)                    [PUBLIC]   int
 METHOD     compareToIgnoreCase(String)     [PUBLIC]   int
 METHOD     concat(String)                  [PUBLIC]   String
 METHOD     contains(CharSequence)          [PUBLIC]   boolean
+METHOD     containsIgnoreCase(CharSequenc             boolean
 METHOD     contentEquals(CharSequence)     [PUBLIC]   boolean
 METHOD     contentEquals(StringBuffer)     [PUBLIC]   boolean
 METHOD     copyValueOf(char[])             [STATIC,   String
@@ -37,6 +39,7 @@ METHOD     decodeHex()                                byte[]
 METHOD     denormalize()                              String
 METHOD     digest(String)                             String
 METHOD     drop(int)                                  String
+METHOD     dropRight(int)                             String
 METHOD     dropWhile(Closure)                         String
 METHOD     dump()                                     String
 METHOD     each(Closure)                              Object
@@ -48,6 +51,7 @@ METHOD     eachMatch(String, Closure)                 String
 METHOD     eachWithIndex(Closure)                     Object
 METHOD     endsWith(String)                [PUBLIC]   boolean
 METHOD     endsWithAny(CharSequence[])                boolean
+METHOD     endsWithIgnoreCase(CharSequenc             boolean
 METHOD     equals(Object)                  [PUBLIC]   boolean
 METHOD     equalsIgnoreCase(String)        [PUBLIC]   boolean
 METHOD     every()                                    boolean
@@ -125,7 +129,7 @@ METHOD     isLong()                                   boolean
 METHOD     isNumber()                                 boolean
 METHOD     iterator()                                 Iterator
 METHOD     join(CharSequence, CharSequenc  [STATIC,   String
-METHOD     join(CharSequence, CharSequenc  [STATIC,   String
+METHOD     join(CharSequence, Iterable<Ch  [STATIC,   String
 METHOD     lastIndexOf(String)             [PUBLIC]   int
 METHOD     lastIndexOf(String, int)        [PUBLIC]   int
 METHOD     lastIndexOf(int)                [PUBLIC]   int
@@ -196,7 +200,10 @@ METHOD     sprintf(String, Object)                    String
 METHOD     startsWith(String)              [PUBLIC]   boolean
 METHOD     startsWith(String, int)         [PUBLIC]   boolean
 METHOD     startsWithAny(CharSequence[])              boolean
+METHOD     startsWithIgnoreCase(CharSeque             boolean
+METHOD     stream()                                   Stream
 METHOD     stripIndent()                              String
+METHOD     stripIndent(boolean)                       String
 METHOD     stripIndent(int)                           String
 METHOD     stripMargin()                              String
 METHOD     stripMargin(CharSequence)                  String
@@ -205,6 +212,14 @@ METHOD     subSequence(int, int)           [PUBLIC]   CharSequence
 METHOD     substring(int)                  [PUBLIC]   String
 METHOD     substring(int, int)             [PUBLIC]   String
 METHOD     take(int)                                  String
+METHOD     takeAfter(CharSequence)                    String
+METHOD     takeBefore(CharSequence)                   CharSequence
+METHOD     takeBefore(String)                         String
+METHOD     takeBetween(CharSequence)                  String
+METHOD     takeBetween(CharSequence,  int             String
+METHOD     takeBetween(CharSequence, Char             String
+METHOD     takeBetween(CharSequence, Char             String
+METHOD     takeRight(int)                             String
 METHOD     takeWhile(Closure)                         String
 METHOD     tap(Closure)                               Object
 METHOD     toBigDecimal()                             BigDecimal

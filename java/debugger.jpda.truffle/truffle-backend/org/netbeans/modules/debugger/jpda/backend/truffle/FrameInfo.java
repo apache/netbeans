@@ -65,7 +65,7 @@ final class FrameInfo {
                    DebuggerVisualizer.getSourceLocation(topStackFrame, isHost) + "\n" +
                    position.id + "\n" + position.name + "\n" + position.path + "\n" +
                    position.hostClassName + "\n" + position.hostMethodName + "\n" +
-                   position.uri.toString() + "\n" + position.mimeType + "\n" + position.sourceSection + "\n" +
+                   position.uri + "\n" + position.mimeType + "\n" + position.sourceSection + "\n" +
                    isInternal(topStackFrame);
         topVariables = JPDATruffleAccessor.getVariables(topStackFrame);
     }

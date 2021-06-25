@@ -534,7 +534,7 @@
                 <property name="build.test.@{test.type}.classes.dir" location="${build.test.@{test.type}.dir}/classes"/>
                 <property name="build.test.@{test.type}.results.dir" location="${build.test.@{test.type}.dir}/results"/>
                 <property name="build.test.@{test.type}.work.dir" location="${build.test.@{test.type}.dir}/work"/>
-                <property name="test-@{test.type}-sys-prop.cluster.path.final" value="${cluster.path.final}:${cluster}"/> <!-- #153178, 176019 -->
+                <property name="test-@{test.type}-sys-prop.cluster.path.final" value="${cluster.path.final}${path.separator}${cluster}"/> <!-- #153178, 176019 -->
                 <property name="test.@{test.type}.cp.extra" value=""/>
                 <path id="test.@{test.type}.cp">
                     <!-- Cannot use <path refid="cp"/> since that uses ${module.classpath} and we want ${module.run.classpath}: -->

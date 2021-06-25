@@ -134,11 +134,13 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.api.sendopts.CommandLine;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.hints.infrastructure.JavaErrorProvider;
 import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.parsing.impl.indexing.implspi.CacheFolderProvider;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.java.queries.AnnotationProcessingQueryImplementation;
+import org.netbeans.spi.lsp.ErrorProvider;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
@@ -215,7 +217,7 @@ public class ServerTest extends NbTestCase {
         OpenProjects.getDefault().close(OpenProjects.getDefault().getOpenProjects());
     }
     
-    List<Diagnostic>[] diags = new List[1];
+    final List<Diagnostic>[] diags = new List[1];
     Set<String> diagnosticURIs = Collections.synchronizedSet(new HashSet<>());
     
     void clearDiagnostics() {
@@ -1076,6 +1078,48 @@ public class ServerTest extends NbTestCase {
         assertEquals(13, loc.getRange().getEnd().getCharacter());
     }
 
+    public void testFindDebugAttachConfigurations() throws Exception {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        server.initialize(new InitializeParams()).get();
+        Object ret = server.getWorkspaceService().executeCommand(new ExecuteCommandParams(Server.JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS, Collections.emptyList())).get();
+        assertNotNull(ret);
+        DebugConnector[] connectors = gson.fromJson(gson.toJsonTree(ret).getAsJsonArray(), DebugConnector[].class);
+        assertTrue(connectors.length > 0);
+        boolean haveAttachToPort = false;
+        boolean haveAttachToProcess = false;
+        for (DebugConnector c : connectors) {
+            if ("Attach to Port".equals(c.getName())) {
+                haveAttachToPort = true;
+                checkAttachToPort(c);
+            }
+            if ("Attach to Process".equals(c.getName())) {
+                haveAttachToProcess = true;
+                checkAttachToProcess(c);
+            }
+        }
+        assertTrue(Arrays.toString(connectors), haveAttachToPort && haveAttachToProcess);
+    }
+
+    private void checkAttachToPort(DebugConnector c) {
+        assertEquals("java8+", c.getType());
+        List<String> arguments = c.getArguments();
+        assertEquals(2, arguments.size());
+        assertEquals("hostName", arguments.get(0));
+        assertEquals("port", arguments.get(1));
+        assertEquals(2, c.getDefaultValues().size());
+    }
+
+    private void checkAttachToProcess(DebugConnector c) {
+        assertEquals("java8+", c.getType());
+        List<String> arguments = c.getArguments();
+        assertEquals(1, arguments.size());
+        assertEquals("processId", arguments.get(0));
+        assertEquals(1, c.getDefaultValues().size());
+    }
+
     public void testOpenProjectOpenJDK() throws Exception {
         getWorkDir().mkdirs();
 
@@ -1240,6 +1284,7 @@ public class ServerTest extends NbTestCase {
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
         assertTrue(result.getCapabilities().getHoverProvider());
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
         Hover hover = server.getTextDocumentService().hover(new HoverParams(new TextDocumentIdentifier(toURI(src)), new Position(5, 10))).get();
         assertNotNull(hover);
         assertTrue(hover.getContents().isRight());
@@ -4252,6 +4297,81 @@ public class ServerTest extends NbTestCase {
         
         // and finally check that the build interrupted before reaching 100%
         assertTrue(lc.perCent < 100);
+    }
+
+    public void testFileModificationDiags() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test {\n" +
+                      "    public void run(String str) {\n" +
+                      "        System.err.println(1);\n" +
+                      "        String s = str.substring(0);\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient(), client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeResult result = server.initialize(new InitializeParams()).get();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        assertDiags(diags);//errors
+        assertDiags(diags, "Warning:3:15-3:16");//hints
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(toURI(src), 0);
+        CountDownLatch waitForErrorLatch = new CountDownLatch(1);
+        JavaErrorProvider.computeDiagsCallback = key -> {
+            if (ErrorProvider.Kind.ERRORS == key) {
+                waitForErrorLatch.countDown();
+                server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 27), new Position(2, 28)), 1, "1"))));
+                JavaErrorProvider.computeDiagsCallback = null;
+            }
+        };
+        server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 27), new Position(2, 27)), 0, "d"))));
+        assertDiags(diags, "Warning:3:15-3:16");//errors
+        assertDiags(diags, "Warning:3:15-3:16");//hints
+        //verify no more diags coming:
+        synchronized (diags) {
+            long timeout = 1000;
+            long start = System.currentTimeMillis();
+            while (diags[0] == null && (System.currentTimeMillis() - start) < timeout) {
+                try {
+                    diags.wait(timeout / 10);
+                } catch (InterruptedException ex) {
+                    //ignore
+                }
+            }
+            assertNull(diags[0]);
+        }
+        server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 1), new Position(2, 1)), 0, "    \n    "))));
+        assertDiags(diags, "Warning:4:15-4:16");//errors
+        assertDiags(diags, "Warning:4:15-4:16");//hints
+        server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(4, 1), new Position(4, 1)), 0, " "))));
+        assertDiags(diags, "Warning:4:16-4:17");//errors
+        assertDiags(diags, "Warning:4:16-4:17");//hints
+    }
+
+    public void testDeclarativeHints() throws Exception {
+        File src = new File(getWorkDir(), "test.hint");
+        src.getParentFile().mkdirs();
+        String code = "$1.length();;";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient(), client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeResult result = server.initialize(new InitializeParams()).get();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "jackpot-hint", 0, code)));
+        assertDiags(diags, "Error:0:0-0:2");//errors
+        assertDiags(diags, "Error:0:0-0:2");//hints
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(1);
+        id.setUri(toURI(src));
+        server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 11), new Position(0, 11)), 0, " :: $1 instanceof java.lang.String"))));
+        Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(0, 5))).get();
+        assertTrue(completion.isRight());
+        List<String> actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
+        assertEquals(Arrays.asList("Method:length() : int"), actualItems);
     }
 
     static {

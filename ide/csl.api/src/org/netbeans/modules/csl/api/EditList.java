@@ -28,10 +28,12 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
 import javax.swing.text.StyledDocument;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.editor.document.AtomicLockDocument;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
+import org.netbeans.modules.csl.core.ApiAccessor;
 import org.netbeans.modules.editor.indent.api.Reformat;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
@@ -49,6 +51,14 @@ import org.openide.util.Exceptions;
  */
 public class EditList {
     private static final Logger LOG = Logger.getLogger(EditList.class.getName());
+
+    static {
+        ApiAccessor.setInstance(new ApiAccessor() {
+            public List<EditList.Edit> getEdits(@NonNull EditList editList) {
+                return Collections.unmodifiableList(editList.edits);
+            }
+        });
+    }
     
     private Document doc;
     private List<Edit> edits;
@@ -267,7 +277,7 @@ public class EditList {
             return 0;
         }
     }
-    
+
     /**
      * A class which records a set of edits to a document, and then can apply these edits.
      * The edit regions are sorted in reverse order and applied from back to front such that
@@ -275,7 +285,7 @@ public class EditList {
      * 
      * @author Tor Norbye
      */
-    private static class Edit implements Comparable<Edit> {
+    public static final class Edit implements Comparable<Edit> {
 
         int offset;
         int removeLen;

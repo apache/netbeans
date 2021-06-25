@@ -94,7 +94,7 @@ public class MicronautLaunchService {
         return features;
     }
 
-    public InputStream create(String serviceUrl, ApplicationType appType, String appName, String javaVersion, String language, String buildTool, Set<Feature> features) throws IOException {
+    public InputStream create(String serviceUrl, ApplicationType appType, String appName, String javaVersion, String language, String buildTool, String testFramework, Set<Feature> features) throws IOException {
         StringBuilder sb = new StringBuilder(serviceUrl);
         if (!serviceUrl.endsWith("/")) {
             sb.append('/');
@@ -103,7 +103,7 @@ public class MicronautLaunchService {
         sb.append("?javaVersion=JDK_").append(javaVersion);
         sb.append("&lang=").append(language);
         sb.append("&build=").append(buildTool);
-        sb.append("&test=JUNIT");
+        sb.append("&test=").append(testFramework);
         if (features != null) {
             for (Feature feature : features) {
                 sb.append("&features=").append(feature.name);

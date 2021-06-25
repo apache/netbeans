@@ -270,17 +270,22 @@ public class UseNbBundleMessagesTest {
     @Test public void annotationOnClass() throws Exception {
         HintTest.create().classpath(cp()).
                 input("package test;\n" +
-                       "@javax.annotation.Resource(description=\"#k\")\n" +
+                       "@A(comments=\"#k\")\n" +
                        "class Test {\n" +
+                       "}\n").
+                input("test/A.java",
+                       "package test;\n" +
+                       "@interface A {\n" +
+                       "    String comments();\n" +
                        "}\n").
                 input("test/Bundle.properties", "k=v\n", false).
                 run(UseNbBundleMessages.class).
-                findWarning("1:27-1:43:warning:" + UseNbBundleMessages_error_text()).
+                findWarning("1:3-1:16:warning:" + UseNbBundleMessages_error_text()).
                 applyFix().
                 assertVerbatimOutput("test/Bundle.properties", "").
                 assertOutput("package test;\n" +
                        "import org.openide.util.NbBundle.Messages;\n" +
-                       "@javax.annotation.Resource(description=\"#k\")\n" +
+                       "@A(comments=\"#k\")\n" +
                        "@Messages(\"k=v\")\n" +
                        "class Test {\n" +
                        "}\n");
@@ -290,18 +295,23 @@ public class UseNbBundleMessagesTest {
         HintTest.create().classpath(cp()).
                 input("package test;\n" +
                        "class Test {\n" +
-                       "    @javax.annotation.Resource(description=\"#k\")\n" +
+                       "    @A(comments=\"#k\")\n" +
                        "    void m() {}\n" +
+                       "}\n").
+                input("test/A.java",
+                       "package test;\n" +
+                       "@interface A {\n" +
+                       "    String comments();\n" +
                        "}\n").
                 input("test/Bundle.properties", "k=v\n", false).
                 run(UseNbBundleMessages.class).
-                findWarning("2:31-2:47:warning:" + UseNbBundleMessages_error_text()).
+                findWarning("2:7-2:20:warning:" + UseNbBundleMessages_error_text()).
                 applyFix().
                 assertVerbatimOutput("test/Bundle.properties", "").
                 assertOutput("package test;\n" +
                        "import org.openide.util.NbBundle.Messages;\n" +
                        "class Test {\n" +
-                       "    @javax.annotation.Resource(description=\"#k\")\n" +
+                       "    @A(comments=\"#k\")\n" +
                        "    @Messages(\"k=v\")\n" +
                        "    void m() {}\n" +
                        "}\n");
@@ -311,18 +321,23 @@ public class UseNbBundleMessagesTest {
         HintTest.create().classpath(cp()).
                 input("package test;\n" +
                        "class Test {\n" +
-                       "    @javax.annotation.Resource(description=\"#k\")\n" +
+                       "    @A(comments=\"#k\")\n" +
                        "    static final Void f = null;\n" +
+                       "}\n").
+                input("test/A.java",
+                       "package test;\n" +
+                       "@interface A {\n" +
+                       "    String comments();\n" +
                        "}\n").
                 input("test/Bundle.properties", "k=v\n", false).
                 run(UseNbBundleMessages.class).
-                findWarning("2:31-2:47:warning:" + UseNbBundleMessages_error_text()).
+                findWarning("2:7-2:20:warning:" + UseNbBundleMessages_error_text()).
                 applyFix().
                 assertVerbatimOutput("test/Bundle.properties", "").
                 assertOutput("package test;\n" +
                        "import org.openide.util.NbBundle.Messages;\n" +
                        "class Test {\n" +
-                       "    @javax.annotation.Resource(description=\"#k\")\n" +
+                       "    @A(comments=\"#k\")\n" +
                        "    @Messages(\"k=v\")\n" +
                        "    static final Void f = null;\n" +
                        "}\n");
@@ -331,15 +346,20 @@ public class UseNbBundleMessagesTest {
     @Test public void annotationOnPackage() throws Exception {
         HintTest.create().classpath(cp()).
                 input("test/package-info.java",
-                       "@javax.annotation.Generated(value={}, comments=\"#k\")\n" +
+                       "@A(comments=\"#k\")\n" +
                        "package test;\n").
+                input("test/A.java",
+                       "package test;\n" +
+                       "@interface A {\n" +
+                       "    String comments();\n" +
+                       "}\n").
                 input("test/Bundle.properties", "k=v\n", false).
                 run(UseNbBundleMessages.class).
-                findWarning("0:38-0:51:warning:" + UseNbBundleMessages_error_text()).
+                findWarning("0:3-0:16:warning:" + UseNbBundleMessages_error_text()).
                 applyFix().
                 assertVerbatimOutput("test/Bundle.properties", "").
                 assertOutput("test/package-info.java",
-                       "@javax.annotation.Generated(value={}, comments=\"#k\")\n" +
+                       "@A(comments=\"#k\")\n" +
                        "@Messages(\"k=v\")\n" +
                        "package test;\n" +
                        "import org.openide.util.NbBundle.Messages;\n");
@@ -403,12 +423,17 @@ public class UseNbBundleMessagesTest {
         HintTest.create().classpath(cp()).
                 input("package test;\n" +
                        "import org.openide.util.NbBundle.Messages;\n" +
-                       "@javax.annotation.Resource(description=\"#k\")\n" +
+                       "@A(comments=\"#k\")\n" +
                        "@Messages(\"k=v\")\n" +
                        "class Test {\n" +
                        "    String m() {\n" +
                        "        return org.openide.util.NbBundle.getMessage(Test.class, \"k\");\n" +
                        "    }\n" +
+                       "}\n").
+                input("test/A.java",
+                       "package test;\n" +
+                       "@interface A {\n" +
+                       "    String comments();\n" +
                        "}\n").
                 run(UseNbBundleMessages.class).
                 findWarning("6:41-6:51:warning:" + UseNbBundleMessages_error_text()).
@@ -416,7 +441,7 @@ public class UseNbBundleMessagesTest {
                 assertOutput("package test;\n" +
                        "import org.openide.util.NbBundle.Messages;\n" +
                        "import static test.Bundle.*;\n" +
-                       "@javax.annotation.Resource(description=\"#k\")\n" +
+                       "@A(comments=\"#k\")\n" +
                        "@Messages(\"k=v\")\n" +
                        "class Test {\n" +
                        "    String m() {\n" +
@@ -429,9 +454,14 @@ public class UseNbBundleMessagesTest {
         HintTest.create().classpath(cp()).
                 input("package test;\n" +
                        "import org.openide.util.NbBundle.Messages;\n" +
-                       "@javax.annotation.Resource(description=\"#k\")\n" +
+                       "@A(comments=\"#k\")\n" +
                        "@Messages(\"k=v\")\n" +
                        "class Test {\n" +
+                       "}\n").
+                input("test/A.java",
+                       "package test;\n" +
+                       "@interface A {\n" +
+                       "    String comments();\n" +
                        "}\n").
                 run(UseNbBundleMessages.class).
                 assertWarnings();

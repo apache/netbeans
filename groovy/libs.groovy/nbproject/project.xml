@@ -30,6 +30,7 @@
                 <friend>org.netbeans.modules.groovy.refactoring</friend>
                 <friend>org.netbeans.modules.groovy.support</friend>
                 <package>groovy.lang</package>
+                <package>groovy.lang.groovydoc</package>
                 <package>groovyjarjarantlr</package>
                 <package>groovyjarjarasm.asm</package>
                 <package>org.codehaus.groovy</package>
@@ -45,17 +46,19 @@
                 <package>org.codehaus.groovy.control.customizers.builder</package>
                 <package>org.codehaus.groovy.control.messages</package>
                 <package>org.codehaus.groovy.reflection</package>
+                <package>org.codehaus.groovy.runtime</package>
+                <package>org.codehaus.groovy.runtime.callsite</package>
                 <package>org.codehaus.groovy.syntax</package>
                 <package>org.codehaus.groovy.transform</package>
                 <package>org.codehaus.groovy.transform.stc</package>
             </friend-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/groovy.jar</runtime-relative-path>
-                <binary-origin>external/groovy-2.5.14.jar</binary-origin>
+                <binary-origin>external/groovy-3.0.8.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/groovy-ant.jar</runtime-relative-path>
-                <binary-origin>external/groovy-ant-2.5.14.jar</binary-origin>
+                <binary-origin>external/groovy-ant-3.0.8.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

@@ -12,7 +12,7 @@ ${class_name}               qualified name of the enclosing class
 ${simple_class_name}        simple name of the enclosing class
 -->
 <#if method_return_type?? && method_return_type != "void">
-return ${super_method_call};
+return ${super_method_call!"null"};
 <#else>
-${super_method_call};
+${super_method_call!""};
 </#if>

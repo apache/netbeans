@@ -331,10 +331,12 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                 actionStatesAtFinish(out.createResumeFromFinder(), out.getExecutionTree());
                 markFreeTab();
                 final Project prj = clonedConfig.getProject();
-                NbMavenProjectImpl impl = prj.getLookup().lookup(NbMavenProjectImpl.class);
-                if (impl != null) {
-                    RequestProcessor.Task reloadTask = impl.fireProjectReload();
-                    reloadTask.waitFinished();
+                if (prj != null) {
+                    NbMavenProjectImpl impl = prj.getLookup().lookup(NbMavenProjectImpl.class);
+                    if (impl != null) {
+                        RequestProcessor.Task reloadTask = impl.fireProjectReload();
+                        reloadTask.waitFinished();
+                    }
                 }
             }
         }

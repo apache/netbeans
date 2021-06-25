@@ -117,7 +117,8 @@ public class EvaluatorTest extends TestBase {
         eval.addPropertyChangeListener(l);
         String bootcp = eval.getProperty(Evaluator.NBJDK_BOOTCLASSPATH);
         String origbootcp = bootcp;
-        assertNotNull(bootcp); // who knows what actual value will be inside a unit test - probably empty
+        //on JDK 9+, bootcp is null here, as sun.boot.class.path is not filled anymore:
+//        assertNotNull(bootcp); // who knows what actual value will be inside a unit test - probably empty
         ep = p.getHelper().getProperties("nbproject/platform.properties");
         ep.setProperty(ModuleProperties.JAVA_PLATFORM_PROPERTY, "testjdk");
         p.getHelper().putProperties("nbproject/platform.properties", ep);

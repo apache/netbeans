@@ -35,6 +35,7 @@ import static org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess.BA
 import org.netbeans.modules.debugger.jpda.truffle.actions.StepActionProvider;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame;
 import org.netbeans.modules.debugger.jpda.truffle.options.TruffleOptions;
+import org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition;
 import org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVFrame;
 import org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVThread;
 import org.netbeans.modules.debugger.jpda.util.WeakCacheMap;
@@ -312,7 +313,11 @@ public class DebuggingTruffleTreeModel implements TreeModelFilter {
             return false;
         }
         int linej = csf.getLineNumber(null);
-        int linet = tframe.getSourcePosition().getStartLine();
+        SourcePosition sourcePosition = tframe.getSourcePosition();
+        if (sourcePosition == null) {
+            return false;
+        }
+        int linet = sourcePosition.getStartLine();
         return (linej == linet || linej == 0);
     }
     

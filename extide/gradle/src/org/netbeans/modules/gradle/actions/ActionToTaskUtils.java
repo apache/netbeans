@@ -24,36 +24,33 @@ import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.spi.actions.GradleActionsProvider;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.openide.util.Lookup;
+import org.netbeans.modules.gradle.execute.ConfigurableActionProvider;
+import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
+import org.netbeans.spi.project.ProjectConfigurationProvider;
 
 /**
  *
  * @author Laszlo Kishalmi
  */
 public final class ActionToTaskUtils {
-
-    private static final String MAPPING
-            = "defaultActionMapping.properties";
-
-    private static MappingContainer defaultActionMappings;
-    private static Map<String, List<ActionMapping>> defaultActionMapping;
-
     private ActionToTaskUtils() {
     }
 
     @NonNull
     public static List<? extends GradleActionsProvider> actionProviders(@NonNull Project project) {
         List<GradleActionsProvider> providers = new ArrayList<>();
+        providers.addAll(project.getLookup().lookupAll(GradleActionsProvider.class));
         providers.addAll(Lookup.getDefault().lookupAll(GradleActionsProvider.class));
         return providers;
     }
 
     public static boolean isActionEnabled(String action, Project project, Lookup lookup) {
-        ActionMapping mapping = getActiveMapping(action, project);
-        if (mapping != null) {
+        ActionMapping mapping = getActiveMapping(action, project, lookup);
+        if (!ActionMapping.isDisabled(mapping)) {
             List<? extends GradleActionsProvider> providers = actionProviders(project);
             for (GradleActionsProvider provider : providers) {
                 if (provider.isActionEnabled(action, project, lookup)) {
@@ -63,11 +60,44 @@ public final class ActionToTaskUtils {
         }
         return false;
     }
-
-
-    public static ActionMapping getActiveMapping(String action, Project project) {
-        ProjectActionMappingProvider mappingProvider = project.getLookup().lookup(ProjectActionMappingProvider.class);
-        return mappingProvider != null ? mappingProvider.findMapping(action) : null;
+    
+    public static GradleExecConfiguration findProjectConfiguration(Project p) {
+        ProjectConfigurationProvider<GradleExecConfiguration> pcp = p.getLookup().lookup(ProjectConfigurationProvider.class);
+        return pcp == null ? null : pcp.getActiveConfiguration();
     }
 
+
+    public static ActionMapping getActiveMapping(String action, Project project, Lookup context) {
+        GradleExecConfiguration c = ProjectConfigurationSupport.getEffectiveConfiguration(project, context);
+        ConfigurableActionProvider contextProvider = project.getLookup().lookup(ConfigurableActionProvider.class);
+        
+        if (c == null) {
+            ProjectConfigurationProvider<GradleExecConfiguration> cprov = project.getLookup().lookup(ProjectConfigurationProvider.class);
+            if (cprov != null) {
+                c = cprov.getActiveConfiguration();
+            }
+        }
+        
+        if (c != null) {
+            ProjectActionMappingProvider mp = contextProvider.findActionProvider(c == null ? null : c.getId());
+            if (mp != null) {
+                ActionMapping m = mp.findMapping(action);
+                if (m != null) {
+                    return m;
+                }
+            }
+        }
+
+        ProjectActionMappingProvider mappingProvider = project.getLookup().lookup(ProjectActionMappingProvider.class);
+        // in case the Mapping Provider asks for the configuration, it should get some:
+        if (mappingProvider == null) {
+            return null;
+        }
+        ActionMapping am = ProjectConfigurationSupport.executeWithConfiguration(project, c, () -> mappingProvider.findMapping(action));
+        if (ActionMapping.isDisabled(am)) {
+            return null;
+        } else {
+            return am;
+        }
+    }
 }

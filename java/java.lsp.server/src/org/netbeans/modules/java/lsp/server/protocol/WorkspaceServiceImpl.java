@@ -30,6 +30,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -59,7 +60,9 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.java.project.JavaProjectConstants;
+import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
+import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -75,6 +78,7 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaTypeProvider;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
@@ -88,6 +92,8 @@ import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.spi.jumpto.type.SearchType;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.ProjectConfiguration;
+import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
@@ -122,6 +128,8 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return CompletableFuture.completedFuture(true);
             case Server.JAVA_NEW_FROM_TEMPLATE:
                 return LspTemplateUI.createFromTemplate("Templates", client, params);
+            case Server.JAVA_NEW_PROJECT:
+                return LspTemplateUI.createProject("Templates/Project", client, params);
             case Server.JAVA_BUILD_WORKSPACE: {
                 final CommandProgress progressOfCompilation = new CommandProgress();
                 final Lookup ctx = Lookups.singleton(progressOfCompilation);
@@ -133,6 +141,48 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
                 progressOfCompilation.checkStatus();
                 return progressOfCompilation.getFinishFuture();
+            }
+            case Server.JAVA_GET_PROJECT_SOURCE_ROOTS: {
+                String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                String type = params.getArguments().size() > 1 ? ((JsonPrimitive) params.getArguments().get(1)).getAsString() : JavaProjectConstants.SOURCES_TYPE_JAVA;
+                return getSourceRoots(uri, type).thenApply(roots -> {
+                    return roots.stream().map(root -> Utils.toUri(root)).collect(Collectors.toList());
+                });
+            }
+            case Server.JAVA_GET_PROJECT_CLASSPATH: {
+                String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                ClasspathInfo.PathKind kind = params.getArguments().size() > 1 ? ClasspathInfo.PathKind.valueOf(((JsonPrimitive) params.getArguments().get(1)).getAsString()) : ClasspathInfo.PathKind.COMPILE;
+                boolean preferSources = params.getArguments().size() > 2 ? ((JsonPrimitive) params.getArguments().get(2)).getAsBoolean() : false;
+                return getSourceRoots(uri, JavaProjectConstants.SOURCES_TYPE_JAVA).thenApply(roots -> {
+                    HashSet<FileObject> cpRoots = new HashSet<>();
+                    for(FileObject root : roots) {
+                        for (FileObject cpRoot : ClasspathInfo.create(root).getClassPath(kind).getRoots()) {
+                            FileObject[] srcRoots = preferSources ? SourceForBinaryQuery.findSourceRoots(cpRoot.toURL()).getRoots() : null;
+                            if (srcRoots != null && srcRoots.length > 0) {
+                                for (FileObject srcRoot : srcRoots) {
+                                    cpRoots.add(srcRoot);
+                                }
+                            } else {
+                                cpRoots.add(cpRoot);
+                            }
+                        }
+                    }
+                    return cpRoots.stream().map(fo -> Utils.toUri(fo)).collect(Collectors.toList());
+                });
+            }
+            case Server.JAVA_GET_PROJECT_PACKAGES: {
+                String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                boolean srcOnly = params.getArguments().size() > 1 ? ((JsonPrimitive) params.getArguments().get(1)).getAsBoolean() : false;
+                return getSourceRoots(uri, JavaProjectConstants.SOURCES_TYPE_JAVA).thenApply(roots -> {
+                    HashSet<String> packages = new HashSet<>();
+                    EnumSet<ClassIndex.SearchScope> scope = srcOnly ? EnumSet.of(ClassIndex.SearchScope.SOURCE) : EnumSet.allOf(ClassIndex.SearchScope.class);
+                    for(FileObject root : roots) {
+                        packages.addAll(ClasspathInfo.create(root).getClassIndex().getPackageNames("", false, scope));
+                    }
+                    ArrayList<String> ret = new ArrayList<>(packages);
+                    Collections.sort(ret);
+                    return ret;
+                });
             }
             case Server.JAVA_LOAD_WORKSPACE_TESTS: {
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
@@ -171,6 +221,26 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 Position pos = gson.fromJson(gson.toJson(params.getArguments().get(1)), Position.class);
                 return (CompletableFuture)((TextDocumentServiceImpl)server.getTextDocumentService()).superImplementations(uri, pos);
+                
+            case Server.JAVA_FIND_PROJECT_CONFIGURATIONS: {
+                String fileUri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                
+                FileObject file;
+                try {
+                    file = URLMapper.findFileObject(new URL(fileUri));
+                } catch (MalformedURLException ex) {
+                    Exceptions.printStackTrace(ex);
+                    return CompletableFuture.completedFuture(Collections.emptyList());
+                }
+
+                return findProjectConfigurations(file);
+            }
+            case Server.JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS: {
+                return AttachConfigurations.findConnectors();
+            }
+            case Server.JAVA_FIND_DEBUG_PROCESS_TO_ATTACH: {
+                return AttachConfigurations.findProcessAttachTo(client);
+            }
             default:
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     if (codeGenerator.getCommands().contains(command)) {
@@ -179,6 +249,45 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
         }
         throw new UnsupportedOperationException("Command not supported: " + params.getCommand());
+    }
+    
+    private CompletableFuture<Object> findProjectConfigurations(FileObject ownedFile) {
+        return server.asyncOpenFileOwner(ownedFile).thenApply(p -> {
+            if (p == null) {
+                return CompletableFuture.completedFuture(Collections.emptyList());
+            }
+            ProjectConfigurationProvider<ProjectConfiguration> provider = p.getLookup().lookup(ProjectConfigurationProvider.class);
+            List<String> configDispNames = new ArrayList<>();
+            if (provider != null) {
+                for (ProjectConfiguration c : provider.getConfigurations()) {
+                    configDispNames.add(c.getDisplayName());
+                }
+            }
+            return configDispNames;
+        });
+    }
+
+    private CompletableFuture<List<FileObject>> getSourceRoots(String uri, String type) {
+        FileObject file;
+        try {
+            file = URLMapper.findFileObject(new URL(uri));
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
+        if (file == null) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
+        return server.asyncOpenFileOwner(file).thenApply(project -> {
+            if (project != null) {
+                List<FileObject> roots = new ArrayList<>();
+                for(SourceGroup sourceGroup : ProjectUtils.getSources(project).getSourceGroups(type)) {
+                    roots.add(sourceGroup.getRootFolder());
+                }
+                return roots;
+            }
+            return Collections.emptyList();
+        });
     }
 
     private CompletableFuture<Set<URL>> getTestRootURLs(Project prj) {

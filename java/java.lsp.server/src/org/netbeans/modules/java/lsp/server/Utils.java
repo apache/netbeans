@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Properties;
 import javax.lang.model.element.ElementKind;
 import javax.swing.text.Document;
@@ -172,7 +173,23 @@ public class Utils {
                 Exceptions.printStackTrace(ex);
             }
         }
-        return file.toURI().toString();
+        URI uri = file.toURI();
+        if (uri.getScheme().equals("nbfs")) {
+            try {
+                String txt = file.asText("UTF-8");
+                try (OutputStream os = file.getOutputStream()) {
+                    os.write(txt.getBytes("UTF-8"));
+                }
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            try {
+                uri = URLMapper.findURL(file, URLMapper.EXTERNAL).toURI();
+            } catch (URISyntaxException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        return uri.toString();
     }
 
     public static synchronized FileObject fromUri(String uri) throws MalformedURLException {

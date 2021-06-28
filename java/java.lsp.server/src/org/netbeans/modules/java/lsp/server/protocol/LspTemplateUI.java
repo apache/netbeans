@@ -56,6 +56,7 @@ import org.openide.util.Utilities;
     "CTL_TemplateUI_SelectGroup=Select Template Type",
     "CTL_TemplateUI_SelectTemplate=Select Template",
     "CTL_TemplateUI_SelectTarget=Where to put the object?",
+    "CTL_TemplateUI_SelectProjectTarget=Specify the project directory",
     "CTL_TemplateUI_SelectPackageName=Package name of your project?",
     "CTL_TemplateUI_SelectPackageNameSuggestion=org.yourcompany.yourproject",
     "CTL_TemplateUI_SelectName=Name of the object?",
@@ -201,7 +202,7 @@ abstract class LspTemplateUI {
                     final File targetPath = new File(path);
                     if (targetPath.exists()) {
                         client.showMessage(new MessageParams(MessageType.Error, Bundle.ERR_ExistingPath(path)));
-                        return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectTarget(), suggestWorkspaceRoot(folders))).thenCompose(this);
+                        return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectProjectTarget(), suggestWorkspaceRoot(folders))).thenCompose(this);
                     }
                     targetPath.getParentFile().mkdirs();
                     FileObject fo = FileUtil.toFileObject(targetPath.getParentFile());
@@ -210,13 +211,13 @@ abstract class LspTemplateUI {
                     return CompletableFuture.completedFuture(Pair.of(DataFolder.findFolder(fo), targetPath.getName()));
                 }
             }
-            return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectTarget(), suggestWorkspaceRoot(folders))).thenCompose(new VerifyNonExistingFolder());
+            return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectProjectTarget(), suggestWorkspaceRoot(folders))).thenCompose(new VerifyNonExistingFolder());
         });
     }
 
     private static String suggestWorkspaceRoot(List<WorkspaceFolder> folders) throws IllegalArgumentException {
         String suggestion = System.getProperty("user.dir");
-        if (!folders.isEmpty()) try {
+        if (folders != null && !folders.isEmpty()) try {
             suggestion = Utilities.toFile(new URI(folders.get(0).getUri())).getParent();
         } catch (URISyntaxException ex) {
         }

@@ -25,6 +25,7 @@
 	},
 	"activationEvents": [
 		"onLanguage:java",
+		"onCommand:java.workspace.newproject",
 		"workspaceContains:**/*.java",
 		"workspaceContains:pom.xml",
 		"workspaceContains:build.gradle",
@@ -324,8 +325,7 @@
 					"when": "nbJavaLSReady"
 				},
 				{
-					"command": "java.workspace.newproject",
-					"when": "nbJavaLSReady"
+					"command": "java.workspace.newproject"
 				},
 				{
 					"command": "java.workspace.compile",

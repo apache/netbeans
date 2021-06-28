@@ -20,11 +20,7 @@ package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonPrimitive;
-import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.LineMap;
-import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -59,12 +55,11 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.DebuggerManager;
+import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
-import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
-import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
@@ -76,19 +71,20 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
+import org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaTypeProvider;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
-import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.lucene.support.Queries;
 import org.netbeans.modules.parsing.spi.ParseException;
+import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.spi.jumpto.type.SearchType;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
@@ -196,9 +192,9 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 if (file == null) {
                     return CompletableFuture.completedFuture(Collections.emptyList());
                 }
-                return server.asyncOpenFileOwner(file).thenCompose(this::getTestRootURLs).thenApply(testRootURLs -> {
+                return server.asyncOpenFileOwner(file).thenCompose(this::getTestRoots).thenApply(testRoots -> {
                     List<TestMethodController.TestMethod> testMethods = new ArrayList<>();
-                    findTestMethods(testRootURLs, testMethods);
+                    findTestMethods(testRoots, testMethods);
                     if (testMethods.isEmpty()) {
                         return Collections.emptyList();
                     }
@@ -206,7 +202,8 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     for (TestMethodController.TestMethod testMethod : testMethods) {
                         TestSuiteInfo suite = file2TestSuites.computeIfAbsent(testMethod.method().getFile(), fo -> {
                             String foUri = Utils.toUri(fo);
-                            Integer line = getTestLine(((TextDocumentServiceImpl)server.getTextDocumentService()).getJavaSource(foUri), testMethod.getTestClassName());
+                            int off = testMethod.getTestClassPosition() != null ? testMethod.getTestClassPosition().getOffset() : -1;
+                            Integer line = off < 0 ? null : Utils.createPosition(testMethod.method().getFile(), off).getLine();
                             return new TestSuiteInfo(testMethod.getTestClassName(), foUri, line, TestSuiteInfo.State.Loaded, new ArrayList<>());
                         });
                         String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
@@ -290,81 +287,63 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         });
     }
 
-    private CompletableFuture<Set<URL>> getTestRootURLs(Project prj) {
-        final Set<URL> testRootURLs = new HashSet<>();
+    private static final String[] SOURCE_TYPES = {"java", "groovy"};
+
+    private CompletableFuture<Set<FileObject>> getTestRoots(Project prj) {
+        final Set<FileObject> testRoots = new HashSet<>();
         List<FileObject> contained = null;
         if (prj != null) {
-            for (SourceGroup sg : ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
-                for (URL url : UnitTestForSourceQuery.findUnitTests(sg.getRootFolder())) {
-                    testRootURLs.add(url);
+            for (String sourceType : SOURCE_TYPES) {
+                for (SourceGroup sg : ProjectUtils.getSources(prj).getSourceGroups(sourceType)) {
+                    if (isTestGroup(sg)) {
+                        testRoots.add(sg.getRootFolder());
+                    }
                 }
             }
             contained = ProjectUtils.getContainedProjects(prj, true).stream().map(p -> p.getProjectDirectory()).collect(Collectors.toList());
         }
         return server.asyncOpenSelectedProjects(contained).thenApply(projects -> {
             for (Project project : projects) {
-                for (SourceGroup sg : ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
-                    for (URL url : UnitTestForSourceQuery.findUnitTests(sg.getRootFolder())) {
-                        testRootURLs.add(url);
+                for (String sourceType : SOURCE_TYPES) {
+                    for (SourceGroup sg : ProjectUtils.getSources(project).getSourceGroups(sourceType)) {
+                        if (isTestGroup(sg)) {
+                            testRoots.add(sg.getRootFolder());
+                        }
                     }
                 }
             }
-            return testRootURLs;
+            return testRoots;
         });
     }
 
-    private void findTestMethods(Set<URL> testRootURLs, List<TestMethodController.TestMethod> testMethods) {
-        for (URL testRootURL : testRootURLs) {
-            FileObject testRoot = URLMapper.findFileObject(testRootURL);
-            if (testRoot != null) {
-                List<Source> sources = new ArrayList<>();
-                Enumeration<? extends FileObject> children = testRoot.getChildren(true);
-                while(children.hasMoreElements()) {
-                    FileObject fo = children.nextElement();
-                    if (fo.hasExt("java")) {
-                        sources.add(((TextDocumentServiceImpl)server.getTextDocumentService()).getSource(Utils.toUri(fo)));
-                    }
-                }
-                if (!sources.isEmpty()) {
-                    try {
-                        ParserManager.parse(sources, new UserTask() {
-                            @Override
-                            public void run(ResultIterator resultIterator) throws Exception {
-                                CompilationController cc = CompilationController.get(resultIterator.getParserResult());
-                                cc.toPhase(Phase.ELEMENTS_RESOLVED);
-                                for (ComputeTestMethods.Factory methodsFactory : Lookup.getDefault().lookupAll(ComputeTestMethods.Factory.class)) {
-                                    testMethods.addAll(methodsFactory.create().computeTestMethods(cc));
-                                }
-                            }
-                        });
-                    } catch (ParseException ex) {}
-                }
-            }
-        }
+    private boolean isTestGroup(SourceGroup sg) {
+        return sg.getName().contains("TestSourceRoot");
     }
 
-    private Integer getTestLine(JavaSource javaSource, String className) {
-        final int[] offset = new int[] {-1};
-        final LineMap[] lm = new LineMap[1];
-        if (javaSource != null) {
-            try {
-                javaSource.runUserActionTask(cc -> {
-                    cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                    Trees trees = cc.getTrees();
-                    CompilationUnitTree cu = cc.getCompilationUnit();
-                    lm[0] = cu.getLineMap();
-                    for (Tree tree : cu.getTypeDecls()) {
-                        Element element = trees.getElement(trees.getPath(cu, tree));
-                        if (element != null && element.getKind().isClass() && ((TypeElement)element).getQualifiedName().contentEquals(className)) {
-                            offset[0] = (int)trees.getSourcePositions().getStartPosition(cu, tree);
-                            return;
+    private void findTestMethods(Set<FileObject> testRoots, List<TestMethodController.TestMethod> testMethods) {
+        for (FileObject testRoot : testRoots) {
+            List<Source> sources = new ArrayList<>();
+            Enumeration<? extends FileObject> children = testRoot.getChildren(true);
+            while(children.hasMoreElements()) {
+                FileObject fo = children.nextElement();
+                if (fo.hasExt("java") || fo.hasExt("groovy")) {
+                    sources.add(((TextDocumentServiceImpl)server.getTextDocumentService()).getSource(Utils.toUri(fo)));
+                }
+            }
+            if (!sources.isEmpty()) {
+                try {
+                    ParserManager.parse(sources, new UserTask() {
+                        @Override
+                        public void run(ResultIterator resultIterator) throws Exception {
+                            Parser.Result parserResult = resultIterator.getParserResult();
+                            for (ComputeTestMethods.Factory methodsFactory : MimeLookup.getLookup(parserResult.getSnapshot().getMimePath()).lookupAll(ComputeTestMethods.Factory.class)) {
+                                testMethods.addAll(methodsFactory.create().computeTestMethods(parserResult));
+                            }
                         }
-                    }
-                }, true);
-            } catch (IOException ioe) {
+                    });
+                } catch (ParseException ex) {}
             }
         }
-        return offset[0] < 0 ? null : Utils.createPosition(lm[0], offset[0]).getLine();
     }
 
     @Override

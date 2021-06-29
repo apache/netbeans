@@ -22,6 +22,7 @@ package org.netbeans.modules.groovy.editor.completion.provider;
 import org.netbeans.modules.groovy.editor.api.completion.CompletionItem;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +58,7 @@ import org.netbeans.modules.groovy.editor.api.elements.common.MethodElement.Meth
 import org.netbeans.modules.groovy.editor.completion.AccessLevel;
 import org.netbeans.modules.groovy.editor.java.JavaElementHandle;
 import org.netbeans.modules.groovy.editor.java.Utilities;
+import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -230,13 +232,13 @@ public final class JavaElementHandler {
                         
                         JavaElementHandle h = new JavaElementHandle(
                                 simpleName, className, ElementHandle.create(element),
-                                signatureOf(info, element), Utilities.modelModifiersToGsf(element.getModifiers()));
+                                signatureOf(te, element, info.getTypes()), Utilities.modelModifiersToGsf(element.getModifiers()));
                         
                         CompletionItem ci = CompletionAccessor.instance().createJavaMethod(
-                                className, simpleName, getParametersForElement(info, element), returnTypeString, 
+                                className, simpleName, getParametersForElement(info, te, element), returnTypeString, 
                                 element.getModifiers(), anchor, emphasise, nameOnly);
 
-                        proposals.put(getSignature(te, element, typeParameters, info.getTypes()), 
+                        proposals.put(getSignature(te, element, info.getTypes()), 
                                 CompletionAccessor.instance().assignHandle(ci, h)
                         );
                     }
@@ -246,32 +248,64 @@ public final class JavaElementHandler {
             cnt.countDown();
         }
         
-        private List<String> signatureOf(CompilationInfo info, ExecutableElement exe) {
-            List<String> fqns = new ArrayList<>(exe.getParameters().size());
-            for (VariableElement v : exe.getParameters()) {
-                fqns.add(info.getTypeUtilities().getTypeName(v.asType(), TypeUtilities.TypeNameOptions.PRINT_FQN).
-                        toString());
-            }
-            return fqns;
+        private List<String> signatureOf(TypeElement classElement, ExecutableElement exe, Types types) {
+            MethodSignature sign = getSignature(classElement, exe, types);
+            return Arrays.asList(sign.getParameters());
         }
         
-        private List<MethodParameter> getParametersForElement(CompilationController info, ExecutableElement exe) {
+        private List<MethodParameter> getParametersForElement(CompilationController info, TypeElement classElement, ExecutableElement exe) {
             List<MethodParameter> result = new ArrayList<>();
             if (exe == null) {
                 return result;
             }
             List<? extends VariableElement> params = exe.getParameters(); // this can cause NPE's
-
+            
             for (VariableElement variableElement : params) {
                 TypeMirror tm = variableElement.asType();
-                String fullName = info.getTypeUtilities().getTypeName(tm, TypeUtilities.TypeNameOptions.PRINT_FQN).toString();
-                String typeName = info.getTypeUtilities().getTypeName(tm).toString();
+                
+                String fullName;
+                String typeName;
+                
+                if (tm.getKind() == TypeKind.TYPEVAR) {
+                    fullName = substituteActualType(tm, classElement, exe, info.getTypes());
+                    typeName = GroovyUtils.stripPackage(fullName);
+                } else {
+                    fullName = info.getTypeUtilities().getTypeName(tm, TypeUtilities.TypeNameOptions.PRINT_FQN).toString();
+                    typeName = info.getTypeUtilities().getTypeName(tm).toString();
+                }
                 result.add(new MethodParameter(fullName, typeName, variableElement.getSimpleName().toString()));
             }
             return result;
         }
         
-        private MethodSignature getSignature(TypeElement classElement, ExecutableElement element, String[] typeParameters, Types types) {
+        private String substituteActualType(TypeMirror type, TypeElement classElement, ExecutableElement element, Types types) {
+            List<? extends TypeParameterElement> declaredTypeParameters = element.getTypeParameters();
+            if (declaredTypeParameters.isEmpty()) {
+                // FIXME: this will not work well, if BOTH the class AND the method declares type parameters.
+                declaredTypeParameters = classElement.getTypeParameters();
+            } 
+            int j = -1;
+            for (TypeParameterElement typeParam : declaredTypeParameters) {
+                j++;
+                if (typeParam.getSimpleName().toString().equals(type.toString())) {
+                    break;
+                }
+            }
+            String typeString;
+            if (j >= 0 && j < typeParameters.length) {
+                typeString = typeParameters[j];
+                // HACK HACK: currently the CC signatures contains typevar names. If the substituted type is not specific,
+                // let's leave the old (also buggy) behaviour rather than presenting Object everywhere.
+                if ("java.lang.Object".equals(typeString)) {
+                    typeString = type.toString();
+                }
+            } else {
+                typeString = type.toString();
+            }
+            return typeString;
+        }
+        
+        private MethodSignature getSignature(TypeElement classElement, ExecutableElement element, Types types) {
             String name = element.getSimpleName().toString();
             String[] parameters = new String[element.getParameters().size()];
 
@@ -281,23 +315,7 @@ public final class JavaElementHandler {
                 String typeString = null;
 
                 if (type.getKind() == TypeKind.TYPEVAR) {
-                    List<? extends TypeParameterElement> declaredTypeParameters = element.getTypeParameters();
-                    if (declaredTypeParameters.isEmpty()) {
-                        declaredTypeParameters = classElement.getTypeParameters();
-                    }
-                    int j = -1;
-                    for (TypeParameterElement typeParam : declaredTypeParameters) {
-                        j++;
-                        if (typeParam.getSimpleName().toString().equals(type.toString())) {
-                            break;
-                        }
-                    }
-// FIXME why we were doing this for signatures ??
-//                    if (j >= 0 && j < typeParameters.length) {
-//                        typeString = typeParameters[j];
-//                    } else {
-                        typeString = types.erasure(type).toString();
-//                    }
+                    typeString = substituteActualType(type, classElement, element, types);
                 } else {
                     typeString = type.toString();
                 }

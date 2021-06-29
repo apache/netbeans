@@ -367,6 +367,7 @@
 		"vscode-test": "^1.3.0"
 	},
 	"dependencies": {
+		"jsonc-parser": "3.0.0",
 		"vscode-debugadapter": "1.42.1",
 		"vscode-languageclient": "6.1.3",
 		"vscode-test-adapter-api": "^1.9.0",

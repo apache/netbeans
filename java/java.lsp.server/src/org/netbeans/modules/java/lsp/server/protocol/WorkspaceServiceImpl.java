@@ -19,27 +19,33 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
@@ -238,6 +244,51 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             case Server.JAVA_FIND_DEBUG_PROCESS_TO_ATTACH: {
                 return AttachConfigurations.findProcessAttachTo(client);
             }
+            case Server.JAVA_PROJECT_CONFIGURATION_COMPLETION: {
+                // We expect one, two or three arguments.
+                // The first argument is always the URI of the launch.json file.
+                // When not more arguments are provided, all available configurations ought to be provided.
+                // When only a second argument is present, it's a map of the current attributes in a configuration,
+                // and additional attributes valid in that particular configuration ought to be provided.
+                // When a third argument is present, it's an attribute name whose possible values ought to be provided.
+                List<Object> arguments = params.getArguments();
+                Collection<? extends LaunchConfigurationCompletion> configurations = Lookup.getDefault().lookupAll(LaunchConfigurationCompletion.class);
+                List<CompletableFuture<List<CompletionItem>>> completionFutures;
+                String configUri = ((JsonPrimitive) arguments.get(0)).getAsString();
+                Supplier<CompletableFuture<Project>> projectSupplier = () -> {
+                    FileObject file;
+                    try {
+                        file = URLMapper.findFileObject(new URL(configUri));
+                    } catch (MalformedURLException ex) {
+                        Exceptions.printStackTrace(ex);
+                        return CompletableFuture.completedFuture(null);
+                    }
+                    return server.asyncOpenFileOwner(file);
+                };
+                switch (arguments.size()) {
+                    case 1:
+                        completionFutures = configurations.stream().map(c -> c.configurations(projectSupplier)).collect(Collectors.toList());
+                        break;
+                    case 2:
+                        Map<String, Object> attributes = attributesMap((JsonObject) arguments.get(1));
+                        completionFutures = configurations.stream().map(c -> c.attributes(projectSupplier, attributes)).collect(Collectors.toList());
+                        break;
+                    case 3:
+                        attributes = attributesMap((JsonObject) arguments.get(1));
+                        String attribute = ((JsonPrimitive) arguments.get(2)).getAsString();
+                        completionFutures = configurations.stream().map(c -> c.attributeValues(projectSupplier, attributes, attribute)).collect(Collectors.toList());
+                        break;
+                    default:
+                        StringBuilder classes = new StringBuilder();
+                        for (int i = 0; i < arguments.size(); i++) {
+                            classes.append(arguments.get(i).getClass().toString());
+                        }
+                        throw new IllegalStateException("Wrong arguments("+arguments.size()+"): " + arguments + ", classes = " + classes);  // NOI18N
+                }
+                CompletableFuture<List<CompletionItem>> joinedFuture = CompletableFuture.allOf(completionFutures.toArray(new CompletableFuture[0]))
+                        .thenApply(avoid -> completionFutures.stream().flatMap(c -> c.join().stream()).collect(Collectors.toList()));
+                return (CompletableFuture<Object>) (CompletableFuture<?>) joinedFuture;
+            }
             default:
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     if (codeGenerator.getCommands().contains(command)) {
@@ -246,6 +297,16 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
         }
         throw new UnsupportedOperationException("Command not supported: " + params.getCommand());
+    }
+    
+    private static Map<String, Object> attributesMap(JsonObject json) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        for (Entry<String, JsonElement> entry : json.entrySet()) {
+            JsonPrimitive jp = (JsonPrimitive) entry.getValue();
+            Object value = jp.isBoolean() ? jp.getAsBoolean() : jp.isNumber() ? jp.getAsNumber() : jp.getAsString();
+            map.put(entry.getKey(), value);
+        }
+        return map;
     }
     
     private CompletableFuture<Object> findProjectConfigurations(FileObject ownedFile) {

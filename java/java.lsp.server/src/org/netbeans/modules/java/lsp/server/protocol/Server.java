@@ -623,6 +623,7 @@ public final class Server {
                         JAVA_LOAD_WORKSPACE_TESTS,
                         JAVA_NEW_FROM_TEMPLATE,
                         JAVA_NEW_PROJECT,
+                        JAVA_PROJECT_CONFIGURATION_COMPLETION,
                         JAVA_SUPER_IMPLEMENTATION));
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     commands.addAll(codeGenerator.getCommands());
@@ -756,6 +757,10 @@ public final class Server {
      * Enumerates JVM processes eligible for debugger attach.
      */
     public static final String JAVA_FIND_DEBUG_PROCESS_TO_ATTACH = "java.attachDebugger.pickProcess";
+    /**
+     * Provides code-completion of configurations.
+     */
+    public static final String JAVA_PROJECT_CONFIGURATION_COMPLETION = "java.project.configuration.completion";
 
     static final String INDEXING_COMPLETED = "Indexing completed.";
     static final String NO_JAVA_SUPPORT = "Cannot initialize Java support on JDK ";

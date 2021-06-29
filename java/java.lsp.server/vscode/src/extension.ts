@@ -42,6 +42,7 @@ import { TestAdapterRegistrar } from 'vscode-test-adapter-util';
 import * as launcher from './nbcode';
 import {NbTestAdapter} from './testAdapter';
 import { StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification, DebugConnector } from './protocol';
+import * as launchConfigurations from './launchConfigurations';
 
 const API_VERSION : string = "1.0";
 let client: Promise<LanguageClient>;
@@ -318,16 +319,19 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         await runDebug(false, false, uri, methodName, launchConfiguration);
     }));
 
-	// get the Test Explorer extension and register TestAdapter
-	const testExplorerExtension = vscode.extensions.getExtension<TestHub>(testExplorerExtensionId);
-	if (testExplorerExtension) {
-		const testHub = testExplorerExtension.exports;
+    // register completions:
+    launchConfigurations.registerCompletion(context);
+
+    // get the Test Explorer extension and register TestAdapter
+    const testExplorerExtension = vscode.extensions.getExtension<TestHub>(testExplorerExtensionId);
+    if (testExplorerExtension) {
+        const testHub = testExplorerExtension.exports;
         testAdapterRegistrar = new TestAdapterRegistrar(
-			testHub,
-			workspaceFolder => new NbTestAdapter(workspaceFolder, client)
-		);
-		context.subscriptions.push(testAdapterRegistrar);
-	}
+            testHub,
+            workspaceFolder => new NbTestAdapter(workspaceFolder, client)
+        );
+        context.subscriptions.push(testAdapterRegistrar);
+    }
 
     return Object.freeze({
         version : API_VERSION

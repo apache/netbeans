@@ -19,20 +19,18 @@
 package org.netbeans.modules.java.lsp.server.debugging.attach;
 
 import com.sun.jdi.Bootstrap;
-import com.sun.jdi.VirtualMachineManager;
 import com.sun.jdi.connect.AttachingConnector;
-import com.sun.jdi.connect.Connector;
 import com.sun.tools.attach.AttachNotSupportedException;
 import com.sun.tools.attach.VirtualMachine;
 import com.sun.tools.attach.VirtualMachineDescriptor;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.lsp4j.MessageParams;
@@ -43,7 +41,6 @@ import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.java.lsp.server.protocol.DebugConnector;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
-import org.netbeans.modules.java.lsp.server.protocol.Server;
 import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
@@ -55,95 +52,71 @@ import org.openide.util.RequestProcessor;
  */
 public final class AttachConfigurations {
 
-    static final String NAME_ATTACH_PROCESS = "Attach to Process";          // NOI18N
-    static final String NAME_ATTACH_SOCKET = "Attach to Port";              // NOI18N
-    static final String NAME_ATTACH_SHMEM = "Attach to Shared Memory";      // NOI18N
-    static final String NAME_ATTACH_BY = "Attach by ";                      // NOI18N
+    static final String CONFIG_TYPE = "java8+";     // NOI18N
+    static final String CONFIG_REQUEST = "attach";  // NOI18N
 
-    static final String CONNECTOR_PROCESS = "com.sun.jdi.ProcessAttach";    // NOI18N
-    static final String CONNECTOR_SOCKET = "com.sun.jdi.SocketAttach";      // NOI18N
-    static final String CONNECTOR_SHMEM = "com.sun.jdi.SharedMemoryAttach"; // NOI18N
+    static final RequestProcessor RP = new RequestProcessor(AttachConfigurations.class);
 
-    static final String PROCESS_ARG_PID = "processId";          // NOI18N
-    static final String SOCKET_ARG_HOST = "hostName";           // NOI18N
-    static final String SOCKET_ARG_PORT = "port";               // NOI18N
-    static final String SHMEM_ARG_NAME = "sharedMemoryName";    // NOI18N
+    private final List<ConfigurationAttributes> configurations;
 
-    private static final RequestProcessor RP = new RequestProcessor(AttachConfigurations.class);
+    private AttachConfigurations(List<AttachingConnector> attachingConnectors) {
+        List<ConfigurationAttributes> configs = new ArrayList<>(5);
+        for (AttachingConnector ac : attachingConnectors) {
+            configs.add(new ConfigurationAttributes(ac));
+        }
+        this.configurations = Collections.unmodifiableList(configs);
+    }
 
-    private AttachConfigurations() {}
+    public static AttachConfigurations get() {
+        return new AttachConfigurations(Bootstrap.virtualMachineManager().attachingConnectors());
+    }
 
     public static CompletableFuture<Object> findConnectors() {
         return CompletableFuture.supplyAsync(() -> {
-            return listAttachingConnectors();
+            return get().listAttachingConnectors();
         }, RP);
     }
 
-    @Messages({"DESC_HostName=Name of host machine to connect to", "DESC_Port=Port number to connect to",
-               "DESC_ShMem=Shared memory transport address at which the target VM is listening"})
-    private static List<DebugConnector> listAttachingConnectors() {
-        VirtualMachineManager vmm = Bootstrap.virtualMachineManager ();
-        List<AttachingConnector> attachingConnectors = vmm.attachingConnectors();
-        List<DebugConnector> connectors = new ArrayList<>(5);
-        String type = "java8+";             // NOI18N
-        for (AttachingConnector ac : attachingConnectors) {
-            String connectorName = ac.name();
-            Map<String, Connector.Argument> defaultArguments = ac.defaultArguments();
-            DebugConnector connector;
-            switch (connectorName) {
-                case CONNECTOR_PROCESS:
-                    connector = new DebugConnector(connectorName, NAME_ATTACH_PROCESS, type,
-                            Collections.singletonList(PROCESS_ARG_PID),
-                            Collections.singletonList("${command:" + Server.JAVA_FIND_DEBUG_PROCESS_TO_ATTACH + "}"),   // NOI18N
-                            Collections.singletonList(""));
-                    break;
-                case CONNECTOR_SOCKET: {
-                    String hostName = getArgumentOrDefault(defaultArguments.get("hostname"), "localhost");          // NOI18N
-                    String port = getArgumentOrDefault(defaultArguments.get("port"), "8000"); // NOI18N
-                    connector = new DebugConnector(connectorName, NAME_ATTACH_SOCKET, type,
-                            Arrays.asList(SOCKET_ARG_HOST, SOCKET_ARG_PORT),
-                            Arrays.asList(hostName, port),
-                            Arrays.asList(Bundle.DESC_HostName(), Bundle.DESC_Port()));
-                    break;
-                }
-                case CONNECTOR_SHMEM: {
-                    String name = getArgumentOrDefault(defaultArguments.get("name"), "");       // NOI18N
-                    connector = new DebugConnector(connectorName, NAME_ATTACH_SHMEM, type,
-                            Collections.singletonList(SHMEM_ARG_NAME),
-                            Collections.singletonList(name),
-                            Collections.singletonList(Bundle.DESC_ShMem()));
-                    break;
-                }
-                default: {
-                    List<String> names = new ArrayList<>();
-                    List<String> values = new ArrayList<>();
-                    List<String> descriptions = new ArrayList<>();
-                    for (Connector.Argument arg : defaultArguments.values()) {
-                        if (arg.mustSpecify()) {
-                            names.add(arg.name());
-                            String value = arg.value();
-                            values.add(value);
-                            descriptions.add(arg.description());
-                        }
-                    }
-                    connector = new DebugConnector(connectorName, NAME_ATTACH_BY + connectorName, type,
-                            names, values, descriptions);
+    List<ConfigurationAttributes> getConfigurations() {
+        return configurations;
+    }
+
+    private List<DebugConnector> listAttachingConnectors() {
+        List<DebugConnector> connectors = new ArrayList<>(configurations.size());
+        for (ConfigurationAttributes configAttributes : configurations) {
+            Map<String, ConfigurationAttribute> attributesMap = configAttributes.getAttributes();
+            List<String> names = new ArrayList<>(2);
+            List<String> values = new ArrayList<>(2);
+            List<String> descriptions = new ArrayList<>(2);
+            for (Map.Entry<String, ConfigurationAttribute> entry : attributesMap.entrySet()) {
+                ConfigurationAttribute ca = entry.getValue();
+                if (ca.isMustSpecify()) {
+                    names.add(entry.getKey());
+                    values.add(ca.getDefaultValue());
+                    descriptions.add(ca.getDescription());
                 }
             }
+            DebugConnector connector = new DebugConnector(configAttributes.getId(), configAttributes.getName(), CONFIG_TYPE,
+                            names, values, descriptions);
             connectors.add(connector);
         }
         connectors.sort((c1, c2) -> c1.getName().compareToIgnoreCase(c2.getName()));
         return connectors;
     }
 
-    private static String getArgumentOrDefault(Connector.Argument arg, String def) {
-        if (arg != null) {
-            String value = arg.value();
-            if (!value.isEmpty()) {
-                return value;
+    ConfigurationAttributes findConfiguration(Map<String, Object> attributes) {
+        if (!CONFIG_TYPE.equals(attributes.get("type")) ||              // NOI18N
+            !CONFIG_REQUEST.equals(attributes.get("request"))) {        // NOI18N
+
+            return null;
+        }
+        Set<String> names = attributes.keySet();
+        for (ConfigurationAttributes config : configurations) {
+            if (config.areMandatoryAttributesIn(names)) {
+                return config;
             }
         }
-        return def;
+        return null;
     }
 
     public static CompletableFuture<Object> findProcessAttachTo(NbCodeLanguageClient client) {

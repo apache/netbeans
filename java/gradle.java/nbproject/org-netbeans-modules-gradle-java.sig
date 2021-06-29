@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.10
+#Version 1.13
 
 CLSS public abstract interface java.io.Serializable
 
@@ -21,7 +21,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -83,10 +82,12 @@ meth public java.lang.String getAnnotationProcessorConfigurationName()
 meth public java.lang.String getBuildTaskName(org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType)
 meth public java.lang.String getClassesTaskName()
 meth public java.lang.String getCompileConfigurationName()
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getCompileTaskName(java.lang.String)
 meth public java.lang.String getName()
 meth public java.lang.String getProcessResourcesTaskName()
 meth public java.lang.String getRuntimeConfigurationName()
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getSourcesCompatibility()
  anno 0 java.lang.Deprecated()
 meth public java.lang.String getSourcesCompatibility(org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType)
@@ -128,6 +129,11 @@ meth public java.lang.String toString()
 meth public static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType valueOf(java.lang.String)
 meth public static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType[] values()
 supr java.lang.Enum<org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType>
+
+CLSS public final org.netbeans.modules.gradle.java.api.ProjectActions
+fld public static java.lang.String TOKEN_JAVAEXEC_ARGS
+fld public static java.lang.String TOKEN_JAVAEXEC_JVMARGS
+supr java.lang.Object
 
 CLSS public abstract interface org.netbeans.modules.gradle.java.api.ProjectSourcesClassPathProvider
 meth public abstract org.netbeans.api.java.classpath.ClassPath getProjectSourcesClassPath(java.lang.String)

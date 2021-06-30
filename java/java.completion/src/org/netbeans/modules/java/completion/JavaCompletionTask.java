@@ -391,7 +391,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 insideBlock(env);
                 break;
             case MEMBER_SELECT:
-                insideMemberSelect(env);
+                insideMemberSelect(env, null);
                 break;
             case MEMBER_REFERENCE:
                 insideMemberReference(env);
@@ -1592,10 +1592,11 @@ public final class JavaCompletionTask<T> extends BaseTask {
     }
 
     @SuppressWarnings("fallthrough")
-    private void insideMemberSelect(Env env) throws IOException {
+    private void insideMemberSelect(Env env, TreePath path) throws IOException {
         int offset = env.getOffset();
         String prefix = env.getPrefix();
-        TreePath path = env.getPath();
+        if(path == null)
+            path = env.getPath();
         MemberSelectTree fa = (MemberSelectTree) path.getLeaf();
         CompilationController controller = env.getController();
         CompilationUnitTree root = env.getRoot();
@@ -2492,19 +2493,49 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 }
             }
         } else {
-            for(ExpressionTree caseExpression : caseTreeList){
-                if(caseExpression != null && caseExpression.getKind() == Tree.Kind.IDENTIFIER){
-                    TreePath tPath = new TreePath(path, caseExpression);
-                    insideExpression(env, tPath);
-                    return;
-                }
-            }
             TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, cst, offset);
-            if (ts != null && ts.token().id() != JavaTokenId.DEFAULT) {
+            if (ts != null && ts.token().id() == JavaTokenId.IDENTIFIER && caseExpressionTree != null && caseExpressionTree.getKind() == Tree.Kind.IDENTIFIER) {
+                TreePath tPath = new TreePath(path, caseExpressionTree);
+                insideExpression(env, tPath);
+            } else if (ts != null && ts.token().id() == JavaTokenId.DOT && TreeShims.getLabels(cst).size() > 0) {
+                List<? extends Tree> labels = TreeShims.getLabels(cst);
+                List<MemberSelectTree> nodes = new ArrayList<>();
+                for(  Tree label:  labels){
+                    if( label.getKind().toString().equals(TreeShims.GUARDED_PATTERN)){
+                        scanSwitchCaseLabelsForMemberSelect(nodes, path, TreeShims.getGuardedExpression(label));
+                    } else if( label.getKind().toString().equals(TreeShims.PARENTHESIZED_PATTERN)){
+                        Tree ppt = TreeShims.getParenthesizedPattern(label);
+                        if( ppt != null){
+                            try{
+                                ExpressionTree guardedExpression = TreeShims.getGuardedExpression(ppt);
+                                scanSwitchCaseLabelsForMemberSelect(nodes, path, guardedExpression);
+                            }catch ( RuntimeException ex){
+                                return;
+                            }
+                        }
+                    }
+                    if (nodes.size() > 0){
+                        insideMemberSelect(env,new  TreePath (path, nodes.get(0)));
+                    }
+                }
+            } else if( ts != null && ts.token().id() != JavaTokenId.DEFAULT) {
                 localResult(env);
                 addKeywordsForBlock(env);
             }
         }
+    }
+
+    private void scanSwitchCaseLabelsForMemberSelect(List<MemberSelectTree> nodes, TreePath path, ExpressionTree guardedExpression) {
+        new TreePathScanner(){
+            @Override
+            public Object visitMemberSelect(MemberSelectTree node, Object p) {
+                if( node.getIdentifier().toString().equals("<error>")){
+                    nodes.add(node);
+                    return null;
+                }
+                return super.visitMemberSelect(node, p);
+            }
+        }.scan(new TreePath(path, guardedExpression), null);
     }
 
     private void insideParens(Env env) throws IOException {

@@ -62,6 +62,7 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.NbSourceProvider;
+import org.netbeans.modules.java.lsp.server.debugging.ni.NILocationVisualizer;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 import org.netbeans.modules.java.lsp.server.progress.ProgressOperationEvent;
@@ -364,6 +365,7 @@ public abstract class NbLaunchDelegate {
 
     private static void startNativeDebug(File nativeImageFile, List<String> args, String miDebugger, DebugAdapterContext context, ExecutionDescriptor executionDescriptor, CompletableFuture<Void> launchFuture, ActionProgress debugProgress) {
         AtomicReference<NbDebugSession> debugSessionRef = new AtomicReference<>();
+        CompletableFuture<Void> finished = new CompletableFuture<>();
         NIDebugger niDebugger;
         try {
             niDebugger = NIDebugRunner.start(nativeImageFile, args, miDebugger, null, null, executionDescriptor, engine -> {
@@ -373,6 +375,12 @@ public abstract class NbLaunchDelegate {
                 context.setDebugSession(debugSession);
                 launchFuture.complete(null);
                 context.getConfigurationSemaphore().waitForConfigurationDone();
+                session.addPropertyChangeListener(Session.PROP_CURRENT_LANGUAGE, evt -> {
+                    if (evt.getNewValue() == null) {
+                        // No current language => finished
+                        finished.complete(null);
+                    }
+                });
             });
         } catch (IllegalStateException ex) {
             ErrorUtilities.completeExceptionally(launchFuture,
@@ -383,6 +391,7 @@ public abstract class NbLaunchDelegate {
         }
         NbDebugSession debugSession = debugSessionRef.get();
         debugSession.setNIDebugger(niDebugger);
+        NILocationVisualizer.handle(nativeImageFile, niDebugger, finished, context.getLspSession().getLspServer().getOpenedDocuments());
     }
 
     @NonNull

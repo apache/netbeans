@@ -29,7 +29,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.EventListener;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -59,6 +61,9 @@ import org.netbeans.modules.cpplite.debugger.breakpoints.CPPLiteBreakpoint;
 import org.netbeans.modules.nativeexecution.api.ExecutionEnvironmentFactory;
 import org.netbeans.modules.nativeexecution.api.pty.Pty;
 import org.netbeans.modules.nativeexecution.api.pty.PtySupport;
+import org.netbeans.modules.nativeimage.api.Location;
+import org.netbeans.modules.nativeimage.api.SourceInfo;
+import org.netbeans.modules.nativeimage.api.Symbol;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.DebuggerEngineProvider;
 import org.netbeans.spi.debugger.SessionProvider;
@@ -419,6 +424,140 @@ public final class CPPLiteDebugger {
             return null;
         }
         return versionRecord.command().getConsoleStream();
+    }
+
+    public List<Location> listLocations(String filePath) {
+        MIRecord lines;
+        try {
+            lines = sendAndGet("-symbol-list-lines " + filePath);
+        } catch (InterruptedException ex) {
+            return null;
+        }
+        MIValue linesValue = lines.results().valueOf("lines");
+        if (linesValue instanceof MITList) {
+            MITList lineList = (MITList) linesValue;
+            int size = lineList.size();
+            List<Location> locations = new ArrayList<>(size);
+            Location.Builder locationBuilder = Location.newBuilder();
+            for (MITListItem item : lineList) {
+                if (item instanceof MITList) {
+                    MITList il = (MITList) item;
+                    String pcs = il.getConstValue("pc", null);
+                    if (pcs != null) {
+                        long pc;
+                        if (pcs.startsWith("0x")) {
+                            pcs = pcs.substring(2);
+                            pc = Long.parseUnsignedLong(pcs, 16);
+                        } else {
+                            pc = Long.parseUnsignedLong(pcs);
+                        }
+                        locationBuilder.pc(pc);
+                    } else {
+                        locationBuilder.pc(0);
+                    }
+                    String lineStr = il.getConstValue("line", null);
+                    if (lineStr != null) {
+                        locationBuilder.line(Integer.parseInt(lineStr));
+                    } else {
+                        locationBuilder.line(0);
+                    }
+                    locations.add(locationBuilder.build());
+                }
+            }
+            return locations;
+        } else {
+            return null;
+        }
+    }
+
+    public Map<SourceInfo, List<Symbol>> listFunctions(String name, boolean includeNondebug, int maxResults) {
+        StringBuilder command = new StringBuilder("-symbol-info-functions");
+        if (name != null) {
+            command.append(" --name ");
+            command.append(name);
+        }
+        if (includeNondebug) {
+            command.append(" --include-nondebug");
+        }
+        if (maxResults > 0) {
+            command.append(" --max-results ");
+            command.append(maxResults);
+        }
+        return listSymbols(command.toString());
+    }
+
+    public Map<SourceInfo, List<Symbol>> listVariables(String name, boolean includeNondebug, int maxResults) {
+        StringBuilder command = new StringBuilder("-symbol-info-variables");
+        if (name != null) {
+            command.append(" --name ");
+            command.append(name);
+        }
+        if (includeNondebug) {
+            command.append(" --include-nondebug");
+        }
+        if (maxResults > 0) {
+            command.append(" --max-results ");
+            command.append(maxResults);
+        }
+        return listSymbols(command.toString());
+    }
+
+    private Map<SourceInfo, List<Symbol>> listSymbols(String command) {
+        MIRecord result;
+        try {
+            result = sendAndGet(command);
+        } catch (InterruptedException ex) {
+            return null;
+        }
+        MIValue allSymbolsValue = result.results().valueOf("symbols");
+        if (allSymbolsValue instanceof MITList) {
+            MITList allSymbolsList = (MITList) allSymbolsValue;
+            if (allSymbolsList.size() == 0) {
+                return Collections.emptyMap();
+            }
+            MIValue debugValue = allSymbolsList.valueOf("debug");
+            if (debugValue instanceof MITList) {
+                MITList debugList = (MITList) debugValue;
+                int size = debugList.size();
+                Map<SourceInfo, List<Symbol>> sourceSymbols = new LinkedHashMap<>(size);
+                for (MITListItem debugItem : debugList) {
+                    if (debugItem instanceof MITList) {
+                        MITList sourceWithSymbols = (MITList) debugItem;
+                        SourceInfo.Builder sourceBuilder = SourceInfo.newBuilder();
+                        String filename = sourceWithSymbols.getConstValue("filename", null);
+                        String fullname = sourceWithSymbols.getConstValue("fullname", null);
+                        sourceBuilder.fileName(filename);
+                        sourceBuilder.fullName(fullname);
+                        SourceInfo source = sourceBuilder.build();
+                        MIValue symbolsValue = sourceWithSymbols.valueOf("symbols");
+                        if (symbolsValue instanceof MITList) {
+                            MITList symbolsList = (MITList) symbolsValue;
+                            int symbolsSize = symbolsList.size();
+                            List<Symbol> symbols = new ArrayList<>(symbolsSize);
+                            for (MITListItem symbolItem : symbolsList) {
+                                if (symbolItem instanceof MITList) {
+                                    MITList symbolList = (MITList) symbolItem;
+                                    String name = symbolList.getConstValue("name");
+                                    String type = symbolList.getConstValue("type", null);
+                                    String description = symbolList.getConstValue("description", null);
+                                    Symbol.Builder symbolBuilder = Symbol.newBuilder();
+                                    symbolBuilder.name(name);
+                                    symbolBuilder.type(type);
+                                    symbolBuilder.description(description);
+                                    symbols.add(symbolBuilder.build());
+                                }
+                            }
+                            sourceSymbols.put(source, symbols);
+                        }
+                    }
+                }
+                return Collections.unmodifiableMap(sourceSymbols);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 
     ContextProvider getContextProvider() {

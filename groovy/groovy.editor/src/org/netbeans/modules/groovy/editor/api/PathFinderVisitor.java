@@ -29,7 +29,9 @@ import org.codehaus.groovy.ast.ClassCodeVisitorSupport;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.ConstructorNode;
 import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.ImportNode;
 import org.codehaus.groovy.ast.MethodNode;
+import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.ast.Parameter;
 import org.codehaus.groovy.ast.PropertyNode;
 import org.codehaus.groovy.ast.expr.ArgumentListExpression;
@@ -558,6 +560,36 @@ public class PathFinderVisitor extends ClassCodeVisitorSupport {
         // we don't want synthetic static initializers introducing this variables
         if (!node.isSynthetic() && isInside(node, line, column)) {
             super.visitProperty(node);
+        }
+    }
+
+    @Override
+    public void visitImports(ModuleNode node) {
+        if (node != null) {
+            for (ImportNode importNode : node.getImports()) {
+                if (isInside(importNode, line, column)) {
+                    visitAnnotations(importNode);
+                    importNode.visit(this);
+                }
+            }
+            for (ImportNode importStarNode : node.getStarImports()) {
+                if (isInside(importStarNode, line, column)) {
+                    visitAnnotations(importStarNode);
+                    importStarNode.visit(this);
+                }
+            }
+            for (ImportNode importStaticNode : node.getStaticImports().values()) {
+                if (isInside(importStaticNode, line, column)) {
+                    visitAnnotations(importStaticNode);
+                    importStaticNode.visit(this);
+                }
+            }
+            for (ImportNode importStaticStarNode : node.getStaticStarImports().values()) {
+                if (isInside(importStaticStarNode, line, column)) {
+                    visitAnnotations(importStaticStarNode);
+                    importStaticStarNode.visit(this);
+                }
+            }
         }
     }
 

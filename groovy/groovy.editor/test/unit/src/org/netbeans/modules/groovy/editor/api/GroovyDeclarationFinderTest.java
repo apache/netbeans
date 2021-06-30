@@ -109,31 +109,41 @@ public class GroovyDeclarationFinderTest extends GroovyTestBase {
 
     public void testExtendsImplements2() throws Exception {
         checkDeclaration(TEST_BASE + "a/Declaration2.groovy",
-                "class Declaration2 extends Declaration1 implements Interfa^ce1, Interface2 {", "Interface1.java", 12);
+                "class Declaration2 extends Declaration1 implements Interfa^ce1, Interface2 {", "Interface1.java", 29);
     }
 
     public void testExtendsImplements3() throws Exception {
         checkDeclaration(TEST_BASE + "a/Declaration2.groovy",
-                "class Declaration2 extends Declaration1 implements Interface1, Int^erface2 {", "Interface2.java", 12);
+                "class Declaration2 extends Declaration1 implements Interface1, Int^erface2 {", "Interface2.java", 29);
     }
 
     public void testInnerClasses1() throws Exception {
         checkDeclaration(TEST_BASE + "a/Declaration3.groovy",
-                "        return Inner^Classes.Type.DUMMY_1;", "InnerClasses.java", 12);
+                "        return Inner^Classes.Type.DUMMY_1;", "InnerClasses.java", 25);
     }
 
     public void testInnerClasses2() throws Exception {
         checkDeclaration(TEST_BASE + "a/Declaration3.groovy",
-                "        return InnerClasses.Ty^pe.DUMMY_1;", "InnerClasses.java", 45);
+                "        return InnerClasses.Ty^pe.DUMMY_1;", "InnerClasses.java", 64);
     }
 
     public void testInnerClasses3() throws Exception {
         checkDeclaration(TEST_BASE + "a/Declaration3.groovy",
-                "        InnerClasses.Type.ca^ll()", "InnerClasses.java", 114);
+                "        InnerClasses.Type.ca^ll()", "InnerClasses.java", 133);
     }
 
     public void testInnerClasses4() throws Exception {
         checkDeclaration(TEST_BASE + "a/Declaration3.groovy",
                 "        return InnerClasses.Type.DU^MMY_1;", "InnerClasses.java", 79);
+    }
+
+    public void testImports1() throws Exception {
+        checkDeclaration(TEST_BASE + "Imports.groovy",
+                "import a.Interfa^ce1", "Interface1.java", 29);
+    }
+
+    public void testImports2() throws Exception {
+        checkDeclaration(TEST_BASE + "Imports.groovy",
+                "class Imports implements Interfa^ce1 {", "Interface1.java", 29);
     }
 }

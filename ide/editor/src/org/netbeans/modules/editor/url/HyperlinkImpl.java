@@ -277,7 +277,9 @@ public final class HyperlinkImpl implements HyperlinkProviderExt, HyperlinkLocat
     @Override
     public CompletableFuture<HyperlinkLocation> getHyperlinkLocation(Document doc, int offset) {
         int[] span = this.getHyperlinkSpan(doc, offset, HyperlinkType.GO_TO_DECLARATION);
-
+        if (span == null) {
+            return CompletableFuture.completedFuture(null);
+        }
         return CompletableFuture.supplyAsync(() -> {
             try {
                 String urlText = doc.getText(span[0], span[1] - span[0]);

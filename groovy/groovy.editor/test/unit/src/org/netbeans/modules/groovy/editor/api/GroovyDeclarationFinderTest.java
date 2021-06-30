@@ -136,4 +136,14 @@ public class GroovyDeclarationFinderTest extends GroovyTestBase {
         checkDeclaration(TEST_BASE + "a/Declaration3.groovy",
                 "        return InnerClasses.Type.DU^MMY_1;", "InnerClasses.java", 79);
     }
+
+    public void testImports1() throws Exception {
+        checkDeclaration(TEST_BASE + "Imports.groovy",
+                "import a.Interfa^ce1", "Interface1.java", 29);
+    }
+
+    public void testImports2() throws Exception {
+        checkDeclaration(TEST_BASE + "Imports.groovy",
+                "class Imports implements Interfa^ce1 {", "Interface1.java", 29);
+    }
 }

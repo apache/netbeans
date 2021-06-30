@@ -38,6 +38,7 @@ import javax.swing.text.Document;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.ImportNode;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.ast.Parameter;
 import org.codehaus.groovy.ast.PropertyNode;
@@ -303,7 +304,8 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
                 || closest instanceof ClassExpression
                 || closest instanceof PropertyNode
                 || closest instanceof FieldNode
-                || closest instanceof Parameter) {
+                || closest instanceof Parameter
+                || closest instanceof ImportNode) {
 
                 String fqName = getFqNameForNode(closest);
                 return findType(fqName, range, doc, info, index);
@@ -476,6 +478,8 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
             return ((FieldNode) node).getType().getName();
         } else if (node instanceof Parameter) {
             return ((Parameter) node).getType().getName();
+        } else if (node instanceof ImportNode) {
+            return ((ImportNode) node).getType().getName();
         }
 
         return "";

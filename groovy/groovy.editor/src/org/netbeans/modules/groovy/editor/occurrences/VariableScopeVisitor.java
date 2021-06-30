@@ -169,7 +169,7 @@ public final class VariableScopeVisitor extends TypeVisitor {
                 }
 
             // #234000
-            } else if (leaf instanceof BlockStatement) {
+            } else if (leaf instanceof ImportNode) {
                 ASTNode root = path.root();
                 if (root instanceof ModuleNode) {
                     for (Map.Entry<String, ImportNode> entry : ((ModuleNode) root).getStaticImports().entrySet()) {
@@ -349,7 +349,7 @@ public final class VariableScopeVisitor extends TypeVisitor {
             }
 
             // #234000
-            if (leaf instanceof BlockStatement) {
+            if (leaf instanceof ImportNode) {
                 ASTNode root = path.root();
                 if (root instanceof ModuleNode) {
                     for (Map.Entry<String, ImportNode> entry : ((ModuleNode) root).getStaticImports().entrySet()) {
@@ -528,7 +528,7 @@ public final class VariableScopeVisitor extends TypeVisitor {
             }
 
             // For both: #233954 and #234000
-            if (leaf instanceof BlockStatement) {
+            if (leaf instanceof ImportNode) {
                 for (Map.Entry<String, ImportNode> entry : node.getStaticImports().entrySet()) {
                     OffsetRange range = ASTUtils.getNextIdentifierByName(doc, entry.getKey(), cursorOffset);
                     if (range.containsInclusive(cursorOffset)) {

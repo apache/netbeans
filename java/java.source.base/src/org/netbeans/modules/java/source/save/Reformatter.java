@@ -594,6 +594,12 @@ public class Reformatter implements ReformatTask {
                     case TreeShims.BINDING_PATTERN:
                         ret = scanBindingPattern(tree, p);
                         break;
+                    case TreeShims.GUARDED_PATTERN:
+                        ret = scanGuardedPattern(tree, p);
+                        break;
+                    case TreeShims.PARENTHESIZED_PATTERN:
+                        ret = scanParenthesizedPattern(tree, p);
+                        break;
                     case TreeShims.RECORD:
                         ret = scanRecord((ClassTree) tree, p);
                         break;
@@ -2809,6 +2815,41 @@ public class Reformatter implements ReformatTask {
             return true;
         }
 
+        private Boolean scanGuardedPattern(Tree node, Void p) {
+            try {
+                Tree gpt = TreeShims.getGuardedPattern(node);
+                if (gpt != null) {
+                    Name name = TreeShims.getBinding(gpt);
+                    Tree type = TreeShims.getBindingPatternType(gpt);
+                    scan(type, p);
+                    if (name != null) {
+                        removeWhiteSpace(IDENTIFIER);
+                    }
+                }
+            } catch (RuntimeException ex) {
+                return false;
+            }
+
+            ExpressionTree exprTree = TreeShims.getGuardedExpression(node);
+            if (exprTree != null) {
+                accept(IDENTIFIER);
+                removeWhiteSpace(IDENTIFIER);
+                scan(exprTree, p);
+            }
+            return true;
+        }
+
+        private Boolean scanParenthesizedPattern(Tree node, Void p) {
+            Tree ppt = TreeShims.getParenthesizedPattern(node);
+            if (ppt != null) {
+                if(scanGuardedPattern(ppt, p) == false){
+                    scanBindingPattern(ppt, p);
+                }
+                removeWhiteSpace(IDENTIFIER);
+            }
+            return true;
+        }
+
         private Boolean handleYield(Tree node, Void p) {
             ExpressionTree exprTree = TreeShims.getYieldValue(node);
             if (exprTree != null) {
@@ -2939,13 +2980,15 @@ public class Reformatter implements ReformatTask {
                     space();
                     for (Tree label : labels) {
                         if (label.getKind().toString().equals(TreeShims.DEFAULT_CASE_LABEL)) {
-                            clearWhiteSpace(JavaTokenId.DEFAULT);
+                            removeWhiteSpace(JavaTokenId.DEFAULT);
                             accept(DEFAULT);
-                        } else if (label.getKind().toString().equals(TreeShims.BINDING_PATTERN)) {
-                            clearWhiteSpace(JavaTokenId.IDENTIFIER);
+                        } else if (label.getKind().toString().equals(TreeShims.BINDING_PATTERN)
+                                || label.getKind().toString().equals(TreeShims.PARENTHESIZED_PATTERN)
+                                || label.getKind().toString().equals(TreeShims.GUARDED_PATTERN)) {
+                            removeWhiteSpace(JavaTokenId.IDENTIFIER);
                             scan(label, p);
                         } else if (label.getKind().toString().equals(TreeShims.NULL_LITERAL)) {
-                            clearWhiteSpace(JavaTokenId.NULL);
+                            removeWhiteSpace(JavaTokenId.NULL);
                             scan(label, p);
                         } else {
                             scan(label, p);
@@ -3001,7 +3044,7 @@ public class Reformatter implements ReformatTask {
             return true;
         }
 
-        private void clearWhiteSpace(JavaTokenId forToken) {
+        private void removeWhiteSpace(JavaTokenId forToken) {
             do {
                 if (tokens.offset() >= endPos) {
                     break;
@@ -5678,4 +5721,3 @@ public class Reformatter implements ReformatTask {
         }
     }
 }
-

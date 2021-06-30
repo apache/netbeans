@@ -57,6 +57,8 @@ public class TreeShims {
     public static final int PATTERN_MATCHING_INSTANCEOF_PREVIEW_JDK_VERSION = 15; //NOI18N
     public static final String DEFAULT_CASE_LABEL = "DEFAULT_CASE_LABEL"; //NOI18N
     public static final String NULL_LITERAL = "NULL_LITERAL"; //NOI18N
+    public static final String PARENTHESIZED_PATTERN = "PARENTHESIZED_PATTERN"; //NOI18N
+    public static final String GUARDED_PATTERN = "GUARDED_PATTERN"; //NOI18N
     
     public static List<? extends ExpressionTree> getExpressions(CaseTree node) {
         try {
@@ -183,6 +185,49 @@ public class TreeShims {
             throw TreeShims.<RuntimeException>throwAny(ex);
         }
     }
+
+    public static Tree getGuardedPattern(Tree node) {
+        try {
+            Class gpt = Class.forName("com.sun.source.tree.GuardedPatternTree"); //NOI18N
+            return isJDKVersionRelease17_Or_Above()
+                    ? (Tree)gpt.getDeclaredMethod("getPattern").invoke(node)  //NOI18N
+                    : null;
+
+        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
+    public static Tree getParenthesizedPattern(Tree node) {
+        try {
+            Class ppt = Class.forName("com.sun.source.tree.ParenthesizedPatternTree"); //NOI18N
+            return isJDKVersionRelease17_Or_Above()
+                    ? (Tree)ppt.getDeclaredMethod("getPattern").invoke(node)  //NOI18N
+                    : null;
+
+        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
+    public static ExpressionTree getGuardedExpression(Tree node) {
+        try {
+            Class gpt = Class.forName("com.sun.source.tree.GuardedPatternTree"); //NOI18N
+            return isJDKVersionRelease17_Or_Above()
+                    ? (ExpressionTree)gpt.getDeclaredMethod("getExpression").invoke(node)  //NOI18N
+                    : null;
+
+        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
     public static List<? extends Tree> getPermits(ClassTree node) {
         List<? extends Tree> perms = null;
         try {
@@ -333,6 +378,10 @@ public class TreeShims {
 	
     public static boolean isJDKVersionRelease16_Or_Above(){
         return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(16) >= 0;
+    }
+
+    public static boolean isJDKVersionRelease17_Or_Above(){
+        return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(17) >= 0;
     }
 
     public static ModuleTree getModule(CompilationUnitTree cut) {

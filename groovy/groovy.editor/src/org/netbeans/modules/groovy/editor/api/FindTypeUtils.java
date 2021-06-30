@@ -232,6 +232,9 @@ public final class FindTypeUtils {
             moduleNode = (ModuleNode) leaf;
         } else if (leaf instanceof ClassNode) {
             moduleNode = ((ClassNode) leaf).getModule();
+        } else if (leaf instanceof ImportNode &&
+                   leafParent instanceof ClassNode) {
+            moduleNode = ((ClassNode) leafParent).getModule();
         } else if (leaf instanceof BlockStatement &&
                    leafParent instanceof MethodNode &&
                    path.root() instanceof ModuleNode) {

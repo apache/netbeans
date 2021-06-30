@@ -260,13 +260,7 @@ public class PathFinderVisitor extends ClassCodeVisitorSupport {
     @Override
     public void visitMethodCallExpression(MethodCallExpression node) {
         if (isInside(node, line, column)) {
-            // FIXME http://jira.codehaus.org/browse/GROOVY-3263
-            if (node.isImplicitThis()) {
-                node.getMethod().visit(this);
-                node.getArguments().visit(this);
-            } else {
                 super.visitMethodCallExpression(node);
-            }
         }
     }
 

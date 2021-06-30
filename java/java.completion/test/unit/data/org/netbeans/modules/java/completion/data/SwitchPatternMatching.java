@@ -19,6 +19,8 @@
 
 package test;
 
+import java.util.stream.IntStream;
+
 public class Test{
     
      public void op(int a) {
@@ -26,8 +28,9 @@ public class Test{
         String result = switch (obj) {
             case null, String  ->
                 "null & String";
-            case CharSequence s ->
+            case CharSequence s && s. && obj. && IntStream.of(1).max().->
                 "CharSequence";
+            case (java.util.List list && list. && new StringBuilder().ERROR. && java.util.ArrayList<String>.)->"list";
             default ->
                 "default";
         };

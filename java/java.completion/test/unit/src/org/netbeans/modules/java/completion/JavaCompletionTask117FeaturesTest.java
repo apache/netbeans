@@ -52,12 +52,33 @@ public class JavaCompletionTask117FeaturesTest extends CompletionTestBase {
         return suite;
     }
 
-    
+
     public void testVariableNameSuggestion() throws Exception {
         EXTRA_OPTIONS.add("--enable-preview");
-        performTest("SwitchPatternMatching", 975, null, "switchPatternMatching.pass", getLatestSource());
+        performTest("SwitchPatternMatching", 1011, null, "AutoCompletion_VarNameSuggestion_PatternMatchingSwitch.pass", getLatestSource());
     } 
-    
+
+    public void testClassMembersAutoCompletion_GuardedPattern() throws Exception {
+        EXTRA_OPTIONS.add("--enable-preview");
+        performTest("SwitchPatternMatching", 1085, null, "AutoCompletion_MembersSelect_GuardedPatternMatchingSwitch.pass", getLatestSource());
+    }
+
+    public void testClassMembersAutoCompletion_GuardedPattern_1() throws Exception {
+        EXTRA_OPTIONS.add("--enable-preview");
+        performTest("SwitchPatternMatching", 1093, null, "AutoCompletion_MembersSelect_GuardedPatternMatchingSwitch_1.pass", getLatestSource());
+    }
+    public void testClassMembersAutoCompletion_GuardedPattern_2() throws Exception {
+        EXTRA_OPTIONS.add("--enable-preview");
+        performTest("SwitchPatternMatching", 1113, null, "AutoCompletion_MembersSelect_GuardedPatternMatchingSwitch_2.pass", getLatestSource());
+    }
+    public void testClassMembersAutoCompletion_ParanthesizedPattern() throws Exception {
+        EXTRA_OPTIONS.add("--enable-preview");
+        performTest("SwitchPatternMatching", 1200, null, "AutoCompletion_MembersSelect_ParenthesizedPatternMatchingSwitch.pass", getLatestSource());
+    }
+    public void testClassMembersAutoCompletion_ParanthesizedPattern_1() throws Exception {
+        EXTRA_OPTIONS.add("--enable-preview");
+        performTest("SwitchPatternMatching", 1224, null, "AutoCompletion_MembersSelect_ParenthesizedPatternMatchingSwitch_1.pass", getLatestSource());
+    }
     public void noop() {
     }
 

@@ -2494,28 +2494,33 @@ public final class JavaCompletionTask<T> extends BaseTask {
             }
         } else {
             TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, cst, offset);
-            if (ts != null && ts.token().id() == JavaTokenId.IDENTIFIER && caseExpressionTree != null && caseExpressionTree.getKind() == Tree.Kind.IDENTIFIER) {
-                TreePath tPath = new TreePath(path, caseExpressionTree);
-                insideExpression(env, tPath);
+            if (ts != null && ts.token().id() == JavaTokenId.IDENTIFIER) {
+                for (ExpressionTree caseExpression : caseTreeList) {
+                    if (caseExpression != null && caseExpression.getKind() == Tree.Kind.IDENTIFIER) {
+                        TreePath tPath = new TreePath(path, caseExpression);
+                        insideExpression(env, tPath);
+                        return;
+                    }
+                }
             } else if (ts != null && ts.token().id() == JavaTokenId.DOT && TreeShims.getLabels(cst).size() > 0) {
                 List<? extends Tree> labels = TreeShims.getLabels(cst);
-                List<MemberSelectTree> nodes = new ArrayList<>();
+                MemberSelectTreeNode mstn = new MemberSelectTreeNode();
                 for(  Tree label:  labels){
                     if( label.getKind().toString().equals(TreeShims.GUARDED_PATTERN)){
-                        scanSwitchCaseLabelsForMemberSelect(nodes, path, TreeShims.getGuardedExpression(label));
+                        scanSwitchCaseLabelsForMemberSelect(mstn, path, TreeShims.getGuardedExpression(label));
                     } else if( label.getKind().toString().equals(TreeShims.PARENTHESIZED_PATTERN)){
                         Tree ppt = TreeShims.getParenthesizedPattern(label);
                         if( ppt != null){
                             try{
                                 ExpressionTree guardedExpression = TreeShims.getGuardedExpression(ppt);
-                                scanSwitchCaseLabelsForMemberSelect(nodes, path, guardedExpression);
-                            }catch ( RuntimeException ex){
+                                scanSwitchCaseLabelsForMemberSelect(mstn, path, guardedExpression);
+                            }catch  ( RuntimeException ex){
                                 return;
                             }
                         }
                     }
-                    if (nodes.size() > 0){
-                        insideMemberSelect(env,new  TreePath (path, nodes.get(0)));
+                    if (mstn.node != null){
+                        insideMemberSelect(env,new  TreePath (path, mstn.node));
                     }
                 }
             } else if( ts != null && ts.token().id() != JavaTokenId.DEFAULT) {
@@ -2525,19 +2530,29 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
     }
 
-    private void scanSwitchCaseLabelsForMemberSelect(List<MemberSelectTree> nodes, TreePath path, ExpressionTree guardedExpression) {
+    private void scanSwitchCaseLabelsForMemberSelect(MemberSelectTreeNode mstn, TreePath path, ExpressionTree guardedExpression) {
+        if( guardedExpression.toString().endsWith("(ERROR)")){
+            return;
+        }
         new TreePathScanner(){
             @Override
             public Object visitMemberSelect(MemberSelectTree node, Object p) {
-                if( node.getIdentifier().toString().equals("<error>")){
-                    nodes.add(node);
-                    return null;
+                if(  node.getIdentifier().toString().equals("<error>")){
+                    int lastErrorNodePos = guardedExpression.toString().lastIndexOf(node.getExpression().toString());
+                    if( lastErrorNodePos > mstn.lastErrorNodePos){
+                        mstn.lastErrorNodePos = lastErrorNodePos;
+                        mstn.node = node;
+                    }
                 }
                 return super.visitMemberSelect(node, p);
             }
         }.scan(new TreePath(path, guardedExpression), null);
     }
 
+    class MemberSelectTreeNode{
+        MemberSelectTree node;
+        int lastErrorNodePos = -1;
+    }
     private void insideParens(Env env) throws IOException {
         TreePath path = env.getPath();
         ParenthesizedTree pa = (ParenthesizedTree) path.getLeaf();

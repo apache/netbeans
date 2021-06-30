@@ -23,6 +23,7 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.java.lsp.server.files.OpenedDocuments;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -73,4 +74,9 @@ public interface LspServerState {
      * @return TextDocumentService
      */
     public TextDocumentService getTextDocumentService();
+
+    /**
+     * Get documents opened by the LSP client.
+     */
+    public OpenedDocuments getOpenedDocuments();
 }

@@ -175,6 +175,7 @@ import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.modules.java.lsp.server.files.OpenedDocuments;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.impl.indexing.implspi.ActiveDocumentProvider.IndexingAware;
@@ -235,7 +236,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     /**
      * Documents actually opened by the client.
      */
-    private final Map<String, Document> openedDocuments = new ConcurrentHashMap<>();
     private final Map<String, RequestProcessor.Task> diagnosticTasks = new HashMap<>();
     private final LspServerState server;
     private NbCodeLanguageClient client;
@@ -246,9 +246,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     private void reRunDiagnostics() {
-        Set<String> documents = new HashSet<>(openedDocuments.keySet());
-
-        for (String doc : documents) {
+        for (String doc : server.getOpenedDocuments().getUris()) {
             runDiagnosticTasks(doc);
         }
     }
@@ -447,7 +445,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
         String uri = params.getTextDocument().getUri();
         FileObject file = fromURI(uri);
-        Document doc = openedDocuments.get(uri);
+        Document doc = server.getOpenedDocuments().getDocument(uri);
         if (file == null || doc == null) {
             return CompletableFuture.completedFuture(null);
         }
@@ -471,7 +469,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definition(DefinitionParams params) {
         try {
             String uri = params.getTextDocument().getUri();
-            Document doc = openedDocuments.get(uri);
+            Document doc = server.getOpenedDocuments().getDocument(uri);
             if (doc != null) {
                 FileObject file = Utils.fromUri(uri);
                 if (file != null) {
@@ -494,7 +492,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> typeDefinition(TypeDefinitionParams params) {
         try {
             String uri = params.getTextDocument().getUri();
-            Document doc = openedDocuments.get(uri);
+            Document doc = server.getOpenedDocuments().getDocument(uri);
             if (doc != null) {
                 FileObject file = Utils.fromUri(uri);
                 if (file != null) {
@@ -770,7 +768,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         if (server.openedProjects().getNow(null) == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
-        Document doc = openedDocuments.get(params.getTextDocument().getUri());
+        Document doc = server.getOpenedDocuments().getDocument(params.getTextDocument().getUri());
         if (doc == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
@@ -1316,7 +1314,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 //TODO: include stack trace:
                 client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
             }
-            openedDocuments.put(params.getTextDocument().getUri(), doc);
+            server.getOpenedDocuments().notifyOpened(params.getTextDocument().getUri(), doc);
             
             // attempt to open the directly owning project, delay diagnostics after project open:
             server.asyncOpenFileOwner(file).thenRun(() ->
@@ -1333,7 +1331,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     public void didChange(DidChangeTextDocumentParams params) {
         String uri = params.getTextDocument().getUri();
         upToDateTests.put(uri, Boolean.FALSE);
-        Document doc = openedDocuments.get(uri);
+        Document doc = server.getOpenedDocuments().getDocument(uri);
         if (doc != null) {
             NbDocument.runAtomic((StyledDocument) doc, () -> {
                 for (TextDocumentContentChangeEvent change : params.getContentChanges()) {
@@ -1359,7 +1357,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             upToDateTests.remove(uri);
             // the order here is important ! As the file may cease to exist, it's
             // important that the doucment is already gone form the client.
-            openedDocuments.remove(uri);
+            server.getOpenedDocuments().notifyClosed(uri);
             FileObject file = fromURI(uri, true);
             if (file == null) {
                 return;
@@ -1481,14 +1479,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
         diagnosticTasks.computeIfAbsent(uri, u -> {
             return BACKGROUND_TASKS.create(() -> {
-                Document originalDoc = openedDocuments.get(uri);
+                Document originalDoc = server.getOpenedDocuments().getDocument(uri);
                 long originalVersion = documentVersion(originalDoc);
                 List<Diagnostic> errorDiags = computeDiags(u, -1, ErrorProvider.Kind.ERRORS, originalVersion);
                 if (documentVersion(originalDoc) == originalVersion) {
                     publishDiagnostics(uri, errorDiags);
                     BACKGROUND_TASKS.create(() -> {
                         List<Diagnostic> hintDiags = computeDiags(u, -1, ErrorProvider.Kind.HINTS, originalVersion);
-                        Document doc = openedDocuments.get(uri);
+                        Document doc = server.getOpenedDocuments().getDocument(uri);
                         if (documentVersion(doc) == originalVersion) {
                             publishDiagnostics(uri, hintDiags);
                 }
@@ -1646,7 +1644,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
      * @param uri file URI
      */
     private void missingFileDiscovered(String uri) {
-        if (openedDocuments.get(uri) != null) {
+        if (server.getOpenedDocuments().getDocument(uri) != null) {
             // do not report anything, the document is still opened in the editor
             return;
         }
@@ -1677,7 +1675,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @CheckForNull
     public JavaSource getJavaSource(String fileUri) {
-        Document doc = openedDocuments.get(fileUri);
+        Document doc = server.getOpenedDocuments().getDocument(fileUri);
         if (doc == null) {
             FileObject file = fromURI(fileUri);
             if (file == null) {
@@ -1691,7 +1689,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @CheckForNull
     public Source getSource(String fileUri) {
-        Document doc = openedDocuments.get(fileUri);
+        Document doc = server.getOpenedDocuments().getDocument(fileUri);
         if (doc == null) {
             FileObject file = fromURI(fileUri);
             if (file == null) {

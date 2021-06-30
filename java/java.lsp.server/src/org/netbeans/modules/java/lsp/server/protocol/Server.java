@@ -88,6 +88,7 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.LspSession;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.files.OpenedDocuments;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.spi.project.ActionProgress;
@@ -316,6 +317,8 @@ public final class Server {
          * the set of opened projects change, collections are never modified.
          */
         private volatile Collection<Project> openedProjects = Collections.emptyList();
+
+        private final OpenedDocuments openedDocuments = new OpenedDocuments();
         
         Lookup getSessionLookup() {
             return sessionLookup;
@@ -574,6 +577,11 @@ public final class Server {
             return workspaceProjects;
         }
         
+        @Override
+        public OpenedDocuments getOpenedDocuments() {
+            return openedDocuments;
+        }
+
         private JavaSource showIndexingCompleted(Project[] opened) {
             try {
                 final JavaSource source = checkJavaSupport();
@@ -824,6 +832,24 @@ public final class Server {
             CompletableFuture<MessageActionItem> x = new CompletableFuture<>();
             x.complete(null);
             return x;
+        }
+
+        @Override
+        public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
+            logWarning(params);
+            CompletableFuture<String> x = new CompletableFuture<>();
+            x.complete(null);
+            return x;
+        }
+
+        @Override
+        public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
+            logWarning(params);
+        }
+
+        @Override
+        public void disposeTextEditorDecoration(String params) {
+            logWarning(params);
         }
 
         @Override

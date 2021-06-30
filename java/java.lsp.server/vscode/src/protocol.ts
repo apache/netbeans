@@ -18,7 +18,12 @@
  */
 'use strict';
 
-import {QuickPickItem} from 'vscode';
+import {
+    DecorationRenderOptions,
+    QuickPickItem,
+    Range,
+    TextEditorDecorationType,
+} from 'vscode';
 import {
     NotificationType,
     RequestType,
@@ -105,3 +110,21 @@ export interface DebugConnector {
     defaultValues: string[];
     descriptions: string[];
 }
+
+export interface SetTextEditorDecorationParams {
+    key: string;
+    uri: string;
+    ranges: Range[];
+};
+
+export namespace TextEditorDecorationCreateRequest {
+    export const type = new RequestType<DecorationRenderOptions, string, void, void>('window/createTextEditorDecoration');
+};
+
+export namespace TextEditorDecorationSetNotification {
+    export const type = new NotificationType<SetTextEditorDecorationParams, void>('window/setTextEditorDecoration');
+};
+
+export namespace TextEditorDecorationDisposeNotification {
+    export const type = new NotificationType<string, void>('window/disposeTextEditorDecoration');
+};

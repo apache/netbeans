@@ -18,7 +18,7 @@
  */
 'use strict';
 
-import { commands, window, workspace, ExtensionContext, ProgressLocation } from 'vscode';
+import { commands, window, workspace, ExtensionContext, ProgressLocation, TextEditorDecorationType } from 'vscode';
 
 import {
     LanguageClient,
@@ -43,7 +43,9 @@ import { testExplorerExtensionId, TestHub } from 'vscode-test-adapter-api';
 import { TestAdapterRegistrar } from 'vscode-test-adapter-util';
 import * as launcher from './nbcode';
 import {NbTestAdapter} from './testAdapter';
-import { StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification, DebugConnector } from './protocol';
+import { StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification, DebugConnector,
+         TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification,
+} from './protocol';
 import * as launchConfigurations from './launchConfigurations';
 
 const API_VERSION : string = "1.0";
@@ -596,7 +598,30 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                         }
                     }
                 }
-            })
+            });
+            let decorations = new Map<string, TextEditorDecorationType>();
+            c.onRequest(TextEditorDecorationCreateRequest.type, param => {
+                let decorationType = vscode.window.createTextEditorDecorationType(param);
+                decorations.set(decorationType.key, decorationType);
+                return decorationType.key;
+            });
+            c.onNotification(TextEditorDecorationSetNotification.type, param => {
+                let decorationType = decorations.get(param.key);
+                if (decorationType) {
+                    let editorsWithUri = vscode.window.visibleTextEditors.filter(
+                        editor => editor.document.uri.toString() == param.uri
+                    );
+                    if (editorsWithUri.length > 0) {
+                        editorsWithUri[0].setDecorations(decorationType, param.ranges);
+                    }
+                }
+            });
+            c.onNotification(TextEditorDecorationDisposeNotification.type, param => {
+                let decorationType = decorations.get(param);
+                if (decorationType) {
+                    decorationType.dispose();
+                }
+            });
             handleLog(log, 'Language Client: Ready');
             setClient[0](c);
             commands.executeCommand('setContext', 'nbJavaLSReady', true);

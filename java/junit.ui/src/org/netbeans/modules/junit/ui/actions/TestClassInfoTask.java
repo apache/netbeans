@@ -204,32 +204,17 @@ public final class TestClassInfoTask implements Task<CompilationController> {
         }
     }
 
-    @MimeRegistration(mimeType="text/x-java", service=org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods.Factory.class)
-    public static final class GenericComputeTestMethodsImpl implements org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods.Factory {
+    @MimeRegistration(mimeType="text/x-java", service=org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods.class)
+    public static final class GenericComputeTestMethodsImpl implements org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods {
 
         @Override
-        public org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods create() {
-            return new TaskImpl();
-        }
-
-        private static class TaskImpl implements org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods {
-
-            private final AtomicBoolean cancel = new AtomicBoolean();
-
-            @Override
-            public void cancel() {
-                cancel.set(true);
-            }
-
-            @Override
-            public List<TestMethod> computeTestMethods(Parser.Result parserResult) {
-                try {
-                    CompilationController cc = CompilationController.get(parserResult);
-                    cc.toPhase(Phase.ELEMENTS_RESOLVED);
-                    return TestClassInfoTask.computeTestMethods(cc, cancel, -1);
-                } catch (IOException ex) {}
-                return Collections.emptyList();
-            }
+        public List<TestMethod> computeTestMethods(Parser.Result parserResult, AtomicBoolean cancel) {
+            try {
+                CompilationController cc = CompilationController.get(parserResult);
+                cc.toPhase(Phase.ELEMENTS_RESOLVED);
+                return TestClassInfoTask.computeTestMethods(cc, cancel, -1);
+            } catch (IOException ex) {}
+            return Collections.emptyList();
         }
     }
 

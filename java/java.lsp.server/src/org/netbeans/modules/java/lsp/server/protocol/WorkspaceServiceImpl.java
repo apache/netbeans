@@ -336,8 +336,8 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                         @Override
                         public void run(ResultIterator resultIterator) throws Exception {
                             Parser.Result parserResult = resultIterator.getParserResult();
-                            for (ComputeTestMethods.Factory methodsFactory : MimeLookup.getLookup(parserResult.getSnapshot().getMimePath()).lookupAll(ComputeTestMethods.Factory.class)) {
-                                testMethods.addAll(methodsFactory.create().computeTestMethods(parserResult));
+                            for (ComputeTestMethods ctm : MimeLookup.getLookup(parserResult.getSnapshot().getMimePath()).lookupAll(ComputeTestMethods.class)) {
+                                testMethods.addAll(ctm.computeTestMethods(parserResult, new AtomicBoolean()));
                             }
                         }
                     });

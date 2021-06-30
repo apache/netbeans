@@ -924,8 +924,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     //look for test methods:
                     if (!upToDateTests.getOrDefault(uri, Boolean.FALSE)) {
                         List<TestMethod> testMethods = new ArrayList<>();
-                        for (ComputeTestMethods.Factory methodsFactory : MimeLookup.getLookup(parserResult.getSnapshot().getMimePath()).lookupAll(ComputeTestMethods.Factory.class)) {
-                            testMethods.addAll(methodsFactory.create().computeTestMethods(parserResult));
+                        for (ComputeTestMethods ctm : MimeLookup.getLookup(parserResult.getSnapshot().getMimePath()).lookupAll(ComputeTestMethods.class)) {
+                            testMethods.addAll(ctm.computeTestMethods(parserResult, new AtomicBoolean()));
                         }
                         if (!testMethods.isEmpty()) {
                             String testClassName = null;

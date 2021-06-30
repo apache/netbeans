@@ -35,80 +35,68 @@ import org.netbeans.spi.project.SingleMethod;
  *
  * @author Dusan Balek
  */
-@MimeRegistration(mimeType="text/x-groovy", service=ComputeTestMethods.Factory.class)
-public class GroovyComputeTestMethods implements ComputeTestMethods.Factory {
+@MimeRegistration(mimeType="text/x-groovy", service=ComputeTestMethods.class)
+public class GroovyComputeTestMethods implements ComputeTestMethods {
 
     @Override
-    public ComputeTestMethods create() {
-        return new Impl();
-    }
-
-    private static class Impl implements ComputeTestMethods {
-
-        private final AtomicBoolean cancel = new AtomicBoolean();
-
-        @Override
-        public void cancel() {
-            cancel.set(true);
+    public List<TestMethodController.TestMethod> computeTestMethods(Parser.Result parserResult, AtomicBoolean cancel) {
+        List<TestMethodController.TestMethod> result = new ArrayList<>();
+        if (cancel.get()) {
+            return result;
         }
-
-        @Override
-        public List<TestMethodController.TestMethod> computeTestMethods(Parser.Result parserResult) {
-            List<TestMethodController.TestMethod> result = new ArrayList<>();
-            String text = parserResult.getSnapshot().getText().toString();
-            ModuleNode moduleNode = TestMethodUtil.extractModuleNode(parserResult);
-            for (ClassNode classNode : moduleNode.getClasses()) {
-                ClassNode superClass = classNode.getSuperClass();
-                if ("spock.lang.Specification".equals(superClass.getName())) {
-                    int classStartLine = classNode.getLineNumber();
-                    int classStartColumn = classNode.getColumnNumber();
-                    int classOffset = classStartLine > 0 && classStartColumn > 0 ? getOffset(text, classStartLine, classStartColumn) : 0;
-                    for (MethodNode methodNode : classNode.getMethods()) {
-                        int startLine = methodNode.getLineNumber();
-                        int startColumn = methodNode.getColumnNumber();
-                        int endLine = methodNode.getLastLineNumber();
-                        int endColumn = methodNode.getLastColumnNumber();
-                        if (startLine > 0 && startColumn > 0 && endLine > 0 && endColumn > 0) {
-                            int startOffset = getOffset(text, startLine, startColumn);
-                            int endOffset = getOffset(text, endLine, endColumn);
-                            result.add(new TestMethodController.TestMethod(classNode.getName(),
-                                    new SimplePosition(classOffset),
-                                    new SingleMethod(parserResult.getSnapshot().getSource().getFileObject(), methodNode.getName()),
-                                    new SimplePosition(startOffset),
-                                    new SimplePosition(startOffset),
-                                    new SimplePosition(endOffset)));
-                        }
+        String text = parserResult.getSnapshot().getText().toString();
+        ModuleNode moduleNode = TestMethodUtil.extractModuleNode(parserResult);
+        for (ClassNode classNode : moduleNode.getClasses()) {
+            ClassNode superClass = classNode.getSuperClass();
+            if ("spock.lang.Specification".equals(superClass.getName())) {
+                int classStartLine = classNode.getLineNumber();
+                int classStartColumn = classNode.getColumnNumber();
+                int classOffset = classStartLine > 0 && classStartColumn > 0 ? getOffset(text, classStartLine, classStartColumn) : 0;
+                for (MethodNode methodNode : classNode.getMethods()) {
+                    int startLine = methodNode.getLineNumber();
+                    int startColumn = methodNode.getColumnNumber();
+                    int endLine = methodNode.getLastLineNumber();
+                    int endColumn = methodNode.getLastColumnNumber();
+                    if (startLine > 0 && startColumn > 0 && endLine > 0 && endColumn > 0) {
+                        int startOffset = getOffset(text, startLine, startColumn);
+                        int endOffset = getOffset(text, endLine, endColumn);
+                        result.add(new TestMethodController.TestMethod(classNode.getName(),
+                                new SimplePosition(classOffset),
+                                new SingleMethod(parserResult.getSnapshot().getSource().getFileObject(), methodNode.getName()),
+                                new SimplePosition(startOffset),
+                                new SimplePosition(startOffset),
+                                new SimplePosition(endOffset)));
                     }
                 }
             }
-            return result;
+        }
+        return result;
+    }
+
+    private static int getOffset(String text, int lineNumber, int columnNumber) {
+        int offset = 0;
+        String[] lines = text.split("\n");
+        for (int i = 0; i < lines.length && i < lineNumber; i++) {
+            if (i < lineNumber - 1) {
+                offset += lines[i].length() + 1;
+            } else {
+                offset += columnNumber - 1;
+            }
+        }
+        return Math.min(offset, text.length());
+    }
+
+    private static class SimplePosition implements Position {
+
+        private final int offset;
+
+        private SimplePosition(int offset) {
+            this.offset = offset;
         }
 
-        public static int getOffset(String text, int lineNumber, int columnNumber) {
-            int offset = 0;
-            String[] lines = text.split("\n");
-            for (int i = 0; i < lines.length && i < lineNumber; i++) {
-                if (i < lineNumber - 1) {
-                    offset += lines[i].length() + 1;
-                } else {
-                    offset += columnNumber - 1;
-                }
-            }
-            return Math.min(offset, text.length());
-        }
-
-        private static class SimplePosition implements Position {
-
-            private final int offset;
-
-            private SimplePosition(int offset) {
-                this.offset = offset;
-            }
-
-            @Override
-            public int getOffset() {
-                return offset;
-            }
+        @Override
+        public int getOffset() {
+            return offset;
         }
     }
 }

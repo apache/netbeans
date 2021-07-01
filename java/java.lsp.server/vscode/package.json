@@ -90,6 +90,9 @@
 		"breakpoints": [
 			{
 				"language": "java"
+			},
+			{
+				"language": "groovy"
 			}
 		],
 		"debuggers": [
@@ -98,7 +101,8 @@
 				"label": "Java 8+",
 				"runtime": "node",
 				"languages": [
-					"java"
+					"java",
+					"groovy"
 				],
 				"configurationAttributes": {
 					"launch": {

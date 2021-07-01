@@ -838,9 +838,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
         }
 
-        try {
-            JavaSource js = JavaSource.forDocument(doc);
-            if (js != null) {
+        final CompletableFuture<List<Either<Command, CodeAction>>> resultFuture = new CompletableFuture<>();
+        JavaSource js = JavaSource.forDocument(doc);
+        if (js == null) {
+            resultFuture.complete(result);
+            return resultFuture;
+        }
+        BACKGROUND_TASKS.post(() -> {
+            try {
                 js.runUserActionTask(cc -> {
                     cc.toPhase(JavaSource.Phase.RESOLVED);
                     //code generators:
@@ -867,8 +872,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                                     for (ModificationResult.Difference diff : diffs) {
                                                         String newText = diff.getNewText();
                                                         edits.add(new TextEdit(new Range(Utils.createPosition(fileObject, diff.getStartPosition().getOffset()),
-                                                                                         Utils.createPosition(fileObject, diff.getEndPosition().getOffset())),
-                                                                               newText != null ? newText : ""));
+                                                                Utils.createPosition(fileObject, diff.getEndPosition().getOffset())),
+                                                                newText != null ? newText : ""));
                                                     }
                                                     documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toUri(fileObject), -1), edits)));
                                                 }
@@ -889,14 +894,16 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         }
                     }
                 }, true);
+            } catch (IOException ex) {
+                //TODO: include stack trace:
+                client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+            } finally {
+                resultFuture.complete(result);
             }
-        } catch (IOException ex) {
-            //TODO: include stack trace:
-            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-        }
-
-        return CompletableFuture.completedFuture(result);
+        });
+        return resultFuture;
     }
+                
 
     private ConcurrentHashMap<String, Boolean> upToDateTests = new ConcurrentHashMap<>();
 

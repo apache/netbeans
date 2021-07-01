@@ -329,6 +329,9 @@ public final class Server {
          */
         @Override
         public CompletableFuture<Project[]> asyncOpenSelectedProjects(List<FileObject> projectCandidates) {
+            if (projectCandidates == null || projectCandidates.isEmpty()) {
+                return CompletableFuture.completedFuture(new Project[0]);
+            }
             CompletableFuture<Project[]> f = new CompletableFuture<>();
             SERVER_INIT_RP.post(() -> {
                 asyncOpenSelectedProjects0(f, projectCandidates, true);

@@ -36,6 +36,7 @@ import javax.lang.model.util.Elements;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
 import org.codehaus.groovy.ast.ImportNode;
@@ -305,7 +306,8 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
                 || closest instanceof PropertyNode
                 || closest instanceof FieldNode
                 || closest instanceof Parameter
-                || closest instanceof ImportNode) {
+                || closest instanceof ImportNode
+                || closest instanceof AnnotationNode) {
 
                 String fqName = getFqNameForNode(closest);
                 return findType(fqName, range, doc, info, index);
@@ -480,6 +482,8 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
             return ((Parameter) node).getType().getName();
         } else if (node instanceof ImportNode) {
             return ((ImportNode) node).getType().getName();
+        } else if (node instanceof AnnotationNode) {
+            return ((AnnotationNode) node).getClassNode().getName();
         }
 
         return "";

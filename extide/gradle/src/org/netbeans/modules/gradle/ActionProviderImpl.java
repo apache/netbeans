@@ -244,23 +244,28 @@ public class ActionProviderImpl implements ActionProvider {
 
     private static void invokeProjectAction(final Project project, final ActionMapping mapping, Lookup context, boolean showUI) {
         GradleExecConfiguration execCfg = ProjectConfigurationSupport.getEffectiveConfiguration(project, context);
-        ProjectConfigurationSupport.executeWithConfiguration(project, execCfg, () -> 
-                invokeProjectAction2(project, mapping, execCfg, context, showUI));
+        ProjectConfigurationSupport.executeWithConfiguration(project, execCfg, () ->  {
+            if (!invokeProjectAction2(project, mapping, execCfg, context, showUI)) {
+                // the caller may wait on the action not knowing that it's not going to be executed at all. Report a failure.
+                ActionProgress prg = ActionProgress.start(context);
+                prg.finished(false);
+            }
+        });
     }
     
-    private static void invokeProjectAction2(final Project project, final ActionMapping mapping, final GradleExecConfiguration execCfg, Lookup context, boolean showUI) {
+    private static boolean invokeProjectAction2(final Project project, final ActionMapping mapping, final GradleExecConfiguration execCfg, Lookup context, boolean showUI) {
         final String action = mapping.getName();
         if (ActionMapping.isDisabled(mapping)) {
             LOG.log(Level.FINE, "Attempt to run a config-disabled action: {0}", action);
-            return;
+            return false;
         }
         if (!ActionToTaskUtils.isActionEnabled(action, project, context)) {
             LOG.log(Level.FINE, "Attempt to run action that is not enabled: {0}", action);
-            return;
+            return false;
         }
         String argLine = askInputArgs(mapping.getDisplayName(), mapping.getArgs());
         if (argLine == null) {
-            return;
+            return false;
         }
         final StringWriter writer = new StringWriter();
         PrintWriter out = new PrintWriter(writer);
@@ -281,7 +286,7 @@ public class ActionProviderImpl implements ActionProvider {
                 pnl.rememberAs();
                 cfg = cfg.withCommandLine(pnl.getCommandLine());
             } else {
-                return;
+                return false;
             }
         }
         
@@ -351,6 +356,7 @@ public class ActionProviderImpl implements ActionProvider {
                 });
             });
         }
+        return true;
     }
 
     public static Action createCustomGradleAction(Project project, String name, ActionMapping mapping, Lookup context, boolean showUI) {

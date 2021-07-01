@@ -98,7 +98,8 @@ public class GoToSupport {
     public static CompletableFuture<HyperlinkLocation> getGoToLocation(final Document doc, final int offset) {
         DeclarationLocation[] location = new DeclarationLocation[1];
         perform(doc, offset, false, location, new AtomicBoolean());
-        return CompletableFuture.completedFuture(location[0] == null ? null : HyperlinkLocationProvider.createHyperlinkLocation(location[0].getFileObject(), location[0].getOffset(), location[0].getOffset()));
+        return CompletableFuture.completedFuture(location[0] == null || location[0] == DeclarationLocation.NONE ? 
+                null : HyperlinkLocationProvider.createHyperlinkLocation(location[0].getFileObject(), location[0].getOffset(), location[0].getOffset()));
     }
 
     private static String perform(final Document doc, final int offset, final boolean tooltip, final DeclarationLocation[] location, final AtomicBoolean cancel) {

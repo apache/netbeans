@@ -152,7 +152,7 @@ public final class HyperlinkLocation {
             List<HyperlinkLocation> locations = new ArrayList<>(futures.length);
             for (CompletableFuture<HyperlinkLocation> future : futures) {
                 HyperlinkLocation location = future.getNow(null);
-                if (location != null) {
+                if (location != null && location.getFileObject() != null) {
                     locations.add(location);
                 }
             }

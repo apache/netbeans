@@ -96,8 +96,9 @@ public class WebServicePersistenceManager implements ExceptionListener {
                         ErrorManager.getDefault().notify(exc);
                         decoder.close();
                     }
-
-                    wsDatas.add(wsData);
+                    if (wsData != null) {
+                        wsDatas.add(wsData);
+                    }
                 }
                 int wsGroupSize = ((Integer) decoder.readObject()).intValue();
                 Map<String, WebServiceGroup> groupByIds = new HashMap<String, WebServiceGroup>();

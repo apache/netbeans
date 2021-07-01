@@ -58,7 +58,7 @@ public final class ArchetypeTemplateHandler extends CreateFromTemplateHandler {
         "MSG_NoGroupId=No groupId attribute specified for the Maven project",
     })
     @Override
-    protected List<FileObject> createFromTemplate(CreateDescriptor desc) throws IOException {
+    public List<FileObject> createFromTemplate(CreateDescriptor desc) throws IOException {
         Properties archetype = new Properties();
         try (InputStream is = desc.getTemplate().getInputStream()) {
             archetype.load(is);
@@ -85,7 +85,7 @@ public final class ArchetypeTemplateHandler extends CreateFromTemplateHandler {
         arch.setVersion(archetype.getProperty("archetypeVersion")); // NOI18N
         File projDir = desc.getValue(CommonProjectActions.PROJECT_PARENT_FOLDER);
         if (projDir == null) {
-            projDir = FileUtil.toFile(desc.getTarget()).getParentFile();
+            projDir = FileUtil.toFile(desc.getTarget());
         }
         if (projDir == null) {
             throw new IOException(CommonProjectActions.PROJECT_PARENT_FOLDER + " not specified");

@@ -641,11 +641,13 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             }
         }
        
-        //#195039
-        builder.environment().put("M2_HOME", mavenHome.getAbsolutePath());
-        if (!mavenHome.equals(EmbedderFactory.getDefaultMavenHome())) {
-            //only relevant display when using the non-default maven installation.
-            display.append(Utilities.escapeParameters(new String[] {"M2_HOME=" + mavenHome.getAbsolutePath()})).append(' '); // NOI18N
+        if (mavenHome != null) {
+            //#195039
+            builder.environment().put("M2_HOME", mavenHome.getAbsolutePath());
+            if (!mavenHome.equals(EmbedderFactory.getDefaultMavenHome())) {
+                //only relevant display when using the non-default maven installation.
+                display.append(Utilities.escapeParameters(new String[] {"M2_HOME=" + mavenHome.getAbsolutePath()})).append(' '); // NOI18N
+            }
         }
 
         // hide the bypass command and output the command as it used to be (before the bypass command was added)
@@ -743,6 +745,9 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         //TEMP 
         String mavenPath = clonedConfig.getProperties().get(CosChecker.MAVENEXTCLASSPATH);
         File jar = InstalledFileLocator.getDefault().locate("maven-nblib/netbeans-eventspy.jar", "org.netbeans.modules.maven", false);
+        if (jar == null) {
+            return;
+        }
         if (mavenPath == null) {
             mavenPath = "";
         } else {

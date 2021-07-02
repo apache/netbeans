@@ -53,7 +53,7 @@ final class LaunchProcess implements Callable<Process> {
 
     private Process setupProcess(String port) throws InterruptedException {
         try {
-            boolean compile = SingleSourceFileUtil.findJavaVersion() < 11;
+            boolean compile = SingleSourceFileUtil.findJavaVersion() < 11 || SingleSourceFileUtil.hasClassSibling(fileObject);
 
             if (compile) {
                 Process p = SingleSourceFileUtil.compileJavaSource(fileObject);

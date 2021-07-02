@@ -25,6 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
+import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassCodeVisitorSupport;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.ConstructorNode;
@@ -533,6 +534,13 @@ public class PathFinderVisitor extends ClassCodeVisitorSupport {
     }
 
     @Override
+    protected void visitAnnotation(AnnotationNode node) {
+        if (isInside(node, line, column)) {
+            super.visitAnnotation(node);
+        }
+    }
+
+    @Override
     public void visitConstructor(ConstructorNode node) {
         // we don't want synthetic constructors duplicating field initial expressions
         if (!node.isSynthetic() && isInside(node, line, column)) {
@@ -559,6 +567,10 @@ public class PathFinderVisitor extends ClassCodeVisitorSupport {
     public void visitProperty(PropertyNode node) {
         // we don't want synthetic static initializers introducing this variables
         if (!node.isSynthetic() && isInside(node, line, column)) {
+            FieldNode field = node.getField();
+            if (field != null) {
+                visitAnnotations(field);
+            }
             super.visitProperty(node);
         }
     }

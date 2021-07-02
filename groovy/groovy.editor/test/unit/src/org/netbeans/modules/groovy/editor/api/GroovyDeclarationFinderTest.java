@@ -146,4 +146,29 @@ public class GroovyDeclarationFinderTest extends GroovyTestBase {
         checkDeclaration(TEST_BASE + "Imports.groovy",
                 "class Imports implements Interfa^ce1 {", "Interface1.java", 29);
     }
+
+    public void testAnnotations1() throws Exception {
+        checkDeclaration(TEST_BASE + "Annotations.groovy",
+                "@Annot^ation class AnnotationOccurrencesTester {", "Annotation.java", 30);
+    }
+
+    public void testAnnotations2() throws Exception {
+        checkDeclaration(TEST_BASE + "Annotations.groovy",
+                "    @Annot^ation protected String field", "Annotation.java", 30);
+    }
+
+    public void testAnnotations3() throws Exception {
+        checkDeclaration(TEST_BASE + "Annotations.groovy",
+                "    @Annot^ation String property", "Annotation.java", 30);
+    }
+
+    public void testAnnotations4() throws Exception {
+        checkDeclaration(TEST_BASE + "Annotations.groovy",
+                "    @Annot^ation AnnotationOccurrencesTester() {}", "Annotation.java", 30);
+    }
+
+    public void testAnnotations5() throws Exception {
+        checkDeclaration(TEST_BASE + "Annotations.groovy",
+                "    @Annot^ation public String method() {}", "Annotation.java", 30);
+    }
 }

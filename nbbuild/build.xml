@@ -448,35 +448,21 @@ metabuild.hash=${metabuild.hash}</echo>
       <include name="${nb.cluster.platform.dir}/lib/nbexec" />
     </fixcrlf>
   </target>
-  <target name="-shall-build-nb-windows-launchers" depends="init,-check-nb-cluster">
-      <condition property="shall.build.windows.launchers">
-          <and>
-              <istrue value="${do.build.windows.launchers}"/>
-              <istrue value="${has.nb.cluster}"/>
-          </and>
-      </condition>
-  </target>
   
-  <target name="-build-nb-windows-launchers" depends="-shall-build-nb-windows-launchers" if="shall.build.windows.launchers">
-    <exec executable="make" dir="../nb/ide.launcher/windows">
-        <arg value="-f"/>
-        <arg value="Makefile.mingw"/>
-    </exec>
-    <copy todir="${netbeans.dest.dir}/bin" overwrite="true">
-        <fileset dir="../nb/ide.launcher/windows" includes="netbeans*.exe"/>
-    </copy>
-  </target>
-  
-  <target name="-download-nb-windows-launchers" depends="init,-check-nb-cluster" if="has.nb.cluster" unless="do.build.windows.launchers">
+  <target name="-download-nb-windows-launchers" depends="init,-check-nb-cluster" if="has.nb.cluster">
     <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" repos="${binaries.repos}">
         <manifest dir="${nb_all}" includes="nb/ide.launcher/external/binaries-list"/>
     </downloadbinaries>
 
     <mkdir dir="${netbeans.dest.dir}/bin" />
-    <unzip src="../nb/ide.launcher/external/launchers-10.0.zip" dest="${netbeans.dest.dir}/bin" />
+    <unzip src="../nb/ide.launcher/external/launcher-12.5-distribution.zip" dest="${netbeans.dest.dir}/bin">
+        <patternset>
+            <include name="netbeans*.exe"/>
+        </patternset>
+    </unzip>
   </target>
 
-  <target name="finish-build-nb" depends="init,-check-nb-cluster, -download-nb-windows-launchers, -build-nb-windows-launchers" if="has.nb.cluster">
+  <target name="finish-build-nb" depends="init,-check-nb-cluster,-download-nb-windows-launchers" if="has.nb.cluster">
     <loadproperties srcFile="${clusters.list.file}" />
 
     <mkdir dir="${netbeans.dest.dir}/bin" />

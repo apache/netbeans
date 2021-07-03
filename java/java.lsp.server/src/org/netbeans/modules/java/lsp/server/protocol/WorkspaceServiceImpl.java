@@ -378,7 +378,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     }
 
     private boolean isTestGroup(SourceGroup sg) {
-        return sg.getName().contains("TestSourceRoot");
+        return sg.getName().contains("TestSourceRoot") || sg.getName().contains("test.");
     }
 
     private void findTestMethods(Set<FileObject> testRoots, List<TestMethodController.TestMethod> testMethods) {

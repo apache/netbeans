@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.text.Position;
+import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.ModuleNode;
@@ -53,19 +54,24 @@ public class GroovyComputeTestMethods implements ComputeTestMethods {
                 int classStartColumn = classNode.getColumnNumber();
                 int classOffset = classStartLine > 0 && classStartColumn > 0 ? getOffset(text, classStartLine, classStartColumn) : 0;
                 for (MethodNode methodNode : classNode.getMethods()) {
-                    int startLine = methodNode.getLineNumber();
-                    int startColumn = methodNode.getColumnNumber();
-                    int endLine = methodNode.getLastLineNumber();
-                    int endColumn = methodNode.getLastColumnNumber();
-                    if (startLine > 0 && startColumn > 0 && endLine > 0 && endColumn > 0) {
-                        int startOffset = getOffset(text, startLine, startColumn);
-                        int endOffset = getOffset(text, endLine, endColumn);
-                        result.add(new TestMethodController.TestMethod(classNode.getName(),
-                                new SimplePosition(classOffset),
-                                new SingleMethod(parserResult.getSnapshot().getSource().getFileObject(), methodNode.getName()),
-                                new SimplePosition(startOffset),
-                                new SimplePosition(startOffset),
-                                new SimplePosition(endOffset)));
+                    for (AnnotationNode annotation : methodNode.getAnnotations()) {
+                        if ("org.spockframework.runtime.model.FeatureMetadata".equals(annotation.getClassNode().getName())) {
+                            int startLine = methodNode.getLineNumber();
+                            int startColumn = methodNode.getColumnNumber();
+                            int endLine = methodNode.getLastLineNumber();
+                            int endColumn = methodNode.getLastColumnNumber();
+                            if (startLine > 0 && startColumn > 0 && endLine > 0 && endColumn > 0) {
+                                int startOffset = getOffset(text, startLine, startColumn);
+                                int endOffset = getOffset(text, endLine, endColumn);
+                                String name = annotation.getMember("name").getText();
+                                result.add(new TestMethodController.TestMethod(classNode.getName(),
+                                        new SimplePosition(classOffset),
+                                        new SingleMethod(parserResult.getSnapshot().getSource().getFileObject(), name),
+                                        new SimplePosition(startOffset),
+                                        new SimplePosition(startOffset),
+                                        new SimplePosition(endOffset)));
+                            }
+                        }
                     }
                 }
             }

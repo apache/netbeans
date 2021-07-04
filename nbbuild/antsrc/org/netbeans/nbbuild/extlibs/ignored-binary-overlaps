@@ -57,3 +57,6 @@ enterprise/modules/ext/javaee7-endorsed/jsr181-api.jar java/modules/ext/jaxws22/
 
 # maven needs commons-lang internally
 ide/modules/org-apache-commons-lang.jar java/maven/lib/commons-lang-2.6.jar
+
+# not part of the product:
+harness/apisupport.harness/external/launcher-12.5-distribution.zip platform/o.n.bootstrap/external/launcher-12.5-distribution.zip

@@ -20,6 +20,7 @@
 import java.io.FileDescriptor;
 import java.net.InetAddress;
 import java.security.Permission;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  *
@@ -181,8 +182,12 @@ public class allow extends SecurityManager {
     public void checkWrite(String file) {
         uninstall();
     }
-    
+
+    private final AtomicBoolean uninstalling = new AtomicBoolean();
+
     private void uninstall() {
-        System.setSecurityManager(null);
+        if (uninstalling.compareAndSet(false, true)) {
+            System.setSecurityManager(null);
+        }
     }
 }

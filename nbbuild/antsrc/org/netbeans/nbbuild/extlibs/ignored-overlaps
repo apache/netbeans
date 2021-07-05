@@ -110,3 +110,6 @@ webcommon/javascript2.doc/external/testfiles-jsdoc-1.zip webcommon/javascript2.e
 webcommon/javascript2.editor/external/testfiles-jsdoc-1.zip webcommon/javascript2.extdoc/external/testfiles-jsdoc-1.zip are identical
 webcommon/javascript2.extdoc/external/testfiles-jsdoc-1.zip webcommon/javascript2.jsdoc/external/testfiles-jsdoc-1.zip are identical
 webcommon/javascript2.jsdoc/external/testfiles-jsdoc-1.zip webcommon/javascript2.sdoc/external/testfiles-jsdoc-1.zip are identical</failure>
+
+# not part of the product:
+harness/apisupport.harness/external/launcher-12.5-distribution.zip platform/o.n.bootstrap/external/launcher-12.5-distribution.zip

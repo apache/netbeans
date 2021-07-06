@@ -145,8 +145,13 @@ public class AddServerLocationPanel implements WizardDescriptor.FinishablePanel,
                         return false;
                     } else if (canCreate(installDir)) {
                         if (downloadState == AddServerLocationVisualPanel.DownloadState.AVAILABLE) {
-                            panel.updateMessageText(NbBundle.getMessage(AddServerLocationPanel.class,
+                            if(wizardIterator.downloadableValues.isEmpty()) {
+                               panel.updateMessageText(NbBundle.getMessage(AddServerLocationPanel.class,
+                                    "LBL_UnaleToConnectPayaraMavenRepo_NewInstallDirCanBeUsed", getSanitizedPath(installDir)));  // NOI18N
+                            } else {
+                               panel.updateMessageText(NbBundle.getMessage(AddServerLocationPanel.class,
                                     "LBL_NewInstallDirCanBeUsed", getSanitizedPath(installDir)));  // NOI18N
+                            }
                             wizard.putProperty(PROP_ERROR_MESSAGE, panel.getStatusText());
                             return false;
                         } else {

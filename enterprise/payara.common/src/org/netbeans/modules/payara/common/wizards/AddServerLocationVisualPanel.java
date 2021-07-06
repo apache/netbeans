@@ -51,11 +51,11 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
 
     public static final String DOWNLOAD_PREFIX = "https://www.payara.fish/"; // NOI18N
     
-    private final List<ChangeListener> listeners = new CopyOnWriteArrayList<ChangeListener>();
+    private final List<ChangeListener> listeners = new CopyOnWriteArrayList<>();
     private Retriever retriever;
     private volatile DownloadState downloadState;
     private volatile String statusText;
-    private ServerWizardIterator wizardIterator;
+    private final ServerWizardIterator wizardIterator;
 
     public AddServerLocationVisualPanel(ServerWizardIterator swi) {
         this.wizardIterator = swi;
@@ -389,6 +389,8 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
 
         if (!wizardIterator.downloadableValues.isEmpty()) {
             chooseServerComboBox.setSelectedItem(wizardIterator.downloadableValues.get(0));
+        } else {
+            updateMessageText(NbBundle.getMessage(AddServerLocationPanel.class, "LBL_UnaleToConnectPayaraMavenRepo"));
         }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

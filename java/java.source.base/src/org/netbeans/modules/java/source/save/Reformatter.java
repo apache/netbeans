@@ -2971,8 +2971,8 @@ public class Reformatter implements ReformatTask {
 
         @Override
         public Boolean visitCase(CaseTree node, Void p) {
-            if (TreeShims.getLabels(node).size() > 0) {
-                List<? extends Tree> labels = TreeShims.getLabels(node);
+            List<? extends Tree> labels = TreeShims.getLabels(node);
+            if (labels != null && labels.size() > 0) {
                 if (tokens.token().id() == JavaTokenId.DEFAULT && labels.get(0).getKind().toString().equals(TreeShims.DEFAULT_CASE_LABEL)) {
                     accept(DEFAULT);
                 } else {

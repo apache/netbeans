@@ -76,7 +76,7 @@ public class TreeShims {
             Method getLabels = CaseTree.class.getDeclaredMethod("getLabels");
             return (List<? extends Tree>) getLabels.invoke(node);
         } catch (NoSuchMethodException ex) {
-            return Collections.singletonList(node.getExpression());
+            return null;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw TreeShims.<RuntimeException>throwAny(ex);
         }

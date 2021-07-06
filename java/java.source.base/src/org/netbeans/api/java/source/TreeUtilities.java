@@ -387,6 +387,12 @@ public final class TreeUtilities {
             }
 
             @Override
+            public Void visitCase(CaseTree node, Void p) {
+                scan(TreeShims.getLabels(node), p);
+                return super.visitCase(node, p);
+            }
+
+            @Override
             public Void visitVariable(VariableTree node, Void p) {
                 int[] span = findNameSpan(node);
                 

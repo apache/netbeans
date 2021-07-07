@@ -147,7 +147,7 @@ public class AddServerLocationPanel implements WizardDescriptor.FinishablePanel,
                         if (downloadState == AddServerLocationVisualPanel.DownloadState.AVAILABLE) {
                             if(wizardIterator.downloadableValues.isEmpty()) {
                                panel.updateMessageText(NbBundle.getMessage(AddServerLocationPanel.class,
-                                    "LBL_UnaleToConnectPayaraMavenRepo_NewInstallDirCanBeUsed", getSanitizedPath(installDir)));  // NOI18N
+                                    "LBL_UnableToConnectPayaraMavenRepo_NewInstallDirCanBeUsed", getSanitizedPath(installDir)));  // NOI18N
                             } else {
                                panel.updateMessageText(NbBundle.getMessage(AddServerLocationPanel.class,
                                     "LBL_NewInstallDirCanBeUsed", getSanitizedPath(installDir)));  // NOI18N

@@ -390,7 +390,7 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
         if (!wizardIterator.downloadableValues.isEmpty()) {
             chooseServerComboBox.setSelectedItem(wizardIterator.downloadableValues.get(0));
         } else {
-            updateMessageText(NbBundle.getMessage(AddServerLocationPanel.class, "LBL_UnaleToConnectPayaraMavenRepo"));
+            updateMessageText(NbBundle.getMessage(AddServerLocationPanel.class, "LBL_UnableToConnectPayaraMavenRepo"));
         }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

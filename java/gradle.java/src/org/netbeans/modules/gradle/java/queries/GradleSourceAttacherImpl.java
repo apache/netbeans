@@ -303,7 +303,7 @@ public class GradleSourceAttacherImpl implements SourceJavadocAttacherImplementa
                                 this,
                                 RunUtils.simpleReplaceTokenProvider(REQUESTED_COMPONENT, dep.getId())
                 );
-                if (ap.isActionEnabled(command, ctx)) {
+                if (!ap.isActionEnabled(command, ctx)) {
                     // disabled action will not even report action end through the Listener.
                     return false;
                 }

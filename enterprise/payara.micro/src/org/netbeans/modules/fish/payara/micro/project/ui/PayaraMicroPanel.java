@@ -93,7 +93,7 @@ class PayaraMicroPanel extends JPanel {
             .toArray(PayaraPlatformVersionAPI[]::new)
         ));
         if(PayaraPlatformVersion.getVersions().isEmpty()) {
-            statusMessage.setText(NbBundle.getMessage(PayaraMicroPanel.class, "LBL_UnaleToConnectPayaraMavenRepo"));
+            statusMessage.setText(NbBundle.getMessage(PayaraMicroPanel.class, "LBL_UnableToConnectPayaraMavenRepo"));
         } else {
             statusMessage.setText("");
         }

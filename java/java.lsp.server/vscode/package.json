@@ -84,6 +84,11 @@
 					"type": "boolean",
 					"default": false,
 					"description": "Enable Run/Debug test in editor"
+				},
+				"netbeans.groovySupport.enabled": {
+					"type": "boolean",
+					"default": false,
+					"description": "Enables experimental Groovy and Spock support in Language Server"
 				}
 			}
 		},

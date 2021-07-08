@@ -387,7 +387,8 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             Enumeration<? extends FileObject> children = testRoot.getChildren(true);
             while(children.hasMoreElements()) {
                 FileObject fo = children.nextElement();
-                if (fo.hasExt("java") || fo.hasExt("groovy")) {
+                boolean groovy = this.client.getNbCodeCapabilities().wantsGroovySupport();
+                if (fo.hasExt("java") || (groovy && fo.hasExt("groovy"))) {
                     sources.add(((TextDocumentServiceImpl)server.getTextDocumentService()).getSource(Utils.toUri(fo)));
                 }
             }

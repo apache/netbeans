@@ -20,6 +20,7 @@ package org.netbeans.modules.gradle.execute;
 
 import java.util.Collections;
 import java.util.Map;
+import org.gradle.tooling.ConfigurableLauncher;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -48,7 +49,14 @@ public abstract class GradleExecAccessor {
      */
     public abstract GradleExecConfiguration create(
             String id, String dispName, Map<String, String> projectProps, String cmdline);
-
+    
+    /**
+     * Configures launcher with the gradle home.
+     * @param cfgL the launcher
+     * @return gradle home setting
+     */
+    public abstract ConfigurableLauncher configureGradleHome(ConfigurableLauncher cfgL);
+        
     /**
      * Updates an existing instance. Cannot change the {@link GradleExecConfiguration#getId()}.
      * @param conf the configuration to update

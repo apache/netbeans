@@ -236,4 +236,25 @@ public final class GroovyUtils {
         }
         return sb.toString();
     }
+    
+    /**
+     * True, if the indexing is enabled. Depends system property or {@link #setIndexingEnabled(boolean)}.
+     * 
+     */
+    private static volatile boolean indexingEnabled = Boolean.valueOf(System.getProperty("org.netbeans.modules.groovy.editor.api.indexingEnabled", "true"));
+    
+    /**
+     * Disables completely Groovy indexing. Temporary options only for 12.5 release, will be hopefully
+     * removed after Groovy performance improves. Currently used reflectively from java.lsp.server module only.
+     * DO NOT expose as an API.
+     * @param enabled 
+     */
+    public static void setIndexingEnabled(boolean enabled) {
+        indexingEnabled = enabled;
+    }
+    
+    public static boolean isIndexingEnabled() {
+        return indexingEnabled;
+    }
+
 }

@@ -1,6 +1,6 @@
 {
 	"name": "apache-netbeans-java",
-	"displayName": "Apache NetBeans Language Server",
+	"displayName": "Language Server",
 	"description": "Apache NetBeans Language Server Extension for Visual Studio Code",
 	"author": "Apache NetBeans",
 	"license": "Apache 2.0",

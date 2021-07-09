@@ -19,11 +19,11 @@
 package org.netbeans.modules.payara.tooling.data;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.openide.util.Exceptions;
@@ -38,6 +40,7 @@ import org.apache.maven.artifact.repository.metadata.Metadata;
 import org.apache.maven.artifact.repository.metadata.io.xpp3.MetadataXpp3Reader;
 import org.netbeans.modules.maven.indexer.api.RepositoryInfo;
 import org.netbeans.modules.maven.indexer.api.RepositoryPreferences;
+import org.openide.util.NbBundle;
 
 /**
  * Payara Platform version.
@@ -50,6 +53,8 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
     ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
     ////////////////////////////////////////////////////////////////////////////
+
+    private static final Logger LOGGER = Logger.getLogger(PayaraPlatformVersion.class.getName());
 
     /**
      * Payara Server artifact download url
@@ -88,11 +93,15 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
 
     public static List<PayaraPlatformVersionAPI> getVersions() {
         if (versions.isEmpty()) {
+            String repository = DEFAULT_REPOSITORY_URL;
             boolean readDefaultRepo;
             URL metadata;
             try {
-                metadata = new URL(DEFAULT_REPOSITORY_URL + METADATA_URL);
-                readDefaultRepo = readVersions(DEFAULT_REPOSITORY_URL, metadata);
+                metadata = new URL(repository + METADATA_URL);
+                readDefaultRepo = readVersions(repository, metadata);
+            } catch (UnknownHostException ex) {
+                readDefaultRepo = false;
+                LOGGER.log(Level.INFO, repository, ex);
             } catch (Exception ex) {
                 readDefaultRepo = false;
                 Exceptions.printStackTrace(ex);
@@ -100,7 +109,7 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
             if (!readDefaultRepo) {
                 for (RepositoryInfo info : RepositoryPreferences.getInstance().getRepositoryInfos()) {
                     try {
-                        String repository = info.getRepositoryUrl();
+                        repository = info.getRepositoryUrl();
                         if (repository != null) {
                             metadata = new URL(repository + METADATA_URL);
                         } else {
@@ -110,6 +119,8 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
                         if (readVersions(repository, metadata)) {
                             break;
                         }
+                    } catch (UnknownHostException ex) {
+                        LOGGER.log(Level.INFO, repository, ex);
                     } catch (Exception ex) {
                         Exceptions.printStackTrace(ex);
                     }

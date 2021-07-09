@@ -49,6 +49,7 @@ import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
+import org.openide.util.RequestProcessor;
 import org.openide.util.UserCancelException;
 import org.openide.util.Utilities;
 
@@ -66,6 +67,12 @@ import org.openide.util.Utilities;
     "ERR_ExistingPath={0} already exists",
 })
 abstract class LspTemplateUI {
+    /**
+     * Creation thread. All requests are serialized; make sure that no creation process can block e.g. waiting
+     * for the client's response.
+     */
+    private static final RequestProcessor    CREATION_RP = new RequestProcessor(LspTemplateUI.class);
+    
     private LspTemplateUI() {
     }
 
@@ -98,7 +105,7 @@ abstract class LspTemplateUI {
     private CompletableFuture<Object> templateUI(DataFolder templates, NbCodeLanguageClient client, ExecuteCommandParams params) {
         CompletionStage<DataObject> findTemplate = findTemplate(templates, client);
         CompletionStage<Pair<DataFolder, String>> findTargetFolderAndName = findTargetAndName(findTemplate, client, params);
-        return findTargetFolderAndName.thenCombine(findTemplate, (targetAndName, source) -> {
+        return findTargetFolderAndName.thenCombineAsync(findTemplate, (targetAndName, source) -> {
             final String name = targetAndName.second();
             if (name == null || name.isEmpty()) {
                 throw raise(RuntimeException.class, new UserCancelException());
@@ -111,7 +118,7 @@ abstract class LspTemplateUI {
             } catch (IOException ex) {
                 throw raise(RuntimeException.class, ex);
             }
-        }).exceptionally((error) -> {
+        }, CREATION_RP).exceptionally((error) -> {
             if (error instanceof UserCancelException || error.getCause() instanceof UserCancelException) {
                 return null;
             }
@@ -124,7 +131,7 @@ abstract class LspTemplateUI {
         CompletionStage<DataObject> findTemplate = findTemplate(templates, client);
         CompletionStage<Pair<DataFolder, String>> findTargetFolderAndName = findTargetAndName(findTemplate, client, params);
         CompletionStage<Pair<DataObject, String>> findTemplateAndPackage = findTemplate.thenCombine(findPackage(findTargetFolderAndName, client), Pair::of);
-        return findTargetFolderAndName.thenCombine(findTemplateAndPackage, (targetAndName, templateAndPackage) -> {
+        return findTargetFolderAndName.thenCombineAsync(findTemplateAndPackage, (targetAndName, templateAndPackage) -> {
             try {
                 final DataObject template = templateAndPackage.first();
                 final String pkg = templateAndPackage.second();
@@ -141,7 +148,7 @@ abstract class LspTemplateUI {
             } catch (IOException ex) {
                 throw raise(RuntimeException.class, ex);
             }
-        }).exceptionally((error) -> {
+        }, CREATION_RP).exceptionally((error) -> {
             if (error instanceof UserCancelException || error.getCause() instanceof UserCancelException) {
                 return null;
             }

@@ -46,6 +46,7 @@ import org.netbeans.modules.groovy.editor.api.lexer.LexUtilities;
 import org.netbeans.modules.groovy.editor.api.elements.ast.ASTField;
 import org.netbeans.modules.groovy.editor.api.elements.ast.ASTMethod;
 import org.netbeans.modules.groovy.editor.compiler.ClassNodeCache;
+import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
@@ -88,9 +89,22 @@ public class GroovyIndexer extends EmbeddingIndexer {
     private static long filesIndexed = 0;
 
     private static final Logger LOG = Logger.getLogger(GroovyIndexer.class.getName());
-
+    
+    /**
+     * Disables completely Groovy indexing. Temporary options only for 12.5 release, will be hopefully
+     * removed after Groovy performance improves. Currently used reflectively from java.lsp.server module only.
+     * DO NOT expose as an API.
+     * @param enabled 
+     */
+    static void setIndexingEnabled(boolean enabled) {
+        GroovyUtils.setIndexingEnabled(enabled);
+    }
+    
     @Override
     protected void index(Indexable indexable, Result parserResult, Context context) {
+        if (!GroovyUtils.isIndexingEnabled()) {
+            return;
+        }
         long indexerThisStartTime = System.currentTimeMillis();
 
         if (indexerFirstRun == 0) {
@@ -145,6 +159,9 @@ public class GroovyIndexer extends EmbeddingIndexer {
 
         @Override
         public EmbeddingIndexer createIndexer(Indexable indexable, Snapshot snapshot) {
+            if (!GroovyUtils.isIndexingEnabled()) {
+                return null;
+            }
             if (isIndexable(indexable, snapshot)) {
                 return new GroovyIndexer();
             } else {
@@ -163,6 +180,9 @@ public class GroovyIndexer extends EmbeddingIndexer {
         }
 
         private boolean isIndexable(Indexable indexable, Snapshot snapshot) {
+            if (!GroovyUtils.isIndexingEnabled()) {
+                return false;
+            }
             String extension = snapshot.getSource().getFileObject().getExt();
 
             if (extension.equals("groovy")) { // NOI18N
@@ -202,6 +222,9 @@ public class GroovyIndexer extends EmbeddingIndexer {
 
         @Override
         public boolean scanStarted(Context context) {
+            if (!GroovyUtils.isIndexingEnabled()) {
+                return false;
+            }
             ClassNodeCache.createThreadLocalInstance();
             return super.scanStarted(context);
         }

@@ -29,7 +29,9 @@ import {
     Message,
     MessageType,
     LogMessageNotification,
-    RevealOutputChannelOn
+    RevealOutputChannelOn,
+    DocumentSelector,
+    DocumentFilter
 } from 'vscode-languageclient';
 
 import * as net from 'net';
@@ -520,17 +522,21 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 }
             });
         });
-
-        // Options to control the language client
-        let clientOptions: LanguageClientOptions = {
-            // Register the server for java documents
-            documentSelector: [
+        const conf = workspace.getConfiguration();
+        let documentSelectors : DocumentSelector = [
                 { language: 'java' },
-                { language: 'groovy' },
                 { language: 'yaml', pattern: '**/{application,bootstrap}*.yml' },
                 { language: 'properties', pattern: '**/{application,bootstrap}*.properties' },
                 { language: 'jackpot-hint' }
-            ],
+        ];
+        const enableGroovy : boolean = conf.get("netbeans.groovySupport.enabled") || false;
+        if (enableGroovy) {
+            documentSelectors.push({ language: 'groovy'});
+        }
+        // Options to control the language client
+        let clientOptions: LanguageClientOptions = {
+            // Register the server for java documents
+            documentSelector: documentSelectors,
             synchronize: {
                 configurationSection: 'java',
                 fileEvents: [
@@ -543,7 +549,8 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             initializationOptions : {
                 'nbcodeCapabilities' : {
                     'statusBarMessageSupport' : true,
-                    'testResultsSupport' : true
+                    'testResultsSupport' : true,
+                    'wantsGroovySupport' : enableGroovy
                 }
             },
             errorHandler: {

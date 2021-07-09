@@ -21,6 +21,7 @@ package org.netbeans.modules.java.lsp.server.protocol;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -644,6 +645,7 @@ public final class Server {
         public CompletableFuture<InitializeResult> initialize(InitializeParams init) {
             NbCodeClientCapabilities capa = NbCodeClientCapabilities.get(init);
             client.setClientCaps(capa);
+            hackConfigureGroovySupport(capa);
             List<FileObject> projectCandidates = new ArrayList<>();
             List<WorkspaceFolder> folders = init.getWorkspaceFolders();
             if (folders != null) {
@@ -730,8 +732,8 @@ public final class Server {
                 }
             });
             sessionServices.add(new WorkspaceUIContext(client));
-            ((LanguageClientAware) getTextDocumentService()).connect(aClient);
-            ((LanguageClientAware) getWorkspaceService()).connect(aClient);
+            ((LanguageClientAware) getTextDocumentService()).connect(client);
+            ((LanguageClientAware) getWorkspaceService()).connect(client);
         }
     }
     
@@ -829,4 +831,22 @@ public final class Server {
             logWarning(message);
         }
     };
+    
+    
+    /**
+     * Hacky way to enable or disable Groovy support. Since it is hack, it will disable Groovy for the whole NBJLS, not just a specific client / project. Should
+     * be revisited after NetBeans 12.5, after Groovy parsing improves
+     * @param caps 
+     */
+    private static void hackConfigureGroovySupport(NbCodeClientCapabilities caps) {
+        boolean b = caps.wantsGroovySupport();
+        try {
+            Class clazz = Lookup.getDefault().lookup(ClassLoader.class).loadClass("org.netbeans.modules.groovy.editor.api.GroovyIndexer");
+            Method m = clazz.getDeclaredMethod("setIndexingEnabled", Boolean.TYPE);
+            m.setAccessible(true);
+            m.invoke(null, b);
+        } catch (ReflectiveOperationException ex) {
+            LOG.log(Level.WARNING, "Unable to configure Groovy support", ex);
+        }
+    }
 }

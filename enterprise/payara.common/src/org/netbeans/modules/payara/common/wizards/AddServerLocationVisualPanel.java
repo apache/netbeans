@@ -65,6 +65,11 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
 
     private void initUserComponents() {
         downloadButton.setEnabled(false);
+        if (wizardIterator.downloadableValues.isEmpty()) {
+            agreeCheckBox.setEnabled(false);
+        } else {
+            agreeCheckBox.setEnabled(true);
+        }
         
         setName(NbBundle.getMessage(AddServerLocationVisualPanel.class, "TITLE_ServerLocation"));
         
@@ -471,7 +476,10 @@ private void readlicenseButtonActionPerformed(java.awt.event.ActionEvent evt) {/
 
 private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
         if(retriever == null) {
-            PayaraPlatformVersionAPI selectedValue = wizardIterator.downloadableValues.get(0);
+            PayaraPlatformVersionAPI selectedValue = null;
+            if (!wizardIterator.downloadableValues.isEmpty()) {
+                selectedValue = wizardIterator.downloadableValues.get(0);
+            }
             if (wizardIterator.downloadableValues.size() > 1) {
                 selectedValue = (PayaraPlatformVersionAPI) chooseServerComboBox.getSelectedItem();
             }

@@ -35,11 +35,15 @@ import org.netbeans.modules.gradle.api.GradleProjects;
 import org.netbeans.modules.gradle.newproject.GradleProjectFromTemplateHandler;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.WizardDescriptor;
+import org.openide.util.NbBundle;
 
 /**
  *
  * @author Laszlo Kishalmi
  */
+@NbBundle.Messages({
+    "TITLE_CreatingNewProject=Creating new project"
+})
 public abstract class BaseGradleWizardIterator implements WizardDescriptor.ProgressInstantiatingIterator<WizardDescriptor> {
 
     ArrayList<? extends WizardDescriptor.Panel<WizardDescriptor>> panels;
@@ -102,7 +106,8 @@ public abstract class BaseGradleWizardIterator implements WizardDescriptor.Progr
     static {
         // register collectOperations for a callback from a friend package
         GradleProjectFromTemplateHandler.register((baseIterator, params) -> {
-            TemplateOperation ops = new TemplateOperation();
+            ProgressHandle handle = ProgressHandle.createHandle(Bundle.TITLE_CreatingNewProject());
+            TemplateOperation ops = new TemplateOperation(handle);
             baseIterator.collectOperations(ops, params);
             return ops;
         });

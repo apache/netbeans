@@ -19,6 +19,11 @@
 
 package org.netbeans.modules.editor.java;
 
+import java.io.IOException;
+import org.netbeans.editor.BaseDocument;
+import org.openide.cookies.EditorCookie;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.modules.ModuleInfo;
 import org.openide.util.Lookup;
 
@@ -309,5 +314,16 @@ public class JavaFormatterArrayInitOrEnumUnitTest extends JavaFormatterUnitTestC
                 "    THREE\n" +
                 "}\n");
     }
-    
+
+    @Override
+    protected BaseDocument createDocument() {
+        try {
+            FileObject file = FileUtil.createMemoryFileSystem().getRoot().createData("Test", "java");
+            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+            return (BaseDocument) ec.openDocument();
+        } catch (IOException ex) {
+            throw new AssertionError("Unexpected: ", ex);
+        }
+    }
+
 }

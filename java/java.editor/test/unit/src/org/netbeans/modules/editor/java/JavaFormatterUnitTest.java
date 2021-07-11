@@ -19,10 +19,15 @@
 
 package org.netbeans.modules.editor.java;
 
+import java.io.IOException;
 import java.util.prefs.Preferences;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.source.CodeStyle;
+import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.java.ui.FmtOptions;
+import org.openide.cookies.EditorCookie;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.modules.ModuleInfo;
 import org.openide.util.Lookup;
 
@@ -429,5 +434,15 @@ public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
                 "else\n" +
                 "    return performanceSum / getCount()");
     }
-    
+
+    @Override
+    protected BaseDocument createDocument() {
+        try {
+            FileObject file = FileUtil.createMemoryFileSystem().getRoot().createData("Test", "java");
+            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+            return (BaseDocument) ec.openDocument();
+        } catch (IOException ex) {
+            throw new AssertionError("Unexpected: ", ex);
+        }
+    }
 }

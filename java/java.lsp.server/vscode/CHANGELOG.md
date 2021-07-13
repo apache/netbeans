@@ -21,6 +21,13 @@
 
 -->
 
+## Version 12.4.301
+
+* New Project action added
+* New From Template action added
+* Debugger attach supported
+* Number of bug fixes
+
 ## Version 12.4
 
 * Numerous fixes in Code Completion and Code navigation, like Go To Super implementation, Find all implementations,...

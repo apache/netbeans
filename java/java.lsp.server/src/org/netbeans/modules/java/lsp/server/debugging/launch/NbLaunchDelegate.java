@@ -291,14 +291,14 @@ public abstract class NbLaunchDelegate {
                             }
                         }
                     });
-                } else {
-                    launchFuture.complete(null);
                 }
-                
                 Lookups.executeWith(launchCtx, () -> {
                     providerAndCommand.first().invokeAction(providerAndCommand.second(), lookup);
 
                 });
+                if (!debug) {
+                    launchFuture.complete(null);
+                }
             }).exceptionally((t) -> {
                 launchFuture.completeExceptionally(t);
                 return null;

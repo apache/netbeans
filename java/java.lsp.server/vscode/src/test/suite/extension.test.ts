@@ -181,7 +181,7 @@ class Main {
                                 reject(new Error("Timeout waiting for user application"));
                                 return;
                             }
-                            setTimeout(() => waitUserApplication(cnt - 1, running, cb), 100);
+                            setTimeout(() => waitUserApplication(cnt - 1, running, cb), 1000);
                             return;
                         }
                     });

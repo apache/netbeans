@@ -301,14 +301,14 @@ public abstract class NbLaunchDelegate {
                     };
                     DebuggerManager.getDebuggerManager().addDebuggerListener(listener);
                     debuggerListeners.put(context, listener);
-                } else {
-                    launchFuture.complete(null);
                 }
-                
                 Lookups.executeWith(launchCtx, () -> {
                     providerAndCommand.first().invokeAction(providerAndCommand.second(), lookup);
 
                 });
+                if (!debug) {
+                    launchFuture.complete(null);
+                }
             }).exceptionally((t) -> {
                 launchFuture.completeExceptionally(t);
                 return null;

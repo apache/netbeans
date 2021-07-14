@@ -88,12 +88,20 @@ public final class ActionToTaskUtils {
             }
         }
 
-        ProjectActionMappingProvider mappingProvider = project.getLookup().lookup(ProjectActionMappingProvider.class);
+        ProjectActionMappingProvider mappingProvider = null;
+        
+        for (ProjectActionMappingProvider prov : project.getLookup().lookupAll(ProjectActionMappingProvider.class)) {
+            if (!(prov instanceof ConfigurableActionProvider)) {
+                mappingProvider = prov;
+                break;
+            }
+        }
         // in case the Mapping Provider asks for the configuration, it should get some:
         if (mappingProvider == null) {
             return null;
         }
-        ActionMapping am = ProjectConfigurationSupport.executeWithConfiguration(project, c, () -> mappingProvider.findMapping(action));
+        ProjectActionMappingProvider mp = mappingProvider;
+        ActionMapping am = ProjectConfigurationSupport.executeWithConfiguration(project, c, () -> mp.findMapping(action));
         if (ActionMapping.isDisabled(am)) {
             return null;
         } else {

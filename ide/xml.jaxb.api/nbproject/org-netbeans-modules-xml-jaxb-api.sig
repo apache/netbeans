@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.37
+#Version 1.38
 
 CLSS public java.awt.datatransfer.DataFlavor
 cons public init()
@@ -61,8 +61,6 @@ meth public void readExternal(java.io.ObjectInput) throws java.io.IOException,ja
 meth public void setHumanPresentableName(java.lang.String)
 meth public void writeExternal(java.io.ObjectOutput) throws java.io.IOException
 supr java.lang.Object
-hfds atom,humanPresentableName,ioInputStreamClass,mimeType,representationClass,serialVersionUID,textFlavorComparator
-hcls TextFlavorComparator
 
 CLSS public abstract interface java.awt.datatransfer.Transferable
 meth public abstract boolean isDataFlavorSupported(java.awt.datatransfer.DataFlavor)
@@ -80,7 +78,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public abstract interface java.io.Serializable
 
@@ -104,7 +101,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -113,7 +109,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -136,7 +131,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -159,8 +153,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -204,7 +196,6 @@ meth public int hashCode()
 meth public java.lang.String getActions()
 meth public java.security.PermissionCollection newPermissionCollection()
 supr java.security.Permission
-hfds exitVM,path,serialVersionUID,wildcard
 
 CLSS public abstract interface java.security.Guard
 meth public abstract void checkGuard(java.lang.Object)
@@ -222,7 +213,6 @@ meth public java.lang.String toString()
 meth public java.security.PermissionCollection newPermissionCollection()
 meth public void checkGuard(java.lang.Object)
 supr java.lang.Object
-hfds name,serialVersionUID
 
 CLSS public javax.activation.ActivationDataFlavor
 cons public init(java.lang.Class,java.lang.String)
@@ -1302,7 +1292,6 @@ meth public void setHandler(org.xml.sax.ContentHandler)
 meth public void setLexicalHandler(org.xml.sax.ext.LexicalHandler)
 meth public void setSystemId(java.lang.String)
 supr java.lang.Object
-hfds handler,lexhandler,systemId
 
 CLSS public javax.xml.transform.sax.SAXSource
 cons public init()
@@ -1318,7 +1307,6 @@ meth public void setInputSource(org.xml.sax.InputSource)
 meth public void setSystemId(java.lang.String)
 meth public void setXMLReader(org.xml.sax.XMLReader)
 supr java.lang.Object
-hfds inputSource,reader
 
 CLSS public abstract interface org.xml.sax.ContentHandler
 meth public abstract void characters(char[],int,int) throws org.xml.sax.SAXException

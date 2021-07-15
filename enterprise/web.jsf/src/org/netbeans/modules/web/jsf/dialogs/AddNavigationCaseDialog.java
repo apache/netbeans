@@ -48,7 +48,7 @@ public class AddNavigationCaseDialog extends javax.swing.JPanel implements Valid
         DefaultComboBoxModel modelT = (DefaultComboBoxModel)jComboBoxToView.getModel();
         modelF.addElement("");
         modelT.addElement("");
-        Iterator iter = facesConfig.getNavigationRules().iterator();
+        Iterator<NavigationRule> iter = facesConfig.getNavigationRules().iterator();
         while (iter.hasNext()) {
             String fromViewID=((NavigationRule)iter.next()).getFromViewId();
             if (fromViewID != null && fromViewID.trim().length() > 0){

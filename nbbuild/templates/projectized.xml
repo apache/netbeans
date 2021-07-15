@@ -822,6 +822,31 @@
         <delete file="${report.file}" failonerror="false"/>
     </target>
 
+    <target name="run-jackpot" depends="build-init,jar">
+        <property name="jackpot.jar" location="${nb_all}/nbbuild/external/tool-12.3.jar"/>
+
+        <path id="jackpot.class.path.ref">
+            <path path="${module.run.classpath}"/> <!-- XXX or module.processor.classpath? -->
+            <path path="${cp.extra}"/>
+        </path>
+
+        <pathconvert refid="jackpot.class.path.ref" property="jackpot.class.path"/>
+
+        <property name="jackpot.extra.args" value="" />
+
+        <java classname="org.netbeans.modules.jackpot30.cmdline.Main" fork="true">
+            <jvmarg value="--add-opens=java.base/java.net=ALL-UNNAMED" />
+            <jvmarg value="--add-opens=java.desktop/sun.awt=ALL-UNNAMED" />
+            <arg value="--classpath" />
+            <arg value="${jackpot.class.path}" />
+            <arg line="${jackpot.extra.args}" />
+            <arg value="${src.dir}" />
+            <classpath>
+                <pathelement location="${nb_all}/nbbuild/external/tool-12.3.jar"/>
+            </classpath>
+        </java>
+    </target>
+
     <target name="patch-for-maven" depends="maven-install"/> <!-- deprecated -->
     <target name="maven-install" depends="init" description="Installs a -D{mavenVersion} of this module into local Maven repository">
         <property name="maven.tmp" location="${build.dir}/mvn"/>

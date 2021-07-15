@@ -1966,6 +1966,12 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     </subant>
   </target>
 
+  <target name="run-jackpot" depends="init">
+    <echo message="Running jackpot for ${cluster.config} modules"/>
+    <subant target="run-jackpot" buildpath="${modules.fullpath}">
+    </subant>
+  </target>
+
   
   <target name="generate-uc-catalog" depends="bootstrap">
     <taskdef name="makeupdatedesc"

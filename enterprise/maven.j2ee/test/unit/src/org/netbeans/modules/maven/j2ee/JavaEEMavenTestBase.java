@@ -54,6 +54,7 @@ public abstract class JavaEEMavenTestBase extends NbTestCase {
     public  final String GLASSFISH = "gfv5ee8"; //NOI18N
     public  final String ECLIPSEGLASSFISH = "gfv510ee8"; //NOI18N
     public  final String ECLIPSEGLASSFISH6 = "gfv6ee9"; //NOI18N
+    public  final String ECLIPSEGLASSFISH610 = "gfv610ee9"; //NOI18N
     public  final String TOMCAT = "Tomcat"; //NOI18N
     public  final String JBOSS = "JBoss"; //NOI18N
 

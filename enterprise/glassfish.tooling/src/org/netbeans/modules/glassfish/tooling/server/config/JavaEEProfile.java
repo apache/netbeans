@@ -127,7 +127,7 @@ public enum JavaEEProfile {
         v1_8("1.8"),
         /** JakartaEE 8.0. */
         v8_0_0("8.0.0"),
-        /** JakartaEE 8.0. */
+        /** JakartaEE 9.0. */
         v9_0_0("9.0.0");
 
         /** JavaEE profile type name. */

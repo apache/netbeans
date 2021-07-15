@@ -70,7 +70,7 @@
             </fileset>
         </classpath>
         <javadocs>
-            <lookup path="docs/javaee-doc-api.jar"/>
+            <lookup path="docs/jakartaee9-doc-api.jar"/>
         </javadocs>
         <sources>
         </sources>
@@ -86,7 +86,7 @@
             </fileset>
         </classpath>
         <javadocs>
-            <link url="https://repo1.maven.org/maven2/org/glassfish/jersey/jersey-documentation/2.0-m05-2/jersey-documentation-2.0-m05-2-docbook.zip"/>
+            <link url="https://repo1.maven.org/maven2/org/glassfish/jersey/jersey-documentation/3.0.1/jersey-documentation-3.0.1-docbook.zip"/>
         </javadocs>
         <sources>
         </sources>

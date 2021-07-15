@@ -137,7 +137,7 @@ public abstract class GlassfishConfiguration implements
             return new int[]{0,1};
         }
         // glassfish-resources.xml for v6
-        if (GlassFishVersion.ge(version, GlassFishVersion.GF_6)) {
+        if (GlassFishVersion.ge(version, GlassFishVersion.GF_6) || GlassFishVersion.ge(version, GlassFishVersion.GF_6_1_0)) {
             return new int[]{0};
         }
         // glassfish-resources.xml for v5
@@ -508,7 +508,8 @@ public abstract class GlassfishConfiguration implements
         "gfv3ee6wc",
         "gfv5ee8",
         "gfv510ee8",
-        "gfv6ee9"
+        "gfv6ee9",
+        "gfv610ee9"
     };
 
     protected ASDDVersion getTargetAppServerVersion() {

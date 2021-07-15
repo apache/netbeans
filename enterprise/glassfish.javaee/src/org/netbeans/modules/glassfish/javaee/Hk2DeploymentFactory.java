@@ -40,6 +40,7 @@ public class Hk2DeploymentFactory implements DeploymentFactory {
     private static Hk2DeploymentFactory ee8Instance;
     private static Hk2DeploymentFactory jakartaee8Instance;
     private static Hk2DeploymentFactory jakartaee9Instance;
+    private static Hk2DeploymentFactory jakartaee91Instance;
     private String[] uriFragments;
     private String version;
     private String displayName;
@@ -128,6 +129,23 @@ public class Hk2DeploymentFactory implements DeploymentFactory {
         if (jakartaee9Instance == null) {
             ServerUtilities tmp = ServerUtilities.getJakartaEe9Utilities();
             jakartaee9Instance = new Hk2DeploymentFactory(new String[]{"deployer:gfv6ee9:", "deployer:gfv6"}, "0.4", // NOI18N
+                    NbBundle.getMessage(Hk2DeploymentFactory.class, "TXT_FactoryDisplayName"));  // NOI18N
+            DeploymentFactoryManager.getInstance().registerDeploymentFactory(jakartaee9Instance);
+            jakartaee9Instance.setServerUtilities(tmp);
+        }
+        return jakartaee9Instance;
+    }
+
+    /**
+     * Stubbed in for NetBeans 12.4, awaiting release of Jakarta EE 9.1.  Once Released,
+     * this will need to be modified accordingly.
+     * @return
+     */
+    public static synchronized DeploymentFactory createJakartaEe91() {
+        // FIXME -- these strings should come from some constant place
+        if (jakartaee9Instance == null) {
+            ServerUtilities tmp = ServerUtilities.getJakartaEe9Utilities();
+            jakartaee9Instance = new Hk2DeploymentFactory(new String[]{"deployer:gfv610ee9:", "deployer:gfv610"}, "0.5", // NOI18N
                     NbBundle.getMessage(Hk2DeploymentFactory.class, "TXT_FactoryDisplayName"));  // NOI18N
             DeploymentFactoryManager.getInstance().registerDeploymentFactory(jakartaee9Instance);
             jakartaee9Instance.setServerUtilities(tmp);

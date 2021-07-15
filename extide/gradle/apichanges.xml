@@ -83,6 +83,21 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="config-disabled-action">
+            <api name="general"/>
+            <summary>
+                Action can be disabled for a configuration.
+            </summary>
+            <date day="19" month="6" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/GradleActionsProvider.html">GradleActionsProviders</a> may
+                <b>disable action</b> in a provided configuration, for example if the configured environment does not permit
+                the action to be run.
+            </description>
+            <class package="org.netbeans.modules.gradle.api.execute" name="ActionMapping"/>
+        </change>
         <change id="configurations">
             <api name="general"/>
             <summary>

@@ -44,6 +44,7 @@ import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.execute.ConfigurableActionProvider;
 import org.netbeans.modules.gradle.execute.GradleExecAccessor;
+import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.spi.actions.GradleActionsProvider;
 import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
@@ -69,7 +70,7 @@ import org.xml.sax.SAXException;
  * And action definition files are loaded for defined configurations, especially the user-defined, which is managed by the {@link ProjectConfigurationProvider} implementation.
  * So these two impls listen for each other firing their own change events + guard against loops.
  * <p/>
- * Caching here is desinged as follows: Once data is loaded, it is valid until a refresh. Customized actions are loaded lazily, on query for a specific configuration, or
+ * Caching here is designed as follows: Once data is loaded, it is valid until a refresh. Customized actions are loaded lazily, on query for a specific configuration, or
  * during the refresh. Once the customizations are loaded, the service listens on the file - if the content changes, customizations are invalidated and loaded during next query.
  * Refresh is caused by a change to the set of configurations and to the set of {@link GradleActionProvider}s - which may occur e.g. when the project is reloaded and 
  * new set of plugins is detected.
@@ -187,17 +188,39 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
             return confProvider;
         }
     }
+    
+    private String effectiveConfig() {
+        return ProjectConfigurationSupport.getEffectiveConfiguration(project, Lookup.EMPTY).getId();
+    }
+    
+    ActionMapping findMapping(String action, String cfgId) {
+        ActionData ad = getActionData(cfgId);
+        ActionMapping m = null;
+        if (ad != null) {
+            m = ad.getAction(action);
+        }
+        if (m == null && !GradleExecConfiguration.DEFAULT.equals(cfgId)) {
+            m = getActionData(GradleExecConfiguration.DEFAULT).getAction(action);
+        }
+        return m;
+    }
+    
+    Set<String> customizedActions(String cfgId) {
+        ActionData ad = getActionData(cfgId);
+        if (ad == null) {
+            return Collections.emptySet();
+        }
+        return new HashSet<>(ad.customizedMappings.keySet());
+    }
 
     @Override
     public ActionMapping findMapping(String action) {
-        ActionData ad = getActionData(GradleExecConfiguration.DEFAULT);
-        return ad == null ? null : ad.getAction(action);
+        return findMapping(action, effectiveConfig());
     }
 
     @Override
     public Set<String> customizedActions() {
-        ActionData ad = getActionData(GradleExecConfiguration.DEFAULT);
-        return ad == null ? Collections.emptySet() : ad.customizedMappings.keySet();
+        return customizedActions(effectiveConfig());
     }
 
     @Override
@@ -237,31 +260,17 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
 
     @Override
     public ProjectActionMappingProvider findActionProvider(String configurationId) {
-        if (configurationId == null || GradleExecConfiguration.DEFAULT.equals(configurationId)) {
-            return this;
-        } else {
-            return new ProjectActionMappingProvider() {
-                @Override
-                public ActionMapping findMapping(String action) {
-                    ActionData ad = getActionData(configurationId);
-                    ActionMapping m = null;
-                    
-                    if (ad != null) {
-                        m = ad.getAction(action);
-                    }
-                    if (m == null) {
-                        m = getActionData(GradleExecConfiguration.DEFAULT).getAction(action);
-                    }
-                    return m;
-                }
+        return new ProjectActionMappingProvider() {
+            @Override
+            public ActionMapping findMapping(String action) {
+                return ConfigurableActionsProviderImpl.this.findMapping(action, configurationId);
+            }
 
-                @Override
-                public Set<String> customizedActions() {
-                    ActionData ad = getActionData(configurationId);
-                    return ad == null ? Collections.emptySet() : ad.customizedMappings.keySet();
-                }
-            };
-        }
+            @Override
+            public Set<String> customizedActions() {
+                return ConfigurableActionsProviderImpl.this.customizedActions(configurationId);
+            }
+        };
     }
 
     @Override
@@ -646,7 +655,7 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
         
         // @GuardedBy(ConfigurableActionProvider.this)
         private Map<String, ActionMapping>  customizedMappings = null;
-
+        
         public ActionData(boolean provided, GradleExecConfiguration cfg) {
             this.fromProvider = provided;
             this.cfg = cfg;

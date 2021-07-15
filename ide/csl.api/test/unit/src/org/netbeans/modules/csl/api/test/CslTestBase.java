@@ -609,6 +609,19 @@ public abstract class CslTestBase extends NbTestCase {
         return inputFile;
     }
 
+    private static List<String> computeVersionVariantsFor(String version) {
+        int dot = version.indexOf('.');
+        version = version.substring(dot + 1);
+        int versionNum = Integer.parseInt(version);
+        List<String> versions = new ArrayList<>();
+
+        for (int v = versionNum; v >= 9; v--) {
+            versions.add("." + v);
+        }
+
+        return versions;
+    }
+
     protected boolean failOnMissingGoldenFile() {
         return true;
     }
@@ -639,12 +652,28 @@ public abstract class CslTestBase extends NbTestCase {
      */
     protected void assertDescriptionMatches(String relFilePath,
             String description, boolean includeTestName, String ext, boolean checkFileExistence, boolean skipMarkers) throws Exception {
+        assertDescriptionMatches(relFilePath, description, includeTestName, false, ext, checkFileExistence, skipMarkers);
+    }
+
+    protected void assertDescriptionMatches(String relFilePath,
+            String description, boolean includeTestName, boolean includeJavaVersion, String ext, boolean checkFileExistence, boolean skipMarkers) throws Exception {
         File rubyFile = getDataFile(relFilePath);
         if (checkFileExistence && !rubyFile.exists()) {
             NbTestCase.fail("File " + rubyFile + " not found.");
         }
 
-        File goldenFile = getDataFile(relFilePath + (includeTestName ? ("." + getName()) : "") + ext);
+        File goldenFile = null;
+        if (includeJavaVersion) {
+            String version = System.getProperty("java.specification.version");
+            for (String variant : computeVersionVariantsFor(version)) {
+                goldenFile = getDataFile(relFilePath + (includeTestName ? ("." + getName()) : "") + variant + ext);
+                if (goldenFile.exists())
+                    break;
+            }
+        }
+        if (goldenFile == null || !goldenFile.exists()) {
+            goldenFile = getDataFile(relFilePath + (includeTestName ? ("." + getName()) : "") + ext);
+        }
         if (!goldenFile.exists()) {
             if (!goldenFile.createNewFile()) {
                 NbTestCase.fail("Cannot create file " + goldenFile);
@@ -2895,13 +2924,13 @@ public abstract class CslTestBase extends NbTestCase {
         };
         if (classPathsForTest == null || classPathsForTest.isEmpty()) {
             ParserManager.parse(Collections.singleton(testSource), task);
-            assertDescriptionMatches(file, described[0], true, ".completion");
+            assertDescriptionMatches(file, described[0], true, true, ".completion", true, false);
         } else {
             Future<Void> future = ParserManager.parseWhenScanFinished(Collections.singleton(testSource), task);
             if (!future.isDone()) {
                 future.get();
             }
-            assertDescriptionMatches(file, described[0], true, ".completion");
+            assertDescriptionMatches(file, described[0], true, true, ".completion", true, false);
         }
     }
 

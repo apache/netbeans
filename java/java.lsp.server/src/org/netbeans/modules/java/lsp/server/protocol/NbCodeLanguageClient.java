@@ -72,6 +72,31 @@ public interface NbCodeLanguageClient extends LanguageClient {
     public void notifyTestProgress(@NonNull TestProgressParams params);
 
     /**
+     * Create a text editor decoration.
+     *
+     * @param params the decoration render options
+     * @return a key of the created decoration
+     */
+    @JsonRequest("window/createTextEditorDecoration")
+    public CompletableFuture<String> createTextEditorDecoration(@NonNull DecorationRenderOptions params);
+
+    /**
+     * Set text editor decoration to an array of code ranges.
+     *
+     * @param params 
+     */
+    @JsonNotification("window/setTextEditorDecoration")
+    public void setTextEditorDecoration(@NonNull SetTextEditorDecorationParams params);
+
+    /**
+     * Notifies client about disposal of the text editor decoration.
+     *
+     * @param params the decoration key
+     */
+    @JsonNotification("window/disposeTextEditorDecoration")
+    public void disposeTextEditorDecoration(@NonNull String params);
+
+    /**
      * Returns extended code capabilities.
      * @return code capabilities.
      */

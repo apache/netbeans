@@ -49,6 +49,11 @@
                         <exec.mainClass>${packageClassName}</exec.mainClass>
                     </properties>
                 </action>
+                <action>
+                    <!-- Since Maven 2.149, one can disable an action, so it is not inherited from the default
+                         configuration. Disabled actions have no goals -->
+                    <actionName>debug</actionName>
+                </action>
             </actions>
         </profile>
     </profiles>

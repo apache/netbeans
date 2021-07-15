@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.59
+#Version 1.60
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -28,7 +28,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()

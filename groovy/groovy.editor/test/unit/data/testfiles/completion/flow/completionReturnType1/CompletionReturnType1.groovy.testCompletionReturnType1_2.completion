@@ -17,7 +17,6 @@ METHOD     collect(Collection, Closure)               Collection
 METHOD     collectReplacements(Closure)               String
 METHOD     collectReplacements(List)                  String
 METHOD     compareTo(String)               [PUBLIC]   int
-METHOD     compareTo(T)                    [PUBLIC]   int
 METHOD     compareToIgnoreCase(String)     [PUBLIC]   int
 METHOD     concat(String)                  [PUBLIC]   String
 METHOD     contains(CharSequence)          [PUBLIC]   boolean

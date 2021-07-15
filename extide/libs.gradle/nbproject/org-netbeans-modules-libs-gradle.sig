@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 6.7
+#Version 7.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -18,9 +18,8 @@ meth public int hashCode()
 meth public java.lang.String toString()
 
 CLSS public org.gradle.StartParameter
+cons protected init(org.gradle.initialization.BuildLayoutParameters)
 cons public init()
-fld protected boolean searchUpwards
-fld protected boolean useEmptySettings
 fld protected java.io.File gradleHomeDir
 fld public final static java.io.File DEFAULT_GRADLE_USER_HOME
 fld public final static java.lang.String GRADLE_USER_HOME_PROPERTY_KEY = "gradle.user.home"
@@ -29,7 +28,6 @@ intf org.gradle.api.logging.configuration.LoggingConfiguration
 intf org.gradle.concurrent.ParallelismConfiguration
 meth protected org.gradle.StartParameter prepareNewBuild(org.gradle.StartParameter)
 meth protected org.gradle.StartParameter prepareNewInstance(org.gradle.StartParameter)
-meth protected void doUseEmptySettings()
 meth public boolean equals(java.lang.Object)
 meth public boolean isBuildCacheDebugLogging()
 meth public boolean isBuildCacheEnabled()
@@ -41,17 +39,13 @@ meth public boolean isContinueOnFailure()
 meth public boolean isContinuous()
 meth public boolean isDryRun()
 meth public boolean isExportKeys()
- anno 0 org.gradle.api.Incubating()
 meth public boolean isNoBuildScan()
 meth public boolean isOffline()
 meth public boolean isParallelProjectExecutionEnabled()
 meth public boolean isProfile()
 meth public boolean isRefreshDependencies()
 meth public boolean isRefreshKeys()
- anno 0 org.gradle.api.Incubating()
 meth public boolean isRerunTasks()
-meth public boolean isSearchUpwards()
-meth public boolean isUseEmptySettings()
 meth public boolean isWriteDependencyLocks()
 meth public int getMaxWorkerCount()
 meth public int hashCode()
@@ -72,7 +66,6 @@ meth public java.util.List<java.io.File> getInitScripts()
 meth public java.util.List<java.lang.String> getLockedDependenciesToUpdate()
 meth public java.util.List<java.lang.String> getTaskNames()
 meth public java.util.List<java.lang.String> getWriteDependencyVerifications()
- anno 0 org.gradle.api.Incubating()
 meth public java.util.List<org.gradle.TaskExecutionRequest> getTaskRequests()
 meth public java.util.Map<java.lang.String,java.lang.String> getProjectProperties()
 meth public java.util.Map<java.lang.String,java.lang.String> getSystemPropertiesArgs()
@@ -80,9 +73,7 @@ meth public java.util.Set<java.lang.String> getExcludedTaskNames()
 meth public org.gradle.StartParameter newBuild()
 meth public org.gradle.StartParameter newInstance()
 meth public org.gradle.StartParameter setBuildProjectDependencies(boolean)
-meth public org.gradle.StartParameter useEmptySettings()
 meth public org.gradle.api.artifacts.verification.DependencyVerificationMode getDependencyVerificationMode()
- anno 0 org.gradle.api.Incubating()
 meth public org.gradle.api.logging.LogLevel getLogLevel()
 meth public org.gradle.api.logging.configuration.ConsoleOutput getConsoleOutput()
 meth public org.gradle.api.logging.configuration.ShowStacktrace getShowStacktrace()
@@ -102,11 +93,9 @@ meth public void setContinuous(boolean)
 meth public void setCurrentDir(java.io.File)
  anno 1 org.gradle.internal.impldep.javax.annotation.Nullable()
 meth public void setDependencyVerificationMode(org.gradle.api.artifacts.verification.DependencyVerificationMode)
- anno 0 org.gradle.api.Incubating()
 meth public void setDryRun(boolean)
 meth public void setExcludedTaskNames(java.lang.Iterable<java.lang.String>)
 meth public void setExportKeys(boolean)
- anno 0 org.gradle.api.Incubating()
 meth public void setGradleUserHomeDir(java.io.File)
  anno 1 org.gradle.internal.impldep.javax.annotation.Nullable()
 meth public void setIncludedBuilds(java.util.List<java.io.File>)
@@ -125,9 +114,7 @@ meth public void setProjectDir(java.io.File)
 meth public void setProjectProperties(java.util.Map<java.lang.String,java.lang.String>)
 meth public void setRefreshDependencies(boolean)
 meth public void setRefreshKeys(boolean)
- anno 0 org.gradle.api.Incubating()
 meth public void setRerunTasks(boolean)
-meth public void setSearchUpwards(boolean)
 meth public void setSettingsFile(java.io.File)
  anno 1 org.gradle.internal.impldep.javax.annotation.Nullable()
 meth public void setShowStacktrace(org.gradle.api.logging.configuration.ShowStacktrace)
@@ -138,7 +125,6 @@ meth public void setTaskRequests(java.lang.Iterable<? extends org.gradle.TaskExe
 meth public void setWarningMode(org.gradle.api.logging.configuration.WarningMode)
 meth public void setWriteDependencyLocks(boolean)
 meth public void setWriteDependencyVerifications(java.util.List<java.lang.String>)
- anno 0 org.gradle.api.Incubating()
 supr java.lang.Object
 hfds buildCacheDebugLogging,buildCacheEnabled,buildFile,buildProjectDependencies,buildScan,configureOnDemand,continueOnFailure,continuous,currentDir,dryRun,excludedTaskNames,gradleUserHomeDir,includedBuilds,initScripts,isExportKeys,isRefreshKeys,lockedDependenciesToUpdate,loggingConfiguration,noBuildScan,offline,parallelismConfiguration,profile,projectCacheDir,projectDir,projectProperties,refreshDependencies,rerunTasks,settingsFile,systemPropertiesArgs,taskRequests,verificationMode,writeDependencyLocks,writeDependencyVerifications
 

@@ -22,7 +22,7 @@ package org.netbeans.modules.gradle.spi;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
@@ -222,11 +222,17 @@ public final class GradleFiles implements Serializable {
     }
 
     public boolean isProject() {
-        boolean ret = knownProject || (buildScript != null);
-        if (!ret && (settingsScript != null)) {
-            ret = SettingsFile.getSubProjects(settingsScript).contains(projectDir);
+        if (knownProject || buildScript != null) {
+            return true;
         }
-        return ret;
+        if (settingsScript != null) {
+            if (projectDir.equals(settingsScript.getParentFile())) {
+                return true;
+            }
+            Set<File> parsed = SettingsFile.getSubProjects(settingsScript);
+            return parsed.contains(projectDir); 
+        }
+        return false;
     }
 
     /**
@@ -354,7 +360,7 @@ public final class GradleFiles implements Serializable {
             Map<String, String> projectPaths = new HashMap<>();
             String rootDir = f.getParentFile().getAbsolutePath();
             try {
-                List<String> lines = Files.readAllLines(f.toPath(), Charset.forName("UTF-8")); //NOI18N
+                List<String> lines = Files.readAllLines(f.toPath(), StandardCharsets.UTF_8);
                 for (String line : lines) {
                     line = line.trim();
                     if (!line.startsWith("//")) { //NOI18N

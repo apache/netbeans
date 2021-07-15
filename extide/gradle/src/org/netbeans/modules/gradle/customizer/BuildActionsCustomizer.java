@@ -26,8 +26,11 @@ import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -44,6 +47,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.actions.CustomActionRegistrationSupport;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.configurations.ConfigurationSnapshot;
+import org.netbeans.modules.gradle.execute.ConfigurableActionProvider;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.text.CloneableEditorSupport;
 import org.openide.util.NbBundle.Messages;
@@ -58,6 +62,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
     private final static String CUSTOM_ACTION = Bundle.TXT_CUSTOM();
     private static final String CARD_NOSELECT = "empty"; //NOI18N
     private static final String CARD_DETAILS = "details"; //NOI18N
+    private static final String CARD_DISABLED = "disabled"; //NOI18N
 
     final Project project;
     final ConfigurationSnapshot configSnapshot;
@@ -232,7 +237,12 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         taArgs = new javax.swing.JEditorPane();
         lbReloadHints = new javax.swing.JLabel();
+        btnDisableAction = new javax.swing.JButton();
         lbNoAction = new javax.swing.JLabel();
+        disabledPanel = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        btnRestore = new javax.swing.JButton();
+        btnRemove2 = new javax.swing.JButton();
 
         org.openide.awt.Mnemonics.setLocalizedText(lbTitle, org.openide.util.NbBundle.getMessage(BuildActionsCustomizer.class, "BuildActionsCustomizer.lbTitle.text")); // NOI18N
 
@@ -306,6 +316,13 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         lbReloadHints.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         lbReloadHints.setEnabled(false);
 
+        org.openide.awt.Mnemonics.setLocalizedText(btnDisableAction, org.openide.util.NbBundle.getMessage(BuildActionsCustomizer.class, "BuildActionsCustomizer.btnDisableAction.text")); // NOI18N
+        btnDisableAction.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDisableActionActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnDetailsLayout = new javax.swing.GroupLayout(pnDetails);
         pnDetails.setLayout(pnDetailsLayout);
         pnDetailsLayout.setHorizontalGroup(
@@ -314,6 +331,8 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
                 .addGroup(pnDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnDetailsLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnDisableAction)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btRemove))
                     .addGroup(pnDetailsLayout.createSequentialGroup()
                         .addContainerGap()
@@ -364,7 +383,9 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbReloadHints, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btRemove)
+                .addGroup(pnDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btRemove)
+                    .addComponent(btnDisableAction))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -373,6 +394,53 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         lbNoAction.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(lbNoAction, org.openide.util.NbBundle.getMessage(BuildActionsCustomizer.class, "BuildActionsCustomizer.lbNoAction.text")); // NOI18N
         pnDetailsPanel.add(lbNoAction, "empty");
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(BuildActionsCustomizer.class, "BuildActionsCustomizer.jLabel2.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(btnRestore, org.openide.util.NbBundle.getMessage(BuildActionsCustomizer.class, "BuildActionsCustomizer.btnRestore.text")); // NOI18N
+        btnRestore.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRestoreActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(btnRemove2, org.openide.util.NbBundle.getMessage(BuildActionsCustomizer.class, "BuildActionsCustomizer.btnRemove2.text")); // NOI18N
+        btnRemove2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemove2ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout disabledPanelLayout = new javax.swing.GroupLayout(disabledPanel);
+        disabledPanel.setLayout(disabledPanelLayout);
+        disabledPanelLayout.setHorizontalGroup(
+            disabledPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(disabledPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(disabledPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(disabledPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(0, 121, Short.MAX_VALUE))
+                    .addGroup(disabledPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnRestore)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnRemove2)))
+                .addContainerGap())
+        );
+        disabledPanelLayout.setVerticalGroup(
+            disabledPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(disabledPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(disabledPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnRemove2)
+                    .addComponent(btnRestore))
+                .addContainerGap(321, Short.MAX_VALUE))
+        );
+
+        pnDetailsPanel.add(disabledPanel, "disabled");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -431,27 +499,44 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         ActionMapping mapping = getSelectedMapping();
         autoApply = false;
         if (mapping != null) {
-            cardLayout.show(pnDetailsPanel, CARD_DETAILS);
-
-            tfName.setText(mapping.getName());
-            tfLabel.setText(mapping.getDisplayName());
-            tfLabel.setEnabled(mapping.getName().startsWith(ActionMapping.CUSTOM_PREFIX));
-            taArgs.setText(mapping.getArgs());
-            cbReloadRule.setSelectedItem(mapping.getReloadRule().name());
-            cbRepeatable.setSelected(mapping.isRepeatable());
-            autoApply = true;
+            if (ActionMapping.isDisabled(mapping)) {
+                cardLayout.show(pnDetailsPanel, CARD_DISABLED);
+            } else {
+                cardLayout.show(pnDetailsPanel, CARD_DETAILS);
+                updateActionProperties(mapping);
+            }
         } else {
             cardLayout.show(pnDetailsPanel, CARD_NOSELECT);
         }
     }//GEN-LAST:event_lsActionsValueChanged
 
+    private void updateActionProperties(ActionMapping mapping) {
+        tfName.setText(mapping.getName());
+        tfLabel.setText(mapping.getDisplayName());
+        tfLabel.setEnabled(mapping.getName().startsWith(ActionMapping.CUSTOM_PREFIX));
+        taArgs.setText(mapping.getArgs());
+        cbReloadRule.setSelectedItem(mapping.getReloadRule().name());
+        cbRepeatable.setSelected(mapping.isRepeatable());
+        autoApply = true;
+        GradleExecConfiguration cfg = (GradleExecConfiguration)cbConfiguration.getSelectedItem();
+        btnDisableAction.setEnabled(!cfg.isDefault());
+    }
+    
     private void btRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoveActionPerformed
         CustomActionMapping mapping = getSelectedMapping();
         customActionsModel.removeElement(mapping);
         actionRegistry.unregisterCustomAction(mapping.getName());
         String action = mapping.getName();
         if (!action.startsWith(ActionMapping.CUSTOM_PREFIX)) {
-            availableActionsModel.addElement(action);
+            // try to insert at the same position:
+            List<String> items = new ArrayList<>();
+            for (int i = 1; i < availableActionsModel.getSize(); i++) {
+                items.add((String)availableActionsModel.getElementAt(i));
+            }
+            items.add(action);
+            Collections.sort(items);
+            int idx = items.indexOf(action);
+            availableActionsModel.insertElementAt(action, idx + 1);
         }
     }//GEN-LAST:event_btRemoveActionPerformed
 
@@ -486,14 +571,71 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         } else {
             action = actionRegistry.findNewCustonActionId();
         }
-        ProjectActionMappingProvider mappingProvider = project.getLookup().lookup(ProjectActionMappingProvider.class);
+        GradleExecConfiguration cfg = (GradleExecConfiguration)cbConfiguration.getSelectedItem();
+        String cfgId = cfg != null ? cfg.getId() : GradleExecConfiguration.DEFAULT;
+        ProjectActionMappingProvider mappingProvider = project.getLookup().lookup(ConfigurableActionProvider.class).findActionProvider(cfgId);
         ActionMapping defaultMapping = mappingProvider.findMapping(action);
-        CustomActionMapping mapping = defaultMapping != null ? new CustomActionMapping(defaultMapping) : new CustomActionMapping(action);
+        if (defaultMapping == null) {
+            defaultMapping = project.getLookup().lookup(ProjectActionMappingProvider.class).findMapping(action);
+        }
+        CustomActionMapping mapping = defaultMapping != null ? new CustomActionMapping(defaultMapping, action) : new CustomActionMapping(action);
         customActionsModel.addElement(mapping);
         actionRegistry.registerCustomAction(mapping);
         lsActions.setSelectedIndex(customActionsModel.indexOf(mapping));
         cbAdd.setSelectedIndex(0);
     }//GEN-LAST:event_cbAddActionPerformed
+
+    private ActionMapping findBuiltinConfiguration(String actionId) {
+        GradleExecConfiguration cfg = configSnapshot.getActiveConfiguration();
+        ConfigurableActionProvider cap = project.getLookup().lookup(ConfigurableActionProvider.class);
+        if (!cfg.isDefault()) {
+            ActionMapping m = cap.findDefaultMapping(cfg.getId(), actionId);
+            if (!ActionMapping.isDisabled(m)) {
+                return m;
+            }
+        }
+        return cap.findDefaultMapping(GradleExecConfiguration.DEFAULT, actionId);
+    }
+    
+    private void btnRestoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestoreActionPerformed
+        CustomActionMapping mapping = getSelectedMapping();
+        ActionMapping original = findBuiltinConfiguration(mapping.getName());
+        if (original != null) {
+            mapping = new CustomActionMapping(original, mapping.getName());
+            int index = customActionsModel.indexOf(mapping);
+            if (index == -1) {
+                return;
+            }
+            customActionsModel.removeElement(mapping);
+            actionRegistry.unregisterCustomAction(mapping.getName());
+            customActionsModel.add(index, mapping);
+            actionRegistry.registerCustomAction(mapping);
+            lsActions.setSelectedIndex(index);
+        } else {
+            String action = mapping.getName();
+            if (!action.startsWith(ActionMapping.CUSTOM_PREFIX)) {
+                availableActionsModel.addElement(action);
+            }
+        }
+    }//GEN-LAST:event_btnRestoreActionPerformed
+
+    private void btnDisableActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisableActionActionPerformed
+        CustomActionMapping mapping = getSelectedMapping();
+        if (ActionMapping.isDisabled(mapping)) {
+            return;
+        }
+        // change to disabled mapping:
+        mapping.setArgs(null);
+        mapping.setReloadRule(ActionMapping.ReloadRule.NEVER);
+        actionRegistry.registerCustomAction(mapping);
+        
+        CardLayout cardLayout = (CardLayout) pnDetailsPanel.getLayout();
+        cardLayout.show(pnDetailsPanel, CARD_DISABLED);
+    }//GEN-LAST:event_btnDisableActionActionPerformed
+
+    private void btnRemove2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemove2ActionPerformed
+        btRemoveActionPerformed(evt);
+    }//GEN-LAST:event_btnRemove2ActionPerformed
 
     private CustomActionMapping getSelectedMapping() {
         int index = lsActions.getSelectedIndex();
@@ -523,11 +665,16 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRemove;
+    private javax.swing.JButton btnDisableAction;
+    private javax.swing.JButton btnRemove2;
+    private javax.swing.JButton btnRestore;
     private javax.swing.JComboBox<String> cbAdd;
     private javax.swing.JComboBox<GradleExecConfiguration> cbConfiguration;
     private javax.swing.JComboBox<String> cbReloadRule;
     private javax.swing.JCheckBox cbRepeatable;
+    private javax.swing.JPanel disabledPanel;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;

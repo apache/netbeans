@@ -1,10 +1,9 @@
-Name: FlatLaf Look and Feel
-Description: FlatLaf Look and Feel
-Version: 1.1.2
-Files: flatlaf-1.1.2.jar
+Name: Apache NetBeans Jackpot 3.0
+Origin: Apache Software Foundation
+Version: 12.3
 License: Apache-2.0
-Origin: FormDev Software GmbH.
-URL: https://www.formdev.com/flatlaf/
+Description: Apache NetBeans Jackpot is a Java Hint's tools base on Apache NetBeans.
+URL: https://netbeans.apache.org
 
                                  Apache License
                            Version 2.0, January 2004

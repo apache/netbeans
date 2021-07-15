@@ -46,6 +46,7 @@ public interface ErrorProvider {
      */
     public static final class Context {
         private final FileObject file;
+        private final int offset;
         private final Kind errorKind;
         private final AtomicBoolean cancel = new AtomicBoolean();
         private final List<Runnable> cancelCallbacks = new ArrayList<>();
@@ -57,7 +58,21 @@ public interface ErrorProvider {
          * @param errorKind the type of errors/warnings that should be computed
          */
         public Context(FileObject file, Kind errorKind) {
+            this(file, -1, errorKind);
+        }
+
+        /**
+         * Construct a new {@code Context}.
+         *
+         * @param file file for which the errors/warnings should be computed
+         * @param offset offset for which the errors/warnings should be computed
+         * @param errorKind the type of errors/warnings that should be computed
+         *
+         * @since 1.4
+         */
+        public Context(FileObject file, int offset, Kind errorKind) {
             this.file = file;
+            this.offset = offset;
             this.errorKind = errorKind;
         }
 
@@ -68,6 +83,17 @@ public interface ErrorProvider {
          */
         public FileObject file() {
             return file;
+        }
+
+        /**
+         * The offset for which the errors/warnings should be computed.
+         *
+         * @return the offset for which the errors/warnings should be computed
+         *
+         * @since 1.4
+         */
+        public int getOffset() {
+            return offset;
         }
 
         /**

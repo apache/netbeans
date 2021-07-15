@@ -1604,6 +1604,21 @@ public class ServerTest extends NbTestCase {
             public void logMessage(MessageParams arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
+
+            @Override
+            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void disposeTextEditorDecoration(String params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
@@ -2942,6 +2957,21 @@ public class ServerTest extends NbTestCase {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
+            @Override
+            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void disposeTextEditorDecoration(String params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
@@ -3141,6 +3171,21 @@ public class ServerTest extends NbTestCase {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
+            @Override
+            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void disposeTextEditorDecoration(String params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
@@ -3254,6 +3299,21 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public NbCodeClientCapabilities getNbCodeCapabilities() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void disposeTextEditorDecoration(String params) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
@@ -3374,6 +3434,21 @@ public class ServerTest extends NbTestCase {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
+            @Override
+            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void disposeTextEditorDecoration(String params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
@@ -3475,6 +3550,21 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public NbCodeClientCapabilities getNbCodeCapabilities() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void disposeTextEditorDecoration(String params) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
@@ -3587,6 +3677,21 @@ public class ServerTest extends NbTestCase {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
+            @Override
+            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void disposeTextEditorDecoration(String params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
@@ -3690,6 +3795,21 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public NbCodeClientCapabilities getNbCodeCapabilities() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void disposeTextEditorDecoration(String params) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 

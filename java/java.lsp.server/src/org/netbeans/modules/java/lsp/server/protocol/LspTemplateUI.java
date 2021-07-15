@@ -49,6 +49,7 @@ import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
+import org.openide.util.RequestProcessor;
 import org.openide.util.UserCancelException;
 import org.openide.util.Utilities;
 
@@ -56,6 +57,7 @@ import org.openide.util.Utilities;
     "CTL_TemplateUI_SelectGroup=Select Template Type",
     "CTL_TemplateUI_SelectTemplate=Select Template",
     "CTL_TemplateUI_SelectTarget=Where to put the object?",
+    "CTL_TemplateUI_SelectProjectTarget=Specify the project directory",
     "CTL_TemplateUI_SelectPackageName=Package name of your project?",
     "CTL_TemplateUI_SelectPackageNameSuggestion=org.yourcompany.yourproject",
     "CTL_TemplateUI_SelectName=Name of the object?",
@@ -65,6 +67,12 @@ import org.openide.util.Utilities;
     "ERR_ExistingPath={0} already exists",
 })
 abstract class LspTemplateUI {
+    /**
+     * Creation thread. All requests are serialized; make sure that no creation process can block e.g. waiting
+     * for the client's response.
+     */
+    private static final RequestProcessor    CREATION_RP = new RequestProcessor(LspTemplateUI.class);
+    
     private LspTemplateUI() {
     }
 
@@ -97,16 +105,20 @@ abstract class LspTemplateUI {
     private CompletableFuture<Object> templateUI(DataFolder templates, NbCodeLanguageClient client, ExecuteCommandParams params) {
         CompletionStage<DataObject> findTemplate = findTemplate(templates, client);
         CompletionStage<Pair<DataFolder, String>> findTargetFolderAndName = findTargetAndName(findTemplate, client, params);
-        return findTargetFolderAndName.thenCombine(findTemplate, (targetAndName, source) -> {
+        return findTargetFolderAndName.thenCombineAsync(findTemplate, (targetAndName, source) -> {
+            final String name = targetAndName.second();
+            if (name == null || name.isEmpty()) {
+                throw raise(RuntimeException.class, new UserCancelException());
+            }
             try {
                 DataFolder target = targetAndName.first();
                 Map<String,String> prjParams = new HashMap<>();
-                DataObject newObject = source.createFromTemplate(target, targetAndName.second(), prjParams);
+                DataObject newObject = source.createFromTemplate(target, name, prjParams);
                 return (Object) newObject.getPrimaryFile().toURI().toString();
             } catch (IOException ex) {
                 throw raise(RuntimeException.class, ex);
             }
-        }).exceptionally((error) -> {
+        }, CREATION_RP).exceptionally((error) -> {
             if (error instanceof UserCancelException || error.getCause() instanceof UserCancelException) {
                 return null;
             }
@@ -119,7 +131,7 @@ abstract class LspTemplateUI {
         CompletionStage<DataObject> findTemplate = findTemplate(templates, client);
         CompletionStage<Pair<DataFolder, String>> findTargetFolderAndName = findTargetAndName(findTemplate, client, params);
         CompletionStage<Pair<DataObject, String>> findTemplateAndPackage = findTemplate.thenCombine(findPackage(findTargetFolderAndName, client), Pair::of);
-        return findTargetFolderAndName.thenCombine(findTemplateAndPackage, (targetAndName, templateAndPackage) -> {
+        return findTargetFolderAndName.thenCombineAsync(findTemplateAndPackage, (targetAndName, templateAndPackage) -> {
             try {
                 final DataObject template = templateAndPackage.first();
                 final String pkg = templateAndPackage.second();
@@ -136,7 +148,7 @@ abstract class LspTemplateUI {
             } catch (IOException ex) {
                 throw raise(RuntimeException.class, ex);
             }
-        }).exceptionally((error) -> {
+        }, CREATION_RP).exceptionally((error) -> {
             if (error instanceof UserCancelException || error.getCause() instanceof UserCancelException) {
                 return null;
             }
@@ -197,7 +209,7 @@ abstract class LspTemplateUI {
                     final File targetPath = new File(path);
                     if (targetPath.exists()) {
                         client.showMessage(new MessageParams(MessageType.Error, Bundle.ERR_ExistingPath(path)));
-                        return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectTarget(), suggestWorkspaceRoot(folders))).thenCompose(this);
+                        return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectProjectTarget(), suggestWorkspaceRoot(folders))).thenCompose(this);
                     }
                     targetPath.getParentFile().mkdirs();
                     FileObject fo = FileUtil.toFileObject(targetPath.getParentFile());
@@ -206,13 +218,13 @@ abstract class LspTemplateUI {
                     return CompletableFuture.completedFuture(Pair.of(DataFolder.findFolder(fo), targetPath.getName()));
                 }
             }
-            return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectTarget(), suggestWorkspaceRoot(folders))).thenCompose(new VerifyNonExistingFolder());
+            return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectProjectTarget(), suggestWorkspaceRoot(folders))).thenCompose(new VerifyNonExistingFolder());
         });
     }
 
     private static String suggestWorkspaceRoot(List<WorkspaceFolder> folders) throws IllegalArgumentException {
         String suggestion = System.getProperty("user.dir");
-        if (!folders.isEmpty()) try {
+        if (folders != null && !folders.isEmpty()) try {
             suggestion = Utilities.toFile(new URI(folders.get(0).getUri())).getParent();
         } catch (URISyntaxException ex) {
         }
@@ -299,7 +311,7 @@ abstract class LspTemplateUI {
     }
 
     private static String removeExtensionFromFileName(String nameWithExtension, String templateExtension) {
-        if (nameWithExtension.endsWith('.' + templateExtension)) {
+        if (nameWithExtension != null && nameWithExtension.endsWith('.' + templateExtension)) {
             return nameWithExtension.substring(0, nameWithExtension.length() - templateExtension.length() - 1);
         } else {
             return nameWithExtension;
@@ -335,12 +347,8 @@ abstract class LspTemplateUI {
             if (display) {
                 String detail = findDetail(obj);
                 final String displayName = n.getDisplayName();
-                String description = n.getShortDescription();
-                if (description != null && description.equals(displayName)) {
-                    description = null;
-                }
                 categories.add(new QuickPickItem(
-                    displayName, description, detail,
+                    displayName, null, detail,
                     false, fo.getNameExt()
                 ));
             }

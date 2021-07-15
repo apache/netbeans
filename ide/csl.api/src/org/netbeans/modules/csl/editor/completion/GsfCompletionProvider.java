@@ -238,7 +238,7 @@ public class GsfCompletionProvider implements CompletionProvider {
         //private Source source;
         /** The compilation info that the Element was generated for */
 
-        private JavaCompletionQuery(int queryType, int caretOffset) {
+        JavaCompletionQuery(int queryType, int caretOffset) {
             this.queryType = queryType;
             this.caretOffset = caretOffset;
         }
@@ -523,7 +523,7 @@ public class GsfCompletionProvider implements CompletionProvider {
             }
         }
 
-        private void resolveDocumentation(ParserResult controller) throws IOException {
+        void resolveDocumentation(ParserResult controller) throws IOException {
             if (element != null) {
                 documentation = GsfCompletionDoc.create(controller, element, new Callable<Boolean>(){
                     @Override
@@ -570,6 +570,10 @@ public class GsfCompletionProvider implements CompletionProvider {
                     }
                 }
             }
+        }
+
+        CompletionDocumentation getDocumentation() {
+            return documentation;
         }
 
         private void resolveCompletion (ParserResult controller)

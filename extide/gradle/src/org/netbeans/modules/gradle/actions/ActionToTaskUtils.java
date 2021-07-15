@@ -43,13 +43,14 @@ public final class ActionToTaskUtils {
     @NonNull
     public static List<? extends GradleActionsProvider> actionProviders(@NonNull Project project) {
         List<GradleActionsProvider> providers = new ArrayList<>();
+        providers.addAll(project.getLookup().lookupAll(GradleActionsProvider.class));
         providers.addAll(Lookup.getDefault().lookupAll(GradleActionsProvider.class));
         return providers;
     }
 
     public static boolean isActionEnabled(String action, Project project, Lookup lookup) {
         ActionMapping mapping = getActiveMapping(action, project, lookup);
-        if (mapping != null) {
+        if (!ActionMapping.isDisabled(mapping)) {
             List<? extends GradleActionsProvider> providers = actionProviders(project);
             for (GradleActionsProvider provider : providers) {
                 if (provider.isActionEnabled(action, project, lookup)) {
@@ -67,7 +68,7 @@ public final class ActionToTaskUtils {
 
 
     public static ActionMapping getActiveMapping(String action, Project project, Lookup context) {
-        GradleExecConfiguration c = context.lookup(GradleExecConfiguration.class);
+        GradleExecConfiguration c = ProjectConfigurationSupport.getEffectiveConfiguration(project, context);
         ConfigurableActionProvider contextProvider = project.getLookup().lookup(ConfigurableActionProvider.class);
         
         if (c == null) {
@@ -87,10 +88,24 @@ public final class ActionToTaskUtils {
             }
         }
 
-        ProjectActionMappingProvider mappingProvider = project.getLookup().lookup(ProjectActionMappingProvider.class);
+        ProjectActionMappingProvider mappingProvider = null;
+        
+        for (ProjectActionMappingProvider prov : project.getLookup().lookupAll(ProjectActionMappingProvider.class)) {
+            if (!(prov instanceof ConfigurableActionProvider)) {
+                mappingProvider = prov;
+                break;
+            }
+        }
         // in case the Mapping Provider asks for the configuration, it should get some:
-        return mappingProvider != null ? ProjectConfigurationSupport.executeWithConfiguration(
-                project, c, () -> mappingProvider.findMapping(action)) : null;
+        if (mappingProvider == null) {
+            return null;
+        }
+        ProjectActionMappingProvider mp = mappingProvider;
+        ActionMapping am = ProjectConfigurationSupport.executeWithConfiguration(project, c, () -> mp.findMapping(action));
+        if (ActionMapping.isDisabled(am)) {
+            return null;
+        } else {
+            return am;
+        }
     }
-
 }

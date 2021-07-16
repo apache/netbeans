@@ -43,6 +43,7 @@ import org.openide.filesystems.LocalFileSystem;
 import org.openide.filesystems.MultiFileSystem;
 import org.openide.filesystems.XMLFileSystem;
 import org.openide.modules.InstalledFileLocator;
+import org.openide.modules.SpecificationVersion;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.xml.sax.SAXException;
@@ -99,20 +100,8 @@ public final class AutoUpgrade {
     static final List<String> PRE_APACHE_NEWER_VERSION_TO_CHECK =
             Arrays.asList ("8.2", "8.1", "8.0.2", "8.0.1", "8.0", "7.4", "7.3.1", "7.3", "7.2.1", "7.2"); //NOI18N
      // XXX: copy to autoupgrade.pluginimporter
-    // helper to remove dot from version for 3 digit versions
-    static class PseudoFloat {
-        
-        static Float parseFloat(String string) {
-            List<String> split = new ArrayList<>(Arrays.asList(string.split("\\.")));
-            String myfloat = split.remove(0);
-            if (!split.isEmpty()) {
-                // concat remaining
-                myfloat += "." + String.join("", split);
-            }
-            return Float.parseFloat(myfloat);
-        }
-    }
-    static final Comparator<String> APACHE_VERSION_COMPARATOR = (v1, v2) -> Float.compare(PseudoFloat.parseFloat(v1), PseudoFloat.parseFloat(v2));
+    
+    static final Comparator<String> APACHE_VERSION_COMPARATOR = (v1, v2) -> new SpecificationVersion(v1).compareTo(new SpecificationVersion(v2));
     
     static final List<String> APACHE_VERSION_TO_CHECK = Arrays.asList(NbBundle.getMessage(AutoUpgrade.class, "apachenetbeanspreviousversion").split(",")).stream().sorted(APACHE_VERSION_COMPARATOR.reversed()).collect(Collectors.toList());
     

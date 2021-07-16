@@ -40,10 +40,6 @@ import org.openide.util.NbBundle;
  * @author Andrei Badea
  */
 public class SQLCompletionProvider implements CompletionProvider {
-    private static final String SQL_CONNECTION_HINT_ID = "sql_connection_hint";
-    private static JTextComponent component = null;
-    private static DatabaseConnection dbconn = null;
-
     @Override
     public CompletionTask createTask(int queryType, JTextComponent component) {
         if (queryType == CompletionProvider.COMPLETION_QUERY_TYPE || 
@@ -167,4 +163,4 @@ public class SQLCompletionProvider implements CompletionProvider {
         TokenHierarchy<?> hierarchy = TokenHierarchy.get(doc);
         return hierarchy.tokenSequence(SQLTokenId.language());
     }
-        }
+}

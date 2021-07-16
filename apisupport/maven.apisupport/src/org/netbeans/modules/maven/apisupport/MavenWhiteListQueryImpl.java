@@ -112,13 +112,13 @@ public class MavenWhiteListQueryImpl implements WhiteListQueryImplementation {
                         if (newTransitive == null) {
                             newTransitive = Collections.emptySet();
                         }
-                        HashSet oldNotNew1 = new HashSet(oldPrivate);
+                        Set<String> oldNotNew1 = new HashSet<>(oldPrivate);
                         oldNotNew1.removeAll(newPrivate);
-                        HashSet newNotOld1 = new HashSet(newPrivate);
+                        Set<String> newNotOld1 = new HashSet<>(newPrivate);
                         newNotOld1.removeAll(oldPrivate);
-                        HashSet oldNotNew2 = new HashSet(oldTransitive);
+                        Set<String> oldNotNew2 = new HashSet<>(oldTransitive);
                         oldNotNew2.removeAll(newTransitive);
-                        HashSet newNotOld2 = new HashSet(newTransitive);
+                        Set<String> newNotOld2 = new HashSet<>(newTransitive);
                         newNotOld2.removeAll(oldTransitive);
                         
                         boolean privateChanged = !oldNotNew1.isEmpty() || !newNotOld1.isEmpty();

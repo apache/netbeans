@@ -19,6 +19,7 @@
 package org.netbeans.modules.autoupdate.pluginimporter;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -52,7 +53,20 @@ public class Installer extends ModuleInstall {
 
     private static final Logger LOG = Logger.getLogger (Installer.class.getName ());
     // XXX: copy from o.n.upgrader
-    private static final Comparator<String> APACHE_VERSION_COMPARATOR = (v1, v2) -> Float.compare(Float.parseFloat(v1), Float.parseFloat(v2));
+    // helper to remove dot from version for 3 digit versions
+    private static class PseudoFloat {
+        
+        static Float parseFloat(String string) {
+            List<String> split = new ArrayList<>(Arrays.asList(string.split("\\.")));
+            String myfloat = split.remove(0);
+            if (!split.isEmpty()) {
+                // concat remaining
+                myfloat += "." + String.join("", split);
+            }
+            return Float.parseFloat(myfloat);
+        }
+    }
+    private static final Comparator<String> APACHE_VERSION_COMPARATOR = (v1, v2) -> Float.compare(PseudoFloat.parseFloat(v1), PseudoFloat.parseFloat(v2));
     private static final List<String> APACHE_VERSION_TO_CHECK = Arrays.asList(NbBundle.getMessage(Installer.class, "apachenetbeanspreviousversion").split(",")).stream().sorted(APACHE_VERSION_COMPARATOR.reversed()).collect(Collectors.toList());
     private static final List<String> VERSION_TO_CHECK =
             Arrays.asList (".netbeans/7.1.2", ".netbeans/7.1.1", ".netbeans/7.1", ".netbeans/7.0", ".netbeans/6.9"); //NOI18N

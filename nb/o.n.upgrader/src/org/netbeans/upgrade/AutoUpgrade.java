@@ -23,6 +23,7 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -91,13 +92,27 @@ public final class AutoUpgrade {
 
     // the order of VERSION_TO_CHECK here defines the precedence of imports
     // the first one will be choosen for import
-    final static private List<String> VERSION_TO_CHECK = 
-            Arrays.asList (new String[] { ".netbeans/7.1.2",  ".netbeans/7.1.1", ".netbeans/7.1", ".netbeans/7.0", ".netbeans/6.9" });//NOI18N
+    private static final List<String> VERSION_TO_CHECK = 
+            Arrays.asList ( ".netbeans/7.1.2",  ".netbeans/7.1.1", ".netbeans/7.1", ".netbeans/7.0", ".netbeans/6.9" );//NOI18N
     
     // userdir on OS specific root of userdir (see issue 196075)
     static final List<String> PRE_APACHE_NEWER_VERSION_TO_CHECK =
             Arrays.asList ("8.2", "8.1", "8.0.2", "8.0.1", "8.0", "7.4", "7.3.1", "7.3", "7.2.1", "7.2"); //NOI18N
-    private static final Comparator<String> APACHE_VERSION_COMPARATOR = (v1, v2) -> Float.compare(Float.parseFloat(v1), Float.parseFloat(v2));
+     // XXX: copy to autoupgrade.pluginimporter
+    // helper to remove dot from version for 3 digit versions
+    static class PseudoFloat {
+        
+        static Float parseFloat(String string) {
+            List<String> split = new ArrayList<>(Arrays.asList(string.split("\\.")));
+            String myfloat = split.remove(0);
+            if (!split.isEmpty()) {
+                // concat remaining
+                myfloat += "." + String.join("", split);
+            }
+            return Float.parseFloat(myfloat);
+        }
+    }
+    static final Comparator<String> APACHE_VERSION_COMPARATOR = (v1, v2) -> Float.compare(PseudoFloat.parseFloat(v1), PseudoFloat.parseFloat(v2));
     
     static final List<String> APACHE_VERSION_TO_CHECK = Arrays.asList(NbBundle.getMessage(AutoUpgrade.class, "apachenetbeanspreviousversion").split(",")).stream().sorted(APACHE_VERSION_COMPARATOR.reversed()).collect(Collectors.toList());
     
@@ -118,7 +133,7 @@ public final class AutoUpgrade {
         return null;
     }
 
-    static private File checkPrevious (final List<String> versionsToCheck) {        
+    private static File checkPrevious (final List<String> versionsToCheck) {        
         String userHome = System.getProperty ("user.home"); // NOI18N
         File sourceFolder = null;
         

@@ -464,7 +464,7 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
 
                 // the comparator instance must not be cached, because it uses data
                 // from the default lookup
-                Collections.sort(_orderedInfos, new C());
+                Collections.sort(_orderedInfos, new C().thenComparing(IIC));
                 sortInfosByMimeType(_infosByMimeType);
                 if (transientUpdate) {
                     return new Object [] {

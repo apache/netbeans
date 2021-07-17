@@ -166,6 +166,13 @@ public class LSPBindings {
 
         if (prj == null) {
             dir = file.getParent();
+            File dirFile = FileUtil.toFile(dir);
+            if (dirFile != null &&
+                dirFile.getName().startsWith("vcs-") &&
+                dirFile.getAbsolutePath().startsWith(System.getProperty("java.io.tmpdir"))) {
+                //diff dir, don't start servers:
+                return null;
+            }
         } else {
             dir = prj.getProjectDirectory();
         }

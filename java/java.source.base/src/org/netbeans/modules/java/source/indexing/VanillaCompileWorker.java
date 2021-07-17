@@ -712,7 +712,7 @@ final class VanillaCompileWorker extends CompileWorker {
                             csym.members_field.remove(member);
                         }
                     }
-                    if (errorClass || def.hasTag(JCTree.Tag.ERRONEOUS) || def.hasTag(JCTree.Tag.BLOCK)) {
+                    if (errorClass || def.hasTag(JCTree.Tag.ERRONEOUS)) {
                         clazz.defs = com.sun.tools.javac.util.List.filter(clazz.defs, def);
                     }
                 }

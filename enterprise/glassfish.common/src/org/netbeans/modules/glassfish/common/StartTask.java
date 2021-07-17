@@ -691,6 +691,9 @@ public class StartTask extends BasicTask<TaskState> {
         // append other options from startup extenders, e.g. for profiling
         appendStartupExtenderParams(optList);
 
+        optList.add("--add-opens java.base/java.lang=ALL-UNNAMED");
+        optList.add("--add-opens java.naming/javax.naming.spi=ALL-UNNAMED");
+        
         return new StartupArgsEntity(
                 glassfishArgs,
                 optList,

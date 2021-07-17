@@ -22,7 +22,6 @@
 <licenseinfo>
     <fileset>
         <file>release/etc/applicationIcon.icns</file>
-        <file>windows-launcher-src/app.ico</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>

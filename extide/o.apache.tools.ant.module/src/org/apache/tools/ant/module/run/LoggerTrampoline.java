@@ -50,7 +50,7 @@ public final class LoggerTrampoline {
     public static Creator ANT_SESSION_CREATOR, ANT_EVENT_CREATOR, TASK_STRUCTURE_CREATOR;
     static {
         try {
-            Class c = AntSession.class;
+            Class<?> c = AntSession.class;
             Class.forName(c.getName(), true, c.getClassLoader());
             c = AntEvent.class;
             Class.forName(c.getName(), true, c.getClassLoader());

@@ -44,7 +44,7 @@ import org.openide.util.NbBundle;
  */
 final class NbInputHandler implements InputHandler {
 
-    private JComboBox combo = null;
+    private JComboBox<String> combo = null;
     private JTextField input = null;
     private final Runnable interestingOutputCallback;
     boolean secure;
@@ -104,7 +104,7 @@ final class NbInputHandler implements InputHandler {
 
         JComponent comp = null;
         if (request instanceof MultipleChoiceInputRequest) {
-            combo = new JComboBox(((MultipleChoiceInputRequest)request).getChoices());
+            combo = new JComboBox<String>(((MultipleChoiceInputRequest)request).getChoices());
             if (defaultValue != null && defaultValue.length() > 0) {
                 combo.setSelectedItem(getDefaultValue(request));
             }

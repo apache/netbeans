@@ -77,7 +77,7 @@ public class AntActionInstance extends AbstractAction
         init();
     }
     
-    public Class instanceClass () {
+    public Class<?> instanceClass () {
         return AntActionInstance.class;
     }
     

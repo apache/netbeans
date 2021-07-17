@@ -27,6 +27,7 @@ import java.io.OutputStream;
 import java.util.Vector;
 import java.util.regex.Pattern;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.module.bridge.AntBridge;
@@ -284,8 +285,8 @@ public class ForkedJavaOverride extends Java {
              */
             
             if (ow == null && logLevel != null) {
-                Vector v = getProject().getBuildListeners();
-                for (Object o : v) {
+                Vector<BuildListener> v = getProject().getBuildListeners();
+                for (BuildListener o : v) {
                     if (o instanceof NbBuildLogger) {
                         NbBuildLogger l = (NbBuildLogger) o;
                         err = logLevel != Project.MSG_INFO;

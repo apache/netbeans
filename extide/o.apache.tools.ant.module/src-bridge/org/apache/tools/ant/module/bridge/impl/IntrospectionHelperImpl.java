@@ -30,24 +30,22 @@ final class IntrospectionHelperImpl implements IntrospectionHelperProxy {
 
     private final IntrospectionHelper helper;
 
-    public IntrospectionHelperImpl(Class c) {
+    public IntrospectionHelperImpl(Class<?> c) {
         helper = IntrospectionHelper.getHelper(c);
     }
 
-    public Class getAttributeType(String name) {
+    public Class<?> getAttributeType(String name) {
         return helper.getAttributeType(name);
     }
     
-    @SuppressWarnings("unchecked") // XXX better to make Generics.checkedEnumeration?
     public Enumeration<String> getAttributes() {
         return helper.getAttributes();
     }
     
-    public Class getElementType(String name) {
+    public Class<?> getElementType(String name) {
         return helper.getElementType(name);
     }
     
-    @SuppressWarnings("unchecked")
     public Enumeration<String> getNestedElements() {
         return helper.getNestedElements();
     }

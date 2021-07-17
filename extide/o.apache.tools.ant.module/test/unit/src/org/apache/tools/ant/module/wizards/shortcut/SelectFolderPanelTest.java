@@ -35,8 +35,8 @@ public final class SelectFolderPanelTest extends ShortcutWizardTestBase {
 
     private SelectFolderPanel.SelectFolderWizardPanel menuPanel;
     private SelectFolderPanel.SelectFolderWizardPanel toolbarsPanel;
-    private ListModel menuListModel;
-    private ListModel toolbarsListModel;
+    private ListModel<DataFolder> menuListModel;
+    private ListModel<DataFolder> toolbarsListModel;
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -53,7 +53,7 @@ public final class SelectFolderPanelTest extends ShortcutWizardTestBase {
     public void testFolderListDisplay() throws Exception {
         String[] names = new String[menuListModel.getSize()];
         for (int i = 0; i < names.length; i++) {
-            names[i] = menuPanel.getPanel().getNestedDisplayName((DataFolder)menuListModel.getElementAt(i));
+            names[i] = menuPanel.getPanel().getNestedDisplayName(menuListModel.getElementAt(i));
         }
         String[] expected = {
             "File",
@@ -65,7 +65,7 @@ public final class SelectFolderPanelTest extends ShortcutWizardTestBase {
         assertEquals("right names in list", Arrays.asList(expected), Arrays.asList(names));
         names = new String[toolbarsListModel.getSize()];
         for (int i = 0; i < names.length; i++) {
-            names[i] = toolbarsPanel.getPanel().getNestedDisplayName((DataFolder)toolbarsListModel.getElementAt(i));
+            names[i] = toolbarsPanel.getPanel().getNestedDisplayName(toolbarsListModel.getElementAt(i));
         }
         expected = new String[] {
             "Build",

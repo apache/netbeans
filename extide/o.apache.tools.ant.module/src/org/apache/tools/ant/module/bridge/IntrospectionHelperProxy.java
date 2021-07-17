@@ -32,10 +32,10 @@ public interface IntrospectionHelperProxy {
 
     Enumeration<String> getAttributes();
 
-    Class getAttributeType(String name);
+    Class<?> getAttributeType(String name);
 
     Enumeration<String> getNestedElements();
 
-    Class getElementType(String name);
+    Class<?> getElementType(String name);
 
 }

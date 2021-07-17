@@ -449,12 +449,10 @@ public class TargetLister {
                         if (evaluatedProperties == null) {
                             continue;
                         }
-                        Iterator it = evaluatedProperties.entrySet().iterator();
-                        while (it.hasNext()) {
-                            Map.Entry entry = (Map.Entry) it.next();
-                            String k = (String) entry.getKey();
+                        for (Entry<String, String> entry : evaluatedProperties.entrySet()) {
+                            String k = entry.getKey();
                             if (!propertyDefs.containsKey(k)) {
-                                propertyDefs.put(k, (String) entry.getValue());
+                                propertyDefs.put(k, entry.getValue());
                             }
                         }
                     }

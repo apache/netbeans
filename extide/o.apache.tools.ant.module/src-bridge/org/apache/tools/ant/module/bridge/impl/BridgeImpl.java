@@ -31,7 +31,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +60,6 @@ import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
-import org.openide.util.NbCollections;
 import org.openide.util.RequestProcessor;
 import org.openide.windows.InputOutput;
 import org.openide.windows.OutputWriter;
@@ -350,11 +348,11 @@ public class BridgeImpl implements BridgeInterface {
             }
         } else {
             // For Ant 1.5, just dump in old-style defs in the simplest manner.
-            Map<String,Map<String,Class>> customDefs = AntBridge.getCustomDefsNoNamespace();
-            for (Map.Entry<String,Class> entry : customDefs.get("task").entrySet()) { // NOI18N
+            Map<String, Map<String, Class<?>>> customDefs = AntBridge.getCustomDefsNoNamespace();
+            for (Map.Entry<String, Class<?>> entry : customDefs.get("task").entrySet()) { // NOI18N
                 project.addTaskDefinition(entry.getKey(), entry.getValue());
             }
-            for (Map.Entry<String,Class> entry : customDefs.get("type").entrySet()) { // NOI18N
+            for (Map.Entry<String, Class<?>> entry : customDefs.get("type").entrySet()) { // NOI18N
                 project.addDataTypeDefinition(entry.getKey(), entry.getValue());
             }
         }
@@ -442,10 +440,10 @@ public class BridgeImpl implements BridgeInterface {
         public @Override void run() {
             IntrospectedInfo custom = AntSettings.getCustomDefs();
             @SuppressWarnings("rawtypes")
-            Map<String,Map<String,Class>> defs = new HashMap<String, Map<String, Class>>();
+            Map<String,Map<String,Class<?>>> defs = new HashMap<String, Map<String, Class<?>>>();
             try {
-                defs.put("task", NbCollections.checkedMapByCopy(project.getTaskDefinitions(), String.class, Class.class, true));
-                defs.put("type", NbCollections.checkedMapByCopy(project.getDataTypeDefinitions(), String.class, Class.class, true));
+                defs.put("task", project.getTaskDefinitions());
+                defs.put("type", project.getDataTypeDefinitions());
             } catch (ThreadDeath t) {
                 // #137883: late clicks on Stop which can be ignored.
             }
@@ -460,5 +458,4 @@ public class BridgeImpl implements BridgeInterface {
             logger = null;
         }
     }
-    
 }

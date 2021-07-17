@@ -244,11 +244,11 @@ public class Installer extends ModuleInstall implements Runnable {
         logMetricsUploadFailed = prefs.getBoolean("metrics.upload.failed", false); // NOI18N
         corePref.addPreferenceChangeListener(new PrefChangeListener());
 
-        if (!Boolean.getBoolean("netbeans.full.hack") && !Boolean.getBoolean("netbeans.close")) {
-            usageStatisticsReminder();
-        }
-        
-        System.setProperty("nb.show.statistics.ui",USAGE_STATISTICS_ENABLED);
+//        if (!Boolean.getBoolean("netbeans.full.hack") && !Boolean.getBoolean("netbeans.close")) {
+//            usageStatisticsReminder();
+//        }
+//
+//        System.setProperty("nb.show.statistics.ui",USAGE_STATISTICS_ENABLED);
         logMetricsEnabled = corePref.getBoolean(USAGE_STATISTICS_ENABLED, false);
         if (logMetricsEnabled) {
             //Handler for metrics

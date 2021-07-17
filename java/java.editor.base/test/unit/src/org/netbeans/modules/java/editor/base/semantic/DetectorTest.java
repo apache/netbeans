@@ -615,6 +615,46 @@ public class DetectorTest extends TestBase {
                 "[PACKAGE_PRIVATE, CLASS, DECLARATION], 1:17-1:22",
                 "[PACKAGE_PRIVATE, CLASS], 1:31-1:35");
     }
+
+    public void testSwitchPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip tests
+            return;
+        }
+        enablePreview();
+        performTest("TestSwitchPattern.java",
+                "public class TestSwitchPattern {\n"
+                + "    String strColor = \"color\";\n"
+                + "    void m1() {\n"
+                + "        Object obj = \"test\";\n"
+                + "        switch (obj) {\n"
+                + "            case String s && s.equals(strColor) -> System.out.println(\"same\");\n"
+                + "            case default -> System.out.println(\"default\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}",
+                "[PUBLIC, CLASS, DECLARATION], 0:13-0:30\n"
+                + "[PUBLIC, CLASS], 1:4-1:10\n"
+                + "[PACKAGE_PRIVATE, FIELD, DECLARATION], 1:11-1:19\n"
+                + "[PACKAGE_PRIVATE, METHOD, DECLARATION], 2:9-2:11\n"
+                + "[PUBLIC, CLASS], 3:8-3:14\n"
+                + "[LOCAL_VARIABLE, DECLARATION], 3:15-3:18\n"
+                + "[LOCAL_VARIABLE], 4:16-4:19\n"
+                + "[PUBLIC, CLASS], 5:17-5:23\n"
+                + "[LOCAL_VARIABLE, DECLARATION], 5:24-5:25\n"
+                + "[LOCAL_VARIABLE], 5:29-5:30\n"
+                + "[PUBLIC, METHOD], 5:31-5:37\n"
+                + "[PACKAGE_PRIVATE, FIELD], 5:38-5:46\n"
+                + "[PUBLIC, CLASS], 5:51-5:57\n"
+                + "[STATIC, PUBLIC, FIELD], 5:58-5:61\n"
+                + "[PUBLIC, METHOD], 5:62-5:69\n"
+                + "[PUBLIC, CLASS], 6:28-6:34\n"
+                + "[STATIC, PUBLIC, FIELD], 6:35-6:38\n"
+                + "[PUBLIC, METHOD], 6:39-6:46\n");
+    }
+
     public void testYield() throws Exception {
         enablePreview();
         performTest("YieldTest.java",

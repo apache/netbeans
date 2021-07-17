@@ -28,6 +28,7 @@ export interface LaunchInfo {
     clusters: string[];
     extensionPath: string;
     storagePath: string;
+    version: string;
     jdkHome: string | unknown;
     verbose? : boolean;
 }
@@ -51,7 +52,7 @@ export function launch(
 ): ChildProcessByStdio<null, Readable, Readable> {
     let nbcodePath = find(info);
 
-    const userDir = path.join(info.storagePath, "userdir");
+    const userDir = path.join(info.storagePath, "userdir-" + info.version);
     fs.mkdirSync(userDir, {recursive: true});
     let userDirPerm = fs.statSync(userDir);
     if (!userDirPerm.isDirectory()) {
@@ -93,6 +94,7 @@ if (typeof process === 'object' && process.argv0 === 'node') {
     let info = {
         clusters : clusters,
         extensionPath: extension,
+        version: json.version,
         storagePath : globalStorage,
         jdkHome : null
     };

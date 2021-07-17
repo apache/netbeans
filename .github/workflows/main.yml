@@ -15,21 +15,24 @@
 # specific language governing permissions and limitations
 # under the License.
 
-name: Apache Netbeans Continuous Integration
+name: Apache NetBeans Continuous Integration
 
-on:
-  push:
-  pull_request:
+on: workflow_dispatch
 
 jobs:
-  windows:
-    name: Windows build
-    runs-on: windows-2019
+  compile-all-modules-openjdk11:
+    name: Compile all modules with OpenJDK11
+    runs-on: ubuntu-18.04
     env:
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=full -Dpermit.jdk9.builds=true -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Setup OpenJDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
 
       - name: Caching dependencies
         uses: actions/cache@v2
@@ -39,107 +42,20 @@ jobs:
           restore-keys: ${{ runner.os }}-
 
       - name: Clean
-        run: ant clean
-        
+        run: ant $OPTS clean
+
       - name: Build
-        run: ant build
-        
+        run: ant $OPTS build
+
       - name: Test
-        run: ant -f platform/core.network test
+        run: ant $OPTS test -Dtest.includes=NoTestsJustBuild
 
-      - name: Test PHP cluster
-        env:
-          OPTS: -Dtest-unit-sys-prop.ignore.random.failures=true
-        run: |
-          ant $OPTS -f php/hudson.php test
-          ant $OPTS -f php/languages.neon test
-          ant $OPTS -f php/php.api.annotation test
-          ant $OPTS -f php/php.api.documentation test
-          ant $OPTS -f php/php.api.executable test
-          ant $OPTS -f php/php.api.framework test
-          ant $OPTS -f php/php.api.phpmodule test
-          ant $OPTS -f php/php.api.testing test
-          ant $OPTS -f php/php.apigen test
-          ant $OPTS -f php/php.atoum test
-          ant $OPTS -f php/php.code.analysis test
-          ant $OPTS -f php/php.codeception test
-          ant $OPTS -f php/php.composer test
-          ant $OPTS -f php/php.dbgp test
-          ant $OPTS -f php/php.doctrine2 test
-          ant $OPTS -f php/php.editor test
-          ant $OPTS -f php/php.latte test
-          ant $OPTS -f php/php.nette.tester test
-          ant $OPTS -f php/php.phpunit test
-          ant $OPTS -f php/php.project test
-          ant $OPTS -f php/php.refactoring test
-          ant $OPTS -f php/php.smarty test
-          ant $OPTS -f php/php.symfony test
-          ant $OPTS -f php/php.symfony2 test
-          ant $OPTS -f php/php.twig test
-          ant $OPTS -f php/php.zend test
-          ant $OPTS -f php/php.zend2 test
-          ant $OPTS -f php/spellchecker.bindings.php test
-
-  linux:
-    name: Check Build System
-    runs-on: ubuntu-18.04
-    env:
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Caching dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.hgexternalcache
-          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
-          restore-keys: ${{ runner.os }}-
-
-      - name: Clean
-        run: ant -Dcluster.config=basic clean
-
-      - name: Build
-        run: ant -Dcluster.config=basic build
-
-      - name: Test Netbeans Build System
-        run: ant -Dcluster.config=basic localtest
-        
-  linux-javadoc:
-    name: Check Javadoc build
-    runs-on: ubuntu-18.04
-    env:
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Caching dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.hgexternalcache
-          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
-          restore-keys: ${{ runner.os }}-
-
-      - name: Get maven coordinates
-        run: ant getallmavencoordinates
-
-      - name: Build nbms
-        run: ant build-nbms
-
-      - name: Build source zips
-        run: ant build-source-zips
-        
-      - name: Build javadoc
-        run: ant build-javadoc
-
-  linux-php:
-    name: Linux build of PHP cluster
+  test-platform-modules-batch1:
+    name: Test platform modules, Batch 1
     runs-on: ubuntu-18.04
     env:
       DISPLAY: ":99.0"
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
-      OPTS: -Dcluster.config=php -Dtest-unit-sys-prop.ignore.random.failures=true
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -silent -Dcluster.config=platform -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -150,145 +66,271 @@ jobs:
           path: ~/.hgexternalcache
           key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
           restore-keys: ${{ runner.os }}-
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@2.8.0
-        with:
-          php-version: '7.4'
-          tools: pecl
-          extensions: xdebug
-          ini-values: xdebug.mode=debug
 
       - name: Launch Xvfb
         run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Clean
         run: ant $OPTS clean
-        
+
       - name: Build
         run: ant $OPTS build
-        
-      - name: Test Hudson
-        run: ant $OPTS -f php/hudson.php test
-
-      - name: Test Neon
-        run: ant $OPTS -f php/languages.neon test
-
-      - name: Test API Annotation
-        run: ant $OPTS -f php/php.api.annotation test
-
-      - name: Test API Documentation
-        run: ant $OPTS -f php/php.api.documentation test
-
-      - name: Test API Executable
-        run: ant $OPTS -f php/php.api.executable test
-
-      - name: Test API Framework
-        run: ant $OPTS -f php/php.api.framework test
-
-      - name: Test API PHP Module
-        run: ant $OPTS -f php/php.api.phpmodule test
-
-      - name: Test API Testing
-        run: ant $OPTS -f php/php.api.testing test
-
-      - name: Test ApiGen
-        run: ant -f php/php.apigen test
-
-      - name: Test Atoum
-        run: ant -f php/php.atoum test
-
-      - name: Test Code Analysis
-        run: ant -f php/php.code.analysis test
-
-      - name: Test Codeception
-        run: ant -f php/php.codeception test
-
-      - name: Test Composer
-        run: ant -f php/php.composer test
-
-      - name: Test PHP Debugger
-        run: ant -f php/php.dbgp test
-
-      - name: Test Doctrine2
-        run: ant -f php/php.doctrine2 test
-
-      - name: Test PHP Editor
-        run: ant -f php/php.editor test
-
-      - name: Test Latte
-        run: ant -f php/php.latte test
-
-      - name: Test Nette Tester
-        run: ant -f php/php.nette.tester test
-
-      - name: Test PHPUnit
-        run: ant -f php/php.phpunit test
-
-      - name: Test PHP Project
-        run: ant -f php/php.project test
-
-      - name: Test Refactoring
-        run: ant -f php/php.refactoring test
-
-      - name: Test Smarty
-        run: ant -f php/php.smarty test
-
-      - name: Test Symfony
-        run: ant -f php/php.symfony test
-
-      - name: Test Symfony 2
-        run: ant -f php/php.symfony2 test
-
-      - name: Test Twig
-        run: ant -f php/php.twig test
-
-      - name: Test Zend
-        run: ant -f php/php.zend test
-
-      - name: Test Zend 2
-        run: ant -f php/php.zend2 test
-
-      - name: Test Spellchecker Bindings
-        run: ant -f php/spellchecker.bindings.php test
-        
-  macos:
-    name: MacOS build
-    runs-on: macos-10.15
-    env:
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
-    steps:
-      - uses: actions/checkout@v2
-        
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.hgexternalcache
-            ~/Library/Caches/Homebrew
-          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
-          restore-keys: ${{ runner.os }}-
-
-      - run: brew install ant
-
-      - name: Clean
-        run: ant clean
-
-      - name: Build
-        run: ant build
 
       - name: Test
         run: |
-          ant -f platform/masterfs.macosx test
-          ant -f platform/core.network test
-
-      - name: Validate consistency and basic tests
-        run: ant -Dcluster.config=release commit-validation
-
-  commit-validation:
-    name: Commit-validation (on Linux)
+          # used travis_retry
+          ant $OPTS -f platform/api.htmlui test
+          ant $OPTS -f platform/api.intent test
+          ant $OPTS -f platform/api.io test
+          ant $OPTS -f platform/api.progress test
+          ant $OPTS -f platform/api.progress.nb test
+          ant $OPTS -f platform/api.scripting test
+          ant $OPTS -f platform/api.search test
+          ant $OPTS -f platform/api.templates test
+          ant $OPTS -f platform/api.visual test
+          ant $OPTS -f platform/applemenu test
+          ant $OPTS -f platform/autoupdate.cli test
+          ant $OPTS -f platform/autoupdate.services test
+          ant $OPTS -f platform/autoupdate.ui test
+          ant $OPTS -f platform/core.execution test
+          ant $OPTS -f platform/core.io.ui test
+          ant $OPTS -f platform/core.kit test
+          ant $OPTS -f platform/core.multiview test
+          ant $OPTS -f platform/core.netigso test
+          ant $OPTS -f platform/core.network test
+          ant $OPTS -f platform/core.osgi test
+          ant $OPTS -f platform/core.output2 test
+          ant $OPTS -f platform/core.startup test
+          ant $OPTS -f platform/core.startup.base test
+          ant $OPTS -f platform/core.ui test
+          # used travis_retry
+          ant $OPTS -f platform/core.windows test
+          ant $OPTS -f platform/editor.mimelookup test
+          ant $OPTS -f platform/editor.mimelookup.impl test
+          ant $OPTS -f platform/favorites test
+          ant $OPTS -f platform/javahelp test-unit
+          ant $OPTS -f platform/keyring.fallback test
+          ant $OPTS -f platform/keyring.impl test
+          ant $OPTS -f platform/lib.uihandler test
+          ant $OPTS -f platform/libs.javafx test
+          ant $OPTS -f platform/libs.junit4 test
+          # used travis_retry
+          ant $OPTS -f platform/masterfs test
+          ant $OPTS -f platform/masterfs.linux test
+          ant $OPTS -f platform/netbinox test  -Dtest.config=stableBTD
+          ant $OPTS -f platform/o.n.bootstrap test
+          ant $OPTS -f platform/o.n.core test-unit
+          ant $OPTS -f platform/o.n.swing.outline test
+          ant $OPTS -f platform/o.n.swing.tabcontrol test
+ 
+  test-platform-modules-batch2:
+    name: Test platform modules, Batch 2
     runs-on: ubuntu-18.04
     env:
-      OPTS: -Dcluster.config=release -Dtest-unit-sys-prop.ignore.random.failures=true
+      DISPLAY: ":99.0"
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -silent -Dcluster.config=platform -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Launch Xvfb
+        run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Test
+        run: |
+          ant $OPTS -f platform/openide.actions test
+          ant $OPTS -f platform/openide.awt test
+          ant $OPTS -f platform/openide.compat test
+          ant $OPTS -f platform/openide.dialogs test
+          ant $OPTS -f platform/openide.execution test
+          ant $OPTS -f platform/openide.execution.compat8 test
+          # used travis_retry
+          ant $OPTS -f platform/openide.explorer test
+          ant $OPTS -f platform/openide.filesystems test
+          ant $OPTS -f platform/openide.filesystems.compat8 test
+          ant $OPTS -f platform/openide.filesystems.nb test
+          ant $OPTS -f platform/openide.io test
+          # used travis_wait
+          ant $OPTS -f platform/openide.loaders test
+          ant $OPTS -f platform/openide.modules test
+          ant $OPTS -f platform/openide.nodes test
+          ant $OPTS -f platform/openide.options test
+          # used travis_retry
+          ant $OPTS -f platform/openide.text test
+          ant $OPTS -f platform/openide.util test
+          ant $OPTS -f platform/openide.util.enumerations test
+          ant $OPTS -f platform/openide.util.lookup test
+          ant $OPTS -f platform/openide.util.ui test
+          ant $OPTS -f platform/openide.windows test
+          ant $OPTS -f platform/options.api test-unit
+          ant $OPTS -f platform/options.keymap test
+          ant $OPTS -f platform/print test
+          ant $OPTS -f platform/progress.ui test
+          ant $OPTS -f platform/queries test
+          ant $OPTS -f platform/sampler test
+          ant $OPTS -f platform/sendopts test
+          ant $OPTS -f platform/settings test
+          ant $OPTS -f platform/spi.actions test
+          ant $OPTS -f platform/spi.quicksearch test
+          ant $OPTS -f platform/templates test
+          ant $OPTS -f platform/templatesui test
+          ant $OPTS -f platform/uihandler test
+
+  test-ide-modules:
+    name: Test ide modules
+    runs-on: ubuntu-18.04
+    env:
+      DISPLAY: ":99.0"
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Launch Xvfb
+        run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Test
+        run: |
+          ant $OPTS -f ide/api.xml test
+          ant $OPTS -f ide/api.xml.ui test
+          # used travis_retry
+          ant $OPTS -f ide/bugtracking test
+          # used travis_retry
+          ant $OPTS -f ide/bugtracking.bridge test
+          ant $OPTS -f ide/bugtracking.commons test
+          # ant $OPTS -f ide/bugzilla test
+          ant $OPTS -f ide/code.analysis test
+          ant $OPTS -f ide/core.ide test
+          ant $OPTS -f ide/csl.api test
+          ant $OPTS -f ide/csl.types test
+          ant $OPTS -f ide/css.editor test
+          ant $OPTS -f ide/css.lib test
+          ant $OPTS -f ide/css.model test
+          # used travis_retry
+          ant $OPTS -f ide/db test
+          ant $OPTS -f ide/db.dataview test
+          ant $OPTS -f ide/db.sql.editor test
+          ant $OPTS -f ide/docker.api test
+          ant $OPTS -f ide/docker.ui test
+          ant $OPTS -f ide/editor.bookmarks test
+          # ant $OPTS -f ide/editor.bracesmatching test
+          ant $OPTS -f ide/editor.document test
+          ant $OPTS -f ide/editor.fold test
+          ant $OPTS -f ide/editor.fold.nbui test
+          ant $OPTS -f ide/editor.guards test
+          ant $OPTS -f ide/editor.indent test
+          ant $OPTS -f ide/editor.indent.project test
+          ant $OPTS -f ide/editor.macros test
+          ant $OPTS -f ide/editor.search test
+          ant $OPTS -f ide/editor.settings test
+          ant $OPTS -f ide/editor.settings.storage test
+          ant $OPTS -f ide/editor.structure test
+          ant $OPTS -f ide/editor.tools.storage test
+          ant $OPTS -f ide/editor.util test
+          ant $OPTS -f ide/extbrowser test
+          ant $OPTS -f ide/extexecution.base test
+          ant $OPTS -f ide/gsf.testrunner.ui test
+          # used travis_retry
+          ant $OPTS -f ide/html test
+          ant $OPTS -f ide/html.custom test
+          # ant $OPTS -f ide/html.editor test
+          # ant $OPTS -f ide/html.lexer test
+          ant $OPTS -f ide/html.parser test
+          ant $OPTS -f ide/html.validation test
+          ant $OPTS -f ide/hudson test
+          ant $OPTS -f ide/hudson.git test
+          ant $OPTS -f ide/hudson.mercurial test
+          ant $OPTS -f ide/hudson.subversion test
+          ant $OPTS -f ide/hudson.tasklist test
+          ant $OPTS -f ide/hudson.ui test
+          ant $OPTS -f ide/javascript2.debug test
+          ant $OPTS -f ide/languages.yaml test
+          ant $OPTS -f ide/lexer test
+          ant $OPTS -f ide/lib.terminalemulator test
+          ant $OPTS -f ide/libs.freemarker test
+          # ant $OPTS -f ide/libs.git test
+          ant $OPTS -f ide/libs.graalsdk test
+          # ant $OPTS -f ide/localhistory test
+          ant $OPTS -f ide/libs.truffleapi test
+          ant $OPTS -f ide/lsp.client test
+          ant $OPTS -f ide/notifications test
+          ant $OPTS -f ide/o.openidex.util test
+          # ant $OPTS -f ide/parsing.api test
+          # ant $OPTS -f ide/parsing.indexing test
+          ant $OPTS -f ide/parsing.lucene test
+          ant $OPTS -f ide/project.ant test
+          ant $OPTS -f ide/project.ant.compat8 test
+          ant $OPTS -f ide/project.ant.ui test
+          ant $OPTS -f ide/project.libraries test
+          ant $OPTS -f ide/project.libraries.ui test
+          ant $OPTS -f ide/projectapi test
+          ant $OPTS -f ide/projectapi.nb test
+          ant $OPTS -f ide/projectuiapi.base test
+          ant $OPTS -f ide/refactoring.api test
+          ant $OPTS -f ide/schema2beans test
+          ant $OPTS -f ide/server test
+          ant $OPTS -f ide/spellchecker test
+          ant $OPTS -f ide/spi.editor.hints test
+          # ant $OPTS -f ide/spi.palette test
+          ant $OPTS -f ide/spi.tasklist test
+          ant $OPTS -f ide/tasklist.ui test
+          ant $OPTS -f ide/team.commons test
+          ant $OPTS -f ide/terminal.nb test
+          ant $OPTS -f ide/utilities test
+          ant $OPTS -f ide/versioning.masterfs test
+          ant $OPTS -f ide/versioning.ui test
+          ant $OPTS -f ide/versioning.util test
+          ant $OPTS -f ide/web.common test
+          ant $OPTS -f ide/web.common.ui test
+          ant $OPTS -f ide/web.webkit.debugging test
+          ant $OPTS -f ide/xml test
+          ant $OPTS -f ide/xml.axi test
+          ant $OPTS -f ide/xml.catalog test-unit
+          ant $OPTS -f ide/xml.core test
+          ant $OPTS -f ide/xml.lexer test
+          ant $OPTS -f ide/xml.multiview test
+          ant $OPTS -f ide/xml.retriever test
+          ant $OPTS -f ide/xml.schema.completion test
+          ant $OPTS -f ide/xml.schema.model test
+          ant $OPTS -f ide/xml.text test
+          ant $OPTS -f ide/xml.text.obsolete90 test
+          # used travis_retry
+          ant $OPTS -f ide/xml.wsdl.model test
+          ant $OPTS -f ide/xml.xam test
+          ant $OPTS -f ide/xml.xdm test
+          ant $OPTS -f ide/xsl test
+
+  test-java-modules-nbjavac-java8:
+    name: Test Java modules with nb-javac on Java 8
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -301,11 +343,496 @@ jobs:
           restore-keys: ${{ runner.os }}-
 
       - name: Clean
-        run: ant -Dcluster.config=release clean
+        run: ant $OPTS clean
 
       - name: Build
-        run: ant -Dcluster.config=release build
+        run: ant $OPTS build
 
-      - name: Validate consistency and basic tests
-        run: ant -Dcluster.config=release commit-validation
+      - name: Test
+        run: |
+          # ant $OPTS -f java/ant.debugger test
+          ant $OPTS -f java/ant.freeform test
+          # ant $OPTS -f java/ant.grammar test
+          ant $OPTS -f java/api.debugger.jpda test
+          ant $OPTS -f java/api.java test
+          ant $OPTS -f java/api.maven test
+          # ant $OPTS -f java/beans test
+          ant $OPTS -f java/classfile test
+          ant $OPTS -f java/dbschema test -Dtest.config=stable
+          # ant $OPTS -f java/debugger.jpda test
+          ant $OPTS -f java/debugger.jpda.js test
+          ant $OPTS -f java/debugger.jpda.projects test
+          ant $OPTS -f java/debugger.jpda.projectsui test
+          ant $OPTS -f java/gradle.java test
+          # ant $OPTS -f java/debugger.jpda.truffle test
+          # ant $OPTS -f java/debugger.jpda.ui test
+          # used travis_wait
+          ant $OPTS -f java/editor.htmlui test
+          # travis_wait 30 hide-logs.sh  ant $OPTS -f java/form test
+          ant $OPTS -f java/hudson.maven test
+          ant $OPTS -f java/java.completion test
+          ant $OPTS -f java/java.hints.declarative test
+          # ant $OPTS -f java/java.kit test
+          # ant $OPTS -f java/java.lexer test
+          # ant $OPTS -f java/java.lexer test
+          # ant $OPTS -f java/java.lsp.server test
+          # ant $OPTS -f java/java.metrics test
+          ant $OPTS -f java/java.module.graph test
+          ant $OPTS -f java/java.navigation test
+          # ant $OPTS -f java/java.openjdk.project test
+          ant $OPTS -f java/java.mx.project test
+          ant $OPTS -f java/java.platform test
+          ant $OPTS -f java/java.platform.ui test
+          ant $OPTS -f java/java.preprocessorbridge test
+          ant $OPTS -f java/java.project test
+          # ant $OPTS -f java/java.project.ui test
+          # ant $OPTS -f java/java.source test
+          # ant $OPTS -f java/java.source.ant test
+          ant $OPTS -f java/java.source.base test
+          ant $OPTS -f java/java.source.compat8 test
+          ant $OPTS -f java/java.source.nbjavac test
+          ant $OPTS -f java/java.source.queriesimpl test
+          # ant $OPTS -f java/java.sourceui test
+          ant $OPTS -f java/java.testrunner test
+          ant $OPTS -f java/java.testrunner.ant test
+          # ant $OPTS -f java/javadoc test
+          ant $OPTS -f java/javawebstart test
+          # ant $OPTS -f java/jellytools.java test
+          # ant $OPTS -f java/jshell.support test
+          # ant $OPTS -f java/junit test
+          ant $OPTS -f java/junit.ant.ui test
+          ant $OPTS -f java/lib.nbjavac test
+          # ant $OPTS -f java/maven test
+          # ant $OPTS -f java/maven.embedder test
+          ant $OPTS -f java/maven.grammar test
+          # ant $OPTS -f java/maven.hints test
+          # ant $OPTS -f java/maven.htmlui test
+          ant $OPTS -f java/maven.indexer test
+          ant $OPTS -f java/maven.junit test
+          ant $OPTS -f java/maven.model test
+          ant $OPTS -f java/maven.osgi test
+          # ant $OPTS -f java/performance test
+          # ant $OPTS -f java/performance.java test
+          # ant $OPTS -f java/projectimport.eclipse.core test
+          # ant $OPTS -f java/refactoring.java test
+          ant $OPTS -f java/spellchecker.bindings.java test
+          # ant $OPTS -f java/spi.java.hints test
+          ant $OPTS -f java/spring.beans test
+          ant $OPTS -f java/testng test
+          # ant $OPTS -f java/testng.ant test
+          # ant $OPTS -f java/testng.ui test
+          ant $OPTS -f java/whitelist test
+          ant $OPTS -f java/xml.jaxb test
 
+  test-java-hints-nbjavac-java8:
+    name: Test java.hints with nb-javac on Java 8
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup OpenJDK 8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Test Batch 1
+        run: ant $OPTS -Dtest.config=batch1 -f java/java.hints test
+
+      - name: Test Batch 2
+        run: ant $OPTS -Dtest.config=batch2 -f java/java.hints test
+
+  test-java-modules-nbjavac-java11:
+    name: Test Java modules with nb-javac on Java 11
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dpermit.jdk9.builds=true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup OpenJDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Test
+        run: |
+          ant $OPTS -f java/java.completion test
+          # used travis_retry
+          ant $OPTS -f java/java.source.base test
+
+  test-java-modules-nbjavac-java13:
+    name: Test Java modules with nb-javac on Java 13
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup OpenJDK 13
+        uses: actions/setup-java@v1
+        with:
+          java-version: 13
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Test
+        run: |
+          ant $OPTS -f java/java.completion test
+          ant $OPTS -f java/java.source.base test
+
+  test-java-hints-nbjavac-java13:
+    name: Test java.hints with nb-javac on Java 13
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup OpenJDK 13
+        uses: actions/setup-java@v1
+        with:
+          java-version: 13
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Test Batch 1
+        run: ant $OPTS -Dtest.config=batch1 -f java/java.hints test
+        
+      - name: Test Batch 2
+        run: ant $OPTS -Dtest.config=batch2 -f java/java.hints test
+
+  test-java-modules-java14:
+    name: Test Java modules without nb-javac on Java 14
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup OpenJDK 14
+        uses: actions/setup-java@v1
+        with:
+          java-version: 14
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Test
+        run: |
+          ant $OPTS -f java/java.completion test
+          ant $OPTS -Dtest.config=vanilla-javac -f java/java.source.base test
+
+  test-java-refactoring-java14:
+    name: Test refactoring.java without nb-javac on Java 14
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dtest.use.jdk.javac=true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup OpenJDK 14
+        uses: actions/setup-java@v1
+        with:
+          java-version: 14
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Test
+        run: ant $OPTS -f java/refactoring.java test-unit
+
+  test-java-hints-java14:
+    name: Test java.hints without nb-javac on Java 14
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup OpenJDK 14
+        uses: actions/setup-java@v1
+        with:
+          java-version: 14
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Test Batch 1
+        run: ant $OPTS -Dtest.config=batch1-vanilla-javac -f java/java.hints test
+        
+      - name: Test Batch 2
+        run: ant $OPTS -Dtest.config=batch2-vanilla-javac -f java/java.hints test
+
+  test-apisupport-modules:
+    name: Test apisupport modules
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Test
+        run: |
+          ant $OPTS -f apisupport/apisupport.ant test
+          ant $OPTS -f apisupport/apisupport.project test
+          ant $OPTS -f apisupport/apisupport.refactoring test
+          ant $OPTS -f apisupport/apisupport.wizards test
+          ant $OPTS -f apisupport/maven.apisupport test
+          ant $OPTS -f apisupport/timers test -Dtest.config=stable
+
+  test-webcommon-modules:
+    name: Test webcommon modules
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=php -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Test
+        run: |
+          ant $OPTS -f webcommon/api.knockout test
+          # ant $OPTS -f webcommon/cordova test
+          # ant $OPTS -f webcommon/html.angular test
+          ant $OPTS -f webcommon/html.knockout test-unit
+          ant $OPTS -f webcommon/javascript.bower test
+          ant $OPTS -f webcommon/javascript.cdnjs test
+          ant $OPTS -f webcommon/javascript.grunt test
+          ant $OPTS -f webcommon/javascript.karma test
+          ant $OPTS -f webcommon/javascript.nodejs test
+          ant $OPTS -f webcommon/javascript.v8debug test
+          ant $OPTS -f webcommon/javascript2.doc test
+          # ant $OPTS -f webcommon/javascript2.editor test
+          ant $OPTS -f webcommon/javascript2.extdoc test
+          ant $OPTS -f webcommon/javascript2.extjs test
+          ant $OPTS -f webcommon/javascript2.jade test
+          # used travis_retry
+          ant $OPTS -f webcommon/javascript2.jquery test
+          ant $OPTS -f webcommon/javascript2.jsdoc test
+          ant $OPTS -f webcommon/javascript2.json test
+          ant $OPTS -f webcommon/javascript2.knockout test
+          ant $OPTS -f webcommon/javascript2.lexer test
+          ant $OPTS -f webcommon/javascript2.model test
+          # ant $OPTS -f webcommon/javascript2.nodejs test
+          # ant $OPTS -f webcommon/javascript2.prototypejs test
+          # ant $OPTS -f webcommon/javascript2.requirejs test
+          ant $OPTS -f webcommon/javascript2.sdoc test
+          ant $OPTS -f webcommon/languages.apacheconf test
+          ant $OPTS -f webcommon/languages.ini test
+          # ant $OPTS -f webcommon/lib.v8debug test
+          ant $OPTS -f webcommon/libs.graaljs test
+          ant $OPTS -f webcommon/selenium2.webclient test
+          ant $OPTS -f webcommon/web.clientproject test-unit
+          ant $OPTS -f webcommon/web.clientproject.api test
+          ant $OPTS -f webcommon/web.inspect test
+
+# TODO versioning modules
+
+  test-mysql-database:
+    name: Tests with mysql database
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false
+      OPTS_TEST: -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true -Dtest-unit-sys-prop.mysql.user=root -Dtest-unit-sys-prop.mysql.password=password
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Start MySQL
+        run: sudo systemctl start mysql.service
+
+      - name: Setup MySQL
+        run: echo "ALTER USER root@'localhost' IDENTIFIED BY 'password';\nFLUSH PRIVILEGES;\n" | mysql -u root -p root
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+        
+      - name: Test
+        run: |
+          ant $OPTS $OPTS_TEST -f ide/db.metadata.model test
+          ant $OPTS $OPTS_TEST -f ide/db.mysql test
+
+  build-vscode-java-extension:
+    name: Build the Visual Studio Code extension for Java
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Build Extension
+        run: |
+          (cd java/java.lsp.server; ant build-vscode-ext)
+          (cd java/java.lsp.server; ant test-vscode-ext)
+
+  test-graalvm:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        graalvm: [ '19.3.3', '20.2.0' ]
+    name: GraalVM Tests (${{ matrix.graalvm }})
+    env:
+      GRAAL_VERSION: ${{ matrix.graalvm }}
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Test
+        run: nbbuild/travis/scripting.sh

@@ -1,0 +1,411 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+name: Passing tests
+
+on: workflow_dispatch
+
+jobs:
+  check-build-system:
+    name: Check Build System
+    runs-on: ubuntu-18.04
+    env:
+      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant -Dcluster.config=basic clean
+
+      - name: Build
+        run: ant -Dcluster.config=basic build
+
+      - name: Test NetBeans Build System
+        run: ant -Dcluster.config=basic localtest
+        
+  linux-javadoc:
+    name: Check Javadoc build
+    runs-on: ubuntu-18.04
+    env:
+      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Get maven coordinates
+        run: ant getallmavencoordinates
+
+      - name: Build nbms
+        run: ant build-nbms
+
+      - name: Build source zips
+        run: ant build-source-zips
+        
+      - name: Build javadoc
+        run: ant build-javadoc
+
+  commit-validation:
+    name: Commit-validation (on Linux)
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dcluster.config=release
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Validate consistency and basic tests
+        run: ant $OPTS commit-validation
+
+  verify-rat-report:
+    name: Verify RAT report and check line endings
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Check
+        run: |
+          nbbuild/travis/check-line-endings.sh
+          ant -quiet build-source-config
+          mkdir scratch
+          cd scratch
+          unzip -qq ../nbbuild/build/release-src*
+          ant -quiet rat -Drat-report.haltonfailure=true -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+
+  verify-libs-licenses:
+    name: Verify libs and licenses
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Check
+        run: ant verify-libs-and-licenses -Dverify-libs-and-licenses.haltonfailure=true -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+
+  run-sigtests:
+    name: Run sigtests
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Check sigtests
+        run: ant $OPTS check-sigtests-release -Dfail.on.error=true
+
+      - name: Generate sigtests release
+        run: ant $OPTS gen-sigtests-release
+
+  run-sigtests-platform:
+    name: Run gen-sigtests-release for platform cluster
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Gen sigtests
+        run: nbbuild/travis/gensigtest.sh
+
+  pristine-platform-build:
+    name: Pristine platform build
+    runs-on: ubuntu-18.04
+    env:
+      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Build
+        run: |
+          ant -quiet build-source-config -Dcluster.config=platform
+          mkdir tmpplatform
+          cd tmpplatform
+          unzip -qq ../nbbuild/build/platform-src*
+          ant build -Dcluster.config=platform
+
+  compile-all-modules-openjdk8:
+    name: Compile all modules with OpenJDK8
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=full -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup OpenJDK 8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+          
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Test
+        run: ant $OPTS test -Dtest.includes=NoTestsJustBuild
+
+  test-harness-modules:
+    name: Test harness modules
+    runs-on: ubuntu-18.04
+    env:
+      DISPLAY: ":99.0"
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=platform -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Launch Xvfb
+        run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Test insane
+        run: ant $OPTS -f harness/o.n.insane test
+        
+      - name: Test apisupport
+        run: ant $OPTS -f harness/apisupport.harness test
+        
+      - name: Test nbjunit
+        run: ant $OPTS -f harness/nbjunit test
+        
+      - name: Test jellytools
+        run: ant $OPTS -f harness/jellytools.platform test -Dtest.config=stable
+
+  test-nb-modules:
+    name: Test nb modules
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Test
+        run: |
+          ant $OPTS -f nb/deadlock.detector test
+          ant $OPTS -f nb/ide.branding test
+          ant $OPTS -f nb/o.n.upgrader test
+          # ant $OPTS -f nb/updatecenters test
+          ant $OPTS -f nb/welcome test
+
+  test-extide-modules:
+    name: Test extide modules
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Test
+        run: |
+          ant $OPTS -f extide/o.apache.tools.ant.module test
+          ant $OPTS -f extide/gradle test
+
+  test-javafx-modules:
+    name: Test JavaFX modules
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Test
+        run: |
+          ant $OPTS -f javafx/javafx2.editor test -Dtest.config=stable
+          # ant $OPTS -f javafx/javafx2.project test
+
+  test-ergonomics-modules:
+    name: Test ergonomics modules
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Test
+        run: ant $OPTS -f ergonomics/ide.ergonomics test -Dtest.config=commit
+
+  test-profiler-modules:
+    name: Test profiler modules
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant $OPTS clean
+
+      - name: Build
+        run: ant $OPTS build
+
+      - name: Test
+        run: ant $OPTS -f profiler/profiler.oql test
+

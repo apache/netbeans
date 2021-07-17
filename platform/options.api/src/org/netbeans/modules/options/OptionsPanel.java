@@ -78,7 +78,6 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.text.JTextComponent;
 import org.netbeans.modules.options.CategoryModel.Category;
 import org.netbeans.modules.options.advanced.AdvancedPanel;
@@ -116,20 +115,12 @@ public class OptionsPanel extends JPanel {
     private HashMap<String, HashMap<Integer, TabInfo>> categoryid2tabs = new HashMap<String, HashMap<Integer, TabInfo>>();
     private final ArrayList<String> disabledCategories = new ArrayList<String>();
 
-    //private final ArrayList<FileObject> advancedFOs = new ArrayList<FileObject>();
-    //private final HashMap<String, Integer> dublicateKeywordsFOs = new HashMap<String, Integer>();
-    //private final HashMap<FileObject, Integer> fo2index = new HashMap<FileObject, Integer>();
-
     private Map<String, CategoryButton> buttons = new LinkedHashMap<String, CategoryButton>();    
     private final boolean isMac = UIManager.getLookAndFeel ().getID ().equals ("Aqua");
-    private final boolean isNimbus = UIManager.getLookAndFeel ().getID ().equals ("Nimbus");
-    private final boolean isMetal = UIManager.getLookAndFeel() instanceof MetalLookAndFeel;
-    private final boolean isGTK = UIManager.getLookAndFeel ().getID ().equals ("GTK");
     private final Color selected = isMac ? new Color(221, 221, 221) : getSelectionBackground();
     private final Color selectedB = isMac ? new Color(183, 183, 183) : getUIColorOrDefault("nb.options.categories.selectionBorderColor", new Color (149, 106, 197));
     private final Color highlighted = isMac ? new Color(221, 221, 221) : getHighlightBackground();
     private final Color highlightedB = getUIColorOrDefault("nb.options.categories.highlightBorderColor", new Color (152, 180, 226));
-    //private final Color iconViewBorder = new Color (127, 157, 185);
     private final ControllerListener controllerListener = new ControllerListener ();
     
     private final Color borderMac = new Color(141, 141, 141);
@@ -395,6 +386,7 @@ public class OptionsPanel extends JPanel {
         pCategories = new JPanel (new BorderLayout ());
         pCategories.setBorder (BorderFactory.createMatteBorder(0,0,1,0,getUIColorOrDefault("nb.options.categories.separatorColor", Color.lightGray))); //NOI18N
         pCategories.setBackground (getTabPanelBackground());
+
         categoriesScrollPane = new JScrollPane(pCategories2, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         categoriesScrollPane.setBorder(null);
         categoriesScrollPane.getHorizontalScrollBar().setUnitIncrement(Utils.ScrollBarUnitIncrement);
@@ -877,7 +869,7 @@ public class OptionsPanel extends JPanel {
                 
     private CategoryButton addButton (CategoryModel.Category category) {
         int index = buttons.size ();
-        CategoryButton button = isNimbus || isGTK 
+        CategoryButton button = UIManager.getBoolean("Nb.options.categories.button.useNimbusCategoryButton") //NOI18N
                 ? new NimbusCategoryButton(category)
                 : new CategoryButton(category);
 
@@ -1027,8 +1019,13 @@ public class OptionsPanel extends JPanel {
         return new Color (224, 232, 246);
     }
 
+    /**
+     * Get if Options Panel uses UI default colors.
+     * Use property Nb.options.useUIDefaultsColors to use modify it.
+     * @return boolean
+     */
     private boolean useUIDefaultsColors() {
-        return isMetal || isNimbus;
+        return UIManager.getBoolean("Nb.options.useUIDefaultsColors"); //NOI18N
     }
 
     private Color getUIColorOrDefault(String uiKey, Color defaultColor) {

@@ -142,7 +142,7 @@ public class WhiteListIndexerPlugin implements JavaIndexerPlugin {
     @CheckForNull
     private static DocumentIndex getIndex(@NonNull final FileObject root) {
         try {
-            final File whiteListFolder = roots2whiteListDirs.get(root.getURL());
+            final File whiteListFolder = roots2whiteListDirs.get(root.toURL());
             if (whiteListFolder != null) {
                 final DocumentIndex index = IndexManager.createDocumentIndex(whiteListFolder);
                 return index.getStatus() == Index.Status.VALID ? index : null;

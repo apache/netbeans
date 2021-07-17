@@ -140,12 +140,8 @@ public class J2SELibrarySourceForBinaryQuery implements SourceForBinaryQueryImpl
         if (normalizedURL == null) {
             FileObject fo = URLMapper.findFileObject(url);
             if (fo != null) {
-                try {
-                    normalizedURL = fo.getURL();
-                    this.normalizedURLCache.put (url, normalizedURL);
-                } catch (FileStateInvalidException e) {
-                    Exceptions.printStackTrace(e);
-                }
+                normalizedURL = fo.toURL();
+                this.normalizedURLCache.put (url, normalizedURL);
             }
         }
         return normalizedURL;

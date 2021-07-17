@@ -698,7 +698,7 @@ public class EjbJarProject implements Project, FileChangeListener {
         
         if (fo.getParent ().equals (libFolder)) {
             try {
-                classPathModifier.addRoots(new URL[] {FileUtil.getArchiveRoot(fo.getURL())}, ProjectProperties.JAVAC_CLASSPATH);
+                classPathModifier.addRoots(new URL[] {FileUtil.getArchiveRoot(fo.toURL())}, ProjectProperties.JAVAC_CLASSPATH);
             }
             catch (IOException e) {
                 Exceptions.printStackTrace(e);

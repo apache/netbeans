@@ -131,7 +131,7 @@ public class CacheSourceForBinaryQueryImpl implements SourceForBinaryQueryImplem
                 final AnnotationProcessingQuery.Result result = AnnotationProcessingQuery.getAnnotationProcessingOptions(sourceRoot);
                 final URL annotationOutputURL = result.sourceOutputDirectory();
                 final FileObject userAnnotationOutput = annotationOutputURL == null ? null : URLMapper.findFileObject(annotationOutputURL);
-                final FileObject cacheAnnoationOutput = FileUtil.toFileObject(JavaIndex.getAptFolder(sourceRoot.getURL(), false));
+                final FileObject cacheAnnoationOutput = FileUtil.toFileObject(JavaIndex.getAptFolder(sourceRoot.toURL(), false));
                 return userAnnotationOutput == null ?
                     cacheAnnoationOutput == null ?
                         new FileObject[0] :

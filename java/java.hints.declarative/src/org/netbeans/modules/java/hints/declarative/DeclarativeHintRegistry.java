@@ -244,14 +244,12 @@ public class DeclarativeHintRegistry implements HintProvider, ClassPathBasedHint
 
         try {
             if (file != null) {
-                ClassLoader l = new URLClassLoader(new URL[] {file.getParent().getURL()});
+                ClassLoader l = new URLClassLoader(new URL[] {file.getParent().toURL()});
 
                 bundle = NbBundle.getBundle("Bundle", Locale.getDefault(), l);
             } else {
                 bundle = null;
             }
-        } catch (FileStateInvalidException ex) {
-            bundle = null;
         } catch (MissingResourceException ex) {
             //TODO: log?
             bundle = null;

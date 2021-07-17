@@ -83,7 +83,7 @@ public class TransformUtil {
 
             fileURL = file.toURL();
         } else {
-            fileURL = fileObject.getURL();
+            fileURL = fileObject.toURL();
         }
 
         return fileURL.toExternalForm();

@@ -68,7 +68,7 @@ public class JobCreator extends JPanel implements ProjectHudsonJobCreator {
             FileObject projectXml = project.getProjectDirectory().getFileObject("nbproject/project.xml"); // NOI18N
             if (projectXml != null && projectXml.isData()) {
                 try {
-                    Document doc = XMLUtil.parse(new InputSource(projectXml.getURL().toString()), false, true, null, null);
+                    Document doc = XMLUtil.parse(new InputSource(projectXml.toURL().toString()), false, true, null, null);
                     String type = XPathFactory.newInstance().newXPath().evaluate(
                             "/*/*[local-name(.)='type']", doc.getDocumentElement()); // NOI18N
                     for (AntBasedJobCreator handler : Lookup.getDefault().lookupAll(AntBasedJobCreator.class)) {

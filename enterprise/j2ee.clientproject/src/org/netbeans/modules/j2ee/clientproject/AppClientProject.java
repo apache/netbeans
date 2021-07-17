@@ -442,7 +442,7 @@ public final class AppClientProject implements Project, FileChangeListener {
         
         if (fo.getParent ().equals (libFolder)) {
             try {
-                cpMod.getClassPathModifier().addRoots(new URL[] {FileUtil.getArchiveRoot(fo.getURL())}, ProjectProperties.JAVAC_CLASSPATH);
+                cpMod.getClassPathModifier().addRoots(new URL[] {FileUtil.getArchiveRoot(fo.toURL())}, ProjectProperties.JAVAC_CLASSPATH);
             } catch (IOException e) {
                 Exceptions.printStackTrace(e);
             }
@@ -572,7 +572,7 @@ public final class AppClientProject implements Project, FileChangeListener {
                         List<URL> libs = new LinkedList<URL>();
                         for (int i = 0; i < children.length; i++) {
                             if (FileUtil.isArchiveFile(children[i])) {
-                                libs.add(FileUtil.getArchiveRoot(children[i].getURL()));
+                                libs.add(FileUtil.getArchiveRoot(children[i].toURL()));
                             }
                         }
                         cpMod.getClassPathModifier().addRoots(libs.toArray(new URL[libs.size()]), ProjectProperties.JAVAC_CLASSPATH);

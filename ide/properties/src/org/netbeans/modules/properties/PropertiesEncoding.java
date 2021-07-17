@@ -139,11 +139,7 @@ public final class PropertiesEncoding extends FileEncodingQueryImplementation {
         }
 
         private synchronized void updateURL(FileObject file) {
-            try {
-                fileURL = file.getURL();
-            } catch (FileStateInvalidException ex) {
-                fileURL = null;
-            }
+            fileURL = file.toURL();
         }
 
         public void fileDeleted(FileEvent fe) { }

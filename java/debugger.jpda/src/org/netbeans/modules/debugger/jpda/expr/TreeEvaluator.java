@@ -157,11 +157,8 @@ public class TreeEvaluator {
                 // Try to define some context that should work...
                 FileObject systemFO = org.netbeans.api.java.classpath.GlobalPathRegistry.getDefault().findResource("java/lang/System.java");    // NOI18N
                 if (systemFO != null) {
-                    try {
-                        url = systemFO.getURL().toString();
-                        line = 100;
-                    } catch (FileStateInvalidException ex) {
-                    }
+                    url = systemFO.toURL().toString();
+                    line = 100;
                 }
             }
         }

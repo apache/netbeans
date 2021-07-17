@@ -242,19 +242,15 @@ public class ClassSourceResolver implements ClassSource.Resolver {
             SourceGroup[] sgs = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
             List<URL> list = new ArrayList<URL>();
             for (SourceGroup sg : sgs) {
-                try {
-                    ClassPath cp = ClassPath.getClassPath(sg.getRootFolder(), ClassPath.SOURCE);
-                    if (cp != null) {
-                        for (FileObject fob : cp.getRoots()) {
-                            URL[] urls = UnitTestForSourceQuery.findSources(fob);
-                            if (urls.length == 0) {
-                                BinaryForSourceQuery.Result result = BinaryForSourceQuery.findBinaryRoots(fob.getURL());
-                                list.addAll(Arrays.asList(result.getRoots()));
-                            }
+                ClassPath cp = ClassPath.getClassPath(sg.getRootFolder(), ClassPath.SOURCE);
+                if (cp != null) {
+                    for (FileObject fob : cp.getRoots()) {
+                        URL[] urls = UnitTestForSourceQuery.findSources(fob);
+                        if (urls.length == 0) {
+                            BinaryForSourceQuery.Result result = BinaryForSourceQuery.findBinaryRoots(fob.toURL());
+                            list.addAll(Arrays.asList(result.getRoots()));
                         }
                     }
-                } catch (FileStateInvalidException fsiex) {
-                    FormUtils.LOGGER.log(Level.INFO, fsiex.getMessage(), fsiex);
                 }
             }
             return list;

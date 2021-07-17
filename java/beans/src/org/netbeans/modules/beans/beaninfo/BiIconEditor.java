@@ -219,7 +219,7 @@ final class BiIconEditor extends PropertyEditorSupport implements ExPropertyEdit
                 : resourcePath;
         FileObject res = cp.findResource(path);
         if (res != null && res.canRead() && res.isData()) {
-            return res.getURL();
+            return res.toURL();
         } else {
             throw new FileNotFoundException(path);
         }

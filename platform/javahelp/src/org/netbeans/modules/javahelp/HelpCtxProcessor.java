@@ -84,7 +84,7 @@ public final class HelpCtxProcessor implements Environment.Provider {
                     return instance;
                 }
                 try {
-                    Document doc = XMLUtil.parse(new InputSource(obj.getPrimaryFile().getURL().toString()), true, false, XMLUtil.defaultErrorHandler(), EntityCatalog.getDefault());
+                    Document doc = XMLUtil.parse(new InputSource(obj.getPrimaryFile().toURL().toString()), true, false, XMLUtil.defaultErrorHandler(), EntityCatalog.getDefault());
                     Element el = doc.getDocumentElement();
                     if (!el.getNodeName().equals("helpctx")) { // NOI18N
                         throw new IOException();

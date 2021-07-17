@@ -429,7 +429,7 @@ public class TransformPerformer {
             if ( data.getProcessOutput() == TransformHistory.APPLY_DEFAULT_ACTION ) {
                 GuiUtil.performDefaultAction(resultFO);
             } else if ( data.getProcessOutput() == TransformHistory.OPEN_IN_BROWSER ) {
-                showURL(resultFO.getURL());
+                showURL(resultFO.toURL());
             }
         }
         
@@ -537,7 +537,7 @@ public class TransformPerformer {
             if ( file != null ) {
                 fileURL = file.toURI().toURL();
             } else {
-                fileURL = fileObject.getURL();
+                fileURL = fileObject.toURL();
             }
             return fileURL;
         }

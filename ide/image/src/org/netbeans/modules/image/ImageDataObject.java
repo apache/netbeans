@@ -151,11 +151,7 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
      * @return the image url
      */
     URL getImageURL() {
-        try {
-            return getPrimaryFile().getURL();
-        } catch (FileStateInvalidException ex) {
-            return null;
-        }
+        return getPrimaryFile().toURL();
     }
 
     /** Gets image data for the image object.
@@ -239,12 +235,8 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
             }
             
             /** Gets value of property. Overrides superclass method. */
-            public Icon getValue() throws InvocationTargetException {
-                try {
-                    return new ImageIcon(obj.getPrimaryFile().getURL());
-                } catch (FileStateInvalidException fsie) {
-                    throw new InvocationTargetException(fsie);
-                }
+            public Icon getValue() {
+                return new ImageIcon(obj.getPrimaryFile().toURL());
             }
             
             /** Gets property editor. */
@@ -265,15 +257,8 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
                 public void paintValue(Graphics g, Rectangle r) {
                     ImageIcon icon = null;
                     
-                    try {
-                        icon = (ImageIcon)ThumbnailProperty.this.getValue();
-                    } catch(InvocationTargetException ioe) {
-                        if(Boolean.getBoolean("netbeans.debug.exceptions")) { // NOI18N
-                            ErrorManager.getDefault().notify(ioe);
-                        }
-                    }
-                    
-                    if(icon != null) {
+                    icon = (ImageIcon)ThumbnailProperty.this.getValue();
+                    if (icon != null) {
                         int iconWidth = icon.getIconWidth();
                         int iconHeight = icon.getIconHeight();
                         
@@ -330,13 +315,8 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
 
           /** Gets value of property. Overrides superclass method. */
           public Integer getValue() throws InvocationTargetException {
-             try {
-                final Icon icon = new ImageIcon(getDataObject().getPrimaryFile().
-                      getURL());
-                return Integer.valueOf(icon.getIconWidth());
-             } catch (FileStateInvalidException fsie) {
-                throw new InvocationTargetException(fsie);
-             }
+              final Icon icon = new ImageIcon(getDataObject().getPrimaryFile().toURL());
+              return Integer.valueOf(icon.getIconWidth());
           }
        } // End of class ImageWidthProperty.
 
@@ -353,13 +333,8 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
 
           /** Gets value of property. Overrides superclass method. */
           public Integer getValue() throws InvocationTargetException {
-             try {
-                final Icon icon = new ImageIcon(getDataObject().getPrimaryFile().
-                      getURL());
-                return Integer.valueOf(icon.getIconHeight());
-             } catch (FileStateInvalidException fsie) {
-                throw new InvocationTargetException(fsie);
-             }
+              final Icon icon = new ImageIcon(getDataObject().getPrimaryFile().toURL());
+              return Integer.valueOf(icon.getIconHeight());
           }
        } // End of class ImageHeightProperty.
     } // End of class ImageNode.

@@ -179,15 +179,9 @@ final class Util extends org.netbeans.modules.i18n.Util {
                 FileObject primaryFile = dobj.getPrimaryFile();
                 
                 boolean isLocal;
-                try {
-                    isLocal = !primaryFile.isVirtual()
+                isLocal = !primaryFile.isVirtual()
                               && primaryFile.isValid()
-                              && primaryFile.getURL().getProtocol()
-                                      .equals("file");                  //NOI18N
-                } catch (FileStateInvalidException ex) {
-                    isLocal = false;
-                }
-                
+                              && primaryFile.toURL().getProtocol().equals("file");  //NOI18N
                 if (isLocal == false) {
                     return false;
                 }

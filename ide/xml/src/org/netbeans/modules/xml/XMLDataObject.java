@@ -357,10 +357,7 @@ public final class XMLDataObject extends org.openide.loaders.XMLDataObject
         /**
          */
         public void view () {
-            try {
-                HtmlBrowser.URLDisplayer.getDefault().showURL(primary.getFile().getURL());
-            } catch (FileStateInvalidException e) {
-            }
+            HtmlBrowser.URLDisplayer.getDefault().showURL(primary.getFile().toURL());
         }
 
     } // end of class ViewSupport

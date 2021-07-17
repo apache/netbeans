@@ -196,7 +196,7 @@ public class ClientHandlerButtonListener implements ActionListener {
                 FileObject localWsdlFile =
                         support.getWsdlFolder(false).getFileObject(client.getLocalWsdl());
                 File f = FileUtil.toFile(bindingHandlerFO);
-                String relativePath = Utilities.relativize(f.toURI(), new URI(localWsdlFile.getURL().toExternalForm()));
+                String relativePath = Utilities.relativize(f.toURI(), new URI(localWsdlFile.toURL().toExternalForm()));
                 GlobalBindings gb = bindingsModel.getGlobalBindings();
                 try {
                     bindingsModel.startTransaction();

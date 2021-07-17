@@ -618,10 +618,7 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
         }
         
         public void view() {
-            try {
-                HtmlBrowser.URLDisplayer.getDefault().showURL(primary.getFile().getURL());
-            } catch (FileStateInvalidException e) {
-            }
+            HtmlBrowser.URLDisplayer.getDefault().showURL(primary.getFile().toURL());
         }
     }
     

@@ -73,12 +73,8 @@ public class PatchAction extends NodeAction {
         if (nodes.length == 1) {
             FileObject fo = DiffAction.getFileFromNode(nodes[0]);
             if (fo != null) {
-                try {
-                    // #63460
-                    return fo.getURL().getProtocol().equals("file");  // NOI18N
-                } catch (FileStateInvalidException fsiex) {
-                    return false;
-                }
+                // #63460
+                return fo.toURL().getProtocol().equals("file");  // NOI18N
             }
         }
         return false;

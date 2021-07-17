@@ -114,11 +114,7 @@ public final class TransformPanel extends javax.swing.JPanel {
             ( xml_stylesheet != null ) ) {
                 setXSL(xml_stylesheet);
             }
-            try {
-                baseURL = xmlFileObject.getParent().getURL();
-            } catch (FileStateInvalidException exc) {
-                // ignore it
-            }
+            baseURL = xmlFileObject.getParent().toURL();
         }
         if ( xslDataObject != null ) {
             setXSL(TransformUtil.getURLName(xslDataObject.getPrimaryFile()));
@@ -128,11 +124,7 @@ public final class TransformPanel extends javax.swing.JPanel {
                 setInput(xslHistory.getLastXML());
             }
             if ( baseURL == null ) {
-                try {
-                    baseURL = xslFileObject.getParent().getURL();
-                } catch (FileStateInvalidException exc) {
-                    // ignore it
-                }
+                baseURL = xslFileObject.getParent().toURL();
             }
         }
         

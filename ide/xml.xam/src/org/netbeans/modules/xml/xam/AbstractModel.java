@@ -60,6 +60,7 @@ public abstract class AbstractModel<T extends Component<T>>
     private PropertyChangeSupport pcs;
     protected ModelUndoableEditSupport ues;
     private State status;
+    private String statusMessage;
     private boolean inSync;
     private boolean inUndoRedo;
     private EventListenerList componentListeners;
@@ -179,12 +180,22 @@ public abstract class AbstractModel<T extends Component<T>>
         return status;
     }
     
+    @Override
+    public String getStatusMessage() {
+        return statusMessage;
+    }
+    
     protected void setState(State s) {
+        setState(s, null);
+    }
+
+    protected void setState(State s, String message) {
         if (s == status) {
             return;
         }
         State old = status;
         status = s;
+        statusMessage = message;
         PropertyChangeEvent event =
                 new PropertyChangeEvent(this, STATE_PROPERTY, old, status);
         if (isIntransaction()) {
@@ -255,11 +266,11 @@ public abstract class AbstractModel<T extends Component<T>>
             try {
                 startTransaction(true, false);  //start pseudo transaction for event firing
                 syncStartedTransaction = true;
-                setState(getAccess().sync());
+                setState(getAccess().sync(), null);
                 endTransaction();
                 success = true;
             } catch (IOException e) {
-                setState(State.NOT_WELL_FORMED);
+                setState(State.NOT_WELL_FORMED, e.getLocalizedMessage());
                 endTransaction(false); // do want to fire just the state transition event
                 throw e;
             } finally {
@@ -273,7 +284,7 @@ public abstract class AbstractModel<T extends Component<T>>
                 }
 
                 if (!success && getState() != State.NOT_WELL_FORMED) {
-                    setState(State.NOT_SYNCED);
+                    setState(State.NOT_SYNCED, null);
                     refresh(); 
                 }
                 
@@ -295,7 +306,7 @@ public abstract class AbstractModel<T extends Component<T>>
      * Note: direct links to model's components become invalid after this operation.
      */
     protected void refresh() {
-        setState(State.VALID);
+        setState(State.VALID, null);
     }
 
     @Override
@@ -622,7 +633,7 @@ public abstract class AbstractModel<T extends Component<T>>
                     }
                 }
                 if (needsRefresh) {
-                    setState(State.NOT_SYNCED);
+                    setState(State.NOT_SYNCED, null);
                     refresh();
                 }
             }
@@ -652,7 +663,7 @@ public abstract class AbstractModel<T extends Component<T>>
                     }
                 }
                 if (needsRefresh) {
-                    setState(State.NOT_SYNCED); 
+                    setState(State.NOT_SYNCED, null);
                     refresh(); 
                 }
             }

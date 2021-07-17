@@ -132,6 +132,7 @@ import com.sun.tools.javac.util.Position;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.Map.Entry;
@@ -1956,6 +1957,23 @@ public class CasualDiff {
 
         copyTo(localPointer, bounds[1]);
         return bounds[1];
+    }
+
+    protected int diffBindingPattern(Tree oldT, Tree newT, int[] bounds) {
+        VariableTree oldVar = getBindingVariableTree(oldT);
+        VariableTree newVar = getBindingVariableTree(newT);
+
+        return diffTree((JCTree) oldVar, (JCTree) newVar, bounds);
+    }
+
+    @NbBundle.Messages("ERR_PatternMatchingInstanceOf=Transformation for pattern matching in instanceof not supported on this version of JDK. Please run on JDK 16 or newer, or install nb-javac.")
+    public static VariableTree getBindingVariableTree(Tree node) {
+        try {
+            Class bpt = Class.forName("com.sun.source.tree.BindingPatternTree"); //NOI18N
+            return (VariableTree)bpt.getDeclaredMethod("getVariable").invoke(node); //NOI18N
+        } catch (NoSuchMethodException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(Exceptions.attachLocalizedMessage(ex, Bundle.ERR_PatternMatchingInstanceOf()));
+        }
     }
 
     protected int diffCase(JCCase oldT, JCCase newT, int[] bounds) {
@@ -5728,6 +5746,10 @@ public class CasualDiff {
               }
               if(oldT.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)){
                   retVal = diffSwitchExpression(oldT, newT, elementBounds);
+                  break;
+              }
+              if(oldT.getKind().toString().equals(TreeShims.BINDING_PATTERN)){
+                  retVal = diffBindingPattern(oldT, newT, elementBounds);
                   break;
               }
               String msg = "Diff not implemented: " +

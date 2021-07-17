@@ -1483,6 +1483,26 @@ public class RenameTest extends RefactoringTestBase {
 
     }
 
+    public void testRenameBindingVariableType() throws Exception {
+        writeFilesAndWaitForScan(src,
+                new File("t/A.java", "package t;\n"
+                + "public class A {\n"
+                + "    public boolean taragui(Object o) {\n"
+                + "        return o instanceof A a && a.toString() != null;\n"
+                + "    }\n"
+                + "}"));
+        JavaRenameProperties props = new JavaRenameProperties();
+        performRename(src.getFileObject("t/A.java"), 25, "B", props, true);
+        verifyContent(src,
+                new File("t/A.java", "package t;\n"
+                + "public class B {\n"
+                + "    public boolean taragui(Object o) {\n"
+                + "        return o instanceof B a && a.toString() != null;\n"
+                + "    }\n"
+                + "}"));
+
+    }
+
     private void performRename(FileObject source, final int position, final int position2, final String newname, final JavaRenameProperties props, final boolean searchInComments, Problem... expectedProblems) throws Exception {
         final RenameRefactoring[] r = new RenameRefactoring[1];
         JavaSource.forFileObject(source).runUserActionTask(new Task<CompilationController>() {

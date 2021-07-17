@@ -21,11 +21,13 @@ package org.netbeans.api.java.source.gen;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.tree.JCTree;
 import java.io.File;
 import java.io.IOException;
@@ -197,6 +199,59 @@ public class InstanceOfTest extends GeneratorTestMDRCompat {
         assertEquals(golden, res);
     }
     
+    public void testRenamePatternMatchingType() throws Exception {
+        if (!typeTestPatternAvailable())
+            return ;
+
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile,
+            "package hierbas.del.litoral;\n\n" +
+            "public class Test {\n" +
+            "    public boolean taragui(Object o) {\n" +
+            "        return o instanceof Test t;\n" +
+            "    }\n" +
+            "}\n"
+            );
+        String golden =
+            "package hierbas.del.litoral;\n\n" +
+            "public class Test {\n" +
+            "    public boolean taragui(Object o) {\n" +
+            "        return o2 instanceof Test2 t;\n" +
+            "    }\n" +
+            "}\n";
+        JavaSource src = getJavaSource(testFile);
+
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                CompilationUnitTree cut = workingCopy.getCompilationUnit();
+                TreeMaker make = workingCopy.getTreeMaker();
+                new TreeScanner<Void, Void>() {
+                    @Override
+                    public Void visitVariable(VariableTree node, Void p) {
+                        if (node.getName().contentEquals("t")) {
+                            workingCopy.rewrite(node.getType(), make.Identifier("Test2"));
+                        }
+                        return super.visitVariable(node, p);
+                    }
+                    @Override
+                    public Void visitIdentifier(IdentifierTree node, Void p) {
+                        if (node.getName().contentEquals("o")) {
+                            workingCopy.rewrite(node, workingCopy.getTreeMaker().setLabel(node, "o2"));
+                        }
+                        return super.visitIdentifier(node, p);
+                    }
+                }.scan(cut, null);
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        System.err.println(res);
+        assertEquals(golden, res);
+    }
+
     private boolean typeTestPatternAvailable() {
         try {
             Class.forName("com.sun.source.tree.BindingPatternTree", false, JCTree.class.getClassLoader());

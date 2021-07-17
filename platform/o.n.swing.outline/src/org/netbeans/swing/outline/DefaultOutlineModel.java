@@ -156,9 +156,7 @@ public class DefaultOutlineModel implements OutlineModel {
         
         layout.setRootVisible(true);
         layout.setModel(this);
-        treePathSupport = new TreePathSupport(this, layout);
-        treePathSupport.addTreeExpansionListener(broadcaster);
-        treePathSupport.addTreeWillExpandListener(broadcaster);
+        treePathSupport = new TreePathSupport(this, layout, broadcaster);
         treeModel.addTreeModelListener(broadcaster);
         tableModel.addTableModelListener(broadcaster);
         if (tableModel instanceof ProxyTableModel) {

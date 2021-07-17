@@ -425,7 +425,7 @@ public class JavacParser extends Parser {
                     init(snapshot, task, false);
                     DiagnosticListener<JavaFileObject> diagnosticListener;
                     JavacTaskImpl javacTask;
-                    boolean oneInstanceJava=Boolean.getBoolean("java.enable.single.javac") && this.snapshotSize <= this.MAX_FILE_SIZE;
+                    boolean oneInstanceJava = !Boolean.getBoolean("java.disable.single.javac") && this.snapshotSize <= this.MAX_FILE_SIZE;
                     if (sequentialParsing == null && ciImpl == null && oneInstanceJava) {
                         List<JavaFileObject> jfos = new ArrayList<>();
                         for (Snapshot s : snapshots) {

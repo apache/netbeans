@@ -77,7 +77,10 @@ public class ArchetypeWizardUtils {
         BeanRunConfig config = new BeanRunConfig();
         config.setProperty("archetypeGroupId", arch.getGroupId()); //NOI18N
         config.setProperty("archetypeArtifactId", arch.getArtifactId()); //NOI18N
-        config.setProperty("archetypeVersion", arch.getVersion()); //NOI18N
+        if (arch.getVersion() != null
+                && !arch.getVersion().isEmpty()) {
+            config.setProperty("archetypeVersion", arch.getVersion()); //NOI18N
+        }
         String repo = arch.getRepository();
         config.setProperty("archetypeRepository", repo != null ? repo : RepositorySystem.DEFAULT_REMOTE_REPO_URL); //NOI18N
         config.setProperty("groupId", vi.groupId); //NOI18N

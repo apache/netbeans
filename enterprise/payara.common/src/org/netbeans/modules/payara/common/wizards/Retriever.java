@@ -252,10 +252,10 @@ public class Retriever implements Runnable {
         String message = null;
 
         try {
+            targetUrl = new URL(getDownloadLocation());
             backupDir = backupInstallDir(targetInstallDir);
             
             setDownloadState(STATUS_CONNECTING);
-            targetUrl = new URL(getDownloadLocation());
 
             Logger.getLogger("payara").log(Level.FINE, "Downloading from {0}", targetUrl); // NOI18N
             connection = targetUrl.openConnection();

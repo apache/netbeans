@@ -22,7 +22,13 @@ package org.netbeans.modules.dbschema.jdbcimpl;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.Map;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -205,18 +211,18 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
         initTables(cp, null, null, false); //false = check tables references
     }
     
-    public void initTables(ConnectionProvider cp, LinkedList t, LinkedList v) {
+    public void initTables(ConnectionProvider cp, List t, List v) {
         initTables(cp, t, v, false); //false = check tables references
     }
         
-    public void initTables(ConnectionProvider cp, LinkedList t, LinkedList v, boolean allTables) {
+    public void initTables(ConnectionProvider cp, List t, List v, boolean allTables) {
         if (cp !=null)
             try {
                 progress = 0;
-                LinkedList tables = new LinkedList();
-                LinkedList views = new LinkedList();
-                LinkedList tablesTmp = new LinkedList();
-                LinkedList viewsTmp = new LinkedList();
+                List tables = new LinkedList();
+                List views = new LinkedList();
+                List tablesTmp = new LinkedList();
+                List viewsTmp = new LinkedList();
 //                String user = dmd.getUserName().trim();
                 String user = cp.getSchema();
                 List<String> recycleBinTables;
@@ -313,8 +319,8 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
             }
     }
     
-    private LinkedList checkNames(LinkedList toCheck, LinkedList names) {
-        LinkedList result = new LinkedList();
+    private List checkNames(List toCheck, List names) {
+        List result = new LinkedList();
         
         for (int i = 0; i < toCheck.size(); i++) {
             Object table = toCheck.get(i);
@@ -329,7 +335,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
         return result;
     }
     
-    private LinkedList checkReferences(LinkedList tables, DDLBridge bridge, String schema) throws SQLException {
+    private List checkReferences(List tables, DDLBridge bridge, String schema) throws SQLException {
         ResultSet rs;
         String pkSchema;
         String fkSchema;
@@ -404,7 +410,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
         return tables;
     }
     
-    private void initTables(ConnectionProvider cp, LinkedList tables, boolean allTables) throws DBException {
+    private void initTables(ConnectionProvider cp, List tables, boolean allTables) throws DBException {
         String name;
         
         for (int i = 0; i < tables.size(); i++) {
@@ -444,7 +450,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
         }
     }
     
-    private void initViews(ConnectionProvider cp, LinkedList views, DDLBridge bridge) throws DBException, SQLException {
+    private void initViews(ConnectionProvider cp, List views, DDLBridge bridge) throws DBException, SQLException {
         String name;
         ResultSet rs;
         
@@ -470,8 +476,8 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                 propertySupport.firePropertyChange("FKv", null, name); //NOI18N
                 
                 ViewDependency vd = new ViewDependency(cp, cp.getSchema(), name);
-                LinkedList tables = new LinkedList();
-                LinkedList columns = new LinkedList();
+                List tables = new LinkedList();
+                List columns = new LinkedList();
 
                 tables.clear();
                 columns.clear();
@@ -488,7 +494,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                         }
                             
                     boolean capture = true;
-                    LinkedList pkTables = new LinkedList();
+                    List pkTables = new LinkedList();
                     for (int j = 0; j < tables.size(); j++) {
                         if (isStop())
                             return;
@@ -534,7 +540,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                             tei.initIndexes(cp, pkTables.get(j).toString());
                             tei.initKeys(cp, 1, pkTables.get(j).toString());
 
-                            LinkedList tempList = new LinkedList();
+                            List tempList = new LinkedList();
                             UniqueKeyElement[] keys = te.getUniqueKeys();
                             for (int k = 0; k < keys.length; k++)
                                 if (keys[k].isPrimaryKey())
@@ -568,9 +574,9 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                     }
                     
                     //compute FKs
-                    LinkedList toCapture = new LinkedList();
-                    LinkedList validFKs = new LinkedList();
-                    LinkedList fkTables = new LinkedList();
+                    List toCapture = new LinkedList();
+                    List validFKs = new LinkedList();
+                    List fkTables = new LinkedList();
                     for (int j = 0; j < tables.size(); j++) {
                         if (isStop())
                             return;
@@ -583,9 +589,9 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                         
                         if (rs != null) {
                             Map<Integer, String> rset = new HashMap();
-                            LinkedList local = new LinkedList();
-                            LinkedList ref = new LinkedList();
-                            LinkedList fk = new LinkedList();
+                            List local = new LinkedList();
+                            List ref = new LinkedList();
+                            List fk = new LinkedList();
                             String fkName, c1, c2, s1, s2;
                             while (rs.next()) {
                                 if (bridge != null) {
@@ -688,7 +694,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                     for (int j = 0; j < fkTables.size(); j++)
                         tei.initKeys(cp, 2, fkTables.get(j).toString());
                     
-                    LinkedList tempList = new LinkedList();
+                    List tempList = new LinkedList();
                     ForeignKeyElement[] fke = te.getForeignKeys();
                     UniqueKeyElement[] uke = te.getUniqueKeys();
                     for (int j = 0; j < fke.length; j++)

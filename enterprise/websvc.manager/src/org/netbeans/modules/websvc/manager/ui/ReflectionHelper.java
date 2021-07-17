@@ -582,7 +582,7 @@ public class ReflectionHelper {
     }
 
     public static Object callMethodWithParams(
-            String inClassName, LinkedList inParamList, JavaMethod inMethod,
+            String inClassName, List inParamList, JavaMethod inMethod,
             URLClassLoader urlClassLoader, WsdlData wsData, WSPort port) throws WebServiceReflectionException {
 
         Class<?> clazz = null;

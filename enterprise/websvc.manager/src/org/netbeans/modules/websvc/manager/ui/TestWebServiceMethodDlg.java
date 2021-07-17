@@ -35,7 +35,10 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.LinkedList;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -387,7 +390,7 @@ public class TestWebServiceMethodDlg extends JPanel implements ActionListener, M
     }
     
     @Override
-    public void methodFinished(final Object inReturnedObject,final LinkedList inParamList) {
+    public void methodFinished(final Object inReturnedObject,final List inParamList) {
         if ( SwingUtilities.isEventDispatchThread()){
             doMethodFinished(inReturnedObject, inParamList);
         }
@@ -402,7 +405,7 @@ public class TestWebServiceMethodDlg extends JPanel implements ActionListener, M
         }
     }
 
-    private void doMethodFinished(Object inReturnedObject,LinkedList inParamList) {
+    private void doMethodFinished(Object inReturnedObject, List inParamList) {
         dialog.setCursor(normalCursor);
 
         showResults(inReturnedObject);
@@ -674,14 +677,14 @@ public class TestWebServiceMethodDlg extends JPanel implements ActionListener, M
     class MethodTask implements Runnable {
 
         private final String clientClassName;
-        private final LinkedList paramList;
+        private final List paramList;
         private final JavaMethod javaMethod;
         private final URLClassLoader urlClassLoader;
         private final List<MethodTaskListener> listeners = new ArrayList<>();
         private boolean cancelled=false;
 
 
-        MethodTask(String inClientClassName, LinkedList inParamList, JavaMethod inJavaMethod,
+        MethodTask(String inClientClassName, List inParamList, JavaMethod inJavaMethod,
                 URLClassLoader inURLClassLoader) {
             clientClassName = inClientClassName;
             paramList = inParamList;

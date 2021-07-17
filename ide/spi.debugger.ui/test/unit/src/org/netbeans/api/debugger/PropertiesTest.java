@@ -457,7 +457,7 @@ public class PropertiesTest extends TestCase {
             DEFAULT_VALUES.put(PROPERTY_NAMES[9], Integer.SIZE);
             DEFAULT_VALUES.put(PROPERTY_NAMES[10], Long.reverse(Long.SIZE));
             DEFAULT_VALUES.put(PROPERTY_NAMES[11], Collections.singletonMap("key", "value"));
-            DEFAULT_VALUES.put(PROPERTY_NAMES[12], new LinkedHashMap());
+            DEFAULT_VALUES.put(PROPERTY_NAMES[12], new LinkedHashMap<Object, Object>());
             DEFAULT_VALUES.put(PROPERTY_NAMES[13], new Rectangle(10, 10, 20, 20));
             DEFAULT_VALUES.put(PROPERTY_NAMES[14], Short.MIN_VALUE);
             DEFAULT_VALUES.put(PROPERTY_NAMES[15], String.class.getName());

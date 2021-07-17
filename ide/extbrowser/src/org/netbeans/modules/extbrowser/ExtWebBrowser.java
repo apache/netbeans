@@ -63,6 +63,10 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
     public static final String MOZILLA  = "MOZILLA";    // NOI18N
     /** Name of DDE server corresponding to Firefox */
     public static final String FIREFOX  = "FIREFOX";    // NOI18N
+    /** Name of DDE server corresponding to Firefox developer edition */
+    public static final String FIREFOX_DEVEDITION  = "FIREFOX_DEVEDITION";    // NOI18N
+    /** Name of DDE server corresponding to Firefox Nigtly*/
+    public static final String FIREFOX_NIGHTLY  = "FIREFOX_NIGHTLY";    // NOI18N
     
     /** Default for DDE activate timeout property */
     protected static final int DEFAULT_ACTIVATE_TIMEOUT = 2000;
@@ -446,6 +450,10 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
                 family = PrivateBrowserFamilyId.CHROMIUM;
             } else if (this instanceof FirefoxBrowser) {
                 family = PrivateBrowserFamilyId.FIREFOX;
+            } else if (this instanceof FirefoxDeveditionBrowser) {
+                family = PrivateBrowserFamilyId.FIREFOX_DEVEDITION;
+            } else if (this instanceof FirefoxNightlyBrowser) {
+                family = PrivateBrowserFamilyId.FIREFOX_NIGHTLY;
             } else if (this instanceof IExplorerBrowser) {
                 family = PrivateBrowserFamilyId.IE;
             } else if (this instanceof MozillaBrowser) {

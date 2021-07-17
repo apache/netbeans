@@ -136,6 +136,10 @@ final class WebBrowserFactoryDescriptor {
         switch (privateBrowserFamilyId) {
             case FIREFOX:
                 return BrowserFamilyId.FIREFOX;
+            case FIREFOX_DEVEDITION:
+                return BrowserFamilyId.FIREFOX_DEVEDITION;
+            case FIREFOX_NIGHTLY:
+                return BrowserFamilyId.FIREFOX_NIGHTLY;
             case MOZILLA:
                 return BrowserFamilyId.MOZILLA;
             case CHROME:

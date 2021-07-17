@@ -27,6 +27,8 @@ public enum BrowserFamilyId {
 
     FIREFOX,
     MOZILLA,
+    FIREFOX_DEVEDITION,
+    FIREFOX_NIGHTLY,
     CHROME,
     CHROMIUM,
     SAFARI,

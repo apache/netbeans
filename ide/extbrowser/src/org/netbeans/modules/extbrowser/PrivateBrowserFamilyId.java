@@ -26,6 +26,8 @@ package org.netbeans.modules.extbrowser;
 public enum PrivateBrowserFamilyId {
 
     FIREFOX,
+    FIREFOX_DEVEDITION,
+    FIREFOX_NIGHTLY,
     MOZILLA,
     CHROME,
     CHROMIUM,

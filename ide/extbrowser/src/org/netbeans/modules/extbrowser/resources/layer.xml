@@ -83,6 +83,20 @@
             <attr name="position" intvalue="300"/>
         </file>
 
+        <file name="FirefoxDeveditionBrowser.settings" url="FirefoxDeveditionBrowser.xml">
+            <attr name="hidden" methodvalue="org.netbeans.modules.extbrowser.FirefoxDeveditionBrowser.isHidden"/>
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.extbrowser.Bundle"/>
+            <attr name="SystemFileSystem.icon" urlvalue="nbres:/org/netbeans/modules/extbrowser/resources/extbrowser.gif"/>
+            <attr name="position" intvalue="300"/>
+        </file>
+
+        <file name="FirefoxNightlyBrowser.settings" url="FirefoxNightlyBrowser.xml">
+            <attr name="hidden" methodvalue="org.netbeans.modules.extbrowser.FirefoxNightlyBrowser.isHidden"/>
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.extbrowser.Bundle"/>
+            <attr name="SystemFileSystem.icon" urlvalue="nbres:/org/netbeans/modules/extbrowser/resources/extbrowser.gif"/>
+            <attr name="position" intvalue="300"/>
+        </file>
+
         <!-- Present on Mac -->
         <file name="SafariBrowser.settings" url="SafariBrowser.xml">
             <attr name="hidden" methodvalue="org.netbeans.modules.extbrowser.SafariBrowser.isHidden"/>

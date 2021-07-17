@@ -445,12 +445,7 @@ final class TreeViewDropSupport implements DropTargetListener, Runnable {
     /** Get a node on given point or null if there none*/
     private Node getNodeForDrop(Point p) {
         if (p != null) {
-            TreePath tp = tree.getPathForLocation(p.x, p.y);
-            if( null == tp ) {
-                //make the drop area a bit bigger at the end of the tree
-                tp = tree.getPathForLocation(p.x, p.y-tree.getRowHeight()/2);
-            }
-
+            TreePath tp = getTreePath(p.x, p.y);
             if (tp != null) {
                 return DragDropUtilities.secureFindNode(tp.getLastPathComponent());
             }
@@ -825,19 +820,31 @@ final class TreeViewDropSupport implements DropTargetListener, Runnable {
         DragDropUtilities.dropNotSuccesfull();
     }
 
+    TreePath getTreePath(int x, int y) {
+        /* Allow the entire width of the component to be used as a drop target for a particular row.
+        See the similar policy for click events in TreeView.ExplorerTree.repositionMouseEvent. */
+        TreePath tp = tree.getClosestPathForLocation(x, y);
+        if (tp == null) {
+            return null;
+        }
+        /* Do require the y coordinate to be within the row's bounds, though, with some extra
+        margin intended for the last node in the tree (per the previous implementation). */
+        Rectangle bounds = tree.getPathBounds(tp);
+        if (bounds == null || y < bounds.y ||
+            y > (bounds.y + bounds.height + tree.getRowHeight() / 2))
+        {
+            return null;
+        }
+        return tp;
+    }
+
     /** @return The tree path to the node the cursor is above now or
     * null if no such node currently exists or if conditions were not
     * satisfied to continue with DnD operation.
     */
     TreePath getTreePath(DropTargetDragEvent dtde, int dropAction) {
-        // check location
         Point location = dtde.getLocation();
-        TreePath tp = tree.getPathForLocation(location.x, location.y);
-        if( null == tp ) {
-            //make the drop area a bit bigger at the end of the tree
-            tp = tree.getPathForLocation(location.x, location.y-tree.getRowHeight()/2);
-        }
-
+        TreePath tp = getTreePath(location.x, location.y);
         return ((tp != null) && (DragDropUtilities.secureFindNode(tp.getLastPathComponent()) != null)) ? tp : null;
     }
 

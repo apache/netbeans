@@ -888,7 +888,7 @@ final class XMLMapAttr implements Map {
             }
 
             byte[] bArray = bos.toByteArray();
-            StringBuffer strBuff = new StringBuffer(bArray.length * 2);
+            StringBuilder strBuff = new StringBuilder(bArray.length * 2);
 
             for (int i = 0; i < bArray.length; i++) {
                 if ((bArray[i] < 16) && (bArray[i] >= 0)) {
@@ -918,24 +918,24 @@ final class XMLMapAttr implements Map {
                 try {
                     switch (index) {
                     case 0:
-                        return new Byte(value);
+                        return Byte.valueOf(value);
                     case 1:
-                        return new Short(value);
+                        return Short.valueOf(value);
                     case 2:
-                        return new Integer(value); //(objI);
+                        return Integer.valueOf(value); //(objI;
                     case 3:
-                        return new Long(value);
+                        return Long.valueOf(value);
                     case 4:
-                        return new Float(value);
+                        return Float.valueOf(value);
                     case 5:
-                        return new Double(value);
+                        return Double.valueOf(value);
                     case 6:
                         return Boolean.valueOf(value);
                     case 7:
                         if (value.trim().length() != 1) {
                             break;
                         }
-                        return new Character(value.charAt(0));
+                        return value.charAt(0);
                     case 8:
                         return value;
                     case 9:

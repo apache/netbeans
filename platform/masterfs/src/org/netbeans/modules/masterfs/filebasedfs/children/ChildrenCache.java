@@ -26,8 +26,8 @@ import java.util.Map;
 import java.util.Set;
 
 public interface ChildrenCache {
-    Integer ADDED_CHILD = new Integer(0);
-    Integer REMOVED_CHILD = new Integer(1);
+    Integer ADDED_CHILD = 0;
+    Integer REMOVED_CHILD = 1;
 
     /**
      * Get child. If some computation or I/O is needed to be performed off the

@@ -279,7 +279,7 @@ public class MapFormat extends Format {
                     throw new IllegalArgumentException(
                         MessageFormat.format(
                             NbBundle.getBundle(MapFormat.class).getString("MSG_FMT_ObjectForKey"),
-                            new Object[] { new Integer(key) }
+                            new Object[] { key }
                         )
                     );
                 } else {
@@ -491,7 +491,7 @@ public class MapFormat extends Format {
             if (hmap.size() == 0) return null;
             int offit = offset;
             while (offit-- >= 0) {
-                Integer off = new Integer(offit);
+                Integer off = offit;
                 if (hmap.containsKey(off)) {
                     Range ran = (Range)hmap.get(off);
                     if (ran.getEnd() - offset > 0) return ran;
@@ -504,7 +504,7 @@ public class MapFormat extends Format {
         /** Puts new range into list *
         public void put(Range range)
         {
-            hmap.put(new Integer(range.getOffset()), range);
+            hmap.put(range.getOffset()), range;
         }
 
         public String toString()

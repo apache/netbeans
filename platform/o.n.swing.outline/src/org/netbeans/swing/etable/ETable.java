@@ -2075,7 +2075,7 @@ public class ETable extends JTable {
                 s = convertValueToString(val);
             }   
             if ((s != null) && (s.toUpperCase().indexOf(prefix.toUpperCase()))!= -1   ) {
-                results.add(new Integer(startIndex));
+                results.add(startIndex);
             
                 // initialize prefix
                 if (maxPrefix == null) {

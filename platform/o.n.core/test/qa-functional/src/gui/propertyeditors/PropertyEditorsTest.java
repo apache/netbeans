@@ -311,10 +311,10 @@ public abstract class PropertyEditorsTest extends JellyTestCase {
         JemmyProperties.setCurrentTimeout(waitDialogTimeout, 3000);
         
         try{
-            propertiesWindow = new NbDialogOperator(org.netbeans.jellytools.Bundle.getString("org.netbeans.core.Bundle", "CTL_FMT_LocalProperties", new Object[]{new Integer(1),"TestNode"}));
+            propertiesWindow = new NbDialogOperator(org.netbeans.jellytools.Bundle.getString("org.netbeans.core.Bundle", "CTL_FMT_LocalProperties", new Object[]{1,"TestNode"}));
         }catch(org.netbeans.jemmy.TimeoutExpiredException exception){
             new PropertiesTest();
-            propertiesWindow = new NbDialogOperator(org.netbeans.jellytools.Bundle.getString("org.netbeans.core.Bundle", "CTL_FMT_LocalProperties", new Object[]{new Integer(1),"TestNode"}));
+            propertiesWindow = new NbDialogOperator(org.netbeans.jellytools.Bundle.getString("org.netbeans.core.Bundle", "CTL_FMT_LocalProperties", new Object[]{1,"TestNode"}));
         }
         
         JemmyProperties.setCurrentTimeout(waitDialogTimeout, findTimeout);

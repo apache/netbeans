@@ -29,7 +29,7 @@ import java.util.Map;
 class SelectionAndScrollPositionManager {
     private static Map<String, String> groupsToNodes = new HashMap<String, String>();
     private static Map<String, Integer> namesToPositions = new HashMap<String, Integer>();
-    private static final Integer zero = new Integer(0);
+    private static final Integer zero = 0;
     private String lastSelectedGroup = "";
     private String nodeName = null;
 

@@ -120,7 +120,7 @@ public class CLIHandlerTest extends NbTestCase {
     
     public void testFileExistsHasPortButNotTheKey() throws Exception {
         // start the server and block
-        Integer block = new Integer(97);
+        Integer block = 97;
         InitializeRunner runner;
         synchronized (block) {
             runner = new InitializeRunner(block, true);
@@ -521,16 +521,10 @@ public class CLIHandlerTest extends NbTestCase {
             this(new String[0], null, till);
         }
 
-        public InitializeRunner(int till, boolean noEnd) throws InterruptedException {
-            this(new String[0], null, till, noEnd);
-        }
-        
         public InitializeRunner(Integer till, boolean noEnd) throws InterruptedException {
             this(new String[0], null, till, noEnd);
         }
-        public InitializeRunner(String[] args, CLIHandler h, int till) throws InterruptedException {
-            this(args, h, new Integer(till));
-        }
+
         public InitializeRunner(String[] args, CLIHandler h, Integer till) throws InterruptedException {
             this(args, h, till, false);
         }

@@ -150,7 +150,7 @@ implements XMLPropertyEditor, ExPropertyEditor  {
                 badFormat(null);
 
             try {
-                newVal[nextNumber] = new Integer(token).intValue();
+                newVal[nextNumber] = Integer.parseInt(token);
                 nextNumber++;
             }
             catch (NumberFormatException e) {

@@ -37,7 +37,7 @@ public class SerialData extends Object implements Serializable {
     public SerialData() {
         data1 = 0;
         data2 = "data2";
-        data3 = new Integer(5);
+        data3 = 5;
         data4 = new ArrayList();
         data4.add(data3);
     }

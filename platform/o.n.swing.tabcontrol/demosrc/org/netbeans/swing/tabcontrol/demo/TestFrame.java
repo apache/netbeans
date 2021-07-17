@@ -405,7 +405,7 @@ public class TestFrame extends javax.swing.JFrame {
             Class c = Class.forName("org.netbeans.swing.plaf.Startup");
             Method m = c.getDeclaredMethod("run", new Class[] {Class.class, Integer.TYPE, java.net.URL.class});
             System.err.println("Installing customs");
-            m.invoke(null, new Object[] {null, new Integer(0), null});
+            m.invoke(null, new Object[] {null, 0), null};
         } catch (Exception e) {
             System.err.println("Could not find plaf library");
         }

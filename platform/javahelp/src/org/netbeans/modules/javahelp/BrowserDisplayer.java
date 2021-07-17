@@ -161,7 +161,7 @@ public class BrowserDisplayer extends JButton
 	textAttribs.addAttribute(StyleConstants.FontFamily,
 				 font.getName());
 	textAttribs.addAttribute(StyleConstants.FontSize,
-				 new Integer(font.getSize()));
+				 font.getSize());
 	textAttribs.addAttribute(StyleConstants.Bold,
 				 Boolean.valueOf(font.isBold()));
 	textAttribs.addAttribute(StyleConstants.Italic,
@@ -339,7 +339,7 @@ public class BrowserDisplayer extends JButton
 	}
 	textAttribs.removeAttribute(StyleConstants.FontSize);
 	textAttribs.addAttribute(StyleConstants.FontSize,
-				 new Integer(newsize));
+				 newsize);
 	setFont(getAttributeSetFont(textAttribs));
 	Font font = getFont();
     }

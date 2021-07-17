@@ -86,7 +86,7 @@ public class LogFormatterTest extends NbTestCase {
         LogRecord log = new LogRecord(Level.INFO, "test_msg");
         log.setResourceBundleName("org.netbeans.lib.uihandler.TestBundle");
         log.setResourceBundle(ResourceBundle.getBundle("org.netbeans.lib.uihandler.TestBundle"));
-        log.setParameters(new Object[] { new Integer(1), "Ahoj" });
+        log.setParameters(new Object[] { 1, "Ahoj" });
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         LogRecords.write(os, log);
         assertFalse("no localized message is printed" + os.toString(), os.toString().contains(" and "));

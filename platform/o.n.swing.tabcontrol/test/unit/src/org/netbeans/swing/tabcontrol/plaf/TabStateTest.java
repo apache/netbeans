@@ -236,7 +236,7 @@ public class TabStateTest extends TestCase {
             Set set = new HashSet (repaintedTabs);
             repaintedTabs = null;
             for (int i=0; i < tabs.length; i++) {
-                if (!set.contains(new Integer(tabs[i]))) {
+                if (!set.contains(tabs[i])) {
                     fail (msg + " Tab " + tabs[i] + " was not repainted - repainted tabs were " + set);
                 }
             }
@@ -246,7 +246,7 @@ public class TabStateTest extends TestCase {
             if (repaintedTabs == null) {
                 repaintedTabs = new HashSet();
             }
-            repaintedTabs.add (new Integer(tab));
+            repaintedTabs.add (tab);
         }
         
         public void assertAllTabsRepainted(String msg) {

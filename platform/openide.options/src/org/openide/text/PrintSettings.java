@@ -156,7 +156,7 @@ public final class PrintSettings extends ContextSystemOption {
 
     public void setHeaderAlignment(int alignment) {
         PrintPreferences.setHeaderAlignment(toAlignment(alignment));
-        firePropertyChange(PROP_HEADER_ALIGNMENT, null, new Integer(alignment));
+        firePropertyChange(PROP_HEADER_ALIGNMENT, null, alignment);
     }
     
     private PrintPreferences.Alignment toAlignment(int alignment) {
@@ -194,7 +194,7 @@ public final class PrintSettings extends ContextSystemOption {
 
     public void setFooterAlignment(int alignment) {
         PrintPreferences.setFooterAlignment(toAlignment(alignment));
-        firePropertyChange(PROP_FOOTER_ALIGNMENT, null, new Integer(alignment));
+        firePropertyChange(PROP_FOOTER_ALIGNMENT, null, alignment);
     }
 
     /** Getter for lineAscentCorrection property. */
@@ -208,7 +208,7 @@ public final class PrintSettings extends ContextSystemOption {
     */
     public void setLineAscentCorrection(float correction) {
         PrintPreferences.setLineAscentCorrection(correction);
-        firePropertyChange(PROP_LINE_ASCENT_CORRECTION, null, new Float(correction));
+        firePropertyChange(PROP_LINE_ASCENT_CORRECTION, null, correction);
     }
 
     public void writeExternal(ObjectOutput obtos) throws IOException {
@@ -241,11 +241,11 @@ public final class PrintSettings extends ContextSystemOption {
 
         public void setAsText(String s) {
             if (s.equals(sLEFT)) {
-                setValue(new Integer(0));
+                setValue(0);
             } else if (s.equals(sCENTER)) {
-                setValue(new Integer(1));
+                setValue(1);
             } else {
-                setValue(new Integer(2));
+                setValue(2);
             }
         }
     }

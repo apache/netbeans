@@ -146,7 +146,7 @@ public class ListImageEditor extends PropertyEditorSupport implements ExProperty
     }
     
     public String getJavaInitializationString () {
-        return "new Integer(" + getValue () + ")"; // NOI18N
+        return "" + getValue () + ""; // NOI18N
     }
     
     private Object findObject (Object [] objs, int i) {

@@ -210,7 +210,7 @@ public abstract class LoaderTransfer {
     */
     private static DataFlavor createDndFlavor (int actions) {
         try {
-            return new DataFlavor(dndMimeType.format(new Object[] {new Integer(actions)}), null, DataObject.class.getClassLoader());
+            return new DataFlavor(dndMimeType.format(new Object[] {actions}), null, DataObject.class.getClassLoader());
         } catch (ClassNotFoundException ex) {
             throw new AssertionError(ex);
         }

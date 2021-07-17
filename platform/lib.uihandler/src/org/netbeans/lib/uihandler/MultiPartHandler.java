@@ -140,7 +140,7 @@ class MultiPartHandler {
     int length = request.getContentLength();
 	//commented this code to remove the restriction on the file upload size.
     /*if (length > maxUploadSize) {
-	  //String msg = localStrings.getString( "admin.server.gui.servlet.posted_content_length_exceeds_limit", new Integer(length), new Integer(maxUploadSize) );
+	  //String msg = localStrings.getString( "admin.server.gui.servlet.posted_content_length_exceeds_limit", length), maxUploadSize ;
       throw new IOException( msg );
     }*/
     // Check the content type to make sure it's "multipart/form-data"

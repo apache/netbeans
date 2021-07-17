@@ -437,12 +437,12 @@ public class ETableTest extends NbTestCase {
         ETable eTable1 = new ETable();
         eTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"a", "x", "tttttttt", new Integer(5)},
-                {"a", "y", "ggggggggg", new Integer(10)},
-                {"b", "z", "nnnnnnnn", new Integer(7)},
-                {"b", "w", "mmmmmm", new Integer(1)},
-                {"c", "m", "kkkkkkkkkk", new Integer(10000)},
-                {"c", "n", "kkkkk", new Integer(4)}
+                {"a", "x", "tttttttt", 5},
+                {"a", "y", "ggggggggg", 10},
+                {"b", "z", "nnnnnnnn", 7},
+                {"b", "w", "mmmmmm", 1},
+                {"c", "m", "kkkkkkkkkk", 10000},
+                {"c", "n", "kkkkk", 4}
             },
             new String [] { "AA", "BB", "CC", "DD"}
         ) {

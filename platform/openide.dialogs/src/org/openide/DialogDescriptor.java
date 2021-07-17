@@ -286,7 +286,7 @@ public class DialogDescriptor extends NotifyDescriptor implements HelpCtx.Provid
 
         int oldValue = this.optionsAlign;
         this.optionsAlign = optionsAlign;
-        firePropertyChange(PROP_OPTIONS_ALIGN, new Integer(oldValue), new Integer(optionsAlign));
+        firePropertyChange(PROP_OPTIONS_ALIGN, oldValue, optionsAlign);
     }
 
     /** Get modal status.

@@ -342,7 +342,7 @@ public class TopComponentGetLookupTest extends NbTestCase {
         CountingLookup cnt = new CountingLookup(ic);
         AbstractNode ac = new AbstractNode(Children.LEAF, cnt);
         for (int i = 0; i < initialSize; i++) {
-            ic.add(new Integer(i));
+            ic.add(i);
         }
         
         top.setActivatedNodes(new Node[] { ac });

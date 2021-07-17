@@ -1164,7 +1164,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
     * @param out the stream to serialize to
     */
     public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeObject(new Short(serialVersion));
+        out.writeObject(Short.valueOf(serialVersion));
         out.writeInt(closeOperation);
         out.writeObject(getName());
         out.writeObject(getToolTipText());

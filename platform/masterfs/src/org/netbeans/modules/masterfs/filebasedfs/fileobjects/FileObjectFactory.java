@@ -244,7 +244,7 @@ public final class FileObjectFactory {
     }
 
     private Integer initRealExists(int initTouch) {
-        final Integer retval = new Integer(initTouch);
+        final Integer retval = initTouch;
         return retval;
     }
 

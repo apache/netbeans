@@ -217,7 +217,7 @@ public final class MultiViewPeer implements PropertyChangeListener {
         input = peer.getInputMap(JComponent.WHEN_FOCUSED);
         input.put(stroke, "accesstoggles"); //NOI18N
         
-        peer.putClientProperty("MultiViewBorderHack.topOffset", new Integer(tabs.getPreferredSize().height - 1));
+        peer.putClientProperty("MultiViewBorderHack.topOffset", tabs.getPreferredSize().height - 1);
     }
 
     private void assignLookup(MultiViewElement el, MultiViewTopComponentLookup lkp) {
@@ -633,9 +633,9 @@ public final class MultiViewPeer implements PropertyChangeListener {
                 currIndexSplit = i;
             }
         }
-        out.writeObject(new Integer(currIndex));
-        out.writeObject(new Integer(currIndexSplit));
-	out.writeObject(new Integer(splitOrientation));
+        out.writeObject(currIndex);
+        out.writeObject(currIndexSplit);
+	out.writeObject(splitOrientation);
         String htmlDisplayName = peer.getHtmlDisplayName();
         if( null != htmlDisplayName )
             out.writeObject(htmlDisplayName);

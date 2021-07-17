@@ -44,6 +44,7 @@ public class MicronautLaunchService {
 
     private static final MicronautLaunchService INSTANCE = new MicronautLaunchService();
     private static final String VERSIONS = "versions/";
+    private static final String OPTIONS = "select-options/";
     private static final String APPLICATION_TYPES = "application-types/";
     private static final String FEATURES = "features/";
     private static final String CREATE = "create/";
@@ -77,6 +78,20 @@ public class MicronautLaunchService {
             types.add(new ApplicationType(jsonObject.get("title").getAsString(), jsonObject.get("value").getAsString()));
         }
         return types;
+    }
+
+    public List<String> getJdkVersions(String serviceUrl) throws IOException {
+        if (!serviceUrl.endsWith("/")) {
+            serviceUrl = serviceUrl + '/';
+        }
+        JsonObject json = gson.fromJson(getJson(serviceUrl + OPTIONS), JsonObject.class);
+        JsonArray jsonArray = json.getAsJsonObject("jdkVersion").getAsJsonArray("options");
+        ArrayList<String> jdkVersions = new ArrayList<>(jsonArray.size());
+        for (JsonElement jsonElement : jsonArray) {
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+            jdkVersions.add(jsonObject.get("label").getAsString());
+        }
+        return jdkVersions;
     }
 
     public List<Feature> getFeatures(String serviceUrl, ApplicationType appType) throws IOException {

@@ -418,6 +418,7 @@ public class Reformatter implements ReformatTask {
         private static final String JDOC_RETURN_TAG = "@return"; //NOI18N
         private static final String JDOC_THROWS_TAG = "@throws"; //NOI18N
         private static final String JDOC_VALUE_TAG = "@value"; //NOI18N
+        private static final String JDOC_SUMMARY_TAG = "@summary"; //NOI18N
         private static final String ERROR = "<error>"; //NOI18N
 
         private final String fText;
@@ -4774,6 +4775,7 @@ public class Reformatter implements ReformatTask {
                                     || JDOC_DOCROOT_TAG.equalsIgnoreCase(tokenText)
                                     || JDOC_INHERITDOC_TAG.equalsIgnoreCase(tokenText)
                                     || JDOC_VALUE_TAG.equalsIgnoreCase(tokenText)
+                                    || JDOC_SUMMARY_TAG.equalsIgnoreCase(tokenText)
                                     || JDOC_LITERAL_TAG.equalsIgnoreCase(tokenText)) {
                                 insideTag = true;
                                 addMark(Pair.of(currWSOffset >= 0 ? currWSOffset : javadocTokens.offset() - offset, 5), marks, state);

@@ -333,7 +333,7 @@ final class JavadocCompletionQuery extends AsyncCompletionQuery{
             pos = caretOffset;
         }
         
-        items.addAll(JavadocCompletionItem.addBlockTagItems(jdctx.handle.getKind(), prefix, pos));
+        items.addAll(JavadocCompletionItem.addBlockTagItems(jdctx.javac.getSourceVersion(),jdctx.handle.getKind(), prefix, pos));
         jdctx.anchorOffset = pos;
     }
     
@@ -349,7 +349,7 @@ final class JavadocCompletionQuery extends AsyncCompletionQuery{
             prefix = ""; // NOI18N
             jdctx.anchorOffset = pos;
         }
-        items.addAll(JavadocCompletionItem.addInlineTagItems(jdctx.handle.getKind(), prefix, pos));
+        items.addAll(JavadocCompletionItem.addInlineTagItems(jdctx.javac.getSourceVersion(),jdctx.handle.getKind(), prefix, pos));
     }
 
     private int skipWhitespacesBackwards(final JavadocContext jdctx, final int offset) {

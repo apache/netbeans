@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
 
 /**
@@ -48,18 +50,17 @@ final class TagRegistery {
         return DEFAULT;
     }
 
-    public List<TagEntry> getTags(ElementKind kind, boolean inline) {
-        List<TagEntry> selection = new ArrayList<TagEntry>();
-        for (TagEntry te : tags) {
-            if (te.isInline == inline && te.whereUsed.contains(kind)) {
-                selection.add(te);
-            }
-        }
+    public List<TagEntry> getTags(ElementKind kind, boolean inline,SourceVersion sourceVersion) {
+        List<TagEntry> selection = tags.stream().filter(te -> (te.isInline == inline 
+            && te.whereUsed.contains(kind)
+            && sourceVersion.ordinal() >= te.minJavaVersion 
+            && sourceVersion.ordinal() <= te.maxJavaVersion))
+            .collect(Collectors.toList());
         return selection;
     }
     
     private TagRegistery() {
-        this.tags = new ArrayList<TagEntry>(20);
+        this.tags = new ArrayList<>(30);
         addTag("@author", false, EnumSet.of(
                 ElementKind.ANNOTATION_TYPE, ElementKind.CLASS,
                 ElementKind.ENUM, ElementKind.INTERFACE,
@@ -99,17 +100,22 @@ final class TagRegistery {
         addTag("@provides", false, EnumSet.of(ElementKind.MODULE));
         addTag("@uses", false, EnumSet.of(ElementKind.MODULE));
         
-        addTag("@code", true, ALL_KINDS);
+        addTag("@code", true, ALL_KINDS,5,Integer.MAX_VALUE);
         addTag("@docRoot", true, ALL_KINDS);
         // just in empty tag description
-        addTag("@inheritDoc", true, EnumSet.of(ElementKind.METHOD));
+        addTag("@inheritDoc", true, EnumSet.of(ElementKind.METHOD),4,Integer.MAX_VALUE);
         addTag("@link", true, ALL_KINDS);
         addTag("@linkplain", true, ALL_KINDS);
-        addTag("@literal", true, ALL_KINDS);
-        addTag("@value", true, EnumSet.of(ElementKind.FIELD));
+        addTag("@literal", true, ALL_KINDS,5,Integer.MAX_VALUE);
+        addTag("@value", true, EnumSet.of(ElementKind.FIELD),4,Integer.MAX_VALUE);
+        addTag("@summary",true,EnumSet.of(ElementKind.METHOD),10,Integer.MAX_VALUE);
     }
     
     void addTag(String name, boolean isInline, Set<ElementKind> where) {
+        addTag(name, isInline, where, 1,Integer.MAX_VALUE);
+    }    
+    
+    void addTag(String name, boolean isInline, Set<ElementKind> where,int minJavaVersion,int maxJavaVersion) {
         if (name == null || where == null) {
             throw new NullPointerException();
         }
@@ -117,6 +123,8 @@ final class TagRegistery {
         te.name = name;
         te.isInline = isInline;
         te.whereUsed = where;
+        te.minJavaVersion = minJavaVersion;
+        te.maxJavaVersion = maxJavaVersion;
         this.tags.add(te);
     }
     
@@ -125,5 +133,7 @@ final class TagRegistery {
         boolean isInline;
         Set<ElementKind> whereUsed;
         String format;
+        int minJavaVersion;
+        int maxJavaVersion;
     }
 }

@@ -75,8 +75,11 @@ public abstract class JavadocTestSupport extends NbTestCase {
             cache.deleteOnExit();
         }
     }
-    
     protected void prepareTest(String code) throws Exception {
+        prepareTest(code,null);
+    }
+    
+    protected void prepareTest(String code,String sourceLevel) throws Exception {
         clearWorkDir();
         
         FileObject workFO = FileUtil.toFileObject(getWorkDir());
@@ -91,6 +94,10 @@ public abstract class JavadocTestSupport extends NbTestCase {
         TestUtilities.copyStringToFile(FileUtil.toFile(data), code);
         
         data.refresh();
+        
+        if (sourceLevel != null) {
+            SourceUtilsTestUtil.setSourceLevel(sourceRoot,sourceLevel);
+        }
         
         SourceUtilsTestUtil.prepareTest(sourceRoot, buildRoot, cacheFO);
         

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import javax.lang.model.SourceVersion;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.editor.completion.CompletionProvider;
@@ -326,6 +327,27 @@ public class JavadocCompletionQueryTest extends JavadocTestSupport {
         performCompletionTest(code, "ClassCircularityError", "ClassFormatError", "ClassCastException", "ClassNotFoundException");
     }
     
+    public void testSummaryCompletionForMethod() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_10"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_10, skip tests
+            return;
+        }        
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * {@sum|\n" +
+                "     */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "    Clazz() {\n" +
+                "    }\n" +
+                "}\n";
+        performCompletionTest(SourceVersion.valueOf("RELEASE_10"),code, "@summary:");
+    }    
+    
     private static String stripHTML(String from) {
         StringBuilder result = new StringBuilder();
         boolean inHTMLTag = false;
@@ -342,10 +364,14 @@ public class JavadocCompletionQueryTest extends JavadocTestSupport {
         
         return result.toString();
     }
-    
+
     private void performCompletionTest(String code, String... golden) throws Exception {
+        performCompletionTest(null,code,golden);
+    }
+    
+    private void performCompletionTest(SourceVersion sourceVersion,String code, String... golden) throws Exception {
         int caret = code.indexOf('|');
-        prepareTest(code.replace("|", ""));
+        prepareTest(code.replace("|", ""),sourceVersion != null ? Integer.toString(sourceVersion.ordinal()) : null);
         
         List<CompletionItem> resultObj = JavadocCompletionQuery.runCompletionQuery(CompletionProvider.COMPLETION_QUERY_TYPE, doc, caret);
         List<String> resultStrings = new ArrayList<String>(resultObj.size());

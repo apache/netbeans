@@ -25,6 +25,7 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -156,10 +157,10 @@ final class JavadocCompletionItem implements CompletionItem {
                 txt, substitutionOffset);
     }
 
-    public static List<CompletionItem> addBlockTagItems(ElementKind kind,
+    public static List<CompletionItem> addBlockTagItems(SourceVersion sourceVersion,ElementKind kind,
             String prefix, int startOffset) {
         
-        List<TagEntry> tags = TagRegistery.getDefault().getTags(kind, false);
+        List<TagEntry> tags = TagRegistery.getDefault().getTags(kind, false,sourceVersion);
         List<CompletionItem> items = new ArrayList<CompletionItem>(tags.size());
         for (TagEntry tagEntry : tags) {
             if (tagEntry.name.startsWith(prefix)) {
@@ -170,10 +171,10 @@ final class JavadocCompletionItem implements CompletionItem {
         return items;
     }
 
-    public static List<CompletionItem> addInlineTagItems(ElementKind kind,
+    public static List<CompletionItem> addInlineTagItems(SourceVersion sourceVersion,ElementKind kind,
             String prefix, int startOffset) {
         
-        List<TagEntry> tags = TagRegistery.getDefault().getTags(kind, true);
+        List<TagEntry> tags = TagRegistery.getDefault().getTags(kind, true,sourceVersion);
         List<CompletionItem> items = new ArrayList<CompletionItem>(tags.size());
         for (TagEntry tagEntry : tags) {
             if (tagEntry.name.startsWith(prefix)) {

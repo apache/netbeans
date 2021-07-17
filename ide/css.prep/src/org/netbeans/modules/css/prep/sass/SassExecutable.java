@@ -52,11 +52,9 @@ final class SassExecutable extends SassCli {
         EXECUTABLE_LONG_NAME,
     };
 
-    private static final String DEBUG_PARAM = "--debug-info"; // NOI18N
     private static final String SOURCEMAP_PARAM = "--sourcemap"; // NOI18N
     private static final String SOURCEMAP_WITH_VALUE_PARAM = "--sourcemap=%s"; // NOI18N
     private static final String VERSION_PARAM = "--version"; // NOI18N
-    private static final String CACHE_LOCATION_PARAM = "--cache-location"; // NOI18N
 
     private static final File TMP_DIR = new File(System.getProperty("java.io.tmpdir")); // NOI18N
 
@@ -105,9 +103,6 @@ final class SassExecutable extends SassCli {
     @Override
     protected List<String> getParameters(File inputFile, File outputFile, List<String> compilerOptions) {
         List<String> params = new ArrayList<>();
-        // cache location
-        params.add(CACHE_LOCATION_PARAM);
-        params.add(Places.getCacheSubdirectory("sass-compiler").getAbsolutePath()); // NOI18N
         // debug
         boolean debug = CssPrepOptions.getInstance().getSassDebug();
         Version installedVersion = getVersion();
@@ -117,13 +112,7 @@ final class SassExecutable extends SassCli {
                     // noop, the 'auto' sourcemaps work just fine
                 } else if (installedVersion.isAboveOrEqual(MINIMAL_VERSION_WITH_SOURCEMAP)) {
                     params.add(SOURCEMAP_PARAM);
-                } else {
-                    // older versions
-                    params.add(DEBUG_PARAM);
                 }
-            } else {
-                // unknwon sass version
-                params.add(DEBUG_PARAM);
             }
         } else {
             if (installedVersion != null

@@ -965,6 +965,17 @@ public class HtmlBrowser extends JPanel {
         public void showURLExternal(URL u) {
             showURL(u);
         }
+        
+        /**
+         * resets the caches used
+         * If the default browser is changed this clears
+         * the instantiated objects for the old one
+         *
+         * @since 7.80
+         */
+        public void clearCache() {
+            
+        }
     }
 
     private static final class TrivialURLDisplayer extends URLDisplayer {

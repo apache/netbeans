@@ -26,6 +26,21 @@
 <apidef name="awt">AWT API</apidef>
 </apidefs>
 <changes>
+    <change>
+        <api name="awt"/>
+        <summary>Fixed class cast exception when customzing the URLDisplayer</summary>
+        <version major="7" minor="80"/>
+        <date day="29" month="12" year="2020"/>
+        <author login="EnricoScantamburlo"/>
+        <compatibility deprecation="no" addition="yes" modification="no" binary="compatible" source="compatible" semantic="compatible" deletion="no"/>
+        <description>
+            <p>
+                <code>HtmlBrowser</code> had to cast <code>UrlDisplayer</code> to <code>NbUrlDisplayer</code> to reset its internal cache.
+                I added the <code>clearCache</code> method that does that without the need of casting
+            </p>
+        </description>
+        <class package="org.openide.awt" name="awt" link="no"/>
+    </change> 
     <change id="getArrowIcon">
         <api name="awt"/>
         <summary>Added DropDownButtonFactory.getArrowIcon method.</summary>
@@ -1034,7 +1049,7 @@
         </description>
         <class package="org.openide.awt" name="awt" link="no"/>
         <issue number="27868"/>
-    </change>
+    </change>   
 </changes>
 <htmlcontents>
 <head>

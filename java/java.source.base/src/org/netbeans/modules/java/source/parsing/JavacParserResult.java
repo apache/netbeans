@@ -20,6 +20,7 @@
 package org.netbeans.modules.java.source.parsing;
 
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.modules.java.source.CompilationInfoAccessor;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.openide.util.Parameters;
@@ -57,4 +58,8 @@ public class JavacParserResult extends Parser.Result {
         JavaSourceAccessor.getINSTANCE().invalidate (info);
     }
 
+    @Override
+    public boolean processingFinished() {
+        return !CompilationInfoAccessor.getInstance().getCompilationInfoImpl(info).isIncomplete();
+    }
 }

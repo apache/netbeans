@@ -20,8 +20,11 @@
 package org.netbeans.lib.editor.codetemplates;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import org.netbeans.lib.editor.codetemplates.spi.CodeTemplateParameter;
 import org.netbeans.lib.editor.util.swing.PositionRegion;
 
@@ -196,6 +199,38 @@ public final class ParametrizedTextParser {
             htmlTextBuffer.append(toHtmlText(parametrizedTextFragments.get(fragIndex)));
             fragIndex++;
         }
+    }
+    
+    /**
+     * Returns a map in which the keys are the ordinals and the values are the corresponding parametrized text 
+     * fragments and template parameters.
+     * <p>
+     * This method should only be called after calling the {@link #parse} method.
+     * 
+     * @return unmodifiable map in which the keys are the ordinals and the values are the corresponding parametrized 
+     * text fragments and template parameters.
+     * 
+     * @since 1.54
+     */
+    public Map<Integer, Object> getParametrizedFragmentsByOrdinals() {
+        Map<Integer, Object> parametrizedFragmentsByOrdinals = new HashMap<>();
+        int numberOfFragments = parametrizedTextFragments.size() + paramImpls.size();
+        int j = 0;
+        int k = 0;
+        for (int i = 0; i < numberOfFragments; i++) { 
+            if (i % 2 == 0) {
+                if (j < parametrizedTextFragments.size()) {
+                    parametrizedFragmentsByOrdinals.put(i, parametrizedTextFragments.get(j));
+                    j++;
+                }
+            } else {
+                if (k < paramImpls.size()) {
+                    parametrizedFragmentsByOrdinals.put(i, paramImpls.get(k));
+                    k++;
+                }
+            }
+        }
+        return Collections.unmodifiableMap(parametrizedFragmentsByOrdinals);
     }
 
 }

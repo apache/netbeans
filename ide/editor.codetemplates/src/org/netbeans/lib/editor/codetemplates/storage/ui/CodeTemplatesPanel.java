@@ -20,6 +20,8 @@
 package org.netbeans.lib.editor.codetemplates.storage.ui;
 
 import java.awt.Component;
+import java.awt.Frame;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,12 +30,17 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 import javax.swing.AbstractButton;
 import javax.swing.JCheckBox;
 import javax.swing.JEditorPane;
@@ -60,6 +67,10 @@ import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.editor.Acceptor;
 import org.netbeans.lib.editor.codetemplates.AbbrevDetection;
+import org.netbeans.lib.editor.codetemplates.CodeTemplateHint;
+import org.netbeans.lib.editor.codetemplates.CodeTemplateParameterImpl;
+import org.netbeans.lib.editor.codetemplates.ParametrizedTextParser;
+import org.netbeans.lib.editor.codetemplates.spi.CodeTemplateParameter;
 import org.netbeans.lib.editor.codetemplates.storage.CodeTemplateSettingsImpl.OnExpandAction;
 import org.netbeans.lib.editor.util.CharSequenceUtilities;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
@@ -87,7 +98,7 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
     private String selectedLanguage;
 
     /** Language which related info the panel currently displays. */
-    private String panelLanguage;
+    private static String panelLanguage;
 
     /** Points to modified template (its row index in templates table model, NOT view index). */
     private int unsavedTemplateIndex = -1;
@@ -342,6 +353,8 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
                     } else if (tabPane.getTabCount() > 2) {
                         tabPane.remove(2);
                     }
+                    editParametersButton.setEnabled(
+                            ParameterValidator.containsNonReservedParameter(epExpandedText.getText()));
                 }
             });
         } else if (e.getSource () == bNew) {
@@ -533,6 +546,7 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
             int row = tTemplates.getSelectedRow();
             unsavedTemplateIndex = row < 0 ? -1 : tTemplates.convertRowIndexToModel(row);
         }
+        editParametersButton.setEnabled(ParameterValidator.containsNonReservedParameter(epExpandedText.getText()));
     }
 
     public void insertUpdate(DocumentEvent e) {
@@ -573,6 +587,8 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
         epDescription = new javax.swing.JEditorPane();
         spTemplates = new javax.swing.JScrollPane();
         tTemplates = new javax.swing.JTable();
+        insertParameterButton = new javax.swing.JButton();
+        editParametersButton = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -649,6 +665,20 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
 
         jSplitPane1.setLeftComponent(spTemplates);
 
+        insertParameterButton.setText(org.openide.util.NbBundle.getMessage(CodeTemplatesPanel.class, "CTL_Insert_Parameter")); // NOI18N
+        insertParameterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                insertParameterButtonActionPerformed(evt);
+            }
+        });
+
+        editParametersButton.setText(org.openide.util.NbBundle.getMessage(CodeTemplatesPanel.class, "CTL_Edit_Parameters")); // NOI18N
+        editParametersButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editParametersButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -656,24 +686,33 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lLanguage)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbLanguage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lTemplates)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lExplandTemplateOn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbExpandTemplateOn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lOnExpandAction)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbOnExpandAction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(bNew, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(bRemove, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(bRemove, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lLanguage)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbLanguage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lTemplates)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(insertParameterButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(lExplandTemplateOn)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(cbExpandTemplateOn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lOnExpandAction)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(cbOnExpandAction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(editParametersButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -690,8 +729,12 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
                         .addComponent(bNew)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bRemove)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE))
+                        .addGap(0, 240, Short.MAX_VALUE))
+                    .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(insertParameterButton)
+                    .addComponent(editParametersButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbExpandTemplateOn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -701,15 +744,62 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
                 .addGap(5, 5, 5))
         );
     }// </editor-fold>//GEN-END:initComponents
-        
+    
+    private void insertParameterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertParameterButtonActionPerformed
+        String language = cbLanguage.getSelectedItem().toString();
+        showPopup(Arrays.stream(CodeTemplateHint.values())
+                .filter(hint -> hint.getLanguages().contains(language))
+                .collect(Collectors.toList()));
+    }//GEN-LAST:event_insertParameterButtonActionPerformed
+
+    private void showPopup(List<CodeTemplateHint> hints) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                Rectangle caretRectangle = epExpandedText.modelToView(epExpandedText.getCaretPosition());
+                if (caretRectangle == null) {
+                    return;
+                }
+                Point where = new Point(
+                        (int) caretRectangle.getX(), 
+                        (int) (caretRectangle.getY() + caretRectangle.getHeight()));
+                SwingUtilities.convertPointToScreen(where, epExpandedText);
+                PopupUtil.showPopup(
+                        new CodeTemplateParametersPanel(epExpandedText, hints),
+                        (Frame) SwingUtilities.getAncestorOfClass(Frame.class, epExpandedText),
+                        where.getX(),
+                        where.getY(),
+                        true,
+                        caretRectangle.getHeight());
+            } catch (BadLocationException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        });
+    }
+    
+    private void editParametersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editParametersButtonActionPerformed
+        showEditParametersDialog();
+    }//GEN-LAST:event_editParametersButtonActionPerformed
+    
+    private void showEditParametersDialog() {
+        CodeTemplateParametersDialog dialog = 
+                new CodeTemplateParametersDialog(cbLanguage.getSelectedItem().toString(), epExpandedText.getText());
+        if (dialog.isOkButtonPressed()) {
+            epExpandedText.setText(
+                    ParametrizedTextBuilder.build(dialog.getTableData(), epExpandedText.getText()));
+        }
+        dialog.close();
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bNew;
     private javax.swing.JButton bRemove;
     private javax.swing.JComboBox cbExpandTemplateOn;
     private javax.swing.JComboBox cbLanguage;
     private javax.swing.JComboBox cbOnExpandAction;
+    private javax.swing.JButton editParametersButton;
     private javax.swing.JEditorPane epDescription;
     private javax.swing.JEditorPane epExpandedText;
+    private javax.swing.JButton insertParameterButton;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JLabel lExplandTemplateOn;
     private javax.swing.JLabel lLanguage;
@@ -781,4 +871,149 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
             }
         }
     }
+    
+    private static class ParametrizedTextBuilder {
+        
+        private static String build(List<?> data, String parametrizedText) {
+            ParametrizedTextParser parser = new ParametrizedTextParser(null, parametrizedText);
+            parser.parse();
+            Map<Integer, Object> parametrizedFragmentsByOrdinals = parser.getParametrizedFragmentsByOrdinals();
+            StringBuilder insertTextBuffer = new StringBuilder();
+            int row = 0;
+            for (int ordinal = 0; ordinal < parametrizedFragmentsByOrdinals.size(); ordinal++) {
+                if (ordinal % 2 == 0) {
+                    String fragment = (String) parametrizedFragmentsByOrdinals.get(ordinal);
+                    fragment = fragment.replaceAll("\\$", "\\$\\$"); //NOI18N
+                    insertTextBuffer.append(fragment);
+                } else {
+                    CodeTemplateParameterImpl paramImpl =
+                            (CodeTemplateParameterImpl) parametrizedFragmentsByOrdinals.get(ordinal);
+                    String paramName = paramImpl.getName();
+                    if (!paramName.equals("<null>") && paramImpl.isSlave()) { //NOI18N
+                        insertTextBuffer.append("${").append(paramImpl.getName()).append("}"); //NOI18N
+                    } else if (paramName.equals(CodeTemplateParameter.CURSOR_PARAMETER_NAME)) {
+                        insertTextBuffer.append("${cursor}"); //NOI18N
+                    } else if (paramName.equals(CodeTemplateParameter.SELECTION_PARAMETER_NAME)) {
+                        insertTextBuffer.append("${selection}"); //NOI18N
+                    } else if (paramName.equals(CodeTemplateParameter.NO_FORMAT_PARAMETER_NAME)) {
+                        insertTextBuffer.append("${no-format}"); //NOI18N
+                    } else if (paramName.equals(CodeTemplateParameter.NO_INDENT_PARAMETER_NAME)) {
+                        insertTextBuffer.append("${no-indent}"); //NOI18N
+                    } else {
+                        insertTextBuffer.append("${"); //NOI18N
+                        int numberOfColumns = 6;
+                        for (int column = 0; column < numberOfColumns; column++) {
+                            if (row < data.size()) {
+                                switch (column) {
+                                    case 0: { //Name
+                                        String name = (String) ((List) data.get(row)).get(column);
+                                        if (!name.isEmpty()) {
+                                            insertTextBuffer.append(name);
+                                        }
+                                        break;
+                                    }
+                                    case 1: { //Hint
+                                        String hint = (String) (((List) data.get(row)).get(column));
+                                        if (!hint.isEmpty()) {
+                                            insertTextBuffer.append(" ").append(hint); //NOI18N
+                                        }
+                                        break;
+                                    }
+                                    case 2: { //Default value
+                                        String defaultValue = (String) ((List) data.get(row)).get(column);
+                                        if (!defaultValue.isEmpty()) {
+                                            insertTextBuffer.append(" default=\"").append(defaultValue).append("\""); //NOI18N
+                                        }
+                                        break;
+                                    }
+                                    case 3: { //Ordering
+                                        Object orderingHint = ((List) data.get(row)).get(column);
+                                        if (orderingHint instanceof String) {
+                                            String ordering = (String) ((List) data.get(row)).get(column);
+                                            if (!ordering.isEmpty()) {
+                                                insertTextBuffer.append(" ordering=").append(ordering); //NOI18N
+                                            }
+                                        } else {
+                                            Integer ordering = (Integer) ((List) data.get(row)).get(column);
+                                            insertTextBuffer.append(" ordering=").append(ordering); //NOI18N
+                                        }
+                                        break;
+                                    }
+                                    case 4: { //Completion
+                                        boolean completionInvoke = (boolean) ((List) data.get(row)).get(column);
+                                        if (completionInvoke) {
+                                            insertTextBuffer.append(" completionInvoke"); //NOI18N
+                                        }
+                                        break;
+                                    }
+                                    default: { //Editable
+                                        boolean editable = (boolean) ((List) data.get(row)).get(column);
+                                        if (!editable) {
+                                            insertTextBuffer.append(" editable=false"); //NOI18N
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        row++;
+                        insertTextBuffer.append("}"); //NOI18N
+                    }
+                }
+            }
+            return insertTextBuffer.toString();
+        }
+        
+    }
+    
+    private static class ParameterValidator {
+        
+        private static boolean containsNonReservedParameter(String parametrizedText) {
+            ParametrizedTextParser parser = new ParametrizedTextParser(null, parametrizedText);
+            parser.parse();
+            Map<Integer, Object> parametrizedFragmentsByOrdinals = parser.getParametrizedFragmentsByOrdinals();
+            int numberOfFragments = parametrizedFragmentsByOrdinals.size();
+            for (int idx = 1; idx < numberOfFragments; idx += 2) {
+                CodeTemplateParameterImpl paramImpl = (CodeTemplateParameterImpl) parametrizedFragmentsByOrdinals.get(idx);
+                if (!isReservedParameter(paramImpl) 
+                        && panelLanguage != null 
+                        && hasValidHints(paramImpl, panelLanguage)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static boolean isReservedParameter(CodeTemplateParameterImpl paramImpl) {
+            String paramName = paramImpl.getName();
+            return paramName.equals(CodeTemplateParameter.CURSOR_PARAMETER_NAME)
+                    || paramName.equals(CodeTemplateParameter.SELECTION_PARAMETER_NAME)
+                    || paramName.equals(CodeTemplateParameter.NO_FORMAT_PARAMETER_NAME)
+                    || paramName.equals(CodeTemplateParameter.NO_INDENT_PARAMETER_NAME);
+        }
+        
+        private static boolean hasValidHints(CodeTemplateParameterImpl paramImpl, String language) {
+            Function<String, Boolean> isSupportedHint = hintName -> {
+                        return Arrays.stream(CodeTemplateHint.values())
+                                .filter(hint -> hint.getLanguages().contains(language)
+                                        || hint.getLanguages().contains(CodeTemplateHint.ALL_LANGUAGES))
+                                .anyMatch(hint -> hint.getName().equals(hintName));
+                    };
+            Function<CodeTemplateParameterImpl, Boolean> checkHints = parameter -> {
+                Set<String> hints = parameter.getHints().keySet();
+                Iterator<String> iterator = hints.iterator();
+                boolean valid = true;
+                while (iterator.hasNext()) {
+                    if (!isSupportedHint.apply(iterator.next())) {
+                        valid = false;
+                        break;
+                    }
+                }
+                return valid;
+            };
+            return checkHints.apply(paramImpl);
+        }
+        
+    }
+    
 }

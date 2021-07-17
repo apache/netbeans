@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -42,7 +44,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import org.netbeans.modules.openfile.RecentFiles.HistoryItem;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.modules.OnStop;
@@ -162,8 +164,7 @@ public final class RecentFiles {
             String value = _prefs.get(curKey, null);
             if (value != null) {
                 try {
-                    int id = new Integer(
-                         curKey.substring(PROP_URL_PREFIX.length())).intValue();
+                    int id = Integer.parseInt(curKey.substring(PROP_URL_PREFIX.length()));
                     HistoryItem hItem = new HistoryItem(id, value,
                             _prefs.getByteArray(PROP_ICON_PREFIX + id, null));
                     int ind = result.indexOf(hItem);
@@ -313,7 +314,7 @@ public final class RecentFiles {
     }
 
     private static String obtainPath(TopComponent tc) {
-        Object file = tc.getClientProperty( RECENT_FILE_KEY );
+        Object file = tc.getClientProperty( RECENT_FILE_KEY ); //TODO: possible dead code. RECENT_FILE_KEY not found in entire codebase
         if( file instanceof File )
             return ((File)file).getPath();
         if( tc instanceof CloneableTopComponent ) {
@@ -338,14 +339,14 @@ public final class RecentFiles {
     }
 
     static String convertFile2Path(FileObject fo) {
-        File f = FileUtil.toFile(fo);
-        return f == null ? null : f.getPath();
+        return fo.toURL().toExternalForm();
     }
 
     static FileObject convertPath2File(String path) {
-        File f = new File(path);
-        f = FileUtil.normalizeFile(f);
-        return f == null ? null : FileUtil.toFileObject(f);
+        try {
+            return URLMapper.findFileObject(new URL(path));
+        } catch (MalformedURLException ex) {}
+        return null;
     }
 
     /** Checks recent files history and removes non-valid entries */
@@ -411,8 +412,14 @@ public final class RecentFiles {
             Iterator<HistoryItem> it = history.iterator();
             while (it.hasNext()) {
                 HistoryItem historyItem = it.next();
-                File f = new File(historyItem.getPath());
-                if (!f.exists()) {
+                boolean prune = false;
+                try {
+                    FileObject fo = URLMapper.findFileObject(new URL(historyItem.getPath()));
+                    if (fo == null || !fo.isValid()) prune = true;
+                } catch (MalformedURLException ex) {
+                    prune = true;
+                }
+                if (prune) {
                     it.remove();
                 }
             }

@@ -19,16 +19,12 @@
 
 package org.netbeans.modules.db.sql.editor.completion;
 
-import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.editor.completion.Completion;
-import org.netbeans.api.lexer.Language;
-import org.netbeans.api.lexer.TokenHierarchy;
-import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.db.api.sql.execute.SQLExecution;
+import org.netbeans.modules.db.sql.editor.SQLPreferences;
 import org.netbeans.modules.db.sql.editor.ui.actions.SQLExecutionBaseAction;
-import org.netbeans.modules.db.sql.lexer.SQLTokenId;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.spi.editor.completion.CompletionTask;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
@@ -42,6 +38,7 @@ import org.openide.util.NbBundle;
  */
 public class SQLCompletionProvider implements CompletionProvider {
 
+    @Override
     public CompletionTask createTask(int queryType, JTextComponent component) {
         if (queryType == CompletionProvider.COMPLETION_QUERY_TYPE || queryType == CompletionProvider.COMPLETION_ALL_QUERY_TYPE) {
             DatabaseConnection dbconn = findDBConn(component);
@@ -56,25 +53,27 @@ public class SQLCompletionProvider implements CompletionProvider {
         return null;
     }
 
+    @Override
     public int getAutoQueryTypes(JTextComponent component, String typedText) {
-        if (!".".equals(typedText)) { // NOI18N
+        if (typedText == null || typedText.trim().isEmpty() ) {
             return 0;
         }
-        if (!isDotAtOffset(component, component.getSelectionStart() - 1)) {
+        char lastChar = typedText.charAt(typedText.length() - 1);
+        if (SQLPreferences.autoPopupTriggers().indexOf(lastChar) < 0) {
             return 0;
         }
         DatabaseConnection dbconn = findDBConn(component);
         if (dbconn == null) {
-            String message = NbBundle.getMessage(SQLCompletionProvider.class, "MSG_NoDatabaseConnection");
+            String message = NbBundle.getMessage(SQLCompletionProvider.class, "MSG_NoDatabaseConnection"); // NOI18N
             StatusDisplayer.getDefault().setStatusText(message);
             return 0;
         }
         if (dbconn.getJDBCConnection() == null) {
-            String message = NbBundle.getMessage(SQLCompletionProvider.class, "MSG_NotConnected");
+            String message = NbBundle.getMessage(SQLCompletionProvider.class, "MSG_NotConnected"); // NOI18N
             StatusDisplayer.getDefault().setStatusText(message);
             return 0;
         }
-        return COMPLETION_QUERY_TYPE;
+        return SQLPreferences.autoPopupCompletionWindow() ? COMPLETION_QUERY_TYPE : 0;
     }
 
     private static DatabaseConnection findDBConn(JTextComponent component) {
@@ -101,34 +100,4 @@ public class SQLCompletionProvider implements CompletionProvider {
         return null;
     }
 
-    private static boolean isDotAtOffset(JTextComponent component, final int offset) {
-        final Document doc = component.getDocument();
-        final boolean[] result = { false };
-        doc.render(new Runnable() {
-            public void run() {
-                TokenSequence<SQLTokenId> seq = getSQLTokenSequence(doc);
-                if (seq == null) {
-                    return;
-                }
-                seq.move(offset);
-                if (!seq.moveNext() && !seq.movePrevious()) {
-                    return;
-                }
-                if (seq.offset() != offset) {
-                    return;
-                }
-                result[0] = (seq.token().id() == SQLTokenId.DOT);
-            }
-        });
-        return result[0];
-    }
-
-    private static TokenSequence<SQLTokenId> getSQLTokenSequence(Document doc) {
-        // Hack until the SQL editor is entirely ported to the Lexer API.
-        if (doc.getProperty(Language.class) == null) {
-            doc.putProperty(Language.class, SQLTokenId.language());
-        }
-        TokenHierarchy<?> hierarchy = TokenHierarchy.get(doc);
-        return hierarchy.tokenSequence(SQLTokenId.language());
-    }
 }

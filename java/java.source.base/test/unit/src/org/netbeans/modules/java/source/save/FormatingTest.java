@@ -1963,6 +1963,12 @@ public class FormatingTest extends NbTestCase {
         preferences.putBoolean("indentCasesFromSwitch", true);
     }
     public void testRuleSwitch() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return ;
+        }
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile,
                 "package hierbas.del.litoral;\n\n"

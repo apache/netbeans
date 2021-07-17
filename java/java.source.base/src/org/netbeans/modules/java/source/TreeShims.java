@@ -61,7 +61,9 @@ public class TreeShims {
             Method getExpressions = CaseTree.class.getDeclaredMethod("getExpressions");
             return (List<? extends ExpressionTree>) getExpressions.invoke(node);
         } catch (NoSuchMethodException ex) {
-            return Collections.singletonList(node.getExpression());
+            ExpressionTree expression = node.getExpression();
+            // If null, return as an empty list, not a singleton list containing null.
+            return expression != null ? Collections.singletonList(expression) : Collections.emptyList();
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw TreeShims.<RuntimeException>throwAny(ex);
         }

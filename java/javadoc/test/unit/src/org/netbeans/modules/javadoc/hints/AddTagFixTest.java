@@ -641,6 +641,32 @@ public class AddTagFixTest extends NbTestCase {
                 + "}\n");
     }
 
+    public void testAddThrowsTagFix_NETBEANS_1615() throws Exception {
+        // issue NETBEANS-1615
+        HintTest.create()
+                .input(
+                "package test;\n"
+                + "interface Zima {\n"
+                + "    /**\n"
+                + "     */\n"
+                + "    <X extends Exception> void leden() throws X;\n"
+                + "}\n")
+                .preference(AVAILABILITY_KEY + true, true)
+                .preference(SCOPE_KEY, "private")
+                .run(JavadocHint.class)
+                .findWarning("4:46-4:47:warning:Missing @throws tag for X")
+                .applyFix("Add @throws X tag")
+                .assertCompilable()
+                .assertOutput(
+                "package test;\n"
+                + "interface Zima {\n"
+                + "    /**\n"
+                + "     * @throws X\n"
+                + "     */\n"
+                + "    <X extends Exception> void leden() throws X;\n"
+                + "}\n");
+    }
+
     public void testAddThrowsTagFix_NestedClass_160414() throws Exception {
         // issue 160414
         HintTest.create()

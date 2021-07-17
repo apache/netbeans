@@ -182,6 +182,23 @@ public class Analyzer2Test extends NbTestCase {
                 .assertNotContainsWarnings("Unknown throwable: @throws java.nio.file.NoSuchFileException");
     }
        
+    public void testExceptionTypeAnalyzer() throws Exception {
+        // issue NETBEANS-1615
+        HintTest.create()
+                .input(
+                "package test;\n"
+                + "interface Zima {\n"
+                + "    /**\n"
+                + "     * @throws X\n"
+                + "     */\n"
+                + "    <X extends Exception> void leden() throws X;\n"
+                + "}\n")
+                .preference(AVAILABILITY_KEY + true, true)
+                .preference(SCOPE_KEY, "private")
+                .run(JavadocHint.class)
+                .assertNotContainsWarnings("Missing @throws tag for X");
+    }
+
     public void testInheritanceAnalyzer() throws Exception {
         HintTest.create()
                 .input(

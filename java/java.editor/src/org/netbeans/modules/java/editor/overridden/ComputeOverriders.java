@@ -232,6 +232,251 @@ public class ComputeOverriders {
         return overriding;
     }
 
+    
+    public Map<ElementHandle<? extends Element>, List<ElementDescription>> processOneClass(CompilationInfo info, TypeElement te, ExecutableElement ee, boolean interactive,String qualifiedClassName) {
+        long startTime = System.currentTimeMillis();
+
+        try {
+            return processImplOneClass(info, te, ee, interactive, qualifiedClassName);
+        } finally {
+            Logger.getLogger("TIMER").log(Level.FINE, "Overridden - Total", //NOI18N
+                new Object[] {info.getFileObject(), System.currentTimeMillis() - startTime});
+        }
+    }
+
+    private Map<ElementHandle<? extends Element>, List<ElementDescription>> processImplOneClass(CompilationInfo info, TypeElement te, ExecutableElement ee, boolean interactive,String qualifiedClassName) {
+        FileObject file = info.getFileObject();
+        FileObject thisSourceRoot;
+        if (te != null ) {
+            thisSourceRoot = findSourceRoot(SourceUtils.getFile(te, info.getClasspathInfo()));
+        } else {
+            thisSourceRoot = findSourceRoot(file);
+        }
+        
+        if (thisSourceRoot == null) {
+            return null;
+        }
+
+
+        //XXX: special case "this" source root (no need to create a new JS and load the classes again for it):
+//        reverseSourceRoots.add(thisSourceRoot);
+
+//        LOG.log(Level.FINE, "reverseSourceRoots: {0}", reverseSourceRoots); //NOI18N
+
+//                if (LOG.isLoggable(Level.FINE)) {
+//                    LOG.log(Level.FINE, "method: {0}", ee.toString()); //NOI18N
+//                }
+
+
+        final Map<ElementHandle<TypeElement>, List<ElementHandle<ExecutableElement>>> methods = new HashMap<ElementHandle<TypeElement>, List<ElementHandle<ExecutableElement>>>();
+
+        if (ee == null) {
+            if (te == null) {
+                fillInMethodsOneClass(info.getTopLevelElements(), methods, qualifiedClassName);
+            } else {
+                methods.put(ElementHandle.create(te), Collections.<ElementHandle<ExecutableElement>>emptyList());
+            }
+        } else {
+            TypeElement owner = (TypeElement) ee.getEnclosingElement();
+
+            methods.put(ElementHandle.create(owner), Collections.singletonList(ElementHandle.create(ee)));
+        }
+        final Map<ElementHandle<? extends Element>, List<ElementDescription>> overriding = new HashMap<ElementHandle<? extends Element>, List<ElementDescription>>();
+
+        long startTime = System.currentTimeMillis();
+        long[] classIndexTime = new long[1];
+        final Map<URL, Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>>> users = computeUsersOneClass(info, thisSourceRoot, methods.keySet(), classIndexTime, interactive);
+        long endTime = System.currentTimeMillis();
+
+        if (users == null) {
+            return null;
+        }
+
+        Logger.getLogger("TIMER").log(Level.FINE, "Overridden Candidates - Class Index", //NOI18N
+            new Object[] {file, classIndexTime[0]});
+        Logger.getLogger("TIMER").log(Level.FINE, "Overridden Candidates - Total", //NOI18N
+            new Object[] {file, endTime - startTime});
+
+	FileObject currentFileSourceRoot = findSourceRoot(file);
+
+	if (currentFileSourceRoot != null) {
+            URL rootURL = currentFileSourceRoot.toURL();
+            Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>> overridingHandles = users.remove(rootURL);
+
+            if (overridingHandles != null) {
+                computeOverridingForRoot(rootURL, overridingHandles, methods, overriding);
+            }
+	}
+
+        for (Map.Entry<URL, Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>>> data : users.entrySet()) {
+	    computeOverridingForRoot(data.getKey(), data.getValue(), methods, overriding);
+        }
+
+	if (cancel.get()) return null;
+
+        return overriding;
+    }
+    
+    private static void fillInMethodsOneClass(Iterable<? extends TypeElement> types, Map<ElementHandle<TypeElement>, List<ElementHandle<ExecutableElement>>> methods,String qualifiedClassName) {
+        for (TypeElement te : types) {
+            if(!te.getQualifiedName().toString().equals(qualifiedClassName)){
+                continue;
+            }
+            List<ElementHandle<ExecutableElement>> l = new LinkedList<ElementHandle<ExecutableElement>>();
+
+            for (ExecutableElement ee : ElementFilter.methodsIn(te.getEnclosedElements())) {
+                l.add(ElementHandle.create(ee));
+            }
+
+            methods.put(ElementHandle.create(te), l);
+
+            //fillInMethods(ElementFilter.typesIn(te.getEnclosedElements()), methods);
+        }
+    }
+    
+    private Map<URL, Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>>> computeUsersOneClass(CompilationInfo info, FileObject thisSourceRoot, Set<ElementHandle<TypeElement>> baseHandles, long[] classIndexCumulative, boolean interactive) {
+        Map<URL, List<URL>> sourceDeps = getDependencies(false);
+        Map<URL, List<URL>> binaryDeps = getDependencies(true);
+
+        if (sourceDeps == null || binaryDeps == null) {
+            if (interactive) {
+                NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(GoToImplementation.class, "ERR_NoDependencies"), NotifyDescriptor.ERROR_MESSAGE);
+
+                DialogDisplayer.getDefault().notifyLater(nd);
+            } else {
+                LOG.log(Level.FINE, NbBundle.getMessage(GoToImplementation.class, "ERR_NoDependencies"));
+            }
+            
+            return null;
+        }
+
+        URL thisSourceRootURL = thisSourceRoot.toURL();
+
+        Map<URL, List<URL>> rootPeers = getRootPeers();
+        List<URL> sourceRoots = reverseSourceRootsInOrder(info, thisSourceRootURL, thisSourceRoot, sourceDeps, binaryDeps, rootPeers, interactive);
+
+        if (sourceRoots == null) {
+            return null;
+        }
+
+        baseHandles = new HashSet<ElementHandle<TypeElement>>(baseHandles);
+
+        for (Iterator<ElementHandle<TypeElement>> it = baseHandles.iterator(); it.hasNext(); ) {
+            if (cancel.get()) return null;
+            if (it.next().getBinaryName().contentEquals("java.lang.Object")) {
+                it.remove();
+                break;
+            }
+        }
+        
+        Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>> auxHandles = new HashMap<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>>();
+
+        if (!sourceDeps.containsKey(thisSourceRootURL)) {
+            Set<URL> binaryRoots = new HashSet<URL>();
+            
+            for (URL sr : sourceRoots) {
+                List<URL> deps = sourceDeps.get(sr);
+
+                if (deps != null) {
+                    binaryRoots.addAll(deps);
+                }
+            }
+
+            binaryRoots.retainAll(binaryDeps.keySet());
+
+            for (ElementHandle<TypeElement> handle : baseHandles) {
+                Set<ElementHandle<TypeElement>> types = computeUsersOneClass(ClasspathInfo.create(ClassPath.EMPTY, ClassPathSupport.createClassPath(binaryRoots.toArray(new URL[0])), ClassPath.EMPTY), SearchScope.DEPENDENCIES, Collections.singleton(handle), classIndexCumulative);
+
+                if (types == null/*canceled*/ || cancel.get()) {
+                    return null;
+                }
+                
+                auxHandles.put(handle, types);
+            }
+        }
+        
+        Map<URL, Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>>> result = new LinkedHashMap<URL, Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>>>();
+
+        for (URL file : sourceRoots) {
+            for (ElementHandle<TypeElement> base : baseHandles) {
+                if (cancel.get()) return null;
+                
+                Set<ElementHandle<TypeElement>> baseTypes = new HashSet<ElementHandle<TypeElement>>();
+
+                baseTypes.add(base);
+
+                Set<ElementHandle<TypeElement>> aux = auxHandles.get(base);
+
+                if (aux != null) {
+                    baseTypes.addAll(aux);
+                }
+
+                for (URL dep : sourceDeps.get(file)) {
+                    Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>> depTypesMulti = result.get(dep);
+                    Set<ElementHandle<TypeElement>> depTypes = depTypesMulti != null ? depTypesMulti.get(base) : null;
+
+                    if (depTypes != null) {
+                        baseTypes.addAll(depTypes);
+                    }
+                }
+
+                Set<ElementHandle<TypeElement>> types = computeUsersOneClass(file, baseTypes, classIndexCumulative);
+
+                if (types == null/*canceled*/ || cancel.get()) {
+                    return null;
+                }
+                
+                types.removeAll(baseTypes);
+
+                Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>> currentUsers = result.get(file);
+
+                if (currentUsers == null) {
+                    result.put(file, currentUsers = new LinkedHashMap<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>>());
+                }
+
+                currentUsers.put(base, types);
+            }
+        }
+
+        return result;
+    }
+    
+     
+    private Set<ElementHandle<TypeElement>> computeUsersOneClass(URL source, Set<ElementHandle<TypeElement>> base, long[] classIndexCumulative) {
+        ClasspathInfo cpinfo = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(source));
+        
+        return computeUsersOneClass(cpinfo, ClassIndex.SearchScope.SOURCE, base, classIndexCumulative);
+    }
+    
+    private Set<ElementHandle<TypeElement>> computeUsersOneClass(ClasspathInfo cpinfo, SearchScope scope, Set<ElementHandle<TypeElement>> base, long[] classIndexCumulative) {
+        long startTime = System.currentTimeMillis();
+
+        try {
+            List<ElementHandle<TypeElement>> l = new LinkedList<ElementHandle<TypeElement>>(base);
+            Set<ElementHandle<TypeElement>> result = new HashSet<ElementHandle<TypeElement>>();
+            Set<ElementHandle<TypeElement>> seen = new HashSet<ElementHandle<TypeElement>>();
+
+            while (!l.isEmpty()) {
+                if (cancel.get()) return null;
+                
+                ElementHandle<TypeElement> eh = l.remove(0);
+
+                if (!seen.add(eh)) continue;
+
+                result.add(eh);
+                Set<ElementHandle<TypeElement>> typeElements = cpinfo.getClassIndex().getElements(eh, Collections.singleton(SearchKind.IMPLEMENTORS), EnumSet.of(scope));
+                result.addAll(typeElements);
+                //Don't need breadth first search for only direct subclasses
+//                if (typeElements != null) {
+//                    l.addAll(typeElements);
+//                }
+            }
+            return result;
+        } finally {
+            classIndexCumulative[0] += (System.currentTimeMillis() - startTime);
+        }
+    }
+    
     private void computeOverridingForRoot(URL root,
 	                                  Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>> overridingHandles,
 					  Map<ElementHandle<TypeElement>, List<ElementHandle<ExecutableElement>>> methods,
@@ -361,7 +606,7 @@ public class ComputeOverriders {
                 break;
             }
         }
-
+        
         Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>> auxHandles = new HashMap<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>>();
 
         if (!sourceDeps.containsKey(thisSourceRootURL)) {

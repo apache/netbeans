@@ -21,14 +21,18 @@ package org.netbeans.modules.java.editor.base.javadoc;
 
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
+import com.sun.source.doctree.DocTree.Kind;
+import com.sun.source.doctree.ErroneousTree;
 import com.sun.source.doctree.ParamTree;
 import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.doctree.SeeTree;
+import com.sun.source.doctree.TextTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.DocSourcePositions;
@@ -36,10 +40,13 @@ import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 import com.sun.source.util.DocTrees;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.Trees;
+import java.io.IOException;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -48,21 +55,31 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
+import javax.swing.text.Document;
 import org.netbeans.api.java.lexer.JavaTokenId;
 
 import org.netbeans.api.java.lexer.JavadocTokenId;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.SourceUtils;
+import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
+import org.openide.util.Exceptions;
 
 /**
  *
  * @author Jan Pokorsky
  */
 public final class JavadocImports {
-
+    private static final String CLASS_KEYWORD = "class"; //NOI18N
     private JavadocImports() {
     }
     
@@ -95,8 +112,34 @@ public final class JavadocImports {
         if (docComment == null) return Collections.emptySet();
         
         final Set<TypeElement> result = new HashSet<TypeElement>();
-        
+        final DocSourcePositions positions = trees.getSourcePositions();
+        //final Element[] result = new Element[1];
         new DocTreePathScanner<Void, Void>() {
+            boolean prevTagError = false;
+
+            @Override
+            public Void scan(DocTree node, Void p) {
+
+                final DocTreePath[] docTreePath = new DocTreePath[1];
+                if (node != null && node.getKind() == com.sun.source.doctree.DocTree.Kind.ERRONEOUS && ((ErroneousTree) node).getBody().endsWith("@")) {
+                    prevTagError = true;
+                    JavadocContext jdctx = new JavadocContext();
+                    processDocTreeNode(docTreePath, node, p, trees, getCurrentPath(), docComment, ((ErroneousTree) node).getBody(), jdctx, javac);
+                    if (jdctx.typeElement != null) {
+                        result.add(jdctx.typeElement);
+                    }
+                    return super.scan(node, p);
+
+                } else if (node != null && node.getKind() == com.sun.source.doctree.DocTree.Kind.TEXT && prevTagError) {
+                    JavadocContext jdctx = new JavadocContext();
+                    processDocTreeNode(docTreePath, node, p, trees, getCurrentPath(), docComment, ((TextTree) node).getBody(), jdctx, javac);
+                    if (jdctx.typeElement != null) {
+                        result.add(jdctx.typeElement);
+                    }
+                }
+                prevTagError = false;
+                return super.scan(node, p);
+            }
             @Override public Void visitReference(ReferenceTree node, Void p) {
                 new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override public Void visitIdentifier(IdentifierTree node, Void p) {
@@ -142,19 +185,87 @@ public final class JavadocImports {
         final List<Token> result = new ArrayList<Token>();
         
         new DocTreePathScanner<Void, Void>() {
+            boolean prevTagError = false;
+
+            @Override
+            public Void scan(DocTree node, Void p) {
+
+                final DocTreePath[] docTreePath = new DocTreePath[1];
+
+                if (node != null && node.getKind() == com.sun.source.doctree.DocTree.Kind.ERRONEOUS && ((ErroneousTree) node).getBody().endsWith("@")) {
+                    prevTagError = true;
+
+                    JavadocContext jdctx = new JavadocContext();
+                    processDocTreeNode(docTreePath, node, p, trees, getCurrentPath(), docComment, ((ErroneousTree) node).getBody(), jdctx, javac);
+
+                    if (jdctx.typeElement != null && jdctx.typeElement.toString().equals(toFind.toString())) {
+                        String[] splitPkgCls = jdctx.typeElement.toString().split("\\.");
+                        if (splitPkgCls.length > 0) {
+                            String endMemberName = splitPkgCls[splitPkgCls.length - 1];
+                            long startPosition = trees.getSourcePositions().getStartPosition(javac.getCompilationUnit(), docComment, node);
+                            startPosition = jdctx.typeElement.toString().indexOf(endMemberName) + startPosition + ((TextTree) node).getBody().indexOf(jdctx.typeElement.toString());
+                            handleUsage((int) startPosition);
+                        }
+                    } else if (jdctx.variableElements.contains(toFind)) {
+                        long startPosition = trees.getSourcePositions().getStartPosition(javac.getCompilationUnit(), docComment, node);
+                        startPosition += ((TextTree) node).getBody().indexOf(toFind.toString());
+                        handleUsage((int) startPosition);
+                    }
+
+                    return super.scan(node, p);
+                }
+                if (node != null && node.getKind() == com.sun.source.doctree.DocTree.Kind.TEXT && prevTagError) {
+                    JavadocContext jdctx = new JavadocContext();
+                    processDocTreeNode(docTreePath, node, p, trees, getCurrentPath(), docComment, ((TextTree) node).getBody(), jdctx, javac);
+
+                    if (jdctx.typeElement != null && jdctx.typeElement.toString().equals(toFind.toString())) {
+                        String[] splitPkgCls = jdctx.typeElement.toString().split("\\.");
+                        if (splitPkgCls.length > 0) {
+                            String endMemberName = splitPkgCls[splitPkgCls.length - 1];
+                            long startPosition = trees.getSourcePositions().getStartPosition(javac.getCompilationUnit(), docComment, node);
+                            startPosition = jdctx.typeElement.toString().indexOf(endMemberName) + startPosition + ((TextTree) node).getBody().indexOf(jdctx.typeElement.toString());
+                            handleUsage((int) startPosition);
+                        }
+                    }
+                    prevTagError = false;
+                }
+                prevTagError = false;
+
+                if (node != null) {
+                    return super.scan(node, p);
+                }
+
+                return null;
+            }
+
             @Override public Void visitReference(ReferenceTree node, Void p) {
+                ReferenceTree parentNode = node;
                 new ErrorAwareTreePathScanner<Void, Void>() {
-                    @Override public Void visitIdentifier(IdentifierTree node, Void p) {
+                    @Override
+                    public Void visitIdentifier(IdentifierTree node, Void p) {
                         if (toFind.equals(trees.getElement(getCurrentPath()))) {
-                            handleUsage((int) trees.getSourcePositions().getStartPosition(javac.getCompilationUnit(), node));
+                            int startPosition = (int) trees.getSourcePositions().getStartPosition(javac.getCompilationUnit(), node);//vanilla javac returns 0 here for start positions
+                            if (startPosition == 0 && parentNode.toString().contains(node.toString())) {
+                                long parentNodeStartPosition = trees.getSourcePositions().getStartPosition(javac.getCompilationUnit(), docComment, parentNode);
+                                startPosition = (int) (parentNode.toString().indexOf(node.toString()) + parentNodeStartPosition);
+                            }
+                            handleUsage(startPosition);
                         }
                         return null;
                     }
                     @Override public Void visitMemberSelect(MemberSelectTree node, Void p) {
                         if (toFind.equals(trees.getElement(getCurrentPath()))) {
-                            int[] span = javac.getTreeUtilities().findNameSpan(node);
+                            int[] span = javac.getTreeUtilities().findNameSpan(node);//vanilla javac return null here e.g. java.util.Collections
                             if (span != null) {
                                 handleUsage(span[0]);
+                            } else if (parentNode.toString().contains(node.toString())) {
+                                String[] splitPkgCls = node.toString().split("\\.");
+                                if (splitPkgCls.length > 0) {
+                                    String endMemberName = splitPkgCls[splitPkgCls.length - 1];
+                                    long startPosition = trees.getSourcePositions().getStartPosition(javac.getCompilationUnit(), docComment, parentNode);
+                                    startPosition = parentNode.toString().indexOf(endMemberName) + startPosition;
+                                    handleUsage((int) startPosition);
+                                }
                             }
                             return null;
                         }
@@ -171,7 +282,7 @@ public final class JavadocImports {
                     int[] span = javac.getTreeUtilities().findNameSpan(docComment, node);
                     if (span != null) {
                         handleUsage(span[0]);
-                    }
+                    } 
                     return null;
                 }
                 return super.visitReference(node, p);
@@ -250,18 +361,65 @@ public final class JavadocImports {
         
         final DocSourcePositions positions = trees.getSourcePositions();
         final Element[] result = new Element[1];
-        
         new DocTreePathScanner<Void, Void>() {
-            @Override public Void scan(DocTree node, Void p) {
-                if (   node != null
-                    && positions.getStartPosition(javac.getCompilationUnit(), docComment, node) <= offset
-                    && positions.getEndPosition(javac.getCompilationUnit(), docComment, node) >= offset) {
+            boolean prevTagError = false;
+
+            @Override
+            public Void scan(DocTree node, Void p) {
+
+                final DocTreePath[] docTreePath = new DocTreePath[1];
+
+                if (node != null && node.getKind() == com.sun.source.doctree.DocTree.Kind.ERRONEOUS && ((ErroneousTree) node).getBody().endsWith("@")) {
+                    prevTagError = true;
+                    if (positions.getStartPosition(javac.getCompilationUnit(), docComment, node) <= offset
+                            && positions.getEndPosition(javac.getCompilationUnit(), docComment, node) >= offset) {
+                        JavadocContext jdctx = new JavadocContext();
+                        processDocTreeNode(docTreePath, node, p, trees, getCurrentPath(), docComment, ((ErroneousTree) node).getBody(), jdctx, javac);
+                        if (!jdctx.variableElements.isEmpty()) {
+                            jdctx.variableElements.forEach(ve -> result[0] = ve);
+                        }
+                        return null;
+                    }
                     return super.scan(node, p);
                 }
-                
+                if (node != null && node.getKind() == com.sun.source.doctree.DocTree.Kind.TEXT && prevTagError
+                        && positions.getStartPosition(javac.getCompilationUnit(), docComment, node) <= offset
+                        && positions.getEndPosition(javac.getCompilationUnit(), docComment, node) >= offset) {
+                    JavadocContext jdctx = new JavadocContext();
+                    processDocTreeNode(docTreePath, node, p, trees, getCurrentPath(), docComment, ((TextTree) node).getBody(), jdctx, javac);
+
+                    if (jdctx.typeElement != null) {
+                        long startPosition = positions.getStartPosition(javac.getCompilationUnit(), docComment, node);
+                        startPosition = node.toString().indexOf(jdctx.typeElement.getSimpleName().toString()) + startPosition;
+                        long endPosition = startPosition + jdctx.typeElement.getSimpleName().toString().length();
+                        if (startPosition <= offset
+                                && endPosition >= offset) {
+                            result[0] = jdctx.typeElement;
+                            return null;
+                        }
+                        startPosition = node.toString().indexOf(jdctx.typeElement.getEnclosingElement().toString()) + positions.getStartPosition(javac.getCompilationUnit(), docComment, node);
+                        endPosition = startPosition + jdctx.typeElement.getEnclosingElement().toString().length();
+                        if (startPosition <= offset
+                                && endPosition >= offset) {
+                            result[0] = jdctx.typeElement.getEnclosingElement();
+                            return null;
+                        }
+                    }
+                    prevTagError = false;
+                    return null;
+                }
+                prevTagError = false;
+
+                if (node != null
+                        && positions.getStartPosition(javac.getCompilationUnit(), docComment, node) <= offset
+                        && positions.getEndPosition(javac.getCompilationUnit(), docComment, node) >= offset) {
+                    return super.scan(node, p);
+                }
+
                 return null;
             }
             @Override public Void visitReference(ReferenceTree node, Void p) {
+                ReferenceTree parentNode = node;
                 int[] span = javac.getTreeUtilities().findNameSpan(docComment, node);
                 if (   span != null
                     && span[0] <= offset
@@ -271,19 +429,49 @@ public final class JavadocImports {
                 }
                 new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override public Void visitIdentifier(IdentifierTree node, Void p) {
-                        if (   positions.getStartPosition(javac.getCompilationUnit(), node) <= offset
-                            && positions.getEndPosition(javac.getCompilationUnit(), node) >= offset) {
+                        if (positions.getStartPosition(javac.getCompilationUnit(), node) <= offset
+                                && positions.getEndPosition(javac.getCompilationUnit(), node) >= offset) {
                             result[0] = trees.getElement(getCurrentPath());
+                        } else {
+                            long startPosition = positions.getStartPosition(javac.getCompilationUnit(), node);
+                            long endPosition = positions.getEndPosition(javac.getCompilationUnit(), node);
+                            if (startPosition == 0 && endPosition == -1) {//vanilla javac returns 0 for start and -1 for end positions
+                                if (parentNode != null && parentNode.toString().contains(node.toString())) {
+                                    long parentNodeStartPosition = positions.getStartPosition(javac.getCompilationUnit(), docComment, parentNode);
+                                    startPosition = parentNode.toString().indexOf(node.toString()) + parentNodeStartPosition;
+                                    endPosition = startPosition + node.toString().length();
+                                    if (startPosition <= offset
+                                            && endPosition >= offset) {
+                                        result[0] = trees.getElement(getCurrentPath());
+                                    }
+                                }
+                            }
                         }
                         return null;
                     }
                     @Override public Void visitMemberSelect(MemberSelectTree node, Void p) {
-                        int[] span = javac.getTreeUtilities().findNameSpan(node);
+                        int[] span = javac.getTreeUtilities().findNameSpan(node);//vanilla javac return null here e.g. java.util.Collections
                         if (   span != null
                             && span[0] <= offset
                             && span[1] >= offset) {
                             result[0] = trees.getElement(getCurrentPath());
                             return null;
+                        } else {
+                            if (parentNode != null && parentNode.toString().contains(node.toString())) {
+                                String[] splitPkgCls = node.toString().split("\\.");
+                                if (splitPkgCls.length > 0) {
+                                    String endMemberName = splitPkgCls[splitPkgCls.length - 1];
+                                    long startPosition = positions.getStartPosition(javac.getCompilationUnit(), docComment, parentNode);
+                                    startPosition = parentNode.toString().indexOf(endMemberName) + startPosition;
+                                    long endPosition = startPosition + node.toString().length();
+                                    if (startPosition <= offset
+                                            && endPosition >= offset) {
+                                        result[0] = trees.getElement(getCurrentPath());
+                                        return null;
+                                    }
+                                }
+
+                            }
                         }
                         return super.visitMemberSelect(node, p);
                     }
@@ -541,8 +729,9 @@ public final class JavadocImports {
             DocCommentTree dcComment = trees.getDocCommentTree(getCurrentPath());
             
             if (dcComment == null) return ;
-            
+
             new DocTreePathScanner<Void, Void>() {
+                boolean prevTagError = false;
                 @Override public Void visitReference(ReferenceTree node, Void p) {
                     new ErrorAwareTreePathScanner<Void, Void>() {
                         @Override public Void visitIdentifier(IdentifierTree node, Void p) {
@@ -571,6 +760,24 @@ public final class JavadocImports {
                     }.scan(referenceEmbeddedSourceNodes(javac, getCurrentPath()), null);
                     return super.visitReference(node, p);
                 }
+
+                @Override
+                public Void scan(DocTree node, Void p) {
+
+                    final DocTreePath[] result = new DocTreePath[1];
+                    if (node != null && node.getKind() == com.sun.source.doctree.DocTree.Kind.ERRONEOUS && ((ErroneousTree) node).getBody().endsWith("@")) {
+                        prevTagError = true;
+                        return super.scan(node, p);
+                    } else if (node != null && node.getKind() == com.sun.source.doctree.DocTree.Kind.TEXT && prevTagError) {
+                        JavadocContext jdctx = new JavadocContext();
+                        processDocTreeNode(result, node, p, trees, getCurrentPath(), dcComment, ((TextTree) node).getBody(), jdctx, javac);
+                        if (!jdctx.errorType.isEmpty()) {
+                            jdctx.errorType.forEach(error -> unresolved.add(error));
+                        }
+                    }
+                    prevTagError = false;
+                    return super.scan(node, p);
+                }
             }.scan(new DocTreePath(getCurrentPath(), dcComment), null);
         }
     }
@@ -593,4 +800,238 @@ public final class JavadocImports {
         return result;
     }
     
+    static final class JavadocContext {
+        int anchorOffset = -1;
+        ElementHandle<Element> handle;
+        TypeElement typeElement;
+        Element commentFor;
+        DocCommentTree comment;
+        DocSourcePositions positions;
+        TokenSequence<JavadocTokenId> jdts;
+        Document doc;
+        CompilationInfo javac;
+        private TreePath javadocFor;
+        Set<String> declaredType = new HashSet<>();
+        Set<String> errorType = new HashSet<>();
+        Set<VariableElement> variableElements = new HashSet<>();
+    }
+    private static void processDocTreeNode(final DocTreePath[] result, DocTree node, Void p, DocTrees trees, DocTreePath path, DocCommentTree dcComment, String body, JavadocContext jdctx, CompilationInfo javac) throws IllegalArgumentException {
+            try {
+                result[0] = new DocTreePath(path, node);
+                jdctx.doc = javac.getDocument();
+                jdctx.javac = javac;
+                long startPosition = trees.getSourcePositions().getStartPosition(javac.getCompilationUnit(), dcComment, node);
+                int errorBodyLength = body.trim().substring(0, body.length()).trim().length();
+                int caretOffset = (int) startPosition + errorBodyLength;
+                TreePath javadocFor = result[0].getTreePath();
+                if (javadocFor == null) {
+                    return;
+                }
+                jdctx.javadocFor = javadocFor;
+                DocCommentTree docCommentTree = result[0].getDocComment();
+                if (docCommentTree == null) {
+                    return;
+                }
+                jdctx.comment = docCommentTree;
+                Element elm = trees.getElement(javadocFor);
+                if (elm == null) {
+                    return;
+                }
+                jdctx.handle = ElementHandle.create(elm);
+                jdctx.commentFor = elm;
+                jdctx.jdts = JavadocCompletionUtils.findJavadocTokenSequence(javac, caretOffset);
+                if (jdctx.jdts == null) {
+                    return;
+                }
+                jdctx.jdts.move(caretOffset);
+                if (!jdctx.jdts.moveNext() && !jdctx.jdts.movePrevious()) {
+                    // XXX solve /***/
+                    // provide block tags, inline tags, html
+                    return;
+                }
+                if (caretOffset - jdctx.jdts.offset() == 0) {
+                    // if position in token == 0 resolve CC according to previous token
+                    jdctx.jdts.movePrevious();
+                }
+                jdctx.positions = (DocSourcePositions) trees.getSourcePositions();
+                if (jdctx.positions != null) {
+                    //insideTag(result[0], jdctx, caretOffset, prevTagError ? Kind.SEE : JavadocCompletionUtils.normalizedKind(result[0].getLeaf()));
+                    insideTag(result[0], jdctx, caretOffset);
+                }
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+    private static final Set<ElementKind> EXECUTABLE = EnumSet.of(ElementKind.METHOD, ElementKind.CONSTRUCTOR);
+    
+    private static void insideTag(DocTreePath tag, JavadocContext jdctx, int caretOffset) {
+        TokenSequence<JavadocTokenId> jdts = jdctx.jdts;
+        assert jdts.token() != null;
+        int start = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
+
+        boolean isThrowsKind = JavadocCompletionUtils.normalizedKind(tag.getLeaf()) == DocTree.Kind.THROWS;
+        if (isThrowsKind && !(EXECUTABLE.contains(jdctx.commentFor.getKind()))) {
+            // illegal tag in this context
+            return;
+        }
+
+        jdts.move(start + (JavadocCompletionUtils.isBlockTag(tag) ? 0 : 1));
+        // @see|@link|@throws
+        if (!jdts.moveNext() || caretOffset <= jdts.offset() + jdts.token().length()) {
+            return;
+        }
+        // white space
+        if (!jdts.moveNext() || caretOffset <= jdts.offset()) {
+            return;
+        }
+
+        boolean noPrefix = false;
+
+        if (caretOffset <= jdts.offset() + jdts.token().length()) {
+            int pos = caretOffset - jdts.offset();
+            CharSequence cs = jdts.token().text();
+            cs = pos < cs.length() ? cs.subSequence(0, pos) : cs;
+
+            if (JavadocCompletionUtils.isWhiteSpace(cs)
+                    || JavadocCompletionUtils.isLineBreak(jdts.token(), pos)) {
+                noPrefix = true;
+            } else {
+                // broken syntax
+                return;
+            }
+        } else if (!(JavadocCompletionUtils.isWhiteSpace(jdts.token())
+                || JavadocCompletionUtils.isLineBreak(jdts.token()))) {
+            // not java reference
+            return;
+        } else if (jdts.moveNext()) {
+            int end = (int) jdctx.positions.getEndPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
+            insideReference(JavadocCompletionUtils.normalizedKind(tag.getLeaf()), jdts.offset(), end, jdctx, caretOffset);
+        }
+
+    }
+    
+    private static void insideReference(Kind enclosingKind, int start, int end, JavadocContext jdctx, int caretOffset) {
+            // complete type
+        CharSequence cs = JavadocCompletionUtils.getCharSequence(jdctx.doc, start, end);
+        StringBuilder sb = new StringBuilder();
+        for (int i = caretOffset - start - 1; i >= 0; i--) {
+            char c = cs.charAt(i);
+            if (c == '#') {
+                // complete class member
+                String prefix = sb.toString();
+                int substitutionOffset = caretOffset - sb.length();
+                jdctx.anchorOffset = substitutionOffset;
+                if (i == 0) {
+                    return;
+                } else {
+                    TypeElement scopeType = jdctx.commentFor.getKind().isClass() || jdctx.commentFor.getKind().isInterface() ? (TypeElement) jdctx.commentFor
+                            : jdctx.javac.getElementUtilities().enclosingTypeElement(jdctx.commentFor);
+                    TypeMirror type
+                            = jdctx.javac.getTreeUtilities().parseType(cs.subSequence(0, i).toString(), scopeType);
+                    type.getKind();
+                    if (enclosingKind == Kind.VALUE) {
+                        if (type.getKind() == TypeKind.DECLARED) {
+                            jdctx.declaredType.add(type.toString());
+                        } else if (type.getKind() == TypeKind.ERROR) {
+                            jdctx.errorType.add(type.toString());
+                        }
+
+                        addMemberConstants(jdctx, prefix.trim(), substitutionOffset, type, caretOffset);
+                        jdctx.typeElement = jdctx.javac.getElements().getTypeElement(type.toString());
+                    }
+                }
+                return;
+            } else if (c == '.') {
+                // complete class or package
+                String prefix = sb.toString();
+                String fqn = cs.subSequence(0, i).toString();
+                int substitutionOffset = caretOffset - sb.length();
+                jdctx.anchorOffset = substitutionOffset;
+                if (enclosingKind == Kind.THROWS) {
+                    return;
+                } else {
+                    completeClassOrPkg(fqn, prefix, substitutionOffset, jdctx, caretOffset);
+                }
+                return;
+            } else {
+                sb.insert(0, c);
+            }
+        }
+        // complete class or package
+        String prefix = sb.toString();
+
+        TypeElement scopeType = jdctx.commentFor.getKind().isClass() || jdctx.commentFor.getKind().isInterface() ? (TypeElement) jdctx.commentFor
+                : jdctx.javac.getElementUtilities().enclosingTypeElement(jdctx.commentFor);
+        TypeMirror type
+                = jdctx.javac.getTreeUtilities().parseType(cs.subSequence(0, caretOffset - start).toString(), scopeType);
+        
+        if(type.toString().contains(prefix)){
+            jdctx.typeElement = jdctx.javac.getElements().getTypeElement(type.toString());
+        }
+        if (enclosingKind == Kind.TEXT) {
+            if (type.getKind() == TypeKind.DECLARED) {
+                jdctx.declaredType.add(type.toString());
+            } else if (type.getKind() == TypeKind.ERROR) {
+                jdctx.errorType.add(type.toString());
+            }
+        }
+    }
+    
+    private static void completeClassOrPkg(String fqn, String prefix, int substitutionOffset, JavadocContext jdctx, int caretOffset) {
+        String pkgPrefix;
+        if (fqn == null) {
+            pkgPrefix = prefix;
+
+        } else {
+            pkgPrefix = fqn + '.' + prefix;
+            TypeElement typeElm = jdctx.javac.getElements().getTypeElement(fqn);
+            if (typeElm != null) {
+            }
+        }
+        jdctx.typeElement = jdctx.javac.getElements().getTypeElement(pkgPrefix);
+    }
+    
+     private static void addMemberConstants(final JavadocContext env, final String prefix, final int substitutionOffset, final TypeMirror type, int caretOffset) {
+         final CompilationInfo controller = env.javac;
+         final Trees trees = controller.getTrees();
+         final Elements elements = controller.getElements();
+         final Types types = controller.getTypes();
+         final TreeUtilities tu = controller.getTreeUtilities();
+         TypeElement typeElem = type.getKind() == TypeKind.DECLARED ? (TypeElement) ((DeclaredType) type).asElement() : null;
+         Element docelm = env.handle.resolve(controller);
+         TreePath docpath = docelm != null ? trees.getPath(docelm) : null;
+         final Scope scope = docpath != null ? trees.getScope(docpath) : tu.scopeFor(caretOffset);
+         ElementUtilities.ElementAcceptor acceptor = new ElementUtilities.ElementAcceptor() {
+             public boolean accept(Element e, TypeMirror t) {
+                 switch (e.getKind()) {
+                     case FIELD:
+                         String name = e.getSimpleName().toString();
+                         if (((VariableElement) e).getConstantValue() != null
+                                 && Utilities.startsWith(name, prefix) && !CLASS_KEYWORD.equals(name)
+                                 && (Utilities.isShowDeprecatedMembers() || !elements.isDeprecated(e))) {
+                             env.variableElements.add((VariableElement) e);
+                         }
+                         return ((VariableElement) e).getConstantValue() != null
+                                 && Utilities.startsWith(name, prefix) && !CLASS_KEYWORD.equals(name)
+                                 && (Utilities.isShowDeprecatedMembers() || !elements.isDeprecated(e));
+                     case ENUM_CONSTANT:
+                         return ((VariableElement) e).getConstantValue() != null
+                                 && Utilities.startsWith(e.getSimpleName().toString(), prefix)
+                                 && (Utilities.isShowDeprecatedMembers() || !elements.isDeprecated(e))
+                                 && trees.isAccessible(scope, e, (DeclaredType) t);
+                 }
+                 return false;
+             }
+         };
+         for (Element e : controller.getElementUtilities().getMembers(type, acceptor)) {
+             switch (e.getKind()) {
+                 case ENUM_CONSTANT:
+                 case FIELD:
+                     TypeMirror tm = type.getKind() == TypeKind.DECLARED ? types.asMemberOf((DeclaredType) type, e) : e.asType();
+                     env.variableElements.add((VariableElement) e);
+                     break;
+             }
+         }
+    }
+     
 }

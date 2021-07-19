@@ -1,9 +1,9 @@
-Name: validation-api
-Version: 1.1.0.Final
-Description: Bean Validation API
+Name: osgi.core
+Version: 8.0.0
+Description: OSGi Core Release 8, Interfaces and Classes for use in compiling bundles
 License: Apache-2.0
-Origin: Oracle
-Files: validation-api-1.1.0.Final.jar
+Origin: https://docs.osgi.org/
+Files: osgi.core-8.0.0.jar
 
 
                                  Apache License

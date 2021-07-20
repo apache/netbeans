@@ -29,7 +29,24 @@
                 <friend>org.netbeans.modules.groovy.editor</friend>
                 <friend>org.netbeans.modules.groovy.refactoring</friend>
                 <friend>org.netbeans.modules.groovy.support</friend>
-                <subpackages>groovy</subpackages>
+                <package>groovy</package>
+                <package>groovy.beans</package>
+                <package>groovy.cli</package>
+                <package>groovy.grape</package>
+                <package>groovy.inspect</package>
+                <package>groovy.io</package>
+                <package>groovy.lang</package>
+                <package>groovy.lang.groovydoc</package>
+                <package>groovy.namespace</package>
+                <package>groovy.security</package>
+                <package>groovy.transform</package>
+                <package>groovy.transform.builder</package>
+                <package>groovy.transform.options</package>
+                <package>groovy.transform.stc</package>
+                <package>groovy.ui</package>
+                <package>groovy.util</package>
+                <package>groovy.util.logging</package>
+                <package>groovy.xml</package>
                 <package>groovyjarjarantlr</package>
                 <package>groovyjarjarasm.asm</package>
                 <package>org.codehaus.groovy</package>

@@ -114,7 +114,10 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
                             metadata = new URL(repository + METADATA_URL);
                         } else {
                             repository = new File(info.getRepositoryPath() + File.separator).toURI().toString();
-                            metadata = new URL(repository + LOCAL_METADATA_URL);//new File(repository + LOCAL_METADATA_URL).toURI().toURL();
+                            if(!new File(repository + LOCAL_METADATA_URL).exists()) {
+                                continue;
+                            }
+                            metadata = new URL(repository + LOCAL_METADATA_URL);
                         }
                         if (readVersions(repository, metadata)) {
                             break;

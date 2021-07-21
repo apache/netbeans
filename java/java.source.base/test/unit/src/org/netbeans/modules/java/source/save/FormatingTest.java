@@ -5134,13 +5134,12 @@ public class FormatingTest extends NbTestCase {
 
     public void testRecord1() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+            SourceVersion.valueOf("RELEASE_16"); //NOI18N
         } catch (IllegalArgumentException ex) {
             //OK, no RELEASE_14, skip test
             return;
         }
-        sourceLevel="15";
-        EXTRA_OPTIONS.add("--enable-preview");
+        sourceLevel="16";
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");
@@ -5171,13 +5170,12 @@ public class FormatingTest extends NbTestCase {
 
     public void testRecord2() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+            SourceVersion.valueOf("RELEASE_16"); //NOI18N
         } catch (IllegalArgumentException ex) {
             //OK, no RELEASE_14, skip test
             return;
         }
-        sourceLevel="15";
-        EXTRA_OPTIONS.add("--enable-preview");
+        sourceLevel="16";
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");
@@ -5214,13 +5212,12 @@ public class FormatingTest extends NbTestCase {
 
     public void testRecord3() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+            SourceVersion.valueOf("RELEASE_16"); //NOI18N
         } catch (IllegalArgumentException ex) {
             //OK, no RELEASE_14, skip test
             return;
         }
-        sourceLevel="15";
-        EXTRA_OPTIONS.add("--enable-preview");
+        sourceLevel="16";
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");
@@ -5246,13 +5243,12 @@ public class FormatingTest extends NbTestCase {
     
     public void testRecord4() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+            SourceVersion.valueOf("RELEASE_16"); //NOI18N
         } catch (IllegalArgumentException ex) {
             //OK, no RELEASE_14, skip test
             return;
         }
-        sourceLevel="15";
-        EXTRA_OPTIONS.add("--enable-preview");
+        sourceLevel="16";
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");

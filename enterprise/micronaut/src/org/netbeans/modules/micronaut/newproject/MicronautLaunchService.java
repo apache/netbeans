@@ -44,6 +44,7 @@ public class MicronautLaunchService {
 
     private static final MicronautLaunchService INSTANCE = new MicronautLaunchService();
     private static final String VERSIONS = "versions/";
+    private static final String OPTIONS = "select-options/";
     private static final String APPLICATION_TYPES = "application-types/";
     private static final String FEATURES = "features/";
     private static final String CREATE = "create/";
@@ -79,6 +80,20 @@ public class MicronautLaunchService {
         return types;
     }
 
+    public List<String> getJdkVersions(String serviceUrl) throws IOException {
+        if (!serviceUrl.endsWith("/")) {
+            serviceUrl = serviceUrl + '/';
+        }
+        JsonObject json = gson.fromJson(getJson(serviceUrl + OPTIONS), JsonObject.class);
+        JsonArray jsonArray = json.getAsJsonObject("jdkVersion").getAsJsonArray("options");
+        ArrayList<String> jdkVersions = new ArrayList<>(jsonArray.size());
+        for (JsonElement jsonElement : jsonArray) {
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+            jdkVersions.add(jsonObject.get("label").getAsString());
+        }
+        return jdkVersions;
+    }
+
     public List<Feature> getFeatures(String serviceUrl, ApplicationType appType) throws IOException {
         if (!serviceUrl.endsWith("/")) {
             serviceUrl = serviceUrl + '/';
@@ -94,7 +109,7 @@ public class MicronautLaunchService {
         return features;
     }
 
-    public InputStream create(String serviceUrl, ApplicationType appType, String appName, String javaVersion, String language, String buildTool, Set<Feature> features) throws IOException {
+    public InputStream create(String serviceUrl, ApplicationType appType, String appName, String javaVersion, String language, String buildTool, String testFramework, Set<Feature> features) throws IOException {
         StringBuilder sb = new StringBuilder(serviceUrl);
         if (!serviceUrl.endsWith("/")) {
             sb.append('/');
@@ -103,7 +118,7 @@ public class MicronautLaunchService {
         sb.append("?javaVersion=JDK_").append(javaVersion);
         sb.append("&lang=").append(language);
         sb.append("&build=").append(buildTool);
-        sb.append("&test=JUNIT");
+        sb.append("&test=").append(testFramework);
         if (features != null) {
             for (Feature feature : features) {
                 sb.append("&features=").append(feature.name);

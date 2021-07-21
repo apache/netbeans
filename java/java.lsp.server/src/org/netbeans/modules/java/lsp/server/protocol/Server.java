@@ -21,6 +21,7 @@ package org.netbeans.modules.java.lsp.server.protocol;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,12 +88,12 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.LspSession;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.files.OpenedDocuments;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
@@ -316,6 +317,8 @@ public final class Server {
          * the set of opened projects change, collections are never modified.
          */
         private volatile Collection<Project> openedProjects = Collections.emptyList();
+
+        private final OpenedDocuments openedDocuments = new OpenedDocuments();
         
         Lookup getSessionLookup() {
             return sessionLookup;
@@ -330,6 +333,9 @@ public final class Server {
          */
         @Override
         public CompletableFuture<Project[]> asyncOpenSelectedProjects(List<FileObject> projectCandidates) {
+            if (projectCandidates == null || projectCandidates.isEmpty()) {
+                return CompletableFuture.completedFuture(new Project[0]);
+            }
             CompletableFuture<Project[]> f = new CompletableFuture<>();
             SERVER_INIT_RP.post(() -> {
                 asyncOpenSelectedProjects0(f, projectCandidates, true);
@@ -426,10 +432,12 @@ public final class Server {
         private void asyncOpenSelectedProjects0(CompletableFuture<Project[]> f, List<FileObject> projectCandidates, boolean asWorkspaceProjects) {
             List<Project> projects = new ArrayList<>();
             try {
-                for (FileObject candidate : projectCandidates) {
-                    Project prj = FileOwnerQuery.getOwner(candidate);
-                    if (prj != null) {
-                        projects.add(prj);
+                if (projectCandidates != null) {
+                    for (FileObject candidate : projectCandidates) {
+                        Project prj = FileOwnerQuery.getOwner(candidate);
+                        if (prj != null) {
+                            projects.add(prj);
+                        }
                     }
                 }
                 Project[] previouslyOpened;
@@ -569,6 +577,11 @@ public final class Server {
             return workspaceProjects;
         }
         
+        @Override
+        public OpenedDocuments getOpenedDocuments() {
+            return openedDocuments;
+        }
+
         private JavaSource showIndexingCompleted(Project[] opened) {
             try {
                 final JavaSource source = checkJavaSupport();
@@ -607,7 +620,20 @@ public final class Server {
                 capabilities.setImplementationProvider(true);
                 capabilities.setDocumentHighlightProvider(true);
                 capabilities.setReferencesProvider(true);
-                List<String> commands = new ArrayList<>(Arrays.asList(JAVA_NEW_FROM_TEMPLATE, JAVA_BUILD_WORKSPACE, JAVA_LOAD_WORKSPACE_TESTS, GRAALVM_PAUSE_SCRIPT, JAVA_SUPER_IMPLEMENTATION));
+                List<String> commands = new ArrayList<>(Arrays.asList(
+                        GRAALVM_PAUSE_SCRIPT,
+                        JAVA_BUILD_WORKSPACE,
+                        JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS,
+                        JAVA_FIND_DEBUG_PROCESS_TO_ATTACH,
+                        JAVA_FIND_PROJECT_CONFIGURATIONS,
+                        JAVA_GET_PROJECT_CLASSPATH,
+                        JAVA_GET_PROJECT_PACKAGES,
+                        JAVA_GET_PROJECT_SOURCE_ROOTS,
+                        JAVA_LOAD_WORKSPACE_TESTS,
+                        JAVA_NEW_FROM_TEMPLATE,
+                        JAVA_NEW_PROJECT,
+                        JAVA_PROJECT_CONFIGURATION_COMPLETION,
+                        JAVA_SUPER_IMPLEMENTATION));
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     commands.addAll(codeGenerator.getCommands());
                 }
@@ -627,6 +653,7 @@ public final class Server {
         public CompletableFuture<InitializeResult> initialize(InitializeParams init) {
             NbCodeClientCapabilities capa = NbCodeClientCapabilities.get(init);
             client.setClientCaps(capa);
+            hackConfigureGroovySupport(capa);
             List<FileObject> projectCandidates = new ArrayList<>();
             List<WorkspaceFolder> folders = init.getWorkspaceFolders();
             if (folders != null) {
@@ -713,16 +740,38 @@ public final class Server {
                 }
             });
             sessionServices.add(new WorkspaceUIContext(client));
-            ((LanguageClientAware) getTextDocumentService()).connect(aClient);
-            ((LanguageClientAware) getWorkspaceService()).connect(aClient);
+            ((LanguageClientAware) getTextDocumentService()).connect(client);
+            ((LanguageClientAware) getWorkspaceService()).connect(client);
         }
     }
     
     public static final String JAVA_BUILD_WORKSPACE =  "java.build.workspace";
     public static final String JAVA_NEW_FROM_TEMPLATE =  "java.new.from.template";
+    public static final String JAVA_NEW_PROJECT =  "java.new.project";
+    public static final String JAVA_GET_PROJECT_SOURCE_ROOTS = "java.get.project.source.roots";
+    public static final String JAVA_GET_PROJECT_CLASSPATH = "java.get.project.classpath";
+    public static final String JAVA_GET_PROJECT_PACKAGES = "java.get.project.packages";
     public static final String JAVA_LOAD_WORKSPACE_TESTS =  "java.load.workspace.tests";
     public static final String JAVA_SUPER_IMPLEMENTATION =  "java.super.implementation";
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
+    
+    /**
+     * Enumerates project configurations.
+     */
+    public static final String JAVA_FIND_PROJECT_CONFIGURATIONS = "java.project.configurations";
+    /**
+     * Enumerates attach debugger configurations.
+     */
+    public static final String JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS = "java.attachDebugger.configurations";
+    /**
+     * Enumerates JVM processes eligible for debugger attach.
+     */
+    public static final String JAVA_FIND_DEBUG_PROCESS_TO_ATTACH = "java.attachDebugger.pickProcess";
+    /**
+     * Provides code-completion of configurations.
+     */
+    public static final String JAVA_PROJECT_CONFIGURATION_COMPLETION = "java.project.configuration.completion";
+
     static final String INDEXING_COMPLETED = "Indexing completed.";
     static final String NO_JAVA_SUPPORT = "Cannot initialize Java support on JDK ";
 
@@ -786,8 +835,44 @@ public final class Server {
         }
 
         @Override
+        public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
+            logWarning(params);
+            CompletableFuture<String> x = new CompletableFuture<>();
+            x.complete(null);
+            return x;
+        }
+
+        @Override
+        public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
+            logWarning(params);
+        }
+
+        @Override
+        public void disposeTextEditorDecoration(String params) {
+            logWarning(params);
+        }
+
+        @Override
         public void logMessage(MessageParams message) {
             logWarning(message);
         }
     };
+    
+    
+    /**
+     * Hacky way to enable or disable Groovy support. Since it is hack, it will disable Groovy for the whole NBJLS, not just a specific client / project. Should
+     * be revisited after NetBeans 12.5, after Groovy parsing improves
+     * @param caps 
+     */
+    private static void hackConfigureGroovySupport(NbCodeClientCapabilities caps) {
+        boolean b = caps.wantsGroovySupport();
+        try {
+            Class clazz = Lookup.getDefault().lookup(ClassLoader.class).loadClass("org.netbeans.modules.groovy.editor.api.GroovyIndexer");
+            Method m = clazz.getDeclaredMethod("setIndexingEnabled", Boolean.TYPE);
+            m.setAccessible(true);
+            m.invoke(null, b);
+        } catch (ReflectiveOperationException ex) {
+            LOG.log(Level.WARNING, "Unable to configure Groovy support", ex);
+        }
+    }
 }

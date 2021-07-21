@@ -27,11 +27,13 @@ import junit.framework.Test;
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
+import org.openide.util.Pair;
 
 public abstract class AbstractDebugTest extends NbTestCase {
 
     protected DebuggerEngine engine;
     protected CPPLiteDebugger debugger;
+    protected Process process;
 
     private final int[] suspendCount = new int[]{0};
     private final int[] resumeCount = new int[]{0};
@@ -51,7 +53,9 @@ public abstract class AbstractDebugTest extends NbTestCase {
     }
 
     protected final void startDebugging(String name, File wd) throws IOException {
-        engine = CPPLiteDebugger.startDebugging(new CPPLiteDebuggerConfig(Arrays.asList(new File(wd, name).getAbsolutePath()), wd, "gdb")).first();
+        Pair<DebuggerEngine, Process> engineProcess = CPPLiteDebugger.startDebugging(new CPPLiteDebuggerConfig(Arrays.asList(new File(wd, name).getAbsolutePath()), wd, "gdb"));
+        engine = engineProcess.first();
+        process = engineProcess.second();
         debugger = engine.lookupFirst(null, CPPLiteDebugger.class);
         debugger.addStateListener(new CPPLiteDebugger.StateListener() {
             @Override
@@ -97,6 +101,14 @@ public abstract class AbstractDebugTest extends NbTestCase {
                 resumeCount.wait();
             }
         }
+    }
+
+    protected boolean isAppProcessAlive() {
+        return process.isAlive();
+    }
+
+    protected final int waitAppProcessExit() throws InterruptedException {
+        return process.waitFor();
     }
 
     protected final void assertStoppedAt(URI file, int line) {

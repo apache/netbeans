@@ -25,7 +25,24 @@
         <apidef name="util_base">Base Utilities API</apidef>
         <apidef name="xml_base">XML API</apidef>
     </apidefs>
-    <changes>
+        <changes>
+            <change id="uri-normalize">
+                <api name="util_base"/>
+                <summary>Adding BaseUtilities.normalize</summary>
+                <version major="9" minor="20"/>
+                <date year="2021" month="6" day="15"/>
+                <author login="jlahoda"/>
+                <compatibility addition="yes" binary="compatible" source="compatible"/>
+                <description>
+                    <p>
+                        Adding BaseUtilities.normalize, as a replacement for URI.normalize,
+                        which should more carefully handle certain special URIs in non-normal
+                        form.
+                    </p>
+                </description>
+                <class package="org.openide.util" name="BaseUtilities"/>
+                <issue number="4953"/>
+        </change>
         <change id="lookup-mutex-event">
             <api name="util_base"/>
             <summary>Propagate current Lookup via Mutex.EVENT</summary>

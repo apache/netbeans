@@ -169,20 +169,25 @@ public abstract class MicronautConfigCompletionItem implements CompletionItem {
                     int caretOffset = component.getCaretPosition();
                     int end = LineDocumentUtils.getWordEnd(lineDocument, caretOffset);
                     if (overwrite && LineDocumentUtils.getWordStart(lineDocument, end) == offset) {
-                        if (doc.getText(end, 1).endsWith(":")) {
+                        String textEnd = doc.getText(end, 1);
+                        if (baseIndent < 0 && textEnd.endsWith(".") || textEnd.endsWith(":")) {
                             end++;
                         }
                         doc.remove(offset, Math.max(caretOffset, end) - offset);
                     } else if (offset < caretOffset) {
                         doc.remove(offset, caretOffset - offset);
                     }
-                    int lineStart = LineDocumentUtils.getLineStart(lineDocument, caretOffset);
-                    int lineIndent = IndentUtils.lineIndent(doc, lineStart);
                     StringBuilder sb = new StringBuilder();
-                    ArrayUtilities.appendSpaces(sb, baseIndent - lineIndent);
-                    sb.append("*".equals(propName) ? "${PAR#1 default=\"\"}" : propName).append(":\n");
-                    ArrayUtilities.appendSpaces(sb, baseIndent + indentLevelSize);
-                    sb.append("${cursor completionInvoke}");
+                    if (baseIndent < 0) {
+                        sb.append("*".equals(propName) ? "${PAR#1 default=\"\"}" : propName).append(".${cursor completionInvoke}");
+                    } else {
+                        int lineStart = LineDocumentUtils.getLineStart(lineDocument, caretOffset);
+                        int lineIndent = IndentUtils.lineIndent(doc, lineStart);
+                        ArrayUtilities.appendSpaces(sb, baseIndent - lineIndent);
+                        sb.append("*".equals(propName) ? "${PAR#1 default=\"\"}" : propName).append(":\n");
+                        ArrayUtilities.appendSpaces(sb, baseIndent + indentLevelSize);
+                        sb.append("${cursor completionInvoke}");
+                    }
                     CodeTemplateManager.get(doc).createTemporary(sb.toString()).insert(component);
                 }
             } catch (Exception ex) {
@@ -245,33 +250,55 @@ public abstract class MicronautConfigCompletionItem implements CompletionItem {
                     int caretOffset = component.getCaretPosition();
                     int end = LineDocumentUtils.getWordEnd(lineDocument, caretOffset);
                     if (overwrite && LineDocumentUtils.getWordStart(lineDocument, end) == offset) {
-                        if (doc.getText(end, 1).endsWith(":")) {
+                        String textEnd = doc.getText(end, 1);
+                        while(baseIndent < 0 && textEnd.endsWith(".")) {
+                            end = LineDocumentUtils.getWordEnd(lineDocument, end + 1);
+                            textEnd = doc.getText(end, 1);
+                        }
+                        if (baseIndent < 0 && textEnd.endsWith("=") || textEnd.endsWith(":")) {
                             end++;
                         }
                         doc.remove(offset, Math.max(caretOffset, end) - offset);
                     } else if (offset < caretOffset) {
                         doc.remove(offset, caretOffset - offset);
                     }
-                    int lineStart = LineDocumentUtils.getLineStart(lineDocument, caretOffset);
-                    int lineIndent = IndentUtils.lineIndent(doc, lineStart);
                     StringBuilder sb = new StringBuilder();
-                    ArrayUtilities.appendSpaces(sb, baseIndent - lineIndent);
                     String name = propName.substring(idx);
-                    int indent = baseIndent;
-                    final String[] parts = name.split("\\.");
-                    int num = 1;
-                    for (int i = 0; i < parts.length; i++) {
-                        String part = parts[i];
-                        if ("*".equals(part)) {
-                            sb.append("${PAR#" + num++ + " default=\"\"}");
-                        } else {
-                            sb.append(part);
+                    String[] parts = name.split("\\.");
+                    if (baseIndent < 0) {
+                        int num = 1;
+                        for (int i = 0; i < parts.length; i++) {
+                            String part = parts[i];
+                            if ("*".equals(part)) {
+                                sb.append("${PAR#" + num++ + " default=\"\"}");
+                            } else {
+                                sb.append(part);
+                            }
+                            if (i < parts.length - 1) {
+                                sb.append(".");
+                            } else {
+                                sb.append("=${cursor}");
+                            }
                         }
-                        if (i < parts.length - 1) {
-                            sb.append(":\n");
-                            ArrayUtilities.appendSpaces(sb, (indent = indent + indentLevelSize));
-                        } else {
-                            sb.append(": ${cursor}");
+                    } else {
+                        int lineStart = LineDocumentUtils.getLineStart(lineDocument, caretOffset);
+                        int lineIndent = IndentUtils.lineIndent(doc, lineStart);
+                        ArrayUtilities.appendSpaces(sb, baseIndent - lineIndent);
+                        int indent = baseIndent;
+                        int num = 1;
+                        for (int i = 0; i < parts.length; i++) {
+                            String part = parts[i];
+                            if ("*".equals(part)) {
+                                sb.append("${PAR#" + num++ + " default=\"\"}");
+                            } else {
+                                sb.append(part);
+                            }
+                            if (i < parts.length - 1) {
+                                sb.append(":\n");
+                                ArrayUtilities.appendSpaces(sb, (indent = indent + indentLevelSize));
+                            } else {
+                                sb.append(": ${cursor}");
+                            }
                         }
                     }
                     CodeTemplateManager.get(doc).createTemporary(sb.toString()).insert(component);

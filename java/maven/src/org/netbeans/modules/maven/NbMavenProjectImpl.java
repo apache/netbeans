@@ -33,6 +33,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,6 +44,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.SwingUtilities;
 import org.apache.maven.DefaultMaven;
 import org.apache.maven.Maven;
@@ -835,6 +837,8 @@ public final class NbMavenProjectImpl implements Project {
         private final WeakReference<NbMavenProject> watcherRef;
         private String packaging;
         private final Lookup general;
+        
+        private volatile List<String> currentIds = new ArrayList<>();
 
         @SuppressWarnings("LeakingThisInConstructor")
         PackagingTypeDependentLookup(NbMavenProject watcher) {
@@ -844,27 +848,80 @@ public final class NbMavenProjectImpl implements Project {
             check();
             watcher.addPropertyChangeListener(WeakListeners.propertyChange(this, watcher));
         }
+        
+        private String pluginDirectory(Artifact pluginArtifact) {
+            String groupId = pluginArtifact.getGroupId();
+            String artId = pluginArtifact.getArtifactId();
+            
+            return groupId + ":" + artId;
+        }
+        
+        /**
+         * Defines at least some order: let the layer positions to 
+         * @param componentSet
+         * @return 
+         */
+        private List<String> partialComponentsOrder(Collection<String> componentSet) {
+            List<FileObject> fos = new ArrayList<>();
+            FileObject root = FileUtil.getConfigFile("Projects/org-netbeans-modules-maven");
+            for (String s : componentSet) {
+                FileObject f = root.getFileObject(s);
+                if (f != null) {
+                    fos.add(f);
+                }
+            }
+            List<String> orderedNames = FileUtil.getOrder(fos, false).stream().map(FileObject::getNameExt).collect(Collectors.toList());
+            List<String> origList = new ArrayList<>(componentSet);
+            origList.removeAll(orderedNames);
+            orderedNames.addAll(origList);
+            return orderedNames;
+        }
 
         private void check() {
             //this call effectively calls project.getLookup(), when called in constructor will get back to the project's baselookup only.
             // but when called from propertyChange() then will call on entire composite lookup, is it a problem?  #230469
+            List<String> newComponents = new ArrayList<>();
             NbMavenProject watcher = watcherRef.get();
             String newPackaging = packaging != null ? packaging : NbMavenProject.TYPE_JAR;
+            List<Lookup> lookups = new ArrayList<>();
+            List<String> old = currentIds;
             if (watcher != null) {
                 newPackaging = watcher.getPackagingType(); 
                 if (newPackaging == null) {
                     newPackaging = NbMavenProject.TYPE_JAR;
                 }
+                Set<Artifact> arts = watcher.getMavenProject().getPluginArtifacts();
+                List<String> compNames = new ArrayList<>();
+                if (arts != null) {
+                    for (Artifact a : arts) {
+                        compNames.add(pluginDirectory(a));
+                    }
+                }
+                compNames.add(newPackaging);
+                
+                newComponents = partialComponentsOrder(compNames);
+            } else {
+                newComponents.add(newPackaging);
             }
-            if (!newPackaging.equals(packaging)) {
-                packaging = newPackaging;
-                Lookup pack = Lookups.forPath("Projects/org-netbeans-modules-maven/" + packaging + "/Lookup");
-                // Include fallback providers for anything
-                Lookup fallback = Lookups.forPath("Projects/org-netbeans-modules-maven/_any/Lookup");
-                setLookups(general, pack, fallback);
+            
+            if (!newComponents.equals(old)) {
+                for (String s : newComponents) {
+                    lookups.add(Lookups.forPath("Projects/org-netbeans-modules-maven/" + s + "/Lookup")); // NOI18N
+                }
+                // put the general lookup last, so plugin - specific ones can override it
+                lookups.add(general);
+                lookups.add(Lookups.forPath("Projects/org-netbeans-modules-maven/_any/Lookup")); // NOI18N
+                synchronized (this) {
+                    if (currentIds != old) {
+                        // the next computation started after us, do not interfere.
+                        return;
+                    }
+                    currentIds = newComponents;
+                }
+                setLookups(lookups.toArray(new Lookup[lookups.size()]));
             }
         }
-
+        
         public @Override void propertyChange(PropertyChangeEvent evt) {
             if (NbMavenProject.PROP_PROJECT.equals(evt.getPropertyName())) {
                 check();

@@ -290,7 +290,7 @@ public class MavenProjectGrammar extends AbstractSchemaBasedGrammar {
     }
     
     private List<GrammarResult> collectPluginParams(Document pluginDoc, HintContext hintCtx) {
-        Iterator it = pluginDoc.getRootElement().getDescendants(new Filter() {
+        Iterator<Element> it = pluginDoc.getRootElement().getDescendants(new Filter() {
             @Override
             public boolean matches(Object object) {
                 if (object instanceof Element) {

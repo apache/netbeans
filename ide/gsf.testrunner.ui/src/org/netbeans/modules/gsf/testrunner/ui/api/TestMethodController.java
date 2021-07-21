@@ -87,6 +87,7 @@ public class TestMethodController {
 
     public static final class TestMethod {
         private final String testClassName;
+        private final Position testClassPosition;
         private final SingleMethod method;
         private final Position start;
         private final Position preferred;
@@ -110,7 +111,22 @@ public class TestMethodController {
          * @since 1.24
          */
         public TestMethod(String testClassName, SingleMethod method, Position start, Position preferred, Position end) {
+            this(testClassName, null, method, start, preferred, end);
+        }
+
+        /** Create TestMethod.
+         *
+         * @param testClassName the class name which contains the test method
+         * @param testClassPosition a preferred position of the class which contains the test method
+         * @param method the identifier of the test method
+         * @param start the starting position of the test method
+         * @param preferred a preferred position for the test method (the position where the name starts)
+         * @param end the end position of the test method
+         * @since 1.25
+         */
+        public TestMethod(String testClassName, Position testClassPosition, SingleMethod method, Position start, Position preferred, Position end) {
             this.testClassName = testClassName;
+            this.testClassPosition = testClassPosition;
             this.method = method;
             this.start = start;
             this.preferred = preferred;
@@ -119,6 +135,16 @@ public class TestMethodController {
 
         public String getTestClassName() {
             return testClassName;
+        }
+
+        /**
+         * Returns the preferred position of the class which contains the test method.
+         *
+         * @return the preferred position of the class
+         * @since 1.25
+         */
+        public Position getTestClassPosition() {
+            return testClassPosition;
         }
 
         public SingleMethod method() {

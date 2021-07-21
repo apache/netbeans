@@ -113,6 +113,7 @@ public class ArchetypeWizardUtils {
         //ExecutionRequest.setInteractive seems to have no influence on archetype plugin.
         config.setInteractive(false);
         config.setProperty("archetype.interactive", "false");//NOI18N
+        config.setProperty("archetypeCatalog", "local");//NOI18N
         //#136853 make sure to get the latest snapshot always..
         if (arch.getVersion().contains("SNAPSHOT")) { //NOI18N
             config.setUpdateSnapshots(true);

@@ -39,6 +39,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -309,7 +310,7 @@ public class JPDATruffleAccessor extends Object {
         str.append('\n');
         str.append(position.hostMethodName);
         str.append('\n');
-        str.append(position.uri.toString());
+        str.append(Objects.toString(position.uri));
         str.append('\n');
         str.append(position.mimeType);
         str.append('\n');

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.79
+#Version 1.80
 
 CLSS public java.lang.Object
 cons public init()
@@ -184,6 +184,7 @@ fld public final static java.lang.String COMMAND_DEBUG_STEP_INTO = "debug.stepin
 fld public final static java.lang.String COMMAND_DEBUG_TEST_SINGLE = "debug.test.single"
 fld public final static java.lang.String COMMAND_DELETE = "delete"
 fld public final static java.lang.String COMMAND_MOVE = "move"
+fld public final static java.lang.String COMMAND_PRIME = "prime"
 fld public final static java.lang.String COMMAND_PROFILE = "profile"
 fld public final static java.lang.String COMMAND_PROFILE_SINGLE = "profile.single"
 fld public final static java.lang.String COMMAND_PROFILE_TEST_SINGLE = "profile.test.single"

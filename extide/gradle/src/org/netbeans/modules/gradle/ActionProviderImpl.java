@@ -76,7 +76,9 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
+import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
+import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.support.ProjectOperations;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
@@ -146,7 +148,7 @@ public class ActionProviderImpl implements ActionProvider {
                 prjImpl.primeProject().
                         thenAccept(gp -> {
                             LOG.log(Level.FINER, "Priming build of {0} finished with status {1}, ", new Object[] { project, prjImpl.isProjectPrimingRequired() });
-                            prg.finished(prjImpl.isProjectPrimingRequired());
+                            prg.finished(!prjImpl.isProjectPrimingRequired());
                         }).
                         exceptionally((e) -> { 
                             LOG.log(Level.FINER, e, () -> String.format("Priming build errored: %s", project));
@@ -162,8 +164,12 @@ public class ActionProviderImpl implements ActionProvider {
             }
             
         }
-        ActionMapping mapping = ActionToTaskUtils.getActiveMapping(command, project);
-        invokeProjectAction(project, mapping, context, false);
+        NbGradleProject gp = NbGradleProject.get(project);
+        GradleExecConfiguration execCfg = ProjectConfigurationSupport.getEffectiveConfiguration(project, context);
+        ProjectConfigurationSupport.executeWithConfiguration(project, execCfg, () -> {
+            ActionMapping mapping = ActionToTaskUtils.getActiveMapping(command, project, context);
+            invokeProjectAction2(project, mapping, execCfg, context, false);
+        });
     }
 
     @Override
@@ -237,32 +243,50 @@ public class ActionProviderImpl implements ActionProvider {
     }
 
     private static void invokeProjectAction(final Project project, final ActionMapping mapping, Lookup context, boolean showUI) {
+        GradleExecConfiguration execCfg = ProjectConfigurationSupport.getEffectiveConfiguration(project, context);
+        ProjectConfigurationSupport.executeWithConfiguration(project, execCfg, () ->  {
+            if (!invokeProjectAction2(project, mapping, execCfg, context, showUI)) {
+                // the caller may wait on the action not knowing that it's not going to be executed at all. Report a failure.
+                ActionProgress prg = ActionProgress.start(context);
+                prg.finished(false);
+            }
+        });
+    }
+    
+    private static boolean invokeProjectAction2(final Project project, final ActionMapping mapping, final GradleExecConfiguration execCfg, Lookup context, boolean showUI) {
         final String action = mapping.getName();
+        if (ActionMapping.isDisabled(mapping)) {
+            LOG.log(Level.FINE, "Attempt to run a config-disabled action: {0}", action);
+            return false;
+        }
+        if (!ActionToTaskUtils.isActionEnabled(action, project, context)) {
+            LOG.log(Level.FINE, "Attempt to run action that is not enabled: {0}", action);
+            return false;
+        }
         String argLine = askInputArgs(mapping.getDisplayName(), mapping.getArgs());
         if (argLine == null) {
-            return;
+            return false;
         }
         final StringWriter writer = new StringWriter();
-
         PrintWriter out = new PrintWriter(writer);
         Lookup ctx = project.getLookup().lookup(BeforeBuildActionHook.class).beforeAction(action, context, out);
 
         final NbGradleProjectImpl prj = project.getLookup().lookup(NbGradleProjectImpl.class);
         final String[] args = RunUtils.evaluateActionArgs(project, action, argLine, ctx);
         Set<ExecFlag> flags = mapping.isRepeatable() ? EnumSet.of(ExecFlag.REPEATABLE) : EnumSet.noneOf(ExecFlag.class);
-        RunConfig cfg = RunUtils.createRunConfig(project, action, taskName(project, action, ctx), flags, args);
+        RunConfig cfg = RunUtils.createRunConfig(project, action, taskName(project, action, ctx), ctx, execCfg, flags, args);
 
         if (showUI) {
             GradleExecutorOptionsPanel pnl = new GradleExecutorOptionsPanel(project);
             DialogDescriptor dd = new DialogDescriptor(pnl, TIT_Run_Gradle());
-            pnl.setCommandLine(cfg.getCommandLine());
+            pnl.setCommandLine(cfg.getCommandLine(), execCfg);
             Object retValue = DialogDisplayer.getDefault().notify(dd);
 
             if (retValue == DialogDescriptor.OK_OPTION) {
                 pnl.rememberAs();
                 cfg = cfg.withCommandLine(pnl.getCommandLine());
             } else {
-                return;
+                return false;
             }
         }
         
@@ -301,7 +325,7 @@ public class ActionProviderImpl implements ActionProvider {
             if (needReload && canReload) {
                 String[] reloadArgs = RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), ctx);
                 final ActionProgress g = ActionProgress.start(context);
-                RequestProcessor.Task reloadTask = prj.reloadProject(loadReason, true, maxQualily, reloadArgs);
+                RequestProcessor.Task reloadTask = prj.forceReloadProject(loadReason, false, maxQualily, reloadArgs);
                 reloadTask.addTaskListener((t) -> {
                     g.finished(true);
                 });
@@ -311,25 +335,28 @@ public class ActionProviderImpl implements ActionProvider {
             final ActionProgress g = ActionProgress.start(context);
             final Lookup outerCtx = ctx;
             task.addTaskListener((Task t) -> {
-                try {
-                    OutputWriter out1 = task.getInputOutput().getOut();
-                    boolean canReload = project.getLookup().lookup(BeforeReloadActionHook.class).beforeReload(action, outerCtx, task.result(), out1);
-                    if (needReload && canReload) {
-                        String[] reloadArgs = RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), outerCtx);
-                        RequestProcessor.Task reloadTask = prj.reloadProject(true, maxQualily, reloadArgs);
-                        reloadTask.waitFinished();
+                ProjectConfigurationSupport.executeWithConfiguration(project, execCfg, () -> {
+                    try {
+                        OutputWriter out1 = task.getInputOutput().getOut();
+                        boolean canReload = project.getLookup().lookup(BeforeReloadActionHook.class).beforeReload(action, outerCtx, task.result(), out1);
+                        if (needReload && canReload) {
+                            String[] reloadArgs = RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), outerCtx);
+                            RequestProcessor.Task reloadTask = prj.forceReloadProject(null, true, maxQualily, reloadArgs);
+                            reloadTask.waitFinished();
+                        }
+                        project.getLookup().lookup(AfterBuildActionHook.class).afterAction(action, outerCtx, task.result(), out1);
+                        for (AfterBuildActionHook l : context.lookupAll(AfterBuildActionHook.class)) {
+                            l.afterAction(action, outerCtx, task.result(), out1);
+                        }
+                    } finally {
+                        task.getInputOutput().getOut().close();
+                        task.getInputOutput().getErr().close();
+                        g.finished(task.result() == 0);
                     }
-                    project.getLookup().lookup(AfterBuildActionHook.class).afterAction(action, outerCtx, task.result(), out1);
-                    for (AfterBuildActionHook l : context.lookupAll(AfterBuildActionHook.class)) {
-                        l.afterAction(action, outerCtx, task.result(), out1);
-                    }
-                } finally {
-                    task.getInputOutput().getOut().close();
-                    task.getInputOutput().getErr().close();
-                    g.finished(task.result() == 0);
-                }
+                });
             });
         }
+        return true;
     }
 
     public static Action createCustomGradleAction(Project project, String name, ActionMapping mapping, Lookup context, boolean showUI) {
@@ -337,7 +364,7 @@ public class ActionProviderImpl implements ActionProvider {
     }
 
     public static Action createCustomGradleAction(Project project, String name, String command, Lookup context, boolean showUI) {
-        ActionMapping mapping = ActionToTaskUtils.getActiveMapping(command, project);
+        ActionMapping mapping = ActionToTaskUtils.getActiveMapping(command, project, context);
         return new CustomAction(project, name, mapping, context, showUI);
     }
 
@@ -508,12 +535,17 @@ public class ActionProviderImpl implements ActionProvider {
 
                 @Override
                 public void run() {
+                    // should also handle the active configuration.
                     ProjectActionMappingProvider provider = project.getLookup().lookup(ProjectActionMappingProvider.class);
 
                     final List<Action> acts = new ArrayList<>();
                     for (String action : provider.customizedActions()) {
                         if (action.startsWith(CustomActionMapping.CUSTOM_PREFIX)) {
                             ActionMapping mapp = provider.findMapping(action);
+                            if (ActionMapping.isDisabled(mapp)) {
+                                // action is disabled.
+                                continue;
+                            }
                             Action act = createCustomGradleAction(project, mapp.getName(), mapp, lookup, false);
                             String displayName = INPUT_PROP_REGEXP.matcher(mapp.getArgs()).find() ? mapp.getDisplayName() + "..." : mapp.getDisplayName();
 

@@ -288,7 +288,8 @@ public class TreePathHandleTest extends NbTestCase {
         }, true);
     }
 
-    public void test190101() throws Exception {
+    //nb-javac: JDK javac error recovery is not sufficient for this. Produces an ErroneousTree with start position -1:
+    public void NB_JAVAC_test190101() throws Exception {
         FileObject file = FileUtil.createData(sourceRoot, "test/test.java");
         String code = "package test;\n" +
                       "//public class Test {\n" +

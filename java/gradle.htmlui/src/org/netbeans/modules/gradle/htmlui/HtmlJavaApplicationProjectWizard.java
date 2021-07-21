@@ -35,7 +35,7 @@ import org.openide.util.NbBundle.Messages;
 @Messages("template.htmlUIProject=Java Frontend Application")
 public class HtmlJavaApplicationProjectWizard extends SimpleGradleWizardIterator {
     private static final String DEFAULT_LICENSE_TEMPLATE = "/Templates/Licenses/license-default.txt"; //NOI18N
-    
+
     @Messages("LBL_FrontendApplicationProject=Java Frontend Application with Gradle")
     public HtmlJavaApplicationProjectWizard() {
         super(Bundle.LBL_FrontendApplicationProject(), initParams());
@@ -45,7 +45,7 @@ public class HtmlJavaApplicationProjectWizard extends SimpleGradleWizardIterator
         Map<String, Object> params = new HashMap<>();
         return params;
     }
-    
+
     @Override
     protected List<? extends WizardDescriptor.Panel<WizardDescriptor>> createPanels() {
         return Collections.singletonList(createProjectAttributesPanel(null));
@@ -58,19 +58,25 @@ public class HtmlJavaApplicationProjectWizard extends SimpleGradleWizardIterator
 
         File rootDir = new File(loc, name);
         params.put(PROP_PROJECT_ROOT, rootDir);
-        
+
         ops.createFolder(rootDir);
 
-
-        FileObject folder = ((TemplateWizard)this.getData()).getTemplate().getPrimaryFile();
+        FileObject folder = readKey(params, "template", FileObject.class); // NOI18N
+        if (folder == null) {
+            folder = ((TemplateWizard)this.getData()).getTemplate().getPrimaryFile();
+        }
         GradleArchetype ga = new GradleArchetype(folder, rootDir, params);
         ga.copyTemplates(ops);
 
         Boolean initWrapper = (Boolean) params.get(PROP_INIT_WRAPPER);
-        if ((initWrapper != null) && initWrapper) {
+        if (initWrapper == null || initWrapper) {
             ops.addWrapperInit(rootDir);
         }
+    }
 
+    private static <T> T readKey(Map<String, Object> map, String key, Class<T> type) {
+        Object obj = map.get(key);
+        return type.isInstance(obj) ? type.cast(obj) : null;
     }
 
     public static class DummyProject {

@@ -23,7 +23,9 @@
 <filesystem>
     <folder name="Templates">
         <folder name="Groovy">
+            <attr name="displayName" bundlevalue="org.netbeans.modules.groovy.support.Bundle#Templates/Groovy"/>
             <attr name="position" intvalue="1350"/>
+            <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/groovy/support/resources/Groovy.html"/>
         </folder>
     </folder>
     <folder name="Editors">

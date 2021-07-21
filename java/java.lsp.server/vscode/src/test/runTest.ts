@@ -11,7 +11,7 @@ async function main() {
         // Passed to `--extensionDevelopmentPath`
         const extensionDevelopmentPath = path.resolve(__dirname, '../../');
 
-        const vscodeExecutablePath: string = await downloadAndUnzipVSCode('stable');
+        const vscodeExecutablePath: string = await downloadAndUnzipVSCode('1.56.2');
         const cliPath: string = resolveCliPathFromVSCodeExecutablePath(vscodeExecutablePath);
 
         cp.spawnSync(cliPath, ['--install-extension', 'hbenl.vscode-test-explorer'], {

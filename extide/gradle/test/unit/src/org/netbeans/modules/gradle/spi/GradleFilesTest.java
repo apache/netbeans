@@ -83,6 +83,15 @@ public class GradleFilesTest {
     }
 
     @Test
+    public void testGetBuildScript5() throws IOException {
+        File settings = root.newFile("settings.gradle");
+        GradleFiles gf = new GradleFiles(settings.getParentFile());
+        assertEquals("It is project", true, gf.isProject());
+        assertEquals("It has settings", settings, gf.getSettingsScript());
+        assertNull("No build script", gf.getBuildScript());
+    }
+
+    @Test
     public void testGetBuildScriptKotlin() throws IOException {
         File build = root.newFile("build.gradle.kts");
         GradleFiles gf = new GradleFiles(root.getRoot());

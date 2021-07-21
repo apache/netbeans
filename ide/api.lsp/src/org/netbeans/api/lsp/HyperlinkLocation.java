@@ -134,7 +134,8 @@ public final class HyperlinkLocation {
 
     /**
      * Resolves a hyperlink at the given document offset and returns its target
-     * location(s).
+     * location(s). Example usage can be illustrated by:
+     * {@codesnippet HyperlinkLocationTest#testHyperlinkResolve}
      *
      * @param doc document on which to operate.
      * @param offset offset within document
@@ -151,7 +152,7 @@ public final class HyperlinkLocation {
             List<HyperlinkLocation> locations = new ArrayList<>(futures.length);
             for (CompletableFuture<HyperlinkLocation> future : futures) {
                 HyperlinkLocation location = future.getNow(null);
-                if (location != null) {
+                if (location != null && location.getFileObject() != null) {
                     locations.add(location);
                 }
             }
@@ -161,7 +162,8 @@ public final class HyperlinkLocation {
 
     /**
      * Resolves a hyperlink at the given document offset and returns its target
-     * type definition location(s).
+     * type definition location(s). Example usage can be illustrated by:
+     * {@codesnippet HyperlinkLocationTest#testHyperlinkTypeDefResolve}
      *
      * @param doc document on which to operate.
      * @param offset offset within document

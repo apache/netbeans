@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.47
+#Version 1.48
 
 CLSS public abstract interface java.io.Serializable
 
@@ -21,7 +21,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -328,9 +327,9 @@ meth public boolean isEE5()
 meth public boolean isEE6()
 meth public boolean isEE7()
 meth public boolean isEE8()
+meth public boolean isEESpecWithJaxRS()
 meth public boolean isJakartaEE8()
 meth public boolean isJakartaEE9()
-meth public boolean isEESpecWithJaxRS()
 meth public boolean isRestSupportOn()
 meth public boolean isServerGFV2()
 meth public boolean isServerGFV3()
@@ -366,3 +365,4 @@ meth public static org.netbeans.modules.websvc.rest.spi.RestSupport$RestConfig[]
 meth public void setAppClassName(java.lang.String)
 supr java.lang.Enum<org.netbeans.modules.websvc.rest.spi.RestSupport$RestConfig>
 hfds appClassName
+

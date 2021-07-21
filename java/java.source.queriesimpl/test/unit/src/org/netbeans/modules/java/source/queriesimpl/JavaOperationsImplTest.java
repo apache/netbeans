@@ -29,6 +29,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.parsing.JavacParserFactory;
 import org.netbeans.modules.java.source.queries.spi.QueryOperationsTestBase;
 import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
@@ -60,7 +61,7 @@ public class JavaOperationsImplTest extends QueryOperationsTestBase {
         cacheFolder.mkdirs();
         CacheFolder.setCacheFolder(FileUtil.toFileObject(cacheFolder));
         CPProvider.srcPath = ClassPathSupport.createClassPath(srcRoot);
-        CPProvider.bootPath = ClassPathSupport.createClassPath(System.getProperty("sun.boot.class.path"));
+        CPProvider.bootPath = BootClassPathUtil.getBootClassPath();
         CPProvider.compilePath = ClassPathSupport.createClassPath(new URL[0]);
         MockServices.setServices(CPProvider.class);
         MockMimeLookup.setInstances(MimePath.parse("text/x-java"), new JavacParserFactory());

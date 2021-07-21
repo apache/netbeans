@@ -488,7 +488,6 @@ public class ActiveConfigAction extends CallableSystemAction implements LookupLi
         private Border defaultBorder = getBorder();
         
         ConfigCellRenderer() {
-            setOpaque(true);
         }
 
         public @Override Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -517,10 +516,15 @@ public class ActiveConfigAction extends CallableSystemAction implements LookupLi
             if ( isSelected ) {
                 setBackground(list.getSelectionBackground());
                 setForeground(list.getSelectionForeground());             
+                setOpaque(true);
             }
             else {
                 setBackground(list.getBackground());
                 setForeground(list.getForeground());
+                /* Avoid painting a background that does not match the rest of the JComboBox, in
+                particular when we are painting the item in the toolbar box rather than in the popup
+                list. */
+                setOpaque(false);
             }
             
             return this;

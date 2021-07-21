@@ -23,6 +23,7 @@ import java.util.concurrent.Future;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.netbeans.modules.java.lsp.server.LspSession;
+import org.netbeans.modules.java.lsp.server.files.OpenedDocuments;
 import org.openide.util.Lookup;
 
 /**
@@ -56,5 +57,9 @@ public final class NbLspServer implements LspSession.ScheduledServer {
     @Override
     public Future<Void> getRunningFuture() {
         return runningFuture;
+    }
+
+    public OpenedDocuments getOpenedDocuments() {
+        return impl.getOpenedDocuments();
     }
 }

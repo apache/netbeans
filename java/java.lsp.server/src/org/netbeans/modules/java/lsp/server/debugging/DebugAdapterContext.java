@@ -19,6 +19,8 @@
 package org.netbeans.modules.java.lsp.server.debugging;
 
 import java.io.IOError;
+import java.io.InputStream;
+import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
@@ -28,6 +30,7 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 
 import org.eclipse.lsp4j.debug.services.IDebugProtocolClient;
 
@@ -55,6 +58,7 @@ public final class DebugAdapterContext {
     private boolean isVmStopOnEntry = false;
     private boolean isDebugMode = true;
     private InternalHandle processExecutorHandle;
+    private Supplier<Writer> inputSinkProvider;
 
     private final AtomicInteger lastSourceReferenceId = new AtomicInteger(0);
     private final Map<Integer, Pair<URI, String>> sourcesById = new ConcurrentHashMap<>();
@@ -274,5 +278,13 @@ public final class DebugAdapterContext {
 
     public BreakpointsManager getBreakpointManager() {
         return this.breakpointManager;
+    }
+
+    public Writer getInputSink() {
+        return inputSinkProvider == null ? null : inputSinkProvider.get();
+    }
+
+    public void setInputSinkProvider(Supplier<Writer> inputSinkProvider) {
+        this.inputSinkProvider = inputSinkProvider;
     }
 }

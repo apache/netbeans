@@ -219,7 +219,7 @@ public final class SourceUtilsEx {
             }
 
             boolean caseSensitive = isCaseSensitive();
-            folders.addFirst(fo);
+            folders.add(fo);
             for (FileObject folder : folders) {
                 FileObject[] children = folder.getChildren();
                 for (FileObject child : children) {

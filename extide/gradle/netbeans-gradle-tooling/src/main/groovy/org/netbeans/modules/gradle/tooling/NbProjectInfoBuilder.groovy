@@ -74,9 +74,16 @@ class NbProjectInfoBuilder {
         detectTests(model)
         detectDependencies(model)
         detectArtifacts(model)
+        detectDistributions(model)
         return model
     }
 
+    private void detectDistributions(NbProjectInfoModel model) {
+        if (project.plugins.hasPlugin('distribution')) {
+           model.info.distributions = storeSet(project.distributions.collect() { it.name })
+        }
+    }
+    
     private void detectLicense(NbProjectInfoModel model) {
         def license = project.hasProperty('netbeans.license') ? project.property('netbeans.license').toString() : null;
         if (license == null) {
@@ -148,7 +155,8 @@ class NbProjectInfoBuilder {
             'ivy-publish', 'antlr', \
             'org.springframework.boot', \
             'com.github.lkishalmi.gatling', \
-            'com.android.library', 'com.android.application']) {
+            'com.android.library', 'com.android.application',
+            "io.micronaut.application"]) {
             if (project.plugins.hasPlugin(plugin)) {
                 plugins.add(plugin);
             }

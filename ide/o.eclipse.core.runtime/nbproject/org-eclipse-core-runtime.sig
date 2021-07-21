@@ -15,7 +15,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -38,7 +37,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -61,8 +59,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract java.net.URLConnection
 cons protected init(java.net.URL)
@@ -127,7 +123,6 @@ meth public void setReadTimeout(int)
 meth public void setRequestProperty(java.lang.String,java.lang.String)
 meth public void setUseCaches(boolean)
 supr java.lang.Object
-hfds connectTimeout,contentClassPrefix,contentPathProp,defaultAllowUserInteraction,defaultUseCaches,factory,fileNameMap,fileNameMapLoaded,handlers,readTimeout,requests
 
 CLSS public abstract interface java.util.EventListener
 
@@ -138,7 +133,6 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public abstract org.eclipse.core.internal.boot.PlatformURLConnection
 cons protected init(java.net.URL)

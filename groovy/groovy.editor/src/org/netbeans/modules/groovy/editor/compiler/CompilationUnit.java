@@ -39,6 +39,7 @@ import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.GenericsType;
 import org.codehaus.groovy.ast.MixinNode;
 import org.codehaus.groovy.control.ClassNodeResolver.LookupResult;
+import org.codehaus.groovy.control.ClassNodeResolver;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -64,6 +65,9 @@ public final class CompilationUnit extends org.codehaus.groovy.control.Compilati
             @NonNull final ClassNodeCache classNodeCache) {
 
         super(configuration, security, loader, transformationLoader);
+        Map<String, Boolean> opts = this.configuration.getOptimizationOptions();
+        opts.put("classLoaderResolving", Boolean.FALSE);
+        this.configuration.setOptimizationOptions(opts);
         this.ast = new CompileUnit(parser, this.classLoader, 
                 (n) -> {
                     LookupResult lr = getClassNodeResolver().resolveName(n, this);
@@ -75,7 +79,7 @@ public final class CompilationUnit extends org.codehaus.groovy.control.Compilati
                 },
                 security, this.configuration, cpInfo, classNodeCache);
     }
-
+    
     private static class CompileUnit extends org.codehaus.groovy.ast.CompileUnit {
         private final Function<String, ClassNode> classResolver;
         private final ClassNodeCache cache;

@@ -20,11 +20,13 @@ package org.netbeans.modules.groovy.editor.compiler;
 
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyResourceLoader;
+import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -42,6 +44,7 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
+import org.openide.util.Enumerations;
 
 /**
  *
@@ -106,6 +109,18 @@ public final class ClassNodeCache {
                 (double)hitCount/invocationCount*100);
         }
         return result;
+    }
+    
+    public boolean isNonExistentResource(@NonNull final CharSequence name) {
+        return nonExistent.containsKey(name);
+    }
+    
+    public void addNonExistentResource(@NonNull final CharSequence name) {
+        LOG.log(
+            Level.FINE,
+            "Unreachable resource: {0}",    //NOI18N
+            name);
+        nonExistent.putIfAbsent(name, null);
     }
     
     public boolean isNonExistent (@NonNull final CharSequence name) {
@@ -305,7 +320,7 @@ public final class ClassNodeCache {
         private final GroovyResourceLoader resourceLoader
                 = (String filename) -> AccessController.doPrivileged(
                         (PrivilegedAction<URL>) () -> getSourceFile(filename));
-
+        
         public ParsingClassLoader(
                 @NonNull ClassPath path,
                 @NonNull CompilerConfiguration config,
@@ -315,21 +330,77 @@ public final class ClassNodeCache {
             this.path = path;
             this.cache = cache;
         }
-        
+
         @Override
         public Class loadClass(
                 final String name,
                 final boolean lookupScriptFiles,
                 final boolean preferClassOverScript,
                 final boolean resolve) throws ClassNotFoundException, CompilationFailedException {
+            LOG.log(Level.FINE, "Parser {4} asking for {0}, scripts {1}, classOverScript {2}, resolve {3}", 
+                    new Object[] { name, lookupScriptFiles, preferClassOverScript, resolve, 
+                        System.identityHashCode(this)
+                    });
+            String rn = null;
             if (preferClassOverScript && !lookupScriptFiles) {
+                rn = name.replace(".", "/") + ".class";
+                if (cache.isNonExistentResource(rn)) {
+                    LOG.log(Level.FINE, " -> cached NONE");
+                    throw CNF;
+                }
+                
                 //Ideally throw CNF but we need to workaround fix of issue #206811
                 //which hurts performance.
                 if (cache.isNonExistent(name)) {
+                    LOG.log(Level.FINE, " -> cached NONE");
                     throw CNF;
                 }
             }
-            return super.loadClass(name, lookupScriptFiles, preferClassOverScript, resolve);
+            boolean ok = false;
+            try {
+                Class c = super.loadClass(name, lookupScriptFiles, preferClassOverScript, resolve);
+                ok = true;
+                return c;
+            } finally {
+                if (!ok && rn != null) {
+                    cache.addNonExistentResource(rn);
+                }
+            }
+        }
+
+        @Override
+        public Enumeration<URL> getResources(String name) throws IOException {
+            if (cache.isNonExistentResource(name)) {
+                return Enumerations.empty();
+            }
+            Enumeration<URL> en = super.getResources(name);
+            if (!en.hasMoreElements()) {
+                cache.addNonExistentResource(name);
+            }
+            return en;
+        }
+
+        @Override
+        public URL getResource(String name) {
+            if (cache.isNonExistentResource(name)) {
+                return null;
+            }
+            URL u = super.getResource(name);
+            if (u == null) {
+                LOG.log(Level.FINE, " -> caching nonexistent: " + name);
+                cache.addNonExistentResource(name);
+            }
+            return u;
+        }
+
+        @Override
+        public URL findResource(String name) {
+            if (cache.isNonExistentResource(name)) {
+                return null;
+            }
+            LOG.log(Level.FINE, "Parser {1} findResource {0}", 
+                    new Object[] { name, System.identityHashCode(this) });
+            return super.findResource(name);
         }
 
         @Override

@@ -131,12 +131,7 @@ final class SuiteSources implements Sources,
             }
             String prevName = null;
             Group firstGroup = null;
-            String binPrefix;
-            if (mxPrj.subDir() == null) {
-                binPrefix = "mxbuild/";
-            } else {
-                binPrefix = "mxbuild/" + mxPrj.subDir() + "/";
-            }
+            String binPrefix = "mxbuild/";
             for (String rel : mxPrj.sourceDirs()) {
                 FileObject srcDir = prjDir.getFileObject(rel);
                 FileObject binDir = getSubDir(dir, binPrefix + name + "/bin");

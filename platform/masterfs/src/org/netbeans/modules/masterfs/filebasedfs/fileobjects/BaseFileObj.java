@@ -591,7 +591,7 @@ public abstract class BaseFileObj extends FileObject {
                     final FileObjectFactory factory = getFactory();
                     final File file = parent.getFile();
                     retVal = factory.getCachedOnly(file);
-                    retVal = (retVal == null) ? factory.getFileObject(new FileInfo(file), FileObjectFactory.Caller.GetParent) : retVal;
+                    retVal = (retVal == null) ? factory.getFileObject(new FileInfo(file), FileObjectFactory.Caller.GetParent, true) : retVal;
                 }
             } else if ((parent != null)) {
                 final FileObjectFactory factory = getFactory();
@@ -600,7 +600,13 @@ public abstract class BaseFileObj extends FileObject {
                     retVal = FileBasedFileSystem.getInstance().getRoot();
                 } else {
                     retVal = factory.getCachedOnly(file);
-                    retVal = (retVal == null) ? factory.getFileObject(new FileInfo(file), FileObjectFactory.Caller.GetParent) : retVal;
+                    if (retVal == null) {
+                        if (this.isValid()) {
+                            retVal = factory.getFileObject(new FileInfo(file), FileObjectFactory.Caller.GetParent, true);
+                        } else {
+                            retVal = factory.getFileObject(new FileInfo(file), FileObjectFactory.Caller.Refresh, false);
+                        }
+                    }
                 }
             }
             assert retVal != null : "getParent should not return null for " + this;

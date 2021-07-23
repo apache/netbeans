@@ -43,13 +43,14 @@ public class TruffleStackVariable implements TruffleVariable {
     private SourcePosition valueSource;
     private SourcePosition typeSource;
     private ObjectVariable guestObj;
+    private final boolean isReceiver;
     private boolean leaf;
     
     public TruffleStackVariable(JPDADebugger debugger, String name, LanguageName language,
                                 String type, boolean readable, boolean writable, boolean internal,
                                 String valueStr, boolean hasValueSource, Supplier<SourcePosition> valueSource,
                                 boolean hasTypeSource, Supplier<SourcePosition> typeSource,
-                                ObjectVariable truffleObj) {
+                                boolean isReceiver, ObjectVariable truffleObj) {
         this.debugger = debugger;
         this.name = name;
         this.language = language;
@@ -63,6 +64,7 @@ public class TruffleStackVariable implements TruffleVariable {
         this.valueSourceSupp = valueSource;
         this.typeSourceSupp = typeSource;
         this.guestObj = truffleObj;
+        this.isReceiver = isReceiver;
         this.leaf = TruffleVariableImpl.isLeaf(truffleObj);
     }
 
@@ -161,5 +163,10 @@ public class TruffleStackVariable implements TruffleVariable {
     @Override
     public Object[] getChildren() {
         return TruffleVariableImpl.getChildren(guestObj);
+    }
+
+    @Override
+    public boolean isReceiver() {
+        return isReceiver;
     }
 }

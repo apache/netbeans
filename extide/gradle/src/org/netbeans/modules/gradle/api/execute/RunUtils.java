@@ -52,14 +52,19 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.function.Function;
 import org.netbeans.api.project.ProjectInformation;
 
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
+import org.netbeans.modules.gradle.execute.ConfigurableActionProvider;
 import org.netbeans.modules.gradle.spi.GradleSettings;
+import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
+import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
+import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -111,7 +116,12 @@ public final class RunUtils {
         }
         return files.toArray(new FileObject[files.size()]);
     }
-
+    
+    /**
+     * Testing support: test can replace and mock the execution.
+     */
+    static Function<RunConfig, GradleExecutor> EXECUTOR_FACTORY = GradleDaemonExecutor::new;
+    
     /**
      * Executes a Gradle build with the given configuration. It can also take an
      * initial message, which is printed to the output tab before the actual
@@ -124,8 +134,16 @@ public final class RunUtils {
      */
     public static ExecutorTask executeGradle(RunConfig config, String initialOutput) {
         LifecycleManager.getDefault().saveAll();
+        
+        if (config.getExecConfig() == null) {
+            // enhance the RunConfig with the active Configuration.
+            config = new RunConfig(config.getProject(), config.getActionName(), 
+                    config.getTaskDisplayName(), config.getExecFlags(), config.getCommandLine(), 
+                    ProjectConfigurationSupport.getEffectiveConfiguration(config.getProject(), Lookup.EMPTY)
+            );
+        }
 
-        GradleDaemonExecutor exec = new GradleDaemonExecutor(config);
+        GradleExecutor exec = EXECUTOR_FACTORY.apply(config);
         ExecutorTask task = executeGradleImpl(config.getTaskDisplayName(), exec, initialOutput);
         GRADLE_TASKS.put(config, exec);
 
@@ -146,6 +164,31 @@ public final class RunUtils {
      * @since 1.5
      */
     public static RunConfig createRunConfig(Project project, String action, String displayName, Set<ExecFlag> flags, String... args) {
+        return createRunConfig(project, action, displayName, Lookup.EMPTY, ProjectConfigurationSupport.getEffectiveConfiguration(project, Lookup.EMPTY), flags, args);
+    }
+    
+    /**
+     * Create Gradle execution configuration (context). It applies the default
+     * setting from the project and the Global Gradle configuration on the
+     * command line. The passed {@link GradleExecConfiguration} is recorded in
+     * the {@link RunConfig#getExecConfig()}. If {@code null} is passed, the
+     * active project's configuration is recorded.
+     * 
+     * @param project The Gradle project
+     * @param action The name of the IDE action that's going to be executed
+     * @param displayName The display name of the output tab
+     * @param flags Execution flags.
+     * @param args Gradle command line arguments
+     * @return the Gradle execution configuration.
+     * @param context action infocation context
+     * @param cfg the desired configuration, or {@code null}.
+     * @since 2.13
+     */
+    public static RunConfig createRunConfig(Project project, String action, String displayName, Lookup context, 
+            GradleExecConfiguration cfg, Set<ExecFlag> flags, String... args) {
+        if (cfg == null) {
+            cfg = ProjectConfigurationSupport.getEffectiveConfiguration(project, context);
+        }
         GradleBaseProject gbp = GradleBaseProject.get(project);
 
         GradleCommandLine syscmd = GradleCommandLine.getDefaultCommandLine();
@@ -167,7 +210,7 @@ public final class RunUtils {
 
 
         GradleCommandLine cmd = GradleCommandLine.combine(basecmd, new GradleCommandLine(args));
-        RunConfig ret = new RunConfig(project, action, displayName, flags, cmd);
+        RunConfig ret = new RunConfig(project, action, displayName, flags, cmd, cfg);
         return ret;
     }
 
@@ -497,6 +540,23 @@ public final class RunUtils {
                 return Collections.singletonMap(token, value);
             }
         };
+    }
+    
+    /**
+     * Returns an action mapping provider for the specified project and context. Specifically 
+     * supports {@link ProjectConfiguration}s, so the returned provider will 
+     * @param p the project
+     * @param context the action invocation context
+     * @return action provider suitable for the project/context.
+     * @since 2.14
+     */
+    public static ProjectActionMappingProvider findActionProvider(Project p, Lookup context) {
+        ConfigurableActionProvider cap = p.getLookup().lookup(ConfigurableActionProvider.class);
+        if (cap == null) {
+            return p.getLookup().lookup(ProjectActionMappingProvider.class);
+        }
+        GradleExecConfiguration cfg = ProjectConfigurationSupport.getEffectiveConfiguration(p, context);
+        return cap.findActionProvider(cfg.getId());
     }
 
     /**

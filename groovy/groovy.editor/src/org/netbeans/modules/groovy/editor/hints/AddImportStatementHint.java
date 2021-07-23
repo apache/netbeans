@@ -89,7 +89,7 @@ public class AddImportStatementHint extends GroovyErrorRule {
                 HintFix fixToApply = new AddImportFix(fo, fqn);
                 fixList.add(fixToApply);
 
-                Hint descriptor = new Hint(this, fixToApply.getDescription(), fo, range,
+                Hint descriptor = new Hint(this, desc, fo, range,
                         fixList, DEFAULT_PRIORITY);
 
                 result.add(descriptor);
@@ -126,7 +126,7 @@ public class AddImportStatementHint extends GroovyErrorRule {
         return HintSeverity.ERROR;
     }
 
-    private static class AddImportFix implements HintFix {
+    private static class AddImportFix implements PreviewableFix {
 
         private final FileObject fo;
         private final String fqn;
@@ -147,7 +147,12 @@ public class AddImportStatementHint extends GroovyErrorRule {
 
         @Override
         public void implement() throws Exception {
-            ImportHelper.addImportStatement(fo, fqn);
+            getEditList().apply();
+        }
+
+        @Override
+        public EditList getEditList() throws Exception {
+            return ImportHelper.addImportStatementEdits(fo, fqn);
         }
 
         @Override
@@ -158,6 +163,11 @@ public class AddImportStatementHint extends GroovyErrorRule {
         @Override
         public boolean isInteractive() {
             return false;
+        }
+
+        @Override
+        public boolean canPreview() {
+            return true;
         }
     }
 }

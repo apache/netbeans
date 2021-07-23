@@ -50,7 +50,7 @@ public final class GradleExperimentalSettings {
     }
 
     public boolean isOpenLazy() {
-        return getPreferences().getBoolean(PROP_LAZY_OPEN_GROUPS, true);
+        return getPreferences().getBoolean(PROP_LAZY_OPEN_GROUPS, false);
     }
 
     public void setCacheDisabled(boolean b) {

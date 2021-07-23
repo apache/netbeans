@@ -98,8 +98,16 @@ public final class NbBreakpoint {
 
     public CompletableFuture<NbBreakpoint> install() {
         Breakpoint breakpoint;
-        if (sourceURL.toLowerCase().endsWith(".java")) {
-            LineBreakpoint b = LineBreakpoint.create(sourceURL, line);
+        String sourceURLLower = sourceURL.toLowerCase();
+        boolean isJava = sourceURLLower.endsWith(".java");      // NOI18N
+        boolean isGroovy = sourceURLLower.endsWith(".groovy");  // NOI18N
+        if (isJava || isGroovy) {
+            LineBreakpoint b;
+            if (isJava) {
+                b = LineBreakpoint.create(sourceURL, line);
+            } else {
+                b = GroovyBreakpointFactory.create(sourceURL, line);
+            }
             if (condition != null && !condition.isEmpty()) {
                 b.setCondition(condition);
             }

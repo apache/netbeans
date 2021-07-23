@@ -27,6 +27,7 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.lib.editor.util.ArrayUtilities;
 import org.netbeans.modules.micronaut.MicronautConfigProperties;
+import org.netbeans.modules.micronaut.MicronautConfigUtilities;
 import org.netbeans.spi.lsp.CompletionCollector;
 import org.openide.filesystems.FileObject;
 import org.springframework.boot.configurationmetadata.ConfigurationMetadataProperty;
@@ -35,13 +36,22 @@ import org.springframework.boot.configurationmetadata.ConfigurationMetadataPrope
  *
  * @author Dusan Balek
  */
-@MimeRegistration(mimeType = "text/x-yaml", service = CompletionCollector.class)
 public class MicronautConfigCompletionCollector implements CompletionCollector {
+
+    @MimeRegistration(mimeType = "text/x-yaml", service = CompletionCollector.class)
+    public static MicronautConfigCompletionCollector createYamlCollector() {
+        return new MicronautConfigCompletionCollector();
+    }
+
+    @MimeRegistration(mimeType = "text/x-properties", service = CompletionCollector.class)
+    public static MicronautConfigCompletionCollector createPropertiesCollector() {
+        return new MicronautConfigCompletionCollector();
+    }
 
     @Override
     public boolean collectCompletions(Document doc, int offset, Completion.Context context, Consumer<Completion> consumer) {
         FileObject fo = EditorDocumentUtils.getFileObject(doc);
-        if (fo != null && "application.yml".equalsIgnoreCase(fo.getNameExt())) {
+        if (MicronautConfigUtilities.isMicronautConfigFile(fo)) {
             Project project = FileOwnerQuery.getOwner(fo);
             if (project != null) {
                 if (MicronautConfigProperties.hasConfigMetadata(project)) {
@@ -50,13 +60,22 @@ public class MicronautConfigCompletionCollector implements CompletionCollector {
                         public Completion createTopLevelPropertyItem(String propName, int offset, int baseIndent, int indentLevelSize) {
                             StringBuilder insertText = new StringBuilder();
                             Completion.TextFormat insertTextFormat = Completion.TextFormat.PlainText;
-                            if ("*".equals(propName)) {
-                                insertText.append("$1:\n");
-                                ArrayUtilities.appendSpaces(insertText, baseIndent + indentLevelSize);
-                                insertTextFormat = Completion.TextFormat.Snippet;
+                            if (baseIndent < 0) {
+                                if ("*".equals(propName)) {
+                                    insertText.append("$1.");
+                                    insertTextFormat = Completion.TextFormat.Snippet;
+                                } else {
+                                    insertText.append(propName).append(".");
+                                }
                             } else {
-                                insertText.append(propName).append(":\n");
-                                ArrayUtilities.appendSpaces(insertText, indentLevelSize);
+                                if ("*".equals(propName)) {
+                                    insertText.append("$1:\n");
+                                    ArrayUtilities.appendSpaces(insertText, baseIndent + indentLevelSize);
+                                    insertTextFormat = Completion.TextFormat.Snippet;
+                                } else {
+                                    insertText.append(propName).append(":\n");
+                                    ArrayUtilities.appendSpaces(insertText, indentLevelSize);
+                                }
                             }
                             return CompletionCollector.newBuilder(propName).kind(Completion.Kind.Property).sortText(String.format("%4d%s", 10, propName))
                                     .insertText(insertText.toString()).insertTextFormat(insertTextFormat).build();
@@ -77,11 +96,19 @@ public class MicronautConfigCompletionCollector implements CompletionCollector {
                                 } else {
                                     insertText.append(part);
                                 }
-                                if (i < parts.length - 1) {
-                                    insertText.append(":\n");
-                                    ArrayUtilities.appendSpaces(insertText, (indent = indent + indentLevelSize));
+                                if (baseIndent < 0) {
+                                    if (i < parts.length - 1) {
+                                        insertText.append(".");
+                                    } else {
+                                        insertText.append("=");
+                                    }
                                 } else {
-                                    insertText.append(": ");
+                                    if (i < parts.length - 1) {
+                                        insertText.append(":\n");
+                                        ArrayUtilities.appendSpaces(insertText, (indent = indent + indentLevelSize));
+                                    } else {
+                                        insertText.append(": ");
+                                    }
                                 }
                             }
                             CompletionCollector.Builder builder = CompletionCollector.newBuilder(property.getId()).kind(Completion.Kind.Property)

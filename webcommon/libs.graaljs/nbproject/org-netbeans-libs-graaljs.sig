@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.11
+#Version 1.12
 
 CLSS public abstract com.oracle.js.parser.AbstractParser
 cons protected init(com.oracle.js.parser.Source,com.oracle.js.parser.ErrorManager,boolean,int)
@@ -576,10 +576,9 @@ fld protected final com.oracle.js.parser.ir.Scope scope
 fld protected final int flags
 fld protected final java.util.List<com.oracle.js.parser.ir.Statement> statements
 fld public final static int IS_BODY = 32
-fld public final static int IS_EXPRESSION_BLOCK = 512
-fld public final static int IS_FOR_OF_BLOCK = 256
+fld public final static int IS_EXPRESSION_BLOCK
 fld public final static int IS_GLOBAL_SCOPE = 8
-fld public final static int IS_MODULE_BODY = 1024
+fld public final static int IS_MODULE_BODY
 fld public final static int IS_PARAMETER_BLOCK = 64
 fld public final static int IS_SWITCH_BLOCK = 128
 fld public final static int IS_SYNTHETIC = 16
@@ -596,7 +595,6 @@ meth public boolean hasSymbol(java.lang.String)
 meth public boolean isBreakableWithoutLabel()
 meth public boolean isCatchBlock()
 meth public boolean isExpressionBlock()
-meth public boolean isForOfBlock()
 meth public boolean isFunctionBody()
 meth public boolean isGlobalScope()
 meth public boolean isModuleBody()
@@ -1734,7 +1732,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -1743,7 +1740,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -1766,7 +1762,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -1789,6 +1784,4 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 

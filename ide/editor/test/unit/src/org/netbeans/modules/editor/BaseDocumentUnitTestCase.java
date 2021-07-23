@@ -248,8 +248,12 @@ public class BaseDocumentUnitTestCase extends NbTestCase {
         return editorKit;
     }
     
+    protected BaseDocument createDocument() {
+        return (BaseDocument)getEditorKit().createDefaultDocument();
+    }
+
     private BaseDocument createAndLoadDocument() {
-        BaseDocument bd = (BaseDocument)getEditorKit().createDefaultDocument();
+        BaseDocument bd = createDocument();
 
         if (loadDocumentText != null) {
             try {

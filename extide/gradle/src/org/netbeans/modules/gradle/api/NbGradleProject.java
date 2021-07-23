@@ -28,9 +28,13 @@ import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import java.util.prefs.Preferences;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -205,6 +209,30 @@ public final class NbGradleProject {
      */
     public boolean isUnloadable() {
         return getQuality().worseThan(Quality.SIMPLE);
+    }
+    
+    /**
+     * Attempts to refresh the project to at least the desired quality. The project information
+     * may be reloaded, if the project is currently loaded with lower {@link Quality} than {@code q}.
+     * If {@code forceLoad} is true, the project reloads even if the {@code q} is worse quality than
+     * the current {@link #getQuality()} level. Reason for the reload may be specified: if the reload
+     * takes some time (i.e. executing Gradle build), the IDE may use the {@code reason} text to annotate
+     * the ongoing progress.
+     * <p/>
+     * The returned {@link CompletionStage} may complete in this thread, or asynchronously in an unspecified thread.
+     * <p/>
+     * Note that the loading may fail, so the returned Quality may be <b>less than requested</b>. For example
+     * if the project is not trusted, its Gradle build will not be executed, so the returned quality can be {@link Quality#EVALUATED}.
+     * 
+     * @param reason reason for reload, may be {@code null}.
+     * @param q the desired quality of project information
+     * @param forceLoad force load even though the current info quality is sufficient.
+     * @return {@link CompletionStage} with the reloaded project. Use {@link CompletionStage#toCompletableFuture()}.{@link CompletableFuture#get get()} 
+     * to block waiting for the result.
+     * @since 2.11
+     */
+    public @NonNull CompletionStage<NbGradleProject> toQuality(@NullAllowed String reason, @NonNull Quality q, boolean forceLoad) {
+        return project.projectWithQualityTask(reason, q, false, forceLoad).thenApply(p -> this);
     }
 
     public Preferences getPreferences(boolean shared) {

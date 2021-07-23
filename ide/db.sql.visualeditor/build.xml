@@ -36,7 +36,7 @@
 
     <target name="sql">
       <mkdir dir="build"/>
-      <copy file="external/javacc-3.2.jar" tofile="build/javacc.jar"/>
+      <copy file="external/javacc-7.0.10.jar" tofile="build/javacc.jar"/>
       <javacc target="src/org/netbeans/modules/db/sql/visualeditor/parser/SQLParser.jj"
 	   javacchome="build">
       </javacc>

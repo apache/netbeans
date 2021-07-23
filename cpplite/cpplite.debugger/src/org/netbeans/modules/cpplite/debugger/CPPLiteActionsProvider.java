@@ -77,7 +77,7 @@ public final class CPPLiteActionsProvider extends ActionsProviderSupport {
     public void doAction (Object action) {
         LOGGER.log(Level.FINE, "CPPLiteDebugger.doAction({0}), is kill = {1}", new Object[]{action, action == ActionsManager.ACTION_KILL});
         if (action == ActionsManager.ACTION_KILL) {
-            debugger.finish();
+            debugger.finish(true);
         } else
         if (action == ActionsManager.ACTION_CONTINUE) {
             debugger.resume();

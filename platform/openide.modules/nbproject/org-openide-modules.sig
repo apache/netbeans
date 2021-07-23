@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.59
+#Version 7.60
 
 CLSS public abstract interface java.io.Externalizable
 intf java.io.Serializable

@@ -45,6 +45,7 @@ import org.netbeans.modules.xml.retriever.catalog.Utilities;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.BaseUtilities;
 import org.openide.util.NbBundle;
 
 /**
@@ -237,7 +238,7 @@ public class RetrieverTask {
                     result = new File(new URI(rent.getLocalBaseFile().getParentFile().toURI().toString()+"/"+temp.toString()));
             }
         }else{
-            File newFile = new File(new URI(rent.getLocalBaseFile().getParentFile().toURI().normalize().toString()+"/"+rent.getCurrentAddress())).getCanonicalFile();
+            File newFile = new File(new URI(BaseUtilities.normalizeURI(rent.getLocalBaseFile().getParentFile().toURI()).toString()+"/"+rent.getCurrentAddress())).getCanonicalFile();
             File newParentFile = getModifiedParentFile(rent.getLocalBaseFile(), newFile);
             if(rent.getLocalBaseFile() != newParentFile)
                 result = new File(new URI(newParentFile.getParentFile().toURI().toString()+"/"+rent.getCurrentAddress()));
@@ -282,7 +283,7 @@ public class RetrieverTask {
             resultStr = resultStr + "index";
         }
         try {
-            return new File(new URI(resultStr).normalize());
+            return new File(BaseUtilities.normalizeURI(new URI(resultStr)));
         } catch (URISyntaxException ex) {
             return null;
         }

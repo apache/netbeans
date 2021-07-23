@@ -66,7 +66,13 @@ public enum JavaEEProfile {
     v8_0_0_web(Version.v8_0_0, Type.WEB, "8.0.0-web"),
 
     /** JakartaEE 8 full profile. */
-    v8_0_0(Version.v8_0_0, Type.FULL, "8.0.0");
+    v8_0_0(Version.v8_0_0, Type.FULL, "8.0.0"),
+
+    /** JakartaEE 9 web profile. */
+    v9_0_0_web(Version.v9_0_0, Type.WEB, "9.0.0-web"),
+
+    /** JakartaEE 9 full profile. */
+    v9_0_0(Version.v9_0_0, Type.FULL, "9.0.0");
 
     ////////////////////////////////////////////////////////////////////////////
     // Inner enums                                                            //
@@ -120,7 +126,9 @@ public enum JavaEEProfile {
         /** JavaEE 1.8. */
         v1_8("1.8"),
         /** JakartaEE 8.0. */
-        v8_0_0("8.0.0");
+        v8_0_0("8.0.0"),
+        /** JakartaEE 8.0. */
+        v9_0_0("9.0.0");
 
         /** JavaEE profile type name. */
         private final String name;

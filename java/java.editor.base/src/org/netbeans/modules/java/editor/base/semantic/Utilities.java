@@ -150,6 +150,11 @@ public class Utilities {
             start = (int) positions.getStartPosition(cu, decl);
         }
 
+        if (start == end) {
+            //may happen for enum constants, would use an empty tokensequence
+            end = start + 1;
+        }
+
         return findTokenWithText(info, name, start, end);
     }
     

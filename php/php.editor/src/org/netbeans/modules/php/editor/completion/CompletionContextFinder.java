@@ -211,6 +211,7 @@ final class CompletionContextFinder {
         HTML, CLASS_NAME, INTERFACE_NAME,
         TYPE_NAME, RETURN_TYPE_NAME, RETURN_UNION_TYPE_NAME, FIELD_TYPE_NAME, VISIBILITY_MODIFIER_OR_TYPE_NAME, STRING,
         CLASS_MEMBER, STATIC_CLASS_MEMBER, PHPDOC, INHERITANCE, EXTENDS, IMPLEMENTS, METHOD_NAME,
+        CLASS_MEMBER_PARAMETER_NAME, STATIC_CLASS_MEMBER_PARAMETER_NAME, FUNCTION_PARAMETER_NAME,
         CLASS_CONTEXT_KEYWORDS, SERVER_ENTRY_CONSTANTS, NONE, NEW_CLASS, GLOBAL, NAMESPACE_KEYWORD,
         GROUP_USE_KEYWORD, GROUP_USE_CONST_KEYWORD, GROUP_USE_FUNCTION_KEYWORD,
         USE_KEYWORD, USE_CONST_KEYWORD, USE_FUNCTION_KEYWORD, DEFAULT_PARAMETER_VALUE, OPEN_TAG, THROW, THROW_NEW, CATCH, CLASS_MEMBER_IN_STRING,
@@ -368,6 +369,10 @@ final class CompletionContextFinder {
         CompletionContext paramContext = getParamaterContext(token, caretOffset, tokenSequence);
         if (paramContext != null) {
             return paramContext;
+        }
+        CompletionContext namedArgumentsContext = getNamedArgumentsContext(caretOffset, tokenSequence);
+        if (namedArgumentsContext != null) {
+            return namedArgumentsContext;
         }
 
         if (tokenSequence.movePrevious() && tokenSequence.token().id() == PHPTokenId.PHP_OPENTAG
@@ -1055,7 +1060,7 @@ final class CompletionContextFinder {
                 && TokenUtilities.textEquals(token.text(), "..."); // NOI18N
     }
 
-    private static boolean isLeftBracket(Token<PHPTokenId> token) {
+    private static boolean isLeftBracket(Token<? extends PHPTokenId> token) {
         return token.id().equals(PHPTokenId.PHP_TOKEN)
                 && TokenUtilities.textEquals(token.text(), "("); // NOI18N
     }
@@ -1160,7 +1165,7 @@ final class CompletionContextFinder {
                 || id == PHPTokenId.PHP_CALLABLE;
     }
 
-    private static boolean isComma(Token<PHPTokenId> token) {
+    private static boolean isComma(Token<? extends PHPTokenId> token) {
         return token.id().equals(PHPTokenId.PHP_TOKEN)
                 && TokenUtilities.textEquals(token.text(), ","); // NOI18N
     }
@@ -1354,6 +1359,83 @@ final class CompletionContextFinder {
             tokenSequence.moveNext();
         }
         return false;
+    }
+
+    @CheckForNull
+    static Token<? extends PHPTokenId> findFunctionInvocationName(TokenSequence<PHPTokenId> ts, int caretOffset) {
+        ts.move(caretOffset);
+        if (!ts.movePrevious()) {
+            return null;
+        }
+        // find ( or ,
+        Token<PHPTokenId> token = ts.token();
+        PHPTokenId id = token.id();
+        if (id != PHPTokenId.PHP_STRING
+                && id != PHPTokenId.WHITESPACE
+                && !isParamSeparator(token)) {
+            return null;
+        }
+        Token<? extends PHPTokenId> previousToken = LexUtilities.findPrevious(ts, Arrays.asList(PHPTokenId.PHP_STRING, PHPTokenId.WHITESPACE));
+        if (previousToken == null) {
+            return null;
+        }
+        if (isComma(previousToken)) {
+            // find (
+            int braceBalance = 0;
+            int curlyBalance = 0;
+            while (ts.movePrevious()) {
+                if (TokenUtilities.textEquals(ts.token().text(), "${") // NOI18N
+                        || TokenUtilities.textEquals(ts.token().text(), "{")) { // NOI18N
+                    curlyBalance++;
+                } else if (TokenUtilities.textEquals(ts.token().text(), "}")) { // NOI18N
+                    curlyBalance--;
+                } else if (TokenUtilities.textEquals(ts.token().text(), "(")) { // NOI18N
+                    if (braceBalance == 0) {
+                        previousToken = ts.token();
+                        break;
+                    }
+                    braceBalance++;
+                } else if (TokenUtilities.textEquals(ts.token().text(), ")")) { // NOI18N
+                    braceBalance--;
+                }
+                if (ts.token().id() == PHPTokenId.PHP_SEMICOLON && curlyBalance == 0) {
+                    // e.g. ; is used in labmda function: test(function(){return 1;}, );
+                    break;
+                }
+            }
+        }
+
+        if (isLeftBracket(previousToken) && ts.movePrevious()) {
+            // find a label "label("
+            previousToken = LexUtilities.findPrevious(ts, Arrays.asList(PHPTokenId.WHITESPACE));
+            if (previousToken == null) {
+                return null;
+            }
+            if (previousToken.id() == PHPTokenId.PHP_STRING) {
+                return ts.token();
+            }
+        }
+        return null;
+    }
+
+    @CheckForNull
+    private static CompletionContext getNamedArgumentsContext(final int caretOffset, final TokenSequence<PHPTokenId> ts) {
+        int originalOffset = ts.offset();
+        CompletionContext retval = null;
+        Token<? extends PHPTokenId> functionName = findFunctionInvocationName(ts, caretOffset);
+        if (functionName != null) {
+            ts.moveNext();
+            if (acceptTokenChains(ts, CLASS_MEMBER_TOKENCHAINS, true)) {
+                retval = CompletionContext.CLASS_MEMBER_PARAMETER_NAME;
+            } else if (acceptTokenChains(ts, STATIC_CLASS_MEMBER_TOKENCHAINS, true)) {
+                retval = CompletionContext.STATIC_CLASS_MEMBER_PARAMETER_NAME;
+            } else {
+                retval = CompletionContext.FUNCTION_PARAMETER_NAME;
+            }
+        }
+        ts.move(originalOffset);
+        ts.moveNext();
+        return retval;
     }
 
     private static boolean isInMatchExpression(final int caretOffset, final TokenSequence ts) {

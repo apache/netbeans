@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.groovy.editor.utils;
 
+import java.util.List;
 import javax.swing.text.BadLocationException;
 
 /**
@@ -38,6 +39,16 @@ public final class GroovyUtils {
      * @return singe typename without package, or method without type
      */
     public static String stripPackage(String fqn) {
+        if (fqn.contains("<")) {
+            // TODO: This does not handle inner classes well - NETBEANS-5787
+            int first = fqn.indexOf('<');
+            int last = fqn.lastIndexOf('>');
+            if (last > first) {
+                return stripPackage(fqn.substring(0, first)) + "<" +
+                        stripPackageFromTypeParams(fqn.substring(first + 1, last)) + ">" +
+                        fqn.substring(last + 1, fqn.length());
+            }
+        }
         if (fqn.contains(".")) {
             int idx = fqn.lastIndexOf(".");
             fqn = fqn.substring(idx + 1);
@@ -201,6 +212,49 @@ public final class GroovyUtils {
         BadLocationException ble = new BadLocationException(offset + " out of " + text.length(), offset);
         ble.initCause(ex);
         return ble;
+    }
+
+    private static String stripPackageFromTypeParams(String params) {
+        StringBuilder sb = new StringBuilder();
+        for (String param : params.split(",")) {
+            if (sb.length() > 0) {
+                sb.append(',');
+            }
+            int idx = param.indexOf("extends ");
+            if (idx < 0) {
+                idx = param.indexOf("super ");
+                if (idx < 0) {
+                    sb.append(stripPackage(param));
+                } else {
+                    sb.append(param.substring(0, idx + 6));
+                    sb.append(stripPackage(param.substring(idx + 6)));
+                }
+            } else {
+                sb.append(param.substring(0, idx + 8));
+                sb.append(stripPackage(param.substring(idx + 8)));
+            }
+        }
+        return sb.toString();
+    }
+    
+    /**
+     * True, if the indexing is enabled. Depends system property or {@link #setIndexingEnabled(boolean)}.
+     * 
+     */
+    private static volatile boolean indexingEnabled = Boolean.valueOf(System.getProperty("org.netbeans.modules.groovy.editor.api.indexingEnabled", "true"));
+    
+    /**
+     * Disables completely Groovy indexing. Temporary options only for 12.5 release, will be hopefully
+     * removed after Groovy performance improves. Currently used reflectively from java.lsp.server module only.
+     * DO NOT expose as an API.
+     * @param enabled 
+     */
+    public static void setIndexingEnabled(boolean enabled) {
+        indexingEnabled = enabled;
+    }
+    
+    public static boolean isIndexingEnabled() {
+        return indexingEnabled;
     }
 
 }

@@ -124,7 +124,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
     // not named extend() so as to avoid implementing WebFrameworkProvider.extend()
     // better to move this to JSFConfigurationPanel
     public Set extendImpl(WebModule webModule, TreeMap<String, JsfComponentCustomizer> jsfComponentCustomizers) {
-        Set result = new HashSet();
+        Set<FileObject> result = new HashSet<>();
         Library jsfLibrary = null;
         Library jstlLibrary = null;
 
@@ -741,7 +741,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
             String shortName;
             try {
                 shortName = Deployment.getDefault().getServerInstance(serverInstanceID).getServerID();
-                if ("gfv510ee8".equals(shortName) || "gfv5ee8".equals(shortName) || "gfv5".equals(shortName) || "gfv3ee6".equals(shortName) || "gfv3".equals(shortName)) {
+                if ("gfv6ee9".equals(shortName) || "gfv510ee8".equals(shortName) || "gfv5ee8".equals(shortName) || "gfv5".equals(shortName) || "gfv3ee6".equals(shortName) || "gfv3".equals(shortName)) {
                     return true;
                 }
             } catch (InstanceRemovedException ex) {

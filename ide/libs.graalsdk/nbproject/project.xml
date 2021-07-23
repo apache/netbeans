@@ -82,12 +82,12 @@
                 <package>org.netbeans.libs.graalsdk</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/graal-sdk-20.2.0.jar</runtime-relative-path>
-                <binary-origin>external/graal-sdk-20.2.0.jar</binary-origin>
+                <runtime-relative-path>ext/graal-sdk-20.3.0.jar</runtime-relative-path>
+                <binary-origin>external/graal-sdk-20.3.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/launcher-common-20.2.0.jar</runtime-relative-path>
-                <binary-origin>external/launcher-common-20.2.0.jar</binary-origin>
+                <runtime-relative-path>ext/launcher-common-20.3.0.jar</runtime-relative-path>
+                <binary-origin>external/launcher-common-20.3.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

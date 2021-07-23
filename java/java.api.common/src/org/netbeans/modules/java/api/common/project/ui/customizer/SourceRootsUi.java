@@ -242,7 +242,7 @@ public final class SourceRootsUi {
             this.ownedFolders.clear();
             this.rootsModel = (DefaultTableModel)rootsList.getModel();
             Vector data = rootsModel.getDataVector();
-            for (Iterator it = data.iterator(); it.hasNext();) {
+            for (Iterator<Vector<File>> it = data.iterator(); it.hasNext();) {
                 Vector row = (Vector) it.next ();
                 File f = (File) row.elementAt(0);
                 this.ownedFolders.add (f);

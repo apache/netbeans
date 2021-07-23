@@ -182,12 +182,16 @@ public class Util {
      */
     public static SpecificationVersion getSpecificationVersion(JavaPlatform plat) {
          String version = plat.getSystemProperties().get("java.specification.version");   // NOI18N
+
+         return getSpecificationVersion(version);
+    }
+
+    public static SpecificationVersion getSpecificationVersion(String version) {
          if (version == null) {
              version = "1.1";
          }
          return fixJDK9SpecVersion(makeSpec(version));
     }
-
 
     public static FileObject findTool (String toolName, Collection<FileObject> installFolders) {
         return findTool (toolName, installFolders, null);

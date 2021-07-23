@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.java.newproject;
 
-import org.netbeans.modules.gradle.java.newproject.Bundle;
 import static org.netbeans.modules.gradle.spi.newproject.BaseGradleWizardIterator.PROP_PACKAGE_BASE;
 import org.netbeans.modules.gradle.spi.newproject.SimpleGradleWizardIterator;
 import org.netbeans.modules.gradle.spi.newproject.TemplateOperation;
@@ -68,6 +67,9 @@ public class SimpleApplicationProjectWizard extends SimpleGradleWizardIterator {
         super.collectOperations(ops, params);
         String packageBase = (String) params.get(PROP_PACKAGE_BASE);
         String mainClassName = (String) params.get(MainClassPanel.PROP_MAIN_CLASS_NAME);
+        if (mainClassName == null) {
+            mainClassName = "Main";
+        }
         
         File mainJava = (File) params.get(PROP_MAIN_JAVA_DIR);
         File packageDir = new File(mainJava, packageBase.replace('.', '/'));

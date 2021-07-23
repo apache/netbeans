@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.maven.queries;
 
+import java.io.File;
 import java.util.Arrays;
 import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.junit.NbTestCase;
@@ -36,7 +37,8 @@ public class UnitTestsCompilerOptionsQueryImplTest extends NbTestCase {
 
     protected @Override void setUp() throws Exception {
         clearWorkDir();
-        wd = FileUtil.toFileObject(getWorkDir());
+        File withSpace = new File(getWorkDir(), "path with space");
+        wd = FileUtil.createFolder(withSpace);
     }
 
     public void testNoCompilerPluginSpecified() throws Exception {
@@ -59,13 +61,19 @@ public class UnitTestsCompilerOptionsQueryImplTest extends NbTestCase {
         TestFileUtils.writeFile(wd,
                                 "src/test/java/module-info.java",
                                 "module test { requires testng; }\n");
+        TestFileUtils.writeFile(wd,
+                                "target/generated-sources/java/test/Gen.java",
+                                "package test;\n" +
+                                "public class Gen {}\n");
         FileObject testSource =
         TestFileUtils.writeFile(wd,
                                 "src/test/java/test/APITest.java",
                                 "package test;\n" +
                                 "public class APITest {}\n");
         assertEquals(Arrays.asList("--patch-module",
-                                   "test=" + FileUtil.toFile(wd.getFileObject("src/main/java")).getAbsolutePath()),
+                                   "test=" + FileUtil.toFile(wd.getFileObject("src/main/java")).toURI().getPath() +
+                                             File.pathSeparator +
+                                             FileUtil.toFile(wd.getFileObject("target/generated-sources/java")).toURI().getPath()),
                      CompilerOptionsQuery.getOptions(testSource).getArguments());
     }
 

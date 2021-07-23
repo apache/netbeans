@@ -82,7 +82,9 @@ public final class MicroProjectWizardIterator extends BaseWizardIterator {
         Archetype archetype = createMojoArchetype();
 
         Map<String, String> properties = new HashMap<>();
-        properties.put(PROP_PAYARA_MICRO_VERSION, payaraMicroVersion);
+        if (payaraMicroVersion != null) {
+            properties.put(PROP_PAYARA_MICRO_VERSION, payaraMicroVersion);
+        }
         properties.put(PROP_AUTO_BIND_HTTP, autoBindHttp);
         properties.put(PROP_CONTEXT_ROOT, contextRoot);
 

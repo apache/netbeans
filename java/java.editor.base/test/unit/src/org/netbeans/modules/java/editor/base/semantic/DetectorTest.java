@@ -662,12 +662,12 @@ public class DetectorTest extends TestBase {
 
     public void testBindingPattern() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_14");
+            SourceVersion.valueOf("RELEASE_16");
         } catch (IllegalArgumentException iae) {
             //OK, presumably no support for pattern matching
             return ;
         }
-        setSourceLevel("14");
+        setSourceLevel("16");
         performTest("BindingPattern",
                     "public class BindingPattern {\n" +
                     "    public boolean test(Object o) {\n" +

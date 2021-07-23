@@ -102,6 +102,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
@@ -538,6 +539,7 @@ final class VanillaCompileWorker extends CompileWorker {
             public Void visitCompilationUnit(CompilationUnitTree node, Void p) {
                 diags = dc.peekDiagnostics(cut.getSourceFile())
                           .stream()
+                          .filter(d -> d.getKind() == Diagnostic.Kind.ERROR)
                           .collect(Collectors.toMap(d -> d.getPosition(),
                                                     d -> Collections.singletonList(d),
                                                     (dl1, dl2) -> Stream.of(dl1, dl2)
@@ -660,9 +662,15 @@ final class VanillaCompileWorker extends CompileWorker {
                                       com.sun.tools.javac.util.List.of(make.Literal(message)),
                                       null);
                 nct.type = syms.runtimeExceptionType;
-                nct.constructor = syms.runtimeExceptionType.tsym.members().getSymbols(
-                        s -> s.getKind() == ElementKind.CONSTRUCTOR && s.type.getParameterTypes().size() == 1 && s.type.getParameterTypes().head.tsym == syms.stringType.tsym
-                ).iterator().next();
+                //find the constructor for RuntimeException(String):
+                for (Element el : ElementFilter.constructorsIn(syms.runtimeExceptionType.tsym.getEnclosedElements())) {
+                    Symbol s = (Symbol) el;
+
+                    if (s.getKind() == ElementKind.CONSTRUCTOR && s.type.getParameterTypes().size() == 1 && s.type.getParameterTypes().head.tsym == syms.stringType.tsym) {
+                        nct.constructor = s;
+                        break;
+                    }
+                }
                 return make.Throw(nct);
             }
 
@@ -704,7 +712,7 @@ final class VanillaCompileWorker extends CompileWorker {
                             csym.members_field.remove(member);
                         }
                     }
-                    if (errorClass || def.hasTag(JCTree.Tag.ERRONEOUS) || def.hasTag(JCTree.Tag.BLOCK)) {
+                    if (errorClass || def.hasTag(JCTree.Tag.ERRONEOUS)) {
                         clazz.defs = com.sun.tools.javac.util.List.filter(clazz.defs, def);
                     }
                 }

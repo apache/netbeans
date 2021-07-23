@@ -24,6 +24,7 @@ import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.actions.CustomActionRegistrationSupport;
+import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.openide.text.CloneableEditorSupport;
 
 /**
@@ -33,6 +34,8 @@ import org.openide.text.CloneableEditorSupport;
 public class GradleExecutorOptionsPanel extends javax.swing.JPanel {
 
     final Project project;
+    
+    private GradleExecConfiguration execConfig;
     
     public GradleExecutorOptionsPanel() {
         this(null);
@@ -55,7 +58,8 @@ public class GradleExecutorOptionsPanel extends javax.swing.JPanel {
         epCLI.requestFocus();
     }
 
-    public void setCommandLine(GradleCommandLine cmd) {
+    public void setCommandLine(GradleCommandLine cmd, GradleExecConfiguration cfg) {
+        this.execConfig = cfg;
         GradleCommandLine text = new GradleCommandLine(cmd);
         execOptions.setCommandLine(text);
         text.remove(ExecutionOptionsPanel.getCLIMask());
@@ -66,8 +70,9 @@ public class GradleExecutorOptionsPanel extends javax.swing.JPanel {
         String txt = tfRememberAs.getText().trim();
         if (!txt.isEmpty() && (project != null)) {
             CustomActionRegistrationSupport support = new CustomActionRegistrationSupport(project);
+            support.setActiveConfiguration(execConfig);
             support.registerCustomAction(txt, String.join(" ", getCommandLine().getFullCommandLine()));
-            support.save();
+            support.saveAndReportErrors();
             return true;
         }
         return false;

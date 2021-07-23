@@ -22,7 +22,6 @@ package org.netbeans.modules.db.sql.editor.completion;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.db.explorer.DatabaseConnection;
-import org.netbeans.api.editor.completion.Completion;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -41,39 +40,61 @@ import org.openide.util.NbBundle;
  * @author Andrei Badea
  */
 public class SQLCompletionProvider implements CompletionProvider {
-
+    @Override
     public CompletionTask createTask(int queryType, JTextComponent component) {
-        if (queryType == CompletionProvider.COMPLETION_QUERY_TYPE || queryType == CompletionProvider.COMPLETION_ALL_QUERY_TYPE) {
+        if (queryType == CompletionProvider.COMPLETION_QUERY_TYPE || 
+                queryType == CompletionProvider.COMPLETION_ALL_QUERY_TYPE) {
+            
+            /* to support DB related completion tasks (i.e. auto populating table 
+            names or db columns for given schema) check for connection */
             DatabaseConnection dbconn = findDBConn(component);
-            if (dbconn == null) {
-                // XXX perhaps should have an item in the completion instead?
-                Completion.get().hideAll();
-                SQLExecutionBaseAction.notifyNoDatabaseConnection();
-                return null;
-            }
+
             return new AsyncCompletionTask(new SQLCompletionQuery(dbconn), component);
         }
+        
+        // not a completion query type so return nothing
         return null;
     }
 
+    /**
+     * getAutoQueryTypes is invoked to check whether a popup with suggestions
+     * should be shown without the user explicitly asking for it.
+     * 
+     * If either #getAutoQueryTypes return a non-zero value or the user
+     * explicitly asks for completion, #createTask is invoked with the
+     * requested type. In case of SQL see
+     * org.netbeans.modules.db.sql.editor.completion.SQLCompletionQuery.
+     * 
+     * @param component
+     * @param typedText
+     * @return 
+     */
     public int getAutoQueryTypes(JTextComponent component, String typedText) {
+        // XXX: Check if "enable/disable" autocomplete is setting.  See NETBEANS-188
+        // If "." has not been typed then acceptable to start checking for options.
         if (!".".equals(typedText)) { // NOI18N
             return 0;
         }
+        // check typed text if dot is present at the selected offset
         if (!isDotAtOffset(component, component.getSelectionStart() - 1)) {
             return 0;
         }
+        
+        // check if there is a DB connection
         DatabaseConnection dbconn = findDBConn(component);
         if (dbconn == null) {
             String message = NbBundle.getMessage(SQLCompletionProvider.class, "MSG_NoDatabaseConnection");
             StatusDisplayer.getDefault().setStatusText(message);
-            return 0;
+            SQLExecutionBaseAction.notifyNoDatabaseConnection();
         }
-        if (dbconn.getJDBCConnection() == null) {
+
+        // check and notify if DB connection is inactive
+        if (dbconn != null && dbconn.getJDBCConnection() == null) {
             String message = NbBundle.getMessage(SQLCompletionProvider.class, "MSG_NotConnected");
             StatusDisplayer.getDefault().setStatusText(message);
-            return 0;
-        }
+            SQLExecutionBaseAction.notifyNoDatabaseConnection();            
+            // XXX: Maybe add content specific "fixs"
+            }
         return COMPLETION_QUERY_TYPE;
     }
 
@@ -101,24 +122,35 @@ public class SQLCompletionProvider implements CompletionProvider {
         return null;
     }
 
+    /**
+     * For given component object's doc model, determine if given offset 
+     * has applicable dot delimiter token
+     * @param component
+     * @param offset
+     * @return 
+     */
     private static boolean isDotAtOffset(JTextComponent component, final int offset) {
         final Document doc = component.getDocument();
         final boolean[] result = { false };
-        doc.render(new Runnable() {
-            public void run() {
-                TokenSequence<SQLTokenId> seq = getSQLTokenSequence(doc);
-                if (seq == null) {
-                    return;
-                }
-                seq.move(offset);
-                if (!seq.moveNext() && !seq.movePrevious()) {
-                    return;
-                }
-                if (seq.offset() != offset) {
-                    return;
-                }
-                result[0] = (seq.token().id() == SQLTokenId.DOT);
+        // trigger internal model rendering based on SQL tokens 
+        doc.render(() -> {
+            TokenSequence<SQLTokenId> seq = getSQLTokenSequence(doc);
+            // no SQL tokens found; done checking
+            if (seq == null) {
+                return;
             }
+            // in the sequence move to provided offset location
+            seq.move(offset);
+            // no next or previous so done looking for tokens; done checking
+            if (!seq.moveNext() && !seq.movePrevious()) {
+                return;
+            }
+            // if offset not consistent with sequence offset done checking
+            if (seq.offset() != offset) {
+                return;
+            }
+            // confirm token ID is applicable SQL "dot" token
+            result[0] = (seq.token().id() == SQLTokenId.DOT);
         });
         return result[0];
     }

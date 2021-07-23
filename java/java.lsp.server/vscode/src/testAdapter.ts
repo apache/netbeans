@@ -79,7 +79,18 @@ export class NbTestAdapter implements TestAdapter {
                 const suiteName = idx < 0 ? tests[0] : tests[0].slice(0, idx);
                 const current = this.children.find(s => s.id === suiteName);
                 if (current && current.file) {
-                    const methodName = idx < 0 ? undefined : tests[0].slice(idx + 1);
+                    let methodName;
+                    if (idx >= 0) {
+                        let test = current.children.find(t => t.id === tests[0]);
+                        if (test) {
+                            methodName = tests[0].slice(idx + 1);
+                        } else {
+                            let parents = current.children.filter(ti => tests[0].startsWith(ti.id));
+                            if (parents && parents.length === 1 && parents[0].type === 'suite') {
+                                methodName = parents[0].id.slice(idx + 1);
+                            }
+                        }
+                    }
                     if (methodName) {
                         await commands.executeCommand('java.run.single', Uri.file(current.file).toString(), methodName);
                     } else {
@@ -102,7 +113,18 @@ export class NbTestAdapter implements TestAdapter {
             const suiteName = idx < 0 ? tests[0] : tests[0].slice(0, idx);
             const current = this.children.find(s => s.id === suiteName);
             if (current && current.file) {
-                const methodName = idx < 0 ? undefined : tests[0].slice(idx + 1);
+                let methodName;
+                if (idx >= 0) {
+                    let test = current.children.find(t => t.id === tests[0]);
+                    if (test) {
+                        methodName = tests[0].slice(idx + 1);
+                    } else {
+                        let parents = current.children.filter(ti => tests[0].startsWith(ti.id));
+                        if (parents && parents.length === 1 && parents[0].type === 'suite') {
+                            methodName = parents[0].id.slice(idx + 1);
+                        }
+                    }
+                }
                 if (methodName) {
                     await commands.executeCommand('java.debug.single', Uri.file(current.file).toString(), methodName);
                 } else {
@@ -143,6 +165,9 @@ export class NbTestAdapter implements TestAdapter {
             case 'errored':
                 let errMessage: string | undefined;
                 if (suite.tests) {
+                    if (this.updateTests(suite, true)) {
+                        this.testsEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished', suite: this.testSuite });
+                    }
                     const currentSuite = this.children.find(s => s.id === suite.suiteName);
                     if (currentSuite) {
                         suite.tests.forEach(test => {
@@ -166,6 +191,12 @@ export class NbTestAdapter implements TestAdapter {
                                 }
                             }
                             let currentTest = (currentSuite as TestSuiteInfo).children.find(ti => ti.id === test.id);
+                            if (!currentTest) {
+                                let parents = (currentSuite as TestSuiteInfo).children.filter(ti => test.id.startsWith(ti.id));
+                                if (parents && parents.length === 1 && parents[0].type === 'suite') {
+                                    currentTest = parents[0].children.find(ti => ti.id === test.id);
+                                }
+                            }
                             if (currentTest) {
                                 this.statesEmitter.fire(<TestEvent>{ type: 'test', test: test.id, state: test.state, message, decorations });
                             } else if (test.state !== 'passed' && message && !errMessage) {
@@ -180,7 +211,7 @@ export class NbTestAdapter implements TestAdapter {
         }
     }
 
-    updateTests(suite: TestSuite): boolean {
+    updateTests(suite: TestSuite, preserveMissingTests?: boolean): boolean {
         let changed = false;
         const currentSuite = this.children.find(s => s.id === suite.suiteName);
         if (currentSuite) {
@@ -194,7 +225,8 @@ export class NbTestAdapter implements TestAdapter {
                 changed = true
             }
             if (suite.tests) {
-                const ids = new Set();
+                const ids: Set<string> = new Set();
+                const parentSuites: Map<TestSuiteInfo, string[]> = new Map();
                 suite.tests.forEach(test => {
                     ids.add(test.id);
                     let currentTest = (currentSuite as TestSuiteInfo).children.find(ti => ti.id === test.id);
@@ -209,11 +241,44 @@ export class NbTestAdapter implements TestAdapter {
                             changed = true;
                         }
                     } else {
-                        (currentSuite as TestSuiteInfo).children.push({ type: 'test', id: test.id, label: test.shortName, tooltip: test.fullName, file: test.file ? Uri.parse(test.file)?.path : undefined, line: test.line });
+                        let parents = (currentSuite as TestSuiteInfo).children.filter(ti => test.id.startsWith(ti.id));
+                        if (parents && parents.length === 1) {
+                            let childSuite: TestSuiteInfo = parents[0].type === 'suite' ? parents[0] : { type: 'suite', id: parents[0].id, label: parents[0].label, file: parents[0].file, line: parents[0].line, children: [] };
+                            if (!parentSuites.has(childSuite)) {
+                                parentSuites.set(childSuite, childSuite.children.map(ti => ti.id));
+                            }
+                            if (parents[0].type === 'test') {
+                                (currentSuite as TestSuiteInfo).children[(currentSuite as TestSuiteInfo).children.indexOf(parents[0])] = childSuite;
+                                changed = true;
+                            }
+                            currentTest = childSuite.children.find(ti => ti.id === test.id);
+                            if (currentTest) {
+                                let arr = parentSuites.get(childSuite);
+                                let idx = arr ? arr.indexOf(currentTest.id) : -1;
+                                if (idx >= 0) {
+                                    arr?.splice(idx, 1);
+                                }
+                            } else {
+                                let label = test.shortName;
+                                if (label.startsWith(childSuite.label)) {
+                                    label = label.slice(childSuite.label.length).trim();
+                                }
+                                childSuite.children.push({ type: 'test', id: test.id, label, tooltip: test.fullName, file: test.file ? Uri.parse(test.file)?.path : undefined, line: test.line });
+                                changed = true;
+                            }
+                        } else {
+                            (currentSuite as TestSuiteInfo).children.push({ type: 'test', id: test.id, label: test.shortName, tooltip: test.fullName, file: test.file ? Uri.parse(test.file)?.path : undefined, line: test.line });
+                            changed = true;
+                        }
+                    }
+                });
+                parentSuites.forEach((val, key) => {
+                    if (val.length > 0) {
+                        key.children = key.children.filter(ti => val.indexOf(ti.id) < 0);
                         changed = true;
                     }
                 });
-                if ((currentSuite as TestSuiteInfo).children.length !== ids.size) {
+                if (!preserveMissingTests && (currentSuite as TestSuiteInfo).children.length !== ids.size) {
                     (currentSuite as TestSuiteInfo).children = (currentSuite as TestSuiteInfo).children.filter(ti => ids.has(ti.id));
                     changed = true;
                 }

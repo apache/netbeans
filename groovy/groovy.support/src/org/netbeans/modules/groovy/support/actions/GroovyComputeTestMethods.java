@@ -27,10 +27,14 @@ import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
 import org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods;
+import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.spi.project.SingleMethod;
+import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -64,9 +68,12 @@ public class GroovyComputeTestMethods implements ComputeTestMethods {
                                 int startOffset = getOffset(text, startLine, startColumn);
                                 int endOffset = getOffset(text, endLine, endColumn);
                                 String name = annotation.getMember("name").getText();
-                                result.add(new TestMethodController.TestMethod(classNode.getName(),
+                                FileObject fileObject = parserResult.getSnapshot().getSource().getFileObject();
+                                Project project = FileOwnerQuery.getOwner(fileObject);
+                                boolean isMaven = project != null && project.getLookup().lookup(NbMavenProject.class) != null;
+                                result.add(new TestMethodController.TestMethod(isMaven ? classNode.getNameWithoutPackage() : classNode.getName(),
                                         new SimplePosition(classOffset),
-                                        new SingleMethod(parserResult.getSnapshot().getSource().getFileObject(), name),
+                                        new SingleMethod(fileObject, name),
                                         new SimplePosition(startOffset),
                                         new SimplePosition(startOffset),
                                         new SimplePosition(endOffset)));

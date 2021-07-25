@@ -41,7 +41,7 @@ import org.openide.util.actions.NodeAction;
  * @author Benjamin Asbach
  */
 @ActionID(id = "org.netbeans.modules.refactoring.java.java.ui.CopyFullyQualifiedClassNameAction", category = "Edit")
-@ActionRegistration(displayName = "Copy Fully Qualified Class Name", lazy = false)
+@ActionRegistration(displayName = "Copy Fully Qualified Class Name", lazy = true)
 @ActionReferences( value = {
     @ActionReference(path = "Editors/text/x-java/Popup", position = 3500),
     @ActionReference(path = "Loaders/text/x-java/Actions", position = 610)

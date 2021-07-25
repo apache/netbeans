@@ -20,6 +20,7 @@
 package org.netbeans.modules.refactoring.java.ui;
 
 import java.awt.Toolkit;
+import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.openide.awt.ActionID;
@@ -44,6 +45,8 @@ import org.openide.util.actions.NodeAction;
     @ActionReference(path = "Loaders/text/x-java/Actions", position = 610)
 })
 public class CopyFullyQualifiedClassNameAction extends NodeAction {
+
+    private static final ClipboardOwner NO_CLIPBOARD_OWNER = null;
 
     private final String name;
     
@@ -82,7 +85,7 @@ public class CopyFullyQualifiedClassNameAction extends NodeAction {
     }
 
     private void setClipboardContent(String content) {
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(content), null);
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(content), NO_CLIPBOARD_OWNER);
     }
 
     @Override

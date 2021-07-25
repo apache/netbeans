@@ -91,8 +91,8 @@ public class CopyFullyQualifiedClassNameAction extends NodeAction {
     }
 
     private boolean containsAnyFileObject(Node[] activatedNodes) {
-        for (Node activatedNod : activatedNodes) {
-            FileObject fileObject = activatedNod.getLookup().lookup(FileObject.class);
+        for (Node activatedNode : activatedNodes) {
+            FileObject fileObject = activatedNode.getLookup().lookup(FileObject.class);
             if (fileObject != null) {
                 return true;
             }

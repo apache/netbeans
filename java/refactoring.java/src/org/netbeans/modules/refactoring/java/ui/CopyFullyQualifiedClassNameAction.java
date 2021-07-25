@@ -22,6 +22,8 @@ package org.netbeans.modules.refactoring.java.ui;
 import java.awt.Toolkit;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
+import java.util.ArrayList;
+import java.util.List;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -56,6 +58,8 @@ public class CopyFullyQualifiedClassNameAction extends NodeAction {
     
     @Override
     protected void performAction(Node[] activatedNodes) {
+        List<String> fullyQualifiedClassNames = new ArrayList<>(activatedNodes.length);
+
         for (Node activatedNode : activatedNodes) {
             FileObject javaSource = activatedNode.getLookup().lookup(FileObject.class);
             if (javaSource == null) {
@@ -76,8 +80,10 @@ public class CopyFullyQualifiedClassNameAction extends NodeAction {
                 fullyQualifiedClassName = packageName + "." + javaSource.getName();
             }
 
-            setClipboardContent(fullyQualifiedClassName);
+            fullyQualifiedClassNames.add(fullyQualifiedClassName);
         }
+
+        setClipboardContent(String.join(System.lineSeparator(), fullyQualifiedClassNames));
     }
 
     private boolean isDefaultPackage(String packageName) {

@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Properties;
 import java.util.Arrays;
 import java.util.Collection;
@@ -36,6 +37,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.gradle.tooling.ConfigurableLauncher;
@@ -836,6 +838,7 @@ public final class GradleCommandLine implements Serializable {
         addGradleSettingJvmargs(rootDir, jvmargs);
         launcher.setJvmArguments(jvmargs);
         List<String> args = new LinkedList<>(getArgs(EnumSet.of(PARAM)));
+        configureGradleHome(launcher);
         args.addAll(tasks);
         launcher.withArguments(args);
     }
@@ -921,4 +924,34 @@ public final class GradleCommandLine implements Serializable {
         return ret;
     }
 
+
+    /**
+     * For testing purposesl. Use {@link #setHomeProvider} to set. Never null, possibly no op
+     */
+    private static Supplier<Path> gradleHomeProvider = () -> null;
+
+    /**
+     * Testing support: allows to operate in a separate directory, i.e. without downloaded jars etc. In order to  use,
+     * make an accessor in the test sources, in the same package (no accessor is in production sources).
+     * @param homeProvider 
+     */
+    static void setHomeProvider(Supplier<Path> homeProvider) {
+        if (homeProvider == null) {
+            homeProvider = () -> null;
+        }
+        gradleHomeProvider = homeProvider;
+    }
+    
+    /**
+     * Configures the launcher with parameters.
+     * @param launcher
+     */
+    static ConfigurableLauncher<?> configureGradleHome(ConfigurableLauncher<?> launcher) {
+        Path home = gradleHomeProvider.get();
+        if (home != null) {
+            return launcher.withArguments("--gradle-user-home", home.toString());
+        } else {
+            return launcher;
+        }
+    }
 }

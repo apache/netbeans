@@ -664,7 +664,7 @@ public class WebFreeFormActionProvider implements ActionProvider {
         Element data = Util.getPrimaryConfigurationData(helper);
         Element foldersEl = XMLUtil.findElement(data, "folders", Util.NAMESPACE); // NOI18N
         if (foldersEl != null) {
-            for (Iterator i = XMLUtil.findSubElements(foldersEl).iterator(); i.hasNext();) {
+            for (Iterator<Element> i = XMLUtil.findSubElements(foldersEl).iterator(); i.hasNext();) {
                 Element sourceFolderEl = (Element)i.next();
                 Element typeEl = XMLUtil.findElement(sourceFolderEl , "type", Util.NAMESPACE); // NOI18N
                 if (typeEl == null || !XMLUtil.findText(typeEl).equals(type))

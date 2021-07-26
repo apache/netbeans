@@ -124,6 +124,18 @@ public class GroovyParser extends Parser {
     @Override
     public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) throws ParseException {
         cancelled.set(false);
+        
+        if (!GroovyUtils.isIndexingEnabled()) {
+            // HACK: Indexing cannot be registered 'conditionally'. Once an indexer is registered for text/x-groovy,
+            // RepositoryUpdater infrastructure calls the registred parser on all text/x-groovy sources even before
+            // the Indexer can reject the file as indexable.
+            // this hack attempts to detect that the parser is being called from RepositoryUpdater and returns null
+            // immediately if so.
+            if (task != null && task.getClass().getName().contains(".RepositoryUpdater$")) { // NOI18N
+                lastResult = createParseResult(snapshot, null, null);
+                return;
+            }
+        }
 
         Context context = new Context(snapshot, event);
         final Set<Error> errors = new HashSet<Error>();

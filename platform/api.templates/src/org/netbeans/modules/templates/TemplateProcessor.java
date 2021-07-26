@@ -39,6 +39,7 @@ import org.netbeans.api.templates.TemplateRegistration;
 import org.netbeans.api.templates.TemplateRegistrations;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerGeneratingProcessor;
+import org.openide.util.BaseUtilities;
 import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service=Processor.class)
@@ -161,7 +162,7 @@ public class TemplateProcessor extends LayerGeneratingProcessor {
         String path = LayerBuilder.absolutizeResource(e, relativePath);
         builder.validateResource(path, e, t, annotationMethod, false);
         try {
-            return new URI("nbresloc", "/" + path, null).normalize();
+            return BaseUtilities.normalizeURI(new URI("nbresloc", "/" + path, null));
         } catch (URISyntaxException x) {
             throw new LayerGenerationException("could not translate " + path, e, processingEnv, t);
         }

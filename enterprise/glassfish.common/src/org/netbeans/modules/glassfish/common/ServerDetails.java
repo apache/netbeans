@@ -41,6 +41,7 @@ import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_4_
 import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_5;
 import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_5_0_1;
 import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_6;
+import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_6_1_0;
 import org.netbeans.modules.glassfish.tooling.utils.ServerUtils;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle;
@@ -209,8 +210,19 @@ public enum ServerDetails {
     GLASSFISH_SERVER_6(NbBundle.getMessage(ServerDetails.class, "STR_6_SERVER_NAME", new Object[]{}), // NOI18N
         "deployer:gfv6ee9", // NOI18N
         6,
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.0.0-RC4/glassfish-6.0.0-RC4.zip", // NOI18N
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.0.0-RC4/glassfish-6.0.0-RC4.zip", // NOI18N
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.0.0/glassfish-6.0.0.zip", // NOI18N
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.0.0/glassfish-6.0.0.zip", // NOI18N
+        "http://www.eclipse.org/legal/epl-2.0" //NOI18N
+    ),
+
+    /**
+     * details for an instance of GlassFish Server 6.1.0
+     */
+    GLASSFISH_SERVER_6_1_0(NbBundle.getMessage(ServerDetails.class, "STR_610_SERVER_NAME", new Object[]{}), // NOI18N
+        "deployer:gfv610ee9", // NOI18N
+        6,
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.1.0/glassfish-6.1.0.zip", // NOI18N
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.1.0/glassfish-6.1.0.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     );
 
@@ -223,6 +235,7 @@ public enum ServerDetails {
     public static WizardDescriptor.InstantiatingIterator
             getInstantiatingIterator() {
         return new ServerWizardIterator(new ServerDetails[]{
+                    GLASSFISH_SERVER_6_1_0,
                     GLASSFISH_SERVER_6,
                     GLASSFISH_SERVER_5_1_0,
                     GLASSFISH_SERVER_5_0_1,
@@ -239,6 +252,7 @@ public enum ServerDetails {
                     GLASSFISH_SERVER_3_0_1,
                     GLASSFISH_SERVER_3},
                 new ServerDetails[]{
+                    GLASSFISH_SERVER_6_1_0,
                     GLASSFISH_SERVER_6,
                     GLASSFISH_SERVER_5_1_0,
                     GLASSFISH_SERVER_5_0_1,
@@ -283,6 +297,7 @@ public enum ServerDetails {
                 case GF_5_0_1:   return GLASSFISH_SERVER_5_0_1.getVersion();
                 case GF_5_1_0:   return GLASSFISH_SERVER_5_1_0.getVersion();
                 case GF_6:       return GLASSFISH_SERVER_6.getVersion();
+                case GF_6_1_0:   return GLASSFISH_SERVER_6_1_0.getVersion();
                 default:         return -1;
             }
         }

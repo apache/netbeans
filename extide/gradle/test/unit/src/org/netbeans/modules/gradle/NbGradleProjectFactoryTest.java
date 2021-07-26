@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.gradle;
 
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -114,6 +116,22 @@ public class NbGradleProjectFactoryTest extends AbstractGradleProjectTestCase {
 
         assertFalse("Pom wins on settings", NbGradleProjectFactory.isProjectCheck(prj, true));
         assertTrue("Gradle wins on parent build.gradle", NbGradleProjectFactory.isProjectCheck(prj, false));
+    }
+
+    public void testGradle70JavaInit() throws Exception {
+        FileObject parentPrj = root;
+        FileObject settings = FileUtil.createData(parentPrj, "settings.gradle");
+        try (OutputStream os = settings.getOutputStream()) {
+            os.write(("\n"
+                    + "rootProject.name = 'example'\n"
+                    + "include('app')\n"
+            ).getBytes(StandardCharsets.UTF_8));
+        }
+        FileObject app = FileUtil.createFolder(parentPrj, "app");
+        FileObject gradle = FileUtil.createData(app, "build.gradle");
+
+        assertTrue("Parent Gradle recognized", NbGradleProjectFactory.isProjectCheck(parentPrj, false));
+        assertTrue("Child Gradle recognized", NbGradleProjectFactory.isProjectCheck(app, false));
     }
 
 }

@@ -20,6 +20,7 @@
 package org.netbeans.modules.editor.actions;
 
 import java.awt.event.ActionEvent;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.JTextComponent;
@@ -34,34 +35,46 @@ import org.netbeans.api.editor.EditorActionNames;
  *
  * @author Miloslav Metelka
  */
-@EditorActionRegistrations({
-    @EditorActionRegistration(
-        name = EditorActionNames.toggleToolbar,
-        menuPath = "View",
-        menuPosition = 800,
-        menuText = "#" + EditorActionNames.toggleToolbar + "_menu_text",
-        preferencesKey = SimpleValueNames.TOOLBAR_VISIBLE_PROP
-    ),
-    @EditorActionRegistration(
-        name = EditorActionNames.toggleLineNumbers,
-        menuPath = "View",
-        menuPosition = 850,
-        menuText = "#" + EditorActionNames.toggleLineNumbers + "_menu_text",
-        preferencesKey = SimpleValueNames.LINE_NUMBER_VISIBLE
-    ),
-    @EditorActionRegistration(
-        name = EditorActionNames.toggleNonPrintableCharacters,
-        menuPath = "View",
-        menuPosition = 870,
-        menuText = "#" + EditorActionNames.toggleNonPrintableCharacters + "_menu_text",
-        preferencesKey = SimpleValueNames.NON_PRINTABLE_CHARACTERS_VISIBLE
-    )
-})
 public final class ToggleAction extends AbstractEditorAction {
+    /* Use eager initialization for these actions. Otherwise the selection ("checked") state of menu
+    items will not properly track the respective Preferences value (NETBEANS-5726). */
+    @EditorActionRegistrations({
+        @EditorActionRegistration(
+            name = EditorActionNames.toggleToolbar,
+            menuPath = "View",
+            menuPosition = 800,
+            menuText = "#" + EditorActionNames.toggleToolbar + "_menu_text",
+            preferencesKey = SimpleValueNames.TOOLBAR_VISIBLE_PROP
+        ),
+        @EditorActionRegistration(
+            name = EditorActionNames.toggleLineNumbers,
+            menuPath = "View",
+            menuPosition = 850,
+            menuText = "#" + EditorActionNames.toggleLineNumbers + "_menu_text",
+            preferencesKey = SimpleValueNames.LINE_NUMBER_VISIBLE
+        ),
+        @EditorActionRegistration(
+            name = EditorActionNames.toggleNonPrintableCharacters,
+            menuPath = "View",
+            menuPosition = 870,
+            menuText = "#" + EditorActionNames.toggleNonPrintableCharacters + "_menu_text",
+            preferencesKey = SimpleValueNames.NON_PRINTABLE_CHARACTERS_VISIBLE
+        )
+    })
+    public static ToggleAction create(Map<String,?> attrs) {
+        return new ToggleAction(attrs);
+    }
 
     private static final Logger LOG = Logger.getLogger(ToggleAction.class.getName());
 
     private static final long serialVersionUID = 1L;
+
+    public ToggleAction() {
+    }
+
+    private ToggleAction(Map<String,?> attrs) {
+        super(attrs);
+    }
 
     @Override
     public void actionPerformed(ActionEvent evt, JTextComponent component) {

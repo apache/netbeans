@@ -58,6 +58,9 @@
             <file name="TestSuite.java_hidden"/>
             <file name="org-netbeans-modules-junit-ui-wizards-SimpleTestCaseWizardIterator_hidden"/>
         </folder>
+        <folder name="Groovy">
+            <file name="GroovyJUnitTest.groovy_hidden"/>
+        </folder>
         <folder name="XML">
             <file name="XMLCatalog.xml_hidden"/>
         </folder>

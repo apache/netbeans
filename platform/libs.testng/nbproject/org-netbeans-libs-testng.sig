@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.25
+#Version 1.26
 
 CLSS public abstract interface java.io.Serializable
 
@@ -29,7 +29,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -38,7 +37,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -71,7 +69,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -94,8 +91,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -1977,9 +1972,7 @@ cons public init(org.testng.reporters.IBuffer,java.lang.String)
 fld public final static java.lang.String EOL
 meth public !varargs void addEmptyElement(java.lang.String,java.lang.String[])
 meth public !varargs void addOptional(java.lang.String,java.lang.String,java.lang.String[])
- anno 2 javax.annotation.Nullable()
 meth public !varargs void addRequired(java.lang.String,java.lang.String,java.lang.String[])
- anno 2 javax.annotation.Nullable()
 meth public !varargs void push(java.lang.String,java.lang.String[])
 meth public java.lang.String getCurrentIndent()
 meth public java.lang.String toXML()
@@ -1988,33 +1981,19 @@ meth public void addCDATA(java.lang.String)
 meth public void addComment(java.lang.String)
 meth public void addEmptyElement(java.lang.String)
 meth public void addEmptyElement(java.lang.String,java.util.Properties)
- anno 2 javax.annotation.Nullable()
 meth public void addOptional(java.lang.String,java.lang.Boolean)
- anno 2 javax.annotation.Nullable()
 meth public void addOptional(java.lang.String,java.lang.Boolean,java.util.Properties)
- anno 2 javax.annotation.Nullable()
- anno 3 javax.annotation.Nullable()
 meth public void addOptional(java.lang.String,java.lang.String)
- anno 2 javax.annotation.Nullable()
 meth public void addOptional(java.lang.String,java.lang.String,java.util.Properties)
- anno 2 javax.annotation.Nullable()
- anno 3 javax.annotation.Nullable()
 meth public void addRequired(java.lang.String,java.lang.String)
- anno 2 javax.annotation.Nullable()
 meth public void addRequired(java.lang.String,java.lang.String,java.util.Properties)
- anno 2 javax.annotation.Nullable()
- anno 3 javax.annotation.Nullable()
 meth public void addString(java.lang.String)
 meth public void pop()
 meth public void pop(java.lang.String)
 meth public void push(java.lang.String)
 meth public void push(java.lang.String,java.lang.String)
- anno 2 javax.annotation.Nullable()
 meth public void push(java.lang.String,java.lang.String,java.util.Properties)
- anno 2 javax.annotation.Nullable()
- anno 3 javax.annotation.Nullable()
 meth public void push(java.lang.String,java.util.Properties)
- anno 2 javax.annotation.Nullable()
 meth public void setDefaultComment(java.lang.String)
 meth public void setDocType(java.lang.String)
 meth public void setXmlDetails(java.lang.String,java.lang.String)
@@ -2033,18 +2012,13 @@ CLSS public final org.testng.reporters.XMLUtils
 meth public static java.lang.String escape(java.lang.String)
 meth public static java.lang.String extractComment(java.lang.String,java.util.Properties)
 meth public static java.lang.String xml(java.lang.String,java.lang.String,java.lang.String,java.util.Properties)
- anno 3 javax.annotation.Nullable()
- anno 4 javax.annotation.Nullable()
 meth public static void appendAttributes(org.testng.reporters.IBuffer,java.util.Properties)
 meth public static void xmlClose(org.testng.reporters.IBuffer,java.lang.String,java.lang.String,java.lang.String)
 meth public static void xmlOpen(org.testng.reporters.IBuffer,java.lang.String,java.lang.String,java.util.Properties)
 meth public static void xmlOpen(org.testng.reporters.IBuffer,java.lang.String,java.lang.String,java.util.Properties,boolean)
 meth public static void xmlOptional(org.testng.reporters.IBuffer,java.lang.String,java.lang.String,java.lang.Boolean,java.util.Properties)
 meth public static void xmlOptional(org.testng.reporters.IBuffer,java.lang.String,java.lang.String,java.lang.String,java.util.Properties)
- anno 4 javax.annotation.Nullable()
 meth public static void xmlRequired(org.testng.reporters.IBuffer,java.lang.String,java.lang.String,java.lang.String,java.util.Properties)
- anno 4 javax.annotation.Nullable()
- anno 5 javax.annotation.Nullable()
 supr java.lang.Object
 hfds EOL
 

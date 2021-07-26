@@ -32,7 +32,7 @@ METHOD     findResult(Closure)                        Object
 METHOD     findResult(Object, Closure)                Object
 METHOD     getAt(String)                              Object
 METHOD     getClass()                      [PUBLIC]   Class<?>
-METHOD     getInstance()                   [STATIC]   Singleton3
+METHOD     getInstance()                   [STATIC,   Singleton3
 METHOD     getMetaClass()                  [PUBLIC]   MetaClass
 METHOD     getMetaPropertyValues()                    List
 METHOD     getProperties()                            Map

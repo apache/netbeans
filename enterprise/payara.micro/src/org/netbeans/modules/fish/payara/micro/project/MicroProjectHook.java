@@ -48,8 +48,6 @@ public class MicroProjectHook extends ProjectHookImpl {
         if (MicroApplication.getInstance(project) != null) {
             addDeployOnSaveManager(project);
             updateMicroIcon();
-        } else {
-            super.projectOpened();
         }
     }
 
@@ -57,8 +55,6 @@ public class MicroProjectHook extends ProjectHookImpl {
     public void projectClosed() {
         if (MicroApplication.getInstance(project) != null) {
             removeDeployOnSaveManager(project);
-        } else {
-            super.projectOpened();
         }
     }
 

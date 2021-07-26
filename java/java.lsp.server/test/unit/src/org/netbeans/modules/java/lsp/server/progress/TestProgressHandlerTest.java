@@ -38,9 +38,11 @@ import org.netbeans.modules.gsf.testrunner.api.Status;
 import org.netbeans.modules.gsf.testrunner.api.TestSession;
 import org.netbeans.modules.gsf.testrunner.api.Testcase;
 import org.netbeans.modules.gsf.testrunner.api.Trouble;
+import org.netbeans.modules.java.lsp.server.protocol.DecorationRenderOptions;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.protocol.SetTextEditorDecorationParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
@@ -197,6 +199,22 @@ public class TestProgressHandlerTest extends NbTestCase {
         public NbCodeClientCapabilities getNbCodeCapabilities() {
             fail();
             return null;
+        }
+
+        @Override
+        public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
+            fail();
+            return null;
+        }
+
+        @Override
+        public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
+            fail();
+        }
+
+        @Override
+        public void disposeTextEditorDecoration(String params) {
+            fail();
         }
     }
 }

@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.security.CodeSource;
 import java.util.*;
 import java.util.concurrent.CancellationException;
+import java.util.function.Function;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
@@ -37,6 +38,8 @@ import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.GenericsType;
 import org.codehaus.groovy.ast.MixinNode;
+import org.codehaus.groovy.control.ClassNodeResolver.LookupResult;
+import org.codehaus.groovy.control.ClassNodeResolver;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -62,17 +65,30 @@ public final class CompilationUnit extends org.codehaus.groovy.control.Compilati
             @NonNull final ClassNodeCache classNodeCache) {
 
         super(configuration, security, loader, transformationLoader);
-        this.ast = new CompileUnit(parser, this.classLoader, security, this.configuration, cpInfo, classNodeCache);
+        Map<String, Boolean> opts = this.configuration.getOptimizationOptions();
+        opts.put("classLoaderResolving", Boolean.FALSE);
+        this.configuration.setOptimizationOptions(opts);
+        this.ast = new CompileUnit(parser, this.classLoader, 
+                (n) -> {
+                    LookupResult lr = getClassNodeResolver().resolveName(n, this);
+                    if (lr != null && lr.isClassNode()) {
+                        return lr.getClassNode();
+                    } else {
+                        return null;
+                    }
+                },
+                security, this.configuration, cpInfo, classNodeCache);
     }
-
+    
     private static class CompileUnit extends org.codehaus.groovy.ast.CompileUnit {
-
+        private final Function<String, ClassNode> classResolver;
         private final ClassNodeCache cache;
         private final GroovyParser parser;
         private final JavaSource javaSource;
         private final HashMap<String, ClassNode> temp = new HashMap<>();
 
         public CompileUnit(GroovyParser parser, GroovyClassLoader classLoader,
+                Function<String, ClassNode> classResolver,
                 CodeSource codeSource, CompilerConfiguration config,
                 ClasspathInfo cpInfo,
                 ClassNodeCache classNodeCache) {
@@ -80,6 +96,7 @@ public final class CompilationUnit extends org.codehaus.groovy.control.Compilati
             this.parser = parser;
             this.cache = classNodeCache;
             this.javaSource = cache.createResolver(cpInfo);
+            this.classResolver = classResolver;
         }
 
 
@@ -107,7 +124,21 @@ public final class CompilationUnit extends org.codehaus.groovy.control.Compilati
             if (cache.isNonExistent(name)) {
                 return null;
             }
-
+            
+            classNode = classResolver.apply(name);
+            if (classNode != null) {
+                cache.put(name, classNode);
+                return classNode;
+            }
+            classNode = super.getClass(name);
+            if (classNode != null) {
+                return classNode;
+            }
+            
+            // The following code is legacy and ClassNodes it creates are not fully populated with properties, fields and methods.
+            // they may be fine for type resolution, but definitely unsuitable for attribution of the AST, as they cannot resolve referenced
+            // members. Barely useful as proxies that are redirect()ed.
+            
             try {
                 // if it is a groovy file it is useless to load it with java
                 // at least until VirtualSourceProvider will do te job ;)
@@ -161,10 +192,10 @@ public final class CompilationUnit extends org.codehaus.groovy.control.Compilati
         private void initAnnotationType(ClassNode node, TypeElement typeElement) {
             node.setModifiers(Opcodes.ACC_ANNOTATION);
             node.setSuperClass(ClassHelper.Annotation_TYPE);
+            initTypeInterfaces(node, typeElement);
         }
-
-        private void initInterfaceKind(ClassNode node, TypeElement typeElement) {
-            int modifiers = 0;
+        
+        private void initTypeInterfaces(ClassNode node, TypeElement typeElement) {
             Set<ClassNode> interfaces = new HashSet<ClassNode>();
             Set<GenericsType> generics = new HashSet<>();
 
@@ -174,15 +205,19 @@ public final class CompilationUnit extends org.codehaus.groovy.control.Compilati
                         ClassNode typeParam = getClass(bound.toString());
                         generics.add(new GenericsType(typeParam));
                     }
-                }
-
-            modifiers |= Opcodes.ACC_INTERFACE;
+            }
             for (TypeMirror interfaceType : typeElement.getInterfaces()) {
                 interfaces.add(new ClassNode(Utilities.getClassName(interfaceType).toString(), Opcodes.ACC_INTERFACE, null));
             }
-            node.setModifiers(modifiers);
             node.setInterfaces(interfaces.toArray(new ClassNode[interfaces.size()]));
             node.setGenericsTypes(generics.toArray(new GenericsType[generics.size()]));
+        }
+
+        private void initInterfaceKind(ClassNode node, TypeElement typeElement) {
+            int modifiers = 0;
+            modifiers |= Opcodes.ACC_INTERFACE;
+            node.setModifiers(modifiers);
+            initTypeInterfaces(node, typeElement);
         }
 
         private void initClassType(ClassNode node, TypeElement typeElement) {

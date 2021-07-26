@@ -25,11 +25,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
+import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassCodeVisitorSupport;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.ConstructorNode;
 import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.ImportNode;
 import org.codehaus.groovy.ast.MethodNode;
+import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.ast.Parameter;
 import org.codehaus.groovy.ast.PropertyNode;
 import org.codehaus.groovy.ast.expr.ArgumentListExpression;
@@ -260,13 +263,7 @@ public class PathFinderVisitor extends ClassCodeVisitorSupport {
     @Override
     public void visitMethodCallExpression(MethodCallExpression node) {
         if (isInside(node, line, column)) {
-            // FIXME http://jira.codehaus.org/browse/GROOVY-3263
-            if (node.isImplicitThis()) {
-                node.getMethod().visit(this);
-                node.getArguments().visit(this);
-            } else {
                 super.visitMethodCallExpression(node);
-            }
         }
     }
 
@@ -537,6 +534,13 @@ public class PathFinderVisitor extends ClassCodeVisitorSupport {
     }
 
     @Override
+    protected void visitAnnotation(AnnotationNode node) {
+        if (isInside(node, line, column)) {
+            super.visitAnnotation(node);
+        }
+    }
+
+    @Override
     public void visitConstructor(ConstructorNode node) {
         // we don't want synthetic constructors duplicating field initial expressions
         if (!node.isSynthetic() && isInside(node, line, column)) {
@@ -563,7 +567,41 @@ public class PathFinderVisitor extends ClassCodeVisitorSupport {
     public void visitProperty(PropertyNode node) {
         // we don't want synthetic static initializers introducing this variables
         if (!node.isSynthetic() && isInside(node, line, column)) {
+            FieldNode field = node.getField();
+            if (field != null) {
+                visitAnnotations(field);
+            }
             super.visitProperty(node);
+        }
+    }
+
+    @Override
+    public void visitImports(ModuleNode node) {
+        if (node != null) {
+            for (ImportNode importNode : node.getImports()) {
+                if (isInside(importNode, line, column)) {
+                    visitAnnotations(importNode);
+                    importNode.visit(this);
+                }
+            }
+            for (ImportNode importStarNode : node.getStarImports()) {
+                if (isInside(importStarNode, line, column)) {
+                    visitAnnotations(importStarNode);
+                    importStarNode.visit(this);
+                }
+            }
+            for (ImportNode importStaticNode : node.getStaticImports().values()) {
+                if (isInside(importStaticNode, line, column)) {
+                    visitAnnotations(importStaticNode);
+                    importStaticNode.visit(this);
+                }
+            }
+            for (ImportNode importStaticStarNode : node.getStaticStarImports().values()) {
+                if (isInside(importStaticStarNode, line, column)) {
+                    visitAnnotations(importStaticStarNode);
+                    importStaticStarNode.visit(this);
+                }
+            }
         }
     }
 

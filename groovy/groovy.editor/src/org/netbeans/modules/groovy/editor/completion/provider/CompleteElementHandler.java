@@ -162,10 +162,23 @@ public final class CompleteElementHandler {
         
         // we can't go groovy and java - helper methods would be visible
         if (result.isEmpty()) {
-            String[] typeParameters = new String[(typeNode.isUsingGenerics() && typeNode.getGenericsTypes() != null)
-                    ? typeNode.getGenericsTypes().length : 0];
+            ClassNode redirected = typeNode.redirect();
+
+            String[] typeParameters = new String[(redirected.isUsingGenerics() && redirected.getGenericsTypes() != null)
+                    ? redirected.getGenericsTypes().length : 0];
+            GenericsType[] origTypes = typeNode.getGenericsTypes();
             for (int i = 0; i < typeParameters.length; i++) {
-                GenericsType genType = typeNode.getGenericsTypes()[i];
+                GenericsType genType = redirected.getGenericsTypes()[i];
+                
+                // a generic type with some explicit type parameters may redirect to a real type that specifies placeholders
+                // in place of the explicit type parameter values. So continue to take placeholders from the real type,
+                // byt replace actual type parameters.
+                if (origTypes != null && i < origTypes.length) {
+                    if (genType.getType() != null && genType.isPlaceholder() &&
+                        !origTypes[i].isPlaceholder()) {
+                        genType = origTypes[i];
+                    }
+                }
                 if (genType.getUpperBounds() != null) {
                     typeParameters[i] = Utilities.translateClassLoaderTypeName(genType.getUpperBounds()[0].getName());
                 } else {

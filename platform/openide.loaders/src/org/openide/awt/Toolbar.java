@@ -80,6 +80,9 @@ public class Toolbar extends ToolbarWithOverflow /*implemented by patchsuperclas
 
     private static final boolean isFlatLaF =
             UIManager.getLookAndFeel().getID().startsWith("FlatLaf");
+
+    private static final boolean isWindowsLaF =
+            UIManager.getLookAndFeel().getID().equals("Windows");
     
     static final long serialVersionUID = 5011742660516204764L;
     static {
@@ -182,9 +185,9 @@ public class Toolbar extends ToolbarWithOverflow /*implemented by patchsuperclas
                 ((AbstractButton) c).setBorderPainted(false);
                 ((AbstractButton) c).setOpaque(false);
             }
-            //This is active for GTK L&F. It should be fixed in JDK
-            //but it is not fixed in JDK 6.0.
-            if (!isMetalLaF && !isFlatLaF) {
+            if (isWindowsLaF) {
+                ((AbstractButton) c).setMargin(new Insets(2,1,0,1));
+            } else if (!isMetalLaF && !isFlatLaF) {
                 ((AbstractButton) c).setMargin( emptyInsets );
             }
             if( null != label && c != label ) {

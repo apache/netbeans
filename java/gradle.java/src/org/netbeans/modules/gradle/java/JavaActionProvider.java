@@ -54,6 +54,17 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
     private static final String GATLING_PLUGIN = "com.github.lkishalmi.gatling"; //NOI18N
     private static final String SIMULATION_POSTFIX = "Simulation.scala"; //NOI18N
 
+    /**
+     * Name of the 'download.sources' standard action
+     */
+    public static final String COMMAND_DL_SOURCES = "download.sources"; //NOI18N
+
+    /**
+     * Name of the 'download.javadoc' standard action
+     */
+    public static final String COMMAND_DL_JAVADOC = "download.javadoc"; //NOI18N
+
+
     private static final String[] SUPPORTED = new String[]{
         COMMAND_BUILD,
         COMMAND_CLEAN,
@@ -71,6 +82,9 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
         COMMAND_DEBUG_SINGLE,
         COMMAND_COMPILE_SINGLE,
         COMMAND_DELETE,
+        
+        COMMAND_DL_JAVADOC,
+        COMMAND_DL_SOURCES
     };
 
     public JavaActionProvider() {

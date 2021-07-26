@@ -772,7 +772,7 @@ public class MakeUpdateDesc extends MatchingTask {
                 } 
                 m2.reset();
                 StringBuilder depSB = new StringBuilder();
-                depSB.append(requiredBundleName); // dep CNB
+                depSB.append(requiredBundleName.replace('-', '_')); // dep CNB
                 while (m2.find()) {
                     if (!m2.group(1).equals("bundle-version")) {
                         continue;

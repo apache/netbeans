@@ -57,6 +57,7 @@ import org.netbeans.spi.project.support.ant.PropertyProvider;
 import org.netbeans.spi.project.support.ant.PropertyUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.BaseUtilities;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
@@ -298,7 +299,7 @@ public class JDKProject implements Project {
         public URL getLocation() {
             if (location == null) {
                 try {
-                    location = new URL(evaluator.evaluate(relPath)).toURI().normalize().toURL();
+                    location = BaseUtilities.normalizeURI(new URL(evaluator.evaluate(relPath)).toURI()).toURL();
                 } catch (MalformedURLException | URISyntaxException ex) {
                     Exceptions.printStackTrace(ex); //XXX
                 }

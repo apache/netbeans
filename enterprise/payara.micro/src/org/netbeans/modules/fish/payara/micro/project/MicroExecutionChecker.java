@@ -51,7 +51,7 @@ import org.netbeans.spi.project.ProjectServiceProvider;
         service = {
             ExecutionResultChecker.class,
             PrerequisitesChecker.class
-        }, 
+        },
         projectType = MAVEN_WAR_PROJECT_TYPE
 )
 public class MicroExecutionChecker extends ExecutionChecker {
@@ -87,13 +87,11 @@ public class MicroExecutionChecker extends ExecutionChecker {
         if (microApplication != null) {
             if (BUILD_ACTIONS.contains(config.getActionName())) {
                 microApplication.setBuilding(true, config.getActionName());
-            }else if (RUN_ACTIONS.contains(config.getActionName())) {
+            } else if (RUN_ACTIONS.contains(config.getActionName())) {
                 microApplication.setRunning(true, config.getActionName());
             }
-            return true;
-        } else {
-           return super.checkRunConfig(config);
         }
+        return true;
     }
 
     @Override
@@ -110,8 +108,6 @@ public class MicroExecutionChecker extends ExecutionChecker {
             } else if (RUN_ACTIONS.contains(config.getActionName())) {
                 microApplication.setRunning(false);
             }
-        } else {
-            super.executionResult(config, res, resultCode);
         }
     }
     

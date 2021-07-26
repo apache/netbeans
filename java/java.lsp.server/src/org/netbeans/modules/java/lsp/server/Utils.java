@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.lsp.server;
 
+import com.google.gson.stream.JsonWriter;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.Tree;
@@ -27,6 +28,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -223,4 +225,57 @@ public class Utils {
     private static File getCacheDir() {
         return Places.getCacheSubfile("java-server");
     }
+
+    private static final char[] SNIPPET_ESCAPE_CHARS = new char[] { '\\', '$', '}' };
+    /**
+     * Escape special characters in a completion snippet. Characters '$' and '}'
+     * are escaped via backslash.
+     */
+    public static String escapeCompletionSnippetSpecialChars(String text) {
+        if (text.isEmpty()) {
+            return text;
+        }
+        for (char c : SNIPPET_ESCAPE_CHARS) {
+            StringBuilder replaced = null;
+            int lastPos = 0;
+            int i = 0;
+            while ((i = text.indexOf(c, i)) >= 0) {
+                if (replaced == null) {
+                    replaced = new StringBuilder(text.length() + 5); // Text length + some escapes
+                }
+                replaced.append(text.substring(lastPos, i));
+                replaced.append('\\');
+                lastPos = i;
+                i += 1;
+            }
+            if (replaced != null) {
+                replaced.append(text.substring(lastPos, text.length()));
+                text = replaced.toString();
+            }
+            replaced = null;
+        }
+        return text;
+    }
+
+    /**
+     * Encode a String value to a valid JSON value. Enclose into quotes explicitly when needed.
+     */
+    public static String encode2JSON(String value) {
+        if (value.isEmpty()) {
+            return value;
+        }
+        StringWriter sw = new StringWriter();
+        try (JsonWriter w = new JsonWriter(sw)) {
+            w.beginArray();
+            w.value(value);
+            w.endArray();
+            w.flush();
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        String encoded = sw.toString();
+        // We have ["value"], remove the array and quotes
+        return encoded.substring(2, encoded.length() - 2);
+    }
+
 }

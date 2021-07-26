@@ -144,4 +144,19 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     public void notifyProgress(ProgressParams params) {
         remote.notifyProgress(params);
     }
+
+    @Override
+    public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
+        return remote.createTextEditorDecoration(params);
+    }
+
+    @Override
+    public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
+        remote.setTextEditorDecoration(params);
+    }
+
+    @Override
+    public void disposeTextEditorDecoration(String params) {
+        remote.disposeTextEditorDecoration(params);
+    }
 }

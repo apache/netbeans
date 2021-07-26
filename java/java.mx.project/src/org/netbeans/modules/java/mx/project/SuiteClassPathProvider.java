@@ -34,26 +34,11 @@ import org.openide.filesystems.FileObject;
 
 final class SuiteClassPathProvider extends ProjectOpenedHook implements ClassPathProvider, AnnotationProcessingQueryImplementation {
     private final SuiteProject project;
-    private final ClassPath bootCP;
+    private final Jdks jdks;
 
-    public SuiteClassPathProvider(SuiteProject project) {
+    public SuiteClassPathProvider(SuiteProject project, Jdks jdks) {
         this.project = project;
-        List<ClassPath.Entry> entries = JavaPlatformManager.getDefault().getDefaultPlatform().getBootstrapLibraries().entries();
-        List<URL> roots = new ArrayList<>();
-        for (ClassPath.Entry entry : entries) {
-            URL root = entry.getURL();
-            if (root.getPath().contains("/graal-sdk.jar")) {
-                continue;
-            }
-            if (root.getPath().contains("/graaljs-scriptengine.jar")) {
-                continue;
-            }
-            if (root.getPath().contains("/graal-sdk.src.zip")) {
-                continue;
-            }
-            roots.add(entry.getURL());
-        }
-        this.bootCP = ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
+        this.jdks = jdks;
     }
 
     @Override
@@ -63,7 +48,7 @@ final class SuiteClassPathProvider extends ProjectOpenedHook implements ClassPat
             return null;
         }
         if (ClassPath.BOOT.equals(type)) {
-            return bootCP;
+            return g.getBootCP(project, jdks);
         } else if (ClassPath.COMPILE.equals(type)) {
             return g.getCP();
         } else if (ClassPath.SOURCE.equals(type)) {
@@ -76,7 +61,7 @@ final class SuiteClassPathProvider extends ProjectOpenedHook implements ClassPat
 
     @Override
     public void projectOpened() {
-        GlobalPathRegistry.getDefault().register(ClassPath.BOOT, new ClassPath[] {bootCP});
+        // GlobalPathRegistry.getDefault().register(ClassPath.BOOT, new ClassPath[] {bootCP});
         for ( SuiteSources.Group s : project.getSources().groups()) {
             GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, new ClassPath[] { s.getSourceCP() });
             GlobalPathRegistry.getDefault().register(ClassPath.COMPILE, new ClassPath[] { s.getCP() });
@@ -85,7 +70,7 @@ final class SuiteClassPathProvider extends ProjectOpenedHook implements ClassPat
 
     @Override
     public void projectClosed() {
-        GlobalPathRegistry.getDefault().unregister(ClassPath.BOOT, new ClassPath[] {bootCP});
+        // GlobalPathRegistry.getDefault().unregister(ClassPath.BOOT, new ClassPath[] {bootCP});
         for ( SuiteSources.Group s : project.getSources().groups()) {
             GlobalPathRegistry.getDefault().unregister(ClassPath.SOURCE, new ClassPath[] { s.getSourceCP() });
             GlobalPathRegistry.getDefault().unregister(ClassPath.COMPILE, new ClassPath[] { s.getCP() });

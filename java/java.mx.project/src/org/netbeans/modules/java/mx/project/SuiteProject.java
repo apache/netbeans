@@ -35,11 +35,12 @@ final class SuiteProject implements Project {
         this.dir = dir;
         this.suite = suite;
         try {
+            Jdks jdks = new Jdks(this);
             this.lkp = Lookups.fixed(
                 this,
-                new SuiteSources(this, dir, suite),
+                new SuiteSources(this, jdks, dir, suite),
                 new SuiteLogicalView(this),
-                new SuiteClassPathProvider(this),
+                new SuiteClassPathProvider(this, jdks),
                 new SuiteProperties(),
                 new SuiteActionProvider(this)
             );

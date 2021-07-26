@@ -71,7 +71,14 @@
                         <attr name="originalFile" stringvalue="Actions/Groovy/org-netbeans-modules-groovy-editor-actions-FixImportsAction.instance"/>
                     </file>
                 </folder>
-
+                <folder name="Parser">
+                    <file name="org.spockframework.compiler.SpockTransform.instance">
+                        <attr name="instanceOf" stringvalue="org.netbeans.modules.groovy.editor.compiler.ParsingCompilerCustomizer"/>
+                        <attr
+                            methodvalue="org.netbeans.modules.groovy.editor.api.parser.GroovyParser.customizeTransformsFromLayer" name="instanceCreate"/>
+                        <attr name="disable" stringvalue="org.spockframework.compiler.SpockTransform"/>
+                    </file>
+                </folder>
                 <folder name="Popup">
                     <file name="fix-groovy-imports">
                         <attr name="position" intvalue="801"/>

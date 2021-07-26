@@ -31,6 +31,7 @@ import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.JPDAThread;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.modules.debugger.jpda.truffle.LanguageName;
+import org.netbeans.modules.debugger.jpda.truffle.Utils;
 import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.source.Source;
@@ -115,25 +116,33 @@ public final class TruffleStackFrame {
             hostClassName = frameDefinition.substring(i1, i2);
             i1 = i2 + 1;
             i2 = frameDefinition.indexOf('\n', i1);
-            hostMethodName = stringOrNull(frameDefinition.substring(i1, i2));
+            hostMethodName = Utils.stringOrNull(frameDefinition.substring(i1, i2));
             i1 = i2 + 1;
             i2 = frameDefinition.indexOf('\n', i1);
-            try {
-                sourceURI = new URI(frameDefinition.substring(i1, i2));
-            } catch (URISyntaxException usex) {
-                throw new IllegalStateException("Bad URI: "+frameDefinition.substring(i1, i2), usex);
+            String uriStr = Utils.stringOrNull(frameDefinition.substring(i1, i2));
+            URI uri;
+            if (uriStr != null) {
+                try {
+                    uri = new URI(uriStr);
+                } catch (URISyntaxException usex) {
+                    Exceptions.printStackTrace(new IllegalStateException("Bad URI: "+uriStr, usex));
+                    uri = null;
+                }
+            } else {
+                uri = null;
             }
+            sourceURI = uri;
             i1 = i2 + 1;
             i2 = frameDefinition.indexOf('\n', i1);
-            mimeType = stringOrNull(frameDefinition.substring(i1, i2));
+            mimeType = Utils.stringOrNull(frameDefinition.substring(i1, i2));
             i1 = i2 + 1;
             if (includeInternal) {
                 i2 = frameDefinition.indexOf('\n', i1);
-                sourceSection = frameDefinition.substring(i1, i2);
+                sourceSection = Utils.stringOrNull(frameDefinition.substring(i1, i2));
                 i1 = i2 + 1;
                 internalFrame = Boolean.valueOf(frameDefinition.substring(i1));
             } else {
-                sourceSection = frameDefinition.substring(i1);
+                sourceSection = Utils.stringOrNull(frameDefinition.substring(i1));
             }
         } catch (IndexOutOfBoundsException ioob) {
             throw new IllegalStateException("frameDefinition='"+frameDefinition+"'", ioob);
@@ -142,14 +151,6 @@ public final class TruffleStackFrame {
         this.scopes = scopes;
         this.thisObject = thisObject;
         this.isInternal = internalFrame;
-    }
-    
-    private static String stringOrNull(String str) {
-        if ("null".equals(str)) {
-            return null;
-        } else {
-            return str;
-        }
     }
     
     public final JPDADebugger getDebugger() {
@@ -193,6 +194,9 @@ public final class TruffleStackFrame {
     }
     
     public SourcePosition getSourcePosition() {
+        if (sourceSection == null) {
+            return null;
+        }
         Source src = Source.getExistingSource(debugger, sourceId);
         if (src == null) {
             src = Source.getSource(debugger, sourceId, sourceName, hostMethodName, sourcePath, sourceURI, mimeType, codeRef);

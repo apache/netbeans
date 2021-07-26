@@ -315,7 +315,9 @@ public abstract class JavaRefactoringPlugin extends ProgressProviderAdapter impl
             }
             List<FileObject> augmentedFiles = new ArrayList<>(entry.getValue());
             FileObject fake = FileUtil.createMemoryFileSystem().getRoot().createData("Fake.java");
-            augmentedFiles.add(fake);
+            if (!augmentedFiles.stream().anyMatch(fo -> SourceUtils.isClassFile(fo))) {
+                augmentedFiles.add(fake);
+            }
             final JavaSource javaSource = JavaSource.create(info, augmentedFiles);
             if (modification) {
                 results.add(javaSource.runModificationTask(cc -> {

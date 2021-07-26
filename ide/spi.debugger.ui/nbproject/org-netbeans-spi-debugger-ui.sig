@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.67
+#Version 2.68
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -27,7 +27,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -91,7 +90,6 @@ meth public void putValue(java.lang.String,java.lang.Object)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setEnabled(boolean)
 supr java.lang.Object
-hfds RECONFIGURE_ON_NULL,arrayTable
 
 CLSS public abstract interface javax.swing.Action
 fld public final static java.lang.String ACCELERATOR_KEY = "AcceleratorKey"

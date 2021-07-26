@@ -31,7 +31,7 @@ public final class NbDebugSession {
     private final Session session;
     private volatile NIDebugger niDebugger;
 
-    NbDebugSession(Session session) {
+    public NbDebugSession(Session session) {
         this.session = session;
     }
 

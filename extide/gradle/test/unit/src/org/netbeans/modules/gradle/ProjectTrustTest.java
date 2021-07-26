@@ -35,7 +35,7 @@ public class ProjectTrustTest extends AbstractGradleProjectTestCase {
     public ProjectTrustTest(String name) {
         super(name);
     }
-
+    
     public void testIsTrusted4Untrusted() throws IOException {
         int rnd = new Random().nextInt(1000000);
         FileObject a = createGradleProject("projectA-" + rnd,

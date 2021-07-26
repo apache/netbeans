@@ -293,7 +293,7 @@ public final class ElementOpen {
     public static CompletableFuture<Location> getLocation(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String resourceName) {
         final CompletableFuture<Object[]> future = getFutureOpenInfo(cpInfo, el, resourceName, new AtomicBoolean());
         return future.thenApply(openInfo -> {
-            if (openInfo[0] != null && (int) openInfo[1] != (-1) && (int) openInfo[2] != (-1)) {
+            if (openInfo != null && openInfo[0] != null && (int) openInfo[1] != (-1) && (int) openInfo[2] != (-1)) {
                 FileObject file = (FileObject) openInfo[0];
                 int start = (int) openInfo[3];
                 if (start < 0) {
@@ -359,12 +359,15 @@ public final class ElementOpen {
 
     private static CompletableFuture<Object[]> getFutureOpenInfo(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String resourceName, AtomicBoolean cancel) {
         Object[] openInfo = getOpenInfo(cpInfo, el, cancel);
-        if (openInfo == null && resourceName != null) {
-            // try to attach sources
+        if (openInfo != null) {
+            return CompletableFuture.completedFuture(openInfo);
+        }
+        // try to attach sources
+        if (resourceName != null) {
             final ClassPath cp = ClassPathSupport.createProxyClassPath(
-                    cpInfo.getClassPath(ClasspathInfo.PathKind.BOOT),
-                    cpInfo.getClassPath(ClasspathInfo.PathKind.COMPILE),
-                    cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE));
+                cpInfo.getClassPath(ClasspathInfo.PathKind.BOOT),
+                cpInfo.getClassPath(ClasspathInfo.PathKind.COMPILE),
+                cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE));
             final FileObject resource = cp.findResource(resourceName);
             if (resource != null) {
                 final FileObject root = cp.findOwnerRoot(resource);
@@ -383,22 +386,17 @@ public final class ElementOpen {
 
                         @Override
                         public void attachmentFailed() {
-                            try {
-                                FileObject generated = CodeGenerator.generateCode(cpInfo, el);
-                                if (generated != null) {
-                                    future.complete(getOpenInfo(generated, el, cancel));
-                                    return;
-                                }
-                            } catch (Exception e) {
-                            }
-                            future.complete(null);
+                            FileObject generated = CodeGenerator.generateCode(cpInfo, el);
+                            future.complete(generated != null ? getOpenInfo(generated, el, cancel) : null);
                         }
                     });
                     return future;
                 }
             }
         }
-        return CompletableFuture.completedFuture(openInfo);
+        // try to generate source from class file
+        FileObject generated = CodeGenerator.generateCode(cpInfo, el);
+        return CompletableFuture.completedFuture(generated != null ? getOpenInfo(generated, el, cancel) : null);
     }
 
     private static Object[] getOpenInfo(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, AtomicBoolean cancel) {
@@ -411,13 +409,13 @@ public final class ElementOpen {
 
     private static Object[] getOpenInfo(final FileObject fo, final ElementHandle<? extends Element> handle, AtomicBoolean cancel) {
         assert fo != null;
-        
+
         try {
             Object[] result = new Object[6];
             result[0] = fo;
             getOffset(fo, handle, result, cancel);
             return result;
-        } catch (IOException e) {
+        } catch (Exception e) {
             Exceptions.printStackTrace(e);
             return null;
         }

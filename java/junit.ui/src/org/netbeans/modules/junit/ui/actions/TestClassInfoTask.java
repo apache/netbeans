@@ -24,6 +24,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,6 +43,7 @@ import javax.lang.model.util.Elements;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource.Phase;
@@ -49,6 +51,7 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController.TestMethod;
 import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods;
 import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods.Factory;
+import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
 import org.openide.util.lookup.ServiceProvider;
@@ -98,6 +101,7 @@ public final class TestClassInfoTask implements Task<CompilationController> {
                 return Collections.emptyList();
             }
         }
+        int clazzPreferred = info.getTreeUtilities().findNameSpan(clazz)[0];
         TypeElement typeElement = (TypeElement) info.getTrees().getElement(new TreePath(new TreePath(info.getCompilationUnit()), clazz));
         Elements elements = info.getElements();
         TypeElement testcase = elements.getTypeElement(TESTCASE);
@@ -126,7 +130,9 @@ public final class TestClassInfoTask implements Task<CompilationController> {
                     int end = (int) sp.getEndPosition(tp.getCompilationUnit(), tp.getLeaf());
                     Document doc = info.getSnapshot().getSource().getDocument(false);
                     try {
-                        result.add(new TestMethod(typeElement.getQualifiedName().toString(), new SingleMethod(fileObject, mn),
+                        result.add(new TestMethod(typeElement.getQualifiedName().toString(),
+                                doc != null ? doc.createPosition(clazzPreferred) : new SimplePosition(clazzPreferred),
+                                new SingleMethod(fileObject, mn),
                                 doc != null ? doc.createPosition(start) : new SimplePosition(start),
                                 doc != null ? doc.createPosition(preferred) : new SimplePosition(preferred),
                                 doc != null ? doc.createPosition(end) : new SimplePosition(end)));
@@ -196,7 +202,20 @@ public final class TestClassInfoTask implements Task<CompilationController> {
                 return TestClassInfoTask.computeTestMethods(info, cancel, -1);
             }
         }
+    }
 
+    @MimeRegistration(mimeType="text/x-java", service=org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods.class)
+    public static final class GenericComputeTestMethodsImpl implements org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods {
+
+        @Override
+        public List<TestMethod> computeTestMethods(Parser.Result parserResult, AtomicBoolean cancel) {
+            try {
+                CompilationController cc = CompilationController.get(parserResult);
+                cc.toPhase(Phase.ELEMENTS_RESOLVED);
+                return TestClassInfoTask.computeTestMethods(cc, cancel, -1);
+            } catch (IOException ex) {}
+            return Collections.emptyList();
+        }
     }
 
     private static class SimplePosition implements Position {

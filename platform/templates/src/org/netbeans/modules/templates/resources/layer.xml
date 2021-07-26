@@ -25,6 +25,7 @@
     <folder name="Templates">
         <folder name="Other">
             <attr name="displayName" bundlevalue="org.netbeans.modules.templates.resources.Bundle#Templates/Other"/>
+            <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/templates/resources/templatesOther.html"/>
             <attr name="position" intvalue="2100"/>
             <folder name="Folder">
                 <attr name="displayName" bundlevalue="org.netbeans.modules.templates.resources.Bundle#Templates/Other/Folder"/>

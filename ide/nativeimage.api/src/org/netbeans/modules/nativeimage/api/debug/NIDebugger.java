@@ -20,13 +20,18 @@ package org.netbeans.modules.nativeimage.api.debug;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
+import org.netbeans.modules.nativeimage.api.Location;
+import org.netbeans.modules.nativeimage.api.SourceInfo;
+import org.netbeans.modules.nativeimage.api.Symbol;
 import org.netbeans.modules.nativeimage.spi.debug.NIDebuggerProvider;
 import org.netbeans.modules.nativeimage.spi.debug.NIDebuggerServiceProvider;
 import org.netbeans.modules.nativeimage.spi.debug.filters.FrameDisplayer;
@@ -163,6 +168,49 @@ public final class NIDebugger {
      */
     public String getVersion() {
         return provider.getVersion();
+    }
+
+    /**
+     * Get a list of locations for a given file path.
+     *
+     * @param filePath a file path
+     * @return list of locations, or <code>null</code> when there's no location
+     *         information about such file.
+     * @since 0.2
+     */
+    @CheckForNull
+    public List<Location> listLocations(String filePath) {
+        return provider.listLocations(filePath);
+    }
+
+    /**
+     * Get functions of a given name.
+     *
+     * @param name a name pattern
+     * @param includeNondebug include also symbols from the symbol table
+     * @param maxResults maximum number of results
+     * @return map of source information and their symbols, or <code>null</code>
+     *         when there are no matching symbols.
+     * @since 0.2
+     */
+    @CheckForNull
+    public Map<SourceInfo, List<Symbol>> listFunctions(String name, boolean includeNondebug, int maxResults) {
+        return provider.listFunctions(name, includeNondebug, maxResults);
+    }
+
+    /**
+     * Get variables of a given name.
+     *
+     * @param name a name pattern
+     * @param includeNondebug include also symbols from the symbol table
+     * @param maxResults maximum number of results
+     * @return map of source information and their symbols, or <code>null</code>
+     *         when there are no matching symbols.
+     * @since 0.2
+     */
+    @CheckForNull
+    public Map<SourceInfo, List<Symbol>> listVariables(String name, boolean includeNondebug, int maxResults) {
+        return provider.listVariables(name, includeNondebug, maxResults);
     }
 
     /**

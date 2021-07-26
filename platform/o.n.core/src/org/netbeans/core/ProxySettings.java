@@ -62,7 +62,7 @@ public class ProxySettings {
     // Only for testing purpose (Test connection in General options panel)
     public static final String TEST_SYSTEM_PROXY_HTTP_HOST = "testSystemProxyHttpHost"; // NOI18N
     public static final String TEST_SYSTEM_PROXY_HTTP_PORT = "testSystemProxyHttpPort"; // NOI18N
-    public static final String HTTP_CONNECTION_TEST_URL = "http://netbeans.org";        // NOI18N
+    public static final String HTTP_CONNECTION_TEST_URL = "https://netbeans.apache.org";// NOI18N
     
     private static String presetNonProxyHosts;
 

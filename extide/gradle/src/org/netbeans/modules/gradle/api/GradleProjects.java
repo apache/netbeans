@@ -51,6 +51,17 @@ public final class GradleProjects {
         GradleModuleFileCache21.CachedArtifactVersion.Entry sources = av != null ? av.getSources() : null;
         return sources != null ? sources.getPath().toFile() : GradleArtifactStore.getDefault().getSources(binary);
     }
+    
+    public static boolean isGradleCacheArtifact(File toCheck) {
+        try {
+            GradleModuleFileCache21 cache = GradleModuleFileCache21.getGradleFileCache();
+            GradleModuleFileCache21.CachedArtifactVersion av = cache.resolveCachedArtifactVersion(toCheck.toPath());
+            return av != null;
+        } catch (IllegalArgumentException ex) {
+            // expected: not an artifact
+            return false;
+        }
+    }
 
     /**
      * Get the JavaDoc artifact for the given binary if available.

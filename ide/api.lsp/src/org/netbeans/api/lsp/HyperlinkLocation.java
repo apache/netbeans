@@ -29,6 +29,7 @@ import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.lsp.HyperlinkLocationAccessor;
 import org.netbeans.spi.lsp.HyperlinkLocationProvider;
+import org.netbeans.spi.lsp.HyperlinkTypeDefLocationProvider;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -133,7 +134,8 @@ public final class HyperlinkLocation {
 
     /**
      * Resolves a hyperlink at the given document offset and returns its target
-     * location(s).
+     * location(s). Example usage can be illustrated by:
+     * {@codesnippet HyperlinkLocationTest#testHyperlinkResolve}
      *
      * @param doc document on which to operate.
      * @param offset offset within document
@@ -146,6 +148,34 @@ public final class HyperlinkLocation {
         MimePath mimePath = MimePath.parse(DocumentUtilities.getMimeType(doc));
         CompletableFuture<HyperlinkLocation>[] futures = MimeLookup.getLookup(mimePath).lookupAll(HyperlinkLocationProvider.class).stream()
                 .map(provider -> provider.getHyperlinkLocation(doc, offset)).toArray(CompletableFuture[]::new);
+        return CompletableFuture.allOf(futures).thenApply(value -> {
+            List<HyperlinkLocation> locations = new ArrayList<>(futures.length);
+            for (CompletableFuture<HyperlinkLocation> future : futures) {
+                HyperlinkLocation location = future.getNow(null);
+                if (location != null && location.getFileObject() != null) {
+                    locations.add(location);
+                }
+            }
+            return locations;
+        });
+    }
+
+    /**
+     * Resolves a hyperlink at the given document offset and returns its target
+     * type definition location(s). Example usage can be illustrated by:
+     * {@codesnippet HyperlinkLocationTest#testHyperlinkTypeDefResolve}
+     *
+     * @param doc document on which to operate.
+     * @param offset offset within document
+     * @return target type definition location(s)
+     *
+     * @since 1.1
+     */
+    @NonNull
+    public static CompletableFuture<List<HyperlinkLocation>> resolveTypeDefinition(@NonNull final Document doc, final int offset) {
+        MimePath mimePath = MimePath.parse(DocumentUtilities.getMimeType(doc));
+        CompletableFuture<HyperlinkLocation>[] futures = MimeLookup.getLookup(mimePath).lookupAll(HyperlinkTypeDefLocationProvider.class).stream()
+                .map(provider -> provider.getHyperlinkTypeDefLocation(doc, offset)).toArray(CompletableFuture[]::new);
         return CompletableFuture.allOf(futures).thenApply(value -> {
             List<HyperlinkLocation> locations = new ArrayList<>(futures.length);
             for (CompletableFuture<HyperlinkLocation> future : futures) {

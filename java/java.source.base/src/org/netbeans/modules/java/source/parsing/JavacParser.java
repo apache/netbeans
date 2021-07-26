@@ -988,7 +988,7 @@ public class JavacParser extends Parser {
 
         Context context = new Context();
         //need to preregister the Messages here, because the getTask below requires Log instance:
-        NBLog.preRegister(context, DEV_NULL, DEV_NULL, DEV_NULL);
+        NBLog.preRegister(context, DEV_NULL);
         JavacTaskImpl task = (JavacTaskImpl)JavacTool.create().getTask(null,
                 ClasspathInfoAccessor.getINSTANCE().createFileManager(cpInfo, validatedSourceLevel.name),
                 diagnosticListener, options, files.iterator().hasNext() ? null : Arrays.asList("java.lang.Object"), files,

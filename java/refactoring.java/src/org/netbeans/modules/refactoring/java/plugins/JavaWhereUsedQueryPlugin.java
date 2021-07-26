@@ -292,20 +292,9 @@ public class JavaWhereUsedQueryPlugin extends JavaRefactoringPlugin implements F
         @SuppressWarnings("unchecked")
         Collection<FileObject> set = SourceUtilsEx.getFiles((Collection<ElementHandle<? extends Element>>) implementorsAsHandles, cpInfo, cancel);
 
-        // filter out files that are not on source path
-        ClassPath source = cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE);
-        Collection<FileObject> set2 = new ArrayList<>(set.size());
-        for (FileObject fo : set) {
-            if (source.contains(fo)) {
-                set2.add(fo);
-            }
-            if(cancel != null && cancel.get()) {
-                return Collections.<FileObject>emptySet();
-            }
-        }
-        return set2;
+        return set;
     }
-    
+
     @Override
     public Problem prepare(final RefactoringElementsBag elements) {
         fireProgressListenerStart(ProgressEvent.START, -1);

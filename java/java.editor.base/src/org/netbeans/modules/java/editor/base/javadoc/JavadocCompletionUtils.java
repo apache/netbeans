@@ -21,6 +21,7 @@ package org.netbeans.modules.java.editor.base.javadoc;
 
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
+import com.sun.source.doctree.ErroneousTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.DocTreePath;
@@ -341,9 +342,25 @@ public final class JavadocCompletionUtils {
                        DocTree.Kind.SERIAL_DATA, DocTree.Kind.SERIAL_FIELD, DocTree.Kind.SINCE,
                        DocTree.Kind.THROWS, DocTree.Kind.UNKNOWN_BLOCK_TAG, DocTree.Kind.VERSION);
     public static boolean isBlockTag(DocTreePath tag) {
-        return BLOCK_TAGS.contains(tag.getLeaf().getKind());
+        return BLOCK_TAGS.contains(normalizedKind(tag.getLeaf()));
     }
-    
+
+    public static DocTree.Kind normalizedKind(DocTree tag) {
+        DocTree.Kind normalizedKind = tag.getKind();
+        if (normalizedKind == com.sun.source.doctree.DocTree.Kind.ERRONEOUS) {
+            String errorBody = ((ErroneousTree) tag).getBody();
+            switch (errorBody.split("\\s")[0]) {
+                case "@throws": normalizedKind = DocTree.Kind.THROWS; break;
+                case "@see": normalizedKind = DocTree.Kind.SEE; break;
+                case "@param": normalizedKind = DocTree.Kind.PARAM; break;
+                case "{@value": normalizedKind = DocTree.Kind.VALUE; break;
+                case "{@link": normalizedKind = DocTree.Kind.LINK; break;
+                case "{@linkplain": normalizedKind = DocTree.Kind.LINK; break;
+            }
+        }
+        return normalizedKind;
+    }
+
     public static CharSequence getCharSequence(Document doc) {
         CharSequence cs = (CharSequence) doc.getProperty(CharSequence.class);
         if (cs == null) {

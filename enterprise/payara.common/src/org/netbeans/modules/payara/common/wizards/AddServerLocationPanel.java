@@ -138,6 +138,14 @@ public class AddServerLocationPanel implements WizardDescriptor.FinishablePanel,
                 File installDir = new File(locationStr).getAbsoluteFile();
                 File payaraDir = getPayaraRoot(installDir);
                 File domainDir = getDefaultDomain(payaraDir);
+                StringBuilder message = new StringBuilder();
+                if (wizardIterator.downloadableValues.isEmpty()) {
+                    message.append(NbBundle.getMessage(
+                            AddServerLocationPanel.class,
+                            "LBL_UnableToConnectPayaraMavenRepo"))
+                            .append(" "); // NOI18N
+                    panel.updateMessageText(message.toString());
+                }
                 if (!installDir.exists()) {
                     if (!isLegalFolder(installDir)) {
                         wizard.putProperty(PROP_ERROR_MESSAGE, NbBundle.getMessage(
@@ -145,8 +153,9 @@ public class AddServerLocationPanel implements WizardDescriptor.FinishablePanel,
                         return false;
                     } else if (canCreate(installDir)) {
                         if (downloadState == AddServerLocationVisualPanel.DownloadState.AVAILABLE) {
-                            panel.updateMessageText(NbBundle.getMessage(AddServerLocationPanel.class,
+                            message.append(NbBundle.getMessage(AddServerLocationPanel.class,
                                     "LBL_NewInstallDirCanBeUsed", getSanitizedPath(installDir)));  // NOI18N
+                            panel.updateMessageText(message.toString());
                             wizard.putProperty(PROP_ERROR_MESSAGE, panel.getStatusText());
                             return false;
                         } else {

@@ -35,6 +35,7 @@ import org.netbeans.modules.csl.api.EditList;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.HintSeverity;
+import org.netbeans.modules.csl.api.PreviewableFix;
 import org.netbeans.modules.csl.api.RuleContext;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.groovy.editor.api.ASTUtils;
@@ -43,6 +44,7 @@ import org.netbeans.modules.groovy.editor.api.lexer.LexUtilities;
 import org.netbeans.modules.groovy.editor.hints.infrastructure.GroovyAstRule;
 import org.netbeans.modules.groovy.editor.hints.infrastructure.GroovyHintsProvider;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -51,6 +53,7 @@ import org.openide.util.Exceptions;
 public class RemoveUnusedImportHint extends GroovyAstRule {
 
     @Override
+    @NbBundle.Messages("UnusedImport=Unused import")
     public void computeHints(GroovyHintsProvider.GroovyRuleContext context, List<Hint> result) {
         final ModuleNode moduleNode = context.getGroovyParserResult().getRootElement().getModuleNode();
         if (null == moduleNode) {
@@ -68,10 +71,10 @@ public class RemoveUnusedImportHint extends GroovyAstRule {
                 while(-1 != (find = context.doc.find(stringFwdFinder, find+1, -1)) && skipUsage(find, context.doc));
                 
                 if (-1 == find) {
-                    result.add(new Hint(this, "Unused Import", 
+                    result.add(new Hint(this, Bundle.UnusedImport(), 
                             NbEditorUtilities.getFileObject(context.doc), 
                             ASTUtils.getRangeFull(importNode, context.doc), 
-                            Collections.<HintFix>singletonList(new RemoveUnusedImportFix("Remove unused import", context.doc, importNode)), 1));
+                            Collections.<HintFix>singletonList(new RemoveUnusedImportFix(Bundle.RemoveUnusedImportHintDescription(), context.doc, importNode)), 1));
                 }             
             } catch (BadLocationException ex) {
                 Exceptions.printStackTrace(ex);
@@ -104,8 +107,9 @@ public class RemoveUnusedImportHint extends GroovyAstRule {
     }
 
     @Override
+    @NbBundle.Messages("RemoveUnusedImportHintDescription=Remove unused import")
     public String getDescription() {
-        return "Remove unused Import";
+        return Bundle.RemoveUnusedImportHintDescription();
     }
 
     @Override
@@ -125,7 +129,7 @@ public class RemoveUnusedImportHint extends GroovyAstRule {
 
     @Override
     public String getDisplayName() {
-        return "Remove unused import";
+        return Bundle.RemoveUnusedImportHintDescription();
     }
 
     @Override
@@ -137,14 +141,14 @@ public class RemoveUnusedImportHint extends GroovyAstRule {
     public HintSeverity getDefaultSeverity() {
         return HintSeverity.INFO;
     }
-    
-    private static class RemoveUnusedImportFix implements HintFix {
+
+    private static class RemoveUnusedImportFix implements PreviewableFix {
 
         final BaseDocument baseDoc;
         final String desc;
         final ImportNode importNode;
 
-        public RemoveUnusedImportFix(String desc, BaseDocument baseDoc, ImportNode importNode) {
+        private RemoveUnusedImportFix(String desc, BaseDocument baseDoc, ImportNode importNode) {
             this.desc = desc;
             this.baseDoc = baseDoc;
             this.importNode = importNode;
@@ -157,11 +161,16 @@ public class RemoveUnusedImportHint extends GroovyAstRule {
 
         @Override
         public void implement() throws Exception {
+            getEditList().apply();
+        }
+
+        @Override
+        public EditList getEditList() throws Exception {
             EditList edits = new EditList(baseDoc);
             int offset =  ASTUtils.getOffset(baseDoc,importNode.getLineNumber(), 1);
             int removeLen =  ASTUtils.getOffset(baseDoc,importNode.getLineNumber()+1, 1)-offset;
             edits.replace(offset, removeLen, "", true, 0);
-            edits.apply();
+            return edits;
         }
 
         @Override
@@ -173,6 +182,10 @@ public class RemoveUnusedImportHint extends GroovyAstRule {
         public boolean isInteractive() {
             return false;
         }
-    }    
-    
+
+        @Override
+        public boolean canPreview() {
+            return true;
+        }
+    }
 }

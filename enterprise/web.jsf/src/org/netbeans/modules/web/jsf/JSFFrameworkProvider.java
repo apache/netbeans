@@ -124,7 +124,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
     // not named extend() so as to avoid implementing WebFrameworkProvider.extend()
     // better to move this to JSFConfigurationPanel
     public Set extendImpl(WebModule webModule, TreeMap<String, JsfComponentCustomizer> jsfComponentCustomizers) {
-        Set result = new HashSet();
+        Set<FileObject> result = new HashSet<>();
         Library jsfLibrary = null;
         Library jstlLibrary = null;
 

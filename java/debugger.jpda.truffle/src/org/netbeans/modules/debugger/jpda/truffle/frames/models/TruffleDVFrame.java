@@ -24,6 +24,7 @@ import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame;
 import org.netbeans.modules.debugger.jpda.truffle.source.Source;
+import org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVFrame;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVThread;
 
@@ -65,7 +66,11 @@ public final class TruffleDVFrame implements DVFrame {
 
     @Override
     public URI getSourceURI() {
-        Source source = truffleFrame.getSourcePosition().getSource();
+        SourcePosition sourcePosition = truffleFrame.getSourcePosition();
+        if (sourcePosition == null) {
+            return null;
+        }
+        Source source = sourcePosition.getSource();
         URI uri = source.getURI();
         if (uri != null && "file".equalsIgnoreCase(uri.getScheme())) {
             return uri;
@@ -79,18 +84,33 @@ public final class TruffleDVFrame implements DVFrame {
 
     @Override
     public String getSourceMimeType() {
-        Source source = truffleFrame.getSourcePosition().getSource();
-        return source.getMimeType();
+        SourcePosition sourcePosition = truffleFrame.getSourcePosition();
+        if (sourcePosition != null) {
+            Source source = sourcePosition.getSource();
+            return source.getMimeType();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public int getLine() {
-        return truffleFrame.getSourcePosition().getStartLine();
+        SourcePosition sourcePosition = truffleFrame.getSourcePosition();
+        if (sourcePosition != null) {
+            return sourcePosition.getStartLine();
+        } else {
+            return -1;
+        }
     }
 
     @Override
     public int getColumn() {
-        return truffleFrame.getSourcePosition().getStartColumn();
+        SourcePosition sourcePosition = truffleFrame.getSourcePosition();
+        if (sourcePosition != null) {
+            return sourcePosition.getStartColumn();
+        } else {
+            return -1;
+        }
     }
 
 }

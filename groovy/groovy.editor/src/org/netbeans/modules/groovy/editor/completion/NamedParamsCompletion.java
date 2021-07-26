@@ -20,6 +20,7 @@
 package org.netbeans.modules.groovy.editor.completion;
 
 import java.util.List;
+import java.util.ListIterator;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
@@ -66,12 +67,27 @@ public class NamedParamsCompletion extends BaseCompletion {
             }
         }
 
-        ASTNode leafParent = context.path.leafParent();
-        ASTNode leafGrandparent = context.path.leafGrandParent();
-        if (leafParent instanceof NamedArgumentListExpression &&
-            leafGrandparent instanceof ConstructorCallExpression) {
-
-            completeNamedParams(proposals, anchor, (ConstructorCallExpression) leafGrandparent, (NamedArgumentListExpression) leafParent);
+        ListIterator<ASTNode> leafToRoot = context.path.leafToRoot();
+        ASTNode previous = null;
+        NamedArgumentListExpression namedArgsListExp = null;
+        while(leafToRoot.hasNext()) {
+            ASTNode next = leafToRoot.next();
+            if (next instanceof MapEntryExpression) {
+                if (previous == null || ((MapEntryExpression) next).getValueExpression() == previous) {
+                    break;
+                }
+            } else if (next instanceof NamedArgumentListExpression) {
+                if (namedArgsListExp != null) {
+                    break;
+                }
+                namedArgsListExp = (NamedArgumentListExpression) next;
+            } else if (next instanceof ConstructorCallExpression) {
+                if (namedArgsListExp != null) {
+                    completeNamedParams(proposals, anchor, (ConstructorCallExpression) next, namedArgsListExp);
+                }
+                break;
+            }
+            previous = next;
         }
 
         return false;

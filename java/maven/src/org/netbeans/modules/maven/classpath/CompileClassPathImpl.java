@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.maven.classpath;
 
+import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,9 +72,10 @@ class CompileClassPathImpl extends AbstractProjectClassPathImpl implements Flagg
         List<Artifact> arts = mavenProject.getCompileArtifacts();
         boolean broken = false;
         for (Artifact art : arts) {
-            if (art.getFile() != null) {
-                lst.add(Utilities.toURI(art.getFile()));
-                broken |= !art.getFile().exists();
+            File f = getFile(art);
+            if (f != null) {
+                lst.add(Utilities.toURI(f));
+                broken |= !f.exists();
             } else {
                 //NOPMD   //null means dependencies were not resolved..
                 broken = true;

@@ -21,6 +21,7 @@ package org.netbeans.modules.gradle.api.execute;
 
 import java.util.Collections;
 import java.util.Set;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.project.Project;
 
 /**
@@ -42,13 +43,19 @@ public final class RunConfig {
     final String action;
     final String displayName;
 
+    final GradleExecConfiguration execConfig;
 
     public RunConfig(Project project, String action, String displayName, Set<ExecFlag> execFlags, GradleCommandLine commandLine) {
+        this(project, action, displayName, execFlags, commandLine, null);
+    }
+    
+    public RunConfig(Project project, String action, String displayName, Set<ExecFlag> execFlags, GradleCommandLine commandLine, GradleExecConfiguration execConfig) {
         this.project = project;
         this.action = action;
         this.displayName = displayName;
         this.execFlags = Collections.unmodifiableSet(execFlags);
         this.commandLine = commandLine;
+        this.execConfig = execConfig;
     }
 
     public Project getProject() {
@@ -60,7 +67,7 @@ public final class RunConfig {
     }
 
     public RunConfig withCommandLine(GradleCommandLine cmd) {
-        return new RunConfig(project, action, displayName, execFlags, cmd);
+        return new RunConfig(project, action, displayName, execFlags, cmd, execConfig);
     }
 
     public Set<ExecFlag> getExecFlags() {
@@ -75,4 +82,14 @@ public final class RunConfig {
         return action;
     }
 
+    /**
+     * Selected executable configuration. Should be never {@code null}, as the default
+     * configuration always exists. May be {@code null}; in that case the active configuration
+     * should be used.
+     * @return configuration or {@code null} to use the active one.
+     */
+    @CheckForNull
+    public GradleExecConfiguration getExecConfig() {
+        return execConfig;
+    }
 }

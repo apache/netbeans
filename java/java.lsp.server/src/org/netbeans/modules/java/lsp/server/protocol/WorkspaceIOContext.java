@@ -18,14 +18,25 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import java.io.IOException;
+import java.io.InputStream;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.netbeans.modules.java.lsp.server.ui.IOContext;
 
 abstract class WorkspaceIOContext extends IOContext {
-
     WorkspaceIOContext() {
+    }
+
+    @Override
+    protected void stdIn(String line) throws IOException {
+        // no op
+    }
+
+    @Override
+    protected InputStream getStdIn() throws IOException {
+        return new EmptyBlockingInputStream();
     }
 
     @Override
@@ -54,4 +65,48 @@ abstract class WorkspaceIOContext extends IOContext {
     }
 
     protected abstract LanguageClient client();
+    
+    /**
+     * This should mimic Streams provided by core.output2 module; those InputStreams
+     * support asynchronous close() without blocking, but close only temporarilyl the 
+     * first reader gets -1, then the stream resets internally and is ready to be read
+     * again (i.e. reused tab).
+     */
+    private static class EmptyBlockingInputStream extends InputStream {
+        private boolean closed = false;
+        
+        @Override
+        public int read() throws IOException {
+            synchronized (this) {
+                if (!closed) {
+                    try {
+                        wait();
+                    } catch (InterruptedException ex) {
+                        throw new IOException(ex);
+                    }
+                }
+                closed = false;
+            }
+            return -1;
+        }
+
+        @Override
+        public void close() throws IOException {
+            synchronized (this) {
+                closed = true;
+                notifyAll();
+            }
+            return;
+        }
+        
+        @Override
+        public boolean markSupported() {
+            return false;
+        }
+
+        @Override
+        public int available() throws IOException {
+            return 0;
+        }
+    }
 }

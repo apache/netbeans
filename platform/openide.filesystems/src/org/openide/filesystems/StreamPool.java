@@ -157,7 +157,7 @@ final class StreamPool extends Object {
 
         synchronized (StreamPool.class) {
             if (iStreams != null) {
-                Iterator itIs = iStreams.iterator();
+                Iterator<InputStream> itIs = iStreams.iterator();
                 NotifyInputStream nis;
 
                 while (itIs.hasNext()) {

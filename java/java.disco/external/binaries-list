@@ -1,0 +1,22 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+4FCCADF37F1C61A0895BAC3D42FE0C530438826C org.checkerframework:checker-qual:3.9.1
+B8DF472B31E1F17C232D2AD78CEB1C84E00C641B org.apache.commons:commons-compress:1.20
+C4BC772689D4BB2D4128C5E4966F765A8A76E904 org.apache.httpcomponents.client5:httpclient5:5.0.3
+EA298CD1CE1D860747149FBB5F6236300219F378 org.apache.httpcomponents.core5:httpcore5:5.0.2
+7CAEB2EEBDFB7ECA30E7F64E8138D977FC85AB80 org.apache.httpcomponents.core5:httpcore5-h2:5.0.2
+377AD361D9938A7E98166E69CED2CB159B73F108 io.foojay.api:discoclient:1.0.1

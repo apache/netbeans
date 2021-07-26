@@ -20,3 +20,5 @@ METHOD     asList()                                   List
 METHOD     asSynchronized()                           List
 METHOD     asType(Class)                              Object
 METHOD     asUnmodifiable()                           List
+METHOD     average()                                  Object
+METHOD     average(Closure)                           Object

@@ -28,4 +28,41 @@
             <file name="pluginportal-update-provider.instance_hidden"/>
         </folder>
     </folder>
+    <folder name="Templates">
+        <folder name="Project">
+            <file name="AntJava_hidden"/>
+            <file name="ClientSide_hidden"/>
+            <folder name="Gradle">
+                <file name="org-netbeans-modules-micronaut-newproject-MicronautProjectWizardIterator-GradleMicronautProject_hidden"/>
+            </folder>
+            <file name="Import_hidden"/>
+            <folder name="Maven2">
+                <file name="JavaApplication_hidden"/>
+                <file name="org-netbeans-modules-fish-payara-micro-project-ui-MicroProjectWizardIterator-createWebAppIterator_hidden"/>
+                <file name="org-netbeans-modules-maven-j2ee-ui-wizard-EAWizardIterator_hidden"/>
+                <file name="org-netbeans-modules-maven-j2ee-ui-wizard-EEWizardIterator-createAppClientIterator_hidden"/>
+                <file name="org-netbeans-modules-maven-j2ee-ui-wizard-EEWizardIterator-createEJBIterator_hidden"/>
+                <file name="org-netbeans-modules-maven-j2ee-ui-wizard-EEWizardIterator-createWebAppIterator_hidden"/>
+                <file name="org-netbeans-modules-maven-newproject-ExistingWizardIterator_hidden"/>
+                <file name="org-netbeans-modules-maven-newproject-MavenWizardIterator_hidden"/>
+                <file name="org-netbeans-modules-maven-newproject-idenative-PomJavaNativeMWI_hidden"/>
+                <file name="org-netbeans-modules-maven-newproject-idenative-SimpleJavaNativeMWI_hidden"/>
+                <file name="org-netbeans-modules-maven-osgi-templates-BundleWizard-create_hidden"/>
+                <file name="org-netbeans-modules-micronaut-newproject-MicronautProjectWizardIterator-MavenMicronautProject_hidden"/>
+            </folder>
+            <file name="Native_hidden"/>
+            <file name="Samples_hidden"/>
+        </folder>
+        <folder name="UnitTests">
+            <file name="EmptyJUnitTest.java_hidden"/>
+            <file name="TestSuite.java_hidden"/>
+            <file name="org-netbeans-modules-junit-ui-wizards-SimpleTestCaseWizardIterator_hidden"/>
+        </folder>
+        <folder name="Groovy">
+            <file name="GroovyJUnitTest.groovy_hidden"/>
+        </folder>
+        <folder name="XML">
+            <file name="XMLCatalog.xml_hidden"/>
+        </folder>
+    </folder>
 </filesystem>

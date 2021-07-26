@@ -64,4 +64,76 @@ public class PHP80FeaturesTest extends PHPLexerTestBase {
     public void testAttributeSyntax_02() throws Exception {
         performTest("lexer/php80/attributeSyntax_02");
     }
+
+    // keyword names are available
+    public void testNamedArgumentsWithKeyword_01() throws Exception {
+        // no whitespace
+        performTest("lexer/php80/namedArgumentsWithKeyword_01");
+    }
+
+    public void testNamedArgumentsWithKeyword_02() throws Exception {
+        // whitespace " "
+        performTest("lexer/php80/namedArgumentsWithKeyword_02");
+    }
+
+    public void testNamedArgumentsWithKeyword_03() throws Exception {
+        // whitespace "\n"
+        performTest("lexer/php80/namedArgumentsWithKeyword_03");
+    }
+
+    public void testNamedArgumentsWithKeyword_04() throws Exception {
+        // whitespace "\t"
+        performTest("lexer/php80/namedArgumentsWithKeyword_04");
+    }
+
+    public void testNamedArgumentsWithKeyword_05() throws Exception {
+        // contains "parent", "static", "self"
+        // "default" in a switch statement (default:)
+        // in a match expression, "default" is used with "=>" i.g. (default =>)
+        performTest("lexer/php80/namedArgumentsWithKeyword_05");
+    }
+
+    public void testNamedArgumentsTypingNullableReturnType_01() throws Exception {
+        performTest("lexer/php80/namedArgumentsTypingNullableReturnType_01");
+    }
+
+    public void testNamedArgumentsTypingNullableReturnType_02() throws Exception {
+        performTest("lexer/php80/namedArgumentsTypingNullableReturnType_02");
+    }
+
+    public void testNamedArgumentsTypingNullableReturnType_03() throws Exception {
+        performTest("lexer/php80/namedArgumentsTypingNullableReturnType_03");
+    }
+
+    public void testNamedArgumentsWithParentSelfStatic_01_lowercase() throws Exception {
+        performTest("lexer/php80/namedArgumentsWithParentSelfStatic_01_lowercase");
+    }
+
+    public void testNamedArgumentsWithParentSelfStatic_01_uppercase() throws Exception {
+        performTest("lexer/php80/namedArgumentsWithParentSelfStatic_01_uppercase");
+    }
+
+    public void testNamedArgumentsWithTrueFalseNull_01_lowercase() throws Exception {
+        performTest("lexer/php80/namedArgumentsWithTrueFalseNull_01_lowercase");
+    }
+
+    public void testNamedArgumentsWithTrueFalseNull_01_uppercase() throws Exception {
+        performTest("lexer/php80/namedArgumentsWithTrueFalseNull_01_uppercase");
+    }
+
+    public void testNamedArgumentsWithTrueFalseNull_02_lowercase() throws Exception {
+        performTest("lexer/php80/namedArgumentsWithTrueFalseNull_02_lowercase");
+    }
+
+    public void testNamedArgumentsWithTrueFalseNull_02_uppercase() throws Exception {
+        performTest("lexer/php80/namedArgumentsWithTrueFalseNull_02_uppercase");
+    }
+
+    public void testNamedArgumentsWithElse_01() throws Exception {
+        performTest("lexer/php80/namedArgumentsWithElse_01");
+    }
+
+    public void testNamedArgumentsWithElse_02() throws Exception {
+        performTest("lexer/php80/namedArgumentsWithElse_02");
+    }
 }

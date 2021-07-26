@@ -167,9 +167,7 @@ final class CoverageReportTopComponent extends TopComponent {
         //        sorter.setComparator(i, comparableComparator);
         //    }
         totalCoverage.setCoveragePercentage(model.getTotalCoverage());
-        FileCoverageSummary summary = model.getCoverageSummary();
-        totalCoverage.setStats(summary.getLineCount(), summary.getExecutedLineCount(),
-            summary.getPartialCount(), summary.getInferredCount());
+        updateStats();
     }
 
     public void resizeColumnWidth(JTable table) {
@@ -363,10 +361,16 @@ final class CoverageReportTopComponent extends TopComponent {
         model = new CoverageTableModel(results);
         table.setModel(model);
         totalCoverage.setCoveragePercentage(model.getTotalCoverage());
-        FileCoverageSummary summary = model.getCoverageSummary();
-        totalCoverage.setStats(summary.getLineCount(), summary.getExecutedLineCount(),
-            summary.getPartialCount(), summary.getInferredCount());
+        updateStats();
         resizeColumnWidth(table);
+    }
+
+    private void updateStats() {
+        FileCoverageSummary summary = model.getCoverageSummary();
+        if (summary != null) {
+            totalCoverage.setStats(summary.getLineCount(), summary.getExecutedLineCount(),
+                    summary.getPartialCount(), summary.getInferredCount());
+        }    
     }
 
     private static class CoverageTableModel implements TableModel {

@@ -30,4 +30,17 @@
             </folder>
         </folder>
     </folder>
+    <folder name="Projects">
+        <folder name="org-netbeans-modules-maven">
+            <folder name="io.micronaut.build:micronaut-maven-plugin">
+                <folder name="Lookup">
+                    <file name="maven-project-actions.instance">
+                        <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.api.maven.MavenActions.forProjectLayer"/>
+                        <attr name="resource" stringvalue="nbres:/org/netbeans/modules/micronaut/resources/micronaut-actions.xml"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
 </filesystem>

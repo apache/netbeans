@@ -20,7 +20,9 @@ package org.netbeans.modules.cpplite.debugger.ni;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Semaphore;
 import java.util.function.Consumer;
 
 import org.netbeans.api.debugger.Breakpoint;
@@ -31,6 +33,9 @@ import org.netbeans.modules.cpplite.debugger.CPPFrame;
 import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger;
 import org.netbeans.modules.cpplite.debugger.CPPLiteDebuggerConfig;
 import org.netbeans.modules.cpplite.debugger.CPPThread;
+import org.netbeans.modules.nativeimage.api.Location;
+import org.netbeans.modules.nativeimage.api.SourceInfo;
+import org.netbeans.modules.nativeimage.api.Symbol;
 import org.netbeans.modules.nativeimage.api.debug.EvaluateException;
 import org.netbeans.modules.nativeimage.api.debug.NIFrame;
 import org.netbeans.modules.nativeimage.api.debug.NILineBreakpointDescriptor;
@@ -91,37 +96,47 @@ public class NIDebuggerProviderImpl implements NIDebuggerProvider {
                 .controllable(true);
         }
         CompletableFuture<Void> completed = new CompletableFuture<>();
+        Semaphore started = new Semaphore(0);
         ExecutionService.newService(() -> {
-            LifecycleManager.getDefault().saveAll();
-            Pair<DebuggerEngine, Process> engineProcess = CPPLiteDebugger.startDebugging(
-                    new CPPLiteDebuggerConfig(command, workingDirectory, miDebugger),
-                    frameDisplayer,
-                    variablesDisplayer);
-            DebuggerEngine engine = engineProcess.first();
-            CPPLiteDebugger debugger = engine.lookupFirst(null, CPPLiteDebugger.class);
-            this.debugger = debugger;
-            if (startedEngine != null) {
-                startedEngine.accept(engine);
-            }
-            debugger.addStateListener(new CPPLiteDebugger.StateListener() {
-                @Override
-                public void currentThread(CPPThread thread) {}
-
-                @Override
-                public void currentFrame(CPPFrame frame) {}
-
-                @Override
-                public void suspended(boolean suspended) {}
-
-                @Override
-                public void finished() {
-                    breakpointsHandler.dispose();
-                    completed.complete(null);
+            Pair<DebuggerEngine, Process> engineProcess;
+            CPPLiteDebugger debugger;
+            try {
+                LifecycleManager.getDefault().saveAll();
+                engineProcess = CPPLiteDebugger.startDebugging(
+                        new CPPLiteDebuggerConfig(command, workingDirectory, miDebugger),
+                        frameDisplayer,
+                        variablesDisplayer);
+                DebuggerEngine engine = engineProcess.first();
+                debugger = engine.lookupFirst(null, CPPLiteDebugger.class);
+                this.debugger = debugger;
+                if (startedEngine != null) {
+                    startedEngine.accept(engine);
                 }
-            });
+                debugger.addStateListener(new CPPLiteDebugger.StateListener() {
+                    @Override
+                    public void currentThread(CPPThread thread) {}
+
+                    @Override
+                    public void currentFrame(CPPFrame frame) {}
+
+                    @Override
+                    public void suspended(boolean suspended) {}
+
+                    @Override
+                    public void finished() {
+                        breakpointsHandler.dispose();
+                        completed.complete(null);
+                    }
+                });
+            } finally {
+                started.release();
+            }
             debugger.execRun();
             return engineProcess.second();
         }, executionDescriptor, displayName).run();
+        // Wait for the debugger to actually start up.
+        // This is necessary to be able to safely call other methods on the NIDebuggerProvider.
+        started.acquireUninterruptibly();
         return completed;
     }
 
@@ -169,4 +184,20 @@ public class NIDebuggerProviderImpl implements NIDebuggerProvider {
     public String getVersion() {
         return debugger.getVersion();
     }
+
+    @Override
+    public List<Location> listLocations(String filePath) {
+        return debugger.listLocations(filePath);
+    }
+
+    @Override
+    public Map<SourceInfo, List<Symbol>> listFunctions(String name, boolean includeNondebug, int maxResults) {
+        return debugger.listFunctions(name, includeNondebug, maxResults);
+    }
+
+    @Override
+    public Map<SourceInfo, List<Symbol>> listVariables(String name, boolean includeNondebug, int maxResults) {
+        return debugger.listVariables(name, includeNondebug, maxResults);
+    }
+
 }

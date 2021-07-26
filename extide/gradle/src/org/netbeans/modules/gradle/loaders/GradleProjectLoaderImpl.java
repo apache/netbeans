@@ -20,6 +20,7 @@ package org.netbeans.modules.gradle.loaders;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.GradleProject;
@@ -44,10 +45,10 @@ public class GradleProjectLoaderImpl implements GradleProjectLoader {
     }
 
     @Override
-    public GradleProject loadProject(NbGradleProject.Quality aim, boolean ignoreCache, boolean interactive, String... args) {
+    public GradleProject loadProject(NbGradleProject.Quality aim, String descriptionOpt, boolean ignoreCache, boolean interactive, String... args) {
         LOGGER.info("Load aiming " +aim + " for "+ project);
         GradleCommandLine cmd = new GradleCommandLine(args);
-        AbstractProjectLoader.ReloadContext ctx = new AbstractProjectLoader.ReloadContext((NbGradleProjectImpl) project, aim, cmd);
+        AbstractProjectLoader.ReloadContext ctx = new AbstractProjectLoader.ReloadContext((NbGradleProjectImpl) project, aim, cmd, descriptionOpt);
         List<AbstractProjectLoader> loaders = new LinkedList<>();
 
         if (!ignoreCache) loaders.add(new DiskCacheProjectLoader(ctx));
@@ -69,14 +70,17 @@ public class GradleProjectLoaderImpl implements GradleProjectLoader {
                     }
                     if (trust) {
                         ret = loader.load();
+                        LOGGER.log(Level.FINER, "Loaded with trusted loader {0} -> {1}", new Object[] { loader, ret });
                     } else {
                         ret = ctx.getPrevious();
                         if (ret != null) {
                             ret = ret.invalidate("Gradle execution is not trusted on this project.");
                         }
+                        LOGGER.log(Level.FINER, "Execution not allowed, invalidated {0}", ret);
                     }
                 } else {
                     ret = loader.load();
+                    LOGGER.log(Level.FINER, "Loaded with loader {0} -> {1}", new Object[] { loader, ret });
                 }
                 if (ret != null) {
                     break;

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.maven.problems;
 
+import org.netbeans.modules.maven.execute.MockMavenExec;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
@@ -171,35 +172,6 @@ public class PrimingActionTest extends NbTestCase {
         assertFalse(enabled);
     }
     
-    /**
-     * Block the actual maven execution, but pretend that the task has been completed
-     */
-    class MockMavenExec extends MavenCommandLineExecutor.ExecuteMaven {
-        volatile boolean executed;
-
-        @Override
-        public ExecutorTask execute(RunConfig config, InputOutput io, AbstractMavenExecutor.TabContext tc) {
-            executed = true;
-            ExecutorTask t = new ExecutorTask(() -> {}) {
-                @Override
-                public void stop() {
-                }
-
-                @Override
-                public int result() {
-                    return 0;
-                }
-
-                @Override
-                public InputOutput getInputOutput() {
-                    return null;
-                }
-
-            };
-            t.run();
-            return t;
-        }
-    }
     
     /**
      * Checks that the priming build does not actually run on OK project, although

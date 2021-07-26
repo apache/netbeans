@@ -31,6 +31,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
+import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.modules.csl.api.CompletionProposal;
@@ -45,10 +46,12 @@ import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
 import org.netbeans.modules.groovy.editor.api.elements.common.MethodElement.MethodParameter;
 import org.netbeans.modules.groovy.editor.api.elements.index.IndexedClass;
-import org.netbeans.modules.groovy.editor.api.elements.index.IndexedField;
 import org.netbeans.modules.groovy.editor.api.elements.index.IndexedMethod;
+import org.netbeans.modules.groovy.editor.completion.provider.CompletionAccessor;
 import org.netbeans.modules.groovy.editor.imports.ImportUtils;
+import org.netbeans.modules.groovy.editor.java.JavaElementHandle;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
+import org.openide.filesystems.FileObject;
 
 /**
  * Complete the methods invokable on a class.
@@ -162,11 +165,11 @@ public class MethodCompletion extends BaseCompletion {
                             typelist.addAll(getElementListFor(info.getElements(), importName));
                         }
                         LOG.log(Level.FINEST, "Number of types found:  {0}", typelist.size());
-
+                        
                         if (exactConstructorExists(typelist, context.getPrefix())) {
                             // if we are in situation like "String s = new String|" we want to
                             // show only String constructors (not StringBuffer constructors etc.)
-                            addExactProposals(typelist);
+                            addExactProposals(context.getSourceFile(), typelist);
                         }
                         addConstructorProposalsForDeclaredClasses();
                     }
@@ -280,10 +283,11 @@ public class MethodCompletion extends BaseCompletion {
         return false;
     }
 
-    private void addExactProposals(List<? extends Element> typelist) {
+    private void addExactProposals(FileObject source, List<? extends Element> typelist) {
         for (Element element : typelist) {
             // only look for classes rather than enums or interfaces
             if (element.getKind() == ElementKind.CLASS) {
+                TypeElement tel = (TypeElement)element;
                 for (Element encl : element.getEnclosedElements()) {
                     if (encl.getKind() == ElementKind.CONSTRUCTOR) {
                         // we gotta get the constructors name from the type itself, since
@@ -291,7 +295,7 @@ public class MethodCompletion extends BaseCompletion {
                         String constructorName = element.getSimpleName().toString();
 
                         if (constructorName.toUpperCase().equals(context.getPrefix().toUpperCase())) {
-                            addConstructorProposal(constructorName, (ExecutableElement) encl);
+                            addConstructorProposal(tel.getQualifiedName().toString(), (ExecutableElement) encl);
                         }
                     }
                 }
@@ -299,10 +303,15 @@ public class MethodCompletion extends BaseCompletion {
         }
     }
 
-    private void addConstructorProposal(String constructorName, ExecutableElement encl) {
+    private void addConstructorProposal(String classFqn, ExecutableElement encl) {
         List<MethodParameter> paramList = getParameterList(encl);
-        
-        ConstructorItem constructor = new ConstructorItem(constructorName, paramList, anchor, false);
+        List<String> sig = new ArrayList<>(paramList.size());
+        for (MethodParameter p : paramList) {
+            sig.add(p.getFqnType());
+        }
+        JavaElementHandle h = new JavaElementHandle(encl.getEnclosingElement().getSimpleName().toString(), classFqn, ElementHandle.create(encl), sig, Collections.emptySet());
+        CompletionItem constructor = CompletionAccessor.instance().
+                createConstructor(h, paramList, anchor, false);
         if (!proposals.contains(constructor)) {
             proposals.add(constructor);
         }

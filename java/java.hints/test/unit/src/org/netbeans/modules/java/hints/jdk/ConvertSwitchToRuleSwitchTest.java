@@ -875,6 +875,71 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                               "     }\n" +
                               "}\n");
     }
+    
+    public void testSwitchToRuleSwitchFormattingMultiple() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
+        HintTest.create()
+                .input("package test;" +
+                        "public class Test {\n" +
+                        "     private void test(int p) {\n" +
+                        "         String result;\n" +
+                        "         switch (p) {\n" +
+                        "            case 0:\n" +
+                        "            case 1:\n" +
+                        "            case 2:\n" +
+                        "            case 3: result=\"a\"; break;\n" +
+                        "            default: System.err.println(\"No.\"); break;" +
+                        "         }\n" +
+                        "     }\n" +
+                        "}\n")
+                .sourceLevel(SourceVersion.latest().name())
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;" +
+                        "public class Test {\n" +
+                        "     private void test(int p) {\n" +
+                        "         String result;\n" +
+                        "         switch (p) {\n" +
+                        "            case 0, 1, 2, 3 -> result=\"a\";\n" +
+                        "            default -> System.err.println(\"No.\");\n" +
+                        "         }\n" +
+                        "     }\n" +
+                        "}\n");
+    }
+    
+    public void testSwitchToRuleSwitchFormattingSimple() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
+        HintTest.create()
+                .input("package test;" +
+                        "public class Test {\n" +
+                        "     private void test(int p) {\n" +
+                        "         String result;\n" +
+                        "         switch (p) {\n" +
+                        "            case 0: result = \"a\"; break;\n" +
+                        "            default: System.err.println(\"No.\"); break;\n" +
+                        "         }\n" +
+                        "     }\n" +
+                        "}\n")
+                .sourceLevel(SourceVersion.latest().name())
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;" +
+                        "public class Test {\n" +
+                        "     private void test(int p) {\n" +
+                        "         String result;\n" +
+                        "         switch (p) {\n" +
+                        "            case 0 -> result = \"a\";\n" +
+                        "            default -> System.err.println(\"No.\");\n" +
+                        "         }\n" +
+                        "     }\n" +
+                        "}\n");
+    }
 
     public static Test suite() {
         TestSuite suite = new TestSuite();

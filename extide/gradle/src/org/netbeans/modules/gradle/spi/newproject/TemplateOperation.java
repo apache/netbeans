@@ -63,7 +63,6 @@ import org.openide.loaders.DataObject;
  * @author Laszlo Kishalmi
  */
 public final class TemplateOperation implements Runnable {
-
     public interface ProjectConfigurator {
         void configure(Project project);
     }
@@ -265,7 +264,7 @@ public final class TemplateOperation implements Runnable {
                             //Just load the project into the cache.
                             GradleProjectLoader loader = nbProject.getLookup().lookup(GradleProjectLoader.class);
                             if (loader != null) {
-                                loader.loadProject(Quality.FULL_ONLINE, true, false);
+                                loader.loadProject(Quality.FULL_ONLINE, null, true, false);
                             }
                         }
                         return Collections.singleton(projectDir);

@@ -19,8 +19,8 @@
 package org.netbeans.modules.java.mx.project;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedHashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -73,16 +73,8 @@ final class Jdks {
 
     final Iterable<File> jdks() {
         Set<File> jdks = new LinkedHashSet<>();
-        String home = System.getProperty("user.home");
-        if (home != null) {
-            File userEnv = new File(new File(new File(home), ".mx"), "env");
-            findJdksInEnv(jdks, userEnv);
-        }
-        FileObject dir = prj.getProjectDirectory();
-        FileObject suiteEnv = dir.getFileObject("mx." + dir.getNameExt() + "/env");
-        if (suiteEnv != null) {
-            findJdksInEnv(jdks, FileUtil.toFile(suiteEnv));
-        }
+        findJdksInEnv(jdks, prj.getGlobalEnv());
+        findJdksInEnv(jdks, prj.getSuiteEnv());
 
         String javaHomeEnv = System.getenv("JAVA_HOME");
         if (javaHomeEnv != null) {
@@ -95,11 +87,11 @@ final class Jdks {
         return jdks;
     }
 
-    private void findJdksInEnv(Set<File> jdks, File env) {
-        if (env == null || !env.isFile()) {
+    private void findJdksInEnv(Set<File> jdks, FileObject env) {
+        if (env == null || !env.isValid()) {
             return;
         }
-        try (final FileInputStream is = new FileInputStream(env)) {
+        try (final InputStream is = env.getInputStream()) {
             Properties p = new Properties();
             p.load(is);
 

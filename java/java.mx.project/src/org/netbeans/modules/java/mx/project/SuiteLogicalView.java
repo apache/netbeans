@@ -49,6 +49,7 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 @ActionReferences({
     @ActionReference(position = 1100, id = @ActionID(category = "Project", id = "org-netbeans-modules-project-ui-BuildProject"), path = "Projects/mxprojects/Actions", separatorBefore = 1000),
@@ -56,7 +57,7 @@ import org.openide.util.lookup.Lookups;
     @ActionReference(position = 1300, id = @ActionID(category = "Project", id = "org-netbeans-modules-project-ui-RebuildProject"), path = "Projects/mxprojects/Actions", separatorAfter = 2000),
     @ActionReference(position = 2100, id = @ActionID(category = "Project", id = "org-netbeans-modules-project-ui-TestSingle"), path = "Projects/mxprojects/Actions"),
     @ActionReference(position = 3100, id = @ActionID(category = "Project", id = "org-netbeans-modules-project-ui-CloseProject"), path = "Projects/mxprojects/Actions", separatorBefore = 3000),
-    @ActionReference(position = 4100, id = @ActionID(category = "View", id = "org-openide-actions-CustomizeAction"), path = "Projects/mxprojects/Actions", separatorBefore = 4000),
+    @ActionReference(position = 4100, id = @ActionID(category = "System", id = "org-openide-actions-EditAction"), path = "Projects/mxprojects/Actions", separatorBefore = 4000),
 })
 @NbBundle.Messages({
     "# {0} - compliance text",
@@ -124,7 +125,7 @@ final class SuiteLogicalView implements LogicalViewProvider  {
         private final SuiteProject project;
 
         public SuiteRootNode(SuiteProject p) {
-            super(Children.create(new RootChildFactory(p), true), Lookups.fixed(p));
+            super(Children.create(new RootChildFactory(p), true), Lookups.fixed(p, new SuiteEnvEdit(p)));
             this.project = p;
             setDisplayName();
             setIconBaseWithExtension("org/netbeans/modules/java/mx/project/mx-knife.png");
@@ -143,18 +144,14 @@ final class SuiteLogicalView implements LogicalViewProvider  {
         public Action[] getActions(boolean context) {
             return CommonProjectActions.forType("mxprojects"); // NOI18N
         }
-
-        @Override
-        public boolean hasCustomizer() {
-            return true;
-        }
     }
 
     private static final class RootChildFactory extends ChildFactory<RootChildFactory.Key> implements ChangeListener {
-
+        private final SuiteProject suite;
         private final SuiteSources sources;
 
         RootChildFactory(SuiteProject project) {
+            this.suite = project;
             this.sources = project.getSources();
             this.sources.addChangeListener(WeakListeners.change(this, this.sources));
         }
@@ -178,40 +175,7 @@ final class SuiteLogicalView implements LogicalViewProvider  {
                         @Override public Node createNode() {
                             try {
                                 DataObject od = DataObject.find(group.getRootFolder());
-                                return new FilterNode(od.getNodeDelegate()) {
-                                    @Override
-                                    public Image getIcon(int type) {
-                                        final Image icon = ImageUtilities.loadImage(SuiteFactory.ICON);
-                                        try {
-                                            ImageDecorator decorator = FileUIUtils.getImageDecorator(od.getPrimaryFile().getFileSystem());
-                                            return decorator.annotateIcon(icon, type, od.files());
-                                        } catch (FileStateInvalidException ex) {
-                                            return icon;
-                                        }
-                                    }
-
-                                    @Override
-                                    public String getDisplayName() {
-                                        return group.getDisplayName();
-                                    }
-
-                                    @Override
-                                    public String getShortDescription() {
-                                        return Bundle.CTL_MissingJDK(group.getCompliance());
-                                    }
-
-                                    @Override
-                                    public Action[] getActions(boolean context) {
-                                        return new Action[] {
-                                            Actions.forID("View", "org.openide.actions.CustomizeAction") // NOI18N
-                                        };
-                                    }
-
-                                    @Override
-                                    public boolean hasCustomizer() {
-                                        return true;
-                                    }
-                                };
+                                return new SuiteWithoutJDKNode(suite, od, group);
                             } catch (DataObjectNotFoundException ex) {
                                 return Node.EMPTY;
                             }
@@ -264,6 +228,51 @@ final class SuiteLogicalView implements LogicalViewProvider  {
                 return Objects.equals(this.group, other.group);
             }
 
+        }
+    }
+    static class SuiteWithoutJDKNode extends FilterNode {
+        private final Group group;
+        private final DataObject od;
+
+        public SuiteWithoutJDKNode(SuiteProject suite, DataObject od, Group group) {
+            this(suite, od, group, od.getNodeDelegate());
+        }
+        
+        private SuiteWithoutJDKNode(SuiteProject suite, DataObject od, Group group, Node n) {
+            super(n, new FilterNode.Children(n), new ProxyLookup(
+                Lookups.singleton(new SuiteEnvEdit(suite)),
+                od.getLookup()
+            ));
+            this.od = od;
+            this.group = group;
+        }
+
+        @Override
+        public Image getIcon(int type) {
+            final Image icon = ImageUtilities.loadImage(SuiteFactory.ICON);
+            try {
+                ImageDecorator decorator = FileUIUtils.getImageDecorator(od.getPrimaryFile().getFileSystem());
+                return decorator.annotateIcon(icon, type, od.files());
+            } catch (FileStateInvalidException ex) {
+                return icon;
+            }
+        }
+
+        @Override
+        public String getDisplayName() {
+            return group.getDisplayName();
+        }
+
+        @Override
+        public String getShortDescription() {
+            return Bundle.CTL_MissingJDK(group.getCompliance());
+        }
+
+        @Override
+        public Action[] getActions(boolean context) {
+            return new Action[]{
+                Actions.forID("System", "org.openide.actions.EditAction") // NOI18N
+            };
         }
     }
 }

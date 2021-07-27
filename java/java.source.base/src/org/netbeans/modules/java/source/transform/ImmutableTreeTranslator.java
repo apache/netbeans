@@ -1415,7 +1415,6 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
 	return tree;
     }
 
-    @NbBundle.Messages("ERR_PatternMatchingInstanceOf=Transformation for pattern matching in instanceof not supported on this version of JDK. Please run on JDK 16 or newer, or install nb-javac.")
     private Tree rewriteChildrenBindingPattern(Tree tree) {
         VariableTree var = CasualDiff.getBindingVariableTree(tree); //replace with tree.getVariable when javac supported is 16+:
         VariableTree newVar = (VariableTree) translate(var);

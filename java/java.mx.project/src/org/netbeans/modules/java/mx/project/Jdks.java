@@ -45,17 +45,17 @@ final class Jdks {
             if (fo == null) {
                 continue;
             }
-            JavaPlatform p = ProjectPlatform.forProject(prj, fo, fo.getName(), "j2se");
-            if (p == null) {
+            JavaPlatform platform = ProjectPlatform.forProject(prj, fo, fo.getName(), "j2se");
+            if (platform == null) {
                 if (fo.getName().equals("jre")) {
                     fo = fo.getParent();
-                    p = ProjectPlatform.forProject(prj, fo, fo.getName(), "j2se");
+                    platform = ProjectPlatform.forProject(prj, fo, fo.getName(), "j2se");
                 }
-                if (p == null) {
+                if (platform == null) {
                     continue;
                 }
             }
-            final Specification spec = p.getSpecification();
+            final Specification spec = platform.getSpecification();
             if (spec == null) {
                 continue;
             }
@@ -63,9 +63,9 @@ final class Jdks {
             if (version == null) {
                 continue;
             }
-            Compliance pVersion = Compliance.parse(version.toString());
-            if (compliance.matches(pVersion)) {
-                return p;
+            Compliance platformVersion = Compliance.parse(version.toString());
+            if (compliance.matches(platformVersion)) {
+                return platform;
             }
         }
         return JavaPlatform.getDefault();

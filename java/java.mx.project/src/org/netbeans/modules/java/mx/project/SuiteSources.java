@@ -671,6 +671,7 @@ final class SuiteSources implements Sources,
         private ClassPath processorPath;
         private Collection<Dep> allDeps;
         private ClassPath bootCP;
+        private Object platformOrThis;
 
         Group(String mxName, MxProject mxPrj, FileObject srcDir, FileObject srcGenDir, FileObject binDir, String name, String displayName) {
             this.mxName = mxName;
@@ -867,9 +868,12 @@ final class SuiteSources implements Sources,
             return SuiteSources.this;
         }
 
-        ClassPath getBootCP(SuiteProject project, Jdks jdks) {
+        ClassPath getBootCP() {
             if (this.bootCP == null) {
-                JavaPlatform platform = jdks.find(compliance);
+                JavaPlatform platform = getJavaPlatform();
+                if (platform == null) {
+                    platform = JavaPlatform.getDefault();
+                }
                 List<ClassPath.Entry> entries = platform.getBootstrapLibraries().entries();
                 List<URL> roots = new ArrayList<>();
                 for (ClassPath.Entry entry : entries) {
@@ -888,6 +892,18 @@ final class SuiteSources implements Sources,
                 this.bootCP = ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
             }
             return this.bootCP;
+        }
+
+        final JavaPlatform getJavaPlatform() {
+            if (this.platformOrThis == null) {
+                JavaPlatform p = jdks.find(compliance);
+                if (p == null) {
+                    this.platformOrThis = this;
+                } else {
+                    this.platformOrThis = p;
+                }
+            }
+            return this.platformOrThis instanceof JavaPlatform ? (JavaPlatform) this.platformOrThis : null;
         }
     }
 

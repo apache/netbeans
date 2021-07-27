@@ -18,16 +18,11 @@
  */
 package org.netbeans.modules.java.mx.project;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
-import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.java.queries.AnnotationProcessingQuery.Result;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
-import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.java.queries.AnnotationProcessingQueryImplementation;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.filesystems.FileObject;
@@ -48,7 +43,7 @@ final class SuiteClassPathProvider extends ProjectOpenedHook implements ClassPat
             return null;
         }
         if (ClassPath.BOOT.equals(type)) {
-            return g.getBootCP(project, jdks);
+            return g.getBootCP();
         } else if (ClassPath.COMPILE.equals(type)) {
             return g.getCP();
         } else if (ClassPath.SOURCE.equals(type)) {
@@ -61,8 +56,8 @@ final class SuiteClassPathProvider extends ProjectOpenedHook implements ClassPat
 
     @Override
     public void projectOpened() {
-        // GlobalPathRegistry.getDefault().register(ClassPath.BOOT, new ClassPath[] {bootCP});
         for ( SuiteSources.Group s : project.getSources().groups()) {
+            GlobalPathRegistry.getDefault().register(ClassPath.BOOT, new ClassPath[] { s.getBootCP() });
             GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, new ClassPath[] { s.getSourceCP() });
             GlobalPathRegistry.getDefault().register(ClassPath.COMPILE, new ClassPath[] { s.getCP() });
         }
@@ -70,8 +65,8 @@ final class SuiteClassPathProvider extends ProjectOpenedHook implements ClassPat
 
     @Override
     public void projectClosed() {
-        // GlobalPathRegistry.getDefault().unregister(ClassPath.BOOT, new ClassPath[] {bootCP});
         for ( SuiteSources.Group s : project.getSources().groups()) {
+            GlobalPathRegistry.getDefault().unregister(ClassPath.BOOT, new ClassPath[] { s.getBootCP() });
             GlobalPathRegistry.getDefault().unregister(ClassPath.SOURCE, new ClassPath[] { s.getSourceCP() });
             GlobalPathRegistry.getDefault().unregister(ClassPath.COMPILE, new ClassPath[] { s.getCP() });
         }

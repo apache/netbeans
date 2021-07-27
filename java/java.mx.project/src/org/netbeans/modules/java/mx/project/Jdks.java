@@ -68,7 +68,7 @@ final class Jdks {
                 return platform;
             }
         }
-        return JavaPlatform.getDefault();
+        return null;
     }
 
     final Iterable<File> jdks() {

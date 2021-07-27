@@ -413,8 +413,6 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         //#164234
         //if maven.bat file is in space containing path, we need to quote with simple quotes.
         String quote = "\"";
-        // the command line parameters with space in them need to be quoted and escaped to arrive
-        // correctly to the java runtime on windows
         for (Map.Entry<? extends String,? extends String> entry : config.getProperties().entrySet()) {
             String k = entry.getKey();
             // filter out env vars AND internal properties.

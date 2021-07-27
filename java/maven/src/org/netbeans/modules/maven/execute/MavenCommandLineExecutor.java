@@ -415,7 +415,6 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         String quote = "\"";
         // the command line parameters with space in them need to be quoted and escaped to arrive
         // correctly to the java runtime on windows
-        String escaped = "\\" + quote;        
         for (Map.Entry<? extends String,? extends String> entry : config.getProperties().entrySet()) {
             String k = entry.getKey();
             // filter out env vars AND internal properties.
@@ -424,9 +423,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             }
             //skip envs, these get filled in later.
             //#228901 since u21 we need to use cmd /c to execute on windows, quotes get escaped and when there is space in value, the value gets wrapped in quotes.
-            String value = (Utilities.isWindows() ? entry.getValue().replace(quote, escaped) : entry.getValue().replace(quote, "'"));
+            String value = (Utilities.isWindows() ? entry.getValue().replace(quote, "") : entry.getValue().replace(quote, "'"));
             if (Utilities.isWindows() && value.endsWith("\"")) {
-                //#201132 property cannot end with 2 double quotes, add a space to the end after our quote to prevent the state
                 value = value + " ";
             }
             String s = "-D" + entry.getKey() + "=" + (Utilities.isWindows() && value.contains(" ") ? quote + value + quote : value);            

@@ -18,21 +18,16 @@
  */
 package org.netbeans.modules.java.lsp.server.debugging.attach;
 
-import com.sun.jdi.Bootstrap;
-import com.sun.jdi.VirtualMachineManager;
 import com.sun.jdi.connect.AttachingConnector;
 import com.sun.jdi.connect.Connector.Argument;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.io.File;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -50,8 +45,11 @@ import org.netbeans.api.debugger.jpda.DebuggerStartException;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDebugSession;
+import org.netbeans.modules.java.lsp.server.debugging.ni.NILocationVisualizer;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
+import org.netbeans.modules.java.nativeimage.debugger.api.NIDebugRunner;
+import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 
@@ -86,10 +84,61 @@ public final class NbAttachRequestHandler {
 
     private CompletableFuture<Void> attachToNative(Map<String, Object> attachArguments, DebugAdapterContext context) {
         CompletableFuture<Void> resultFuture = new CompletableFuture<>();
-        // TODO
-        ErrorUtilities.completeExceptionally(resultFuture,
-                "Attach to native image is not implemented yet", ResponseErrorCode.serverErrorStart);
+        String processAndExe = (String) attachArguments.get("processId");   // NOI18N
+        long processId;
+        String nativeImagePath = (String) attachArguments.get("nativeImagePath");   // NOI18N
+        String miDebugger = (String) attachArguments.get("miDebugger");     // NOI18N
+        int index = processAndExe.indexOf(' ');
+        try {
+            if (index > 0) {
+                processId = Long.parseLong(processAndExe.substring(0, index));
+                if (nativeImagePath.isEmpty()) {
+                    nativeImagePath = processAndExe.substring(index + 1);
+                }
+            } else {
+                processId = Long.parseLong(processAndExe);
+            }
+            String executable = nativeImagePath;
+            RP.post(() -> attachNativeDebug(new File(executable), processId, miDebugger, context, resultFuture));
+        } catch (NumberFormatException nfex) {
+            ErrorUtilities.completeExceptionally(resultFuture,
+                    nfex.getLocalizedMessage(),
+                    ResponseErrorCode.serverErrorStart);
+        }
         return resultFuture;
+    }
+
+    private void attachNativeDebug(File nativeImageFile, long processId, String miDebugger, DebugAdapterContext context, CompletableFuture<Void> resultFuture) {
+        AtomicReference<NbDebugSession> debugSessionRef = new AtomicReference<>();
+        CompletableFuture<Void> finished = new CompletableFuture<>();
+        NIDebugger niDebugger;
+        resultFuture.complete(null);
+        try {
+            niDebugger = NIDebugRunner.attach(nativeImageFile, processId, miDebugger, null, engine -> {
+                Session session = engine.lookupFirst(null, Session.class);
+                NbDebugSession debugSession = new NbDebugSession(session);
+                debugSessionRef.set(debugSession);
+                context.setDebugSession(debugSession);
+                context.getClient().initialized();
+                context.getConfigurationSemaphore().waitForConfigurationDone();
+                session.addPropertyChangeListener(Session.PROP_CURRENT_LANGUAGE, evt -> {
+                    if (evt.getNewValue() == null) {
+                        // No current language => finished
+                        boolean didFinish = finished.complete(null);
+                        if (didFinish) {
+                            notifyTerminated(context);
+                        }
+                    }
+                });
+            });
+        } catch (IllegalStateException ex) {
+            notifyErrorMessage(context, Bundle.MSG_FailedToAttach());
+            notifyTerminated(context);
+            return ;
+        }
+        NbDebugSession debugSession = debugSessionRef.get();
+        debugSession.setNIDebugger(niDebugger);
+        NILocationVisualizer.handle(nativeImageFile, niDebugger, finished, context.getLspSession().getLspServer().getOpenedDocuments());
     }
 
     @Messages({"# {0} - connector name", "MSG_InvalidConnector=Invalid connector name: {0}"})

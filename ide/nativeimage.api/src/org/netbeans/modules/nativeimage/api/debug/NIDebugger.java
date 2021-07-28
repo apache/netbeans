@@ -114,6 +114,20 @@ public final class NIDebugger {
     }
 
     /**
+     * Attach to a process and create a debugging session. Call this typically after breakpoints are added.
+     *
+     * @param executablePath path to an executable representing the native image
+     * @param processId a process to attach to
+     * @param debugger the native debugger command
+     * @param startedEngine the corresponding DebuggerEngine is passed to this consumer
+     * @return future that completes on the execution finish
+     * @since 0.4
+     */
+    public CompletableFuture<Void> attach(String executablePath, long processId, String debugger, Consumer<DebuggerEngine> startedEngine) {
+        return provider.attach(executablePath,  processId, debugger, startedEngine);
+    }
+
+    /**
      * An asynchronous expression evaluation.
      *
      * @param expression the expression to evaluate

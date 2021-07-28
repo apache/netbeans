@@ -81,6 +81,7 @@ import org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
+import org.netbeans.modules.java.lsp.server.debugging.attach.AttachNativeConfigurations;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaTypeProvider;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
@@ -243,6 +244,9 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             }
             case Server.JAVA_FIND_DEBUG_PROCESS_TO_ATTACH: {
                 return AttachConfigurations.findProcessAttachTo(client);
+            }
+            case Server.NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH: {
+                return AttachNativeConfigurations.findProcessAttachTo(client);
             }
             case Server.JAVA_PROJECT_CONFIGURATION_COMPLETION: {
                 // We expect one, two or three arguments.

@@ -50,14 +50,6 @@ public enum JavaSEPlatform {
     v1_8,
     /** JavaSE 11. */
     v11,
-    /** JavaSE 12. */
-    v12,
-    /** JavaSE 13. */
-    v13,
-    /** JavaSE 14. */
-    v14,
-    /** JavaSE 15. */
-    v15,
     /** JavaSE 16. */
     v16;
     
@@ -97,19 +89,7 @@ public enum JavaSEPlatform {
 
     /**  A <code>String</code> representation of v11 value. */
     static final String V11_STR = "11";
-    
-    /**  A <code>String</code> representation of v12 value. */
-    static final String V12_STR = "12";    
-    
-    /**  A <code>String</code> representation of v13 value. */
-    static final String V13_STR = "13";    
-    
-    /**  A <code>String</code> representation of v14 value. */
-    static final String V14_STR = "14";    
-    
-    /**  A <code>String</code> representation of v15 value. */
-    static final String V15_STR = "15";    
-    
+
     /**  A <code>String</code> representation of v16 value. */
     static final String V16_STR = "16";    
     
@@ -174,10 +154,6 @@ public enum JavaSEPlatform {
             case v1_7:     return V1_7_STR;
             case v1_8:     return V1_8_STR;
             case v11:     return V11_STR;            
-            case v12:     return V12_STR;       
-            case v13:     return V13_STR;       
-            case v14:     return V14_STR;       
-            case v15:     return V15_STR;       
             case v16:     return V16_STR;                   
                         
             // This is unrecheable. Being here means this class does not handle

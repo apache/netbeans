@@ -26,13 +26,12 @@ import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.tree.JCTree;
 import java.io.File;
 import java.io.IOException;
 import java.util.EnumSet;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Modifier;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.JavaSource;
@@ -254,7 +253,7 @@ public class InstanceOfTest extends GeneratorTestMDRCompat {
 
     private boolean typeTestPatternAvailable() {
         try {
-            Class.forName("com.sun.source.tree.BindingPatternTree", false, JCTree.class.getClassLoader()).getDeclaredMethod("getVariable");
+            Class.forName("com.sun.source.tree.BindingPatternTree", false, Tree.class.getClassLoader()).getDeclaredMethod("getVariable");
             return true;
         } catch (ClassNotFoundException | NoSuchMethodException | SecurityException ex) {
             //OK

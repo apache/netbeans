@@ -1484,6 +1484,7 @@ public class RenameTest extends RefactoringTestBase {
     }
 
     public void testRenameBindingVariableType() throws Exception {
+        if (!typeTestPatternAvailable()) return; //only run the test when javac supports it
         writeFilesAndWaitForScan(src,
                 new File("t/A.java", "package t;\n"
                 + "public class A {\n"
@@ -1576,5 +1577,15 @@ public class RenameTest extends RefactoringTestBase {
         }
 
         assertProblems(Arrays.asList(expectedProblems), problems);
+    }
+
+    private boolean typeTestPatternAvailable() {
+        try {
+            Class.forName("com.sun.source.tree.BindingPatternTree", false, Tree.class.getClassLoader()).getDeclaredMethod("getVariable");
+            return true;
+        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException ex) {
+            //OK
+            return false;
+        }
     }
 }

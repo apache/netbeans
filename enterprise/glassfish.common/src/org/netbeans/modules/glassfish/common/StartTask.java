@@ -62,6 +62,7 @@ import org.netbeans.modules.glassfish.spi.GlassfishModule.ServerState;
 import org.openide.execution.NbProcessDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.modules.SpecificationVersion;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -691,8 +692,8 @@ public class StartTask extends BasicTask<TaskState> {
         // append other options from startup extenders, e.g. for profiling
         appendStartupExtenderParams(optList);
 
-        optList.add("--add-opens java.base/java.lang=ALL-UNNAMED");
-        optList.add("--add-opens java.naming/javax.naming.spi=ALL-UNNAMED");
+        // append options to open modules for java 9+
+        appendModuleOpensParams(optList);        
         
         return new StartupArgsEntity(
                 glassfishArgs,
@@ -760,6 +761,20 @@ public class StartTask extends BasicTask<TaskState> {
         }
     }
 
+    /**
+     * Appends options in order to open modules for java 9.0+
+     * @param optList 
+     */
+    private void appendModuleOpensParams(List<String> optList) {
+        SpecificationVersion currentInstanceJavaVersion = JavaUtils.serverInstancePlatform(instance).getSpecification().getVersion();
+        SpecificationVersion firstJavaVersionWithModules = new SpecificationVersion("9");
+
+        if(currentInstanceJavaVersion.compareTo(firstJavaVersionWithModules)>=0){        
+            optList.add("--add-opens java.base/java.lang=ALL-UNNAMED");
+            optList.add("--add-opens java.naming/javax.naming.spi=ALL-UNNAMED");
+        }
+    }    
+    
     private String selectDebugPort() throws IOException {
         int debugPort = 9009;
         ServerSocket t = null;

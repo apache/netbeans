@@ -633,7 +633,8 @@ public final class Server {
                         JAVA_NEW_FROM_TEMPLATE,
                         JAVA_NEW_PROJECT,
                         JAVA_PROJECT_CONFIGURATION_COMPLETION,
-                        JAVA_SUPER_IMPLEMENTATION));
+                        JAVA_SUPER_IMPLEMENTATION,
+                        NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH));
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     commands.addAll(codeGenerator.getCommands());
                 }
@@ -767,6 +768,10 @@ public final class Server {
      * Enumerates JVM processes eligible for debugger attach.
      */
     public static final String JAVA_FIND_DEBUG_PROCESS_TO_ATTACH = "java.attachDebugger.pickProcess";
+    /**
+     * Enumerates native processes eligible for debugger attach.
+     */
+    public static final String NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH = "nativeImage.attachDebugger.pickProcess";
     /**
      * Provides code-completion of configurations.
      */

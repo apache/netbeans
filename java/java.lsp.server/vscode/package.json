@@ -243,6 +243,25 @@
 								"default": "internalConsole"
 							}
 						}
+					},
+					"attach": {
+						"properties": {
+							"nativeImagePath": {
+								"type": "string",
+								"description": "Absolute path to the application native image.",
+								"default": "${workspaceFolder}/build/native-image/application"
+							},
+							"processId": {
+								"type": "string",
+								"default": "${command:nativeImage.attachDebugger.pickProcess}",
+								"description": "Process Id of the native image"
+							},
+							"miDebugger": {
+								"type": "string",
+								"description": "MI Debugger",
+								"default": "gdb"
+							}
+						}
 					}
 				},
 				"initialConfigurations": [
@@ -255,13 +274,24 @@
 				],
 				"configurationSnippets": [
 					{
-						"label": "Launch Native Image",
+						"label": "Native Image: Launch",
 						"description": "Launch a native image with MI debugger.",
 						"body": {
 							"type": "nativeimage",
 							"request": "launch",
 							"name": "Launch Native Image",
 							"nativeImagePath": "^\"${1:\\${workspaceFolder\\}/build/native-image/application}\""
+						}
+					},
+					{
+						"label": "Native Image: Attach to Process",
+						"description": "Attach to a native image process with MI debugger.",
+						"body": {
+							"type": "nativeimage",
+							"request": "attach",
+							"name": "Attach to Native Image",
+							"processId": "^\"\\${command:nativeImage.attachDebugger.pickProcess\\}\"",
+							"nativeImagePath": ""
 						}
 					}
 				]

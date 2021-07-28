@@ -39,6 +39,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -592,6 +593,7 @@ public final class CPPLiteDebugger {
             //if (record.token() == 0) {
                 switch (record.cls()) {
                     case "stopped":
+                        runningLatch.countDown();
                         MITList results = record.results();
                         String threadId = results.getConstValue("thread-id");
                         MIValue stoppedThreads = results.valueOf("stopped-threads");
@@ -773,7 +775,7 @@ public final class CPPLiteDebugger {
 
     }
 
-    public static @NonNull Pair<DebuggerEngine, Process> startDebugging (CPPLiteDebuggerConfig configuration, Object... services) throws IOException {
+    public static @NonNull Process startDebugging (CPPLiteDebuggerConfig configuration, Consumer<DebuggerEngine> startedEngine, Object... services) throws IOException {
         SessionProvider sessionProvider = new SessionProvider () {
             @Override
             public String getSessionName () {
@@ -804,12 +806,17 @@ public final class CPPLiteDebugger {
         );
         DebuggerEngine[] es = DebuggerManager.getDebuggerManager ().
             startDebugging (di);
+        startedEngine.accept(es[0]);
         Pty pty = PtySupport.allocate(ExecutionEnvironmentFactory.getLocal());
         CPPLiteDebugger debugger = es[0].lookupFirst(null, CPPLiteDebugger.class);
         List<String> executable = new ArrayList<>();
         executable.add(configuration.getDebugger());
         executable.add("--interpreter=mi");
         executable.add("--tty=" + pty.getSlaveName());
+        if (configuration.isAttach()) {
+            executable.add("-p");
+            executable.add(Long.toString(configuration.getAttachProcessId()));
+        }
         executable.addAll(configuration.getExecutable());
         Process debuggee = new ProcessBuilder(executable).directory(configuration.getDirectory()).start();
         new RequestProcessor(configuration.getDisplayName() + " (pty deallocator)").post(() -> {
@@ -832,7 +839,7 @@ public final class CPPLiteDebugger {
         debugger.setDebuggee(debuggee);
         AtomicInteger exitCode = debugger.exitCode;
 
-        return Pair.of(es[0], new Process() {
+        return new Process() {
             @Override
             public OutputStream getOutputStream() {
                 return pty.getOutputStream();
@@ -868,7 +875,7 @@ public final class CPPLiteDebugger {
             public void destroy() {
                 debuggee.destroy();
             }
-        });
+        };
     }
 
     private class BreakpointsHandler extends DebuggerManagerAdapter implements PropertyChangeListener {

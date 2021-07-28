@@ -27,7 +27,6 @@ import junit.framework.Test;
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
-import org.openide.util.Pair;
 
 public abstract class AbstractDebugTest extends NbTestCase {
 
@@ -53,9 +52,9 @@ public abstract class AbstractDebugTest extends NbTestCase {
     }
 
     protected final void startDebugging(String name, File wd) throws IOException {
-        Pair<DebuggerEngine, Process> engineProcess = CPPLiteDebugger.startDebugging(new CPPLiteDebuggerConfig(Arrays.asList(new File(wd, name).getAbsolutePath()), wd, "gdb"));
-        engine = engineProcess.first();
-        process = engineProcess.second();
+        this.process = CPPLiteDebugger.startDebugging(
+                new CPPLiteDebuggerConfig(Arrays.asList(new File(wd, name).getAbsolutePath()), wd, null, "gdb"),
+                engine -> this.engine = engine);
         debugger = engine.lookupFirst(null, CPPLiteDebugger.class);
         debugger.addStateListener(new CPPLiteDebugger.StateListener() {
             @Override

@@ -98,7 +98,7 @@
         <folder name="Advanced">
             <file name="RuleFiles">
                 <attr name="include" stringvalue="config/rules/.*"/>
-                <attr name="displayName" bundlevalue="org.netbeans.modules.refactoring.java.Bundle#RefactoringRules.Options.Export.displayName"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.refactoring.java.resources.Bundle#RefactoringRules.Options.Export.displayName"/>
             </file>
         </folder>
     </folder>

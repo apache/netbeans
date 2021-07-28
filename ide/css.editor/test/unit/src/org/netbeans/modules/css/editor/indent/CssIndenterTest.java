@@ -115,7 +115,7 @@ public class CssIndenterTest extends TestBase {
         format("a{\nbackground: red,\nblue;\n  }\n",
                 "a{\n    background: red,\n        blue;\n}\n", null);
         format("a{     background: green,\nyellow;\n      }\n",
-                "a{     background: green,\n           yellow;\n}\n", null);
+                "a{\n    background: green,\n        yellow;\n}\n", null);
 
         // comments formatting:
         format("a{\n/*comme\n  *dddsd\n nt*/\nbackground: red;\n}",
@@ -124,7 +124,7 @@ public class CssIndenterTest extends TestBase {
         // even though lines are preserved they will be indented according to indent of previous line;
         // I'm not sure it is OK but leaving like that for now:
         format("a{\ncolor: red; /* start\n   comment\n end*/ background: blue;\n}",
-                "a{\n    color: red; /* start\n       comment\n     end*/ background: blue;\n}", null);
+                "a{\n    color: red; /* start\n       comment\n     end*/\n    background: blue;\n}", null);
 
         // formatting of last line:
         format("a{\nbackground: red,",
@@ -141,6 +141,9 @@ public class CssIndenterTest extends TestBase {
         // #218884
         format("/**\n    *\n  */",
                 "/**\n    *\n  */", null);
+
+        format("h1{font-face: 12pt;font-family: sans-serif;}h2{font-face: 10pt;font-family: sans-serif;}",
+            "h1{\n    font-face: 12pt;\n    font-family: sans-serif;\n}\nh2{\n    font-face: 10pt;\n    font-family: sans-serif;\n}", null);
     }
 
     public void testNativeEmbeddingFormattingCase1() throws Exception {

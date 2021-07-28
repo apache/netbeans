@@ -23,6 +23,7 @@ import java.awt.Component;
 import java.awt.EventQueue;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -52,7 +53,78 @@ import org.openide.windows.OutputWriter;
  *
  * @author Marian Petras. Erno Mononen
  */
-public final class ResultDisplayHandler implements TestResultDisplayHandler.Spi<ResultDisplayHandler> {
+public final class ResultDisplayHandler {
+
+    private static TestResultDisplayHandler.Spi<?> providerInstance = null;
+
+    public static TestResultDisplayHandler.Spi<?> getProvider() {
+        if (providerInstance == null) {
+            providerInstance = new ResultDisplayHandlerProvider();
+        }
+        return providerInstance;
+    }
+
+    private static class ResultDisplayHandlerProvider implements TestResultDisplayHandler.Spi<WeakReference<ResultDisplayHandler>> {
+
+        @Override
+        public WeakReference<ResultDisplayHandler> create(TestSession session) {
+            return new WeakReference<>(new ResultDisplayHandler(session));
+        }
+
+        @Override
+        public void displayOutput(WeakReference<ResultDisplayHandler> token, String text, boolean error) {
+            ResultDisplayHandler handler = token.get();
+            if (handler != null) {
+                handler.displayOutput(text, error);
+            }
+        }
+
+        @Override
+        public void displaySuiteRunning(WeakReference<ResultDisplayHandler> token, String suiteName) {
+            ResultDisplayHandler handler = token.get();
+            if (handler != null) {
+                handler.displaySuiteRunning(suiteName);
+            }
+        }
+
+        @Override
+        public void displaySuiteRunning(WeakReference<ResultDisplayHandler> token, TestSuite suite) {
+            ResultDisplayHandler handler = token.get();
+            if (handler != null) {
+                handler.displaySuiteRunning(suite);
+            }
+        }
+
+        @Override
+        public void displayReport(WeakReference<ResultDisplayHandler> token, Report report) {
+            ResultDisplayHandler handler = token.get();
+            if (handler != null) {
+                handler.displayReport(report);
+            }
+        }
+
+        @Override
+        public void displayMessage(WeakReference<ResultDisplayHandler> token, String message) {
+            ResultDisplayHandler handler = token.get();
+            if (handler != null) {
+                handler.displayMessage(message);
+            }
+        }
+
+        @Override
+        public void displayMessageSessionFinished(WeakReference<ResultDisplayHandler> token, String message) {
+            ResultDisplayHandler handler = token.get();
+            if (handler != null) {
+                handler.displayMessageSessionFinished(message);
+            }
+        }
+
+        @Override
+        public int getTotalTests(WeakReference<ResultDisplayHandler> token) {
+            ResultDisplayHandler handler = token.get();
+            return handler != null ? handler.getTotalTests() : 0;
+        }
+    }
 
     private static final Logger LOGGER = Logger.getLogger(ResultDisplayHandler.class.getName());
 
@@ -119,7 +191,7 @@ public final class ResultDisplayHandler implements TestResultDisplayHandler.Spi<
                 dividerSettings.getLocation());
     }
 
-    public int getTotalTests(final ResultDisplayHandler token) {
+    public int getTotalTests() {
         return statisticsPanel.getTreePanel().getTotalTests();
     }
 
@@ -179,7 +251,7 @@ public final class ResultDisplayHandler implements TestResultDisplayHandler.Spi<
 
     /**
      */
-    public void displayOutput(final ResultDisplayHandler token, final String text, final boolean error) {
+    public void displayOutput(final String text, final boolean error) {
 
         /* Called from the AntLogger's thread */
 
@@ -221,7 +293,7 @@ public final class ResultDisplayHandler implements TestResultDisplayHandler.Spi<
      * @param  suiteName  name of the running suite; or {@code null} in the case
      *                    of anonymous suite
      */
-    public void displaySuiteRunning(final ResultDisplayHandler token, String suiteName) {
+    public void displaySuiteRunning(String suiteName) {
 
         synchronized (this) {
 
@@ -241,7 +313,7 @@ public final class ResultDisplayHandler implements TestResultDisplayHandler.Spi<
      *
      * @param  suite  name of the running suite
      */
-    public void displaySuiteRunning(final ResultDisplayHandler token, TestSuite suite) {
+    public void displaySuiteRunning(TestSuite suite) {
         synchronized (this) {
             assert runningSuite == null;
             suite = (suite != null) ? suite : TestSuite.ANONYMOUS_TEST_SUITE;
@@ -255,7 +327,7 @@ public final class ResultDisplayHandler implements TestResultDisplayHandler.Spi<
 
     /**
      */
-    public void displayReport(final ResultDisplayHandler token, final Report report) {
+    public void displayReport(final Report report) {
 
         synchronized (this) {
             if (treePanel == null) {
@@ -273,7 +345,7 @@ public final class ResultDisplayHandler implements TestResultDisplayHandler.Spi<
 
     /**
      */
-    public void displayMessage(final ResultDisplayHandler token, final String msg) {
+    public void displayMessage(final String msg) {
 
         /* Called from the AntLogger's thread */
 
@@ -290,7 +362,7 @@ public final class ResultDisplayHandler implements TestResultDisplayHandler.Spi<
 
     /**
      */
-    public void displayMessageSessionFinished(final ResultDisplayHandler token, final String msg) {
+    public void displayMessageSessionFinished(final String msg) {
 
         /* Called from the AntLogger's thread */
 
@@ -395,10 +467,5 @@ public final class ResultDisplayHandler implements TestResultDisplayHandler.Spi<
 
     Lookup getLookup() {
         return l;
-    }
-
-    @Override
-    public ResultDisplayHandler create(TestSession session) {
-        return null;
     }
 }

@@ -40,11 +40,10 @@ public abstract class TestResultDisplayHandler {
      */
     public static final TestResultDisplayHandler create(TestSession session) {
         Spi provider = Lookup.getDefault().lookup(Spi.class);
-        if (provider != null) {
-            return new Impl<>(provider.create(session), provider);
-        } else {
-            return new Impl<>(null, new ResultDisplayHandler(session));
+        if (provider == null) {
+            provider = ResultDisplayHandler.getProvider();
         }
+        return new Impl<>(provider.create(session), provider);
     }
 
     private TestResultDisplayHandler() {
@@ -211,10 +210,10 @@ public abstract class TestResultDisplayHandler {
         }
 
         @Override
-        Spi<T> getSpi() {
-            return spi;
+        T getToken() {
+            return token;
         }
     }
 
-    abstract Spi getSpi();
+    abstract Object getToken();
 }

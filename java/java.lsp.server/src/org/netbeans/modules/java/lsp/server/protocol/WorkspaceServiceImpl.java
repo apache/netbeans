@@ -394,7 +394,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             }
             if (!sources.isEmpty()) {
                 try {
-                    ParserManager.parse(sources, new UserTask() {
+                    ParserManager.parseWhenScanFinished(sources, new UserTask() {
                         @Override
                         public void run(ResultIterator resultIterator) throws Exception {
                             Parser.Result parserResult = resultIterator.getParserResult();
@@ -402,8 +402,8 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                                 testMethods.addAll(ctm.computeTestMethods(parserResult, new AtomicBoolean()));
                             }
                         }
-                    });
-                } catch (ParseException ex) {}
+                    }).get();
+                } catch (Exception ex) {}
             }
         }
     }

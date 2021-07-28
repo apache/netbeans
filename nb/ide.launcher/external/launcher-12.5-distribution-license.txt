@@ -1,5 +1,5 @@
 Name: NetBeans Application Launchers
-Version: 10.0
+Version: 12.5
 License: Apache-2.0
 Origin: NetBeans
 Description: Windows Launchers for the NetBeans Applications

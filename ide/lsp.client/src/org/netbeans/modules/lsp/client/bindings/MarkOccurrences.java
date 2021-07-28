@@ -101,6 +101,9 @@ public class MarkOccurrences implements BackgroundTask, CaretListener, PropertyC
         try {
             List<? extends DocumentHighlight> highlights =
                     server.getTextDocumentService().documentHighlight(new DocumentHighlightParams(new TextDocumentIdentifier(uri), Utils.createPosition(doc, caretPos))).get();
+            if(highlights == null) {
+                return result;
+            }
             for (DocumentHighlight h : highlights) {
                 result.addHighlight(Utils.getOffset(doc, h.getRange().getStart()), Utils.getOffset(doc, h.getRange().getEnd()), attr);
             }

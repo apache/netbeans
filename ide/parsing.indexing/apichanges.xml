@@ -87,6 +87,21 @@ is the proper place.
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
   <changes>
+      <change id="IndexingTask">
+          <api name="IndexingAPI"/>
+          <summary>Allow Parsers to adjust results for indexing</summary>
+          <version major="9" minor="22"/>
+          <date day="28" month="7" year="2021"/>
+          <author login="sdedic"/>
+          <compatibility source="compatible" binary="compatible" semantic="compatible" addition="yes"/>
+          <description>
+              <p>
+                  <a href="@org-netbeans-modules-parsing-api@/org/netbeans/modules/parsing/spi/Parser.html">Parsers</a> may need to provide reduced data for indexing, or enriched data for source parsing. The
+                  added <a href="@TOP@/org/netbeans/modules/parsing/spi/indexing/support/IndexingSupport.html#isIndexingTask-org.netbeans.modules.parsing.api.Task-">isIndexingTask()</a> method identifies tasks applied by indexing infrastructure.
+              </p>
+          </description>
+          <class package="org.netbeans.modules.parsing.spi.indexing.support" name="IndexingSupport"/>
+      </change>
       <change id="CustomCamelCase">
           <api name="IndexingAPI"/>
           <summary>Added custom camel case support into <code>QuerySupport</code></summary>

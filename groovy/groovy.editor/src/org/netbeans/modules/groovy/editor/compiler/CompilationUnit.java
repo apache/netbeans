@@ -56,15 +56,30 @@ import org.openide.util.Exceptions;
  * @author Martin Adamek
  */
 public final class CompilationUnit extends org.codehaus.groovy.control.CompilationUnit {
-
+    static CompilerConfiguration processConfiguration(CompilerConfiguration configuration, boolean isIndexing) {
+        Map<String, Boolean> opts = configuration.getOptimizationOptions();
+        opts.put("classLoaderResolving", Boolean.FALSE); // NOI18N
+        return configuration;
+    }
+    
     public CompilationUnit(GroovyParser parser, CompilerConfiguration configuration,
             CodeSource security,
             @NonNull final GroovyClassLoader loader,
             @NonNull final GroovyClassLoader transformationLoader,
             @NonNull final ClasspathInfo cpInfo,
             @NonNull final ClassNodeCache classNodeCache) {
-
-        super(configuration, security, loader, transformationLoader);
+        this(parser, configuration, security, loader, transformationLoader, cpInfo, classNodeCache, true);
+    }
+    
+    public CompilationUnit(GroovyParser parser, CompilerConfiguration configuration,
+            CodeSource security,
+            @NonNull final GroovyClassLoader loader,
+            @NonNull final GroovyClassLoader transformationLoader,
+            @NonNull final ClasspathInfo cpInfo,
+            @NonNull final ClassNodeCache classNodeCache, boolean isIndexing) {
+    
+        super(processConfiguration(configuration, isIndexing), 
+                security, loader, transformationLoader);
         Map<String, Boolean> opts = this.configuration.getOptimizationOptions();
         opts.put("classLoaderResolving", Boolean.FALSE);
         this.configuration.setOptimizationOptions(opts);

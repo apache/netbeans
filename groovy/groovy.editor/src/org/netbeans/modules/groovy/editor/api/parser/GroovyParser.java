@@ -22,8 +22,10 @@ package org.netbeans.modules.groovy.editor.api.parser;
 import groovy.lang.GroovyClassLoader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -33,20 +35,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
-import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.CompileUnit;
 import org.codehaus.groovy.ast.ModuleNode;
-import org.codehaus.groovy.classgen.GeneratorContext;
-import org.codehaus.groovy.control.CompilationFailedException;
-import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.ErrorCollector;
 import org.codehaus.groovy.control.Phases;
-import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.control.messages.Message;
 import org.codehaus.groovy.control.messages.SimpleMessage;
 import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
 import org.codehaus.groovy.syntax.SyntaxException;
+import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.lexer.Token;
@@ -63,18 +61,22 @@ import org.netbeans.modules.groovy.editor.compiler.error.GroovyError;
 import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 import org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId;
 import org.netbeans.modules.groovy.editor.api.lexer.LexUtilities;
+import org.netbeans.modules.groovy.editor.compiler.ParsingCompilerCustomizer;
+import org.netbeans.modules.groovy.editor.compiler.SimpleTransformationCustomizer;
 import org.netbeans.modules.groovy.editor.compiler.error.CompilerErrorResolver;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Task;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
+import org.netbeans.modules.parsing.spi.indexing.support.IndexingSupport;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 
 /**
- *
+ * Groovy Parser interface. This class should not be probably public. Do not use it outside the module.
  * @author Martin Adamek
  */
 public class GroovyParser extends Parser {
@@ -126,18 +128,14 @@ public class GroovyParser extends Parser {
         cancelled.set(false);
         
         if (!GroovyUtils.isIndexingEnabled()) {
-            // HACK: Indexing cannot be registered 'conditionally'. Once an indexer is registered for text/x-groovy,
-            // RepositoryUpdater infrastructure calls the registred parser on all text/x-groovy sources even before
-            // the Indexer can reject the file as indexable.
-            // this hack attempts to detect that the parser is being called from RepositoryUpdater and returns null
-            // immediately if so.
-            if (task != null && task.getClass().getName().contains(".RepositoryUpdater$")) { // NOI18N
+            if (IndexingSupport.isIndexingTask(task)) { // NOI18N
                 lastResult = createParseResult(snapshot, null, null);
                 return;
             }
         }
 
         Context context = new Context(snapshot, event);
+        context.setIndexingTask(task);
         final Set<Error> errors = new HashSet<Error>();
         context.errorHandler = new ParseErrorHandler() {
 
@@ -443,6 +441,17 @@ public class GroovyParser extends Parser {
         }
     }
 
+    private static CompilerConfiguration makeConfiguration(
+            CompilerConfiguration configuration, Context context, boolean isIndexing) {
+        Map<String, Boolean> opts = configuration.getOptimizationOptions();
+        opts.put("classLoaderResolving", Boolean.FALSE);
+
+        for (ParsingCompilerCustomizer pcc : context.compilerCustomizers) {
+            configuration = pcc.configureParsingCompiler(context.customizerCtx, configuration);
+        }
+        return configuration;
+    }
+    
     @SuppressWarnings("unchecked")
     GroovyParserResult parseBuffer(final Context context, final Sanitize sanitizing) {
         if (isCancelled()) {
@@ -494,10 +503,18 @@ public class GroovyParser extends Parser {
                 bootPath == null ? ClassPath.EMPTY : bootPath,
                 compilePath == null ? ClassPath.EMPTY : compilePath,
                 sourcePath);        
-        CompilationUnit compilationUnit = new CompilationUnit(this, configuration,
-                null, classLoader, transformationLoader, cpInfo, classNodeCache);
+        
+        boolean indexing = IndexingSupport.isIndexingTask(context.parserTask);
+        configuration = makeConfiguration(configuration, context, indexing);
+        org.codehaus.groovy.control.CompilationUnit compilationUnit = new CompilationUnit(this, configuration,
+                null, classLoader, transformationLoader, cpInfo, classNodeCache, 
+                indexing);
         InputStream inputStream = new ByteArrayInputStream(source.getBytes());
         compilationUnit.addSource(fileName, inputStream);
+        
+        for (ParsingCompilerCustomizer pcc : context.compilerCustomizers) {
+            pcc.decorateCompilation(context.customizerCtx, compilationUnit);
+        }
 
         if (isCancelled()) {
             return null;
@@ -779,7 +796,8 @@ public class GroovyParser extends Parser {
         private final Snapshot snapshot;
         private final SourceModificationEvent event;
         private final BaseDocument document;
-
+        private Task parserTask;
+        
         private ParseErrorHandler errorHandler;
         private int errorOffset;
         private String source;
@@ -788,6 +806,8 @@ public class GroovyParser extends Parser {
         private String sanitizedContents;
         private int caretOffset;
         private Sanitize sanitized = Sanitize.NONE;
+        final List<ParsingCompilerCustomizer> compilerCustomizers;
+        final ParsingCompilerCustomizer.Context customizerCtx;
 
         public Context(Snapshot snapshot, SourceModificationEvent event) {
             this.snapshot = snapshot;
@@ -796,6 +816,20 @@ public class GroovyParser extends Parser {
             this.caretOffset = GsfUtilities.getLastKnownCaretOffset(snapshot, event);
             // FIXME parsing API
             this.document = LexUtilities.getDocument(snapshot.getSource(), true);
+
+
+            Lookup mlkp = MimeLookup.getLookup(snapshot.getMimePath());
+            List<ParsingCompilerCustomizer> cc = new ArrayList<>(mlkp.lookupAll(ParsingCompilerCustomizer.class));
+            compilerCustomizers = cc;
+            if (!cc.isEmpty()) {
+                customizerCtx = new ParsingCompilerCustomizer.Context(snapshot, parserTask);
+            } else {
+                customizerCtx = null;
+            }
+        }
+        
+        void setIndexingTask(Task t) {
+            this.parserTask = parserTask;
         }
 
         @Override
@@ -824,5 +858,10 @@ public class GroovyParser extends Parser {
 
         void error(Error error);
 
+    }
+    
+    // to be used form layers.
+    static ParsingCompilerCustomizer customizeTransformsFromLayer(Map<String, Object> attributes) {
+        return SimpleTransformationCustomizer.fromLayer(attributes);
     }
 }

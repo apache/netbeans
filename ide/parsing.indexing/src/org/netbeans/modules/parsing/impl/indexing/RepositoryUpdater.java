@@ -3140,7 +3140,8 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                     try {
                         // log parsing for the mimetype:
                         logStartIndexer(src.getMimeType());
-                        ParserManager.parse(Collections.singleton(src), new UserTask() {
+                        
+                        class T extends UserTask implements IndexingTask {
                             @Override
                             public void run(ResultIterator resultIterator) throws Exception {
                                 final String mimeType = resultIterator.getSnapshot().getMimeType();
@@ -3231,7 +3232,8 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                                     run(resultIterator.getResultIterator(embedding));
                                 }
                             }
-                        });
+                        }
+                        ParserManager.parse(Collections.singleton(src), new T());
                     } catch (final ParseException e) {
                         logFinishIndexer(src.getMimeType());
                         LOGGER.log(Level.WARNING, null, e);

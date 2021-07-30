@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
@@ -88,6 +89,7 @@ import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
 import org.netbeans.modules.nativeimage.api.debug.NIVariable;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVFrame;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVThread;
+import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -101,6 +103,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
     private final NbDisconnectRequestHandler disconnectRequestHandler = new NbDisconnectRequestHandler();
     private final NbBreakpointsRequestHandler breakpointsRequestHandler = new NbBreakpointsRequestHandler();
     private final NbVariablesRequestHandler variablesRequestHandler = new NbVariablesRequestHandler();
+    private final RequestProcessor evaluationRP = new RequestProcessor(NbProtocolServer.class.getName(), 3);
     private boolean initialized = false;
     private Future<Void> runningServer;
 
@@ -458,7 +461,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
                 evaluateNative(niDebugger, expression, threadId, response);
             }
             return response;
-        });
+        }, evaluationRP);
     }
 
     private void evaluateJPDA(JPDADebugger debugger, String expression, int threadId, EvaluateResponse response) {
@@ -487,7 +490,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
                 } catch (InvalidExpressionException ex) {
                     toString = variable.getValue();
                 }
-                response.setResult(toString);
+                response.setResult(Objects.toString(toString));
                 response.setVariablesReference(referenceId);
                 response.setType(variable.getType());
                 response.setIndexedVariables(Math.max(indexedVariables, 0));

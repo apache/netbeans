@@ -69,10 +69,10 @@ import org.openide.util.NbBundle;
  */
 class IntroduceFieldFix extends IntroduceFixBase implements Fix {
     protected final String guessedName;
+    protected final boolean permitDuplicates;
     private final int[] initilizeIn;
     private final boolean statik;
     private final boolean allowFinalInCurrentMethod;
-    private final boolean permitDuplicates;
     private final TreePathHandle targetHandle;
     
     /**
@@ -176,7 +176,7 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
      * The actual modification. Some javac related data are recorded in fields, inner class prevents
      * unintentional leak if someone keeps a reference to the Fix
      */
-    private final class Worker implements Task<WorkingCopy> {
+    protected final class Worker implements Task<WorkingCopy> {
         final String name;
         final boolean replaceAll;
         final boolean declareFinal;

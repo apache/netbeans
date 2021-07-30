@@ -22,6 +22,8 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
+import java.io.IOException;
+import java.util.EnumSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -30,14 +32,13 @@ import javax.lang.model.type.TypeKind;
 import javax.swing.JButton;
 import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.StopProcessing;
 import org.netbeans.modules.java.hints.errors.Utilities;
-import org.netbeans.spi.editor.hints.Fix;
 import org.openide.util.NbBundle;
 
 /**
@@ -162,7 +163,9 @@ public class IntroduceConstantFix extends IntroduceFieldFix {
     protected TreePath findTargetClass(WorkingCopy copy, TreePath resolved) {
         return findAcceptableConstantTarget(copy, resolved);
     }
-    
-    
-    
+
+    @Override
+    public ModificationResult getModificationResult() throws IOException {
+        return js.runModificationTask(new Worker(guessedName, permitDuplicates, true, EnumSet.of(Modifier.PRIVATE), IntroduceFieldPanel.INIT_FIELD, null, false));
+    }
 }

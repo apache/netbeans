@@ -309,23 +309,4 @@ public class JavaUtils {
         return false;
     }
 
-    /**
-     * Return the Java SE platforms used by a by GlassFish server instance.
-     * <p/>
-     * Have to do this because org.netbeans.modules.glassfish.common.ui.VmCustomizer
-     * in persistFields() sets the platform to null if it's the default one.
-     * <p/>
-     * @param instance GlassFish server instance for which to find the 
-     *                 selected platform.
-     * @return Java SE platform {@see JavaPlatform} object selected to use
-     *         by GlassFish server. 
-     */
-    public static JavaPlatform serverInstancePlatform(
-                        @NonNull final GlassfishInstance instance) {
-        JavaPlatform serverInstanceJavaPlatform = instance.getJavaPlatform();
-        if(serverInstanceJavaPlatform==null){
-            serverInstanceJavaPlatform=JavaPlatformManager.getDefault().getDefaultPlatform();
-        }
-        return serverInstanceJavaPlatform;
-    }
 }

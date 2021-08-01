@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.refactoring.java.ui;
+package org.netbeans.modules.java.ui;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.ClipboardOwner;

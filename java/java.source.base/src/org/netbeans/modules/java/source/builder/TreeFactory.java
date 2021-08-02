@@ -266,6 +266,20 @@ public class TreeFactory {
         }
     }
     
+    public CaseTree CasePatterns(List<? extends Tree> expressions, Tree body) {
+        ListBuffer<JCStatement> lb = new ListBuffer<>();
+        lb.append(body instanceof ExpressionTree ? (JCStatement) Break((ExpressionTree) body) : (JCStatement) body);
+        ListBuffer<JCTree> exprs = new ListBuffer<>();
+        for (Tree t : expressions)
+            exprs.append((JCTree)t);
+        try {
+            Class<Enum> caseKind = (Class<Enum>) Class.forName("com.sun.source.tree.CaseTree$CaseKind", false, JCTree.class.getClassLoader());
+            return (CaseTree) make.getClass().getMethod("Case", caseKind, com.sun.tools.javac.util.List.class, com.sun.tools.javac.util.List.class, JCTree.class).invoke(make.at(NOPOS), Enum.valueOf(caseKind, "RULE"), exprs.toList(), lb.toList(), body);
+        } catch (Throwable t) {
+            throw throwAny(t);
+        }
+    }
+    
     public CatchTree Catch(VariableTree parameter, BlockTree block) {
         return make.at(NOPOS).Catch((JCVariableDecl)parameter, (JCBlock)block);
     }

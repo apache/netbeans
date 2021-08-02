@@ -2060,6 +2060,14 @@ public class CasualDiff {
         }
     }
 
+    public static List<JCTree> getCaseLabelPatterns(JCCase cs) {
+        try {
+            return (List<JCTree>) CaseTree.class.getDeclaredMethod("getLabels").invoke(cs);
+        } catch (Throwable t) {
+            return Collections.emptyList();
+        }
+    }
+     
     public static Object getCaseKind(JCCase cs) {
         try {
             return CaseTree.class.getDeclaredMethod("getCaseKind").invoke(cs);

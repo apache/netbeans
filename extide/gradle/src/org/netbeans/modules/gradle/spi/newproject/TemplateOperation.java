@@ -28,6 +28,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,6 +58,7 @@ import org.netbeans.modules.gradle.api.GradleProjects;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -145,6 +147,119 @@ public final class TemplateOperation implements Runnable {
 
     public void addWrapperInit(File target) {
         steps.add(new InitGradleWrapper(target));
+    }
+
+    /** @since XXX */
+    public InitOperation createGradleInit(File target, String type) {
+        return new InitStep(target, type);
+    }
+
+    /** @since XXX */
+    public abstract class InitOperation {
+        InitOperation() {
+        }
+        /** @since XXX */
+        public final void add() {
+            steps.add((OperationStep) this);
+        }
+
+        /** @since XXX */
+        public abstract InitOperation dsl(String dsl);
+        /** @since XXX */
+        public abstract InitOperation testFramework(String testFramework);
+        /** @since XXX */
+        public abstract InitOperation basePackage(String pkg);
+        /** @since XXX */
+        public abstract InitOperation projectName(String name);
+    }
+
+    private final class InitStep extends InitOperation implements OperationStep {
+        private final File target;
+        private final String type;
+        private String dsl;
+        private String testFramework;
+        private String basePackage;
+        private String projectName;
+
+        InitStep(File target, String type) {
+            this.target = target;
+            this.type = type;
+        }
+
+        @Override
+        public InitStep dsl(String dsl) {
+            this.dsl = dsl;
+            return this;
+        }
+
+        @Override
+        public InitStep testFramework(String testFramework) {
+            this.testFramework = testFramework;
+            return this;
+        }
+
+        @Override
+        public InitStep basePackage(String pkg) {
+            this.basePackage = pkg;
+            return this;
+        }
+
+        @Override
+        public InitStep projectName(String name) {
+            this.projectName = name;
+            return this;
+        }
+
+        @NbBundle.Messages({
+            "MSG_INIT_GRADLE=Initializing {0} in {1}"
+        })
+        @Override
+        public String getMessage() {
+            return Bundle.MSG_INIT_GRADLE(type, target);
+        }
+
+        @Override
+        public Set<FileObject> execute() {
+            GradleConnector gconn = GradleConnector.newConnector();
+            target.mkdirs();
+            ProjectConnection pconn = gconn.forProjectDirectory(target).connect();
+            try {
+                List<String> args = new ArrayList<>();
+                args.add("init");
+                // gradle init --type java-application --test-framework junit-jupiter --dsl groovy --package com.example --project-name example
+                args.add("--type");
+                args.add(type);
+                // --test-framework junit-jupiter
+                if (testFramework != null) {
+                    args.add("--test-framework");
+                    args.add(testFramework);
+                }
+                // --dsl groovy
+                if (dsl != null) {
+                    args.add("--dsl");
+                    args.add(dsl);
+                }
+                // --package com.example
+                if (basePackage != null) {
+                    args.add("--package");
+                    args.add(basePackage);
+                }
+
+                // --project-name example
+                if (projectName != null) {
+                    args.add("--project-name");
+                    args.add(projectName);
+                }
+
+                pconn.newBuild().withArguments("--offline").forTasks(args.toArray(new String[0])).run(); //NOI18N
+            } catch (GradleConnectionException | IllegalStateException ex) {
+                // Well for some reason we were  not able to load Gradle.
+                // Ignoring that for now
+            } finally {
+                pconn.close();
+            }
+            return Collections.singleton(FileUtil.toFileObject(target));
+        }
     }
 
     public void copyFromFile(String templateName, File target, Map<String, ? extends Object> tokens) {

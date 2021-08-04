@@ -1991,4 +1991,17 @@ public class Css3ParserScssTest extends CssTestBase {
                 + "  background: red;\n"
                 + "}");
     }
+
+    public void testScssUseForward() {
+        assertParses("@use 'test1';");
+        assertParses("@use 'test2' as t;");
+        assertParses("@use 'test2' with ($black: #222, $border-radius: 0.1rem);");
+        assertParses("@use 'test2' as t with ($black: #222, $border-radius: 0.1rem);");
+        assertParses("@forward 'test1';");
+        assertParses("@forward 'test2' as t;");
+        assertParses("@forward 'test2' with ($black: #222, $border-radius: 0.1rem);");
+        assertParses("@forward 'test2' as t with ($black: #222, $border-radius: 0.1rem);");
+        assertParses("@forward 'test2' hide dummy1;");
+        assertParses("@forward 'test2' show dummy1, dummy2;");
+    }
 }

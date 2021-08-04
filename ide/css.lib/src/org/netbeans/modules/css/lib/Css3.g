@@ -101,6 +101,10 @@ package org.netbeans.modules.css.lib;
     private boolean tokenNameEquals(String tokenImage) {
         return tokenImage.equalsIgnoreCase(input.LT(1).getText());
     }
+    
+    private boolean tokenNameEquals2(String tokenImage) {
+        return tokenImage.equalsIgnoreCase(input.LT(2).getText());
+    }
 
     private boolean tokenNameIs(String[] tokens) {
         for(String tokenImage : tokens) {
@@ -311,7 +315,13 @@ charSetValue
 
 imports
 	:
-	( importItem ws? SEMI ws? )+
+	(
+            ( importItem ws? SEMI ws? )
+            |
+            ( sass_use ws? SEMI ws? )
+            |
+            ( sass_forward ws? SEMI ws? )
+        )+
 	;
 
 importItem
@@ -323,6 +333,58 @@ importItem
         |
         {isLessSource()}? IMPORT_SYM ws? (LPAREN less_import_types RPAREN ws?)? resourceIdentifier ((ws? mediaQueryList)=>ws? mediaQueryList)?
     ;
+
+sass_use
+    :
+        {isScssSource()}? SASS_USE ws resourceIdentifier (ws sass_use_as)? (ws sass_use_with)?
+    ;
+
+sass_use_as
+    :
+    {tokenNameEquals("as")}? IDENT ws IDENT
+    ;
+
+sass_use_with
+    :
+    {tokenNameEquals("with")}? IDENT ws? LPAREN ws? sass_use_with_declaration  (ws? COMMA ws? sass_use_with_declaration)*  ws? RPAREN
+    ;
+
+sass_use_with_declaration
+    :
+    cp_variable ws? COLON ws? cp_expression
+    ;
+
+
+sass_forward
+    :
+        {isScssSource()}? SASS_FORWARD ws resourceIdentifier ( ws ( sass_forward_hide |  sass_forward_show))? ({tokenNameEquals2("as")}? ws sass_forward_as)? ({tokenNameEquals2("with")}? ws sass_forward_with)?
+    ;
+
+sass_forward_as
+    :
+    {tokenNameEquals("as")}? IDENT ws IDENT
+    ;
+
+sass_forward_with
+    :
+    {tokenNameEquals("with")}? IDENT ws? LPAREN ws? sass_forward_with_declaration  (ws? COMMA ws? sass_forward_with_declaration)*  ws? RPAREN
+    ;
+
+sass_forward_with_declaration
+    :
+    cp_variable ws? COLON ws? cp_expression
+    ;
+
+sass_forward_hide
+    :
+    {tokenNameEquals("hide")}? IDENT ws IDENT (ws? COMMA ws? IDENT)*
+    ;
+
+sass_forward_show
+    :
+    {tokenNameEquals("show")}? IDENT ws IDENT (ws? COMMA ws? IDENT)*
+    ;
+
 media
     : MEDIA_SYM ws?
     (
@@ -1791,6 +1853,8 @@ SASS_ELSEIF         : '@ELSEIF'; //@elseif
 SASS_FOR            : '@FOR';
 SASS_FUNCTION       : '@FUNCTION';
 SASS_RETURN         : '@RETURN';
+SASS_USE            : '@USE';
+SASS_FORWARD        : '@FORWARD';
 
 SASS_EACH           : '@EACH';
 SASS_WHILE          : '@WHILE';

@@ -21,6 +21,7 @@ package org.netbeans.modules.groovy.editor.api.elements.ast;
 
 import org.codehaus.groovy.ast.ClassNode;
 import org.netbeans.modules.csl.api.ElementKind;
+import org.netbeans.modules.groovy.editor.api.ASTUtils;
 import org.netbeans.modules.groovy.editor.api.elements.common.ClassElement;
 
 public class ASTClass extends ASTElement implements ClassElement {
@@ -29,14 +30,14 @@ public class ASTClass extends ASTElement implements ClassElement {
 
 
     public ASTClass(ClassNode node, String fqn) {
-        super(node, node.getPackageName(), node.getNameWithoutPackage());
+        super(node, ASTUtils.getClassParentName(node), ASTUtils.getSimpleName(node));
         if (fqn != null) {
             this.fqn = fqn;
         } else {
             this.fqn = getName();
         }
     }
-
+    
     @Override
     public String getFqn() {
         return fqn;

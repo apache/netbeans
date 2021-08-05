@@ -22,10 +22,12 @@ import groovy.lang.MetaMethod;
 import java.util.ArrayList;
 import java.util.List;
 import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.ConstructorNode;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.Parameter;
 import org.netbeans.modules.csl.api.ElementKind;
+import org.netbeans.modules.groovy.editor.api.ASTUtils;
 import org.netbeans.modules.groovy.editor.api.elements.common.MethodElement;
 
 public class ASTMethod extends ASTElement implements MethodElement {
@@ -74,7 +76,7 @@ public class ASTMethod extends ASTElement implements MethodElement {
             for (Parameter parameter : ((MethodNode) node).getParameters()) {
                 String paramName = parameter.getName();
                 String fqnType = parameter.getType().getName();
-                String type = parameter.getType().getNameWithoutPackage();
+                String type = ASTUtils.getSimpleName(parameter.getType());
 
                 parameters.add(new MethodParameter(fqnType, type, paramName));
             }
@@ -115,7 +117,7 @@ public class ASTMethod extends ASTElement implements MethodElement {
     public String getName() {
         if (name == null) {
             if (node instanceof ConstructorNode) {
-                name = ((ConstructorNode) node).getDeclaringClass().getNameWithoutPackage();
+                name = ASTUtils.getSimpleName(((ConstructorNode) node).getDeclaringClass());
             } else if (node instanceof MethodNode) {
                 name = ((MethodNode) node).getName();
             }
@@ -130,7 +132,7 @@ public class ASTMethod extends ASTElement implements MethodElement {
     @Override
     public String getReturnType() {
         if (returnType == null) {
-            returnType = ((MethodNode) node).getReturnType().getNameWithoutPackage();
+            returnType = ASTUtils.getSimpleName(((MethodNode) node).getReturnType());
         }
         return returnType;
     }

@@ -45,7 +45,7 @@ public class SimpleApplicationProjectWizard extends BaseGradleWizardIterator {
 
     @Override
     protected List<? extends WizardDescriptor.Panel<WizardDescriptor>> createPanels() {
-        return Collections.singletonList(createProjectAttributesPanel(new MainClassPanel()));
+        return Collections.singletonList(createProjectAttributesPanel(null));
     }
 
     @Messages("LBL_SimpleApplicationProject=Java Application with Gradle")

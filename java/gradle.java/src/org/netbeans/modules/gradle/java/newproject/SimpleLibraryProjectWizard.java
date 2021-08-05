@@ -40,7 +40,7 @@ public class SimpleLibraryProjectWizard extends BaseGradleWizardIterator {
 
     @Override
     protected List<? extends WizardDescriptor.Panel<WizardDescriptor>> createPanels() {
-        return Collections.singletonList(createProjectAttributesPanel(new MainClassPanel()));
+        return Collections.singletonList(createProjectAttributesPanel(null));
     }
 
     @NbBundle.Messages("LBL_SimpleLibraryProject=Java Class Library with Gradle")

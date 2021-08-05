@@ -1564,6 +1564,17 @@ public class Css3ParserScssTest extends CssTestBase {
                 + "  &-primary { background: orange; }\n"
                 + "  &-secondary { background: blue; }\n"
                 + "}\n");
+        // Test parent selector combined with interpolation
+        assertParses("$i: 1;\n"
+            + ".selector\n"
+            + "{\n"
+            + "    &--#{$i}\n"
+            + "    {\n"
+            + "    }\n"
+            + "    &__#{$i}\n"
+            + "    {\n"
+            + "    }\n"
+            + "}", true);
     }
 
     public void testAtRoot() {

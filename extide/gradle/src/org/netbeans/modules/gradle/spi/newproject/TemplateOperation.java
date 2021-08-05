@@ -149,27 +149,65 @@ public final class TemplateOperation implements Runnable {
         steps.add(new InitGradleWrapper(target));
     }
 
-    /** @since XXX */
+    /** *  Begin creation of new project using Gradle's 
+     * <a target="_blank" href="https://docs.gradle.org/current/userguide/build_init_plugin.html">gradle init</a>
+     * functionality. Use the returned {@link InitOperation} object to specify 
+     * additional properties and then call  
+     * {@link InitOperation#add()} to finish the request.
+     * 
+     * 
+     * @param target the directory to place the project at
+     * @param type either {@code java-application}, {@code java-library}, etc.
+     * @return the {@link InitOperation} builder to finish the request
+     * @since 2.20
+     */
     public InitOperation createGradleInit(File target, String type) {
         return new InitStep(target, type);
     }
 
-    /** @since XXX */
+    /** Builder to specify additional parameters for the {@link #createGradleInit(java.io.File, java.lang.String)}
+     * operation. At the end call {@link #add()} to finish the operation and 
+     * add it to the list of {@link OperationStep}s to perform.
+     * 
+     * @since 2.20
+     */
     public abstract class InitOperation {
         InitOperation() {
         }
-        /** @since XXX */
+
+        /** Add the operation to the list of {@link OperationStep}s to perform.
+         * @since 2.20
+         */
         public final void add() {
             steps.add((OperationStep) this);
         }
 
-        /** @since XXX */
+        /** Specify the type of DSL to use.
+         * @param dsl either {@code groovy} or {@code kotlin}
+         * @return this builder to chain the calls.
+         * @since 2.20
+         */
         public abstract InitOperation dsl(String dsl);
-        /** @since XXX */
+
+        /** Specify the type of test framework.
+         * @param testFramework {@code junit-jupiter}, {@code spock}, {@code testng}
+         * @return this builder to chain the calls.
+         * @since 2.20
+         */
         public abstract InitOperation testFramework(String testFramework);
-        /** @since XXX */
+
+        /** Specify base package of the project
+         * @param pkg base package for the sources
+         * @return this builder to chain the calls.
+         * @since 2.20
+         */
         public abstract InitOperation basePackage(String pkg);
-        /** @since XXX */
+
+        /** Specify project name.
+         * @param name the (logical) name of the project
+         * @return this builder to chain the calls.
+         * @since 2.20
+         */
         public abstract InitOperation projectName(String name);
     }
 

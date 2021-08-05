@@ -538,6 +538,12 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
         public ElementKind getKind() {
             return ElementKind.METHOD;
         }
+
+        @Override
+        public int getSortPrioOverride() {
+            // sort meta-methods after normal ones, but before keywords
+            return 550;
+        }
         
         // accessed by CompletionAccessor
         List<MethodParameter> getParameters() {

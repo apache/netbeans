@@ -829,7 +829,10 @@ public class GroovyParser extends Parser {
         }
         
         void setIndexingTask(Task t) {
-            this.parserTask = parserTask;
+            this.parserTask = t;
+            if (customizerCtx != null) {
+                customizerCtx.setConsumerTask(t);
+            }
         }
 
         @Override

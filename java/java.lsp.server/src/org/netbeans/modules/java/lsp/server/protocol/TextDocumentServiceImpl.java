@@ -42,14 +42,12 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -158,8 +156,6 @@ import org.netbeans.api.project.Sources;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.java.GoToSupport;
 import org.netbeans.modules.editor.java.GoToSupport.GoToTarget;
-import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController.TestMethod;
-import org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods;
 import org.netbeans.modules.java.editor.base.fold.JavaElementFoldVisitor;
 import org.netbeans.modules.java.editor.base.fold.JavaElementFoldVisitor.FoldCreator;
 import org.netbeans.modules.java.editor.base.semantic.MarkOccurrencesHighlighterBase;
@@ -175,7 +171,6 @@ import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
-import org.netbeans.modules.java.lsp.server.files.OpenedDocuments;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.impl.indexing.implspi.ActiveDocumentProvider.IndexingAware;
@@ -904,8 +899,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
                 
 
-    private ConcurrentHashMap<String, Boolean> upToDateTests = new ConcurrentHashMap<>();
-
     @NbBundle.Messages({"# {0} - method name", "LBL_Run=Run {0}",
                         "# {0} - method name", "LBL_Debug=Debug {0}",
                         "# {0} - method name", "# {1} - configuration name", "LBL_RunWith=Run {0} with {1}",
@@ -923,38 +916,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
         CompletableFuture<List<? extends CodeLens>> result = new CompletableFuture<>();
         try {
-            ParserManager.parse(Collections.singleton(source), new UserTask() {
+            ParserManager.parseWhenScanFinished(Collections.singleton(source), new UserTask() {
                 @Override
                 public void run(ResultIterator resultIterator) throws Exception {
                     Parser.Result parserResult = resultIterator.getParserResult();
-                    //look for test methods:
-                    if (!upToDateTests.getOrDefault(uri, Boolean.FALSE)) {
-                        List<TestMethod> testMethods = new ArrayList<>();
-                        for (ComputeTestMethods ctm : MimeLookup.getLookup(parserResult.getSnapshot().getMimePath()).lookupAll(ComputeTestMethods.class)) {
-                            testMethods.addAll(ctm.computeTestMethods(parserResult, new AtomicBoolean()));
-                        }
-                        if (!testMethods.isEmpty()) {
-                            String testClassName = null;
-                            Integer testClassLine = null;
-                            List<TestSuiteInfo.TestCaseInfo> tests = new ArrayList<>(testMethods.size());
-                            for (TestMethod testMethod : testMethods) {
-                                if (testClassName == null) {
-                                    testClassName = testMethod.getTestClassName();
-                                }
-                                if (testClassLine == null) {
-                                    testClassLine = testMethod.getTestClassPosition() != null
-                                            ? Utils.createPosition(parserResult.getSnapshot().getSource().getFileObject(), testMethod.getTestClassPosition().getOffset()).getLine()
-                                            : null;
-                                }
-                                String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
-                                String fullName = testMethod.getTestClassName() + '.' + testMethod.method().getMethodName();
-                                int testLine = Utils.createPosition(parserResult.getSnapshot().getSource().getFileObject(), testMethod.start().getOffset()).getLine();
-                                tests.add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), fullName, uri, testLine, TestSuiteInfo.State.Loaded, null));
-                            }
-                            client.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(testClassName, uri, testClassLine, TestSuiteInfo.State.Loaded, tests)));
-                            upToDateTests.put(uri, Boolean.TRUE);
-                        }
-                    }
                     //look for main methods:
                     List<CodeLens> lens = new ArrayList<>();
                     CompilationController cc = CompilationController.get(parserResult);
@@ -1331,7 +1296,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public void didChange(DidChangeTextDocumentParams params) {
         String uri = params.getTextDocument().getUri();
-        upToDateTests.put(uri, Boolean.FALSE);
         Document doc = server.getOpenedDocuments().getDocument(uri);
         if (doc != null) {
             NbDocument.runAtomic((StyledDocument) doc, () -> {
@@ -1355,7 +1319,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     public void didClose(DidCloseTextDocumentParams params) {
         try {
             String uri = params.getTextDocument().getUri();
-            upToDateTests.remove(uri);
             // the order here is important ! As the file may cease to exist, it's
             // important that the doucment is already gone form the client.
             server.getOpenedDocuments().notifyClosed(uri);

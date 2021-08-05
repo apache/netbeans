@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -49,6 +50,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.DebuggerManagerAdapter;
+import org.netbeans.api.debugger.DebuggerManagerListener;
 import org.netbeans.api.debugger.Session;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
@@ -105,13 +107,18 @@ import org.openide.util.lookup.ProxyLookup;
 public abstract class NbLaunchDelegate {
 
     private final RequestProcessor requestProcessor = new RequestProcessor(NbLaunchDelegate.class);
+    private final Map<DebugAdapterContext, DebuggerManagerListener> debuggerListeners = new ConcurrentHashMap<>();
 
     public abstract void preLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
 
     public abstract void postLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
     
     protected void notifyFinished(DebugAdapterContext ctx, boolean success) {
-        // no op.
+        // Remove a possibly staled debugger listener
+        DebuggerManagerListener listener = debuggerListeners.remove(ctx);
+        if (listener != null) {
+            DebuggerManager.getDebuggerManager().removeDebuggerListener(listener);
+        }
     }
 
     public final CompletableFuture<Void> nbLaunch(FileObject toRun, File nativeImageFile, String method, Map<String, Object> launchArguments, DebugAdapterContext context, boolean debug, boolean testRun, Consumer<NbProcessConsole.ConsoleMessage> consoleMessages) {
@@ -267,12 +274,13 @@ public abstract class NbLaunchDelegate {
 
                 context.setInputSinkProvider(() -> writer);
                 if (debug) {
-                    DebuggerManager.getDebuggerManager().addDebuggerListener(new DebuggerManagerAdapter() {
+                    DebuggerManagerListener listener = new DebuggerManagerAdapter() {
                         @Override
                         public void sessionAdded(Session session) {
                             JPDADebugger debugger = session.lookupFirst(null, JPDADebugger.class);
                             if (debugger != null) {
                                 DebuggerManager.getDebuggerManager().removeDebuggerListener(this);
+                                debuggerListeners.remove(context);
                                 Map properties = session.lookupFirst(null, Map.class);
                                 NbSourceProvider sourceProvider = context.getSourceProvider();
                                 sourceProvider.setSourcePath(properties != null ? (ClassPath) properties.getOrDefault("sourcepath", ClassPath.EMPTY) : ClassPath.EMPTY);
@@ -291,7 +299,9 @@ public abstract class NbLaunchDelegate {
                                 });
                             }
                         }
-                    });
+                    };
+                    DebuggerManager.getDebuggerManager().addDebuggerListener(listener);
+                    debuggerListeners.put(context, listener);
                 }
                 Lookups.executeWith(launchCtx, () -> {
                     providerAndCommand.first().invokeAction(providerAndCommand.second(), lookup);

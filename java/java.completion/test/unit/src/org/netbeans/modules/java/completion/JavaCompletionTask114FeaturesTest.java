@@ -57,12 +57,12 @@ public class JavaCompletionTask114FeaturesTest extends CompletionTestBase {
     
 
     public void testBeforeLeftRecordBraces() throws Exception {
-        EXTRA_OPTIONS.add("--enable-preview");
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
         performTest("Records", 896, null, "implementsKeyword.pass", getLatestSource());
     }
         
     public void testBeforeRecParamsLeftParen() throws Exception {
-        EXTRA_OPTIONS.add("--enable-preview");
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
         performTest("Records", 892, null, "empty.pass", getLatestSource());
     }
 
@@ -83,7 +83,7 @@ public class JavaCompletionTask114FeaturesTest extends CompletionTestBase {
     } 
     
     public void testVariableNameSuggestion() throws Exception {
-        EXTRA_OPTIONS.add("--enable-preview");
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
         performTest("Records", 1071, null, "recordVariableSuggestion.pass", getLatestSource());
     } 
     
@@ -97,9 +97,10 @@ public class JavaCompletionTask114FeaturesTest extends CompletionTestBase {
     private String getLatestSource(){
         return SourceVersion.latest().name().substring(SourceVersion.latest().name().indexOf("_")+1);
     }
-    private static final List<String> EXTRA_OPTIONS = new ArrayList<>();
     @ServiceProvider(service = CompilerOptionsQueryImplementation.class, position = 100)
     public static class TestCompilerOptionsQueryImplementation implements CompilerOptionsQueryImplementation {
+
+        private static final List<String> EXTRA_OPTIONS = new ArrayList<>();
 
         @Override
         public CompilerOptionsQueryImplementation.Result getOptions(FileObject file) {

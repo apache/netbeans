@@ -51,11 +51,11 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
 
     public static final String DOWNLOAD_PREFIX = "https://www.payara.fish/"; // NOI18N
     
-    private final List<ChangeListener> listeners = new CopyOnWriteArrayList<ChangeListener>();
+    private final List<ChangeListener> listeners = new CopyOnWriteArrayList<>();
     private Retriever retriever;
     private volatile DownloadState downloadState;
     private volatile String statusText;
-    private ServerWizardIterator wizardIterator;
+    private final ServerWizardIterator wizardIterator;
 
     public AddServerLocationVisualPanel(ServerWizardIterator swi) {
         this.wizardIterator = swi;
@@ -65,6 +65,11 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
 
     private void initUserComponents() {
         downloadButton.setEnabled(false);
+        if (wizardIterator.downloadableValues.isEmpty()) {
+            agreeCheckBox.setEnabled(false);
+        } else {
+            agreeCheckBox.setEnabled(true);
+        }
         
         setName(NbBundle.getMessage(AddServerLocationVisualPanel.class, "TITLE_ServerLocation"));
         
@@ -387,7 +392,11 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
         chooseServerLabel.setLabelFor(hk2HomeTextField);
         org.openide.awt.Mnemonics.setLocalizedText(chooseServerLabel, org.openide.util.NbBundle.getMessage(AddServerLocationVisualPanel.class, "LBL_ChooseOne")); // NOI18N
 
-        chooseServerComboBox.setSelectedItem(wizardIterator.downloadableValues.get(0));
+        if (!wizardIterator.downloadableValues.isEmpty()) {
+            chooseServerComboBox.setSelectedItem(wizardIterator.downloadableValues.get(0));
+        } else {
+            updateMessageText(NbBundle.getMessage(AddServerLocationPanel.class, "LBL_UnableToConnectPayaraMavenRepo"));
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -467,7 +476,10 @@ private void readlicenseButtonActionPerformed(java.awt.event.ActionEvent evt) {/
 
 private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
         if(retriever == null) {
-            PayaraPlatformVersionAPI selectedValue = wizardIterator.downloadableValues.get(0);
+            PayaraPlatformVersionAPI selectedValue = null;
+            if (!wizardIterator.downloadableValues.isEmpty()) {
+                selectedValue = wizardIterator.downloadableValues.get(0);
+            }
             if (wizardIterator.downloadableValues.size() > 1) {
                 selectedValue = (PayaraPlatformVersionAPI) chooseServerComboBox.getSelectedItem();
             }

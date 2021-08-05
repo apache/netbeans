@@ -70,16 +70,4 @@
 
     <target name="netbeans-extra" depends="nbantext,jar-jnlp-launcher"/>
 
-    <target name="release" depends="projectized.release,-build-windows-launchers" />
-
-    <target name="-build-windows-launchers" if="do.build.windows.launchers">
-        <exec executable="make" dir="windows-launcher-src">
-            <arg value="-f"/>
-            <arg value="Makefile.mingw"/>
-        </exec>
-        <copy todir="${cluster}/launchers" overwrite="true">
-            <fileset dir="windows-launcher-src" includes="app*.exe"/>
-        </copy>
-    </target>
-
 </project>

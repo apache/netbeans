@@ -256,7 +256,7 @@ public class TreeShims {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends Throwable> RuntimeException throwAny(Throwable t) throws T {
+    public static <T extends Throwable> RuntimeException throwAny(Throwable t) throws T {
         throw (T) t;
     }
     public static boolean isRecord(Element el) {

@@ -21,6 +21,7 @@ package org.netbeans.modules.java.disco;
 import io.foojay.api.discoclient.pkg.ArchiveType;
 import io.foojay.api.discoclient.pkg.Distribution;
 import io.foojay.api.discoclient.pkg.Latest;
+import io.foojay.api.discoclient.pkg.LibCType;
 import io.foojay.api.discoclient.pkg.PackageType;
 import io.foojay.api.discoclient.pkg.Pkg;
 import io.foojay.api.discoclient.pkg.VersionNumber;
@@ -40,7 +41,18 @@ class QuickPkgSelection implements PkgSelection {
     public QuickPkgSelection(QuickPanel.QuickSelection quick) {
         this.version = new VersionNumber(quick.version);
         this.filter = quick.zip
-                ? (p) -> p.getArchiveType() == ArchiveType.ZIP
+                ? (p) -> {
+                    switch (OS.getOperatingSystem()) {
+                        case MACOS:
+                            return ArchiveType.ZIP == p.getArchiveType() || ArchiveType.TAR_GZ == p.getArchiveType();
+                        case LINUX:
+                            return (ArchiveType.ZIP == p.getArchiveType() || ArchiveType.TAR_GZ == p.getArchiveType()) &&
+                                    (LibCType.MUSL != p.getLibCType());
+                        case WINDOWS:
+                        default:
+                            return ArchiveType.ZIP == p.getArchiveType();
+                    }
+                }
                 : (p) -> {
                     switch (OS.getOperatingSystem()) {
                         case WINDOWS:

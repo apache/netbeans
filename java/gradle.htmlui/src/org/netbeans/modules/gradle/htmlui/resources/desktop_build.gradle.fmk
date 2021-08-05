@@ -51,8 +51,8 @@ if (!jdk8) {
 </#noparse>
 dependencies {
     implementation commonProject
-    implementation "org.netbeans.html:net.java.html.boot:1.6.1"
+    implementation "org.netbeans.html:net.java.html.boot:1.7.2"
     implementation "com.dukescript.api:javafx.beaninfo:0.5"
     runtimeOnly "com.dukescript.api:javafx.base:8.60.11"
-    runtimeOnly "org.netbeans.html:net.java.html.boot.fx:1.6.1"
+    runtimeOnly "org.netbeans.html:net.java.html.boot.fx:1.7.2"
 }

@@ -236,7 +236,7 @@ public class CustomizerLibraries extends JPanel implements HelpCtx.Provider, Lis
             uiProperties.RUN_TEST_CLASSPATH_MODEL
            };
         for (int i = 0; i < models.length; i++) {
-            for (Iterator it = ClassPathUiSupport.getIterator(models[i]); it.hasNext();) {
+            for (Iterator<ClassPathSupport.Item> it = ClassPathUiSupport.getIterator(models[i]); it.hasNext();) {
                 ClassPathSupport.Item itm = (ClassPathSupport.Item) it.next();
                 if (itm.getType() == ClassPathSupport.Item.TYPE_LIBRARY) {
                     itm.reassignLibraryManager(man);
@@ -263,7 +263,7 @@ public class CustomizerLibraries extends JPanel implements HelpCtx.Provider, Lis
         boolean broken = false;
         
         for( int i = 0; i < models.length; i++ ) {
-            for( Iterator it = ClassPathUiSupport.getIterator( models[i] ); it.hasNext(); ) {
+            for (Iterator<ClassPathSupport.Item> it = ClassPathUiSupport.getIterator( models[i] ); it.hasNext(); ) {
                 if ( ((ClassPathSupport.Item)it.next()).isBroken() ) {
                     broken = true;
                     break;

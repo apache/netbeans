@@ -31,9 +31,7 @@ import java.util.Locale;
 import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.ColorUIResource;
 import org.netbeans.swing.plaf.LFCustoms;
@@ -63,8 +61,9 @@ public final class Windows8LFCustoms extends LFCustoms {
     private static final String TAB_BORDER = "tab_border"; //NOI18N      
     private static final String TAB_SEL_BORDER = "tab_sel_border"; //NOI18N
     private static final String TAB_BORDER_INNER = "tab_border_inner"; //NOI18N      
-    
-    static final String SCROLLPANE_BORDER_COLOR = "scrollpane_border"; //NOI18N
+
+    // There is also a SCROLLPANE_BORDER_COLOR constant in the superclass. Both seem to be in use.
+    static final String SCROLLPANE_BORDER_COLOR2 = "scrollpane_border"; //NOI18N
 
     private static final String[] DEFAULT_GUI_FONT_PROPERTIES = new String[] {
         "TitledBorder.font", "Slider.font", "PasswordField.font", "TableHeader.font", "TextPane.font",
@@ -72,6 +71,8 @@ public final class Windows8LFCustoms extends LFCustoms {
         "Table.font", "ScrollPane.font", "ToggleButton.font", "Panel.font", "RadioButton.font",
         "FormattedTextField.font", "TextField.font", "Spinner.font", "Button.font", "EditorPane.font",
         "Label.font", "ComboBox.font", "Tree.font", "TextArea.font" }; //NOI18N
+
+    final Color TAB_CONTENT_BORDER_COLOR = new Color(156, 156, 156);
 
     @Override
     public Object[] createLookAndFeelCustomizationKeysAndValues() {
@@ -111,6 +112,18 @@ public final class Windows8LFCustoms extends LFCustoms {
             /* Note that menu separators are still 3 pixels too tall on Windows compared to native
             apps. Fixing that would be a bigger job, though (replacing WindowsPopupMenuSeparatorUI
             to override getPreferredSize). */
+
+            /* Let the quick search area be flush with the rest of the menu bar. There's already a
+            thin border under the menu bar, and the quick search icon + the "Search (Ctrl+I)" string
+            to show the user that the quick search component is there. */
+            "nb.quicksearch.border", new EmptyBorder(0, 0, 0, 0),
+
+            // Let the HeapView component be flush with the toolbar background.
+            "nb.heapview.background", new Color(240, 240, 240),
+            "nb.heapview.foreground", new Color(45, 45, 45),
+            "nb.heapview.highlight", new Color(240, 240, 240, 240),
+            // Use the same color as EditorTab/ViewTab.underlineColor.
+            "nb.heapview.chart", new Color(61, 129, 245)
         };
         List<Object> result = new ArrayList<>();
         result.addAll(Arrays.asList(constants));
@@ -154,8 +167,7 @@ public final class Windows8LFCustoms extends LFCustoms {
                 Object key = entry.getKey();
                 /* Force loading of lazily loaded values, so we can see if the actual implementation
                 type is of the kind that needs to be patched. All currently known icon properties
-                are suffixed "icon" or "Icon". All but one is of the kind that needs to be
-                patched. */
+                are suffixed "icon" or "Icon", and all are of the kind that needs to be patched. */
                 Object value = key.toString().toLowerCase(Locale.ROOT).endsWith("icon") //NOI18N
                         ? UIManager.getDefaults().get(key) : null;
                 if (value == null) {
@@ -164,13 +176,10 @@ public final class Windows8LFCustoms extends LFCustoms {
                 String valueCN = value.getClass().getName();
                 if (value instanceof Icon &&
                     (valueCN.startsWith("com.sun.java.swing.plaf.windows.WindowsIconFactory$") || //NOI18N
-                    valueCN.startsWith("com.sun.java.swing.plaf.windows.WindowsTreeUI$")) && //NOI18N
-                    /* This particular one can't be used as a delegate, as it intentionally behaves
-                    differently when the application has overridden UIDefaults. */
-                    !valueCN.contains("VistaMenuItemCheckIcon")) //NOI18N
+                    valueCN.startsWith("com.sun.java.swing.plaf.windows.WindowsTreeUI$"))) //NOI18N
                 {
                     result.add(key);
-                    result.add(new WindowsDPIWorkaroundIcon((Icon) value));
+                    result.add(new WindowsDPIWorkaroundIcon(key, (Icon) value));
                 }
             }
         }
@@ -180,7 +189,7 @@ public final class Windows8LFCustoms extends LFCustoms {
         not use the borders from UIManager. */
         for (String key : new String[] {
                 "TextField.border", "PasswordField.border", "FormattedTextField.border", //NOI18N
-                "ScrollPane.border", "PopupMenu.border", "Menu.border" }) //NOI18N
+                "ScrollPane.border", "PopupMenu.border", "Menu.border", "ToolTip.border" }) //NOI18N
         {
             Object value = UIManager.getDefaults().get(key);
             if (value instanceof Border) {
@@ -191,19 +200,12 @@ public final class Windows8LFCustoms extends LFCustoms {
                 }
             }
         }
-        // JSpinner requires some special treatment.
-        Object spinnerBorder = UIManager.getDefaults().get("Spinner.border"); //NOI18N
-        if (spinnerBorder instanceof CompoundBorder) {
-            CompoundBorder cb = (CompoundBorder) spinnerBorder;
-            Border ob = cb.getOutsideBorder();
-            Border ib = cb.getInsideBorder();
-            if (ob instanceof LineBorder && ib instanceof EmptyBorder) {
-                result.add("Spinner.border"); //NOI18N
-                result.add(new DPIUnscaledBorder(new CompoundBorder(
-                        new MatteBorder(1, 1, 1, 1, ((LineBorder) ob).getLineColor()),
-                        new MatteBorder(2, 2, 2, 2, Color.WHITE))));
-            }
-        }
+
+        /* JSpinner has an odd border, and seemingly two borders on top of each other. Setting an
+        empty border for Spinner.border makes the component look better on various HiDPI
+        scalings. */
+        result.add("Spinner.border");
+        result.add(new EmptyBorder(3, 3, 3, 3));
 
         return result.toArray();
     }
@@ -225,9 +227,11 @@ public final class Windows8LFCustoms extends LFCustoms {
         Object[] uiDefaults = {
             EDITOR_TAB_DISPLAYER_UI, editorTabsUI,
             VIEW_TAB_DISPLAYER_UI, viewTabsUI,
-            
-            DESKTOP_BACKGROUND, new Color(226, 223, 214), //NOI18N
-            SCROLLPANE_BORDER_COLOR, new Color(127, 157, 185),
+
+            // Use the same neutral grey as in the Windows 10 "Settings" app sidebar.
+            DESKTOP_BACKGROUND, new Color(230, 230, 230), //NOI18N
+            SCROLLPANE_BORDER_COLOR, TAB_CONTENT_BORDER_COLOR,
+            SCROLLPANE_BORDER_COLOR2, TAB_CONTENT_BORDER_COLOR,
             DESKTOP_BORDER, new EmptyBorder(6, 5, 4, 6),
             SCROLLPANE_BORDER, new DPIUnscaledBorder((Border) UIManager.get("ScrollPane.border")),
             EXPLORER_STATUS_BORDER, new StatusLineBorder(StatusLineBorder.TOP),
@@ -237,14 +241,18 @@ public final class Windows8LFCustoms extends LFCustoms {
             EDITOR_STATUS_RIGHT_BORDER, new StatusLineBorder(StatusLineBorder.TOP | StatusLineBorder.LEFT),
             EDITOR_STATUS_INNER_BORDER, new StatusLineBorder(StatusLineBorder.TOP | StatusLineBorder.LEFT | StatusLineBorder.RIGHT),
             EDITOR_STATUS_ONLYONEBORDER, new StatusLineBorder(StatusLineBorder.TOP),
-            EDITOR_TOOLBAR_BORDER, new EditorToolbarBorder(),
+            EDITOR_TOOLBAR_BORDER, new DPIUnscaledBorder(new EditorToolbarBorder()),
             OUTPUT_SELECTION_BACKGROUND, new Color (164, 180, 255),
 
             PROPERTYSHEET_BOOTSTRAP, propertySheetValues,
 
-            WORKPLACE_FILL, new Color(226, 223, 214),
+            WORKPLACE_FILL, new Color(230, 230, 230), // Same as DESKTOP_BACKGROUND
 
-            DESKTOP_SPLITPANE_BORDER, BorderFactory.createEmptyBorder(4, 0, 0, 0),
+            DESKTOP_SPLITPANE_BORDER, BorderFactory.createEmptyBorder(0, 0, 0, 0),
+
+            "MenuBar.border", new DPIUnscaledBorder(new MatteBorder(0, 0, 1, 0, TAB_CONTENT_BORDER_COLOR)),
+            "nb.quicksearch.background", Color.WHITE, // Match text box background.
+
             SLIDING_BUTTON_UI, "org.netbeans.swing.tabcontrol.plaf.WinVistaSlidingButtonUI",
 
             // progress component related
@@ -270,6 +278,9 @@ public final class Windows8LFCustoms extends LFCustoms {
             //browser picker
             "Nb.browser.picker.background.light", new Color(255,255,255),
             "Nb.browser.picker.foreground.light", new Color(130,130,130),
+
+            // On Windows 10, tooltip backgrounds are white rather than yellowish.
+            "ToolTip.background", new Color(255, 255, 255)
         }; //NOI18N
         
         //Workaround for JDK 1.5.0 bug 5080144 - Disabled JTextFields stay white

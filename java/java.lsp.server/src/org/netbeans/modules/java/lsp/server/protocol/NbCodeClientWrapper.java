@@ -182,4 +182,8 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     public CompletableFuture<Void> refreshCodeLenses() {
         return remote.refreshCodeLenses();
     }
+    
+    public void notifyNodeChange(int params) {
+        remote.notifyNodeChange(params);
+    }
 }

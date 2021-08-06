@@ -22,6 +22,16 @@ import * as vscode from 'vscode';
 import {
     ProtocolNotificationType,
     ProtocolRequestType,
+    DecorationRenderOptions,
+    QuickPickItem,
+    Range,
+    TextEditorDecorationType,
+    TreeItem,
+    TreeItemCollapsibleState,
+} from 'vscode';
+import {
+    NotificationType,
+    RequestType,
     ShowMessageParams
 } from 'vscode-languageclient';
 import {
@@ -125,6 +135,28 @@ export namespace TextEditorDecorationSetNotification {
 
 export namespace TextEditorDecorationDisposeNotification {
     export const type = new ProtocolNotificationType<string, void>('window/disposeTextEditorDecoration');
+}
+
+export namespace NodeQueryRequest {
+    export const type = new RequestType<string, string, void, void>('nodes/delete');
+};
+
+export namespace NodeInfoRequest {
+    export const explorermanager = new RequestType<string, Data, void, void>('nodes/explorermanager');
+    export const info = new RequestType<number, Data, void, void>('nodes/info');
+    export const children = new RequestType<number, number[], void, void>('nodes/children');
+    export const destroy = new RequestType<number, boolean, void, void>('nodes/delete');
+    export const notifyChange = new NotificationType<number, void>('nodes/notifyChange');
+
+    export interface Data {
+        id : number; /* numeric ID of the node */
+        name : string; /* Node.getName() */
+        label : string; /* Node.getDisplayName() */
+        description : string; /* Node.getShortDescription() */
+        resourceUri? : string; /* external URL to file: resource */
+        collapsibleState : TreeItemCollapsibleState;
+        canDestroy : boolean; /* Node.canDestroy() */
+    }
 };
 
 export function asPosition(value: undefined | null): undefined;

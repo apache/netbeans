@@ -9,7 +9,9 @@ import { Readable } from 'stream';
 // as well as import your extension to test it
 import * as vscode from 'vscode';
 import * as myExtension from '../../extension';
+import * as myExplorer from '../../explorer';
 import { TextDocument, TextEditor, Uri } from 'vscode';
+import { assertWorkspace, dumpJava } from './testutils';
 
 suite('Extension Test Suite', () => {
     vscode.window.showInformationMessage('Cleaning up workspace.');
@@ -93,11 +95,18 @@ suite('Extension Test Suite', () => {
         if (where === 8) return;
 
         assert.ok(fs.statSync(mainClass).isFile(), "Class created by compilation: " + mainClass);
+
+        const lvp = myExplorer.foundProjects(await myExtension.findLanguageClient());
+        const firstLevelChildren = await (lvp.getChildren(null) as Thenable<any[]>);
+        assert.equal(firstLevelChildren.length, 1, "One child under the root");
+        const item = await (lvp.getTreeItem(firstLevelChildren[0]) as Thenable<vscode.TreeItem>);
+        assert.equal(item?.label, "basicapp", "Element is named as the Maven project");
     }
 
     test("Compile workspace6", async() => demo(6));
     test("Compile workspace7", async() => demo(7));
     test("Compile workspace8", async() => demo(8));
+    test("Compile workspace9", async() => demo(9));
 
     /**
      * Checks that maven-managed process can be started, and forcefully terminated by vscode
@@ -257,6 +266,7 @@ suite('Extension Test Suite', () => {
 
     test("Test Explorer tests", async() => testExplorerTests());
 });
+<<<<<<< HEAD
 
 function assertWorkspace(): string {
     assert.ok(vscode.workspace, "workspace is defined");

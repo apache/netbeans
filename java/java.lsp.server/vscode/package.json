@@ -60,6 +60,14 @@
 				"path": "./syntaxes/java.tmLanguage.json"
 			}
 		],
+		"views": {
+			"explorer": [
+				{
+					"id": "foundProjects",
+					"name": "Found projects"
+				}
+			]
+		},
 		"configuration": {
 			"title": "Java",
 			"properties": {
@@ -384,6 +392,10 @@
 				"command": "graalvm.pause.script",
 				"title": "Pause in Script",
 				"category": "GraalVM"
+			},
+			{
+				"command": "foundProjects.deleteEntry",
+				"title": "Delete"
 			}
 		],
 		"keybindings": [
@@ -439,6 +451,14 @@
 				{
 					"command": "graalvm.pause.script",
 					"when": "nbJavaLSReady"
+				}
+			],
+			"view/title": [
+			],
+			"view/item/context": [
+				{
+					"command": "foundProjects.deleteEntry",
+					"when": "view == foundProjects && viewItem == node"
 				}
 			]
 		}

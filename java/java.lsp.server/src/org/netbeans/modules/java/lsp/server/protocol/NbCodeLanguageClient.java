@@ -32,13 +32,13 @@ import org.eclipse.lsp4j.services.LanguageClient;
  * @author sdedic
  */
 public interface NbCodeLanguageClient extends LanguageClient {
-    
+
     /**
      * Shows a message in the status bar. Log- and Info-type messages are shown "as is".
      * The other message types can be decorated by an icon according to {@link MessageParams#getType}.
      * The message will be hidden after specified number of milliseconds; 0 means the client
      * controls when the message is hidden.
-     * 
+     *
      * @param params message type and text.
      */
     @JsonNotification("window/showStatusBarMessage")
@@ -83,7 +83,7 @@ public interface NbCodeLanguageClient extends LanguageClient {
     /**
      * Set text editor decoration to an array of code ranges.
      *
-     * @param params 
+     * @param params
      */
     @JsonNotification("window/setTextEditorDecoration")
     public void setTextEditorDecoration(@NonNull SetTextEditorDecorationParams params);
@@ -97,11 +97,19 @@ public interface NbCodeLanguageClient extends LanguageClient {
     public void disposeTextEditorDecoration(@NonNull String params);
 
     /**
+     * Notifies client about change in a node.
+     *
+     * @param params the id of the node
+     */
+    @JsonNotification("nodes/notifyChange")
+    public void notifyNodeChange(int params);
+
+    /**
      * Returns extended code capabilities.
      * @return code capabilities.
      */
     public NbCodeClientCapabilities getNbCodeCapabilities();
-    
+
     public default boolean isRequestDispatcherThread() {
         return Boolean.TRUE.equals(Server.DISPATCHERS.get());
     }

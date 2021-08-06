@@ -30,11 +30,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -74,6 +74,7 @@ import org.eclipse.lsp4j.jsonrpc.MessageIssueException;
 import org.eclipse.lsp4j.jsonrpc.messages.Message;
 import org.eclipse.lsp4j.jsonrpc.messages.NotificationMessage;
 import org.eclipse.lsp4j.jsonrpc.messages.RequestMessage;
+import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
@@ -94,12 +95,16 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.LspSession;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.explorer.TreeItem;
+import org.netbeans.modules.java.lsp.server.explorer.TreeViewProvider;
 import org.netbeans.modules.java.lsp.server.files.OpenedDocuments;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
+import org.openide.explorer.ExplorerManager;
 import org.openide.filesystems.FileObject;
+import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
@@ -115,20 +120,20 @@ import org.openide.util.lookup.ProxyLookup;
  */
 public final class Server {
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
-    
+
     private Server() {
     }
-    
+
     public static NbCodeLanguageClient getStubClient() {
         return STUB_CLIENT;
     }
-    
+
     public static boolean isClientResponseThread(NbCodeLanguageClient client) {
-        return client != null ? 
+        return client != null ?
                 DISPATCHERS.get() == client :
                 DISPATCHERS.get() != null;
     }
-    
+
     public static NbLspServer launchServer(Pair<InputStream, OutputStream> io, LspSession session) {
         LanguageServerImpl server = new LanguageServerImpl();
         ConsumeWithLookup msgProcessor = new ConsumeWithLookup(server.getSessionLookup());
@@ -139,7 +144,7 @@ public final class Server {
         Future<Void> runningServer = serverLauncher.startListening();
         return new NbLspServer(server, runningServer);
     }
-    
+
     private static Launcher<NbCodeLanguageClient> createLauncher(LanguageServerImpl server, Pair<InputStream, OutputStream> io,
             Function<MessageConsumer, MessageConsumer> processor) {
         return new LSPLauncher.Builder<NbCodeLanguageClient>()
@@ -152,26 +157,26 @@ public final class Server {
 //                .traceMessages(new java.io.PrintWriter(System.err))
             .create();
     }
-    
+
     static final ThreadLocal<NbCodeLanguageClient>   DISPATCHERS = new ThreadLocal<>();
-    
+
     /**
-     * Processes message while the default Lookup is set to 
+     * Processes message while the default Lookup is set to
      * {@link LanguageServerImpl#getSessionLookup()}.
      */
     private static class ConsumeWithLookup {
         private final Lookup sessionLookup;
         private NbCodeLanguageClient client;
         private OperationContext initialContext;
-        
+
         public ConsumeWithLookup(Lookup sessionLookup) {
             this.sessionLookup = sessionLookup;
         }
-        
+
         synchronized void attachClient(NbCodeLanguageClient client) {
             this.client = client;
         }
-        
+
         public MessageConsumer attachLookup(MessageConsumer delegate) {
             // PENDING: allow for message consumer wrappers to be registered to add pre/post processing for
             // the request plus build the request's default Lookup contents.
@@ -181,7 +186,7 @@ public final class Server {
                     InstanceContent ic = new InstanceContent();
                     ProxyLookup ll = new ProxyLookup(new AbstractLookup(ic), sessionLookup);
                     final OperationContext ctx;
-                    
+
                     // Intercept client REQUESTS; take the progress token from them, if it is
                     // attached.
                     Runnable r;
@@ -242,8 +247,8 @@ public final class Server {
             };
         }
     }
-    
-    
+
+
     /**
      * Returns a sequence of parents of the given project, leading to the {@link #rootOf} that
      * project. If `{@code excludeSelf}` is true, the sequence does not contain the project itself.
@@ -252,7 +257,7 @@ public final class Server {
      * <p>
      * The sequence starts at the project (or its immediate parent, if excludeSelf is true), and
      * iterate towards the root of the project.
-     * 
+     *
      * @param project inspected project
      * @return path from the project to the root
      * @since
@@ -298,14 +303,14 @@ public final class Server {
                 new AbstractLookup(sessionServices),
                 Lookup.getDefault()
         );
-        
+
         /**
          * Projects that are or were opened. After projects open, their CompletableFutures
          * remain here to signal no further priming build is required.
          */
         // @GuardedBy(this)
         private final Map<Project, CompletableFuture<Void>> beingOpened = new HashMap<>();
-        
+
         /**
          * Projects opened based on files. This registry avoids duplicate questions if
          * more files are opened at the same time; the project question is displayed just for the
@@ -313,14 +318,14 @@ public final class Server {
          */
         // @GuardedBy(this)
         private final Map<Project, CompletableFuture<Project>> openingFileOwners = new HashMap<>();
-        
+
         /**
          * Holds projects opened in the LSP workspace; these projects serve as root points for
          * other projects opened behind the scenes. The value is initially uncompleted, but
          * is replaced by a <b>completed</b> future at any time the set of workspace projects change.
          */
         private volatile CompletableFuture<Project[]> workspaceProjects = new CompletableFuture<>();
-        
+
         /**
          * All projects opened by this LSP server. The collection is replaced every time
          * the set of opened projects change, collections are never modified.
@@ -328,15 +333,15 @@ public final class Server {
         private volatile Collection<Project> openedProjects = Collections.emptyList();
 
         private final OpenedDocuments openedDocuments = new OpenedDocuments();
-        
+
         Lookup getSessionLookup() {
             return sessionLookup;
         }
-        
+
         /**
          * Open projects that own the `projectCandidates` files asynchronously.
          * Returns immediately, results or errors are reported through the Future.
-         * 
+         *
          * @param projectCandidates files whose projects should be opened.
          * @return future that yields the opened project instances.
          */
@@ -432,7 +437,7 @@ public final class Server {
                 return f.thenApply(arr -> arr.length > 0 ? arr[0] : null);
             });
         }
-        
+
         /**
          * For diagnostic purposes
          */
@@ -461,23 +466,23 @@ public final class Server {
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     throw new IllegalStateException(ex);
-                
+
                 }
                 asyncOpenSelectedProjects1(f, previouslyOpened, projects, asWorkspaceProjects);
             } catch (RuntimeException ex) {
                 f.completeExceptionally(ex);
             }
         }
-        
+
         private void asyncOpenSelectedProjects1(CompletableFuture<Project[]> f, Project[] previouslyOpened, List<Project> projects, boolean addToWorkspace) {
             int id = this.openRequestId.getAndIncrement();
-            
+
             List<CompletableFuture> primingBuilds = new ArrayList<>();
             List<Project> toOpen = new ArrayList<>();
             Map<Project, CompletableFuture<Void>> local = new HashMap<>();
             synchronized (this) {
                 LOG.log(Level.FINER, "{0}: Asked to open project(s): {1}", new Object[]{ id, Arrays.asList(projects) });
-                for (Project p : projects) { 
+                for (Project p : projects) {
                     CompletableFuture<Void> pending = beingOpened.get(p);
                     if (pending != null) {
                         primingBuilds.add(pending);
@@ -488,7 +493,7 @@ public final class Server {
                 }
                 beingOpened.putAll(local);
             }
-            
+
             LOG.log(Level.FINER, id + ": Opening projects: {0}", Arrays.asList(toOpen));
 
             // before the projects are officialy 'opened', try to prime the projects
@@ -522,7 +527,7 @@ public final class Server {
                     pap.invokeAction(ActionProvider.COMMAND_PRIME, Lookups.fixed(progress));
                 }
             }
-            
+
             // Wait for all priming builds, even those already pending, to finish:
             CompletableFuture.allOf(primingBuilds.toArray(new CompletableFuture[primingBuilds.size()])).thenRun(() -> {
                 OpenProjects.getDefault().open(projects.toArray(new Project[0]), false);
@@ -536,7 +541,7 @@ public final class Server {
                     //init source groups/FileOwnerQuery:
                     ProjectUtils.getSources(prj).getSourceGroups(Sources.TYPE_GENERIC);
                     final CompletableFuture<Void> prjF = local.get(prj);
-                    if (prjF != null) { 
+                    if (prjF != null) {
                         prjF.complete(null);
                     }
                 }
@@ -568,7 +573,7 @@ public final class Server {
                 return null;
             });
         }
-        
+
         private JavaSource checkJavaSupport() {
             final ClasspathInfo info = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY);
             final JavaSource source = JavaSource.create(info);
@@ -580,12 +585,12 @@ public final class Server {
             }
             return source;
         }
-        
+
         @Override
         public CompletableFuture<Project[]> openedProjects() {
             return workspaceProjects;
         }
-        
+
         @Override
         public OpenedDocuments getOpenedDocuments() {
             return openedDocuments;
@@ -612,7 +617,7 @@ public final class Server {
                 client.showMessage(new ShowStatusMessageParams(type, msg, timeout));
             }
         }
-        
+
         private InitializeResult constructInitResponse(JavaSource src) {
             ServerCapabilities capabilities = new ServerCapabilities();
             if (src != null) {
@@ -664,7 +669,7 @@ public final class Server {
             }
             return new InitializeResult(capabilities);
         }
-        
+
         @Override
         public CompletableFuture<InitializeResult> initialize(InitializeParams init) {
             NbCodeClientCapabilities capa = NbCodeClientCapabilities.get(init);
@@ -695,7 +700,7 @@ public final class Server {
             }
             CompletableFuture<Project[]> prjs = workspaceProjects;
             SERVER_INIT_RP.post(() -> asyncOpenSelectedProjects0(prjs, projectCandidates, true));
-            
+
             // chain showIndexingComplete message after initial project open.
             prjs.
                     thenApply(this::showIndexingCompleted);
@@ -737,7 +742,7 @@ public final class Server {
             c.acquireProgressToken();
             return res;
         }
-        
+
         @Override
         public CompletableFuture<Object> shutdown() {
             return CompletableFuture.completedFuture(null);
@@ -745,6 +750,50 @@ public final class Server {
 
         @Override
         public void exit() {
+        }
+
+        private final ExplorerManager lv = OpenProjects.getDefault().createLogicalView();
+        private final TreeViewProvider tvp = new TreeViewProvider(lv) {
+            @Override
+            protected void onDidChangeTreeData(Node n, int id) {
+                client.notifyNodeChange(id);
+            }
+        };
+
+	@JsonRequest(value = "nodes/delete")
+	public CompletableFuture<Boolean> nodesDelete(int nodeId) {
+            CompletableFuture<Boolean> ret = new CompletableFuture<>();
+            Node n = TreeItem.findNode(nodeId);
+            if (n != null && n.canDestroy()) {
+                try {
+                    n.destroy();
+                    ret.complete(true);
+                } catch (IOException ex) {
+                    ret.completeExceptionally(ex);
+                }
+            } else {
+                ret.complete(false);
+            }
+            return ret;
+        }
+
+	@JsonRequest(value = "nodes/info")
+	public CompletableFuture<TreeItem> nodesInfo(int nodeId) {
+            return tvp.getTreeItem(nodeId).toCompletableFuture();
+        }
+
+//    export const init = new RequestType<string, Data, void, void>('nodes/explorermanager');
+
+	@JsonRequest(value = "nodes/explorermanager")
+	public CompletableFuture<TreeItem> explorerManager(String id) {
+            return tvp.getRootInfo().toCompletableFuture();
+        }
+
+//    export const children = new RequestType<number, number[], void, void>('nodes/children');
+
+	@JsonRequest(value = "nodes/children")
+	public CompletableFuture<int[]> getChildren(int id) {
+            return tvp.getChildren(id).toCompletableFuture();
         }
 
         @Override
@@ -761,7 +810,7 @@ public final class Server {
         public void cancelProgress(WorkDoneProgressCancelParams params) {
             // handled in the interceptor, after the complete RPC call completes.
         }
-        
+
         @Override
         public void connect(LanguageClient aClient) {
             this.client = new NbCodeClientWrapper((NbCodeLanguageClient)aClient);
@@ -778,7 +827,7 @@ public final class Server {
             ((LanguageClientAware) getWorkspaceService()).connect(client);
         }
     }
-    
+
     public static final String JAVA_BUILD_WORKSPACE =  "java.build.workspace";
     public static final String JAVA_NEW_FROM_TEMPLATE =  "java.new.from.template";
     public static final String JAVA_NEW_PROJECT =  "java.new.project";
@@ -788,7 +837,7 @@ public final class Server {
     public static final String JAVA_LOAD_WORKSPACE_TESTS =  "java.load.workspace.tests";
     public static final String JAVA_SUPER_IMPLEMENTATION =  "java.super.implementation";
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
-    
+
     /**
      * Enumerates project configurations.
      */
@@ -815,12 +864,12 @@ public final class Server {
 
     static final NbCodeLanguageClient STUB_CLIENT = new NbCodeLanguageClient() {
         private final NbCodeClientCapabilities caps = new NbCodeClientCapabilities();
-        
+
         private void logWarning(Object... args) {
-            LOG.log(Level.WARNING, "LSP Client called without proper context with param(s): {0}", 
+            LOG.log(Level.WARNING, "LSP Client called without proper context with param(s): {0}",
                     Arrays.asList(args));
         }
-        
+
         @Override
         public void showStatusBarMessage(ShowStatusMessageParams params) {
             logWarning(params);
@@ -894,6 +943,11 @@ public final class Server {
         public void logMessage(MessageParams message) {
             logWarning(message);
         }
+
+        @Override
+        public void notifyNodeChange(int params) {
+            logWarning(params);
+        }
     };
 
 
@@ -902,7 +956,7 @@ public final class Server {
     /**
      * Hacky way to enable or disable Groovy support. Since it is hack, it will disable Groovy for the whole NBJLS, not just a specific client / project. Should
      * be revisited after NetBeans 12.5, after Groovy parsing improves
-     * @param caps 
+     * @param caps
      */
     private static void hackConfigureGroovySupport(NbCodeClientCapabilities caps) {
         boolean b = caps != null && caps.wantsGroovySupport();

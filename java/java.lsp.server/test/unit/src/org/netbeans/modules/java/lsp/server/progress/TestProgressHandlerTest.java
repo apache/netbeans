@@ -213,5 +213,10 @@ public class TestProgressHandlerTest extends NbTestCase {
         public void disposeTextEditorDecoration(String params) {
             fail();
         }
+
+        @Override
+        public void notifyNodeChange(int params) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
     }
 }

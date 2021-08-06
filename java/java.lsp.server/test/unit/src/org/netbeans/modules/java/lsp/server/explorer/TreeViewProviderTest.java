@@ -1,0 +1,116 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.netbeans.modules.java.lsp.server.explorer;
+
+import org.junit.Test;
+import static org.junit.Assert.*;
+import org.openide.explorer.ExplorerManager;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
+import org.openide.nodes.Node;
+
+public class TreeViewProviderTest {
+
+    public TreeViewProviderTest() {
+    }
+
+    @Test
+    public void simpleHierarchyTestWithChange() throws Exception {
+        ExplorerManager em = new ExplorerManager();
+        em.setRootContext(new FibNode(10));
+        TreeViewProvider tvp = new TreeViewProviderImpl(em);
+
+        Node[] two = tvp.getChildren(null).toCompletableFuture().get();
+        assertEquals(2, two.length);
+
+        TreeItem two0 = tvp.getTreeItem(two[0]).toCompletableFuture().get();
+        TreeItem two1 = tvp.getTreeItem(two[1]).toCompletableFuture().get();
+
+        assertEquals("9", two0.id);
+        assertEquals("8", two1.id);
+
+        assertEquals("Fib(9)", two0.label);
+        assertEquals("Fib(8)", two1.label);
+
+        assertEquals("Fib(9) = 34", two0.description);
+        assertEquals("Fib(8) = 21", two1.description);
+
+        assertEquals(TreeItem.CollapsibleState.Collapsed, two0.collapsibleState);
+        assertEquals(TreeItem.CollapsibleState.Collapsed, two1.collapsibleState);
+    }
+
+
+    final static class TreeViewProviderImpl extends TreeViewProvider {
+        TreeViewProviderImpl(ExplorerManager em) {
+            super(em);
+        }
+
+        public void onDidChangeTreeData(Node n) {
+        }
+    }
+
+    private static class FibNode extends AbstractNode {
+        private final int value;
+
+        public FibNode(int value) {
+            super(value <= 2 ? Children.LEAF : new FibChildren(value));
+            this.value = value;
+        }
+
+        @Override
+        public String getName() {
+            return "" + value;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return "Fib(" + value + ")";
+        }
+
+        @Override
+        public String getShortDescription() {
+            return "Fib(" + value + ") = " + result();
+        }
+
+        private int result() {
+            if (isLeaf()) {
+                return 1;
+            }
+            int sum = 0;
+            for (Node n : getChildren().getNodes(true)) {
+                sum += ((FibNode)n).result();
+            }
+            return sum;
+        }
+    }
+
+    private static final class FibChildren extends Children.Keys<Integer> {
+        private FibChildren(int value) {
+            setKeys(new Integer[] {
+                value - 1,
+                value - 2,
+            });
+        }
+
+        @Override
+        protected Node[] createNodes(Integer key) {
+            return new Node[] { new FibNode(key) };
+        }
+    }
+}

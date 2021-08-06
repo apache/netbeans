@@ -19,14 +19,13 @@
 
 package org.netbeans.modules.gradle.java.newproject;
 
-import org.netbeans.modules.gradle.java.newproject.Bundle;
-import org.netbeans.modules.gradle.spi.newproject.SimpleGradleWizardIterator;
-import static org.netbeans.modules.gradle.spi.newproject.SimpleGradleWizardIterator.PROP_DEPENDENCIES;
-import static org.netbeans.modules.gradle.spi.newproject.SimpleGradleWizardIterator.PROP_PLUGINS;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import org.netbeans.api.templates.TemplateRegistration;
+import org.netbeans.modules.gradle.spi.newproject.BaseGradleWizardIterator;
+import org.netbeans.modules.gradle.spi.newproject.TemplateOperation;
+import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle;
 
 /**
@@ -35,21 +34,24 @@ import org.openide.util.NbBundle;
  */
 @TemplateRegistration(folder="Project/Gradle", position=110, displayName="#template.simpleLibProject", iconBase="org/netbeans/modules/gradle/java/resources/javaseProjectIcon.png", description="SimpleLibraryDescription.html")
 @NbBundle.Messages("template.simpleLibProject=Java Class Library")
-public class SimpleLibraryProjectWizard extends SimpleGradleWizardIterator {
+public class SimpleLibraryProjectWizard extends BaseGradleWizardIterator {
+    public SimpleLibraryProjectWizard() {
+    }
+
+    @Override
+    protected List<? extends WizardDescriptor.Panel<WizardDescriptor>> createPanels() {
+        return Collections.singletonList(createProjectAttributesPanel(null));
+    }
 
     @NbBundle.Messages("LBL_SimpleLibraryProject=Java Class Library with Gradle")
-    public SimpleLibraryProjectWizard() {
-        super(Bundle.LBL_SimpleLibraryProject(), initParams());
-    }
-    
-    private static Map<String, Object> initParams() {
-        Map<String, Object> params = new HashMap<>();
-        params.put(PROP_PLUGINS, Arrays.asList("java", "jacoco", "maven-publish"));
-        params.put(PROP_DEPENDENCIES, Arrays.asList(
-                "testImplementation     'junit:junit:4.13'"
-        ));
-        return params;
+    @Override
+    protected String getTitle() {
+        return Bundle.LBL_SimpleLibraryProject();
     }
 
+    @Override
+    protected void collectOperations(TemplateOperation ops, Map<String, Object> params) {
+        SimpleApplicationProjectWizard.collectOperationsForType(params, ops, "java-library", "lib");
+    }
 }
-    
+

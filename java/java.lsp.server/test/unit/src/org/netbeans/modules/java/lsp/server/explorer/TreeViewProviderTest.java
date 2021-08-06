@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.java.lsp.server.explorer;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.openide.explorer.ExplorerManager;
@@ -34,7 +36,7 @@ public class TreeViewProviderTest {
     public void simpleHierarchyTestWithChange() throws Exception {
         ExplorerManager em = new ExplorerManager();
         em.setRootContext(new FibNode(10));
-        TreeViewProvider tvp = new TreeViewProviderImpl(em);
+        TreeViewProviderImpl tvp = new TreeViewProviderImpl(em);
 
         Node[] two = tvp.getChildren(null).toCompletableFuture().get();
         assertEquals(2, two.length);
@@ -53,15 +55,32 @@ public class TreeViewProviderTest {
 
         assertEquals(TreeItem.CollapsibleState.Collapsed, two0.collapsibleState);
         assertEquals(TreeItem.CollapsibleState.Collapsed, two1.collapsibleState);
+
+        ((FibNode)two[1]).extraAdd(8);
+
+        tvp.assertChanged(two[1]);
+
+        TreeItem second1 = tvp.getTreeItem(two[1]).toCompletableFuture().get();
+        assertEquals("8", second1.id);
+        assertEquals("Fib(8)", second1.label);
+        assertEquals("Fib(8) = 42", second1.description);
+
     }
 
 
     final static class TreeViewProviderImpl extends TreeViewProvider {
+        private Set<Node> changed = new HashSet<>();
+
         TreeViewProviderImpl(ExplorerManager em) {
             super(em);
         }
 
         public void onDidChangeTreeData(Node n) {
+            changed.add(n);
+        }
+
+        public void assertChanged(Node n) {
+            assertTrue("Expecting " + n + " among " + changed, changed.remove(n));
         }
     }
 
@@ -88,7 +107,14 @@ public class TreeViewProviderTest {
             return "Fib(" + value + ") = " + result();
         }
 
-        private int result() {
+        void extraAdd(int value) {
+            getChildren().add(new Node[] { new FibNode(value) });
+            fireDisplayNameChange(null, null);
+            fireNameChange(null, null);
+            fireShortDescriptionChange(null, null);
+        }
+
+        int result() {
             if (isLeaf()) {
                 return 1;
             }

@@ -784,6 +784,10 @@ public class Css3ParserScssTest extends CssTestBase {
 
     }
 
+    public void testExtendMultipleSelectors() {
+        assertParses("dummy {@extend .message, .info;};");
+    }
+
     public void testDebug() {
         String source = "@debug 10em + 12em;\n"
                 + ".class {\n"

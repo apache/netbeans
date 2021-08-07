@@ -1314,7 +1314,7 @@ sass_nested_properties
 
 sass_extend
     :
-    SASS_EXTEND ws simpleSelectorSequence (ws SASS_OPTIONAL)?
+    SASS_EXTEND ws simpleSelectorSequence (ws? COMMA ws? simpleSelectorSequence)* (ws SASS_OPTIONAL)?
     ;
 
 sass_extend_only_selector

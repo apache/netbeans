@@ -550,34 +550,33 @@ public final class MavenExecuteUtils {
         return c == '\'' || c == '"';
     }
     
-    public static String joinParameters(List<String> params) {
-        StringBuilder sb = new StringBuilder();
+    public static List<String> escapeParameters(List<String> params) {
+        List<String> ret = new ArrayList<>();
         for (String s : params) {
             if (s == null) {
                 continue;
             }
-            if (sb.length() > 0) {
-                sb.append(" ");
-            }
             if (s.length() > 1) {
                 char c = s.charAt(0);
                 if (isQuoteChar(c) && s.charAt(s.length() - 1) == c) {
-                    sb.append(s);
+                    ret.add(s);
                     continue;
                 }
             }
             // note: does not care about escaped spaces.
             if (!s.contains(" ")) {
-                sb.append(s.replace("'", "\\'").replace("\"", "\\\""));
+                ret.add(s.replace("'", "\\'").replace("\"", "\\\""));
             } else {
-                sb.append("\"").append(
-                        s.replace("\"", "\\\"")
-                ).append("\"");
+                ret.add("\"" + s.replace("\"", "\\\"") + "\"");
             }
         }
-        return sb.toString();
+        return ret;
     }
     
+    public static String joinParameters(List<String> params) {
+        return String.join(" ", escapeParameters(params));
+    }
+
     public static List<String> extractDebugJVMOptions(String argLine) {
         Iterable<String> split = propertySplitter(argLine, true);
         List<String> toRet = new ArrayList<String>();

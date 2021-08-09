@@ -54,6 +54,7 @@ public class FlatEditorTabCellRenderer extends AbstractTabCellRenderer {
     private static final Color activeForeground = Utils.getUIColor( "EditorTab.activeForeground", foreground ); // NOI18N
     private static final Color selectedForeground = Utils.getUIColor( "EditorTab.selectedForeground", activeForeground ); // NOI18N
     private static final Color hoverForeground = Utils.getUIColor( "EditorTab.hoverForeground", foreground ); // NOI18N
+    private static final Color unselectedHoverForeground = Utils.getUIColor( "EditorTab.unselectedHoverForeground", hoverForeground ); // NOI18N
     private static final Color attentionForeground = Utils.getUIColor( "EditorTab.attentionForeground", foreground ); // NOI18N
 
     private static final Color underlineColor = UIManager.getColor("EditorTab.underlineColor"); // NOI18N
@@ -124,7 +125,7 @@ public class FlatEditorTabCellRenderer extends AbstractTabCellRenderer {
 
         // set text color
         setForeground(colorForState(foreground, activeForeground, selectedForeground,
-                hoverForeground, hoverForeground, attentionForeground));
+                hoverForeground, unselectedHoverForeground, attentionForeground));
 
         return result;
     }

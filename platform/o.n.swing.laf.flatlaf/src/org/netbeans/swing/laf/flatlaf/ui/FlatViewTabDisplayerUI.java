@@ -69,6 +69,7 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
             activeForeground,       // text color if view group is active;                 optional; defaults to foreground
             selectedForeground,     // text color if tab is selected in active view group; optional; defaults to activeForeground
             hoverForeground,        // text color if mouse is over tab;                    optional; defaults to foreground
+            unselectedHoverForeground,  // if defined, use this color instead of hoverForeground for unselected tabs
             attentionForeground,    // text color if tab is in attension mode;             optional; defaults to foreground
 
             underlineColor,         // underline color of selected active tabs
@@ -183,7 +184,7 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
 
         // text color
         Color c = colorForState(index, foreground, activeForeground, selectedForeground,
-                hoverForeground, hoverForeground, attentionForeground);
+                hoverForeground, unselectedHoverForeground, attentionForeground);
 
         // paint text
         int txtX = x + txtLeftPad;
@@ -324,6 +325,7 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
             activeForeground = Utils.getUIColor("ViewTab.activeForeground", foreground); // NOI18N
             selectedForeground = Utils.getUIColor("ViewTab.selectedForeground", activeForeground); // NOI18N
             hoverForeground = Utils.getUIColor("ViewTab.hoverForeground", foreground); // NOI18N
+            unselectedHoverForeground = Utils.getUIColor("ViewTab.unselectedHoverForeground", hoverForeground); // NOI18N
             attentionForeground = Utils.getUIColor("ViewTab.attentionForeground", foreground); // NOI18N
 
             underlineColor = UIManager.getColor("ViewTab.underlineColor"); // NOI18N

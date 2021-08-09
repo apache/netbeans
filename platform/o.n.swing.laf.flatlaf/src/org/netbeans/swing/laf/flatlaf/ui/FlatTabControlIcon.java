@@ -110,7 +110,8 @@ public final class FlatTabControlIcon extends VectorIcon {
     }
 
     private FlatTabControlIcon(int buttonId, Integer buttonState) {
-        super(UIScale.scale(16), UIScale.scale(16));
+        super(UIScale.scale(16),
+            UIScale.scale(buttonId == TabControlButton.ID_CLOSE_BUTTON ? 15 : 16));
         this.buttonId = buttonId;
         this.buttonState = buttonState;
         this.userScaleFactor = UIScale.getUserScaleFactor();

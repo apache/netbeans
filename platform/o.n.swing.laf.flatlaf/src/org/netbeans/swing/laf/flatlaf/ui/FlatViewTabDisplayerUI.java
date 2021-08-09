@@ -133,7 +133,9 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
                 } else {
                     buttons.setVisible(true);
                     availTxtWidth -= (buttonsSize.width + ICON_X_PAD);
-                    buttons.setLocation(x + width - buttonsSize.width - ICON_X_PAD, y + ((height - buttonsSize.height) / 2) - 1);
+                    // Ad hoc adjustment.
+                    int yAdjustment = 2;
+                    buttons.setLocation(x + width - buttonsSize.width - ICON_X_PAD, y + ((height - buttonsSize.height) / 2) - 1 + yAdjustment);
                 }
             }
         }

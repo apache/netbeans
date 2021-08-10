@@ -39,7 +39,8 @@ sourceCompatibility = '1.8'
 dependencies {
     implementation "org.netbeans.html:net.java.html.json:1.7.2"
     implementation "com.dukescript.api:javafx.base:8.60.11"
-    implementation "com.dukescript.api:javafx.beaninfo:0.5"
+    implementation "com.dukescript.api:javafx.beaninfo:0.6"
+    annotationProcessor "com.dukescript.api:javafx.beaninfo:0.6"
     runtimeOnly "org.netbeans.html:ko4j:1.7.2"
 }
 </#noparse>

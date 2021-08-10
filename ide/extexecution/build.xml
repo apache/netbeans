@@ -22,4 +22,14 @@
 <project basedir="." default="build" name="ide/extexecution">
     <description>Builds, tests, and runs the project org.netbeans.modules.extexecution</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
+    
+    <!-- 
+        Hacks the build process: we supply a default generated-layer, the layer reg processor reads the existing 
+        file first, and appends to it. So annotation-based registrations will merge into the static content.
+        Must be done before do-test-compile.
+    -->
+    <target name="test-unit-dep-build" depends="test-init,projectized-common.test-unit-dep-build">
+       <mkdir dir="${build.test.unit.classes.dir}/META-INF"/>
+       <copy file="${test.unit.src.dir}/META-INF/layer-static.xml" tofile="${build.test.unit.classes.dir}/META-INF/generated-layer.xml"/>
+    </target>
 </project>

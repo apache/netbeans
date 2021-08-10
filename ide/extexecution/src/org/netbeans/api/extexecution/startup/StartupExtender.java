@@ -99,6 +99,15 @@ public final class StartupExtender {
                 }
             } else {
                 rawArgs = args;
+                List<String> quotedArgs = new ArrayList<>();
+                for (String s : args) {
+                    if (s.isEmpty()) {
+                        quotedArgs.add(s);
+                    } else {
+                        quotedArgs.add(BaseUtilities.escapeParameters(new String[] { s }));
+                    }
+                }
+                args = quotedArgs;
             }
             StartupExtender extender = new StartupExtender(item.getDisplayName(), args, rawArgs);
             LOG.log(Level.FINE, " {0} => {1}", new Object[] {extender.description, extender.getArguments()});

@@ -113,6 +113,7 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.lib.nbjavac.services.NBJavaCompiler;
+import org.netbeans.lib.nbjavac.services.NBJavacProcessingEnvironment;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
 import org.netbeans.modules.java.source.parsing.FileManagerTransaction;
 import org.netbeans.modules.java.source.parsing.FileObjects;
@@ -200,6 +201,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 fileObjects.values().iterator().next().aptGenerated ? null : APTUtils.get(context.getRoot()),
                 CompilerOptionsQuery.getOptions(context.getRoot()),
                 fileObjects.keySet());
+            NBJavacProcessingEnvironment.preRegister(jt.getContext());
             for (CompilationUnitTree cut : jt.parse()) {
                 trees.add(cut);
                 CompileTuple tuple = fileObjects.get(cut.getSourceFile());
@@ -248,9 +250,24 @@ final class VanillaCompileWorker extends CompileWorker {
         Log log = Log.instance(jt.getContext());
         JavaCompiler compiler = JavaCompiler.instance(jt.getContext());
         try {
-            final Iterable<? extends Element> types = jt.enter(trees);
+            final Set<Element> types = new HashSet<>();
+            jt.enter(trees).forEach(types::add);
             if (context.isCancelled()) {
                 return null;
+            }
+            Set<javax.tools.FileObject> processorGenerated = JavaCustomIndexer.getProcessorGenerated(context, javaContext);
+            for (Env<AttrContext> env : ((NBJavaCompiler) NBJavaCompiler.instance(jt.getContext())).todo) {
+                if (!processorGenerated.contains(env.toplevel.sourcefile)) {
+                    continue;
+                }
+                Tree.Kind treeKind = env.tree.getKind();
+                if (TreeUtilities.CLASS_TREE_KINDS.contains(treeKind)) {
+                    types.add(((JCClassDecl) env.tree).sym);
+                } else if (treeKind == Tree.Kind.MODULE) {
+                    types.add(((JCModuleDecl) env.tree).sym);
+                } else if (treeKind == Tree.Kind.PACKAGE) {
+                    types.add(((JCPackageDecl) env.tree).packge);
+                }
             }
             if (isLowMemory(new boolean[] {true})) {
                 fallbackCopyExistingClassFiles(context, javaContext, files);

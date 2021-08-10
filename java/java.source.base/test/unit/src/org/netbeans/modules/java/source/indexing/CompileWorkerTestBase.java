@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 import javax.swing.event.ChangeListener;
@@ -180,7 +181,11 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
     
     @Override
     protected void setUp() throws Exception {
-        SourceUtilsTestUtil.prepareTest(new String[0], new Object[] {new SourceLevelQueryImpl(), new CompilerOptionsQueryImpl()});
+        List<Object> lookup = new ArrayList<>();
+        lookup.add(new SourceLevelQueryImpl());
+        lookup.add(new CompilerOptionsQueryImpl());
+        lookup.addAll(getExtraLookup());
+        SourceUtilsTestUtil.prepareTest(new String[0], lookup.toArray());
         
         clearWorkDir();
         File wdFile = getWorkDir();
@@ -194,7 +199,7 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
         FileObject cache = FileUtil.createFolder(wd, "cache");
         ClassPath sourcePath = ClassPathSupport.createClassPath(src, extraSrc);
 
-        SourceUtilsTestUtil.prepareTest(sourcePath, buildRoot, cache, new FileObject[0]);
+        SourceUtilsTestUtil.prepareTest(sourcePath, buildRoot, cache, getExtraClassPath().clone());
     }
     
     private FileObject src;
@@ -229,6 +234,14 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
 
     protected void setCompilerOptions(List<String> compilerOptions) {
         this.compilerOptions = compilerOptions;
+    }
+
+    protected FileObject[] getExtraClassPath() {
+        return new FileObject[0];
+    }
+
+    protected List<? extends Object> getExtraLookup() {
+        return Collections.emptyList();
     }
 
     private final class SourceLevelQueryImpl implements SourceLevelQueryImplementation2 {

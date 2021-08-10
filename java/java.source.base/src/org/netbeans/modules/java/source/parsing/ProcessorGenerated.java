@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.tools.FileObject;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -58,7 +59,7 @@ import org.openide.util.BaseUtilities;
 public final class ProcessorGenerated extends TransactionContext.Service {
 
     private static final Logger LOG = Logger.getLogger(ProcessorGenerated.class.getName());
-    
+
     public enum Type {
         SOURCE,
         RESOURCE
@@ -83,6 +84,14 @@ public final class ProcessorGenerated extends TransactionContext.Service {
         Pair<Set<javax.tools.FileObject>,Set<javax.tools.FileObject>> res = 
             generated.get(forSource);
         return res == null ? null : res.first();
+    }
+    
+    public Set<javax.tools.FileObject> getGeneratedSources() {
+        Set<javax.tools.FileObject> result = new HashSet<>();
+        for (Pair<Set<FileObject>, Set<FileObject>> val : generated.values()) {
+            result.addAll(val.first());
+        }
+        return result;
     }
     
     public boolean canWrite() {

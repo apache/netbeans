@@ -62,6 +62,10 @@
                 </test-type>
             </test-dependencies>
             <public-packages/>
+            <class-path-extension>
+                <runtime-relative-path>ext/byte-buddy-1.11.12.jar</runtime-relative-path>
+                <binary-origin>external/byte-buddy-1.11.12.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>

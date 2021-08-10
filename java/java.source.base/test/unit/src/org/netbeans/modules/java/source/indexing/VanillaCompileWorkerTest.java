@@ -18,15 +18,23 @@
  */
 package org.netbeans.modules.java.source.indexing;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.Writer;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -36,16 +44,25 @@ import java.util.logging.LogRecord;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import java.util.stream.Collectors;
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.swing.event.ChangeListener;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardLocation;
 import junit.framework.Test;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.queries.AnnotationProcessingQuery.Result;
+import org.netbeans.api.java.queries.AnnotationProcessingQuery.Trigger;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClassIndex.SearchKind;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.classfile.ClassFile;
 import org.netbeans.modules.java.source.NoJavacHelper;
@@ -53,9 +70,12 @@ import org.netbeans.modules.java.source.indexing.CompileWorker.ParsingOutput;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.spi.java.queries.AnnotationProcessingQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
+import org.openide.util.Exceptions;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -1921,6 +1941,58 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertEquals(expected, file2Fixed);
     }
 
+    public void testAnnotationProcessing1() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test1.java",
+                                                                      "package test;\n" +
+                                                                      "public class Test1 {\n" +
+                                                                      "    gen.Gen1 g;\n" +
+                                                                      "}\n"),
+                                                        compileTuple("test/Test2.java",
+                                                                      "package test;\n" +
+                                                                      "public class Test2 {\n" +
+                                                                      "    gen.Gen2 g;\n" +
+                                                                      "}\n")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test1.sig",
+                                                       "cache/s1/java/15/classes/gen/Gen1.sig",
+                                                       "cache/s1/java/15/classes/test/Test2.sig",
+                                                       "cache/s1/java/15/classes/gen/Gen2.sig")),
+                     createdFiles);
+
+        for (String suff : new String[] {"1", "2"}) {
+            File rapt = new File(getWorkDir().toURI().resolve("cache/s1/java/15/classes/test/Test" + suff + ".rapt"));
+            String raptContent = readTextFully(rapt);
+
+            assertEquals("gen/Gen" + suff + ".java\n", raptContent);
+        }
+
+        assertEquals("res/Res2.txt\nres/Res1.txt\n", readTextFully(new File(getWorkDir().toURI().resolve("cache/s1/java/15/classes/resouces.res"))));
+    }
+
+    private String readTextFully(File file) throws IOException {
+        StringBuilder content = new StringBuilder();
+
+        try (Reader r = new InputStreamReader(new FileInputStream(file))) {
+            int c;
+
+            while ((c = r.read()) != (-1)) {
+                content.append((char) c);
+            }
+        }
+
+        return content.toString();
+    }
+
     public static void noop() {}
 
     @Override
@@ -1953,11 +2025,31 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
     }
 
     @Override
+    protected FileObject[] getExtraClassPath() {
+        switch (getName()) {
+            case "testAnnotationProcessing1":
+                return new FileObject[] {URLMapper.findFileObject(VanillaCompileWorkerTest.class.getProtectionDomain().getCodeSource().getLocation())};
+            default:
+                return super.getExtraClassPath();
+        }
+    }
+
+    @Override
+    protected List<? extends Object> getExtraLookup() {
+        switch (getName()) {
+            case "testAnnotationProcessing1":
+                return Arrays.asList(new AnnotationProcessingQueryImpl());
+            default:
+                return super.getExtraLookup();
+        }
+    }
+
+    @Override
     protected void tearDown() throws Exception {
         VanillaCompileWorker.fixedListener = (file, cut) -> {};
     }
 
-    public static Test suite() {
+    public static Test suiteXX() {
         if (NoJavacHelper.hasNbJavac()) {
             return new VanillaCompileWorkerTest("noop");
         } else {
@@ -1969,5 +2061,82 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
 
     static {
         VanillaCompileWorker.DIAGNOSTIC_TO_TEXT = d -> d.getCode();
+    }
+
+    @SupportedAnnotationTypes("*")
+    public static final class TestAP extends AbstractProcessor {
+
+        private int round;
+
+        @Override
+        public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+            if (round++ == 0) {
+                for (String suff : new String[] {"1", "2"}) {
+                    TypeElement testEl = processingEnv.getElementUtils().getTypeElement("test.Test" + suff);
+                    if (testEl == null) {
+                        throw new AssertionError("test.Test" + suff + " does not exist.");
+                    }
+                    try {
+                        JavaFileObject gen = processingEnv.getFiler().createSourceFile("gen.Gen" + suff, testEl);
+                        try (Writer w = gen.openWriter()) {
+                            w.append("package gen; public class Gen"  + suff + " {}\n");
+                        }
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                    try {
+                        javax.tools.FileObject gen = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "res", "Res" + suff + ".txt", testEl);
+                        try (Writer w = gen.openWriter()) {
+                            w.append(suff + "\n");
+                        }
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            }
+            return false;
+        }
+    }
+
+//    @ServiceProvider(service=AnnotationProcessingQueryImplementation.class)
+    public class AnnotationProcessingQueryImpl implements AnnotationProcessingQueryImplementation {
+
+        @Override
+        public Result getAnnotationProcessingOptions(FileObject file) {
+            return new Result() {
+                @Override
+                public Set<? extends Trigger> annotationProcessingEnabled() {
+                    return EnumSet.of(Trigger.ON_SCAN);
+                }
+
+                @Override
+                public Iterable<? extends String> annotationProcessorsToRun() {
+                    return Collections.singletonList(TestAP.class.getName());
+                }
+
+                @Override
+                public URL sourceOutputDirectory() {
+                    try {
+                        return new File(FileUtil.toFile(VanillaCompileWorkerTest.this.getRoot().getParent()), "source-output").toURI().toURL();
+                    } catch (MalformedURLException ex) {
+                        throw new IllegalStateException(ex);
+                    }
+                }
+
+                @Override
+                public Map<? extends String, ? extends String> processorOptions() {
+                    return Collections.emptyMap();
+                }
+
+                @Override
+                public void addChangeListener(ChangeListener l) {
+                }
+
+                @Override
+                public void removeChangeListener(ChangeListener l) {
+                }
+            };
+        }
+        
     }
 }

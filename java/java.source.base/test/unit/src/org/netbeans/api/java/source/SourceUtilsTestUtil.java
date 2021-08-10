@@ -299,6 +299,10 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
                 return ClassPathSupport.createClassPath(classPathElements);
             }
             
+            if (JavaClassPathConstants.PROCESSOR_PATH == type) {
+                return ClassPathSupport.createClassPath(classPathElements);
+            }
+            
             if (ClassPath.EXECUTE == type) {
                 return ClassPathSupport.createClassPath(new FileObject[] {
                     buildRoot

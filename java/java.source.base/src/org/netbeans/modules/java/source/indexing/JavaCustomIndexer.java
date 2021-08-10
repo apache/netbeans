@@ -803,6 +803,12 @@ public class JavaCustomIndexer extends CustomIndexer {
         }
     }
 
+    public static Set<javax.tools.FileObject> getProcessorGenerated(
+            @NonNull final Context context,
+            @NonNull JavaParsingContext javaContext) throws IOException {
+        return javaContext.getProcessorGeneratedFiles().getGeneratedSources();
+    }
+
     public static void setErrors(Context context, CompileTuple active, DiagnosticListenerImpl errors) {
         if (!active.virtual) {
             Iterable<Diagnostic<? extends JavaFileObject>> filteredErrorsList = Iterators.filter(errors.getDiagnostics(active.jfo), new FilterOutJDK7AndLaterWarnings());

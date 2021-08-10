@@ -16,24 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package test;
+package org.netbeans.api.extexecution.startup;
 
-public class PrintCommandLine {
-    public static void main(String[] args) {
-        System.err.println("::PrintCommandLineStart");
-        System.err.print("argCount="); System.err.println(args.length);
-        
-        int index = 1;
-        for (String s : args) {
-            System.err.print("appArg." + index + "="); System.err.println(s);
-            index++;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import org.netbeans.spi.extexecution.startup.StartupExtenderImplementation;
+import org.openide.util.Lookup;
+
+/**
+ *
+ * @author sdedic
+ */
+public class LegacyStartupExtender2 implements StartupExtenderImplementation {
+    public static boolean enable = false;
+    
+    @Override
+    public List<String> getArguments(Lookup context, StartupExtender.StartMode mode) {
+        if (!enable) {
+            return Collections.emptyList();
+        } else {
+            return Arrays.asList("\"Quoted parameter l\"", "Normal-parameter-l");
         }
-        
-        for (String k : System.getProperties().stringPropertyNames()) {
-            if (k.startsWith("test.")) {
-                System.err.print(k + "="); System.err.println(System.getProperty(k));
-            }
-        }
-        System.err.println("::PrintCommandLineEnd");
     }
 }

@@ -34,6 +34,7 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.execute.ActionToGoalUtils;
+import org.netbeans.modules.maven.execute.BeanRunConfig;
 import org.netbeans.modules.maven.execute.MavenCommandLineExecutor;
 import org.netbeans.spi.extexecution.startup.StartupExtenderImplementation;
 import org.netbeans.spi.project.ActionProvider;
@@ -113,11 +114,14 @@ public class RunJarStartupArgsTest extends NbTestCase {
         
         FileObject f = FileUtil.createFolder(d, "src/main/java/test");
         FileObject source = FileUtil.toFileObject(getDataDir()).getFileObject("exec/PrintCommandLine.java");
-        FileUtil.copyFile(source, f, source.getName());
+        FileObject result = FileUtil.copyFile(source, f, source.getName());
+        System.err.println("Testing application: " + result.getPath());
 
         Project proj = ProjectManager.getDefault().findProject(d);
         RunConfig rc = ActionToGoalUtils.createRunConfig(ActionProvider.COMMAND_RUN, proj.getLookup().lookup(NbMavenProjectImpl.class), proj.getLookup());
         rc.setProperty("packageClassName", "test.PrintCommandLine");
+        ((BeanRunConfig)rc).setShowDebug(true);
+        ((BeanRunConfig)rc).setShowError(true);
         
         class CaptureOutput implements InputOutput {
             
@@ -225,7 +229,7 @@ public class RunJarStartupArgsTest extends NbTestCase {
         };
 
         MavenCommandLineExecutor cme = new MavenCommandLineExecutor(rc, out, null);
-
+        
         cme.setTask(t);
         cme.run();
         
@@ -234,7 +238,7 @@ public class RunJarStartupArgsTest extends NbTestCase {
         String[] lines = out.sw.toString().split("\n");
         int from = 0;
         for (; from < lines.length; from++) {
-            if (lines[from].startsWith("--- exec-maven-plugin"))  {
+            if (lines[from].startsWith("::PrintCommandLineStart"))  {
                 from++;
                 break;
             }
@@ -244,7 +248,7 @@ public class RunJarStartupArgsTest extends NbTestCase {
         Properties p = new Properties();
         while (from < lines.length) {
             String s = lines[from];
-            if (s.startsWith("----")) {
+            if (s.startsWith("::PrintCommandLineEnd")) {
                 break;
             }
             int eq = s.indexOf('=');

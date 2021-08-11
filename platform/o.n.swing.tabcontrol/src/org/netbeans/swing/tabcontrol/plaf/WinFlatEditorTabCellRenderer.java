@@ -21,13 +21,14 @@ package org.netbeans.swing.tabcontrol.plaf;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FontMetrics;
+import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.font.FontRenderContext;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.UIManager;
@@ -99,25 +100,23 @@ class WinFlatEditorTabCellRenderer extends AbstractTabCellRenderer {
     }
 
     @Override
-    protected int getCaptionYAdjustment() {
-        // Workaround for a issue in AbstractTabCellRenderer.paintIconAndText(Graphics),
-        // which uses font height (which includes font descent) to calculate Y-coordinate
-        // when available height is equal to font height (availH <= txtH),
-        // but HtmlRenderer.renderString() expects Y-coordinate at baseline.
-        // So the text is painted vertically out of center.
-        //
-        // This seems to be no issue with other LAFs because they seem to use
-        // TabPainter insets differently and the available height is larger than
-        // the font height (availH > txtH), in which case 3 pixels are removed from
-        // the Y-coordinate to avoid that the text is painted vertically out of center.
-
-        FontMetrics fm = getFontMetrics(getFont());
-        int txtH = fm.getHeight();
+    protected int getCaptionYPosition(Graphics g) {
+        Font font = getFont();
+        FontRenderContext frc = (g instanceof Graphics2D)
+                ? ((Graphics2D) g).getFontRenderContext()
+                : g.getFontMetrics(font).getFontRenderContext();
+        /* Don't rely on FontMetrics.getAscent() to get the ascent; it can return values much bigger
+        than the actual, visual size of the letters. Use the actual height of a flat-topped
+        upper-case letter instead. */
+        double txtVisualAscent = font.createGlyphVector(frc, "H")
+                .getVisualBounds().getHeight();
         Insets ins = getInsets();
         int availH = getHeight() - (ins.top + ins.bottom);
-        // Ad hoc adjustment for the Windows LAF.
-        int yAdjustment = -1;
-        return ((availH <= txtH) ? -fm.getDescent() : -1) + yAdjustment;
+        final int effectiveIconYAdjustment = 1 + getIconYAdjustment();
+
+        // Center the visual ascent portion of the text vertically with respect to the icon.
+        return ins.top + (int) Math.round((availH + txtVisualAscent) / 2)
+                + effectiveIconYAdjustment;
     }
 
     @Override

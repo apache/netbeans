@@ -487,18 +487,11 @@ public abstract class AbstractTabCellRenderer extends JLabel
 
         Icon icon = getIcon();
         //Check the icon non-null and height (see TabData.NO_ICON for why)
-        if (!isClipLeft() && icon != null && icon.getIconWidth() > 0
-                && icon.getIconHeight() > 0) {
-            int iconY;
-            if (availH > icon.getIconHeight()) {
-                //add 2 to make sure icon top pixels are not cut off by outline
-                iconY = ins.top
-                        + ((availH / 2) - (icon.getIconHeight() / 2))
+        if (!isClipLeft() && icon != null && icon.getIconWidth() > 0 && icon.getIconHeight() > 0) {
+            int iconY = ins.top
+                        + Math.max(0, (availH - icon.getIconHeight())) / 2
+                        //add 2 to make sure icon top pixels are not cut off by outline
                         + 2;
-            } else {
-                //add 2 to make sure icon top pixels are not cut off by outline
-                iconY = ins.top + 2;
-            }
             int iconX = ins.left + centeringToAdd;
 
             iconY += getIconYAdjustment();

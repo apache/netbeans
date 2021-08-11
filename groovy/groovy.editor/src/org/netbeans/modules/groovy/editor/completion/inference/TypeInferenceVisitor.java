@@ -20,6 +20,7 @@
 package org.netbeans.modules.groovy.editor.completion.inference;
 
 import groovy.lang.Range;
+import java.util.Iterator;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
@@ -38,6 +39,8 @@ import org.codehaus.groovy.ast.expr.MethodCallExpression;
 import org.codehaus.groovy.ast.expr.RangeExpression;
 import org.codehaus.groovy.ast.expr.StaticMethodCallExpression;
 import org.codehaus.groovy.ast.expr.VariableExpression;
+import org.codehaus.groovy.ast.stmt.BlockStatement;
+import org.codehaus.groovy.ast.stmt.Statement;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.syntax.Types;
 import org.netbeans.editor.BaseDocument;
@@ -118,7 +121,35 @@ public class TypeInferenceVisitor extends TypeVisitor {
             }
         }
     }
+    
+    private ASTNode leafStatement;
 
+    /**
+     * After each statement certify that the leaf / completion point was not 
+     * passed.
+     */
+    @Override
+    protected void visitStatement(Statement statement) {
+        super.visitStatement(statement);
+        if (statement == leafStatement) {
+            leafReached = true;
+        }
+    }
+
+    @Override
+    public void visitBlockStatement(BlockStatement statement) {
+        ASTNode prev = null;
+        for (Iterator<ASTNode> it = path.iterator(); it.hasNext(); ) {
+            ASTNode n = it.next();
+            if (n == statement) {
+                leafStatement = prev;
+                break;
+            }
+            prev = n;
+        }
+        super.visitBlockStatement(statement);
+    }
+    
     @Override
     public void visitVariableExpression(VariableExpression expression) {
         boolean guessed = true;
@@ -184,6 +215,11 @@ public class TypeInferenceVisitor extends TypeVisitor {
                         guessedType = MethodInference.findCallerType(rightExpression, path, doc, cursorOffset);
                     } else if (rightExpression instanceof StaticMethodCallExpression) {
                         guessedType = MethodInference.findCallerType(rightExpression, path, doc, cursorOffset);
+                    } else {
+                        ClassNode cn = expression.getRightExpression().getType();
+                        if (!cn.equals("java.lang.Object")) {
+                            guessedType = cn;
+                        }
                     }
                 }
             }

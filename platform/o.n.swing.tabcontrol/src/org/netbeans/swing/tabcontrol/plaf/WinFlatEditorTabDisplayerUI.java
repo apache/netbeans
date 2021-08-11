@@ -66,15 +66,12 @@ public class WinFlatEditorTabDisplayerUI extends BasicScrollingTabDisplayerUI {
 
     @Override
     public Dimension getPreferredSize(JComponent c) {
-        int prefHeight;
-        Graphics g = BasicScrollingTabDisplayerUI.getOffscreenGraphics();
-        if (g != null) {
-            FontMetrics fm = g.getFontMetrics(displayer.getFont());
-            Insets ins = getTabAreaInsets();
-            prefHeight = fm.getHeight() + ins.top + ins.bottom
-                    + tabInsets.top + tabInsets.bottom;
-        } else
-            prefHeight = UIScale.scale(28);
+        Graphics g = BasicScrollingTabDisplayerUI.getOffscreenGraphics(c);
+        FontMetrics fm = g.getFontMetrics(displayer.getFont());
+        Insets ins = getTabAreaInsets();
+        // Standard icons are 16 pixels tall, so always allocate space for them.
+        int prefHeight = Math.max(fm.getHeight(), 16) + ins.top + ins.bottom
+                + tabInsets.top + tabInsets.bottom;
         return new Dimension(displayer.getWidth(), prefHeight);
     }
 

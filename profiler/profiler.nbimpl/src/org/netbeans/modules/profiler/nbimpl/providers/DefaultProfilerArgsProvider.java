@@ -24,6 +24,7 @@ import org.netbeans.api.extexecution.startup.StartupExtender.StartMode;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.profiler.nbimpl.actions.ProfilerLauncher;
 import org.netbeans.spi.extexecution.startup.StartupExtenderImplementation;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
@@ -34,7 +35,7 @@ import org.openide.util.NbBundle;
 @NbBundle.Messages({
     "DESC_NBProfiler=NetBeans Profiler"
 })
-@StartupExtenderImplementation.Registration(displayName="#DESC_NBProfiler", position=1000, startMode={
+@StartupExtenderImplementation.Registration(displayName="#DESC_NBProfiler", position=1000, argumentsQuoted = false, startMode={
     StartupExtender.StartMode.PROFILE,
     StartupExtender.StartMode.TEST_PROFILE
 })
@@ -50,7 +51,8 @@ public class DefaultProfilerArgsProvider implements StartupExtenderImplementatio
                     List<String> args = new ArrayList<String>();
                     
                     String agentArgs = m.get("agent.jvmargs"); // NOI18N // Always set
-                    args.add(agentArgs);
+                    // remove quoting, expand params to array
+                    args.addAll(Arrays.asList(BaseUtilities.parseParameters(agentArgs)[0]));
                     
                     String jvmargs = m.get("profiler.info.jvmargs"); // NOI18N // May not be set
                     if (jvmargs != null) {
@@ -59,11 +61,13 @@ public class DefaultProfilerArgsProvider implements StartupExtenderImplementatio
                         while (st.hasMoreTokens()) {
                             String arg = st.nextToken();
                             if (!arg.isEmpty()) {
-                                args.add((arg.startsWith("-") ? "" : "-") + arg); // NOI18N
+                                // remove any quoting etc, there should be just a single parameter.
+                                for (String a : BaseUtilities.parseParameters(arg)) {
+                                    args.add((arg.startsWith("-") ? "" : "-") + a); // NOI18N
+                                }
                             }
                         }
                     }
-                    
                     return args;
                 }
             }

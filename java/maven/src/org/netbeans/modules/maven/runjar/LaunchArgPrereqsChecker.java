@@ -86,7 +86,7 @@ public class LaunchArgPrereqsChecker implements LateBoundPrerequisitesChecker {
                 }
             }
             for (StartupExtender group : StartupExtender.getExtenders(new AbstractLookup(ic), mode)) {
-                fixedArgs.addAll(group.getArguments());
+                fixedArgs.addAll(group.getRawArguments());
             }
         }
 

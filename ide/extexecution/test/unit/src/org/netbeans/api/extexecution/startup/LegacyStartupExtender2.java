@@ -19,21 +19,24 @@
 package org.netbeans.api.extexecution.startup;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import org.netbeans.api.extexecution.startup.StartupExtender.StartMode;
 import org.netbeans.spi.extexecution.startup.StartupExtenderImplementation;
 import org.openide.util.Lookup;
 
 /**
  *
- * @author Petr Hejl
+ * @author sdedic
  */
-@StartupExtenderImplementation.Registration(displayName="Test", startMode=StartMode.NORMAL, position = 0)
-public class TestStartupExtender implements StartupExtenderImplementation {
-
+public class LegacyStartupExtender2 implements StartupExtenderImplementation {
+    public static boolean enable = false;
+    
     @Override
-    public List<String> getArguments(Lookup context, StartMode mode) {
-        return Arrays.asList("arg1", "arg2");
+    public List<String> getArguments(Lookup context, StartupExtender.StartMode mode) {
+        if (!enable) {
+            return Collections.emptyList();
+        } else {
+            return Arrays.asList("\"Quoted parameter l\"", "Normal-parameter-l");
+        }
     }
-
 }

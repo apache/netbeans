@@ -16,24 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.api.extexecution.startup;
-
-import java.util.Arrays;
-import java.util.List;
-import org.netbeans.api.extexecution.startup.StartupExtender.StartMode;
-import org.netbeans.spi.extexecution.startup.StartupExtenderImplementation;
-import org.openide.util.Lookup;
+package org.netbeans.modules.extexecution.startup;
 
 /**
- *
- * @author Petr Hejl
+ * Interface internal to the module connecting {@link StartupExtender} registrations
+ * and API.
+ * @author sdedic
  */
-@StartupExtenderImplementation.Registration(displayName="Test", startMode=StartMode.NORMAL, position = 0)
-public class TestStartupExtender implements StartupExtenderImplementation {
-
-    @Override
-    public List<String> getArguments(Lookup context, StartMode mode) {
-        return Arrays.asList("arg1", "arg2");
-    }
-
+public interface StartupExtenderRegistrationOptions {
+    public boolean argumentsQuoted();
 }

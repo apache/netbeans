@@ -23,6 +23,7 @@ import java.util.Set;
 import org.codehaus.groovy.ast.FieldNode;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.Modifier;
+import org.netbeans.modules.groovy.editor.api.ASTUtils;
 
 public final class ASTField extends ASTElement {
 
@@ -33,7 +34,7 @@ public final class ASTField extends ASTElement {
     public ASTField(FieldNode node, String in, boolean isProperty) {
         super(node, in, node.getName());
         this.isProperty = isProperty;
-        this.fieldType = node.getType().getNameWithoutPackage();
+        this.fieldType = ASTUtils.getSimpleName(node.getType());
     }
 
     @Override

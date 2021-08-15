@@ -31,44 +31,86 @@ import org.openide.nodes.NodeReorderEvent;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakSet;
 
-abstract class TreeViewProvider {
+public abstract class TreeViewProvider {
     private static final RequestProcessor INITIALIZE = new RequestProcessor("Initialize nodes", 5);
     private final ExplorerManager manager;
     /** @GuardedBy(this) */
     private final Set<Node> nodeListenerAttached = new WeakSet<>();
     private final NodeListener nodeListener;
 
-    TreeViewProvider(ExplorerManager manager) {
+    protected TreeViewProvider(ExplorerManager manager) {
         this.manager = manager;
         this.nodeListener = new NodeListener() {
             @Override
             public void childrenAdded(NodeMemberEvent ev) {
-                onDidChangeTreeData(ev.getNode());
+                notifyChange(ev.getNode());
             }
 
             @Override
             public void childrenRemoved(NodeMemberEvent ev) {
-                onDidChangeTreeData(ev.getNode());
+                notifyChange(ev.getNode());
             }
 
             @Override
             public void childrenReordered(NodeReorderEvent ev) {
-                onDidChangeTreeData(ev.getNode());
+                notifyChange(ev.getNode());
             }
 
             @Override
             public void nodeDestroyed(NodeEvent ev) {
-                onDidChangeTreeData(ev.getNode());
+                notifyChange(ev.getNode());
             }
 
             @Override
             public void propertyChange(PropertyChangeEvent ev) {
-                onDidChangeTreeData((Node) ev.getSource());
+                notifyChange((Node) ev.getSource());
+            }
+
+            private void notifyChange(Node src) {
+                onDidChangeTreeData(src, TreeItem.findId(src));
             }
         };
     }
-    abstract void onDidChangeTreeData(Node n);
-    final CompletionStage<Node[]> getChildren(Node nodeOrNull) {
+    protected abstract void onDidChangeTreeData(Node n, int id);
+
+    public final CompletionStage<int[]> getChildren(int id) {
+        return getChildren(TreeItem.findNode(id)).thenApply((nodes) -> {
+            int[] ids = new int[nodes.length];
+            for (int i = 0; i < ids.length; i++) {
+                ids[i] = TreeItem.findId(nodes[i]);
+            }
+            return ids;
+        });
+    }
+
+    public final CompletionStage<Node[]> getChildren(Node nodeOrNull) {
+        Node node = getNodeOrRoot(nodeOrNull);
+        return CompletableFuture.supplyAsync(() -> {
+            return node.getChildren().getNodes(true);
+        }, INITIALIZE);
+    }
+
+
+    public final CompletionStage<Node> getParent(Node node) {
+        return CompletableFuture.completedFuture(node.getParentNode());
+    }
+
+    public final CompletionStage<TreeItem> getTreeItem(int id) {
+        return getTreeItem(TreeItem.findNode(id));
+    }
+
+    public CompletionStage<TreeItem> getRootInfo() {
+        Node n = getNodeOrRoot(null);
+        return CompletableFuture.completedFuture(TreeItem.find(n));
+    }
+
+    private final CompletionStage<TreeItem> getTreeItem(Node n) {
+        ensureListenerAttached(n);
+        TreeItem item = TreeItem.find(n);
+        return CompletableFuture.completedFuture(item);
+    }
+
+    private Node getNodeOrRoot(Node nodeOrNull) {
         Node node;
         if (nodeOrNull == null) {
             node = manager.getRootContext();
@@ -76,33 +118,12 @@ abstract class TreeViewProvider {
             node = nodeOrNull;
         }
         ensureListenerAttached(node);
-        return CompletableFuture.supplyAsync(() -> {
-            return node.getChildren().getNodes(true);
-        }, INITIALIZE);
+        return node;
     }
 
     private synchronized void ensureListenerAttached(Node node) {
         if (nodeListenerAttached.add(node)) {
             node.addNodeListener(nodeListener);
         }
-    }
-
-    final CompletionStage<Node> getParent(Node node) {
-        return CompletableFuture.completedFuture(node.getParentNode());
-    }
-
-    final CompletionStage<TreeItem> getTreeItem(Node n) {
-        ensureListenerAttached(n);
-        TreeItem item = new TreeItem();
-        if (n.isLeaf()) {
-            item.collapsibleState = TreeItem.CollapsibleState.None;
-        } else {
-            item.collapsibleState = TreeItem.CollapsibleState.Collapsed;
-        }
-        item.id = n.getName();
-        item.label = n.getDisplayName();
-        item.description = n.getShortDescription();
-        item.tooltip = n.getHtmlDisplayName();
-        return CompletableFuture.completedFuture(item);
     }
 }

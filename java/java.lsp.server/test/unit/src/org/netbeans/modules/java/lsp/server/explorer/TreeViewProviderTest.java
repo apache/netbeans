@@ -38,14 +38,17 @@ public class TreeViewProviderTest {
         em.setRootContext(new FibNode(10));
         TreeViewProviderImpl tvp = new TreeViewProviderImpl(em);
 
-        Node[] two = tvp.getChildren(null).toCompletableFuture().get();
+        TreeItem rootInfo = tvp.getRootInfo().toCompletableFuture().get();
+        int[] two = tvp.getChildren(rootInfo.id).toCompletableFuture().get();
         assertEquals(2, two.length);
 
         TreeItem two0 = tvp.getTreeItem(two[0]).toCompletableFuture().get();
         TreeItem two1 = tvp.getTreeItem(two[1]).toCompletableFuture().get();
 
-        assertEquals("9", two0.id);
-        assertEquals("8", two1.id);
+        assertNotEquals("Different node and ids", two1.id, two0.id);
+
+        assertEquals("9", two0.name);
+        assertEquals("8", two1.name);
 
         assertEquals("Fib(9)", two0.label);
         assertEquals("Fib(8)", two1.label);
@@ -56,15 +59,18 @@ public class TreeViewProviderTest {
         assertEquals(TreeItem.CollapsibleState.Collapsed, two0.collapsibleState);
         assertEquals(TreeItem.CollapsibleState.Collapsed, two1.collapsibleState);
 
-        ((FibNode)two[1]).extraAdd(8);
+        Node twoOneNode = TreeItem.findNode(two[1]);
+        ((FibNode)twoOneNode).extraAdd(8);
 
-        tvp.assertChanged(two[1]);
+        tvp.assertChanged(twoOneNode);
 
         TreeItem second1 = tvp.getTreeItem(two[1]).toCompletableFuture().get();
-        assertEquals("8", second1.id);
+        assertEquals("8", second1.name);
         assertEquals("Fib(8)", second1.label);
         assertEquals("Fib(8) = 42", second1.description);
+        assertEquals("Node id remains", two1.id, second1.id);
 
+        assertSame("Nodes are cached", twoOneNode, TreeItem.findNode(two1.id));
     }
 
 
@@ -75,7 +81,7 @@ public class TreeViewProviderTest {
             super(em);
         }
 
-        public void onDidChangeTreeData(Node n) {
+        public void onDidChangeTreeData(Node n, int id) {
             changed.add(n);
         }
 

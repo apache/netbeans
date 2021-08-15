@@ -31,7 +31,8 @@ import {
     LogMessageNotification,
     RevealOutputChannelOn,
     DocumentSelector,
-    DocumentFilter
+    DocumentFilter,
+    HandlerResult
 } from 'vscode-languageclient';
 
 import * as net from 'net';
@@ -45,8 +46,10 @@ import * as launcher from './nbcode';
 import {NbTestAdapter} from './testAdapter';
 import { StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification, DebugConnector,
          TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification,
+         NodeQueryRequest
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
+import * as explorer from './explorer';
 
 const API_VERSION : string = "1.0";
 let client: Promise<LanguageClient>;
@@ -622,6 +625,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                     decorationType.dispose();
                 }
             });
+            explorer.register(c);
             handleLog(log, 'Language Client: Ready');
             setClient[0](c);
             commands.executeCommand('setContext', 'nbJavaLSReady', true);

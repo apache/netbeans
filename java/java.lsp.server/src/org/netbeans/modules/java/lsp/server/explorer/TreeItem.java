@@ -18,30 +18,79 @@
  */
 package org.netbeans.modules.java.lsp.server.explorer;
 
-final class TreeItem {
+import java.util.HashMap;
+import java.util.Map;
+import org.openide.nodes.Node;
+
+public final class TreeItem {
     enum CollapsibleState {
         None, Collapsed, Expanded
     }
 
     // accessibilityInformation?: AccessibilityInformation
-    CollapsibleState collapsibleState;
+    public CollapsibleState collapsibleState;
     // executed when the tree item is selected.
     // command?: Command
     // contribute item specific actions in the tree
-    String contextValue;
+    public String contextValue;
     // ?: string | boolean
     // rendered less prominent. When true, it is derived from resourceUri
-    String description;
+    public String description;
     // ?: string | Uri | {dark: string | Uri, light: string | Uri} | ThemeIcon
-    String iconPath;
+    public String iconPath;
     // id for the tree item that has to be unique across tree.
     // The id is used to preserve the selection and expansion state of the tree item.
-    String id;
+    public int id;
+    // programatic name of the node
+    public String name;
     // human-readable string describing this item
     // ?: string | TreeItemLabel
-    String label;
+    public String label;
     // resourceUri?: Uri
-    String resourceUri;
+    public String resourceUri;
     // ?: string | MarkdownString | undefined
-    String tooltip;
+    public String tooltip;
+
+    public TreeItem() {
+    }
+
+    private TreeItem(int id, Node n) {
+        if (n.isLeaf()) {
+            collapsibleState = TreeItem.CollapsibleState.None;
+        } else {
+            collapsibleState = TreeItem.CollapsibleState.Collapsed;
+        }
+        this.id = id;
+        this.name = n.getName();
+        this.label = n.getDisplayName();
+        this.description = n.getShortDescription();
+        this.tooltip = n.getHtmlDisplayName();
+    }
+
+    private static int counter = 0;
+    private static final Map<Integer, Node> MAP = new HashMap<>();
+
+    public static synchronized int findId(Node n) {
+        Object lspId = n.getValue("lspId");
+        if (!(lspId instanceof Integer)) {
+            lspId = ++counter;
+            n.setValue("lspId", lspId);
+            MAP.put((Integer) lspId, n);
+        }
+        return (int) lspId;
+    }
+
+    public static TreeItem find(Node n) {
+        return new TreeItem(findId(n), n);
+    }
+
+    public static synchronized TreeItem find(int id) {
+        Node n = findNode(id);
+        return n == null ? null : find(n);
+    }
+
+    public synchronized static Node findNode(int id) {
+        return MAP.get(id);
+    }
+
 }

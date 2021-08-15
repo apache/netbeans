@@ -1,0 +1,102 @@
+import * as vscode from 'vscode';
+import { LanguageClient } from 'vscode-languageclient';
+import { NodeInfoRequest, NodeQueryRequest } from './protocol';
+
+class VisualizerProvider implements vscode.TreeDataProvider<Visualizer> {
+  private root: Promise<Visualizer[]>;
+  private known: Visualizer[] = [];
+
+  constructor(
+    private client: LanguageClient,
+    id : string
+  ) {
+    this.root = new Promise((resolve, reject) => {
+      client.sendRequest(NodeInfoRequest.explorermanager, id).then((node) => {
+        resolve([ new Visualizer(this.known, node) ]);
+        client.onNotification(NodeInfoRequest.notifyChange, (params) => {
+            for (const v  of this.known) {
+                if (v.data.id == params) {
+                    this._onDidChangeTreeData.fire(v);
+                }
+            }
+          vscode.window.showInformationMessage(`Something change ${params}`);
+        })
+      }).catch((ex) => {
+        reject(ex);
+      });
+    });
+  }
+
+  private _onDidChangeTreeData: vscode.EventEmitter<Visualizer | undefined | null | void> = new vscode.EventEmitter<Visualizer | undefined | null | void>();
+  readonly onDidChangeTreeData: vscode.Event<Visualizer | undefined | null | void> = this._onDidChangeTreeData.event;
+
+  refresh(v : Visualizer): void {
+    this._onDidChangeTreeData.fire(v);
+  }
+
+  getTreeItem(element: Visualizer): vscode.TreeItem {
+    return element;
+  }
+
+  getChildren(element?: Visualizer): Thenable<Visualizer[]> {
+    if (element) {
+      return this.client.sendRequest(NodeInfoRequest.children, element.data.id).then(async (arr) => {
+        let res = Array<Visualizer>();
+        for (let i = 0; i < arr.length; i++) {
+          let d = await this.client.sendRequest(NodeInfoRequest.info, arr[i]);
+          let v = new Visualizer(this.known, d);
+          v.parent = element;
+          res.push(v);
+        }
+        return res;
+      });
+    } else {
+      return this.root;
+    }
+  }
+}
+
+class Visualizer extends vscode.TreeItem {
+  constructor(
+    private known : Visualizer[],
+    public data : NodeInfoRequest.Data
+  ) {
+    super(data.displayName, data.collapsibleState);
+    known.push(this);
+    this.id = data.name;
+    this.label = data.displayName;
+    this.description = data.description;
+    this.collapsibleState = data.collapsibleState;
+  }
+  parent: Visualizer | null = null;
+  contextValue = "node";
+}
+
+export function register(c : LanguageClient) {
+    let vtp = new VisualizerProvider(c, "foundProjects");
+    let view = vscode.window.createTreeView(
+      'foundProjects', {
+        treeDataProvider: vtp,
+        canSelectMany: true,
+        showCollapseAll: true,
+      }
+    );
+    view.message = "Projects view!";
+    view.onDidChangeSelection((ev) => {
+      if (ev.selection.length > 0) {
+          view.message = `Selected ${ev.selection[0].label}`;
+      }
+    });
+    view.title = "Found projects!";
+
+    vscode.commands.registerCommand("foundProjects.deleteEntry", async function (this: any, args: any) {
+        let v = args as Visualizer;
+        let ok = await c.sendRequest(NodeInfoRequest.destroy, v.data.id);
+        if (ok) {
+          this.refresh(v.parent);
+        } else {
+          vscode.window.showErrorMessage('Cannot delete node ' + v.label);
+        }
+    }, vtp);
+}
+

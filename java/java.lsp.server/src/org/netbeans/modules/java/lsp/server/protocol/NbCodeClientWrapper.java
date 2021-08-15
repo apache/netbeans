@@ -37,7 +37,7 @@ import org.eclipse.lsp4j.WorkspaceFolder;
 /**
  * Convenience wrapper that binds language client's remote proxy together with
  * other useful methods. Will be sent out as THE client by the server core code.
- * 
+ *
  * @author sdedic
  */
 class NbCodeClientWrapper implements NbCodeLanguageClient {
@@ -158,5 +158,10 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     @Override
     public void disposeTextEditorDecoration(String params) {
         remote.disposeTextEditorDecoration(params);
+    }
+
+    @Override
+    public void notifyNodeChange(int params) {
+        remote.notifyNodeChange(params);
     }
 }

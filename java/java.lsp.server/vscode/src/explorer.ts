@@ -14,12 +14,7 @@ class VisualizerProvider implements vscode.TreeDataProvider<Visualizer> {
       client.sendRequest(NodeInfoRequest.explorermanager, id).then((node) => {
         resolve([ new Visualizer(this.known, node) ]);
         client.onNotification(NodeInfoRequest.notifyChange, (params) => {
-            for (const v  of this.known) {
-                if (v.data.id == params) {
-                    this._onDidChangeTreeData.fire(v);
-                }
-            }
-          vscode.window.showInformationMessage(`Something change ${params}`);
+          this.refresh(params);
         })
       }).catch((ex) => {
         reject(ex);
@@ -30,8 +25,12 @@ class VisualizerProvider implements vscode.TreeDataProvider<Visualizer> {
   private _onDidChangeTreeData: vscode.EventEmitter<Visualizer | undefined | null | void> = new vscode.EventEmitter<Visualizer | undefined | null | void>();
   readonly onDidChangeTreeData: vscode.Event<Visualizer | undefined | null | void> = this._onDidChangeTreeData.event;
 
-  refresh(v : Visualizer): void {
-    this._onDidChangeTreeData.fire(v);
+  refresh(id : number): void {
+      for (const v of this.known) {
+          if (v.data.id === id) {
+              this._onDidChangeTreeData.fire(v);
+          }
+      }
   }
 
   getTreeItem(element: Visualizer): vscode.TreeItem {
@@ -72,8 +71,12 @@ class Visualizer extends vscode.TreeItem {
   contextValue = "node";
 }
 
+export function foundProjects(c : LanguageClient): vscode.TreeDataProvider<any> {
+    return new VisualizerProvider(c, "foundProjects");
+}
+
 export function register(c : LanguageClient) {
-    let vtp = new VisualizerProvider(c, "foundProjects");
+    let vtp = foundProjects(c);
     let view = vscode.window.createTreeView(
       'foundProjects', {
         treeDataProvider: vtp,
@@ -92,10 +95,8 @@ export function register(c : LanguageClient) {
     vscode.commands.registerCommand("foundProjects.deleteEntry", async function (this: any, args: any) {
         let v = args as Visualizer;
         let ok = await c.sendRequest(NodeInfoRequest.destroy, v.data.id);
-        if (ok) {
-          this.refresh(v.parent);
-        } else {
-          vscode.window.showErrorMessage('Cannot delete node ' + v.label);
+        if (!ok) {
+            vscode.window.showErrorMessage('Cannot delete node ' + v.label);
         }
     }, vtp);
 }

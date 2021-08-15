@@ -20,6 +20,7 @@ package org.netbeans.modules.java.lsp.server.explorer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import org.openide.nodes.Node;
 
 public final class TreeItem {
@@ -63,7 +64,8 @@ public final class TreeItem {
         this.id = id;
         this.name = n.getName();
         this.label = n.getDisplayName();
-        this.description = n.getShortDescription();
+        final String desc = n.getShortDescription();
+        this.description = Objects.equals(this.label, desc) ? null : desc;
         this.tooltip = n.getHtmlDisplayName();
     }
 

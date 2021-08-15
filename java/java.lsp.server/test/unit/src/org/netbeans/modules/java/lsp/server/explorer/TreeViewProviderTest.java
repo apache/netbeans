@@ -73,6 +73,29 @@ public class TreeViewProviderTest {
         assertSame("Nodes are cached", twoOneNode, TreeItem.findNode(two1.id));
     }
 
+    @Test
+    public void dontInheritTheSameDescription() {
+        AbstractNode an = new AbstractNode(Children.LEAF);
+        an.setName("a node");
+
+        TreeItem item = TreeItem.find(an);
+        assertEquals("name is set", "a node", item.name);
+        assertEquals("label is inherited", "a node", item.label);
+        assertNull("description isn't copied", item.description);
+    }
+
+    @Test
+    public void useDifferentDescription() {
+        AbstractNode an = new AbstractNode(Children.LEAF);
+        an.setName("a node");
+        an.setShortDescription("better node");
+
+        TreeItem item = TreeItem.find(an);
+        assertEquals("name is set", "a node", item.name);
+        assertEquals("label is inherited", "a node", item.label);
+        assertEquals("description is set", "better node", item.description);
+    }
+
 
     final static class TreeViewProviderImpl extends TreeViewProvider {
         private Set<Node> changed = new HashSet<>();

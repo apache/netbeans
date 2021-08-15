@@ -57,13 +57,13 @@ class VisualizerProvider implements vscode.TreeDataProvider<Visualizer> {
 
 class Visualizer extends vscode.TreeItem {
   constructor(
-    private known : Visualizer[],
+    known : Visualizer[],
     public data : NodeInfoRequest.Data
   ) {
-    super(data.displayName, data.collapsibleState);
+    super(data.label, data.collapsibleState);
     known.push(this);
     this.id = data.name;
-    this.label = data.displayName;
+    this.label = data.label;
     this.description = data.description;
     this.collapsibleState = data.collapsibleState;
   }

@@ -145,7 +145,7 @@ export namespace NodeInfoRequest {
     export interface Data {
         id : number; /* numeric ID of the node */
         name : string; /* Node.getName() */
-        displayName : string; /* Node.getDisplayName() */
+        label : string; /* Node.getDisplayName() */
         description : string; /* Node.getShortDescription() */
         collapsibleState : TreeItemCollapsibleState;
         canDestroy : boolean; /* Node.canDestroy() */

@@ -36,6 +36,7 @@ import org.netbeans.insane.live.CancelException;
 import org.netbeans.modules.project.uiapi.OpenProjectsTrampoline;
 import org.netbeans.modules.project.uiapi.ProjectOpenedTrampoline;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
+import org.openide.explorer.ExplorerManager;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -144,6 +145,16 @@ public final class TestTrampoline implements OpenProjectsTrampoline {
 
     @Override
     public void removeProjectGroupChangeListenerAPI(ProjectGroupChangeListener listener) {
+    }
+
+    @Override
+    public ExplorerManager createLogicalView() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ExplorerManager createPhysicalView() {
+        throw new UnsupportedOperationException();
     }
 
     private final class F implements Future<Project[]> {

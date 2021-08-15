@@ -21,6 +21,8 @@ package org.netbeans.modules.java.lsp.server.explorer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.URLMapper;
 import org.openide.nodes.Node;
 
 public final class TreeItem {
@@ -67,6 +69,11 @@ public final class TreeItem {
         final String desc = n.getShortDescription();
         this.description = Objects.equals(this.label, desc) ? null : desc;
         this.tooltip = n.getHtmlDisplayName();
+
+        FileObject fo = n.getLookup().lookup(FileObject.class);
+        if (fo != null) {
+            this.resourceUri = URLMapper.findURL(fo, URLMapper.EXTERNAL).toString();
+        }
     }
 
     private static int counter = 0;

@@ -147,6 +147,7 @@ export namespace NodeInfoRequest {
         name : string; /* Node.getName() */
         label : string; /* Node.getDisplayName() */
         description : string; /* Node.getShortDescription() */
+        resourceUri? : string; /* external URL to file: resource */
         collapsibleState : TreeItemCollapsibleState;
         canDestroy : boolean; /* Node.canDestroy() */
     }

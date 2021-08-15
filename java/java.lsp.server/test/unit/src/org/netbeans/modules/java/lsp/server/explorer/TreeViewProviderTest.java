@@ -18,11 +18,15 @@
  */
 package org.netbeans.modules.java.lsp.server.explorer;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.openide.explorer.ExplorerManager;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.URLMapper;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -94,6 +98,21 @@ public class TreeViewProviderTest {
         assertEquals("name is set", "a node", item.name);
         assertEquals("label is inherited", "a node", item.label);
         assertEquals("description is set", "better node", item.description);
+    }
+
+    @Test
+    public void resourceUriSpecifiedOnFileObjects() throws Exception {
+        File tmp = File.createTempFile("sample", ".tmp");
+        FileObject fo = FileUtil.toFileObject(tmp);
+        assertNotNull("File object for temporary file found", fo);
+
+        AbstractNode an = new AbstractNode(Children.LEAF, fo.getLookup());
+        an.setName(fo.getNameExt());
+
+        TreeItem item = TreeItem.find(an);
+        assertEquals("label is inherited", fo.getNameExt(), item.label);
+        assertNotNull("resource uri specified", item.resourceUri);
+        assertEquals(item.resourceUri, URLMapper.findURL(fo, URLMapper.EXTERNAL).toString());
     }
 
 

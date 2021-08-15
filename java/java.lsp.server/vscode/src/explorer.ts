@@ -62,13 +62,15 @@ class Visualizer extends vscode.TreeItem {
   ) {
     super(data.label, data.collapsibleState);
     known.push(this);
-    this.id = data.name;
     this.label = data.label;
     this.description = data.description;
     this.collapsibleState = data.collapsibleState;
+    if (data.resourceUri) {
+        this.resourceUri = vscode.Uri.parse(data.resourceUri);
+    }
+    this.contextValue = "node";
   }
   parent: Visualizer | null = null;
-  contextValue = "node";
 }
 
 export function foundProjects(c : LanguageClient): vscode.TreeDataProvider<any> {

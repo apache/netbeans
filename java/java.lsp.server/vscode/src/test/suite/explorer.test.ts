@@ -24,8 +24,6 @@ suite('Explorer Test Suite', () => {
     test('Explorer can be created', async () => {
         const lvp = myExplorer.foundProjects(await myExtension.findLanguageClient());
         const firstLevelChildren = await (lvp.getChildren(null) as Thenable<any[]>);
-        assert.equal(firstLevelChildren.length, 1, "One child under the root");
-        const item = await (lvp.getTreeItem(firstLevelChildren[0]) as Thenable<vscode.TreeItem>);
-        assert.equal(item?.label, "Projects", "Element is named Projects");
+        assert.equal(firstLevelChildren.length, 0, "No child under the root");
     });
 });

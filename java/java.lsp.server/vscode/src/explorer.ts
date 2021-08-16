@@ -3,7 +3,7 @@ import { LanguageClient } from 'vscode-languageclient';
 import { NodeInfoRequest, NodeQueryRequest } from './protocol';
 
 class VisualizerProvider implements vscode.TreeDataProvider<Visualizer> {
-  private root: Promise<Visualizer[]>;
+  private root: Promise<Visualizer>;
   private known: Visualizer[] = [];
 
   constructor(
@@ -12,11 +12,12 @@ class VisualizerProvider implements vscode.TreeDataProvider<Visualizer> {
   ) {
     this.root = new Promise((resolve, reject) => {
       client.sendRequest(NodeInfoRequest.explorermanager, id).then((node) => {
-        resolve([ new Visualizer(this.known, node) ]);
+        resolve(new Visualizer(this.known, node));
         client.onNotification(NodeInfoRequest.notifyChange, (params) => {
           this.refresh(params);
         })
       }).catch((ex) => {
+        vscode.window.showErrorMessage(`Cannot initialize ${ex} tree data provider`);
         reject(ex);
       });
     });
@@ -37,20 +38,29 @@ class VisualizerProvider implements vscode.TreeDataProvider<Visualizer> {
     return element;
   }
 
-  getChildren(element?: Visualizer): Thenable<Visualizer[]> {
-    if (element) {
-      return this.client.sendRequest(NodeInfoRequest.children, element.data.id).then(async (arr) => {
-        let res = Array<Visualizer>();
-        for (let i = 0; i < arr.length; i++) {
-          let d = await this.client.sendRequest(NodeInfoRequest.info, arr[i]);
-          let v = new Visualizer(this.known, d);
-          v.parent = element;
-          res.push(v);
-        }
-        return res;
+  getChildren(e?: Visualizer): Thenable<Visualizer[]> {
+    const self = this;
+    async function collectResults(arr: any, element: Visualizer): Promise<Array<Visualizer>> {
+      let res = Array<Visualizer>();
+      for (let i = 0; i < arr.length; i++) {
+        let d = await self.client.sendRequest(NodeInfoRequest.info, arr[i]);
+        let v = new Visualizer(self.known, d);
+        v.parent = element;
+        res.push(v);
+      }
+      return res;
+    }
+
+    if (e) {
+      return this.client.sendRequest(NodeInfoRequest.children, e.data.id).then(async (arr) => {
+        return collectResults(arr, e);
       });
     } else {
-      return this.root;
+      return this.root.then(async (element: Visualizer) => {
+        const arr = await this.client.sendRequest(NodeInfoRequest.children, element.data.id);
+        const res = await collectResults(arr, element);
+        return res;
+      });
     }
   }
 }

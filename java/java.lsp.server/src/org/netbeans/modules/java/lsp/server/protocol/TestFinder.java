@@ -30,8 +30,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
@@ -48,6 +51,7 @@ import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -59,21 +63,16 @@ public final class TestFinder extends EmbeddingIndexer {
     private static final int VERSION = 1;
     private static TestFinder INSTANCE = null;
 
-    private NbCodeLanguageClient client;
+    private final Set<NbCodeLanguageClient> clients = new HashSet<>();
 
-    @MimeRegistration(mimeType="text/x-groovy", service=EmbeddingIndexerFactory.class) //NOI18N
-    public static EmbeddingIndexerFactory createGroovyFactory() {
-        return new Factory();
-    }
-
-    @MimeRegistration(mimeType = "text/x-java", service = EmbeddingIndexerFactory.class) //NOI18N
-    public static EmbeddingIndexerFactory createJavaFactory() {
+    @MimeRegistration(mimeType="", service=EmbeddingIndexerFactory.class) //NOI18N
+    public static EmbeddingIndexerFactory createFactory() {
         return new Factory();
     }
 
     public static Collection<TestSuiteInfo> findTests(Iterable<FileObject> testRoots, NbCodeLanguageClient client) {
         if (INSTANCE != null) {
-            INSTANCE.client = client;
+            INSTANCE.clients.add(client);
         }
         Map<FileObject, TestSuiteInfo> file2TestSuites = new HashMap<>();
         for (FileObject testRoot : testRoots) {
@@ -93,9 +92,8 @@ public final class TestFinder extends EmbeddingIndexer {
         return file2TestSuites.values();
     }
 
-    private static void loadTestSuites(FileObject input, Map<FileObject, TestSuiteInfo> file2TestSuites) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(input.getInputStream(), "UTF-8")); //NOI18N
-        try {
+    private static void loadTestSuites(FileObject input, Map<FileObject, TestSuiteInfo> file2TestSuites) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(input.getInputStream(), "UTF-8"))) {
             FileObject fo = null;
             String url = null;
             TestSuiteInfo suite = null;
@@ -109,21 +107,21 @@ public final class TestFinder extends EmbeddingIndexer {
                     suite = file2TestSuites.computeIfAbsent(fo, fObj -> {
                         int idx = info.lastIndexOf(':');
                         String name = (idx < 0 ? info : info.substring(0, idx)).trim();
-                        Integer lineNum = idx < 0 ? null : Utils.createPosition(fObj, Integer.parseInt(info.substring(idx + 1))).getLine();
+                        Integer lineNum = idx < 0 ? null : Integer.parseInt(info.substring(idx + 1));
                         return new TestSuiteInfo(name, Utils.toUri(fObj), lineNum, TestSuiteInfo.State.Loaded, new ArrayList<>());
                     });
                 } else if (line.startsWith("method: ") && suite != null) { //NOI18N
-                    String info = line.substring(7);
+                    String info = line.substring(8);
                     int idx = info.lastIndexOf(':');
                     String name = (idx < 0 ? info : info.substring(0, idx)).trim();
-                    Integer lineNum = idx < 0 ? null : Utils.createPosition(fo, Integer.parseInt(info.substring(idx + 1))).getLine();
+                    Integer lineNum = idx < 0 ? null : Integer.parseInt(info.substring(idx + 1));
                     String id = suite.getSuiteName() + ':' + name;
                     String fullName = suite.getSuiteName() + '.' + name;
                     suite.getTests().add(new TestSuiteInfo.TestCaseInfo(id, name, fullName, suite.getFile(), lineNum, TestSuiteInfo.State.Loaded, null));
                 }
             }
-        } finally {
-            br.close();
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
         }
     }
 
@@ -135,9 +133,9 @@ public final class TestFinder extends EmbeddingIndexer {
                 testMethods.addAll(ctm.computeTestMethods(parserResult, new AtomicBoolean()));
             }
             if (!testMethods.isEmpty()) {
-                store(context.getIndexFolder(), indexable.getURL(), indexable.getRelativePath(), testMethods);
-                if (client != null && !context.isAllFilesIndexing()) {
-                    FileObject fo = parserResult.getSnapshot().getSource().getFileObject();
+                FileObject fo = parserResult.getSnapshot().getSource().getFileObject();
+                store(context.getIndexFolder(), indexable.getURL(), indexable.getRelativePath(), testMethods, fo);
+                if (!clients.isEmpty() && !context.isAllFilesIndexing()) {
                     String url = Utils.toUri(fo);
                     String testClassName = null;
                     Integer testClassLine = null;
@@ -156,39 +154,46 @@ public final class TestFinder extends EmbeddingIndexer {
                         int testLine = Utils.createPosition(parserResult.getSnapshot().getSource().getFileObject(), testMethod.start().getOffset()).getLine();
                         tests.add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), fullName, url, testLine, TestSuiteInfo.State.Loaded, null));
                     }
-                    client.notifyTestProgress(new TestProgressParams(url, new TestSuiteInfo(testClassName, url, testClassLine, TestSuiteInfo.State.Loaded, tests)));
+                    for (Iterator<NbCodeLanguageClient> it = clients.iterator(); it.hasNext();) {
+                        NbCodeLanguageClient client = it.next();
+                        try {
+                            client.notifyTestProgress(new TestProgressParams(url, new TestSuiteInfo(testClassName, url, testClassLine, TestSuiteInfo.State.Loaded, tests)));
+                        } catch (Exception e) {
+                            it.remove();
+                        }
+                    }
                 }
             }
         }
     }
 
-    private void store(FileObject indexFolder, URL url, String resourceName, List<TestMethodController.TestMethod> methods) {
-        try {
-            File cacheRoot = FileUtil.toFile(indexFolder);
-            File output = new File(cacheRoot, resourceName + ".tests"); //NOI18N
-            output.getParentFile().mkdirs();
-            final PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output), "UTF-8")); //NOI18N
-            boolean printHeader = true;
-            try {
-                for (TestMethodController.TestMethod method : methods) {
-                    if (printHeader) {
-                        pw.print("url: "); //NOI18N
-                        pw.println(url.toString());
-                        pw.print("class: "); //NOI18N
-                        pw.print(method.getTestClassName());
+    private void store(FileObject indexFolder, URL url, String resourceName, List<TestMethodController.TestMethod> methods, FileObject fo) {
+        File cacheRoot = FileUtil.toFile(indexFolder);
+        File output = new File(cacheRoot, resourceName + ".tests"); //NOI18N
+        output.getParentFile().mkdirs();
+        boolean printHeader = true;
+        try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output), "UTF-8"))) {
+            for (TestMethodController.TestMethod method : methods) {
+                if (printHeader) {
+                    pw.print("url: "); //NOI18N
+                    pw.println(url.toString());
+                    pw.print("class: "); //NOI18N
+                    pw.print(method.getTestClassName());
+                    if (method.getTestClassPosition() != null) {
                         pw.print(':'); //NOI18N
-                        pw.println(method.getTestClassPosition().getOffset());
-                        printHeader = false;
+                        pw.println(Utils.createPosition(fo, method.getTestClassPosition().getOffset()).getLine());
+                    } else {
+                        pw.println();
                     }
-                    pw.print("method: "); //NOI18N
-                    pw.print(method.method().getMethodName());
-                    pw.print(':'); //NOI18N
-                    pw.println(method.start().getOffset());
+                    printHeader = false;
                 }
-            } finally {
-                pw.close();
+                pw.print("method: "); //NOI18N
+                pw.print(method.method().getMethodName());
+                pw.print(':'); //NOI18N
+                pw.println(Utils.createPosition(fo, method.start().getOffset()).getLine());
             }
         } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
         }
     }
 

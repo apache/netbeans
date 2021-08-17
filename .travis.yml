@@ -108,7 +108,7 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - travis_retry hide-logs.sh ant $OPTS -f platform/api.htmlui test
+            - hide-logs.sh ant $OPTS -f platform/api.htmlui test
             - hide-logs.sh ant $OPTS -f platform/api.intent test
             - hide-logs.sh ant $OPTS -f platform/api.io test
             - hide-logs.sh ant $OPTS -f platform/api.progress test
@@ -132,7 +132,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f platform/core.startup test
             - hide-logs.sh ant $OPTS -f platform/core.startup.base test
             - hide-logs.sh ant $OPTS -f platform/core.ui test
-            - travis_wait hide-logs.sh ant $OPTS -f platform/core.windows test
+            - hide-logs.sh ant $OPTS -f platform/core.windows test
             - hide-logs.sh ant $OPTS -f platform/editor.mimelookup test
             - hide-logs.sh ant $OPTS -f platform/editor.mimelookup.impl test
             - hide-logs.sh ant $OPTS -f platform/favorites test
@@ -142,7 +142,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f platform/lib.uihandler test
             - hide-logs.sh ant $OPTS -f platform/libs.javafx test
             - hide-logs.sh ant $OPTS -f platform/libs.junit4 test
-            - travis_retry hide-logs.sh ant $OPTS -f platform/masterfs test
+            - hide-logs.sh ant $OPTS -f platform/masterfs test
             - hide-logs.sh ant $OPTS -f platform/masterfs.linux test
             - hide-logs.sh ant $OPTS -f platform/netbinox test  -Dtest.config=stableBTD
             - hide-logs.sh ant $OPTS -f platform/o.n.bootstrap test
@@ -164,16 +164,16 @@ matrix:
             - hide-logs.sh ant $OPTS -f platform/openide.dialogs test
             - hide-logs.sh ant $OPTS -f platform/openide.execution test
             - hide-logs.sh ant $OPTS -f platform/openide.execution.compat8 test
-            - travis_retry hide-logs.sh ant $OPTS -f platform/openide.explorer test
+            - hide-logs.sh ant $OPTS -f platform/openide.explorer test
             - hide-logs.sh ant $OPTS -f platform/openide.filesystems test
             - hide-logs.sh ant $OPTS -f platform/openide.filesystems.compat8 test
             - hide-logs.sh ant $OPTS -f platform/openide.filesystems.nb test
             - hide-logs.sh ant $OPTS -f platform/openide.io test
-            - travis_wait hide-logs.sh ant $OPTS -f platform/openide.loaders test
+            - hide-logs.sh ant $OPTS -f platform/openide.loaders test
             - hide-logs.sh ant $OPTS -f platform/openide.modules test
             - hide-logs.sh ant $OPTS -f platform/openide.nodes test
             - hide-logs.sh ant $OPTS -f platform/openide.options test
-            - travis_retry hide-logs.sh ant $OPTS -f platform/openide.text test
+            - hide-logs.sh ant $OPTS -f platform/openide.text test
             - hide-logs.sh ant $OPTS -f platform/openide.util test
             - hide-logs.sh ant $OPTS -f platform/openide.util.enumerations test
             - hide-logs.sh ant $OPTS -f platform/openide.util.lookup test
@@ -203,8 +203,8 @@ matrix:
           script:
             - ant $OPTS -f ide/api.xml test
             - ant $OPTS -f ide/api.xml.ui test
-            - travis_retry ant $OPTS -f ide/bugtracking test
-            - travis_retry ant $OPTS -f ide/bugtracking.bridge test
+            - ant $OPTS -f ide/bugtracking test
+            - ant $OPTS -f ide/bugtracking.bridge test
             - ant $OPTS -f ide/bugtracking.commons test
             #- ant $OPTS -f ide/bugzilla test
             - ant $OPTS -f ide/code.analysis test
@@ -214,7 +214,7 @@ matrix:
             - ant $OPTS -f ide/css.editor test
             - ant $OPTS -f ide/css.lib test
             - hide-logs.sh ant $OPTS -f ide/css.model test
-            - travis_retry ant $OPTS -f ide/db test
+            - ant $OPTS -f ide/db test
             - ant $OPTS -f ide/db.dataview test
             - ant $OPTS -f ide/db.sql.editor test
             - ant $OPTS -f ide/docker.api test
@@ -237,7 +237,7 @@ matrix:
             - ant $OPTS -f ide/extbrowser test
             - ant $OPTS -f ide/extexecution.base test
             - ant $OPTS -f ide/gsf.testrunner.ui test
-            - travis_retry ant $OPTS -f ide/html test
+            - ant $OPTS -f ide/html test
             - ant $OPTS -f ide/html.custom test
             #- ant $OPTS -f ide/html.editor test
             #- ant $OPTS -f ide/html.lexer test
@@ -300,7 +300,7 @@ matrix:
             - ant $OPTS -f ide/xml.schema.model test
             - ant $OPTS -f ide/xml.text test
             - ant $OPTS -f ide/xml.text.obsolete90 test
-            - travis_retry ant $OPTS -f ide/xml.wsdl.model test
+            - ant $OPTS -f ide/xml.wsdl.model test
             - ant $OPTS -f ide/xml.xam test
             - ant $OPTS -f ide/xml.xdm test
             - ant $OPTS -f ide/xsl test
@@ -354,7 +354,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f java/gradle.java test
             #- ant $OPTS -f java/debugger.jpda.truffle test
             #- ant $OPTS -f java/debugger.jpda.ui test
-            - travis_wait hide-logs.sh ant $OPTS -f java/editor.htmlui test
+            - hide-logs.sh ant $OPTS -f java/editor.htmlui test
             #- travis_wait 30 hide-logs.sh  ant $OPTS -f java/form test
             - ant $OPTS -f java/hudson.maven test
             - ant $OPTS -f java/java.completion test
@@ -444,7 +444,7 @@ matrix:
             - ant $OPTS build
           script:
             - ant $OPTS -f java/java.completion test
-            - travis_retry ant $OPTS -f java/java.source.base test
+            - ant $OPTS -f java/java.source.base test
 
         - name: Test Java modules with nb-javac on Java 13
           jdk: openjdk8
@@ -511,7 +511,7 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - travis_retry ant $OPTS -f java/refactoring.java test-unit
+            - ant $OPTS -f java/refactoring.java test-unit
 
         - name: Test java.hints batch1 without nb-javac on Java 14
           jdk: openjdk8
@@ -564,7 +564,7 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - travis_retry ant $OPTS -f java/refactoring.java test-unit
+            - ant $OPTS -f java/refactoring.java test-unit
 
         - name: Test java.hints batch1 without nb-javac on Java 15
           jdk: openjdk8
@@ -662,7 +662,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.extdoc test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.extjs test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.jade test
-            - travis_retry hide-logs.sh ant $OPTS -f webcommon/javascript2.jquery test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.jquery test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.jsdoc test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.json test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.knockout test
@@ -721,8 +721,8 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - travis_retry ant $OPTS $OPTS_TEST -f ide/db.metadata.model test
-            - travis_retry ant $OPTS $OPTS_TEST -f ide/db.mysql test
+            - ant $OPTS $OPTS_TEST -f ide/db.metadata.model test
+            - ant $OPTS $OPTS_TEST -f ide/db.mysql test
             
         - name: Test enterprise modules
           jdk: openjdk8

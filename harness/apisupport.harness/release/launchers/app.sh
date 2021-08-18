@@ -142,11 +142,35 @@ case "`uname`" in
        then
            sh=/bin/bash
        fi
+
+       # See longer comments in nb/ide.launcher/unix/netbeans.
+       if [ "`command xrdb -query 2> /dev/null | grep Xft.dpi | cut -d ':' -f2 | xargs`" = 192 ]
+       then
+           echo "Detected 2x HiDPI scaling in Xft.dpi setting; setting GDK_SCALE=2"
+           export GDK_SCALE=2
+       fi
+       if [ "`command xdpyinfo 2> /dev/null | grep 'resolution:.*dots per inch' | cut -d ':' -f2 | cut -d 'x' -f1 | sort -u | xargs`" = 192 ]
+       then
+           echo "Detected 192 DPI on all screens in xdpyinfo; setting GDK_SCALE=2"
+           export GDK_SCALE=2
+       fi
+
+       extra_automatic_options=""
+
+       # See longer comments in nb/ide.launcher/unix/netbeans.
+       if [ ! -z "$KDE_FULL_SESSION" ] ; then
+           echo "Detected KDE; adding awt.useSystemAAFontSettings=on"
+           extra_automatic_options="-J-Dawt.useSystemAAFontSettings=on"
+       fi
+
+       # Add extra_automatic_options before default_options, to allow system
+       # property definitions from the configuration file to take precedence.
        eval exec $sh '"$nbexec"' \
             --jdkhome '"$jdkhome"' \
             --clusters '"$clusters"' \
             --userdir '"${userdir}"' \
             --cachedir '"${cachedir}"' \
+            ${extra_automatic_options} \
             ${default_options} \
             "$args"
        exit 1

@@ -41,11 +41,8 @@
         <chmod file="${lsp.build.dir}/bin/nbcode" perm="u+x" />
         <chmod file="${lsp.build.dir}/platform/lib/nbexec" perm="u+x"/>
         <chmod file="${lsp.build.dir}/java/maven/bin/mvn" perm="u+x" />
-        <delete file="${lsp.build.dir}/lib/nb-javac-9-api.jar" />
-        <delete file="${lsp.build.dir}/lib/nb-javac-9-impl.jar" />
-        <delete file="${lsp.build.dir}/lib/org-netbeans-modules-java-source-nbjavac.jar" />
 
-        <property name="3rdparty.modules" value="dont-install-anything"/>
+        <property name="3rdparty.modules" value=".*nbjavac.*"/>
         <autoupdate todir="${lsp.build.dir}/extra" updatecenter="file://${nb_all}/nb/updatecenters/build/classes/org/netbeans/modules/updatecenters/resources/3rdparty-catalog.xml">
             <modules includes="${3rdparty.modules}"/>
         </autoupdate>
@@ -144,11 +141,6 @@
     </target>
 
     <target name="test-vscode-ext" depends="test-lsp-server" description="Tests the Visual Studio Code extension built by 'build-vscode-ext' target.">
-        <exec executable="npm" failonerror="true" dir="vscode">
-            <arg value="--allow-same-version"/>
-            <arg value="run" />
-            <arg value="nbjavac" />
-        </exec>
         <exec executable="npm" failonerror="true" dir="vscode">
             <arg value="--allow-same-version"/>
             <arg value="run" />

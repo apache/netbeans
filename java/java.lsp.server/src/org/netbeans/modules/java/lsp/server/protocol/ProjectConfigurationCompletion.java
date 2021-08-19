@@ -128,7 +128,7 @@ public class ProjectConfigurationCompletion implements LaunchConfigurationComple
     }
 
     private static Collection<ProjectConfiguration> getConfigurations(Project p) {
-        ProjectConfigurationProvider<ProjectConfiguration> provider = p.getLookup().lookup(ProjectConfigurationProvider.class);
+        ProjectConfigurationProvider<ProjectConfiguration> provider = (p != null) ? p.getLookup().lookup(ProjectConfigurationProvider.class) : null;
         if (provider == null) {
             return Collections.emptyList();
         }

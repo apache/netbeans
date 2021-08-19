@@ -33,6 +33,7 @@ import org.netbeans.modules.db.metadata.model.api.MetadataModel;
 import org.netbeans.modules.db.metadata.model.api.MetadataModelException;
 import org.netbeans.modules.db.metadata.model.api.Parameter;
 import org.netbeans.modules.db.metadata.model.api.Procedure;
+import org.netbeans.modules.db.metadata.model.api.Value;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 
@@ -83,7 +84,6 @@ public class ProcedureParamNodeProvider extends NodeProvider {
                                 return ;
                             }
 
-                            /* TBD uncomment after issue 156304 is resolved.
                             Value returnValue = procedure.getReturnValue();
                             if (returnValue != null) {
                                 MetadataElementHandle<Value> h = MetadataElementHandle.create(returnValue);
@@ -97,7 +97,6 @@ public class ProcedureParamNodeProvider extends NodeProvider {
                                     newList.add(ReturnValueNode.create(lookup, ProcedureParamNodeProvider.this));
                                 }
                             }
-                            */
 
                             Collection<Parameter> parameters = procedure.getParameters();
 

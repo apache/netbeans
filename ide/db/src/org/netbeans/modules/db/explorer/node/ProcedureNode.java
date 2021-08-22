@@ -371,7 +371,7 @@ public class ProcedureNode extends BaseNode {
                                 //Routine comment
                                 String comment = rs.getString("routine_comment"); // NOI18N
 
-                                source = rs.getString("routine_definition");
+                                source = rs.getString("routine_definition"); // NOI18N
 
                                 source = getTypeName(getType()) + " " + parent + getName() + "(" + params + ")" + "\n"
                                        + (function ? "RETURNS " + rs.getString("dtd_identifier") + "\n" : "") // NOI18N

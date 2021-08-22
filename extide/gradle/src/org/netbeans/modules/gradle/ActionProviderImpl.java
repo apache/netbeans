@@ -121,11 +121,7 @@ public class ActionProviderImpl implements ActionProvider {
 
     @Override
     public String[] getSupportedActions() {
-        List<? extends GradleActionsProvider> providers = ActionToTaskUtils.actionProviders(project);
-        Set<String> actions = new HashSet<>();
-        for (GradleActionsProvider provider : providers) {
-            actions.addAll(provider.getSupportedActions());
-        }
+        Set<String> actions = new HashSet<>(ActionToTaskUtils.getAllSupportedActions(project));
         // add a fixed 'prime build' action
         actions.add(ActionProvider.COMMAND_PRIME);
         actions.add(COMMAND_DL_SOURCES);
@@ -184,7 +180,7 @@ public class ActionProviderImpl implements ActionProvider {
             LOG.log(Level.FINEST, "Priming build action for {0} is: {1}", new Object[] { project, enabled });
             return enabled;
         }
-        return ActionToTaskUtils.isActionEnabled(command, project, context);
+        return ActionToTaskUtils.isActionEnabled(command, null, project, context);
     }
 
     @NbBundle.Messages({
@@ -259,7 +255,7 @@ public class ActionProviderImpl implements ActionProvider {
             LOG.log(Level.FINE, "Attempt to run a config-disabled action: {0}", action);
             return false;
         }
-        if (!ActionToTaskUtils.isActionEnabled(action, project, context)) {
+        if (!ActionToTaskUtils.isActionEnabled(action, mapping, project, context)) {
             LOG.log(Level.FINE, "Attempt to run action that is not enabled: {0}", action);
             return false;
         }

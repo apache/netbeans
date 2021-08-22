@@ -23,7 +23,9 @@ import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.spi.actions.GradleActionsProvider;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
@@ -47,10 +49,43 @@ public final class ActionToTaskUtils {
         providers.addAll(Lookup.getDefault().lookupAll(GradleActionsProvider.class));
         return providers;
     }
-
-    public static boolean isActionEnabled(String action, Project project, Lookup lookup) {
-        ActionMapping mapping = getActiveMapping(action, project, lookup);
+    
+    public static Set<String> getAllSupportedActions(@NonNull Project project) {
+        Set<String> actions = new HashSet<>();
+        for (GradleActionsProvider provider : actionProviders(project)) {
+            actions.addAll(provider.getSupportedActions());
+        }
+        ProjectActionMappingProvider projectProvider = project.getLookup().lookup(ProjectActionMappingProvider.class);
+        ConfigurableActionProvider contextProvider = project.getLookup().lookup(ConfigurableActionProvider.class);
+        ProjectConfigurationProvider<GradleExecConfiguration> pcp = project.getLookup().lookup(ProjectConfigurationProvider.class);
+        if (contextProvider == null || projectProvider == null) {
+            return actions;
+        }
+        if (pcp == null || contextProvider == null) {
+            actions.addAll(projectProvider.customizedActions());
+        } else {
+            for (GradleExecConfiguration gec : pcp.getConfigurations()) {
+                projectProvider = contextProvider.findActionProvider(gec.getId());
+                if (projectProvider != null) {
+                    actions.addAll(projectProvider.customizedActions());
+                }
+            }
+        }
+        return actions;
+    }
+    
+    public static boolean isCustomMapping(ActionMapping am) {
+        return am.getName().startsWith(ActionMapping.CUSTOM_PREFIX);
+    }
+    
+    public static boolean isActionEnabled(String action, ActionMapping mapping, Project project, Lookup lookup) {
+        if (mapping == null) {
+            mapping = getActiveMapping(action, project, lookup);
+        }
         if (!ActionMapping.isDisabled(mapping)) {
+            if (isCustomMapping(mapping)) {
+                return true;
+            }
             List<? extends GradleActionsProvider> providers = actionProviders(project);
             for (GradleActionsProvider provider : providers) {
                 if (provider.isActionEnabled(action, project, lookup)) {

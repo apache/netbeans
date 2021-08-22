@@ -373,12 +373,12 @@ public class ProcedureNode extends BaseNode {
 
                                 source = rs.getString("routine_definition"); // NOI18N
 
-                                source = getTypeName(getType()) + " " + parent + getName() + "(" + params + ")" + "\n"
+                                source = getTypeName(getType()) + " " + parent + getName() + "(" + params + ")" + "\n" // NOI18N
                                        + (function ? "RETURNS " + rs.getString("dtd_identifier") + "\n" : "") // NOI18N
-                                       + sql_data_access + "\n"
+                                       + sql_data_access + "\n" // NOI18N
                                        + (is_deterministic == "YES" ? "" : "NOT ") + "DETERMINISTIC\n" // NOI18N
                                        + (comment.length() > 0 ? "COMMENT '" + comment +"'\n" : "") // NOI18N
-                                       + rs.getString("routine_definition");
+                                       + rs.getString("routine_definition"); // NOI18N
                             }
                         }
                         break;

@@ -520,7 +520,7 @@ public class ProcedureNode extends BaseNode {
                         }
                         break;
                     default:
-                        assert false : "Unknown type " + getType();
+                        assert false : "Unknown type " + getType(); // NOI18N
                 }
             } catch (SQLException ex) {
                 LOG.log(Level.INFO, "{0} while get body of {1} {2}", new Object[] {ex, getTypeName(getType()), getName()});

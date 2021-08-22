@@ -363,7 +363,7 @@ public class ProcedureNode extends BaseNode {
                                 String params = rs.getString("routine_params"); // NOI18N
 
                                 //Data access characteristic: CONTAINS SQL, NO SQL, READS SQL DATA, or MODIFIES SQL DATA.
-                                String sql_data_access = rs.getString("sql_data_access");
+                                String sql_data_access = rs.getString("sql_data_access"); // NOI18N
 
                                 //YES or NO, depending on whether the routine is defined with the DETERMINISTIC characteristic.
                                 String is_deterministic = rs.getString("is_deterministic"); // NOI18N

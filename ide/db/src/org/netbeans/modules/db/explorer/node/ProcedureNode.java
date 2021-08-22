@@ -336,7 +336,7 @@ public class ProcedureNode extends BaseNode {
             String source = "";
             try {
                 String query = "";
-                String escapedName = getName().replace("'", "''");
+                String escapedName = getName().replace("'", "''"); // NOI18N
                 boolean function = false;
                 switch (getType()) {
                     case Function:

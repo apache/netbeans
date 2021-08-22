@@ -447,7 +447,7 @@ public class ProcedureNode extends BaseNode {
                         escapedName = getName().replace("'", "''");
                         query = "SELECT GROUP_CONCAT(CONCAT(" + (function ? "" : "parameter_mode,' ',") + "parameter_name,' ',dtd_identifier)) AS routine_params" // NOI18N
                               + " FROM information_schema.parameters" // NOI18N
-                              + " WHERE ordinal_position>0 AND specific_name='" + escapedName + "';"; // NOI18N
+                              + " WHERE ordinal_position>0 AND specific_name='" + escapedName + "' ORDER BY ordinal_position;"; // NOI18N
                         try (Statement stat = connection.getJDBCConnection().createStatement(); 
                                 ResultSet rs = stat.executeQuery(query);) {
                             while (rs.next()) {

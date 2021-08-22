@@ -95,6 +95,22 @@ public interface NIDebuggerProvider {
     CompletableFuture<Void> start(List<String> command, File workingDirectory, String debugger, String displayName, ExecutionDescriptor executionDescriptor, Consumer<DebuggerEngine> startedEngine);
 
     /**
+     * Attach to a process and create a debugging session. Called typically after breakpoints are added.
+     *
+     * @param executablePath path to an executable representing the native image
+     * @param processId a process to attach to
+     * @param debugger the native debugger command
+     * @param startedEngine the corresponding DebuggerEngine is passed to this consumer
+     * @return future that completes on the execution finish
+     * @since 0.4
+     */
+    default CompletableFuture<Void> attach(String executablePath, long processId, String debugger, Consumer<DebuggerEngine> startedEngine) {
+        CompletableFuture cf = new CompletableFuture();
+        cf.completeExceptionally(new UnsupportedOperationException());
+        return cf;
+    }
+
+    /**
      * An asynchronous expression evaluation.
      *
      * @param expression the expression to evaluate

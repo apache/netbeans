@@ -867,7 +867,7 @@ class NetBeansConfigurationNativeResolver implements vscode.DebugConfigurationPr
         if (!config.request) {
             config.request = 'launch';
         }
-        if (!config.nativeImagePath) {
+        if ('launch' == config.request && !config.nativeImagePath) {
             config.nativeImagePath = '${workspaceFolder}/build/native-image/application';
         }
         if (!config.miDebugger) {

@@ -75,6 +75,7 @@ public final class CompletionContext {
     public CaretLocation location;
     public CompletionSurrounding context;
     public AstPath path;
+    public ClassNode rawDseclaringClass;
     public ClassNode declaringClass;
     public DotCompletionContext dotContext;
     public Set<AccessLevel> access;
@@ -108,12 +109,18 @@ public final class CompletionContext {
         this.nameOnly = dotContext != null && dotContext.isMethodsOnly();
 
         ClassNode dc = getBeforeDotDeclaringClass();
+        this.rawDseclaringClass = dc;
         this.declaringClass = dc == null ? null : dc.redirect();
     }
     
     // TODO: Move this to the constructor and change ContextHelper.getSurroundingClassNode()
     // to prevent NPE caused by leaking this in constructor
     public void init() {
+        setDeclaringClass(declaringClass);
+    }
+    
+    public void setDeclaringClass(ClassNode declaringClass) {
+        this.declaringClass = declaringClass;
         if (declaringClass != null) {
             this.access = AccessLevel.create(ContextHelper.getSurroundingClassNode(this), declaringClass);
         } else {
@@ -184,6 +191,10 @@ public final class CompletionContext {
     }
 
     private AstPath getPath(ParserResult parseResult, BaseDocument doc, int astOffset) {
+        return getPath(parseResult, doc, astOffset, false);
+    }
+    
+    private AstPath getPath(ParserResult parseResult, BaseDocument doc, int astOffset, boolean outermost) {
         ASTNode root = ASTUtils.getRoot(parseResult);
 
         // in some cases we can not repair the code, therefore root == null
@@ -191,7 +202,7 @@ public final class CompletionContext {
         if (root == null) {
             return null;
         }
-        return new AstPath(root, astOffset, doc);
+        return new AstPath(root, astOffset, doc, outermost);
     }
     
     /**
@@ -631,8 +642,8 @@ public final class CompletionContext {
         }
 
         int lexOffset = ts.offset();
-        int astOffset = ASTUtils.getAstOffset(parserResult, lexOffset);
-        AstPath realPath = getPath(parserResult, doc, astOffset);
+        int astOffset = ASTUtils.getAstOffset(parserResult, lexOffset) + ts.token().length() - 1;
+        AstPath realPath = getPath(parserResult, doc, astOffset, true);
 
         return new DotCompletionContext(lexOffset, astOffset, realPath, fieldsOnly, methodsOnly);
     }
@@ -699,7 +710,7 @@ public final class CompletionContext {
         // FIXME static/script context...
         if (!isBehindDot() && context.before1 == null
                 && (location == CaretLocation.INSIDE_CLOSURE || location == CaretLocation.INSIDE_METHOD)) {
-            declaringClass = ContextHelper.getSurroundingClassNode(this);
+            setDeclaringClass(ContextHelper.getSurroundingClassNode(this));
             return declaringClass;
         }
 
@@ -722,19 +733,19 @@ public final class CompletionContext {
 
         // type inferred
         if (declClass != null) {
-            declaringClass = declClass;
+            setDeclaringClass(declaringClass);
             return declaringClass;
         }
 
         if (dotCompletionContext.getAstPath().leaf() instanceof VariableExpression) {
             VariableExpression variable = (VariableExpression) dotCompletionContext.getAstPath().leaf();
             if ("this".equals(variable.getName())) { // NOI18N
-                declaringClass = ContextHelper.getSurroundingClassNode(this);
+                setDeclaringClass(ContextHelper.getSurroundingClassNode(this));
                 return declaringClass;
             }
             if ("super".equals(variable.getName())) { // NOI18N
                 ClassNode thisClass = ContextHelper.getSurroundingClassNode(this);
-                declaringClass = thisClass.getSuperClass();
+                setDeclaringClass(declaringClass);
                 if (declaringClass == null) {
                     return new ClassNode("java.lang.Object", ClassNode.ACC_PUBLIC, null);
                 }
@@ -762,7 +773,7 @@ public final class CompletionContext {
                     constantExpression.setType(new ClassNode(constantExpression.getValue().getClass()));
                 }
             }
-            declaringClass = expression.getType();
+            setDeclaringClass(expression.getType());
         }
 
         return declaringClass;

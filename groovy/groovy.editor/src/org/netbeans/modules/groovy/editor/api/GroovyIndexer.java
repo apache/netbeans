@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.groovy.editor.api;
 
+import groovy.transform.PackageScope;
 import groovyjarjarasm.asm.Opcodes;
 import java.io.IOException;
 import java.net.URL;
@@ -40,6 +41,8 @@ import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import org.codehaus.groovy.ast.ClassHelper;
+import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
 import org.netbeans.modules.csl.api.Modifier;
 import org.netbeans.modules.groovy.editor.api.lexer.LexUtilities;
@@ -323,7 +326,8 @@ public class GroovyIndexer extends EmbeddingIndexer {
             sb.append(';').append(org.netbeans.modules.groovy.editor.java.Utilities.translateClassLoaderTypeName(
                     node.getType().getName()));
 
-            int flags = getFieldModifiersFlag(child.getModifiers());
+            // maintain index compatibility; althogh
+            int flags = getFieldModifiersFlag(child.isProperty(), child.getModifiers());
             if (flags != 0 || child.isProperty()) {
                 sb.append(';');
                 sb.append(IndexedElement.flagToFirstChar(flags));
@@ -390,14 +394,17 @@ public class GroovyIndexer extends EmbeddingIndexer {
 
     }
 
-    // note that default field modifier is private
-    private static int getFieldModifiersFlag(Set<Modifier> modifiers) {
+    // note that no modifiers for field means it is a property, but that's
+    // declared with .isProperty that is indexed separately.
+    private static int getFieldModifiersFlag(boolean property, Set<Modifier> modifiers) {
         int flags = modifiers.contains(Modifier.STATIC) ? Opcodes.ACC_STATIC : 0;
         if (modifiers.contains(Modifier.PUBLIC)) {
             flags |= Opcodes.ACC_PUBLIC;
         } else if (modifiers.contains(Modifier.PROTECTED)) {
             flags |= Opcodes.ACC_PROTECTED;
-        }
+        } else if (!property && modifiers.contains(Modifier.PRIVATE)) {
+            flags |= Opcodes.ACC_PRIVATE;
+        }   
 
         return flags;
     }
@@ -409,6 +416,8 @@ public class GroovyIndexer extends EmbeddingIndexer {
             flags |= Opcodes.ACC_PRIVATE;
         } else if (modifiers.contains(Modifier.PROTECTED)) {
             flags |= Opcodes.ACC_PROTECTED;
+        } else if (modifiers.contains(Modifier.PUBLIC)) {
+            flags |= Opcodes.ACC_PUBLIC;
         }
 
         return flags;

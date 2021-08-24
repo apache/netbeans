@@ -43,6 +43,12 @@ public class FieldCCTest extends GroovyCCTestBase {
     }
 
     @Override
+    protected void setUp() throws Exception {
+        clearWorkDir();
+        super.setUp();
+    }
+
+    @Override
     protected String getTestType() {
         return ".";
     }
@@ -68,5 +74,47 @@ public class FieldCCTest extends GroovyCCTestBase {
 
     public void testFields2() throws Exception {
         checkCompletion(TEST_BASE + "" + "Fields1.groovy", "println \"Hi: $ad^\"", true);
+    }
+
+    /**
+     * Groovy fields (not properties) with private modifiers are accessible.
+     */
+    public void testFields2_modifiers() throws Exception {
+        checkCompletion(TEST_BASE + "" + "Fields2.groovy", "new Helper().builder^Property.inheritIO()", true);
+    }
+    
+    /**
+     * But java class fields respect the access modifiers. Must not contain 'classLoader0' property.
+     */
+    public void testFields2_javaModifiers() throws Exception {
+        checkCompletion(TEST_BASE + "" + "Fields2.groovy", "Helper.class.classL^oader", true);
+    }
+    
+    public void testFields2_propertyChain1() throws Exception {
+        checkCompletion(TEST_BASE + "" + "Fields2.groovy", "someFile.parent^File.mkdirs()", true);
+    }
+
+    public void testFields2_propertyChain2() throws Exception {
+        checkCompletion(TEST_BASE + "" + "Fields2.groovy", "someFile.absoluteFile.parent^File.mkdirs()", true);
+    }
+
+    public void testFields2_propertyChain3() throws Exception {
+        checkCompletion(TEST_BASE + "" + "Fields2.groovy", "someFile.absoluteFile.parentFile.mkd^irs()", true);
+    }
+
+    /**
+     * Cannot work ATM, see NETBEANS-5964
+     * @throws Exception 
+    public void testFields2_propertyChain4() throws Exception {
+        checkCompletion(TEST_BASE + "" + "Fields2.groovy", "(someFile.canonicalFile.getParentFile).mkd^irs()", true);
+    }
+     */
+    
+    public void testFields2_javaPropertyReference() throws Exception {
+        checkCompletion(TEST_BASE + "" + "Fields2.groovy", "System.properties.ge^t(", true);
+    }
+    
+    public void testFields2_otherClassProperty() throws Exception {
+        checkCompletion(TEST_BASE + "" + "Fields2.groovy", "new Helper().builderProperty.inher^itIO()", true);
     }
 }

@@ -84,6 +84,36 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="ASTPath.outer">
+        <api name="groovy-parsing"/>
+        <summary>Alternative construction for path more suitable for expressions</summary>
+        <version major="1" minor="80"/>
+        <date day="25" month="8" year="2021"/>
+        <author login="sdedic"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" />
+        <description>
+            <p>
+                ASTPath can be constructed so it terminates on the outermost expression that spans
+                the given  index. By default the path was constructed to the deepest node.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.groovy.editor.api" name="ASTPath"/>
+    </change>
+    <change id="CompletionContext.setDeclaringClass">
+        <api name="groovy-completion"/>
+        <summary>Accessor for CompletionContext.declaringClass</summary>
+        <version major="1" minor="80"/>
+        <date day="25" month="8" year="2021"/>
+        <author login="sdedic"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" />
+        <description>
+            <p>
+                Added setter for <a href="@TOP@/org/netbeans/modules/groovy/editor/api/completion/util/CompletionContext.html#declaringClass">
+                    CompletionContext.declaringClass</a> that refreshes access restrictions.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.groovy.editor.api.completion.util" name="CompletionContext"/>
+    </change>
     <change id="DisableTransformers">
       <api name="groovy-parsing"/>
       <summary>Allow to enable/disable AST transformation during parsing and indexing</summary>

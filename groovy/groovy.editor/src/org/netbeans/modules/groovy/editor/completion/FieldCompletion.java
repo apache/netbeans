@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.groovy.editor.completion;
 
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -43,7 +42,7 @@ import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
 public class FieldCompletion extends BaseCompletion {
 
     @Override
-    public boolean complete(List<CompletionProposal> proposals, CompletionContext context, int anchor) {
+    public boolean complete(Map<Object, CompletionProposal> proposals, CompletionContext context, int anchor) {
         LOG.log(Level.FINEST, "-> completeFields"); // NOI18N
 
         if (context.location == CaretLocation.INSIDE_PARAMETERS && context.isBehindDot() == false) {
@@ -95,7 +94,7 @@ public class FieldCompletion extends BaseCompletion {
         if (result.containsKey(prefixFieldSignature)) {
             result.remove(prefixFieldSignature);
         }
-        proposals.addAll(result.values());
+        proposals.putAll(result);
 
         return true;
     }

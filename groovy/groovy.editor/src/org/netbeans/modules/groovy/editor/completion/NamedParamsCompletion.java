@@ -21,6 +21,7 @@ package org.netbeans.modules.groovy.editor.completion;
 
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
@@ -43,7 +44,7 @@ public class NamedParamsCompletion extends BaseCompletion {
     private CompletionContext context;
 
     @Override
-    public boolean complete(List<CompletionProposal> proposals, CompletionContext context, int anchor) {
+    public boolean complete(Map<Object, CompletionProposal> proposals, CompletionContext context, int anchor) {
         this.context = context;
 
         ASTNode leaf = context.path.leaf();
@@ -94,7 +95,7 @@ public class NamedParamsCompletion extends BaseCompletion {
     }
 
     private void completeNamedParams(
-            List<CompletionProposal> proposals,
+            Map<Object, CompletionProposal> proposals,
             int anchor,
             ConstructorCallExpression constructorCall,
             NamedArgumentListExpression namedArguments) {
@@ -122,7 +123,7 @@ public class NamedParamsCompletion extends BaseCompletion {
                 }
             }
 
-            proposals.add(new CompletionItem.NamedParameter(typeName, name, anchor));
+            proposals.put("local:" + name, new CompletionItem.NamedParameter(typeName, name, anchor));
         }
     }
 

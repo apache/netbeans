@@ -61,7 +61,7 @@ import org.openide.filesystems.FileObject;
 public class MethodCompletion extends BaseCompletion {
 
     // There attributes should be initiated after each complete() method call
-    private List<CompletionProposal> proposals;
+    private Map<Object, CompletionProposal> proposals;
     private CompletionContext context;
     private int anchor;
 
@@ -71,7 +71,7 @@ public class MethodCompletion extends BaseCompletion {
 
 
     @Override
-    public boolean complete(final List<CompletionProposal> proposals, final CompletionContext context, final int anchor) {
+    public boolean complete(final Map<Object, CompletionProposal> proposals, final CompletionContext context, final int anchor) {
         LOG.log(Level.FINEST, "-> completeMethods"); // NOI18N
 
         this.proposals = proposals;
@@ -136,7 +136,7 @@ public class MethodCompletion extends BaseCompletion {
         }
 
         Map<MethodSignature, CompletionItem> result = new CompleteElementHandler(context).getMethods();
-        proposals.addAll(result.values());
+        proposals.putAll(result);
 
         return true;
     }
@@ -191,15 +191,14 @@ public class MethodCompletion extends BaseCompletion {
                 List<MethodParameter> parameters = indexedMethod.getParameters();
 
                 ConstructorItem constructor = new ConstructorItem(name, parameters, anchor, false);
-                if (!proposals.contains(constructor)) {
-                    proposals.add(constructor);
-                }
+                MethodSignature ms = new MethodSignature("<init>", param2FQN(parameters)); // NOI18N
+                proposals.putIfAbsent(ms, constructor);
             }
 
             // If we didn't find any proposal, it means the instatiate class does not have any constructor
             // explicitely declared - in such case add defaultly generated no-parameter constructor
             if (proposals.isEmpty()) {
-                proposals.add(new ConstructorItem(name, Collections.<MethodParameter>emptyList(), anchor, false));
+                proposals.putIfAbsent(new MethodSignature("<init>", new String[0]), new ConstructorItem(name, Collections.<MethodParameter>emptyList(), anchor, false)); // NOI18N
             }
         }
 
@@ -302,19 +301,27 @@ public class MethodCompletion extends BaseCompletion {
             }
         }
     }
+    
+    private String[] param2FQN(List<MethodParameter> params) {
+        String[] res = new String[params.size()];
+        int i = 0;
+        for (MethodParameter mp : params) {
+            res[i++] = mp.getFqnType();
+        }
+        return res;
+    }
 
     private void addConstructorProposal(String classFqn, ExecutableElement encl) {
         List<MethodParameter> paramList = getParameterList(encl);
-        List<String> sig = new ArrayList<>(paramList.size());
+        String[] sig = new String[paramList.size()];
+        int i = 0;
         for (MethodParameter p : paramList) {
-            sig.add(p.getFqnType());
+            sig[i++] = p.getFqnType();
         }
-        JavaElementHandle h = new JavaElementHandle(encl.getEnclosingElement().getSimpleName().toString(), classFqn, ElementHandle.create(encl), sig, Collections.emptySet());
+        JavaElementHandle h = new JavaElementHandle(encl.getEnclosingElement().getSimpleName().toString(), classFqn, ElementHandle.create(encl), Arrays.asList(sig), Collections.emptySet());
         CompletionItem constructor = CompletionAccessor.instance().
                 createConstructor(h, paramList, anchor, false);
-        if (!proposals.contains(constructor)) {
-            proposals.add(constructor);
-        }
+        proposals.putIfAbsent(new MethodSignature("<init>", sig), constructor);
     }
 
     private void addConstructorProposalsForDeclaredClasses() {
@@ -331,7 +338,8 @@ public class MethodCompletion extends BaseCompletion {
                 Parameter[] parameters = constructor.getParameters();
                 List<MethodParameter> paramList = getParameterListForMethod(parameters);
 
-                proposals.add(new ConstructorItem(constructorName, paramList, anchor, false));
+                proposals.putIfAbsent(new MethodSignature("<init>",  // NOI18N
+                        param2FQN(paramList)), new ConstructorItem(constructorName, paramList, anchor, false));
             }
         }
     }

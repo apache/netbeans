@@ -20,8 +20,8 @@
 package org.netbeans.modules.groovy.editor.completion;
 
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,8 +44,8 @@ public abstract class BaseCompletion {
     protected static final Logger LOG = Logger.getLogger(BaseCompletion.class.getName());
 
 
-    public abstract boolean complete(List<CompletionProposal> proposals, CompletionContext request, int anchor);
-
+    public abstract boolean complete(Map<Object, CompletionProposal> proposals, CompletionContext request, int anchor);
+    
 
     protected class PackageCompletionRequest {
         String fullString = "";

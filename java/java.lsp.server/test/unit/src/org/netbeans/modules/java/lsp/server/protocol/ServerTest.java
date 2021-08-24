@@ -3873,14 +3873,14 @@ public class ServerTest extends NbTestCase {
                          WorkspaceEdit edit = cf.get();
                          assertTrue(edit.getChanges().isEmpty());
                          Set<String> actual = edit.getDocumentChanges().stream().map(this::toString).collect(Collectors.toSet());
-                         Set<String> expected = new HashSet<>(Arrays.asList("Test2.java:[3:25-3:28=>nue]", "Test2.java:[1:8-1:11=>nue]"));
+                         Set<String> expected = new HashSet<>(Arrays.asList("Test2.java:[3:25-3:28=>nue]", "Test.java:[1:8-1:11=>nue]"));
                          assertEquals(expected, actual);
                      },
                      cf -> {
                          WorkspaceEdit edit = cf.get();
                          assertTrue(edit.getChanges().isEmpty());
                          Set<String> actual = edit.getDocumentChanges().stream().map(this::toString).collect(Collectors.toSet());
-                         Set<String> expected = new HashSet<>(Arrays.asList("Test.java:[0:27-0:31=>TestNew, 1:4-1:8=>TestNew, 2:11-2:15=>TestNew]", "Test.java:[0:13-0:17=>TestNew]", "Test.java=>TestNew.java"));
+                         Set<String> expected = new HashSet<>(Arrays.asList("Test2.java:[0:27-0:31=>TestNew, 1:4-1:8=>TestNew, 2:11-2:15=>TestNew]", "Test.java:[0:13-0:17=>TestNew]", "Test.java=>TestNew.java"));
                          assertEquals(expected, actual);
                      });
     }
@@ -3897,14 +3897,14 @@ public class ServerTest extends NbTestCase {
                          WorkspaceEdit edit = cf.get();
                          assertTrue(edit.getChanges().isEmpty());
                          Set<String> actual = edit.getDocumentChanges().stream().map(this::toString).collect(Collectors.toSet());
-                         Set<String> expected = new HashSet<>(Arrays.asList("Test2.java:[3:25-3:28=>nue]", "Test2.java:[1:8-1:11=>nue]"));
+                         Set<String> expected = new HashSet<>(Arrays.asList("Test2.java:[3:25-3:28=>nue]", "Test.java:[1:8-1:11=>nue]"));
                          assertEquals(expected, actual);
                      },
                      cf -> {
                          WorkspaceEdit edit = cf.get();
                          assertTrue(edit.getChanges().isEmpty());
                          Set<String> actual = edit.getDocumentChanges().stream().map(this::toString).collect(Collectors.toSet());
-                         Set<String> expected = new HashSet<>(Arrays.asList("Test.java:[0:27-0:31=>TestNew, 1:4-1:8=>TestNew, 2:11-2:15=>TestNew]", "Test.java:[0:13-0:17=>TestNew]", "Test.java=>TestNew.java"));
+                         Set<String> expected = new HashSet<>(Arrays.asList("Test2.java:[0:27-0:31=>TestNew, 1:4-1:8=>TestNew, 2:11-2:15=>TestNew]", "Test.java:[0:13-0:17=>TestNew]", "Test.java=>TestNew.java"));
                          assertEquals(expected, actual);
                      });
     }
@@ -3922,12 +3922,13 @@ public class ServerTest extends NbTestCase {
             w.write(code);
         }
         File src2 = new File(getWorkDir(), "Test2.java");
+        String code2 = "public class Test2 extends Test {\n" +
+                       "    Test t;\n" +
+                       "    void m(Test p) {};\n" +
+                       "    int get() { return t.val; };\n" +
+                       "}\n";
         try (Writer w = new FileWriter(src2)) {
-            w.write("public class Test2 extends Test {\n" +
-                    "    Test t;\n" +
-                    "    void m(Test p) {};\n" +
-                    "    int get() { return t.val; };\n" +
-                    "}\n");
+            w.write(code2);
         }
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
@@ -3971,8 +3972,7 @@ public class ServerTest extends NbTestCase {
         settings.accept(initParams);
         InitializeResult result = server.initialize(initParams).get();
         indexingComplete.await();
-        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
-
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src2), "java", 0, code2)));
         {
             RenameParams params = new RenameParams(new TextDocumentIdentifier(src2.toURI().toString()),
                                                    new Position(3, 27),
@@ -3980,7 +3980,7 @@ public class ServerTest extends NbTestCase {
 
             validateFieldRename.validate(server.getTextDocumentService().rename(params));
         }
-
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
         {
             RenameParams params = new RenameParams(new TextDocumentIdentifier(src.toURI().toString()),
                                                    new Position(0, 15),
@@ -3988,7 +3988,6 @@ public class ServerTest extends NbTestCase {
 
             validateClassRename.validate(server.getTextDocumentService().rename(params));
         }
-
     }
 
     public void testMoveClass() throws Exception {

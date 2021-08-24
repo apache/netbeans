@@ -1205,7 +1205,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 }
                 for (ModificationResult mr : results) {
                     for (FileObject modified : mr.getModifiedFileObjects()) {
-                        resultChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(params.getTextDocument().getUri(), /*XXX*/-1), fileModifications(mr, modified, null))));
+                        resultChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toUri(modified), /*XXX*/-1), fileModifications(mr, modified, null))));
                     }
                 }
                 List<RefactoringElementImplementation> fileChanges = APIAccessor.DEFAULT.getFileChanges(session);

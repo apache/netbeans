@@ -42,7 +42,6 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -175,7 +174,6 @@ import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
-import org.netbeans.modules.java.lsp.server.files.OpenedDocuments;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.impl.indexing.implspi.ActiveDocumentProvider.IndexingAware;
@@ -838,62 +836,68 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
 
         final CompletableFuture<List<Either<Command, CodeAction>>> resultFuture = new CompletableFuture<>();
-        JavaSource js = JavaSource.forDocument(doc);
-        if (js == null) {
-            resultFuture.complete(result);
-            return resultFuture;
-        }
+        Source source = Source.create(doc);
         BACKGROUND_TASKS.post(() -> {
             try {
-                js.runUserActionTask(cc -> {
-                    cc.toPhase(JavaSource.Phase.RESOLVED);
-                    //code generators:
-                    for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
-                        for (CodeAction codeAction : codeGenerator.getCodeActions(cc, params)) {
-                            result.add(Either.forRight(codeAction));
+                ParserManager.parse(Collections.singleton(source), new UserTask() {
+                    @Override
+                    public void run(ResultIterator resultIterator) throws Exception {
+                        //code generators:
+                        for (CodeActionsProvider codeGenerator : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
+                            try {
+                                for (CodeAction codeAction : codeGenerator.getCodeActions(resultIterator, params)) {
+                                    result.add(Either.forRight(codeAction));
+                                }
+                            } catch (Exception ex) {
+                                client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                            }
                         }
-                    }
-                    //introduce hints
-                    if (!range.getStart().equals(range.getEnd())) {
-                        for (ErrorDescription err : IntroduceHint.computeError(cc, startOffset, endOffset, new EnumMap<IntroduceKind, Fix>(IntroduceKind.class), new EnumMap<IntroduceKind, String>(IntroduceKind.class), new AtomicBoolean())) {
-                            for (Fix fix : err.getFixes().getFixes()) {
-                                if (fix instanceof IntroduceFixBase) {
-                                    try {
-                                        ModificationResult changes = ((IntroduceFixBase) fix).getModificationResult();
-                                        if (changes != null) {
-                                            List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
-                                            Set<? extends FileObject> fos = changes.getModifiedFileObjects();
-                                            if (fos.size() == 1) {
-                                                FileObject fileObject = fos.iterator().next();
-                                                List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
-                                                if (diffs != null) {
-                                                    List<TextEdit> edits = new ArrayList<>();
-                                                    for (ModificationResult.Difference diff : diffs) {
-                                                        String newText = diff.getNewText();
-                                                        edits.add(new TextEdit(new Range(Utils.createPosition(fileObject, diff.getStartPosition().getOffset()),
-                                                                Utils.createPosition(fileObject, diff.getEndPosition().getOffset())),
-                                                                newText != null ? newText : ""));
+                        //introduce hints:
+                        CompilationController cc = CompilationController.get(resultIterator.getParserResult());
+                        if (cc != null) {
+                            cc.toPhase(JavaSource.Phase.RESOLVED);
+                            if (!range.getStart().equals(range.getEnd())) {
+                                for (ErrorDescription err : IntroduceHint.computeError(cc, startOffset, endOffset, new EnumMap<IntroduceKind, Fix>(IntroduceKind.class), new EnumMap<IntroduceKind, String>(IntroduceKind.class), new AtomicBoolean())) {
+                                    for (Fix fix : err.getFixes().getFixes()) {
+                                        if (fix instanceof IntroduceFixBase) {
+                                            try {
+                                                ModificationResult changes = ((IntroduceFixBase) fix).getModificationResult();
+                                                if (changes != null) {
+                                                    List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
+                                                    Set<? extends FileObject> fos = changes.getModifiedFileObjects();
+                                                    if (fos.size() == 1) {
+                                                        FileObject fileObject = fos.iterator().next();
+                                                        List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
+                                                        if (diffs != null) {
+                                                            List<TextEdit> edits = new ArrayList<>();
+                                                            for (ModificationResult.Difference diff : diffs) {
+                                                                String newText = diff.getNewText();
+                                                                edits.add(new TextEdit(new Range(Utils.createPosition(fileObject, diff.getStartPosition().getOffset()),
+                                                                        Utils.createPosition(fileObject, diff.getEndPosition().getOffset())),
+                                                                        newText != null ? newText : ""));
+                                                            }
+                                                            documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toUri(fileObject), -1), edits)));
+                                                        }
+                                                        CodeAction codeAction = new CodeAction(fix.getText());
+                                                        codeAction.setKind(CodeActionKind.RefactorExtract);
+                                                        codeAction.setEdit(new WorkspaceEdit(documentChanges));
+                                                        int renameOffset = ((IntroduceFixBase) fix).getNameOffset(changes);
+                                                        if (renameOffset >= 0) {
+                                                            codeAction.setCommand(new Command("Rename", "java.rename.element.at", Collections.singletonList(renameOffset)));
+                                                        }
+                                                        result.add(Either.forRight(codeAction));
                                                     }
-                                                    documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toUri(fileObject), -1), edits)));
                                                 }
-                                                CodeAction codeAction = new CodeAction(fix.getText());
-                                                codeAction.setKind(CodeActionKind.RefactorExtract);
-                                                codeAction.setEdit(new WorkspaceEdit(documentChanges));
-                                                int renameOffset = ((IntroduceFixBase) fix).getNameOffset(changes);
-                                                if (renameOffset >= 0) {
-                                                    codeAction.setCommand(new Command("Rename", "java.rename.element.at", Collections.singletonList(renameOffset)));
-                                                }
-                                                result.add(Either.forRight(codeAction));
+                                            } catch (GeneratorUtils.DuplicateMemberException dme) {
                                             }
                                         }
-                                    } catch (GeneratorUtils.DuplicateMemberException dme) {
                                     }
                                 }
                             }
                         }
                     }
-                }, true);
-            } catch (IOException ex) {
+                });
+            } catch (ParseException ex) {
                 //TODO: include stack trace:
                 client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
             } finally {

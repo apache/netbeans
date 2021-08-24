@@ -43,11 +43,14 @@ import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.SourceUtils;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.errors.Utilities;
+import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.modules.parsing.api.UserTask;
+import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.Fix;
 import org.openide.DialogDescriptor;
@@ -102,9 +105,9 @@ final class IntroduceVariableFix extends IntroduceFixBase implements Fix {
     private final String guessedName;
     private final TreePathHandle targetHandle;
 
-    public IntroduceVariableFix(TreePathHandle handle, JavaSource js, String guessedName, int numDuplicates, IntroduceKind kind, 
+    public IntroduceVariableFix(TreePathHandle handle, Source source, String guessedName, int numDuplicates, IntroduceKind kind,
             TreePathHandle methodHandle, int offset) {
-        super(js, handle, numDuplicates, offset);
+        super(source, handle, numDuplicates, offset);
         this.guessedName = guessedName;
         this.targetHandle = methodHandle;
     }
@@ -122,7 +125,7 @@ final class IntroduceVariableFix extends IntroduceFixBase implements Fix {
         return NbBundle.getMessage(IntroduceHint.class, "FIX_" + getKeyExt()); //NOI18N
     }
 
-    public ChangeInfo implement() throws IOException, BadLocationException {
+    public ChangeInfo implement() throws IOException, BadLocationException, ParseException {
         JButton btnOk = new JButton(NbBundle.getMessage(IntroduceHint.class, "LBL_Ok"));
         JButton btnCancel = new JButton(NbBundle.getMessage(IntroduceHint.class, "LBL_Cancel"));
         IntroduceFieldPanel panel = new IntroduceFieldPanel(guessedName, null, duplicatesCount,
@@ -131,7 +134,7 @@ final class IntroduceVariableFix extends IntroduceFixBase implements Fix {
                 "introduceVariable", btnOk);
         String caption = NbBundle.getMessage(IntroduceHint.class, "CAP_" + getKeyExt()); //NOI18N
         DialogDescriptor dd = new DialogDescriptor(panel, caption, true, new Object[]{btnOk, btnCancel}, btnOk, DialogDescriptor.DEFAULT_ALIGN, null, null);
-        FieldValidator val = new FieldValidator(js, null, this.handle);
+        FieldValidator val = new FieldValidator(source, null, this.handle);
         panel.setNotifier(dd.createNotificationLineSupport());
         panel.setValidator(val);
         panel.setTarget(targetHandle);
@@ -148,13 +151,14 @@ final class IntroduceVariableFix extends IntroduceFixBase implements Fix {
     }
 
     @Override
-    public ModificationResult getModificationResult() throws IOException {
+    public ModificationResult getModificationResult() throws ParseException {
         return getModificationResult(true, guessedName, false, false, null);
     }
 
-    private ModificationResult getModificationResult(final boolean replaceAll, final String name, final boolean declareFinal, final boolean refactor, final MemberSearchResult search) throws IOException {
-        return js.runModificationTask(new Task<WorkingCopy>() {
-            public void run(WorkingCopy parameter) throws Exception {
+    private ModificationResult getModificationResult(final boolean replaceAll, final String name, final boolean declareFinal, final boolean refactor, final MemberSearchResult search) throws ParseException {
+        return ModificationResult.runModificationTask(Collections.singleton(source), new UserTask() {
+            public void run(ResultIterator resultIterator) throws Exception {
+                WorkingCopy parameter = WorkingCopy.get(resultIterator.getParserResult());
                 parameter.toPhase(JavaSource.Phase.RESOLVED);
                 TreePath resolved = handle.resolve(parameter);
                 if (resolved == null) {

@@ -54,29 +54,29 @@ public class JavaCompletionTask117FeaturesTest extends CompletionTestBase {
 
 
     public void testVariableNameSuggestion() throws Exception {
-        EXTRA_OPTIONS.add("--enable-preview");
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
         performTest("SwitchPatternMatching", 1011, null, "AutoCompletion_VarNameSuggestion_PatternMatchingSwitch.pass", getLatestSource());
     } 
 
     public void testClassMembersAutoCompletion_GuardedPattern() throws Exception {
-        EXTRA_OPTIONS.add("--enable-preview");
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
         performTest("SwitchPatternMatching", 1085, null, "AutoCompletion_MembersSelect_GuardedPatternMatchingSwitch.pass", getLatestSource());
     }
 
     public void testClassMembersAutoCompletion_GuardedPattern_1() throws Exception {
-        EXTRA_OPTIONS.add("--enable-preview");
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
         performTest("SwitchPatternMatching", 1093, null, "AutoCompletion_MembersSelect_GuardedPatternMatchingSwitch_1.pass", getLatestSource());
     }
     public void testClassMembersAutoCompletion_GuardedPattern_2() throws Exception {
-        EXTRA_OPTIONS.add("--enable-preview");
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
         performTest("SwitchPatternMatching", 1113, null, "AutoCompletion_MembersSelect_GuardedPatternMatchingSwitch_2.pass", getLatestSource());
     }
     public void testClassMembersAutoCompletion_ParanthesizedPattern() throws Exception {
-        EXTRA_OPTIONS.add("--enable-preview");
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
         performTest("SwitchPatternMatching", 1200, null, "AutoCompletion_MembersSelect_ParenthesizedPatternMatchingSwitch.pass", getLatestSource());
     }
     public void testClassMembersAutoCompletion_ParanthesizedPattern_1() throws Exception {
-        EXTRA_OPTIONS.add("--enable-preview");
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");
         performTest("SwitchPatternMatching", 1224, null, "AutoCompletion_MembersSelect_ParenthesizedPatternMatchingSwitch_1.pass", getLatestSource());
     }
     public void noop() {
@@ -89,10 +89,11 @@ public class JavaCompletionTask117FeaturesTest extends CompletionTestBase {
     private String getLatestSource(){
         return SourceVersion.latest().name().substring(SourceVersion.latest().name().indexOf("_")+1);
     }
-    private static final List<String> EXTRA_OPTIONS = new ArrayList<>();
+    
     @ServiceProvider(service = CompilerOptionsQueryImplementation.class, position = 100)
     public static class TestCompilerOptionsQueryImplementation implements CompilerOptionsQueryImplementation {
-
+        private static final List<String> EXTRA_OPTIONS = new ArrayList<>();
+        
         @Override
         public CompilerOptionsQueryImplementation.Result getOptions(FileObject file) {
             return new CompilerOptionsQueryImplementation.Result() {

@@ -24,128 +24,49 @@ import javax.lang.model.SourceVersion;
 
 /**
  *
- * @author lahvac
+ * @author aksinsin
  */
-public class ConvertToPatternInstanceOfTest extends NbTestCase {
+public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
     
-    public ConvertToPatternInstanceOfTest(String name) {
+    public ConvertToSwitchPatternInstanceOfTest(String name) {
         super(name);
     }
     
     public void testSimple() throws Exception {
         HintTest.create()
-                .input("package test;\n" +
-                       "public class Test {\n" +
-                       "    private int test(Object o) {\n" +
-                       "        if (o instanceof String) {\n" +
-                       "            String s = (String) o;\n" +
-                       "            return s.length();\n" +
-                       "        }\n" +
-                       "        return -1;\n" +
-                       "    }\n" +
-                       "}\n")
+                .input("package test;\n"
+                        + "public class Test {\n"
+                        + "    private void test(Object o) {\n"
+                        + "        if (o instanceof String) {\n"
+                        + "            String s = (String) o;\n"
+                        + "            System.out.println(s + \" String\");\n"
+                        + "        } else if (o instanceof StringBuilder) {\n"
+                        + "            StringBuilder sb = (StringBuilder) o;\n"
+                        + "            System.out.println(sb + \" StringBuilder\");\n"
+                        + "        } else if (o instanceof CharSequence) {\n"
+                        + "            CharSequence cs = (CharSequence) o;\n"
+                        + "            System.out.println(cs + \" CharSequence\");\n"
+                        + "        } else {\n"
+                        + "            System.out.println(\"else\");\n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}")
                 .sourceLevel(SourceVersion.latest().name())
                 .options("--enable-preview")
-                .run(ConvertToPatternInstanceOf.class)
-                .findWarning("3:8-3:10:verifier:" + Bundle.ERR_ConvertToPatternInstanceOf())
+                .run(ConvertToSwitchPatternInstanceOf.class)
+                .findWarning("3:8-3:10:verifier:" + Bundle.ERR_ConvertToSwitchPatternInstanceOf())
                 .applyFix()
                 .assertCompilable()
-                .assertOutput("package test;\n" +
-                              "public class Test {\n" +
-                              "    private int test(Object o) {\n" +
-                              "        if (o instanceof String s) {\n" +
-                              "            return s.length();\n" +
-                              "        }\n" +
-                              "        return -1;\n" +
-                              "    }\n" +
-                              "}\n");
+                .assertOutput("package test;\n"
+                        + "public class Test {\n"
+                        + "    private void test(Object o) {\n"
+                        + "        switch (o) {\n"
+                        + "            case String s -> System.out.println(s + \" String\");\n"
+                        + "            case StringBuilder sb -> System.out.println(sb + \" StringBuilder\");\n"
+                        + "            case CharSequence cs -> System.out.println(cs + \" CharSequence\");\n"
+                        + "            case default -> System.out.println(\"else\");\n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}\n");
     }
-
-    public void testWithElse() throws Exception {
-        HintTest.create()
-                .input("package test;\n" +
-                       "public class Test {\n" +
-                       "    private int test(Object o) {\n" +
-                       "        if (o instanceof String) {\n" +
-                       "            String s = (String) o;\n" +
-                       "            return s.length();\n" +
-                       "        } else {\n" +
-                       "            return -1;\n" +
-                       "        }\n" +
-                       "    }\n" +
-                       "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
-                .run(ConvertToPatternInstanceOf.class)
-                .findWarning("3:8-3:10:verifier:" + Bundle.ERR_ConvertToPatternInstanceOf())
-                .applyFix()
-                .assertCompilable()
-                .assertOutput("package test;\n" +
-                              "public class Test {\n" +
-                              "    private int test(Object o) {\n" +
-                              "        if (o instanceof String s) {\n" +
-                              "            return s.length();\n" +
-                              "        } else {\n" +
-                              "            return -1;\n" +
-                              "        }\n" +
-                              "    }\n" +
-                              "}\n");
-    }
-
-    public void testNoSoSimple() throws Exception {
-        HintTest.create()
-                .input("package test;\n" +
-                       "public class Test {\n" +
-                       "    private int test(Object o) {\n" +
-                       "        if (o instanceof String) {\n" +
-                       "            return ((String) o).length();\n" +
-                       "        }\n" +
-                       "        return -1;\n" +
-                       "    }\n" +
-                       "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
-                .run(ConvertToPatternInstanceOf.class)
-                .findWarning("3:8-3:10:verifier:" + Bundle.ERR_ConvertToPatternInstanceOf())
-                .applyFix()
-                .assertCompilable()
-                .assertOutput("package test;\n" +
-                              "public class Test {\n" +
-                              "    private int test(Object o) {\n" +
-                              "        if (o instanceof String string) {\n" +
-                              "            return string.length();\n" +
-                              "        }\n" +
-                              "        return -1;\n" +
-                              "    }\n" +
-                              "}\n");
-    }
-
-    public void testNoSoSimpleNameClash() throws Exception {
-        HintTest.create()
-                .input("package test;\n" +
-                       "public class Test {\n" +
-                       "    private int test(Object o, String string) {\n" +
-                       "        if (o instanceof String) {\n" +
-                       "            return ((String) o).length();\n" +
-                       "        }\n" +
-                       "        return -1;\n" +
-                       "    }\n" +
-                       "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
-                .run(ConvertToPatternInstanceOf.class)
-                .findWarning("3:8-3:10:verifier:" + Bundle.ERR_ConvertToPatternInstanceOf())
-                .applyFix()
-                .assertCompilable()
-                .assertOutput("package test;\n" +
-                              "public class Test {\n" +
-                              "    private int test(Object o, String string) {\n" +
-                              "        if (o instanceof String string1) {\n" +
-                              "            return string1.length();\n" +
-                              "        }\n" +
-                              "        return -1;\n" +
-                              "    }\n" +
-                              "}\n");
-    }
-
 }

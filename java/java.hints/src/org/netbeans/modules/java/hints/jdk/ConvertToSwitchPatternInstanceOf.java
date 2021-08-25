@@ -159,8 +159,8 @@ public class ConvertToSwitchPatternInstanceOf {
                 Tree defaultTree = null;
                 defaultTree = blockTree.getStatements().size() == 1 && isValidCaseTree(blockTree.getStatements().get(0))? blockTree.getStatements().get(0) : thenBlock;
 
-                CaseTree caseMultipleSwitchPatterns = wc.getTreeMaker().CaseMultipleSwitchPatterns(caseBindPattern, defaultTree);
-                ctl.add(caseMultipleSwitchPatterns);
+                CaseTree casePatterns = wc.getTreeMaker().CasePatterns(caseBindPattern, defaultTree);
+                ctl.add(casePatterns);
             }
             List<Tree> caseDefaultLabel = new LinkedList<>();
             caseDefaultLabel.add(wc.getTreeMaker().Identifier("default"));
@@ -170,8 +170,8 @@ public class ConvertToSwitchPatternInstanceOf {
             }
 
             Tree defaultTree = elseTree.getStatements().size() == 1 && isValidCaseTree(elseTree.getStatements().get(0))? elseTree.getStatements().get(0) : elseTree;
-            CaseTree caseMultipleSwitchPatterns = wc.getTreeMaker().CaseMultipleSwitchPatterns(caseDefaultLabel, defaultTree);
-            ctl.add(caseMultipleSwitchPatterns);
+            CaseTree casePatterns = wc.getTreeMaker().CasePatterns(caseDefaultLabel, defaultTree);
+            ctl.add(casePatterns);
             wc.rewrite((IfTree) main.getLeaf(), wc.getTreeMaker().Switch(iot.getExpression(), ctl));
         }
 

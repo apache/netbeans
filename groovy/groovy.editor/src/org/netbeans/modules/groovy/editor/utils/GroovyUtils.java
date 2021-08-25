@@ -19,8 +19,12 @@
 
 package org.netbeans.modules.groovy.editor.utils;
 
-import java.util.List;
 import javax.swing.text.BadLocationException;
+import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.GenericsType;
+import org.codehaus.groovy.ast.expr.Expression;
+import org.codehaus.groovy.transform.stc.StaticTypesMarker;
 
 /**
  *
@@ -235,6 +239,47 @@ public final class GroovyUtils {
             }
         }
         return sb.toString();
+    }
+    
+    /**
+     * Finds the type inferred for the expression tree. Types are inferred by
+     * static compilation visitor during INSTRUCTION_SELECTION phase.
+     * <p>
+     * If the inferred type is just Object, the method returns false.
+     * @param n the node
+     * @return inferred type or {@code null}
+     */
+    public static ClassNode findInferredType(ASTNode n) {
+        Object o = n.getNodeMetaData(StaticTypesMarker.INFERRED_TYPE);
+        ClassNode cn = null;
+        if (n instanceof Expression) {
+            cn = ((Expression)n).getType();
+            
+        }
+        ClassNode inferred = null;
+        if (o instanceof ClassNode) {
+            inferred = (ClassNode)o;
+        } 
+        /*
+        // hack: if the inferred type is j.l.Class & type is known, return that type
+        if (cn != null && inferred != null && inferred.getName().equals("java.lang.Class")) {
+            GenericsType[] gt = inferred.getGenericsTypes();
+            if (gt != null && gt.length == 1 && gt[0].getName().equals(cn.getName())) {
+                return cn;
+            }
+        }
+        */
+        if (inferred != null) {
+            cn = inferred;
+        }
+        if (cn == null) {
+            return null;
+        }
+        if (!cn.getName().equals("java.lang.Object")) {
+            return cn;
+        } else {
+            return null;
+        }
     }
     
     /**

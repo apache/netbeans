@@ -36,6 +36,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.lang.model.element.Element;
 import javax.swing.text.Document;
+import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.reflection.CachedClass;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
@@ -54,6 +55,7 @@ import static org.netbeans.modules.groovy.editor.api.completion.CompletionHandle
 import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
 import org.netbeans.modules.groovy.editor.api.completion.util.ContextHelper;
 import org.netbeans.modules.groovy.editor.api.elements.ast.ASTMethod;
+import org.netbeans.modules.groovy.editor.api.parser.GroovyParserResult;
 import org.netbeans.modules.groovy.editor.completion.ProposalsCollector;
 import org.netbeans.modules.groovy.editor.java.JavaElementHandle;
 import org.netbeans.modules.groovy.support.api.GroovySettings;
@@ -166,24 +168,22 @@ public class GroovyCompletionImpl {
             if (ContextHelper.isVariableNameDefinition(context) || ContextHelper.isFieldNameDefinition(context)) {
                 proposalsCollector.completeNewVars(context);
             } else {
-                if (!(context.location == CaretLocation.OUTSIDE_CLASSES || context.location == CaretLocation.INSIDE_STRING)) {
-                    proposalsCollector.completePackages(context);
-                    proposalsCollector.completeTypes(context);
-                }
-
-                if (!context.isBehindImportStatement()) {
-                    if (context.location != CaretLocation.INSIDE_STRING) {
-                        proposalsCollector.completeKeywords(context);
-                        proposalsCollector.completeMethods(context);
+                makeClassProposals(proposalsCollector, context);
+                // implicit conversion of GString > String:
+                if (context.declaringClass != null && context.declaringClass.getName().equals("groovy.lang.GString")) { // NOI18N
+                    // add String methods in addition to GString ones.
+                    ClassNode sn = ((GroovyParserResult)parserResult).resolveClassName("java.lang.String"); // NOI18N
+                    if (sn != null) {
+                        context.setDeclaringClass(sn);
+                        makeClassProposals(proposalsCollector, context);
                     }
-
-                    proposalsCollector.completeFields(context);
-                    proposalsCollector.completeLocalVars(context);
                 }
-
-                if (context.location == CaretLocation.INSIDE_CONSTRUCTOR_CALL) {
-                    if (ContextHelper.isAfterComma(context) || ContextHelper.isAfterLeftParenthesis(context)) {
-                        proposalsCollector.completeNamedParams(context);
+                if (context.rawDseclaringClass != null && context.rawDseclaringClass.getName().equals("java.lang.Class")) { // NOI18N
+                    if (context.rawDseclaringClass.getGenericsTypes().length == 1) {
+                        ClassNode cn = context.rawDseclaringClass.getGenericsTypes()[0].getType();
+                        context.setDeclaringClass(cn);
+                        context.init();
+                        makeClassProposals(proposalsCollector, context);
                     }
                 }
             }
@@ -192,6 +192,29 @@ public class GroovyCompletionImpl {
             return new CompletionImplResult(proposalsCollector.getCollectedProposals(), context);
         } finally {
             doc.readUnlock();
+        }
+    }
+    
+    private void makeClassProposals(ProposalsCollector proposalsCollector, CompletionContext context) {
+        if (!(context.location == CaretLocation.OUTSIDE_CLASSES || context.location == CaretLocation.INSIDE_STRING)) {
+            proposalsCollector.completePackages(context);
+            proposalsCollector.completeTypes(context);
+        }
+
+        if (!context.isBehindImportStatement()) {
+            if (context.location != CaretLocation.INSIDE_STRING) {
+                proposalsCollector.completeKeywords(context);
+                proposalsCollector.completeMethods(context);
+            }
+
+            proposalsCollector.completeFields(context);
+            proposalsCollector.completeLocalVars(context);
+        }
+
+        if (context.location == CaretLocation.INSIDE_CONSTRUCTOR_CALL) {
+            if (ContextHelper.isAfterComma(context) || ContextHelper.isAfterLeftParenthesis(context)) {
+                proposalsCollector.completeNamedParams(context);
+            }
         }
     }
 

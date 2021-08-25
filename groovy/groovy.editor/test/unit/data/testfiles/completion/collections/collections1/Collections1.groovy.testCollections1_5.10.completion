@@ -23,6 +23,7 @@ METHOD     asUnmodifiable()                           List
 METHOD     average()                                  Object
 METHOD     average(Closure)                           Object
 METHOD     bufferedIterator()                         BufferedIterator
+METHOD     by(T)                           [PUBLIC]   NumberRange
 METHOD     chop(int[])                                List
 METHOD     clear()                         [PUBLIC]   void
 METHOD     collate(int)                               List
@@ -43,7 +44,7 @@ METHOD     collectNested(Collection, Clos             Collection
 METHOD     combinations()                             List
 METHOD     combinations(Closure)                      List
 METHOD     contains(Object)                [PUBLIC]   boolean
-METHOD     containsAll(Collection<?>)      [PUBLIC]   boolean
+METHOD     containsAll(Collection)         [PUBLIC]   boolean
 METHOD     containsAll(Object[])                      boolean
 METHOD     containsWithinBounds(Object)    [PUBLIC]   boolean
 METHOD     copyOf(Collection<? extends E>  [STATIC,   List<E>
@@ -59,6 +60,7 @@ METHOD     each(Closure)                              List
 METHOD     eachCombination(Closure)                   void
 METHOD     eachPermutation(Closure)                   Iterator
 METHOD     eachWithIndex(Closure)                     List
+METHOD     equals(IntRange)                [PUBLIC]   boolean
 METHOD     equals(List)                               boolean
 METHOD     equals(Object)                  [PUBLIC]   boolean
 METHOD     equals(Object[])                           boolean
@@ -84,7 +86,7 @@ METHOD     first()                                    Object
 METHOD     flatten()                                  List
 METHOD     flatten(Closure)                           Collection
 METHOD     forEach(Consumer<? super T>)    [PUBLIC]   void
-METHOD     get(int)                        [PUBLIC]   E
+METHOD     get(int)                        [PUBLIC]   Integer
 METHOD     getAt(Collection)                          List
 METHOD     getAt(EmptyRange)                          List
 METHOD     getAt(Number)                              Object
@@ -92,12 +94,15 @@ METHOD     getAt(Range)                               List
 METHOD     getAt(String)                              List
 METHOD     getAt(int)                                 Object
 METHOD     getClass()                      [PUBLIC]   Class<?>
-METHOD     getFrom()                       [PUBLIC]   T
+METHOD     getFrom()                       [PUBLIC]   Integer
+METHOD     getFromInt()                    [PUBLIC]   int
+METHOD     getInclusive()                  [PUBLIC]   Boolean
 METHOD     getIndices()                               IntRange
 METHOD     getMetaClass()                             MetaClass
 METHOD     getMetaPropertyValues()                    List
 METHOD     getProperties()                            Map
-METHOD     getTo()                         [PUBLIC]   T
+METHOD     getTo()                         [PUBLIC]   Integer
+METHOD     getToInt()                      [PUBLIC]   int
 METHOD     grep()                                     List
 METHOD     grep(Object)                               List
 METHOD     groupBy(Closure)                           Map
@@ -124,7 +129,7 @@ METHOD     is(Object)                                 boolean
 METHOD     isCase(Object)                             boolean
 METHOD     isEmpty()                       [PUBLIC]   boolean
 METHOD     isReverse()                     [PUBLIC]   boolean
-METHOD     iterator()                                 Iterator
+METHOD     iterator()                      [PUBLIC]   Iterator<Integer>
 METHOD     join(String)                               String
 METHOD     last()                                     Object
 METHOD     lastIndexOf(Object)             [PUBLIC]   int
@@ -220,10 +225,11 @@ METHOD     split(Closure)                             List
 METHOD     spliterator()                   [PUBLIC]   Spliterator<E>
 METHOD     sprintf(String, Object)                    String
 METHOD     sprintf(String, Object)                    String
-METHOD     step(int)                       [PUBLIC]   List<T>
+METHOD     step(int)                       [PUBLIC]   List<Integer>
 METHOD     step(int, Closure)              [PUBLIC]   void
 METHOD     stream()                                   Stream
-METHOD     subList(int, int)               [PUBLIC]   List<E>
+METHOD     subList(int, int)               [PUBLIC]   List<Integer>
+METHOD     subListBorders(int)             [PUBLIC]   RangeInfo
 METHOD     subsequences()                             Set
 METHOD     sum()                                      Object
 METHOD     sum(Closure)                               Object
@@ -237,6 +243,7 @@ METHOD     takeRight(int)                             List
 METHOD     takeWhile(Closure)                         List
 METHOD     tap(Closure)                               Object
 METHOD     toArray()                       [PUBLIC]   Object[]
+METHOD     toArray(IntFunction<T[]>)       [PUBLIC]   T[]
 METHOD     toArray(T[])                    [PUBLIC]   T[]
 METHOD     toList()                                   List
 METHOD     toListString()                             String
@@ -246,7 +253,7 @@ METHOD     toSorted()                                 List
 METHOD     toSorted(Closure)                          List
 METHOD     toSorted(Comparator)                       List
 METHOD     toSpreadMap()                              SpreadMap
-METHOD     toString()                                 String
+METHOD     toString()                      [PUBLIC]   String
 METHOD     toUnique()                                 List
 METHOD     toUnique(Closure)                          List
 METHOD     toUnique(Comparator)                       List
@@ -271,7 +278,11 @@ METHOD     withIndex()                                List
 METHOD     withIndex(int)                             List
 METHOD     withLazyDefault(Closure)                   ListWithDefault
 METHOD     withTraits(Class[])                        Object
+FIELD      class                           [PUBLIC]   Class
 FIELD      empty                           [PUBLIC]   boolean
-FIELD      from                            [PUBLIC]   Comparable
+FIELD      from                            [PUBLIC]   Integer
+FIELD      fromInt                         [PUBLIC]   int
+FIELD      inclusive                       [PUBLIC]   Boolean
 FIELD      reverse                         [PUBLIC]   boolean
-FIELD      to                              [PUBLIC]   Comparable
+FIELD      to                              [PUBLIC]   Integer
+FIELD      toInt                           [PUBLIC]   int

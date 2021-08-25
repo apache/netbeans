@@ -115,6 +115,11 @@ public final class GroovyElementsProvider implements CompletionProvider {
             }
 
             for (IndexedField indexedField : fields) {
+                // properties are represented as indexed fields, with private access. Maybe should
+                // change so access checks can succeed without special cases.
+                if (!(indexedField.isProperty() || accept(context.access, indexedField))) {
+                    continue;
+                }
                 result.put(getFieldSignature(indexedField), new CompletionItem.FieldItem(
                         indexedField.getTypeName(),
                         indexedField.getName(),

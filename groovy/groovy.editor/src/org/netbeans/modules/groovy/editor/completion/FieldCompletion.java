@@ -21,6 +21,7 @@ package org.netbeans.modules.groovy.editor.completion;
 
 import java.util.Map;
 import java.util.logging.Level;
+import org.codehaus.groovy.ast.ClassNode;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.groovy.editor.api.completion.CaretLocation;
@@ -78,7 +79,7 @@ public class FieldCompletion extends BaseCompletion {
                 }
             }
         } else {
-            context.declaringClass = ContextHelper.getSurroundingClassNode(context);
+            context.setDeclaringClass(ContextHelper.getSurroundingClassNode(context));
         }
 
         // If we are dealing with GStrings, the prefix is prefixed ;-)

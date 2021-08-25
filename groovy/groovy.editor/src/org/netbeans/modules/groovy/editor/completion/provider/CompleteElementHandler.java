@@ -68,7 +68,7 @@ public final class CompleteElementHandler {
 
     public Map<MethodSignature, CompletionItem> getMethods() {
         final ClassNode source = context.getSurroundingClass();
-        final ClassNode node = context.declaringClass;
+        final ClassNode node = context.rawDseclaringClass;
         
         if (node == null) {
             return Collections.emptyMap();
@@ -88,7 +88,7 @@ public final class CompleteElementHandler {
 
     public Map<FieldSignature, CompletionItem> getFields() {
         final ClassNode source = context.getSurroundingClass();
-        final ClassNode node = context.declaringClass;
+        final ClassNode node = context.rawDseclaringClass;
         
         if (node == null) {
             return Collections.emptyMap();

@@ -86,7 +86,7 @@ is the proper place.
 <changes>
     <change id="ASTPath.outer">
         <api name="groovy-parsing"/>
-        <summary>Alternative construction for path more suitable for expressions</summary>
+        <summary>Alternative construction for path more suitable for expressions, API to resolve types</summary>
         <version major="1" minor="80"/>
         <date day="25" month="8" year="2021"/>
         <author login="sdedic"/>
@@ -96,8 +96,12 @@ is the proper place.
                 ASTPath can be constructed so it terminates on the outermost expression that spans
                 the given  index. By default the path was constructed to the deepest node.
             </p>
+            <p>
+                GroovyParserResult can resolve type names to ClassNodes using proper environment.
+            </p>
         </description>
         <class package="org.netbeans.modules.groovy.editor.api" name="ASTPath"/>
+        <class package="org.netbeans.modules.groovy.editor.api.parser" name="GroovyParserResult"/>
     </change>
     <change id="CompletionContext.setDeclaringClass">
         <api name="groovy-completion"/>

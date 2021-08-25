@@ -39,7 +39,6 @@ import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.GenericsType;
 import org.codehaus.groovy.ast.MixinNode;
 import org.codehaus.groovy.control.ClassNodeResolver.LookupResult;
-import org.codehaus.groovy.control.ClassNodeResolver;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -55,7 +54,7 @@ import org.openide.util.Exceptions;
  *
  * @author Martin Adamek
  */
-public final class CompilationUnit extends org.codehaus.groovy.control.CompilationUnit {
+public class CompilationUnit extends org.codehaus.groovy.control.CompilationUnit {
     static CompilerConfiguration processConfiguration(CompilerConfiguration configuration, boolean isIndexing) {
         Map<String, Boolean> opts = configuration.getOptimizationOptions();
         opts.put("classLoaderResolving", Boolean.FALSE); // NOI18N

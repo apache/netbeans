@@ -82,30 +82,36 @@ public final class TestMethodFinderImpl extends EmbeddingIndexer {
     private void store(FileObject indexFolder, URL url, String resourceName, List<TestMethodController.TestMethod> methods) {
         File cacheRoot = FileUtil.toFile(indexFolder);
         File output = new File(cacheRoot, resourceName + ".tests"); //NOI18N
-        output.getParentFile().mkdirs();
-        boolean printHeader = true;
-        try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output), "UTF-8"))) {
-            for (TestMethodController.TestMethod method : methods) {
-                if (printHeader) {
-                    pw.print("url: "); //NOI18N
-                    pw.println(url.toString());
-                    pw.print("class: "); //NOI18N
-                    pw.print(method.getTestClassName());
-                    if (method.getTestClassPosition() != null) {
-                        pw.print(':'); //NOI18N
-                        pw.println(method.getTestClassPosition().getOffset());
-                    } else {
-                        pw.println();
-                    }
-                    printHeader = false;
-                }
-                pw.print("method: "); //NOI18N
-                pw.print(method.method().getMethodName());
-                pw.print(':'); //NOI18N
-                pw.println(method.start().getOffset());
+        if (methods.isEmpty()) {
+            if (output.exists()) {
+                output.delete();
             }
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+        } else {
+            output.getParentFile().mkdirs();
+            boolean printHeader = true;
+            try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output), "UTF-8"))) {
+                for (TestMethodController.TestMethod method : methods) {
+                    if (printHeader) {
+                        pw.print("url: "); //NOI18N
+                        pw.println(url.toString());
+                        pw.print("class: "); //NOI18N
+                        pw.print(method.getTestClassName());
+                        if (method.getTestClassPosition() != null) {
+                            pw.print(':'); //NOI18N
+                            pw.println(method.getTestClassPosition().getOffset());
+                        } else {
+                            pw.println();
+                        }
+                        printHeader = false;
+                    }
+                    pw.print("method: "); //NOI18N
+                    pw.print(method.method().getMethodName());
+                    pw.print(':'); //NOI18N
+                    pw.println(method.start().getOffset());
+                }
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
     }
 

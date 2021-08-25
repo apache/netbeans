@@ -66,6 +66,7 @@ import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
+import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -79,13 +80,13 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
+import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodFinder;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaTypeProvider;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
-import org.netbeans.modules.java.testrunner.ui.api.TestMethodFinder;
 import org.netbeans.modules.parsing.lucene.support.Queries;
 import org.netbeans.spi.jumpto.type.SearchType;
 import org.netbeans.spi.project.ActionProgress;
@@ -224,9 +225,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                                 try {
                                     client.notifyTestProgress(new TestProgressParams(Utils.toUri(fo), f.apply(fo, methods)));
                                 } catch (Exception e) {
-                                    synchronized(this) {
-                                        TestMethodFinder.removeListener(testMethodsListener.getAndSet(null));
-                                    }
+                                    testMethodsListener.set(null);
                                 }
                             });
                             Map<FileObject, Collection<TestMethodController.TestMethod>> testMethods = TestMethodFinder.findTestMethods(testRoots, testMethodsListener.get());
@@ -402,7 +401,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     }
 
     private boolean isTestGroup(SourceGroup sg) {
-        return sg.getName().contains("TestSourceRoot") || sg.getName().contains("test.");
+        return UnitTestForSourceQuery.findSources(sg.getRootFolder()).length > 0;
     }
 
     @Override

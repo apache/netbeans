@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.testrunner.ui;
+package org.netbeans.modules.gsf.testrunner.ui;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,14 +26,11 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
-import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
 import org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods;
 import org.netbeans.modules.parsing.api.Snapshot;
@@ -45,6 +42,7 @@ import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
+import org.openide.util.WeakSet;
 
 /**
  *
@@ -56,22 +54,20 @@ public final class TestMethodFinderImpl extends EmbeddingIndexer {
     public static final int VERSION = 1;
     public static TestMethodFinderImpl INSTANCE = null;
 
-    private final Set<BiConsumer<FileObject, Collection<TestMethodController.TestMethod>>> listeners = new HashSet<>();
+    private final WeakSet<BiConsumer<FileObject, Collection<TestMethodController.TestMethod>>> listeners = new WeakSet<>();
 
     @Override
     protected void index(Indexable indexable, Parser.Result parserResult, Context context) {
-        if (UnitTestForSourceQuery.findUnitTests(context.getRoot()).length == 0) {
-            List<TestMethodController.TestMethod> testMethods = new ArrayList<>();
-            for (ComputeTestMethods ctm : MimeLookup.getLookup(indexable.getMimeType()).lookupAll(ComputeTestMethods.class)) {
-                testMethods.addAll(ctm.computeTestMethods(parserResult, new AtomicBoolean()));
-            }
-            FileObject fo = parserResult.getSnapshot().getSource().getFileObject();
-            store(context.getIndexFolder(), indexable.getURL(), indexable.getRelativePath(), testMethods);
-            if (!context.isAllFilesIndexing()) {
-                synchronized (listeners) {
-                    for (BiConsumer<FileObject, Collection<TestMethodController.TestMethod>> listener : listeners) {
-                        listener.accept(fo, testMethods);
-                    }
+        List<TestMethodController.TestMethod> testMethods = new ArrayList<>();
+        for (ComputeTestMethods ctm : MimeLookup.getLookup(indexable.getMimeType()).lookupAll(ComputeTestMethods.class)) {
+            testMethods.addAll(ctm.computeTestMethods(parserResult, new AtomicBoolean()));
+        }
+        FileObject fo = parserResult.getSnapshot().getSource().getFileObject();
+        store(context.getIndexFolder(), indexable.getURL(), indexable.getRelativePath(), testMethods);
+        if (!context.isAllFilesIndexing()) {
+            synchronized (listeners) {
+                for (BiConsumer<FileObject, Collection<TestMethodController.TestMethod>> listener : listeners) {
+                    listener.accept(fo, testMethods);
                 }
             }
         }
@@ -79,13 +75,7 @@ public final class TestMethodFinderImpl extends EmbeddingIndexer {
 
     public void addListener(BiConsumer<FileObject, Collection<TestMethodController.TestMethod>> listener) {
         synchronized(listeners) {
-            listeners.add(listener);
-        }
-    }
-
-    public void removeListener(BiConsumer<FileObject, Collection<TestMethodController.TestMethod>> listener) {
-        synchronized(listeners) {
-            listeners.remove(listener);
+            listeners.putIfAbsent(listener);
         }
     }
 

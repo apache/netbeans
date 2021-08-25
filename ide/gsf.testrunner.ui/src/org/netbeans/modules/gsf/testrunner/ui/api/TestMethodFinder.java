@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.testrunner.ui.api;
+package org.netbeans.modules.gsf.testrunner.ui.api;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,8 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import javax.swing.text.Position;
-import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
-import org.netbeans.modules.java.testrunner.ui.TestMethodFinderImpl;
+import org.netbeans.modules.gsf.testrunner.ui.TestMethodFinderImpl;
 import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
@@ -43,7 +42,7 @@ import org.openide.util.Exceptions;
  * API to provide a list of {@link TestMethod}s found in sources under particular test roots.
  *
  * @author Dusan Balek
- * @since 1.18
+ * @since 1.27
  */
 public final class TestMethodFinder {
 
@@ -51,9 +50,9 @@ public final class TestMethodFinder {
      * Provides a list of {@link TestMethod}s found in sources under particular test roots.
      *
      * @param testRoots roots to search test methods for
-     * @param listener a listener to inform about later changes
+     * @param listener a listener to inform about later changes. The listener is held weakly.
      * @return map of test source files to tests methods found
-     * @since 1.18
+     * @since 1.27
      */
     public static Map<FileObject, Collection<TestMethodController.TestMethod>> findTestMethods(Iterable<FileObject> testRoots, BiConsumer<FileObject, Collection<TestMethodController.TestMethod>> listener) {
         if (TestMethodFinderImpl.INSTANCE != null) {
@@ -75,17 +74,6 @@ public final class TestMethodFinder {
             } catch (IOException ex) {}
         }
         return file2TestMethods;
-    }
-
-    /**
-     * Removes previously registered listener.
-     * @param listener a listener to remove
-     * @see 1.18
-     */
-    public static void removeListener(BiConsumer<FileObject, Collection<TestMethodController.TestMethod>> listener) {
-        if (TestMethodFinderImpl.INSTANCE != null) {
-            TestMethodFinderImpl.INSTANCE.removeListener(listener);
-        }
     }
 
     private static void loadTestMethods(FileObject input, Map<FileObject, Collection<TestMethodController.TestMethod>> file2TestMethods) {

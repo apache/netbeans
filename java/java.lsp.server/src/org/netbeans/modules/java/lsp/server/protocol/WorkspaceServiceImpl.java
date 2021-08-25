@@ -39,6 +39,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
@@ -75,6 +78,8 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
+import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodFinder;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
@@ -194,7 +199,42 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     JavaSource js = JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY));
                     try {
                         js.runWhenScanFinished(controller -> {
-                            future.complete(TestFinder.findTests(testRoots, client));
+                            BiFunction<FileObject, Collection<TestMethodController.TestMethod>, TestSuiteInfo> f = (fo, methods) -> {
+                                List<TestSuiteInfo.TestCaseInfo> tests = new ArrayList<>(methods.size());
+                                String url = Utils.toUri(fo);
+                                String testClassName = null;
+                                Integer testClassLine = null;
+                                for (TestMethodController.TestMethod testMethod : methods) {
+                                    if (testClassName == null) {
+                                        testClassName = testMethod.getTestClassName();
+                                    }
+                                    if (testClassLine == null) {
+                                        testClassLine = testMethod.getTestClassPosition() != null
+                                                ? Utils.createPosition(fo, testMethod.getTestClassPosition().getOffset()).getLine()
+                                                : null;
+                                    }
+                                    String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
+                                    String fullName = testMethod.getTestClassName() + '.' + testMethod.method().getMethodName();
+                                    int testLine = Utils.createPosition(fo, testMethod.start().getOffset()).getLine();
+                                    tests.add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), fullName, url, testLine, TestSuiteInfo.State.Loaded, null));
+                                }
+                                return new TestSuiteInfo(testClassName, url, testClassLine, TestSuiteInfo.State.Loaded, tests);
+                            };
+                            testMethodsListener.compareAndSet(null, (fo, methods) -> {
+                                try {
+                                    client.notifyTestProgress(new TestProgressParams(Utils.toUri(fo), f.apply(fo, methods)));
+                                } catch (Exception e) {
+                                    synchronized(this) {
+                                        TestMethodFinder.removeListener(testMethodsListener.getAndSet(null));
+                                    }
+                                }
+                            });
+                            Map<FileObject, Collection<TestMethodController.TestMethod>> testMethods = TestMethodFinder.findTestMethods(testRoots, testMethodsListener.get());
+                            Collection<TestSuiteInfo> suites = new ArrayList<>(testMethods.size());
+                            for (Entry<FileObject, Collection<TestMethodController.TestMethod>> entry : testMethods.entrySet()) {
+                                suites.add(f.apply(entry.getKey(), entry.getValue()));
+                            }
+                            future.complete(suites);
                         }, true);
                     } catch (IOException ex) {
                         future.completeExceptionally(ex);
@@ -280,7 +320,9 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         }
         throw new UnsupportedOperationException("Command not supported: " + params.getCommand());
     }
-    
+
+    private final AtomicReference<BiConsumer<FileObject, Collection<TestMethodController.TestMethod>>> testMethodsListener = new AtomicReference<>();
+
     private static Map<String, Object> attributesMap(JsonObject json) {
         Map<String, Object> map = new LinkedHashMap<>();
         for (Entry<String, JsonElement> entry : json.entrySet()) {

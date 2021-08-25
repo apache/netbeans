@@ -60,7 +60,7 @@ public class ConvertToPatternInstanceOfTest extends NbTestCase {
                               "    }\n" +
                               "}\n");
     }
-
+    
     public void testWithElse() throws Exception {
         HintTest.create()
                 .input("package test;\n" +

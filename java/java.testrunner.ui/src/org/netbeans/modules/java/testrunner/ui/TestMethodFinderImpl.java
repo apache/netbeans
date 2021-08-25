@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.gsf.testrunner.ui;
+package org.netbeans.modules.java.testrunner.ui;
 
 import java.io.File;
 import java.io.FileOutputStream;

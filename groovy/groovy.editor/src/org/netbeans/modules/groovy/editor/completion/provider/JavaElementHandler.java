@@ -372,7 +372,7 @@ public final class JavaElementHandler {
                 ElementAcceptor acceptor = new ElementAcceptor() {
 
                     public boolean accept(Element e, TypeMirror type) {
-                        if (e.getKind() != ElementKind.FIELD) {
+                        if (!e.getKind().isField()) {
                             return false;
                         }
                         for (AccessLevel level : levels) {

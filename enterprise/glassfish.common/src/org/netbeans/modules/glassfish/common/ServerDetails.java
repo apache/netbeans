@@ -209,7 +209,7 @@ public enum ServerDetails {
      */
     GLASSFISH_SERVER_6(NbBundle.getMessage(ServerDetails.class, "STR_6_SERVER_NAME", new Object[]{}), // NOI18N
         "deployer:gfv6ee9", // NOI18N
-        6,
+        600,
         "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.0.0/glassfish-6.0.0.zip", // NOI18N
         "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.0.0/glassfish-6.0.0.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
@@ -220,7 +220,7 @@ public enum ServerDetails {
      */
     GLASSFISH_SERVER_6_1_0(NbBundle.getMessage(ServerDetails.class, "STR_610_SERVER_NAME", new Object[]{}), // NOI18N
         "deployer:gfv610ee9", // NOI18N
-        6,
+        610,
         "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.1.0/glassfish-6.1.0.zip", // NOI18N
         "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.1.0/glassfish-6.1.0.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N

@@ -18,9 +18,9 @@
     under the License.
 
 -->
-action.run.args=bck2brwsrShow
+action.run.args=bck2brwsrShow -t
 
 action.debug.args=run --debug-jvm
 
 action.custom-1=Run in Browser
-action.custom-1.args=bck2brwsrShow
+action.custom-1.args=bck2brwsrShow -t

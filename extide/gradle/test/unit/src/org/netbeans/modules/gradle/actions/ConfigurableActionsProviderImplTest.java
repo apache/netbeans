@@ -38,10 +38,12 @@ import org.junit.rules.TemporaryFolder;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.api.execute.RunConfig;
 import org.netbeans.modules.gradle.api.execute.RunUtilsTest;
+import org.netbeans.modules.gradle.customizer.CustomActionMapping;
 import org.netbeans.modules.gradle.execute.ConfigPersistenceUtilsTest;
 import org.netbeans.modules.gradle.execute.GradleExecAccessor;
 import org.netbeans.modules.gradle.execute.GradleExecutor;
@@ -348,5 +350,53 @@ public class ConfigurableActionsProviderImplTest {
         ActionProvider ap = project.getLookup().lookup(ActionProvider.class);
         assertTrue("debug.single is supported for java.distribution / default", Arrays.asList(ap.getSupportedActions()).contains("debug.single"));
         assertTrue("debug.single is enabled for java.distribution / default", ap.isActionEnabled("debug.single", Lookups.singleton(def)));
+    }
+    
+    /**
+     * Checks that if a custom action is made/paersisted, it will be visible in
+     * action provider.
+     * @throws IOException 
+     */
+    @Test
+    public void testSaveCustomizedActionVisible() throws Exception {
+        createGradleProject2();
+        
+        CustomActionRegistrationSupport supp = new CustomActionRegistrationSupport(project);
+        CustomActionMapping cam = new CustomActionMapping(ActionMapping.CUSTOM_PREFIX + "1");
+        cam.setArgs("build");
+        
+        ActionProvider ap = project.getLookup().lookup(ActionProvider.class);
+        assertFalse(Arrays.asList(ap.getSupportedActions()).contains(cam.getName()));
+        
+        supp.registerCustomAction(cam);
+        supp.save();
+        
+        assertTrue(Arrays.asList(ap.getSupportedActions()).contains(cam.getName()));
+    }
+    
+    /**
+     * Checks that custom created action is enabled.
+     */
+    @Test
+    public void testCustomizedActionEnabled() throws Exception {
+        createGradleProject2();
+        
+        CustomActionRegistrationSupport supp = new CustomActionRegistrationSupport(project);
+        CustomActionMapping cam = new CustomActionMapping(ActionMapping.CUSTOM_PREFIX + "1");
+        cam.setArgs("build");
+        
+        ActionProvider ap = project.getLookup().lookup(ActionProvider.class);
+        
+        assertFalse("Nonexistent ation must not be enabled", ap.isActionEnabled(cam.getName(), Lookup.EMPTY));
+
+        supp.registerCustomAction(cam);
+        supp.save();
+        
+        assertTrue("Custom actions are always enabled", ap.isActionEnabled(cam.getName(), Lookup.EMPTY));
+        
+        supp.unregisterCustomAction(cam.getName());
+        supp.save();
+        
+        assertFalse("Deleted actions must not be enabled", ap.isActionEnabled(cam.getName(), Lookup.EMPTY));
     }
 }

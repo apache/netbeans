@@ -24,7 +24,7 @@ import org.openide.WizardDescriptor.InstantiatingIterator;
 import org.openide.util.NbBundle;
 
 @NbBundle.Messages({
-    "DiscoPlatformInstall.displayName=Download OpenJDK (via foojay Disco API)"
+    "DiscoPlatformInstall.displayName=Download OpenJDK (via Foojay.io Disco API)"
 })
 public class FoojayPlatformInstall extends CustomPlatformInstall {
 

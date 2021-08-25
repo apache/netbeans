@@ -2166,7 +2166,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             Token t = ts.token();
             if (t != null) {
                 if (t.id() == PHPTokenId.T_INLINE_HTML) {
-                    return QueryType.ALL_COMPLETION;
+                    return QueryType.NONE;
                 } else {
                     if (AUTOPOPUP_STOP_CHARS.contains(Character.valueOf(lastChar))) {
                         return QueryType.STOP;

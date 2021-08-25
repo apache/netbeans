@@ -19,20 +19,22 @@
 package org.netbeans.modules.nbcode.integration;
 
 import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
-public class VerifyJustOneUpdateCenterTest extends NbTestCase {
+public class VerifyPresentUpdateCentersTest extends NbTestCase {
 
-    public VerifyJustOneUpdateCenterTest(String name) {
+    public VerifyPresentUpdateCentersTest(String name) {
         super(name);
     }
 
     public static junit.framework.Test suite() {
-        return NbModuleSuite.createConfiguration(VerifyJustOneUpdateCenterTest.class).
-            gui(true).
+        return NbModuleSuite.createConfiguration(VerifyPresentUpdateCentersTest.class).
+            gui(false).
             suite();
     }
 
@@ -42,7 +44,14 @@ public class VerifyJustOneUpdateCenterTest extends NbTestCase {
         FileObject au = services.getFileObject("AutoupdateType");
         assertNotNull("AutoUpdate folder found", au);
         FileObject[] arr = au.getChildren();
-        assertEquals("Just one AutoUpdate center registration: " + Arrays.toString(arr), 1, arr.length);
-        assertEquals("3rdparty.instance", arr[0].getNameExt());
+        assertEquals("Two AutoUpdate center registrations: " + Arrays.toString(arr), 2, arr.length);
+
+        Set<String> names = new TreeSet<>();
+        names.add(arr[0].getNameExt());
+        names.add(arr[1].getNameExt());
+
+        String[] arrNames = names.toArray(new String[0]);
+        assertEquals("3rdparty.instance", arrNames[0]);
+        assertEquals("distribution-update-provider.instance", arrNames[1]);
     }
 }

@@ -47,13 +47,13 @@ java.lsp.server$ ant build-vscode-ext
 The resulting extension is then in the `build` directory, with the `.vsix` extension.
 #### Build Options
 - `-Dvsix.version=x.y.z`can be used to set release version. E.g. set this option to `12.3.0` to get proper NetBeans release version for extension. 
-- `-D3rdparty.modules=.*nbjavac.*` can be set to include nb-javac which allows extension to run out of the box on JDK8. For **zsh** it is necessary to wrap it: `-D3rdparty.modules='.*nbjavac.*'`
+- `-D3rdparty.modules=` property can be set to different value than `.*nbjavac.*` to not inlcude nb-javac which allows extension to run out of the box on JDK8.
 
-The build of NetBeans VSCode extension with nb-javac included, for version 12.3.0 then looks like this:
+The build of NetBeans VSCode extension with nb-javac included, for version 12.6.0 then looks like this:
 ```bash
 netbeans$ ant build
 netbeans$ cd java/java.lsp.server
-java.lsp.server$ ant build-vscode-ext -D3rdparty.modules=.*nbjavac.* -Dvsix.version=12.3.0
+java.lsp.server$ ant build-vscode-ext -Dvsix.version=12.6.0
 ```
 
 
@@ -63,13 +63,12 @@ If you want to develop the extension, use these steps for building instead:
 
 ```bash
 netbeans$ cd java/java.lsp.server
-java.lsp.server$ ant build-lsp-server -D3rdparty.modules=.*nbjavac.*
+java.lsp.server$ ant build-lsp-server
 java.lsp.server$ cd vscode
 vscode$ npm install
 vscode$ npm run watch
 ```
 
-The `3rdparty.modules` property doesn't have to be set at all.
 This target is faster than building the `.vsix` file. Find the instructions
 for running and debugging below.
 

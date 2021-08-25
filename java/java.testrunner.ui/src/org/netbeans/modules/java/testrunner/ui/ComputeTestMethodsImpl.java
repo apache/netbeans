@@ -36,6 +36,7 @@ import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods.Factory;
 import org.netbeans.modules.parsing.spi.TaskIndexingMode;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
+import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -44,6 +45,8 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service=JavaSourceTaskFactory.class)
 public class ComputeTestMethodsImpl extends EditorAwareJavaSourceTaskFactory {
+
+    private static final RequestProcessor WORKER = new RequestProcessor(ComputeTestMethodsImpl.class.getName(), 1, false, false);
 
     public ComputeTestMethodsImpl() {
         super(Phase.ELEMENTS_RESOLVED, Priority.NORMAL, TaskIndexingMode.ALLOWED_DURING_SCAN);
@@ -100,7 +103,7 @@ public class ComputeTestMethodsImpl extends EditorAwareJavaSourceTaskFactory {
                 }
 
                 if (!cancel.get()) {
-                    TestMethodController.setTestMethods(doc, methods);
+                    WORKER.post(() -> TestMethodController.setTestMethods(doc, methods));
                 }
             }
         }

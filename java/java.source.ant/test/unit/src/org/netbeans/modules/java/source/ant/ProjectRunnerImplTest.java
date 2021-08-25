@@ -53,6 +53,8 @@ import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.project.runner.JavaRunner;
 import org.netbeans.junit.MockServices;
 import org.netbeans.spi.extexecution.startup.StartupExtenderImplementation;
+import org.netbeans.spi.queries.FileEncodingQueryImplementation;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -258,5 +260,12 @@ public class ProjectRunnerImplTest extends NbTestCase {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
+    }
+
+    @ServiceProvider(service=FileEncodingQueryImplementation.class)
+    public static final class FEQImpl extends FileEncodingQueryImplementation {
+        @Override public Charset getEncoding(FileObject file) {
+            return Charset.forName("UTF-8");
+        }
     }
 }

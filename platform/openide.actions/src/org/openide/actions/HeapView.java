@@ -54,7 +54,7 @@ import org.openide.util.NbPreferences;
  * <li> nb.heapview.background - Color of widget background
  * <li> nb.heapview.foreground - Color of text
  * <li> nb.heapview.chart - Color of area chart
- * <li> nb.heapview.background - Color of outline around the text, to provide a contrast against
+ * <li> nb.heapview.highlight - Color of outline around the text, to provide a contrast against
  *                               the chart (may have a non-opaque alpha value)
  * </ul>
  * @author sky, radim, peter
@@ -112,17 +112,20 @@ class HeapView extends JComponent {
         }
         TEXT_COLOR = c;
 
-        c = UIManager.getColor("nb.heapview.highlight"); //NOI18N
-        if (null == c) {
-            c = new Color(255, 255, 255, 192);
-        }
-        OUTLINE_COLOR = c;
-
         c = UIManager.getColor("nb.heapview.background"); //NOI18N
         if (null == c) {
             c = new Color(0xCEDBE6);
         }
         BACKGROUND_COLOR = c;
+
+        c = UIManager.getColor("nb.heapview.highlight"); //NOI18N
+        if (null == c) {
+            c = new Color(BACKGROUND_COLOR.getRed(),
+                    BACKGROUND_COLOR.getGreen(),
+                    BACKGROUND_COLOR.getBlue(),
+                    192);
+        }
+        OUTLINE_COLOR = c;
     }
 
     /**

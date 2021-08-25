@@ -275,6 +275,7 @@ public class GroovyIndexer extends EmbeddingIndexer {
 
             for (ASTElement child : children) {
                 switch (child.getKind()) {
+                    case INTERFACE:
                     case CLASS:
                         analyzeClass((ASTClass) child);
                         break;
@@ -298,6 +299,10 @@ public class GroovyIndexer extends EmbeddingIndexer {
                         break;
                     case FIELD:
                         indexField((ASTField) child, document);
+                        break;
+                    case INTERFACE:
+                    case CLASS:
+                        analyzeClass((ASTClass) child);
                         break;
                 }
             }

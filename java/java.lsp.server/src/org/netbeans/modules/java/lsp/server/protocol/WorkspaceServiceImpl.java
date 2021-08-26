@@ -388,7 +388,10 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     }
                 }
             }
-            contained = ProjectUtils.getContainedProjects(prj, true).stream().map(p -> p.getProjectDirectory()).collect(Collectors.toList());
+            Set<Project> containedProjects = ProjectUtils.getContainedProjects(prj, true);
+            if (containedProjects != null) {
+                contained = containedProjects.stream().map(p -> p.getProjectDirectory()).collect(Collectors.toList());
+            }
         }
         return server.asyncOpenSelectedProjects(contained).thenApply(projects -> {
             for (Project project : projects) {

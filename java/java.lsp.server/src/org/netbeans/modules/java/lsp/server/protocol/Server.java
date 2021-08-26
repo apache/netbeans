@@ -613,7 +613,7 @@ public final class Server {
                 completionOptions.setTriggerCharacters(Collections.singletonList("."));
                 capabilities.setCompletionProvider(completionOptions);
                 capabilities.setHoverProvider(true);
-                capabilities.setCodeActionProvider(new CodeActionOptions(Arrays.asList(CodeActionKind.QuickFix, CodeActionKind.Source)));
+                capabilities.setCodeActionProvider(new CodeActionOptions(Arrays.asList(CodeActionKind.QuickFix, CodeActionKind.Source, CodeActionKind.Refactor)));
                 capabilities.setDocumentSymbolProvider(true);
                 capabilities.setDefinitionProvider(true);
                 capabilities.setTypeDefinitionProvider(true);
@@ -635,8 +635,8 @@ public final class Server {
                         JAVA_PROJECT_CONFIGURATION_COMPLETION,
                         JAVA_SUPER_IMPLEMENTATION,
                         NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH));
-                for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
-                    commands.addAll(codeGenerator.getCommands());
+                for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
+                    commands.addAll(codeActionsProvider.getCommands());
                 }
                 capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(commands));
                 capabilities.setWorkspaceSymbolProvider(true);
@@ -870,7 +870,7 @@ public final class Server {
      * @param caps 
      */
     private static void hackConfigureGroovySupport(NbCodeClientCapabilities caps) {
-        boolean b = caps.wantsGroovySupport();
+        boolean b = caps != null && caps.wantsGroovySupport();
         try {
             Class clazz = Lookup.getDefault().lookup(ClassLoader.class).loadClass("org.netbeans.modules.groovy.editor.api.GroovyIndexer");
             Method m = clazz.getDeclaredMethod("setIndexingEnabled", Boolean.TYPE);

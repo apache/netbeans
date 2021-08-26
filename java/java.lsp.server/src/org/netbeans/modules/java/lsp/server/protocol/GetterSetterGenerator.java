@@ -46,12 +46,14 @@ import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.netbeans.api.java.source.CodeStyle;
+import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
@@ -61,8 +63,8 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author lahvac
  */
-@ServiceProvider(service = CodeGenerator.class, position = 30)
-public final class GetterSetterGenerator extends CodeGenerator {
+@ServiceProvider(service = CodeActionsProvider.class, position = 30)
+public final class GetterSetterGenerator extends CodeActionsProvider {
 
     public static final String GENERATE_GETTERS =  "java.generate.getters";
     public static final String GENERATE_SETTERS =  "java.generate.setters";
@@ -83,7 +85,12 @@ public final class GetterSetterGenerator extends CodeGenerator {
         "DN_GenerateSetterFor=Generate Setter for \"{0}\"",
         "DN_GenerateGetterSetterFor=Generate Getter and Setter for \"{0}\"",
     })
-    public List<CodeAction> getCodeActions(CompilationInfo info, CodeActionParams params) {
+    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+        CompilationController info = CompilationController.get(resultIterator.getParserResult());
+        if (info == null) {
+            return Collections.emptyList();
+        }
+        info.toPhase(JavaSource.Phase.RESOLVED);
         List<String> only = params.getContext().getOnly();
         boolean all = only != null && only.contains(CodeActionKind.Source);
         Pair<Set<VariableElement>, Set<VariableElement>> pair = findMissingGettersSetters(info, params.getRange(), all);

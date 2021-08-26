@@ -315,9 +315,9 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return (CompletableFuture<Object>) (CompletableFuture<?>) joinedFuture;
             }
             default:
-                for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
-                    if (codeGenerator.getCommands().contains(command)) {
-                        return codeGenerator.processCommand(client, command, params.getArguments());
+                for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
+                    if (codeActionsProvider.getCommands().contains(command)) {
+                        return codeActionsProvider.processCommand(client, command, params.getArguments());
                     }
                 }
         }

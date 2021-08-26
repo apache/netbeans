@@ -85,8 +85,6 @@ public class Util {
                 dp.addFileEntry(fe);
             } catch(DDException ex) {
                 giveUp(ex);
-            } catch (org.netbeans.modules.schema2beans.Schema2BeansException s2bX) {
-                giveUp(s2bX);
             } catch (java.beans.PropertyVetoException pv) {
                 giveUp(pv);
             }

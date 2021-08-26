@@ -364,9 +364,6 @@ public class PlatformsCustomizer extends javax.swing.JPanel implements PropertyC
                 } catch (DataObjectNotFoundException dfne) {
                     Exceptions.printStackTrace(dfne);
                 }
-                catch (IOException ioe) {
-                    Exceptions.printStackTrace(ioe);
-                }
             }
         });
     }//GEN-LAST:event_addNewPlatform

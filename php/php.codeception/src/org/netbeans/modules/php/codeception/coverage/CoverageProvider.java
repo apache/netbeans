@@ -45,9 +45,6 @@ public class CoverageProvider {
             LOGGER.info(String.format("File %s not found. If there are no errors in Codeception output (verify in Output window), "
                     + "please report an issue (http://www.netbeans.org/issues/).", Codecept.COVERAGE_LOG));
             return null;
-        } catch (IOException ex) {
-            LOGGER.log(Level.WARNING, null, ex);
-            return null;
         }
         return coverage;
     }

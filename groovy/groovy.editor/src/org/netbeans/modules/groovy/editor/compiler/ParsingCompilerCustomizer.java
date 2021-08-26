@@ -61,7 +61,7 @@ public interface ParsingCompilerCustomizer {
      */
     public final class Context {
         private final Snapshot snapshot;
-        private final Task consumerTask;
+        private Task consumerTask;
 
         /**
          * Constructs the context. 
@@ -89,6 +89,13 @@ public interface ParsingCompilerCustomizer {
          */
         public Task getConsumerTask() {
             return consumerTask;
+        }
+
+        /**
+         * Sets the task that is about to consume the parser's results.
+         */
+        public void setConsumerTask(Task consumerTask) {
+            this.consumerTask = consumerTask;
         }
     }
 }

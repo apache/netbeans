@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -40,6 +39,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
@@ -61,9 +63,10 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.DebuggerManager;
-import org.netbeans.api.editor.mimelookup.MimeLookup;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
+import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -77,7 +80,7 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
-import org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods;
+import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodFinder;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
@@ -85,13 +88,7 @@ import org.netbeans.modules.java.lsp.server.debugging.attach.AttachNativeConfigu
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaTypeProvider;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
-import org.netbeans.modules.parsing.api.ParserManager;
-import org.netbeans.modules.parsing.api.ResultIterator;
-import org.netbeans.modules.parsing.api.Source;
-import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.lucene.support.Queries;
-import org.netbeans.modules.parsing.spi.ParseException;
-import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.spi.jumpto.type.SearchType;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
@@ -199,26 +196,50 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 if (file == null) {
                     return CompletableFuture.completedFuture(Collections.emptyList());
                 }
-                return server.asyncOpenFileOwner(file).thenCompose(this::getTestRoots).thenApply(testRoots -> {
-                    List<TestMethodController.TestMethod> testMethods = new ArrayList<>();
-                    findTestMethods(testRoots, testMethods);
-                    if (testMethods.isEmpty()) {
-                        return Collections.emptyList();
+                return server.asyncOpenFileOwner(file).thenCompose(this::getTestRoots).thenCompose(testRoots -> {
+                    CompletableFuture<Object> future = new CompletableFuture<>();
+                    JavaSource js = JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY));
+                    try {
+                        js.runWhenScanFinished(controller -> {
+                            BiFunction<FileObject, Collection<TestMethodController.TestMethod>, TestSuiteInfo> f = (fo, methods) -> {
+                                List<TestSuiteInfo.TestCaseInfo> tests = new ArrayList<>(methods.size());
+                                String url = Utils.toUri(fo);
+                                String testClassName = null;
+                                Integer testClassLine = null;
+                                for (TestMethodController.TestMethod testMethod : methods) {
+                                    if (testClassName == null) {
+                                        testClassName = testMethod.getTestClassName();
+                                    }
+                                    if (testClassLine == null) {
+                                        testClassLine = testMethod.getTestClassPosition() != null
+                                                ? Utils.createPosition(fo, testMethod.getTestClassPosition().getOffset()).getLine()
+                                                : null;
+                                    }
+                                    String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
+                                    String fullName = testMethod.getTestClassName() + '.' + testMethod.method().getMethodName();
+                                    int testLine = Utils.createPosition(fo, testMethod.start().getOffset()).getLine();
+                                    tests.add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), fullName, url, testLine, TestSuiteInfo.State.Loaded, null));
+                                }
+                                return new TestSuiteInfo(testClassName, url, testClassLine, TestSuiteInfo.State.Loaded, tests);
+                            };
+                            testMethodsListener.compareAndSet(null, (fo, methods) -> {
+                                try {
+                                    client.notifyTestProgress(new TestProgressParams(Utils.toUri(fo), f.apply(fo, methods)));
+                                } catch (Exception e) {
+                                    testMethodsListener.set(null);
+                                }
+                            });
+                            Map<FileObject, Collection<TestMethodController.TestMethod>> testMethods = TestMethodFinder.findTestMethods(testRoots, testMethodsListener.get());
+                            Collection<TestSuiteInfo> suites = new ArrayList<>(testMethods.size());
+                            for (Entry<FileObject, Collection<TestMethodController.TestMethod>> entry : testMethods.entrySet()) {
+                                suites.add(f.apply(entry.getKey(), entry.getValue()));
+                            }
+                            future.complete(suites);
+                        }, true);
+                    } catch (IOException ex) {
+                        future.completeExceptionally(ex);
                     }
-                    Map<FileObject, TestSuiteInfo> file2TestSuites = new HashMap<>();
-                    for (TestMethodController.TestMethod testMethod : testMethods) {
-                        TestSuiteInfo suite = file2TestSuites.computeIfAbsent(testMethod.method().getFile(), fo -> {
-                            String foUri = Utils.toUri(fo);
-                            int off = testMethod.getTestClassPosition() != null ? testMethod.getTestClassPosition().getOffset() : -1;
-                            Integer line = off < 0 ? null : Utils.createPosition(testMethod.method().getFile(), off).getLine();
-                            return new TestSuiteInfo(testMethod.getTestClassName(), foUri, line, TestSuiteInfo.State.Loaded, new ArrayList<>());
-                        });
-                        String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
-                        String fullName = testMethod.getTestClassName() + '.' + testMethod.method().getMethodName();
-                        int line = Utils.createPosition(testMethod.method().getFile(), testMethod.start().getOffset()).getLine();
-                        suite.getTests().add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), fullName, suite.getFile(), line, TestSuiteInfo.State.Loaded, null));
-                    }
-                    return file2TestSuites.values();
+                    return future;
                 });
             }
             case Server.JAVA_SUPER_IMPLEMENTATION:
@@ -302,7 +323,9 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         }
         throw new UnsupportedOperationException("Command not supported: " + params.getCommand());
     }
-    
+
+    private final AtomicReference<BiConsumer<FileObject, Collection<TestMethodController.TestMethod>>> testMethodsListener = new AtomicReference<>();
+
     private static Map<String, Object> attributesMap(JsonObject json) {
         Map<String, Object> map = new LinkedHashMap<>();
         for (Entry<String, JsonElement> entry : json.entrySet()) {
@@ -382,34 +405,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     }
 
     private boolean isTestGroup(SourceGroup sg) {
-        return sg.getName().contains("TestSourceRoot") || sg.getName().contains("test.");
-    }
-
-    private void findTestMethods(Set<FileObject> testRoots, List<TestMethodController.TestMethod> testMethods) {
-        for (FileObject testRoot : testRoots) {
-            List<Source> sources = new ArrayList<>();
-            Enumeration<? extends FileObject> children = testRoot.getChildren(true);
-            while(children.hasMoreElements()) {
-                FileObject fo = children.nextElement();
-                boolean groovy = this.client.getNbCodeCapabilities().wantsGroovySupport();
-                if (fo.hasExt("java") || (groovy && fo.hasExt("groovy"))) {
-                    sources.add(((TextDocumentServiceImpl)server.getTextDocumentService()).getSource(Utils.toUri(fo)));
-                }
-            }
-            if (!sources.isEmpty()) {
-                try {
-                    ParserManager.parseWhenScanFinished(sources, new UserTask() {
-                        @Override
-                        public void run(ResultIterator resultIterator) throws Exception {
-                            Parser.Result parserResult = resultIterator.getParserResult();
-                            for (ComputeTestMethods ctm : MimeLookup.getLookup(parserResult.getSnapshot().getMimePath()).lookupAll(ComputeTestMethods.class)) {
-                                testMethods.addAll(ctm.computeTestMethods(parserResult, new AtomicBoolean()));
-                            }
-                        }
-                    }).get();
-                } catch (Exception ex) {}
-            }
-        }
+        return UnitTestForSourceQuery.findSources(sg.getRootFolder()).length > 0;
     }
 
     @Override

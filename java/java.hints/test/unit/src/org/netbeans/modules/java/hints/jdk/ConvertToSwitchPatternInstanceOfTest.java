@@ -33,6 +33,12 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
     }
     
     public void testSimple() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip tests
+            return;
+        }
         HintTest.create()
                 .input("package test;\n"
                         + "public class Test {\n"

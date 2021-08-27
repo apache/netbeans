@@ -275,8 +275,20 @@ public final class TreeMaker {
      * @see com.sun.source.tree.CaseTree
      * @since 2.39
      */
-    public CaseTree CaseMultipleSwitchPatterns(List<? extends Tree> patterns, Tree body) {
-        return delegate.CasePatterns(patterns, body);
+    public CaseTree CasePatterns(List<? extends Tree> patterns, Tree body) {
+        return delegate.CaseMultiplePatterns(patterns, body);
+    }
+    
+    /**
+     * Creates a new CaseTree.
+     *
+     * @param patterns the labels for this case statement.
+     * @param statements the list of statements.
+     * @see com.sun.source.tree.CaseTree
+     * @since 2.39
+     */
+    public CaseTree CasePatterns(List<? extends Tree> patterns, List<? extends StatementTree> statements) {
+        return delegate.CaseMultiplePatterns(patterns, statements);
     }
     
     /**

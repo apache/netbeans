@@ -25,20 +25,19 @@ import org.testng.annotations.Test;
 
 /**
  *
- * @author sandeemi
+ * @author aksinsin
  */
 public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
-
+    
     public ConvertToSwitchPatternInstanceOfTest(String name) {
         super(name);
     }
-
-    @Test
+    
     public void testSimple() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_17");
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
         } catch (IllegalArgumentException ex) {
-            //OK, skip test
+            //OK, no RELEASE_17, skip tests
             return;
         }
         HintTest.create()

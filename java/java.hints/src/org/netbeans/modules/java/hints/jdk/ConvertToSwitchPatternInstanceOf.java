@@ -68,7 +68,7 @@ import org.openide.util.NbBundle;
     "ERR_ConvertToSwitchPatternInstanceOf=switch pattern matching <pattern> can be used here",
     "FIX_ConvertToSwitchPatternInstanceOf=Use switch pattern matching <pattern>"
 })
-@Hint(displayName = "#DN_ConvertToSwitchPatternInstanceOf", description = "#DESC_ConvertToSwitchPatternInstanceOf", category = "rules15",
+@Hint(displayName="#DN_ConvertToSwitchPatternInstanceOf", description="#DESC_ConvertToSwitchPatternInstanceOf", category="rules15",
         minSourceVersion = "17")
 public class ConvertToSwitchPatternInstanceOf {
 
@@ -117,7 +117,7 @@ public class ConvertToSwitchPatternInstanceOf {
 
     }
 
-    public static final class FixImpl extends JavaFix {
+    private static final class FixImpl extends JavaFix {
 
         private final boolean removeFirst;
 
@@ -156,11 +156,8 @@ public class ConvertToSwitchPatternInstanceOf {
                 StatementTree thenBlock = removeFirst ? wc.getTreeMaker().removeBlockStatement((BlockTree) bt, 0) : bt;
                 caseBindPattern.add(wc.getTreeMaker().BindingPattern(wc.getTreeMaker().Variable(wc.getTreeMaker().Modifiers(EnumSet.noneOf(Modifier.class)), var.getName().toString(), iot.getType(), null)));
                 BlockTree blockTree = (BlockTree) thenBlock;
-                
-                Tree defaultTree = null;
-                defaultTree = blockTree.getStatements().size() == 1 && isValidCaseTree(blockTree.getStatements().get(0))? blockTree.getStatements().get(0) : thenBlock;
-                
-                CaseTree caseMultipleSwitchPatterns = wc.getTreeMaker().CaseMultipleSwitchPatterns(caseBindPattern, defaultTree);
+                Tree statementTree = blockTree.getStatements().size() == 1 && isValidCaseTree(blockTree.getStatements().get(0))? blockTree.getStatements().get(0) : thenBlock;                
+                CaseTree caseMultipleSwitchPatterns = wc.getTreeMaker().CasePatterns(caseBindPattern, statementTree);
                 ctl.add(caseMultipleSwitchPatterns);
             }
             List<Tree> caseDefaultLabel = new LinkedList<>();
@@ -171,7 +168,7 @@ public class ConvertToSwitchPatternInstanceOf {
             }
             
             Tree defaultTree = elseTree.getStatements().size() == 1 && isValidCaseTree(elseTree.getStatements().get(0))? elseTree.getStatements().get(0) : elseTree;
-            CaseTree caseMultipleSwitchPatterns = wc.getTreeMaker().CaseMultipleSwitchPatterns(caseDefaultLabel, defaultTree);
+            CaseTree caseMultipleSwitchPatterns = wc.getTreeMaker().CasePatterns(caseDefaultLabel, defaultTree);
             ctl.add(caseMultipleSwitchPatterns);
             wc.rewrite((IfTree) main.getLeaf(), wc.getTreeMaker().Switch(iot.getExpression(), ctl));
         }
@@ -181,7 +178,7 @@ public class ConvertToSwitchPatternInstanceOf {
     @TriggerPatterns({
         @TriggerPattern(value = "if ($expr0 instanceof $typeI0 $var0) { $statements0$;} else if ($expr1 instanceof $typeI1 $var1) { $statements1$;} else $else$;")
     })
-    public static ErrorDescription instanceofToSwitch(HintContext ctx) {
+    public static ErrorDescription patternMatchToSwitch(HintContext ctx) {
         TreePath parent = ctx.getPath().getParentPath();
         if (parent.getLeaf().getKind() == Tree.Kind.IF) {
             return null;
@@ -211,15 +208,15 @@ public class ConvertToSwitchPatternInstanceOf {
             ifPath = it.getElseStatement();
         }
 
-        Fix fix = new FixImpl2(ctx.getInfo(), ctx.getPath(), false, Collections.emptySet()).toEditorFix();
+        Fix fix = new FixPatternMatchToSwitch(ctx.getInfo(), ctx.getPath(), false, Collections.emptySet()).toEditorFix();
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_ConvertToSwitchPatternInstanceOf(), fix);
 
     }
 
-    private static final class FixImpl2 extends JavaFix {
+    private static final class FixPatternMatchToSwitch extends JavaFix {
         private final boolean removeFirst;
 
-        public FixImpl2(CompilationInfo info, TreePath main,  boolean removeFirst, Set<TreePath> replaceOccurrences) {
+        public FixPatternMatchToSwitch(CompilationInfo info, TreePath main,  boolean removeFirst, Set<TreePath> replaceOccurrences) {
             super(info, main);
             this.removeFirst = removeFirst;
         }
@@ -260,7 +257,8 @@ public class ConvertToSwitchPatternInstanceOf {
                 caseBindPattern.add(pattern);
                 //caseBindPattern.add(wc.getTreeMaker().BindingPattern(wc.getTreeMaker().Variable(wc.getTreeMaker().Modifiers(EnumSet.noneOf(Modifier.class)), ((BindingPatternTree)iot.getPattern()).getVariable().getName(), iot.getType(), null)));
                 BlockTree blockTree = (BlockTree) thenBlock;
-                CaseTree caseMultipleSwitchPatterns = wc.getTreeMaker().CaseMultipleSwitchPatterns(caseBindPattern, blockTree.getStatements().size() == 1 ? blockTree.getStatements().get(0) : thenBlock);
+                Tree statementTree = blockTree.getStatements().size() == 1 && isValidCaseTree(blockTree.getStatements().get(0))? blockTree.getStatements().get(0) : thenBlock;
+                CaseTree caseMultipleSwitchPatterns = wc.getTreeMaker().CasePatterns(caseBindPattern, statementTree);
                 ctl.add(caseMultipleSwitchPatterns);
             }
             List<Tree> caseDefaultLabel = new LinkedList<>();
@@ -269,16 +267,17 @@ public class ConvertToSwitchPatternInstanceOf {
             if (elseTree == null) {
                 elseTree = wc.getTreeMaker().Block(new ArrayList<>(), false);
             }
-            CaseTree caseMultipleSwitchPatterns;
-            caseMultipleSwitchPatterns = wc.getTreeMaker().CaseMultipleSwitchPatterns(caseDefaultLabel, (elseTree.getStatements().size() == 1) ? elseTree.getStatements().get(0) : elseTree);
-            ctl.add(caseMultipleSwitchPatterns);
+
+            Tree defaultTree = elseTree.getStatements().size() == 1 && isValidCaseTree(elseTree.getStatements().get(0))? elseTree.getStatements().get(0) : elseTree;
+            CaseTree casePatterns = wc.getTreeMaker().CasePatterns(caseDefaultLabel, defaultTree);
+            ctl.add(casePatterns);
             wc.rewrite((IfTree) main.getLeaf(), wc.getTreeMaker().Switch(iot.getExpression(), ctl));
         }
 
     }
 
     @TriggerTreeKind(Tree.Kind.SWITCH)
-    public static ErrorDescription instanceofToSwitchNull(HintContext ctx) {
+    public static ErrorDescription switchPatternMatchToSwitchNull(HintContext ctx) {
 
         SwitchTree switchTree = (SwitchTree) ctx.getPath().getLeaf();
         boolean isPatternMatch = false;
@@ -309,16 +308,16 @@ public class ConvertToSwitchPatternInstanceOf {
             return null;
         }
 
-        Fix fix = new FixImpl3(ctx.getInfo(), ctx.getPath().getParentPath(), indexOf).toEditorFix();
+        Fix fix = new FixSwitchPatternMatchToSwitchNull(ctx.getInfo(), ctx.getPath().getParentPath(), indexOf).toEditorFix();
         return ErrorDescriptionFactory.forTree(ctx, ifTree, Bundle.ERR_ConvertToSwitchPatternInstanceOf(), fix);
 
     }
 
-    private static final class FixImpl3 extends JavaFix {
+    private static final class FixSwitchPatternMatchToSwitchNull extends JavaFix {
 
         private final int indexOf;
 
-        public FixImpl3(CompilationInfo info, TreePath path, int indexOf) {
+        public FixSwitchPatternMatchToSwitchNull(CompilationInfo info, TreePath path, int indexOf) {
             super(info, path);
             this.indexOf = indexOf;
         }
@@ -340,7 +339,7 @@ public class ConvertToSwitchPatternInstanceOf {
             StatementTree thenStatement = ((IfTree) ifTree).getThenStatement();
             caseNullLabel.add(wc.getTreeMaker().Identifier("null"));
             BlockTree blockTree = (BlockTree)thenStatement;
-            CaseTree caseMultipleSwitchPatterns = wc.getTreeMaker().CaseMultipleSwitchPatterns(caseNullLabel, blockTree.getStatements().size() == 1 ? blockTree.getStatements().get(0) : blockTree);
+            CaseTree caseMultipleSwitchPatterns = wc.getTreeMaker().CasePatterns(caseNullLabel, blockTree.getStatements().size() == 1 ? blockTree.getStatements().get(0) : blockTree);
             SwitchTree insertSwitchCase = make.insertSwitchCase(switchTree, 0, caseMultipleSwitchPatterns);
             wc.rewrite(switchTree, insertSwitchCase);
             BlockTree removeBlockStatement = make.removeBlockStatement((BlockTree) main.getLeaf(), indexOf);

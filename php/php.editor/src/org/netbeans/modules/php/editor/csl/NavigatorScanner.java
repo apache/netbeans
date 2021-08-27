@@ -158,6 +158,26 @@ public final class NavigatorScanner {
                 for (FieldElement field : declaredFields) {
                     children.add(new PHPFieldStructureItem(field));
                 }
+        
+                Collection<? extends FieldElement> inheritedFields = cls.getInheritedFields();
+                for (FieldElement field : inheritedFields) {
+                    children.add(new PHPFieldStructureItem(field));
+                }
+
+		Collection<? extends MethodScope> inheritedMethods = type.getInheritedMethods();
+		for (MethodScope method : inheritedMethods) {
+		    // The method name doesn't have to be always defined during parsing.
+		    // For example when user writes in  a php doc @method and parsing is
+		    // started when there is no name yet.
+		    if (method.getName() != null && !method.getName().isEmpty()) {
+			List<StructureItem> variables = new ArrayList<>();
+		        if (method.isConstructor()) {
+			    children.add(new PHPConstructorStructureItem(method, variables));
+			} else {
+			    children.add(new PHPMethodStructureItem(method, variables));
+		        }
+		    }
+		}
             }
             if (type instanceof TraitScope) {
                 TraitScope trait = (TraitScope) type;

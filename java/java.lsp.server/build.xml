@@ -146,5 +146,10 @@
             <arg value="run" />
             <arg value="test" />
         </exec>
+        <exec executable="npm" failonerror="true" dir="vscode">
+            <arg value="--allow-same-version"/>
+            <arg value="run" />
+            <arg value="apisupport" />
+        </exec>
     </target>
 </project>

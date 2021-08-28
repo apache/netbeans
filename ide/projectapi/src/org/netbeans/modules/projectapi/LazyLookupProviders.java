@@ -81,12 +81,17 @@ public class LazyLookupProviders {
                                     return;
                                 }
                                 try {
+                                    /* deadlock - probably wait without a notify
+                                    https://issues.apache.org/jira/secure/attachment/13032558/13032558_12.5-beta2-threaddump-1629986898821.tdump
+                                    always make sure LOCK.notifyAll is called when changing the LOCK[0] value
+                                     */
                                     LOCK.wait();
                                 } catch (InterruptedException ex) {
                                     LOG.log(Level.INFO, null, ex);
                                 }
                             }
                             LOCK[0] = Thread.currentThread();
+                            LOCK.notifyAll();
                         }
                         try {
                             Object instance = loadPSPInstance((String) attrs.get("class"), (String) attrs.get("method"), lkp); // NOI18N

@@ -34,9 +34,9 @@ import java.util.Set;
  */
 public interface ActionMapping extends Serializable, Comparable<ActionMapping> {
 
-    /** Prefix fo custom, non-default IDE actions. */
+    /** Prefix for custom, non-default IDE actions. */
     public static final String CUSTOM_PREFIX = "custom-"; //NOI18N
-
+    
     /**
      * Rule to reload the project after the Gradle execution. The project reload
      * by default done, by setting the offline flag in Gradle in order to avoid

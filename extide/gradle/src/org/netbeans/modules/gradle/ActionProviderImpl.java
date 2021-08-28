@@ -26,7 +26,6 @@ import org.netbeans.modules.gradle.api.execute.RunConfig;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.modules.gradle.actions.ActionToTaskUtils;
 import org.netbeans.modules.gradle.execute.GradleExecutorOptionsPanel;
-import org.netbeans.modules.gradle.spi.actions.GradleActionsProvider;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -128,7 +127,7 @@ public class ActionProviderImpl implements ActionProvider {
         actions.add(COMMAND_DL_JAVADOC);
         return actions.toArray(new String[actions.size()]);
     }
-    
+
     @Override
     public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
         if (COMMAND_DELETE.equals(command)) {
@@ -146,7 +145,7 @@ public class ActionProviderImpl implements ActionProvider {
                             LOG.log(Level.FINER, "Priming build of {0} finished with status {1}, ", new Object[] { project, prjImpl.isProjectPrimingRequired() });
                             prg.finished(!prjImpl.isProjectPrimingRequired());
                         }).
-                        exceptionally((e) -> { 
+                        exceptionally((e) -> {
                             LOG.log(Level.FINER, e, () -> String.format("Priming build errored: %s", project));
                             prg.finished(false);
                             return null;
@@ -158,7 +157,7 @@ public class ActionProviderImpl implements ActionProvider {
                 prg.finished(true);
                 return;
             }
-            
+
         }
         NbGradleProject gp = NbGradleProject.get(project);
         GradleExecConfiguration execCfg = ProjectConfigurationSupport.getEffectiveConfiguration(project, context);
@@ -248,7 +247,7 @@ public class ActionProviderImpl implements ActionProvider {
             }
         });
     }
-    
+
     private static boolean invokeProjectAction2(final Project project, final ActionMapping mapping, final GradleExecConfiguration execCfg, Lookup context, boolean showUI) {
         final String action = mapping.getName();
         if (ActionMapping.isDisabled(mapping)) {
@@ -285,7 +284,7 @@ public class ActionProviderImpl implements ActionProvider {
                 return false;
             }
         }
-        
+
         final String loadReason;
         if  (mapping.getDisplayName() != null && !mapping.getDisplayName().equals(mapping.getName())) {
             loadReason = mapping.getDisplayName();
@@ -394,6 +393,10 @@ public class ActionProviderImpl implements ActionProvider {
             invokeProjectAction(project, mapping, context, showUI);
         }
 
+        @Override
+        public boolean isEnabled() {
+            return !ActionMapping.isDisabled(mapping) && ActionToTaskUtils.isActionEnabled(mapping.getName(), mapping, project, context);
+        }
     }
 
     // Copied from the Maven Plugin with minimal changes applied.
@@ -437,10 +440,10 @@ public class ActionProviderImpl implements ActionProvider {
                             p = FileOwnerQuery.getOwner(fo);
                         }
                         if (p != null) {
-                             triggeredOnFile = true;
-                             triggeredOnGradle = true;
-                             Action a = forProject(p, null);
-                             return a != null ? a : this;
+                            triggeredOnFile = true;
+                            triggeredOnGradle = true;
+                            Action a = forProject(p, null);
+                            return a != null ? a : this;
                         }
                     } else {
                         Project p = findOwner(projects, fo);
@@ -448,9 +451,9 @@ public class ActionProviderImpl implements ActionProvider {
                             p = FileOwnerQuery.getOwner(fo);
                         }
                         if (p != null) {
-                             triggeredOnFile = true;
-                             Action a = forProject(p, fo);
-                             return a != null ? a : this;
+                            triggeredOnFile = true;
+                            Action a = forProject(p, fo);
+                            return a != null ? a : this;
                         }
                     }
                 }
@@ -500,14 +503,12 @@ public class ActionProviderImpl implements ActionProvider {
     private final class CustomPopupActions extends AbstractAction implements Presenter.Popup {
 
         private final boolean onFile;
-        private final boolean onGradle;
         private final Lookup lookup;
 
         @SuppressWarnings("OverridableMethodCallInConstructor")
         private CustomPopupActions(boolean onFile, boolean onGradleFile, FileObject fo) {
             putValue(Action.NAME, onFile ? LBL_Custom_Run_File() : LBL_Custom_Run());
             this.onFile = onFile;
-            this.onGradle = onGradleFile;
             this.lookup = fo != null ? Lookups.singleton(fo) : Lookup.EMPTY;
         }
 
@@ -549,7 +550,9 @@ public class ActionProviderImpl implements ActionProvider {
                             acts.add(act);
                         }
                     }
-                    acts.add(createCustomGradleAction(project, LBL_Custom_run_tasks(), new CustomActionMapping("name"), lookup, true));
+
+                    acts.add(createCustomGradleAction(project, LBL_Custom_run_tasks(), new RunTaskActionMapping(), lookup, true));
+
                     SwingUtilities.invokeLater(() -> {
                         boolean selected = menu.isSelected();
                         menu.remove(loading);
@@ -608,5 +611,49 @@ public class ActionProviderImpl implements ActionProvider {
             }
         }
         return ret;
+    }
+
+    private static class RunTaskActionMapping implements ActionMapping {
+
+        @Override
+        public String getName() {
+            return RunUtils.EXECUTE_TASK_ACTION;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return LBL_Custom_run_tasks();
+        }
+
+        @Override
+        public String getArgs() {
+            return "";
+        }
+
+        @Override
+        public ActionMapping.ReloadRule getReloadRule() {
+            return ActionMapping.ReloadRule.DEFAULT;
+        }
+
+        @Override
+        public String getReloadArgs() {
+            return "";
+        }
+
+        @Override
+        public boolean isApplicable(Set<String> plugins) {
+            return true;
+        }
+
+        @Override
+        public boolean isRepeatable() {
+            return true;
+        }
+
+        @Override
+        public int compareTo(ActionMapping o) {
+            return -1;
+        }
+
     }
 }

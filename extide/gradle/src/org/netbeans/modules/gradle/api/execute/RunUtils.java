@@ -90,6 +90,9 @@ public final class RunUtils {
     public static final String PROP_INCLUDE_OPEN_PROJECTS = "include.open.projects"; //NOI18N
     public static final String PROP_DEFAULT_CLI = "gradle.cli"; //NOI18N
 
+    /** Action to execute specific Gradle Tasks from the IDE (Eg. from Navigator). */
+    public static final String EXECUTE_TASK_ACTION = "execute.task"; //NOI18N
+
     private RunUtils() {}
     private static final Map<RunConfig, GradleExecutor> GRADLE_TASKS = new WeakHashMap<>();
 

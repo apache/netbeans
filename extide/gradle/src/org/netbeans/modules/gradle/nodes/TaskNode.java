@@ -28,13 +28,14 @@ import org.netbeans.modules.gradle.ActionProviderImpl;
 import org.netbeans.modules.gradle.FavoriteTaskManager;
 import org.netbeans.modules.gradle.api.GradleTask;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
-import org.netbeans.modules.gradle.customizer.CustomActionMapping;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.Lookups;
 
 import static org.netbeans.modules.gradle.nodes.Bundle.*;
+import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -44,6 +45,8 @@ public final class TaskNode extends AbstractNode {
 
     @StaticResource
     private static final String TASK_ICON = "org/netbeans/modules/gradle/resources/gradle-task.gif";
+
+    public static final String EXECUTE_TASK_ACTION = "execute.task"; //NOI18N
 
     final Project project;
     final GradleTask task;
@@ -65,12 +68,15 @@ public final class TaskNode extends AbstractNode {
     })
     @Override
     public Action[] getActions(boolean context) {
-        CustomActionMapping mapping = new CustomActionMapping(ActionMapping.CUSTOM_PREFIX);
-        mapping.setArgs(task.getName());
         ArrayList<Action> actions = new ArrayList<>(3);
-        actions.add(ActionProviderImpl.createCustomGradleAction(project, LBL_ExecTask(), mapping, Lookups.singleton(project), false));
-        actions.add(ActionProviderImpl.createCustomGradleAction(project, LBL_ExecCust(), mapping, Lookups.singleton(project), true));
-
+        
+        ActionMapping mapping = project.getLookup().lookup(ProjectActionMappingProvider.class).findMapping(EXECUTE_TASK_ACTION);
+        if (mapping != null) {
+            Lookup ctx = Lookups.fixed(project, task);
+            actions.add(ActionProviderImpl.createCustomGradleAction(project, LBL_ExecTask(), mapping, ctx, false));
+            actions.add(ActionProviderImpl.createCustomGradleAction(project, LBL_ExecCust(), mapping, ctx, true));
+        }
+        
         FavoriteTaskManager fvmgr = project.getLookup().lookup(FavoriteTaskManager.class);
         if (fvmgr != null) {
             actions.add(new FavoriteAction(task));

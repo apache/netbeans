@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.gradle;
 
+import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.modules.gradle.spi.actions.DefaultGradleActionsProvider;
 import org.netbeans.modules.gradle.spi.actions.GradleActionsProvider;
 import static org.netbeans.spi.project.ActionProvider.*;
@@ -36,6 +37,8 @@ public class RootActionProvider extends DefaultGradleActionsProvider {
         COMMAND_CLEAN,
         COMMAND_REBUILD,
         COMMAND_DELETE,
+        
+        RunUtils.EXECUTE_TASK_ACTION,
     };
 
     public RootActionProvider() {

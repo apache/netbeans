@@ -146,6 +146,12 @@ public class DefaultActionMapping implements ActionMapping {
         return Objects.equals(this.withPlugins, other.withPlugins);
     }
 
+    @Override
+    public String toString() {
+        return name + " [" + args + ']';
+    }
+
+    
     public static DefaultActionMapping DISABLED = new DefaultActionMapping();
     
     static {

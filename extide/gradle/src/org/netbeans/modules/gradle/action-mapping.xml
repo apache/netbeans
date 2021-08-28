@@ -48,7 +48,7 @@
         </reload>
     </action>
 
-    <action displayName="Download sources" name="download.sources">
+    <action displayName="Download Sources" name="download.sources">
         <reload rule="ALWAYS_ONLINE">
             <args>-PdownloadSources=${requestedComponent}</args>
         </reload>
@@ -58,6 +58,10 @@
         <reload rule="ALWAYS_ONLINE">
             <args>-PdownloadSources=${requestedComponent} -PdownloadJavadoc=${requestedComponent}</args>
         </reload>
+    </action>
+
+    <action displayName="Run Task" name="execute.task">
+        <args>${taskName}</args>
     </action>
 
     <!--

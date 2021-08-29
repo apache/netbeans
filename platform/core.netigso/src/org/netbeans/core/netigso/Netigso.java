@@ -142,6 +142,7 @@ implements Cloneable, Stamps.Updater {
             }
             framework = frameworkFactory.newFramework(configMap);
             try {
+                System.clearProperty("java.security.manager");
                 framework.init();
                 NetigsoServices ns = new NetigsoServices(this, framework);
             } catch (BundleException ex) {

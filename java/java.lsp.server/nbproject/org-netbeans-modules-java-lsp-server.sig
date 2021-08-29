@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.7.0
+#Version 1.8.0
 
 CLSS public java.lang.Object
 cons public init()
@@ -50,7 +50,7 @@ supr java.lang.Object
 CLSS public final static org.netbeans.modules.java.lsp.server.ui.AbstractLspInputOutputProvider$LspIO
  outer org.netbeans.modules.java.lsp.server.ui.AbstractLspInputOutputProvider
 supr java.lang.Object
-hfds ctx,err,in,lookup,name,out
+hfds closed,ctx,err,in,lookup,name,out
 hcls LspWriter
 
 CLSS public abstract org.netbeans.modules.java.lsp.server.ui.AbstractLspStatusDisplayer

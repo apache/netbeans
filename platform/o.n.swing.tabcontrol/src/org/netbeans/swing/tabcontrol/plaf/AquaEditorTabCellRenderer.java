@@ -222,32 +222,32 @@ class AquaEditorTabCellRenderer extends AbstractTabCellRenderer {
             Color shadowColor = UIManager.getColor("NbTabControl.borderShadowColor");
             //top
             g.setColor(borderColor);
-            g.drawLine(x, y, width-1, y);
+            drawLine(g, x, y, width-1, y);
 
             //bottom
             if( !ren.isSelected() ) {
                 g.setColor(borderColor);
-                g.drawLine(x, y+height-1, width, y+height-1);
+                drawLine(g, x, y+height-1, width, y+height-1);
 
             } else {
                 g.setColor(UIManager.getColor("NbTabControl.selectedTabDarkerBackground"));
-                g.drawLine(x, y+height-1, width, y+height-1);
+                drawLine(g, x, y+height-1, width, y+height-1);
             }
 
             //right
             if( ren.isRightmost() || !ren.isSelected() ) {
                 g.setColor(borderColor);
-                g.drawLine(x+width-1, y, x+width-1, y+height-1);
+                drawLine(g, x+width-1, y, x+width-1, y+height-1);
                 g.setColor(shadowColor);
-                g.drawLine(x+width-2, y+1, x+width-2, y+height-(ren.isSelected() ? 1 : 2));
+                drawLine(g, x+width-2, y+1, x+width-2, y+height-(ren.isSelected() ? 1 : 2));
             } else if( ren.isSelected() ) {
                 g.setColor(borderColor);
-                g.drawLine(x+width-1, y, x+width-1, y+height-1);
+                drawLine(g, x+width-1, y, x+width-1, y+height-1);
             }
             //left
             if( !ren.isLeftmost() && !ren.isSelected() ) {
                 g.setColor(shadowColor);
-                g.drawLine(x, y+1, x, y+height-2);
+                drawLine(g, x, y+1, x, y+height-2);
             }
         }
 
@@ -268,8 +268,8 @@ class AquaEditorTabCellRenderer extends AbstractTabCellRenderer {
                 int y = 0;
                 int width = ren.getWidth();
                 g.setColor(UIManager.getColor("NbTabControl.focusedTabBackground"));
-                g.drawLine(x, y+1, x+width-2, y+1);
-                g.drawLine(x, y+2, x+width-2, y+2);
+                drawLine(g, x, y+1, x+width-2, y+1);
+                drawLine(g, x, y+2, x+width-2, y+2);
             }
 
             if (!g.hitClip(r.x, r.y, r.width, r.height)) {
@@ -323,29 +323,29 @@ class AquaEditorTabCellRenderer extends AbstractTabCellRenderer {
 
             //top
             g.setColor(borderColor);
-            g.drawLine(x, y, width-1, y);
+            drawLine(g, x, y, width-1, y);
 
             //bottom
             if( !ren.isSelected() ) {
                 g.setColor(borderColor);
-                g.drawLine(x, y+height-1, width, y+height-1);
+                drawLine(g, x, y+height-1, width, y+height-1);
 
             } else {
                 g.setColor(UIManager.getColor("NbTabControl.selectedTabDarkerBackground"));
-                g.drawLine(x, y+height-1, width, y+height-1);
+                drawLine(g, x, y+height-1, width, y+height-1);
             }
 
             //right
             if( ren.isRightmost() || !ren.isSelected() ) {
                 g.setColor(borderColor);
-                g.drawLine(x+width-1, y, x+width-1, y+height-1);
+                drawLine(g, x+width-1, y, x+width-1, y+height-1);
                 g.setColor(UIManager.getColor("NbTabControl.editorBorderShadowColor"));
-                g.drawLine(x+width-2, y+1, x+width-2, y+height-(ren.isSelected() ? 1 : 2));
+                drawLine(g, x+width-2, y+1, x+width-2, y+height-(ren.isSelected() ? 1 : 2));
             }
             if( ren.isActive() && ren.isSelected() ) {
                 g.setColor(UIManager.getColor("NbTabControl.focusedTabBackground"));
-                g.drawLine(x, y+1, x+width-1, y+1);
-                g.drawLine(x, y+2, x+width-1, y+2);
+                drawLine(g, x, y+1, x+width-1, y+1);
+                drawLine(g, x, y+2, x+width-1, y+2);
             }
         }
 
@@ -410,22 +410,22 @@ class AquaEditorTabCellRenderer extends AbstractTabCellRenderer {
 
             //top
             g.setColor(borderColor);
-            g.drawLine(x, y, width, y);
+            drawLine(g, x, y, width, y);
 
             //bottom
             if( !ren.isSelected() ) {
                 g.setColor(borderColor);
-                g.drawLine(x, y+height-1, width, y+height-1);
+                drawLine(g, x, y+height-1, width, y+height-1);
 
             } else {
                 g.setColor(UIManager.getColor("NbTabControl.selectedTabDarkerBackground"));
-                g.drawLine(x, y+height-1, width, y+height-1);
+                drawLine(g, x, y+height-1, width, y+height-1);
             }
 
             //left
             if( !ren.isLeftmost() && !ren.isSelected() ) {
                 g.setColor(UIManager.getColor("NbTabControl.editorBorderShadowColor"));
-                g.drawLine(x, y+1, x, y+height-2);
+                drawLine(g, x, y+1, x, y+height-2);
             }
         }
 
@@ -440,8 +440,8 @@ class AquaEditorTabCellRenderer extends AbstractTabCellRenderer {
                 int y = 0;
                 int width = ren.getWidth();
                 g.setColor(UIManager.getColor("NbTabControl.focusedTabBackground"));
-                g.drawLine(x, y+1, x+width, y+1);
-                g.drawLine(x, y+2, x+width, y+2);
+                drawLine(g, x, y+1, x+width, y+1);
+                drawLine(g, x, y+2, x+width, y+2);
             }
         }
 
@@ -454,5 +454,9 @@ class AquaEditorTabCellRenderer extends AbstractTabCellRenderer {
                                             Rectangle bounds) {
             rect.setBounds(-20, -20, 0, 0);
         }
+    }
+
+    private static void drawLine(Graphics g, int x1, int y1, int x2, int y2) {
+        AquaEditorTabDisplayerUI.drawLine(g, x1, y1, x2, y2);
     }
 }

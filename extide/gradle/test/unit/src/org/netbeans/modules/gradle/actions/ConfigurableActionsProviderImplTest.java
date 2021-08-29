@@ -20,12 +20,14 @@ package org.netbeans.modules.gradle.actions;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 import static junit.framework.TestCase.assertNotNull;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -36,10 +38,12 @@ import org.junit.rules.TemporaryFolder;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.api.execute.RunConfig;
 import org.netbeans.modules.gradle.api.execute.RunUtilsTest;
+import org.netbeans.modules.gradle.customizer.CustomActionMapping;
 import org.netbeans.modules.gradle.execute.ConfigPersistenceUtilsTest;
 import org.netbeans.modules.gradle.execute.GradleExecAccessor;
 import org.netbeans.modules.gradle.execute.GradleExecutor;
@@ -51,6 +55,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.test.TestFileUtils;
 import org.openide.modules.DummyInstalledFileLocator;
+import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.test.MockLookup;
 import org.openide.windows.InputOutput;
@@ -101,6 +106,19 @@ public class ConfigurableActionsProviderImplTest {
         TestFileUtils.writeFile(projectFolder, "build.gradle",
                 "plugins {\n" +
                 "    id(\"java-library-distribution\")\n" +
+                "}"
+                            
+        );
+        project = ProjectManager.getDefault().findProject(projectFolder);
+    }
+    
+    private void createGradleProject2() throws Exception {
+        projectFolder = FileUtil.toFileObject(tempFolder.newFolder());
+        FileUtil.createFolder(projectFolder, "src/main/java");
+        TestFileUtils.writeFile(projectFolder, "build.gradle",
+                "plugins {\n" +
+                "    id(\"java-library-distribution\")\n" +
+                "    id(\"java\")\n" +
                 "}"
                             
         );
@@ -186,7 +204,7 @@ public class ConfigurableActionsProviderImplTest {
      */
     @Test
     public void testInvokeWithSpecificConfiguration() throws Exception {
-        createGradleProject();
+        createGradleProject2();
         primeProject();
 
         ProjectConfigurationProvider<GradleExecConfiguration> pcp = project.getLookup().lookup(ProjectConfigurationProvider.class);
@@ -259,5 +277,126 @@ public class ConfigurableActionsProviderImplTest {
         
         // customized action for this config
         assertTrue(runWith.getCommandLine().hasFlag(GradleCommandLine.Flag.CONTINUOUS));
+    }
+    
+    /**
+     * Checks that 'debug.single' is enabled by default (defined in declarative-actions.xml for java plugin)
+     */
+    @Test
+    public void testActionEnabledDefault() throws Exception {
+        createGradleProject2();
+        primeProject();
+        
+        ActionProvider ap = project.getLookup().lookup(ActionProvider.class);
+        assertTrue("debug.single is supported for java.distribution / default", Arrays.asList(ap.getSupportedActions()).contains("debug.single"));
+        assertTrue("debug.single is enabled for java.distribution / default", ap.isActionEnabled("debug.single", Lookup.EMPTY));
+    }
+    
+    /**
+     * Checks that debug.single is disabled if the invoked explicitly requests 'provided' configuration.
+     * The debug.single action is disabled in declarative-actions2.xml
+     */
+    @Test
+    public void testActionDisabledInSpecifiedConfiguration() throws Exception {
+        createGradleProject2();
+        primeProject();
+        
+        ProjectConfigurationProvider<GradleExecConfiguration> pcp = project.getLookup().lookup(ProjectConfigurationProvider.class);
+        List<? extends GradleExecConfiguration> configs = new ArrayList<>(pcp.getConfigurations());
+        GradleExecConfiguration conf = configs.stream().filter(c -> c.getId().equals("provided-config")).findAny().get();
+
+        ActionProvider ap = project.getLookup().lookup(ActionProvider.class);
+        assertTrue("debug.single is supported for java.distribution / default", Arrays.asList(ap.getSupportedActions()).contains("debug.single"));
+        assertFalse("debug.single is enabled for java.distribution / default", ap.isActionEnabled("debug.single", Lookups.singleton(conf)));
+    }
+
+    /**
+     * Checks that debug.single is disabled, if the active configuration is switched w/o any explicit action designation
+     * @throws Exception 
+     */
+    @Test
+    public void testActionDisabledInActiveConfiguration() throws Exception {
+        createGradleProject2();
+        primeProject();
+
+        ProjectConfigurationProvider<GradleExecConfiguration> pcp = project.getLookup().lookup(ProjectConfigurationProvider.class);
+        List<? extends GradleExecConfiguration> configs = new ArrayList<>(pcp.getConfigurations());
+        GradleExecConfiguration conf = configs.stream().filter(c -> c.getId().equals("provided-config")).findAny().get();
+        
+        pcp.setActiveConfiguration(conf);
+        
+        ActionProvider ap = project.getLookup().lookup(ActionProvider.class);
+        assertTrue("debug.single is supported for java.distribution / default", Arrays.asList(ap.getSupportedActions()).contains("debug.single"));
+        assertFalse("debug.single is enabled for java.distribution / default", ap.isActionEnabled("debug.single", Lookup.EMPTY));
+    }
+
+    /**
+     * Checks that even though active config disables 'debug.single', explicit request
+     * will override it
+     */
+    @Test
+    public void testActionEnabledWithExplicitOverActive() throws Exception {
+        createGradleProject2();
+        primeProject();
+
+        ProjectConfigurationProvider<GradleExecConfiguration> pcp = project.getLookup().lookup(ProjectConfigurationProvider.class);
+        List<? extends GradleExecConfiguration> configs = new ArrayList<>(pcp.getConfigurations());
+        GradleExecConfiguration conf = configs.stream().filter(c -> c.getId().equals("provided-config")).findAny().get();
+        
+        pcp.setActiveConfiguration(conf);
+        
+        GradleExecConfiguration def = configs.stream().filter(c -> c.isDefault()).findAny().get();
+        
+        ActionProvider ap = project.getLookup().lookup(ActionProvider.class);
+        assertTrue("debug.single is supported for java.distribution / default", Arrays.asList(ap.getSupportedActions()).contains("debug.single"));
+        assertTrue("debug.single is enabled for java.distribution / default", ap.isActionEnabled("debug.single", Lookups.singleton(def)));
+    }
+    
+    /**
+     * Checks that if a custom action is made/paersisted, it will be visible in
+     * action provider.
+     * @throws IOException 
+     */
+    @Test
+    public void testSaveCustomizedActionVisible() throws Exception {
+        createGradleProject2();
+        
+        CustomActionRegistrationSupport supp = new CustomActionRegistrationSupport(project);
+        CustomActionMapping cam = new CustomActionMapping(ActionMapping.CUSTOM_PREFIX + "1");
+        cam.setArgs("build");
+        
+        ActionProvider ap = project.getLookup().lookup(ActionProvider.class);
+        assertFalse(Arrays.asList(ap.getSupportedActions()).contains(cam.getName()));
+        
+        supp.registerCustomAction(cam);
+        supp.save();
+        
+        assertTrue(Arrays.asList(ap.getSupportedActions()).contains(cam.getName()));
+    }
+    
+    /**
+     * Checks that custom created action is enabled.
+     */
+    @Test
+    public void testCustomizedActionEnabled() throws Exception {
+        createGradleProject2();
+        
+        CustomActionRegistrationSupport supp = new CustomActionRegistrationSupport(project);
+        CustomActionMapping cam = new CustomActionMapping(ActionMapping.CUSTOM_PREFIX + "1");
+        cam.setArgs("build");
+        
+        ActionProvider ap = project.getLookup().lookup(ActionProvider.class);
+        
+        assertFalse("Nonexistent ation must not be enabled", ap.isActionEnabled(cam.getName(), Lookup.EMPTY));
+
+        supp.registerCustomAction(cam);
+        supp.save();
+        
+        assertTrue("Custom actions are always enabled", ap.isActionEnabled(cam.getName(), Lookup.EMPTY));
+        
+        supp.unregisterCustomAction(cam.getName());
+        supp.save();
+        
+        assertFalse("Deleted actions must not be enabled", ap.isActionEnabled(cam.getName(), Lookup.EMPTY));
     }
 }

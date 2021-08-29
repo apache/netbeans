@@ -154,7 +154,7 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
         ArrayList<SourceGroup> ret = new ArrayList<>();
         Set<SourceType> stype = soureType2SourceType(type);
         for (SourceType st : stype) {
-            Set<File> processed = new HashSet();
+            Set<File> processed = new HashSet<>();
             for (String group : gradleSources.keySet()) {
                 Set<File> dirs = gradleSources.get(group).getSourceDirs(st);
                 boolean unique = dirs.size() == 1;

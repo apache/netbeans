@@ -107,7 +107,8 @@ public final class CompletionContext {
         this.dotContext = getDotCompletionContext();
         this.nameOnly = dotContext != null && dotContext.isMethodsOnly();
 
-        this.declaringClass = getBeforeDotDeclaringClass();
+        ClassNode dc = getBeforeDotDeclaringClass();
+        this.declaringClass = dc == null ? null : dc.redirect();
     }
     
     // TODO: Move this to the constructor and change ContextHelper.getSurroundingClassNode()

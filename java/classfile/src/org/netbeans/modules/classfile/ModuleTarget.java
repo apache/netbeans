@@ -27,25 +27,23 @@ import java.io.IOException;
  * @author Tomas Zezula
  */
 public final class ModuleTarget {
-    private final String osName;
-    private final String osArch;
-    private final String osVersion;
+    private final String platform;
 
     ModuleTarget(
         final DataInputStream in,
         final ConstantPool cp) throws IOException {
         int index = in.readUnsignedShort();
-        this.osName = index == 0 ?
+        this.platform = index == 0 ?
                 null :
                 ((CPUTF8Info)cp.get(index)).getName();
-        index = in.readUnsignedShort();
-        this.osArch = index == 0 ?
-                null :
-                ((CPUTF8Info)cp.get(index)).getName();
-        index = in.readUnsignedShort();
-        this.osVersion = index == 0 ?
-                null :
-                ((CPUTF8Info)cp.get(index)).getName();
+    }
+
+    /**
+     * Returns the platform name required by the module.
+     * @return the platform name or null if no information is present
+     */
+    public String getPlatform() {
+        return platform;
     }
 
     /**
@@ -53,7 +51,7 @@ public final class ModuleTarget {
      * @return the operating system name or null if no information is present
      */
     public String getOSName() {
-        return osName;
+        return null;
     }
 
     /**
@@ -61,7 +59,7 @@ public final class ModuleTarget {
      * @return the operating system architecture or null if no information is present
      */
     public String getOSArch() {
-        return osArch;
+        return null;
     }
 
     /**
@@ -69,15 +67,13 @@ public final class ModuleTarget {
      * @return the operating system version or null if no information is present
      */
     public String getOSVersion() {
-        return osVersion;
+        return null;
     }
 
     @Override
     public String toString() {
         return String.format(
-                "os_name=%s, os_arch=%s, os_version=%s",    //NOI18N
-                osName,
-                osArch,
-                osVersion);
+                "platform=%s",    //NOI18N
+                platform);
     }
 }

@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
@@ -45,6 +46,7 @@ import org.eclipse.lsp4j.debug.ExceptionInfoResponse;
 import org.eclipse.lsp4j.debug.InitializeRequestArguments;
 import org.eclipse.lsp4j.debug.NextArguments;
 import org.eclipse.lsp4j.debug.PauseArguments;
+import org.eclipse.lsp4j.debug.RestartFrameArguments;
 import org.eclipse.lsp4j.debug.Scope;
 import org.eclipse.lsp4j.debug.ScopesArguments;
 import org.eclipse.lsp4j.debug.ScopesResponse;
@@ -86,8 +88,11 @@ import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.nativeimage.api.debug.EvaluateException;
 import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
 import org.netbeans.modules.nativeimage.api.debug.NIVariable;
+import org.netbeans.spi.debugger.ui.DebuggingView;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVFrame;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVThread;
+import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -101,6 +106,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
     private final NbDisconnectRequestHandler disconnectRequestHandler = new NbDisconnectRequestHandler();
     private final NbBreakpointsRequestHandler breakpointsRequestHandler = new NbBreakpointsRequestHandler();
     private final NbVariablesRequestHandler variablesRequestHandler = new NbVariablesRequestHandler();
+    private final RequestProcessor evaluationRP = new RequestProcessor(NbProtocolServer.class.getName(), 3);
     private boolean initialized = false;
     private Future<Void> runningServer;
 
@@ -347,6 +353,32 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
     }
 
     @Override
+    @NbBundle.Messages({"MSG_FrameRestartUnsupported=Restart of frames is not supported.",
+                        "# {0} - frame pop error message",
+                        "MSG_FrameRestartFailed=Unable to restart frame: {0}"})
+    public CompletableFuture<Void> restartFrame(RestartFrameArguments args) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        NbFrame stackFrame = (NbFrame) context.getThreadsProvider().getThreadObjects().getObject(args.getFrameId());
+        String popError = null;
+        if (stackFrame != null) {
+            try {
+                stackFrame.getDVFrame().popOff();
+                ActionsManager am = DebuggerManager.getDebuggerManager().getCurrentEngine().getActionsManager();
+                am.doAction("stepInto");
+                future.complete(null);
+            } catch (UnsupportedOperationException ex) {
+                popError = Bundle.MSG_FrameRestartUnsupported();
+            } catch (DebuggingView.PopException ex) {
+                popError = Bundle.MSG_FrameRestartFailed(ex.getLocalizedMessage());
+            }
+        }
+        if (popError != null) {
+            ErrorUtilities.completeExceptionally(future, popError, ResponseErrorCode.InvalidParams);
+        }
+        return future;
+    }
+
+    @Override
     public CompletableFuture<ScopesResponse> scopes(ScopesArguments args) {
         List<Scope> result = new ArrayList<>();
         NbFrame stackFrame = (NbFrame) context.getThreadsProvider().getThreadObjects().getObject(args.getFrameId());
@@ -458,7 +490,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
                 evaluateNative(niDebugger, expression, threadId, response);
             }
             return response;
-        });
+        }, evaluationRP);
     }
 
     private void evaluateJPDA(JPDADebugger debugger, String expression, int threadId, EvaluateResponse response) {
@@ -487,7 +519,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
                 } catch (InvalidExpressionException ex) {
                     toString = variable.getValue();
                 }
-                response.setResult(toString);
+                response.setResult(Objects.toString(toString));
                 response.setVariablesReference(referenceId);
                 response.setType(variable.getType());
                 response.setIndexedVariables(Math.max(indexedVariables, 0));

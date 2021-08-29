@@ -145,6 +145,11 @@ public class GtkLFCustoms extends LFCustoms {
     @Override
     public Object[] createLookAndFeelCustomizationKeysAndValues() {
         if (ThemeValue.functioning()) {
+            // Better than nothing detection of GTK dark themes
+            ThemeValue textText = new ThemeValue (Region.PANEL, ColorType.TEXT_FOREGROUND, Color.BLACK);
+            ThemeValue text = new ThemeValue (Region.PANEL, ColorType.TEXT_BACKGROUND, Color.GRAY);
+            Boolean dark = UIUtils.isBrighter(textText.getColor(), text.getColor());
+            
             return new Object[] {
                 //XXX once the JDK team has integrated support for standard
                 //UIManager keys into 1.5 (not there as of b47), these can 
@@ -154,12 +159,16 @@ public class GtkLFCustoms extends LFCustoms {
                 "controlShadow", new ThemeValue (Region.PANEL, ThemeValue.DARK, Color.DARK_GRAY), //NOI18N
                 "controlDkShadow", new ThemeValue (Region.PANEL, ThemeValue.BLACK, Color.BLACK), //NOI18N
                 "controlLtHighlight", new ThemeValue (Region.PANEL, ThemeValue.WHITE, Color.WHITE), //NOI18N
-                "textText", new ThemeValue (Region.PANEL, ColorType.TEXT_FOREGROUND, Color.BLACK), //NOI18N
-                "text", new ThemeValue (Region.PANEL, ColorType.TEXT_BACKGROUND, Color.GRAY), //NOI18N
+                "textText", textText, //NOI18N
+                "text", text, //NOI18N
+                
+                
+                "nb.dark.theme", dark, //NOI18N
+                "nb.wizard.hideimage", dark, //NOI18N
                 
                 "tab_unsel_fill", control, //NOI18N
                  
-                "SplitPane.dividerSize", new Integer (2),  //NOI18N
+                "SplitPane.dividerSize", 2,  //NOI18N
                 
                 SYSTEMFONT, controlFont, //NOI18N
                 USERFONT, controlFont, //NOI18N

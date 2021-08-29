@@ -83,6 +83,36 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="gradle-init">
+            <api name="general"/>
+            <summary>
+                Request project creation via Gradle init.
+            </summary>
+            <version major="2" minor="20"/>
+            <date day="8" month="8" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                Use <a href="@TOP@/org/netbeans/modules/gradle/spi/newproject/TemplateOperation.html#createGradleInit-java.io.File-java.lang.String-">createGradleInit</a>
+                to ask Gradle to create new project using its <code>init</code> functionality.
+            </description>
+            <class package="org.netbeans.modules.gradle.spi.newproject" name="TemplateOperation"/>
+        </change>
+        <change id="config-disabled-action">
+            <api name="general"/>
+            <summary>
+                Action can be disabled for a configuration.
+            </summary>
+            <date day="19" month="6" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/GradleActionsProvider.html">GradleActionsProviders</a> may
+                <b>disable action</b> in a provided configuration, for example if the configured environment does not permit
+                the action to be run.
+            </description>
+            <class package="org.netbeans.modules.gradle.api.execute" name="ActionMapping"/>
+        </change>
         <change id="configurations">
             <api name="general"/>
             <summary>

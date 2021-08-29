@@ -466,7 +466,7 @@ public class TreeDuplicator implements TreeVisitor<Tree, Void> {
 
     @Override
     public Tree visitCompilationUnit(CompilationUnitTree tree, Void p) {
-        CompilationUnitTree n = make.CompilationUnit(tree.getPackage(), tree.getImports(), tree.getTypeDecls(), tree.getSourceFile());
+        CompilationUnitTree n = make.CompilationUnit(tree.getPackage(), tree.getImports(), TreeHelpers.getCombinedTopLevelDecls(tree), tree.getSourceFile());
         model.setElement(n, model.getElement(tree));
         comments.copyComments(tree, n);
         model.setPos(n, model.getPos(tree));

@@ -83,10 +83,11 @@ public class ExtraCatchTest extends ErrorHintsTestBase {
     public void testNotThrownMulti3() throws Exception {
         performFixTest("test/Test.java",
                        "package test;\n" +
+                       "import java.lang.reflect.InvocationTargetException;\n" +
                        "public class Test {\n" +
                        "    public void test() {\n" +
                        "        try {\n" +
-                       "            if (Boolean.getBoolean(\"\")) { throw new RuntimeException(); } else { throw new InvocationTargetException(); }\n" +
+                       "            if (Boolean.getBoolean(\"\")) { throw new RuntimeException(); } else { throw new InvocationTargetException(null); }\n" +
                        "        } catch (RuntimeException | java.io.IOException | InvocationTargetException ex) {" +
                        "        }\n" +
                        "    }\n" +
@@ -94,10 +95,11 @@ public class ExtraCatchTest extends ErrorHintsTestBase {
                        -1,
                        Bundle.FIX_RemoveCatchException("IOException"),
                        ("package test;\n" +
+                        "import java.lang.reflect.InvocationTargetException;\n" +
                         "public class Test {\n" +
                         "    public void test() {\n" +
                         "        try {\n" +
-                        "            if (Boolean.getBoolean(\"\")) { throw new RuntimeException(); } else { throw new InvocationTargetException(); }\n" +
+                        "            if (Boolean.getBoolean(\"\")) { throw new RuntimeException(); } else { throw new InvocationTargetException(null); }\n" +
                         "        } catch (RuntimeException | InvocationTargetException ex) {" +
                         "        }\n" +
                         "    }\n" +

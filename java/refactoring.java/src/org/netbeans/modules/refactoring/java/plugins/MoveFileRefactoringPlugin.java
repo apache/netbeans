@@ -579,6 +579,7 @@ public class MoveFileRefactoringPlugin extends JavaRefactoringPlugin {
                 } else {
                     deleteFile = new DeleteFile(filesToMove.get(0), elements);
                 }
+                elements.addFileChange(refactoring, deleteFile);
                 elements.add(refactoring, deleteFile);
             }
             problem = moveClassTransformer.getProblem();

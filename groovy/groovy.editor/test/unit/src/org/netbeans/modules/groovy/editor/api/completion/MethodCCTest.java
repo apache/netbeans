@@ -149,5 +149,13 @@ public class MethodCCTest extends GroovyCCTestBase {
     public void testCompletionNoPrefixString2() throws Exception {
         checkCompletion(BASE + "CompletionNoPrefixString2.groovy", "def name='Petr'.^", false);
     }
+    
+    /**
+     * Checks that the completion contains methods from inner interfaces and their
+     * superinterfaces.
+     */
+    public void testMethods4() throws Exception {
+        checkCompletion(BASE + "Methods4.groovy", "iface.meth^", false);
+    }
 }
 

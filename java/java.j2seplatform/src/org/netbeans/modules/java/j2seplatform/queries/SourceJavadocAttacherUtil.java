@@ -173,7 +173,8 @@ public final class SourceJavadocAttacherUtil {
         BaseProgressUtils.runOffEventDispatchThread(h, 
                 source ? Bundle.TITLE_ObtainingSource() : Bundle.TITLE_ObtainingJavadoc(), 
                 h, false);
-        return h.getResult();
+        List<? extends URI> r = h.getResult();
+        return r != null && !r.isEmpty() ? r : null;
     }            
     
     @CheckForNull

@@ -86,7 +86,7 @@ public class MavenAssemblyGrammar extends AbstractSchemaBasedGrammar {
                     scope = "runtime"; //NOI18N
                 }
                 scope = scope.trim();
-                Iterator it;
+                Iterator<Dependency> it;
                 if ("runtime".equals(scope)) { //NOI18N
                     it = project.getRuntimeDependencies().iterator();
                 } else if ("test".equals(scope)) { //NOI18N

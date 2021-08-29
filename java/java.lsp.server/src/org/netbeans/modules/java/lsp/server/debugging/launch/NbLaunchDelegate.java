@@ -29,21 +29,28 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
+import org.eclipse.lsp4j.debug.TerminatedEventArguments;
 
 import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
+import org.eclipse.lsp4j.services.LanguageClient;
 
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.DebuggerManagerAdapter;
+import org.netbeans.api.debugger.DebuggerManagerListener;
 import org.netbeans.api.debugger.Session;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
@@ -57,6 +64,7 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.NbSourceProvider;
+import org.netbeans.modules.java.lsp.server.debugging.ni.NILocationVisualizer;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 import org.netbeans.modules.java.lsp.server.progress.ProgressOperationEvent;
@@ -73,6 +81,7 @@ import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
 import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
@@ -82,16 +91,34 @@ import org.openide.util.lookup.ProxyLookup;
  *
  * @author martin
  */
+@NbBundle.Messages({
+    "ERR_UnsupportedLaunchDebug=Debugging is not supported in this project.",
+    "ERR_UnsupportedLaunch=Running  is not supported in this project.",
+    "# {0} - the selected configuration",
+    "# {1} - the suggested configuration",
+    "ERR_UnsupportedLaunchDebugConfig=Debugging is not supported in configuration \"{0}\", please switch to {1}",
+    "# {0} - the selected configuration",
+    "# {1} - the suggested configuration",
+    "ERR_UnsupportedLaunchConfig=Running is not supported in configuration \"{0}\", please switch to {1}.",
+    "ERR_LaunchDefaultConfiguration=the default one.",
+    "# {0} - the recommended configuration",
+    "ERR_LaunchSupportiveConfigName=\"{0}\"",
+})
 public abstract class NbLaunchDelegate {
 
     private final RequestProcessor requestProcessor = new RequestProcessor(NbLaunchDelegate.class);
+    private final Map<DebugAdapterContext, DebuggerManagerListener> debuggerListeners = new ConcurrentHashMap<>();
 
     public abstract void preLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
 
     public abstract void postLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
     
     protected void notifyFinished(DebugAdapterContext ctx, boolean success) {
-        // no op.
+        // Remove a possibly staled debugger listener
+        DebuggerManagerListener listener = debuggerListeners.remove(ctx);
+        if (listener != null) {
+            DebuggerManager.getDebuggerManager().removeDebuggerListener(listener);
+        }
     }
 
     public final CompletableFuture<Void> nbLaunch(FileObject toRun, File nativeImageFile, String method, Map<String, Object> launchArguments, DebugAdapterContext context, boolean debug, boolean testRun, Consumer<NbProcessConsole.ConsoleMessage> consoleMessages) {
@@ -146,36 +173,6 @@ public abstract class NbLaunchDelegate {
             W writer = new W();
             CompletableFuture<Pair<ActionProvider, String>> commandFuture = findTargetWithPossibleRebuild(toRun, singleMethod, debug, testRun, ioContext);
             commandFuture.thenAccept((providerAndCommand) -> {
-                context.setInputSinkProvider(() -> writer);
-                if (debug) {
-                    DebuggerManager.getDebuggerManager().addDebuggerListener(new DebuggerManagerAdapter() {
-                        @Override
-                        public void sessionAdded(Session session) {
-                            JPDADebugger debugger = session.lookupFirst(null, JPDADebugger.class);
-                            if (debugger != null) {
-                                DebuggerManager.getDebuggerManager().removeDebuggerListener(this);
-                                Map properties = session.lookupFirst(null, Map.class);
-                                NbSourceProvider sourceProvider = context.getSourceProvider();
-                                sourceProvider.setSourcePath(properties != null ? (ClassPath) properties.getOrDefault("sourcepath", ClassPath.EMPTY) : ClassPath.EMPTY);
-                                debugger.addPropertyChangeListener(JPDADebugger.PROP_STATE, new PropertyChangeListener() {
-                                    @Override
-                                    public void propertyChange(PropertyChangeEvent evt) {
-                                        int newState = (int) evt.getNewValue();
-                                        if (newState == JPDADebugger.STATE_RUNNING) {
-                                            debugger.removePropertyChangeListener(JPDADebugger.PROP_STATE, this);
-                                            NbDebugSession debugSession = new NbDebugSession(session);
-                                            context.setDebugSession(debugSession);
-                                            launchFuture.complete(null);
-                                            context.getConfigurationSemaphore().waitForConfigurationDone();
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    });
-                } else {
-                    launchFuture.complete(null);
-                }
                 List<String> args = argsToStringList(launchArguments.get("args"));
                 List<String> vmArgs = argsToStringList(launchArguments.get("vmArgs"));
                 ExplicitProcessParameters params = ExplicitProcessParameters.empty();
@@ -200,11 +197,13 @@ public abstract class NbLaunchDelegate {
                 );
                 
                 ProjectConfiguration selectConfiguration = null;
+                ProjectConfigurationProvider<ProjectConfiguration> pcp = null;
+                
                 Object o = launchArguments.get("launchConfiguration");
                 if (o instanceof String) {
                     Project p = FileOwnerQuery.getOwner(toRun);
                     if (p != null) {
-                        ProjectConfigurationProvider<ProjectConfiguration> pcp = p.getLookup().lookup(ProjectConfigurationProvider.class);
+                        pcp = p.getLookup().lookup(ProjectConfigurationProvider.class);
                         if (pcp != null) {
                             String n = (String)o;
                             selectConfiguration = pcp.getConfigurations().stream().filter(c -> n.equals(c.getDisplayName())).findAny().orElse(null);
@@ -226,11 +225,91 @@ public abstract class NbLaunchDelegate {
                 }
                 
                 lookup = Lookups.fixed(runContext.toArray(new Object[runContext.size()]));
-                
+                // the execution Lookup is fully populated now. If the Project supports Configurations,
+                // check if the action is actually enabled in the prescribed configuration. If it is not, 
+                if (pcp != null) {
+                    final ActionProvider ap = providerAndCommand.first();
+                    final String cmd = providerAndCommand.second();
+                    if (!ap.isActionEnabled(cmd, lookup)) {
+                        
+                        // attempt to locate a different configuration that enables the action:
+                        ProjectConfiguration supportive = null;
+                        int confIndex = runContext.indexOf(selectConfiguration);
+                        if (confIndex == -1) {
+                            runContext.add(null);
+                            confIndex = runContext.size() - 1;
+                        }
+                        boolean defConfig = true;
+                        for (ProjectConfiguration c : pcp.getConfigurations()) {
+                            runContext.set(confIndex, c);
+                            Lookup tryConf = Lookups.fixed(runContext.toArray(new Object[runContext.size()]));
+                            if (ap.isActionEnabled(cmd, tryConf)) {
+                                supportive = c;
+                                break;
+                            }
+                            defConfig = false;
+                        }
+                        String msg;
+                        String recommended = defConfig ? Bundle.ERR_LaunchDefaultConfiguration(): Bundle.ERR_LaunchSupportiveConfigName(supportive.getDisplayName());
+                        if (debug) {
+                            msg = supportive == null ? 
+                                 Bundle.ERR_UnsupportedLaunchDebug() : Bundle.ERR_UnsupportedLaunchDebugConfig(selectConfiguration.getDisplayName(),  recommended);
+                        } else {
+                            msg = supportive == null ? 
+                                 Bundle.ERR_UnsupportedLaunch() : Bundle.ERR_UnsupportedLaunchConfig(selectConfiguration.getDisplayName(), recommended);
+                        }
+                        LanguageClient client = context.getLspSession().getLookup().lookup(LanguageClient.class);
+                        if (client != null) {
+                            client.showMessage(new MessageParams(MessageType.Warning, msg));
+                            // first complete the future
+                            launchFuture.complete(null);
+                            // and then fake debuggee termination.
+                            context.getClient().terminated(new TerminatedEventArguments());
+                        } else {
+                            launchFuture.completeExceptionally(new CancellationException());
+                        }
+                        return;
+                    }
+                }
+
+                context.setInputSinkProvider(() -> writer);
+                if (debug) {
+                    DebuggerManagerListener listener = new DebuggerManagerAdapter() {
+                        @Override
+                        public void sessionAdded(Session session) {
+                            JPDADebugger debugger = session.lookupFirst(null, JPDADebugger.class);
+                            if (debugger != null) {
+                                DebuggerManager.getDebuggerManager().removeDebuggerListener(this);
+                                debuggerListeners.remove(context);
+                                Map properties = session.lookupFirst(null, Map.class);
+                                NbSourceProvider sourceProvider = context.getSourceProvider();
+                                sourceProvider.setSourcePath(properties != null ? (ClassPath) properties.getOrDefault("sourcepath", ClassPath.EMPTY) : ClassPath.EMPTY);
+                                debugger.addPropertyChangeListener(JPDADebugger.PROP_STATE, new PropertyChangeListener() {
+                                    @Override
+                                    public void propertyChange(PropertyChangeEvent evt) {
+                                        int newState = (int) evt.getNewValue();
+                                        if (newState == JPDADebugger.STATE_RUNNING) {
+                                            debugger.removePropertyChangeListener(JPDADebugger.PROP_STATE, this);
+                                            NbDebugSession debugSession = new NbDebugSession(session);
+                                            context.setDebugSession(debugSession);
+                                            launchFuture.complete(null);
+                                            context.getConfigurationSemaphore().waitForConfigurationDone();
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    };
+                    DebuggerManager.getDebuggerManager().addDebuggerListener(listener);
+                    debuggerListeners.put(context, listener);
+                }
                 Lookups.executeWith(launchCtx, () -> {
                     providerAndCommand.first().invokeAction(providerAndCommand.second(), lookup);
 
                 });
+                if (!debug) {
+                    launchFuture.complete(null);
+                }
             }).exceptionally((t) -> {
                 launchFuture.completeExceptionally(t);
                 return null;
@@ -296,6 +375,7 @@ public abstract class NbLaunchDelegate {
 
     private static void startNativeDebug(File nativeImageFile, List<String> args, String miDebugger, DebugAdapterContext context, ExecutionDescriptor executionDescriptor, CompletableFuture<Void> launchFuture, ActionProgress debugProgress) {
         AtomicReference<NbDebugSession> debugSessionRef = new AtomicReference<>();
+        CompletableFuture<Void> finished = new CompletableFuture<>();
         NIDebugger niDebugger;
         try {
             niDebugger = NIDebugRunner.start(nativeImageFile, args, miDebugger, null, null, executionDescriptor, engine -> {
@@ -305,6 +385,12 @@ public abstract class NbLaunchDelegate {
                 context.setDebugSession(debugSession);
                 launchFuture.complete(null);
                 context.getConfigurationSemaphore().waitForConfigurationDone();
+                session.addPropertyChangeListener(Session.PROP_CURRENT_LANGUAGE, evt -> {
+                    if (evt.getNewValue() == null) {
+                        // No current language => finished
+                        finished.complete(null);
+                    }
+                });
             });
         } catch (IllegalStateException ex) {
             ErrorUtilities.completeExceptionally(launchFuture,
@@ -315,6 +401,7 @@ public abstract class NbLaunchDelegate {
         }
         NbDebugSession debugSession = debugSessionRef.get();
         debugSession.setNIDebugger(niDebugger);
+        NILocationVisualizer.handle(nativeImageFile, niDebugger, finished, context.getLspSession().getLspServer().getOpenedDocuments());
     }
 
     @NonNull
@@ -336,7 +423,7 @@ public abstract class NbLaunchDelegate {
             throw new IllegalArgumentException("Expected String or String list");
         }
     }
-
+    
     private static CompletableFuture<Pair<ActionProvider, String>> findTargetWithPossibleRebuild(FileObject toRun, SingleMethod singleMethod, boolean debug, boolean testRun, NbProcessConsole ioContext) throws IllegalArgumentException {
         Pair<ActionProvider, String> providerAndCommand = findTarget(toRun, singleMethod, debug, testRun);
         if (providerAndCommand != null) {

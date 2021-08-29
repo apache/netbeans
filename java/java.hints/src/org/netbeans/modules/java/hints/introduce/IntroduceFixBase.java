@@ -18,10 +18,10 @@
  */
 package org.netbeans.modules.java.hints.introduce;
 
-import java.io.IOException;
-import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.TreePathHandle;
+import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.spi.editor.hints.Fix;
 
 /**
@@ -32,14 +32,14 @@ import org.netbeans.spi.editor.hints.Fix;
 public abstract class IntroduceFixBase implements Fix {
 
     protected static final String TYPE_TAG = "typeTag";
-    protected final JavaSource js;
+    protected final Source source;
     protected final TreePathHandle  handle;
     protected final int duplicatesCount;
     protected final int offset;
     protected boolean targetIsInterface;
 
-    public IntroduceFixBase(JavaSource js, TreePathHandle handle, int duplicateCount, int offset) {
-        this.js = js;
+    public IntroduceFixBase(Source source, TreePathHandle handle, int duplicateCount, int offset) {
+        this.source = source;
         this.handle = handle;
         this.duplicatesCount = duplicateCount;
         this.offset = offset;
@@ -49,7 +49,7 @@ public abstract class IntroduceFixBase implements Fix {
         this.targetIsInterface = f;
     }
 
-    public abstract ModificationResult getModificationResult() throws IOException;
+    public abstract ModificationResult getModificationResult() throws ParseException;
 
     public int getNameOffset(ModificationResult result) {
         int[] span = result.getSpan(TYPE_TAG);

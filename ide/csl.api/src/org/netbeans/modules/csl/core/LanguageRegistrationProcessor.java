@@ -40,10 +40,12 @@ import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
 import org.netbeans.modules.csl.editor.codetemplates.GsfCodeTemplateFilter;
 import org.netbeans.modules.csl.editor.codetemplates.GsfCodeTemplateProcessor;
 import org.netbeans.modules.csl.editor.completion.GsfCompletionProvider;
+import org.netbeans.modules.csl.editor.completion.GsfHoverProvider;
 import org.netbeans.modules.csl.editor.fold.GsfFoldManagerFactory;
 import org.netbeans.modules.csl.editor.hyperlink.GsfHyperlinkProvider;
 import org.netbeans.modules.csl.editor.semantic.HighlightsLayerFactoryImpl;
 import org.netbeans.modules.csl.editor.semantic.OccurrencesMarkProviderCreator;
+import org.netbeans.modules.csl.hints.GsfErrorProvider;
 import org.netbeans.modules.csl.hints.GsfUpToDateStateProviderFactory;
 import org.netbeans.modules.csl.navigation.ClassMemberPanel;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
@@ -55,6 +57,7 @@ import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory;
 import org.netbeans.modules.parsing.spi.indexing.PathRecognizer;
 import org.netbeans.spi.editor.errorstripe.UpToDateStatusProviderFactory;
 import org.netbeans.spi.editor.highlighting.HighlightsLayerFactory;
+import org.netbeans.spi.lsp.HyperlinkLocationProvider;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerBuilder.File;
 import org.openide.filesystems.annotations.LayerGeneratingProcessor;
@@ -124,7 +127,7 @@ public class LanguageRegistrationProcessor extends LayerGeneratingProcessor {
                     if (methods.containsKey("getParser")) { //NOI18N
                         registerParser(lb, mimeType);
                     }
-                        if (methods.containsKey("getIndexerFactory")) { //NOI18N
+                    if (methods.containsKey("getIndexerFactory")) { //NOI18N
                         registerIndexer(lb, mimeType);
                         if (!isAnnotatedByPathRecognizerRegistration) {
                             registerPathRecognizer(lb, mimeType);
@@ -135,6 +138,9 @@ public class LanguageRegistrationProcessor extends LayerGeneratingProcessor {
                     registerCodeTemplates(lb, mimeType);
                     if (methods.containsKey("getDeclarationFinder")) { //NOI18N
                         registerHyperlinks(lb, mimeType);
+                    }
+                    if (methods.containsKey("getHintsProvider")) { //NOI18N
+                        registerErrorProvider(lb, mimeType);
                     }
                     registerSemanticHighlighting(lb, mimeType);
                     registerUpToDateStatus(lb, mimeType);
@@ -255,6 +261,7 @@ public class LanguageRegistrationProcessor extends LayerGeneratingProcessor {
         instanceFile(b, "Editors/" + mimeType + "/CompletionProviders", null, CodeTemplateCompletionProvider.class, null).write(); //NOI18N
         instanceFile(b, "Editors/" + mimeType + "/CompletionProviders", null, GsfCompletionProvider.class, null).write(); //NOI18N
         instanceFile(b, "Editors/" + mimeType + "/CompletionProviders", null, "org.netbeans.modules.parsing.ui.WaitScanFinishedCompletionProvider", null).write(); //NOI18N
+        instanceFile(b, "Editors/" + mimeType + "/HoverProviders", null, GsfHoverProvider.class, null).write(); //NOI18N
 //        // Code Completion
 //        Element completionFolder = mkdirs(doc, "Editors/" + mimeType + "/CompletionProviders"); // NOI18N
 //        createFile(doc, completionFolder, "org-netbeans-lib-editor-codetemplates-CodeTemplateCompletionProvider.instance"); // NOI18N
@@ -291,6 +298,7 @@ public class LanguageRegistrationProcessor extends LayerGeneratingProcessor {
 
     private static void registerHyperlinks(LayerBuilder b, String mimeType) {
         instanceFile(b, "Editors/" + mimeType + "/HyperlinkProviders", null, GsfHyperlinkProvider.class, null, 1000, HyperlinkProviderExt.class).write(); //NOI18N
+        instanceFile(b, "Editors/" + mimeType + "/HyperlinkLocationProviders", null, GsfHyperlinkProvider.LocationProvider.class, null, 1000, HyperlinkLocationProvider.class).write(); //NOI18N
 //
 //        // Hyperlinks
 //        if (hasDeclarationFinder) {
@@ -306,6 +314,10 @@ public class LanguageRegistrationProcessor extends LayerGeneratingProcessor {
 //
 //        // Highlighting Factories
 //        item = createFile(doc, mimeFolder, "org-netbeans-modules-csl-editor-semantic-HighlightsLayerFactoryImpl.instance"); // NOI18N
+    }
+
+    private static void registerErrorProvider(LayerBuilder b, String mimeType) {
+        instanceFile(b, "Editors/" + mimeType, null, GsfErrorProvider.class, null).write(); //NOI18N
     }
 
     private void registerStructureScanner(LayerBuilder b, String mimeType) {

@@ -88,7 +88,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
     private OutputStream errStream;
     private boolean cancelling;
     private GradleTask gradleTask;
-
+    
     @SuppressWarnings("LeakingThisInConstructor")
     public GradleDaemonExecutor(RunConfig config) {
         super(config);
@@ -100,7 +100,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             }
         });
     }
-
+    
     @NbBundle.Messages({
         "# {0} - Project name",
         "BUILD_SUCCESS=Building {0} was success.",
@@ -241,6 +241,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                     buildLauncher.addProgressListener(new ProgressLookupListener(provider.getProgressListener()), provider.getSupportedOperationTypes());
                 }
             }
+            GradleExecAccessor.instance().configureGradleHome(buildLauncher);
             buildLauncher.run();
             StatusDisplayer.getDefault().setStatusText(Bundle.BUILD_SUCCESS(getProjectName()));
             gradleTask.finish(0);

@@ -21,7 +21,11 @@ package org.netbeans.modules.java.disco;
 import org.netbeans.spi.java.platform.CustomPlatformInstall;
 import org.openide.WizardDescriptor;
 import org.openide.WizardDescriptor.InstantiatingIterator;
+import org.openide.util.NbBundle;
 
+@NbBundle.Messages({
+    "DiscoPlatformInstall.displayName=Download OpenJDK (via Foojay.io Disco API)"
+})
 public class FoojayPlatformInstall extends CustomPlatformInstall {
 
     private FoojayPlatformInstall() {}
@@ -33,7 +37,7 @@ public class FoojayPlatformInstall extends CustomPlatformInstall {
 
     @Override
     public String getDisplayName() {
-        return "Remote Universal OpenJDK Service";
+        return Bundle.DiscoPlatformInstall_displayName();
     }
     
     public static FoojayPlatformInstall create() {

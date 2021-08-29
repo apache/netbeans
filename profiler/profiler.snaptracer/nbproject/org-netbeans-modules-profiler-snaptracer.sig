@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.35
+#Version 1.36
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -24,7 +24,6 @@ meth public void setPreferred(boolean)
 meth public void setShortDescription(java.lang.String)
 meth public void setValue(java.lang.String,java.lang.Object)
 supr java.lang.Object
-hfds TRANSIENT,classRef,displayName,expert,hidden,name,preferred,shortDescription,table
 
 CLSS public abstract interface java.io.Serializable
 

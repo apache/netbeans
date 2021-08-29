@@ -20,12 +20,16 @@ package org.netbeans.modules.nativeimage.spi.debug;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
+
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerEngine;
-
 import org.netbeans.api.extexecution.ExecutionDescriptor;
+import org.netbeans.modules.nativeimage.api.Location;
+import org.netbeans.modules.nativeimage.api.SourceInfo;
+import org.netbeans.modules.nativeimage.api.Symbol;
 import org.netbeans.modules.nativeimage.api.debug.NIFrame;
 import org.netbeans.modules.nativeimage.api.debug.NILineBreakpointDescriptor;
 import org.netbeans.modules.nativeimage.api.debug.NIVariable;
@@ -91,6 +95,22 @@ public interface NIDebuggerProvider {
     CompletableFuture<Void> start(List<String> command, File workingDirectory, String debugger, String displayName, ExecutionDescriptor executionDescriptor, Consumer<DebuggerEngine> startedEngine);
 
     /**
+     * Attach to a process and create a debugging session. Called typically after breakpoints are added.
+     *
+     * @param executablePath path to an executable representing the native image
+     * @param processId a process to attach to
+     * @param debugger the native debugger command
+     * @param startedEngine the corresponding DebuggerEngine is passed to this consumer
+     * @return future that completes on the execution finish
+     * @since 0.4
+     */
+    default CompletableFuture<Void> attach(String executablePath, long processId, String debugger, Consumer<DebuggerEngine> startedEngine) {
+        CompletableFuture cf = new CompletableFuture();
+        cf.completeExceptionally(new UnsupportedOperationException());
+        return cf;
+    }
+
+    /**
      * An asynchronous expression evaluation.
      *
      * @param expression the expression to evaluate
@@ -120,4 +140,24 @@ public interface NIDebuggerProvider {
      * @since 1.0
      */
     String getVersion();
+
+    /**
+     * Provide a list of locations for a given file path.
+     *
+     * @param filePath a file path
+     * @return list of locations, or <code>null</code> when there's no location
+     *         information about such file.
+     * @since 0.2
+     */
+    default List<Location> listLocations(String filePath) {
+        return null;
+    }
+
+    default Map<SourceInfo, List<Symbol>> listFunctions(String name, boolean includeNondebug, int maxResults) {
+        return null;
+    }
+
+    default Map<SourceInfo, List<Symbol>> listVariables(String name, boolean includeNondebug, int maxResults) {
+        return null;
+    }
 }

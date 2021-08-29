@@ -90,7 +90,7 @@ public class JUnitProjectOpenedHook implements LookupProvider {
         + "JUnit 4.x has a compatibility mode in order to handle JUnit 3.x testcases.\n\n"
         + "Alternatively download junit-3.8.2.jar and add it manually as your project's test dependency.",
         "Error_display_name_junit4=Hamcrest binaries missing",
-        "Error_description_junit4=JUnit 4.12 does not bundle hamcrest matchers library.\n\n"
+        "Error_description_junit4=JUnit 4.13.2 does not bundle hamcrest matchers library.\n\n"
         + "Click the resolve button to automatically add hamcrest as your project's test dependency."})
     @Override
     public Lookup createAdditionalLookup(final Lookup lookup) {

@@ -19,31 +19,35 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.LineMap;
-import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
@@ -59,12 +63,12 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.DebuggerManager;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
-import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
@@ -76,19 +80,15 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
+import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodFinder;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
+import org.netbeans.modules.java.lsp.server.debugging.attach.AttachNativeConfigurations;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaTypeProvider;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
-import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods;
-import org.netbeans.modules.parsing.api.ParserManager;
-import org.netbeans.modules.parsing.api.ResultIterator;
-import org.netbeans.modules.parsing.api.Source;
-import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.lucene.support.Queries;
-import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.spi.jumpto.type.SearchType;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
@@ -128,6 +128,8 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return CompletableFuture.completedFuture(true);
             case Server.JAVA_NEW_FROM_TEMPLATE:
                 return LspTemplateUI.createFromTemplate("Templates", client, params);
+            case Server.JAVA_NEW_PROJECT:
+                return LspTemplateUI.createProject("Templates/Project", client, params);
             case Server.JAVA_BUILD_WORKSPACE: {
                 final CommandProgress progressOfCompilation = new CommandProgress();
                 final Lookup ctx = Lookups.singleton(progressOfCompilation);
@@ -194,25 +196,50 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 if (file == null) {
                     return CompletableFuture.completedFuture(Collections.emptyList());
                 }
-                return server.asyncOpenFileOwner(file).thenCompose(this::getTestRootURLs).thenApply(testRootURLs -> {
-                    List<TestMethodController.TestMethod> testMethods = new ArrayList<>();
-                    findTestMethods(testRootURLs, testMethods);
-                    if (testMethods.isEmpty()) {
-                        return Collections.emptyList();
+                return server.asyncOpenFileOwner(file).thenCompose(this::getTestRoots).thenCompose(testRoots -> {
+                    CompletableFuture<Object> future = new CompletableFuture<>();
+                    JavaSource js = JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY));
+                    try {
+                        js.runWhenScanFinished(controller -> {
+                            BiFunction<FileObject, Collection<TestMethodController.TestMethod>, TestSuiteInfo> f = (fo, methods) -> {
+                                List<TestSuiteInfo.TestCaseInfo> tests = new ArrayList<>(methods.size());
+                                String url = Utils.toUri(fo);
+                                String testClassName = null;
+                                Integer testClassLine = null;
+                                for (TestMethodController.TestMethod testMethod : methods) {
+                                    if (testClassName == null) {
+                                        testClassName = testMethod.getTestClassName();
+                                    }
+                                    if (testClassLine == null) {
+                                        testClassLine = testMethod.getTestClassPosition() != null
+                                                ? Utils.createPosition(fo, testMethod.getTestClassPosition().getOffset()).getLine()
+                                                : null;
+                                    }
+                                    String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
+                                    String fullName = testMethod.getTestClassName() + '.' + testMethod.method().getMethodName();
+                                    int testLine = Utils.createPosition(fo, testMethod.start().getOffset()).getLine();
+                                    tests.add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), fullName, url, testLine, TestSuiteInfo.State.Loaded, null));
+                                }
+                                return new TestSuiteInfo(testClassName, url, testClassLine, TestSuiteInfo.State.Loaded, tests);
+                            };
+                            testMethodsListener.compareAndSet(null, (fo, methods) -> {
+                                try {
+                                    client.notifyTestProgress(new TestProgressParams(Utils.toUri(fo), f.apply(fo, methods)));
+                                } catch (Exception e) {
+                                    testMethodsListener.set(null);
+                                }
+                            });
+                            Map<FileObject, Collection<TestMethodController.TestMethod>> testMethods = TestMethodFinder.findTestMethods(testRoots, testMethodsListener.get());
+                            Collection<TestSuiteInfo> suites = new ArrayList<>(testMethods.size());
+                            for (Entry<FileObject, Collection<TestMethodController.TestMethod>> entry : testMethods.entrySet()) {
+                                suites.add(f.apply(entry.getKey(), entry.getValue()));
+                            }
+                            future.complete(suites);
+                        }, true);
+                    } catch (IOException ex) {
+                        future.completeExceptionally(ex);
                     }
-                    Map<FileObject, TestSuiteInfo> file2TestSuites = new HashMap<>();
-                    for (TestMethodController.TestMethod testMethod : testMethods) {
-                        TestSuiteInfo suite = file2TestSuites.computeIfAbsent(testMethod.method().getFile(), fo -> {
-                            String foUri = Utils.toUri(fo);
-                            Integer line = getTestLine(((TextDocumentServiceImpl)server.getTextDocumentService()).getJavaSource(foUri), testMethod.getTestClassName());
-                            return new TestSuiteInfo(testMethod.getTestClassName(), foUri, line, TestSuiteInfo.State.Loaded, new ArrayList<>());
-                        });
-                        String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
-                        String fullName = testMethod.getTestClassName() + '.' + testMethod.method().getMethodName();
-                        int line = Utils.createPosition(testMethod.method().getFile(), testMethod.start().getOffset()).getLine();
-                        suite.getTests().add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), fullName, suite.getFile(), line, TestSuiteInfo.State.Loaded, null));
-                    }
-                    return file2TestSuites.values();
+                    return future;
                 });
             }
             case Server.JAVA_SUPER_IMPLEMENTATION:
@@ -239,14 +266,74 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             case Server.JAVA_FIND_DEBUG_PROCESS_TO_ATTACH: {
                 return AttachConfigurations.findProcessAttachTo(client);
             }
+            case Server.NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH: {
+                return AttachNativeConfigurations.findProcessAttachTo(client);
+            }
+            case Server.JAVA_PROJECT_CONFIGURATION_COMPLETION: {
+                // We expect one, two or three arguments.
+                // The first argument is always the URI of the launch.json file.
+                // When not more arguments are provided, all available configurations ought to be provided.
+                // When only a second argument is present, it's a map of the current attributes in a configuration,
+                // and additional attributes valid in that particular configuration ought to be provided.
+                // When a third argument is present, it's an attribute name whose possible values ought to be provided.
+                List<Object> arguments = params.getArguments();
+                Collection<? extends LaunchConfigurationCompletion> configurations = Lookup.getDefault().lookupAll(LaunchConfigurationCompletion.class);
+                List<CompletableFuture<List<CompletionItem>>> completionFutures;
+                String configUri = ((JsonPrimitive) arguments.get(0)).getAsString();
+                Supplier<CompletableFuture<Project>> projectSupplier = () -> {
+                    FileObject file;
+                    try {
+                        file = URLMapper.findFileObject(new URL(configUri));
+                    } catch (MalformedURLException ex) {
+                        Exceptions.printStackTrace(ex);
+                        return CompletableFuture.completedFuture(null);
+                    }
+                    return server.asyncOpenFileOwner(file);
+                };
+                switch (arguments.size()) {
+                    case 1:
+                        completionFutures = configurations.stream().map(c -> c.configurations(projectSupplier)).collect(Collectors.toList());
+                        break;
+                    case 2:
+                        Map<String, Object> attributes = attributesMap((JsonObject) arguments.get(1));
+                        completionFutures = configurations.stream().map(c -> c.attributes(projectSupplier, attributes)).collect(Collectors.toList());
+                        break;
+                    case 3:
+                        attributes = attributesMap((JsonObject) arguments.get(1));
+                        String attribute = ((JsonPrimitive) arguments.get(2)).getAsString();
+                        completionFutures = configurations.stream().map(c -> c.attributeValues(projectSupplier, attributes, attribute)).collect(Collectors.toList());
+                        break;
+                    default:
+                        StringBuilder classes = new StringBuilder();
+                        for (int i = 0; i < arguments.size(); i++) {
+                            classes.append(arguments.get(i).getClass().toString());
+                        }
+                        throw new IllegalStateException("Wrong arguments("+arguments.size()+"): " + arguments + ", classes = " + classes);  // NOI18N
+                }
+                CompletableFuture<List<CompletionItem>> joinedFuture = CompletableFuture.allOf(completionFutures.toArray(new CompletableFuture[0]))
+                        .thenApply(avoid -> completionFutures.stream().flatMap(c -> c.join().stream()).collect(Collectors.toList()));
+                return (CompletableFuture<Object>) (CompletableFuture<?>) joinedFuture;
+            }
             default:
-                for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
-                    if (codeGenerator.getCommands().contains(command)) {
-                        return codeGenerator.processCommand(client, command, params.getArguments());
+                for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
+                    if (codeActionsProvider.getCommands().contains(command)) {
+                        return codeActionsProvider.processCommand(client, command, params.getArguments());
                     }
                 }
         }
         throw new UnsupportedOperationException("Command not supported: " + params.getCommand());
+    }
+
+    private final AtomicReference<BiConsumer<FileObject, Collection<TestMethodController.TestMethod>>> testMethodsListener = new AtomicReference<>();
+
+    private static Map<String, Object> attributesMap(JsonObject json) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        for (Entry<String, JsonElement> entry : json.entrySet()) {
+            JsonPrimitive jp = (JsonPrimitive) entry.getValue();
+            Object value = jp.isBoolean() ? jp.getAsBoolean() : jp.isNumber() ? jp.getAsNumber() : jp.getAsString();
+            map.put(entry.getKey(), value);
+        }
+        return map;
     }
     
     private CompletableFuture<Object> findProjectConfigurations(FileObject ownedFile) {
@@ -288,81 +375,37 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         });
     }
 
-    private CompletableFuture<Set<URL>> getTestRootURLs(Project prj) {
-        final Set<URL> testRootURLs = new HashSet<>();
+    private static final String[] SOURCE_TYPES = {"java", "groovy"};
+
+    private CompletableFuture<Set<FileObject>> getTestRoots(Project prj) {
+        final Set<FileObject> testRoots = new HashSet<>();
         List<FileObject> contained = null;
         if (prj != null) {
-            for (SourceGroup sg : ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
-                for (URL url : UnitTestForSourceQuery.findUnitTests(sg.getRootFolder())) {
-                    testRootURLs.add(url);
+            for (String sourceType : SOURCE_TYPES) {
+                for (SourceGroup sg : ProjectUtils.getSources(prj).getSourceGroups(sourceType)) {
+                    if (isTestGroup(sg)) {
+                        testRoots.add(sg.getRootFolder());
+                    }
                 }
             }
             contained = ProjectUtils.getContainedProjects(prj, true).stream().map(p -> p.getProjectDirectory()).collect(Collectors.toList());
         }
         return server.asyncOpenSelectedProjects(contained).thenApply(projects -> {
             for (Project project : projects) {
-                for (SourceGroup sg : ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
-                    for (URL url : UnitTestForSourceQuery.findUnitTests(sg.getRootFolder())) {
-                        testRootURLs.add(url);
+                for (String sourceType : SOURCE_TYPES) {
+                    for (SourceGroup sg : ProjectUtils.getSources(project).getSourceGroups(sourceType)) {
+                        if (isTestGroup(sg)) {
+                            testRoots.add(sg.getRootFolder());
+                        }
                     }
                 }
             }
-            return testRootURLs;
+            return testRoots;
         });
     }
 
-    private void findTestMethods(Set<URL> testRootURLs, List<TestMethodController.TestMethod> testMethods) {
-        for (URL testRootURL : testRootURLs) {
-            FileObject testRoot = URLMapper.findFileObject(testRootURL);
-            if (testRoot != null) {
-                List<Source> sources = new ArrayList<>();
-                Enumeration<? extends FileObject> children = testRoot.getChildren(true);
-                while(children.hasMoreElements()) {
-                    FileObject fo = children.nextElement();
-                    if (fo.hasExt("java")) {
-                        sources.add(((TextDocumentServiceImpl)server.getTextDocumentService()).getSource(Utils.toUri(fo)));
-                    }
-                }
-                if (!sources.isEmpty()) {
-                    try {
-                        ParserManager.parse(sources, new UserTask() {
-                            @Override
-                            public void run(ResultIterator resultIterator) throws Exception {
-                                CompilationController cc = CompilationController.get(resultIterator.getParserResult());
-                                cc.toPhase(Phase.ELEMENTS_RESOLVED);
-                                for (ComputeTestMethods.Factory methodsFactory : Lookup.getDefault().lookupAll(ComputeTestMethods.Factory.class)) {
-                                    testMethods.addAll(methodsFactory.create().computeTestMethods(cc));
-                                }
-                            }
-                        });
-                    } catch (ParseException ex) {}
-                }
-            }
-        }
-    }
-
-    private Integer getTestLine(JavaSource javaSource, String className) {
-        final int[] offset = new int[] {-1};
-        final LineMap[] lm = new LineMap[1];
-        if (javaSource != null) {
-            try {
-                javaSource.runUserActionTask(cc -> {
-                    cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                    Trees trees = cc.getTrees();
-                    CompilationUnitTree cu = cc.getCompilationUnit();
-                    lm[0] = cu.getLineMap();
-                    for (Tree tree : cu.getTypeDecls()) {
-                        Element element = trees.getElement(trees.getPath(cu, tree));
-                        if (element != null && element.getKind().isClass() && ((TypeElement)element).getQualifiedName().contentEquals(className)) {
-                            offset[0] = (int)trees.getSourcePositions().getStartPosition(cu, tree);
-                            return;
-                        }
-                    }
-                }, true);
-            } catch (IOException ioe) {
-            }
-        }
-        return offset[0] < 0 ? null : Utils.createPosition(lm[0], offset[0]).getLine();
+    private boolean isTestGroup(SourceGroup sg) {
+        return UnitTestForSourceQuery.findSources(sg.getRootFolder()).length > 0;
     }
 
     @Override

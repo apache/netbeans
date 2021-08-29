@@ -26,12 +26,16 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.maven.api.MavenConfiguration;
 import org.netbeans.modules.maven.spi.actions.MavenActionsProvider;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -43,11 +47,7 @@ public class MavenActionsTest extends NbTestCase {
         super(name);
     }
     
-    /**
-     * Checks that the custom provider is included when the project contains appropriate
-     * plugin and trashed when the plugin vanishes from the model.
-     */
-    public void testCustomActionsProvider() throws Exception {
+    private Project createProject() throws Exception {
         clearWorkDir();
         FileObject wd = FileUtil.toFileObject(getWorkDir());
         
@@ -66,6 +66,15 @@ public class MavenActionsTest extends NbTestCase {
         OpenProjects.getDefault().open(new Project[] { p } , false);
         OpenProjects.getDefault().openProjects().get();
         
+        return p;
+    }
+    
+    /**
+     * Checks that the custom provider is included when the project contains appropriate
+     * plugin and trashed when the plugin vanishes from the model.
+     */
+    public void testCustomActionsProvider() throws Exception {
+        Project p = createProject();
         ActionProvider ap = p.getLookup().lookup(ActionProvider.class);
         assertTrue(Arrays.asList(ap.getSupportedActions()).contains("extra"));
         
@@ -77,7 +86,7 @@ public class MavenActionsTest extends NbTestCase {
                 change.countDown();
             }
         });
-        
+        FileObject wd = FileUtil.toFileObject(getWorkDir());
         FileObject pom = wd.getFileObject("pom.xml");
 
         try (OutputStream o = pom.getOutputStream();
@@ -93,5 +102,39 @@ public class MavenActionsTest extends NbTestCase {
         change.await();
    
         assertFalse(Arrays.asList(ap.getSupportedActions()).contains("extra"));
+    }
+    
+    /**
+     * Checks that a configuration can override action to disabled.
+     * @throws Exception 
+     */
+    public void testDebugDisabledInSpecialConfig() throws Exception {
+        Project p = createProject();
+        ActionProvider ap = p.getLookup().lookup(ActionProvider.class);
+        assertTrue(Arrays.asList(ap.getSupportedActions()).contains("debug"));
+        
+        ProjectConfigurationProvider<MavenConfiguration> mavenConf = p.getLookup().lookup(ProjectConfigurationProvider.class);
+        MavenConfiguration mc = mavenConf.getConfigurations().stream().filter(c -> "Example Configuration".equals(c.getDisplayName())).findAny().get();
+        Lookup lkp = Lookups.singleton(mc);
+        
+        assertTrue(ap.isActionEnabled("debug", Lookup.EMPTY));
+        assertFalse(ap.isActionEnabled("debug", lkp));
+    }
+    
+    /**
+     * Checks that unspecified actions still default to the default config's behaviour.
+     * @throws Exception 
+     */
+    public void testDebugEnabledInDefaultConfig() throws Exception {
+        Project p = createProject();
+        ActionProvider ap = p.getLookup().lookup(ActionProvider.class);
+        assertTrue(Arrays.asList(ap.getSupportedActions()).contains("debug"));
+        
+        ProjectConfigurationProvider<MavenConfiguration> mavenConf = p.getLookup().lookup(ProjectConfigurationProvider.class);
+        MavenConfiguration mc = mavenConf.getConfigurations().stream().filter(c -> "Still enabled actions".equals(c.getDisplayName())).findAny().get();
+        Lookup lkp = Lookups.singleton(mc);
+        
+        assertTrue(ap.isActionEnabled("debug", Lookup.EMPTY));
+        assertTrue(ap.isActionEnabled("debug", lkp));
     }
 }

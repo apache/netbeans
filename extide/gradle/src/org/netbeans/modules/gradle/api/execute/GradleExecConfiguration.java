@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import org.gradle.tooling.ConfigurableLauncher;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.project.Project;
@@ -225,6 +226,13 @@ public final class GradleExecConfiguration implements ProjectConfiguration {
                 conf.setProjectProperties(new LinkedHashMap<>(projectProps == null ? Collections.emptyMap() : projectProps));
                 return conf;
             }
+
+            @Override
+            public ConfigurableLauncher configureGradleHome(ConfigurableLauncher cfgL) {
+                ConfigurableLauncher r = GradleCommandLine.configureGradleHome(cfgL);
+                return r;
+            }
+
         });
         
     }

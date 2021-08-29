@@ -79,8 +79,10 @@ public class ModuleTest extends TestCase {
                                 final ClassFile cf = new ClassFile(in, true);
                                 assertNotNull(cf);
                                 assertTrue(cf.isModule());
-                                final List<String> pkgs = cf.getModulePackages();
-                                assertNotNull("No module packages for: " + moduleName, pkgs);   //NOI18N
+                                if (!"java.se".equals(moduleName) && moduleName.startsWith("java.")) {
+                                    final List<String> pkgs = cf.getModulePackages();
+                                    assertNotNull("No module packages for: " + moduleName, pkgs);   //NOI18N
+                                }
                             }
                         } catch (IOException ioe) {
                             throw new RuntimeException(ioe);
@@ -227,8 +229,7 @@ public class ModuleTest extends TestCase {
                 return null;
             }
             final Path jimageRoot = provider.getPath(URI.create("jrt:///"));    //NOI18N
-            final Path modules = jimageRoot.resolve("modules");
-            return Files.exists(modules) ? modules : jimageRoot;
+            return jimageRoot;
         } catch (IOException ioe) {
             LOG.log(Level.WARNING, "Cannot load jrt nio provider.", ioe);   //NOI18N
             return null;

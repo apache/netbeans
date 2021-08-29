@@ -213,7 +213,7 @@ public class Utilities {
     }
 
     private static boolean isChainTrusted(Collection<? extends Certificate> archiveCertificates, Collection<? extends Certificate> trustedCertificates) {
-        Collection<Certificate> c = new HashSet(trustedCertificates);
+        Collection<Certificate> c = new HashSet<>(trustedCertificates);
         c.retainAll(archiveCertificates);
         return ! c.isEmpty();
     }

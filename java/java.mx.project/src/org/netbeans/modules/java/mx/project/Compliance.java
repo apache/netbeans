@@ -99,12 +99,23 @@ public final class Compliance {
         }
     }
 
+    boolean matches(Compliance check) {
+        if (min > check.min) {
+            return false;
+        }
+        if (max < check.max) {
+            return false;
+        }
+        return true;
+    }
+
     String getSourceLevel() {
         if (min == 8) {
             return "1.8";
         }
         return "" + min;
     }
+
     
     public interface Provider {
         public Compliance getCompliance();

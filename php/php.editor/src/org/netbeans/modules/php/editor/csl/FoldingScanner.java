@@ -131,6 +131,7 @@ public final class FoldingScanner {
     );
 
     private static final String LAST_CORRECT_FOLDING_PROPERTY = "LAST_CORRECT_FOLDING_PROPERY"; //NOI18N
+    private static final boolean FOLD_PHPTAG = !Boolean.getBoolean("nb.php.editor.doNotFoldPhptag"); // NOI18N NETBEANS-5480
 
     public static FoldingScanner create() {
         return new FoldingScanner();
@@ -170,7 +171,9 @@ public final class FoldingScanner {
             Source source = phpParseResult.getSnapshot().getSource();
             assert source != null : "source was null";
             Document doc = source.getDocument(false);
-            processPHPTags(folds, doc);
+            if (FOLD_PHPTAG) {
+                processPHPTags(folds, doc);
+            }
             setFoldingProperty(doc, folds);
             return folds;
         }

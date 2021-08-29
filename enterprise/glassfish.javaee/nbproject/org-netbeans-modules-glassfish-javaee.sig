@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.52
+#Version 1.53
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -272,8 +272,6 @@ meth public void transferFocusUpCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.lang.Object
-hfds FOCUS_TRAVERSABLE_DEFAULT,FOCUS_TRAVERSABLE_SET,FOCUS_TRAVERSABLE_UNKNOWN,LOCK,acc,actionListenerK,adjustmentListenerK,appContext,autoFocusTransferOnDisposal,background,backgroundEraseDisabled,boundsOp,bufferStrategy,changeSupport,coalesceEventsParams,coalesceMap,coalescingEnabled,componentListener,componentListenerK,componentOrientation,componentSerializedDataVersion,compoundShape,containerListenerK,cursor,dropTarget,enabled,eventCache,eventLog,eventMask,focusListener,focusListenerK,focusLog,focusTraversalKeyPropertyNames,focusTraversalKeys,focusTraversalKeysEnabled,focusable,font,foreground,graphicsConfig,height,hierarchyBoundsListener,hierarchyBoundsListenerK,hierarchyListener,hierarchyListenerK,ignoreRepaint,incRate,inputMethodListener,inputMethodListenerK,isAddNotifyComplete,isFocusTraversableOverridden,isInc,isPacked,itemListenerK,keyListener,keyListenerK,locale,log,maxSize,maxSizeSet,minSize,minSizeSet,mixingCutoutRegion,mixingLog,mouseListener,mouseListenerK,mouseMotionListener,mouseMotionListenerK,mouseWheelListener,mouseWheelListenerK,name,nameExplicitlySet,newEventsOnly,objectLock,ownedWindowK,parent,peer,peerFont,popups,prefSize,prefSizeSet,requestFocusController,serialVersionUID,textListenerK,valid,visible,width,windowClosingException,windowFocusListenerK,windowListenerK,windowStateListenerK,x,y
-hcls AWTTreeLock,BltSubRegionBufferStrategy,DummyRequestFocusController,FlipSubRegionBufferStrategy,ProxyCapabilities,SingleBufferStrategy
 
 CLSS public java.awt.Container
 cons public init()
@@ -358,8 +356,6 @@ meth public void transferFocusDownCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.awt.Component
-hfds EMPTY_ARRAY,INCLUDE_SELF,SEARCH_HEAVYWEIGHTS,component,containerListener,containerSerializedDataVersion,descendUnconditionallyWhenValidating,descendantsCount,dispatcher,eventLog,focusCycleRoot,focusTraversalPolicy,focusTraversalPolicyProvider,isJavaAwtSmartInvalidate,layoutMgr,listeningBoundsChildren,listeningChildren,log,mixingLog,modalAppContext,modalComp,numOfHWComponents,numOfLWComponents,preserveBackgroundColor,printing,printingThreads,serialPersistentFields,serialVersionUID
-hcls DropTargetEventTargetFilter,EventTargetFilter,MouseEventTargetFilter,WakingRunnable
 
 CLSS public abstract interface java.awt.MenuContainer
 meth public abstract boolean postEvent(java.awt.Event)
@@ -398,7 +394,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -625,8 +620,6 @@ meth public void unregisterKeyboardAction(javax.swing.KeyStroke)
 meth public void update(java.awt.Graphics)
 meth public void updateUI()
 supr java.awt.Container
-hfds ACTIONMAP_CREATED,ANCESTOR_INPUTMAP_CREATED,ANCESTOR_USING_BUFFER,AUTOSCROLLS_SET,COMPLETELY_OBSCURED,CREATED_DOUBLE_BUFFER,DEBUG_GRAPHICS_LOADED,FOCUS_INPUTMAP_CREATED,FOCUS_TRAVERSAL_KEYS_BACKWARD_SET,FOCUS_TRAVERSAL_KEYS_FORWARD_SET,INHERITS_POPUP_MENU,INPUT_VERIFIER_SOURCE_KEY,IS_DOUBLE_BUFFERED,IS_OPAQUE,IS_PAINTING_TILE,IS_PRINTING,IS_PRINTING_ALL,IS_REPAINTING,KEYBOARD_BINDINGS_KEY,KEY_EVENTS_ENABLED,NEXT_FOCUS,NOT_OBSCURED,OPAQUE_SET,PARTIALLY_OBSCURED,REQUEST_FOCUS_DISABLED,RESERVED_1,RESERVED_2,RESERVED_3,RESERVED_4,RESERVED_5,RESERVED_6,WHEN_IN_FOCUSED_WINDOW_BINDINGS,WIF_INPUTMAP_CREATED,WRITE_OBJ_COUNTER_FIRST,WRITE_OBJ_COUNTER_LAST,aaTextInfo,actionMap,alignmentX,alignmentY,ancestorInputMap,autoscrolls,border,clientProperties,componentObtainingGraphicsFrom,componentObtainingGraphicsFromLock,defaultLocale,flags,focusController,focusInputMap,inputVerifier,isAlignmentXSet,isAlignmentYSet,managingFocusBackwardTraversalKeys,managingFocusForwardTraversalKeys,paintingChild,popupMenu,readObjectCallbacks,revalidateRunnableScheduled,tempRectangles,uiClassID,verifyInputWhenFocusTarget,vetoableChangeSupport,windowInputMap
-hcls ActionStandin,IntVector,KeyboardState,ReadObjectCallback
 
 CLSS public javax.swing.JPanel
 cons public init()
@@ -642,7 +635,6 @@ meth public javax.swing.plaf.PanelUI getUI()
 meth public void setUI(javax.swing.plaf.PanelUI)
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds uiClassID
 
 CLSS public final org.netbeans.modules.glassfish.common.parser.TreeParser
 innr public abstract static NodeReader
@@ -786,8 +778,9 @@ meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory creat
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createEe7()
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createEe8()
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createJakartaEe8()
+meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createJakartaEe9()
 supr java.lang.Object
-hfds displayName,ee6Instance,ee7Instance,ee8Instance,jakartaee8Instance,preludeInstance,su,uriFragments,version
+hfds displayName,ee6Instance,ee7Instance,ee8Instance,jakartaee8Instance,jakartaee9Instance,preludeInstance,su,uriFragments,version
 
 CLSS public org.netbeans.modules.glassfish.javaee.Hk2DeploymentManager
 cons public init(java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.glassfish.spi.ServerUtilities)
@@ -832,7 +825,7 @@ cons public init()
 meth public org.netbeans.modules.j2ee.deployment.plugins.spi.J2eePlatformImpl getJ2eePlatformImpl(javax.enterprise.deploy.spi.DeploymentManager)
 meth public static org.netbeans.modules.glassfish.javaee.Hk2JavaEEPlatformFactory getFactory()
 supr org.netbeans.modules.j2ee.deployment.plugins.spi.J2eePlatformFactory
-hfds V3_LOOKUP_KEY,V4_LOOKUP_KEY,V510_LOOKUP_KEY,V5_LOOKUP_KEY,instance
+hfds V3_LOOKUP_KEY,V4_LOOKUP_KEY,V510_LOOKUP_KEY,V5_LOOKUP_KEY,V6_LOOKUP_KEY,instance
 
 CLSS public org.netbeans.modules.glassfish.javaee.Hk2JavaEEPlatformImpl
 cons public init(org.netbeans.modules.glassfish.javaee.Hk2DeploymentManager,java.lang.String[],org.netbeans.api.j2ee.core.Profile[],org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule$Type[],java.lang.String,java.lang.String,java.lang.String)
@@ -975,6 +968,7 @@ meth public org.openide.WizardDescriptor$InstantiatingIterator getAddInstanceIte
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createEe6()
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createEe8()
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createJakartaEe8()
+meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createJakartaEe9()
 supr org.netbeans.modules.j2ee.deployment.plugins.spi.OptionalDeploymentManagerFactory
 hfds commonUtilities,df,hasWizard
 hcls J2eeInstantiatingIterator

@@ -39,13 +39,13 @@
                 <pathelement location="${cluster}/tasks.jar"></pathelement>
             </classpath>
         </taskdef>
-        <echo file="build/binaries-list">3F5199523FB95304B44563F5D56D9F5A07270669 org.ow2.asm:asm:8.0.1</echo>
+        <echo file="build/binaries-list">81A03F76019C67362299C40E0BA13405F5467BFF org.ow2.asm:asm:9.2</echo>
         <TestDownload>
             <manifest dir="build">
                 <include name="binaries-list"/>
             </manifest>
         </TestDownload>
-        <delete file="build/asm-8.0.1.jar"/>
+        <delete file="build/asm-9.2.jar"/>
     </target>
 
     <target name="compile-jnlp-launcher" depends="init,compile">
@@ -69,17 +69,5 @@
     </target>
 
     <target name="netbeans-extra" depends="nbantext,jar-jnlp-launcher"/>
-
-    <target name="release" depends="projectized.release,-build-windows-launchers" />
-
-    <target name="-build-windows-launchers" if="do.build.windows.launchers">
-        <exec executable="make" dir="windows-launcher-src">
-            <arg value="-f"/>
-            <arg value="Makefile.mingw"/>
-        </exec>
-        <copy todir="${cluster}/launchers" overwrite="true">
-            <fileset dir="windows-launcher-src" includes="app*.exe"/>
-        </copy>
-    </target>
 
 </project>

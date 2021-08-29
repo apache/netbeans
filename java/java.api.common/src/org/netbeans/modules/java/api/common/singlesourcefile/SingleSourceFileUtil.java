@@ -101,4 +101,8 @@ final class SingleSourceFileUtil {
         return null;
     }
 
+    static boolean hasClassSibling(FileObject fo) {
+        return fo.getParent().getFileObject(fo.getName(), "class") != null;
+    }
+
 }

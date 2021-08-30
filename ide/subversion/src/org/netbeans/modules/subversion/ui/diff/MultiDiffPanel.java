@@ -802,7 +802,8 @@ public class MultiDiffPanel extends javax.swing.JPanel implements ActionListener
     }
 
     private void addToModel (final RepositoryFile newItem, final JComboBox cmbDiffTree) {
-        DefaultComboBoxModel model = (DefaultComboBoxModel) cmbDiffTree.getModel();
+        DefaultComboBoxModel<RepositoryFile> model =
+                (DefaultComboBoxModel<RepositoryFile>) cmbDiffTree.getModel();
         for (int i = 0; i < model.getSize(); ++i) {
             final Object item = model.getElementAt(i);
             if (newItem.toString().equals(item.toString())) {

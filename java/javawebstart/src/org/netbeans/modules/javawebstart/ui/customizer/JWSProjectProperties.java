@@ -1010,7 +1010,7 @@ public class JWSProjectProperties /*implements TableModelListener*/ {
 
     private static ComboBoxModel createMixedCodeModel (final PropertyEvaluator eval) {
         assert eval != null;
-        final DefaultComboBoxModel model = new DefaultComboBoxModel();
+        final DefaultComboBoxModel<MixedCodeOptions> model = new DefaultComboBoxModel<>();
         for (MixedCodeOptions option : MixedCodeOptions.values()) {
             model.addElement(option);
         }

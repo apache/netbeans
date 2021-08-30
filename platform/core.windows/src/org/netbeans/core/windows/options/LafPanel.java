@@ -76,7 +76,7 @@ public class LafPanel extends javax.swing.JPanel {
         });
         initLookAndFeel();
         lblRestart.setVisible(!NO_RESTART_ON_LAF_CHANGE);
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         for( LookAndFeelInfo li : lafs ) {
             model.addElement( li.getName() );
         }

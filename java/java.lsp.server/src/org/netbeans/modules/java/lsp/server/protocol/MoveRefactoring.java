@@ -24,7 +24,6 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.Trees;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -283,7 +282,7 @@ public class MoveRefactoring extends CodeActionsProvider {
             }
             session.finished();
             client.applyEdit(new ApplyWorkspaceEditParams(new WorkspaceEdit(resultChanges)));
-        } catch (IOException | IllegalArgumentException ex) {
+        } catch (Exception ex) {
             client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }
     }

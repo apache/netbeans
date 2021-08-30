@@ -21,6 +21,7 @@ package org.netbeans.lib.profiler.heap;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.ResourceBundle;
 
@@ -76,6 +77,10 @@ abstract class HprofByteBuffer {
 
             throw ex;
         }
+    }
+
+    static HprofByteBuffer createHprofByteBuffer(ByteBuffer bb) throws IOException {
+        return new HprofMappedByteBuffer(bb);
     }
 
     abstract char getChar(long index);

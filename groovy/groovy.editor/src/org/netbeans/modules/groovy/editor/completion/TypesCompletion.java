@@ -345,9 +345,9 @@ public class TypesCompletion extends BaseCompletion {
             try {
                 javaSource.runUserActionTask(new Task<CompilationController>() {
                     @Override
-                    public void run(CompilationController info) {
+                    public void run(CompilationController info) throws IOException {
                         Elements elements = info.getElements();
-
+                        info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                         addPackageElements(elements.getPackageElement(pkg));
                         addTypeElements(elements.getTypeElement(pkg));
                     }

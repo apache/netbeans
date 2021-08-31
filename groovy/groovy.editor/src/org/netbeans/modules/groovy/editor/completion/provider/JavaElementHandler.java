@@ -215,7 +215,7 @@ public final class JavaElementHandler {
                     return false;
                 }
             };
-
+            info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
             TypeElement te = elements.getTypeElement(className);
             if (te != null) {
                 for (ExecutableElement element : ElementFilter.methodsIn(te.getEnclosedElements())) {
@@ -383,7 +383,7 @@ public final class JavaElementHandler {
                         return false;
                     }
                 };
-
+                info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                 TypeElement te = elements.getTypeElement(className);
                 if (te != null) {
                     for (VariableElement element : ElementFilter.fieldsIn(te.getEnclosedElements())) {

@@ -115,13 +115,19 @@ public final class CompletionContext {
         this.declaringClass = dc == null ? null : dc.redirect();
     }
 
+    /**
+     * @return true, if just static members or meta-members should be considered.
+     * @since 1.80
+     */
     public boolean isStaticMembers() {
         return staticMembers;
     }
 
     /**
-     * If nonzero, the provider should 
-     * @return 
+     * If nonzero, the provider should adjust CompletionItems priority by this amount
+     * to sort the items lower/higher than usual.
+     * @return adjustment for sort priority.
+     * @since 1.80
      */
     public int getAddSortOverride() {
         return addSortOverride;
@@ -130,7 +136,8 @@ public final class CompletionContext {
     /**
      * Set an offset to the default sort priority for the provided items.
      * The provider should increase / decrease sort priority of the items
-     * @param addSortOverride 
+     * @param addSortOverride the delta.
+     * @since 1.80
      */
     public void setAddSortOverride(int addSortOverride) {
         this.addSortOverride = addSortOverride;

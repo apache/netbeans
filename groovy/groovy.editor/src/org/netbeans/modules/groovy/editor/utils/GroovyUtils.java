@@ -43,6 +43,10 @@ public final class GroovyUtils {
      * @return singe typename without package, or method without type
      */
     public static String stripPackage(String fqn) {
+        // special case for method parameters, as they come with String FQN sometimes:
+        if (fqn.endsWith("...") && fqn.length() > 3) {
+            return stripPackage(fqn.substring(0, fqn.length() - 3)) + "..."; // NOI18N
+        }
         if (fqn.contains("<")) {
             // TODO: This does not handle inner classes well - NETBEANS-5787
             int first = fqn.indexOf('<');

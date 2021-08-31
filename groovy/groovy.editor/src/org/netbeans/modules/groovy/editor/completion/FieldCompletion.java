@@ -27,6 +27,7 @@ import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.groovy.editor.api.completion.CaretLocation;
 import org.netbeans.modules.groovy.editor.api.completion.CompletionItem;
 import org.netbeans.modules.groovy.editor.api.completion.FieldSignature;
+import org.netbeans.modules.groovy.editor.api.completion.MethodSignature;
 import org.netbeans.modules.groovy.editor.api.completion.util.ContextHelper;
 import org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId;
 import org.netbeans.modules.groovy.editor.completion.provider.CompleteElementHandler;
@@ -79,7 +80,7 @@ public class FieldCompletion extends BaseCompletion {
                 }
             }
         } else {
-            context.setDeclaringClass(ContextHelper.getSurroundingClassNode(context));
+            context.setDeclaringClass(ContextHelper.getSurroundingClassNode(context), context.isStaticMembers());
         }
 
         // If we are dealing with GStrings, the prefix is prefixed ;-)
@@ -95,7 +96,9 @@ public class FieldCompletion extends BaseCompletion {
         if (result.containsKey(prefixFieldSignature)) {
             result.remove(prefixFieldSignature);
         }
-        proposals.putAll(result);
+        for (Map.Entry<FieldSignature, CompletionItem> e :result.entrySet()) {
+            proposals.putIfAbsent(e.getKey(), e.getValue());
+        }
 
         return true;
     }

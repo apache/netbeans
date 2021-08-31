@@ -183,4 +183,8 @@ public abstract class BaseCompletion {
 
         return result;
     }
+    
+    public interface SortOverride {
+        public void setPriorityOverride(int override);
+    }
 }

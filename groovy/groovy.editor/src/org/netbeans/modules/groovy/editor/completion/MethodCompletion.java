@@ -136,8 +136,9 @@ public class MethodCompletion extends BaseCompletion {
         }
 
         Map<MethodSignature, CompletionItem> result = new CompleteElementHandler(context).getMethods();
-        proposals.putAll(result);
-
+        for (Map.Entry<MethodSignature, CompletionItem> e :result.entrySet()) {
+            proposals.putIfAbsent(e.getKey(), e.getValue());
+        }
         return true;
     }
 

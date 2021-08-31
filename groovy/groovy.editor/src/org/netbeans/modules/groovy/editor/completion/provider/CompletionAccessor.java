@@ -72,4 +72,6 @@ public abstract class CompletionAccessor {
     public abstract CompletionItem createDynamicMethod(int anchorOffset, String name, List<MethodParameter> parameters, String returnType, boolean prefix);
     
     public abstract Pair<String, List<MethodParameter>> getParametersAndType(CompletionItem item);
+    
+    public abstract CompletionItem sortOverride(CompletionItem item, int override);
 }

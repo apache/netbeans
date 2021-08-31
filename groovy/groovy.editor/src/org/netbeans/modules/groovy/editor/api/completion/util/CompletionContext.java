@@ -28,6 +28,7 @@ import org.codehaus.groovy.ast.FieldNode;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.ast.Parameter;
+import org.codehaus.groovy.ast.expr.ClassExpression;
 import org.codehaus.groovy.ast.expr.ClosureExpression;
 import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.ConstructorCallExpression;
@@ -70,6 +71,7 @@ public final class CompletionContext {
     public final int lexOffset;
     public final int astOffset;
     public final BaseDocument doc;
+    private boolean staticMembers;
     
     public boolean scriptMode;
     public CaretLocation location;
@@ -79,7 +81,7 @@ public final class CompletionContext {
     public ClassNode declaringClass;
     public DotCompletionContext dotContext;
     public Set<AccessLevel> access;
-
+    private int addSortOverride;
 
     public CompletionContext(
             ParserResult parseResult,
@@ -112,18 +114,42 @@ public final class CompletionContext {
         this.rawDseclaringClass = dc;
         this.declaringClass = dc == null ? null : dc.redirect();
     }
+
+    public boolean isStaticMembers() {
+        return staticMembers;
+    }
+
+    /**
+     * If nonzero, the provider should 
+     * @return 
+     */
+    public int getAddSortOverride() {
+        return addSortOverride;
+    }
+    
+    /**
+     * Set an offset to the default sort priority for the provided items.
+     * The provider should increase / decrease sort priority of the items
+     * @param addSortOverride 
+     */
+    public void setAddSortOverride(int addSortOverride) {
+        this.addSortOverride = addSortOverride;
+    }
     
     // TODO: Move this to the constructor and change ContextHelper.getSurroundingClassNode()
     // to prevent NPE caused by leaking this in constructor
     public void init() {
-        setDeclaringClass(declaringClass);
+        setDeclaringClass(rawDseclaringClass, this.staticMembers);
     }
-    
-    public void setDeclaringClass(ClassNode declaringClass) {
-        this.declaringClass = declaringClass;
+
+    public void setDeclaringClass(ClassNode declaringClass, boolean staticMembers) {
+        this.rawDseclaringClass = declaringClass;
         if (declaringClass != null) {
+            this.declaringClass = declaringClass.redirect();
             this.access = AccessLevel.create(ContextHelper.getSurroundingClassNode(this), declaringClass);
+            this.staticMembers = staticMembers;
         } else {
+            this.declaringClass = null;
             this.access = null;
         }
     }
@@ -710,7 +736,11 @@ public final class CompletionContext {
         // FIXME static/script context...
         if (!isBehindDot() && context.before1 == null
                 && (location == CaretLocation.INSIDE_CLOSURE || location == CaretLocation.INSIDE_METHOD)) {
-            setDeclaringClass(ContextHelper.getSurroundingClassNode(this));
+            ASTNode an = ContextHelper.getSurroundingClassMember(this);
+            boolean st = 
+                    ((an instanceof FieldNode) && ((FieldNode)an).isStatic()) ||
+                    ((an instanceof MethodNode) && ((MethodNode)an).isStatic());
+            setDeclaringClass(ContextHelper.getSurroundingClassNode(this), st);
             return declaringClass;
         }
 
@@ -719,8 +749,6 @@ public final class CompletionContext {
             return null;
         }
 
-        ClassNode declClass = null;
-
         // experimental type inference
         GroovyTypeAnalyzer typeAnalyzer = new GroovyTypeAnalyzer(doc);
         Set<ClassNode> infered = typeAnalyzer.getTypes(dotCompletionContext.getAstPath(),
@@ -728,28 +756,23 @@ public final class CompletionContext {
         // FIXME multiple types
         // FIXME is there any test (?)
         if (!infered.isEmpty()) {
-            return infered.iterator().next();
-        }
-
-        // type inferred
-        if (declClass != null) {
-            setDeclaringClass(declaringClass);
-            return declaringClass;
+            setDeclaringClass(infered.iterator().next(), false);
+            return rawDseclaringClass;
         }
 
         if (dotCompletionContext.getAstPath().leaf() instanceof VariableExpression) {
             VariableExpression variable = (VariableExpression) dotCompletionContext.getAstPath().leaf();
             if ("this".equals(variable.getName())) { // NOI18N
-                setDeclaringClass(ContextHelper.getSurroundingClassNode(this));
-                return declaringClass;
+                setDeclaringClass(ContextHelper.getSurroundingClassNode(this), false);
+                return rawDseclaringClass;
             }
             if ("super".equals(variable.getName())) { // NOI18N
                 ClassNode thisClass = ContextHelper.getSurroundingClassNode(this);
-                setDeclaringClass(declaringClass);
+                setDeclaringClass(declaringClass, false);
                 if (declaringClass == null) {
                     return new ClassNode("java.lang.Object", ClassNode.ACC_PUBLIC, null);
                 }
-                return declaringClass;
+                return rawDseclaringClass;
             }
         }
 
@@ -773,10 +796,10 @@ public final class CompletionContext {
                     constantExpression.setType(new ClassNode(constantExpression.getValue().getClass()));
                 }
             }
-            setDeclaringClass(expression.getType());
+            setDeclaringClass(expression.getType(), false);
         }
 
-        return declaringClass;
+        return rawDseclaringClass;
     }
     
     /**

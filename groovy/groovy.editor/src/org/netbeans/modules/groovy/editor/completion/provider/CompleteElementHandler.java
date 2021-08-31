@@ -79,7 +79,7 @@ public final class CompleteElementHandler {
                 node,
                 context.getPrefix(), 
                 context.getAnchor(),
-                0,
+                context.getAddSortOverride() == 0 ? 0 : 1,
                 AccessLevel.create(source, node),
                 context.dotContext != null && context.dotContext.isMethodsOnly());
 
@@ -99,7 +99,8 @@ public final class CompleteElementHandler {
                 node,
                 context.getPrefix(), 
                 context.getAnchor(),
-                0);
+                context.getAddSortOverride() == 0 ? 0 : 1
+        );
 
         return result;
     }
@@ -186,7 +187,7 @@ public final class CompleteElementHandler {
                 }
             }
 
-            fillSuggestions(JavaElementHandler.forCompilationInfo(info)
+            fillSuggestions(JavaElementHandler.forCompilationInfo(info, context)
                     .getMethods(typeName, prefix, anchor, typeParameters,
                             leaf, modifiedAccess, nameOnly), result);
         }
@@ -198,7 +199,8 @@ public final class CompleteElementHandler {
         if (typeNode.getSuperClass() != null) {
             fillSuggestions(getMethodsInner(source, typeNode.getSuperClass(), prefix, anchor, level + 1, modifiedAccess, nameOnly), result);
         } else if (leaf) {
-            fillSuggestions(JavaElementHandler.forCompilationInfo(info).getMethods("java.lang.Object", prefix, anchor, new String[]{}, false, modifiedAccess, nameOnly), result); // NOI18N
+            fillSuggestions(JavaElementHandler.forCompilationInfo(info, context).
+                    getMethods("java.lang.Object", prefix, anchor, new String[]{}, false, modifiedAccess, nameOnly), result); // NOI18N
         }
 
         for (ClassNode inter : typeNode.getInterfaces()) {
@@ -230,7 +232,8 @@ public final class CompleteElementHandler {
         fillSuggestions(groovyProvider.getFields(context), result);
         fillSuggestions(groovyProvider.getStaticFields(context), result);
 
-        fillSuggestions(JavaElementHandler.forCompilationInfo(info).getFields(typeNode.getName(), prefix, anchor, leaf), result);
+        fillSuggestions(JavaElementHandler.forCompilationInfo(info, context).
+                getFields(typeNode.getName(), prefix, anchor, leaf), result);
 
         CompletionProviderHandler providerHandler = new CompletionProviderHandler();
         fillSuggestions(providerHandler.getFields(context), result);
@@ -239,7 +242,8 @@ public final class CompleteElementHandler {
         if (typeNode.getSuperClass() != null) {
             fillSuggestions(getFieldsInner(source, typeNode.getSuperClass(), prefix, anchor, level + 1), result);
         } else if (leaf) {
-            fillSuggestions(JavaElementHandler.forCompilationInfo(info).getFields("java.lang.Object", prefix, anchor, false), result); // NOI18N
+            fillSuggestions(JavaElementHandler.forCompilationInfo(info, context).
+                    getFields("java.lang.Object", prefix, anchor, false), result); // NOI18N
         }
 
         for (ClassNode inter : typeNode.getInterfaces()) {
@@ -269,9 +273,15 @@ public final class CompleteElementHandler {
         return new ClassDefinition(node, null);
     }
 
-    private static <T> void fillSuggestions(Map<T, ? extends CompletionItem> input, Map<T, ? super CompletionItem> result) {
+    private <T> void fillSuggestions(Map<T, ? extends CompletionItem> input, Map<T, ? super CompletionItem> result) {
         for (Map.Entry<T, ? extends CompletionItem> entry : input.entrySet()) {
             if (!result.containsKey(entry.getKey())) {
+                CompletionItem item = entry.getValue();
+                if (context.getAddSortOverride() > 0) {
+                    CompletionAccessor.instance().sortOverride(
+                        item,
+                        item.getSortPrioOverride() + context.getAddSortOverride());
+                }
                 result.put(entry.getKey(), entry.getValue());
             }
         }

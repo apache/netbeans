@@ -37,6 +37,7 @@ import java.util.logging.Logger;
 import javax.lang.model.element.Element;
 import javax.swing.text.Document;
 import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.expr.ClassExpression;
 import org.codehaus.groovy.reflection.CachedClass;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
@@ -54,6 +55,7 @@ import org.netbeans.modules.groovy.editor.api.completion.CompletionHandler;
 import static org.netbeans.modules.groovy.editor.api.completion.CompletionHandler.getMethodSignature;
 import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
 import org.netbeans.modules.groovy.editor.api.completion.util.ContextHelper;
+import org.netbeans.modules.groovy.editor.api.completion.util.DotCompletionContext;
 import org.netbeans.modules.groovy.editor.api.elements.ast.ASTMethod;
 import org.netbeans.modules.groovy.editor.api.parser.GroovyParserResult;
 import org.netbeans.modules.groovy.editor.completion.ProposalsCollector;
@@ -168,23 +170,28 @@ public class GroovyCompletionImpl {
             if (ContextHelper.isVariableNameDefinition(context) || ContextHelper.isFieldNameDefinition(context)) {
                 proposalsCollector.completeNewVars(context);
             } else {
+                ClassNode realClass = null;
+                if (context.rawDseclaringClass != null && context.rawDseclaringClass.getName().equals("java.lang.Class")) { // NOI18N
+                    if (context.rawDseclaringClass.getGenericsTypes().length == 1) {
+                        realClass = context.rawDseclaringClass.getGenericsTypes()[0].getType();
+                        context.setAddSortOverride(510);
+                    }
+                }
                 makeClassProposals(proposalsCollector, context);
                 // implicit conversion of GString > String:
                 if (context.declaringClass != null && context.declaringClass.getName().equals("groovy.lang.GString")) { // NOI18N
                     // add String methods in addition to GString ones.
                     ClassNode sn = ((GroovyParserResult)parserResult).resolveClassName("java.lang.String"); // NOI18N
                     if (sn != null) {
-                        context.setDeclaringClass(sn);
+                        context.setDeclaringClass(sn, false);
                         makeClassProposals(proposalsCollector, context);
                     }
                 }
-                if (context.rawDseclaringClass != null && context.rawDseclaringClass.getName().equals("java.lang.Class")) { // NOI18N
-                    if (context.rawDseclaringClass.getGenericsTypes().length == 1) {
-                        ClassNode cn = context.rawDseclaringClass.getGenericsTypes()[0].getType();
-                        context.setDeclaringClass(cn);
-                        context.init();
-                        makeClassProposals(proposalsCollector, context);
-                    }
+                if (realClass != null) { // NOI18N
+                    context.setAddSortOverride(0);
+                    context.setDeclaringClass(realClass, true);
+                    context.init();
+                    makeClassProposals(proposalsCollector, context);
                 }
             }
             proposalsCollector.completeCamelCase(context);

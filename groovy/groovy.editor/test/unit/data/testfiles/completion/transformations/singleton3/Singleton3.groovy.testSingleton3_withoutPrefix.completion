@@ -9,7 +9,6 @@ METHOD     asBoolean()                                boolean
 METHOD     asSubclass(Class<U>)            [PUBLIC]   Class<? extends U>
 METHOD     asType(Class)                              Object
 METHOD     cast(Object)                    [PUBLIC]   T
-METHOD     clone()                         [PROTECTE  Object
 METHOD     collect()                                  Collection
 METHOD     collect(Closure)                           List
 METHOD     collect(Collection, Closure)               Collection
@@ -20,7 +19,6 @@ METHOD     eachWithIndex(Closure)                     Object
 METHOD     equals(Object)                  [PUBLIC]   boolean
 METHOD     every()                                    boolean
 METHOD     every(Closure)                             boolean
-METHOD     finalize()                      [PROTECTE  void
 METHOD     find()                                     Object
 METHOD     find(Closure)                              Object
 METHOD     findAll()                                  Collection
@@ -46,7 +44,7 @@ METHOD     getClass()                      [PUBLIC]   Class<?>
 METHOD     getClassLoader()                [PUBLIC]   ClassLoader
 METHOD     getClasses()                    [PUBLIC]   Class<?>[]
 METHOD     getComponentType()              [PUBLIC]   Class<?>
-METHOD     getConstructor(Class<?>[])      [PUBLIC]   Constructor<T>
+METHOD     getConstructor(Class<?>...)     [PUBLIC]   Constructor<T>
 METHOD     getConstructors()               [PUBLIC]   Constructor<?>[]
 METHOD     getDeclaredAnnotation(Class<A>  [PUBLIC]   A
 METHOD     getDeclaredAnnotations()        [PUBLIC]   Annotation[]
@@ -71,15 +69,14 @@ METHOD     getGroovydoc()                             Groovydoc
 METHOD     getInstance()                   [STATIC,   Singleton3
 METHOD     getInterfaces()                 [PUBLIC]   Class<?>[]
 METHOD     getLocation()                              URL
-METHOD     getMetaClass()                  [PUBLIC]   MetaClass
+METHOD     getMetaClass()                             MetaClass
 METHOD     getMetaPropertyValues()                    List
-METHOD     getMethod(String, Class<?>[])   [PUBLIC]   Method
+METHOD     getMethod(String, Class<?>...)  [PUBLIC]   Method
 METHOD     getMethods()                    [PUBLIC]   Method[]
 METHOD     getModifiers()                  [PUBLIC]   int
 METHOD     getName()                       [PUBLIC]   String
 METHOD     getPackage()                    [PUBLIC]   Package
 METHOD     getProperties()                            Map
-METHOD     getProperty(String)             [PUBLIC]   Object
 METHOD     getProtectionDomain()           [PUBLIC]   ProtectionDomain
 METHOD     getResource(String)             [PUBLIC]   URL
 METHOD     getResourceAsStream(String)     [PUBLIC]   InputStream
@@ -130,8 +127,7 @@ METHOD     println(PrintWriter)                       void
 METHOD     putAt(String, Object)                      void
 METHOD     respondsTo(String)                         List
 METHOD     respondsTo(String, Object)                 List
-METHOD     setMetaClass(MetaClass)         [PUBLIC]   void
-METHOD     setProperty(String, Object)     [PUBLIC]   void
+METHOD     setMetaClass(MetaClass)                    void
 METHOD     sleep(long)                                void
 METHOD     sleep(long, Closure)                       void
 METHOD     split(Closure)                             Collection

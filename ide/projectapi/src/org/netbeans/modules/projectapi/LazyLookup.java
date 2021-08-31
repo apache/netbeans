@@ -18,9 +18,12 @@
  */
 package org.netbeans.modules.projectapi;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
 import java.util.logging.Level;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
@@ -29,7 +32,6 @@ import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
 final class LazyLookup extends ProxyLookup {
-    
     private final Map<String, Object> attrs;
     private final Lookup lkp;
     private Collection<String> serviceNames;
@@ -39,12 +41,28 @@ final class LazyLookup extends ProxyLookup {
         this.attrs = attrs;
         this.lkp = lkp;
         this.serviceNames = Arrays.asList(((String) attrs.get("service")).split(",")); // NOI18N
-    } // NOI18N
+    }
 
     @Override
     protected void beforeLookup(Template<?> template) {
+        class NotifyLater implements Executor {
+            private List<Runnable> pending = new ArrayList<>();
+            @Override
+            public void execute(Runnable command) {
+                pending.add(command);
+            }
+            
+            public void deliverPending() {
+                List<Runnable> notify = pending;
+                pending = null;
+                for (Runnable r : notify) {
+                    r.run();
+                }
+            }
+        }
         LazyLookupProviders.safeToLoad(this.lkp);
         Class<?> service = template.getType();
+        NotifyLater later = null;
         synchronized (LOCK) {
             for (;;) {
                 if (serviceNames == null || !serviceNames.contains(service.getName())) {
@@ -57,10 +75,6 @@ final class LazyLookup extends ProxyLookup {
                     return;
                 }
                 try {
-                    /* deadlock - probably wait without a notify
-                    https://issues.apache.org/jira/secure/attachment/13032558/13032558_12.5-beta2-threaddump-1629986898821.tdump
-                    always make sure LOCK.notifyAll is called when changing the LOCK[0] value
-                     */
                     LOCK.wait();
                 } catch (InterruptedException ex) {
                     LazyLookupProviders.LOG.log(Level.INFO, null, ex);
@@ -75,9 +89,10 @@ final class LazyLookup extends ProxyLookup {
                 // JRE #6456938: Class.cast currently throws an exception without details.
                 throw new ClassCastException("Instance of " + instance.getClass() + " unassignable to " + service);
             }
-            setLookups(Lookups.singleton(instance));
+            setLookups(later = new NotifyLater(), Lookups.singleton(instance));
             synchronized (LOCK) {
                 serviceNames = null;
+                LOCK.notifyAll();
             }
         } catch (Exception x) {
             Exceptions.attachMessage(x, "while loading from " + attrs);
@@ -87,13 +102,20 @@ final class LazyLookup extends ProxyLookup {
                 LOCK[0] = null;
                 LOCK.notifyAll();
             }
+            if (later != null) {
+                later.deliverPending();
+            }
         }
     }
 
+    boolean isInitializing() {
+        return LOCK[0] != null;
+    }
+    
     @Override
     @SuppressWarnings(value = "element-type-mismatch")
     public String toString() {
         return "LazyLookupProviders.LookupProvider[service=" + attrs.get("service") + ", class=" + attrs.get("class") + ", orig=" + attrs.get(FileObject.class) + "]";
     }
-    
+
 }

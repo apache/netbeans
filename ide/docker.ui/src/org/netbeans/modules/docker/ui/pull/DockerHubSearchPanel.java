@@ -96,7 +96,7 @@ public class DockerHubSearchPanel extends javax.swing.JPanel {
                     // there is another search already running
                     return;
                 }
-                DefaultListModel model = new DefaultListModel();
+                DefaultListModel<DockerHubImageItem> model = new DefaultListModel<>();
                 for (DockerHubImageItem image : fresh) {
                     model.addElement(image);
                 }

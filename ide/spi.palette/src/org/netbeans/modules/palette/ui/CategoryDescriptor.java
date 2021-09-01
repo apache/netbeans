@@ -134,7 +134,7 @@ class CategoryDescriptor implements CategoryListener {
     }
     
     void computeItems() {
-        DefaultListModel newModel = new DefaultListModel();
+        DefaultListModel<Item> newModel = new DefaultListModel<>();
         Item[] items = category.getItems();
         if( items != null ) {
             for( int i=0; i<items.length; i++ ) {

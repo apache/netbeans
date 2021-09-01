@@ -171,7 +171,7 @@ public class QueryNode implements Query {
             ArrayList columns = new ArrayList();
 
             // Get the list of table objects from FROM
-            ArrayList tables = _from.getTables();
+            List<Table> tables = _from.getTables();
 
             // Iterate through it
             for (int i=0; i<tables.size(); i++) {

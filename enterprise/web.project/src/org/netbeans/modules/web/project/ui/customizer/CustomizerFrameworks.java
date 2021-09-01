@@ -69,8 +69,8 @@ public class CustomizerFrameworks extends javax.swing.JPanel implements HelpCtx.
         initComponents();
         
         project = uiProperties.getProject();
-        jListFrameworks.setModel(new DefaultListModel());
-        ((DefaultListModel) jListFrameworks.getModel()).addElement(NbBundle.getMessage(CustomizerFrameworks.class, "LBL_CustomizerFrameworks_Loading"));
+        jListFrameworks.setModel(new DefaultListModel<String>());
+        ((DefaultListModel<String>) jListFrameworks.getModel()).addElement(NbBundle.getMessage(CustomizerFrameworks.class, "LBL_CustomizerFrameworks_Loading"));
         // do not load frameworks again but use list from uiProperties; list is being loaded in background thread:
         uiProperties.getLoadingFrameworksTask().addTaskListener(new TaskListener() {
             public void taskFinished(Task task) {
@@ -107,7 +107,7 @@ public class CustomizerFrameworks extends javax.swing.JPanel implements HelpCtx.
         if (uiProperties.getCurrentFrameworks() != null) {
             for (WebFrameworkProvider framework : uiProperties.getCurrentFrameworks()) {
                 usedFrameworks.add(framework);
-                ((DefaultListModel) jListFrameworks.getModel()).addElement(framework.getName());
+                ((DefaultListModel<String>) jListFrameworks.getModel()).addElement(framework.getName());
                 WebModuleExtender extender = framework.createWebModuleExtender(webModule, controller);
                 extenders.put(framework, extender);
                 usedExtenders.add(extender);
@@ -221,7 +221,7 @@ public class CustomizerFrameworks extends javax.swing.JPanel implements HelpCtx.
             for(int i = 0; i < newFrameworks.size(); i++) {
                 WebFrameworkProvider framework = (WebFrameworkProvider) newFrameworks.get(i);
                 if (!((DefaultListModel) jListFrameworks.getModel()).contains(framework.getName()))
-                    ((DefaultListModel) jListFrameworks.getModel()).addElement(framework.getName());
+                    ((DefaultListModel<String>) jListFrameworks.getModel()).addElement(framework.getName());
 
                 boolean added = false;
                 if (usedFrameworks.size() == 0) {

@@ -432,14 +432,14 @@ public class LSPBindings {
     }
 
     private static void scheduleBackgroundTask(RequestProcessor.Task req) {
-        WORKER.post(req, DELAY);
+        req.schedule(DELAY);
     }
 
     public static synchronized void rescheduleBackgroundTask(FileObject file, BackgroundTask task) {
         RequestProcessor.Task req = backgroundTasksMapFor(file).get(task);
 
         if (req != null) {
-            WORKER.post(req, DELAY);
+            scheduleBackgroundTask(req);
         }
     }
 

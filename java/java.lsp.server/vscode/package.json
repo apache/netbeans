@@ -387,8 +387,9 @@
 		"watch": "tsc -watch -p ./",
 		"test": "node ./out/test/runTest.js",
 		"nbcode": "node ./out/nbcode.js",
-		"nbjavac": "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install .*nbjavac.*"
-	},
+		"nbjavac": "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install .*nbjavac.*",
+		"apisupport": "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install '(org.netbeans.libs.xerces|org.netbeans.modules.editor.structure|org.netbeans.modules.xml|org.netbeans.modules.xml.axi|org.netbeans.modules.xml.retriever|org.netbeans.modules.xml.schema.model|org.netbeans.modules.xml.tax|org.netbeans.modules.xml.text|org.netbeans.modules.ant.browsetask|.*apisupport.*|org.netbeans.modules.debugger.jpda.ant)' && node ./out/nbcode.js -J-Dnetbeans.close=true --modules --enable .*apisupport.ant"
+        },
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^7.0.2",

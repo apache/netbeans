@@ -18,42 +18,13 @@
  */
 package org.netbeans.modules.fish.payara.micro.project;
 
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.DEBUG_SINGLE_ACTION;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.MAVEN_WAR_PROJECT_TYPE;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROFILE_SINGLE_ACTION;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.RUN_SINGLE_ACTION;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.WAR_PACKAGING;
-import org.netbeans.modules.fish.payara.micro.project.MicroApplication;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
-import java.util.prefs.Preferences;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
-import static org.netbeans.api.project.ProjectUtils.getPreferences;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.COMPILE_EXPLODE_ACTION;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.COMPILE_GOAL;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.DEBUG_ACTION;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.EXPLODED_GOAL;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.EXPLODE_ACTION;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROFILE_ACTION;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.RESOURCES_GOAL;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.RUN_ACTION;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.START_GOAL;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.STOP_ACTION;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.STOP_GOAL;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.VERSION;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.WAR_GOAL;
-import org.netbeans.modules.maven.api.NbMavenProject;
-import org.netbeans.modules.maven.api.execute.RunConfig;
-import org.netbeans.modules.maven.execute.model.NetbeansActionMapping;
-import org.netbeans.modules.maven.j2ee.J2eeActionsProvider;
 import org.netbeans.modules.maven.spi.actions.AbstractMavenActionsProvider;
 import org.netbeans.modules.maven.spi.actions.MavenActionsProvider;
-import static org.netbeans.spi.project.ActionProvider.COMMAND_DEBUG;
-import static org.netbeans.spi.project.ActionProvider.COMMAND_PROFILE;
-import static org.netbeans.spi.project.ActionProvider.COMMAND_RUN;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.util.Lookup;
 
@@ -65,78 +36,40 @@ import org.openide.util.Lookup;
         service = MavenActionsProvider.class,
         projectType = MAVEN_WAR_PROJECT_TYPE
 )
-public class MicroActionsProvider implements MavenActionsProvider {
+public final class MicroActionsProvider extends AbstractMavenActionsProvider {
 
     @StaticResource
     private static final String ACTION_MAPPINGS = "org/netbeans/modules/fish/payara/micro/project/resources/action-mapping.xml";
-        
-    private final AbstractMavenActionsProvider actionsProvider = new AbstractMavenActionsProvider() {
-        @Override
-        protected InputStream getActionDefinitionStream() {
-            return MicroActionsProvider.class
-                    .getClassLoader()
-                    .getResourceAsStream(ACTION_MAPPINGS);
-        }
 
-        @Override
-        public boolean isActionEnable(String action, Project project, Lookup lookup) {
-            NbMavenProject nbMavenProject = project.getLookup().lookup(NbMavenProject.class);
-            final String packagingType = nbMavenProject.getPackagingType();
-            if (!WAR_PACKAGING.equals(packagingType)) {
-                return false;
-            }
-            switch (action) {
-                case COMMAND_RUN:
-                case COMMAND_DEBUG:
-                case COMMAND_PROFILE:
-                case RUN_SINGLE_ACTION:
-                case DEBUG_SINGLE_ACTION:
-                case PROFILE_SINGLE_ACTION:
-                    break;
-                default:
-                    return false;
-            }
-            return MicroApplication.getInstance(project) != null;
-        }
+    private final Project project;
 
-    };
-
-    @Override
-    public RunConfig createConfigForDefaultAction(String actionName, Project project, Lookup lookup) {
-        MicroApplication microApplication = MicroApplication.getInstance(project);
-        if (microApplication != null) {
-            Preferences pref = getPreferences(project, MicroApplication.class, true);
-            String microVersionText = pref.get(VERSION, "");
-            RunConfig config = actionsProvider.createConfigForDefaultAction(actionName, project, lookup);
-            if (!microVersionText.isEmpty()) {
-                config.setProperty("version.payara", microVersionText);
-            }
-            return config;
-        }
-        return null;
+    public MicroActionsProvider(Project project) {
+        this.project = project;
     }
-
-    @Override
-    public NetbeansActionMapping getMappingForAction(String actionName, Project project) {
-        MicroApplication microApplication = MicroApplication.getInstance(project);
-        if (microApplication != null) {
-            return actionsProvider.getMappingForAction(actionName, project);
-        }
-        return null;
-    }
-
+    
     @Override
     public boolean isActionEnable(String action, Project project, Lookup lookup) {
-        MicroApplication microApplication = MicroApplication.getInstance(project);
-        if (microApplication != null) {
-            return actionsProvider.isActionEnable(action, project, lookup);
+        if ("micro-explode".equals(action)) {
+            MicroApplication ma = MicroApplication.getInstance(project);
+            return (ma != null) && ma.isRunning();
         }
-        return false;
+        return super.isActionEnable(action, project, lookup);
     }
 
     @Override
     public Set<String> getSupportedDefaultActions() {
-        return actionsProvider.getSupportedDefaultActions();
+        Set<String> ret = super.getSupportedDefaultActions();
+        MicroApplication ma = MicroApplication.getInstance(project);
+        if ((ma != null) && ma.isRunning()) {
+            ret.add(Actions.COMMAND_MICRO_RELOAD);
+        }
+        return ret;
+    }
+
+    
+    @Override
+    protected InputStream getActionDefinitionStream() {
+        return MicroActionsProvider.class.getClassLoader().getResourceAsStream(ACTION_MAPPINGS);
     }
 
 }

@@ -22,11 +22,23 @@ package org.netbeans.modules.maven.spi.actions;
 import org.openide.util.Lookup;
 
 /**
+ * Register an {@code ActionConverter} in a Maven Project Lookup to convert
+ * generic action names to project/plugin specific action names if needed.
  *
  * @author mkleint
  */
 public interface ActionConvertor {
 
+    /**
+     * Shall return an action name converted from the given action the action
+     * context is provided in the Lookup. If no conversion shall be applied
+     * on the action, this method shall return {@code null}.
+     *
+     * @param action the action name to be converted
+     * @param lookup the action context
+     * @return the converted action name or {@code null} if this convertor
+     *         does not support the given action.
+     */
     String convert(String action, Lookup lookup);
 
 }

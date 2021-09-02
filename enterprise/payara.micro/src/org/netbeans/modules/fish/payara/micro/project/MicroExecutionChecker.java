@@ -26,10 +26,12 @@ import static org.netbeans.modules.fish.payara.micro.plugin.Constants.MAVEN_WAR_
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROFILE_SINGLE_ACTION;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.RUN_SINGLE_ACTION;
 import java.io.File;
+import java.io.IOException;
 import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
 import org.netbeans.api.project.Project;
+import static org.netbeans.modules.fish.payara.micro.plugin.Constants.RELOAD_FILE;
 import org.netbeans.modules.maven.api.execute.ExecutionContext;
 import org.netbeans.modules.maven.api.execute.ExecutionResultChecker;
 import org.netbeans.modules.maven.api.execute.PrerequisitesChecker;
@@ -42,6 +44,7 @@ import static org.netbeans.spi.project.ActionProvider.COMMAND_PROFILE;
 import static org.netbeans.spi.project.ActionProvider.COMMAND_REBUILD;
 import static org.netbeans.spi.project.ActionProvider.COMMAND_RUN;
 import org.netbeans.spi.project.ProjectServiceProvider;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -102,23 +105,13 @@ public class MicroExecutionChecker extends ExecutionChecker {
             if (BUILD_ACTIONS.contains(config.getActionName())) {
                 if(config.getActionName().contains(COMMAND_BUILD) 
                         || config.getActionName().contains(COMMAND_EXPLODE) ){
-                    reloadApplication(microApplication);
+                    Actions.reloadApplication(microApplication);
                 }
                 microApplication.setBuilding(false);
             } else if (RUN_ACTIONS.contains(config.getActionName())) {
                 microApplication.setRunning(false);
             }
         }
-    }
-    
-    public static void reloadApplication(MicroApplication application) {
-        if (!application.isRunning()) {
-            return;
-        }
-        String buildPath = application.getMavenProject().getBuild().getDirectory()
-                + File.separator
-                + application.getMavenProject().getBuild().getFinalName();
-        ReloadAction.reloadApplication(buildPath);
     }
     
 

@@ -54,6 +54,37 @@ class NbProjectInfoBuilder {
     def CONFIG_EXCLUDES = ['archives', 'checkstyle', 'pmd', 'jacocoAgent', \
         'jacocoAnt', 'findbugs', 'findbugsPlugins', 'jdepend', 'codenarc', \
         'classycle']
+    
+    def RECOGNISED_PLUGINS = [
+        'antlr', \
+        'application',\
+        'base',\
+        'checkstyle',\
+        'com.android.application',
+        'com.android.library',\
+        'com.github.lkishalmi.gatling', \
+        'distribution',\
+        'ear', \
+        'findbugs',
+        'fish.payara.micro-gradle-plugin',\
+        'groovy',\
+        'groovy-base',\
+        'io.micronaut.application',        
+        'ivy-publish',\
+        'jacoco',\
+        'java',
+        'java-base',
+        'java-library-distribution',\
+        'maven',\
+        'maven-publish',
+        'org.springframework.boot', \
+        'osgi', \
+        'play',\
+        'pmd',\
+        'scala',\
+        'scala-base',\
+        'war',
+    ]
 
     final Project project;
     final VersionNumber gradleVersion;
@@ -147,16 +178,7 @@ class NbProjectInfoBuilder {
     private void detectPlugins(NbProjectInfoModel model) {
         long time = System.currentTimeMillis()
         Set<String> plugins = new HashSet<>();
-        for (String plugin: ['base', 'java-base', 'java', 'war', \
-            'scala-base', 'scala', 'groovy-base', 'groovy',\
-            'distribution', 'application', 'maven', 'osgi', \
-            'jacoco', 'checkstyle', 'pmd', 'findbugs', 'ear', \
-            'play', 'java-library-distribution', 'maven-publish',
-            'ivy-publish', 'antlr', \
-            'org.springframework.boot', \
-            'com.github.lkishalmi.gatling', \
-            'com.android.library', 'com.android.application',
-            "io.micronaut.application"]) {
+        for (String plugin: RECOGNISED_PLUGINS) {
             if (project.plugins.hasPlugin(plugin)) {
                 plugins.add(plugin);
             }

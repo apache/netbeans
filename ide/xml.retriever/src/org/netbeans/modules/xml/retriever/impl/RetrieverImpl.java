@@ -105,7 +105,7 @@ public class RetrieverImpl extends Retriever {
             } else {
                 // For Maven based projects the project directory doesn't contain cached catalogs. 
                 //  In these cases should be used catalog.xml within destination directory.
-                cfuri = destinationDir.getParent().getURL().toURI().resolve(Utilities.PRIVATE_CATALOG_URI_STR);
+                cfuri = destinationDir.getParent().toURL().toURI().resolve(Utilities.PRIVATE_CATALOG_URI_STR);
             }
         }else{
             cfuri = relativePathToCatalogFile;

@@ -97,7 +97,7 @@ public class JUnitTestSession extends TestSession{
                 FileObject[] rootsCP = cp.getRoots();
                 for(FileObject fo: rootsCP){
                     try{
-                        FileObject[] aaa = SourceForBinaryQuery.findSourceRoots(fo.getURL()).getRoots();
+                        FileObject[] aaa = SourceForBinaryQuery.findSourceRoots(fo.toURL()).getRoots();
                         roots.addAll(Arrays.asList(aaa));
                     }catch(Exception e){}
                 }

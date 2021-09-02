@@ -187,11 +187,7 @@ class ProjectClassLoader extends ClassLoader {
         Set<URL> urls = new HashSet<URL>();
         List<FileObject> fos = sources.findAllResources(name);
         for (FileObject fo : fos) {
-            try {
-                urls.add(fo.getURL());
-            } catch (FileStateInvalidException ex) {
-                ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);
-            }
+            urls.add(fo.toURL());
         }
         Enumeration<URL> e = projectClassLoaderDelegate.getResources(name);
         while (e.hasMoreElements()) {

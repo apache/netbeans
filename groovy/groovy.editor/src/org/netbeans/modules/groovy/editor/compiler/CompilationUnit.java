@@ -164,6 +164,7 @@ public final class CompilationUnit extends org.codehaus.groovy.control.Compilati
                 Task<CompilationController> task = new Task<CompilationController>() {
                     @Override
                     public void run(CompilationController controller) throws Exception {
+                        controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                         Elements elements = controller.getElements();
                         TypeElement typeElement = ElementSearch.getClass(elements, name);
                         if (typeElement != null) {

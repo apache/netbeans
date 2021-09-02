@@ -16,19 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.editor.hints.settings.friend;
+package org.netbeans.modules.editor.hints.projects.settings;
 
-import java.util.prefs.Preferences;
-import org.openide.filesystems.FileObject;
+import org.netbeans.api.options.OptionsDisplayer;
+import org.netbeans.modules.editor.hints.settings.friend.OpenGlobalPreferences;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author lahvac
  */
-public interface FileHintPreferencesProvider {
-    
-    //TODO: change listener - requires Result?
-    public Preferences getFilePreferences(FileObject file, String mimeType);
-    public boolean openFilePreferences(FileObject file, String mimeType, String hintId);
+@ServiceProvider(service=OpenGlobalPreferences.class)
+public class OpenGlobalPreferencesImpl implements OpenGlobalPreferences {
+
+    @Override
+    public boolean openFilePreferences(String mimeType, String hintId) {
+        OptionsDisplayer.getDefault().open("Editor/Hints/" + mimeType + "/" + hintId);
+        return true;
+    }
 
 }

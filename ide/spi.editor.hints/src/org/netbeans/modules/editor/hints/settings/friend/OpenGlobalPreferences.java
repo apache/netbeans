@@ -18,17 +18,10 @@
  */
 package org.netbeans.modules.editor.hints.settings.friend;
 
-import java.util.prefs.Preferences;
-import org.openide.filesystems.FileObject;
-
 /**
  *
  * @author lahvac
  */
-public interface FileHintPreferencesProvider {
-    
-    //TODO: change listener - requires Result?
-    public Preferences getFilePreferences(FileObject file, String mimeType);
-    public boolean openFilePreferences(FileObject file, String mimeType, String hintId);
-
+public interface OpenGlobalPreferences {
+    public boolean openFilePreferences(String mimeType, String hintId);
 }

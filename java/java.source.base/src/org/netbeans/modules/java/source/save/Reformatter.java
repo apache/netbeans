@@ -2819,11 +2819,13 @@ public class Reformatter implements ReformatTask {
             try {
                 Tree gpt = TreeShims.getGuardedPattern(node);
                 if (gpt != null) {
-                    Name name = TreeShims.getBinding(gpt);
-                    Tree type = TreeShims.getBindingPatternType(gpt);
-                    scan(type, p);
-                    if (name != null) {
-                        removeWhiteSpace(IDENTIFIER);
+                    if (scanParenthesizedPattern(gpt, p) == false) {
+                        Name name = TreeShims.getBinding(gpt);
+                        Tree type = TreeShims.getBindingPatternType(gpt);
+                        scan(type, p);
+                        if (name != null) {
+                            removeWhiteSpace(IDENTIFIER);
+                        }
                     }
                 }
             } catch (RuntimeException ex) {
@@ -2840,12 +2842,16 @@ public class Reformatter implements ReformatTask {
         }
 
         private Boolean scanParenthesizedPattern(Tree node, Void p) {
-            Tree ppt = TreeShims.getParenthesizedPattern(node);
-            if (ppt != null) {
-                if(scanGuardedPattern(ppt, p) == false){
-                    scanBindingPattern(ppt, p);
+            try {
+                Tree ppt = TreeShims.getParenthesizedPattern(node);
+                if (ppt != null) {
+                    if (scanGuardedPattern(ppt, p) == false) {
+                        scanBindingPattern(ppt, p);
+                    }
+                    removeWhiteSpace(IDENTIFIER);
                 }
-                removeWhiteSpace(IDENTIFIER);
+            } catch (RuntimeException ex) {
+                return false;
             }
             return true;
         }

@@ -308,8 +308,11 @@ class GeneralOptionsModel {
         httpConnection.setConnectTimeout(5000);
         httpConnection.connect();
 
-        if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK || 
-                httpConnection.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
+        int responseCode = httpConnection.getResponseCode();
+
+        if (responseCode == HttpURLConnection.HTTP_OK || 
+            responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
+            responseCode == HttpURLConnection.HTTP_MOVED_PERM) {
             result = true;
         }
 

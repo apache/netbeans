@@ -4316,8 +4316,6 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(new File(src.getParentFile().getParentFile(), ".test-project"))) {}
         String code = "package a;\n" +
                       "\n" +
-                      "import b.Test2;\n" +
-                      "\n" +
                       "public class Test {\n" +
                       "    public static final int CNT = 10;\n" +
                       "    public void m(Test t) {}\n" +
@@ -4416,7 +4414,7 @@ public class ServerTest extends NbTestCase {
         indexingComplete.await();
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
-        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(5, 10), new Position(5, 10)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Refactor)))).get();
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(3, 10), new Position(3, 10)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Refactor)))).get();
         Optional<CodeAction> extractInterface =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -4444,16 +4442,16 @@ public class ServerTest extends NbTestCase {
                 List<TextEdit> fileChanges = tde.getEdits();
                 assertNotNull(fileChanges);
                 assertEquals(3, fileChanges.size());
-                assertEquals(new Range(new Position(4, 18),
-                                       new Position(5, 10)),
+                assertEquals(new Range(new Position(2, 18),
+                                       new Position(3, 10)),
                              fileChanges.get(0).getRange());
                 assertEquals("implements", fileChanges.get(0).getNewText());
-                assertEquals(new Range(new Position(5, 11),
-                                       new Position(5, 17)),
+                assertEquals(new Range(new Position(3, 11),
+                                       new Position(3, 17)),
                              fileChanges.get(1).getRange());
                 assertEquals("NewInterface", fileChanges.get(1).getNewText());
-                assertEquals(new Range(new Position(5, 18),
-                                       new Position(5, 37)),
+                assertEquals(new Range(new Position(3, 18),
+                                       new Position(3, 37)),
                              fileChanges.get(2).getRange());
                 assertEquals("{\n    @Override", fileChanges.get(2).getNewText());
             } else if (tde.getTextDocument().getUri().endsWith("a/NewInterface.java")) {
@@ -4482,8 +4480,6 @@ public class ServerTest extends NbTestCase {
         src.getParentFile().mkdirs();
         try (Writer w = new FileWriter(new File(src.getParentFile().getParentFile(), ".test-project"))) {}
         String code = "package a;\n" +
-                      "\n" +
-                      "import b.Test2;\n" +
                       "\n" +
                       "public class Test {\n" +
                       "    public int CNT = 10;\n" +
@@ -4583,7 +4579,7 @@ public class ServerTest extends NbTestCase {
         indexingComplete.await();
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
-        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(5, 10), new Position(5, 10)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Refactor)))).get();
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(3, 10), new Position(3, 10)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Refactor)))).get();
         Optional<CodeAction> extractSuperclass =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -4611,20 +4607,20 @@ public class ServerTest extends NbTestCase {
                 List<TextEdit> fileChanges = tde.getEdits();
                 assertNotNull(fileChanges);
                 assertEquals(4, fileChanges.size());
-                assertEquals(new Range(new Position(4, 18),
-                                       new Position(5, 10)),
+                assertEquals(new Range(new Position(2, 18),
+                                       new Position(3, 10)),
                              fileChanges.get(0).getRange());
                 assertEquals("extends", fileChanges.get(0).getNewText());
-                assertEquals(new Range(new Position(5, 11),
-                                       new Position(5, 14)),
+                assertEquals(new Range(new Position(3, 11),
+                                       new Position(3, 14)),
                              fileChanges.get(1).getRange());
                 assertEquals("NewClass", fileChanges.get(1).getNewText());
-                assertEquals(new Range(new Position(5, 15),
-                                       new Position(6, 26)),
+                assertEquals(new Range(new Position(3, 15),
+                                       new Position(4, 26)),
                              fileChanges.get(2).getRange());
                 assertEquals("", fileChanges.get(2).getNewText());
-                assertEquals(new Range(new Position(6, 27),
-                                       new Position(6, 28)),
+                assertEquals(new Range(new Position(4, 27),
+                                       new Position(4, 28)),
                              fileChanges.get(3).getRange());
                 assertEquals("", fileChanges.get(3).getNewText());
             } else if (tde.getTextDocument().getUri().endsWith("a/NewClass.java")) {
@@ -4643,6 +4639,306 @@ public class ServerTest extends NbTestCase {
                         "    }\n" +
                         "\n" +
                         "}\n"));
+            } else {
+                fail("Unknown file modified");
+            }
+        }
+    }
+
+    public void testPullUp() throws Exception {
+        File src = new File(getWorkDir(), "a/Test.java");
+        src.getParentFile().mkdirs();
+        try (Writer w = new FileWriter(new File(src.getParentFile().getParentFile(), ".test-project"))) {}
+        String code = "package a;\n" +
+                      "\n" +
+                      "import b.Iface;\n" +
+                      "\n" +
+                      "public class Test implements Iface {\n" +
+                      "    public int CNT = 10;\n" +
+                      "    public void foo() {}\n" +
+                      "    public void bar(int i) {}\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        File src2 = new File(getWorkDir(), "b/Iface.java");
+        src2.getParentFile().mkdirs();
+        try (Writer w = new FileWriter(src2)) {
+            w.write("package b;\n" +
+                    "\n" +
+                    "public interface Iface {\n" +
+                    "    void foo();\n" +
+                    "}\n");
+        }
+        List<Diagnostic>[] diags = new List[1];
+        CountDownLatch indexingComplete = new CountDownLatch(1);
+        WorkspaceEdit[] edit = new WorkspaceEdit[1];
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams params) {
+                if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
+                    indexingComplete.countDown();
+                } else {
+                    throw new UnsupportedOperationException("Unexpected message.");
+                }
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+                edit[0] = params.getEdit();
+                return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
+            }
+
+            @Override
+            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void disposeTextEditorDecoration(String params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public NbCodeClientCapabilities getNbCodeCapabilities() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void notifyTestProgress(TestProgressParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+                return CompletableFuture.completedFuture(params.getValue());
+            }
+
+            @Override
+            public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
+                List<QuickPickItem> items = params.getItems();
+                return CompletableFuture.completedFuture(items.size() > 1 ? items.subList(1, 2) : items);
+            }
+
+            @Override
+            public void showStatusBarMessage(ShowStatusMessageParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeParams initParams = new InitializeParams();
+        initParams.setRootUri(getWorkDir().toURI().toString());
+        InitializeResult result = server.initialize(initParams).get();
+        indexingComplete.await();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(5, 10), new Position(5, 10)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Refactor)))).get();
+        Optional<CodeAction> pullUp =
+                codeActions.stream()
+                           .filter(Either::isRight)
+                           .map(Either::getRight)
+                           .filter(a -> Bundle.DN_PullUp().equals(a.getTitle()))
+                           .findAny();
+        assertTrue(pullUp.isPresent());
+        server.getWorkspaceService().executeCommand(new ExecuteCommandParams(pullUp.get().getCommand().getCommand(), pullUp.get().getCommand().getArguments())).get();
+        int cnt = 0;
+        while(edit[0] == null && cnt++ < 10) {
+            Thread.sleep(1000);
+        }
+        List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = edit[0].getDocumentChanges();
+        assertEquals(1, documentChanges.size());
+        Either<TextDocumentEdit, ResourceOperation> change = documentChanges.get(0);
+        assertTrue(change.isLeft());
+        TextDocumentEdit tde = change.getLeft();
+        assertTrue(tde.getTextDocument().getUri().endsWith("b/Iface.java"));
+        List<TextEdit> fileChanges = tde.getEdits();
+        assertNotNull(fileChanges);
+        assertEquals(1, fileChanges.size());
+        assertEquals(new Range(new Position(4, 0),
+                               new Position(4, 0)),
+                     fileChanges.get(0).getRange());
+        assertEquals("\n    void bar(int i);\n", fileChanges.get(0).getNewText());
+    }
+
+    public void testPushDown() throws Exception {
+        File src = new File(getWorkDir(), "b/Base.java");
+        src.getParentFile().mkdirs();
+        try (Writer w = new FileWriter(new File(src.getParentFile().getParentFile(), ".test-project"))) {}
+        String code = "package b;\n" +
+                      "\n" +
+                      "public class Base {\n" +
+                      "    public void foo() {}\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        File src2 = new File(getWorkDir(), "a/Test.java");
+        src2.getParentFile().mkdirs();
+        try (Writer w = new FileWriter(src2)) {
+            w.write("package a;\n" +
+                    "\n" +
+                    "import b.Base;\n" +
+                    "\n" +
+                    "public class Test extends Base {\n" +
+                    "    public int CNT = 10;\n" +
+                    "    public void bar(int i) {}\n" +
+                    "}\n");
+        }
+        List<Diagnostic>[] diags = new List[1];
+        CountDownLatch indexingComplete = new CountDownLatch(1);
+        WorkspaceEdit[] edit = new WorkspaceEdit[1];
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams params) {
+                if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
+                    indexingComplete.countDown();
+                } else {
+                    throw new UnsupportedOperationException("Unexpected message.");
+                }
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+                edit[0] = params.getEdit();
+                return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
+            }
+
+            @Override
+            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void disposeTextEditorDecoration(String params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public NbCodeClientCapabilities getNbCodeCapabilities() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void notifyTestProgress(TestProgressParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+                return CompletableFuture.completedFuture(params.getValue());
+            }
+
+            @Override
+            public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
+                List<QuickPickItem> items = params.getItems();
+                return CompletableFuture.completedFuture(items.size() > 1 ? items.subList(1, 2) : items);
+            }
+
+            @Override
+            public void showStatusBarMessage(ShowStatusMessageParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeParams initParams = new InitializeParams();
+        initParams.setRootUri(getWorkDir().toURI().toString());
+        InitializeResult result = server.initialize(initParams).get();
+        indexingComplete.await();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(3, 10), new Position(3, 10)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Refactor)))).get();
+        Optional<CodeAction> pushDown =
+                codeActions.stream()
+                           .filter(Either::isRight)
+                           .map(Either::getRight)
+                           .filter(a -> Bundle.DN_PushDown().equals(a.getTitle()))
+                           .findAny();
+        assertTrue(pushDown.isPresent());
+        server.getWorkspaceService().executeCommand(new ExecuteCommandParams(pushDown.get().getCommand().getCommand(), pushDown.get().getCommand().getArguments())).get();
+        int cnt = 0;
+        while(edit[0] == null && cnt++ < 10) {
+            Thread.sleep(1000);
+        }
+        List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = edit[0].getDocumentChanges();
+        assertEquals(2, documentChanges.size());
+        for (int i = 0; i <= 1; i++) {
+            Either<TextDocumentEdit, ResourceOperation> change = documentChanges.get(i);
+            assertTrue(change.isLeft());
+            TextDocumentEdit tde = change.getLeft();
+            if (tde.getTextDocument().getUri().endsWith("a/Test.java")) {
+                List<TextEdit> fileChanges = tde.getEdits();
+                assertNotNull(fileChanges);
+                assertEquals(1, fileChanges.size());
+                assertEquals(new Range(new Position(7, 0),
+                                       new Position(7, 0)),
+                             fileChanges.get(0).getRange());
+                assertEquals("\n    public void foo() {\n    }\n", fileChanges.get(0).getNewText());
+            } else if (tde.getTextDocument().getUri().endsWith("b/Base.java")) {
+                List<TextEdit> fileChanges = tde.getEdits();
+                assertNotNull(fileChanges);
+                assertEquals(1, fileChanges.size());
+                assertEquals(new Range(new Position(3, 0),
+                                       new Position(4, 0)),
+                             fileChanges.get(0).getRange());
+                assertEquals("", fileChanges.get(0).getNewText());
             } else {
                 fail("Unknown file modified");
             }

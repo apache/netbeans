@@ -22,9 +22,9 @@ import com.google.gson.Gson;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -44,39 +44,22 @@ import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
-import org.eclipse.lsp4j.CreateFile;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
-import org.eclipse.lsp4j.Position;
-import org.eclipse.lsp4j.Range;
-import org.eclipse.lsp4j.ResourceOperation;
-import org.eclipse.lsp4j.TextDocumentEdit;
-import org.eclipse.lsp4j.TextEdit;
-import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
-import org.eclipse.lsp4j.WorkspaceEdit;
-import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
-import org.netbeans.modules.refactoring.api.Problem;
-import org.netbeans.modules.refactoring.api.RefactoringSession;
-import org.netbeans.modules.refactoring.api.impl.APIAccessor;
-import org.netbeans.modules.refactoring.api.impl.SPIAccessor;
 import org.netbeans.modules.refactoring.java.api.ExtractInterfaceRefactoring;
 import org.netbeans.modules.refactoring.java.api.ExtractSuperclassRefactoring;
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
 import org.netbeans.modules.refactoring.java.api.MemberInfo;
-import org.netbeans.modules.refactoring.java.spi.hooks.JavaModificationResult;
-import org.netbeans.modules.refactoring.spi.RefactoringCommit;
-import org.netbeans.modules.refactoring.spi.Transaction;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -86,8 +69,8 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Dusan Balek
  */
-@ServiceProvider(service = CodeActionsProvider.class, position = 160)
-public class ExtractSuperclassOrInterfaceRefactoring extends CodeActionsProvider {
+@ServiceProvider(service = CodeActionsProvider.class, position = 170)
+public class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactoring {
 
     private static final String EXTRACT_SUPERCLASS_REFACTORING_COMMAND =  "java.refactor.extract.superclass";
     private static final String EXTRACT_INTERFACE_REFACTORING_COMMAND =  "java.refactor.extract.interface";
@@ -129,6 +112,7 @@ public class ExtractSuperclassOrInterfaceRefactoring extends CodeActionsProvider
         if (type == null) {
             return Collections.emptyList();
         }
+        SourcePositions sourcePositions = info.getTrees().getSourcePositions();
         List<QuickPickItem> members = new ArrayList();
         List<QuickPickItem> allMembers = new ArrayList();
         ClassTree sourceTree = (ClassTree) path.getLeaf();
@@ -137,15 +121,18 @@ public class ExtractSuperclassOrInterfaceRefactoring extends CodeActionsProvider
             if (!treeUtilities.isSynthetic(memberTreePath)) {
                 Element memberElm = trees.getElement(memberTreePath);
                 if (memberElm != null) {
+                    long startMember = sourcePositions.getStartPosition(info.getCompilationUnit(), member);
+                    long endMember = sourcePositions.getEndPosition(info.getCompilationUnit(), member);
+                    boolean selected = offset > startMember && offset < endMember;
                     Set<Modifier> mods = memberElm.getModifiers();
                     if (memberElm.getKind() == ElementKind.FIELD) {
-                        QuickPickItem memberItem = new QuickPickItem(createLabel(info, memberElm), null, null, false, new ElementData(memberElm));
+                        QuickPickItem memberItem = new QuickPickItem(createLabel(info, memberElm), null, null, selected, new ElementData(memberElm));
                         allMembers.add(memberItem);
                         if (mods.contains(Modifier.PUBLIC) && mods.contains(Modifier.STATIC) && mods.contains(Modifier.FINAL) && ((VariableTree) member).getInitializer() != null) {
                             members.add(memberItem);
                         }
                     } else if (memberElm.getKind() == ElementKind.METHOD) {
-                        QuickPickItem memberItem = new QuickPickItem(createLabel(info, memberElm), null, null, false, new ElementData(memberElm));
+                        QuickPickItem memberItem = new QuickPickItem(createLabel(info, memberElm), null, null, selected, new ElementData(memberElm));
                         allMembers.add(memberItem);
                         if (mods.contains(Modifier.PUBLIC) && !mods.contains(Modifier.STATIC)) {
                             members.add(memberItem);
@@ -158,7 +145,9 @@ public class ExtractSuperclassOrInterfaceRefactoring extends CodeActionsProvider
         if (!allMembers.isEmpty()) {
             QuickPickItem elementItem = new QuickPickItem(createLabel(info, type));
             elementItem.setUserData(new ElementData(type));
-            result.add(createCodeAction(Bundle.DN_ExtractSuperclass(), CodeActionKind.RefactorExtract, EXTRACT_SUPERCLASS_REFACTORING_COMMAND, uri, elementItem, allMembers));
+            if (!type.getKind().isInterface()) {
+                result.add(createCodeAction(Bundle.DN_ExtractSuperclass(), CodeActionKind.RefactorExtract, EXTRACT_SUPERCLASS_REFACTORING_COMMAND, uri, elementItem, allMembers));
+            }
             if (!members.isEmpty()) {
                 result.add(createCodeAction(Bundle.DN_ExtractInterface(), CodeActionKind.RefactorExtract, EXTRACT_INTERFACE_REFACTORING_COMMAND, uri, elementItem, members));
             }
@@ -241,63 +230,7 @@ public class ExtractSuperclassOrInterfaceRefactoring extends CodeActionsProvider
                 refactoring = r;
             }
             refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(file));
-            RefactoringSession session = RefactoringSession.create(EXTRACT_SUPERCLASS_REFACTORING_COMMAND.equals(command) ? "Extract Superclass" : "Extract Interface");
-            Problem p = refactoring.checkParameters();
-            if (p != null && p.isFatal()) {
-                throw new IllegalStateException(p.getMessage());
-            }
-            p = refactoring.preCheck();
-            if (p != null && p.isFatal()) {
-                throw new IllegalStateException(p.getMessage());
-            }
-            p = refactoring.prepare(session);
-            if (p != null && p.isFatal()) {
-                throw new IllegalStateException(p.getMessage());
-            }
-            List<Either<TextDocumentEdit, ResourceOperation>> resultChanges = new ArrayList<>();
-            List<Transaction> transactions = APIAccessor.DEFAULT.getCommits(session);
-            List<ModificationResult> results = new ArrayList<>();
-            for (Transaction t : transactions) {
-                if (t instanceof RefactoringCommit) {
-                    RefactoringCommit c = (RefactoringCommit) t;
-                    for (org.netbeans.modules.refactoring.spi.ModificationResult refResult : SPIAccessor.DEFAULT.getTransactions(c)) {
-                        if (refResult instanceof JavaModificationResult) {
-                            results.add(((JavaModificationResult) refResult).delegate);
-                        } else {
-                            throw new IllegalStateException(refResult.getClass().toString());
-                        }
-                    }
-                } else {
-                    throw new IllegalStateException(t.getClass().toString());
-                }
-            }
-            for (ModificationResult mr : results) {
-                Set<File> newFiles = mr.getNewFiles();
-                if (newFiles.size() > 1) {
-                    throw new IllegalStateException();
-                }
-                String newFilePath = null;
-                for (File newFile : newFiles) {
-                    newFilePath = newFile.toURI().toString();
-                    resultChanges.add(Either.forRight(new CreateFile(newFilePath)));
-                }
-                for (FileObject modified : mr.getModifiedFileObjects()) {
-                    String modifiedUri = Utils.toUri(modified);
-                    List<TextEdit> edits = new ArrayList<>();
-                    for (ModificationResult.Difference diff : mr.getDifferences(modified)) {
-                        String newText = diff.getNewText();
-                        if (diff.getKind() == ModificationResult.Difference.Kind.CREATE) {
-                            Position pos = new Position(0, 0);
-                            resultChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(newFilePath, -1), Collections.singletonList(new TextEdit(new Range(pos, pos), newText != null ? newText : "")))));
-                        } else {
-                            edits.add(new TextEdit(new Range(Utils.createPosition(file, diff.getStartPosition().getOffset()), Utils.createPosition(file, diff.getEndPosition().getOffset())), newText != null ? newText : ""));
-                        }
-                    }
-                    resultChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(modifiedUri, -1), edits)));
-                }
-            }
-            session.finished();
-            client.applyEdit(new ApplyWorkspaceEditParams(new WorkspaceEdit(resultChanges)));
+            client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, EXTRACT_SUPERCLASS_REFACTORING_COMMAND.equals(command) ? "Extract Superclass" : "Extract Interface")));
         } catch (Exception ex) {
             client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }

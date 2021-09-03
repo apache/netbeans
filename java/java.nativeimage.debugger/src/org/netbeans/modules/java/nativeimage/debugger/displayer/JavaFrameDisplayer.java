@@ -115,6 +115,9 @@ public final class JavaFrameDisplayer implements FrameDisplayer {
     private URI getSourceURI(NIFrame frame) {
         String functionName = frame.getFunctionName();
         int methodEnd = functionName.indexOf('(');
+        if (methodEnd < 0) {
+            methodEnd = functionName.length();
+        }
         if (methodEnd > 0) {
             int methodStart = functionName.lastIndexOf('.', methodEnd);
             if (methodStart > 0) {

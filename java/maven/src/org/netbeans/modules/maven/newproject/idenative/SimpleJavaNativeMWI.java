@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import org.apache.maven.project.MavenProject;
+import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.templates.TemplateRegistration;
@@ -31,18 +32,27 @@ import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.api.PluginPropertyUtils;
 import org.netbeans.modules.maven.api.archetype.ArchetypeWizards;
 import org.netbeans.modules.maven.api.archetype.ProjectInfo;
+import org.netbeans.modules.maven.classpath.AbstractBootPathImpl;
 import org.netbeans.modules.maven.model.ModelOperation;
 import org.netbeans.modules.maven.model.pom.POMModel;
 import org.netbeans.modules.maven.model.pom.Project;
 import org.netbeans.modules.maven.model.pom.Properties;
 import static org.netbeans.modules.maven.newproject.idenative.Bundle.LBL_Maven_Quickstart_Archetype;
+import org.netbeans.modules.maven.options.MavenSettings;
 import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author mkleint
  */
-@TemplateRegistration(folder=ArchetypeWizards.TEMPLATE_FOLDER, position=100, displayName="#LBL_Maven_Quickstart_Archetype", iconBase="org/netbeans/modules/maven/resources/jaricon.png", description="quickstart.html")
+@TemplateRegistration(
+    id = "JavaApplication",
+    displayName="#LBL_Maven_Quickstart_Archetype",
+    iconBase="org/netbeans/modules/maven/resources/jaricon.png",
+    description="quickstart.html",
+    folder=ArchetypeWizards.TEMPLATE_FOLDER,
+    position=100
+)
 @Messages("LBL_Maven_Quickstart_Archetype=Java Application")
 public class SimpleJavaNativeMWI extends IDENativeMavenWizardIterator {
 
@@ -93,7 +103,11 @@ public class SimpleJavaNativeMWI extends IDENativeMavenWizardIterator {
                                     props = model.getFactory().createProperties();
                                     root.setProperties(props);
                                 }
-                                String version = JavaPlatformManager.getDefault().getDefaultPlatform().getSpecification().getVersion().toString();
+                                JavaPlatform active = AbstractBootPathImpl.getActivePlatform(MavenSettings.getDefault().getDefaultJdk());
+                                if (active == null) {
+                                    active = JavaPlatformManager.getDefault().getDefaultPlatform();
+                                }
+                                String version = active.getSpecification().getVersion().toString();
                                 props.setProperty("maven.compiler.source", version);
                                 props.setProperty("maven.compiler.target", version);
                             }

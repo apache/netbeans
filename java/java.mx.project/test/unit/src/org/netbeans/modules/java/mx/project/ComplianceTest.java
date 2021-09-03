@@ -151,6 +151,22 @@ public class ComplianceTest {
     }
 
     @Test
+    public void matchesExact() {
+        Compliance eight = Compliance.parse("1.8");
+        assertFalse("Seven is out", eight.matches(Compliance.exact(7)));
+        assertTrue("Eight is in", eight.matches(Compliance.exact(8)));
+        assertFalse("Eleven is out", eight.matches(Compliance.exact(11)));
+    }
+
+    @Test
+    public void matchesPlus() {
+        Compliance eightPlus = Compliance.parse("1.8+");
+        assertFalse("Seven is out", eightPlus.matches(Compliance.exact(7)));
+        assertTrue("Eight is in", eightPlus.matches(Compliance.exact(8)));
+        assertTrue("Eleven is in", eightPlus.matches(Compliance.exact(11)));
+    }
+
+    @Test
     public void eightThirteenPlus() {
         Compliance eightThirteen = Compliance.parse("8,13+");
         assertMinMax(eightThirteen, 8, null);

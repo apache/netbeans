@@ -21,6 +21,20 @@
 
 -->
 
+## Version 12.4.301
+
+* New Project action added
+* New From Template action added
+* Debugger attach supported
+* Number of bug fixes
+
+## Version 12.4
+
+* Numerous fixes in Code Completion and Code navigation, like Go To Super implementation, Find all implementations,...
+* Go To Definition works for Gradle projects 
+* GDB version check for proper version usable in native-image debugger
+* mx project fixes
+
 ## Version 12.4 Beta
 
 * Test results UI added using Test Explorer UI extension

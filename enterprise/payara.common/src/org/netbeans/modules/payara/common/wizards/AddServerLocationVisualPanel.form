@@ -256,6 +256,8 @@
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JComboBox&lt;PayaraVersion&gt;(wizardIterator.downloadableValues.toArray(new PayaraVersion[0]))"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="} else {&#xa;    updateMessageText(NbBundle.getMessage(AddServerLocationPanel.class, &quot;LBL_UnaleToConnectPayaraMavenRepo&quot;));&#xa;}"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="if (!wizardIterator.downloadableValues.isEmpty()) {"/>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;PayaraVersion&gt;"/>
       </AuxValues>
     </Component>

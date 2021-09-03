@@ -5,6 +5,8 @@ Searchable Keys:
   class : FourthClass
   class-ig : fourthclass
   fqn : foo.FourthClass
+  method : getMetaClass;groovy.lang.MetaClass
+  method : setMetaClass(groovy.lang.MetaClass);void
 
 Not Searchable Keys:
 
@@ -35,10 +37,12 @@ Searchable Keys:
   method : dynamicmethod;void
   method : getField1;int
   method : getGreeting;java.lang.Object
+  method : getMetaClass;groovy.lang.MetaClass
   method : getName;java.lang.Object
   method : main(java.lang.String[]);void;08
   method : setField1(int);void
   method : setGreeting(java.lang.Object);void
+  method : setMetaClass(groovy.lang.MetaClass);void
   method : setName(java.lang.Object);void
 
 Not Searchable Keys:
@@ -51,6 +55,8 @@ Searchable Keys:
   ctor : SecondTestClass;String
   ctor : SecondTestClass;int
   fqn : foo.SecondTestClass
+  method : getMetaClass;groovy.lang.MetaClass
+  method : setMetaClass(groovy.lang.MetaClass);void
 
 Not Searchable Keys:
 
@@ -62,5 +68,7 @@ Searchable Keys:
   ctor : ThirdTestClass;String
   ctor : ThirdTestClass;int
   fqn : foo.ThirdTestClass
+  method : getMetaClass;groovy.lang.MetaClass
+  method : setMetaClass(groovy.lang.MetaClass);void
 
 Not Searchable Keys:

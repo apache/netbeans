@@ -142,8 +142,8 @@ public class QuickPanel extends javax.swing.JPanel {
         public Hashtable<Integer, JLabel> createLabels() {
             Hashtable<Integer, JLabel> labels = new Hashtable<>();
             for (Integer v : versionJDKs) {
-                boolean isLTS = lts.containsKey(v);
-                String name = isLTS ? LTSes.text(v, lts.get(v)) : String.valueOf(v);
+                boolean isLTS = lts.get(v) == TermOfSupport.LTS;
+                String name = LTSes.text(v, lts.get(v));
                 JLabel label = new JLabel(name);
                 if (isLTS) {
                     //these decorations do nothing on macOS...

@@ -24,9 +24,7 @@ package org.netbeans.modules.groovy.editor.api.completion;
  * @author schmidtm
  */
 import java.util.Map;
-import org.netbeans.modules.groovy.editor.test.GroovyTestBase;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -36,13 +34,17 @@ import org.openide.filesystems.FileUtil;
  *
  * @author schmidtm
  */
-public class FieldCCTest extends GroovyTestBase {
+public class FieldCCTest extends GroovyCCTestBase {
 
     String TEST_BASE = "testfiles/completion/field/";
 
     public FieldCCTest(String testName) {
         super(testName);
-        Logger.getLogger(CompletionHandler.class.getName()).setLevel(Level.FINEST);
+    }
+
+    @Override
+    protected String getTestType() {
+        return ".";
     }
 
     // uncomment this to have logging from GroovyLexer
@@ -67,5 +69,4 @@ public class FieldCCTest extends GroovyTestBase {
     public void testFields2() throws Exception {
         checkCompletion(TEST_BASE + "" + "Fields1.groovy", "println \"Hi: $ad^\"", true);
     }
-
 }

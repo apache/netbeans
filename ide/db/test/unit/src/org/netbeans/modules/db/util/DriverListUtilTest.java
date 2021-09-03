@@ -26,7 +26,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import static junit.framework.Assert.assertEquals;
 import junit.framework.TestCase;
 import org.netbeans.api.db.explorer.JDBCDriver;
 import org.openide.util.NbBundle;
@@ -350,7 +349,7 @@ public class DriverListUtilTest extends TestCase {
     
     public void testMSSQL2005() throws Exception {
         /*
-                add(getMessage("DRIVERNAME_MSSQL2005"),
+                add(getMessage("DRIVERNAME_MSSQL"),
         "com.microsoft.sqlserver.jdbc.SQLServerDriver",
         "jdbc:sqlserver://[<HOST>[\\<INSTANCE>][:<PORT>]][;databaseName=<DB>][;<ADDITIONAL>]", true);
         */
@@ -359,7 +358,7 @@ public class DriverListUtilTest extends TestCase {
         supportedProps.add(JdbcUrl.TOKEN_INSTANCE);
         
         ArrayList<String> requiredProps = new ArrayList<String>();
-        JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_MSSQL2005"), null, 
+        JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_MSSQL"), null,
                 "com.microsoft.sqlserver.jdbc.SQLServerDriver", 
                 "jdbc:sqlserver://[<HOST>[\\<INSTANCE>][:<PORT>]][;databaseName=<DB>][;<ADDITIONAL>]", 
                 supportedProps, requiredProps);

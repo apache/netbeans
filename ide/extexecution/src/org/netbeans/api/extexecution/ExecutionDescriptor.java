@@ -21,6 +21,7 @@ package org.netbeans.api.extexecution;
 
 import java.nio.charset.Charset;
 import java.util.concurrent.Future;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
@@ -52,7 +53,7 @@ public final class ExecutionDescriptor {
 
     private final Runnable preExecution;
 
-    private final Runnable postExecution;
+    private final Consumer<? super Integer> postExecution;
 
     private final boolean suspend;
 
@@ -622,11 +623,34 @@ public final class ExecutionDescriptor {
     @NonNull
     @CheckReturnValue
     public ExecutionDescriptor postExecution(@NullAllowed Runnable postExecution) {
+        return postExecution((__) -> {
+            postExecution.run();
+        });
+    }
+
+    /**
+     * Returns a descriptor with configured post execution runnable. This
+     * runnable is executed <i>after</i> the external execution itself
+     * (when invoked by {@link ExecutionService#run()}).
+     * <p>
+     * The default (not configured) value is <code>null</code>.
+     * <p>
+     * All other properties of the returned descriptor are inherited from
+     * <code>this</code>.
+     *
+     * @param postExecution post execution callback that receives exit code of the
+     *    execution, <code>null</code> allowed
+     * @return new descriptor with configured post execution callback
+     * @since 1.61
+     */
+    @NonNull
+    @CheckReturnValue
+    public ExecutionDescriptor postExecution(@NullAllowed Consumer<Integer> postExecution) {
         DescriptorData data = new DescriptorData(this);
         return new ExecutionDescriptor(data.postExecution(postExecution));
     }
 
-    Runnable getPostExecution() {
+    Consumer<? super Integer> getPostExecution() {
         return postExecution;
     }
 
@@ -838,7 +862,7 @@ public final class ExecutionDescriptor {
 
         private Runnable preExecution;
 
-        private Runnable postExecution;
+        private Consumer<? super Integer> postExecution;
 
         private boolean suspend;
 
@@ -994,7 +1018,7 @@ public final class ExecutionDescriptor {
             return this;
         }
 
-        public DescriptorData postExecution(Runnable postExecution) {
+        public DescriptorData postExecution(Consumer<Integer> postExecution) {
             this.postExecution = postExecution;
             return this;
         }

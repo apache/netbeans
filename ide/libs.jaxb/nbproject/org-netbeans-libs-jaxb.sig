@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.42
+#Version 1.43
 
 CLSS public final com.sun.codemodel.ClassType
 fld public final static com.sun.codemodel.ClassType ANNOTATION_TYPE_DECL
@@ -7930,7 +7930,6 @@ meth public void write(byte[],int,int)
 meth public void write(int)
 meth public void writeTo(java.io.OutputStream) throws java.io.IOException
 supr java.io.OutputStream
-hfds MAX_ARRAY_SIZE
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -7999,8 +7998,6 @@ meth public void setClassAssertionStatus(java.lang.String,boolean)
 meth public void setDefaultAssertionStatus(boolean)
 meth public void setPackageAssertionStatus(java.lang.String,boolean)
 supr java.lang.Object
-hfds assertionLock,classAssertionStatus,classes,defaultAssertionStatus,defaultDomain,loadedLibraryNames,nativeLibraries,nativeLibraryContext,nocerts,package2certs,packageAssertionStatus,packages,parallelLockMap,parent,scl,sclSet,sys_paths,systemNativeLibraries,usr_paths
-hcls NativeLibrary,ParallelLoaders
 
 CLSS public abstract interface java.lang.Cloneable
 
@@ -8028,7 +8025,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -8037,7 +8033,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public abstract interface java.lang.Iterable<%0 extends java.lang.Object>
 meth public abstract java.util.Iterator<{java.lang.Iterable%0}> iterator()
@@ -8065,7 +8060,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -8088,8 +8082,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -8137,7 +8129,6 @@ meth public static java.net.PasswordAuthentication requestPasswordAuthentication
 meth public static java.net.PasswordAuthentication requestPasswordAuthentication(java.net.InetAddress,int,java.lang.String,java.lang.String,java.lang.String)
 meth public static void setDefault(java.net.Authenticator)
 supr java.lang.Object
-hfds requestingAuthType,requestingHost,requestingPort,requestingPrompt,requestingProtocol,requestingScheme,requestingSite,requestingURL,theAuthenticator
 
 CLSS public abstract java.util.AbstractCollection<%0 extends java.lang.Object>
 cons protected init()
@@ -8157,7 +8148,6 @@ meth public java.lang.Object[] toArray()
 meth public java.lang.String toString()
 meth public void clear()
 supr java.lang.Object
-hfds MAX_ARRAY_SIZE
 
 CLSS public abstract java.util.AbstractList<%0 extends java.lang.Object>
 cons protected init()
@@ -8180,7 +8170,6 @@ meth public void clear()
 meth public {java.util.AbstractList%0} remove(int)
 meth public {java.util.AbstractList%0} set(int,{java.util.AbstractList%0})
 supr java.util.AbstractCollection<{java.util.AbstractList%0}>
-hcls Itr,ListItr
 
 CLSS public java.util.ArrayList<%0 extends java.lang.Object>
 cons public init()
@@ -8222,8 +8211,6 @@ meth public {java.util.ArrayList%0} get(int)
 meth public {java.util.ArrayList%0} remove(int)
 meth public {java.util.ArrayList%0} set(int,{java.util.ArrayList%0})
 supr java.util.AbstractList<{java.util.ArrayList%0}>
-hfds DEFAULTCAPACITY_EMPTY_ELEMENTDATA,DEFAULT_CAPACITY,EMPTY_ELEMENTDATA,MAX_ARRAY_SIZE,elementData,serialVersionUID,size
-hcls ArrayListSpliterator,Itr,ListItr,SubList
 
 CLSS public abstract interface java.util.Collection<%0 extends java.lang.Object>
 intf java.lang.Iterable<{java.util.Collection%0}>
@@ -8649,7 +8636,6 @@ meth public void setReader(java.io.Reader)
 meth public void setSystemId(java.io.File)
 meth public void setSystemId(java.lang.String)
 supr java.lang.Object
-hfds inputStream,publicId,reader,systemId
 
 CLSS public abstract interface org.w3c.dom.ls.LSInput
 meth public abstract boolean getCertifiedText()
@@ -8724,7 +8710,6 @@ meth public java.lang.String getMessage()
 meth public java.lang.String toString()
 meth public java.lang.Throwable getCause()
 supr java.lang.Exception
-hfds exception,serialVersionUID
 
 CLSS public org.xml.sax.SAXParseException
 cons public init(java.lang.String,java.lang.String,java.lang.String,int,int)
@@ -8737,7 +8722,6 @@ meth public java.lang.String getPublicId()
 meth public java.lang.String getSystemId()
 meth public java.lang.String toString()
 supr org.xml.sax.SAXException
-hfds columnNumber,lineNumber,publicId,serialVersionUID,systemId
 
 CLSS public abstract interface org.xml.sax.XMLFilter
 intf org.xml.sax.XMLReader
@@ -8802,5 +8786,4 @@ meth public void startPrefixMapping(java.lang.String,java.lang.String) throws or
 meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 meth public void warning(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
 supr java.lang.Object
-hfds contentHandler,dtdHandler,entityResolver,errorHandler,locator,parent
 

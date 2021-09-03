@@ -73,6 +73,7 @@ public class StructureAnalyzer implements StructureScanner {
     private Map<ASTClass, Set<FieldNode>> fields;
     private Map<ASTClass, Set<PropertyNode>> properties;
     private List<ASTMethod> methods;
+    private Map<String, ASTClass> classes = new HashMap<>();
     
     private static final Logger LOG = Logger.getLogger(StructureAnalyzer.class.getName());
 
@@ -170,7 +171,10 @@ public class StructureAnalyzer implements StructureScanner {
             if (node instanceof ClassNode) {
                 ClassNode classNode = (ClassNode) node;
                 ASTClass co = new ASTClass(classNode, classNode.getName());
-
+                classes.put(co.getFqn(), co);
+                if (parent == null && classNode.getOuterClass() != null) {
+                    parent = classes.get(classNode.getOuterClass().getName());
+                }
                 if (parent != null) {
                     parent.addChild(co);
                 } else {
@@ -215,7 +219,9 @@ public class StructureAnalyzer implements StructureScanner {
 
         @SuppressWarnings("unchecked")
         List<ASTNode> list = ASTUtils.children(node);
-
+        
+        // classes are collected from the whole source, but the toplevel classes come
+        // first/earlier than inners.
         for (ASTNode child : list) {
             path.descend(child);
             scan(result, child, path, in, includes, parent);

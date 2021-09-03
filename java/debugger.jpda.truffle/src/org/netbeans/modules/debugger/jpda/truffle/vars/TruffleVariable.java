@@ -61,6 +61,10 @@ public interface TruffleVariable {
 
     ObjectVariable setValue(JPDADebugger debugger, String newExpression);
 
+    default boolean isReceiver() {
+        return false;
+    }
+
     public static TruffleVariable get(Variable var) {
         return TruffleVariableImpl.get(var);
     }

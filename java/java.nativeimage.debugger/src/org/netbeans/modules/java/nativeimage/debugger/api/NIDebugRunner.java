@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import org.netbeans.api.debugger.DebuggerEngine;
@@ -32,6 +33,10 @@ import org.netbeans.modules.java.nativeimage.debugger.breakpoints.JPDABreakpoint
 import org.netbeans.modules.java.nativeimage.debugger.displayer.JavaFrameDisplayer;
 import org.netbeans.modules.java.nativeimage.debugger.displayer.JavaVariablesDisplayer;
 import static org.netbeans.spi.project.ActionProvider.COMMAND_DEBUG;
+
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
+import org.openide.util.NbBundle;
 
 /**
  * Runs debugger with Java translations on a native image.
@@ -68,16 +73,93 @@ public final class NIDebugRunner {
         JPDABreakpointsHandler breakpointsHandler = new JPDABreakpointsHandler(niFile, debugger);
         File workingDirectory = new File(System.getProperty("user.dir"));
         List<String> command = arguments.isEmpty() ? Collections.singletonList(niFile.getAbsolutePath()) : join(niFile.getAbsolutePath(), arguments);
+        DialogDisplayer displayer = DialogDisplayer.getDefault(); // The launcher might provide a special displayer in the lookup. This is why we grab it eagerly.
         debugger.start(
                 command,
                 workingDirectory,
                 debuggerCommand,
                 COMMAND_DEBUG + " " + niFile.getName(),
                 executionDescriptor,
-                startedEngine).thenRun(() -> {
+                (engine) -> {
+                    if (startedEngine != null) {
+                        startedEngine.accept(engine);
+                    }
+                }).thenRun(() -> {
                     breakpointsHandler.dispose();
                 });
+        checkVersion(debugger.getVersion(), displayer);
         return debugger;
+    }
+
+    /**
+     * Attach debugger to a Native Image.
+     *
+     * @param niFile Native Image file
+     * @param processId a process to attach to
+     * @param debuggerCommand the debugger command
+     * @param project a project associated with the native image, or <code>null</code>
+     * @param startedEngine consumer of the started {@link DebuggerEngine}.
+     * @return an instance of {@link NIDebugger}.
+     * @throws IllegalStateException when the native debugger is not available.
+     * @since 0.3
+     */
+    public static NIDebugger attach(File niFile, long processId, String debuggerCommand, Project project, Consumer<DebuggerEngine> startedEngine) throws IllegalStateException {
+        JavaVariablesDisplayer variablesDisplayer = new JavaVariablesDisplayer();
+        JavaFrameDisplayer frameDisplayer = new JavaFrameDisplayer(project);
+        NIDebugger debugger = NIDebugger.newBuilder()
+                .frameDisplayer(frameDisplayer)
+                .variablesDisplayer(variablesDisplayer)
+                .build();
+        variablesDisplayer.setDebugger(debugger);
+        JPDABreakpointsHandler breakpointsHandler = new JPDABreakpointsHandler(niFile, debugger);
+        DialogDisplayer displayer = DialogDisplayer.getDefault(); // The launcher might provide a special displayer in the lookup. This is why we grab it eagerly.
+        CompletableFuture<Void> future = debugger.attach(
+                niFile.getAbsolutePath(),
+                processId,
+                debuggerCommand,
+                (engine) -> {
+                    if (startedEngine != null) {
+                        startedEngine.accept(engine);
+                    }
+                }).thenRun(() -> {
+                    breakpointsHandler.dispose();
+                });
+        if (future.isDone()) {
+            throw new IllegalStateException("Failed to attach.");
+        }
+        checkVersion(debugger.getVersion(), displayer);
+        return debugger;
+    }
+
+    @NbBundle.Messages("MSG_GDBVersionBug=gdb bug #26139 will affect the debugging.\nWe recommend to upgrade to version 10.1 or newer.")
+    private static void checkVersion(String version, DialogDisplayer displayer) {
+        String gdbVersion = "GNU gdb";
+        int i = version.indexOf(gdbVersion);
+        if (i >= 0) {
+            i += gdbVersion.length();
+            i = skipParanthesis(version, i);
+            int eol = version.indexOf("\\n", i);
+            if (eol > 0) {
+                String v = version.substring(i, eol).trim();
+                if (v.startsWith("8.") && !v.startsWith("8.0") || v.startsWith("9.")) {
+                    NotifyDescriptor descriptor = new NotifyDescriptor.Message(Bundle.MSG_GDBVersionBug(), NotifyDescriptor.WARNING_MESSAGE);
+                    displayer.notifyLater(descriptor);
+                }
+            }
+        }
+    }
+
+    private static int skipParanthesis(String str, int i) {
+        while (i < str.length() && Character.isWhitespace(str.charAt(i))) {
+            i++;
+        }
+        if (i < str.length() && '(' == str.charAt(i)) {
+            int p = str.indexOf(')', i + 1);
+            if (p > 0) {
+                i = p + 1;
+            }
+        }
+        return i;
     }
 
     private static List<String> join(String first, List<String> next) {

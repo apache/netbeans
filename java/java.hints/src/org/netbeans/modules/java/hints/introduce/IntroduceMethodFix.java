@@ -36,7 +36,6 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import java.awt.GraphicsEnvironment;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -67,7 +66,6 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ModificationResult;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
@@ -77,6 +75,10 @@ import org.netbeans.api.java.source.matching.Matcher;
 import org.netbeans.api.java.source.matching.Occurrence;
 import org.netbeans.api.java.source.matching.Pattern;
 import org.netbeans.modules.java.hints.errors.Utilities;
+import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.modules.parsing.api.UserTask;
+import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.Fix;
 import org.openide.DialogDescriptor;
@@ -275,7 +277,7 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
         List<TargetDescription> viableTargets = IntroduceExpressionBasedMethodFix.computeViableTargets(info, block, statementsToWrap, duplicates, cancel, allIfaces);
         IntroduceMethodFix imf = null;
         if (viableTargets != null && !viableTargets.isEmpty()) {
-            imf = new IntroduceMethodFix(info.getJavaSource(), h, params, additionaLocalTypes, additionaLocalNames, TypeMirrorHandle.create(returnType), returnAssignTo, declareVariableForReturnValue, exceptionHandles, exits, exitsFromAllBranches, statements[0], statements[1], 
+            imf = new IntroduceMethodFix(info.getSnapshot().getSource(), h, params, additionaLocalTypes, additionaLocalNames, TypeMirrorHandle.create(returnType), returnAssignTo, declareVariableForReturnValue, exceptionHandles, exits, exitsFromAllBranches, statements[0], statements[1],
                     duplicatesCount, scanner.getUsedTypeVars(), end, viableTargets);
             imf.setTargetIsInterface(allIfaces.get());
         }
@@ -389,8 +391,8 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
     private final List<TreePathHandle> typeVars;
     private final Collection<TargetDescription> targets;
 
-    public IntroduceMethodFix(JavaSource js, TreePathHandle parentBlock, List<TreePathHandle> parameters, List<TypeMirrorHandle> additionalLocalTypes, List<String> additionalLocalNames, TypeMirrorHandle returnType, TreePathHandle returnAssignTo, boolean declareVariableForReturnValue, Set<TypeMirrorHandle> thrownTypes, List<TreePathHandle> exists, boolean exitsFromAllBranches, int from, int to, int duplicatesCount, List<TreePathHandle> typeVars, int offset, Collection<TargetDescription> targets) {
-        super(js, parentBlock, duplicatesCount, offset);
+    public IntroduceMethodFix(Source source, TreePathHandle parentBlock, List<TreePathHandle> parameters, List<TypeMirrorHandle> additionalLocalTypes, List<String> additionalLocalNames, TypeMirrorHandle returnType, TreePathHandle returnAssignTo, boolean declareVariableForReturnValue, Set<TypeMirrorHandle> thrownTypes, List<TreePathHandle> exists, boolean exitsFromAllBranches, int from, int to, int duplicatesCount, List<TreePathHandle> typeVars, int offset, Collection<TargetDescription> targets) {
+        super(source, parentBlock, duplicatesCount, offset);
         this.parameters = parameters;
         this.additionalLocalTypes = additionalLocalTypes;
         this.additionalLocalNames = additionalLocalNames;
@@ -421,7 +423,7 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
         String caption = NbBundle.getMessage(IntroduceHint.class, "CAP_IntroduceMethod");
         DialogDescriptor dd = new DialogDescriptor(panel, caption, true, new Object[]{btnOk, btnCancel}, btnOk, DialogDescriptor.DEFAULT_ALIGN, null, null);
         NotificationLineSupport notifier = dd.createNotificationLineSupport();
-        MethodValidator val = new MethodValidator(js, parameters, returnType);
+        MethodValidator val = new MethodValidator(source, parameters, returnType);
         panel.setNotifier(notifier);
         panel.setValidator(val);
         panel.setOkButton(btnOk);
@@ -433,17 +435,17 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
         final Set<Modifier> access = panel.getAccess();
         final boolean replaceOther = panel.getReplaceOther();
         final TargetDescription target = panel.getSelectedTarget();
-        js.runModificationTask(new TaskImpl(access, name, target, replaceOther, val.getResult(), redoReferences)).commit();
+        ModificationResult.runModificationTask(Collections.singleton(source), new TaskImpl(access, name, target, replaceOther, val.getResult(), redoReferences)).commit();
         return null;
     }
 
     @Override
-    public ModificationResult getModificationResult() throws IOException {
+    public ModificationResult getModificationResult() throws ParseException {
         ModificationResult result = null;
         int counter = 0;
         do {
             try {
-                result = js.runModificationTask(new TaskImpl(EnumSet.of(Modifier.PRIVATE), "method" + (counter != 0 ? String.valueOf(counter) : ""), targets.iterator().next(), true, null, false));
+                result = ModificationResult.runModificationTask(Collections.singleton(source), new TaskImpl(EnumSet.of(Modifier.PRIVATE), "method" + (counter != 0 ? String.valueOf(counter) : ""), targets.iterator().next(), true, null, false));
             } catch (Exception e) {
                 counter++;
             }
@@ -471,7 +473,7 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
         
     }
 
-    private class TaskImpl implements Task<WorkingCopy> {
+    private class TaskImpl extends UserTask {
         private final Set<Modifier> access;
         private final String name;
         private final TargetDescription target;
@@ -792,7 +794,8 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
             return dupeRealArguments;
         }
 
-        public void run(WorkingCopy copy) throws Exception {
+        public void run(ResultIterator resultIterator) throws Exception {
+            WorkingCopy copy = WorkingCopy.get(resultIterator.getParserResult());
             copy.toPhase(JavaSource.Phase.RESOLVED);
             this.copy = copy;
             

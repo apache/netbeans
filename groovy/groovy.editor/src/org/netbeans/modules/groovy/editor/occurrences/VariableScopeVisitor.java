@@ -169,20 +169,12 @@ public final class VariableScopeVisitor extends TypeVisitor {
                 }
 
             // #234000
-            } else if (leaf instanceof BlockStatement) {
-                ASTNode root = path.root();
-                if (root instanceof ModuleNode) {
-                    for (Map.Entry<String, ImportNode> entry : ((ModuleNode) root).getStaticImports().entrySet()) {
-                        String alias = entry.getKey();
-
-                        if (!alias.equals(variableExpression.getName())) {
-                            continue;
-                        }
-
-                        OffsetRange range = ASTUtils.getNextIdentifierByName(doc, alias, cursorOffset);
-                        if (range.containsInclusive(cursorOffset)) {
-                            occurrences.add(variableExpression);
-                        }
+            } else if (leaf instanceof ImportNode) {
+                String alias = ((ImportNode)leaf).getAlias();
+                if (alias != null && alias.equals(variableExpression.getName())) {
+                    OffsetRange range = ASTUtils.getNextIdentifierByName(doc, alias, cursorOffset);
+                    if (range.containsInclusive(cursorOffset)) {
+                        occurrences.add(variableExpression);
                     }
                 }
             }
@@ -349,19 +341,12 @@ public final class VariableScopeVisitor extends TypeVisitor {
             }
 
             // #234000
-            if (leaf instanceof BlockStatement) {
-                ASTNode root = path.root();
-                if (root instanceof ModuleNode) {
-                    for (Map.Entry<String, ImportNode> entry : ((ModuleNode) root).getStaticImports().entrySet()) {
-                        String alias = entry.getKey();
-                        if (!alias.equals(methodCall.getMethodAsString())) {
-                            continue;
-                        }
-
-                        OffsetRange range = ASTUtils.getNextIdentifierByName(doc, alias, cursorOffset);
-                        if (range.containsInclusive(cursorOffset)) {
-                            occurrences.add(methodCall);
-                        }
+            if (leaf instanceof ImportNode) {
+                String alias = ((ImportNode) leaf).getAlias();
+                if (alias != null && alias.equals(methodCall.getMethodAsString())) {
+                    OffsetRange range = ASTUtils.getNextIdentifierByName(doc, alias, cursorOffset);
+                    if (range.containsInclusive(cursorOffset)) {
+                        occurrences.add(methodCall);
                     }
                 }
             }
@@ -512,27 +497,26 @@ public final class VariableScopeVisitor extends TypeVisitor {
 
     @Override
     public void visitImports(ModuleNode node) {
-        if (FindTypeUtils.isCaretOnClassNode(path, doc, cursorOffset)) {
-            for (ImportNode importNode : node.getImports()) {
-                addOccurrences(importNode.getType(), (ClassNode) FindTypeUtils.findCurrentNode(path, doc, cursorOffset));
+        if (node != null) {
+            if (FindTypeUtils.isCaretOnClassNode(path, doc, cursorOffset)) {
+                for (ImportNode importNode : node.getImports()) {
+                    addOccurrences(importNode.getType(), (ClassNode) FindTypeUtils.findCurrentNode(path, doc, cursorOffset));
+                }
             }
-        } else {
-            // #233954
-            if (leaf instanceof ConstantExpression && leafParent instanceof MethodCallExpression) {
-                addAliasOccurrences(node, ((MethodCallExpression) leafParent).getMethodAsString());
-            }
-
-            // #234000
-            if (leaf instanceof VariableExpression) {
-                addAliasOccurrences(node, ((VariableExpression) leaf).getName());
-            }
-
-            // For both: #233954 and #234000
-            if (leaf instanceof BlockStatement) {
-                for (Map.Entry<String, ImportNode> entry : node.getStaticImports().entrySet()) {
-                    OffsetRange range = ASTUtils.getNextIdentifierByName(doc, entry.getKey(), cursorOffset);
+            for (ImportNode importStaticNode : node.getStaticImports().values()) {
+                // #233954
+                if (leaf instanceof ConstantExpression && leafParent instanceof MethodCallExpression) {
+                    addAliasOccurrence(importStaticNode, ((MethodCallExpression) leafParent).getMethodAsString());
+                }
+                // #234000
+                if (leaf instanceof VariableExpression) {
+                    addAliasOccurrence(importStaticNode, ((VariableExpression) leaf).getName());
+                }
+                // For both: #233954 and #234000
+                if (leaf instanceof ImportNode) {
+                    OffsetRange range = ASTUtils.getNextIdentifierByName(doc, importStaticNode.getAlias(), cursorOffset);
                     if (range.containsInclusive(cursorOffset)) {
-                        occurrences.add(new FakeASTNode(entry.getValue().getType(), entry.getKey()));
+                        occurrences.add(new FakeASTNode(importStaticNode.getType(), importStaticNode.getAlias()));
                     }
                 }
             }
@@ -540,11 +524,9 @@ public final class VariableScopeVisitor extends TypeVisitor {
         super.visitImports(node);
     }
 
-    private void addAliasOccurrences(ModuleNode moduleNode, String findingName) {
-        for (Map.Entry<String, ImportNode> entry : moduleNode.getStaticImports().entrySet()) {
-            if (findingName.equals(entry.getKey())) {
-                occurrences.add(new FakeASTNode(entry.getValue().getType(), entry.getKey()));
-            }
+    private void addAliasOccurrence(ImportNode node, String findingName) {
+        if (findingName.equals(node.getAlias())) {
+            occurrences.add(new FakeASTNode(node.getType(), node.getAlias()));
         }
     }
 

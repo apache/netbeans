@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.18
+#Version 1.19
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -32,7 +32,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -41,7 +40,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -70,7 +68,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -93,8 +90,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -1399,6 +1394,7 @@ fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVer
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_5_0_1
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_5_1_0
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_6
+fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_6_1_0
 meth public boolean equals(org.netbeans.modules.glassfish.tooling.data.GlassFishVersion)
 meth public boolean equalsMajorMinor(org.netbeans.modules.glassfish.tooling.data.GlassFishVersion)
 meth public java.lang.String toFullString()
@@ -1419,7 +1415,7 @@ meth public static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion 
 meth public static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion valueOf(java.lang.String)
 meth public static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion[] values()
 supr java.lang.Enum<org.netbeans.modules.glassfish.tooling.data.GlassFishVersion>
-hfds GF_1_STR,GF_1_STR_NEXT,GF_2_1_1_STR,GF_2_1_1_STR_NEXT,GF_2_1_STR,GF_2_1_STR_NEXT,GF_2_STR,GF_2_STR_NEXT,GF_3_0_1_STR,GF_3_0_1_STR_NEXT,GF_3_1_1_STR,GF_3_1_1_STR_NEXT,GF_3_1_2_2_STR,GF_3_1_2_3_STR,GF_3_1_2_4_STR,GF_3_1_2_5_STR,GF_3_1_2_STR,GF_3_1_2_STR_NEXT,GF_3_1_STR,GF_3_1_STR_NEXT,GF_3_STR,GF_3_STR_NEXT,GF_4_0_1_STR,GF_4_0_1_STR_NEXT,GF_4_1_1_STR,GF_4_1_1_STR_NEXT,GF_4_1_2_STR,GF_4_1_2_STR_NEXT,GF_4_1_STR,GF_4_1_STR_NEXT,GF_4_STR,GF_4_STR_NEXT,GF_5_0_1_STR,GF_5_0_1_STR_NEXT,GF_5_1_0_STR,GF_5_1_0_STR_NEXT,GF_5_STR,GF_5_STR_NEXT,GF_6_STR,GF_6_STR_NEXT,build,major,minor,stringValuesMap,update,value
+hfds GF_1_STR,GF_1_STR_NEXT,GF_2_1_1_STR,GF_2_1_1_STR_NEXT,GF_2_1_STR,GF_2_1_STR_NEXT,GF_2_STR,GF_2_STR_NEXT,GF_3_0_1_STR,GF_3_0_1_STR_NEXT,GF_3_1_1_STR,GF_3_1_1_STR_NEXT,GF_3_1_2_2_STR,GF_3_1_2_3_STR,GF_3_1_2_4_STR,GF_3_1_2_5_STR,GF_3_1_2_STR,GF_3_1_2_STR_NEXT,GF_3_1_STR,GF_3_1_STR_NEXT,GF_3_STR,GF_3_STR_NEXT,GF_4_0_1_STR,GF_4_0_1_STR_NEXT,GF_4_1_1_STR,GF_4_1_1_STR_NEXT,GF_4_1_2_STR,GF_4_1_2_STR_NEXT,GF_4_1_STR,GF_4_1_STR_NEXT,GF_4_STR,GF_4_STR_NEXT,GF_5_0_1_STR,GF_5_0_1_STR_NEXT,GF_5_1_0_STR,GF_5_1_0_STR_NEXT,GF_5_STR,GF_5_STR_NEXT,GF_6_STR,GF_6_STR_NEXT,GF_6_1_0_STR,GF_6_1_0_STR_NEXT,build,major,minor,stringValuesMap,update,value
 
 CLSS public org.netbeans.modules.glassfish.tooling.data.IdeContext
 cons public init()
@@ -2461,3 +2457,4 @@ meth public void startPrefixMapping(java.lang.String,java.lang.String) throws or
 meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 meth public void warning(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
 supr java.lang.Object
+

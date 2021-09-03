@@ -21,7 +21,9 @@ package org.netbeans.modules.lsp.client.bindings;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 import java.util.function.Consumer;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
@@ -34,7 +36,6 @@ import org.netbeans.modules.parsing.spi.indexing.CustomIndexerFactory;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.EditableProperties;
 import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
 
@@ -57,7 +58,8 @@ public class CustomIndexerImpl extends CustomIndexer {
                 }
             }
 
-            Set<String> mimeTypes = new HashSet<>(props.values());
+            @SuppressWarnings("unchecked")
+            Set<String> mimeTypes = new HashSet<>((Collection) props.values());
             Project prj = FileOwnerQuery.getOwner(root);
 
             if (prj != null) {
@@ -72,8 +74,8 @@ public class CustomIndexerImpl extends CustomIndexer {
 
     private static final String INDEX_FILE_NAME = "index.properties";
 
-    private static void handleStoredFiles(Context context, Consumer<EditableProperties> handleProperties) {
-        EditableProperties props = new EditableProperties(true);
+    private static void handleStoredFiles(Context context, Consumer<Properties> handleProperties) {
+        Properties props = new Properties();
         FileObject index = context.getIndexFolder().getFileObject(INDEX_FILE_NAME);
 
         if (index != null) {
@@ -84,7 +86,7 @@ public class CustomIndexerImpl extends CustomIndexer {
             }
         }
 
-        EditableProperties old = props.cloneProperties();
+        Properties old = (Properties) props.clone();
 
         handleProperties.accept(props);
 
@@ -94,7 +96,7 @@ public class CustomIndexerImpl extends CustomIndexer {
                     index = context.getIndexFolder().createData(INDEX_FILE_NAME);
                 }
                 try (OutputStream out = index.getOutputStream()) {
-                    props.store(out);
+                    props.store(out, "");
                 }
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);

@@ -44,9 +44,10 @@ import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
-import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -55,8 +56,8 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Dusan Balek
  */
-@ServiceProvider(service = CodeGenerator.class, position = 40)
-public final class EqualsHashCodeGenerator extends CodeGenerator {
+@ServiceProvider(service = CodeActionsProvider.class, position = 40)
+public final class EqualsHashCodeGenerator extends CodeActionsProvider {
 
     public static final String GENERATE_EQUALS =  "java.generate.equals";
     public static final String GENERATE_HASH_CODE =  "java.generate.hashCode";
@@ -74,11 +75,16 @@ public final class EqualsHashCodeGenerator extends CodeGenerator {
         "DN_GenerateHashCode=Generate hashCode()...",
         "DN_GenerateEqualsHashCode=Generate equals() and hashCode()...",
     })
-    public List<CodeAction> getCodeActions(CompilationInfo info, CodeActionParams params) {
+    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
         List<String> only = params.getContext().getOnly();
         if (only == null || !only.contains(CodeActionKind.Source)) {
             return Collections.emptyList();
         }
+        CompilationController info = CompilationController.get(resultIterator.getParserResult());
+        if (info == null) {
+            return Collections.emptyList();
+        }
+        info.toPhase(JavaSource.Phase.RESOLVED);
         int offset = getOffset(info, params.getRange().getStart());
         TreePath tp = info.getTreeUtilities().pathFor(offset);
         tp = info.getTreeUtilities().getPathElementOfKind(Tree.Kind.CLASS, tp);

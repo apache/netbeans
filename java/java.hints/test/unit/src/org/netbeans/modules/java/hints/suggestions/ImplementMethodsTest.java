@@ -44,7 +44,7 @@ public class ImplementMethodsTest {
                 .assertOutput("package test;\n" +
                               "public abstract class Test implements Runnable {\n" +
                               "    public void run() {\n" +
-                              "        throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates.\n" +
+                              "        throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
                               "    }\n" +
                               "}\n");
     }

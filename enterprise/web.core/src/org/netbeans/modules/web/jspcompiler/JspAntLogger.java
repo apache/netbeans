@@ -143,11 +143,7 @@ public final class JspAntLogger extends AntLogger {
                     // and create the hyperlink if needed
                     if (jspSource != null) {
                         if (messageLevel <= sessionLevel && !event.isConsumed()) {
-                            try {
-                                session.println(file, true, session.createStandardHyperlink(jspSource.getURL(), jspErrorText, lineNumber, columnNumber, -1, -1));
-                            } catch (FileStateInvalidException e) {
-                                assert false : e;
-                            }
+                            session.println(file, true, session.createStandardHyperlink(jspSource.toURL(), jspErrorText, lineNumber, columnNumber, -1, -1));
                         }
                     }
                 }

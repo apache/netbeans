@@ -81,7 +81,15 @@ public abstract class AdvancedPanel extends javax.swing.JPanel {
     }
 
     private ComboBoxModel<Distribution> createDistributionComboboxModel() {
-        Distribution[] distributions = {Distribution.NONE, Distribution.AOJ, Distribution.CORRETTO, Distribution.DRAGONWELL, Distribution.LIBERICA, Distribution.OJDK_BUILD, Distribution.SAP_MACHINE, Distribution.ZULU};
+        List<Distribution> allDistros = Distribution.getDistributions();
+        allDistros.sort((o1, o2) -> {
+            return o1.getUiString().compareTo(o2.getUiString());
+        });
+        List<Distribution> distros = new ArrayList<>(1 + allDistros.size());
+        distros.add(Distribution.NONE);
+        distros.addAll(allDistros);
+
+        Distribution[] distributions = distros.toArray(new Distribution[0]);
 
         return new DefaultComboBoxModel<>(distributions);
     }

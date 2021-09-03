@@ -20,6 +20,8 @@ METHOD     asList()                                   List
 METHOD     asSynchronized()                           List
 METHOD     asType(Class)                              Object
 METHOD     asUnmodifiable()                           List
+METHOD     average()                                  Object
+METHOD     average(Closure)                           Object
 METHOD     bufferedIterator()                         BufferedIterator
 METHOD     chop(int[])                                List
 METHOD     clear()                         [PUBLIC]   void
@@ -188,6 +190,10 @@ METHOD     reverse(boolean)                           List
 METHOD     reverseEach(Closure)                       List
 METHOD     set(int, E)                     [PUBLIC]   E
 METHOD     setMetaClass(MetaClass)                    void
+METHOD     shuffle()                                  void
+METHOD     shuffle(Random)                            void
+METHOD     shuffled()                                 List
+METHOD     shuffled(Random)                           List
 METHOD     size()                          [PUBLIC]   int
 METHOD     sleep(long)                                void
 METHOD     sleep(long, Closure)                       void
@@ -203,7 +209,7 @@ METHOD     sprintf(String, Object)                    String
 METHOD     sprintf(String, Object)                    String
 METHOD     step(int)                       [PUBLIC]   List<T>
 METHOD     step(int, Closure)              [PUBLIC]   void
-METHOD     stream()                        [PUBLIC]   Stream<E>
+METHOD     stream()                                   Stream
 METHOD     subList(int, int)               [PUBLIC]   List<E>
 METHOD     subsequences()                             Set
 METHOD     sum()                                      Object

@@ -223,7 +223,7 @@ public class JavaExecTokenProviderTest extends NbTestCase {
         plugins.add("application");
         GradleBaseProjectTrampoline.setPlugins(gbp, plugins);
         
-        ActionMapping mapping = ActionToTaskUtils.getActiveMapping(ActionProvider.COMMAND_RUN, project);
+        ActionMapping mapping = ActionToTaskUtils.getActiveMapping(ActionProvider.COMMAND_RUN, project, Lookup.EMPTY);
         String argLine = mapping.getArgs();
         final String[] args = RunUtils.evaluateActionArgs(project, ActionProvider.COMMAND_RUN, argLine, ctx);
         List<String> full = Arrays.asList(args);

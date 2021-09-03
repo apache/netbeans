@@ -136,7 +136,7 @@ public class JavaExecTokenProvider implements ReplaceTokenProvider {
         List<String> extraArgs = new ArrayList<>();
         if (mode != null) {
             for (StartupExtender group : StartupExtender.getExtenders(new AbstractLookup(ic), mode)) {
-                extraArgs.addAll(group.getArguments());
+                extraArgs.addAll(group.getRawArguments());
             }
         }
         

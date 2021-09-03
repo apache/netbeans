@@ -58,4 +58,15 @@
             More specificly: https://gradle.com/brand_assets/Gradle_Elephant_Icon_Assets.zip
         </comment>
     </fileset>
+    <fileset>
+        <file>test/unit/src/org/netbeans/modules/gradle/execute/configs-wthout-default.xml</file>
+        <file>test/unit/src/org/netbeans/modules/gradle/execute/writeConfigurations.pass.xml</file>
+        <file>test/unit/src/org/netbeans/modules/gradle/execute/writeConfigurationsWithActive-nonshared.pass.xml</file>
+        <file>test/unit/src/org/netbeans/modules/gradle/execute/writeConfigurationsWithActive-shared.pass.xml</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED">
+            Test-only golden files, which should have content exactly as user config files generated at runtime.
+            No license should appear in user files.
+        </comment>
+    </fileset>
 </licenseinfo>

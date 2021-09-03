@@ -905,9 +905,9 @@ public class CallStackFrameImpl implements CallStackFrame {
             StackFrame frame = getStackFrame();
             debugger.popFrames(StackFrameWrapper.thread(frame), frame);
         } catch (InternalExceptionWrapper ex) {
-            // Ignored
+            throw new InvalidStackFrameException(ex.getLocalizedMessage());
         } catch (VMDisconnectedExceptionWrapper ex) {
-            // Ignored
+            throw new InvalidStackFrameException(ex.getLocalizedMessage());
         } catch (InvalidStackFrameExceptionWrapper ex) {
             throw ex.getCause();
         }

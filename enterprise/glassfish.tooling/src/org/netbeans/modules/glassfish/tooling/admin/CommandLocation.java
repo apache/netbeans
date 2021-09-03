@@ -22,6 +22,7 @@ import java.io.File;
 import java.net.URI;
 import org.netbeans.modules.glassfish.tooling.data.GlassFishServer;
 import org.netbeans.modules.glassfish.tooling.utils.ServerUtils;
+import org.openide.util.BaseUtilities;
 
 /**
  * Locations command used to determine locations (installation, domain etc.)
@@ -80,8 +81,8 @@ public class CommandLocation extends Command {
                     = resultMap.getValue().get(DOMAIN_ROOT_RESULT_KEY);
             String domainRootServer = ServerUtils.getDomainPath(server);
             if (domainRootResult != null && domainRootServer != null) {
-                URI rootResult = new File(domainRootResult).toURI().normalize();
-                URI rootServer = new File(domainRootServer).toURI().normalize();
+                URI rootResult = BaseUtilities.normalizeURI(new File(domainRootResult).toURI());
+                URI rootServer = BaseUtilities.normalizeURI(new File(domainRootServer).toURI());
                 if (rootResult != null && rootServer != null) {
                     result = rootServer.equals(rootResult);
                 } 

@@ -22,8 +22,10 @@ package org.netbeans.modules.groovy.editor.api.parser;
 import groovy.lang.GroovyClassLoader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -33,20 +35,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
-import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.CompileUnit;
 import org.codehaus.groovy.ast.ModuleNode;
-import org.codehaus.groovy.classgen.GeneratorContext;
-import org.codehaus.groovy.control.CompilationFailedException;
-import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.ErrorCollector;
 import org.codehaus.groovy.control.Phases;
-import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.control.messages.Message;
 import org.codehaus.groovy.control.messages.SimpleMessage;
 import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
 import org.codehaus.groovy.syntax.SyntaxException;
+import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.lexer.Token;
@@ -63,18 +61,22 @@ import org.netbeans.modules.groovy.editor.compiler.error.GroovyError;
 import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 import org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId;
 import org.netbeans.modules.groovy.editor.api.lexer.LexUtilities;
+import org.netbeans.modules.groovy.editor.compiler.ParsingCompilerCustomizer;
+import org.netbeans.modules.groovy.editor.compiler.SimpleTransformationCustomizer;
 import org.netbeans.modules.groovy.editor.compiler.error.CompilerErrorResolver;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Task;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
+import org.netbeans.modules.parsing.spi.indexing.support.IndexingSupport;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 
 /**
- *
+ * Groovy Parser interface. This class should not be probably public. Do not use it outside the module.
  * @author Martin Adamek
  */
 public class GroovyParser extends Parser {
@@ -124,8 +126,16 @@ public class GroovyParser extends Parser {
     @Override
     public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) throws ParseException {
         cancelled.set(false);
+        
+        if (!GroovyUtils.isIndexingEnabled()) {
+            if (IndexingSupport.isIndexingTask(task)) { // NOI18N
+                lastResult = createParseResult(snapshot, null, null);
+                return;
+            }
+        }
 
         Context context = new Context(snapshot, event);
+        context.setIndexingTask(task);
         final Set<Error> errors = new HashSet<Error>();
         context.errorHandler = new ParseErrorHandler() {
 
@@ -161,7 +171,9 @@ public class GroovyParser extends Parser {
         int offset = context.caretOffset;
 
         // Let caretOffset represent the offset of the portion of the buffer we'll be operating on
-        if ((sanitizing == Sanitize.ERROR_DOT) || (sanitizing == Sanitize.ERROR_LINE)) {
+        if (sanitizing == Sanitize.ERROR_DOT) {
+            offset = context.errorOffset + 1;
+        } else if (sanitizing == Sanitize.ERROR_LINE || sanitizing == Sanitize.PRIOR_ERROR_LINE) {
             offset = context.errorOffset;
         }
 
@@ -249,6 +261,41 @@ public class GroovyParser extends Parser {
                         context.sanitizedSource = sb.toString();
                         context.sanitizedContents = doc.substring(lineStart, lineEnd);
                         return true;
+                    }
+                } else if  (sanitizing == Sanitize.PRIOR_ERROR_LINE) {
+                    int errRowStart = GroovyUtils.getRowStart(doc, offset);
+                    if (errRowStart > 0) {
+                        int lineEnd = GroovyUtils.getRowLastNonWhite(doc, errRowStart - 1);
+                        if (lineEnd != -1) {
+                            lineEnd++; // lineEnd is exclusive, not inclusive
+                            StringBuilder sb = new StringBuilder(doc.length());
+                            int lineStart = GroovyUtils.getRowStart(doc, errRowStart - 1);
+                            if (lineEnd >= lineStart+2) {
+                                sb.append(doc.substring(0, lineStart));
+                                sb.append("//");
+                                int rest = lineStart + 2;
+                                if (rest < doc.length()) {
+                                    sb.append(doc.substring(rest, doc.length()));
+                                }
+                            } else {
+                                // A line with just one character - can't replace with a comment
+                                // Just replace the char with a space
+                                sb.append(doc.substring(0, lineStart));
+                                sb.append(" ");
+                                int rest = lineStart + 1;
+                                if (rest < doc.length()) {
+                                    sb.append(doc.substring(rest, doc.length()));
+                                }
+
+                            }
+
+                            assert sb.length() == doc.length();
+
+                            context.sanitizedRange = new OffsetRange(lineStart, lineEnd);
+                            context.sanitizedSource = sb.toString();
+                            context.sanitizedContents = doc.substring(lineStart, lineEnd);
+                            return true;
+                        }
                     }
                 } else {
                     assert sanitizing == Sanitize.ERROR_DOT || sanitizing == Sanitize.EDITED_DOT;
@@ -365,9 +412,16 @@ public class GroovyParser extends Parser {
         // Fall through to try the next trick
         case ERROR_LINE:
 
-            // Messing with the error line didn't work - we could try "around" the error line
-            // but I'm not attempting that now.
-            // Finally try removing the whole line around the user editing position
+            // We've tried removing error line - now try removing line prior the the error position
+            if (context.errorOffset != -1) {
+                return parseBuffer(context, Sanitize.PRIOR_ERROR_LINE);
+            }
+
+        // Fall through to try the next trick
+        case PRIOR_ERROR_LINE:
+
+            // Messing with the error line and the line prior didn't work -
+            // finally try removing the whole line around the user editing position
             // (which could be far from where the error is showing up - but if you're typing
             // say a new "def" statement in a class, this will show up as an error on a mismatched
             // "end" statement rather than here
@@ -387,6 +441,17 @@ public class GroovyParser extends Parser {
         }
     }
 
+    private static CompilerConfiguration makeConfiguration(
+            CompilerConfiguration configuration, Context context, boolean isIndexing) {
+        Map<String, Boolean> opts = configuration.getOptimizationOptions();
+        opts.put("classLoaderResolving", Boolean.FALSE);
+
+        for (ParsingCompilerCustomizer pcc : context.compilerCustomizers) {
+            configuration = pcc.configureParsingCompiler(context.customizerCtx, configuration);
+        }
+        return configuration;
+    }
+    
     @SuppressWarnings("unchecked")
     GroovyParserResult parseBuffer(final Context context, final Sanitize sanitizing) {
         if (isCancelled()) {
@@ -438,10 +503,18 @@ public class GroovyParser extends Parser {
                 bootPath == null ? ClassPath.EMPTY : bootPath,
                 compilePath == null ? ClassPath.EMPTY : compilePath,
                 sourcePath);        
-        CompilationUnit compilationUnit = new CompilationUnit(this, configuration,
-                null, classLoader, transformationLoader, cpInfo, classNodeCache);
+        
+        boolean indexing = IndexingSupport.isIndexingTask(context.parserTask);
+        configuration = makeConfiguration(configuration, context, indexing);
+        org.codehaus.groovy.control.CompilationUnit compilationUnit = new CompilationUnit(this, configuration,
+                null, classLoader, transformationLoader, cpInfo, classNodeCache, 
+                indexing);
         InputStream inputStream = new ByteArrayInputStream(source.getBytes());
         compilationUnit.addSource(fileName, inputStream);
+        
+        for (ParsingCompilerCustomizer pcc : context.compilerCustomizers) {
+            pcc.decorateCompilation(context.customizerCtx, compilationUnit);
+        }
 
         if (isCancelled()) {
             return null;
@@ -709,6 +782,8 @@ public class GroovyParser extends Parser {
         ERROR_DOT,
         /** Try to cut out the error line */
         ERROR_LINE,
+        /** Try to cut out line prior the error line */
+        PRIOR_ERROR_LINE,
         /** Try to cut out the current edited line, if known */
         EDITED_LINE,
         /** Attempt to add an "end" to the end of the buffer to make it compile */
@@ -721,7 +796,8 @@ public class GroovyParser extends Parser {
         private final Snapshot snapshot;
         private final SourceModificationEvent event;
         private final BaseDocument document;
-
+        private Task parserTask;
+        
         private ParseErrorHandler errorHandler;
         private int errorOffset;
         private String source;
@@ -730,6 +806,8 @@ public class GroovyParser extends Parser {
         private String sanitizedContents;
         private int caretOffset;
         private Sanitize sanitized = Sanitize.NONE;
+        final List<ParsingCompilerCustomizer> compilerCustomizers;
+        final ParsingCompilerCustomizer.Context customizerCtx;
 
         public Context(Snapshot snapshot, SourceModificationEvent event) {
             this.snapshot = snapshot;
@@ -738,6 +816,23 @@ public class GroovyParser extends Parser {
             this.caretOffset = GsfUtilities.getLastKnownCaretOffset(snapshot, event);
             // FIXME parsing API
             this.document = LexUtilities.getDocument(snapshot.getSource(), true);
+
+
+            Lookup mlkp = MimeLookup.getLookup(snapshot.getMimePath());
+            List<ParsingCompilerCustomizer> cc = new ArrayList<>(mlkp.lookupAll(ParsingCompilerCustomizer.class));
+            compilerCustomizers = cc;
+            if (!cc.isEmpty()) {
+                customizerCtx = new ParsingCompilerCustomizer.Context(snapshot, parserTask);
+            } else {
+                customizerCtx = null;
+            }
+        }
+        
+        void setIndexingTask(Task t) {
+            this.parserTask = t;
+            if (customizerCtx != null) {
+                customizerCtx.setConsumerTask(t);
+            }
         }
 
         @Override
@@ -766,5 +861,10 @@ public class GroovyParser extends Parser {
 
         void error(Error error);
 
+    }
+    
+    // to be used form layers.
+    static ParsingCompilerCustomizer customizeTransformsFromLayer(Map<String, Object> attributes) {
+        return SimpleTransformationCustomizer.fromLayer(attributes);
     }
 }

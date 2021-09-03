@@ -19,26 +19,28 @@
 package org.netbeans.modules.java.disco;
 
 import static org.netbeans.modules.java.disco.SwingWorker2.submit;
+
 import java.io.File;
 import javax.swing.JFileChooser;
 import org.checkerframework.checker.guieffect.qual.UIEffect;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.openide.util.NbBundle;
 
+@NbBundle.Messages({
+    "DiscoBrowsePanel.searching=Searching...",
+    "DiscoBrowsePanel.error=Requested JDK not found."
+})
 public class BrowsePanel extends javax.swing.JPanel {
 
+    private final BrowseWizardPanel panel;
     private final WizardState state;
     private final Client discoClient;
 
-    @UIEffect
-    public static BrowsePanel create(WizardState state) {
-        BrowsePanel d = new BrowsePanel(state);
-        d.init();
-        return d;
-    }
-
-    public BrowsePanel(WizardState state) {
+    public BrowsePanel(BrowseWizardPanel panel, WizardState state) {
+        this.panel = panel;
         this.state = state;
         this.discoClient = Client.getInstance();
+        init();
     }
 
     @UIEffect
@@ -53,21 +55,26 @@ public class BrowsePanel extends javax.swing.JPanel {
     public void addNotify() {
         super.addNotify();
         //we do this every time
-        jdkDescription.setText(state.selection.getFileName());
         if (state.selection.get(null) == null) {
+            jdkDescription.setText(Bundle.DiscoBrowsePanel_searching());
             //OK, we have a quick selection so the file name was not the best, let's try to load it
             submit(() -> {
                 return state.selection.get(discoClient);
             }).then(pkg -> {
                 //re-set the name
                 jdkDescription.setText(state.selection.getFileName());
-
-            }).execute(); //NOTE: ignoring errors on purpose...
+                panel.fireChangeListeners();
+            }).handle(ex -> {
+                jdkDescription.setText(Bundle.DiscoBrowsePanel_error());
+            }).execute();
+        } else {
+            jdkDescription.setText(state.selection.getFileName());
         }
     }
 
     public boolean isOK() {
-        return !downloadPathText.getText().isEmpty();
+        return state.selection.get(null) != null
+                && !downloadPathText.getText().isEmpty();
     }
 
     @NonNull

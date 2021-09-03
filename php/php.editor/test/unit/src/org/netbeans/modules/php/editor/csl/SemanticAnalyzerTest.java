@@ -201,4 +201,12 @@ public class SemanticAnalyzerTest extends SemanticAnalysisTestBase {
     public void testNamedArgumentsColoring() throws Exception {
         checkSemantic("testfiles/semantic/namedArgumentsColoring.php");
     }
+
+    public void testNETBEANS5719_01() throws Exception {
+        checkSemantic("testfiles/semantic/netbeans5719_01.php");
+    }
+
+    public void testNETBEANS5719_02() throws Exception {
+        checkSemantic("testfiles/semantic/netbeans5719_02.php");
+    }
 }

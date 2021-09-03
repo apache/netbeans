@@ -166,7 +166,7 @@ public class GoToSupport {
         }
     }
 
-    public static CompletableFuture<HyperlinkLocation> getGoToLocation(final Document doc, final int offset) {
+    public static CompletableFuture<HyperlinkLocation> getGoToLocation(final Document doc, final int offset, final boolean goToSource) {
         try {
             final FileObject fo = getFileObject(doc);
             if (fo != null) {
@@ -182,7 +182,7 @@ public class GoToSupport {
                             return;
                         }
 
-                        Context resolved = resolveContext(controller, doc, offset, false, false);
+                        Context resolved = resolveContext(controller, doc, offset, goToSource, false);
 
                         if (resolved == null) {
                             target[0] = new GoToTarget(-1, -1, null, null, null, null, null, false);

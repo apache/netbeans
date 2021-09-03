@@ -838,6 +838,13 @@ public class MultiDataObject extends DataObject {
     protected DataObject handleCreateFromTemplate (
         DataFolder df, String name
     ) throws IOException {
+        return this.handleCreateFromTemplate(df, name, new int[1]);
+    }
+
+    final DataObject handleCreateFromTemplate (
+        DataFolder df, String name, int[] fileBuilderUsed
+    ) throws IOException {
+        assert fileBuilderUsed != null;
         if (name == null) {
             name = FileUtil.findFreeFileName(
                        df.getPrimaryFile (), getPrimaryFile ().getName (), getPrimaryFile ().getExt ()
@@ -854,6 +861,8 @@ public class MultiDataObject extends DataObject {
         if (pf == null) {
             // do the regular creation
             pf = getPrimaryEntry().createFromTemplate (df.getPrimaryFile (), name);
+        } else {
+            fileBuilderUsed[0]++;
         }
         
         
@@ -864,6 +873,8 @@ public class MultiDataObject extends DataObject {
             FileObject fo = FileBuilder.createFromTemplate(current, df.getPrimaryFile(), name, params, FileBuilder.Mode.FAIL);
             if (fo == null) {
                 entry.createFromTemplate (df.getPrimaryFile (), name);
+            } else {
+                fileBuilderUsed[0]++;
             }
         }
         

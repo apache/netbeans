@@ -33,7 +33,7 @@ public class FromNode implements From {
 
     // A vector of generalized Table objects (JoinTables)
 
-    ArrayList _tableList;
+    List<JoinTable> _tableList;
 
 
     // Constructors
@@ -86,8 +86,9 @@ public class FromNode implements From {
 
     // Return the Table objects in the table list
 
-    ArrayList getTables() {
-        ArrayList tableRefs = new ArrayList();
+    List<Table> getTables() {
+        List<Table> tableRefs = new ArrayList<>();
+
         for (int i=0; i<_tableList.size(); i++)
             tableRefs.add(((JoinTableNode)_tableList.get(i)).getTable());
         return tableRefs;
@@ -113,7 +114,7 @@ public class FromNode implements From {
     }
 
     public JoinTable findJoinTable(String table1, String column1, String table2, String column2) {
-        ArrayList tableList = _tableList;
+        List<JoinTable> tableList = _tableList;
         for (int i=0; i<tableList.size(); i++) {
             JoinTableNode jt = (JoinTableNode) tableList.get(i);
             Expression cond = jt.getExpression();

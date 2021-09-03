@@ -19,8 +19,10 @@
 
 package org.netbeans.modules.groovy.editor.completion.inference;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
@@ -70,7 +72,7 @@ public final class MethodInference {
 
             ClassNode callerType = findCallerType(methodCall.getObjectExpression(), path, baseDocument, offset);
             if (callerType != null) {
-                return findReturnTypeFor(callerType, methodCall.getMethodAsString(), methodCall.getArguments(), path, false, baseDocument, offset);
+                return findReturnTypeFor(callerType.redirect(), methodCall.getMethodAsString(), methodCall.getArguments(), path, false, baseDocument, offset);
             }
         }
 
@@ -93,7 +95,7 @@ public final class MethodInference {
         if (expression instanceof StaticMethodCallExpression) {
             StaticMethodCallExpression staticMethodCall = (StaticMethodCallExpression) expression;
 
-            return findReturnTypeFor(staticMethodCall.getOwnerType(), staticMethodCall.getMethod(), staticMethodCall.getArguments(), path, true, baseDocument, offset);
+            return findReturnTypeFor(staticMethodCall.getOwnerType().redirect(), staticMethodCall.getMethod(), staticMethodCall.getArguments(), path, true, baseDocument, offset);
         }
         return null;
     }
@@ -141,7 +143,7 @@ public final class MethodInference {
                 }
             }
         }
-
+        
         MethodNode possibleMethod = tryFindPossibleMethod(callerType, methodName, paramTypes, isStatic);
         if (possibleMethod != null) {
             return possibleMethod.getReturnType();
@@ -154,7 +156,13 @@ public final class MethodInference {
 
         MethodNode res = null;
         ClassNode node = callerType;
-        do {
+        Queue<ClassNode> tq = new ArrayDeque<>();
+        tq.add(callerType.redirect());
+        while ((node = tq.poll()) != null) {
+            for (ClassNode in : node.getInterfaces()) {
+                // search also in interfaces
+                tq.add(in.redirect());
+            }
             for (MethodNode method : node.getMethods(methodName)) {
                 if (isStatic && !method.isStatic()) {
                     continue;
@@ -194,7 +202,10 @@ public final class MethodInference {
                 }
             }
             node = node.getSuperClass();
-        } while (node != null);
+            if (node != null) {
+                tq.add(node.redirect());
+            }
+        };
 
         return res;
     }

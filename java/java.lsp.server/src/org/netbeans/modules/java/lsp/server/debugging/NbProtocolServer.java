@@ -19,18 +19,18 @@
 package org.netbeans.modules.java.lsp.server.debugging;
 
 import java.io.File;
-import java.net.MalformedURLException;
+import java.io.IOException;
+import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.Future;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.lsp4j.debug.Capabilities;
@@ -40,13 +40,13 @@ import org.eclipse.lsp4j.debug.ContinueResponse;
 import org.eclipse.lsp4j.debug.DisconnectArguments;
 import org.eclipse.lsp4j.debug.EvaluateArguments;
 import org.eclipse.lsp4j.debug.EvaluateResponse;
-import org.eclipse.lsp4j.debug.ExceptionBreakMode;
 import org.eclipse.lsp4j.debug.ExceptionBreakpointsFilter;
 import org.eclipse.lsp4j.debug.ExceptionInfoArguments;
 import org.eclipse.lsp4j.debug.ExceptionInfoResponse;
 import org.eclipse.lsp4j.debug.InitializeRequestArguments;
 import org.eclipse.lsp4j.debug.NextArguments;
 import org.eclipse.lsp4j.debug.PauseArguments;
+import org.eclipse.lsp4j.debug.RestartFrameArguments;
 import org.eclipse.lsp4j.debug.Scope;
 import org.eclipse.lsp4j.debug.ScopesArguments;
 import org.eclipse.lsp4j.debug.ScopesResponse;
@@ -77,30 +77,38 @@ import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.api.debugger.jpda.Variable;
 import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable;
+import org.netbeans.modules.java.lsp.server.LspSession;
+import org.netbeans.modules.java.lsp.server.debugging.breakpoints.NbBreakpointsRequestHandler;
+import org.netbeans.modules.java.lsp.server.debugging.attach.NbAttachRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDebugSession;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDisconnectRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbLaunchRequestHandler;
-import org.netbeans.modules.java.lsp.server.debugging.breakpoints.NbBreakpointsRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.variables.NbVariablesRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.nativeimage.api.debug.EvaluateException;
 import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
 import org.netbeans.modules.nativeimage.api.debug.NIVariable;
+import org.netbeans.spi.debugger.ui.DebuggingView;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVFrame;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVThread;
+import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 
 /**
  *
  * @author Dusan Balek
  */
-public final class NbProtocolServer implements IDebugProtocolServer {
+public final class NbProtocolServer implements IDebugProtocolServer, LspSession.ScheduledServer {
 
     private final DebugAdapterContext context;
     private final NbLaunchRequestHandler launchRequestHandler = new NbLaunchRequestHandler();
+    private final NbAttachRequestHandler attachRequestHandler = new NbAttachRequestHandler();
     private final NbDisconnectRequestHandler disconnectRequestHandler = new NbDisconnectRequestHandler();
     private final NbBreakpointsRequestHandler breakpointsRequestHandler = new NbBreakpointsRequestHandler();
     private final NbVariablesRequestHandler variablesRequestHandler = new NbVariablesRequestHandler();
+    private final RequestProcessor evaluationRP = new RequestProcessor(NbProtocolServer.class.getName(), 3);
     private boolean initialized = false;
+    private Future<Void> runningServer;
 
     public NbProtocolServer(DebugAdapterContext context) {
         this.context = context;
@@ -149,6 +157,7 @@ public final class NbProtocolServer implements IDebugProtocolServer {
         return CompletableFuture.completedFuture(caps);
     }
 
+    @Override
     public CompletableFuture<Void> configurationDone(ConfigurationDoneArguments args) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         NbDebugSession debugSession = context.getDebugSession();
@@ -165,6 +174,11 @@ public final class NbProtocolServer implements IDebugProtocolServer {
     @Override
     public CompletableFuture<Void> launch(Map<String, Object> args) {
         return launchRequestHandler.launch(args, context);
+    }
+
+    @Override
+    public CompletableFuture<Void> attach(Map<String, Object> args) {
+        return attachRequestHandler.attach(args, context);
     }
 
     @Override
@@ -339,6 +353,32 @@ public final class NbProtocolServer implements IDebugProtocolServer {
     }
 
     @Override
+    @NbBundle.Messages({"MSG_FrameRestartUnsupported=Restart of frames is not supported.",
+                        "# {0} - frame pop error message",
+                        "MSG_FrameRestartFailed=Unable to restart frame: {0}"})
+    public CompletableFuture<Void> restartFrame(RestartFrameArguments args) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        NbFrame stackFrame = (NbFrame) context.getThreadsProvider().getThreadObjects().getObject(args.getFrameId());
+        String popError = null;
+        if (stackFrame != null) {
+            try {
+                stackFrame.getDVFrame().popOff();
+                ActionsManager am = DebuggerManager.getDebuggerManager().getCurrentEngine().getActionsManager();
+                am.doAction("stepInto");
+                future.complete(null);
+            } catch (UnsupportedOperationException ex) {
+                popError = Bundle.MSG_FrameRestartUnsupported();
+            } catch (DebuggingView.PopException ex) {
+                popError = Bundle.MSG_FrameRestartFailed(ex.getLocalizedMessage());
+            }
+        }
+        if (popError != null) {
+            ErrorUtilities.completeExceptionally(future, popError, ResponseErrorCode.InvalidParams);
+        }
+        return future;
+    }
+
+    @Override
     public CompletableFuture<ScopesResponse> scopes(ScopesArguments args) {
         List<Scope> result = new ArrayList<>();
         NbFrame stackFrame = (NbFrame) context.getThreadsProvider().getThreadObjects().getObject(args.getFrameId());
@@ -404,17 +444,35 @@ public final class NbProtocolServer implements IDebugProtocolServer {
         }
         return future;
     }
+    
+    private EvaluateResponse passToApplication(String args) {
+        Writer w = context.getInputSink();
+        if (w != null) {
+            try {
+                w.write(args);
+            } catch (IOException ex) {
+                // TBD: handle.
+            }
+        }
+        EvaluateResponse resp = new EvaluateResponse();
+        resp.setResult("");
+        return resp;
+    }
 
     @Override
     public CompletableFuture<EvaluateResponse> evaluate(EvaluateArguments args) {
         return CompletableFuture.supplyAsync(() -> {
             String expression = args.getExpression();
+            ThreadObjects obs = context.getThreadsProvider().getThreadObjects();
+            if (args.getFrameId() == null || obs == null) {
+                return passToApplication(args.getExpression());
+            }
             if (StringUtils.isBlank(expression)) {
                 throw ErrorUtilities.createResponseErrorException(
                     "Empty expression cannot be evaluated.",
                     ResponseErrorCode.InvalidParams);
             }
-            NbFrame stackFrame = (NbFrame) context.getThreadsProvider().getThreadObjects().getObject(args.getFrameId());
+            NbFrame stackFrame = (NbFrame)obs.getObject(args.getFrameId());
             if (stackFrame == null) {
                 throw ErrorUtilities.createResponseErrorException(
                     "Unknown frame " + args.getFrameId(),
@@ -432,7 +490,7 @@ public final class NbProtocolServer implements IDebugProtocolServer {
                 evaluateNative(niDebugger, expression, threadId, response);
             }
             return response;
-        });
+        }, evaluationRP);
     }
 
     private void evaluateJPDA(JPDADebugger debugger, String expression, int threadId, EvaluateResponse response) {
@@ -461,7 +519,7 @@ public final class NbProtocolServer implements IDebugProtocolServer {
                 } catch (InvalidExpressionException ex) {
                     toString = variable.getValue();
                 }
-                response.setResult(toString);
+                response.setResult(Objects.toString(toString));
                 response.setVariablesReference(referenceId);
                 response.setType(variable.getType());
                 response.setIndexedVariables(Math.max(indexedVariables, 0));
@@ -513,5 +571,14 @@ public final class NbProtocolServer implements IDebugProtocolServer {
             future.complete(response);
         }
         return future;
+    }
+
+    void setRunningFuture(Future<Void> runningServer) {
+        this.runningServer = runningServer;
+    }
+
+    @Override
+    public Future<Void> getRunningFuture() {
+        return runningServer;
     }
 }

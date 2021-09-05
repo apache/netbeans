@@ -61,11 +61,6 @@ public class NBAttr extends Attr {
     }
 
     @Override
-    public void attribClass(DiagnosticPosition pos, ClassSymbol c) {
-        super.attribClass(pos, c); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public void visitClassDef(JCClassDecl tree) {
         cancelService.abortIfCanceled();
         super.visitClassDef(tree);

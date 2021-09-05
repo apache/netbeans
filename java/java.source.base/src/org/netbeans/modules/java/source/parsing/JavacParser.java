@@ -1379,7 +1379,7 @@ public class JavacParser extends Parser {
 
         @Override
         public boolean isCanceled() {
-            if (!mayCancel.get() && parser.parserCanceled.get()) {
+            if (mayCancel.get() && parser.parserCanceled.get()) {
                 return true;
             }
             if (!parser.perFileProcessing && LOW_MEMORY_WATCHER.isLowMemory()) {

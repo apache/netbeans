@@ -561,7 +561,7 @@ public abstract class DefaultSchemaGenerator extends SchemaGenerator {
         scs.add(element);
         scs.add(e);
         scs.add(eref);
-        fixNamesMap.put(new Integer(fgeCount++), scs);
+        fixNamesMap.put(Integer.valueOf(fgeCount++), scs);
     }
     
     protected void fixGlobalElementNames() {

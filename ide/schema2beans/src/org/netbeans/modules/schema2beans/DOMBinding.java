@@ -455,7 +455,7 @@ public class DOMBinding {
 	    default:
             throw new Schema2BeansRuntimeException(Common.getMessage(
                           "TypeNotSupported_msg",
-		                  prop.getPropClass(), new Integer(prop.getType())));
+		                  prop.getPropClass(), Integer.valueOf(prop.getType())));
 	}
     }
 
@@ -971,7 +971,7 @@ public class DOMBinding {
             }
             else
                 throw new IllegalArgumentException(Common.getMessage(
-                                                                     "UnknownAction_msg", new Integer(a.action)));
+                                                                     "UnknownAction_msg", Integer.valueOf(a.action)));
     }
 
     boolean hasDomNode() {

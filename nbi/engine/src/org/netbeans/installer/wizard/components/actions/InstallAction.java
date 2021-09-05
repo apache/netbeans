@@ -180,7 +180,7 @@ public class InstallAction extends WizardAction {
                 // do not override already set exit code
                 if (System.getProperties().get(Installer.EXIT_CODE_PROPERTY) == null) {
                      System.getProperties().put(Installer.EXIT_CODE_PROPERTY, 
-                             new Integer(INSTALLATION_ERROR_CODE));
+                             Integer.valueOf(INSTALLATION_ERROR_CODE));
                 }
                 // adjust the product's status and save this error - it will
                 // be reused later at the PostInstallSummary

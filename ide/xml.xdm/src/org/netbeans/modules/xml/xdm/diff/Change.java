@@ -69,14 +69,14 @@ public class Change extends Difference {
                     String name = oldAttr.getNodeName();
                     if ( !allAttrNames.contains( name ) )
                         allAttrNames.add( name );
-                    posMap.put(oldAttr, new Integer(i));
+                    posMap.put(oldAttr, Integer.valueOf(i));
                 }
                 for ( int i=0; i < nm2.getLength(); i++ ) {
                     Node newAttr = (Node) nm2.item(i);
                     String name = newAttr.getNodeName();
                     if ( !allAttrNames.contains( name ) )
                         allAttrNames.add( name );
-                    posMap.put(newAttr, new Integer(i));
+                    posMap.put(newAttr, Integer.valueOf(i));
                 }
                 for ( int i=0; i < allAttrNames.size(); i++ ) {
                     String attrName = allAttrNames.get( i );

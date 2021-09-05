@@ -138,7 +138,7 @@ public class Common {
             return true;
 	    default:
             throw new IllegalArgumentException(Common.getMessage(
-                                                                 "UnknownType_msg", new Integer(type)));
+                                                                 "UnknownType_msg", Integer.valueOf(type)));
         }
     }
     
@@ -162,7 +162,7 @@ public class Common {
             return "doubleValue";	// NOI18N
 	    default:
             throw new IllegalArgumentException(Common.getMessage(
-                                                                 "UnknownType_msg", new Integer(type)));
+                                                                 "UnknownType_msg", Integer.valueOf(type)));
         }
     }
     
@@ -186,7 +186,7 @@ public class Common {
             return "Double";	// NOI18N
 	    default:
             throw new IllegalArgumentException(Common.getMessage(
-                                                                 "UnknownType_msg", new Integer(type)));
+                                                                 "UnknownType_msg", Integer.valueOf(type)));
         }
     }
     
@@ -236,7 +236,7 @@ public class Common {
             return "double";	// NOI18N
 	    default:
             throw new IllegalArgumentException(Common.getMessage(
-                                                                 "UnknownType_msg", new Integer(type)));
+                                                                 "UnknownType_msg", Integer.valueOf(type)));
         }
     }
     
@@ -266,7 +266,7 @@ public class Common {
             return "TYPE_DOUBLE";	// NOI18N
 	    default:
             throw new IllegalArgumentException(Common.getMessage(
-                                                                 "UnknownType_msg", new Integer(type)));
+                                                                 "UnknownType_msg", Integer.valueOf(type)));
         }
     }
     
@@ -381,7 +381,7 @@ public class Common {
 	    case Common.TYPE_SHORT:
             return new Short((short)0);
 	    case Common.TYPE_INT:
-            return new Integer(0);
+            return Integer.valueOf(0);
 	    case Common.TYPE_LONG:
             return new Long(0);
 	    case Common.TYPE_FLOAT:
@@ -390,7 +390,7 @@ public class Common {
             return new Double(0.0);
 	    default:
             throw new IllegalArgumentException(Common.getMessage(
-                                                                 "UnknownType_msg", new Integer(type)));
+                                                                 "UnknownType_msg", Integer.valueOf(type)));
         }
     }
     
@@ -415,7 +415,7 @@ public class Common {
     }
     
     public static String getMessage(String key, int p1) {
-        return Common.getMessage(key, new Object[] {new Integer(p1)});
+        return Common.getMessage(key, new Object[] {Integer.valueOf(p1)});
     }
     
     public static String getMessage(String key, Object p1, Object p2) {

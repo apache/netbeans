@@ -294,9 +294,9 @@ public class IMGCustomizer extends javax.swing.JPanel {
             try {
                 Image img = new ImageIcon(file.getAbsolutePath()).getImage();
                 int width = img.getWidth(null);
-                jTextField2.setText(width != -1 ? new Integer(width).toString() : "");
+                jTextField2.setText(width != -1 ? Integer.valueOf(width).toString() : "");
                 int height = img.getHeight(null);
-                jTextField3.setText(height != -1 ? new Integer(height).toString() : "");
+                jTextField3.setText(height != -1 ? Integer.valueOf(height).toString() : "");
                 jTextField4.setText(imgFO.getName());
             }
             catch (Exception ex) {

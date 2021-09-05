@@ -1195,7 +1195,7 @@ public class QueryBuilder extends TopComponent
                 }
     
                 for (int i = 0; i < paramCount; i++) {
-                    parameters[i] = new String( "Parameter " + new Integer(i).toString());
+                    parameters[i] = new String( "Parameter " + Integer.valueOf(i).toString());
                 }
                 if (DEBUG) {
                     for (int i = 0; i < parameters.length; i++) {

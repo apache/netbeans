@@ -171,7 +171,7 @@ public class AnnotationTypes {
         loadSettings();
         
         if (getProp(PROP_BACKGROUND_GLYPH_ALPHA) == null)
-            return new Integer(40);
+            return Integer.valueOf(40);
         return (Integer)getProp(PROP_BACKGROUND_GLYPH_ALPHA);
     }
 
@@ -181,7 +181,7 @@ public class AnnotationTypes {
         if (alpha < 0 || alpha > 100) {
             return;
         }
-        Integer i = new Integer(alpha);
+        Integer i = Integer.valueOf(alpha);
         putProp(PROP_BACKGROUND_GLYPH_ALPHA, i);
         firePropertyChange(PROP_BACKGROUND_GLYPH_ALPHA, null, null);
         

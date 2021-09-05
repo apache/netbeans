@@ -102,7 +102,7 @@ public class DDFactory extends Object {
 	    "CantGetConstructor_msg"), me);
 	}
 	
-	Object[] p = new Object[] {doc, new Integer(Common.NO_DEFAULT_VALUES)};
+	Object[] p = new Object[] {doc, Integer.valueOf(Common.NO_DEFAULT_VALUES)};
 	
 	try {
 	    beanNode = (BaseBean)c.newInstance(p);

@@ -830,7 +830,7 @@ public final class Coloring implements java.io.Serializable {
 
         return new Object [] {
             new Font(fontFamily, style, fontSize),
-            new Integer(applyMode)
+            Integer.valueOf(applyMode)
         };
     }
 

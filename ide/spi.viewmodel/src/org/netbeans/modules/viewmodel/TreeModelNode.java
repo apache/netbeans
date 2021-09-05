@@ -1223,7 +1223,7 @@ public class TreeModelNode extends AbstractNode {
         } else {
             int d = 1;
             while ((p = p.getParentNode()) != null) d++;
-            depth = new Integer(d);
+            depth = Integer.valueOf(d);
             return depth;
         }
     }
@@ -1620,7 +1620,7 @@ public class TreeModelNode extends AbstractNode {
             } else {
                 int d = 1;
                 while ((p = p.getParentNode()) != null) d++;
-                depth = new Integer(d);
+                depth = Integer.valueOf(d);
                 return depth;
             }
         }

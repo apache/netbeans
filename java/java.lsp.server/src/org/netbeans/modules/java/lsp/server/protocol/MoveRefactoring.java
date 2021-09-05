@@ -28,10 +28,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -41,17 +39,8 @@ import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
-import org.eclipse.lsp4j.DeleteFile;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
-import org.eclipse.lsp4j.Range;
-import org.eclipse.lsp4j.RenameFile;
-import org.eclipse.lsp4j.ResourceOperation;
-import org.eclipse.lsp4j.TextDocumentEdit;
-import org.eclipse.lsp4j.TextEdit;
-import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
-import org.eclipse.lsp4j.WorkspaceEdit;
-import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.ClassIndex;
@@ -60,7 +49,6 @@ import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
@@ -68,17 +56,8 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.parsing.api.ResultIterator;
-import org.netbeans.modules.refactoring.api.Problem;
-import org.netbeans.modules.refactoring.api.RefactoringSession;
-import org.netbeans.modules.refactoring.api.impl.APIAccessor;
-import org.netbeans.modules.refactoring.api.impl.SPIAccessor;
 import org.netbeans.modules.refactoring.java.api.JavaMoveMembersProperties;
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
-import org.netbeans.modules.refactoring.java.spi.hooks.JavaModificationResult;
-import org.netbeans.modules.refactoring.plugins.FileMovePlugin;
-import org.netbeans.modules.refactoring.spi.RefactoringCommit;
-import org.netbeans.modules.refactoring.spi.RefactoringElementImplementation;
-import org.netbeans.modules.refactoring.spi.Transaction;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -90,7 +69,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Dusan Balek
  */
 @ServiceProvider(service = CodeActionsProvider.class, position = 160)
-public class MoveRefactoring extends CodeActionsProvider {
+public class MoveRefactoring extends CodeRefactoring {
 
     private static final String MOVE_REFACTORING_KIND = "refactor.move";
     private static final String MOVE_REFACTORING_COMMAND =  "java.refactor.move";
@@ -225,79 +204,10 @@ public class MoveRefactoring extends CodeActionsProvider {
                 ElementHandle handle = gson.fromJson(gson.toJson(target.getUserData()), ElementData.class).toHandle();
                 refactoring.setTarget(Lookups.singleton(TreePathHandle.from(handle, info)));
             }
-            RefactoringSession session = RefactoringSession.create("Move");
-            Problem p = refactoring.checkParameters();
-            if (p != null && p.isFatal()) {
-                throw new IllegalStateException(p.getMessage());
-            }
-            p = refactoring.preCheck();
-            if (p != null && p.isFatal()) {
-                throw new IllegalStateException(p.getMessage());
-            }
-            p = refactoring.prepare(session);
-            if (p != null && p.isFatal()) {
-                throw new IllegalStateException(p.getMessage());
-            }
-            List<Either<TextDocumentEdit, ResourceOperation>> resultChanges = new ArrayList<>();
-            Map<String, String> renames = new HashMap<>();
-            List<RefactoringElementImplementation> fileChanges = APIAccessor.DEFAULT.getFileChanges(session);
-            for (RefactoringElementImplementation rei : fileChanges) {
-                if (rei instanceof FileMovePlugin.MoveFile) {
-                    String oldURI = Utils.toUri(rei.getParentFile());
-                    int slash = oldURI.lastIndexOf('/');
-                    URL url = refactoring.getTarget().lookup(URL.class);
-                    String newURI = url.toString() + oldURI.substring(slash + 1);
-                    renames.put(oldURI, newURI);
-                    ResourceOperation op = new RenameFile(oldURI, newURI);
-                    resultChanges.add(Either.forRight(op));
-                } else if (rei instanceof org.netbeans.modules.refactoring.java.plugins.DeleteFile) {
-                    String oldURI = Utils.toUri(rei.getParentFile());
-                    ResourceOperation op = new DeleteFile(oldURI);
-                    resultChanges.add(Either.forRight(op));
-                } else {
-                    throw new IllegalStateException(rei.getClass().toString());
-                }
-            }
-            List<Transaction> transactions = APIAccessor.DEFAULT.getCommits(session);
-            List<ModificationResult> results = new ArrayList<>();
-            for (Transaction t : transactions) {
-                if (t instanceof RefactoringCommit) {
-                    RefactoringCommit c = (RefactoringCommit) t;
-                    for (org.netbeans.modules.refactoring.spi.ModificationResult refResult : SPIAccessor.DEFAULT.getTransactions(c)) {
-                        if (refResult instanceof JavaModificationResult) {
-                            results.add(((JavaModificationResult) refResult).delegate);
-                        } else {
-                            throw new IllegalStateException(refResult.getClass().toString());
-                        }
-                    }
-                } else {
-                    throw new IllegalStateException(t.getClass().toString());
-                }
-            }
-            for (ModificationResult mr : results) {
-                for (FileObject modified : mr.getModifiedFileObjects()) {
-                    String modifiedUri = Utils.toUri(modified);
-                    resultChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(renames.getOrDefault(modifiedUri, modifiedUri), -1), fileModifications(mr, modified))));
-                }
-            }
-            session.finished();
-            client.applyEdit(new ApplyWorkspaceEditParams(new WorkspaceEdit(resultChanges)));
+            client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, "Move")));
         } catch (Exception ex) {
             client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }
-    }
-
-    private static List<TextEdit> fileModifications(ModificationResult changes, FileObject file) {
-        List<? extends ModificationResult.Difference> diffs = changes.getDifferences(file);
-        if (diffs == null) {
-            return Collections.emptyList();
-        }
-        List<TextEdit> edits = new ArrayList<>();
-        for (ModificationResult.Difference diff : diffs) {
-            String newText = diff.getNewText();
-            edits.add(new TextEdit(new Range(Utils.createPosition(file, diff.getStartPosition().getOffset()), Utils.createPosition(file, diff.getEndPosition().getOffset())), newText != null ? newText : ""));
-        }
-        return edits;
     }
 
     private static Element elementForOffset(CompilationInfo info, int offset) throws RuntimeException {

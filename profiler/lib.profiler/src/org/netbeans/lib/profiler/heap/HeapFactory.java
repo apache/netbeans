@@ -92,7 +92,7 @@ public class HeapFactory {
      * @return implementation of {@link Heap} corresponding to the memory dump
      * passed in the {@code buffer} parameter
      * @throws IOException if the access to the buffer fails or data are corrupted
-     * @since 2.2
+     * @since 1.122
      */
     public static Heap createHeap(ByteBuffer buffer, int segment) throws IOException {
         return new HprofHeap(buffer, segment, new CacheDirectory(null));

@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -121,11 +122,11 @@ class HprofHeap implements Heap {
     private boolean retainedSizeByClassComputed;
     private final Object retainedSizeByClassLock = new Object();
     private int idMapSize;
-    private int segment;
+    private final int segment;
 
     // for serialization
-    File heapDumpFile;
-    CacheDirectory cacheDirectory;
+    final File heapDumpFile;
+    final CacheDirectory cacheDirectory;
     
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
@@ -144,6 +145,23 @@ class HprofHeap implements Heap {
         nearestGCRoot = new NearestGCRoot(this);
         gcRoots = new HprofGCRoots(this);
         heapDumpFile = dumpFile;
+    }
+
+    HprofHeap(ByteBuffer bb, int seg, CacheDirectory cacheDir) throws IOException {
+        cacheDirectory = cacheDir;
+        dumpBuffer = HprofByteBuffer.createHprofByteBuffer(bb);
+        segment = seg;
+        fillTagBounds(dumpBuffer.getHeaderSize());
+        heapDumpSegment = computeHeapDumpStart();
+
+        if (heapDumpSegment != null) {
+            fillHeapTagBounds();
+        }
+
+        idToOffsetMap = new LongMap(idMapSize,dumpBuffer.getIDSize(),dumpBuffer.getFoffsetSize(), cacheDirectory);
+        nearestGCRoot = new NearestGCRoot(this);
+        gcRoots = new HprofGCRoots(this);
+        heapDumpFile = null;
     }
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------

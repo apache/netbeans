@@ -31,6 +31,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.lsp4j.debug.Capabilities;
@@ -100,6 +102,9 @@ import org.openide.util.RequestProcessor;
  */
 public final class NbProtocolServer implements IDebugProtocolServer, LspSession.ScheduledServer {
 
+    private static final Logger LOGGER = Logger.getLogger(NbProtocolServer.class.getName());
+    private static final Level LOGLEVEL = Level.FINE;
+
     private final DebugAdapterContext context;
     private final NbLaunchRequestHandler launchRequestHandler = new NbLaunchRequestHandler();
     private final NbAttachRequestHandler attachRequestHandler = new NbAttachRequestHandler();
@@ -107,6 +112,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
     private final NbBreakpointsRequestHandler breakpointsRequestHandler = new NbBreakpointsRequestHandler();
     private final NbVariablesRequestHandler variablesRequestHandler = new NbVariablesRequestHandler();
     private final RequestProcessor evaluationRP = new RequestProcessor(NbProtocolServer.class.getName(), 3);
+    private final RequestProcessor threadsRP = new RequestProcessor(NbProtocolServer.class.getName(), 1);
     private boolean initialized = false;
     private Future<Void> runningServer;
 
@@ -284,72 +290,78 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
 
     @Override
     public CompletableFuture<StackTraceResponse> stackTrace(StackTraceArguments args) {
-        CompletableFuture<StackTraceResponse> future = new CompletableFuture<>();
         if (context.getDebugSession() == null) {
+            CompletableFuture<StackTraceResponse> future = new CompletableFuture<>();
             ErrorUtilities.completeExceptionally(future, "Debug Session doesn't exist.", ResponseErrorCode.InvalidParams);
+            return future;
         } else {
-            List<StackFrame> result = new ArrayList<>();
-            int cnt = 0;
-            DVThread dvThread = context.getThreadsProvider().getThread(args.getThreadId());
-            if (dvThread != null) {
-                cnt = dvThread.getFrameCount();
-                int from = args.getStartFrame() != null ? args.getStartFrame() : 0;
-                int to = args.getLevels() != null ? from + args.getLevels() : Integer.MAX_VALUE;
-                List<DVFrame> stackFrames = dvThread.getFrames(from, to);
-                for (DVFrame frame : stackFrames) {
-                    int frameId = context.getThreadsProvider().getThreadObjects().addObject(args.getThreadId(), new NbFrame(args.getThreadId(), frame));
-                    int line = frame.getLine();
-                    if (line < 0) { // unknown
-                        line = 0;
-                    }
-                    int column = frame.getColumn();
-                    if (column < 0) { // unknown
-                        column = 0;
-                    }
-                    StackFrame stackFrame = new StackFrame();
-                    stackFrame.setId(frameId);
-                    stackFrame.setName(frame.getName());
-                    URI sourceURI = frame.getSourceURI();
-                    if (sourceURI != null) {
-                        Source source = new Source();
-                        String scheme = sourceURI.getScheme();
-                        if (null == scheme || scheme.isEmpty() || "file".equalsIgnoreCase(scheme)) {
-                            source.setName(Paths.get(sourceURI).getFileName().toString());
-                            source.setPath(sourceURI.getPath());
-                            source.setSourceReference(0);
-                        } else {
-                            int ref = context.createSourceReference(sourceURI, frame.getSourceMimeType());
-                            String path = sourceURI.getPath();
-                            if (path == null) {
-                                path = sourceURI.getSchemeSpecificPart();
-                            }
-                            if (path != null) {
-                                int sepIndex = Math.max(path.lastIndexOf('/'), path.lastIndexOf(File.separatorChar));
-                                source.setName(path.substring(sepIndex + 1));
-                                if ("jar".equalsIgnoreCase(scheme)) {
-                                    try {
-                                        path = new URI(path).getPath();
-                                    } catch (URISyntaxException ex) {
-                                        // ignore, we just tried
-                                    }
-                                }
-                                source.setPath(path);
-                            }
-                            source.setSourceReference(ref);
+            return CompletableFuture.supplyAsync(() -> {
+                LOGGER.log(LOGLEVEL, "stackTrace() START");
+                long t1 = System.nanoTime();
+                List<StackFrame> result = new ArrayList<>();
+                int cnt = 0;
+                DVThread dvThread = context.getThreadsProvider().getThread(args.getThreadId());
+                if (dvThread != null) {
+                    cnt = dvThread.getFrameCount();
+                    int from = args.getStartFrame() != null ? args.getStartFrame() : 0;
+                    int to = args.getLevels() != null ? from + args.getLevels() : Integer.MAX_VALUE;
+                    List<DVFrame> stackFrames = dvThread.getFrames(from, to);
+                    for (DVFrame frame : stackFrames) {
+                        int frameId = context.getThreadsProvider().getThreadObjects().addObject(args.getThreadId(), new NbFrame(args.getThreadId(), frame));
+                        int line = frame.getLine();
+                        if (line < 0) { // unknown
+                            line = 0;
                         }
-                        stackFrame.setSource(source);
+                        int column = frame.getColumn();
+                        if (column < 0) { // unknown
+                            column = 0;
+                        }
+                        StackFrame stackFrame = new StackFrame();
+                        stackFrame.setId(frameId);
+                        stackFrame.setName(frame.getName());
+                        URI sourceURI = frame.getSourceURI();
+                        if (sourceURI != null) {
+                            Source source = new Source();
+                            String scheme = sourceURI.getScheme();
+                            if (null == scheme || scheme.isEmpty() || "file".equalsIgnoreCase(scheme)) {
+                                source.setName(Paths.get(sourceURI).getFileName().toString());
+                                source.setPath(sourceURI.getPath());
+                                source.setSourceReference(0);
+                            } else {
+                                int ref = context.createSourceReference(sourceURI, frame.getSourceMimeType());
+                                String path = sourceURI.getPath();
+                                if (path == null) {
+                                    path = sourceURI.getSchemeSpecificPart();
+                                }
+                                if (path != null) {
+                                    int sepIndex = Math.max(path.lastIndexOf('/'), path.lastIndexOf(File.separatorChar));
+                                    source.setName(path.substring(sepIndex + 1));
+                                    if ("jar".equalsIgnoreCase(scheme)) {
+                                        try {
+                                            path = new URI(path).getPath();
+                                        } catch (URISyntaxException ex) {
+                                            // ignore, we just tried
+                                        }
+                                    }
+                                    source.setPath(path);
+                                }
+                                source.setSourceReference(ref);
+                            }
+                            stackFrame.setSource(source);
+                        }
+                        stackFrame.setLine(line);
+                        stackFrame.setColumn(column);
+                        result.add(stackFrame);
                     }
-                    stackFrame.setLine(line);
-                    stackFrame.setColumn(column);
-                    result.add(stackFrame);
                 }
-            }
-            StackTraceResponse response = new StackTraceResponse();
-            response.setStackFrames(result.toArray(new StackFrame[result.size()]));
-            response.setTotalFrames(cnt);
-            future.complete(response);
+                StackTraceResponse response = new StackTraceResponse();
+                response.setStackFrames(result.toArray(new StackFrame[result.size()]));
+                response.setTotalFrames(cnt);
+                long t2 = System.nanoTime();
+                LOGGER.log(LOGLEVEL, "stackTrace() END after {0} ns", (t2 - t1));
+                return response;
+            }, threadsRP);
         }
-        return future;
     }
 
     @Override
@@ -427,22 +439,28 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
 
     @Override
     public CompletableFuture<ThreadsResponse> threads() {
-        CompletableFuture<ThreadsResponse> future = new CompletableFuture<>();
         if (context.getDebugSession() == null) {
+            CompletableFuture<ThreadsResponse> future = new CompletableFuture<>();
             ErrorUtilities.completeExceptionally(future, "Debug Session doesn't exist.", ResponseErrorCode.InvalidParams);
+            return future;
         } else {
-            List<org.eclipse.lsp4j.debug.Thread> result = new ArrayList<>();
-            context.getThreadsProvider().visitThreads((id, dvThread) -> {
-                org.eclipse.lsp4j.debug.Thread thread = new org.eclipse.lsp4j.debug.Thread();
-                thread.setId(id);
-                thread.setName(dvThread.getName());
-                result.add(thread);
-            });
-            ThreadsResponse response = new ThreadsResponse();
-            response.setThreads(result.toArray(new org.eclipse.lsp4j.debug.Thread[result.size()]));
-            future.complete(response);
+            return CompletableFuture.supplyAsync(() -> {
+                LOGGER.log(LOGLEVEL, "threads() START");
+                long t1 = System.nanoTime();
+                List<org.eclipse.lsp4j.debug.Thread> result = new ArrayList<>();
+                context.getThreadsProvider().visitThreads((id, dvThread) -> {
+                    org.eclipse.lsp4j.debug.Thread thread = new org.eclipse.lsp4j.debug.Thread();
+                    thread.setId(id);
+                    thread.setName(dvThread.getName());
+                    result.add(thread);
+                });
+                ThreadsResponse response = new ThreadsResponse();
+                response.setThreads(result.toArray(new org.eclipse.lsp4j.debug.Thread[result.size()]));
+                long t2 = System.nanoTime();
+                LOGGER.log(LOGLEVEL, "threads() END after {0} ns", (t2 - t1));
+                return response;
+            }, threadsRP);
         }
-        return future;
     }
     
     private EvaluateResponse passToApplication(String args) {

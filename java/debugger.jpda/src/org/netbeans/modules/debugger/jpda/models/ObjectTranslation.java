@@ -30,14 +30,20 @@ import com.sun.jdi.ThreadReference;
 import com.sun.jdi.Value;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
 import org.netbeans.api.debugger.jpda.JPDAThread;
 
 import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
+import org.openide.util.Exceptions;
 
 /**
  * Helps to translate one tree to another.
@@ -140,7 +146,8 @@ public final class ObjectTranslation {
     }
     
     /**
-     * Translates a debuggee Mirror to a wrapper object.
+     * Translates a debuggee Mirror to a wrapper object. It allows thread safe
+     * concurrent translation.
      *
      * @param o the Mirror object in the debuggee
      * @return translated object or <code>null</code> when the argument
@@ -148,13 +155,28 @@ public final class ObjectTranslation {
      */
     public Object translate (Mirror o) {
         Object r = null;
+        boolean create = false;
         synchronized (cache) {
-            WeakReference wr = cache.get (o);
-            if (wr != null)
-                r = wr.get ();
+            WeakReference wr = cache.get(o);
+            if (wr != null) {
+                r = wr.get();
+            }
             if (r == null) {
-                r = createTranslation (o);
-                cache.put (o, new WeakReference<Object>(r));
+                r = new TranslationFuture();
+                create = true;
+                cache.put (o, new WeakReference<>(r));
+            }
+        }
+        if (r instanceof TranslationFuture) {
+            TranslationFuture tf = (TranslationFuture) r;
+            if (create) {
+                r = createTranslation(o);
+                tf.complete(r);
+                synchronized (cache) {
+                    cache.put(o, new WeakReference<>(r));
+                }
+            } else {
+                r = tf.get();
             }
         }
         return r;
@@ -170,9 +192,13 @@ public final class ObjectTranslation {
     public Object translateExisting(Mirror o) {
         Object r = null;
         synchronized (cache) {
-            WeakReference wr = cache.get (o);
-            if (wr != null)
-                r = wr.get ();
+            WeakReference wr = cache.get(o);
+            if (wr != null) {
+                r = wr.get();
+                if (r instanceof TranslationFuture) {
+                    r = ((TranslationFuture) r).get();
+                }
+            }
         }
         return r;
     }
@@ -187,6 +213,9 @@ public final class ObjectTranslation {
             for (Iterator it = references.iterator(); it.hasNext(); ) {
                 WeakReference wr = (WeakReference) it.next();
                 Object r = wr.get();
+                if (r instanceof TranslationFuture) {
+                    r = ((TranslationFuture) r).get();
+                }
                 if (r != null) {
                     translated.add(r);
                 }
@@ -196,7 +225,35 @@ public final class ObjectTranslation {
     }
     
     /**
-     * Translates a debuggee Mirror to a wrapper object.
+     * Get existing translated objects.
+     *
+     * @param <T> the type of translated objects we're looking for
+     * @param test a test function that returns non-null objects of type
+     *             <code>T</code> that we're looking for
+     * @return a list of translated objects selected by the test function.
+     */
+    public <T> List<? extends T> getTranslated(Function<Object, T> test) {
+        List<T> translated = new ArrayList<>();
+        synchronized (cache) {
+            Collection references = cache.values();
+            for (Iterator it = references.iterator(); it.hasNext(); ) {
+                WeakReference wr = (WeakReference) it.next();
+                Object r = wr.get();
+                if (r instanceof TranslationFuture) {
+                    r = ((TranslationFuture) r).get();
+                }
+                T t;
+                if (r != null && (t = test.apply(r)) != null) {
+                    translated.add(t);
+                }
+            }
+        }
+        return translated;
+    }
+    
+    /**
+     * Translates a debuggee Mirror to a wrapper object. It allows thread safe
+     * concurrent translation.
      *
      * @param o the Mirror object in the debuggee
      * @param v an additional argument used for the translation
@@ -206,15 +263,30 @@ public final class ObjectTranslation {
     public Object translate (Mirror o, Object v) {
         Object r = null;
         boolean verify = false;
+        boolean create = false;
         synchronized (cache) {
-            WeakReference wr = cache.get (o);
-            if (wr != null)
-                r = wr.get ();
+            WeakReference wr = cache.get(o);
+            if (wr != null) {
+                r = wr.get();
+            }
             if (r == null) {
-                r = createTranslation (o, v);
-                cache.put (o, new WeakReference<Object>(r));
+                r = new TranslationFuture();
+                create = true;
+                cache.put(o, new WeakReference<>(r));
             } else {
                 verify = true;
+            }
+        }
+        if (r instanceof TranslationFuture) {
+            TranslationFuture tf = (TranslationFuture) r;
+            if (create) {
+                r = createTranslation(o, v);
+                tf.complete(r);
+                synchronized (cache) {
+                    cache.put(o, new WeakReference<>(r));
+                }
+            } else {
+                r = tf.get();
             }
         }
         if (verify) {
@@ -273,5 +345,16 @@ public final class ObjectTranslation {
     public static ObjectTranslation createLocalsTranslation(JPDADebuggerImpl debugger) {
         return new ObjectTranslation(debugger, LOCALS_ID);
     }
-    
+
+    private static final class TranslationFuture extends CompletableFuture<Object> {
+
+        @Override
+        public Object get() {
+            try {
+                return super.get();
+            } catch (ExecutionException | InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
 }

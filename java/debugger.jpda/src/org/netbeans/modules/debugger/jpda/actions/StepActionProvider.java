@@ -605,6 +605,9 @@ implements Executor {
             return 0;
         } catch (InternalExceptionWrapper iex) {
             return 0;
+        } catch (IndexOutOfBoundsException iobe) {
+            // no frames on stack
+            return 0;
         } catch (InvalidStackFrameExceptionWrapper iex) {
             return 0;
         } catch (ObjectCollectedExceptionWrapper iex) {

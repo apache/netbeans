@@ -268,6 +268,30 @@ public final class TreeMaker {
     }
     
     /**
+     * Creates a new CaseTree for a rule case (case &lt;constants&gt; -> &lt;body&gt;).
+     *
+     * @param patterns the labels for this case statement.
+     * @param body the case's body
+     * @see com.sun.source.tree.CaseTree
+     * @since 2.39
+     */
+    public CaseTree CasePatterns(List<? extends Tree> patterns, Tree body) {
+        return delegate.CaseMultiplePatterns(patterns, body);
+    }
+
+    /**
+     * Creates a new CaseTree.
+     *
+     * @param patterns the labels for this case statement.
+     * @param statements the list of statements.
+     * @see com.sun.source.tree.CaseTree
+     * @since 2.39
+     */
+    public CaseTree CasePatterns(List<? extends Tree> patterns, List<? extends StatementTree> statements) {
+        return delegate.CaseMultiplePatterns(patterns, statements);
+    }
+    
+    /**
      * Creates a new CatchTree.
      *
      * @param parameter the exception variable declaration.

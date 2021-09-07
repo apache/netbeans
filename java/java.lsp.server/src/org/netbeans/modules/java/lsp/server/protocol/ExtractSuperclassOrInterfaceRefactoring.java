@@ -70,7 +70,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Dusan Balek
  */
 @ServiceProvider(service = CodeActionsProvider.class, position = 170)
-public class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactoring {
+public final class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactoring {
 
     private static final String EXTRACT_SUPERCLASS_REFACTORING_COMMAND =  "java.refactor.extract.superclass";
     private static final String EXTRACT_INTERFACE_REFACTORING_COMMAND =  "java.refactor.extract.interface";
@@ -81,8 +81,8 @@ public class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactoring {
 
     @Override
     @NbBundle.Messages({
-        "DN_ExtractSuperclass= Extract Superclass...",
-        "DN_ExtractInterface= Extract Interface...",
+        "DN_ExtractSuperclass=Extract Superclass...",
+        "DN_ExtractInterface=Extract Interface...",
     })
     public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
         List<String> only = params.getContext().getOnly();

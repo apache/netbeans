@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -4943,6 +4944,84 @@ public class ServerTest extends NbTestCase {
                 fail("Unknown file modified");
             }
         }
+    }
+
+    public void testSurroundWith() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test {\n" +
+                      "    public static void main(String[] args) {\n" +
+                      "        System.out.println(\"Hello World\");\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+
+        List<Diagnostic>[] diags = new List[1];
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        server.initialize(new InitializeParams()).get();
+        String uri = src.toURI().toString();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
+        synchronized (diags) {
+            while (diags[0] == null) {
+                try {
+                    diags.wait();
+                } catch (InterruptedException ex) {
+                }
+            }
+        }
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 8), new Position(2, 42)), new CodeActionContext(diags[0]))).get();
+        Optional<CodeAction> surroundWith =
+                codeActions.stream()
+                           .filter(Either::isRight)
+                           .map(Either::getRight)
+                           .filter(a -> a.getTitle().startsWith(Bundle.DN_SurroundWith() + "do"))
+                           .findAny();
+        assertTrue(surroundWith.isPresent());
+        Command command = surroundWith.get().getCommand();
+        assertEquals("editor.action.insertSnippet", command.getCommand());
+        assertEquals(1, command.getArguments().size());
+        JsonObject obj = (JsonObject) command.getArguments().get(0);
+        assertEquals("do { \n" +
+                     "    ${0:$TM_SELECTED_TEXT}\n" +
+                     "} while (${1:true});", obj.getAsJsonPrimitive("snippet").getAsString());
     }
 
     public void testNoErrorAndHintsFor() throws Exception {

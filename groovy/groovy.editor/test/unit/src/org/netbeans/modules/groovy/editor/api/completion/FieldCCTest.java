@@ -110,6 +110,12 @@ public class FieldCCTest extends GroovyCCTestBase {
     }
      */
     
+    /**
+     * See NETBEANS-5991 -- bug in type parameters substitution. Note that JDK9 added j.u.Properties#get(Object) -> Object
+     * while JDK8 had no such method. Since V (unsubstituted superclass' parameter) != Object, JDK9+ reports get() -> Object
+     * (signature of superclass' get() -> V is the same, so it is ignored) and 2 getOrDefault as the superclass' signature contains 'V' 
+     * and is therefore different.
+     */
     public void testFields2_javaPropertyReference() throws Exception {
         checkCompletion(TEST_BASE + "" + "Fields2.groovy", "System.properties.ge^t(", true);
     }

@@ -159,7 +159,7 @@ METHOD     of(E, E, E, E, E, E, E)         [STATIC,   List<E>
 METHOD     of(E, E, E, E, E, E, E, E)      [STATIC,   List<E>
 METHOD     of(E, E, E, E, E, E, E, E, E)   [STATIC,   List<E>
 METHOD     of(E, E, E, E, E, E, E, E, E,   [STATIC,   List<E>
-METHOD     of(E[])                         [STATIC,   List<E>
+METHOD     of(E...)                        [STATIC,   List<E>
 METHOD     parallelStream()                [PUBLIC]   Stream<E>
 METHOD     permutations()                             Set
 METHOD     permutations(Closure)                      List

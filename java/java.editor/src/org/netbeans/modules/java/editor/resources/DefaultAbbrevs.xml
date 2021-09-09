@@ -58,18 +58,26 @@
     <codetemplate abbreviation="serr" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION"><code><![CDATA[System.err.println("${cursor}");]]></code></codetemplate> 
     <codetemplate abbreviation="sout" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION"><code><![CDATA[System.out.println("${cursor}");]]></code></codetemplate> 
     <codetemplate abbreviation="st"><code><![CDATA[${no-indent}static ]]></code></codetemplate> 
-    <codetemplate abbreviation="sw"><code><![CDATA[switch (${var instanceof="java.lang.Enum"}) {
-        case ${val completionInvoke}:
-            ${cursor}
-            break;
-        default:
-            throw new AssertionError();
-    }
-]]></code></codetemplate>
-    <codetemplate abbreviation="cs"><code><![CDATA[case ${what completionInvoke}:
-            ${cursor}
-            break;
-]]></code></codetemplate> 
+    <codetemplate abbreviation="sw" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION">
+        <code>
+<![CDATA[switch (${var instanceof="java.lang.Enum"}) {
+    case ${val completionInvoke}:
+        ${selection}${cursor}
+        break;
+    default:
+        throw new AssertionError();
+}
+]]>
+        </code>
+    </codetemplate>
+    <codetemplate abbreviation="cs" contexts="CASE,SWITCH">
+        <code>
+<![CDATA[case ${what completionInvoke}:
+    ${selection}${cursor}
+    break;
+]]>
+        </code>
+    </codetemplate>
     <codetemplate abbreviation="tw"><code><![CDATA[throw ${exc instanceof="java.lang.Throwable" default="new IllegalStateException()"};]]></code></codetemplate>
     <codetemplate abbreviation="ise"><code><![CDATA[throw new IllegalStateException("${arg}");]]></code></codetemplate>
     <codetemplate abbreviation="iae"><code><![CDATA[throw new IllegalArgumentException("${arg}");]]></code></codetemplate>

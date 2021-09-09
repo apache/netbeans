@@ -5012,7 +5012,7 @@ public class ServerTest extends NbTestCase {
                 codeActions.stream()
                            .filter(Either::isRight)
                            .map(Either::getRight)
-                           .filter(a -> a.getTitle().startsWith(Bundle.DN_SurroundWith() + "do"))
+                           .filter(a -> a.getTitle().startsWith(Bundle.DN_SurroundWith("do { ...")))
                            .findAny();
         assertTrue(surroundWith.isPresent());
         Command command = surroundWith.get().getCommand();

@@ -40,10 +40,9 @@ public class GsfCodeTemplateFilter implements CodeTemplateFilter {
     private int endOffset;
     private Set<String> templates;
     
-    private GsfCodeTemplateFilter(JTextComponent component, int offset) {
-        this.startOffset = offset;
-        this.endOffset = component.getSelectionStart() == offset ? component.getSelectionEnd() : -1;
-        Document doc = component.getDocument();
+    private GsfCodeTemplateFilter(Document doc, int startOffset, int endOffset) {
+        this.startOffset = startOffset;
+        this.endOffset = endOffset;
         CodeCompletionHandler completer = doc == null ? null : GsfCompletionProvider.getCompletable(doc, startOffset);
             
         if (completer != null) {
@@ -68,7 +67,12 @@ public class GsfCodeTemplateFilter implements CodeTemplateFilter {
         
         @Override
         public CodeTemplateFilter createFilter(JTextComponent component, int offset) {
-            return new GsfCodeTemplateFilter(component, offset);
+            return createFilter(component.getDocument(), offset, component.getSelectionStart() == offset ? component.getSelectionEnd() : -1);
+        }
+
+        @Override
+        public CodeTemplateFilter createFilter(Document doc, int startOffset, int endOffset) {
+            return new GsfCodeTemplateFilter(doc, startOffset, endOffset);
         }
     }
 

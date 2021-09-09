@@ -181,7 +181,7 @@ public final class MoveRefactoring extends CodeRefactoring {
                 throw new IllegalArgumentException(String.format("Illegal number of arguments received for command: %s", command));
             }
         } catch (Exception ex) {
-            client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+            client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }
         return CompletableFuture.completedFuture(true);
     }
@@ -206,7 +206,7 @@ public final class MoveRefactoring extends CodeRefactoring {
             }
             client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, "Move")));
         } catch (Exception ex) {
-            client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+            client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }
     }
 

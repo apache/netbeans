@@ -164,7 +164,7 @@ public final class PullUpRefactoring extends CodeRefactoring {
                 throw new IllegalArgumentException(String.format("Illegal number of arguments received for command: %s", command));
             }
         } catch (Exception ex) {
-            client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+            client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }
         return CompletableFuture.completedFuture(true);
     }
@@ -206,7 +206,7 @@ public final class PullUpRefactoring extends CodeRefactoring {
                 }
             }, true);
         } catch (Exception ex) {
-            client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+            client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }
         return members;
     }
@@ -238,7 +238,7 @@ public final class PullUpRefactoring extends CodeRefactoring {
             refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(file));
             client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, "PullUp")));
         } catch (Exception ex) {
-            client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+            client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }
     }
 

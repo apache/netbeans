@@ -18,17 +18,11 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
-import com.sun.source.tree.CaseTree;
-import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.Tree;
-import com.sun.source.util.SourcePositions;
-import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -44,20 +38,14 @@ import javax.swing.text.html.parser.ParserDelegator;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
-import org.netbeans.api.java.lexer.JavaTokenId;
+import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.source.CompilationController;
-import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.SourceUtils;
-import org.netbeans.api.java.source.TreeUtilities;
-import org.netbeans.api.lexer.Token;
-import org.netbeans.api.lexer.TokenHierarchy;
-import org.netbeans.api.lexer.TokenId;
-import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.lib.editor.codetemplates.api.CodeTemplate;
 import org.netbeans.lib.editor.codetemplates.api.CodeTemplateManager;
+import org.netbeans.lib.editor.codetemplates.spi.CodeTemplateFilter;
 import org.netbeans.lib.editor.codetemplates.spi.CodeTemplateParameter;
-import org.netbeans.modules.editor.java.Utilities;
+import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -69,20 +57,18 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = CodeActionsProvider.class, position = 80)
 public final class SurroundWithHint extends CodeActionsProvider {
 
-    private static final String EXPRESSION = "EXPRESSION";
-    private static final String CLASS_HEADER = "CLASS_HEADER";
     private static final String COMMAND_INSERT_SNIPPET = "editor.action.insertSnippet";
     private static final String DOTS = "...";
     private static final String SNIPPET = "snippet";
     private static final String SELECTION_VAR = "${selection}";
     private static final String SELECTED_TEXT_VAR = "${0:$TM_SELECTED_TEXT}";
     private static final Pattern SNIPPET_VAR_PATTERN = Pattern.compile("\\$\\{\\s*([-\\w]++)([^}]*)?}");
-    private static final Pattern DEFAULT_VALUE_PATTERN = Pattern.compile("default\\s*=\\s*\\\"([^\\\"]*)\\\"");
+    private static final Pattern SNIPPET_HINT_PATTERN = Pattern.compile("([-\\w]++)(?:\\s*=\\s*(\\\"([^\\\"]*)\\\"|\\S*))?");
     private static final Set<String> TO_FILTER = Collections.singleton("fcom");
 
     @Override
     @NbBundle.Messages({
-        "DN_SurroundWith=Surround with ",
+        "DN_SurroundWith=Surround with \"{0}\"",
     })
     public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
         CompilationController info = CompilationController.get(resultIterator.getParserResult());
@@ -101,64 +87,12 @@ public final class SurroundWithHint extends CodeActionsProvider {
         } catch (IOException ex) {
             return Collections.emptyList();
         }
-        Tree.Kind treeKindCtx = null;
-        String stringCtx = null;
-        TreeUtilities tu = info.getTreeUtilities();
-        TokenSequence<JavaTokenId> ts = SourceUtils.getJavaTokenSequence(info.getTokenHierarchy(), startOffset);
-        int delta = ts.move(startOffset);
-        if (delta == 0 || ts.moveNext() && ts.token().id() == JavaTokenId.WHITESPACE) {
-            delta = ts.move(endOffset);
-            if (delta == 0 || ts.moveNext() && ts.token().id() == JavaTokenId.WHITESPACE) {
-                String selectedText = info.getText().substring(startOffset, endOffset).trim();
-                SourcePositions[] sp = new SourcePositions[1];
-                ExpressionTree expr = selectedText.length() > 0 ? tu.parseExpression(selectedText, sp) : null;
-                if (expr != null && expr.getKind() != Tree.Kind.IDENTIFIER && !Utilities.containErrors(expr) && sp[0].getEndPosition(null, expr) >= selectedText.length()) {
-                    stringCtx = EXPRESSION;
-                }
-            }
-        }
-        Tree tree = tu.pathFor(startOffset).getLeaf();
-        if (tu.pathFor(endOffset).getLeaf() == tree) {
-            treeKindCtx = tree.getKind();
-            switch (treeKindCtx) {
-                case CASE:
-                    if (startOffset < info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), ((CaseTree)tree).getExpression())) {
-                        treeKindCtx = null;
-                    }
-                    break;
-                case CLASS:
-                    SourcePositions sp = info.getTrees().getSourcePositions();
-                    int startPos = (int)sp.getEndPosition(info.getCompilationUnit(), ((ClassTree)tree).getModifiers());
-                    if (startPos <= 0) {
-                        startPos = (int)sp.getStartPosition(info.getCompilationUnit(), tree);
-                    }
-                    String headerText = info.getText().substring(startPos, startOffset);
-                    int idx = headerText.indexOf('{'); //NOI18N
-                    if (idx < 0) {
-                        treeKindCtx = null;
-                        stringCtx = CLASS_HEADER;
-                    }
-                    break;
-                case FOR_LOOP:
-                case ENHANCED_FOR_LOOP:
-                    if (!isRightParenthesisOfLoopPresent(info, startOffset)) {
-                        treeKindCtx = null;
-                    }
-                    break;
-                case PARENTHESIZED:
-                    if (isPartOfWhileLoop(info, startOffset)) {
-                        if (!isRightParenthesisOfLoopPresent(info, startOffset)) {
-                            treeKindCtx = null;
-                        }
-                    }
-                    break;
-            }
-        }
+        Collection<? extends CodeTemplateFilter> filters = getTemplateFilters(doc, startOffset, endOffset);
         List<CodeAction> codeActions = new ArrayList<>();
         for (CodeTemplate codeTemplate : CodeTemplateManager.get(doc).getCodeTemplates()) {
             String parametrizedText = codeTemplate.getParametrizedText();
             if (parametrizedText.toLowerCase().contains(SELECTION_VAR) && !TO_FILTER.contains(codeTemplate.getAbbreviation())) {
-                if (codeTemplate.getContexts() == null || codeTemplate.getContexts().isEmpty() || accept(codeTemplate, treeKindCtx, stringCtx)) {
+                if (codeTemplate.getContexts() == null || codeTemplate.getContexts().isEmpty() || accept(codeTemplate, filters)) {
                     String label = html2text(codeTemplate.getDescription());
                     if (label == null) {
                         String text = codeTemplate.getParametrizedText();
@@ -166,7 +100,7 @@ public final class SurroundWithHint extends CodeActionsProvider {
                         label = convert(idx < 0 ? text : text.substring(0, idx) + DOTS, true);
                     }
                     String snippet = convert(codeTemplate.getParametrizedText(), false);
-                    codeActions.add(createCodeAction(Bundle.DN_SurroundWith() + label, CodeActionKind.RefactorRewrite, COMMAND_INSERT_SNIPPET, Collections.singletonMap(SNIPPET, snippet)));
+                    codeActions.add(createCodeAction(Bundle.DN_SurroundWith(label), CodeActionKind.RefactorRewrite, COMMAND_INSERT_SNIPPET, Collections.singletonMap(SNIPPET, snippet)));
                 }
             }
         }
@@ -183,71 +117,37 @@ public final class SurroundWithHint extends CodeActionsProvider {
         return CompletableFuture.completedFuture(false);
     }
 
-    private static boolean isRightParenthesisOfLoopPresent(CompilationInfo info, int abbrevStartOffset) {
-        TokenHierarchy<?> tokenHierarchy = info.getTokenHierarchy();
-        TokenSequence<?> tokenSequence = tokenHierarchy.tokenSequence();
-        tokenSequence.move(abbrevStartOffset);
-        if (tokenSequence.moveNext()) {
-            TokenId tokenId = skipNextWhitespaces(tokenSequence);
-            return tokenId == null ? false : (tokenId == JavaTokenId.RPAREN);
+    private static Collection<? extends CodeTemplateFilter> getTemplateFilters(Document doc, int startOffset, int endOffset) {
+        String mimeType = DocumentUtilities.getMimeType(doc);
+        Collection<? extends CodeTemplateFilter.Factory> filterFactories = MimeLookup.getLookup(mimeType).lookupAll(CodeTemplateFilter.Factory.class);
+        List<CodeTemplateFilter> result = new ArrayList<>(filterFactories.size());
+        for (CodeTemplateFilter.Factory factory : filterFactories) {
+            result.add(factory.createFilter(doc, startOffset, endOffset));
         }
-        return false;
+        return result;
     }
 
-    private static TokenId skipNextWhitespaces(TokenSequence<?> tokenSequence) {
-        TokenId tokenId = null;
-        while (tokenSequence.moveNext()) {
-            Token<?> token = tokenSequence.token();
-            if (token != null) {
-                tokenId = token.id();
-            }
-            if (tokenId != JavaTokenId.WHITESPACE) {
-                break;
+    private static boolean accept(CodeTemplate template, Collection<? extends CodeTemplateFilter> filters) {
+        for(CodeTemplateFilter filter : filters) {
+            if (!filter.accept(template)) {
+                return false;
             }
         }
-        return tokenId;
-    }
-
-    private static boolean isPartOfWhileLoop(CompilationInfo info, int abbrevStartOffset) {
-        TreeUtilities treeUtilities = info.getTreeUtilities();
-        TreePath currentPath = treeUtilities.pathFor(abbrevStartOffset);
-        TreePath parentPath = treeUtilities.getPathElementOfKind(Tree.Kind.WHILE_LOOP, currentPath);
-        return parentPath != null;
-    }
-
-    private static boolean accept(CodeTemplate template, Tree.Kind treeKindCtx, String stringCtx) {
-        if (treeKindCtx == null && stringCtx == null) {
-            return false;
-        }
-        EnumSet<Tree.Kind> treeKindContexts = EnumSet.noneOf(Tree.Kind.class);
-        HashSet stringContexts = new HashSet();
-        getTemplateContexts(template, treeKindContexts, stringContexts);
-        return treeKindContexts.isEmpty() && stringContexts.isEmpty() && treeKindCtx != Tree.Kind.STRING_LITERAL || treeKindContexts.contains(treeKindCtx) || stringContexts.contains(stringCtx);
-    }
-
-    private static void getTemplateContexts(CodeTemplate template, EnumSet<Tree.Kind> treeKindContexts, HashSet<String> stringContexts) {
-        List<String> contexts = template.getContexts();
-        if (contexts != null) {
-            for(String context : contexts) {
-                try {
-                    treeKindContexts.add(Tree.Kind.valueOf(context));
-                } catch (IllegalArgumentException iae) {
-                    stringContexts.add(context);
-                }
-            }
-        }
+        return true;
     }
 
     private static String convert(String s, boolean label) {
         StringBuilder sb = new StringBuilder();
-        Matcher varMatcher = SNIPPET_VAR_PATTERN.matcher(s);
+        Matcher matcher = SNIPPET_VAR_PATTERN.matcher(s);
         int idx = 0;
         Map<String, Integer> placeholders = new HashMap<>();
+        Map<String, String> values = new HashMap<>();
+        Set<String> nonEditables = new HashSet<>();
         AtomicInteger last = new AtomicInteger();
-        while (varMatcher.find(idx)) {
-            int start = varMatcher.start();
+        while (matcher.find(idx)) {
+            int start = matcher.start();
             sb.append(s.substring(idx, start));
-            String name = varMatcher.group(1);
+            String name = matcher.group(1);
             switch (name) {
                 case CodeTemplateParameter.CURSOR_PARAMETER_NAME:
                 case CodeTemplateParameter.NO_FORMAT_PARAMETER_NAME:
@@ -257,29 +157,52 @@ public final class SurroundWithHint extends CodeActionsProvider {
                     sb.append(label ? DOTS : SELECTED_TEXT_VAR);
                     break;
                 default:
-                    Integer placeholder = placeholders.computeIfAbsent(name, n -> last.incrementAndGet());
-                    String params = varMatcher.groupCount() > 1 ? varMatcher.group(2) : null;
-                    if (params == null) {
-                        if (!label) {
-                            sb.append('$').append(placeholder);
+                    String params = matcher.groupCount() > 1 ? matcher.group(2) : null;
+                    if (params == null || params.isEmpty()) {
+                        if (label || nonEditables.contains(name)) {
+                            sb.append(values.getOrDefault(name, ""));
+                        } else {
+                            sb.append('$').append(placeholders.computeIfAbsent(name, n -> last.incrementAndGet()));
                         }
                     } else {
-                        Matcher defaultValueMatcher = DEFAULT_VALUE_PATTERN.matcher(params);
-                        if (defaultValueMatcher.find()) {
-                            if (label) {
-                                sb.append(defaultValueMatcher.group(1));
+                        Map<String, String> hints = getHints(params);
+                        String defaultValue = hints.get(CodeTemplateParameter.DEFAULT_VALUE_HINT_NAME);
+                        if (defaultValue != null) {
+                            values.put(name, defaultValue);
+                        }
+                        if ("false".equalsIgnoreCase(hints.get(CodeTemplateParameter.EDITABLE_HINT_NAME))) {
+                            nonEditables.add(name);
+                            sb.append(values.getOrDefault(name, ""));
+                        } else {
+                            if (defaultValue != null) {
+                                if (label) {
+                                    sb.append(defaultValue);
+                                } else {
+                                    sb.append("${").append(placeholders.computeIfAbsent(name, n -> last.incrementAndGet())).append(':').append(defaultValue).append('}');
+                                }
+                            } else if (label) {
+                                sb.append(values.getOrDefault(name, ""));
                             } else {
-                                sb.append("${").append(placeholder).append(':').append(defaultValueMatcher.group(1)).append('}');
+                                sb.append('$').append(placeholders.computeIfAbsent(name, n -> last.incrementAndGet()));
                             }
-                        } else if (!label) {
-                            sb.append('$').append(placeholder);
                         }
                     }
             }
-            idx = varMatcher.end();
+            idx = matcher.end();
         }
         String tail = s.substring(idx);
         return sb.append(tail.endsWith("\n") ? tail.substring(0, tail.length() - 1) : tail).toString();
+    }
+
+    private static Map<String, String> getHints(String text) {
+        Map<String, String> hint2Values = new HashMap<>();
+        Matcher matcher = SNIPPET_HINT_PATTERN.matcher(text);
+        int idx = 0;
+        while (matcher.find(idx)) {
+            hint2Values.put(matcher.group(1), matcher.groupCount() > 2 ? matcher.group(3) : matcher.groupCount() > 1 ? matcher.group(2) : null);
+            idx = matcher.end();
+        }
+        return hint2Values;
     }
 
     private static String html2text(String html) throws IOException {

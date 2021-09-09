@@ -181,7 +181,7 @@ public final class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactori
                 }
             });
         } else {
-            client.logMessage(new MessageParams(MessageType.Error, String.format("Illegal number of arguments received for command: %s", command)));
+            client.showMessage(new MessageParams(MessageType.Error, String.format("Illegal number of arguments received for command: %s", command)));
         }
         return CompletableFuture.completedFuture(true);
     }
@@ -232,7 +232,7 @@ public final class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactori
             refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(file));
             client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, EXTRACT_SUPERCLASS_REFACTORING_COMMAND.equals(command) ? "Extract Superclass" : "Extract Interface")));
         } catch (Exception ex) {
-            client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+            client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }
     }
 }

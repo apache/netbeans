@@ -84,7 +84,7 @@ class StringSegment extends TagBounds {
         try {
             s = new String(chars, "UTF-8"); // NOI18N
         } catch (UnsupportedEncodingException ex) {
-            ex.printStackTrace();
+            Systems.printStackTrace(ex);
         }
 
         return s;

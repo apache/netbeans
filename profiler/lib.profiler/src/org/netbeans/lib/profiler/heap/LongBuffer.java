@@ -107,7 +107,7 @@ class LongBuffer {
             try {
                 writeStream.close();
             } catch (IOException ex) {
-                ex.printStackTrace();
+                Systems.printStackTrace(ex);
             }
         }
 
@@ -126,7 +126,7 @@ class LongBuffer {
                 readStream = backingFile.newDataInputStream(buffer.length * 8);
                 readStreamClosed = false;
             } catch (IOException ex) {
-                ex.printStackTrace();
+                Systems.printStackTrace(ex);
             }
         }
     }

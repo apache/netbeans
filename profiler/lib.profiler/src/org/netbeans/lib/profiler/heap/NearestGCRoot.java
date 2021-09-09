@@ -109,7 +109,7 @@ class NearestGCRoot {
                 computeOneLevel(processedClasses);
             } while (hasMoreLevels());
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Systems.printStackTrace(ex);
         }
 
         deleteBuffers();
@@ -190,7 +190,7 @@ class NearestGCRoot {
                 fieldValues = instance.getFieldValues();
             } else {
                 if (instance == null) {
-                    System.err.println("HeapWalker Warning - null instance for " + heap.dumpBuffer.getID(instanceOffset + 1)); // NOI18N
+                    Systems.debug("HeapWalker Warning - null instance for " + heap.dumpBuffer.getID(instanceOffset + 1)); // NOI18N
                     continue;
                 }
                 throw new IllegalArgumentException("Illegal type " + instance.getClass()); // NOI18N
@@ -371,10 +371,10 @@ class NearestGCRoot {
 
     LongBuffer getLeaves() {
         computeGCRoots();
-//System.out.println("Multi par.  "+multiParentsCount);
-//System.out.println("Leaves      "+leavesCount);
-//System.out.println("Tree obj.   "+heap.idToOffsetMap.treeObj);
-//System.out.println("First level "+firstLevel);
+//Systems.debug("Multi par.  "+multiParentsCount);
+//Systems.debug("Leaves      "+leavesCount);
+//Systems.debug("Tree obj.   "+heap.idToOffsetMap.treeObj);
+//Systems.debug("First level "+firstLevel);
         return leaves;
     }
     

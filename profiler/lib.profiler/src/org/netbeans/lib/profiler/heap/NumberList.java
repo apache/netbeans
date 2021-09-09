@@ -148,7 +148,7 @@ class NumberList {
             }
             offset = getOffsetToNextBlock(block);
             if (offset == 0L) {
-                System.out.println("Error - number not found at end");
+                Systems.debug("Error - number not found at end");
                 return;
             }
         }
@@ -190,7 +190,7 @@ class NumberList {
                 mappedSize = Math.min(blockSize*blocks, Integer.MAX_VALUE-blockSize+1);
                 buf = data.mmap(FileChannel.MapMode.READ_WRITE, mappedSize, false);
             } catch (IOException ex) {
-                ex.printStackTrace();
+                Systems.printStackTrace(ex);
             }
         }
     }
@@ -201,7 +201,7 @@ class NumberList {
             blockCache.clear();
             mmapData();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Systems.printStackTrace(ex);
         }
     }
     
@@ -373,7 +373,7 @@ class NumberList {
                 try {
                     nextNumber();
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    Systems.printStackTrace(ex);
                     nextNumber = 0;
                 }
                 return num;

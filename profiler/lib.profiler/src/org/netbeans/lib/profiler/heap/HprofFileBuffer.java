@@ -114,7 +114,7 @@ class HprofFileBuffer extends HprofByteBuffer {
                 fis.seek(position);
                 fis.readFully(chars);
             } catch (IOException ex) {
-                ex.printStackTrace();
+                Systems.printStackTrace(ex);
             }
         }
     }
@@ -148,11 +148,11 @@ class HprofFileBuffer extends HprofByteBuffer {
             fis.seek(newBufferStart);
             fis.readFully(dumpBuffer);
 
-            //System.out.println("Reading at "+newBufferStart+" size "+dumpBuffer.length+" thread "+Thread.currentThread().getName());
+            //Systems.debug("Reading at "+newBufferStart+" size "+dumpBuffer.length+" thread "+Thread.currentThread().getName());
         } catch (EOFException ex) {
             // ignore
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Systems.printStackTrace(ex);
         }
 
         bufferStartOffset = newBufferStart;

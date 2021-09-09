@@ -70,8 +70,7 @@ public class HeapFactory {
                 try {
                     return loadHeap(cacheDir);
                 } catch (IOException ex) {
-                    System.err.println("Loading heap dump "+heapDump+" from cache failed.");
-                    ex.printStackTrace(System.err);
+                    Systems.printStackTrace("Loading heap dump "+heapDump+" from cache failed.", ex);
                 }
             }
         }

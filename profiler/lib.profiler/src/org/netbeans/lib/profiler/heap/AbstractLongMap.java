@@ -205,12 +205,6 @@ abstract class AbstractLongMap {
         return index;
     }
     
-    private static boolean isLinux() {
-        String osName = System.getProperty("os.name");  // NOI18N
-        
-        return osName.endsWith("Linux"); // NOI18N
-    }
-
     abstract Entry createEntry(long index);
     
     abstract Entry createEntry(long index,long value);
@@ -316,7 +310,7 @@ abstract class AbstractLongMap {
                     file.seek(newOffset);
                     file.readFully(buf,0,getBufferSize(newOffset));
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    Systems.printStackTrace(ex);
                 }
 
                 offset = newOffset;
@@ -350,7 +344,7 @@ abstract class AbstractLongMap {
     
     private static class MemoryMappedData implements Data {
         
-        private static final FileChannel.MapMode MAP_MODE = isLinux() ? FileChannel.MapMode.PRIVATE : FileChannel.MapMode.READ_WRITE;
+        private static final FileChannel.MapMode MAP_MODE = Systems.isLinux() ? FileChannel.MapMode.PRIVATE : FileChannel.MapMode.READ_WRITE;
 
         //~ Instance fields ------------------------------------------------------------------------------------------------------
 

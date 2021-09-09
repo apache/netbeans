@@ -94,6 +94,12 @@ import org.openide.util.Lookup;
  */
 public class GroovyParser extends Parser {
 
+    /**
+     * If set, enables reporting of static type checking in editor. As there are a lot of false positives,
+     * this feature remains 'developer only' at the moment, so false reports can be seen & mitigated easily.
+     */
+    private static final boolean STATIC_ERRORS = Boolean.getBoolean(GroovyParser.class.getName() + ".staticCompileErrors");
+
     private static final Logger LOG = Logger.getLogger(GroovyParser.class.getName());
 
     private static final AtomicLong PARSING_TIME = new AtomicLong(0);
@@ -610,10 +616,14 @@ public class GroovyParser extends Parser {
             try {
                 compilationUnit.compile(Phases.CLASS_GENERATION);
                 NbGroovyErrorCollector coll = (NbGroovyErrorCollector)compilationUnit.getErrorCollector();
-                // enable static errors, they were separated aside, so that later compilation phases can run
-                coll.setShowAllErrors(true);
-                // and let the Collector to fail...
-                coll.failIfErrors();
+                // PENDING: there are too many spurious errors from static type analysis (now). Let's make the errors
+                // a dev-only feature fow now.
+                if (STATIC_ERRORS) {
+                    // enable static errors, they were separated aside, so that later compilation phases can run
+                    coll.setShowAllErrors(true);
+                    // and let the Collector to fail...
+                    coll.failIfErrors();
+                }
             } catch (CancellationException ex) {
                 // cancelled probably
                 if (isCancelled()) {

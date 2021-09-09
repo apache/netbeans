@@ -19,12 +19,9 @@
 
 package org.netbeans.lib.profiler.heap;
 
-import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -319,7 +316,7 @@ class HprofHeap implements Heap {
             try {
                 DataOutputStream out;
                 File outFile = cacheDirectory.getHeapDumpAuxFile();
-                out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(outFile), 32768));
+                out = outFile.newDataOutputStream(32768);
                 writeToStream(out);
                 out.close();
             } catch (IOException ex) {
@@ -327,7 +324,7 @@ class HprofHeap implements Heap {
             }
         }
     }
-    
+
     void writeToStream(DataOutputStream out) throws IOException {
         out.writeUTF(SNAPSHOT_ID);
         out.writeInt(SNAPSHOT_VERSION);

@@ -21,10 +21,8 @@ package org.netbeans.lib.profiler.heap;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.MappedByteBuffer;
+import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +46,7 @@ class NumberList {
     private final Map/*offset,block*/ blockCache;
     private final Set dirtyBlocks;
     private long blocks;
-    private MappedByteBuffer buf;
+    private ByteBuffer buf;
     private long mappedSize;
     private CacheDirectory cacheDirectory;
     
@@ -190,7 +188,7 @@ class NumberList {
         if (buf == null) {
             try {
                 mappedSize = Math.min(blockSize*blocks, Integer.MAX_VALUE-blockSize+1);
-                buf = data.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, mappedSize);
+                buf = data.mmap(FileChannel.MapMode.READ_WRITE, mappedSize, false);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

@@ -19,7 +19,6 @@
 
 package org.netbeans.lib.profiler.heap;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 

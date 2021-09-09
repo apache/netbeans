@@ -19,16 +19,10 @@
 
 package org.netbeans.lib.profiler.heap;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 
 
 /**
@@ -129,7 +123,7 @@ class LongBuffer {
                 if (readStream != null) {
                     readStream.close();
                 }
-                readStream = new DataInputStream(new BufferedInputStream(new FileInputStream(backingFile), buffer.length * 8));
+                readStream = backingFile.newDataInputStream(buffer.length * 8);
                 readStreamClosed = false;
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -149,7 +143,7 @@ class LongBuffer {
         }
 
         if (writeStream == null) {
-            writeStream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(backingFile), buffer.length * 8));
+            writeStream = backingFile.newDataOutputStream(buffer.length * 8);
 
             for (int i = 0; i < buffer.length; i++) {
                 writeStream.writeLong(buffer[i]);

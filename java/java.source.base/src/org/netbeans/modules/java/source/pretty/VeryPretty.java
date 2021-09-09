@@ -2095,6 +2095,9 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             } catch (RuntimeException ex) {
                 Exceptions.printStackTrace(ex);
             }
+        }else if ("DEFAULT_CASE_LABEL".equals(tree.getKind().name())) {
+            print("default");
+            return;
         }
 	print("(UNKNOWN: " + tree + ")");
 	newline();

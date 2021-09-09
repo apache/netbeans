@@ -1734,6 +1734,12 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testSwitch() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+            return;
+        } catch (IllegalArgumentException ex) {
+            //OK,RELEASE_17, skip test
+        }
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile,
                 "package hierbas.del.litoral;\n\n"
@@ -1961,6 +1967,243 @@ public class FormatingTest extends NbTestCase {
         preferences.putBoolean("indentCasesFromSwitch", false);
         reformat(doc, content, golden);
         preferences.putBoolean("indentCasesFromSwitch", true);
+    }
+
+    public void testSwitchOnJDK17() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile,
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n"
+                + "    public void taragui(int i) {\n"
+                + "    }\n"
+                + "}\n");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie)testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        JavaSource testSource = JavaSource.forDocument(doc);
+        final String stmt =
+                "switch (i) {case 0: System.out.println(i); break; default: System.out.println(\"DEFAULT\");}";
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            @Override
+            public void run(WorkingCopy workingCopy) throws java.io.IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                ClassTree clazz = (ClassTree)workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                MethodTree method = (MethodTree)clazz.getMembers().get(1);
+                BlockTree block = method.getBody();
+                StatementTree statement = workingCopy.getTreeUtilities().parseStatement(stmt, new SourcePositions[1]);
+                workingCopy.rewrite(block, workingCopy.getTreeMaker().addBlockStatement(block, statement));
+            }
+        };
+        testSource.runModificationTask(task).commit();
+
+        Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
+        preferences.putBoolean("spaceBeforeSwitchParen", false);
+        preferences.putBoolean("spaceWithinSwitchParens", true);
+        preferences.putBoolean("spaceBeforeSwitchLeftBrace", false);
+        testSource.runModificationTask(task).commit();
+        preferences.putBoolean("spaceBeforeSwitchParen", true);
+        preferences.putBoolean("spaceWithinSwitchParens", false);
+        preferences.putBoolean("spaceBeforeSwitchLeftBrace", true);
+
+        preferences.put("otherBracePlacement", CodeStyle.BracePlacement.NEW_LINE.name());
+        testSource.runModificationTask(task).commit();
+
+        preferences.put("otherBracePlacement", CodeStyle.BracePlacement.NEW_LINE_HALF_INDENTED.name());
+        testSource.runModificationTask(task).commit();
+
+        preferences.put("otherBracePlacement", CodeStyle.BracePlacement.NEW_LINE_INDENTED.name());
+        testSource.runModificationTask(task).commit();
+        preferences.put("otherBracePlacement", CodeStyle.BracePlacement.SAME_LINE.name());
+
+        preferences.putBoolean("indentCasesFromSwitch", false);
+        testSource.runModificationTask(task).commit();
+        preferences.putBoolean("indentCasesFromSwitch", true);
+
+        ec.saveDocument();
+        String res = TestUtilities.copyFileToString(testFile);
+        System.err.println(res);
+
+        String golden =
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch (i) {\n"
+                + "            case 0:\n"
+                + "                System.out.println(i);\n"
+                + "                break;\n"
+                + "            case default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "        }\n"
+                + "        switch( i ){\n"
+                + "            case 0:\n"
+                + "                System.out.println(i);\n"
+                + "                break;\n"
+                + "            case default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "        }\n"
+                + "        switch (i)\n"
+                + "        {\n"
+                + "            case 0:\n"
+                + "                System.out.println(i);\n"
+                + "                break;\n"
+                + "            case default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "        }\n"
+                + "        switch (i)\n"
+                + "          {\n"
+                + "            case 0:\n"
+                + "                System.out.println(i);\n"
+                + "                break;\n"
+                + "            case default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "          }\n"
+                + "        switch (i)\n"
+                + "            {\n"
+                + "            case 0:\n"
+                + "                System.out.println(i);\n"
+                + "                break;\n"
+                + "            case default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "            }\n"
+                + "        switch (i) {\n"
+                + "        case 0:\n"
+                + "            System.out.println(i);\n"
+                + "            break;\n"
+                + "        case default:\n"
+                + "            System.out.println(\"DEFAULT\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        assertEquals(golden, res);
+
+        String content =
+                "package hierbas.del.litoral;"
+                + "public class Test{"
+                + "public void taragui(int i){"
+                + "switch(i){"
+                + "case 0:"
+                + "System.out.println(i);"
+                + "break;"
+                + "default:"
+                + "System.out.println(\"DEFAULT\");"
+                + "}"
+                + "}"
+                + "}\n";
+
+        golden =
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch (i) {\n"
+                + "            case 0:\n"
+                + "                System.out.println(i);\n"
+                + "                break;\n"
+                + "            default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+
+        golden =
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch( i ){\n"
+                + "            case 0:\n"
+                + "                System.out.println(i);\n"
+                + "                break;\n"
+                + "            default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        preferences.putBoolean("spaceBeforeSwitchParen", false);
+        preferences.putBoolean("spaceWithinSwitchParens", true);
+        preferences.putBoolean("spaceBeforeSwitchLeftBrace", false);
+        reformat(doc, content, golden);
+        preferences.putBoolean("spaceBeforeSwitchParen", true);
+        preferences.putBoolean("spaceWithinSwitchParens", false);
+        preferences.putBoolean("spaceBeforeSwitchLeftBrace", true);
+
+        golden =
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch (i)\n"
+                + "        {\n"
+                + "            case 0:\n"
+                + "                System.out.println(i);\n"
+                + "                break;\n"
+                + "            default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        preferences.put("otherBracePlacement", CodeStyle.BracePlacement.NEW_LINE.name());
+        reformat(doc, content, golden);
+
+        golden =
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch (i)\n"
+                + "          {\n"
+                + "            case 0:\n"
+                + "                System.out.println(i);\n"
+                + "                break;\n"
+                + "            default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "          }\n"
+                + "    }\n"
+                + "}\n";
+        preferences.put("otherBracePlacement", CodeStyle.BracePlacement.NEW_LINE_HALF_INDENTED.name());
+        reformat(doc, content, golden);
+
+        golden =
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch (i)\n"
+                + "            {\n"
+                + "            case 0:\n"
+                + "                System.out.println(i);\n"
+                + "                break;\n"
+                + "            default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "            }\n"
+                + "    }\n"
+                + "}\n";
+        preferences.put("otherBracePlacement", CodeStyle.BracePlacement.NEW_LINE_INDENTED.name());
+        reformat(doc, content, golden);
+        preferences.put("otherBracePlacement", CodeStyle.BracePlacement.SAME_LINE.name());
+
+        golden =
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch (i) {\n"
+                + "        case 0:\n"
+                + "            System.out.println(i);\n"
+                + "            break;\n"
+                + "        default:\n"
+                + "            System.out.println(\"DEFAULT\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        preferences.putBoolean("indentCasesFromSwitch", false);
+        reformat(doc, content, golden);
+        preferences.putBoolean("indentCasesFromSwitch", true);
+
     }
     public void testRuleSwitch() throws Exception {
         testFile = new File(getWorkDir(), "Test.java");

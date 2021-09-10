@@ -92,7 +92,7 @@ is the proper place.
              <author login="dbalek"/>
              <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
              <description>
-                 Added method allows for creating code template filters for the given document and range.
+                 Added method allows creating code template filters for the given document and range.
              </description>
              <class package="org.netbeans.lib.editor.codetemplates.spi" name="CodeTemplateFilter"/>
         </change>

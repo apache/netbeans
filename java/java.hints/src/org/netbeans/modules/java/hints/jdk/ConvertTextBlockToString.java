@@ -36,7 +36,7 @@ import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.hints.TriggerTreeKind;
 import org.openide.util.NbBundle.Messages;
 
-@Hint(displayName = "#DN_ConvertTextBlockToString", description = "#DESC_ConvertTextBlockToString", category = "suggestions", minSourceVersion = "13", hintKind = Hint.Kind.ACTION, severity = Severity.HINT)
+@Hint(displayName = "#DN_ConvertTextBlockToString", description = "#DESC_ConvertTextBlockToString", category = "rules15", severity = Severity.HINT)
 @Messages({
     "DN_ConvertTextBlockToString=Convert Text block to String",
     "DESC_ConvertTextBlockToString=Converts java 15 Text Blocks back to regular Strings."

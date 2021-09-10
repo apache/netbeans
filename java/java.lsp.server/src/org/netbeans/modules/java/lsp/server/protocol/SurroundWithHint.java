@@ -18,13 +18,23 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.SourcePositions;
+import com.sun.source.util.TreePath;
+import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,20 +42,31 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 import javax.swing.text.Document;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.parser.ParserDelegator;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
+import org.eclipse.lsp4j.Range;
+import org.eclipse.lsp4j.TextEdit;
+import org.eclipse.lsp4j.WorkspaceEdit;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.source.CompilationController;
+import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.TreeUtilities;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.lib.editor.codetemplates.api.CodeTemplate;
 import org.netbeans.lib.editor.codetemplates.api.CodeTemplateManager;
 import org.netbeans.lib.editor.codetemplates.spi.CodeTemplateFilter;
 import org.netbeans.lib.editor.codetemplates.spi.CodeTemplateParameter;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -93,14 +114,24 @@ public final class SurroundWithHint extends CodeActionsProvider {
             String parametrizedText = codeTemplate.getParametrizedText();
             if (parametrizedText.toLowerCase().contains(SELECTION_VAR) && !TO_FILTER.contains(codeTemplate.getAbbreviation())) {
                 if (codeTemplate.getContexts() == null || codeTemplate.getContexts().isEmpty() || accept(codeTemplate, filters)) {
+                    String text = convert(codeTemplate.getParametrizedText(), null);
                     String label = html2text(codeTemplate.getDescription());
                     if (label == null) {
-                        String text = codeTemplate.getParametrizedText();
                         int idx = text.indexOf('\n');
-                        label = convert(idx < 0 ? text : text.substring(0, idx) + DOTS, true);
+                        label = idx < 0 ? text : text.substring(0, idx) + DOTS;
                     }
-                    String snippet = convert(codeTemplate.getParametrizedText(), false);
-                    codeActions.add(createCodeAction(Bundle.DN_SurroundWith(label), CodeActionKind.RefactorRewrite, COMMAND_INSERT_SNIPPET, Collections.singletonMap(SNIPPET, snippet)));
+                    StringBuilder sb = new StringBuilder();
+                    AtomicInteger last = new AtomicInteger();
+                    List<TextEdit> edits = updateSelection(info, startOffset, endOffset, text, sb, last);
+                    String snippet = convert(codeTemplate.getParametrizedText(), last);
+                    if (sb.length() > 0) {
+                        snippet = sb.append(snippet).toString();
+                    }
+                    CodeAction codeAction = createCodeAction(Bundle.DN_SurroundWith(label), CodeActionKind.RefactorRewrite, COMMAND_INSERT_SNIPPET, Collections.singletonMap(SNIPPET, snippet));
+                    if (!edits.isEmpty()) {
+                        codeAction.setEdit(new WorkspaceEdit(Collections.singletonMap(params.getTextDocument().getUri(), edits)));
+                    }
+                    codeActions.add(codeAction);
                 }
             }
         }
@@ -136,14 +167,13 @@ public final class SurroundWithHint extends CodeActionsProvider {
         return true;
     }
 
-    private static String convert(String s, boolean label) {
+    private static String convert(String s, AtomicInteger last) {
         StringBuilder sb = new StringBuilder();
         Matcher matcher = SNIPPET_VAR_PATTERN.matcher(s);
         int idx = 0;
         Map<String, Integer> placeholders = new HashMap<>();
         Map<String, String> values = new HashMap<>();
         Set<String> nonEditables = new HashSet<>();
-        AtomicInteger last = new AtomicInteger();
         while (matcher.find(idx)) {
             int start = matcher.start();
             sb.append(s.substring(idx, start));
@@ -154,12 +184,14 @@ public final class SurroundWithHint extends CodeActionsProvider {
                 case CodeTemplateParameter.NO_INDENT_PARAMETER_NAME:
                     break;
                 case CodeTemplateParameter.SELECTION_PARAMETER_NAME:
-                    sb.append(label ? DOTS : SELECTED_TEXT_VAR);
+                    if (last != null) {
+                        sb.append(SELECTED_TEXT_VAR);
+                    }
                     break;
                 default:
                     String params = matcher.groupCount() > 1 ? matcher.group(2) : null;
                     if (params == null || params.isEmpty()) {
-                        if (label || nonEditables.contains(name)) {
+                        if (last == null || nonEditables.contains(name)) {
                             sb.append(values.getOrDefault(name, ""));
                         } else {
                             sb.append('$').append(placeholders.computeIfAbsent(name, n -> last.incrementAndGet()));
@@ -175,12 +207,12 @@ public final class SurroundWithHint extends CodeActionsProvider {
                             sb.append(values.getOrDefault(name, ""));
                         } else {
                             if (defaultValue != null) {
-                                if (label) {
+                                if (last == null) {
                                     sb.append(defaultValue);
                                 } else {
                                     sb.append("${").append(placeholders.computeIfAbsent(name, n -> last.incrementAndGet())).append(':').append(defaultValue).append('}');
                                 }
-                            } else if (label) {
+                            } else if (last == null) {
                                 sb.append(values.getOrDefault(name, ""));
                             } else {
                                 sb.append('$').append(placeholders.computeIfAbsent(name, n -> last.incrementAndGet()));
@@ -217,5 +249,81 @@ public final class SurroundWithHint extends CodeActionsProvider {
             }
         }, Boolean.TRUE);
         return sb.toString();
+    }
+
+    private static List<TextEdit> updateSelection(CompilationInfo info, int startOffset, int endOffset, String templateText, StringBuilder sb, AtomicInteger last) {
+        List<TextEdit> edits = new ArrayList<>();
+        TreeUtilities tu = info.getTreeUtilities();
+        StatementTree stat = tu.parseStatement(templateText, null);
+        EnumSet<Tree.Kind> kinds = EnumSet.of(Tree.Kind.BLOCK, Tree.Kind.DO_WHILE_LOOP,
+                Tree.Kind.ENHANCED_FOR_LOOP, Tree.Kind.FOR_LOOP, Tree.Kind.IF, Tree.Kind.SYNCHRONIZED,
+                Tree.Kind.TRY, Tree.Kind.WHILE_LOOP);
+        if (stat != null && kinds.contains(stat.getKind())) {
+            TreePath treePath = tu.pathFor(startOffset);
+            Tree tree = treePath.getLeaf();
+            if (tree.getKind() == Tree.Kind.BLOCK && tree == tu.pathFor(endOffset).getLeaf()) {
+                Trees trees = info.getTrees();
+                SourcePositions sp = trees.getSourcePositions();
+                Map<VariableElement, VariableTree> vars = new HashMap<>();
+                LinkedList<VariableTree> varList = new LinkedList<>();
+                ErrorAwareTreePathScanner scanner = new ErrorAwareTreePathScanner() {
+                    private int cnt = 0;
+                    @Override
+                    public Object visitIdentifier(IdentifierTree node, Object p) {
+                        Element e = trees.getElement(getCurrentPath());
+                        VariableTree var;
+                        if (e != null && (var = vars.remove(e)) != null) {
+                            sb.append(var.getType()).append(' ').append(var.getName());
+                            TypeMirror tm = ((VariableElement)e).asType();
+                            switch(tm.getKind()) {
+                                case ARRAY:
+                                case DECLARED:
+                                    sb.append(" = ${").append(last.incrementAndGet()).append(':').append("\"null\"}");
+                                    break;
+                                case BOOLEAN:
+                                    sb.append(" = ${").append(last.incrementAndGet()).append(':').append("\"false\"}");
+                                    break;
+                                case BYTE:
+                                case CHAR:
+                                case DOUBLE:
+                                case FLOAT:
+                                case INT:
+                                case LONG:
+                                case SHORT:
+                                    sb.append(" = ${").append(last.incrementAndGet()).append(':').append("\"0\"}");
+                                    break;
+                            }
+                            sb.append(";\n"); //NOI18N
+                        }
+                        return null;
+                    }
+                };
+                for (StatementTree st : ((BlockTree)tree).getStatements()) {
+                    if (sp.getStartPosition(info.getCompilationUnit(), st) >= startOffset) {
+                        if (sp.getEndPosition(info.getCompilationUnit(), st) <= endOffset) {
+                            if (st.getKind() == Tree.Kind.VARIABLE) {
+                                Element e = trees.getElement(new TreePath(treePath, st));
+                                if (e != null && e.getKind() == ElementKind.LOCAL_VARIABLE) {
+                                    vars.put((VariableElement)e, (VariableTree)st);
+                                    varList.addFirst((VariableTree)st);
+                                }
+                            }
+                        } else {
+                            scanner.scan(new TreePath(treePath, st), null);
+                        }
+                    }
+                }
+                Collection<VariableTree> vals = vars.values();
+                for (VariableTree var : varList) {
+                    if (!vals.contains(var)) {
+                        int start = (int) sp.getStartPosition(info.getCompilationUnit(), var.getType());
+                        int[] span = tu.findNameSpan(var);
+                        int end = span != null ? span[0] : (int) sp.getEndPosition(info.getCompilationUnit(), var.getType());
+                        edits.add(new TextEdit(new Range(Utils.createPosition(info.getCompilationUnit().getLineMap(), start), Utils.createPosition(info.getCompilationUnit().getLineMap(), end)), ""));
+                    }
+                }
+            }
+        }
+        return edits;
     }
 }

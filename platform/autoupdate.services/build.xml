@@ -52,6 +52,8 @@
     <target name="netbeans-extra" depends="jar-updater"/>
 
     <target name="do-unit-test-build" depends="projectized.do-unit-test-build">
+        <jar destfile="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/empty.jar">
+        </jar>
         <property name="validation-store" value="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/test-validate-keystore.jks" />
         <delete file="${validation-store}" />
         <genkey

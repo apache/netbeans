@@ -317,6 +317,27 @@ public final class ClassNodeCache {
 
         private static final ClassNotFoundException CNF = new ClassNotFoundException();
         
+        /**
+         * Indicates the resource is just one, there are not multiple resources. Will be
+         * replaced by URL in the cache on first reference, so next accesses do not need to
+         * use URLMappers. Note: this tag value is compared by identity
+         */
+        private static final URL PLACEHOLDER; 
+        
+        /**
+         * Multiple resources of the same name; use slow method. Note: this tag value is compared by identity
+         */
+        private static final URL MULTIPLE; 
+        
+        static {
+            try {
+                PLACEHOLDER = new URL("file:///");
+                MULTIPLE = new URL("file:///");
+            } catch (IOException ex) {
+                throw new IllegalStateException();
+            }
+        }
+        
         private final CompilerConfiguration config;
 
         private final ClassPath path;
@@ -384,6 +405,31 @@ public final class ClassNodeCache {
                 Class c = super.loadClass(name, lookupScriptFiles, preferClassOverScript, resolve);
                 ok = true;
                 return c;
+            } catch (ClassNotFoundException ex) {
+                // NETBEANS-5982: Groovy tries to load some types (i.e. annotations) into JVM. We serve .class resources
+                // from .sig files produced by Java indexer, then Groovy "needs" to load them for further inspection,
+                // but the ClassLoaderSupport refuses to do so. Until NETBEANS-5982 is fixed, attempt to load .sig file into
+                // JVM.
+                // This ClassLoader is a throwaway one, so if the source changes, the classes can be loaded again in a different
+                // ParsingCL instance next parsing round.
+                String cr = name.replace(".", "/") + ".class"; // NOI18N
+                URL u = getResource(cr);
+                if (u != null) {
+                    try {
+                        URLConnection con = u.openConnection(); 
+                        byte[] contents = new byte[con.getContentLength()];
+                        try (InputStream cs = u.openStream()) {
+                            cs.read(contents);
+                        }
+                        Class c = defineClass(name, contents);
+                        ok = true;
+                        return c;
+                    } catch (IOException ex2) {
+                        throw ex;
+                    }
+                } else {
+                    throw ex;
+                }
             } finally {
                 if (!ok && rn != null) {
                     cache.addNonExistentResource(rn);
@@ -391,16 +437,93 @@ public final class ClassNodeCache {
             }
         }
         
+        /**
+         * Will load folder from {@link #path} and return its contents. The 1st pair element
+         * is the filename, the second is a Map of folder's contents.
+         * @param resourceName full resource name to search for
+         * @return filename and folder contents.
+         */
+        private Pair<String, Map<String, URL>> loadFolder(String resourceName) {
+            int lastSlash = resourceName.lastIndexOf('/');
+            String folderName = lastSlash == -1 ? "" : resourceName.substring(0, lastSlash);
+            Map<String, URL> contents = folderContents.get(folderName);
+            String rest = resourceName.substring(lastSlash + 1);
+            if (cache.isNonExistentResource(folderName)) {
+                return Pair.of(rest, Collections.emptyMap());
+            }
+            if (contents != null) {
+                return Pair.of(rest, contents);
+            }
+            Map<String, URL> lhm = new LinkedHashMap<>();
+            boolean empty = true;
+            for (FileObject parent: path.findAllResources(folderName)) {
+                for (FileObject f : parent.getChildren()) {
+                    if (lhm.putIfAbsent(f.getNameExt(), PLACEHOLDER) != null) {
+                        lhm.put(f.getNameExt(), MULTIPLE);
+                    }
+                    empty = false;
+                }
+            }
+            folderContents.put(folderName, lhm);
+            if (empty) {
+                cache.addNonExistentResource(folderName);
+            }
+            return Pair.of(rest, lhm);
+        }
+
+        // allow to conditionally disable this optimization, for debugging.
+        private static final boolean RESOURCES_FROM_FILESYSTEMS = Boolean.valueOf(System.getProperty(GroovyParser.class.getName() + ".useFilesystems", "true"));
+        
         @Override
         public Enumeration<URL> getResources(String name) throws IOException {
             if (cache.isNonExistentResource(name)) {
                 return Enumerations.empty();
             }
-            Enumeration<URL> en = super.getResources(name);
-            if (!en.hasMoreElements()) {
-                cache.addNonExistentResource(name);
+            if (!RESOURCES_FROM_FILESYSTEMS) {
+                 Enumeration<URL> en = super.getResources(name);
+                if (!en.hasMoreElements()) {
+                    cache.addNonExistentResource(name);
+                }
+                return en;
             }
-            return en;
+            Pair<String, Map<String, URL>> fl = loadFolder(name);
+            URL res = fl.second().get(fl.first());
+            if (res == null) {
+                cache.addNonExistentResource(name);
+                return Collections.emptyEnumeration();
+            } else if (res == MULTIPLE) {
+                return super.getResources(name);
+            } else if (res == PLACEHOLDER) {
+                Enumeration<URL> r = super.getResources(name);
+                if (r.hasMoreElements()) {
+                    res = r.nextElement();
+                    fl.second().put(fl.first(), res);
+                } else {
+                    cache.addNonExistentResource(name);
+                    return null;
+                }
+            }
+            return Enumerations.singleton(res);
+        }
+        
+        private URL doGetResource(String name) {
+            Pair<String, Map<String, URL>> fl = loadFolder(name);
+            URL res = fl.second().get(fl.first());
+            if (res == null) {
+                return null;
+            }
+            
+            if (res == MULTIPLE) {
+                FileObject f = path.findResource(name);
+                return URLMapper.findURL(f, URLMapper.INTERNAL);
+            } else if (res == PLACEHOLDER) {
+                FileObject f = path.findResource(name);
+                res = URLMapper.findURL(f, URLMapper.INTERNAL);
+                fl.second().put(fl.first(), res);
+                return res;
+            } else {
+                return res;
+            }
         }
 
         @Override
@@ -410,7 +533,19 @@ public final class ClassNodeCache {
                 if (cache.isNonExistentResource(name)) {
                     return null;
                 }
-                URL u = super.getResource(name);
+                if (!RESOURCES_FROM_FILESYSTEMS) {
+                    URL u = super.getResource(name);
+                    if (u == null) {
+                        LOG.log(Level.FINE, " -> caching nonexistent: " + name);
+                        cache.addNonExistentResource(name);
+                    }
+                    return u;
+                }
+                URL u = doGetResource(name);
+                if (u == null && name.endsWith(".class")) {
+                    String sigName = name.substring(0, name.length() - 5) + "sig";
+                    u = doGetResource(sigName);
+                }
                 if (u == null) {
                     LOG.log(Level.FINE, " -> caching nonexistent: " + name);
                     cache.addNonExistentResource(name);

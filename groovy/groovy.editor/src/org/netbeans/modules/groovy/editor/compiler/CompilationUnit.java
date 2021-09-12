@@ -53,7 +53,6 @@ import org.netbeans.modules.groovy.editor.api.parser.GroovyParser;
 import org.netbeans.modules.groovy.editor.java.ElementSearch;
 import org.netbeans.modules.groovy.editor.java.Utilities;
 import org.netbeans.modules.parsing.api.Snapshot;
-import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
 /**
@@ -306,6 +305,29 @@ public class CompilationUnit extends org.codehaus.groovy.control.CompilationUnit
     protected void runSourceVisitor(String visitorName, Consumer<SourceUnit> callback) {
         for (SourceUnit su : sources.values()) {
             callback.accept(su);
+        }
+    }
+    
+    private static Method getCachedClassPathMethod;
+    
+    public static ClassPath pryOutCachedClassPath(ClasspathInfo cpInfo, ClasspathInfo.PathKind kind) {
+        try {
+            if (getCachedClassPathMethod == null) {
+                Method m = ClasspathInfo.class.getDeclaredMethod("getCachedClassPath", ClasspathInfo.PathKind.class);
+                m.setAccessible(true);
+                getCachedClassPathMethod = m;
+            } else if (getCachedClassPathMethod.getDeclaringClass() == String.class) {
+                return cpInfo.getClassPath(kind);
+            }
+            return (ClassPath)getCachedClassPathMethod.invoke(cpInfo, kind);
+        } catch (ReflectiveOperationException | SecurityException ex) {
+            Exceptions.printStackTrace(ex);
+            try {
+                getCachedClassPathMethod = String.class.getMethod("toString");
+            } catch (ReflectiveOperationException | SecurityException ex2) {
+                Exceptions.printStackTrace(ex2);
+            }
+            return cpInfo.getClassPath(kind);
         }
     }
 }

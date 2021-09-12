@@ -584,23 +584,22 @@ public class GroovyParser extends Parser {
         ClassPath bootPath = fo == null ? ClassPath.EMPTY : ClassPath.getClassPath(fo, ClassPath.BOOT);
         ClassPath compilePath = fo == null ? ClassPath.EMPTY : ClassPath.getClassPath(fo, ClassPath.COMPILE);
         ClassPath sourcePath = fo == null ? ClassPath.EMPTY : ClassPath.getClassPath(fo, ClassPath.SOURCE);
-        ClassPath transformPath = ClassPathSupport.createProxyClassPath(bootPath, compilePath);
-        ClassPath cp = ClassPathSupport.createProxyClassPath(transformPath, sourcePath);
         
         CompilerConfiguration configuration = new CompilerConfiguration();
         final ClassNodeCache classNodeCache = ClassNodeCache.get();
-        final ParsingClassLoader classLoader = classNodeCache.createResolveLoader(cp, configuration);
-        final GroovyClassLoader transformationLoader = classNodeCache.createTransformationLoader(transformPath, configuration);
-
         classNodeCache.setPerfData(context.perfData);
         ClasspathInfo cpInfo = ClasspathInfo.create(
                 // we should try to load everything by javac instead of classloader,
                 // but for now it is faster to use javac only for sources - not true
-
                 // null happens in GSP
-                bootPath == null ? ClassPath.EMPTY : bootPath,
-                compilePath == null ? ClassPath.EMPTY : compilePath,
+                bootPath,
+                compilePath,
                 sourcePath);        
+        ClassPath cachedCompile = CompilationUnit.pryOutCachedClassPath(cpInfo, ClasspathInfo.PathKind.COMPILE);
+        ClassPath transformPath = ClassPathSupport.createProxyClassPath(bootPath, cachedCompile);
+        ClassPath cp = ClassPathSupport.createProxyClassPath(transformPath, sourcePath);
+        final ParsingClassLoader classLoader = classNodeCache.createResolveLoader(cp, configuration);
+        final GroovyClassLoader transformationLoader = classNodeCache.createTransformationLoader(transformPath, configuration);
         
         if (LOG.isLoggable(Level.FINEST)) {
             FileObject[] roots = cp.getRoots();

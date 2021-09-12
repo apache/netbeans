@@ -22,6 +22,7 @@ package org.netbeans.modules.groovy.editor.completion;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Level;
 import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.groovy.editor.api.completion.CaretLocation;
@@ -38,7 +39,7 @@ public class NewVarCompletion extends BaseCompletion {
 
 
     @Override
-    public boolean complete(List<CompletionProposal> proposals, CompletionContext request, int anchor) {
+    public boolean complete(Map<Object, CompletionProposal> proposals, CompletionContext request, int anchor) {
         LOG.log(Level.FINEST, "-> completeNewVars"); // NOI18N
 
         List<String> newVars = getNewVarNameSuggestion(request.context);
@@ -51,7 +52,7 @@ public class NewVarCompletion extends BaseCompletion {
         for (String var : newVars) {
             LOG.log(Level.FINEST, "Variable candidate: {0}", var); // NOI18N
             if (var.startsWith(request.getPrefix()) && !var.equals(request.getPrefix())) {
-                proposals.add(new CompletionItem.NewVarItem(var, anchor));
+                proposals.put("local:" + var, new CompletionItem.NewVarItem(var, anchor));
                 stuffAdded = true;
             }
         }

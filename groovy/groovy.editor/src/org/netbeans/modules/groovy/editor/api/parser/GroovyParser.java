@@ -16,13 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.groovy.editor.api.parser;
 
 import groovy.lang.GroovyClassLoader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.security.CodeSource;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -35,15 +37,24 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
+import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.AnnotationNode;
+import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.CompileUnit;
+import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.ModuleNode;
+import org.codehaus.groovy.ast.expr.Expression;
+import org.codehaus.groovy.control.CompilationFailedException;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.ErrorCollector;
 import org.codehaus.groovy.control.Phases;
+import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.control.messages.Message;
 import org.codehaus.groovy.control.messages.SimpleMessage;
 import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
 import org.codehaus.groovy.syntax.SyntaxException;
+import org.codehaus.groovy.transform.StaticTypesTransformation;
+import org.codehaus.groovy.transform.stc.StaticTypeCheckingVisitor;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -76,10 +87,18 @@ import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
 /**
- * Groovy Parser interface. This class should not be probably public. Do not use it outside the module.
+ * Groovy Parser interface. This class should not be probably public. Do not use
+ * it outside the module.
+ *
  * @author Martin Adamek
  */
 public class GroovyParser extends Parser {
+
+    /**
+     * If set, enables reporting of static type checking in editor. As there are a lot of false positives,
+     * this feature remains 'developer only' at the moment, so false reports can be seen & mitigated easily.
+     */
+    private static final boolean STATIC_ERRORS = Boolean.getBoolean(GroovyParser.class.getName() + ".staticCompileErrors");
 
     private static final Logger LOG = Logger.getLogger(GroovyParser.class.getName());
 
@@ -151,6 +170,16 @@ public class GroovyParser extends Parser {
             // FIXME just temporary
             lastResult = createParseResult(snapshot, null, null);
         }
+    }
+
+    /**
+     * Post-configures the parser result with CompilationUnit, so that API clients
+     * may resolve ClassNodes.
+     */
+    GroovyParserResult createParseResult0(Snapshot snapshot, org.codehaus.groovy.control.CompilationUnit cu, ModuleNode rootNode, ErrorCollector errorCollector) {
+        GroovyParserResult gpr = createParseResult(snapshot, rootNode, errorCollector);
+        gpr.setUnit(cu);
+        return gpr;
     }
 
     protected GroovyParserResult createParseResult(Snapshot snapshot, ModuleNode rootNode, ErrorCollector errorCollector) {
@@ -451,7 +480,64 @@ public class GroovyParser extends Parser {
         }
         return configuration;
     }
-    
+
+    /**
+     * Provides special processing: injects {@link StaticTypeCheckingVisitor} in {@link Phases.INSTRUCTION_SELECTION}
+     * compilation phase. Also overrides ErrorCollector implementation with {@link NbGroovyErrorCollector}.
+     */
+    static class CU extends CompilationUnit {
+
+        /**
+         * Disable type attribution for indexing now.
+         */
+        final boolean indexing;
+
+        StaticTypesTransformation typesXform = new StaticTypesTransformation() {
+            @Override
+            protected StaticTypeCheckingVisitor newVisitor(SourceUnit unit, ClassNode node) {
+                return new NbGroovyErrorCollector.NbStaticTypeCheckingVisitor(unit, node, (NbGroovyErrorCollector)errorCollector);
+            }
+        };
+
+        public CU(boolean indexing, GroovyParser parser, CompilerConfiguration configuration, CodeSource security, GroovyClassLoader loader, GroovyClassLoader transformationLoader, ClasspathInfo cpInfo, ClassNodeCache classNodeCache) {
+            super(parser, configuration, security, loader, transformationLoader, cpInfo, classNodeCache);
+            this.indexing = indexing;
+            this.errorCollector = new NbGroovyErrorCollector(configuration);
+        }
+
+        public CU(boolean indexing, GroovyParser parser, CompilerConfiguration configuration, CodeSource security, GroovyClassLoader loader, GroovyClassLoader transformationLoader, ClasspathInfo cpInfo, ClassNodeCache classNodeCache, boolean isIndexing) {
+            super(parser, configuration, security, loader, transformationLoader, cpInfo, classNodeCache, isIndexing);
+            this.indexing = indexing;
+            this.errorCollector = new NbGroovyErrorCollector(configuration);
+        }
+
+        /**
+         * Inject static compilation transofmrations; apply them in the
+         *
+         * @param phase
+         * @throws CompilationFailedException
+         */
+        @Override
+        public void gotoPhase(int phase) throws CompilationFailedException {
+            super.gotoPhase(phase);
+            if (phase != Phases.INSTRUCTION_SELECTION) {
+                return;
+            }
+            if (indexing) {
+                return;
+            }
+            typesXform.setCompilationUnit(this);
+            ClassNode annoClass = getClassNodeResolver().resolveName("groovy.transform.TypeChecked", this).getClassNode();
+            for (SourceUnit su : sources.values()) {
+                for (ClassNode cn : su.getAST().getClasses()) {
+                    AnnotationNode fakeTypeChecked = new AnnotationNode(annoClass);
+                    cn.addAnnotation(fakeTypeChecked);
+                    typesXform.visit(new ASTNode[]{fakeTypeChecked, cn}, su);
+                }
+            }
+        }
+    }
+
     @SuppressWarnings("unchecked")
     GroovyParserResult parseBuffer(final Context context, final Sanitize sanitizing) {
         if (isCancelled()) {
@@ -506,8 +592,8 @@ public class GroovyParser extends Parser {
         
         boolean indexing = IndexingSupport.isIndexingTask(context.parserTask);
         configuration = makeConfiguration(configuration, context, indexing);
-        org.codehaus.groovy.control.CompilationUnit compilationUnit = new CompilationUnit(this, configuration,
-                null, classLoader, transformationLoader, cpInfo, classNodeCache, 
+        org.codehaus.groovy.control.CompilationUnit compilationUnit = new CU(indexing, this, configuration,
+                null, classLoader, transformationLoader, cpInfo, classNodeCache,
                 indexing);
         InputStream inputStream = new ByteArrayInputStream(source.getBytes());
         compilationUnit.addSource(fileName, inputStream);
@@ -529,6 +615,15 @@ public class GroovyParser extends Parser {
         try {
             try {
                 compilationUnit.compile(Phases.CLASS_GENERATION);
+                NbGroovyErrorCollector coll = (NbGroovyErrorCollector)compilationUnit.getErrorCollector();
+                // PENDING: there are too many spurious errors from static type analysis (now). Let's make the errors
+                // a dev-only feature fow now.
+                if (STATIC_ERRORS) {
+                    // enable static errors, they were separated aside, so that later compilation phases can run
+                    coll.setShowAllErrors(true);
+                    // and let the Collector to fail...
+                    coll.failIfErrors();
+                }
             } catch (CancellationException ex) {
                 // cancelled probably
                 if (isCancelled()) {
@@ -542,10 +637,11 @@ public class GroovyParser extends Parser {
             String localizedMessage = e.getLocalizedMessage();
 
             ErrorCollector errorCollector = compilationUnit.getErrorCollector();
+            List<? extends Message> filtered = errorCollector.getErrors();
             if (errorCollector.hasErrors()) {
-                Message message = errorCollector.getLastError();
+                Message message = filtered.get(filtered.size() - 1);
                 if (message instanceof SyntaxErrorMessage) {
-                    SyntaxException se = ((SyntaxErrorMessage)message).getCause();
+                    SyntaxException se = ((SyntaxErrorMessage) message).getCause();
 
                     // if you have a single line starting with: "$
                     // SyntaxException.getStartLine() returns 0 instead of 1
@@ -589,8 +685,8 @@ public class GroovyParser extends Parser {
                     localizedMessage = se.getLocalizedMessage();
                 }
             } else {
-                if (LOG.isLoggable(Level.FINE)) {
-                    if (e instanceof CancellationException) {
+                if (e instanceof CancellationException) {
+                    if (LOG.isLoggable(Level.FINE)) {
                         LOG.log(Level.FINE, null, e);
                     }
                 }
@@ -646,7 +742,7 @@ public class GroovyParser extends Parser {
         if (module != null) {
             context.sanitized = sanitizing;
             // FIXME parsing API
-            GroovyParserResult r = createParseResult(context.snapshot, module, compilationUnit.getErrorCollector());
+            GroovyParserResult r = createParseResult0(context.snapshot, compilationUnit, module, compilationUnit.getErrorCollector());
             r.setSanitized(context.sanitized, context.sanitizedRange, context.sanitizedContents);
             return r;
         } else {
@@ -759,7 +855,7 @@ public class GroovyParser extends Parser {
                             notifyError(context, null, Severity.ERROR, ex.getMessage(), null, startOffset, endOffset, sanitizing);
                         }
                     } else if (object instanceof SimpleMessage) {
-                        String message = ((SimpleMessage)object).getMessage();
+                        String message = ((SimpleMessage) object).getMessage();
                         notifyError(context, null, Severity.ERROR, message, null, -1, sanitizing);
                     } else {
                         notifyError(context, null, Severity.ERROR, "Error", null, -1, sanitizing);

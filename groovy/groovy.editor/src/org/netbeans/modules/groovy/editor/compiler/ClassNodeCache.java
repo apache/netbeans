@@ -21,11 +21,14 @@ package org.netbeans.modules.groovy.editor.compiler;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyResourceLoader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -42,9 +45,11 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.modules.groovy.editor.api.parser.GroovyParser;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Enumerations;
+import org.openide.util.Pair;
 
 /**
  *
@@ -71,6 +76,7 @@ public final class ClassNodeCache {
     private Reference<GroovyClassLoader> resolveLoaderRef;
     private long invocationCount;
     private long hitCount;
+    private PerfData perfData;
     
     private ClassNodeCache() {
         this.cache = new HashMap<>();
@@ -216,7 +222,7 @@ public final class ClassNodeCache {
         return transformationLoader;
     }
     
-    public GroovyClassLoader createResolveLoader(
+    public ParsingClassLoader createResolveLoader(
             @NonNull final ClassPath allResources,
             @NonNull final CompilerConfiguration configuration) {
         GroovyClassLoader resolveLoader = resolveLoaderRef == null ? null : resolveLoaderRef.get();
@@ -228,7 +234,7 @@ public final class ClassNodeCache {
                     this);
             resolveLoaderRef = new SoftReference<>(resolveLoader);
         }
-        return resolveLoader;
+        return (ParsingClassLoader)resolveLoader;
     }
 
     @CheckForNull
@@ -307,7 +313,7 @@ public final class ClassNodeCache {
 
     }
 
-    private static class ParsingClassLoader extends GroovyClassLoader {
+    public static class ParsingClassLoader extends GroovyClassLoader {
 
         private static final ClassNotFoundException CNF = new ClassNotFoundException();
         
@@ -321,6 +327,15 @@ public final class ClassNodeCache {
                 = (String filename) -> AccessController.doPrivileged(
                         (PrivilegedAction<URL>) () -> getSourceFile(filename));
         
+        private PerfData perfData;
+        
+        private CompilationUnit unit;
+        
+        /**
+         * Map of folder contents. Indexed by folder path, values are file => URL/placeholder
+         */
+        private final Map<String, Map<String, URL>> folderContents = new HashMap<>();
+        
         public ParsingClassLoader(
                 @NonNull ClassPath path,
                 @NonNull CompilerConfiguration config,
@@ -329,6 +344,14 @@ public final class ClassNodeCache {
             this.config = config;
             this.path = path;
             this.cache = cache;
+        }
+
+        public void setPerfData(PerfData perfData) {
+            this.perfData = perfData;
+        }
+
+        public void setUnit(CompilationUnit unit) {
+            this.unit = unit;
         }
 
         @Override
@@ -367,7 +390,7 @@ public final class ClassNodeCache {
                 }
             }
         }
-
+        
         @Override
         public Enumeration<URL> getResources(String name) throws IOException {
             if (cache.isNonExistentResource(name)) {
@@ -382,15 +405,21 @@ public final class ClassNodeCache {
 
         @Override
         public URL getResource(String name) {
-            if (cache.isNonExistentResource(name)) {
-                return null;
+            long t = System.currentTimeMillis();
+            try {
+                if (cache.isNonExistentResource(name)) {
+                    return null;
+                }
+                URL u = super.getResource(name);
+                if (u == null) {
+                    LOG.log(Level.FINE, " -> caching nonexistent: " + name);
+                    cache.addNonExistentResource(name);
+                }
+                return u;
+            } finally {
+                long t2 = System.currentTimeMillis();
+                perfData.addVisitorTime(unit.getPhase(), "ParsingClassLoader", t2 - t);
             }
-            URL u = super.getResource(name);
-            if (u == null) {
-                LOG.log(Level.FINE, " -> caching nonexistent: " + name);
-                cache.addNonExistentResource(name);
-            }
-            return u;
         }
 
         @Override
@@ -416,5 +445,13 @@ public final class ClassNodeCache {
             }
             return URLMapper.findURL(fo, URLMapper.EXTERNAL);
         }
+    }
+
+    public PerfData getPerfData() {
+        return perfData;
+    }
+
+    public void setPerfData(PerfData perfData) {
+        this.perfData = perfData;
     }
 }

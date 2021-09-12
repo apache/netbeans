@@ -22,9 +22,11 @@ package org.netbeans.modules.groovy.editor.compiler;
 import groovy.lang.GroovyClassLoader;
 import groovyjarjarasm.asm.Opcodes;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.security.CodeSource;
 import java.util.*;
 import java.util.concurrent.CancellationException;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -40,7 +42,9 @@ import org.codehaus.groovy.ast.GenericsType;
 import org.codehaus.groovy.ast.MixinNode;
 import org.codehaus.groovy.control.ClassNodeResolver.LookupResult;
 import org.codehaus.groovy.control.CompilerConfiguration;
+import org.codehaus.groovy.control.SourceUnit;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
@@ -48,6 +52,8 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.modules.groovy.editor.api.parser.GroovyParser;
 import org.netbeans.modules.groovy.editor.java.ElementSearch;
 import org.netbeans.modules.groovy.editor.java.Utilities;
+import org.netbeans.modules.parsing.api.Snapshot;
+import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
 /**
@@ -55,6 +61,8 @@ import org.openide.util.Exceptions;
  * @author Martin Adamek
  */
 public class CompilationUnit extends org.codehaus.groovy.control.CompilationUnit {
+    protected final Snapshot mainSnapshot;
+    
     static CompilerConfiguration processConfiguration(CompilerConfiguration configuration, boolean isIndexing) {
         Map<String, Boolean> opts = configuration.getOptimizationOptions();
         opts.put("classLoaderResolving", Boolean.FALSE); // NOI18N
@@ -67,7 +75,7 @@ public class CompilationUnit extends org.codehaus.groovy.control.CompilationUnit
             @NonNull final GroovyClassLoader transformationLoader,
             @NonNull final ClasspathInfo cpInfo,
             @NonNull final ClassNodeCache classNodeCache) {
-        this(parser, configuration, security, loader, transformationLoader, cpInfo, classNodeCache, true);
+        this(parser, configuration, security, loader, transformationLoader, cpInfo, classNodeCache, true, null);
     }
     
     public CompilationUnit(GroovyParser parser, CompilerConfiguration configuration,
@@ -75,10 +83,11 @@ public class CompilationUnit extends org.codehaus.groovy.control.CompilationUnit
             @NonNull final GroovyClassLoader loader,
             @NonNull final GroovyClassLoader transformationLoader,
             @NonNull final ClasspathInfo cpInfo,
-            @NonNull final ClassNodeCache classNodeCache, boolean isIndexing) {
+            @NonNull final ClassNodeCache classNodeCache, boolean isIndexing, Snapshot snapshot) {
     
         super(processConfiguration(configuration, isIndexing), 
                 security, loader, transformationLoader);
+        this.mainSnapshot = snapshot;
         Map<String, Boolean> opts = this.configuration.getOptimizationOptions();
         opts.put("classLoaderResolving", Boolean.FALSE);
         this.configuration.setOptimizationOptions(opts);
@@ -100,7 +109,7 @@ public class CompilationUnit extends org.codehaus.groovy.control.CompilationUnit
         private final GroovyParser parser;
         private final JavaSource javaSource;
         private final HashMap<String, ClassNode> temp = new HashMap<>();
-
+        
         public CompileUnit(GroovyParser parser, GroovyClassLoader classLoader,
                 Function<String, ClassNode> classResolver,
                 CodeSource codeSource, CompilerConfiguration config,
@@ -163,6 +172,7 @@ public class CompilationUnit extends org.codehaus.groovy.control.CompilationUnit
                 Task<CompilationController> task = new Task<CompilationController>() {
                     @Override
                     public void run(CompilationController controller) throws Exception {
+                        controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                         Elements elements = controller.getElements();
                         TypeElement typeElement = ElementSearch.getClass(elements, name);
                         if (typeElement != null) {
@@ -290,6 +300,12 @@ public class CompilationUnit extends org.codehaus.groovy.control.CompilationUnit
                 classNode.setGenericsTypes(generics.toArray(new GenericsType[generics.size()]));
             }
             return classNode;
+        }
+    }
+    
+    protected void runSourceVisitor(String visitorName, Consumer<SourceUnit> callback) {
+        for (SourceUnit su : sources.values()) {
+            callback.accept(su);
         }
     }
 }

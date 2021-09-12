@@ -53,6 +53,7 @@
                 <package>org.codehaus.groovy.ant</package>
                 <package>org.codehaus.groovy.antlr.parser</package>
                 <package>org.codehaus.groovy.ast</package>
+                <package>org.codehaus.groovy.ast.decompiled</package>
                 <package>org.codehaus.groovy.ast.expr</package>
                 <package>org.codehaus.groovy.ast.stmt</package>
                 <package>org.codehaus.groovy.ast.tools</package>
@@ -67,6 +68,7 @@
                 <package>org.codehaus.groovy.runtime</package>
                 <package>org.codehaus.groovy.runtime.callsite</package>
                 <package>org.codehaus.groovy.syntax</package>
+                <package>org.codehaus.groovy.tools</package>
                 <package>org.codehaus.groovy.transform</package>
                 <package>org.codehaus.groovy.transform.sc</package>
                 <package>org.codehaus.groovy.transform.trait</package>

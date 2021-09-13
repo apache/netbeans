@@ -30,8 +30,10 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.Properties;
+import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
 import org.junit.Test;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.maven.options.MavenSettings;
@@ -51,29 +53,29 @@ public class ShellConstructorTest extends NbTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        Files.walkFileTree(MAVENMOCK_DIR.toPath(), new FileVisitor<Path>() {
-            @Override
-            public FileVisitResult preVisitDirectory(Path t, BasicFileAttributes bfa) throws IOException {
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult visitFile(Path t, BasicFileAttributes bfa) throws IOException {
-                Files.delete(t);
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult visitFileFailed(Path t, IOException ioe) throws IOException {
-                throw ioe;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path t, IOException ioe) throws IOException {
-                Files.delete(t);
-                return FileVisitResult.CONTINUE;
-            }
-        });
+//        Files.walkFileTree(MAVENMOCK_DIR.toPath(), new FileVisitor<Path>() {
+//            @Override
+//            public FileVisitResult preVisitDirectory(Path t, BasicFileAttributes bfa) throws IOException {
+//                return FileVisitResult.CONTINUE;
+//            }
+//
+//            @Override
+//            public FileVisitResult visitFile(Path t, BasicFileAttributes bfa) throws IOException {
+//                Files.delete(t);
+//                return FileVisitResult.CONTINUE;
+//            }
+//
+//            @Override
+//            public FileVisitResult visitFileFailed(Path t, IOException ioe) throws IOException {
+//                throw ioe;
+//            }
+//
+//            @Override
+//            public FileVisitResult postVisitDirectory(Path t, IOException ioe) throws IOException {
+//                Files.delete(t);
+//                return FileVisitResult.CONTINUE;
+//            }
+//        });
         resetOs();
     }
 
@@ -94,8 +96,12 @@ public class ShellConstructorTest extends NbTestCase {
         properties.setProperty("version", version);
         properties.setProperty("groupId", "org.apache.maven");
         properties.setProperty("artifactId", "maven.core");
+        Manifest manifest = new Manifest();
+        manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
+        manifest.getMainAttributes().putValue("Ant-Version", "Apache Ant 1.9.4");
+        manifest.getMainAttributes().putValue("Created-By", "1.8.0_40-b25 (Oracle Corporation)");
         try (FileOutputStream fos = new FileOutputStream(new File(mockDir, "fake" + version.replaceAll("\\D", "") + ".jar"));
-                JarOutputStream jf = new JarOutputStream(fos)) {
+                JarOutputStream jf = new JarOutputStream(fos, manifest)) {
             jf.putNextEntry(new JarEntry("META-INF/maven/org.apache.maven/maven-core/pom.properties"));
             properties.store(jf, "Maven mock properties");
         }

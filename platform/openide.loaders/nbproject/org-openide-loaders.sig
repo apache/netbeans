@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.81
+#Version 7.83
 
 CLSS public java.awt.Canvas
 cons public init()
@@ -173,6 +173,8 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
+meth public java.awt.peer.ComponentPeer getPeer()
+ anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -3082,7 +3084,7 @@ meth public void setDnDListener(org.openide.awt.Toolbar$DnDListener)
 meth public void setUI(javax.swing.plaf.ToolBarUI)
 meth public void setVisible(boolean)
 supr org.openide.awt.ToolbarWithOverflow
-hfds LOG,backingFolder,displayName,emptyAction,emptyInsets,isFlatLaF,isMetalLaF,label,processor,serialVersionUID
+hfds LOG,backingFolder,displayName,emptyAction,emptyInsets,isFlatLaF,isMetalLaF,isWindowsLaF,label,processor,serialVersionUID
 hcls DefaultIconButton,DefaultIconToggleButton,Folder
 
 CLSS public static org.openide.awt.Toolbar$DnDEvent

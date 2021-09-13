@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.68
+#Version 1.69
 
 CLSS public abstract java.awt.AWTEvent
 cons public init(java.awt.Event)
@@ -192,6 +192,8 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
+meth public java.awt.peer.ComponentPeer getPeer()
+ anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -3100,6 +3102,36 @@ meth public static javax.swing.plaf.ComponentUI createUI(javax.swing.JComponent)
 meth public void paint(java.awt.Graphics,javax.swing.JComponent)
 supr org.netbeans.swing.tabcontrol.plaf.AbstractViewTabDisplayerUI
 hfds BUMP_WIDTH,BUMP_X_PAD,GTK_TABBED_PANE_BACKGROUND_1,ICON_X_PAD,TXT_X_PAD,TXT_Y_PAD,buttonIconPaths,isGenericUI,prefSize,tempRect
+
+CLSS public org.netbeans.swing.tabcontrol.plaf.WinFlatEditorTabDisplayerUI
+cons public init(org.netbeans.swing.tabcontrol.TabDisplayer)
+meth protected java.awt.Rectangle getControlButtonsRectangle(java.awt.Container)
+meth protected org.netbeans.swing.tabcontrol.plaf.TabCellRenderer createDefaultRenderer()
+meth public java.awt.Dimension getPreferredSize(javax.swing.JComponent)
+meth public java.awt.Insets getTabAreaInsets()
+meth public javax.swing.Icon getButtonIcon(int,int)
+meth public org.netbeans.swing.tabcontrol.plaf.TabCellRenderer getTabCellRenderer(int)
+meth public static javax.swing.plaf.ComponentUI createUI(javax.swing.JComponent)
+meth public void paintBackground(java.awt.Graphics)
+supr org.netbeans.swing.tabcontrol.plaf.BasicScrollingTabDisplayerUI
+hfds ICON_X_PAD,activeBackground,background,contentBorderColor,tabInsets,unscaledBorders
+
+CLSS public org.netbeans.swing.tabcontrol.plaf.WinFlatViewTabDisplayerUI
+cons public init(org.netbeans.swing.tabcontrol.TabDisplayer)
+meth protected java.awt.Font getTxtFont()
+meth protected org.netbeans.swing.tabcontrol.plaf.AbstractViewTabDisplayerUI$Controller createController()
+meth protected void paintDisplayerBackground(java.awt.Graphics,javax.swing.JComponent)
+meth protected void paintTabBackground(java.awt.Graphics,int,int,int,int,int)
+meth protected void paintTabBorder(java.awt.Graphics,int,int,int,int,int)
+meth protected void paintTabContent(java.awt.Graphics,int,java.lang.String,int,int,int,int)
+meth public java.awt.Dimension getPreferredSize(javax.swing.JComponent)
+meth public javax.swing.Icon getButtonIcon(int,int)
+meth public static javax.swing.plaf.ComponentUI createUI(javax.swing.JComponent)
+meth public void installUI(javax.swing.JComponent)
+meth public void postTabAction(org.netbeans.swing.tabcontrol.event.TabActionEvent)
+supr org.netbeans.swing.tabcontrol.plaf.AbstractViewTabDisplayerUI
+hfds ICON_X_PAD,activeBackground,activeForeground,attentionBackground,attentionForeground,background,colorsReady,contentBorderColor,font,foreground,hoverBackground,hoverForeground,inactiveUnderlineColor,selectedBackground,selectedForeground,showSelectedTabBorder,showTabSeparators,tabInsets,tabSeparatorColor,underlineAtTop,underlineColor,underlineHeight,unscaledBorders,unselectedHoverBackground
+hcls OwnController
 
 CLSS public final org.netbeans.swing.tabcontrol.plaf.WinVistaEditorTabDisplayerUI
 cons public init(org.netbeans.swing.tabcontrol.TabDisplayer)

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.53
+#Version 1.54
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -159,6 +159,8 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
+meth public java.awt.peer.ComponentPeer getPeer()
+ anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -779,8 +781,9 @@ meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory creat
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createEe8()
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createJakartaEe8()
 meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createJakartaEe9()
+meth public static javax.enterprise.deploy.spi.factories.DeploymentFactory createJakartaEe91()
 supr java.lang.Object
-hfds displayName,ee6Instance,ee7Instance,ee8Instance,jakartaee8Instance,jakartaee9Instance,preludeInstance,su,uriFragments,version
+hfds displayName,ee6Instance,ee7Instance,ee8Instance,jakartaee8Instance,jakartaee91Instance,jakartaee9Instance,preludeInstance,su,uriFragments,version
 
 CLSS public org.netbeans.modules.glassfish.javaee.Hk2DeploymentManager
 cons public init(java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.glassfish.spi.ServerUtilities)
@@ -825,7 +828,7 @@ cons public init()
 meth public org.netbeans.modules.j2ee.deployment.plugins.spi.J2eePlatformImpl getJ2eePlatformImpl(javax.enterprise.deploy.spi.DeploymentManager)
 meth public static org.netbeans.modules.glassfish.javaee.Hk2JavaEEPlatformFactory getFactory()
 supr org.netbeans.modules.j2ee.deployment.plugins.spi.J2eePlatformFactory
-hfds V3_LOOKUP_KEY,V4_LOOKUP_KEY,V510_LOOKUP_KEY,V5_LOOKUP_KEY,V6_LOOKUP_KEY,instance
+hfds V3_LOOKUP_KEY,V4_LOOKUP_KEY,V510_LOOKUP_KEY,V5_LOOKUP_KEY,V610_LOOKUP_KEY,V6_LOOKUP_KEY,instance
 
 CLSS public org.netbeans.modules.glassfish.javaee.Hk2JavaEEPlatformImpl
 cons public init(org.netbeans.modules.glassfish.javaee.Hk2DeploymentManager,java.lang.String[],org.netbeans.api.j2ee.core.Profile[],org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule$Type[],java.lang.String,java.lang.String,java.lang.String)
@@ -969,6 +972,7 @@ meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory crea
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createEe8()
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createJakartaEe8()
 meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createJakartaEe9()
+meth public static org.netbeans.modules.glassfish.javaee.Hk2OptionalFactory createJakartaEe91()
 supr org.netbeans.modules.j2ee.deployment.plugins.spi.OptionalDeploymentManagerFactory
 hfds commonUtilities,df,hasWizard
 hcls J2eeInstantiatingIterator

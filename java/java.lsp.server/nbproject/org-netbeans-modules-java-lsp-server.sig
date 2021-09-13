@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.8.0
+#Version 1.9.0
 
 CLSS public java.lang.Object
 cons public init()
@@ -79,6 +79,8 @@ cons public init()
 meth protected abstract boolean isValid()
 meth protected abstract void stdErr(java.lang.String)
 meth protected abstract void stdOut(java.lang.String)
+meth protected java.io.InputStream getStdIn() throws java.io.IOException
+meth protected void stdIn(java.lang.String) throws java.io.IOException
 supr java.lang.Object
 hfds lastCtx
 hcls StdErrContext

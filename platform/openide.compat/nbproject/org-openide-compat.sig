@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 6.52
+#Version 6.53
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -159,6 +159,8 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
+meth public java.awt.peer.ComponentPeer getPeer()
+ anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -1023,6 +1025,7 @@ meth public static java.lang.String wrapString(java.lang.String,int,java.text.Br
 meth public static java.lang.String[] parseParameters(java.lang.String)
 meth public static java.lang.String[] wrapStringToArray(java.lang.String,int,java.text.BreakIterator,boolean)
 meth public static java.lang.ref.ReferenceQueue<java.lang.Object> activeReferenceQueue()
+meth public static java.net.URI normalizeURI(java.net.URI)
 meth public static java.net.URI toURI(java.io.File)
 supr java.lang.Object
 hfds LOG,TRANS_LOCK,operatingSystem,pathURIConsistent,transExp,transLoader

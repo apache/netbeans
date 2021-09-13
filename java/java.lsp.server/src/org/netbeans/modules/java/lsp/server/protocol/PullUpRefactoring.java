@@ -67,7 +67,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Dusan Balek
  */
 @ServiceProvider(service = CodeActionsProvider.class, position = 180)
-public class PullUpRefactoring extends CodeRefactoring {
+public final class PullUpRefactoring extends CodeRefactoring {
 
     private static final String PULL_UP_REFACTORING_KIND = "refactor.pull.up";
     private static final String PULL_UP_REFACTORING_COMMAND =  "java.refactor.pull.up";
@@ -77,7 +77,7 @@ public class PullUpRefactoring extends CodeRefactoring {
 
     @Override
     @NbBundle.Messages({
-        "DN_PullUp= Pull Up...",
+        "DN_PullUp=Pull Up...",
     })
     public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
         List<String> only = params.getContext().getOnly();
@@ -164,7 +164,7 @@ public class PullUpRefactoring extends CodeRefactoring {
                 throw new IllegalArgumentException(String.format("Illegal number of arguments received for command: %s", command));
             }
         } catch (Exception ex) {
-            client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+            client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }
         return CompletableFuture.completedFuture(true);
     }
@@ -206,7 +206,7 @@ public class PullUpRefactoring extends CodeRefactoring {
                 }
             }, true);
         } catch (Exception ex) {
-            client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+            client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }
         return members;
     }
@@ -238,7 +238,7 @@ public class PullUpRefactoring extends CodeRefactoring {
             refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(file));
             client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, "PullUp")));
         } catch (Exception ex) {
-            client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+            client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }
     }
 

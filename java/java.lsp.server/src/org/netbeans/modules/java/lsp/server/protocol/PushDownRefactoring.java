@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -41,6 +42,7 @@ import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
+import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -61,7 +63,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Dusan Balek
  */
 @ServiceProvider(service = CodeActionsProvider.class, position = 190)
-public class PushDownRefactoring extends CodeRefactoring {
+public final class PushDownRefactoring extends CodeRefactoring {
 
     private static final String PUSH_DOWN_REFACTORING_KIND = "refactor.push.down";
     private static final String PUSH_DOWN_REFACTORING_COMMAND =  "java.refactor.push.down";
@@ -71,7 +73,7 @@ public class PushDownRefactoring extends CodeRefactoring {
 
     @Override
     @NbBundle.Messages({
-        "DN_PushDown= Push Down...",
+        "DN_PushDown=Push Down...",
     })
     public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
         List<String> only = params.getContext().getOnly();
@@ -98,6 +100,11 @@ public class PushDownRefactoring extends CodeRefactoring {
             element = info.getElementUtilities().enclosingTypeElement(element);
         }
         if (!(element instanceof TypeElement)) {
+            return Collections.emptyList();
+        }
+        ElementHandle<TypeElement> eh = ElementHandle.create((TypeElement) element);
+        Set<FileObject> resources = info.getClasspathInfo().getClassIndex().getResources(eh, EnumSet.of(ClassIndex.SearchKind.IMPLEMENTORS), EnumSet.of(ClassIndex.SearchScope.SOURCE));
+        if (resources.isEmpty()) {
             return Collections.emptyList();
         }
         List<QuickPickItem> members = new ArrayList<>();
@@ -146,7 +153,7 @@ public class PushDownRefactoring extends CodeRefactoring {
                 throw new IllegalArgumentException(String.format("Illegal number of arguments received for command: %s", command));
             }
         } catch (Exception ex) {
-            client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+            client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }
         return CompletableFuture.completedFuture(true);
     }
@@ -174,7 +181,7 @@ public class PushDownRefactoring extends CodeRefactoring {
             refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(file));
             client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, "PushDown")));
         } catch (Exception ex) {
-            client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+            client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }
     }
 

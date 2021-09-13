@@ -19,9 +19,10 @@
 
 package org.netbeans.modules.java.hints.perf;
 
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
-import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
@@ -41,7 +42,6 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
-import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.errors.CreateElementUtilities;
 import org.netbeans.modules.java.hints.errors.Utilities;
@@ -314,15 +314,22 @@ wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
     @Hint(displayName = "#DN_org.netbeans.modules.java.hints.perf.Tiny.collectionsToArray",
           description = "#DESC_org.netbeans.modules.java.hints.perf.Tiny.collectionsToArray",
           category="performance",
-          enabled=false,
+          enabled=true,
           suppressWarnings="CollectionsToArray")
-    @TriggerPattern(value = "$collection.toArray(new $clazz[0])",
-                    constraints=@ConstraintVariableType(variable="$collection",
-                                                        type="java.util.Collection"))
+    @TriggerPatterns({
+        @TriggerPattern(value = "$collection.toArray(new $clazz[$collection.size()])",
+                        constraints = @ConstraintVariableType(variable="$collection", type="java.util.Collection")),
+        @TriggerPattern(value = "$collection.toArray(new $clazz[0])",
+                        constraints = @ConstraintVariableType(variable="$collection", type="java.util.Collection")),
+        @TriggerPattern(value = "$collection.toArray(new $clazz[]{})",
+                        constraints = @ConstraintVariableType(variable="$collection", type="java.util.Collection"))
+    })
     public static ErrorDescription collectionsToArray(HintContext ctx) {
+
         boolean pureMemberSelect = true;
         TreePath tp = ctx.getVariables().get("$collection");
         if (tp == null) return null;
+
         Tree msTest = tp.getLeaf();
         OUTER: while (true) {
             switch (msTest.getKind()) {
@@ -337,11 +344,24 @@ wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
         Fix[] fixes;
 
         if (pureMemberSelect) {
-            String fixDisplayName = NbBundle.getMessage(Tiny.class, "FIX_Tiny_collectionsToArray");
 
-            fixes = new Fix[] {
-                JavaFixUtilities.rewriteFix(ctx, fixDisplayName, ctx.getPath(), "$collection.toArray(new $clazz[$collection.size()])")
-            };
+            SourceVersion version = ctx.getInfo().getSourceVersion();
+            TreePath type = ctx.getVariables().get("$clazz");
+            String typeName = type.getLeaf().toString();
+            
+            if (Integer.parseInt(version.name().substring(version.name().indexOf('_')+1)) >= 11) {
+                String byRef = NbBundle.getMessage(Tiny.class, "FIX_Tiny_collectionsToArrayByMethodRef", typeName);
+                fixes = new Fix[] {
+                    JavaFixUtilities.rewriteFix(ctx, byRef, ctx.getPath(), "$collection.toArray($clazz[]::new)"),
+                };
+            } else if (isNewArrayWithSize(type)) {
+                String byZero = NbBundle.getMessage(Tiny.class, "FIX_Tiny_collectionsToArrayByZeroArray", typeName);
+                fixes = new Fix[] {
+                    JavaFixUtilities.rewriteFix(ctx, byZero, ctx.getPath(), "$collection.toArray(new $clazz[0])")
+                };
+            } else {
+                return null; // new T[0] or new T[]{} and version < 11 -> nothing to do
+            }
         } else {
             fixes = new Fix[0];
         }
@@ -349,6 +369,15 @@ wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
         String displayName = NbBundle.getMessage(Tiny.class, "ERR_Tiny_collectionsToArray");
 
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), displayName, fixes);
+    }
+
+    private static boolean isNewArrayWithSize(TreePath type) {
+        Tree parent = type.getParentPath().getLeaf();
+        if (parent instanceof NewArrayTree) {
+            List<? extends ExpressionTree> dim = ((NewArrayTree) parent).getDimensions();
+            return dim.isEmpty() ? false : dim.get(0).getKind() == Kind.METHOD_INVOCATION; // size()
+        }
+        return false;
     }
     
     @NbBundle.Messages({

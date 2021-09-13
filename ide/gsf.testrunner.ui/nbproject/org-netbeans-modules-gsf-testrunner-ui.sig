@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.24
+#Version 1.26
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -159,6 +159,7 @@ supr java.lang.Object
 
 CLSS public final static org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController$TestMethod
  outer org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController
+cons public init(java.lang.String,javax.swing.text.Position,org.netbeans.spi.project.SingleMethod,javax.swing.text.Position,javax.swing.text.Position,javax.swing.text.Position)
 cons public init(java.lang.String,org.netbeans.spi.project.SingleMethod,javax.swing.text.Position,javax.swing.text.Position)
 cons public init(java.lang.String,org.netbeans.spi.project.SingleMethod,javax.swing.text.Position,javax.swing.text.Position,javax.swing.text.Position)
 cons public init(org.netbeans.spi.project.SingleMethod,javax.swing.text.Position,javax.swing.text.Position)
@@ -166,11 +167,12 @@ meth public boolean equals(java.lang.Object)
 meth public int hashCode()
 meth public java.lang.String getTestClassName()
 meth public javax.swing.text.Position end()
+meth public javax.swing.text.Position getTestClassPosition()
 meth public javax.swing.text.Position preferred()
 meth public javax.swing.text.Position start()
 meth public org.netbeans.spi.project.SingleMethod method()
 supr java.lang.Object
-hfds end,method,preferred,start,testClassName
+hfds end,method,preferred,start,testClassName,testClassPosition
 
 CLSS public abstract org.netbeans.modules.gsf.testrunner.ui.api.TestMethodDebuggerProvider
 cons public init()
@@ -274,6 +276,9 @@ meth public static void notifyUser(java.lang.String)
 meth public static void notifyUser(java.lang.String,int)
 supr java.lang.Object
 hfds LOG
+
+CLSS public abstract interface org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods
+meth public abstract java.util.List<org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController$TestMethod> computeTestMethods(org.netbeans.modules.parsing.spi.Parser$Result,java.util.concurrent.atomic.AtomicBoolean)
 
 CLSS public abstract org.netbeans.modules.gsf.testrunner.ui.spi.TestCreatorConfiguration
 cons public init()

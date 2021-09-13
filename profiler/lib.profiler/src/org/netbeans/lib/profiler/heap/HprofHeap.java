@@ -494,7 +494,7 @@ class HprofHeap implements Heap {
             return;
         }
 
-        HeapProgress.progressStart();
+        Progress.Handle handle = Progress.COMPUTE_INSTANCES.start();
         ClassDumpSegment classDumpBounds = getClassDumpSegment();
         int idSize = dumpBuffer.getIDSize();
         long[] offset = new long[] { allInstanceDumpBounds.startOffset };
@@ -535,12 +535,12 @@ class HprofHeap implements Heap {
                 instanceEntry.setIndex(classDump.getInstancesCount());
                 classDumpBounds.addInstanceSize(classDump, tag, start);
             }
-            HeapProgress.progress(counter,allInstanceDumpBounds.startOffset,start,allInstanceDumpBounds.endOffset);
+            handle.progress(counter,allInstanceDumpBounds.startOffset,start,allInstanceDumpBounds.endOffset);
         }
         instancesCountComputed = true;
         writeToFile();
+        handle.close();
         }
-        HeapProgress.progressFinish();
     }
 
     List findReferencesFor(long instanceId) {
@@ -611,7 +611,7 @@ class HprofHeap implements Heap {
             return;
         }
 
-        HeapProgress.progressStart();
+        Progress.Handle handle = Progress.COMPUTE_REFERENCES.start();
         ClassDumpSegment classDumpBounds = getClassDumpSegment();
         int idSize = dumpBuffer.getIDSize();
         long[] offset = new long[] { allInstanceDumpBounds.startOffset };
@@ -663,7 +663,7 @@ class HprofHeap implements Heap {
                     }
                 }
             }
-            HeapProgress.progress(counter,allInstanceDumpBounds.startOffset,start,allInstanceDumpBounds.endOffset);
+            handle.progress(counter,allInstanceDumpBounds.startOffset,start,allInstanceDumpBounds.endOffset);
         }
         
         Iterator classesIt = getClassDumpSegment().createClassCollection().iterator();
@@ -692,8 +692,8 @@ class HprofHeap implements Heap {
         idToOffsetMap.flush();
         referencesComputed = true;
         writeToFile();
+        handle.close();
         }
-        HeapProgress.progressFinish();        
     }
     
     void computeRetainedSize() {
@@ -1220,7 +1220,7 @@ class HprofHeap implements Heap {
             return;
         }
 
-        HeapProgress.progressStart();
+        Progress.Handle handle = Progress.FILL_HEAP_TAG_BOUNDS.start();
         heapTagBounds = new TagBounds[0x100];
 
         long[] offset = new long[] { heapDumpSegment.startOffset + 1 + 4 + 4 };
@@ -1248,7 +1248,7 @@ class HprofHeap implements Heap {
             if ((tag == CLASS_DUMP) || (tag == INSTANCE_DUMP) || (tag == OBJECT_ARRAY_DUMP) || (tag == PRIMITIVE_ARRAY_DUMP)) {
                 idMapSize++;
             }
-            HeapProgress.progress(counter,heapDumpSegment.startOffset,start,heapDumpSegment.endOffset);
+            handle.progress(counter,heapDumpSegment.startOffset,start,heapDumpSegment.endOffset);
         }
 
         TagBounds instanceDumpBounds = heapTagBounds[INSTANCE_DUMP];
@@ -1256,7 +1256,7 @@ class HprofHeap implements Heap {
         TagBounds primArrayDumpBounds = heapTagBounds[PRIMITIVE_ARRAY_DUMP];
         allInstanceDumpBounds = instanceDumpBounds.union(objArrayDumpBounds);
         allInstanceDumpBounds = allInstanceDumpBounds.union(primArrayDumpBounds);
-        HeapProgress.progressFinish();
+        handle.close();
     }
 
     private void fillTagBounds(long tagStart) throws IOException {

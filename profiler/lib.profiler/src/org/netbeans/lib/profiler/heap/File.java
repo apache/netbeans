@@ -31,27 +31,44 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 
 final class File {
+    static class Factory {
+        File newFile(File parent, String relative) {
+            return new File(this, parent, relative);
+        }
+
+        File newFile(String fileName) {
+            return new File(this, fileName);
+        }
+
+        File newFile(java.io.File real) {
+            return new File(this, real);
+        }
+
+        File createTempFile(String prefix, String suffix, File cacheDirectory) throws IOException {
+            if (cacheDirectory == null) {
+                return newFile(java.io.File.createTempFile(prefix, suffix));
+            } else {
+                return newFile(java.io.File.createTempFile(prefix, suffix, cacheDirectory.delegate));
+            }
+        }
+    }
+
+    final Factory io;
     final java.io.File delegate;
 
-    File(File parent, String relative) {
-        this(new java.io.File(parent.delegate, relative));
+    private File(Factory io, File parent, String relative) {
+        this(io, new java.io.File(parent.delegate, relative));
     }
 
-    File(String fileName) {
-        this(new java.io.File(fileName));
+    private File(Factory io, String fileName) {
+        this(io, new java.io.File(fileName));
     }
 
-    File(java.io.File real) {
+    private File(Factory io, java.io.File real) {
+        this.io = io;
         this.delegate = real;
     }
 
-    static File createTempFile(String prefix, String suffix) throws IOException {
-        return new File(java.io.File.createTempFile(prefix, suffix));
-    }
-
-    static File createTempFile(String prefix, String suffix, File cacheDirectory) throws IOException {
-        return new File(java.io.File.createTempFile(prefix, suffix, cacheDirectory.delegate));
-    }
 
     String getAbsolutePath() {
         return delegate.getAbsolutePath();
@@ -62,7 +79,7 @@ final class File {
     }
 
     File getParentFile() {
-        return new File(delegate.getParentFile());
+        return io.newFile(delegate.getParentFile());
     }
 
     boolean exists() {
@@ -105,6 +122,10 @@ final class File {
         return delegate.renameTo(bufferFile.delegate);
     }
 
+    RandomAccessFile newRandomAccessFile(String mode) throws FileNotFoundException {
+        return new RandomAccessFile(this, mode);
+    }
+
     DataOutputStream newDataOutputStream(int bufferSize) throws FileNotFoundException {
         return new DataOutputStream(new BufferedOutputStream(new FileOutputStream(delegate), bufferSize));
     }
@@ -128,7 +149,7 @@ final class File {
             new FileOutputStream(newBufferFile).getChannel().write(buf);
             delegate.delete();
             newBufferFile.renameTo(delegate);
-            return new RandomAccessFile(this, "rw").mmap(mode, length, true); // NOI18N
+            return newRandomAccessFile("rw").mmap(mode, length, true); // NOI18N
         } else {
             ((MappedByteBuffer)buf).force();
             return buf;
@@ -171,7 +192,7 @@ final class File {
             }
             delegate.delete();
             newBufferFile.renameTo(delegate);
-            return new RandomAccessFile(this, "rw").mmapAsBuffers(MAP_MODE, length, bufferSize, bufferExt); // NOI18N
+            return newRandomAccessFile("rw").mmapAsBuffers(MAP_MODE, length, bufferSize, bufferExt); // NOI18N
         } else {
             for (ByteBuffer buf : dumpBuffer) {
                 ((MappedByteBuffer)buf).force();

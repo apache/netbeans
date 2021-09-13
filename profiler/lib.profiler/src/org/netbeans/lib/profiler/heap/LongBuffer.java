@@ -164,7 +164,7 @@ class LongBuffer {
             }
         } else {
             writeStream.flush();
-            RandomAccessFile raf = new RandomAccessFile(backingFile,"r");
+            RandomAccessFile raf = backingFile.newRandomAccessFile("r");
             long offset = raf.length();
             while(offset > 0) {
                 offset-=8;

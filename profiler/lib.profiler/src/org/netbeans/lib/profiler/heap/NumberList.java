@@ -56,7 +56,7 @@ class NumberList {
     
     NumberList(int elSize, CacheDirectory cacheDir) throws IOException {
         dataFile = cacheDir.createTempFile("NBProfiler", ".ref"); // NOI18N
-        data = new RandomAccessFile(dataFile, "rw"); // NOI18N
+        data = dataFile.newRandomAccessFile("rw"); // NOI18N
         numberSize = elSize;
         blockCache = new BlockLRUCache();
         dirtyBlocks = new HashSet(100000);
@@ -338,7 +338,7 @@ class NumberList {
         
         cacheDirectory = cacheDir;
         dataFile = cacheDirectory.getCacheFile(dis.readUTF());
-        data = new RandomAccessFile(dataFile, "rw"); // NOI18N
+        data = dataFile.newRandomAccessFile("rw"); // NOI18N
         numberSize = dis.readInt();
         blocks = dis.readLong();
         mmaped = dis.readBoolean();

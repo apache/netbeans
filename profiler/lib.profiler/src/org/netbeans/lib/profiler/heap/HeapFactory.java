@@ -61,8 +61,9 @@ public class HeapFactory {
      */
     public static Heap createHeap(java.io.File heapDump, int segment)
                            throws FileNotFoundException, IOException {
-        File hd = new File(heapDump);
-        CacheDirectory cacheDir = CacheDirectory.getHeapDumpCacheDirectory(hd);
+        File.Factory io = new File.Factory();
+        File hd = io.newFile(heapDump);
+        CacheDirectory cacheDir = CacheDirectory.getHeapDumpCacheDirectory(io, hd);
         if (!cacheDir.isTemporary()) {
             File savedDump = cacheDir.getHeapDumpAuxFile();
 
@@ -91,7 +92,8 @@ public class HeapFactory {
      * @since 1.122
      */
     public static Heap createHeap(ByteBuffer buffer, int segment) throws IOException {
-        return new HprofHeap(buffer, segment, new CacheDirectory(null));
+        File.Factory io = new File.Factory();
+        return new HprofHeap(buffer, segment, new CacheDirectory(io, null));
     }
     
     static Heap loadHeap(CacheDirectory cacheDir)

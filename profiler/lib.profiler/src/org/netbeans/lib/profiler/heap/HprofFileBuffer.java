@@ -47,7 +47,7 @@ class HprofFileBuffer extends HprofByteBuffer {
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
     HprofFileBuffer(File dumpFile) throws IOException {
-        fis = new RandomAccessFile(dumpFile, "r");
+        fis = dumpFile.newRandomAccessFile("r");
         length = fis.length();
         bufferStartOffset = Long.MAX_VALUE;
         readHeader();

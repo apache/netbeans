@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.groovy.editor.api;
 
-import groovy.transform.PackageScope;
 import groovyjarjarasm.asm.Opcodes;
 import java.io.IOException;
 import java.net.URL;
@@ -41,15 +40,15 @@ import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import org.codehaus.groovy.ast.ClassHelper;
-import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
 import org.netbeans.modules.csl.api.Modifier;
 import org.netbeans.modules.groovy.editor.api.lexer.LexUtilities;
 import org.netbeans.modules.groovy.editor.api.elements.ast.ASTField;
 import org.netbeans.modules.groovy.editor.api.elements.ast.ASTMethod;
 import org.netbeans.modules.groovy.editor.compiler.ClassNodeCache;
+import org.netbeans.modules.groovy.editor.compiler.PerfData;
 import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
+
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
@@ -140,6 +139,8 @@ public class GroovyIndexer extends EmbeddingIndexer {
         long indexerThisStopTime = System.currentTimeMillis();
         long indexerThisRunTime = indexerThisStopTime - indexerThisStartTime;
         indexerRunTime += indexerThisRunTime;
+        
+        PerfData.global.addPerfCounter("Indexer time", indexerThisRunTime);
 
         LOG.log(Level.FINEST, "Indexed File                : {0}", r.getSnapshot().getSource().getFileObject());
         LOG.log(Level.FINEST, "Indexing time (ms)          : {0}", indexerThisRunTime);
@@ -229,11 +230,14 @@ public class GroovyIndexer extends EmbeddingIndexer {
                 return false;
             }
             ClassNodeCache.createThreadLocalInstance();
+            PerfData.global.clear();
             return super.scanStarted(context);
         }
 
         @Override
-        public void scanFinished(Context context) {            
+        public void scanFinished(Context context) {
+            PerfData.LOG.finer("***** Indexing statistics");
+            PerfData.global.dumpStatsAndMerge();
             ClassNodeCache.clearThreadLocalInstance();
             super.scanFinished(context);
         }

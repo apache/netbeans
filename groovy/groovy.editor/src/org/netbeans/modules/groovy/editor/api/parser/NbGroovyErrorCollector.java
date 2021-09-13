@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.MethodNode;
+import org.codehaus.groovy.ast.expr.ClosureExpression;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.codehaus.groovy.control.CompilerConfiguration;
@@ -95,6 +96,12 @@ class NbGroovyErrorCollector extends ErrorCollector {
      * code completion
      */
     private Map<ASTNode, AmbiguousReference> amiguousCandidates = new HashMap<>();
+    
+    /**
+     * True, if in closure context. In this case, undefined symbol errors will be ignored,
+     * as they may be in the delegate.
+     */
+    private ASTNode closureContext;
     
     /**
      * Not used at the moment, but when ambiguous reference is reported, the reporter passes 
@@ -194,9 +201,19 @@ class NbGroovyErrorCollector extends ErrorCollector {
         }
         if (filtersError(msg)) {
             filteredErrors.add(m);
-        } else {
-            staticAnalysisErrors.add(m);
+            return;
         }
+        // special case: do not report unknown symbols in closure context:
+        // the Closure may dispatch to its (mutable) delegate at runtime, so the code
+        // might be eventually correct.
+        if (getClosureContext() != null) {
+            if (msg.startsWith("[Static type checking] - No such ") || // NOI18N
+                msg.startsWith("[Static type checking] - The variable ")) { // NOI18N
+                // suppress
+                return;
+            }
+        }
+        staticAnalysisErrors.add(m);
     }
     
     public List<Message> getAllErrors() {
@@ -240,6 +257,26 @@ class NbGroovyErrorCollector extends ErrorCollector {
             return;
         }
         super.addErrorAndContinue(message);
+    }
+
+    /**
+     * Returns the nearest enclosing Closure node
+     * @return nearest Closure, or {@code null} if no closure is present
+     */
+    public ASTNode getClosureContext() {
+        return closureContext;
+    }
+
+    /**
+     * Establishes closure context, returns the previous value. The caller is responsible
+     * for saving the previous value and restoring it after the closure is processed.
+     * @param closureContext new closure context
+     * @return previous value.
+     */
+    public ASTNode setClosureContext(ASTNode closureContext) {
+        ASTNode save = this.closureContext;
+        this.closureContext = closureContext;
+        return save;
     }
     
     private static Pattern errorFilter;
@@ -295,6 +332,17 @@ class NbGroovyErrorCollector extends ErrorCollector {
         NbStaticTypeCheckingVisitor(SourceUnit source, ClassNode classNode, NbGroovyErrorCollector errorCollector) {
             super(source, classNode);
             this.errCollector = errorCollector;
+        }
+
+        @Override
+        public void visitClosureExpression(ClosureExpression expression) {
+            ASTNode save = errCollector.getClosureContext();
+            try {
+                errCollector.setClosureContext(expression);
+                super.visitClosureExpression(expression); 
+            } finally {
+                errCollector.setClosureContext(save);
+            }
         }
 
         @Override

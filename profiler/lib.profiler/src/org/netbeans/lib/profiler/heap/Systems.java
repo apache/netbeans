@@ -18,10 +18,12 @@
  */
 package org.netbeans.lib.profiler.heap;
 
-final class Systems {
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-    //~ Static fields/initializers -----------------------------------------------------------------------------------------------
-    static final boolean DEBUG = false;
+final class Systems {
+    private static final Logger LOG = Logger.getLogger(System.class.getPackage().getName());
+    static final boolean DEBUG = LOG.isLoggable(Level.FINE);
 
     static boolean isLinux() {
         String osName = System.getProperty("os.name"); // NOI18N
@@ -32,15 +34,14 @@ final class Systems {
     }
     
     static void printStackTrace(Throwable t) {
-        t.printStackTrace();
+        printStackTrace(null, t);
     }
 
     static void printStackTrace(String msg, Throwable t) {
-        System.err.println(msg);
-        t.printStackTrace(System.err);
+        LOG.log(Level.FINE, msg, t);
     }
 
     static void debug(String msg) {
-        System.err.println(msg);
+        LOG.log(Level.FINE, msg);
     }
 }

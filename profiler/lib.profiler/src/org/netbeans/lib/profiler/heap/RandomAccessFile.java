@@ -18,70 +18,19 @@
  */
 package org.netbeans.lib.profiler.heap;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
-final class RandomAccessFile {
-    private final java.io.RandomAccessFile delegate;
-
-    RandomAccessFile(File file, String mode) throws FileNotFoundException {
-        this.delegate = new java.io.RandomAccessFile(file.delegate, mode);
-    }
-
-    long length() throws IOException {
-        return delegate.length();
-    }
-
-    void write(byte[] arr) throws IOException {
-        delegate.write(arr);
-    }
-
-    void write(byte[] arr, int off, int len) throws IOException {
-        delegate.write(arr, off, len);;
-    }
-
-    void setLength(long fileSize) throws IOException {
-        delegate.setLength(fileSize);
-    }
-
-    void seek(long newOffset) throws IOException {
-        delegate.seek(newOffset);
-    }
-
-    void readFully(byte[] buf, int off, int len) throws IOException {
-        delegate.readFully(buf, off, len);
-    }
-
-    void readFully(byte[] buf) throws IOException {
-        delegate.readFully(buf);
-    }
-
-    long readLong() throws IOException {
-        return delegate.readLong();
-    }
-
-    ByteBuffer mmap(FileChannel.MapMode mode, long size, boolean close) throws IOException {
-        FileChannel ch = delegate.getChannel();
-        try {
-            return ch.map(mode, 0, size);
-        } finally {
-            if (close) {
-                ch.close();
-            }
-        }
-    }
-
-    ByteBuffer[] mmapAsBuffers(FileChannel.MapMode mode, long length, long BUFFER_SIZE, long BUFFER_EXT) throws IOException {
-        try (FileChannel channel = delegate.getChannel()) {
-            ByteBuffer[] dumpBuffer = new ByteBuffer[(int) (((length + BUFFER_SIZE) - 1) / BUFFER_SIZE)];
-            for (int i = 0; i < dumpBuffer.length; i++) {
-                long position = i * BUFFER_SIZE;
-                long size = Math.min(BUFFER_SIZE + BUFFER_EXT, length - position);
-                dumpBuffer[i] = channel.map(mode, position, size);
-            }
-            return dumpBuffer;
-        }
-    }
+abstract class RandomAccessFile {
+    abstract long length() throws IOException;
+    abstract void write(byte[] arr) throws IOException;
+    abstract void write(byte[] arr, int off, int len) throws IOException;
+    abstract void setLength(long fileSize) throws IOException;
+    abstract void seek(long newOffset) throws IOException;
+    abstract void readFully(byte[] buf, int off, int len) throws IOException;
+    abstract void readFully(byte[] buf) throws IOException;
+    abstract long readLong() throws IOException;
+    abstract ByteBuffer mmap(FileChannel.MapMode mode, long size, boolean close) throws IOException;
+    abstract ByteBuffer[] mmapAsBuffers(FileChannel.MapMode mode, long length, long BUFFER_SIZE, long BUFFER_EXT) throws IOException;
 }

@@ -164,25 +164,34 @@ public class Tiny {
         final String literal = ctx.getInfo().getText().substring(start, end);
 
         Fix f = new JavaFix(ctx.getInfo(), toSearch) {
-@Override protected String getText() {
-return NbBundle.getMessage(Tiny.class, "FIX_LengthOneStringIndexOf");
-}
-@Override protected void performRewrite(TransformationContext ctx) {
-WorkingCopy wc = ctx.getWorkingCopy();
-TreePath tp = ctx.getPath();
-String content;
+            @Override
+            protected String getText() {
+                return NbBundle.getMessage(Tiny.class, "FIX_LengthOneStringIndexOf");
+            }
 
-if ("'".equals(data)) content = "\\'";
-else if ("\"".equals(data)) content = "\"";
-else {
-content = literal;
-if (content.length() > 0 && content.charAt(0) == '"') content = content.substring(1);
-if (content.length() > 0 && content.charAt(content.length() - 1) == '"') content = content.substring(0, content.length() - 1);
-}
+            @Override
+            protected void performRewrite(TransformationContext ctx) {
+                WorkingCopy wc = ctx.getWorkingCopy();
+                TreePath tp = ctx.getPath();
+                String content;
 
-wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
-}
-}.toEditorFix();
+                if ("'".equals(data)) {
+                    content = "\\'";
+                } else if ("\"".equals(data)) {
+                    content = "\"";
+                } else {
+                    content = literal;
+                    if (content.length() > 0 && content.charAt(0) == '"') {
+                        content = content.substring(1);
+                    }
+                    if (content.length() > 0 && content.charAt(content.length() - 1) == '"') {
+                        content = content.substring(0, content.length() - 1);
+                    }
+                }
+
+                wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
+            }
+        }.toEditorFix();
         
         String displayName = NbBundle.getMessage(Tiny.class, "ERR_LengthOneStringIndexOf", literal);
         
@@ -398,7 +407,7 @@ wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
                 JavaFixUtilities.rewriteFix(ctx, Bundle.FIX_RedundantToString(), ctx.getPath(), "$v"));
     }
     
-    private static final Map<TypeKind, String[]> PARSE_METHODS = new HashMap<TypeKind, String[]>(7);
+    private static final Map<TypeKind, String[]> PARSE_METHODS = new HashMap<>(7);
     static {
         PARSE_METHODS.put(TypeKind.BOOLEAN, new String[] { "Boolean", "parseBoolean" }); // NOI18N
         PARSE_METHODS.put(TypeKind.BYTE, new String[] { "Byte", "parseByte"}); // NOI18N

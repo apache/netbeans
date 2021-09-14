@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.20
+#Version 9.21
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -678,6 +678,7 @@ meth public static java.lang.String wrapString(java.lang.String,int,java.text.Br
 meth public static java.lang.String[] parseParameters(java.lang.String)
 meth public static java.lang.String[] wrapStringToArray(java.lang.String,int,java.text.BreakIterator,boolean)
 meth public static java.lang.ref.ReferenceQueue<java.lang.Object> activeReferenceQueue()
+meth public static java.net.URI normalizeURI(java.net.URI)
 meth public static java.net.URI toURI(java.io.File)
 supr java.lang.Object
 hfds LOG,TRANS_LOCK,operatingSystem,pathURIConsistent,transExp,transLoader

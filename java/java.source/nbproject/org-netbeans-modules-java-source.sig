@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.176.0
+#Version 0.177.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -1209,6 +1209,8 @@ hcls FinishedFuture,RetryWhenScanFinished,TaskWrapper
 
 CLSS public org.netbeans.api.java.source.SourceUtils
 meth public static boolean checkTypesAssignable(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.type.TypeMirror,javax.lang.model.type.TypeMirror)
+meth public static boolean isClassFile(org.openide.filesystems.FileObject)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public static boolean isMainClass(java.lang.String,org.netbeans.api.java.source.ClasspathInfo)
 meth public static boolean isMainClass(java.lang.String,org.netbeans.api.java.source.ClasspathInfo,boolean)
 meth public static boolean isMainMethod(javax.lang.model.element.ExecutableElement)

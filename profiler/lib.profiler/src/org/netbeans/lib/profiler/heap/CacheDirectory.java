@@ -19,7 +19,6 @@
 
 package org.netbeans.lib.profiler.heap;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -32,16 +31,19 @@ class CacheDirectory {
     private static final String DIR_EXT = ".hwcache";   // NOI18N
     private static final String DUMP_AUX_FILE = "NBProfiler.nphd";   // NOI18N
     
+    private final File.Factory io;
     private File cacheDirectory;
     
-    static CacheDirectory getHeapDumpCacheDirectory(File heapDump) {
+    static CacheDirectory getHeapDumpCacheDirectory(File.Factory io, File heapDump) {
         String dumpName = heapDump.getName();
         File parent = heapDump.getParentFile();
-        File dir = new File(parent, dumpName+DIR_EXT);
-        return new CacheDirectory(dir);
+        File dir = io.newFile(parent, dumpName+DIR_EXT);
+        return new CacheDirectory(io, dir);
     }
     
-    CacheDirectory(File cacheDir) {
+    CacheDirectory(File.Factory io, File cacheDir) {
+        io.getClass();
+        this.io = io;
         cacheDirectory = cacheDir;
         if (cacheDir != null) {
             if (!cacheDir.exists()) {
@@ -59,17 +61,17 @@ class CacheDirectory {
         File newFile;
         
         if (isTemporary()) {
-            newFile = File.createTempFile(prefix, suffix);
+            newFile = io.createTempFile(prefix, suffix, null);
             newFile.deleteOnExit();
         } else {
-            newFile = File.createTempFile(prefix, suffix, cacheDirectory);
+            newFile = io.createTempFile(prefix, suffix, cacheDirectory);
         }
         return newFile;
     }
     
     File getHeapDumpAuxFile() {
         assert !isTemporary();
-        return new File(cacheDirectory, DUMP_AUX_FILE);
+        return io.newFile(cacheDirectory, DUMP_AUX_FILE);
     }
     
     boolean isTemporary() {
@@ -77,12 +79,12 @@ class CacheDirectory {
     }
 
     File getCacheFile(String fileName) throws FileNotFoundException {
-        File f = new File(fileName);
+        File f = io.newFile(fileName);
         if (isFileRW(f)) {
             return f;
         }
         // try to find file in cache directory
-        f = new File(cacheDirectory, f.getName());
+        f = io.newFile(cacheDirectory, f.getName());
         if (isFileRW(f)) {
             return f;
         }
@@ -90,12 +92,12 @@ class CacheDirectory {
     }
 
     File getHeapFile(String fileName) throws FileNotFoundException {
-        File f = new File(fileName);
+        File f = io.newFile(fileName);
         if (isFileR(f)) {
             return f;
         }
         // try to find heap dump file next to cache directory
-        f = new File(cacheDirectory.getParentFile(), f.getName());
+        f = io.newFile(cacheDirectory.getParentFile(), f.getName());
         if (isFileR(f)) {
             return f;
         }
@@ -108,11 +110,5 @@ class CacheDirectory {
     
     private static boolean isFileRW(File f) {
         return isFileR(f) && f.canWrite();
-    }
-
-    private static boolean isLinux() {
-        String osName = System.getProperty("os.name");  // NOI18N
-
-        return osName.endsWith("Linux"); // NOI18N
     }
 }

@@ -19,13 +19,9 @@
 
 package org.netbeans.lib.profiler.heap;
 
-import java.io.BufferedInputStream;
 import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 
@@ -46,7 +42,7 @@ public class HeapFactory {
      * @throws java.io.FileNotFoundException if heapDump file does not exist
      * @throws java.io.IOException if I/O error occurred while accessing heapDump file
      */
-    public static Heap createHeap(File heapDump) throws FileNotFoundException, IOException {
+    public static Heap createHeap(java.io.File heapDump) throws FileNotFoundException, IOException {
         return createHeap(heapDump, 0);
     }
 
@@ -63,9 +59,10 @@ public class HeapFactory {
      * @throws java.io.FileNotFoundException if heapDump file does not exist
      * @throws java.io.IOException if I/O error occurred while accessing heapDump file
      */
-    public static Heap createHeap(File heapDump, int segment)
+    public static Heap createHeap(java.io.File heapDump, int segment)
                            throws FileNotFoundException, IOException {
-        CacheDirectory cacheDir = CacheDirectory.getHeapDumpCacheDirectory(heapDump);
+        File hd = JavaIoFile.IO.newFile(heapDump);
+        CacheDirectory cacheDir = CacheDirectory.getHeapDumpCacheDirectory(JavaIoFile.IO, hd);
         if (!cacheDir.isTemporary()) {
             File savedDump = cacheDir.getHeapDumpAuxFile();
 
@@ -73,12 +70,11 @@ public class HeapFactory {
                 try {
                     return loadHeap(cacheDir);
                 } catch (IOException ex) {
-                    System.err.println("Loading heap dump "+heapDump+" from cache failed.");
-                    ex.printStackTrace(System.err);
+                    Systems.printStackTrace("Loading heap dump "+heapDump+" from cache failed.", ex);
                 }
             }
         }
-        return new HprofHeap(heapDump, segment, cacheDir);
+        return new HprofHeap(hd, segment, cacheDir);
 
     }
 
@@ -95,14 +91,13 @@ public class HeapFactory {
      * @since 1.122
      */
     public static Heap createHeap(ByteBuffer buffer, int segment) throws IOException {
-        return new HprofHeap(buffer, segment, new CacheDirectory(null));
+        return new HprofHeap(buffer, segment, new CacheDirectory(JavaIoFile.IO, null));
     }
     
     static Heap loadHeap(CacheDirectory cacheDir)
                            throws FileNotFoundException, IOException {
         File savedDump = cacheDir.getHeapDumpAuxFile();
-        InputStream is = new BufferedInputStream(new FileInputStream(savedDump), 64*1024);
-        DataInputStream dis = new DataInputStream(is);
+        DataInputStream dis = savedDump.newDataInputStream(64*1024);
         Heap heap = new HprofHeap(dis, cacheDir);
         dis.close();
         return heap;

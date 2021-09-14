@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.java.editor.base.semantic;
 
-import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExportsTree;
@@ -1015,12 +1014,6 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                visitModifier(tree);
             }
             return super.scan(tree, p);
-        }
-        
-        @Override
-        public Void visitCase(CaseTree node, Void p) {
-            scan(TreeShims.getLabels(node), p);
-            return super.visitCase(node, p);
         }
 
         private void visitModifier(Tree tree) {

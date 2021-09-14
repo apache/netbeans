@@ -631,11 +631,6 @@ abstract class BaseTask extends UserTask {
             return null;
         }
 
-        @Override
-        public Void visitCase(CaseTree node, Tree p) {
-            scan(TreeShims.getLabels(node), p);
-            return super.visitCase(node, p);
-        }
 
     }
 

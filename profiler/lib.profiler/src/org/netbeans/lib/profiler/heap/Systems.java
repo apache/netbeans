@@ -22,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 final class Systems {
-    private static final Logger LOG = Logger.getLogger(System.class.getPackage().getName());
+    private static final Logger LOG = Logger.getLogger(Systems.class.getName());
     static final boolean DEBUG = LOG.isLoggable(Level.FINE);
 
     static boolean isLinux() {

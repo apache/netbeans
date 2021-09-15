@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,27 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.api.java.source.support;
 
-import com.sun.source.tree.ErroneousTree;
-import com.sun.source.tree.CaseTree;
-import com.sun.source.util.TreeScanner;
-import org.netbeans.modules.java.source.TreeShims;
+package test;
 
-/**
- *
- * @author Jan Lahoda
- */
-public class ErrorAwareTreeScanner<R,P> extends TreeScanner<R,P> {
+import java.util.stream.IntStream;
 
-    @Override
-    public R visitErroneous(ErroneousTree et, P p) {
-        return scan(et.getErrorTrees(), p);
+public class Test{
+    
+     public void op(int a) {
+        Object obj = "test";
+        String result = switch (obj) {
+            case null, String  ->
+                "null & String";
+            case CharSequence s && s. && obj. && IntStream.of(1).max().->
+                "CharSequence";
+            case (java.util.List list && list. && new StringBuilder().ERROR. && java.util.ArrayList<String>.)->"list";
+            default ->
+                "default";
+        };
     }
-
-    @Override
-    public R visitCase(CaseTree node, P p) {
-        scan(TreeShims.getLabels(node), p);
-        return super.visitCase(node, p);
-    }
-}
+}    

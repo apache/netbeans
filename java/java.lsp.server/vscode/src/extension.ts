@@ -288,6 +288,23 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             ]);
         }
     }));
+    context.subscriptions.push(commands.registerCommand('java.surround.with', async (items) => {
+        const selected: any = await window.showQuickPick(items, { placeHolder: 'Surround with ...' });
+        if (selected) {
+            if (selected.userData.edit && selected.userData.edit.changes) {
+                let edit = new vscode.WorkspaceEdit();
+                Object.keys(selected.userData.edit.changes).forEach(key => {
+                    edit.set(vscode.Uri.parse(key), selected.userData.edit.changes[key].map((change: any) => {
+                        let start = new vscode.Position(change.range.start.line, change.range.start.character);
+                        let end = new vscode.Position(change.range.end.line, change.range.end.character);
+                        return new vscode.TextEdit(new vscode.Range(start, end), change.newText);
+                    }));
+                });
+                await workspace.applyEdit(edit);
+            }
+            await commands.executeCommand(selected.userData.command.command, ...(selected.userData.command.arguments || []));
+        }
+    }));
     const runDebug = async (noDebug: boolean, testRun: boolean, uri: string, methodName?: string, launchConfiguration?: string) => {
         const docUri = uri ? vscode.Uri.file(uri) : window.activeTextEditor?.document.uri;
         if (docUri) {

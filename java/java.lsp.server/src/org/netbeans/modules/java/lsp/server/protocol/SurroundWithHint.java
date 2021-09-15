@@ -29,6 +29,7 @@ import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -79,24 +80,27 @@ import org.openide.util.lookup.ServiceProvider;
 public final class SurroundWithHint extends CodeActionsProvider {
 
     private static final String COMMAND_INSERT_SNIPPET = "editor.action.insertSnippet";
+    private static final String COMMAND_SURROUND_WITH = "java.surround.with";
     private static final String DOTS = "...";
     private static final String SNIPPET = "snippet";
     private static final String SELECTION_VAR = "${selection}";
     private static final String SELECTED_TEXT_VAR = "${0:$TM_SELECTED_TEXT}";
-    private static final Pattern SNIPPET_VAR_PATTERN = Pattern.compile("\\$\\{\\s*([-\\w]++)([^}]*)?}");
-    private static final Pattern SNIPPET_HINT_PATTERN = Pattern.compile("([-\\w]++)(?:\\s*=\\s*(\\\"([^\\\"]*)\\\"|\\S*))?");
+    private static final Pattern SNIPPET_VAR_PATTERN = Pattern.compile("\\$\\{\\s*([-\\w]++)((?:\\s*[-\\w]++(?:\\s*=\\s*(?:\\\"[^\\\"]*\\\"|[-\\w]++))?)*\\s*)?}");
+    private static final Pattern SNIPPET_HINT_PATTERN = Pattern.compile("([-\\w]++)(?:\\s*=\\s*(\\\"([^\\\"]*)\\\"|[-\\w]++))?");
+    private static final String UNCAUGHT_EXCEPTION_CATCH_STATEMENTS = "uncaughtExceptionCatchStatements";
     private static final Set<String> TO_FILTER = Collections.singleton("fcom");
+    private static final Set<String> TO_SHOW = Collections.unmodifiableSet(new HashSet(Arrays.asList("bcom", "dowhile", "iff", "fore", "trycatch", "whilexp")));
 
     @Override
     @NbBundle.Messages({
-        "DN_SurroundWith=Surround with \"{0}\"",
+        "DN_SurroundWith=Surround with {0}",
     })
     public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
         CompilationController info = CompilationController.get(resultIterator.getParserResult());
         if (info == null) {
             return Collections.emptyList();
         }
-        info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+        info.toPhase(JavaSource.Phase.RESOLVED);
         int startOffset = getOffset(info, params.getRange().getStart());
         int endOffset = getOffset(info, params.getRange().getEnd());
         if (startOffset >= endOffset) {
@@ -110,6 +114,7 @@ public final class SurroundWithHint extends CodeActionsProvider {
         }
         Collection<? extends CodeTemplateFilter> filters = getTemplateFilters(doc, startOffset, endOffset);
         List<CodeAction> codeActions = new ArrayList<>();
+        List<QuickPickItem> items = new ArrayList<>();
         for (CodeTemplate codeTemplate : CodeTemplateManager.get(doc).getCodeTemplates()) {
             String parametrizedText = codeTemplate.getParametrizedText();
             if (parametrizedText.toLowerCase().contains(SELECTION_VAR) && !TO_FILTER.contains(codeTemplate.getAbbreviation())) {
@@ -127,13 +132,20 @@ public final class SurroundWithHint extends CodeActionsProvider {
                     if (sb.length() > 0) {
                         snippet = sb.append(snippet).toString();
                     }
-                    CodeAction codeAction = createCodeAction(Bundle.DN_SurroundWith(label), CodeActionKind.RefactorRewrite, COMMAND_INSERT_SNIPPET, Collections.singletonMap(SNIPPET, snippet));
+                    int idx = label.indexOf(' ');
+                    CodeAction codeAction = createCodeAction(Bundle.DN_SurroundWith(idx < 0 ? label : label.substring(0, idx)), CodeActionKind.RefactorRewrite, COMMAND_INSERT_SNIPPET, Collections.singletonMap(SNIPPET, snippet));
                     if (!edits.isEmpty()) {
                         codeAction.setEdit(new WorkspaceEdit(Collections.singletonMap(params.getTextDocument().getUri(), edits)));
                     }
-                    codeActions.add(codeAction);
+                    if (TO_SHOW.contains(codeTemplate.getAbbreviation())) {
+                        codeActions.add(codeAction);
+                    }
+                    items.add(new QuickPickItem(label, null, text, false, codeAction));
                 }
             }
+        }
+        if (items.size() > codeActions.size()) {
+            codeActions.add(createCodeAction(Bundle.DN_SurroundWith(DOTS), CodeActionKind.RefactorRewrite, COMMAND_SURROUND_WITH, items));
         }
         return codeActions;
     }
@@ -184,7 +196,9 @@ public final class SurroundWithHint extends CodeActionsProvider {
                 case CodeTemplateParameter.NO_INDENT_PARAMETER_NAME:
                     break;
                 case CodeTemplateParameter.SELECTION_PARAMETER_NAME:
-                    if (last != null) {
+                    if (last == null) {
+                        sb.append(' ');
+                    } else {
                         sb.append(SELECTED_TEXT_VAR);
                     }
                     break;
@@ -202,7 +216,13 @@ public final class SurroundWithHint extends CodeActionsProvider {
                         if (defaultValue != null) {
                             values.put(name, defaultValue);
                         }
-                        if ("false".equalsIgnoreCase(hints.get(CodeTemplateParameter.EDITABLE_HINT_NAME))) {
+                        if (hints.containsKey(UNCAUGHT_EXCEPTION_CATCH_STATEMENTS)) {
+                            if (last == null) {
+                                sb.append(defaultValue);
+                            } else {
+                                sb.append("catch (${").append(last.incrementAndGet()).append(":Exception} ${").append(last.incrementAndGet()).append(":e}) {\n}");
+                            }
+                        } else if ("false".equalsIgnoreCase(hints.get(CodeTemplateParameter.EDITABLE_HINT_NAME))) {
                             nonEditables.add(name);
                             sb.append(values.getOrDefault(name, ""));
                         } else {
@@ -231,7 +251,9 @@ public final class SurroundWithHint extends CodeActionsProvider {
         Matcher matcher = SNIPPET_HINT_PATTERN.matcher(text);
         int idx = 0;
         while (matcher.find(idx)) {
-            hint2Values.put(matcher.group(1), matcher.groupCount() > 2 ? matcher.group(3) : matcher.groupCount() > 1 ? matcher.group(2) : null);
+            String insideString = matcher.groupCount() > 2 ? matcher.group(3) : null;
+            String value = matcher.groupCount() > 1 ? matcher.group(2) : null;
+            hint2Values.put(matcher.group(1), insideString!= null ? insideString : value);
             idx = matcher.end();
         }
         return hint2Values;

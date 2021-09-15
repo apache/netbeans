@@ -58,7 +58,7 @@
     <codetemplate abbreviation="serr" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION"><code><![CDATA[System.err.println("${cursor}");]]></code></codetemplate> 
     <codetemplate abbreviation="sout" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION"><code><![CDATA[System.out.println("${cursor}");]]></code></codetemplate> 
     <codetemplate abbreviation="st"><code><![CDATA[${no-indent}static ]]></code></codetemplate> 
-    <codetemplate abbreviation="sw" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION">
+    <codetemplate abbreviation="sw" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION" descriptionId="CT_sw">
         <code>
 <![CDATA[switch (${var instanceof="java.lang.Enum"}) {
     case ${val completionInvoke}:
@@ -91,7 +91,13 @@
     } while (${expr instanceof="boolean" default="true"});
 ]]></code></codetemplate>
 
-    <codetemplate abbreviation="sy"><code><![CDATA[${no-indent}synchronized ]]></code></codetemplate> 
+    <codetemplate abbreviation="sy" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION">
+        <code>
+<![CDATA[synchronized (${OBJ instanceof="java.lang.Object" default="this"}) {
+    ${selection}${cursor}
+}]]>
+        </code>
+    </codetemplate>
     <codetemplate abbreviation="tds"><code><![CDATA[Thread.dumpStack();]]></code></codetemplate> 
     <codetemplate abbreviation="th"><code><![CDATA[${no-indent}throws ]]></code></codetemplate> 
     <codetemplate abbreviation="En"><code><![CDATA[${no-indent}Enumeration]]></code></codetemplate> 
@@ -250,11 +256,31 @@
 ]]>
         </code>
     </codetemplate>
-    <codetemplate abbreviation="trycatch" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION">
+    <codetemplate abbreviation="trycatch" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION" descriptionId="CT_trycatch">
         <code>
 <![CDATA[try {
     ${selection}${cursor}
-} ${CATCH_STMTS uncaughtExceptionCatchStatements default="catch (Exception e) {}" editable=false}
+} ${CATCH_STMTS uncaughtExceptionCatchStatements default="catch (Exception e) {
+}" editable=false}
+]]>
+        </code>
+    </codetemplate>
+    <codetemplate abbreviation="trycatchfin" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION" descriptionId="CT_trycatchfin">
+        <code>
+<![CDATA[try {
+    ${selection}${cursor}
+} ${CATCH_STMTS uncaughtExceptionCatchStatements default="catch (Exception e) {
+}" editable=false} finally {
+}
+]]>
+        </code>
+    </codetemplate>
+    <codetemplate abbreviation="tryfin" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION" descriptionId="CT_tryfin">
+        <code>
+<![CDATA[try {
+    ${selection}${cursor}
+} finally {
+}
 ]]>
         </code>
     </codetemplate>

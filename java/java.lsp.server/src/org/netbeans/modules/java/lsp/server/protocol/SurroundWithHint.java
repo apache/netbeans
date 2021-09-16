@@ -89,11 +89,12 @@ public final class SurroundWithHint extends CodeActionsProvider {
     private static final Pattern SNIPPET_HINT_PATTERN = Pattern.compile("([-\\w]++)(?:\\s*=\\s*(\\\"([^\\\"]*)\\\"|[-\\w]++))?");
     private static final String UNCAUGHT_EXCEPTION_CATCH_STATEMENTS = "uncaughtExceptionCatchStatements";
     private static final Set<String> TO_FILTER = Collections.singleton("fcom");
-    private static final Set<String> TO_SHOW = Collections.unmodifiableSet(new HashSet(Arrays.asList("bcom", "dowhile", "iff", "fore", "trycatch", "whilexp")));
+    private static final Set<String> TO_SHOW = Collections.unmodifiableSet(new HashSet(Arrays.asList("bcom", "dowhile", "iff", "fore", "sy", "trycatch", "whilexp")));
 
     @Override
     @NbBundle.Messages({
         "DN_SurroundWith=Surround with {0}",
+        "DN_SurroundWithAll=Surround with ...",
     })
     public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
         CompilationController info = CompilationController.get(resultIterator.getParserResult());
@@ -145,7 +146,7 @@ public final class SurroundWithHint extends CodeActionsProvider {
             }
         }
         if (items.size() > codeActions.size()) {
-            codeActions.add(createCodeAction(Bundle.DN_SurroundWith(DOTS), CodeActionKind.RefactorRewrite, COMMAND_SURROUND_WITH, items));
+            codeActions.add(createCodeAction(Bundle.DN_SurroundWithAll(), CodeActionKind.RefactorRewrite, COMMAND_SURROUND_WITH, items));
         }
         return codeActions;
     }

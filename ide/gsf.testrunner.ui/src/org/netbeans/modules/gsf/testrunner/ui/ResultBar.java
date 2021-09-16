@@ -345,6 +345,7 @@ public final class ResultBar extends JComponent implements ActionListener{
         }
         // Step 1: render the text.
         Graphics2D textImageG = textImage.createGraphics();
+        GraphicsUtils.configureDefaultRenderingHints(textImageG);
         textImageG.setComposite(AlphaComposite.Clear);
         textImageG.fillRect(0, 0, w, h);
         textImageG.setComposite(AlphaComposite.SrcOver);
@@ -355,6 +356,7 @@ public final class ResultBar extends JComponent implements ActionListener{
         // Step 2: copy the image containing the text to dropShadowImage using
         // the blur effect, which generates a nice drop shadow.
         Graphics2D blurryImageG = dropShadowImage.createGraphics();
+        GraphicsUtils.configureDefaultRenderingHints(blurryImageG);
         blurryImageG.setComposite(AlphaComposite.Clear);
         blurryImageG.fillRect(0, 0, w, h);
         blurryImageG.setComposite(AlphaComposite.SrcOver);

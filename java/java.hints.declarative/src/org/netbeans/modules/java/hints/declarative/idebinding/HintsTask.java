@@ -36,6 +36,7 @@ import java.util.Set;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
+import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
@@ -112,7 +113,12 @@ public class HintsTask extends ParserResultTask<Result> {
                     Tree parsed = Utilities.parseAndAttribute(parameter, code, s, parsedErrors);
 
                     for (Diagnostic<? extends JavaFileObject> d : parsedErrors) {
-                        errors.add(ErrorDescriptionFactory.createErrorDescription(Severity.ERROR/*XXX*/, d.getMessage(null), file, (int) (hd.textStart + d.getStartPosition()), (int) (hd.textStart + d.getEndPosition())));
+                        errors.add(ErrorDescriptionFactory.createErrorDescription(
+                                        d.getKind() == Kind.ERROR ? Severity.ERROR : Severity.WARNING,
+                                        d.getMessage(null),
+                                        file,
+                                        (int) (hd.textStart + d.getStartPosition()),
+                                        (int) (hd.textStart + d.getEndPosition())));
                     }
                     
                     if (parsed != null && ExpressionTree.class.isAssignableFrom(parsed.getKind().asInterface())) {

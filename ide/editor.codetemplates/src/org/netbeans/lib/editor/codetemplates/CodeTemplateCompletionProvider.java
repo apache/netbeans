@@ -89,8 +89,9 @@ public final class CodeTemplateCompletionProvider implements CompletionProvider 
     public static class Collector implements CompletionCollector {
 
         private static final String SELECTED_TEXT_VAR = "${0:$TM_SELECTED_TEXT}";
-        private static final Pattern SNIPPET_VAR_PATTERN = Pattern.compile("\\$\\{\\s*([-\\w]++)([^}]*)?}");
-        private static final Pattern SNIPPET_HINT_PATTERN = Pattern.compile("([-\\w]++)(?:\\s*=\\s*(\\\"([^\\\"]*)\\\"|\\S*))?");
+        private static final Pattern SNIPPET_VAR_PATTERN = Pattern.compile("\\$\\{\\s*([-\\w]++)((?:\\s*[-\\w]++(?:\\s*=\\s*(?:\\\"[^\\\"]*\\\"|[-\\w]++))?)*\\s*)?}");
+        private static final Pattern SNIPPET_HINT_PATTERN = Pattern.compile("([-\\w]++)(?:\\s*=\\s*(\\\"([^\\\"]*)\\\"|[-\\w]++))?");
+        private static final String UNCAUGHT_EXCEPTION_CATCH_STATEMENTS = "uncaughtExceptionCatchStatements";
 
         @Override
         public boolean collectCompletions(Document doc, int offset, Completion.Context context, Consumer<Completion> consumer) {
@@ -100,8 +101,9 @@ public final class CodeTemplateCompletionProvider implements CompletionProvider 
                     description = CodeTemplateApiPackageAccessor.get().getSingleLineText(ct);
                 }
                 String label = html2text(description.trim());
+                String sortText = String.format("%04d%s", 1650, "fore".equals(ct.getAbbreviation()) ? label.substring(0, 3) : label);
                 consumer.accept(CompletionCollector.newBuilder(label)
-                        .sortText(String.format("%04d%s", 1650, label))
+                        .sortText(sortText)
                         .documentation(() -> {
                             StringBuffer sb = new StringBuffer("<html><pre>");
                             ParametrizedTextParser.parseToHtml(sb, ct.getParametrizedText());
@@ -148,7 +150,9 @@ public final class CodeTemplateCompletionProvider implements CompletionProvider 
                             if (defaultValue != null) {
                                 values.put(name, defaultValue);
                             }
-                            if ("false".equalsIgnoreCase(hints.get(CodeTemplateParameter.EDITABLE_HINT_NAME))) {
+                            if (hints.containsKey(UNCAUGHT_EXCEPTION_CATCH_STATEMENTS)) {
+                                sb.append("catch (${").append(last.incrementAndGet()).append(":Exception} ${").append(last.incrementAndGet()).append(":e}) {\n}");
+                            } else if ("false".equalsIgnoreCase(hints.get(CodeTemplateParameter.EDITABLE_HINT_NAME))) {
                                 nonEditables.add(name);
                                 sb.append(values.getOrDefault(name, ""));
                             } else {
@@ -171,7 +175,9 @@ public final class CodeTemplateCompletionProvider implements CompletionProvider 
             Matcher matcher = SNIPPET_HINT_PATTERN.matcher(text);
             int idx = 0;
             while (matcher.find(idx)) {
-                hint2Values.put(matcher.group(1), matcher.groupCount() > 2 ? matcher.group(3) : matcher.groupCount() > 1 ? matcher.group(2) : null);
+                String insideString = matcher.groupCount() > 2 ? matcher.group(3) : null;
+                String value = matcher.groupCount() > 1 ? matcher.group(2) : null;
+                hint2Values.put(matcher.group(1), insideString!= null ? insideString : value);
                 idx = matcher.end();
             }
             return hint2Values;

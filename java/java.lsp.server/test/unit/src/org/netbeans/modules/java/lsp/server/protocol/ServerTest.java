@@ -4946,6 +4946,166 @@ public class ServerTest extends NbTestCase {
         }
     }
 
+    public void testChangeMethodParameters() throws Exception {
+        File src = new File(getWorkDir(), "a/Foo.java");
+        src.getParentFile().mkdirs();
+        try (Writer w = new FileWriter(new File(src.getParentFile().getParentFile(), ".test-project"))) {}
+        String code = "package a;\n" +
+                      "\n" +
+                      "public class Foo {\n" +
+                      "    public String bar(String s, boolean b) {\n" +
+                      "        return b ? s.toUpperCase() : s.toLowerCase();\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        File src2 = new File(getWorkDir(), "a/Test.java");
+        String code2 = "package a;\n" +
+                       "\n" +
+                       "public class Test {\n" +
+                       "    public void test(Foo f) {\n" +
+                       "        String s = f.bar(\"Test\", false);\n" +
+                       "    }\n" +
+                       "}\n";
+        try (Writer w = new FileWriter(src2)) {
+            w.write(code2);
+        }
+        List<Diagnostic>[] diags = new List[1];
+        CountDownLatch indexingComplete = new CountDownLatch(1);
+        WorkspaceEdit[] edit = new WorkspaceEdit[1];
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams params) {
+                if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
+                    indexingComplete.countDown();
+                } else {
+                    throw new UnsupportedOperationException("Unexpected message.");
+                }
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+                edit[0] = params.getEdit();
+                return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
+            }
+
+            @Override
+            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void disposeTextEditorDecoration(String params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public NbCodeClientCapabilities getNbCodeCapabilities() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void notifyTestProgress(TestProgressParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+                return CompletableFuture.completedFuture("(java.lang.String s, int cnt, boolean b):java.lang.String");
+            }
+
+            @Override
+            public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void showStatusBarMessage(ShowStatusMessageParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeParams initParams = new InitializeParams();
+        initParams.setRootUri(getWorkDir().toURI().toString());
+        InitializeResult result = server.initialize(initParams).get();
+        indexingComplete.await();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src2), "java", 0, code2)));
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src2.toURI().toString(), 1);
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(4, 22), new Position(5, 22)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Refactor)))).get();
+        Optional<CodeAction> changeMethodParams =
+                codeActions.stream()
+                           .filter(Either::isRight)
+                           .map(Either::getRight)
+                           .filter(a -> Bundle.DN_ChangeMethodParams().equals(a.getTitle()))
+                           .findAny();
+        assertTrue(changeMethodParams.isPresent());
+        server.getWorkspaceService().executeCommand(new ExecuteCommandParams(changeMethodParams.get().getCommand().getCommand(), changeMethodParams.get().getCommand().getArguments())).get();
+        int cnt = 0;
+        while(edit[0] == null && cnt++ < 10) {
+            Thread.sleep(1000);
+        }
+        List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = edit[0].getDocumentChanges();
+        assertEquals(2, documentChanges.size());
+        for (int i = 0; i <= 1; i++) {
+            Either<TextDocumentEdit, ResourceOperation> change = documentChanges.get(i);
+            assertTrue(change.isLeft());
+            TextDocumentEdit tde = change.getLeft();
+            if (tde.getTextDocument().getUri().endsWith("a/Test.java")) {
+                List<TextEdit> fileChanges = tde.getEdits();
+                assertNotNull(fileChanges);
+                assertEquals(1, fileChanges.size());
+                assertEquals(new Range(new Position(4, 33),
+                                       new Position(4, 33)),
+                             fileChanges.get(0).getRange());
+                assertEquals("0, ", fileChanges.get(0).getNewText());
+            } else if (tde.getTextDocument().getUri().endsWith("a/Foo.java")) {
+                List<TextEdit> fileChanges = tde.getEdits();
+                assertNotNull(fileChanges);
+                assertEquals(2, fileChanges.size());
+                assertEquals(new Range(new Position(3, 22),
+                                       new Position(3, 22)),
+                             fileChanges.get(0).getRange());
+                assertEquals("java.lang.", fileChanges.get(0).getNewText());
+                assertEquals(new Range(new Position(3, 30),
+                                       new Position(3, 30)),
+                             fileChanges.get(1).getRange());
+                assertEquals(", int cnt", fileChanges.get(1).getNewText());
+            } else {
+                fail("Unknown file modified");
+            }
+        }
+    }
+
     public void testSurroundWith() throws Exception {
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();

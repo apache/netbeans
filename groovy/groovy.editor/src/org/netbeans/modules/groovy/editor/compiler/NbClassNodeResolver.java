@@ -25,7 +25,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Map;
-import org.codehaus.groovy.GroovyBugError;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.decompiled.AsmDecompiler;
@@ -34,7 +33,6 @@ import org.codehaus.groovy.ast.decompiled.ClassStub;
 import org.codehaus.groovy.ast.decompiled.DecompiledClassNode;
 import org.codehaus.groovy.classgen.Verifier;
 import org.codehaus.groovy.control.ClassNodeResolver;
-import org.codehaus.groovy.control.CompilationFailedException;
 import org.codehaus.groovy.control.SourceUnit;
 
 /**
@@ -71,55 +69,36 @@ public class NbClassNodeResolver extends ClassNodeResolver {
             return result;
         }
 
-        if (!useClassLoader) {
-            return tryAsScript(name, compilationUnit, null);
-        }
-
-        return findByClassLoading(name, compilationUnit, loader);
+        // the options always mandate disable class loading, so simplifying the original
+        // implementation:
+        return tryAsScript(name, compilationUnit, null);
     }
 
-    /**
-     * Search for classes using class loading
-     */
-    private static LookupResult findByClassLoading(String name, org.codehaus.groovy.control.CompilationUnit compilationUnit, GroovyClassLoader loader) {
-        Class cls;
-        try {
-            // NOTE: it's important to do no lookup against script files
-            // here since the GroovyClassLoader would create a new CompilationUnit
-            cls = loader.loadClass(name, false, true);
-        } catch (ClassNotFoundException cnfe) {
-            LookupResult lr = tryAsScript(name, compilationUnit, null);
-            return lr;
-        } catch (CompilationFailedException cfe) {
-            throw new GroovyBugError("The lookup for " + name + " caused a failed compilation. There should not have been any compilation from this call.", cfe);
-        }
-        //TODO: the case of a NoClassDefFoundError needs a bit more research
-        // a simple recompilation is not possible it seems. The current class
-        // we are searching for is there, so we should mark that somehow.
-        // Basically the missing class needs to be completely compiled before
-        // we can again search for the current name.
-        /*catch (NoClassDefFoundError ncdfe) {
-            cachedClasses.put(name,SCRIPT);
-            return false;
-        }*/
-        if (cls == null) return null;
-        //NOTE: we might return false here even if we found a class,
-        //      because  we want to give a possible script a chance to
-        //      recompile. This can only be done if the loader was not
-        //      the instance defining the class.
-        ClassNode cn = ClassHelper.make(cls);
-        if (cls.getClassLoader() != loader) {
-            return tryAsScript(name, compilationUnit, cn);
-        }
-        return new LookupResult(null,cn);
-    }
-    
     protected AsmReferenceResolver createReferencesResolver(org.codehaus.groovy.control.CompilationUnit unit) {
         return new AsmReferenceResolver(this, unit);
     }
     
     protected ClassStub parseClass(URL resource) throws IOException {
         return AsmDecompiler.parseClass(resource);
+    }
+    
+    /**
+     * Holds timestamps of compilation from the original archive entry's timestamp. The original
+     * implementation relies on __TIMESTAMP__ field to be present, but we know the time from
+     * the archive's entry.
+     */
+    private static class TimestampedClassNode extends DecompiledClassNode {
+        private final long timestamp;
+        
+        public TimestampedClassNode(long timestamp, ClassStub data, AsmReferenceResolver resolver) {
+            super(data, resolver);
+            this.timestamp = timestamp;
+        }
+
+        @Override
+        public long getCompilationTimeStamp() {
+            return timestamp;
+        }
     }
     
     /**
@@ -134,31 +113,40 @@ public class NbClassNodeResolver extends ClassNodeResolver {
         DecompiledClassNode asmClass = null;
         String fileName = name.replace('.', '/') + ".class";
         URL resource = loader.getResource(fileName);
+        long t = System.currentTimeMillis();
+        long t2;
         if (resource != null) {
+            URLConnection c;
             try {
-                asmClass = new DecompiledClassNode(parseClass(resource), createReferencesResolver(compilationUnit));
+                c = resource.openConnection();
+                asmClass = new TimestampedClassNode(c.getLastModified(), parseClass(resource), createReferencesResolver(compilationUnit));
                 if (!asmClass.getName().equals(name)) {
                     // this may happen under Windows because getResource is case insensitive under that OS!
                     asmClass = null;
                 }
             } catch (IOException e) {
                 // fall through and attempt other search strategies
+            } finally {
+                t2 = System.currentTimeMillis();
+                PerfData.context().addPerfCounter("findDecompiled - parsing", t2 - t);
             }
         }
-
         if (asmClass != null) {
-            if (isFromAnotherClassLoader(loader, fileName)) {
-                return tryAsScript(name, compilationUnit, asmClass);
+            // originally there was a check that the class may have come from a different ClassLoader; it's now always the case.
+            // TBD: should we even test for the class coming from a source ??
+            long t3 = System.currentTimeMillis();
+            long t5 = 0;
+            try {
+                LookupResult lr = tryAsScript(name, compilationUnit, asmClass);
+                t5 = System.currentTimeMillis();
+                return lr;
+            } finally {
+                if (t5 > 0) {
+                    PerfData.context().addPerfCounter("findDecompiled - tryAsScrupt", t5 - t3);
+                }
             }
-
-            return new LookupResult(null, asmClass);
         }
         return null;
-    }
-
-    private static boolean isFromAnotherClassLoader(GroovyClassLoader loader, String fileName) {
-        ClassLoader parent = loader.getParent();
-        return parent != null && parent.getResource(fileName) != null;
     }
 
     /**

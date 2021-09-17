@@ -20,7 +20,7 @@
 package org.netbeans.modules.groovy.editor.completion;
 
 import java.util.EnumSet;
-import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
@@ -47,7 +47,7 @@ class KeywordCompletion extends BaseCompletion {
 
 
     @Override
-    public boolean complete(List<CompletionProposal> proposals, CompletionContext request, int anchor) {
+    public boolean complete(Map<Object, CompletionProposal> proposals, CompletionContext request, int anchor) {
         this.request = request;
 
         LOG.log(Level.FINEST, "-> completeKeywords"); // NOI18N
@@ -91,7 +91,8 @@ class KeywordCompletion extends BaseCompletion {
 
         for (GroovyKeyword groovyKeyword : keywords) {
             LOG.log(Level.FINEST, "Adding keyword proposal : {0}", groovyKeyword.getName()); // NOI18N
-            proposals.add(new CompletionItem.KeywordItem(groovyKeyword.getName(), null, anchor, request.getParserResult(), groovyKeyword.isGroovyKeyword()));
+            proposals.put("keyword:" + groovyKeyword.getName(), 
+                    new CompletionItem.KeywordItem(groovyKeyword.getName(), null, anchor, request.getParserResult(), groovyKeyword.isGroovyKeyword()));
         }
 
         return true;

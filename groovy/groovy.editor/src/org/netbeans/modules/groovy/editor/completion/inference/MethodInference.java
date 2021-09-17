@@ -37,11 +37,14 @@ import org.codehaus.groovy.ast.expr.MethodCallExpression;
 import org.codehaus.groovy.ast.expr.StaticMethodCallExpression;
 import org.codehaus.groovy.ast.expr.VariableExpression;
 import org.codehaus.groovy.ast.tools.GenericsUtils;
+import org.codehaus.groovy.transform.stc.StaticTypeCheckingSupport;
+import org.codehaus.groovy.transform.stc.StaticTypesMarker;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.groovy.editor.api.ASTUtils;
 import org.netbeans.modules.groovy.editor.api.AstPath;
+import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 
 /**
  *
@@ -69,7 +72,13 @@ public final class MethodInference {
         // For example: someInteger.toString().^
         if (expression instanceof MethodCallExpression) {
             MethodCallExpression methodCall = (MethodCallExpression) expression;
-
+            Object o = expression.getNodeMetaData(StaticTypesMarker.DIRECT_METHOD_CALL_TARGET);
+            if (o instanceof MethodNode) {
+                MethodNode mn = (MethodNode)o;
+                if (mn.getReturnType() != null && mn.getReturnType().isResolved()) {
+                    return mn.getReturnType();
+                }
+            }
             ClassNode callerType = findCallerType(methodCall.getObjectExpression(), path, baseDocument, offset);
             if (callerType != null) {
                 return findReturnTypeFor(callerType.redirect(), methodCall.getMethodAsString(), methodCall.getArguments(), path, false, baseDocument, offset);
@@ -89,7 +98,14 @@ public final class MethodInference {
             return ((ConstantExpression) expression).getType();
         }
         if (expression instanceof ClassExpression) {
-            return ClassHelper.make(((ClassExpression) expression).getType().getName());
+            ClassExpression ce = (ClassExpression)expression;
+            ClassNode cn = ce.getType();
+            if (cn != null && cn.isResolved()) {
+                cn = cn.redirect();
+            }
+            return cn.isResolved() ? cn :
+                   // note: this is just a stabu
+                   ClassHelper.make(((ClassExpression) expression).getType().getName());
         }
 
         if (expression instanceof StaticMethodCallExpression) {
@@ -112,9 +128,15 @@ public final class MethodInference {
             ) {
 
         List<ClassNode> paramTypes = new ArrayList<>();
+        ArgumentListExpression argExpression = null;
         if (arguments instanceof ArgumentListExpression) {
-            ArgumentListExpression argExpression = (ArgumentListExpression) arguments;
+            argExpression = (ArgumentListExpression) arguments;
             for (Expression e : argExpression.getExpressions()) {
+                ClassNode cn = GroovyUtils.findInferredType(e);
+                if (cn != null && cn.isResolved()) {
+                    paramTypes.add(cn);
+                    continue;
+                }
                 if (e instanceof VariableExpression) {
                     ModuleNode moduleNode = (ModuleNode) path.root();
                     int newOffset = ASTUtils.getOffset(baseDocument, e.getLineNumber(), e.getColumnNumber());
@@ -144,14 +166,14 @@ public final class MethodInference {
             }
         }
         
-        MethodNode possibleMethod = tryFindPossibleMethod(callerType, methodName, paramTypes, isStatic);
+        MethodNode possibleMethod = tryFindPossibleMethod(callerType, methodName, paramTypes, isStatic, argExpression);
         if (possibleMethod != null) {
             return possibleMethod.getReturnType();
         }
         return null;
     }
 
-    private static MethodNode tryFindPossibleMethod(ClassNode callerType, String methodName, List<ClassNode> paramTypes, boolean isStatic) {
+    private static MethodNode tryFindPossibleMethod(ClassNode callerType, String methodName, List<ClassNode> paramTypes, boolean isStatic, ArgumentListExpression paramExpr) {
         int count = paramTypes.size();
 
         MethodNode res = null;
@@ -171,8 +193,15 @@ public final class MethodInference {
                     boolean match = true;
                     for (int i = 0; i != count; ++i) {
                         if (!paramTypes.get(i).isDerivedFrom(method.getParameters()[i].getType())) {
-                            match = false;
-                            break;
+                            // do a thorough test in addition to plain type-equals.
+                            if (!StaticTypeCheckingSupport.checkCompatibleAssignmentTypes(
+                                    method.getParameters()[i].getType(),
+                                    paramTypes.get(i),
+                                    paramExpr.getExpression(i))) {
+
+                                match = false;
+                                break;
+                            }
                         }
                     }
 

@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
 
 /**
  *
- * @author sandeemi
+ * @author aksinsin
  */
 public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
     

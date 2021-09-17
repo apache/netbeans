@@ -266,7 +266,7 @@ public class TreeFactory {
         }
     }
     
-        public CaseTree CaseMultiplePatterns(List<? extends Tree> expressions, Tree body) {
+    public CaseTree CaseMultiplePatterns(List<? extends Tree> expressions, Tree body) {
         ListBuffer<JCStatement> lb = new ListBuffer<>();
         lb.append(body instanceof ExpressionTree ? (JCStatement) Break((ExpressionTree) body) : (JCStatement) body);
         ListBuffer<JCTree> exprs = new ListBuffer<>();
@@ -279,6 +279,7 @@ public class TreeFactory {
             throw throwAny(t);
         }
     }
+    
 
     public CaseTree CaseMultiplePatterns(List<? extends Tree> expressions, List<? extends StatementTree> statements) {
         ListBuffer<JCStatement> lb = new ListBuffer<JCStatement>();

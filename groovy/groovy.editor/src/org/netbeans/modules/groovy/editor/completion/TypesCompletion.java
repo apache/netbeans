@@ -83,14 +83,14 @@ import org.openide.filesystems.FileObject;
 public class TypesCompletion extends BaseCompletion {
 
     // There attributes should be initiated for each complete() method call
-    private List<CompletionProposal> proposals;
+    private Map<Object, CompletionProposal> proposals;
     private CompletionContext request;
     private int anchor;
     private boolean constructorCompletion;
 
     
     @Override
-    public boolean complete(List<CompletionProposal> proposals, CompletionContext request, int anchor) {
+    public boolean complete(Map<Object, CompletionProposal> proposals, CompletionContext request, int anchor) {
         LOG.log(Level.FINEST, "-> completeTypes"); // NOI18N
 
         this.proposals = proposals;
@@ -321,16 +321,14 @@ public class TypesCompletion extends BaseCompletion {
         }
         if (isPrefixed(request, typeName)) {
             alreadyPresent.add(type);
-            proposals.add(CompletionAccessor.instance().createType(jh, fqnTypeName, typeName, anchor, type.getKind()));
+            proposals.putIfAbsent(fqnTypeName, CompletionAccessor.instance().createType(jh, fqnTypeName, typeName, anchor, type.getKind()));
         }
 
         // We are dealing with CamelCase completion for some class type
         if (CamelCaseUtil.compareCamelCase(typeName, request.getPrefix())) {
             CompletionItem.TypeItem camelCaseProposal = CompletionAccessor.instance().createType(jh, fqnTypeName, typeName, anchor, ElementKind.CLASS);
             
-            if (!proposals.contains(camelCaseProposal)) {
-                proposals.add(camelCaseProposal);
-            }
+            proposals.putIfAbsent(fqnTypeName, camelCaseProposal);
         }
     }
 

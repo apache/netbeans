@@ -31,6 +31,7 @@ import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.tree.JCTree;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,7 +60,7 @@ import org.openide.util.NbBundle;
 
 /**
  *
- * @author sandeemi
+ * @author aksinsin
  */
 @NbBundle.Messages({
     "DN_ConvertToSwitchPatternInstanceOf=Convert to switch pattern matching <pattern>",
@@ -79,7 +80,6 @@ public class ConvertToSwitchPatternInstanceOf {
         if (parent.getLeaf().getKind() == Tree.Kind.IF) {
             return null;
         }
-
         Tree ifPath = ctx.getPath().getLeaf();
         Name expr0 = ((IdentifierTree) ctx.getVariables().get("$expr0").getLeaf()).getName();
         int matchVarIndex = 1;
@@ -273,6 +273,7 @@ public class ConvertToSwitchPatternInstanceOf {
         }
 
     }
+
 
     @TriggerTreeKind(Tree.Kind.SWITCH)
     public static ErrorDescription switchPatternMatchToSwitchNull(HintContext ctx) {

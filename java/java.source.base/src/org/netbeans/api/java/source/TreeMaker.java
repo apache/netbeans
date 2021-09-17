@@ -278,7 +278,7 @@ public final class TreeMaker {
     public CaseTree CasePatterns(List<? extends Tree> patterns, Tree body) {
         return delegate.CaseMultiplePatterns(patterns, body);
     }
-
+    
     /**
      * Creates a new CaseTree.
      *

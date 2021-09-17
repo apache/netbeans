@@ -639,11 +639,15 @@ public class GroovyParser extends Parser {
             PARSING_COUNT.incrementAndGet();
             start = System.currentTimeMillis();
         }
-
+        NbGroovyErrorCollector coll = (NbGroovyErrorCollector)compilationUnit.getErrorCollector();
+        coll.setDisableErrors(true);
         try {
             try {
-                compilationUnit.compile(Phases.CLASS_GENERATION);
-                NbGroovyErrorCollector coll = (NbGroovyErrorCollector)compilationUnit.getErrorCollector();
+                PerfData.withPerfData(context.perfData, () -> {
+                    compilationUnit.compile(Phases.CLASS_GENERATION);
+                    return null;
+                });
+                coll.setDisableErrors(false);
                 // PENDING: there are too many spurious errors from static type analysis (now). Let's make the errors
                 // a dev-only feature fow now.
                 if (STATIC_ERRORS) {

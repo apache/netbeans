@@ -142,7 +142,7 @@ public class ServletIterator implements TemplateWizard.AsynchronousInstantiating
                 // chooser to appear in the list of steps.
                 steps[i] = jc.getName();
             }
-	    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(i));
+	    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
 	    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
 	}	
     }

@@ -192,7 +192,7 @@ public class JspLineBreakpoint extends Breakpoint {
         if (javalb != null) {
             javalb.setSuspend(s);
         }
-        firePropertyChange(PROP_SUSPEND, new Integer(old), new Integer(s));
+        firePropertyChange(PROP_SUSPEND, old, s);
     }
     
     /**
@@ -213,7 +213,7 @@ public class JspLineBreakpoint extends Breakpoint {
         if (h == hidden) return;
         boolean old = hidden;
         hidden = h;
-        firePropertyChange(PROP_HIDDEN, Boolean.valueOf(old), Boolean.valueOf(h));
+        firePropertyChange(PROP_HIDDEN, old, h);
     }
     
     /**
@@ -330,7 +330,7 @@ public class JspLineBreakpoint extends Breakpoint {
         if (javalb != null) {
             javalb.setLineNumber(ln);
         }
-        firePropertyChange(PROP_LINE_NUMBER, new Integer(old), new Integer(getLineNumber()));
+        firePropertyChange(PROP_LINE_NUMBER, old, getLineNumber());
     }
     
     /**

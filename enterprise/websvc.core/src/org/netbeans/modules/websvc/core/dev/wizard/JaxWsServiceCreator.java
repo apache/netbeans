@@ -119,8 +119,7 @@ public class JaxWsServiceCreator implements ServiceCreator {
     }
 
     public void createService() throws IOException {
-        serviceType = ((Integer) wiz.getProperty(WizardProperties.WEB_SERVICE_TYPE)).
-            intValue();
+        serviceType = ((Integer) wiz.getProperty(WizardProperties.WEB_SERVICE_TYPE));
         projectType = projectInfo.getProjectType();
 
         // Use Progress API to display generator messages.

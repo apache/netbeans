@@ -69,7 +69,7 @@ public final class EjbJarXmlWizardIterator implements WizardDescriptor.Instantia
                 if (component instanceof JComponent) { // assume Swing components
                     JComponent jComponent = (JComponent) component;
                     // Sets step number of a component
-                    jComponent.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(i));
+                    jComponent.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
                     // Sets steps names for a panel
                     jComponent.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
                     // Turn on subtitle creation on each step

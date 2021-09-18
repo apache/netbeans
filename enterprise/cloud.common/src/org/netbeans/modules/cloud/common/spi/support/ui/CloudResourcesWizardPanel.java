@@ -48,7 +48,7 @@ public class CloudResourcesWizardPanel implements WizardDescriptor.Panel<WizardD
         if (component == null) {
             component = new CloudResourcesWizardComponent(resources);
             component.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, names);
-            component.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(step));
+            component.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, step);
         }
         return component;
     }

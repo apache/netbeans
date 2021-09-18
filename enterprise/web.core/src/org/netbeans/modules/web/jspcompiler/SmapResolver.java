@@ -324,7 +324,7 @@ public class SmapResolver {
         Iterator i = c.iterator();
         int counter = 0;
         while (i.hasNext()) {
-            h.put(new Integer(counter++), i.next());
+            h.put(counter++, i.next());
         }
         return h;
     }

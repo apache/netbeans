@@ -207,7 +207,7 @@ public class EditBindingMultiview extends JPanel implements TableModelListener {
 		messageSecurityPanel = new GenericTablePanel(messageSecurityModel, 
 			webserviceBundle, "MessageSecurity", // NOI18N - property name
 			MessageSecurityEntryPanel.class, 
-			HelpContext.HELP_SERVICE_ENDPOINT_SECURITY_POPUP, Boolean.valueOf(this.methodAsOperation));
+			HelpContext.HELP_SERVICE_ENDPOINT_SECURITY_POPUP, this.methodAsOperation);
 
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER;

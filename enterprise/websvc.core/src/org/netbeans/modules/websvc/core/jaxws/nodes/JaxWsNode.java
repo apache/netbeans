@@ -819,7 +819,7 @@ public class JaxWsNode extends AbstractNode implements
 
                 // remove non JSR109 entries
                 Boolean isJsr109 = jaxWsModel.getJsr109();
-                if (isJsr109 != null && !isJsr109.booleanValue()) {
+                if (isJsr109 != null && !isJsr109) {
                     if (service.getWsdlUrl() != null) {
                         //if coming from wsdl
                         serviceName = service.getServiceName();

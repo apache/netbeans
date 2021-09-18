@@ -462,7 +462,7 @@ public class LogHyperLinkSupport {
                         if (nextColonIdx > -1 && nextColonIdx > colonIdx) {
                             String lineNum = logLine.substring(colonIdx + 1, nextColonIdx);
                             try {
-                                line = Integer.valueOf(lineNum).intValue();
+                                line = Integer.valueOf(lineNum);
                             } catch (NumberFormatException ex) {
                                 accessible = true;
                             // ignore it
@@ -486,7 +486,7 @@ public class LogHyperLinkSupport {
                         if (thirdColonIdx > -1 && thirdColonIdx > secondColonIdx) {
                             String lineNum = logLine.substring(secondColonIdx + 1, thirdColonIdx);
                             try {
-                                line = Integer.valueOf(lineNum).intValue();
+                                line = Integer.valueOf(lineNum);
                             } catch (NumberFormatException ex) { // ignore it
                                 accessible = true;
                             //ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, nfe);
@@ -511,7 +511,7 @@ public class LogHyperLinkSupport {
                         if (lastParenthIdx > -1 && lastColonIdx > -1 &&  lastParenthIdx > lastColonIdx) {
                             String lineNum = logLine.substring(lastColonIdx + 1, lastParenthIdx);
                             try {
-                                line = Integer.valueOf(lineNum).intValue();
+                                line = Integer.valueOf(lineNum);
                             } catch (NumberFormatException ex) { // ignore it
                                 //ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, nfe);
                                 error = true;

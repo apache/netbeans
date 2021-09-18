@@ -156,7 +156,7 @@ public class TagInfoPanel implements WizardDescriptor.Panel {
                 component.setTagName(targetName);
         }
         Boolean bodySupport = (Boolean)w.getProperty("BODY_SUPPORT");//NOI18N
-        if (bodySupport!=null && bodySupport.booleanValue()) 
+        if (bodySupport!=null && bodySupport) 
             component.setBodySupport(true);
         else component.setBodySupport(false);
     }

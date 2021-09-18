@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.payara.jakartaee.db;
 
-import org.netbeans.modules.payara.jakartaee.db.Hk2DatasourceManager;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;

@@ -20,7 +20,6 @@ package org.netbeans.modules.web.core.syntax;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.String;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;

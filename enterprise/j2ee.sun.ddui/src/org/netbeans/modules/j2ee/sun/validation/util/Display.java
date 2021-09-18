@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.netbeans.modules.j2ee.sun.validation.Failure;
-import org.netbeans.modules.j2ee.sun.validation.util.BundleReader;
 
 /**
  * Display is a class that provides utiltiy methods for displaying

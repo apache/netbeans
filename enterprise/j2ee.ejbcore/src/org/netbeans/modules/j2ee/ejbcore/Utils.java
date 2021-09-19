@@ -71,7 +71,7 @@ public class Utils {
         if (classpathEntries == null) {
             return "";
         }
-        StringBuffer classpath = new StringBuffer();
+        StringBuilder classpath = new StringBuilder();
         for (int i = 0; i < classpathEntries.length; i++) {
             classpath.append(classpathEntries[i].getAbsolutePath());
             if (i + 1 < classpathEntries.length) {

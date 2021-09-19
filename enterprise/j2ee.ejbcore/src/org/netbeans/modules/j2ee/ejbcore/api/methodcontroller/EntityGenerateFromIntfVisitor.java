@@ -180,7 +180,7 @@ class EntityGenerateFromIntfVisitor implements MethodType.MethodTypeVisitor, Abs
     }
     
     private String prependAndUpper(String fullName, String prefix) {
-        StringBuffer stringBuffer = new StringBuffer(fullName);
+        StringBuilder stringBuffer = new StringBuilder(fullName);
         stringBuffer.setCharAt(0, Character.toUpperCase(stringBuffer.charAt(0)));
         return prefix + stringBuffer.toString();
     }

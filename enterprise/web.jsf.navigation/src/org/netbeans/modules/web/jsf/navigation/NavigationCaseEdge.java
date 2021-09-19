@@ -72,7 +72,7 @@ public final class NavigationCaseEdge extends PageFlowSceneElement  {
     
     @Override
     public String toString() {
-        return new String("NavigationCaseEdge[FromOutcome=" + getFromOuctome() + " ToViewId="+ getToViewId() + " FromViewId="+ getFromViewId() + "] ");
+        return "NavigationCaseEdge[FromOutcome=" + getFromOuctome() + " ToViewId="+ getToViewId() + " FromViewId="+ getFromViewId() + "] ";
     }
     
     

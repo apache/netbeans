@@ -205,7 +205,7 @@ public class HttpMonitorHelper {
         File instDir = new File(loc);
         boolean retVal = copyFromIDEInstToDir("modules/ext/org-netbeans-modules-web-httpmonitor.jar"  , instDir, "lib/org-netbeans-modules-web-httpmonitor.jar");  // NOI18N  
         for (String anOther : others) {
-            int lastSlash = anOther.lastIndexOf("/");
+            int lastSlash = anOther.lastIndexOf('/');
             if (lastSlash > -1) {
                 String jarName = anOther.substring(lastSlash+1);
                 retVal = retVal && copyFromIDEInstToDir(anOther , instDir, "lib/"+jarName);  // NOI18N                  

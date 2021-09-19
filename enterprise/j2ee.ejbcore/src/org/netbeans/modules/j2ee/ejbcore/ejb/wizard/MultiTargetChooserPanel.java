@@ -367,7 +367,7 @@ public final class MultiTargetChooserPanel implements WizardDescriptor.Panel, Ch
             newObjectName = newObjectName.replace ('.', '/'); // NOI18N
         }
         if (extension != null && extension.length () > 0) {
-            StringBuffer sb = new StringBuffer ();
+            StringBuilder sb = new StringBuilder ();
             sb.append (newObjectName);
             sb.append ('.'); // NOI18N
             sb.append (extension);
@@ -375,7 +375,7 @@ public final class MultiTargetChooserPanel implements WizardDescriptor.Panel, Ch
         }
         
         if (extension != null && extension.length () > 0) {
-            StringBuffer sb = new StringBuffer ();
+            StringBuilder sb = new StringBuilder ();
             sb.append (newObjectNameToDisplay);
             sb.append ('.'); // NOI18N
             sb.append (extension);

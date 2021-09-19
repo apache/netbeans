@@ -159,7 +159,7 @@ public final class SessionNode extends AbstractNode implements OpenCookie, Prope
     
     public Transferable clipboardCopy() throws IOException {
         EjbReference ejbRef = ejbViewController.createEjbReference();
-        StringBuffer ejbRefString = new StringBuffer();
+        StringBuilder ejbRefString = new StringBuilder();
         ejbRefString.append(ejbViewController.getLocalStringRepresentation("Session"));
         return new EjbTransferable(ejbRefString.toString(), ejbRef);
     }

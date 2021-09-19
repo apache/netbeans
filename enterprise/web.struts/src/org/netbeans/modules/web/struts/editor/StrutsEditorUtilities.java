@@ -189,7 +189,7 @@ public class StrutsEditorUtilities {
                 while (token != null && token.getTokenID().getNumericID() != XML_ELEMENT )
                     token = token.getNext();
                 if (token != null && token.getImage().equals("/>")){                    //NOI18N
-                    StringBuffer text = new StringBuffer();
+                    StringBuilder text = new StringBuilder();
                     offset = token.getOffset();
                     text.append(">");                                                   //NOI18N
                     text.append(END_LINE);
@@ -282,11 +282,11 @@ public class StrutsEditorUtilities {
                     appendText.append("<struts-config>");                   //NOI18N
                     appendText.append(END_LINE);
                     if (section != null && section.length()>0 ){
-                        appendText.append("<"+section+">");                 //NOI18N
+                        appendText.append("<").append(section).append(">");                 //NOI18N
                         appendText.append(END_LINE);
                         appendText.append(sBean);
                         appendText.append(END_LINE);
-                        appendText.append("</"+section+">");                //NOI18N
+                        appendText.append("</").append(section).append(">");                //NOI18N
                     }
                     else{
                         appendText.append(sBean);
@@ -300,11 +300,11 @@ public class StrutsEditorUtilities {
                     if (section != null && section.length()>0){
                         int offsetSection;
                         if ((offsetSection = findEndOfElement(doc, section)) == -1){
-                            appendText.append("<"+section+">");             //NOI18N
+                            appendText.append("<").append(section).append(">");             //NOI18N
                             appendText.append(END_LINE);
                             appendText.append(sBean);
                             appendText.append(END_LINE);
-                            appendText.append("</"+section+">");            //NOI18N
+                            appendText.append("</").append(section).append(">");            //NOI18N
                         }
                         else {
                             appendText.append(sBean);

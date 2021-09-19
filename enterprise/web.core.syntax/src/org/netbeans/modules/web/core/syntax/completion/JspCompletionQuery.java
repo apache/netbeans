@@ -185,7 +185,7 @@ public class JspCompletionQuery {
                 anchor = offset;
                 addAttributeItems(result, anchor, sup,  elem, sup.getTagAttributes(elem.getName(), ""), null); // NOI18N
             } else {
-                int colonIndex = tokenPart.indexOf(":"); // NOI18N
+                int colonIndex = tokenPart.indexOf(':'); // NOI18N
                 anchor = offset - tokenPart.length();
                 if (colonIndex == -1) {
                     addTagPrefixItems(result, anchor, sup, sup.getTagPrefixes(tokenPart));

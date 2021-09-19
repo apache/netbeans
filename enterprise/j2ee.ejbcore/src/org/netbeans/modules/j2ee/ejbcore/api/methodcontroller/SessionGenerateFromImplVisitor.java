@@ -81,7 +81,7 @@ final class SessionGenerateFromImplVisitor implements MethodType.MethodTypeVisit
     }
     
     private String chopAndUpper(String fullName, String chop) {
-         StringBuffer buffer = new StringBuffer(fullName);
+         StringBuilder buffer = new StringBuilder(fullName);
          buffer.delete(0, chop.length());
          buffer.setCharAt(0, Character.toLowerCase(buffer.charAt(0)));
          return buffer.toString();

@@ -93,13 +93,13 @@ public class WebServiceClientWizardDescriptor implements WizardDescriptor.Finish
         boolean projectDirValid=true;
         String illegalChar = null;
         
-        if (projectPath.indexOf("%")>=0) {
+        if (projectPath.indexOf('%')>=0) {
             projectDirValid=false;
             illegalChar="%";
-        } else if (projectPath.indexOf("&")>=0) {
+        } else if (projectPath.indexOf('&')>=0) {
             projectDirValid=false;
             illegalChar="&";
-        } else if (projectPath.indexOf("?")>=0) {
+        } else if (projectPath.indexOf('?')>=0) {
             projectDirValid=false;
             illegalChar="?";
         }

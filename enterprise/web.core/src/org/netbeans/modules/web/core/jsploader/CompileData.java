@@ -124,21 +124,23 @@ public class CompileData {
     
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("--COMPILE DATA--"); // NOI18N
         sb.append("\n"); // NOI18N
-        sb.append("JSP page        : " + FileUtil.getFileDisplayName(jspPage.getPrimaryFile())); // NOI18N
+        sb.append("JSP page        : ").append(FileUtil.getFileDisplayName(jspPage.getPrimaryFile())); // NOI18N
         sb.append("\n"); // NOI18N
-        sb.append("servletJavaRoot : " + servletJavaRoot + ", exists= " +  // NOI18N
-            ((servletJavaRoot == null) ? "false" : "" + servletJavaRoot.exists())); // NOI18N
+        sb.append("servletJavaRoot : ").append(servletJavaRoot).append(", exists= ").append((servletJavaRoot == null) ? "false" : "" + servletJavaRoot.exists())
+        // NOI18N
+        ; // NOI18N
         sb.append("\n"); // NOI18N
-        sb.append("servletResource : " + servletResourceName + ", fileobject exists= " +  // NOI18N
-            (getServletFileObject() != null)); // NOI18N
+        sb.append("servletResource : ").append(servletResourceName).append(", fileobject exists= ").append(getServletFileObject() != null)
+        // NOI18N
+        ; // NOI18N
         sb.append("\n"); // NOI18N
         File sf = getServletFile();
         if (sf != null) {
-            sb.append("servletFile : " + sf.getAbsolutePath() + ", exists= " +  // NOI18N
-                getServletFile().exists()); // NOI18N
+            sb.append("servletFile : ").append(sf.getAbsolutePath()).append(", exists= ").append(// NOI18N
+                    getServletFile().exists()); // NOI18N
         }
         else {
             sb.append("servletFile : null"); // NOI18N

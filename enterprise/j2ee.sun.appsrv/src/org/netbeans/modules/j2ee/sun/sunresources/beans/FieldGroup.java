@@ -150,7 +150,7 @@ public class FieldGroup extends org.netbeans.modules.schema2beans.BaseBean
 		org.netbeans.modules.schema2beans.BaseBean n;
 		str.append(indent);
 		str.append("Name");	// NOI18N
-		str.append(indent+"\t");	// NOI18N
+		str.append(indent).append("\t");	// NOI18N
 		str.append("<");	// NOI18N
 		s = this.getName();
 		str.append((s==null?"null":s.trim()));	// NOI18N
@@ -158,16 +158,16 @@ public class FieldGroup extends org.netbeans.modules.schema2beans.BaseBean
 		this.dumpAttributes(NAME, 0, str, indent);
 
 		str.append(indent);
-		str.append("Field["+this.sizeField()+"]");	// NOI18N
+		str.append("Field[").append(this.sizeField()).append("]");	// NOI18N
 		for(int i=0; i<this.sizeField(); i++)
 		{
-			str.append(indent+"\t");
-			str.append("#"+i+":");
+			str.append(indent).append("\t");
+			str.append("#").append(i).append(":");
 			n = (org.netbeans.modules.schema2beans.BaseBean) this.getField(i);
 			if (n != null)
 				n.dump(str, indent + "\t");	// NOI18N
 			else
-				str.append(indent+"\tnull");	// NOI18N
+				str.append(indent).append("\tnull");	// NOI18N
 			this.dumpAttributes(FIELD, i, str, indent);
 		}
 

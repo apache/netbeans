@@ -166,7 +166,7 @@ public class SetupUtil {
         File[] implJars = jaxWsBase.listFiles(jarFilter);
         
         Properties result = new Properties();
-        StringBuffer classpath = new StringBuffer();
+        StringBuilder classpath = new StringBuilder();
         
         for (int i = 0; i < apiJars.length; i++) {
             String pathElement = apiJars[i].getAbsolutePath() + separator;

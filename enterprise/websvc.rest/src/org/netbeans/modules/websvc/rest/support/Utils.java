@@ -72,13 +72,13 @@ import org.openide.util.RequestProcessor;
 public class Utils {
     
     public static String stripPackageName(String name) {
-        int genericIndex = name.indexOf("<");//NOI18N
+        int genericIndex = name.indexOf('<');//NOI18N
         int index = 0;
         if (genericIndex > 0) {
             String className = name.substring(0, genericIndex);
-            index = className.lastIndexOf("."); //NOI18N
+            index = className.lastIndexOf('.'); //NOI18N
         } else {
-            index = name.lastIndexOf("."); //NOI18N
+            index = name.lastIndexOf('.'); //NOI18N
         }
         if (index > 0) {
             return name.substring(index+1);

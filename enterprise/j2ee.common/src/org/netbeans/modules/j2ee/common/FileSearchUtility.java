@@ -186,7 +186,7 @@ public final class FileSearchUtility {
         java.io.Reader r = null;
         try {
             r = new BufferedReader(new InputStreamReader(f.getInputStream(), "utf-8")); // NOI18N
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             final char[] buffer = new char[4096];
             int len;
 

@@ -727,7 +727,7 @@ public class J2SEProjectJaxRpcClientSupport implements WebServicesClientSupportI
         }
         
         public String getDefaultFeaturesAsArgument() {
-            StringBuffer buf = new StringBuffer(defaultFeatures.length*32);
+            StringBuilder buf = new StringBuilder(defaultFeatures.length*32);
             for(int i = 0; i < defaultFeatures.length; i++) {
                 if(i > 0) {
                     buf.append(",");

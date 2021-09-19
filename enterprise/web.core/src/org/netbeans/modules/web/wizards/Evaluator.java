@@ -60,7 +60,7 @@ abstract class Evaluator {
      * wizards to display the result of the selections. 
      */
     String getTargetPath(Iterator pathItems) {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         while (pathItems.hasNext()) {
             buffer.append((String) (pathItems.next()));
             if (pathItems.hasNext()) {

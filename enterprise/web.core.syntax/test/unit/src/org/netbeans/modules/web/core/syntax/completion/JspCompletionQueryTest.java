@@ -114,7 +114,7 @@ public class JspCompletionQueryTest extends TestBase {
     }
 
     private void assertItems(String documentText, final String[] expectedItemsNames, final Match type, int expectedAnchor) {
-        StringBuffer content = new StringBuffer(documentText);
+        StringBuilder content = new StringBuilder(documentText);
 
         final int pipeOffset = content.indexOf("|");
         assert pipeOffset >= 0 : "define caret position by pipe character in the document source!";
@@ -144,13 +144,13 @@ public class JspCompletionQueryTest extends TestBase {
     }
 
     private void assertCompletedText(String documentText, String itemToCompleteName, String expectedText) throws BadLocationException {
-        StringBuffer content = new StringBuffer(documentText);
+        StringBuilder content = new StringBuilder(documentText);
         final int pipeOffset = content.indexOf("|");
         assert pipeOffset >= 0 : "define caret position by pipe character in the document source!";
         //remove the pipe
         content.deleteCharAt(pipeOffset);
 
-        StringBuffer expectedContent = new StringBuffer(expectedText);
+        StringBuilder expectedContent = new StringBuilder(expectedText);
         final int expectedPipeOffset = expectedContent.indexOf("|");
         assert expectedPipeOffset >= 0 : "define caret position by pipe character in the expected text!";
         //remove the pipe
@@ -229,14 +229,14 @@ public class JspCompletionQueryTest extends TestBase {
         JEditorPane component = new JEditorPane();
         component.setDocument(doc);
 
-        StringBuffer output = new StringBuffer();
+        StringBuilder output = new StringBuilder();
         for (int i = 0; i < doc.getLength(); i++) {
             JspCompletionQuery.CompletionResultSet result = new JspCompletionQuery.CompletionResultSet();
             
             query.query(result, component, i);
             if (result != null) {
                 List<CompletionItem> items = result.getItems();
-                output.append(i + ":");
+                output.append(i).append(":");
                 output.append('[');
                 Iterator<CompletionItem> itr = items.iterator();
                 while (itr.hasNext()) {

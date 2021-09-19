@@ -118,12 +118,12 @@ public class Tag extends org.netbeans.modules.schema2beans.BaseBean
 	public void dump(StringBuffer str, String indent){
 		String s;
 		str.append(indent);
-		str.append("TagItem["+this.sizeTagItem()+"]");	// NOI18N
+		str.append("TagItem[").append(this.sizeTagItem()).append("]");	// NOI18N
 		for(int i=0; i<this.sizeTagItem(); i++)
 		{
-			str.append(indent+"\t");
-			str.append("#"+i+":");
-			str.append(indent+"\t");	// NOI18N
+			str.append(indent).append("\t");
+			str.append("#").append(i).append(":");
+			str.append(indent).append("\t");	// NOI18N
 			str.append("<");	// NOI18N
 			s = this.getTagItem(i);
 			str.append((s==null?"null":s.trim()));	// NOI18N

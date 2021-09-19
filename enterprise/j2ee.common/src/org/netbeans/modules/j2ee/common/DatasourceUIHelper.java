@@ -543,7 +543,7 @@ public final class DatasourceUIHelper {
                     } catch (DatasourceAlreadyExistsException daee) { // it should not occur bcs it should be already handled in DatasourceCustomizer
                         StringBuilder sb = new StringBuilder();
                         for (Object conflict : daee.getDatasources()) {
-                            sb.append(conflict.toString() + "\n"); // NOI18N
+                            sb.append(conflict.toString()).append("\n"); // NOI18N
                         }
                         
                         String message = NbBundle.getMessage(DatasourceUIHelper.class, "ERR_DsConflict", sb.toString());

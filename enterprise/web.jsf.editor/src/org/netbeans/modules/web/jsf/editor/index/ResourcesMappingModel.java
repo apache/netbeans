@@ -131,7 +131,7 @@ public class ResourcesMappingModel extends JsfPageModel {
     /* tests */ static Resource parseResource(ResourceType resourceType, String expression) {
         // XXX - would be faster to parse it using common ELParser?
         int resourceStartBracketOffset = expression.indexOf("resource[");
-        int resourceEndBracketOffset = expression.indexOf("]", resourceStartBracketOffset);
+        int resourceEndBracketOffset = expression.indexOf(']', resourceStartBracketOffset);
         String resourceValue = expression.substring(resourceStartBracketOffset + 9, resourceEndBracketOffset);
         if (resourceValue.startsWith("'") || resourceValue.startsWith("\"")) {
             resourceValue = resourceValue.substring(1, resourceValue.length() - 1);
@@ -140,7 +140,7 @@ public class ResourcesMappingModel extends JsfPageModel {
             return null;
         }
 
-        int colonOffset = resourceValue.indexOf(":");
+        int colonOffset = resourceValue.indexOf(':');
         return new Resource(resourceType,
                 colonOffset == -1 ? resourceValue : resourceValue.substring(colonOffset + 1),
                 colonOffset == -1 ? "" : resourceValue.substring(0, colonOffset));

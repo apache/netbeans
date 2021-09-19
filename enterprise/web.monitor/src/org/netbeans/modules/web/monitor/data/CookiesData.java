@@ -214,30 +214,30 @@ public class CookiesData extends BaseBean {
 	BaseBean n;
 
 	str.append(indent);
-	str.append("CookieIn["+this.sizeCookieIn()+"]"); // NOI18N
+	str.append("CookieIn[").append(this.sizeCookieIn()).append("]"); // NOI18N
 	for(int i=0; i<this.sizeCookieIn(); i++) 
 	    {
-		str.append(indent+"\t"); // NOI18N
-		str.append("#"+i+":"); // NOI18N
+		str.append(indent).append("\t"); // NOI18N
+		str.append("#").append(i).append(":"); // NOI18N
 		n = this.getCookieIn(i);
 		if (n != null)
 		    n.dump(str, indent + "\t"); // NOI18N
 		else
-		    str.append(indent+"\tnull"); // NOI18N
+		    str.append(indent).append("\tnull"); // NOI18N
 		this.dumpAttributes(COOKIEIN, i, str, indent);
 	    }
 
 	str.append(indent);
-	str.append("CookieOut["+this.sizeCookieOut()+"]"); // NOI18N
+	str.append("CookieOut[").append(this.sizeCookieOut()).append("]"); // NOI18N
 	for(int i=0; i<this.sizeCookieOut(); i++) 
 	    {
-		str.append(indent+"\t"); // NOI18N
-		str.append("#"+i+":"); // NOI18N
+		str.append(indent).append("\t"); // NOI18N
+		str.append("#").append(i).append(":"); // NOI18N
 		n = this.getCookieOut(i);
 		if (n != null)
 		    n.dump(str, indent + "\t"); // NOI18N
 		else
-		    str.append(indent+"\tnull"); // NOI18N
+		    str.append(indent).append("\tnull"); // NOI18N
 		this.dumpAttributes(COOKIEOUT, i, str, indent);
 	    }
 

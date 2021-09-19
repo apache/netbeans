@@ -247,7 +247,7 @@ public abstract class HintTestBase extends ELTestBaseForTestProject {
                         manager.setTestingRules(null, null, null, testHints);
 
                         if (caretLine != null) {
-                            int start = text.indexOf(caretLine.toString());
+                            int start = text.indexOf(caretLine);
                             int end = start+caretLine.length();
                             RuleContext context = manager.createRuleContext(pr, language, -1, start, end);
                             provider.computeSelectionHints(manager, context, hints, start, end);

@@ -86,7 +86,7 @@ public class Util {
     
     public static Document setDocumentContentTo(Document doc, InputStream in) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        StringBuffer sbuf = new StringBuffer();
+        StringBuilder sbuf = new StringBuilder();
         try {
             String line = null;
             while ((line = br.readLine()) != null) {

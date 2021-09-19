@@ -443,7 +443,7 @@ public class WebProjectWebServicesClientSupport implements WebServicesClientSupp
             }
             
             if(newWscJars) {
-                StringBuffer newClasspathBuf = new StringBuffer(256);
+                StringBuilder newClasspathBuf = new StringBuilder(256);
                 for(Iterator iter = wscJars.iterator(); iter.hasNext(); ) {
                     newClasspathBuf.append(iter.next());
                     if(iter.hasNext()) {
@@ -927,7 +927,7 @@ public class WebProjectWebServicesClientSupport implements WebServicesClientSupp
         }
         
         public String getDefaultFeaturesAsArgument() {
-            StringBuffer buf = new StringBuffer(defaultFeatures.length*32);
+            StringBuilder buf = new StringBuilder(defaultFeatures.length*32);
             for(int i = 0; i < defaultFeatures.length; i++) {
                 if(i > 0) {
                     buf.append(',');

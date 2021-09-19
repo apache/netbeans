@@ -252,7 +252,7 @@ class JSFUIManager extends AbstractOptionPanelManager {
 
     private void setNewFileExtension(TargetChooserPanelGUI<FileType> uiPanel, String extension) {
         String createdFile = uiPanel.getFile();
-        int dotOffset = createdFile.lastIndexOf("."); //NOI18N
+        int dotOffset = createdFile.lastIndexOf('.'); //NOI18N
         if (dotOffset > 0) {
             uiPanel.setFile(createdFile.substring(0, dotOffset + 1) + extension);
         } else {

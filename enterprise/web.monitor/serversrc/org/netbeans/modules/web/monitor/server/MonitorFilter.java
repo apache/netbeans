@@ -587,8 +587,8 @@ public class MonitorFilter extends Logger implements Filter {
 	    return; 
 	} 
 
-	StringBuffer buf = 
-	    new StringBuffer(monData.getAttributeValue("id")); //NOI18N
+	StringBuilder buf = 
+	    new StringBuilder(monData.getAttributeValue("id")); //NOI18N
 	buf.append(Constants.Punctuation.itemSep);
 	buf.append(monData.getAttributeValue("method")); //NOI18N
 	buf.append(Constants.Punctuation.itemSep);
@@ -728,10 +728,10 @@ public class MonitorFilter extends Logger implements Filter {
 
 	    // PENDING - this is used for the label and should refer to
 	    // the resource, not to the URI that was used to access it. 
-	    String resource = new String(uri);
+	    String resource = uri;
 
 	    // PENDING - don't use the timestamp as the ID
-	    String id = new String(timestamp);
+	    String id = timestamp;
 	    
 	    if(debug) { 
 		log("            id: " + id); //NOI18N
@@ -1399,7 +1399,7 @@ public class MonitorFilter extends Logger implements Filter {
                     valueRep = ResourceBundle.getBundle("org.netbeans.modules.web.monitor.server.Bundle").getString("MON_Warning_attributes"); //NOI18N
                 } else if (value.getClass().isArray()) {
                     Object[] valueItems = (Object[])value;
-                    StringBuffer sb = new StringBuffer(valueItems.length * 16);
+                    StringBuilder sb = new StringBuilder(valueItems.length * 16);
                     if (valueItems.length > 0) sb.append(valueItems[0]);
                     for(int i=1; i < valueItems.length; i++) {
                         sb.append(", "); // NOI18N
@@ -1588,7 +1588,7 @@ public class MonitorFilter extends Logger implements Filter {
     public String toString() {
 
 	if (filterConfig == null) return ("MonitorFilter()"); //NOI18N
-	StringBuffer sb = new StringBuffer("MonitorFilter("); //NOI18N
+	StringBuilder sb = new StringBuilder("MonitorFilter("); //NOI18N
 	sb.append(filterConfig);
 	sb.append(")"); //NOI18N
 	return (sb.toString());

@@ -177,13 +177,13 @@ public class FaceletsELPlugin extends ELPlugin {
     }
 
     private static String getReturnTypeForSignature(String signature) {
-        String returnType = signature.substring(0, signature.indexOf(" ")); //NOI18N
+        String returnType = signature.substring(0, signature.indexOf(' ')); //NOI18N
         return getSimpleNameForType(returnType.trim());
     }
 
     private static List<String> getParametersForSignature(String signature) {
         List<String> params = new ArrayList<>();
-        String paramString = signature.substring(signature.indexOf("(") + 1, signature.indexOf(")")); //NOI18N
+        String paramString = signature.substring(signature.indexOf('(') + 1, signature.indexOf(')')); //NOI18N
         for (String param : paramString.split(",")) { //NOI18N
             params.add(getSimpleNameForType(param.trim()));
         }
@@ -191,7 +191,7 @@ public class FaceletsELPlugin extends ELPlugin {
     }
 
     private static String getSimpleNameForType(String fqn) {
-        return fqn.substring(fqn.lastIndexOf(".") + 1); //NOI18N
+        return fqn.substring(fqn.lastIndexOf('.') + 1); //NOI18N
     }
 
     static class FacesContextObject extends JsfImplicitObject {

@@ -359,7 +359,7 @@ public abstract class SunBaseBean extends BaseBean implements CommonDDBean {
         String key = version + className;
         String modelPostfix = commonBeanModelMap.get(key);
         
-        StringBuffer buf = new StringBuffer(128);
+        StringBuilder buf = new StringBuilder(128);
         if(modelPostfix != null) {
             // Generate correct common bean package prefix.
             buf.append("org.netbeans.modules.j2ee.sun.dd.impl.common.model_");

@@ -400,7 +400,7 @@ public final class DDUtils {
     }
     
     private static String getAsString(List list) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         for (int i=0;i<list.size();i++) {
             if (i>0) buf.append(", "); //NOI18N
             buf.append((String)list.get(i));

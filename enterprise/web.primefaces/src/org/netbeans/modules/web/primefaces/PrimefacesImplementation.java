@@ -239,8 +239,8 @@ public class PrimefacesImplementation implements JsfComponentImplementation {
                     String propertiesText = resource.asText();
                     int indexOfVersion = propertiesText.indexOf(versionItem); //NOI18N
                     String version = propertiesText.substring(indexOfVersion + versionItem.length());
-                    version = version.substring(0, version.indexOf("\n")); //NOI18N
-                    poms.add(new URI(baseUri.replace("<VERSION>", version.trim()))); //NOI18N
+                    version = version.substring(0, version.indexOf('\n')); //NOI18N
+                    poms.add(new URI(baseUri.replaceAll("<VERSION>", version.trim()))); //NOI18N
                 }
             } catch (URISyntaxException ex) {
                 LOGGER.log(Level.WARNING, "Primefaces version wasn't parsed", ex);

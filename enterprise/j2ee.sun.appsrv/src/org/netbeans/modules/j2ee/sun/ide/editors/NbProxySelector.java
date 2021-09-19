@@ -243,7 +243,7 @@ public final class NbProxySelector extends ProxySelector {
         StringTokenizer st = new StringTokenizer (nonProxyHosts, "|", false);
         while (st.hasMoreTokens () && !dontUseProxy) {
             String token = st.nextToken ();
-            int star = token.indexOf ("*");
+            int star = token.indexOf ('*');
             if (star == -1) {
                 dontUseProxy = token.equals (host);
                 if (dontUseProxy) {
@@ -279,7 +279,7 @@ public final class NbProxySelector extends ProxySelector {
         StringTokenizer st = new StringTokenizer (nonProxyHosts, "|", false);
         while (st.hasMoreTokens () && !dontUseProxy) {
             String nonProxyHost = st.nextToken ();
-            int star = nonProxyHost.indexOf ("*");
+            int star = nonProxyHost.indexOf ('*');
             if (star == -1) {
                 dontUseProxy = nonProxyHost.equals (ip);
                 if (dontUseProxy) {

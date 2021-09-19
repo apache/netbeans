@@ -129,7 +129,7 @@ public class WsdlWrapperHandler extends DefaultHandler{
     }
     
     private String getLocalPart(String fullName) {
-        int index = fullName.indexOf(":"); //NOI18N
+        int index = fullName.indexOf(':'); //NOI18N
         return (index>=0?fullName.substring(index+1):fullName);
     }
 }

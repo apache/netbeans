@@ -134,7 +134,7 @@ public class FaceletsInputTextTagValueProvider implements InputTextTagValueProvi
         if (value.startsWith("#{")) {    //NOI18N
             value = value.substring(2, value.length()-1);
         }
-        String result = value.substring(value.lastIndexOf(".")+1,value.length()).toLowerCase();
+        String result = value.substring(value.lastIndexOf('.')+1,value.length()).toLowerCase();
         int i=0;
         String tmp = result;
         while (properties.get(tmp) != null) {

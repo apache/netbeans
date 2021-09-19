@@ -69,7 +69,7 @@ public class AddBeanPanel {
             if (name == null) {
                 return null;
             }
-            name = name.substring(name.lastIndexOf(".") + 1); //NOI18N
+            name = name.substring(name.lastIndexOf('.') + 1); //NOI18N
             id = name.substring(0, 1).toLowerCase() + name.substring(1);
         }
         return id;

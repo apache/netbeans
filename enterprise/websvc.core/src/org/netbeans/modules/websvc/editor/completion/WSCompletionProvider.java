@@ -65,7 +65,7 @@ import org.openide.util.RequestProcessor;
  */
 public class WSCompletionProvider implements CompletionProvider {
     
-    private static Logger LOG = Logger.getLogger( WSCompletionProvider.class.getCanonicalName().toString());
+    private static Logger LOG = Logger.getLogger(WSCompletionProvider.class.getCanonicalName());
     
     private static final String[] BINDING_TYPES = {
         "SOAPBinding.SOAP11HTTP_BINDING", //NOI18N

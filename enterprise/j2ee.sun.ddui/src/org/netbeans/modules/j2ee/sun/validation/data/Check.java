@@ -112,7 +112,7 @@ public class Check extends org.netbeans.modules.schema2beans.BaseBean
 		org.netbeans.modules.schema2beans.BaseBean n;
 		str.append(indent);
 		str.append("Name");	// NOI18N
-		str.append(indent+"\t");	// NOI18N
+		str.append(indent).append("\t");	// NOI18N
 		str.append("<");	// NOI18N
 		s = this.getName();
 		str.append((s==null?"null":s.trim()));	// NOI18N
@@ -125,7 +125,7 @@ public class Check extends org.netbeans.modules.schema2beans.BaseBean
 		if (n != null)
 			n.dump(str, indent + "\t");	// NOI18N
 		else
-			str.append(indent+"\tnull");	// NOI18N
+			str.append(indent).append("\tnull");	// NOI18N
 		this.dumpAttributes(PARAMETERS, 0, str, indent);
 
 	}

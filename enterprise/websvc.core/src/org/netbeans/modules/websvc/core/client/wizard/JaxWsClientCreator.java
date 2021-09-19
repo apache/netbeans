@@ -144,17 +144,17 @@ public class JaxWsClientCreator implements ClientCreator {
     }
     
     private String getWsdlName(String wsdlUrl) {
-        int ind = wsdlUrl.lastIndexOf("/"); //NOI18N
+        int ind = wsdlUrl.lastIndexOf('/'); //NOI18N
         String wsdlName = ind>=0?wsdlUrl.substring(ind+1):wsdlUrl;
         if (wsdlName.toUpperCase().endsWith("?WSDL")) wsdlName = wsdlName.substring(0,wsdlName.length()-5); //NOI18N
-        ind = wsdlName.lastIndexOf("."); //NOI18N
+        ind = wsdlName.lastIndexOf('.'); //NOI18N
         if (ind>0) wsdlName = wsdlName.substring(0,ind);
         // replace special characters with '_'
         return convertAllSpecialChars(wsdlName);
     }
     
     private String convertAllSpecialChars(String resultStr){
-        StringBuffer sb = new StringBuffer(resultStr);
+        StringBuilder sb = new StringBuilder(resultStr);
         for(int i = 0; i < sb.length(); i++){
             char c = sb.charAt(i);
             if( Character.isLetterOrDigit(c) ||

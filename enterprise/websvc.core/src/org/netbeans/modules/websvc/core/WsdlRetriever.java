@@ -318,7 +318,7 @@ public class WsdlRetriever implements Runnable {
     }
     
     private String getSchemaUrlName(String wsdlUrl, String schemaName) {
-        int index = wsdlUrl.lastIndexOf("/"); //NOI18N
+        int index = wsdlUrl.lastIndexOf('/'); //NOI18N
         if (index>=0) return wsdlUrl.substring(0,index+1)+schemaName;
         else return null;
     }
@@ -411,14 +411,14 @@ public class WsdlRetriever implements Runnable {
                 }
                 if("import".equals(localname)) { // NOI18N
                     String wsdlLocation = attributes.getValue("location"); //NOI18N
-                    if (wsdlLocation!=null && wsdlLocation.indexOf("/")<0 && wsdlLocation.endsWith(".wsdl")) { //NOI18N
+                    if (wsdlLocation!=null && wsdlLocation.indexOf('/')<0 && wsdlLocation.endsWith(".wsdl")) { //NOI18N
                         schemaNames.add(wsdlLocation);
                     }
                 }
             }
             if(insideSchema && "import".equals(localname)) { // NOI18N
                 String schemaLocation = attributes.getValue("schemaLocation"); //NOI18N
-                if (schemaLocation!=null && schemaLocation.indexOf("/")<0 && schemaLocation.endsWith(".xsd")) { //NOI18N
+                if (schemaLocation!=null && schemaLocation.indexOf('/')<0 && schemaLocation.endsWith(".xsd")) { //NOI18N
                     schemaNames.add(schemaLocation);
                 }
             }

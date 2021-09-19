@@ -311,7 +311,7 @@ public class ServerUtils {
         assert pattern != null : "Search pattern should not be null";
         assert dir != null : "Search directory tree root should not be null";
         // TODO: Check if this is OK of File.pathSeparator should be used.
-        int subindex = pattern.lastIndexOf("/");
+        int subindex = pattern.lastIndexOf('/');
         if (subindex != -1) {
             String subdir = pattern.substring(0, subindex);
             pattern = pattern.substring(subindex + 1);

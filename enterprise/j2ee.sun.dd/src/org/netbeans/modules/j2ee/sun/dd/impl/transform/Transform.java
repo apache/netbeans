@@ -265,16 +265,16 @@ public class Transform extends org.netbeans.modules.schema2beans.BaseBean
 		Object o;
 		org.netbeans.modules.schema2beans.BaseBean n;
 		str.append(indent);
-		str.append("Xmltype["+this.sizeXmltype()+"]");	// NOI18N
+		str.append("Xmltype[").append(this.sizeXmltype()).append("]");	// NOI18N
 		for(int i=0; i<this.sizeXmltype(); i++)
 		{
-			str.append(indent+"\t");
-			str.append("#"+i+":");
+			str.append(indent).append("\t");
+			str.append("#").append(i).append(":");
 			n = (org.netbeans.modules.schema2beans.BaseBean) this.getXmltype(i);
 			if (n != null)
 				n.dump(str, indent + "\t");	// NOI18N
 			else
-				str.append(indent+"\tnull");	// NOI18N
+				str.append(indent).append("\tnull");	// NOI18N
 			this.dumpAttributes(XMLTYPE, i, str, indent);
 		}
 

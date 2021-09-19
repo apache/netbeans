@@ -378,12 +378,12 @@ public class WebModules implements WebModuleProvider, AntProjectListener, ClassP
         }
         
         public String toString () {
-            StringBuffer sb = new StringBuffer ("web module in freeform project" +
+            StringBuilder sb = new StringBuilder ("web module in freeform project" +
                 "\n\tdoc root:" + docRootFO.getPath () + 
                 "\n\tcontext path:" + contextPath +
                 "\n\tj2ee version:" + j2eeSpec);
             for (int i = 0; i < sourcesFOs.length; i++) {
-                sb.append ("\n\tsource root:" + sourcesFOs [i].getPath ());
+                sb.append("\n\tsource root:").append (sourcesFOs [i].getPath ());
             }
             return sb.toString ();
         }

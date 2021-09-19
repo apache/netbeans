@@ -263,7 +263,7 @@ public class ServiceLocatorStrategyPanel extends javax.swing.JPanel implements C
         setEnabledClassNameTextField(true);
         String simpleName = "";
         if (serviceLocatorName != null) {
-            int dotPosition = serviceLocatorName.lastIndexOf(".");
+            int dotPosition = serviceLocatorName.lastIndexOf('.');
             simpleName = serviceLocatorName.substring(dotPosition + 1);
         }
         final ElementHandle<TypeElement> handle = TypeElementFinder.find(cpInfo, simpleName, new TypeElementFinder.Customizer() {

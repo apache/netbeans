@@ -816,7 +816,7 @@ public final class StartTomcat extends StartServer implements ProgressObject {
                         if (idx == -1) { // common/endorsed/*.jar is not present, add it
                             String COMMON_LIB = "${catalina.home}/" + tm.libFolder() + "/*.jar"; // NOI18N
                             int commonLibIdx = commonLoader.indexOf(COMMON_LIB);
-                            StringBuffer sb = new StringBuffer(commonLibIdx == -1 
+                            StringBuilder sb = new StringBuilder(commonLibIdx == -1 
                                     ? commonLoader 
                                     : commonLoader.substring(0, commonLibIdx));
                             if (commonLibIdx != -1) {
@@ -835,7 +835,7 @@ public final class StartTomcat extends StartServer implements ProgressObject {
                         if (idx != -1) { // common/endorsed/*.jar is present, remove it
                             String strBefore = commonLoader.substring(0, idx);
                             int commaIdx = strBefore.lastIndexOf(',');
-                            StringBuffer sb = new StringBuffer(commonLoader.substring(0, commaIdx == -1 ? idx : commaIdx));
+                            StringBuilder sb = new StringBuilder(commonLoader.substring(0, commaIdx == -1 ? idx : commaIdx));
                             String strAfter = commonLoader.substring(idx + COMMON_ENDORSED.length());
                             if (commaIdx == -1) {
                                 // we have to cut off the trailing comman after the endorsed lib

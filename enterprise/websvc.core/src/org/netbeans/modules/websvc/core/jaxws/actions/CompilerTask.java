@@ -269,7 +269,7 @@ class CompilerTask implements CancellableTask<CompilationController> {
 
     private static String fixNamesInDeclarationPart(String argumentDeclarationPart) {
         StringTokenizer tok = new StringTokenizer(argumentDeclarationPart, " ,"); //NOI18N
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         int i = 0;
         while (tok.hasMoreTokens()) {
             String token = tok.nextToken();

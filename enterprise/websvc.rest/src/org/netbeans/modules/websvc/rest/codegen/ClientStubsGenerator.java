@@ -544,14 +544,14 @@ public class ClientStubsGenerator extends AbstractGenerator {
         if ( url.endsWith("/")) {
             url = url.substring(0, url.length()-1);
         }
-        sb2.append("\n\t<!-- Using JavaScript files for project " + prjName + "-->\n");
+        sb2.append("\n\t<!-- Using JavaScript files for project ").append(prjName).append("-->\n");
         sb2.append("\t<script language='Javascript'>\n");
         sb2.append("\t\tvar str = '';\n");
-        sb2.append("\t\t//Example test code for " + prjName + "\n");
-        sb2.append("\t\tstr = '<h2>Resources for " + prjName + ":</h2><br><table border=\"1\">';\n");
-        sb2.append("\t\tvar app = new " + pkg+prjName + "('"+url+"');\n");
+        sb2.append("\t\t//Example test code for ").append(prjName).append("\n");
+        sb2.append("\t\tstr = '<h2>Resources for ").append(prjName).append(":</h2><br><table border=\"1\">';\n");
+        sb2.append("\t\tvar app = new ").append(pkg).append(prjName).append("('").append(url).append("');\n");
         sb2.append("\t\t//Uncomment below if using proxy for javascript cross-domain.\n");
-        sb2.append("\t\t//app.setProxy(\""+getProxyUrl()+"\");\n");
+        sb2.append("\t\t//app.setProxy(\"").append(getProxyUrl()).append("\");\n");
         sb2.append("\t\tvar resources = app.getResources();\n");
         sb2.append("\t\tfor(i=0;i<resources.length;i++) {\n");
         sb2.append("\t\t  var resource = resources[i];\n");

@@ -208,9 +208,9 @@ public class SaasClientJ2eeAuthenticationGenerator extends SaasClientAuthenticat
                         JavaSourceHelper.createJavaSource(templateUrl, targetFolder, 
                                 getBean().getSaasServicePackageName(), fileName);
                     } else {
-                        if (templateUrl.indexOf("/") != -1) {
+                        if (templateUrl.indexOf('/') != -1) {
                             fileName = getBean().getSaasName() +
-                                    templateUrl.substring(templateUrl.lastIndexOf("/") + 1);
+                                    templateUrl.substring(templateUrl.lastIndexOf('/') + 1);
                         }
                         if (fileName != null) {
                             FileObject fobj = targetFolder.getFileObject(fileName);

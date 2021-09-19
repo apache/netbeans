@@ -52,7 +52,7 @@ public class Utils {
 
         try{
             while ((line = rdr.readLine()) != null){
-                buff.append(line + "\n");
+                buff.append(line).append("\n");
             }
         } finally{
             rdr.close();

@@ -110,7 +110,7 @@ public abstract class DDTestCase extends J2eeTestCase {
     }
 
     protected void assertFile(String filename) throws IOException {
-        int dot = filename.lastIndexOf(".");
+        int dot = filename.lastIndexOf('.');
         if (dot < 0) {
             dot = filename.length();
         }

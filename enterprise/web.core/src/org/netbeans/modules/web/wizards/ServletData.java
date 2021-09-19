@@ -287,7 +287,7 @@ class ServletData extends DeployData {
         if (urlMappings == null || urlMappings.length == 0) {
             return ""; //NOI18N
         }
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         int index = 0;
         while (index < urlMappings.length - 1) {
             buf.append(urlMappings[index]);

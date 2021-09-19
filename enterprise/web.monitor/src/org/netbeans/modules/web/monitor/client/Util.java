@@ -58,7 +58,7 @@ public class Util  {
 	if(rd.sizeParam() == 0) return;
 	
 	Param[] params = rd.getParam();
-	StringBuffer buf = new StringBuffer(512);
+	StringBuilder buf = new StringBuilder(512);
 	String name, value;
 	 
 	for(int i=0; i < params.length; i++) {
@@ -173,7 +173,7 @@ public class Util  {
 
 	boolean sessionCookie = false;
 	Param[] params = headers.getParam(); 
-	StringBuffer cookiesOut = new StringBuffer("");  //NOI18N
+	StringBuilder cookiesOut = new StringBuilder("");  //NOI18N
 	 
 	for(int i=0; i<numParams; ++i) {
 

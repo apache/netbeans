@@ -529,13 +529,13 @@ public class OAuthHelper {
 
     private static String getRequestTokenBody(Metadata oauthMetadata) {
         MethodType oauthMethod = oauthMetadata.getFlow().getRequestToken();
-        StringBuffer bodyBuf = new StringBuffer();
+        StringBuilder bodyBuf = new StringBuilder();
         bodyBuf.append("{"); //NOI18N
         String webResourceMethod=getWebResourceMethod(oauthMethod);
-        bodyBuf.append("WebResource resource = client.resource(OAUTH_BASE_URL)."+webResourceMethod); //NOI18N
+        bodyBuf.append("WebResource resource = client.resource(OAUTH_BASE_URL).").append(webResourceMethod); //NOI18N
         bodyBuf.append("oauth_params = new OAuthParameters().consumerKey(CONSUMER_KEY)"); //NOI18N
-        bodyBuf.append(".signatureMethod("+getSignatureMethod(oauthMetadata, oauthMethod)+")"); //NOI18N
-        bodyBuf.append(".version(\""+getVersion(oauthMethod)+"\")"); //NOI18N
+        bodyBuf.append(".signatureMethod(").append(getSignatureMethod(oauthMetadata, oauthMethod)).append(")"); //NOI18N
+        bodyBuf.append(".version(\"").append(getVersion(oauthMethod)).append("\")"); //NOI18N
         if (isNonce(oauthMethod)) {
             bodyBuf.append(".nonce()"); //NOI18N
         }
@@ -549,20 +549,20 @@ public class OAuthHelper {
         bodyBuf.append("oauth_secrets = new OAuthSecrets().consumerSecret(CONSUMER_SECRET);"); //NOI18N
         bodyBuf.append("oauth_filter = new OAuthClientFilter(client.getProviders(), oauth_params, oauth_secrets);"); //NOI18N
         bodyBuf.append("resource.addFilter(oauth_filter);"); //NOI18N
-        bodyBuf.append("return resource.get("+getResponseClass(oauthMethod.getResponseStyle(), true)+");"); //NOI18N
+        bodyBuf.append("return resource.get(").append(getResponseClass(oauthMethod.getResponseStyle(), true)).append(");"); //NOI18N
         bodyBuf.append("}"); //NOI18N
         return bodyBuf.toString();
     }
     private static String getAccessTokenBody(Metadata oauthMetadata) {
         MethodType requestTokenMethod = oauthMetadata.getFlow().getRequestToken();
         MethodType accessTokenMethod = oauthMetadata.getFlow().getAccessToken();
-        StringBuffer bodyBuf = new StringBuffer();
+        StringBuilder bodyBuf = new StringBuilder();
         bodyBuf.append("{"); //NOI18N
         String webResourceMethod=getWebResourceMethod(accessTokenMethod);
-        bodyBuf.append("WebResource resource = client.resource(OAUTH_BASE_URL)."+webResourceMethod); //NOI18N
-        bodyBuf.append("oauth_params.token("+getParamFromResponse(oauthMetadata, requestTokenMethod.getResponseStyle(), "requestTokenResponse", "oauth_token")+")"); //NOI18N
-        bodyBuf.append(".signatureMethod("+getSignatureMethod(oauthMetadata, accessTokenMethod)+")"); //NOI18N
-        bodyBuf.append(".version(\""+getVersion(accessTokenMethod)+"\")"); //NOI18N
+        bodyBuf.append("WebResource resource = client.resource(OAUTH_BASE_URL).").append(webResourceMethod); //NOI18N
+        bodyBuf.append("oauth_params.token(").append(getParamFromResponse(oauthMetadata, requestTokenMethod.getResponseStyle(), "requestTokenResponse", "oauth_token")).append(")"); //NOI18N
+        bodyBuf.append(".signatureMethod(").append(getSignatureMethod(oauthMetadata, accessTokenMethod)).append(")"); //NOI18N
+        bodyBuf.append(".version(\"").append(getVersion(accessTokenMethod)).append("\")"); //NOI18N
         if (isNonce(accessTokenMethod)) {
             bodyBuf.append(".nonce()"); //NOI18N
         }
@@ -578,20 +578,20 @@ public class OAuthHelper {
         bodyBuf.append(";"); //NOI18N
 
 
-        bodyBuf.append("oauth_secrets.tokenSecret("+getParamFromResponse(oauthMetadata, requestTokenMethod.getResponseStyle(), "requestTokenResponse", "oauth_token_secret")+");"); //NOI18N
+        bodyBuf.append("oauth_secrets.tokenSecret(").append(getParamFromResponse(oauthMetadata, requestTokenMethod.getResponseStyle(), "requestTokenResponse", "oauth_token_secret")).append(");"); //NOI18N
         bodyBuf.append("resource.addFilter(oauth_filter);"); //NOI18N
-        bodyBuf.append("return resource.get("+getResponseClass(accessTokenMethod.getResponseStyle(), true)+");"); //NOI18N
+        bodyBuf.append("return resource.get(").append(getResponseClass(accessTokenMethod.getResponseStyle(), true)).append(");"); //NOI18N
         bodyBuf.append("}"); //NOI18N
         return bodyBuf.toString();
     }
 
     private static String getInitOAuthBody(Metadata oauthMetadata) {
        //MethodType accessTokenMethod = oauthMetadata.getFlow().getAccessToken();
-        StringBuffer bodyBuf = new StringBuffer();
+        StringBuilder bodyBuf = new StringBuilder();
         bodyBuf.append("{"); //NOI18N
         bodyBuf.append("oauth_params = new OAuthParameters().consumerKey(CONSUMER_KEY).token(oauth_access_token)"); //NOI18N
-        bodyBuf.append(".signatureMethod("+getSignatureMethod(oauthMetadata, null)+")"); //NOI18N
-        bodyBuf.append(".version(\""+getVersion(oauthMetadata)+"\")"); //NOI18N
+        bodyBuf.append(".signatureMethod(").append(getSignatureMethod(oauthMetadata, null)).append(")"); //NOI18N
+        bodyBuf.append(".version(\"").append(getVersion(oauthMetadata)).append("\")"); //NOI18N
         if (isNonce(oauthMetadata)) {
             bodyBuf.append(".nonce()"); //NOI18N
         }
@@ -608,10 +608,10 @@ public class OAuthHelper {
 
     private static String getAuthorizeConsumerBody(Metadata oauthMetadata) {
         MethodType accessTokenMethod = oauthMetadata.getFlow().getAccessToken();
-        StringBuffer bodyBuf = new StringBuffer();
+        StringBuilder bodyBuf = new StringBuilder();
         bodyBuf.append("{"); //NOI18N
         bodyBuf.append("try {"); //NOI18N
-        bodyBuf.append("java.awt.Desktop.getDesktop().browse(new java.net.URI("+getAuthorizationUrl(oauthMetadata)+"));"); //NOI18N
+        bodyBuf.append("java.awt.Desktop.getDesktop().browse(new java.net.URI(").append(getAuthorizationUrl(oauthMetadata)).append("));"); //NOI18N
         bodyBuf.append("} catch (java.net.URISyntaxException ex) {"); //NOI18N
         bodyBuf.append("ex.printStackTrace();"); //NOI18N
         bodyBuf.append("}"); //NOI18N
@@ -636,13 +636,13 @@ public class OAuthHelper {
         MethodType accessTokenMethod = oauthMetadata.getFlow().getAccessToken();
         String verifierPrefix = accessTokenMethod.isVerifier() ? "String oauth_verifier = " : ""; //NOI18N
         String verifierPostfix = accessTokenMethod.isVerifier() ? ", oauth_verifier" : ""; //NOI18N
-        StringBuffer bodyBuf = new StringBuffer();
+        StringBuilder bodyBuf = new StringBuilder();
         bodyBuf.append("{"); //NOI18N
-        bodyBuf.append(getResponseClass(requestTokenMethod.getResponseStyle(), false)+" requestTokenResponse = getOAuthRequestToken();"); //NOI18N
-        bodyBuf.append(verifierPrefix+"authorizeConsumer(requestTokenResponse);"); //NOI18N
-        bodyBuf.append(getResponseClass(accessTokenMethod.getResponseStyle(), false)+" accessTokenResponse = getOAuthAccessToken(requestTokenResponse"+verifierPostfix+");"); //NOI18N
-        bodyBuf.append("oauth_access_token_secret = "+getParamFromResponse(oauthMetadata, accessTokenMethod.getResponseStyle(), "accessTokenResponse", "oauth_token_secret")+";"); //NOI18N
-        bodyBuf.append("oauth_access_token  = "+getParamFromResponse(oauthMetadata, accessTokenMethod.getResponseStyle(), "accessTokenResponse", "oauth_token")+";"); //NOI18N
+        bodyBuf.append(getResponseClass(requestTokenMethod.getResponseStyle(), false)).append(" requestTokenResponse = getOAuthRequestToken();"); //NOI18N
+        bodyBuf.append(verifierPrefix).append("authorizeConsumer(requestTokenResponse);"); //NOI18N
+        bodyBuf.append(getResponseClass(accessTokenMethod.getResponseStyle(), false)).append(" accessTokenResponse = getOAuthAccessToken(requestTokenResponse").append(verifierPostfix).append(");"); //NOI18N
+        bodyBuf.append("oauth_access_token_secret = ").append(getParamFromResponse(oauthMetadata, accessTokenMethod.getResponseStyle(), "accessTokenResponse", "oauth_token_secret")).append(";"); //NOI18N
+        bodyBuf.append("oauth_access_token  = ").append(getParamFromResponse(oauthMetadata, accessTokenMethod.getResponseStyle(), "accessTokenResponse", "oauth_token")).append(";"); //NOI18N
         bodyBuf.append("}"); //NOI18N
         return bodyBuf.toString();
     }
@@ -679,7 +679,7 @@ public class OAuthHelper {
     private static String getAuthorizationUrl(Metadata oauthMetadata) {
         AuthorizationType auth = oauthMetadata.getFlow().getAuthorization();
         if (auth.getFixedUrl() != null) {
-            StringBuffer buf = new StringBuffer(auth.getFixedUrl().getUrl());
+            StringBuilder buf = new StringBuilder(auth.getFixedUrl().getUrl());
             List<ParamType> params =  auth.getParam();
             if (params.size() > 0) {
                 buf.append("?"); //NOI18N
@@ -695,7 +695,7 @@ public class OAuthHelper {
                     paramName = oauthName;
                 }
                 String paramValue = getParamFromResponse(oauthMetadata, oauthMetadata.getFlow().getRequestToken().getResponseStyle(), "requestTokenResponse", oauthName); //NOI18N
-                buf.append(paramName+"=\"+"+paramValue);
+                buf.append(paramName).append("=\"+").append(paramValue);
             }
             return "\""+buf.toString()+(params.size() == 0 ? "\"" : ""); //NOI18N
         } else {
@@ -733,14 +733,14 @@ public class OAuthHelper {
     private static String getRequestTokenBodyWeb(Metadata oauthMetadata) {
         MethodType oauthMethod = oauthMetadata.getFlow().getRequestToken();
         String webResourceMethod=getWebResourceMethod(oauthMethod);
-        StringBuffer bodyBuf = new StringBuffer();
+        StringBuilder bodyBuf = new StringBuilder();
         bodyBuf.append("{"); //NOI18N
         bodyBuf.append("Client reqTokenClient = new Client();"); //NOI18N
         
-        bodyBuf.append("WebResource resource = reqTokenClient.resource(OAUTH_BASE_URL)."+webResourceMethod); //NOI18N
+        bodyBuf.append("WebResource resource = reqTokenClient.resource(OAUTH_BASE_URL).").append(webResourceMethod); //NOI18N
         bodyBuf.append("OAuthParameters o_params = new OAuthParameters().consumerKey(CONSUMER_KEY)"); //NOI18N
-        bodyBuf.append(".signatureMethod("+getSignatureMethod(oauthMetadata, oauthMethod)+")"); //NOI18N
-        bodyBuf.append(".version(\""+getVersion(oauthMethod)+"\")"); //NOI18N
+        bodyBuf.append(".signatureMethod(").append(getSignatureMethod(oauthMetadata, oauthMethod)).append(")"); //NOI18N
+        bodyBuf.append(".version(\"").append(getVersion(oauthMethod)).append("\")"); //NOI18N
         if (isNonce(oauthMethod)) {
             bodyBuf.append(".nonce()"); //NOI18N
         }
@@ -754,7 +754,7 @@ public class OAuthHelper {
         bodyBuf.append("OAuthSecrets o_secrets = new OAuthSecrets().consumerSecret(CONSUMER_SECRET);"); //NOI18N
         bodyBuf.append("OAuthClientFilter o_filter = new OAuthClientFilter(reqTokenClient.getProviders(), o_params, o_secrets);"); //NOI18N
         bodyBuf.append("resource.addFilter(o_filter);"); //NOI18N
-        bodyBuf.append("return resource.get("+getResponseClass(oauthMethod.getResponseStyle(), true)+");"); //NOI18N
+        bodyBuf.append("return resource.get(").append(getResponseClass(oauthMethod.getResponseStyle(), true)).append(");"); //NOI18N
         bodyBuf.append("}"); //NOI18N
         return bodyBuf.toString();
     }
@@ -763,14 +763,14 @@ public class OAuthHelper {
         //MethodType requestTokenMethod = oauthMetadata.getFlow().getRequestToken();
         MethodType accessTokenMethod = oauthMetadata.getFlow().getAccessToken();
         String webResourceMethod=getWebResourceMethod(accessTokenMethod);
-        StringBuffer bodyBuf = new StringBuffer();
+        StringBuilder bodyBuf = new StringBuilder();
         bodyBuf.append("{"); //NOI18N
         bodyBuf.append("Client accessTokenClient = new Client();"); //NOI18N
-        bodyBuf.append("WebResource resource = accessTokenClient.resource(OAUTH_BASE_URL)."+webResourceMethod); //NOI18N
+        bodyBuf.append("WebResource resource = accessTokenClient.resource(OAUTH_BASE_URL).").append(webResourceMethod); //NOI18N
         bodyBuf.append("OAuthParameters o_params = new OAuthParameters().consumerKey(CONSUMER_KEY)");
         bodyBuf.append(".token((String)session.getAttribute(\"oauth_token\"))"); //NOI18N
-        bodyBuf.append(".signatureMethod("+getSignatureMethod(oauthMetadata, accessTokenMethod)+")"); //NOI18N
-        bodyBuf.append(".version(\""+getVersion(accessTokenMethod)+"\")"); //NOI18N
+        bodyBuf.append(".signatureMethod(").append(getSignatureMethod(oauthMetadata, accessTokenMethod)).append(")"); //NOI18N
+        bodyBuf.append(".version(\"").append(getVersion(accessTokenMethod)).append("\")"); //NOI18N
         if (isNonce(accessTokenMethod)) {
             bodyBuf.append(".nonce()"); //NOI18N
         }
@@ -786,7 +786,7 @@ public class OAuthHelper {
         bodyBuf.append("OAuthSecrets o_secrets = new OAuthSecrets().consumerSecret(CONSUMER_SECRET).tokenSecret((String)session.getAttribute(\"oauth_token_secret\"));"); //NOI18N
         bodyBuf.append("OAuthClientFilter o_filter = new OAuthClientFilter(accessTokenClient.getProviders(), o_params, o_secrets);"); //NOI18N
         bodyBuf.append("resource.addFilter(o_filter);"); //NOI18N
-        bodyBuf.append("return resource.get("+getResponseClass(accessTokenMethod.getResponseStyle(), true)+");"); //NOI18N
+        bodyBuf.append("return resource.get(").append(getResponseClass(accessTokenMethod.getResponseStyle(), true)).append(");"); //NOI18N
         bodyBuf.append("}"); //NOI18N
         return bodyBuf.toString();
     }
@@ -796,14 +796,14 @@ public class OAuthHelper {
         //MethodType requestTokenMethod = oauthMetadata.getFlow().getRequestToken();
         MethodType accessTokenMethod = oauthMetadata.getFlow().getAccessToken();
         String webResourceMethod=getWebResourceMethod(accessTokenMethod);
-        StringBuffer bodyBuf = new StringBuffer();
+        StringBuilder bodyBuf = new StringBuilder();
         bodyBuf.append("{"); //NOI18N
         bodyBuf.append("Client accessTokenClient = new Client();"); //NOI18N
-        bodyBuf.append("WebResource resource = accessTokenClient.resource(OAUTH_BASE_URL)."+webResourceMethod); //NOI18N
+        bodyBuf.append("WebResource resource = accessTokenClient.resource(OAUTH_BASE_URL).").append(webResourceMethod); //NOI18N
         bodyBuf.append("OAuthParameters o_params = new OAuthParameters().consumerKey(CONSUMER_KEY)");
-        bodyBuf.append(".token("+getParamFromResponse(oauthMetadata, requestTokenMethod.getResponseStyle(), "requestTokenResponse", "oauth_token")+")"); //NOI18N
-        bodyBuf.append(".signatureMethod("+getSignatureMethod(oauthMetadata, accessTokenMethod)+")"); //NOI18N
-        bodyBuf.append(".version(\""+getVersion(accessTokenMethod)+"\")"); //NOI18N
+        bodyBuf.append(".token(").append(getParamFromResponse(oauthMetadata, requestTokenMethod.getResponseStyle(), "requestTokenResponse", "oauth_token")).append(")"); //NOI18N
+        bodyBuf.append(".signatureMethod(").append(getSignatureMethod(oauthMetadata, accessTokenMethod)).append(")"); //NOI18N
+        bodyBuf.append(".version(\"").append(getVersion(accessTokenMethod)).append("\")"); //NOI18N
         if (isNonce(accessTokenMethod)) {
             bodyBuf.append(".nonce()"); //NOI18N
         }
@@ -816,25 +816,25 @@ public class OAuthHelper {
         bodyBuf.append(";"); //NOI18N
 
 
-        bodyBuf.append("OAuthSecrets o_secrets = new OAuthSecrets().consumerSecret(CONSUMER_SECRET).tokenSecret("+getParamFromResponse(oauthMetadata, requestTokenMethod.getResponseStyle(), "requestTokenResponse", "oauth_token_secret")+");"); //NOI18N
+        bodyBuf.append("OAuthSecrets o_secrets = new OAuthSecrets().consumerSecret(CONSUMER_SECRET).tokenSecret(").append(getParamFromResponse(oauthMetadata, requestTokenMethod.getResponseStyle(), "requestTokenResponse", "oauth_token_secret")).append(");"); //NOI18N
         bodyBuf.append("OAuthClientFilter o_filter = new OAuthClientFilter(accessTokenClient.getProviders(), o_params, o_secrets);"); //NOI18N
         bodyBuf.append("resource.addFilter(o_filter);"); //NOI18N
-        bodyBuf.append("return resource.get("+getResponseClass(accessTokenMethod.getResponseStyle(), true)+");"); //NOI18N
+        bodyBuf.append("return resource.get(").append(getResponseClass(accessTokenMethod.getResponseStyle(), true)).append(");"); //NOI18N
         bodyBuf.append("}"); //NOI18N
         return bodyBuf.toString();
     }
 
     private static String getInitOAuthBodyWeb(Metadata oauthMetadata) {
         //MethodType accessTokenMethod = oauthMetadata.getFlow().getAccessToken();
-        StringBuffer bodyBuf = new StringBuffer();
+        StringBuilder bodyBuf = new StringBuilder();
         bodyBuf.append("{"); //NOI18N
         bodyBuf.append("HttpSession session = request.getSession();"); //NOI18N
         bodyBuf.append("if ((String)session.getAttribute(\"oauth_token\") == null) {"); //NOI18N
         bodyBuf.append("    response.sendRedirect(request.getContextPath() + \"/OAuthLogin\");"); //NOI18N
         bodyBuf.append("} else {"); //NOI18N
         bodyBuf.append("oauth_params = new OAuthParameters().consumerKey(CONSUMER_KEY).token((String)session.getAttribute(\"oauth_token\"))"); //NOI18N
-        bodyBuf.append(".signatureMethod("+getSignatureMethod(oauthMetadata, null)+")"); //NOI18N
-        bodyBuf.append(".version(\""+getVersion(oauthMetadata)+"\")"); //NOI18N
+        bodyBuf.append(".signatureMethod(").append(getSignatureMethod(oauthMetadata, null)).append(")"); //NOI18N
+        bodyBuf.append(".version(\"").append(getVersion(oauthMetadata)).append("\")"); //NOI18N
         if (isNonce(oauthMetadata)) {
             bodyBuf.append(".nonce()"); //NOI18N
         }
@@ -852,7 +852,7 @@ public class OAuthHelper {
     
 
     private static String getInitOAuthBodyNb(Metadata oauthMetadata) {
-        StringBuffer bodyBuf = new StringBuffer();
+        StringBuilder bodyBuf = new StringBuilder();
         bodyBuf.append("{"); //NOI18N
         bodyBuf.append("java.util.prefs.Preferences prefs = org.openide.util.NbPreferences.forModule(this.getClass());"); //NOI18N
         bodyBuf.append("String oauth_token = prefs.get(\"oauth_token\", null);"); //NOI18N
@@ -861,8 +861,8 @@ public class OAuthHelper {
         bodyBuf.append("    org.openide.DialogDisplayer.getDefault().notify(new org.openide.NotifyDescriptor.Message(\"You have to call the login() method first to authorize the application to access user data.\"));"); //NOI18N
         bodyBuf.append("} else {"); //NOI18N
         bodyBuf.append("oauth_params = new OAuthParameters().consumerKey(CONSUMER_KEY).token(oauth_token)"); //NOI18N
-        bodyBuf.append(".signatureMethod("+getSignatureMethod(oauthMetadata, null)+")"); //NOI18N
-        bodyBuf.append(".version(\""+getVersion(oauthMetadata)+"\")"); //NOI18N
+        bodyBuf.append(".signatureMethod(").append(getSignatureMethod(oauthMetadata, null)).append(")"); //NOI18N
+        bodyBuf.append(".version(\"").append(getVersion(oauthMetadata)).append("\")"); //NOI18N
         if (isNonce(oauthMetadata)) {
             bodyBuf.append(".nonce()"); //NOI18N
         }
@@ -879,7 +879,7 @@ public class OAuthHelper {
     }      
 
     private static String getBodyForUniqueRequest(Metadata oauthMetadata) {
-        StringBuffer bodyBuf = new StringBuffer();
+        StringBuilder bodyBuf = new StringBuilder();
         bodyBuf.append("{"); //NOI18N
         bodyBuf.append("if (oauth_params != null) {"); //NOI18N
         if (isNonce(oauthMetadata)) {
@@ -901,20 +901,20 @@ public class OAuthHelper {
         String verifierPrefix = accessTokenMethod.isVerifier() ? "String oauth_verifier = " : ""; //NOI18N
         String verifierPostfix = accessTokenMethod.isVerifier() ? ", oauth_verifier" : ""; //NOI18N
 
-        StringBuffer bodyBuf = new StringBuffer();
+        StringBuilder bodyBuf = new StringBuilder();
         bodyBuf.append("{"); //NOI18N
-        bodyBuf.append(getResponseClass(requestTokenMethod.getResponseStyle(), false)+" requestTokenResponse = getOAuthRequestToken();"); //NOI18N
-        bodyBuf.append(verifierPrefix+"authorizeConsumer(requestTokenResponse);"); //NOI18N
-        bodyBuf.append(getResponseClass(accessTokenMethod.getResponseStyle(), false)+" accessTokenResponse = getOAuthAccessToken(requestTokenResponse"+verifierPostfix+");"); //NOI18N
-        bodyBuf.append("java.util.prefs.Preferences prefs = org.openide.util.NbPreferences.forModule("+className+".class);"); //NOI18N
-        bodyBuf.append("prefs.put(\"oauth_token\", "+getParamFromResponse(oauthMetadata, accessTokenMethod.getResponseStyle(), "accessTokenResponse", "oauth_token")+");"); //NOI18N
-        bodyBuf.append("prefs.put(\"oauth_token_secret\", "+getParamFromResponse(oauthMetadata, accessTokenMethod.getResponseStyle(), "accessTokenResponse", "oauth_token_secret")+");"); //NOI18N
+        bodyBuf.append(getResponseClass(requestTokenMethod.getResponseStyle(), false)).append(" requestTokenResponse = getOAuthRequestToken();"); //NOI18N
+        bodyBuf.append(verifierPrefix).append("authorizeConsumer(requestTokenResponse);"); //NOI18N
+        bodyBuf.append(getResponseClass(accessTokenMethod.getResponseStyle(), false)).append(" accessTokenResponse = getOAuthAccessToken(requestTokenResponse").append(verifierPostfix).append(");"); //NOI18N
+        bodyBuf.append("java.util.prefs.Preferences prefs = org.openide.util.NbPreferences.forModule(").append(className).append(".class);"); //NOI18N
+        bodyBuf.append("prefs.put(\"oauth_token\", ").append(getParamFromResponse(oauthMetadata, accessTokenMethod.getResponseStyle(), "accessTokenResponse", "oauth_token")).append(");"); //NOI18N
+        bodyBuf.append("prefs.put(\"oauth_token_secret\", ").append(getParamFromResponse(oauthMetadata, accessTokenMethod.getResponseStyle(), "accessTokenResponse", "oauth_token_secret")).append(");"); //NOI18N
         bodyBuf.append("}"); //NOI18N
         return bodyBuf.toString();
     }
 
     private static String getLogoutBodyWeb(Metadata oauthMetadata) {
-        StringBuffer bodyBuf = new StringBuffer();
+        StringBuilder bodyBuf = new StringBuilder();
         bodyBuf.append("{"); //NOI18N
         bodyBuf.append("HttpSession session = request.getSession();"); //NOI18N
         bodyBuf.append("session.removeAttribute(\"oauth_token\");"); //NOI18N
@@ -924,9 +924,9 @@ public class OAuthHelper {
     }
 
     private static String getLogoutBodyNb(Metadata oauthMetadata, String className) {
-        StringBuffer bodyBuf = new StringBuffer();
+        StringBuilder bodyBuf = new StringBuilder();
         bodyBuf.append("{"); //NOI18N
-        bodyBuf.append("java.util.prefs.Preferences prefs = org.openide.util.NbPreferences.forModule("+className+".class);"); //NOI18N
+        bodyBuf.append("java.util.prefs.Preferences prefs = org.openide.util.NbPreferences.forModule(").append(className).append(".class);"); //NOI18N
         bodyBuf.append("prefs.remove(\"oauth_token\");"); //NOI18N
         bodyBuf.append("prefs.remove(\"oauth_token_secret\");"); //NOI18N
         bodyBuf.append("}"); //NOI18N
@@ -936,11 +936,11 @@ public class OAuthHelper {
     private static String getAuthorizeConsumerBodyNb(Metadata oauthMetadata) {
         String dialogPanel = Wadl2JavaHelper.getMethodBody("Templates/SaaSServices/OAuthAuthorizationPanelNb.java"); //NOI18N
         //MethodType accessTokenMethod = oauthMetadata.getFlow().getAccessToken();
-        StringBuffer bodyBuf = new StringBuffer();
+        StringBuilder bodyBuf = new StringBuilder();
         bodyBuf.append("{"); //NOI18N
         bodyBuf.append(dialogPanel); //NOI18N
         bodyBuf.append("String oauth_verifier = null;"); //NOI18N
-        bodyBuf.append("String loginUrl = "+getAuthorizationUrl(oauthMetadata)+";"); //NOI18N
+        bodyBuf.append("String loginUrl = ").append(getAuthorizationUrl(oauthMetadata)).append(";"); //NOI18N
         bodyBuf.append("DialogPanel dialogPanel = new DialogPanel(loginUrl);"); //NOI18N
         bodyBuf.append("org.openide.DialogDescriptor dd = new org.openide.DialogDescriptor(dialogPanel, \"OAuth Authentication Dialog\");"); //NOI18N
         bodyBuf.append("org.openide.DialogDisplayer.getDefault().notify(dd);"); //NOI18N
@@ -1060,18 +1060,18 @@ public class OAuthHelper {
 
     private static String getOAuthLoginBody(Metadata oauthMetadata) {
         String responseStyle = oauthMetadata.getFlow().getRequestToken().getResponseStyle();
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("{"); //NOI18N
         buf.append("response.setContentType(\"text/html;charset=UTF-8\");");  //NOI18N
         buf.append("java.io.PrintWriter out = response.getWriter();"); //NOI18N
         buf.append("try {");  //NOI18N
-        buf.append(getResponseClass(responseStyle, false)+" requestTokenResponse = null;");  //NOI18N
+        buf.append(getResponseClass(responseStyle, false)).append(" requestTokenResponse = null;");  //NOI18N
         buf.append("UniformInterfaceException uiEx = null;");  //NOI18N
         buf.append("try {");  //NOI18N
         buf.append("    requestTokenResponse = getOAuthRequestToken();"); //NOI18N
         buf.append("    javax.servlet.http.HttpSession session = request.getSession(true);"); //NOI18N
-        buf.append("    session.setAttribute(\"oauth_token\", "+getParamFromResponse(oauthMetadata, responseStyle, "requestTokenResponse", "oauth_token")+");"); //NOI18N
-        buf.append("    session.setAttribute(\"oauth_token_secret\", "+getParamFromResponse(oauthMetadata, responseStyle, "requestTokenResponse", "oauth_token_secret")+");"); //NOI18N
+        buf.append("    session.setAttribute(\"oauth_token\", ").append(getParamFromResponse(oauthMetadata, responseStyle, "requestTokenResponse", "oauth_token")).append(");"); //NOI18N
+        buf.append("    session.setAttribute(\"oauth_token_secret\", ").append(getParamFromResponse(oauthMetadata, responseStyle, "requestTokenResponse", "oauth_token_secret")).append(");"); //NOI18N
         buf.append("} catch (UniformInterfaceException ex) "); //NOI18N
         buf.append("    uiEx = ex;"); //NOI18N
         buf.append("}"); //NOI18N
@@ -1082,7 +1082,7 @@ public class OAuthHelper {
         buf.append("out.println(\"<body>\");"); //NOI18N
         buf.append("out.println(\"<h1>OAuth Login Servlet at \" + request.getContextPath() + \"</h1>\");"); //NOI18N
         buf.append("if (uiEx == null) {"); //NOI18N
-        buf.append("out.println(\"<a href='\"+"+getAuthorizationUrl(oauthMetadata)+"+\"'>"); //NOI18N
+        buf.append("out.println(\"<a href='\"+").append(getAuthorizationUrl(oauthMetadata)).append("+\"'>"); //NOI18N
         buf.append("Click at this link to authorize the application to access your data</a>\");"); //NOI18N
         buf.append("} else {"); //NOI18N
         buf.append("out.println(\"Problem to get request token: \"+uiEx.getResponse()+\": \"+uiEx.getResponse().getEntity(String.class));"); //NOI18N
@@ -1099,7 +1099,7 @@ public class OAuthHelper {
     private static String getOAuthCallbackBody(Metadata oauthMetadata, String clientClassName) {
         String responseStyle = oauthMetadata.getFlow().getAccessToken().getResponseStyle();
         boolean isVerifier = isVerifier(oauthMetadata.getFlow().getAccessToken());
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("{"); //NOI18N
         buf.append("response.setContentType(\"text/html;charset=UTF-8\");");  //NOI18N
         buf.append("java.io.PrintWriter out = response.getWriter();"); //NOI18N
@@ -1107,13 +1107,13 @@ public class OAuthHelper {
         if (isVerifier) {
             buf.append("String oauth_verifier = request.getParameter(\"oauth_verifier\");"); //NOI18N
         }
-        buf.append(getResponseClass(responseStyle, false)+" accessTokenResponse = null;"); //NOI18N
+        buf.append(getResponseClass(responseStyle, false)).append(" accessTokenResponse = null;"); //NOI18N
         buf.append("UniformInterfaceException uiEx = null;"); //NOI18N
         buf.append("try {"); //NOI18N
         buf.append("    javax.servlet.http.HttpSession session = request.getSession(true);"); //NOI18N
-        buf.append("    accessTokenResponse = getOAuthAccessToken(session"+(isVerifier?", oauth_verifier":"")+");"); //NOI18N
-        buf.append("    session.setAttribute(\"oauth_token\", "+getParamFromResponse(oauthMetadata, responseStyle, "accessTokenResponse", "oauth_token")+");"); //NOI18N
-        buf.append("    session.setAttribute(\"oauth_token_secret\", "+getParamFromResponse(oauthMetadata, responseStyle, "accessTokenResponse", "oauth_token_secret")+");"); //NOI18N
+        buf.append("    accessTokenResponse = getOAuthAccessToken(session").append(isVerifier?", oauth_verifier":"").append(");"); //NOI18N
+        buf.append("    session.setAttribute(\"oauth_token\", ").append(getParamFromResponse(oauthMetadata, responseStyle, "accessTokenResponse", "oauth_token")).append(");"); //NOI18N
+        buf.append("    session.setAttribute(\"oauth_token_secret\", ").append(getParamFromResponse(oauthMetadata, responseStyle, "accessTokenResponse", "oauth_token_secret")).append(");"); //NOI18N
         buf.append("} catch (UniformInterfaceException ex) {"); //NOI18N
         buf.append("    uiEx = ex;"); //NOI18N
         buf.append("}"); //NOI18N
@@ -1126,7 +1126,7 @@ public class OAuthHelper {
         buf.append("if (uiEx == null) {"); //NOI18N
         buf.append("    out.println(\"Now, you have successfully authorized this application to access your data.<br><br>\");"); //NOI18N
         buf.append("    out.println(\"Usage: <p><pre>\");"); //NOI18N
-        buf.append("    out.println(\"   "+clientClassName+" client = new "+clientClassName+"(...);\");"); //NOI18N
+        buf.append("    out.println(\"   ").append(clientClassName).append(" client = new ").append(clientClassName).append("(...);\");"); //NOI18N
         buf.append("    out.println(\"   client.initOAuth(httpServletRequest, httpServletResponse);\");"); //NOI18N
         buf.append("    out.println(\"   // call any method\");"); //NOI18N
         buf.append("    out.println(\"   client.close();\");"); //NOI18N

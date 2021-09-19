@@ -247,7 +247,7 @@ public abstract class BeansCompletionItem implements CompletionItem {
             try {
                 Position position = doc.createPosition(offset);
                 doc.remove(offset, len);
-                doc.insertString(position.getOffset(), text.toString(), null);
+                doc.insertString(position.getOffset(), text, null);
             } catch (BadLocationException ble) {
                 // nothing can be done to update
             } finally {

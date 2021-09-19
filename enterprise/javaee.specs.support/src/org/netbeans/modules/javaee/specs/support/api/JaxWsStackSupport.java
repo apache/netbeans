@@ -60,7 +60,7 @@ public class JaxWsStackSupport {
             
     private static String getJaxWsStackVersion(String javaVersion) {
         if (javaVersion.startsWith("1.6")) { //NOI18N
-            int index = javaVersion.indexOf("_"); //NOI18N
+            int index = javaVersion.indexOf('_'); //NOI18N
             if (index > 0) {
                 String releaseVersion = parseReleaseVersion(
                         javaVersion.substring(index+1));
@@ -95,7 +95,7 @@ public class JaxWsStackSupport {
     }
 
     private static String parseReleaseVersion(String releaseVersion) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         for (int i=0; i<releaseVersion.length(); i++) {
             char c = releaseVersion.charAt(i);
             if (Character.isDigit(c)) {

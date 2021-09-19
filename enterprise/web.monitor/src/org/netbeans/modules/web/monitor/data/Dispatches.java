@@ -108,15 +108,15 @@ public class Dispatches extends BaseBean {
 	Object o;
 	BaseBean n;
 	str.append(indent);
-	str.append("DispatchData["+this.sizeDispatchData()+"]");	// NOI18N
+	str.append("DispatchData[").append(this.sizeDispatchData()).append("]");	// NOI18N
 	for(int i=0; i<this.sizeDispatchData(); i++) {
-	    str.append(indent+"\t"); // NOI18N
-	    str.append("#"+i+":"); // NOI18N
+	    str.append(indent).append("\t"); // NOI18N
+	    str.append("#").append(i).append(":"); // NOI18N
 	    n = this.getDispatchData(i);
 	    if (n != null)
 		n.dump(str, indent + "\t");	// NOI18N
 	    else
-		str.append(indent+"\tnull");	// NOI18N
+		str.append(indent).append("\tnull");	// NOI18N
 	    this.dumpAttributes(DISPATCHDATA, i, str, indent);
 	}
 

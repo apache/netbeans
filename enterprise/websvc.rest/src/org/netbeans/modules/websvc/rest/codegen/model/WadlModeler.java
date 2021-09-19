@@ -232,8 +232,8 @@ public class WadlModeler extends ResourceModel {
             for(int i=0;i<childs.getLength();i++) {
                 Node child = childs.item(i);
                 String cName = child.getNodeName();
-                if(cName.indexOf(":")!=-1) {
-                    cName = cName.substring(cName.indexOf(":")+1);
+                if(cName.indexOf(':')!=-1) {
+                    cName = cName.substring(cName.indexOf(':')+1);
                 }
                 if(cName.equals(name) && (child.getNamespaceURI() == null || 
                         child.getNamespaceURI().equals(n.getNamespaceURI())))

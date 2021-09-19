@@ -34,14 +34,14 @@ public class SyntaxUtils {
         TokenContext[] tcs = tcp.getContexts();
         for(int i = 0; i < tcs.length; i++ ) {
             String tcClassName = tcs[i].getClass().getName();
-            tcClassName = tcClassName.substring(tcClassName.lastIndexOf(".") + 1);
+            tcClassName = tcClassName.substring(tcClassName.lastIndexOf('.') + 1);
             out.print(tcClassName + ( (i < (tcs.length - 1)) ? ", " : ""));
         }
     }
     
     /** converts \n to <NL> \t to <TAB> etc... */
     public static String normalize(String s, String[][] translationTable) {
-        StringBuffer normalized = new StringBuffer();
+        StringBuilder normalized = new StringBuilder();
         for(int i = 0; i < s.length(); i++) {
             String ch = s.substring(i,i+1);
             for(int j = 0; j < normalizeTable.length; j++) {

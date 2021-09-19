@@ -204,7 +204,7 @@ public class AttrSupports {
         }
         
         @Override protected String getFakedClassBody(String prefix){
-            int commaPos = prefix.lastIndexOf(",");
+            int commaPos = prefix.lastIndexOf(',');
             
             if (commaPos > -1){
                 prefix = prefix.substring(commaPos + 1);

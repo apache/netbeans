@@ -296,7 +296,7 @@ public class JaxWsChildren extends Children.Keys<Object>/* implements MDRChangeL
                     return method.getOperationName()+": "+getClassName(method.getReturnType()); //NOI18N
                 } 
             };
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             for (String paramType:method.getParamTypes()) {
                 buf.append(buf.length() == 0 ? paramType : ", "+paramType);
             }

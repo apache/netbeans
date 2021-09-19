@@ -336,7 +336,7 @@ public class JaxWsNode extends AbstractNode implements ConfigureHandlerCookie {
     }
 
     private String getNameFromPackageName(String packageName) {
-        int index = packageName.lastIndexOf("."); //NOI18N
+        int index = packageName.lastIndexOf('.'); //NOI18N
         return index >= 0 ? packageName.substring(index + 1) : packageName;
     }
 
@@ -475,7 +475,7 @@ public class JaxWsNode extends AbstractNode implements ConfigureHandlerCookie {
         if (serverUrl != null && serverUrl.indexOf("::") > 0) { //NOI18N
             //NOI18N
             int index1 = serverUrl.indexOf("::"); //NOI18N
-            int index2 = serverUrl.lastIndexOf(":"); //NOI18N
+            int index2 = serverUrl.lastIndexOf(':'); //NOI18N
             if (index2 > index1 + 2) {
                 hostName = serverUrl.substring(index1 + 2, index2);
             }

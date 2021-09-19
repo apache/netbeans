@@ -91,8 +91,8 @@ public final class ContextUtilities {
      */
     public static String getPrefixFromTag(String tagName) {
         if(tagName == null) return null;
-        return (tagName.indexOf(":") == -1) ? null : // NOI18N
-            tagName.substring(0, tagName.indexOf(":")); // NOI18N
+        return (tagName.indexOf(':') == -1) ? null : // NOI18N
+            tagName.substring(0, tagName.indexOf(':')); // NOI18N
     }
     
     /**
@@ -100,8 +100,8 @@ public final class ContextUtilities {
      */
     public static String getLocalNameFromTag(String tagName) {
         if(tagName == null) return null;
-        return (tagName.indexOf(":") == -1) ? tagName : // NOI18N
-            tagName.substring(tagName.indexOf(":")+1, tagName.length()); // NOI18N
+        return (tagName.indexOf(':') == -1) ? tagName : // NOI18N
+            tagName.substring(tagName.indexOf(':')+1, tagName.length()); // NOI18N
     }
     
     /**

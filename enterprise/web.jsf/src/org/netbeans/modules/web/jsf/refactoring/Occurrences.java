@@ -97,7 +97,7 @@ public class Occurrences {
         }
         
         public String getElementText(){
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuffer = new StringBuilder();
             stringBuffer.append("<font color=\"#0000FF\">");    //NOI18N
             stringBuffer.append("&lt;").append(getXMLElementName()).append("&gt;</font><b>"); //NOI18N
             stringBuffer.append(oldValue).append("</b><font color=\"#0000FF\">&lt;/").append(getXMLElementName()); //NOI18N

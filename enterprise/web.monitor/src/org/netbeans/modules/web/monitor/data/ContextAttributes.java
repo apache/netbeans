@@ -173,16 +173,16 @@ public class ContextAttributes extends BaseBean {
 	String s;
 	BaseBean n;
 	str.append(indent);
-	str.append("Param["+this.sizeParam()+"]"); // NOI18N
+	str.append("Param[").append(this.sizeParam()).append("]"); // NOI18N
 	for(int i=0; i<this.sizeParam(); i++)
 	    {
-		str.append(indent+"\t"); // NOI18N
-		str.append("#"+i+":");  // NOI18N
+		str.append(indent).append("\t"); // NOI18N
+		str.append("#").append(i).append(":");  // NOI18N
 		n = this.getParam(i);
 		if (n != null)
 		    n.dump(str, indent + "\t");  // NOI18N
 		else
-		    str.append(indent+"\tnull");  // NOI18N
+		    str.append(indent).append("\tnull");  // NOI18N
 		this.dumpAttributes(PARAM, i, str, indent);
 	    }
 
@@ -196,7 +196,7 @@ public class ContextAttributes extends BaseBean {
     }
 
     public String toString() {
-	StringBuffer buf = new StringBuffer("ContextAttributes\n");  // NOI18N
+	StringBuilder buf = new StringBuilder("ContextAttributes\n");  // NOI18N
 	
 	Param[] params = getParam();
 	buf.append(String.valueOf(params.length));

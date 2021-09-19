@@ -269,7 +269,7 @@ public class JspUtils {
             ; // do nohing
             else if (tok.equals("..")) { // NOI18N
                 String withoutSlash = result.substring(0, result.length() - 1);
-                int ls = withoutSlash.lastIndexOf("/"); // NOI18N
+                int ls = withoutSlash.lastIndexOf('/'); // NOI18N
                 if (ls != -1) {
                     result = withoutSlash.substring(0, ls + 1);
                 }
@@ -285,7 +285,7 @@ public class JspUtils {
 
     // helper methods for help implement toString() 
     public static String mapToString(Map m, String indent) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         Iterator it = m.keySet().iterator();
         while (it.hasNext()) {
             Object key = it.next();

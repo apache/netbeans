@@ -88,7 +88,7 @@ public class JavaUtils {
     }
     
     public static String getShortClassName(String qualifiedClassName){
-        return qualifiedClassName.substring(qualifiedClassName.lastIndexOf(".") + 1); //NOI18N
+        return qualifiedClassName.substring(qualifiedClassName.lastIndexOf('.') + 1); //NOI18N
     }
 
     public static boolean isMethodSignatureSame(CompilationInfo cinfo,

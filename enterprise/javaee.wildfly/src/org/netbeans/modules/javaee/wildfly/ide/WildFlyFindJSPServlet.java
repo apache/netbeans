@@ -61,7 +61,7 @@ public class WildFlyFindJSPServlet implements FindJSPServlet {
 
         String path = null;
 
-        String extension = jspResourcePath.substring(jspResourcePath.lastIndexOf("."));
+        String extension = jspResourcePath.substring(jspResourcePath.lastIndexOf('.'));
         if (".jsp".equals(extension)) { // NOI18N
             String pkgName = getServletPackageName(jspResourcePath);
             String pkgPath = pkgName.replace('.', '/');

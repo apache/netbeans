@@ -138,7 +138,7 @@ public class InitialServerFileDistributor extends ServerProgress {
                 // maven ear plugin fileNameMapping attribute into account
                 String moduleURL = module.getUrl();
                 if (moduleURL != null) {
-                    moduleURL = moduleURL.substring(moduleURL.lastIndexOf("/") + 1); // NOI18N
+                    moduleURL = moduleURL.substring(moduleURL.lastIndexOf('/') + 1); // NOI18N
                     childModuleNames.add(moduleURL);
                 }
             }

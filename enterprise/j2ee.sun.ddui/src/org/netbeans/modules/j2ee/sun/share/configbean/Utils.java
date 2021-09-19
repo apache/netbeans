@@ -250,7 +250,7 @@ public class Utils implements org.netbeans.modules.j2ee.sun.share.Constants {
         // For each url element, do UTF encoding of that element.
         if(encodedUrl != null) { // see bug 56280
             try {
-                StringBuffer result = new StringBuffer(encodedUrl.length() + 10);
+                StringBuilder result = new StringBuilder(encodedUrl.length() + 10);
                 String s[] = encodedUrl.split("/"); // NOI18N
                 for(int i = 0; i < s.length; i++) {
                     result.append(URLEncoder.encode(s[i], "UTF-8")); // NOI18N

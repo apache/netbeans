@@ -526,7 +526,7 @@ private void sharableProjectActionPerformed(java.awt.event.ActionEvent evt) {//G
             name.indexOf('/')  >= 0 ||        //NOI18N
             name.indexOf('\\') >= 0 ||        //NOI18N
             name.indexOf(':')  >= 0 ||        //NOI18N
-            name.indexOf("\"") >= 0 ||        //NOI18N
+            name.indexOf('"') >= 0 ||        //NOI18N
             name.indexOf('<')  >= 0 ||        //NOI18N
             name.indexOf('>')  >= 0;          //NOI18N
     }

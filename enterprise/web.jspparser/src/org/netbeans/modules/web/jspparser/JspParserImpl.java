@@ -95,7 +95,7 @@ public class JspParserImpl implements JspParserAPI {
 
             if(!missing.isEmpty()) {
                 //something wasn't found, report error and cancel the initialization
-                StringBuffer msg = new StringBuffer();
+                StringBuilder msg = new StringBuilder();
                 msg.append("Cannot initialize JSP parser, following JAR files couldn't be localted: "); //NOI18N
                 for(String fname : missing) {
                     msg.append(fname);

@@ -156,7 +156,7 @@ class EditPanelCookies extends DataDisplay {
 		public void actionPerformed(ActionEvent e) {
 
 		    int numRows = cookieTable.getRowCount();
-		    StringBuffer buf = new StringBuffer
+		    StringBuilder buf = new StringBuilder
 			(NbBundle.getBundle(EditPanelCookies.class).getString("MON_Confirm_Delete_Cookies")); 
 		    buf.append("\n"); // NOI18N
 
@@ -302,7 +302,7 @@ class EditPanelCookies extends DataDisplay {
 	    monitorData.getRequestData().setCookieHeader(""); //NOI18N
 	    return; 
 	}
-	StringBuffer buf = new StringBuffer(); 
+	StringBuilder buf = new StringBuilder(); 
 	for(int i=0; i<numRows; ++i) { 
 	    if(i>0) buf.append(";"); //NOI18N
 	    buf.append(cookieTable.getValueAt(i,0));

@@ -168,7 +168,7 @@ public final class ServerLibraryTypeProvider implements LibraryTypeProvider {
                 //Non valid library, but try to recover
                 continue;
             }
-            StringBuffer propValue = new StringBuffer();
+            StringBuilder propValue = new StringBuilder();
             boolean first = true;
             for (Iterator rootsIt = roots.iterator(); rootsIt.hasNext();) {
                 URL url = (URL) rootsIt.next();

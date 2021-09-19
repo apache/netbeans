@@ -111,7 +111,7 @@ public final class JsfServerURLMapping implements FrameworkServerURLMapping {
         Map<String, String> result = new LinkedHashMap<>();
         String[] pairs = query.split("&"); //NOI18N
         for (String pair : pairs) {
-            int idx = pair.indexOf("="); //NOI18N
+            int idx = pair.indexOf('='); //NOI18N
             if (idx != -1) {
                 result.put(
                         URLDecoder.decode(pair.substring(0, idx), "UTF-8"),     //NOI18N
@@ -122,8 +122,8 @@ public final class JsfServerURLMapping implements FrameworkServerURLMapping {
     }
 
     private String removeSessionIdFromUri(String relPath) {
-        if (relPath.indexOf(";") != -1) { //NOI18N
-            return relPath.substring(0, relPath.indexOf(";")); //NOI18N
+        if (relPath.indexOf(';') != -1) { //NOI18N
+            return relPath.substring(0, relPath.indexOf(';')); //NOI18N
         }
         return relPath;
     }

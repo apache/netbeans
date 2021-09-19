@@ -223,7 +223,7 @@ public final class DDProvider {
             // it is XSD-based
             String schemaLocation = document.getDocumentElement().getAttribute("xsi:schemaLocation");
             if (schemaLocation != null) {
-                id = schemaLocation.substring(schemaLocation.lastIndexOf(" ") + 1);
+                id = schemaLocation.substring(schemaLocation.lastIndexOf(' ') + 1);
             }
         }
         if (id != null) {

@@ -66,7 +66,7 @@ class IncludedJSPFileProcessor extends JSPProcessor {
                 StringBuilder buff = blockType == JavaCodeType.DECLARATION ? declarations : scriptlets;
 
                 if (blockType != JavaCodeType.EXPRESSION) {
-                    buff.append(token.text() + "\n"); //NOI18N
+                    buff.append(token.text()).append("\n"); //NOI18N
                 }
             }
         } while (tokenSequence.moveNext());

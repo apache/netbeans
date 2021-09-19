@@ -442,7 +442,7 @@ public class JaxWsUtils {
         JAXWSSupport jaxWsSupport = JAXWSSupport.getJAXWSSupport(
                 project.getProjectDirectory());
         String portJavaName = port.getJavaName();
-        String artifactsPckg = portJavaName.substring(0, portJavaName.lastIndexOf("."));    // NOI18N
+        String artifactsPckg = portJavaName.substring(0, portJavaName.lastIndexOf('.'));    // NOI18N
         FileObject implClassFo = GenerationUtils.createClass(targetFolder, 
                 targetName, null);
         implClassFo.setAttribute("jax-ws-service", Boolean.TRUE);               // NOI18N
@@ -658,7 +658,7 @@ public class JaxWsUtils {
 
     public static String getPackageName(String fullyQualifiedName) {
         String packageName = "";                            // NOI18N
-        int index = fullyQualifiedName.lastIndexOf(".");    // NOI18N
+        int index = fullyQualifiedName.lastIndexOf('.');    // NOI18N
         if (index != -1) {
             packageName = fullyQualifiedName.substring(0, index);
         }

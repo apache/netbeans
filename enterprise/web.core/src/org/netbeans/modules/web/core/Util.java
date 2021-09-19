@@ -72,7 +72,7 @@ public class Util {
 
     public static String issueGetRequest(URL url) {
         BufferedReader in = null;
-        StringBuffer input = new StringBuffer();
+        StringBuilder input = new StringBuilder();
         try {
             in = new BufferedReader(new InputStreamReader(
                                         url.openStream()));

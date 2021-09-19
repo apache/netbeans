@@ -129,7 +129,7 @@ public class Utils {
             return null;
         }
 
-        int subindex = jarNamePattern.lastIndexOf("/");
+        int subindex = jarNamePattern.lastIndexOf('/');
         if (subindex != -1) {
             String subdir = jarNamePattern.substring(0, subindex);
             jarNamePattern = jarNamePattern.substring(subindex + 1);

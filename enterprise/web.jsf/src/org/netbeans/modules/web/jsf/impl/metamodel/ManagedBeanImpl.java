@@ -175,7 +175,7 @@ class ManagedBeanImpl extends PersistentObject  implements FacesManagedBean,
     }
     
     public static String getConvertedClassName( String className ){
-        String result = className.substring( className.lastIndexOf(".") +1 );
+        String result = className.substring( className.lastIndexOf('.') +1 );
         if ( result.length() >1 ){
             StringBuilder builder = new StringBuilder();
             builder.append(  

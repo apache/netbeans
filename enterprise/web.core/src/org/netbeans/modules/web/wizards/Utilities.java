@@ -48,7 +48,7 @@ public class Utilities {
     public static String canUseFileName (java.io.File dir, String relativePath, String objectName, String extension) {
         String newObjectName=objectName;
         if (extension != null && extension.length () > 0) {
-            StringBuffer sb = new StringBuffer ();
+            StringBuilder sb = new StringBuilder ();
             sb.append (objectName);
             sb.append ('.'); // NOI18N
             sb.append (extension);

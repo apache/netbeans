@@ -718,7 +718,7 @@ public class JaxWsNode extends AbstractNode implements
     }
 
     private String getNameFromPackageName(String packageName) {
-        int index = packageName.lastIndexOf("."); //NOI18N
+        int index = packageName.lastIndexOf('.'); //NOI18N
         return index >= 0 ? packageName.substring(index + 1) : packageName;
     }
 
@@ -1078,11 +1078,11 @@ public class JaxWsNode extends AbstractNode implements
         int index1 = serverURL.indexOf("http://"); //NOI18N
         if (index1 >= 0) {
             String s = serverURL.substring(index1+7);
-            int index2 = s.indexOf(":");
+            int index2 = s.indexOf(':');
             if (index2 > 0) {
                 s = s.substring(index2+1);
                 if (s.length() > 0) {
-                    StringBuffer buf = new StringBuffer();
+                    StringBuilder buf = new StringBuilder();
                     int i=0;
                     while (Character.isDigit(s.charAt(i)) && i < s.length()) {
                         buf.append(s.charAt(i++));
@@ -1107,7 +1107,7 @@ public class JaxWsNode extends AbstractNode implements
         if (serverUrl != null && serverUrl.indexOf("::") > 0) { //NOI18N
             //NOI18N
             int index1 = serverUrl.indexOf("::"); //NOI18N
-            int index2 = serverUrl.lastIndexOf(":"); //NOI18N
+            int index2 = serverUrl.lastIndexOf(':'); //NOI18N
             if (index2 > index1 + 2) {
                 hostName = serverUrl.substring(index1 + 2, index2);
             }

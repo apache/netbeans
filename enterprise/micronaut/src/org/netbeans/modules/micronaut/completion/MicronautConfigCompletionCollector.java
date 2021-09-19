@@ -91,7 +91,7 @@ public class MicronautConfigCompletionCollector implements CompletionCollector {
                             for (int i = 0; i < parts.length; i++) {
                                 String part = parts[i];
                                 if ("*".equals(part)) {
-                                    insertText.append("$" + num++);
+                                    insertText.append("$").append(num++);
                                     insertTextFormat = Completion.TextFormat.Snippet;
                                 } else {
                                     insertText.append(part);

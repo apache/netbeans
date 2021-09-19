@@ -267,7 +267,7 @@ public class TomcatManager implements DeploymentManager {
         TomcatManagerConfig tmConfig = getTomcatManagerConfig();
         String engineName = tmConfig.getEngineElement().getAttributeValue("name"); //NOI18N
         String hostName = tmConfig.getHostElement().getAttributeValue("name"); //NOI18N
-        StringBuffer catWork = new StringBuffer(tp.getCatalinaDir().toString());
+        StringBuilder catWork = new StringBuilder(tp.getCatalinaDir().toString());
         catWork.append("/work/").append(engineName).append("/").append(hostName); //NOI18N
         return catWork.toString();
     }

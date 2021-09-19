@@ -70,7 +70,7 @@ public class Util {
     
     public static String getCorrectedLabel(ResourceBundle bundle, String key){
         String val = bundle.getString("LBL_" + key); //NOI18N
-        int i = val.indexOf("&"); // NOI18N
+        int i = val.indexOf('&'); // NOI18N
         String result;
         // some locales do not have mnemonics?
         if (i > -1) {

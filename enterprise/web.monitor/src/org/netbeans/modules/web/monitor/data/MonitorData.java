@@ -572,7 +572,7 @@ public class MonitorData extends BaseBean implements DataRecord {
 	if (n != null)
 	    n.dump(str, indent + "\t"); // NOI18N
 	else
-	    str.append(indent+"\tnull"); // NOI18N
+	    str.append(indent).append("\tnull"); // NOI18N
 	this.dumpAttributes(CLIENTDATA, 0, str, indent);
 
 	str.append(indent);
@@ -581,7 +581,7 @@ public class MonitorData extends BaseBean implements DataRecord {
 	if (n != null)
 	    n.dump(str, indent + "\t"); // NOI18N
 	else
-	    str.append(indent+"\tnull"); // NOI18N
+	    str.append(indent).append("\tnull"); // NOI18N
 	this.dumpAttributes(SESSIONDATA, 0, str, indent);
 
 	str.append(indent);
@@ -590,7 +590,7 @@ public class MonitorData extends BaseBean implements DataRecord {
 	if (n != null)
 	    n.dump(str, indent + "\t"); // NOI18N
 	else
-	    str.append(indent+"\tnull"); // NOI18N
+	    str.append(indent).append("\tnull"); // NOI18N
 	this.dumpAttributes(COOKIESDATA, 0, str, indent);
 
 	str.append(indent);
@@ -599,7 +599,7 @@ public class MonitorData extends BaseBean implements DataRecord {
 	if (n != null)
 	    n.dump(str, indent + "\t"); // NOI18N
 	else
-	    str.append(indent+"\tnull"); // NOI18N
+	    str.append(indent).append("\tnull"); // NOI18N
 	this.dumpAttributes(REQUESTDATA, 0, str, indent);
 
 	str.append(indent);
@@ -608,7 +608,7 @@ public class MonitorData extends BaseBean implements DataRecord {
 	if (n != null)
 	    n.dump(str, indent + "\t"); // NOI18N
 	else
-	    str.append(indent+"\tnull"); // NOI18N
+	    str.append(indent).append("\tnull"); // NOI18N
 	this.dumpAttributes(SERVLETDATA, 0, str, indent);
 
 	str.append("ContextData"); // NOI18N
@@ -616,7 +616,7 @@ public class MonitorData extends BaseBean implements DataRecord {
 	if (n != null)
 	    n.dump(str, indent + "\t"); // NOI18N
 	else
-	    str.append(indent+"\tnull"); // NOI18N
+	    str.append(indent).append("\tnull"); // NOI18N
 	this.dumpAttributes(CONTEXTDATA, 0, str, indent);
 
 	str.append(indent);
@@ -625,7 +625,7 @@ public class MonitorData extends BaseBean implements DataRecord {
 	if (n != null)
 	    n.dump(str, indent + "\t");	// NOI18N
 	else
-	    str.append(indent+"\tnull");	// NOI18N
+	    str.append(indent).append("\tnull");	// NOI18N
 	this.dumpAttributes(DISPATCHES, 0, str, indent);
     }
 
@@ -644,7 +644,7 @@ public class MonitorData extends BaseBean implements DataRecord {
      */
     public String createTempFile(String filename) { 
 
-	StringBuffer buf = new StringBuffer
+	StringBuilder buf = new StringBuilder
 	    (System.getProperty("java.io.tmpdir")); // NOI18N
 	buf.append(System.getProperty("file.separator")); // NOI18N
 	buf.append(filename); 

@@ -693,12 +693,12 @@ public class XMLJ2eeUtils {
     }
     
     private static String getIndentBefore(int level) {
-        StringBuffer sb = new StringBuffer("\n"); //NOI18N
+        StringBuilder sb = new StringBuilder("\n"); //NOI18N
         for (int i=0;i<=level;i++) sb.append("  "); //NOI18N
         return sb.toString();
     }
     private static String getIndentAfter(int level) {
-        StringBuffer sb = new StringBuffer("\n"); //NOI18N
+        StringBuilder sb = new StringBuilder("\n"); //NOI18N
         for (int i=0;i<level;i++) sb.append("  "); //NOI18N
         return sb.toString();
     }    

@@ -60,13 +60,13 @@ public class Choose implements ActiveEditorDrop {
     }
     
     private String generateChooseBody(String prefix) {
-        StringBuffer sb = new StringBuffer();
-        sb.append("<"+prefix+":when test=\""+JspPaletteUtilities.CARET+"\">\n</"+prefix+":when>\n");  //NOI18N
+        StringBuilder sb = new StringBuilder();
+        sb.append("<").append(prefix).append(":when test=\"" + JspPaletteUtilities.CARET + "\">\n</").append(prefix).append(":when>\n");  //NOI18N
         for (int i = 1; i < whens; i++)
-            sb.append("<"+prefix+":when test=\"\">\n</"+prefix+":when>\n"); // NOI18N
+            sb.append("<").append(prefix).append(":when test=\"\">\n</").append(prefix).append(":when>\n"); // NOI18N
         
         if (otherwise)
-            sb.append("<"+prefix+":otherwise>\n</"+prefix+":otherwise>\n"); // NOI18N
+            sb.append("<").append(prefix).append(":otherwise>\n</").append(prefix).append(":otherwise>\n"); // NOI18N
                 
         return sb.toString();
     }

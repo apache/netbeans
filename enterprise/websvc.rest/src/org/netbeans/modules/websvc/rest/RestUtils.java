@@ -301,7 +301,7 @@ public class RestUtils {
         if (mAnons != null && mAnons.size() > 0) {
             for (AnnotationTree mAnon : mAnons) {
                 eName = mAnon.toString();
-                if (eName.indexOf("\"") != -1) {
+                if (eName.indexOf('"') != -1) {
                     eName = getValueFromAnnotation(mAnon);
                 } else {
                     eName = getNameFromMethod(tree);
@@ -361,8 +361,8 @@ public class RestUtils {
     }
     
     public static String getValueFromAnnotation(String value) {
-        if (value.indexOf("\"") != -1) {
-            value = value.substring(value.indexOf("\"") + 1, value.lastIndexOf("\""));
+        if (value.indexOf('"') != -1) {
+            value = value.substring(value.indexOf('"') + 1, value.lastIndexOf('"'));
         }
         return value;
     }

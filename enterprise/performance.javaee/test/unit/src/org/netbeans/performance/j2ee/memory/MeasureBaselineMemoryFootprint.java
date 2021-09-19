@@ -146,7 +146,7 @@ public class MeasureBaselineMemoryFootprint extends org.netbeans.junit.NbPerform
         try {
             Process ps = Runtime.getRuntime().exec(psCommand);
             
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             BufferedReader dataInput = new BufferedReader(new InputStreamReader(ps.getInputStream()));
             String line;
             

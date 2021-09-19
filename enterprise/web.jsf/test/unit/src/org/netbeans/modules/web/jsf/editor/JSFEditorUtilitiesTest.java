@@ -66,7 +66,7 @@ public class JSFEditorUtilitiesTest extends NbTestCase {
 
     private BaseDocument createBaseDocument(File file){
         BaseDocument doc = new BaseDocument(false, "text/xml");
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         try {
             FileReader reader = new FileReader (file);
             char[] buf = new char [100];

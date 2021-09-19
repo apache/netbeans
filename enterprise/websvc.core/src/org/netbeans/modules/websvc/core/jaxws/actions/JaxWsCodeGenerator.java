@@ -490,7 +490,7 @@ public class JaxWsCodeGenerator  {
     }
 
     private static String getCanonicalClassName(String genericClassName) {
-        int index = genericClassName.indexOf("<");
+        int index = genericClassName.indexOf('<');
         if (index != -1) {
             return genericClassName.substring(0, index);
         }
@@ -498,8 +498,8 @@ public class JaxWsCodeGenerator  {
     }
 
     private static String resolveResponseType(String argumentType) {
-        int start = argumentType.indexOf("<");
-        int end = argumentType.indexOf(">");
+        int start = argumentType.indexOf('<');
+        int end = argumentType.indexOf('>');
         if (start > 0 && end > 0 && start < end) {
             return argumentType.substring(start + 1, end);
         } else {
@@ -508,7 +508,7 @@ public class JaxWsCodeGenerator  {
     }
 
     private static String pureJavaName(String javaNameWithPackage) {
-        int index = javaNameWithPackage.lastIndexOf(".");
+        int index = javaNameWithPackage.lastIndexOf('.');
         return index >= 0 ? javaNameWithPackage.substring(index + 1) : javaNameWithPackage;
     }
     
@@ -600,8 +600,8 @@ public class JaxWsCodeGenerator  {
             while (it.hasNext()) {
                 exceptionList.add(it.next());
             }
-            StringBuffer argumentBuffer1 = new StringBuffer();
-            StringBuffer argumentBuffer2 = new StringBuffer();
+            StringBuilder argumentBuffer1 = new StringBuilder();
+            StringBuilder argumentBuffer2 = new StringBuilder();
             List<String> paramTypesList = new ArrayList<String>();
             List<String> paramNamesList = new ArrayList<String>();
             int argSize = arguments.size();
@@ -618,9 +618,8 @@ public class JaxWsCodeGenerator  {
                 if (inJsp && IMPLICIT_JSP_OBJECTS.contains(argumentName)) {
                     argumentName = argumentName + "_1"; //NOI18N
                 }
-                argumentBuffer1.append("\t" + argumentTypeName + " " + argumentName +
-                        " = " + resolveInitValue(argumentTypeName,
-                        NbEditorUtilities.getFileObject(document)) + "\n"); //NOI18N
+                argumentBuffer1.append("\t").append(argumentTypeName).append(" ").append(argumentName).append(" = ").append(resolveInitValue(argumentTypeName,
+                        NbEditorUtilities.getFileObject(document))).append("\n"); //NOI18N
                 argumentBuffer2.append(i > 0 ? ", " + argumentName : argumentName); //NOI18N
                 paramTypesList.add(argumentTypeName);
                 paramNamesList.add(argumentName);
@@ -875,7 +874,7 @@ public class JaxWsCodeGenerator  {
     }
 
     public static String generateXMLMessage(WsdlPort port, WsdlOperation operation) {
-        StringBuffer message = new StringBuffer("");
+        StringBuilder message = new StringBuilder("");
 
         String operationName = operation.getOperationName();
         String namespace = port.getNamespaceURI();
@@ -902,7 +901,7 @@ public class JaxWsCodeGenerator  {
     }
 
     private static String getDispatchInvocationMethod(WsdlPort port, WsdlOperation operation) {
-        StringBuffer invoke = new StringBuffer("");
+        StringBuilder invoke = new StringBuilder("");
         invoke.append(MessageFormat.format(QNAME, new Object[]{port.getNamespaceURI(), port.getName()}));
         invoke.append("\n");
         invoke.append("String req = ");

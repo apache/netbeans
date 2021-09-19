@@ -165,7 +165,7 @@ public class EjbJarWebServicesClientSupport implements WebServicesClientSupportI
             }
             
             if(newWscJars) {
-                StringBuffer newClasspathBuf = new StringBuffer(256);
+                StringBuilder newClasspathBuf = new StringBuilder(256);
                 for(Iterator<String> iter = wscJars.iterator(); iter.hasNext(); ) {
                     newClasspathBuf.append(iter.next().toString());
                     if(iter.hasNext()) {
@@ -806,7 +806,7 @@ public class EjbJarWebServicesClientSupport implements WebServicesClientSupportI
         }
         
         public String getDefaultFeaturesAsArgument() {
-            StringBuffer buf = new StringBuffer(defaultFeatures.length*32);
+            StringBuilder buf = new StringBuilder(defaultFeatures.length*32);
             for(int i = 0; i < defaultFeatures.length; i++) {
                 if(i > 0) {
                     buf.append(",");

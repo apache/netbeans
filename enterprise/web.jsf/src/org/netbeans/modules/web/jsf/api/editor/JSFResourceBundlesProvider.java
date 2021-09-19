@@ -95,7 +95,7 @@ public class JSFResourceBundlesProvider {
     }
 
     private static FileObject getBundleFileInSourceGroup(SourceGroup sourceGroup, org.netbeans.modules.web.jsf.api.facesmodel.ResourceBundle bundle) {
-        int lastDelim = bundle.getBaseName().lastIndexOf("/"); //NOI18N
+        int lastDelim = bundle.getBaseName().lastIndexOf('/'); //NOI18N
         if (lastDelim <= 0) {
             // in root folder or default package
             String bundleName = bundle.getBaseName().substring(1);

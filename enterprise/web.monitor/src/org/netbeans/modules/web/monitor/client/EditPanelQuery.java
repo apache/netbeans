@@ -268,7 +268,7 @@ class EditPanelQuery extends DataDisplay {
 		    int numRows = paramTable.getRowCount();
 		    RequestData rd = monitorData.getRequestData();
 		
-		    StringBuffer buf = new StringBuffer
+		    StringBuilder buf = new StringBuilder
 			(NbBundle.getBundle(EditPanelQuery.class).getString("MON_Confirm_Delete_Params")); 
 		    buf.append("\n"); //NOI18N
 		

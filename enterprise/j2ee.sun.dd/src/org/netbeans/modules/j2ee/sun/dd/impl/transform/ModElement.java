@@ -215,7 +215,7 @@ public class ModElement extends org.netbeans.modules.schema2beans.BaseBean
 		org.netbeans.modules.schema2beans.BaseBean n;
 		str.append(indent);
 		str.append("Name");	// NOI18N
-		str.append(indent+"\t");	// NOI18N
+		str.append(indent).append("\t");	// NOI18N
 		str.append("<");	// NOI18N
 		o = this.getName();
 		str.append((o==null?"null":o.toString().trim()));	// NOI18N
@@ -223,30 +223,30 @@ public class ModElement extends org.netbeans.modules.schema2beans.BaseBean
 		this.dumpAttributes(NAME, 0, str, indent);
 
 		str.append(indent);
-		str.append("ModAttribute["+this.sizeModAttribute()+"]");	// NOI18N
+		str.append("ModAttribute[").append(this.sizeModAttribute()).append("]");	// NOI18N
 		for(int i=0; i<this.sizeModAttribute(); i++)
 		{
-			str.append(indent+"\t");
-			str.append("#"+i+":");
+			str.append(indent).append("\t");
+			str.append("#").append(i).append(":");
 			n = (org.netbeans.modules.schema2beans.BaseBean) this.getModAttribute(i);
 			if (n != null)
 				n.dump(str, indent + "\t");	// NOI18N
 			else
-				str.append(indent+"\tnull");	// NOI18N
+				str.append(indent).append("\tnull");	// NOI18N
 			this.dumpAttributes(MOD_ATTRIBUTE, i, str, indent);
 		}
 
 		str.append(indent);
-		str.append("SubElement["+this.sizeSubElement()+"]");	// NOI18N
+		str.append("SubElement[").append(this.sizeSubElement()).append("]");	// NOI18N
 		for(int i=0; i<this.sizeSubElement(); i++)
 		{
-			str.append(indent+"\t");
-			str.append("#"+i+":");
+			str.append(indent).append("\t");
+			str.append("#").append(i).append(":");
 			n = (org.netbeans.modules.schema2beans.BaseBean) this.getSubElement(i);
 			if (n != null)
 				n.dump(str, indent + "\t");	// NOI18N
 			else
-				str.append(indent+"\tnull");	// NOI18N
+				str.append(indent).append("\tnull");	// NOI18N
 			this.dumpAttributes(SUB_ELEMENT, i, str, indent);
 		}
 

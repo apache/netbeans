@@ -405,7 +405,7 @@ public class WebServiceFromWSDLPanel extends javax.swing.JPanel implements HelpC
         FileObject projectDir = project.getProjectDirectory();
         File projectDirFile = FileUtil.toFile(projectDir);
         String path = projectDirFile.getAbsolutePath();
-        int index = path.indexOf(" ");
+        int index = path.indexOf(' ');
         return index != -1;
     }
 

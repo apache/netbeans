@@ -450,7 +450,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
      * Assumes that complPrefix also includes the 'jsp prefix'.
      */
     public final List getTags(String complPrefix) {
-        int colonIndex = complPrefix.indexOf(":");  // NOI18N
+        int colonIndex = complPrefix.indexOf(':');  // NOI18N
         if (colonIndex == -1)
             throw new IllegalArgumentException();
         return getTags(complPrefix.substring(0, colonIndex),
@@ -470,7 +470,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
      * The attribute's 'string prefix' must match complPrefix.
      */
     public final List getTagAttributes(String tagPrefixName, String complPrefix) {
-        int colonIndex = tagPrefixName.indexOf(":");    // NOI18N
+        int colonIndex = tagPrefixName.indexOf(':');    // NOI18N
         if (colonIndex == -1)
             throw new IllegalArgumentException();
         return getTagAttributes(tagPrefixName.substring(0, colonIndex),
@@ -1043,29 +1043,29 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
 
     /** Debug output of all tags and directives. */
     private String printJspCompletionInfo() {
-        StringBuffer output = new StringBuffer();
+        StringBuilder output = new StringBuilder();
 
         output.append("TAGS\n");    // NOI18N
         List tagPrefixes = getTagPrefixes("");  // NOI18N
         for (int i = 0; i < tagPrefixes.size(); i++) {
             String prefix = (String)tagPrefixes.get(i);
-            output.append("  " + prefix + "\n");    // NOI18N
+            output.append("  ").append(prefix).append("\n");    // NOI18N
             List tags = getTags(prefix, "");    // NOI18N
             for (int j = 0; j < tags.size(); j++) {
                 if (tags.get(j) instanceof TagInfo){
                     TagInfo ti = (TagInfo) tags.get(j);
-                    output.append("    " + ti.getTagName() + "\n");
+                    output.append("    ").append(ti.getTagName()).append("\n");
                     TagAttributeInfo[] attributes =  ti.getAttributes();
                     for (int k = 0; k < attributes.length; k++) {
-                        output.append("      " + attributes[k].getName() + "\n");// NOI18N
+                        output.append("      ").append(attributes[k].getName()).append("\n");// NOI18N
                     }
                 } else {
                     String tagName = (String)tags.get(j);
-                    output.append("    " + tagName + "\n"); // NOI18N
+                    output.append("    ").append(tagName).append("\n"); // NOI18N
                     List attributes = getTagAttributes(prefix, tagName, "");// NOI18N
                     for (int k = 0; k < attributes.size(); k++) {
                         String attribute = (String)attributes.get(k);
-                        output.append("      " + attribute + "\n");// NOI18N
+                        output.append("      ").append(attribute).append("\n");// NOI18N
                     }
                 }
             }
@@ -1077,18 +1077,18 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
         for (int i = 0; i < directives.size(); i++) {
             if (directives.get(i) instanceof TagInfo){
                 TagInfo ti = (TagInfo) directives.get(i);
-                output.append("    " + ti.getTagName() + "\n");
+                output.append("    ").append(ti.getTagName()).append("\n");
                 TagAttributeInfo[] attributes =  ti.getAttributes();
                 for (int k = 0; k < attributes.length; k++) {
-                    output.append("      " + attributes[k].getName() + "\n");// NOI18N
+                    output.append("      ").append(attributes[k].getName()).append("\n");// NOI18N
                 }
             } else {
                 String directive = (String)directives.get(i);
-                output.append("  " + directive + "\n");// NOI18N
+                output.append("  ").append(directive).append("\n");// NOI18N
                 List attributes = getDirectiveAttributes(directive, "");// NOI18N
                 for (int k = 0; k < attributes.size(); k++) {
                     String attribute = (String)attributes.get(k);
-                    output.append("      " + attribute + "\n");// NOI18N
+                    output.append("      ").append(attribute).append("\n");// NOI18N
                 }
             }
         }
@@ -1471,7 +1471,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
                         (item.getTokenID().getNumericID() == JspTagTokenContext.SYMBOL_ID) &&
                         (isValueBeginning(item.getImage())))
                     item = item.getNext();
-                StringBuffer value = new StringBuffer();
+                StringBuilder value = new StringBuilder();
                 while ((item != null)
                         && ((item.getTokenID().getNumericID() == JspTagTokenContext.ATTR_VALUE_ID)
                         || (item.getTokenID().getNumericID() == JspTagTokenContext.EOL_ID))) {
@@ -1559,7 +1559,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
     }
 
     private String getWholeWord(TokenItem firstToken, TokenID requestedTokenID) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         while ((firstToken != null) && (firstToken.getTokenID().getNumericID() == requestedTokenID.getNumericID())) {
             sb.append(firstToken.getImage());
             firstToken = firstToken.getNext();

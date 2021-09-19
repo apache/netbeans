@@ -112,7 +112,7 @@ public final class TestURLDisplayer extends URLDisplayer {
         if (!isURLValid || url == null) {
             throw new IllegalStateException("URL is not valid.");
         }
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         InputStream is = null;
         try {
             is = con.getInputStream();

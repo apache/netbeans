@@ -247,16 +247,16 @@ public class Validation extends org.netbeans.modules.schema2beans.BaseBean
 		Object o;
 		org.netbeans.modules.schema2beans.BaseBean n;
 		str.append(indent);
-		str.append("Element["+this.sizeElement()+"]");	// NOI18N
+		str.append("Element[").append(this.sizeElement()).append("]");	// NOI18N
 		for(int i=0; i<this.sizeElement(); i++)
 		{
-			str.append(indent+"\t");
-			str.append("#"+i+":");
+			str.append(indent).append("\t");
+			str.append("#").append(i).append(":");
 			n = (org.netbeans.modules.schema2beans.BaseBean) this.getElement(i);
 			if (n != null)
 				n.dump(str, indent + "\t");	// NOI18N
 			else
-				str.append(indent+"\tnull");	// NOI18N
+				str.append(indent).append("\tnull");	// NOI18N
 			this.dumpAttributes(ELEMENT, i, str, indent);
 		}
 

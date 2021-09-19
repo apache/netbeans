@@ -660,7 +660,7 @@ public class WebFreeFormActionProvider implements ActionProvider {
     }
     
     private String findSourceFolders(String type) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         Element data = Util.getPrimaryConfigurationData(helper);
         Element foldersEl = XMLUtil.findElement(data, "folders", Util.NAMESPACE); // NOI18N
         if (foldersEl != null) {

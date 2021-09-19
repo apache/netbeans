@@ -107,8 +107,8 @@ class NotifyUtil  {
      */
     void setIDE(String server) throws MalformedURLException { 
 	
-	String host = server.substring(0, server.indexOf(":"));  //NOI18N
-	String port = server.substring(server.indexOf(":") + 1); //NOI18N
+	String host = server.substring(0, server.indexOf(':'));  //NOI18N
+	String port = server.substring(server.indexOf(':') + 1); //NOI18N
 	setIDE(host, port); 
 	if(debug){ 
 	    log("host: " + host); //NOI18N
@@ -177,7 +177,7 @@ class NotifyUtil  {
 
 	// This is the default case - the server port was already known
 
-	StringBuffer uriBuf = new StringBuffer(replayServlet); //NOI18N
+	StringBuilder uriBuf = new StringBuilder(replayServlet); //NOI18N
 	uriBuf.append("?status=");  //NOI18N
 	uriBuf.append(status);
 	uriBuf.append("&id=");  //NOI18N

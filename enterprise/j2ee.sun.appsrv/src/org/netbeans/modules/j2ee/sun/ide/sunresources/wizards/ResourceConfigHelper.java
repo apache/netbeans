@@ -81,13 +81,13 @@ public class ResourceConfigHelper {
     }
     
     public String toString() {
-        StringBuffer str = new StringBuffer();
-        str.append("index is " + index + "\n");  //NOI18N
+        StringBuilder str = new StringBuilder();
+        str.append("index is ").append(index).append("\n");  //NOI18N
         for (int i = 0; i < datas.length; i++) {
             if (datas[i] == null)
-                str.append("datas[ " + i + " ] is null"); //NOI18N
+                str.append("datas[ ").append(i).append(" ] is null"); //NOI18N
             else
-                str.append("datas[ " + i + " ] is:\n" + datas[i].toString()); //NOI18N
+                str.append("datas[ ").append(i).append(" ] is:\n").append(datas[i].toString()); //NOI18N
         }
         return str.toString();
     }

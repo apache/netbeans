@@ -84,7 +84,7 @@ public class JspElWatch implements PropertyChangeListener {
     }
 
     public String getToStringValue() throws InvalidExpressionException {
-        return getValue().toString();
+        return getValue();
     }
 
     public Watch getWatch() {

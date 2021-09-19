@@ -302,7 +302,7 @@ public class ServerLocationManager  {
     }
     
     private static String getFileNameWithoutExt(String fileName){
-	int index = fileName.lastIndexOf("."); //NOI18N
+	int index = fileName.lastIndexOf('.'); //NOI18N
 	if(index != -1){
 	    fileName = fileName.substring(0, index);
 	}

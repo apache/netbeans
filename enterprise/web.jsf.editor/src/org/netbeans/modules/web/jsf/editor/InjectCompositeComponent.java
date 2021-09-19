@@ -190,7 +190,7 @@ public class InjectCompositeComponent {
             // get component folder
             FileObject tF = Templates.getTargetFolder(templateWizard);
             String compFolder = FileUtil.getRelativePath(projectDir, tF);
-            compFolder = compFolder.substring(compFolder.lastIndexOf("/") + 1);
+            compFolder = compFolder.substring(compFolder.lastIndexOf('/') + 1);
 
             // issue #232189 - Composite component's NS declaration not inserted on first usage
             FileObject generatedFO = result.iterator().next().getPrimaryFile();

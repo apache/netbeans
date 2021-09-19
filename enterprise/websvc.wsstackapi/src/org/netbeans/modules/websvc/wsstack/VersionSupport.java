@@ -73,7 +73,7 @@ public  class VersionSupport {
 
     private static Integer valueOf(String versionToken) {
         int i = 0;
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         while (i<versionToken.length()) {
             char ch = versionToken.charAt(i);
             if (Character.isDigit(ch)) {

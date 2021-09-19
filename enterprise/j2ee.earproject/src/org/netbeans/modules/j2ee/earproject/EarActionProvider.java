@@ -254,7 +254,7 @@ public class EarActionProvider implements ActionProvider {
                         if (null != wm) {
                             FileObject fo = wm.getDocumentBase();
                             if (null != fo) {
-                                edbd.append(FileUtil.toFile(fo).getAbsolutePath()+":"); //NOI18N
+                                edbd.append(FileUtil.toFile(fo).getAbsolutePath()).append(":"); //NOI18N
                             }
                         }
                     }
@@ -287,7 +287,7 @@ public class EarActionProvider implements ActionProvider {
                         if (null != wm) {
                             FileObject fo = wm.getDocumentBase();
                             if (null != fo) {
-                                edbd.append(FileUtil.toFile(fo).getAbsolutePath()+":"); //NOI18N
+                                edbd.append(FileUtil.toFile(fo).getAbsolutePath()).append(":"); //NOI18N
                             }
                         }
                     }

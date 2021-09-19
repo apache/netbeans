@@ -159,7 +159,7 @@ public class CharsetMapping implements Comparable {
 		String result = chosenAlias;
 		
 		if(showAliases) {
-			StringBuffer aliasList = new StringBuffer(200);
+			StringBuilder aliasList = new StringBuilder(200);
 
 			for(Iterator iter = charset.aliases().iterator(); iter.hasNext(); ) {
 				aliasList.append((String) iter.next());

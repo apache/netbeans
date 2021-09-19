@@ -266,7 +266,7 @@ class DumpVisitor extends Node.Visitor {
     @Override
     public void visit(Node.TemplateText n) throws JspException {
         visitCommon(n);
-        printString(new String(n.getText()));
+        printString(n.getText());
     }
 
     private void printIndent() {

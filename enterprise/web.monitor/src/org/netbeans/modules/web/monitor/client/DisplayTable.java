@@ -128,7 +128,7 @@ public class DisplayTable extends JTable {
 	for(int i=0; i<numRows; ++i) {
 	    data[i][0] = names[i];
 	    if (values == null) {
-		data[i][1] = new String(""); // NOI18N
+		data[i][1] = ""; // NOI18N
 	    } else {
 		data[i][1] = values[i];
 	    }

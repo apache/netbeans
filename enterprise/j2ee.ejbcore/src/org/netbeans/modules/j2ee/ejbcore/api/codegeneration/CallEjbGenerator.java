@@ -437,7 +437,7 @@ public class CallEjbGenerator {
         }
         if (!throwCheckedExceptions) {
             Iterator<String> exIt = exceptions.iterator();
-            StringBuffer catchBody = new StringBuffer("try {\n" + body + "}\n"); // NOI18N
+            StringBuilder catchBody = new StringBuilder("try {\n" + body + "}\n"); // NOI18N
             while (exIt.hasNext()) {
                 String exceptionName = exIt.next();
                 catchBody.append("catch("); // NOI18N
@@ -448,7 +448,7 @@ public class CallEjbGenerator {
                 catchBody.append(") {\n"); //NOI18N
                 catchBody.append(MessageFormat.format(LOG_STATEMENT,
                         new Object[] {capitalLetters}));
-                catchBody.append("throw new RuntimeException("+capitalLetters+");\n");
+                catchBody.append("throw new RuntimeException(").append(capitalLetters).append(");\n");
                 catchBody.append("}\n"); //NOI18N
             }
             body = catchBody.toString();
@@ -518,7 +518,7 @@ public class CallEjbGenerator {
         }
         if (!throwCheckedExceptions) {
             Iterator<String> exIt = exceptions.iterator();
-            StringBuffer catchBody = new StringBuffer("try {\n" + body + "\n}"); // NOI18N
+            StringBuilder catchBody = new StringBuilder("try {\n" + body + "\n}"); // NOI18N
             while (exIt.hasNext()) {
                 String exceptionName = exIt.next();
                 catchBody.append(" catch("); // NOI18N
@@ -528,7 +528,7 @@ public class CallEjbGenerator {
                 catchBody.append(capitalLetters);
                 catchBody.append(") {\n"); //NOI18N
                 catchBody.append(MessageFormat.format(LOG_STATEMENT, new Object[] {capitalLetters}));
-                catchBody.append("throw new RuntimeException("+capitalLetters+");\n");
+                catchBody.append("throw new RuntimeException(").append(capitalLetters).append(");\n");
                 catchBody.append('}');
                 body = catchBody.toString();
                 exceptions = Collections.<String>emptyList();
@@ -560,7 +560,7 @@ public class CallEjbGenerator {
     }
     
     private String extractAllCapitalLetters(String word) {
-        StringBuffer caps = new StringBuffer(4);
+        StringBuilder caps = new StringBuilder(4);
         for (int i =0; i < word.length(); i++) {
             char character = word.charAt(i);
             if (Character.isUpperCase(character)) {

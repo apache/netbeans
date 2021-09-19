@@ -63,7 +63,7 @@ public class TokenReplacer {
             reader = new BufferedReader(new InputStreamReader( 
                     new FileInputStream((FileUtil.toFile(fo))), StandardCharsets.UTF_8));
             String line;
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             while ((line = reader.readLine()) != null) {
                 line = replaceTokens(line, "", "", tokenMap);
                 sb.append(line);

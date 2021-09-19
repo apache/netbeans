@@ -489,7 +489,7 @@ public class JaxWsCodeGenerator {
     }
 
     private static String getCanonicalClassName(String genericClassName) {
-        int index = genericClassName.indexOf("<");
+        int index = genericClassName.indexOf('<');
         if (index != -1) {
             return genericClassName.substring(0, index);
         }
@@ -497,8 +497,8 @@ public class JaxWsCodeGenerator {
     }
 
     private static String resolveResponseType(String argumentType) {
-        int start = argumentType.indexOf("<");
-        int end = argumentType.indexOf(">");
+        int start = argumentType.indexOf('<');
+        int end = argumentType.indexOf('>');
         if (start > 0 && end > 0 && start < end) {
             return argumentType.substring(start + 1, end);
         } else {
@@ -507,7 +507,7 @@ public class JaxWsCodeGenerator {
     }
 
     private static String pureJavaName(String javaNameWithPackage) {
-        int index = javaNameWithPackage.lastIndexOf(".");
+        int index = javaNameWithPackage.lastIndexOf('.');
         return index >= 0 ? javaNameWithPackage.substring(index + 1) : javaNameWithPackage;
     }
 
@@ -550,8 +550,8 @@ public class JaxWsCodeGenerator {
             serviceJavaName = service.getJavaName();
             List arguments = operation.getParameters();
             returnTypeName = operation.getReturnTypeName();
-            StringBuffer argumentBuffer1 = new StringBuffer();
-            StringBuffer argumentBuffer2 = new StringBuffer();
+            StringBuilder argumentBuffer1 = new StringBuilder();
+            StringBuilder argumentBuffer2 = new StringBuilder();
             for (int i = 0; i < arguments.size(); i++) {
                 String argumentTypeName = ((WsdlParameter) arguments.get(i)).getTypeName();
                 if (argumentTypeName.startsWith("javax.xml.ws.AsyncHandler")) { //NOI18N
@@ -565,8 +565,8 @@ public class JaxWsCodeGenerator {
                 if (inJsp && IMPLICIT_JSP_OBJECTS.contains(argumentName)) {
                     argumentName = argumentName + "_1"; //NOI18N
                 }
-                argumentBuffer1.append("\t" + argumentTypeName + " " + argumentName + " = " + resolveInitValue(argumentTypeName,
-                        NbEditorUtilities.getFileObject(document)) + "\n"); //NOI18N
+                argumentBuffer1.append("\t").append(argumentTypeName).append(" ").append(argumentName).append(" = ").append(resolveInitValue(argumentTypeName,
+                        NbEditorUtilities.getFileObject(document))).append("\n"); //NOI18N
                 argumentBuffer2.append(i > 0 ? ", " + argumentName : argumentName); //NOI18N
             }
             argumentInitializationPart = (argumentBuffer1.length() > 0 ? "\t" + HINT_INIT_ARGUMENTS + argumentBuffer1.toString() : "");
@@ -904,7 +904,7 @@ public class JaxWsCodeGenerator {
 
         private static String fixNamesInDeclarationPart(String argumentDeclarationPart) {
             StringTokenizer tok = new StringTokenizer(argumentDeclarationPart, " ,"); //NOI18N
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             int i = 0;
             while (tok.hasMoreTokens()) {
                 String token = tok.nextToken();
@@ -1050,7 +1050,7 @@ public class JaxWsCodeGenerator {
     }
 
     public static String generateXMLMessage(WsdlPort port, WsdlOperation operation) {
-        StringBuffer message = new StringBuffer("");
+        StringBuilder message = new StringBuilder("");
 
         String operationName = operation.getOperationName();
         String namespace = port.getNamespaceURI();
@@ -1077,7 +1077,7 @@ public class JaxWsCodeGenerator {
     }
 
     private static String getDispatchInvocationMethod(WsdlPort port, WsdlOperation operation) {
-        StringBuffer invoke = new StringBuffer("");
+        StringBuilder invoke = new StringBuilder("");
         invoke.append(MessageFormat.format(QNAME, new Object[]{port.getNamespaceURI(), port.getName()}));
         invoke.append("\n");
         invoke.append("String req = ");
@@ -1121,8 +1121,8 @@ public class JaxWsCodeGenerator {
             serviceJavaName = service.getJavaName();
             List arguments = operation.getParameters();
             returnTypeName = operation.getReturnTypeName();
-            StringBuffer argumentBuffer1 = new StringBuffer();
-            StringBuffer argumentBuffer2 = new StringBuffer();
+            StringBuilder argumentBuffer1 = new StringBuilder();
+            StringBuilder argumentBuffer2 = new StringBuilder();
             for (int i = 0; i < arguments.size(); i++) {
                 String argumentTypeName = ((WsdlParameter) arguments.get(i)).getTypeName();
                 if (argumentTypeName.startsWith("javax.xml.ws.AsyncHandler")) { //NOI18N
@@ -1139,8 +1139,8 @@ public class JaxWsCodeGenerator {
                     argumentName = argumentName + "_1"; //NOI18N
 
                 }
-                argumentBuffer1.append("\t" + argumentTypeName + " " + argumentName + " = " + resolveInitValue(argumentTypeName,
-                        target) + "\n"); //NOI18N
+                argumentBuffer1.append("\t").append(argumentTypeName).append(" ").append(argumentName).append(" = ").append(resolveInitValue(argumentTypeName,
+                        target)).append("\n"); //NOI18N
 
                 argumentBuffer2.append(i > 0 ? ", " + argumentName : argumentName); //NOI18N
 

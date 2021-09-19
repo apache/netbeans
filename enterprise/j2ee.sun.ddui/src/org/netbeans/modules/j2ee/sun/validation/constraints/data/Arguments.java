@@ -121,16 +121,16 @@ public class Arguments extends org.netbeans.modules.schema2beans.BaseBean
 		Object o;
 		org.netbeans.modules.schema2beans.BaseBean n;
 		str.append(indent);
-		str.append("Argument["+this.sizeArgument()+"]");	// NOI18N
+		str.append("Argument[").append(this.sizeArgument()).append("]");	// NOI18N
 		for(int i=0; i<this.sizeArgument(); i++)
 		{
-			str.append(indent+"\t");
-			str.append("#"+i+":");
+			str.append(indent).append("\t");
+			str.append("#").append(i).append(":");
 			n = (org.netbeans.modules.schema2beans.BaseBean) this.getArgument(i);
 			if (n != null)
 				n.dump(str, indent + "\t");	// NOI18N
 			else
-				str.append(indent+"\tnull");	// NOI18N
+				str.append(indent).append("\tnull");	// NOI18N
 			this.dumpAttributes(ARGUMENT, i, str, indent);
 		}
 

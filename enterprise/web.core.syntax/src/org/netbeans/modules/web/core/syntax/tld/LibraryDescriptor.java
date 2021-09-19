@@ -160,9 +160,9 @@ public abstract class LibraryDescriptor {
     @Override
     public String toString() {
         try {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append(getDefinitionFile() != null ? getDefinitionFile().getFileSystem().getRoot().getURL().toString() + ";" + getDefinitionFile().getPath() : ""); //NOI18N
-            sb.append("; defaultPrefix = " + getDefaultPrefix() + "; uri = " + getURI() + "; tags={"); //NOI18N
+            sb.append("; defaultPrefix = ").append(getDefaultPrefix()).append("; uri = ").append(getURI()).append("; tags={"); //NOI18N
             for (Tag t : getTags().values()) {
                 sb.append(t.toString());
             }
@@ -263,10 +263,10 @@ public abstract class LibraryDescriptor {
 
         @Override
         public String toString() {
-            StringBuffer sb = new StringBuffer();
-            sb.append("Tag[name=" + getName() + /*", description=" + getDescription() +*/ ", attributes={"); //NOI18N
+            StringBuilder sb = new StringBuilder();
+            sb.append("Tag[name=").append(getName()).append(/*", description=" + getDescription() +*/ ", attributes={"); //NOI18N
             for (Attribute attr : getAttributes()) {
-                sb.append(attr.toString() + ",");
+                sb.append(attr.toString()).append(",");
             }
             sb.append("}]");
             return sb.toString();

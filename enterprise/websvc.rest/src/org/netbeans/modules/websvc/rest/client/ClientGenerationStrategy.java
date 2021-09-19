@@ -281,7 +281,7 @@ abstract class ClientGenerationStrategy {
         } else {
             StringBuilder buf = new StringBuilder(arguments[0]);
             for (int i=1 ; i<arguments.length ; i++) {
-                buf.append(","+arguments[i]);
+                buf.append(",").append(arguments[i]);
             }
             return buf.toString();
         }
@@ -359,7 +359,7 @@ abstract class ClientGenerationStrategy {
                     VariableTree paramTree = maker.Variable(paramModifier, 
                             javaIdentifier, maker.Identifier("String"), null); //NOI18N
                     paramList.add(paramTree);
-                    commentBuffer.append("@param "+javaIdentifier+" form parameter\n"); //NOI18N
+                    commentBuffer.append("@param ").append(javaIdentifier).append(" form parameter\n"); //NOI18N
                 }
             }
             Pair<String> paramPair = null;
@@ -370,10 +370,8 @@ abstract class ClientGenerationStrategy {
                 paramPair = Wadl2JavaHelper.getParamList(httpParams.getFormParams(), 
                         httpParams.getFixedFormParams());
             }
-            queryParamPart.append("String[] formParamNames = new String[] {"+
-                    paramPair.getKey()+"};"); //NOI18N
-            queryParamPart.append("String[] formParamValues = new String[] {"+
-                    paramPair.getValue()+"};"); //NOI18N
+            queryParamPart.append("String[] formParamNames = new String[] {").append(paramPair.getKey()).append("};"); //NOI18N
+            queryParamPart.append("String[] formParamValues = new String[] {").append(paramPair.getValue()).append("};"); //NOI18N
         }
         // add query params
         if (httpParams.hasQueryParams()) {
@@ -389,8 +387,7 @@ abstract class ClientGenerationStrategy {
                         VariableTree paramTree = maker.Variable(paramModifier, 
                                 javaIdentifier, maker.Identifier("String"), null); //NOI18N
                         paramList.add(paramTree);
-                        commentBuffer.append("@param "+javaIdentifier+
-                                " query parameter[REQUIRED]\n"); //NOI18N
+                        commentBuffer.append("@param ").append(javaIdentifier).append(" query parameter[REQUIRED]\n"); //NOI18N
                     }
                 }
                 // adding query params calculation to metthod body
@@ -405,10 +402,8 @@ abstract class ClientGenerationStrategy {
                                 httpParams.getRequiredQueryParams(), 
                                 httpParams.getFixedQueryParams());
                     }
-                    queryParamPart.append("String[] queryParamNames = new String[] {"+
-                            paramPair.getKey()+"};"); //NOI18N
-                    queryParamPart.append("String[] queryParamValues = new String[] {"+
-                            paramPair.getValue()+"};"); //NOI18N
+                    queryParamPart.append("String[] queryParamNames = new String[] {").append(paramPair.getKey()).append("};"); //NOI18N
+                    queryParamPart.append("String[] queryParamValues = new String[] {").append(paramPair.getValue()).append("};"); //NOI18N
                     if (Security.Authentication.SESSION_KEY == 
                             security.getAuthentication() && securityParams != null) 
                     {
@@ -416,13 +411,9 @@ abstract class ClientGenerationStrategy {
                         if (httpParams.hasOptionalQueryParams()) {
                             optParams = ", optionalQueryParams";
                         }
-                        queryParamPart.append("String signature = "+
-                                SIGN_PARAMS_METHOD+
-                                "(queryParamNames, queryParamValues"+optParams+
-                                ");"); //NOI18N
+                        queryParamPart.append("String signature = " + SIGN_PARAMS_METHOD + "(queryParamNames, queryParamValues").append(optParams).append(");"); //NOI18N
                         String sigParam = securityParams.getSignature();
-                        queryP.append(".queryParam(\""+
-                                sigParam+"\", signature)"); //NOI18N
+                        queryP.append(".queryParam(\"").append(sigParam).append("\", signature)"); //NOI18N
                         buildQueryFormParams(queryP);
                     } else {
                         buildQueryFormParams(queryP); 
@@ -441,20 +432,18 @@ abstract class ClientGenerationStrategy {
                             if (httpParams.hasOptionalQueryParams()) {
                                 optParams = ", optionalQueryParams";
                             }
-                            queryParamPart.append("String signature = "+
-                                    SIGN_PARAMS_METHOD+
-                                    "(formParamNames, formParamValues"+optParams+");"); //NOI18N
+                            queryParamPart.append("String signature = " + SIGN_PARAMS_METHOD + "(formParamNames, formParamValues").append(optParams).append(");"); //NOI18N
                             String sigParam = securityParams.getSignature();
-                            queryP.append(".queryParam(\""+sigParam+"\", signature)"); //NOI18N
+                            queryP.append(".queryParam(\"").append(sigParam).append("\", signature)"); //NOI18N
                         } else {
-                            queryP.append(".queryParam(\""+paramName+"\","+paramValue+")"); //NOI18N
+                            queryP.append(".queryParam(\"").append(paramName).append("\",").append(paramValue).append(")"); //NOI18N
                         }
                     } else {
                         Map<String, String> fixedParams = httpParams.getFixedQueryParams();
                         for(Entry<String, String> entry: fixedParams.entrySet()) {
                             String paramName = entry.getKey();
                             String paramValue = entry.getValue();
-                            queryP.append(".queryParam(\""+paramName+"\",\""+paramValue+"\")"); //NOI18N"
+                            queryP.append(".queryParam(\"").append(paramName).append("\",\"").append(paramValue).append("\")"); //NOI18N"
                         }
                     }
                 }
@@ -466,16 +455,14 @@ abstract class ClientGenerationStrategy {
                     VariableTree paramTree = maker.Variable(paramModifier, 
                             javaIdentifier, maker.Identifier("String"), null); //NOI18N
                     paramList.add(paramTree);
-                    commentBuffer.append("@param "+javaIdentifier+" query parameter\n"); //NOI18N
+                    commentBuffer.append("@param ").append(javaIdentifier).append(" query parameter\n"); //NOI18N
                 }
                 // there are no fixed params in this case
                 Pair<String> paramPair = Wadl2JavaHelper.getParamList(
                         httpParams.getOptionalQueryParams(), 
                         Collections.<String, String>emptyMap());
-                queryParamPart.append("String[] queryParamNames = new String[] {"+
-                        paramPair.getKey()+"};"); //NOI18N
-                queryParamPart.append("String[] queryParamValues = new String[] {"+
-                        paramPair.getValue()+"};"); //NOI18N
+                queryParamPart.append("String[] queryParamNames = new String[] {").append(paramPair.getKey()).append("};"); //NOI18N
+                queryParamPart.append("String[] queryParamValues = new String[] {").append(paramPair.getValue()).append("};"); //NOI18N
                 buildQueryFormParams(queryP);
             }
 
@@ -489,13 +476,12 @@ abstract class ClientGenerationStrategy {
 
                 commentBuffer.append("@param optionalQueryParams List of optional query parameters in the form of \"param_name=param_value\",...<br>\nList of optional query parameters:\n"); //NOI18N
                 for (String otherParam : httpParams.getOptionalQueryParams()) {
-                    commentBuffer.append("<LI>"+otherParam+" [OPTIONAL]\n"); //NOI18N
+                    commentBuffer.append("<LI>").append(otherParam).append(" [OPTIONAL]\n"); //NOI18N
                 }
                 // add default params
                 Map<String,String> defaultParams = httpParams.getDefaultQueryParams();
                 for (String key : defaultParams.keySet()) {
-                    commentBuffer.append("<LI>"+key+" [OPTIONAL, DEFAULT VALUE: \""+
-                            defaultParams.get(key)+"\"]\n"); //NOI18N
+                    commentBuffer.append("<LI>").append(key).append(" [OPTIONAL, DEFAULT VALUE: \"").append(defaultParams.get(key)).append("\"]\n"); //NOI18N
                 }
                 buildQParams(queryP); 
             }
@@ -514,14 +500,14 @@ abstract class ClientGenerationStrategy {
                 VariableTree paramTree = maker.Variable(paramModifier, 
                         javaIdentifier, maker.Identifier("String"), null); //NOI18N
                 paramList.add(paramTree);
-                commentBuffer.append("@param "+javaIdentifier+" header parameter[REQUIRED]\n"); //NOI18N
-                queryP.append(".header(\""+headerParam+"\","+javaIdentifier+")"); //NOI18N
+                commentBuffer.append("@param ").append(javaIdentifier).append(" header parameter[REQUIRED]\n"); //NOI18N
+                queryP.append(".header(\"").append(headerParam).append("\",").append(javaIdentifier).append(")"); //NOI18N
             }
             Map<String, String> fixedHeaderParams = httpParams.getFixedHeaderParams();
             for (Entry<String, String> entry : fixedHeaderParams.entrySet()) {
                 String paramName = entry.getKey();
                 String paramValue = entry.getValue();
-                queryP.append(".header(\""+paramName+"\",\""+paramValue+"\")"); //NOI18N
+                queryP.append(".header(\"").append(paramName).append("\",\"").append(paramValue).append("\")"); //NOI18N
             }
         }
     }
@@ -544,7 +530,7 @@ abstract class ClientGenerationStrategy {
                 if ( index > -1){
                     arg = arg.substring(0, index);
                 }
-                buf.append("{"+arguments.size()+"}"); //NOI18N
+                buf.append("{").append(arguments.size()).append("}"); //NOI18N
                 arguments.add(arg);
                 i = j;
             } else {

@@ -162,7 +162,7 @@ public class JspNode extends DataNode {
     * @exception IOException if arguments cannot be set
     */
     static void setRequestParams(MultiDataObject.Entry entry, String params) throws IOException {
-        StringBuffer newParams=new StringBuffer();
+        StringBuilder newParams=new StringBuilder();
         String s=null;
         if (params!=null){
             for (int i=0;i<params.length();i++) {

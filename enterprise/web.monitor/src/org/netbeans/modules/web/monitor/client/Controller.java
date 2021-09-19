@@ -646,7 +646,7 @@ class Controller  {
 	    String name = md.getServerName();
 	    int port = md.getServerPort();
 	    
-	    StringBuffer uriBuf = new StringBuffer(128);
+	    StringBuilder uriBuf = new StringBuilder(128);
 	    uriBuf.append(md.getRequestData().getAttributeValue("uri")); //NOI18N 
 	    uriBuf.append("?"); //NOI18N 
 	    uriBuf.append(REPLAY); 

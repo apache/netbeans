@@ -115,7 +115,7 @@ public class VendorNameMgr {
     
     
     static String stripExtraDBInfo(String dbConnectionString) {
-        int bracketIndex = dbConnectionString.indexOf("["); // NOI18N
+        int bracketIndex = dbConnectionString.indexOf('['); // NOI18N
         if(bracketIndex != -1) { 
             dbConnectionString = dbConnectionString.substring(0, bracketIndex).trim();
         }

@@ -417,7 +417,7 @@ public final class EntityMethodController extends AbstractMethodController {
     }
 
     private static String prependAndUpper(String fullName, String prefix) {
-        StringBuffer buffer = new StringBuffer(fullName);
+        StringBuilder buffer = new StringBuilder(fullName);
         buffer.setCharAt(0, Character.toUpperCase(buffer.charAt(0)));
         return prefix+buffer.toString();
     }

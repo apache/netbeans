@@ -420,7 +420,7 @@ public class DomainEditor {
     // or to  "-agentpath:C:\Program Files\lib\profileragent.dll=\"C:\Program Files\lib\",5140" (Payara or AS 9.0)
     private String formatJvmOption(String jvmOption) {
         // only jvmOption containing \" needs to be formatted
-        if (jvmOption.indexOf("\"") != -1) { // NOI18N
+        if (jvmOption.indexOf('"') != -1) { // NOI18N
             // special handling for -agentpath
             if (jvmOption.indexOf("\\\"") != -1 && jvmOption.indexOf("-agentpath") != -1 ){ // NOI18N
             // Modification for AS 8.1, 8.2, initial modification for AS 9.0, Payara

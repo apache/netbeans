@@ -186,8 +186,8 @@ public class StartupArgsEntity implements StartupArgs {
                     }
                     if (javaVersionLine != null) {
                         javaVersion = JDKVersion.toValue(
-                                javaVersionLine.substring(javaVersionLine.indexOf("\"") + 1, javaVersionLine.lastIndexOf("\"")), // NOI18N
-                                implementorLine != null ? implementorLine.substring(implementorLine.indexOf("\"") + 1, implementorLine.lastIndexOf("\"")) : null, // NOI18N
+                                javaVersionLine.substring(javaVersionLine.indexOf('"') + 1, javaVersionLine.lastIndexOf('"')), // NOI18N
+                                implementorLine != null ? implementorLine.substring(implementorLine.indexOf('"') + 1, implementorLine.lastIndexOf('"')) : null, // NOI18N
                                 null
                         );
                     }

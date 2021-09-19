@@ -223,7 +223,7 @@ public abstract class SyntaxElement extends Object {
 
         @Override
         public String toString() {
-            StringBuffer ret = new StringBuffer(super.toString() + " - {" );   // NOI18N
+            StringBuilder ret = new StringBuilder(super.toString() + " - {" );   // NOI18N
 
             for( Iterator i = attribs.keySet().iterator(); i.hasNext(); ) {
                 Object next = i.next();

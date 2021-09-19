@@ -743,13 +743,13 @@ public class EntityClassInfo {
                 }
             } else {
                 this.type = type;
-                this.simpleTypeName = type.substring(type.lastIndexOf(".") + 1);
+                this.simpleTypeName = type.substring(type.lastIndexOf('.') + 1);
             }
         }
 
         private void setTypeArg(String typeArg) {
             this.typeArg = typeArg;
-            this.simpleTypeArgName = typeArg.substring(typeArg.lastIndexOf(".") + 1);
+            this.simpleTypeArgName = typeArg.substring(typeArg.lastIndexOf('.') + 1);
         }
 
     }

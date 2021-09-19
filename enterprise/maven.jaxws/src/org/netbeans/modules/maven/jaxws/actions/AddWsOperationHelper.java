@@ -434,7 +434,7 @@ public class AddWsOperationHelper {
     
     
     private String getPackagePrefix (String className) {
-        int lastDot = className.indexOf("."); //NOI18N
+        int lastDot = className.indexOf('.'); //NOI18N
         if (lastDot > 0) return className.substring(0,lastDot+1);
         else return "";
     }

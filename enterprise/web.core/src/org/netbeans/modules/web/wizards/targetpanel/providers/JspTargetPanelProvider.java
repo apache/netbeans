@@ -213,7 +213,7 @@ class JspUIManager extends XmlOptionPanelManager{
                     uiPanel.setFile(createdFile+"x"); //NOI18N
                 } else {
                     uiPanel.setFile(
-                            createdFile.substring(0,createdFile.lastIndexOf(".")+1)+"jspx"); //NOI18N
+                            createdFile.substring(0,createdFile.lastIndexOf('.')+1)+"jspx"); //NOI18N
                 }
             } else {
                 getSegmentBox().setEnabled(true);
@@ -224,7 +224,7 @@ class JspUIManager extends XmlOptionPanelManager{
                             createdFile.substring(0,createdFile.length()-1)); //NOI18N
                 } else {
                     uiPanel.setFile(
-                            createdFile.substring(0,createdFile.lastIndexOf(".")+1)+"jsp"); //NOI18N
+                            createdFile.substring(0,createdFile.lastIndexOf('.')+1)+"jsp"); //NOI18N
                 }
             }
         }     

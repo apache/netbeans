@@ -168,7 +168,7 @@ class EditPanelHeaders extends DataDisplay {
 
 		    int numRows = headerTable.getRowCount();
 
-		    StringBuffer buf = new StringBuffer
+		    StringBuilder buf = new StringBuilder
 			(NbBundle.getBundle(EditPanelHeaders.class).getString("MON_Confirm_Delete_Headers")); 
 		    buf.append("\n"); // NOI18N
 

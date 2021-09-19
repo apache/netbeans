@@ -1905,7 +1905,7 @@ public abstract class Node {
 	    class AttributeVisitor extends Visitor {
 		String attrValue = null;
 		public void visit(TemplateText txt) {
-		    attrValue = new String(txt.getText());
+		    attrValue = txt.getText();
 		}
 		
 		public String getAttrValue() {

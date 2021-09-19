@@ -206,7 +206,7 @@ public class ManagerUtil {
                 return null;
             }
             
-            StringBuffer arguments = new StringBuffer();
+            StringBuilder arguments = new StringBuilder();
             for (int i = 0; i < argTypes.length; i++) {
                 String argument = typeToString(argTypes[0]);
                 if (argument == null) {
@@ -304,12 +304,12 @@ public class ManagerUtil {
         
         int start = 0;
         int end = 0;
-        StringBuffer changedString = new StringBuffer("");
+        StringBuilder changedString = new StringBuilder("");
         
         end = inString.indexOf(oldSubString, start);
         while(end != -1) {
             //add substring before oldSubString and append newSubString
-            changedString.append(inString.substring(start, end) + newSubString);
+            changedString.append(inString.substring(start, end)).append(newSubString);
             
             //recompute starting index to end of changed substring
             start = end + oldSubString.length();
@@ -348,7 +348,7 @@ public class ManagerUtil {
          * If we don't have a "." in the string, simply uppercase the first char and
          * return it.
          */
-        if(inPortName.indexOf(".") == -1) {
+        if(inPortName.indexOf('.') == -1) {
             return  ManagerUtil.upperCaseFirstChar(inPortName);
         }
         
@@ -376,7 +376,7 @@ public class ManagerUtil {
          * A "$" seems to be a valid part but messes with the package name so we need to check for it
          * explicitly.
          */
-        if(inPackageName.indexOf("$") != -1) {
+        if(inPackageName.indexOf('$') != -1) {
             return false;
         }
         

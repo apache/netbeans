@@ -184,7 +184,7 @@ public class WebLocationsWizardPanel implements WizardDescriptor.Panel {
                 line = line.trim();
                 //try to find package
                 if (line.trim().startsWith("package")) { // NOI18N
-                    int idx = line.indexOf(";");  // NOI18N
+                    int idx = line.indexOf(';');  // NOI18N
                     if (idx >= 0)
                         return line.substring("package".length(), idx).trim(); // NOI18N
                 }

@@ -98,7 +98,7 @@ public class StrutsFrameworkProvider extends WebFrameworkProvider {
     
     private static String readResource(InputStream is, String encoding) throws IOException {
         // read the config from resource first
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         String lineSep = System.getProperty("line.separator");//NOI18N
         BufferedReader br = new BufferedReader(new InputStreamReader(is, encoding));
         String line = br.readLine();
@@ -229,8 +229,8 @@ public class StrutsFrameworkProvider extends WebFrameworkProvider {
                 String path = "";
                 String name = sresource;
                 if (index > -1){
-                    path = sresource.substring(0, sresource.lastIndexOf("."));   //NOI18N
-                    name = sresource.substring(sresource.lastIndexOf(".")+1);    //NOI18N
+                    path = sresource.substring(0, sresource.lastIndexOf('.'));   //NOI18N
+                    name = sresource.substring(sresource.lastIndexOf('.')+1);    //NOI18N
                 }
                 name = name + ".properties";   //NOI18N
                 SourceGroup[] resourceGroups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_RESOURCES);
@@ -417,7 +417,7 @@ public class StrutsFrameworkProvider extends WebFrameworkProvider {
             String find = "<h1>JSP Page</h1>"; // NOI18N
             String endLine = System.getProperty("line.separator"); //NOI18N
             if ( content.indexOf(find) > 0){
-                StringBuffer replace = new StringBuffer();
+                StringBuilder replace = new StringBuilder();
                 replace.append(find);
                 replace.append(endLine);
                 replace.append("    <br/>");                        //NOI18N

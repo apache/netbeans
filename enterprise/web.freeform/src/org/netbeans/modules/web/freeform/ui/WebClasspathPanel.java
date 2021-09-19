@@ -354,7 +354,7 @@ public class WebClasspathPanel extends javax.swing.JPanel implements HelpCtx.Pro
     }
     
     public String getClasspath(){
-        StringBuffer sf = new StringBuffer();
+        StringBuilder sf = new StringBuilder();
         for (int i = 1; i < listModel.getSize(); i++){
             String path = listModel.get(i);
             sf.append(path);

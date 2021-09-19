@@ -62,8 +62,8 @@ public class DisplayTableSorter extends AbstractTableModel implements
 	}
 
 	if(debug) {
-	    StringBuffer buf = 
-		new StringBuffer("Order of indices before sorting: ");//NOI18N
+	    StringBuilder buf = 
+		new StringBuilder("Order of indices before sorting: ");//NOI18N
 	    for(int i=0; i<index.length; ++i) {
 		buf.append(String.valueOf(index[i]));
 		buf.append(", "); //NOI18N
@@ -75,8 +75,8 @@ public class DisplayTableSorter extends AbstractTableModel implements
 	sort(index.clone(), index, 0, index.length);
 	 
 	if(debug) {
-	    StringBuffer buf = 
-		new StringBuffer("Order of indices after sorting: ");//NOI18N
+	    StringBuilder buf = 
+		new StringBuilder("Order of indices after sorting: ");//NOI18N
 	    for(int i=0; i<index.length; ++i) {
 		buf.append(String.valueOf(index[i]));
 		buf.append(", ");  //NOI18N

@@ -448,7 +448,7 @@ public class JaxWsChildren extends Children.Keys<Object>/* implements MDRChangeL
                     return getWebOperationInfoName(method);
                 } 
             };
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             for (String paramType:method.getParamTypes()) {
                 buf.append(buf.length() == 0 ? paramType : ", "+paramType);
             }
@@ -638,7 +638,7 @@ public class JaxWsChildren extends Children.Keys<Object>/* implements MDRChangeL
                             String oldPkgName = service.getPackageName();
                             if (wsdlService!=null && oldPkgName!=null && !service.isPackageNameForceReplace()) {
                                 String javaName = wsdlService.getJavaName();
-                                int dotPosition = javaName.lastIndexOf(".");
+                                int dotPosition = javaName.lastIndexOf('.');
                                 if (dotPosition>=0) {
                                     String newPkgName = javaName.substring(0,dotPosition);
                                     if (!oldPkgName.equals(newPkgName)) {
@@ -662,7 +662,7 @@ public class JaxWsChildren extends Children.Keys<Object>/* implements MDRChangeL
                                 String implClass = service.getImplementationClass();
                                 FileObject oldImplClass = srcRoot.getFileObject(implClass.replace('.','/')+".java"); //NOI18N
                                 FileObject oldCopy = srcRoot.getFileObject(implClass.replace('.','/')+".java.old"); //NOI18N
-                                int index = implClass.lastIndexOf(".");
+                                int index = implClass.lastIndexOf('.');
                                 FileObject folder = index>0?srcRoot.getFileObject(implClass.substring(0,index).replace('.','/')):srcRoot;
                                 if (folder!=null) {
                                     String name = (index>=0?implClass.substring(index+1):implClass);

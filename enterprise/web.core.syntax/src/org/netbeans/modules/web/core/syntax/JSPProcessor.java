@@ -109,7 +109,7 @@ public abstract class JSPProcessor {
             if (beanData != null) {
                 for (PageInfo.BeanData bean : beanData) {
                     if (!localBeans.contains(bean.getId())) {
-                        beanDeclarationsBuff.append(bean.getClassName() + " " + bean.getId() + ";\n"); //NOI18N
+                        beanDeclarationsBuff.append(bean.getClassName()).append(" ").append(bean.getId()).append(";\n"); //NOI18N
                     }
                 }
             }
@@ -118,7 +118,7 @@ public abstract class JSPProcessor {
                 for (TagAttributeInfo info : pageInfo.getTagInfo().getAttributes()) {
                     if (info.getTypeName() != null) { // will be null e.g. for fragment attrs
                         if (!localBeans.contains(info.getName())) {
-                            beanDeclarationsBuff.append(info.getTypeName() + " " + info.getName() + ";\n"); //NOI18N
+                            beanDeclarationsBuff.append(info.getTypeName()).append(" ").append(info.getName()).append(";\n"); //NOI18N
                         }
                     }
                 }
@@ -354,7 +354,7 @@ public abstract class JSPProcessor {
             // (JSP doesn't belong to a project)
             for (String pckg : imports) {
                 if (!localImports.contains(pckg)) {
-                    importsBuff.append("import " + pckg + ";\n"); //NOI18N
+                    importsBuff.append("import ").append(pckg).append(";\n"); //NOI18N
                 }
             }
         }

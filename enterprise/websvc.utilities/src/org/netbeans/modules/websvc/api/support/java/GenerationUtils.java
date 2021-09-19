@@ -393,7 +393,7 @@ public final class GenerationUtils {
         body.append("{"); // NOI18N
         for (VariableTree parameter : parameters) {
             String parameterName = parameter.getName().toString();
-            body.append("this." + parameterName + " = " + parameterName + ";"); // NOI18N
+            body.append("this.").append(parameterName).append(" = ").append(parameterName).append(";"); // NOI18N
         }
         body.append("}"); // NOI18N
 

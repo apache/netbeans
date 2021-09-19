@@ -180,7 +180,7 @@ public class JvmOptions extends ModuleMBean implements Constants{
         String debugOptionsVal = getDebugOptions();
         if(debugOptionsVal != null){
             debugOptionsVal = debugOptionsVal.substring(debugOptionsVal.indexOf(DEBUG_OPTIONS_ADDRESS)+DEBUG_OPTIONS_ADDRESS.length(), debugOptionsVal.length());
-            int hasMore = debugOptionsVal.indexOf(","); //NOI18N
+            int hasMore = debugOptionsVal.indexOf(','); //NOI18N
             if(hasMore != -1){ 
                 debugOptionsVal = debugOptionsVal.substring(0, hasMore);
             }
@@ -194,7 +194,7 @@ public class JvmOptions extends ModuleMBean implements Constants{
             String debugOptionsStart = debugOptionsVal.substring(0, debugOptionsVal.indexOf(DEBUG_OPTIONS_ADDRESS) + DEBUG_OPTIONS_ADDRESS.length());
             debugOptionsStart = debugOptionsStart + portNumber;
             String inMiddle = debugOptionsVal.substring(debugOptionsVal.indexOf(DEBUG_OPTIONS_ADDRESS) + DEBUG_OPTIONS_ADDRESS.length(), debugOptionsVal.length());
-            int hasMore = inMiddle.indexOf(","); //NOI18N
+            int hasMore = inMiddle.indexOf(','); //NOI18N
             if(hasMore != -1){
                 String debugOptionsEnd = inMiddle.substring(hasMore, inMiddle.length());
                 debugOptionsStart = debugOptionsStart + debugOptionsEnd;

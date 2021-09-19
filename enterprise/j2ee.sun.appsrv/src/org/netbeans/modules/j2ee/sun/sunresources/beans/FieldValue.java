@@ -141,7 +141,7 @@ public class FieldValue extends org.netbeans.modules.schema2beans.BaseBean
 		org.netbeans.modules.schema2beans.BaseBean n;
 		str.append(indent);
 		str.append("DefaultFieldValue");	// NOI18N
-		str.append(indent+"\t");	// NOI18N
+		str.append(indent).append("\t");	// NOI18N
 		str.append("<");	// NOI18N
 		s = this.getDefaultFieldValue();
 		str.append((s==null?"null":s.trim()));	// NOI18N
@@ -149,16 +149,16 @@ public class FieldValue extends org.netbeans.modules.schema2beans.BaseBean
 		this.dumpAttributes(DEFAULT_FIELD_VALUE, 0, str, indent);
 
 		str.append(indent);
-		str.append("OptionValuePair["+this.sizeOptionValuePair()+"]");	// NOI18N
+		str.append("OptionValuePair[").append(this.sizeOptionValuePair()).append("]");	// NOI18N
 		for(int i=0; i<this.sizeOptionValuePair(); i++)
 		{
-			str.append(indent+"\t");
-			str.append("#"+i+":");
+			str.append(indent).append("\t");
+			str.append("#").append(i).append(":");
 			n = (org.netbeans.modules.schema2beans.BaseBean) this.getOptionValuePair(i);
 			if (n != null)
 				n.dump(str, indent + "\t");	// NOI18N
 			else
-				str.append(indent+"\tnull");	// NOI18N
+				str.append(indent).append("\tnull");	// NOI18N
 			this.dumpAttributes(OPTION_VALUE_PAIR, i, str, indent);
 		}
 

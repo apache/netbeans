@@ -116,8 +116,8 @@ public class FilterMappingData {
 
     @Override
     public String toString() {
-        StringBuffer buf =
-                new StringBuffer("FilterMapping for filter: "); //NOI18N
+        StringBuilder buf =
+                new StringBuilder("FilterMapping for filter: "); //NOI18N
         buf.append(name);
         buf.append("\nMapping type: ");
         buf.append(type.toString());

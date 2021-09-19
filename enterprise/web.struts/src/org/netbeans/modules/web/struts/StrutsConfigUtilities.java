@@ -395,7 +395,7 @@ public class StrutsConfigUtilities {
      * @return If successful, returns the welcome file, "do/" + pageName if unsuccessful.
      */
     public static String getWelcomeFile(String URLPattern, String pageName) {
-        int indWild = URLPattern.indexOf("*"); // NOI18N
+        int indWild = URLPattern.indexOf('*'); // NOI18N
         if (indWild >= 0) {
             String pPrefix = URLPattern.substring(0, indWild);
             String pSuffix = URLPattern.substring(indWild + 1);

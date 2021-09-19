@@ -590,8 +590,8 @@ public class ResourceConfigurator implements ResourceConfiguratorInterface {
     }
 
     private String stripExtraDBInfo(String dbConnectionString) {
-        if(dbConnectionString.indexOf("[") != -1) { //NOI18N
-            dbConnectionString = dbConnectionString.substring(0, dbConnectionString.indexOf("[")).trim(); // NOI18N
+        if(dbConnectionString.indexOf('[') != -1) { //NOI18N
+            dbConnectionString = dbConnectionString.substring(0, dbConnectionString.indexOf('[')).trim(); // NOI18N
         }
         return dbConnectionString;
     }
@@ -623,11 +623,11 @@ public class ResourceConfigurator implements ResourceConfiguratorInterface {
 
     public String getDerbyServerName(String url){
         String hostName = ""; //NOI18N
-        int index = url.indexOf(":"); //NOI18N
+        int index = url.indexOf(':'); //NOI18N
         if(index != -1) {
             hostName = url.substring(0, index);
         }else{
-            index = url.indexOf("/"); //NOI18N
+            index = url.indexOf('/'); //NOI18N
             if(index != -1){
                 hostName = url.substring(0, index);
             }
@@ -637,18 +637,18 @@ public class ResourceConfigurator implements ResourceConfiguratorInterface {
 
     public String getDerbyPortNo(String url){
         String portNumber = "";  //NOI18N
-        int index = url.indexOf(":"); //NOI18N
+        int index = url.indexOf(':'); //NOI18N
         if(index != -1) {
-            portNumber = url.substring(index + 1, url.indexOf("/")); //NOI18N
+            portNumber = url.substring(index + 1, url.indexOf('/')); //NOI18N
         }
         return portNumber;
     }
 
     public String getDerbyDatabaseName(String url){
         String databaseName = ""; //NOI18N
-        int index = url.indexOf("/"); //NOI18N
+        int index = url.indexOf('/'); //NOI18N
         if(index != -1){
-            int colonIndex = url.indexOf(";"); //NOI18N
+            int colonIndex = url.indexOf(';'); //NOI18N
             if(colonIndex != -1) {
                 databaseName = url.substring(index + 1, colonIndex);
             } else {
@@ -660,7 +660,7 @@ public class ResourceConfigurator implements ResourceConfiguratorInterface {
 
     private String getDerbyConnAttrs(String url){
         String connAttr = ""; //NOI18N
-        int colonIndex = url.indexOf(";"); //NOI18N
+        int colonIndex = url.indexOf(';'); //NOI18N
         if(colonIndex != -1) {
             connAttr = url.substring(colonIndex,  url.length());
         }
@@ -1108,13 +1108,13 @@ public class ResourceConfigurator implements ResourceConfiguratorInterface {
 
     private String createPoolName(String url, String vendorName, String username){
         UrlData urlData = new UrlData(url);
-        StringBuffer poolName = new StringBuffer(vendorName);
+        StringBuilder poolName = new StringBuilder(vendorName);
         String dbName = getDatabaseName(urlData);
         if (dbName != null) {
-            poolName.append("_" + dbName); //NOI18N
+            poolName.append("_").append(dbName); //NOI18N
         }
         if (username != null) {
-            poolName.append("_" + username); //NOI18N
+            poolName.append("_").append(username); //NOI18N
         }
         poolName.append(WizardConstants.__ConnPoolSuffix);
         return poolName.toString();

@@ -103,7 +103,7 @@ public class AddAnnotation implements Fix {
     }
     
     public String getText(){
-        String annotationLabel = annotation.substring(annotation.lastIndexOf(".")+1);
+        String annotationLabel = annotation.substring(annotation.lastIndexOf('.')+1);
         return NbBundle.getMessage(RemoveAnnotation.class, "LBL_AddAnnotation",annotationLabel);
     }
 }

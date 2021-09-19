@@ -147,7 +147,7 @@ public class ListenerIterator implements TemplateWizard.AsynchronousInstantiatin
                         try {
                             Listener listener = (Listener)webApp.createBean("Listener");//NOI18N
                             listener.setListenerClass(className);
-                            StringBuffer desc= new StringBuffer();
+                            StringBuilder desc= new StringBuilder();
                             int i=0;
                             if (panel.isContextListener()) {
                                 desc.append("ServletContextListener"); //NOI18N

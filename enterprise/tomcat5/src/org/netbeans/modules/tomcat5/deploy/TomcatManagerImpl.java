@@ -573,7 +573,7 @@ public class TomcatManagerImpl implements ProgressObject, Runnable {
                 // Process the response message
                 reader = new InputStreamReader(hconn.getInputStream(), StandardCharsets.UTF_8);
                 retries = -1;
-                StringBuffer buff = new StringBuffer();
+                StringBuilder buff = new StringBuilder();
                 String error = null;
                 msg = null;
                 boolean first = !command.startsWith ("jmxproxy");   // NOI18N

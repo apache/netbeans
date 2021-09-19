@@ -145,7 +145,7 @@ public class Parameter extends org.netbeans.modules.schema2beans.BaseBean
 		org.netbeans.modules.schema2beans.BaseBean n;
 		str.append(indent);
 		str.append("Name");	// NOI18N
-		str.append(indent+"\t");	// NOI18N
+		str.append(indent).append("\t");	// NOI18N
 		str.append("<");	// NOI18N
 		s = this.getName();
 		str.append((s==null?"null":s.trim()));	// NOI18N
@@ -153,12 +153,12 @@ public class Parameter extends org.netbeans.modules.schema2beans.BaseBean
 		this.dumpAttributes(NAME, 0, str, indent);
 
 		str.append(indent);
-		str.append("Value["+this.sizeValue()+"]");	// NOI18N
+		str.append("Value[").append(this.sizeValue()).append("]");	// NOI18N
 		for(int i=0; i<this.sizeValue(); i++)
 		{
-			str.append(indent+"\t");
-			str.append("#"+i+":");
-			str.append(indent+"\t");	// NOI18N
+			str.append(indent).append("\t");
+			str.append("#").append(i).append(":");
+			str.append(indent).append("\t");	// NOI18N
 			str.append("<");	// NOI18N
 			s = this.getValue(i);
 			str.append((s==null?"null":s.trim()));	// NOI18N

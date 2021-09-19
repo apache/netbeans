@@ -199,11 +199,11 @@ public class SmapResolver {
         int spaceIndex = 0;
         if ((token != null) && (token.startsWith("+"))) {
             token = token.substring(2);
-            spaceIndex = token.indexOf(" ");
+            spaceIndex = token.indexOf(' ');
             id = token.substring(0, spaceIndex);
             filename = token2;
         } else {
-            spaceIndex = token.indexOf(" ");
+            spaceIndex = token.indexOf(' ');
             id = token.substring(0, spaceIndex);
             filename = token.substring(spaceIndex+1);
         }
@@ -213,7 +213,7 @@ public class SmapResolver {
     /** stores line mappings into both java->jsp->java maps
      */
     private void storeLine(String token, String fileIndex) {
-        int delimIndex = token.indexOf(":");
+        int delimIndex = token.indexOf(':');
         
         String jspLine = token.substring(0, delimIndex);
         String javaLine = token.substring(delimIndex+1);
@@ -379,7 +379,7 @@ public class SmapResolver {
         String key = Integer.toString(line);
         String value = (String)java2jsp.get(key);
         if (value == null) return -1;
-        int jspline = Integer.parseInt(value.substring(0, value.indexOf("#")));
+        int jspline = Integer.parseInt(value.substring(0, value.indexOf('#')));
         return jspline;
     }
     

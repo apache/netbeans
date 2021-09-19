@@ -629,9 +629,9 @@ public class ReflectionHelper {
                 int start;
                 if (wsdlUrl.getProtocol().toLowerCase().startsWith("file")) { // NOI18N
                     start = urlPath.lastIndexOf(System.getProperty("path.separator")); // NOI18N
-                    start = (start < 0) ? urlPath.lastIndexOf("/") : start; // NOI18N
+                    start = (start < 0) ? urlPath.lastIndexOf('/') : start; // NOI18N
                 } else {
-                    start = urlPath.lastIndexOf("/"); // NOI18N
+                    start = urlPath.lastIndexOf('/'); // NOI18N
                 }
                 start = (start < 0 || start >= urlPath.length() - 1) ? 0 : start + 1;
 

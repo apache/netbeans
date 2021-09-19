@@ -616,7 +616,7 @@ public class CompletionTest extends J2eeTestCase {
     }
 
     protected String dumpToken(TokenItem tokenItem) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("<token \name='");
         sb.append(tokenItem.getTokenID().getName());
         sb.append("'>\n");

@@ -109,7 +109,7 @@ public class OptionValuePair extends org.netbeans.modules.schema2beans.BaseBean
 		String s;
 		str.append(indent);
 		str.append("OptionName");	// NOI18N
-		str.append(indent+"\t");	// NOI18N
+		str.append(indent).append("\t");	// NOI18N
 		str.append("<");	// NOI18N
 		s = this.getOptionName();
 		str.append((s==null?"null":s.trim()));	// NOI18N
@@ -118,7 +118,7 @@ public class OptionValuePair extends org.netbeans.modules.schema2beans.BaseBean
 
 		str.append(indent);
 		str.append("ConditionalValue");	// NOI18N
-		str.append(indent+"\t");	// NOI18N
+		str.append(indent).append("\t");	// NOI18N
 		str.append("<");	// NOI18N
 		s = this.getConditionalValue();
 		str.append((s==null?"null":s.trim()));	// NOI18N

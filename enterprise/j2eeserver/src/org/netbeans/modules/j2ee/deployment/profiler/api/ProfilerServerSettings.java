@@ -152,17 +152,17 @@ public final class ProfilerServerSettings {
     }
     
     public String toString() {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         buffer.append("ProfilerServerSettings [\n");   //  NOI18N
-        buffer.append("  javaPlatform: " + javaPlatform.getDisplayName() + "\n"); //  NOI18N
+        buffer.append("  javaPlatform: ").append(javaPlatform.getDisplayName()).append("\n"); //  NOI18N
         buffer.append("  jvmarg:   ");  //  NOI18N      //  NOI18N
         for (int i = 0; i < jvmArgs.length; i++) {
-            buffer.append(jvmArgs[i] + " ");    //  NOI18N
+            buffer.append(jvmArgs[i]).append(" ");    //  NOI18N
         }
         buffer.append("\n");                    //  NOI18N
         buffer.append("  env:      ");          //  NOI18N
         for (int i = 0; i < env.length; i++) {  
-            buffer.append(env[i] + " ");        //  NOI18N
+            buffer.append(env[i]).append(" ");        //  NOI18N
         }
         buffer.append("]");                     //  NOI18N
         return buffer.toString();

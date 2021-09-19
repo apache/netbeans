@@ -113,8 +113,8 @@ public abstract class FromEntityBase {
             try {
                 boolean containsFView = isInViewTag(jsfLibrariesSupport, targetComponent);
                 String managedBean = mbc.getManagedBeanProperty();
-                if (managedBean != null && managedBean.lastIndexOf(".") != -1) {
-                    managedBean = managedBean.substring(0, managedBean.lastIndexOf("."));
+                if (managedBean != null && managedBean.lastIndexOf('.') != -1) {
+                    managedBean = managedBean.substring(0, managedBean.lastIndexOf('.'));
                 }
                 Charset encoding = FileEncodingQuery.getEncoding(fo);
                 String body = expandTemplate(targetComponent, !containsFView, encoding,
@@ -190,8 +190,8 @@ public abstract class FromEntityBase {
         params.put("managedBean", managedBean); // NOI18N
         params.put("managedBeanProperty", managedBeanProperty); // NOI18N
         String entityName = entityClass;
-        if (entityName.lastIndexOf(".") != -1) {
-            entityName = entityName.substring(entityClass.lastIndexOf(".")+1);
+        if (entityName.lastIndexOf('.') != -1) {
+            entityName = entityName.substring(entityClass.lastIndexOf('.')+1);
         }
         params.put("entityName", entityName); // NOI18N
         if (jls != null) {
@@ -411,7 +411,7 @@ public abstract class FromEntityBase {
             int index, String keyType, String keyTypeFQN, TypeMirror idType) {
         if (index == 0) {
             key.append(INDENT+"String values[] = value.split(SEPARATOR_ESCAPED);\n");
-            key.append(INDENT+"key = new "+keyTypeFQN+"();\n");
+            key.append(INDENT + "key = new ").append(keyTypeFQN).append("();\n");
         }
         if (index > 0) {
             stringKey.append(INDENT+"sb.append(SEPARATOR);\n");
@@ -421,10 +421,10 @@ public abstract class FromEntityBase {
         String conversion = getConversionFromString(idType, index, keyType);
 
         if (setter != null) {
-            key.append(INDENT+"key."+setter+"("+conversion+");\n");
-            stringKey.append(INDENT+"sb.append(value.g"+setter.substring(1)+"());\n");
+            key.append(INDENT + "key.").append(setter).append("(").append(conversion).append(");\n");
+            stringKey.append(INDENT + "sb.append(value.g").append(setter.substring(1)).append("());\n");
         } else {
-            key.append(INDENT+"key = "+conversion+";\n");
+            key.append(INDENT + "key = ").append(conversion).append(";\n");
             stringKey.append(INDENT+"sb.append(value);\n");
         }
     }

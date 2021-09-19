@@ -391,9 +391,9 @@ public class TomcatModuleConfiguration implements ModuleConfiguration, ContextRo
         if (!isCorrectCP(contextPath)) {
             String ctxRoot = contextPath;
             java.util.StringTokenizer tok = new java.util.StringTokenizer(contextPath,"/"); //NOI18N
-            StringBuffer buf = new StringBuffer(); //NOI18N
+            StringBuilder buf = new StringBuilder(); //NOI18N
             while (tok.hasMoreTokens()) {
-                buf.append("/"+tok.nextToken()); //NOI18N
+                buf.append("/").append(tok.nextToken()); //NOI18N
             }
             ctxRoot = buf.toString();
             NotifyDescriptor desc = new NotifyDescriptor.Message(

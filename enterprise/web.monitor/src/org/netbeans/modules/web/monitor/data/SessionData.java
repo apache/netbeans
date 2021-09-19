@@ -150,7 +150,7 @@ public class SessionData extends BaseBean {
 	if (n != null)
 	    n.dump(str, indent + "\t"); //NOI18N
 	else
-	    str.append(indent+"\tnull"); //NOI18N
+	    str.append(indent).append("\tnull"); //NOI18N
 	this.dumpAttributes(SESSIONIN, 0, str, indent);
 
 	str.append(indent);
@@ -159,7 +159,7 @@ public class SessionData extends BaseBean {
 	if (n != null)
 	    n.dump(str, indent + "\t"); //NOI18N
 	else
-	    str.append(indent+"\tnull"); //NOI18N
+	    str.append(indent).append("\tnull"); //NOI18N
 	this.dumpAttributes(SESSIONOUT, 0, str, indent);
 
     }

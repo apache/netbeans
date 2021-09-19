@@ -412,8 +412,8 @@ public class WebActionProvider extends BaseActionProvider {
                 scNames.add(serviceClientSettings.getServiceName());
             }
 
-            StringBuffer clientDCP = new StringBuffer();//additional debug.classpath
-            StringBuffer clientWDD = new StringBuffer();//additional web.docbase.dir
+            StringBuilder clientDCP = new StringBuilder();//additional debug.classpath
+            StringBuilder clientWDD = new StringBuilder();//additional web.docbase.dir
 
             //we find all projects containg a web service
             Set<FileObject> globalPath = GlobalPathRegistry.getDefault().getSourceRoots();
@@ -452,7 +452,7 @@ public class WebActionProvider extends BaseActionProvider {
                                     if (!f.isAbsolute()) {
                                         pathTokens[i] = serverProject.getProjectDirectory().getPath() + "/" + pathTokens[i];
                                     }
-                                    clientDCP.append(pathTokens[i] + ":");
+                                    clientDCP.append(pathTokens[i]).append(":");
                                 }
                             }
 
@@ -465,7 +465,7 @@ public class WebActionProvider extends BaseActionProvider {
                                     if (!f.isAbsolute()) {
                                         pathTokens[i] = serverProject.getProjectDirectory().getPath() + "/" + pathTokens[i];
                                     }
-                                    clientWDD.append(pathTokens[i] + ":");
+                                    clientWDD.append(pathTokens[i]).append(":");
                                 }
                             }
                         }
@@ -709,7 +709,7 @@ public class WebActionProvider extends BaseActionProvider {
     }
 
     public String getCommaSeparatedGeneratedJavaFiles(FileObject[] jspFiles) {
-        StringBuffer b = new StringBuffer();
+        StringBuilder b = new StringBuilder();
         for (int i = 0; i < jspFiles.length; i++) {
             String jspRes = getJspResource(jspFiles[i]);
             if (i > 0) {
@@ -737,7 +737,7 @@ public class WebActionProvider extends BaseActionProvider {
     }
 
     public String getBuiltJspFileNamesAsPath(FileObject[] files) {
-        StringBuffer b = new StringBuffer();
+        StringBuilder b = new StringBuilder();
         for (int i = 0; i < files.length; i++) {
             String path = getBuiltJsp(files[i]).getAbsolutePath();
             if (i > 0) {

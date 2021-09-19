@@ -179,7 +179,7 @@ public final class Profile {
 
     private static String getProfileVersion(@NonNull Profile profile) {
         String profileDetails = profile.toPropertiesString();
-        int indexOfDash = profileDetails.indexOf("-");
+        int indexOfDash = profileDetails.indexOf('-');
         if (indexOfDash != -1) {
             return profileDetails.substring(0, indexOfDash);
         }
@@ -206,7 +206,7 @@ public final class Profile {
 
     private static boolean isFullProfile(@NonNull Profile profile) {
         final String profileDetails = profile.toPropertiesString();
-        if (profileDetails.indexOf("-") == -1) {
+        if (profileDetails.indexOf('-') == -1) {
             return true;
         }
         return false;

@@ -116,7 +116,7 @@ public class UrlData {
             String [] properties = data.split("[;?&:]");
             for(int i = 0; i < properties.length; i++) {
                 if(properties[i] != null && properties[i].length() > 0) {
-                    int eqIndex = properties[i].indexOf("=");
+                    int eqIndex = properties[i].indexOf('=');
                     if(eqIndex != -1) {
                         result.put(properties[i].substring(0, eqIndex), properties[i].substring(eqIndex+1));
                     } else {

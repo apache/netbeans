@@ -117,7 +117,7 @@ public class WelcomeFilesPanel extends SectionInnerPanel {
             return;
         } else {
             String[] welcomeFiles = wfList.getWelcomeFile();
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             for (int i=0;i<welcomeFiles.length;i++) {
                 if (i>0) buf.append(", ");
                 buf.append(welcomeFiles[i].trim());

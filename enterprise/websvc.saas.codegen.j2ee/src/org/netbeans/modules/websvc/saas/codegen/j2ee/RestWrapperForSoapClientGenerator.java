@@ -90,8 +90,8 @@ public class RestWrapperForSoapClientGenerator extends SoapClientRestResourceCod
                 if (parm.isHolder()) {//TODO pick the first one right now. 
                                       //Should let user pick if there are multiple OUT parameters.
                     String holderType = parm.getTypeName();
-                    int leftbracket = holderType.indexOf("<");
-                    int rightbracket = holderType.lastIndexOf(">");
+                    int leftbracket = holderType.indexOf('<');
+                    int rightbracket = holderType.lastIndexOf('>');
                     retType = holderType.substring(leftbracket + 1, rightbracket);
                     variableName = parm.getName() + ".value";
                     break;

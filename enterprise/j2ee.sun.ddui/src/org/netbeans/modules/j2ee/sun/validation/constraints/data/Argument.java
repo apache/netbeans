@@ -106,7 +106,7 @@ public class Argument extends org.netbeans.modules.schema2beans.BaseBean
 		org.netbeans.modules.schema2beans.BaseBean n;
 		str.append(indent);
 		str.append("Name");	// NOI18N
-		str.append(indent+"\t");	// NOI18N
+		str.append(indent).append("\t");	// NOI18N
 		str.append("<");	// NOI18N
 		s = this.getName();
 		str.append((s==null?"null":s.trim()));	// NOI18N
@@ -115,7 +115,7 @@ public class Argument extends org.netbeans.modules.schema2beans.BaseBean
 
 		str.append(indent);
 		str.append("Type");	// NOI18N
-		str.append(indent+"\t");	// NOI18N
+		str.append(indent).append("\t");	// NOI18N
 		str.append("<");	// NOI18N
 		s = this.getType();
 		str.append((s==null?"null":s.trim()));	// NOI18N

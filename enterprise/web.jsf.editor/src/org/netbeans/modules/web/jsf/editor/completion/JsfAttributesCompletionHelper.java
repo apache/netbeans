@@ -126,8 +126,8 @@ public class JsfAttributesCompletionHelper {
         }
 
         // complete all attributes of JSF elements
-        String prefixNs = prefix.substring(0, prefix.indexOf(":"));      // NOI18N
-        String prefixValue = prefix.substring(prefix.indexOf(":") + 1); // NOI18N
+        String prefixNs = prefix.substring(0, prefix.indexOf(':'));      // NOI18N
+        String prefixValue = prefix.substring(prefix.indexOf(':') + 1); // NOI18N
         for (String jsfComponent : mapped) {
             completeAttributes(context, result, prefixNs, htmlLibrary, jsfComponent, prefixValue);
         }

@@ -249,7 +249,7 @@ public class Utils {
                         }
                         if (!tnsFound) {
                             String qualifName = classEl.getQualifiedName().toString();
-                            int ind = qualifName.lastIndexOf(".");
+                            int ind = qualifName.lastIndexOf('.');
                             String packageName = ind>=0 ? 
                                     qualifName.substring(0,ind) : ""; //NOI18N
                             String ns = getPackageReverseOrder(packageName);
@@ -470,7 +470,7 @@ public class Utils {
             }
             if (!faultFound) {
                 String fullyQualifiedName = faultModel.getFaultType();
-                int index = fullyQualifiedName.lastIndexOf("."); //NOI18N
+                int index = fullyQualifiedName.lastIndexOf('.'); //NOI18N
                 faultModel.setName(index>=0?fullyQualifiedName.substring(index+1):fullyQualifiedName);
             }
             faults.add(faultModel);
@@ -964,7 +964,7 @@ public class Utils {
 
     private static String getPackageReverseOrder(String packageName) {
         String[] names = packageName.split("\\."); //NOI18N
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         for (int i=names.length-1 ; i >= 0 ; i--) {
             if (i<names.length-1) {
                 buf.append("."); //NOI18N

@@ -166,7 +166,7 @@ public class WSUtils {
     
     private static String readResource(InputStream is) throws IOException {
         // read the config from resource first
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         String lineSep = System.getProperty("line.separator");//NOI18N
         BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
         String line = br.readLine();
@@ -252,7 +252,7 @@ public class WSUtils {
         if (doubleSlashIndex >=0) {
             base = ns.substring(doubleSlashIndex+2);
         } else {
-            int colonIndex = ns.indexOf(":");
+            int colonIndex = ns.indexOf(':');
             if (colonIndex >=0) base = ns.substring(colonIndex+1);
         }
         StringTokenizer tokens = new StringTokenizer(base,"/"); //NOI18N
@@ -285,9 +285,9 @@ public class WSUtils {
                 for (int i=1; i<nsParts.size(); i++) {
                     packageParts.add(nsParts.get(i).toLowerCase());
                 }
-                StringBuffer buf = new StringBuffer(packageParts.get(0));
+                StringBuilder buf = new StringBuilder(packageParts.get(0));
                 for (int i=1;i<packageParts.size();i++) {
-                    buf.append("."+packageParts.get(i));
+                    buf.append(".").append(packageParts.get(i));
                 }
                 return buf.toString();
             }

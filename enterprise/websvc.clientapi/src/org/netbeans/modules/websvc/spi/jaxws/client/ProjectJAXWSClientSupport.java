@@ -272,7 +272,7 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
                                     if (model.getServices().size() > 0) {
                                         WsdlService service = model.getServices().get(0);
                                         String javaName = service.getJavaName();
-                                        int index = javaName.lastIndexOf(".");
+                                        int index = javaName.lastIndexOf('.');
                                         if (index != -1){
                                             packName = javaName.substring(0,index );
                                         } else {

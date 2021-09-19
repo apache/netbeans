@@ -77,7 +77,7 @@ public class ConvertToRestCookieImpl implements ConvertToRestCookie {
     }
 
     private String getPackageName(String implementationClass) {
-        int index = implementationClass.lastIndexOf(".");
+        int index = implementationClass.lastIndexOf('.');
         return implementationClass.substring(0, index);
     }
 

@@ -70,7 +70,7 @@ public class TransactionNode extends AbstractNode {
     // This method is incomplete, URI may need to be truncated... 
     public String getLongName() {
 
-	StringBuffer buf = new StringBuffer(method); 
+	StringBuilder buf = new StringBuilder(method); 
 	buf.append(" "); //NOI18N
 	buf.append(uri);
 	if(timestamp == null) setTimeStamp();

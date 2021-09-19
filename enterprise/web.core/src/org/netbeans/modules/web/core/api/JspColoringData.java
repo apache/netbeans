@@ -73,7 +73,7 @@ public final class JspColoringData extends PropertyChangeSupport {
     }
     
     private static String mapToString(Map m, String indent) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         Iterator it = m.keySet().iterator();
         while (it.hasNext()) {
             Object key = it.next();

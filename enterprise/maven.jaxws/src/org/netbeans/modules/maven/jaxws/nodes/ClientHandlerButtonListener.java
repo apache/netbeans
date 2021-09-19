@@ -240,7 +240,7 @@ public class ClientHandlerButtonListener implements ActionListener {
                         String className = (String) tableModel.getValueAt(i, 0);
                         BindingsHandler handler = factory.createHandler();
 
-                        String handlerName = className.substring(className.indexOf(".") + 1);
+                        String handlerName = className.substring(className.indexOf('.') + 1);
                         BindingsHandlerName name = factory.createHandlerName();
                         name.setHandlerName(handlerName);
                         handler.setHandlerName(name);

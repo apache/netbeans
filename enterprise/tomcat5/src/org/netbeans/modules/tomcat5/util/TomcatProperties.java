@@ -712,7 +712,7 @@ public class TomcatProperties {
     }
     
     public void setOpenContextLogOnRun(boolean val) {
-        ip.setProperty(PROP_OPEN_LOG, Boolean.valueOf(val).toString());
+        ip.setProperty(PROP_OPEN_LOG, Boolean.toString(val));
     }
     
     public boolean getOpenContextLogOnRun() {

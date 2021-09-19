@@ -101,12 +101,12 @@ public class TagHandlerGenerator {
     }
 
     private MethodTree addBodyEvaluatorCheck(boolean evaluateBody, TreeMaker make) throws IOException {        
-        StringBuffer methodBody = new StringBuffer();
+        StringBuilder methodBody = new StringBuilder();
         methodBody.append("{"); //NOI18N
         methodBody.append("\n        // TODO: code that determines whether the body should be"); //NOI18N
         methodBody.append("\n        //       evaluated should be placed here."); //NOI18N
         methodBody.append("\n        //       Called from the doStartTag() method."); //NOI18N
-        methodBody.append("\nreturn " + (evaluateBody ? "true;" : "false;")); //NOI18N
+        methodBody.append("\nreturn ").append(evaluateBody ? "true;" : "false;"); //NOI18N
         methodBody.append("\n}"); //NOI18N
         
         MethodTree method = make.Method(

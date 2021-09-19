@@ -167,7 +167,7 @@ public class PositionBoundsResolver {
      * Reads the given stream.
      */
     private String readResource(InputStream stream){
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         String lineSep = System.getProperty("line.separator");//NO18N
         BufferedReader reader = null;
         try {

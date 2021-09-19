@@ -132,8 +132,8 @@ public class WsdlWrapperGenerator {
     
     public static String getWrapperName(URL wsdlURL) {
         String urlString = wsdlURL.toExternalForm();
-        int start = urlString.lastIndexOf("/"); //NOI18N
-        int end = urlString.lastIndexOf("."); //NOI18N
+        int start = urlString.lastIndexOf('/'); //NOI18N
+        int end = urlString.lastIndexOf('.'); //NOI18N
         if (start>=0) {
             if (start<end) return urlString.substring(start+1,end)+"Wrapper.wsdl"; //NOI18N
             else if (start+1<urlString.length()) return urlString.substring(start+1)+"Wrapper.wsdl"; //NOI18N

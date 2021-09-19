@@ -143,7 +143,7 @@ public class Element extends org.netbeans.modules.schema2beans.BaseBean
 		org.netbeans.modules.schema2beans.BaseBean n;
 		str.append(indent);
 		str.append("Name");	// NOI18N
-		str.append(indent+"\t");	// NOI18N
+		str.append(indent).append("\t");	// NOI18N
 		str.append("<");	// NOI18N
 		s = this.getName();
 		str.append((s==null?"null":s.trim()));	// NOI18N
@@ -151,16 +151,16 @@ public class Element extends org.netbeans.modules.schema2beans.BaseBean
 		this.dumpAttributes(NAME, 0, str, indent);
 
 		str.append(indent);
-		str.append("Check["+this.sizeCheck()+"]");	// NOI18N
+		str.append("Check[").append(this.sizeCheck()).append("]");	// NOI18N
 		for(int i=0; i<this.sizeCheck(); i++)
 		{
-			str.append(indent+"\t");
-			str.append("#"+i+":");
+			str.append(indent).append("\t");
+			str.append("#").append(i).append(":");
 			n = (org.netbeans.modules.schema2beans.BaseBean) this.getCheck(i);
 			if (n != null)
 				n.dump(str, indent + "\t");	// NOI18N
 			else
-				str.append(indent+"\tnull");	// NOI18N
+				str.append(indent).append("\tnull");	// NOI18N
 			this.dumpAttributes(CHECK, i, str, indent);
 		}
 

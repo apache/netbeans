@@ -211,7 +211,7 @@ public class JaxWsClientChildren extends Children.Keys<WsdlService> {
                             String oldPkgName = client.getPackageName();
                             if (wsdlService != null && !client.isPackageNameForceReplace()) {
                                 String javaName = wsdlService.getJavaName();
-                                int dotPosition = javaName.lastIndexOf(".");
+                                int dotPosition = javaName.lastIndexOf('.');
                                 if (dotPosition >= 0) {
                                     String newPkgName = javaName.substring(0, dotPosition);
                                     if ((oldPkgName == null && newPkgName != null) || (!oldPkgName.equals(newPkgName))) {

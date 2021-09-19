@@ -461,7 +461,7 @@ public final class ClientSideDevelopmentSupport implements
     }
 
     private static String truncatePathForSessionId(String name) {
-        int semicolonOffset = name.indexOf(";"); //NOI18N
+        int semicolonOffset = name.indexOf(';'); //NOI18N
         if (semicolonOffset == -1) {
             return name;
         } else {

@@ -242,7 +242,7 @@ public class TemplateClientIterator implements TemplateWizard.Iterator {
     }
     
     private String createDefineTags(Collection<String> data, int indent) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         final String basicIndent = "    ";
         
         for (String temp : data) {

@@ -170,8 +170,8 @@ public class BrokenDatasourceSupport {
         }
         
         if (jdbcResourceUrl.contains("derby")) {
-            int lastIndexOfColon = jdbcResourceUrl.lastIndexOf(":");
-            int lastIndexOfSlash = jdbcResourceUrl.lastIndexOf("/");
+            int lastIndexOfColon = jdbcResourceUrl.lastIndexOf(':');
+            int lastIndexOfSlash = jdbcResourceUrl.lastIndexOf('/');
             
             if (lastIndexOfColon >= 0 && lastIndexOfSlash >= 0) {
                 String newJdbcResourceUrl = jdbcResourceUrl.substring(0, lastIndexOfColon) + jdbcResourceUrl.substring(lastIndexOfSlash);

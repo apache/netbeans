@@ -136,8 +136,8 @@ class Wadl2JavaHelper {
     static Pair<String> getParamList(List<String> requiredParams, 
             Map<String,String> fixedParams, SecurityParams securityParams) 
     {
-        StringBuffer paramNames = new StringBuffer();
-        StringBuffer paramValues = new StringBuffer();
+        StringBuilder paramNames = new StringBuilder();
+        StringBuilder paramValues = new StringBuilder();
         boolean first = true;
         for (String p : requiredParams) {
             if (!isSignatureParam(p, securityParams)) {
@@ -147,7 +147,7 @@ class Wadl2JavaHelper {
                     paramNames.append(",");
                     paramValues.append(",");
                 }
-                paramNames.append("\""+p+"\"");
+                paramNames.append("\"").append(p).append("\"");
                 if (isSecurityParam(p, securityParams)) {
                     paramValues.append(findGetterForParam(p, securityParams.getMethodDescriptors()));
                 } else {
@@ -164,11 +164,11 @@ class Wadl2JavaHelper {
                     paramValues.append(",");
 
                 }
-                paramNames.append("\""+p+"\"");
+                paramNames.append("\"").append(p).append("\"");
                 if (isSecurityParam(p, securityParams)) {
                     paramValues.append(findGetterForParam(p, securityParams.getMethodDescriptors()));
                 } else {
-                    paramValues.append("\""+fixedParams.get(p)+"\"");
+                    paramValues.append("\"").append(fixedParams.get(p)).append("\"");
                 }
 
             }

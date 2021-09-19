@@ -221,7 +221,7 @@ public final class MessageGenerator {
     }
 
     private static String getPhysicalName(String jndiName) {
-        int lastSlashIndex = jndiName.lastIndexOf("/"); //NOI18N
+        int lastSlashIndex = jndiName.lastIndexOf('/'); //NOI18N
         if (lastSlashIndex == -1) {
             return jndiName;
         } else {

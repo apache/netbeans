@@ -1389,7 +1389,7 @@ private void saasBrowse(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saasB
         FileObject projectDir = project.getProjectDirectory();
         File projectDirFile = FileUtil.toFile(projectDir);
         String path = projectDirFile.getAbsolutePath();
-        int index = path.indexOf(" ");
+        int index = path.indexOf(' ');
         return index != -1;
     }
     

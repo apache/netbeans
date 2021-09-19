@@ -184,7 +184,7 @@ public class Util {
      * Returns the simple class for the passed fully-qualified class name.
      */
     public static String getClassName(String fqClassName) {
-        int dot = fqClassName.lastIndexOf("."); // NOI18N
+        int dot = fqClassName.lastIndexOf('.'); // NOI18N
         if (dot >= 0 && dot < fqClassName.length() - 1) {
             return fqClassName.substring(dot + 1);
         } else {
@@ -196,7 +196,7 @@ public class Util {
      * Returns the package name of the passed fully-qualified class name.
      */
     public static String getPackageName(String fqClassName) {
-        int dot = fqClassName.lastIndexOf("."); // NOI18N
+        int dot = fqClassName.lastIndexOf('.'); // NOI18N
         if (dot >= 0 && dot < fqClassName.length() - 1) {
             return fqClassName.substring(0, dot);
         } else {

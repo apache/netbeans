@@ -207,7 +207,7 @@ public class ProxySettings {
                 return ""; // NOI18N
             }
 
-            int i = systemProxy.lastIndexOf (":"); // NOI18N
+            int i = systemProxy.lastIndexOf (':'); // NOI18N
             if (i <= 0 || i >= systemProxy.length () - 1) {
                 return ""; // NOI18N
             }
@@ -221,7 +221,7 @@ public class ProxySettings {
                 return ""; // NOI18N
              }
 
-            int i = systemProxy.lastIndexOf (":"); // NOI18N
+            int i = systemProxy.lastIndexOf (':'); // NOI18N
             if (i <= 0 || i >= systemProxy.length () - 1) {
                 return ""; // NOI18N
             }
@@ -244,7 +244,7 @@ public class ProxySettings {
                 return ""; // NOI18N
             }
 
-            int i = systemProxy.lastIndexOf (":"); // NOI18N
+            int i = systemProxy.lastIndexOf (':'); // NOI18N
             if (i <= 0 || i >= systemProxy.length () - 1) {
                 return ""; // NOI18N
             }
@@ -258,7 +258,7 @@ public class ProxySettings {
                 return ""; // NOI18N
              }
 
-            int i = systemProxy.lastIndexOf (":"); // NOI18N
+            int i = systemProxy.lastIndexOf (':'); // NOI18N
             if (i <= 0 || i >= systemProxy.length () - 1) {
                 return ""; // NOI18N
             }

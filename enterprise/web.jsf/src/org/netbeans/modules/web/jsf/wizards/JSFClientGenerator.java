@@ -443,10 +443,10 @@ public class JSFClientGenerator {
             
             String find = "<h1><h:outputText value=\"JavaServer Faces\"/></h1>"; //NOI18N
             if ( content.indexOf(find) > -1){
-                StringBuffer replace = new StringBuffer();
+                StringBuilder replace = new StringBuilder();
                 replace.append(find);
                 replace.append(endLine);
-                StringBuffer replaceCrux = new StringBuffer();
+                StringBuilder replaceCrux = new StringBuilder();
                 replaceCrux.append("    <br/>");                        //NOI18N
                 replaceCrux.append(endLine);
                 String managedBeanName = getManagedBeanName(simpleEntityName);
@@ -505,7 +505,7 @@ public class JSFClientGenerator {
             }
 
             if ( isFound ){
-                StringBuffer replace = new StringBuffer();
+                StringBuilder replace = new StringBuilder();
                 String managedBeanName = getManagedBeanName(simpleEntityName);
                 String commandLink = "";
                 if (pageLink == null || "".equals(pageLink)) {
@@ -974,7 +974,7 @@ public class JSFClientGenerator {
         }, true);
         
         String controllerReferenceName = controllerClass;
-        StringBuffer getAsObjectBody = new StringBuffer();
+        StringBuilder getAsObjectBody = new StringBuilder();
         getAsObjectBody.append("if (string == null || string.length() == 0) {\n return null;\n }\n");
 
         String controllerVariable;
@@ -990,12 +990,10 @@ public class JSFClientGenerator {
                     + managedBeanName + "\");\n";
         }
         if (embeddable[0]) {
-            getAsObjectBody.append(idPropertyType[0] + " id = getId(string);\n");
-            getAsObjectBody.append(controllerVariable + "\n return controller.getJpaController().find" + (useSessionBean ? "" : simpleEntityName) + "(id);");
+            getAsObjectBody.append(idPropertyType[0]).append(" id = getId(string);\n");
+            getAsObjectBody.append(controllerVariable).append("\n return controller.getJpaController().find").append(useSessionBean ? "" : simpleEntityName).append("(id);");
         } else {
-            getAsObjectBody.append(createIdFieldDeclaration(idPropertyType[0], "string") + "\n"
-                    + controllerVariable
-                    + "\n return controller.getJpaController().find" + (useSessionBean ? "" : simpleEntityName) + "(id);");
+            getAsObjectBody.append(createIdFieldDeclaration(idPropertyType[0], "string")).append("\n").append(controllerVariable).append("\n return controller.getJpaController().find").append(useSessionBean ? "" : simpleEntityName).append("(id);");
         }
         
         final MethodModel getAsObject = MethodModel.create(
@@ -1016,45 +1014,21 @@ public class JSFClientGenerator {
             getIdBody = new StringBuffer();
             int params = paramSetters.size();
             if(params > 0){
-                getIdBody.append(idPropertyType[0] + " id = new " + idPropertyType[0] + "();\n");
+                getIdBody.append(idPropertyType[0]).append(" id = new ").append(idPropertyType[0]).append("();\n");
             }
             else {
-                getIdBody.append(idPropertyType[0] + " id;\n");//do not initialize, user need to update code and may be use not default constructor
+                getIdBody.append(idPropertyType[0]).append(" id;\n");//do not initialize, user need to update code and may be use not default constructor
             }
 
-            getIdBody.append("String params[] = new String[" + params + "];\n" +
-                    "int p = 0;\n" +
-                    "int grabStart = 0;\n" +
-                    "String delim = \"#\";\n" +
-                    "String escape = \"~\";\n" +
-                    "Pattern pattern = Pattern.compile(escape + \"*\" + delim);\n" +
-                    "Matcher matcher = pattern.matcher(string);\n" +
-                    "while (matcher.find()) {\n" +
-                    "String found = matcher.group();\n" +
-                    "if (found.length() % 2 == 1) {\n" +
-                    "params[p] = string.substring(grabStart, matcher.start());\n" +
-                    "p++;\n" +
-                    "grabStart = matcher.end();\n" +
-                    "}\n" +
-                    "}\n" +
-                    "if (p != params.length - 1) {\n" +
-                    "throw new IllegalArgumentException(\"string \" + string + \" is not in expected format. expected " + params + " ids delimited by \" + delim);\n" +
-                    "}\n" +
-                    "params[p] = string.substring(grabStart);\n" +
-                    "for (int i = 0; i < params.length; i++) {\n" +
-                    "params[i] = params[i].replace(escape + delim, delim);\n" +
-                    "params[i] = params[i].replace(escape + escape, escape);\n" +
-                    "}\n\n"
-                    );
+            getIdBody.append("String params[] = new String[").append(params).append("];\nint p = 0;\nint grabStart = 0;\nString delim = \"#\";\nString escape = \"~\";\nPattern pattern = Pattern.compile(escape + \"*\" + delim);\nMatcher matcher = pattern.matcher(string);\nwhile (matcher.find()) {\nString found = matcher.group();\nif (found.length() % 2 == 1) {\nparams[p] = string.substring(grabStart, matcher.start());\np++;\ngrabStart = matcher.end();\n}\n}\nif (p != params.length - 1) {\nthrow new IllegalArgumentException(\"string \" + string + \" is not in expected format. expected ").append(params).append(" ids delimited by \" + delim);\n}\nparams[p] = string.substring(grabStart);\nfor (int i = 0; i < params.length; i++) {\nparams[i] = params[i].replace(escape + delim, delim);\nparams[i] = params[i].replace(escape + escape, escape);\n}\n\n");
             for (int i = 0; i < paramSetters.size(); i++) {
                 MethodModel setter = paramSetters.get(i);
                 String type = setter.getParameters().get(0).getType();
-                getIdBody.append("id." + setter.getName() + "("
-                        + createIdFieldInitialization(type, "params[" + i + "]") + ");\n");
+                getIdBody.append("id.").append(setter.getName()).append("(").append(createIdFieldInitialization(type, "params[" + i + "]")).append(");\n");
             }
             
             if( params==0) {
-                     getIdBody.append(NbBundle.getMessage(JSFClientGenerator.class, "ERR_NO_SETTERS_CONVERTER", new String[]{INDENT, idPropertyType[0], "getId()"})+"\n");//NOI18N;
+                getIdBody.append(NbBundle.getMessage(JSFClientGenerator.class, "ERR_NO_SETTERS_CONVERTER", new String[]{INDENT, idPropertyType[0], "getId()"})).append("\n");//NOI18N;
             }
             getIdBody.append("return id;\n");
         }
@@ -1071,18 +1045,10 @@ public class JSFClientGenerator {
                 ) : null;
 
         String entityReferenceName = entityClass;
-        StringBuffer getAsStringBody = new StringBuffer();
-        getAsStringBody.append("if (object == null) {\n return null;\n }\n"
-                + "if(object instanceof " + entityReferenceName + ") {\n"
-                + entityReferenceName + " o = (" + entityReferenceName +") object;\n");
+        StringBuilder getAsStringBody = new StringBuilder();
+        getAsStringBody.append("if (object == null) {\n return null;\n }\nif(object instanceof ").append(entityReferenceName).append(") {\n").append(entityReferenceName).append(" o = (").append(entityReferenceName).append(") object;\n");
         if (embeddable[0]) {
-            getAsStringBody.append(idPropertyType[0] + " id  = o." + idGetterName[0] + "();\n" +
-                    "if (id == null) {\n" +
-                    "return \"\";\n" +
-                    "}\n" +
-                    "String delim = \"#\";\n" +
-                    "String escape = \"~\";\n\n"               
-                    );
+            getAsStringBody.append(idPropertyType[0]).append(" id  = o.").append(idGetterName[0]).append("();\nif (id == null) {\nreturn \"\";\n}\nString delim = \"#\";\nString escape = \"~\";\n\n");
             for(int i = 0; i < paramSetters.size(); i++) {
                 MethodModel setter = paramSetters.get(i);
                 String propName = JpaControllerUtil.getPropNameFromMethod(setter.getName());
@@ -1091,21 +1057,19 @@ public class JSFClientGenerator {
                 boolean isPrimitive = "boolean".equals(type) || "char".equals(type) ||
                         "double".equals(type) || "float".equals(type) || "int".equals(type) || "long".equals(type);
                 if (isString) {
-                    getAsStringBody.append("String " + propName + " = id.g" + setter.getName().substring(1) + "();\n");
+                    getAsStringBody.append("String ").append(propName).append(" = id.g").append(setter.getName().substring(1)).append("();\n");
                 }
                 else if (isPrimitive) {
-                    getAsStringBody.append("String " + propName + " = String.valueOf(id.g" + setter.getName().substring(1) + "());\n");
+                    getAsStringBody.append("String ").append(propName).append(" = String.valueOf(id.g").append(setter.getName().substring(1)).append("());\n");
                 }
                 else {
-                    getAsStringBody.append("Object " + propName + "Obj = id.g" + setter.getName().substring(1) + "();\n" +
-                            "String " + propName + " = " + propName + "Obj == null ? \"\" : String.valueOf(" + propName + "Obj);\n");
+                    getAsStringBody.append("Object ").append(propName).append("Obj = id.g").append(setter.getName().substring(1)).append("();\nString ").append(propName).append(" = ").append(propName).append("Obj == null ? \"\" : String.valueOf(").append(propName).append("Obj);\n");
                 }
-                getAsStringBody.append(propName + " = ");
+                getAsStringBody.append(propName).append(" = ");
                 if (isString) {
-                    getAsStringBody.append(propName + " == null ? \"\" : ");
+                    getAsStringBody.append(propName).append(" == null ? \"\" : ");
                 }
-                getAsStringBody.append(propName + ".replace(escape, escape + escape);\n" +
-                        propName + " = " + propName + ".replace(delim, escape + delim);\n");
+                getAsStringBody.append(propName).append(".replace(escape, escape + escape);\n").append(propName).append(" = ").append(propName).append(".replace(delim, escape + delim);\n");
             }
             getAsStringBody.append("return ");
             for(int i = 0; i < paramSetters.size(); i++) {
@@ -1117,17 +1081,16 @@ public class JSFClientGenerator {
                 getAsStringBody.append(propName);
             }
             getAsStringBody.append(";\n");
-            getAsStringBody.append(NbBundle.getMessage(JSFClientGenerator.class, "ERR_NO_SETTERS_CONVERTER", new String[]{INDENT, idPropertyType[0], "getAsString()"})+"\n");//NOI18N;
+            getAsStringBody.append(NbBundle.getMessage(JSFClientGenerator.class, "ERR_NO_SETTERS_CONVERTER", new String[]{INDENT, idPropertyType[0], "getAsString()"})).append("\n");//NOI18N;
         } else {
             String oDotGetId = "o." + idGetterName[0] + "()";
             if (isPrimitiveIdPropertyType[0]) {
-                getAsStringBody.append("return String.valueOf(" + oDotGetId + ");\n");
+                getAsStringBody.append("return String.valueOf(").append(oDotGetId).append(");\n");
             } else {
-                getAsStringBody.append("return " + oDotGetId + " == null ? \"\" : " + oDotGetId + ".toString();\n");
+                getAsStringBody.append("return ").append(oDotGetId).append(" == null ? \"\" : ").append(oDotGetId).append(".toString();\n");
             }
         }
-        getAsStringBody.append("} else {\n"
-                + "throw new IllegalArgumentException(\"object \" + object + \" is of type \" + object.getClass().getName() + \"; expected type: " + entityClass +"\");\n}");
+        getAsStringBody.append("} else {\nthrow new IllegalArgumentException(\"object \" + object + \" is of type \" + object.getClass().getName() + \"; expected type: ").append(entityClass).append("\");\n}");
         
 
         final MethodModel getAsString = MethodModel.create(
@@ -1391,21 +1354,21 @@ public class JSFClientGenerator {
                     
                     
                     TypeElement entityType = workingCopy.getElements().getTypeElement(entityClass);
-                    StringBuffer codeToPopulatePkFields = new StringBuffer();
+                    StringBuilder codeToPopulatePkFields = new StringBuilder();
                     if (embeddable[0]) {
                         Set<ExecutableElement> methods = embeddedPkSupport.getPkAccessorMethods(entityType);
                         boolean missedSetters = true;
                         for (ExecutableElement pkMethod : methods) {
                             if (embeddedPkSupport.isRedundantWithRelationshipField(entityType, pkMethod)) {
-                                codeToPopulatePkFields.append(fieldName + "." +idGetterName[0] + "().s" + pkMethod.getSimpleName().toString().substring(1) + "(" +  //NOI18N
-                                    fieldName + "." + embeddedPkSupport.getCodeToPopulatePkField(entityType, pkMethod) + ");\n");
+                                codeToPopulatePkFields.append(fieldName).append(".").append(idGetterName[0]).append("().s").append(pkMethod.getSimpleName().toString().substring(1)).append("(").append(//NOI18N
+                                        fieldName).append(".").append(embeddedPkSupport.getCodeToPopulatePkField(entityType, pkMethod)).append(");\n");
                                 if(!embeddedPkSupport.getPkSetterMethodExist(entityType, pkMethod)) {
                                     missedSetters = false;
                                 }
                             }
                         }
                         if(missedSetters){
-                            codeToPopulatePkFields.append(NbBundle.getMessage(JSFClientGenerator.class, "ERR_NO_SETTERS_CONTROLLER", new String[]{INDENT, idPropertyType[0]})+"\n");//NOI18N;
+                            codeToPopulatePkFields.append(NbBundle.getMessage(JSFClientGenerator.class, "ERR_NO_SETTERS_CONTROLLER", new String[]{INDENT, idPropertyType[0]})).append("\n");//NOI18N;
                         }
                     }
 

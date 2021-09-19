@@ -951,7 +951,7 @@ public final class ConfigSupportImpl implements J2eeModuleProvider.ConfigSupport
         relativePaths = new HashMap();
         if (hasCustomSupport()) {
             String [] paths = server.getDeploymentPlanFiles(getModuleType());
-            configurationPrimaryFileName = paths[0].substring(paths[0].lastIndexOf("/")+1);
+            configurationPrimaryFileName = paths[0].substring(paths[0].lastIndexOf('/')+1);
         
             collectData(server, relativePaths);
         }
@@ -966,7 +966,7 @@ public final class ConfigSupportImpl implements J2eeModuleProvider.ConfigSupport
         String [] paths = server.getDeploymentPlanFiles(getModuleType());
         paths = (paths == null) ? new String[0] : paths;
         for (int i=0; i<paths.length; i++) {
-            String name = paths[i].substring(paths[i].lastIndexOf("/")+1);
+            String name = paths[i].substring(paths[i].lastIndexOf('/')+1);
             map.put(name, paths[i]);
         }        
     }

@@ -126,16 +126,16 @@ public class Parameters extends org.netbeans.modules.schema2beans.BaseBean
 		Object o;
 		org.netbeans.modules.schema2beans.BaseBean n;
 		str.append(indent);
-		str.append("Parameter["+this.sizeParameter()+"]");	// NOI18N
+		str.append("Parameter[").append(this.sizeParameter()).append("]");	// NOI18N
 		for(int i=0; i<this.sizeParameter(); i++)
 		{
-			str.append(indent+"\t");
-			str.append("#"+i+":");
+			str.append(indent).append("\t");
+			str.append("#").append(i).append(":");
 			n = (org.netbeans.modules.schema2beans.BaseBean) this.getParameter(i);
 			if (n != null)
 				n.dump(str, indent + "\t");	// NOI18N
 			else
-				str.append(indent+"\tnull");	// NOI18N
+				str.append(indent).append("\tnull");	// NOI18N
 			this.dumpAttributes(PARAMETER, i, str, indent);
 		}
 

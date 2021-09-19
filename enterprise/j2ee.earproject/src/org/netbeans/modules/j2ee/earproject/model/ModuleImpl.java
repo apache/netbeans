@@ -158,7 +158,7 @@ public class ModuleImpl implements Module {
         StringBuilder sb = new StringBuilder();
         final String newLine = System.getProperty("line.separator");
 
-        sb.append(this.getClass().getName() + " Object {");
+        sb.append(this.getClass().getName()).append(" Object {");
         sb.append(newLine);
         
         if (connector != null) {

@@ -164,7 +164,7 @@ public class ResourceImpl {
         StringBuilder sb = new StringBuilder();
         final String newLine = System.getProperty("line.separator");
 
-        sb.append(this.getClass().getName() + " Object {");
+        sb.append(this.getClass().getName()).append(" Object {");
         sb.append(newLine);
 
         sb.append(" Name: ");

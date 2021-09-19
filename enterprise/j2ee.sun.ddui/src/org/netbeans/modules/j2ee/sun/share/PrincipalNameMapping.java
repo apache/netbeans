@@ -49,7 +49,7 @@ public final class PrincipalNameMapping {
         if(className == null || className.length() == 0) {
             return principalName;
         }
-        StringBuffer buffer = new StringBuffer(principalName.length() + className.length() + 10);
+        StringBuilder buffer = new StringBuilder(principalName.length() + className.length() + 10);
         buffer.append(principalName);
         buffer.append(" [cn=");
         buffer.append(className);

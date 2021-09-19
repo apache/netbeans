@@ -219,7 +219,7 @@ public abstract class BasePanel extends JPanel {
                         pushPrefix = k.substring(0,dex);
                     }
                     String[] aRow = new String[colCount];
-                    int dex = k.lastIndexOf(".");
+                    int dex = k.lastIndexOf('.');
                     String partialKey = k.substring(0, dex);
                     aRow[0] = data.get(k);
                     for (int i = 2 ; i < colCount+1; i++) {
@@ -243,7 +243,7 @@ public abstract class BasePanel extends JPanel {
                             pushPrefix = k.substring(0, dex);
                         }
                         String[] aRow = new String[colCount];
-                        int dex = k.lastIndexOf(".");
+                        int dex = k.lastIndexOf('.');
                         String propName = k.substring(dex + 1);
                         aRow[0] = propName;
                         aRow[1] = data.get(k);

@@ -136,7 +136,7 @@ public class EnableModulesAction extends NodeAction {
             return null;
         }
         for (String target : targets) {
-            int colon = target.indexOf(":");
+            int colon = target.indexOf(':');
             if (-1 == colon) {
                 colon = target.length();
             }

@@ -219,7 +219,7 @@ public class PagesMultiViewElement extends ToolBarMultiViewElement implements ja
             if (name==null) name = NbBundle.getMessage(PagesMultiViewElement.class,"NODE_JSP_GROUP");
                 
             String[] patterns = jspGroup.getUrlPattern();
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             for (int i=0;i<patterns.length;i++) {
                 if (i>0) buf.append(", ");
                 buf.append(patterns[i]);

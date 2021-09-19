@@ -495,9 +495,9 @@ public class DDTablePanel extends JPanel
 
     private String getA11yText(java.util.List errors) {
         Object [] o = new Object [] { model.getModelName() };
-        StringBuffer buf =new StringBuffer(MessageFormat.format(bundle.getString("MSG_TableErrors"),o));
+        StringBuilder buf =new StringBuilder(MessageFormat.format(bundle.getString("MSG_TableErrors"),o));
         for (int i=0;i<errors.size();i++) {
-            buf.append("\n"+(String)errors.get(i)); //NOI18N
+            buf.append("\n").append((String)errors.get(i)); //NOI18N
         }
         return buf.toString();
     }

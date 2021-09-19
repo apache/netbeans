@@ -313,7 +313,7 @@ public class JspKit extends NbEditorKit implements org.openide.util.HelpCtx.Prov
 
     private static boolean isNewLineBeforeCaretOffset(final TokenSequence<JspTokenId> ts, final int caretOffset) {
         boolean result = false;
-        int indexOfNewLine = ts.token().text().toString().indexOf("\n"); //NOI18N
+        int indexOfNewLine = ts.token().text().toString().indexOf('\n'); //NOI18N
         if (indexOfNewLine != -1) {
             int absoluteIndexOfNewLine = ts.offset() + indexOfNewLine;
             result = caretOffset > absoluteIndexOfNewLine;

@@ -222,7 +222,7 @@ public class RequestData extends BaseBean {
 
     public String getCookieString() {
 	Param[] headers = getHeaders().getParam();
-	StringBuffer cookieStr = new StringBuffer(); 
+	StringBuilder cookieStr = new StringBuilder(); 
 	int len = headers.length;
 	for(int j=0; j<len; ++j) {
 	    if(headers[j].getName().equalsIgnoreCase(COOKIE)) { 
@@ -246,7 +246,7 @@ public class RequestData extends BaseBean {
 	while (tok.hasMoreTokens()) {
 		
 	    String token = tok.nextToken();
-	    int i = token.indexOf("="); // NOI18N
+	    int i = token.indexOf('='); // NOI18N
 	    if (i > -1) {
 			
 		String name = token.substring(0, i).trim();
@@ -281,7 +281,7 @@ public class RequestData extends BaseBean {
 		
 	    String token = tok.nextToken();
 	    if(debug) log("token is " + token); 
-	    int i = token.indexOf("="); // NOI18N
+	    int i = token.indexOf('='); // NOI18N
 	    if (i > -1) {
 
 		String name = token.substring(0, i).trim();
@@ -315,7 +315,7 @@ public class RequestData extends BaseBean {
 	    log("Adding cookie: " + ckname + " " + ckvalue); //NOI18N
 
 	// Holds the cookie header
-	StringBuffer buf = new StringBuffer();
+	StringBuilder buf = new StringBuilder();
 	
 	Param[] headers = getHeaders().getParam();
 	if(headers == null) headers = new Param[0]; 
@@ -371,7 +371,7 @@ public class RequestData extends BaseBean {
      * turns out to be a cookie. 
      */
     public int addCookie(String ckstr) { 
-	int index = ckstr.indexOf("="); 
+	int index = ckstr.indexOf('='); 
 	if(index == -1) return addCookie(ckstr, ""); 
 	else if(index == ckstr.length()-1) return addCookie(ckstr, ""); 
 	return addCookie(ckstr.substring(0,index), ckstr.substring(index+1)); 
@@ -425,7 +425,7 @@ public class RequestData extends BaseBean {
 
 	    if(debug) log(" old cookie string is " + oldCookies);//NOI18N
 		
-	    StringBuffer buf = new StringBuffer(); 
+	    StringBuilder buf = new StringBuilder(); 
 	    StringTokenizer tok = 
 		new StringTokenizer(headers[i].getValue(),
 				    ";", false); // NOI18N
@@ -433,7 +433,7 @@ public class RequestData extends BaseBean {
 	    while (tok.hasMoreTokens()) {
 		    
 		String token = tok.nextToken();
-		int j = token.indexOf("="); // NOI18N
+		int j = token.indexOf('='); // NOI18N
 		if (j > -1) {
 
 		    String name = token.substring(0, j).trim();
@@ -490,14 +490,14 @@ public class RequestData extends BaseBean {
 		return;
 	    } 
 		
-	    StringBuffer buf = new StringBuffer();
+	    StringBuilder buf = new StringBuilder();
 	    StringTokenizer tok = new StringTokenizer(headers[i].getValue(),
 						      ";", false); // NOI18N
 	    
 	    while (tok.hasMoreTokens()) {
 		    
 		String token = tok.nextToken();
-		int j = token.indexOf("="); // NOI18N
+		int j = token.indexOf('='); // NOI18N
 		if (j > -1) {
 
 		    String name = token.substring(0, j).trim();
@@ -604,20 +604,20 @@ public class RequestData extends BaseBean {
 	if (n != null)
 	    n.dump(str, indent + "\t"); //NOI18N
 	else
-	    str.append(indent+"\tnull"); //NOI18N
+	    str.append(indent).append("\tnull"); //NOI18N
 	this.dumpAttributes(HEADERS, 0, str, indent);
 
 	str.append(indent);
-	str.append("Param["+this.sizeParam()+"]");  //NOI18N
+	str.append("Param[").append(this.sizeParam()).append("]");  //NOI18N
 	for(int i=0; i<this.sizeParam(); i++)
 	    {
-		str.append(indent+"\t"); //NOI18N
-		str.append("#"+i+":"); //NOI18N
+		str.append(indent).append("\t"); //NOI18N
+		str.append("#").append(i).append(":"); //NOI18N
 		n = this.getParam(i);
 		if (n != null)
 		    n.dump(str, indent + "\t"); //NOI18N
 		else
-		    str.append(indent+"\tnull"); //NOI18N
+		    str.append(indent).append("\tnull"); //NOI18N
 		this.dumpAttributes(PARAM, i, str, indent);
 	    }
 

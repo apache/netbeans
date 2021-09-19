@@ -326,7 +326,7 @@ public class ELTestBase extends CslTestBase {
             sourceLine = getSourceWindow(text, caretOffset);
         }
         sb.append(sourceLine);
-        sb.append("\n(QueryType=" + type + ", prefixSearch=" + prefixSearch + ", caseSensitive=" + caseSensitive + ")");
+        sb.append("\n(QueryType=").append(type).append(", prefixSearch=").append(prefixSearch).append(", caseSensitive=").append(caseSensitive).append(")");
         sb.append("\n");
 
         // Sort to make test more stable

@@ -305,7 +305,7 @@ public abstract class AbstractMethodController extends EjbMethodController {
     }
     
     private String chopAndUpper(String fullName, String chop) {
-        StringBuffer stringBuffer = new StringBuffer(fullName);
+        StringBuilder stringBuffer = new StringBuilder(fullName);
         stringBuffer.delete(0, chop.length());
         stringBuffer.setCharAt(0, Character.toLowerCase(stringBuffer.charAt(0)));
         return stringBuffer.toString();

@@ -118,7 +118,7 @@ public class Utils {
         if (fo != null) {
             return fo.getNameExt();
         }
-        return (url == null) ? null : url.toString();
+        return (url == null) ? null : url;
     }
     
     public static String getJspPath(String url) {       

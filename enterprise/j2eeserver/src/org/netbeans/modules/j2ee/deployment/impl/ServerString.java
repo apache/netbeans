@@ -110,7 +110,7 @@ public class ServerString implements java.io.Serializable {
 
     @Override
     public String toString() {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         buffer.append("Server ").append(plugin); // NOI18N
         buffer.append(" Instance ").append(instance); // NOI18N
         if (/*targets == null || */targets.length == 0) {

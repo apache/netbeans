@@ -82,7 +82,7 @@ public class MessageArea extends JLabel {
     }
 
     private void makeEntireMsg () {
-	StringBuffer sbuf = new StringBuffer 
+	StringBuilder sbuf = new StringBuilder 
 				("<html><table width=\"" + width + "\"><tr>");	// NOI18N
 	if (fontString != null) {
 	    sbuf.append (fontString);
@@ -135,7 +135,7 @@ public class MessageArea extends JLabel {
     }
 
     private String toHex (int i) {
-	StringBuffer sbuf = new StringBuffer ();
+	StringBuilder sbuf = new StringBuilder ();
         int val = i / 16;
         if (val > 10) {   
             sbuf.append (hexVals [val - 10]);     
@@ -193,7 +193,7 @@ public class MessageArea extends JLabel {
     }
 
     private void makeFontString (Font f, Color c) {	// BEGIN_NOI18N
-	StringBuffer sbuf = new StringBuffer ("<font");
+	StringBuilder sbuf = new StringBuilder ("<font");
 	if (f != null) {
 	    sbuf.append (" face=");
 	    sbuf.append (f.getName ());
@@ -231,11 +231,11 @@ public class MessageArea extends JLabel {
 	    bulletItemString = null;
 	}
 
-	StringBuffer sbuf = new StringBuffer ();
+	StringBuilder sbuf = new StringBuilder ();
 	sbuf.append ("<ul>");	// NOI18N
 	for (int i = 0; i < bulletItems.size (); i++) {
 	    String s = (String) bulletItems.elementAt (i);
-	    sbuf.append ("<li>" + s + "</li>");	// NOI18N
+            sbuf.append("<li>").append(s).append ("</li>");	// NOI18N
 	}
 	
 	sbuf.append ("</ul>");	// NOI18N

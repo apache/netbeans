@@ -194,8 +194,8 @@ public class RestWrapperForSoapGenerator {
                     //Should let user pick if there are multiple OUT parameters.
 
                     String holderType = parm.getTypeName();
-                    int leftbracket = holderType.indexOf("<");
-                    int rightbracket = holderType.lastIndexOf(">");
+                    int leftbracket = holderType.indexOf('<');
+                    int rightbracket = holderType.lastIndexOf('>');
                     retType = holderType.substring(leftbracket + 1, rightbracket);
 
                     break;
@@ -231,7 +231,7 @@ public class RestWrapperForSoapGenerator {
             comment.append("@return an instance of ");      //NOI18N
             comment.append( retType);
         }
-        int index = methodAnnotations[0].lastIndexOf(".");
+        int index = methodAnnotations[0].lastIndexOf('.');
         String methodPrefix = methodAnnotations[0].substring(index + 1).toLowerCase();
         return JavaSourceHelper.addMethod(copy, tree,
                 modifiers, methodAnnotations, methodAnnotationAttrs,
@@ -427,7 +427,7 @@ public class RestWrapperForSoapGenerator {
     }
 
     private String getReturnTypeQName(String returnTypeName) {
-        int index = returnTypeName.lastIndexOf(".");
+        int index = returnTypeName.lastIndexOf('.');
         String packageName = returnTypeName.substring(0, index);
         StringTokenizer tokenizer = new StringTokenizer(packageName, ".");
         int tokens = tokenizer.countTokens();
@@ -435,7 +435,7 @@ public class RestWrapperForSoapGenerator {
         while (tokenizer.hasMoreTokens()) {
             inverted[--tokens] = tokenizer.nextToken();
         }
-        StringBuffer namespace = new StringBuffer();
+        StringBuilder namespace = new StringBuilder();
         for (int i = 0; i < inverted.length; i++) {
             namespace.append(inverted[i]);
             if (i < inverted.length - 1) {
@@ -478,7 +478,7 @@ public class RestWrapperForSoapGenerator {
         String portGetterMethod = port.getPortGetter();
         List<WsdlParameter> arguments = operation.getParameters();
         String returnTypeName = operation.getReturnTypeName();
-        StringBuffer argumentBuffer = new StringBuffer();
+        StringBuilder argumentBuffer = new StringBuilder();
 
         int i = 0;
         for (WsdlParameter argument : arguments) {
@@ -596,7 +596,7 @@ public class RestWrapperForSoapGenerator {
         if (word.length() == 0) {
             return word;
         }
-        StringBuffer sb = new StringBuffer(word.length());
+        StringBuilder sb = new StringBuilder(word.length());
         if (flag) {
             sb.append(Character.toLowerCase(word.charAt(0)));
         } else {
@@ -665,7 +665,7 @@ public class RestWrapperForSoapGenerator {
     }
 
     private String getPackageFromJava(String seiClass) {
-        int index = seiClass.lastIndexOf(".");
+        int index = seiClass.lastIndexOf('.');
         return index > 0 ? seiClass.substring(0,index) : "";
     }
 }

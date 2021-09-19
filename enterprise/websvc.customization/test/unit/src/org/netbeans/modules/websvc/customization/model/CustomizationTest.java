@@ -251,7 +251,7 @@ public class CustomizationTest extends TestCase {
 	Document sd = new org.netbeans.editor.BaseDocument(
             org.netbeans.modules.xml.text.syntax.XMLKit.class, false);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        StringBuffer sbuf = new StringBuffer();
+        StringBuilder sbuf = new StringBuilder();
         try {
             String line = null;
             while ((line = br.readLine()) != null) {

@@ -156,7 +156,7 @@ public class Xmltype extends org.netbeans.modules.schema2beans.BaseBean
 		org.netbeans.modules.schema2beans.BaseBean n;
 		str.append(indent);
 		str.append("Name");	// NOI18N
-		str.append(indent+"\t");	// NOI18N
+		str.append(indent).append("\t");	// NOI18N
 		str.append("<");	// NOI18N
 		o = this.getName();
 		str.append((o==null?"null":o.toString().trim()));	// NOI18N
@@ -164,16 +164,16 @@ public class Xmltype extends org.netbeans.modules.schema2beans.BaseBean
 		this.dumpAttributes(NAME, 0, str, indent);
 
 		str.append(indent);
-		str.append("ModElement["+this.sizeModElement()+"]");	// NOI18N
+		str.append("ModElement[").append(this.sizeModElement()).append("]");	// NOI18N
 		for(int i=0; i<this.sizeModElement(); i++)
 		{
-			str.append(indent+"\t");
-			str.append("#"+i+":");
+			str.append(indent).append("\t");
+			str.append("#").append(i).append(":");
 			n = (org.netbeans.modules.schema2beans.BaseBean) this.getModElement(i);
 			if (n != null)
 				n.dump(str, indent + "\t");	// NOI18N
 			else
-				str.append(indent+"\tnull");	// NOI18N
+				str.append(indent).append("\tnull");	// NOI18N
 			this.dumpAttributes(MOD_ELEMENT, i, str, indent);
 		}
 

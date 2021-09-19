@@ -228,7 +228,7 @@ public class Utils {
     }
 
     public static void createLibrary(String name, String[] jars, String[] srcs, String[] javadocs) {
-        if ((name == null) || (name.indexOf(" ") > -1)) {
+        if ((name == null) || (name.indexOf(' ') > -1)) {
             throw new IllegalArgumentException("Name cannot be null nor contain spaces");
         }
         if (jars == null) {

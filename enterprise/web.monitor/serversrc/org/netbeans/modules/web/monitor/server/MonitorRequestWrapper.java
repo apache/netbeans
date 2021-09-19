@@ -536,7 +536,7 @@ public class MonitorRequestWrapper extends HttpServletRequestWrapper {
 	} 
 
 	// Used to create the cookie header
-	StringBuffer cookieBuf = new StringBuffer();
+	StringBuilder cookieBuf = new StringBuilder();
 
 	// Set the headers in the wrapper to what they were set to in
 	// the data record. It will have to be modified in case either 
@@ -719,7 +719,7 @@ public class MonitorRequestWrapper extends HttpServletRequestWrapper {
 	    if(debug) { 
 		//log("Key: " + (String)o); //NOI18N
 		String[] value = (String[])currentMap.get(o); 
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for(int k=0; k<value.length; ++k) { 
 		    buf.append(value[k]); 
 		    buf.append(" "); //NOI18N
@@ -841,7 +841,7 @@ public class MonitorRequestWrapper extends HttpServletRequestWrapper {
      * toString prints out the main values of the request. 
      */ 
     public String toString() {
-	StringBuffer buf = new StringBuffer();
+	StringBuilder buf = new StringBuilder();
 	buf.append("uri: "); // NOI18N
 	buf.append(getRequestURI());
 	buf.append("\n"); // NOI18N

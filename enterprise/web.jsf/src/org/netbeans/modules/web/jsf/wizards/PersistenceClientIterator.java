@@ -617,7 +617,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     }
 
     private static String generateBundleVarName(String bundleName) {
-        int lastSlash = bundleName.lastIndexOf("/"); //NOI18N
+        int lastSlash = bundleName.lastIndexOf('/'); //NOI18N
         String varName = lastSlash != -1 ? bundleName.substring(lastSlash + 1) : bundleName;
         if (varName.isEmpty()) {
             return "bundle"; //NOI18N

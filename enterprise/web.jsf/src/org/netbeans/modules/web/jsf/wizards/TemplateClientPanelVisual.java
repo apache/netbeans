@@ -318,7 +318,7 @@ public class TemplateClientPanelVisual extends javax.swing.JPanel implements Hel
             return fullPath;
         }
         int rootIndex = fullPath.lastIndexOf(JsfConstants.CONTRACTS_FOLDER) + JsfConstants.CONTRACTS_FOLDER.length() + 1;
-        int nextSlashOffset = fullPath.indexOf("/", rootIndex); //NOI18N
+        int nextSlashOffset = fullPath.indexOf('/', rootIndex); //NOI18N
         // root folder selected
         if (nextSlashOffset != -1) {
             String resourceLibraryName = fullPath.substring(rootIndex, nextSlashOffset);

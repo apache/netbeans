@@ -73,7 +73,7 @@ public class WebXmlPackageRename extends BaseWebXmlRename{
                 result.add(new RenameItem(newName, oldName));
             }
             else {
-                String packageName = oldName.substring(0, oldName.lastIndexOf("."));
+                String packageName = oldName.substring(0, oldName.lastIndexOf('.'));
                 
                 result.add(new RenameItem(new Problem(true, 
                         NbBundle.getMessage(WebXmlPackageRename.class, 

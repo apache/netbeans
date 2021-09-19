@@ -355,12 +355,12 @@ public final class JsfForm extends EntityClass implements ActiveEditorDrop, Pale
                             String relatedClass = typeElement.getSimpleName().toString();
                             String relatedManagedBean = JSFClientGenerator.getManagedBeanName(relatedClass);
                             String tableVarName = getFreeTableVarName("item", entities); //NOI18N
-                            stringBuffer.append("<h:outputText value=\"" + name + ":\" />\n");
+                            stringBuffer.append("<h:outputText value=\"").append(name).append(":\" />\n");
                             stringBuffer.append("<h:panelGroup>\n");
-                            stringBuffer.append("<h:outputText rendered=\"#{empty " + variable + "." + propName + "}\" value=\"(No Items)\"/>\n");
+                            stringBuffer.append("<h:outputText rendered=\"#{empty ").append(variable).append(".").append(propName).append("}\" value=\"(No Items)\"/>\n");
                             String valueAttribute = isCollectionTypeAssignableToSet ? variable + ".jsfcrud_transform[jsfcrud_class['" + jsfUtilClass + "'].jsfcrud_method.setToList][jsfcrud_null]." + propName : variable + "." + propName;
-                            stringBuffer.append("<h:dataTable value=\"#{" + valueAttribute + "}\" var=\"" + tableVarName + "\" \n");
-                            stringBuffer.append("border=\"0\" cellpadding=\"2\" cellspacing=\"0\" rowClasses=\"jsfcrud_odd_row,jsfcrud_even_row\" rules=\"all\" style=\"border:solid 1px\" \n rendered=\"#{not empty " + variable + "." + propName + "}\">\n"); //NOI18N
+                            stringBuffer.append("<h:dataTable value=\"#{").append(valueAttribute).append("}\" var=\"").append(tableVarName).append("\" \n");
+                            stringBuffer.append("border=\"0\" cellpadding=\"2\" cellspacing=\"0\" rowClasses=\"jsfcrud_odd_row,jsfcrud_even_row\" rules=\"all\" style=\"border:solid 1px\" \n rendered=\"#{not empty ").append(variable).append(".").append(propName).append("}\">\n"); //NOI18N
 
                             String commands = "<h:column>\n"
                                     + "<f:facet name=\"header\">\n"

@@ -309,7 +309,7 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
                         for (int i = 0; i < deletedEjbNames.size(); i++) {
                             String deletedServletName = deletedEjbNames.get(i);
                             String deletedName = deletedServletName;
-                            int index = deletedServletName.lastIndexOf("."); //NOI18N
+                            int index = deletedServletName.lastIndexOf('.'); //NOI18N
                             if (index > 0) {
                                 deletedName = deletedServletName.substring(index + 1);
                             }
@@ -317,7 +317,7 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
                             for (int j = 0; j < newFileNames.size(); j++) {
                                 String newFileName = newFileNames.get(j);
                                 String newName = newFileName;
-                                int ind = newFileName.lastIndexOf("."); //NOI18N
+                                int ind = newFileName.lastIndexOf('.'); //NOI18N
                                 if (ind > 0) {
                                     newName = newFileName.substring(ind + 1);
                                 }
@@ -363,7 +363,7 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
         FileObject fo = fileRenameEvent.getFile();
         String resourceName = getPackageName(fo);
         if (resourceName != null) {
-            int index = resourceName.lastIndexOf("."); //NOI18N
+            int index = resourceName.lastIndexOf('.'); //NOI18N
             String oldName = fileRenameEvent.getName();
             String oldResourceName = (index >= 0 ? resourceName.substring(0, index + 1) : "") + oldName;
             EjbJar ejbJar = getEjbJar();

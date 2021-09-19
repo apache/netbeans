@@ -268,7 +268,7 @@ public class JspCompletionItem implements CompletionItem {
                 int caretOffset = component.getSelectionEnd();
                 if (caretOffset > substitutionOffset) {
                     String currentText = component.getDocument().getText(substitutionOffset, caretOffset - substitutionOffset);
-                    if (!getSubstituteText().toString().startsWith(currentText)) {
+                    if (!getSubstituteText().startsWith(currentText)) {
                         return false;
                     }
                 }
@@ -710,7 +710,7 @@ public class JspCompletionItem implements CompletionItem {
                 }
             }
             if (tagAttributeInfo != null) {
-                StringBuffer helpText = new StringBuffer();
+                StringBuilder helpText = new StringBuilder();
                 helpText.append("<table border=\"0\"><tr><td><b>Name:</b></td><td>");  //NOI18N
                 helpText.append(tagAttributeInfo.getName());                            //NOI18N
                 helpText.append("</td></tr><tr><td><b>Required:</b></td><td>");         //NOI18N
@@ -850,7 +850,7 @@ public class JspCompletionItem implements CompletionItem {
             return null;
         }
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("<h2>").append(getString("LBL_TagName")).append(" "); //NOI18N
         sb.append(tagInfo.getTagName()).append("</h2>"); // NOI18N
         String val = tagInfo.getDisplayName();

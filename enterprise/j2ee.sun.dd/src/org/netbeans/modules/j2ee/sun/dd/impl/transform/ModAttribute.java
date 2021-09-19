@@ -97,7 +97,7 @@ public class ModAttribute extends org.netbeans.modules.schema2beans.BaseBean
 		org.netbeans.modules.schema2beans.BaseBean n;
 		str.append(indent);
 		str.append("Name");	// NOI18N
-		str.append(indent+"\t");	// NOI18N
+		str.append(indent).append("\t");	// NOI18N
 		str.append("<");	// NOI18N
 		o = this.getName();
 		str.append((o==null?"null":o.toString().trim()));	// NOI18N

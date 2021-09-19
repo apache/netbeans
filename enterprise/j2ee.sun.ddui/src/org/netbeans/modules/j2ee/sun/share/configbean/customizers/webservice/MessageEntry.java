@@ -117,7 +117,7 @@ public class MessageEntry extends GenericTableModel.TableEntry {
     }
     
     private String methodToString(JavaMethod jm) {
-        StringBuffer buf = new StringBuffer(128);
+        StringBuilder buf = new StringBuilder(128);
 
         if(jm != null) {
             buf.append(jm.getMethodName());

@@ -125,7 +125,7 @@ public class ReplaySendXMLServlet extends HttpServlet {
 	}
 	if(debug) {
 	    try {
-		StringBuffer buf = new StringBuffer
+		StringBuilder buf = new StringBuilder
 		    (System.getProperty("java.io.tmpdir")); // NOI18N
 		buf.append(System.getProperty("file.separator")); // NOI18N
 		buf.append("replay-servlet.xml"); // NOI18N

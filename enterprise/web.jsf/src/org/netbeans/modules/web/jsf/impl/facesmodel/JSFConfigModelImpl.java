@@ -133,8 +133,8 @@ public class JSFConfigModelImpl extends AbstractDocumentModel<JSFConfigComponent
             String value = attr.getValue();
             if (value.equals(XMLConstants.W3C_XML_SCHEMA_NS_URI)) {
                 String prefixedAttr = attr.getName();
-                if (prefixedAttr.indexOf(":") != -1) { //NOI18N
-                    prefix = prefixedAttr.substring(prefixedAttr.indexOf(":") + 1); //NOI18N
+                if (prefixedAttr.indexOf(':') != -1) { //NOI18N
+                    prefix = prefixedAttr.substring(prefixedAttr.indexOf(':') + 1); //NOI18N
                 }
                 break;
             }

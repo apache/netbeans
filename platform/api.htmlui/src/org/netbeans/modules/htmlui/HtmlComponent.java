@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.htmlui;
 
+import org.netbeans.spi.htmlui.HtmlViewer;
 import java.awt.BorderLayout;
 import java.io.Closeable;
 import java.io.IOException;
@@ -29,11 +30,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import javax.swing.JComponent;
 import net.java.html.js.JavaScriptBody;
 import static org.netbeans.modules.htmlui.HtmlToolkit.LOG;
-import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.windows.TopComponent;
@@ -46,7 +47,7 @@ import org.openide.windows.TopComponent;
     persistenceType = TopComponent.PERSISTENCE_NEVER,
     preferredID = "browser"
 )
-public final class HtmlComponent extends TopComponent  {
+public final class HtmlComponent extends TopComponent {
     private final JComponent p = HtmlToolkit.getDefault().newPanel();
     private /* final */ Object webView;
     private final InstanceContent ic;
@@ -60,26 +61,21 @@ public final class HtmlComponent extends TopComponent  {
         add(p, BorderLayout.CENTER);
     }
     
-    public void loadFX(URL pageUrl, final Class<?> clazz, final String m, Object... ctx) {
+    void loadFX(ClassLoader loader, URL pageUrl, Callable<Object> init, String... ctx) {
         webView = HtmlToolkit.getDefault().initHtmlComponent(p, this::setDisplayName);
-        ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
-        if (loader == null) {
-            loader = clazz.getClassLoader();
-        }
         HtmlToolkit.getDefault().load(webView, pageUrl, new Runnable() {
             @Override
             public void run() {
                 try {
                     HtmlComponent hc = HtmlComponent.this;
-                    Method method = clazz.getMethod(m);
-                    Object value = method.invoke(null);
+                    value = init.call();
                     if (value != null) {
                         hc.value = value;
                         hc.ic.add(value);
                     }
                     listenOnContext(hc);
                 } catch (Exception ex) {
-                    LOG.log(Level.WARNING, "Can't load " + m + " from " + clazz, ex);
+                    LOG.log(Level.WARNING, "Can't load " + pageUrl, ex);
                 }
             }
         }, loader, ctx);
@@ -97,7 +93,7 @@ public final class HtmlComponent extends TopComponent  {
                 if (o instanceof String) {
                     Object inst = c.remove((String)o);
                     if (inst == null) try {
-                        Class<?> cookie = loadClass((String) o);
+                        Class<?> cookie = HtmlPair.loadClass((String) o);
                         Constructor<?>[] arr = cookie.getConstructors();
                         if (arr.length != 1) {
                             LOG.log(Level.WARNING, "Class {0} should have one public constructor. Found {1}", new Object[]{cookie, Arrays.toString(arr)});
@@ -143,14 +139,22 @@ public final class HtmlComponent extends TopComponent  {
     )
     private static native void listenOnContext(HtmlComponent onChange);
 
-    static Class loadClass(String c) throws ClassNotFoundException {
-        ClassLoader l = Lookup.getDefault().lookup(ClassLoader.class);
-        if (l == null) {
-            l = Thread.currentThread().getContextClassLoader();
+    static final HtmlViewer<?> VIEWER = new HtmlViewer<HtmlComponent>() {
+        @Override
+        public HtmlComponent newView() {
+            return new HtmlComponent();
         }
-        if (l == null) {
-            l = Pages.class.getClassLoader();
+
+        @Override
+        public void makeVisible(HtmlComponent view, Runnable whenReady) {
+            view.open();
+            view.requestActive();
+            HtmlToolkit.getDefault().execute(whenReady);
         }
-        return Class.forName(c, true, l);
-    }
+
+        @Override
+        public void load(HtmlComponent view, ClassLoader loader, URL pageUrl, Callable<Object> initialize, String[] techIds) {
+            view.loadFX(loader, pageUrl, initialize, techIds);
+        }
+    };
 }

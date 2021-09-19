@@ -146,6 +146,7 @@
             </test-dependencies>
             <public-packages>
                 <package>org.netbeans.api.htmlui</package>
+                <package>org.netbeans.spi.htmlui</package>
             </public-packages>
         </data>
     </configuration>

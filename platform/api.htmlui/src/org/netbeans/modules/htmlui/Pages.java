@@ -20,12 +20,14 @@ package org.netbeans.modules.htmlui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.swing.Action;
 import org.openide.awt.Actions;
+import org.openide.util.Lookup;
 
 /** API for controlling HTML like UI from Java language.
  *
@@ -44,11 +46,12 @@ public final class Pages {
                 Boolean.TRUE.equals(map.get("noIconInMenu")) // NOI18N
         );
     }
+
     static class R implements ActionListener, Runnable {
         private final Map<?,?> map;
-        private String m;
+        private String methodName;
         private Class<?> clazz;
-        private HtmlComponent tc;
+        private HtmlPair<?> tc;
         private URL pageUrl;
         private List<String> techIds;
 
@@ -61,16 +64,13 @@ public final class Pages {
             try {
                 String u = (String) map.get("url");
                 String c = (String) map.get("class");
-                m = (String) map.get("method");
+                methodName = (String) map.get("method");
 
-                clazz = HtmlComponent.loadClass(c);
+                clazz = HtmlPair.loadClass(c);
                 pageUrl = new URL("nbresloc:/" + u);
 
-                tc = new HtmlComponent();
-                tc.open();
-                tc.requestActive();
-
-                HtmlToolkit.getDefault().execute(this);
+                tc = HtmlPair.newView();
+                tc.makeVisible(this);
             } catch (Exception ex) {
                 throw new IllegalStateException(ex);
             }
@@ -78,10 +78,19 @@ public final class Pages {
 
         @Override
         public void run() {
-            tc.loadFX(pageUrl, clazz, m, getTechIds());
+            ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
+            if (loader == null) {
+                loader = clazz.getClassLoader();
+            }
+
+            tc.load(loader, pageUrl, () -> {
+                Method method = clazz.getMethod(methodName);
+                Object value = method.invoke(null);
+                return value;
+            }, getTechIds());
         }
 
-        final Object[] getTechIds() {
+        final String[] getTechIds() {
             if (techIds == null) {
                 techIds = new ArrayList<>();
                 for (int i = 0;; i++) {
@@ -93,7 +102,7 @@ public final class Pages {
                     }
                 }
             }
-            return techIds.toArray();
+            return techIds.toArray(new String[0]);
         }
     }
 }

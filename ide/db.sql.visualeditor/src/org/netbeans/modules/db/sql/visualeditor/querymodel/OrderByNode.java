@@ -41,7 +41,7 @@ public class OrderByNode implements OrderBy {
     public OrderByNode() {
     }
 
-    public OrderByNode(ArrayList sortSpecificationList) {
+    public OrderByNode(List sortSpecificationList) {
         _sortSpecificationList = sortSpecificationList;
     }
 

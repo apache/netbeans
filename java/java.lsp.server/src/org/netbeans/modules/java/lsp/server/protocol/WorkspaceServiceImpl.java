@@ -23,6 +23,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sun.source.util.TreePath;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -47,6 +48,7 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import javax.swing.Action;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
@@ -94,6 +96,7 @@ import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
+import org.openide.awt.Actions;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
@@ -130,6 +133,11 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return LspTemplateUI.createFromTemplate("Templates", client, params);
             case Server.JAVA_NEW_PROJECT:
                 return LspTemplateUI.createProject("Templates/Project", client, params);
+            case Server.JAVA_HTML_DEMO: {
+                Action action = Actions.forID("Tools","org.netbeans.modules.java.lsp.server.protocol.HelloWorld");
+                action.actionPerformed(new ActionEvent(this, 0, ""));
+                break;
+            }
             case Server.JAVA_BUILD_WORKSPACE: {
                 final CommandProgress progressOfCompilation = new CommandProgress();
                 final Lookup ctx = Lookups.singleton(progressOfCompilation);

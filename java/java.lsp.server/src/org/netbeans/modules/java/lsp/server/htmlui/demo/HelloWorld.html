@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title>HelloWorld</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Security-Policy" content="default-src http: 'unsafe-inline' 'unsafe-eval'">
+    </head>
+    <body>
+        <h1>VSNetBeans WebView Demo</h1>
+        <input data-bind="textinput: text" placeholder="What is your name?"/>
+        <button data-bind="click: sayHello, enable: canSayHello, visible: displaySayHello">Say hello!</button>
+        <p>Your name has <span data-bind="text: count">0</span> characters</p>
+        <div>
+            <input type="checkbox" id="upper" name="scales" data-bind="checked: upper">
+            <label for="upper">Upper-case</label>
+        </div>
+        <div>
+            <input type="checkbox" id="update" name="scales" data-bind="checked: update">
+            <label for="update">Update immediately</label>
+        </div>
+        <h1 data-bind="text: helloMessage">.</h1>
+    </body>
+</html>

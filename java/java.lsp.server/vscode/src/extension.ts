@@ -241,6 +241,9 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             throw `Client ${c} doesn't support new project`;
         }
     }));
+    context.subscriptions.push(commands.registerCommand('java.workspace.html.demo', () => {
+        vscode.commands.executeCommand('java.html.demo');
+    }));
     context.subscriptions.push(commands.registerCommand('java.workspace.compile', () => {
         return window.withProgress({ location: ProgressLocation.Window }, p => {
             return new Promise(async (resolve, reject) => {

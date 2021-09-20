@@ -136,7 +136,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             case Server.JAVA_HTML_DEMO: {
                 Action action = Actions.forID("Tools","org.netbeans.modules.java.lsp.server.protocol.HelloWorld");
                 action.actionPerformed(new ActionEvent(this, 0, ""));
-                break;
+                return CompletableFuture.completedFuture(true);
             }
             case Server.JAVA_BUILD_WORKSPACE: {
                 final CommandProgress progressOfCompilation = new CommandProgress();

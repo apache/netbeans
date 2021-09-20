@@ -1,8 +1,9 @@
 #Signature file v4.1
-#Version 1.6
+#Version 1.7
 
 CLSS public abstract interface com.formdev.flatlaf.FlatClientProperties
 fld public final static java.lang.String BUTTON_TYPE = "JButton.buttonType"
+fld public final static java.lang.String BUTTON_TYPE_BORDERLESS = "borderless"
 fld public final static java.lang.String BUTTON_TYPE_HELP = "help"
 fld public final static java.lang.String BUTTON_TYPE_ROUND_RECT = "roundRect"
 fld public final static java.lang.String BUTTON_TYPE_SQUARE = "square"
@@ -66,6 +67,7 @@ fld public final static java.lang.String TABBED_PANE_TRAILING_COMPONENT = "JTabb
 fld public final static java.lang.String TAB_BUTTON_SELECTED_BACKGROUND = "JToggleButton.tab.selectedBackground"
 fld public final static java.lang.String TAB_BUTTON_UNDERLINE_COLOR = "JToggleButton.tab.underlineColor"
 fld public final static java.lang.String TAB_BUTTON_UNDERLINE_HEIGHT = "JToggleButton.tab.underlineHeight"
+fld public final static java.lang.String TEXT_FIELD_PADDING = "JTextField.padding"
 fld public final static java.lang.String TITLE_BAR_BACKGROUND = "JRootPane.titleBarBackground"
 fld public final static java.lang.String TITLE_BAR_FOREGROUND = "JRootPane.titleBarForeground"
 fld public final static java.lang.String TREE_PAINT_SELECTION = "JTree.paintSelection"
@@ -83,6 +85,8 @@ fld public final static java.lang.String NAME = "FlatLaf Darcula"
 meth public java.lang.String getDescription()
 meth public java.lang.String getName()
 meth public static boolean install()
+ anno 0 java.lang.Deprecated()
+meth public static boolean setup()
 meth public static void installLafInfo()
 supr com.formdev.flatlaf.FlatDarkLaf
 
@@ -93,6 +97,8 @@ meth public boolean isDark()
 meth public java.lang.String getDescription()
 meth public java.lang.String getName()
 meth public static boolean install()
+ anno 0 java.lang.Deprecated()
+meth public static boolean setup()
 meth public static void installLafInfo()
 supr com.formdev.flatlaf.FlatLaf
 
@@ -141,6 +147,8 @@ fld public final static java.lang.String NAME = "FlatLaf IntelliJ"
 meth public java.lang.String getDescription()
 meth public java.lang.String getName()
 meth public static boolean install()
+ anno 0 java.lang.Deprecated()
+meth public static boolean setup()
 meth public static void installLafInfo()
 supr com.formdev.flatlaf.FlatLightLaf
 
@@ -159,9 +167,11 @@ meth public java.lang.String getID()
 meth public javax.swing.Icon getDisabledIcon(javax.swing.JComponent,javax.swing.Icon)
 meth public javax.swing.UIDefaults getDefaults()
 meth public static boolean install(javax.swing.LookAndFeel)
+ anno 0 java.lang.Deprecated()
 meth public static boolean isLafDark()
 meth public static boolean isShowMnemonics()
 meth public static boolean isUseNativeWindowDecorations()
+meth public static boolean setup(javax.swing.LookAndFeel)
 meth public static boolean supportsNativeWindowDecorations()
 meth public static javax.swing.UIDefaults$ActiveValue createActiveFontValue(float)
 meth public static void hideMnemonics()
@@ -196,6 +206,8 @@ meth public boolean isDark()
 meth public java.lang.String getDescription()
 meth public java.lang.String getName()
 meth public static boolean install()
+ anno 0 java.lang.Deprecated()
+meth public static boolean setup()
 meth public static void installLafInfo()
 supr com.formdev.flatlaf.FlatLaf
 
@@ -232,6 +244,8 @@ fld public final java.lang.String author
 fld public final java.lang.String name
 innr public static ThemeLaf
 meth public static boolean install(java.io.InputStream)
+ anno 0 java.lang.Deprecated()
+meth public static boolean setup(java.io.InputStream)
 meth public static com.formdev.flatlaf.FlatLaf createLaf(com.formdev.flatlaf.IntelliJTheme)
 meth public static com.formdev.flatlaf.FlatLaf createLaf(java.io.InputStream) throws java.io.IOException
 supr java.lang.Object
@@ -425,7 +439,6 @@ meth public void fillPolygon(int[],int[],int)
 meth public void fillPolygon(java.awt.Polygon)
 meth public void fillRect(int,int,int,int)
 meth public void fillRoundRect(int,int,int,int,int,int)
-meth public void finalize()
 meth public void rotate(double)
 meth public void rotate(double,double,double)
 meth public void scale(double,double)

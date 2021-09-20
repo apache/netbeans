@@ -40,7 +40,7 @@ public class GroupByNode implements GroupBy {
     public GroupByNode() {
     }
 
-    public GroupByNode(ArrayList columnList) {
+    public GroupByNode(List columnList) {
         _columnList = columnList;
     }
 

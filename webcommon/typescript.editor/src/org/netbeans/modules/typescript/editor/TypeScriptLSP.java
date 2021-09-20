@@ -33,12 +33,17 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
+import static org.netbeans.modules.typescript.editor.TypeScriptEditorKit.TYPESCRIPT_ICON;
+import static org.netbeans.modules.typescript.editor.TypeScriptEditorKit.TYPESCRIPT_MIME_TYPE;
+
 /**
  *
  * @author jlahoda
  */
-@MimeRegistration(mimeType="application/x-typescript", service=LanguageServerProvider.class)
+@MimeRegistration(mimeType=TYPESCRIPT_MIME_TYPE, service=LanguageServerProvider.class)
 public class TypeScriptLSP implements LanguageServerProvider {
+
+    private static final Logger LOG = Logger.getLogger(TypeScriptLSP.class.getName());
 
     private final AtomicBoolean missingNodeWarningIssued = new AtomicBoolean();
 
@@ -50,7 +55,7 @@ public class TypeScriptLSP implements LanguageServerProvider {
         String node = NodeJsSupport.getInstance().getNode(null);
         if (node == null || node.isEmpty()) {
             if (!missingNodeWarningIssued.getAndSet(true)) {
-                NotificationDisplayer.getDefault().notify(Bundle.WARN_NoNode(), ImageUtilities.loadImageIcon("org/netbeans/modules/typescript/editor/icon.png", true), Bundle.DESC_NoNode(), evt -> {
+                NotificationDisplayer.getDefault().notify(Bundle.WARN_NoNode(), ImageUtilities.loadImageIcon(TYPESCRIPT_ICON, true), Bundle.DESC_NoNode(), evt -> {
                     OptionsDisplayer.getDefault().open("Html5/NodeJs");
                 });
             }
@@ -66,6 +71,4 @@ public class TypeScriptLSP implements LanguageServerProvider {
         }
     }
 
-    private static final Logger LOG = Logger.getLogger(TypeScriptLSP.class.getName());
-    
 }

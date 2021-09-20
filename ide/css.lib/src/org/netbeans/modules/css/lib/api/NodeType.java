@@ -465,5 +465,22 @@ public enum NodeType {
     , supportsWithOperator
     , supportsConjunction
     , supportsDisjunction
+
+    /**
+     * @use rule
+     */
+    , sass_use
+    , sass_use_as
+    , sass_use_with
+    , sass_use_with_declaration
+    /**
+     * @forward rule
+     */
+    , sass_forward
+    , sass_forward_as
+    , sass_forward_with
+    , sass_forward_with_declaration
+    , sass_forward_hide
+    , sass_forward_show
     ;
 }

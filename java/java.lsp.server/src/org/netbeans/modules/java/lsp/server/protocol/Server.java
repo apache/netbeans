@@ -861,6 +861,11 @@ public final class Server {
         public void logMessage(MessageParams message) {
             logWarning(message);
         }
+
+        @Override
+        public void showHtmlPage(HtmlPageParams params) {
+            logWarning(params);
+        }
     };
     
     

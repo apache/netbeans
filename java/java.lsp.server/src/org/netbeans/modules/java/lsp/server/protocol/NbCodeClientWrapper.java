@@ -37,7 +37,7 @@ import org.eclipse.lsp4j.WorkspaceFolder;
 /**
  * Convenience wrapper that binds language client's remote proxy together with
  * other useful methods. Will be sent out as THE client by the server core code.
- * 
+ *
  * @author sdedic
  */
 class NbCodeClientWrapper implements NbCodeLanguageClient {
@@ -64,6 +64,13 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     public void showStatusBarMessage(ShowStatusMessageParams params) {
         remote.showStatusBarMessage(params);
     }
+
+    @Override
+    public void showHtmlPage(HtmlPageParams params) {
+        remote.showHtmlPage(params);
+    }
+
+
 
     @Override
     public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {

@@ -23,8 +23,10 @@ import java.lang.ref.WeakReference;
 import java.util.concurrent.CompletableFuture;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.openide.awt.StatusDisplayer.Message;
 import org.openide.util.Lookup;
@@ -76,6 +78,9 @@ public abstract class UIContext {
 
     protected abstract boolean isValid();
     protected abstract void showMessage(MessageParams msg);
+    protected void showHtmlPage(HtmlPageParams msg) {
+        showMessage(new MessageParams(MessageType.Log, msg.getUri()));
+    }
     protected abstract CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams msg);
     protected abstract void logMessage(MessageParams msg);
     protected abstract Message showStatusMessage(ShowStatusMessageParams msg);
@@ -113,6 +118,11 @@ public abstract class UIContext {
         @Override
         protected boolean isValid() {
             return true;
+        }
+
+        @Override
+        protected void showHtmlPage(HtmlPageParams msg) {
+            System.out.println("Open in browser: " + msg.getUri());
         }
     }
 }

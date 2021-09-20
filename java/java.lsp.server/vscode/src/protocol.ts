@@ -37,6 +37,14 @@ export interface ShowStatusMessageParams extends ShowMessageParams {
     timeout?: number;
 }
 
+export interface HtmlPageParams {
+    uri: string;
+}
+
+export namespace HtmlPageRequest {
+    export const type = new NotificationType<HtmlPageParams, void>('window/showHtmlPage');
+};
+
 export namespace StatusMessageRequest {
     export const type = new NotificationType<ShowStatusMessageParams, void>('window/showStatusBarMessage');
 };

@@ -65,5 +65,9 @@ class WorkspaceUIContext extends UIContext {
         }
         return null;
     }
-    
+
+    @Override
+    protected void showHtmlPage(HtmlPageParams msg) {
+        client.showHtmlPage(msg);
+    }
 }

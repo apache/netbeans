@@ -44,7 +44,7 @@ import { TestAdapterRegistrar } from 'vscode-test-adapter-util';
 import * as launcher from './nbcode';
 import {NbTestAdapter} from './testAdapter';
 import { StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification, DebugConnector,
-         TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification,
+         TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification, HtmlPageRequest, HtmlPageParams,
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
 
@@ -580,6 +580,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         c.start();
         c.onReady().then(() => {
             c.onNotification(StatusMessageRequest.type, showStatusBarMessage);
+            c.onNotification(HtmlPageRequest.type, showHtmlPage);
             c.onNotification(LogMessageNotification.type, (param) => handleLog(log, param.message));
             c.onRequest(QuickPickRequest.type, async param => {
                 const selected = await window.showQuickPick(param.items, { placeHolder: param.placeHolder, canPickMany: param.canPickMany });
@@ -631,6 +632,39 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         handleLog(log, reason);
         window.showErrorMessage('Error initializing ' + reason);
     });
+
+    function showHtmlPage(params : HtmlPageParams) {
+        function showUri(url: string, id: string, name: string) {
+            let uri = vscode.Uri.parse(url);
+            var http = require('http');
+
+            let host = uri.authority.split(":")[0];
+            let port = uri.authority.split(":")[1];
+
+            var options = {
+                host: host,
+                port: port,
+                path: uri.path
+            }
+            var request = http.request(options, function(res: any) {
+                var data = '';
+                res.on('data', function(chunk: any) {
+                    data += chunk;
+                });
+                res.on('end', function() {
+                    let view = vscode.window.createWebviewPanel(id, name, vscode.ViewColumn.One, {
+                        enableScripts: true,
+                    });
+                    view.webview.html = data;
+                });
+            });
+            request.on('error', function(e: any) {
+                vscode.window.showWarningMessage(e.message);
+            });
+            request.end();
+        }
+        showUri(params.uri, "test", "Showing a view");
+    }
 
     function showStatusBarMessage(params : ShowStatusMessageParams) {
         let decorated : string = params.message;

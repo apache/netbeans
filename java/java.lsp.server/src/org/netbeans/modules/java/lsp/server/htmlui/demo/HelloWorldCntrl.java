@@ -18,56 +18,91 @@
  */
 package org.netbeans.modules.java.lsp.server.htmlui.demo;
 
+import java.util.Arrays;
+import java.util.List;
 import net.java.html.json.Model;
-import net.java.html.json.Function;
 import net.java.html.json.Property;
 import net.java.html.json.ComputedProperty;
-import net.java.html.json.OnPropertyChange;
+import net.java.html.json.Function;
+import net.java.html.json.ModelOperation;
 import org.netbeans.api.htmlui.OpenHTMLRegistration;
 import org.openide.util.NbBundle;
 import org.openide.awt.ActionID;
+import org.openide.awt.StatusDisplayer;
 
-@Model(className = "HelloWorld", targetId = "", properties = {
-    @Property(name = "text", type = String.class),
-    @Property(name = "upper", type = boolean.class),
-    @Property(name = "update", type = boolean.class),
-    @Property(name = "helloMessage", type = String.class)
+@Model(className = "HelloWorld", targetId = "", instance = true, builder = "with", properties = {
+    @Property(name = "selectedModifier", type = String.class),
+    @Property(name = "name", type = String.class),
+    @Property(name = "returnType", type = String.class),
+    @Property(name = "parameters", type = Parameter.class, array = true)
 })
 public final class HelloWorldCntrl {
-    @ComputedProperty
-    static int count(String text) {
-        return text == null ? 0 : text.length();
+    @Model(className = "Parameter", properties = {
+        @Property(name = "type", type = String.class),
+        @Property(name = "name", type = String.class)
+    })
+    static class ParameterCntrl {
     }
 
-    @ComputedProperty
-    static boolean canSayHello(String text, boolean update) {
-        return text != null && !text.isEmpty() && !update;
-    }
+    private RefactoringData data;
 
-    @ComputedProperty
-    static boolean displaySayHello(String text, boolean update) {
-        return !update;
+    @ModelOperation
+    void assignData(HelloWorld model, RefactoringData data) {
+        this.data = data;
     }
 
     @Function
-    static void sayHello(HelloWorld model) {
-        updateHelloMessage(model);
-        model.setText("");
+    void doRefactoring(HelloWorld model) {
+        StatusDisplayer.getDefault().setStatusText("use data: " + data + " and model " + model);
     }
 
-    private static void updateHelloMessage(HelloWorld model) {
-        String name = model.getText();
-        if (model.isUpper()) {
-            name = name.toUpperCase();
+    @Function
+    void moveUpParameter(HelloWorld model, Parameter data) {
+        final List<Parameter> arr = model.getParameters();
+        int index = arr.indexOf(data);
+        if (index > 0) {
+            Parameter other = arr.get(index - 1);
+            arr.set(index, other);
+            arr.set(index - 1, data);
         }
-        model.setHelloMessage("Hello " + name + "!");
     }
 
-    @OnPropertyChange({ "text", "update", "upper" })
-    static void updateImmediately(HelloWorld model) {
-        if (model.isUpdate()) {
-            updateHelloMessage(model);
+    @Function
+    void moveDownParameter(HelloWorld model, Parameter data) {
+        final List<Parameter> arr = model.getParameters();
+        int index = arr.indexOf(data);
+        if (index != -1 && index + 1 < arr.size()) {
+            Parameter other = arr.get(index + 1);
+            arr.set(index, other);
+            arr.set(index + 1, data);
         }
+    }
+
+    @Function
+    void removeParameter(HelloWorld model, Parameter data) {
+        model.getParameters().remove(data);
+    }
+
+    @ComputedProperty
+    static List<String> availableModifiers() {
+        return Arrays.asList("public", "protected", "package-package", "private");
+    }
+
+    @ComputedProperty
+    static String preview(
+        String selectedModifier, String returnType, String name, List<Parameter> parameters
+    ) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(selectedModifier).append(" ").append(returnType);
+        sb.append(" ").append(name).append("(");
+        String sep = "";
+        for (Parameter p : parameters) {
+            sb.append(sep);
+            sb.append(p.getType()).append(" ").append(p.getName());
+            sep = ", ";
+        }
+        sb.append(")");
+        return sb.toString();
     }
 
     @ActionID(
@@ -81,6 +116,23 @@ public final class HelloWorldCntrl {
     //, iconBase="SET/PATH/TO/ICON/HERE"
     )
     public static HelloWorld onPageLoad() {
-        return new HelloWorld().applyBindings();
+        final HelloWorld model = new HelloWorld();
+        model.
+            withName("openSource").
+            withReturnType("boolean").
+            withSelectedModifier("public").
+            withParameters(
+                new Parameter("Lookup.Provider", "project"),
+                new Parameter("String", "className"),
+                new Parameter("String", "methodName"),
+                new Parameter("String", "signature"),
+                new Parameter("int", "line")
+            ).
+            assignData(new RefactoringData());
+
+        return model.applyBindings();
+    }
+
+    static final class RefactoringData {
     }
 }

@@ -637,6 +637,16 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
     });
 
     function showHtmlPage(params : HtmlPageParams) {
+        function replaceAll(data: string, pattern: string, w: string): string {
+            for (;;) {
+                let n = data.replace(pattern, w);
+                if (n === data) {
+                    return data;
+                }
+                data = n;
+            }
+        }
+
         function showUri(url: string, id: string, name: string) {
             let uri = vscode.Uri.parse(url);
             var http = require('http');
@@ -658,7 +668,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                     let view = vscode.window.createWebviewPanel(id, name, vscode.ViewColumn.One, {
                         enableScripts: true,
                     });
-                    view.webview.html = data;
+                    view.webview.html = replaceAll(data, "{{BASE}}", url);
                 });
             });
             request.on('error', function(e: any) {

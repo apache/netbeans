@@ -1,0 +1,108 @@
+html, body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    overflow-x: scroll;
+}
+input, select {
+    width: 100%;
+    font-family: var(--vscode-editor-font-family) !important;
+    border: var(--vscode-input-border);
+    margin-right: 6px !important;
+    background: var(--vscode-input-background);
+    color: var(--vscode-input-foreground);
+    box-sizing: border-box;
+}
+input:focus, select:focus {
+    outline-color: var(--vscode-focusBorder);
+}
+input {
+    padding: 5px 4px !important;
+}
+select {
+    padding: 4px !important;
+}
+button {
+    font-size: 13px;
+    text-decoration: none;
+    border: none;
+    background: var(--vscode-button-background);
+    color: var(--vscode-button-foreground);
+    font-family: var(--vscode-font-family) !important;
+    padding: 4px 10px 4px 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+button:hover, button:focus {
+    background: var(--vscode-button-hoverBackground);
+}
+button:focus {
+    outline: 1px solid var(--vscode-button-hoverBackground);
+    outline-offset: 2px;
+}
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+.caption1 {
+    margin-bottom: -20px !important;
+}
+.caption2 {
+    margin-bottom: -20px !important;
+	margin-left: -32px;
+}
+.action {
+	border-radius: 4px;
+	padding: 2px;
+	margin: 3px 0px;
+}
+.action:hover {
+	background-color: var(--vscode-list-inactiveSelectionBackground);
+}
+.preview-panel {
+    margin: 0px;
+    padding: 10px;
+    font-family: var(--vscode-editor-font-family) !important;
+    background-color: var(--vscode-sideBar-background);
+    cursor: default;
+}
+.section {
+    padding: 20px 20px 0px;
+}
+.section1 {
+    padding: 0px 10px;
+}
+.section2 {
+    padding: 0px 10px;
+	margin-top: -6px;
+}
+.vdivider {
+    margin-bottom: 20px;
+}
+.hdivider {
+    margin-left: 6px;
+}
+.row {
+    padding: 3px 10px;
+}
+.row:hover {
+    background-color: var(--vscode-list-hoverBackground);
+}
+.flex {
+    display: flex;
+}
+.flex-grow {
+    flex-grow: 1;
+    display: block;
+}
+.flex-vscrollable {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.align-right {
+    margin-left: auto;
+}

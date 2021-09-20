@@ -1,22 +1,54 @@
-<html>
-    <head>
-        <title>HelloWorld</title>
-        <meta charset="UTF-8">
-        <meta http-equiv="Content-Security-Policy" content="default-src http: 'unsafe-inline' 'unsafe-eval'">
-    </head>
-    <body>
-        <h1>VSNetBeans WebView Demo</h1>
-        <input data-bind="textinput: text" placeholder="What is your name?"/>
-        <button data-bind="click: sayHello, enable: canSayHello, visible: displaySayHello">Say hello!</button>
-        <p>Your name has <span data-bind="text: count">0</span> characters</p>
-        <div>
-            <input type="checkbox" id="upper" name="scales" data-bind="checked: upper">
-            <label for="upper">Upper-case</label>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src http: 'unsafe-inline' 'unsafe-eval'">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{BASE}}HelloWorld.css">
+    <link rel="stylesheet" href="{{BASE}}codicon.css">
+    <title>Refactor: Change Signature</title>
+</head>
+
+<body >
+    <div class="section">
+        <div class="flex vdivider">
+            <div>
+                <label>Access:</label>
+                <select data-bind="options: availableModifiers, value: selectedModifier"></select>
+            </div>
+            <div class="flex-grow hdivider">
+                <label>Return:</label>
+                <input type="text" data-bind="textInput: returnType">
+            </div>
+            <div class="flex-grow hdivider">
+                <label>Name:</label>
+                <input type="text" data-bind="textInput: name">
+            </div>
         </div>
-        <div>
-            <input type="checkbox" id="update" name="scales" data-bind="checked: update">
-            <label for="update">Update immediately</label>
+        <label>Parameters:</label>
+        <div class="flex">
+            <label class="flex-grow caption1">Type:</label>
+            <label class="flex-grow caption2">Name:</label>
+            <span class="action codicon codicon-add"></span>
         </div>
-        <h1 data-bind="text: helloMessage">.</h1>
-    </body>
+    </div>
+    <div class="flex-vscrollable section2" data-bind="foreach: parameters">
+        <div class="flex row">
+            <input type="text" data-bind="textInput: type" class="flex-grow">
+            <input type="text" data-bind="textInput: name" class="flex-grow">
+            <span class="action codicon codicon-arrow-up" data-bind="click: $root.moveUpParameter"></span>
+            <span class="action codicon codicon-arrow-down" data-bind="click: $root.moveDownParameter"></span>
+            <span class="action codicon codicon-trash" data-bind="click: $root.removeParameter"></span>
+        </div>
+    </div>
+    <div class="section">
+        <label>Preview:</label>
+    </div>
+    <div class="section1">
+        <p class="preview-panel" data-bind="text: preview">.</p>
+    </div>
+    <div class="flex section">
+        <button data-bind="click: doRefactoring" class="align-right">Refactor</button>
+        <button data-bind="">Cancel</button>
+    </div>
+</body>
 </html>

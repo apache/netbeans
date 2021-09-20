@@ -38,12 +38,6 @@
                     <run-dependency/>
                 </dependency>
                 <dependency>
-                    <code-name-base>net.java.html.boot.fx</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency/>
-                </dependency>
-                <dependency>
                     <code-name-base>net.java.html.json</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -56,14 +50,6 @@
                 <dependency>
                     <code-name-base>org.netbeans.html.xhr4j</code-name-base>
                     <run-dependency/>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.libs.javafx</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>2.4</specification-version>
-                    </run-dependency>
                 </dependency>
                 <dependency>
                     <code-name-base>org.netbeans.libs.asm</code-name-base>

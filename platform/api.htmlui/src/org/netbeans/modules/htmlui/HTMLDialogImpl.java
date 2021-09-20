@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.htmlui;
 
+import org.netbeans.spi.htmlui.HtmlToolkit;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.EventQueue;

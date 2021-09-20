@@ -18,7 +18,7 @@
  */
 package org.netbeans.modules.htmlui.jfx;
 
-import org.netbeans.modules.htmlui.HtmlToolkit;
+import org.netbeans.spi.htmlui.HtmlToolkit;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -38,9 +38,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javax.swing.JComponent;
-import org.netbeans.modules.htmlui.HTMLDialogImpl;
 import org.openide.DialogDescriptor;
-import org.openide.util.Lookup;
+import org.openide.util.*;
 import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service = HtmlToolkit.class)
@@ -121,7 +120,7 @@ public final class JavaFxHtmlToolkit extends HtmlToolkit {
 
         ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
         if (loader == null) {
-            loader = HTMLDialogImpl.class.getClassLoader();
+            loader = JavaFxHtmlToolkit.class.getClassLoader();
         }
         URL pageUrl;
         try {

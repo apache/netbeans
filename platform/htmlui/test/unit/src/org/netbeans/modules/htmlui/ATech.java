@@ -18,34 +18,23 @@
  */
 package org.netbeans.modules.htmlui;
 
-import javafx.embed.swing.JFXPanel;
-import static org.testng.AssertJUnit.assertNotNull;
-import org.testng.SkipException;
+import org.netbeans.html.context.spi.Contexts;
+import org.openide.util.lookup.ServiceProvider;
 
-class EnsureJavaFXPresent {
-    private static final Throwable initError;
-    static {
-        Throwable t;
-        try {
-            JFXPanel p = new JFXPanel();
-            assertNotNull("Allocated", p);
-            t = null;
-        } catch (RuntimeException | LinkageError err) {
-            t = err;
+public interface ATech {
+    @Contexts.Id("first")
+    public static final class First implements ATech {
+    }
+    @Contexts.Id("second")
+    public static final class Second implements ATech {
+    }
+
+    @ServiceProvider(service = Contexts.Provider.class)
+    public final static class Register implements Contexts.Provider {
+        @Override
+        public void fillContext(Contexts.Builder bldr, Class<?> type) {
+            bldr.register(ATech.class, new First(), 30);
+            bldr.register(ATech.class, new Second(), 50);
         }
-        initError = t;
-    }
-    
-    private EnsureJavaFXPresent() {
-    }
-    
-    static void checkAndThrow() {
-        if (initError != null) {
-            throw new SkipException("Cannot initialize JavaFX", initError);
-        }
-    }
-    
-    static boolean check() {
-        return initError == null;
     }
 }

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.htmlui;
 
+import org.netbeans.modules.htmlui.EnsureJavaFXPresent;
 import java.util.concurrent.CountDownLatch;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -86,7 +87,7 @@ public class ComponentsTest {
         url = "simple.html", className = "TestPages",
         type = JComponent.class, 
         techIds = "second"
-    ) 
+    )
     static void getSwing(int param, CountDownLatch called) {
         assertEquals(param, 10, "Correct value passed in");
         called.countDown();

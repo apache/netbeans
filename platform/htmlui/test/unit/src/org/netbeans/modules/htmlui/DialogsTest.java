@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.htmlui;
 
+import org.netbeans.modules.htmlui.EnsureJavaFXPresent;
 import java.awt.EventQueue;
 import java.net.URL;
 import java.util.concurrent.CountDownLatch;
@@ -30,6 +31,7 @@ import javax.swing.JFrame;
 import net.java.html.BrwsrCtx;
 import net.java.html.js.JavaScriptBody;
 import org.netbeans.api.htmlui.HTMLDialog;
+import org.netbeans.spi.htmlui.HtmlToolkit;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import static org.testng.Assert.*;

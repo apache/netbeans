@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.htmlui;
+package org.netbeans.spi.htmlui;
 
 import java.net.URL;
 import java.util.List;
@@ -24,23 +24,28 @@ import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
+import org.netbeans.modules.htmlui.DefaultHtmlToolkit;
 import org.openide.DialogDescriptor;
 import org.openide.util.Lookup;
 
+/**
+ *
+ * @since 1.21
+ */
 public abstract class HtmlToolkit implements Executor {
     public static final Logger LOG = Logger.getLogger(HtmlToolkit.class.getName());
 
     public static HtmlToolkit getDefault() {
         HtmlToolkit toolkit = Lookup.getDefault().lookup(HtmlToolkit.class);
-        return toolkit;
+        return toolkit == null ? DefaultHtmlToolkit.DEFAULT : toolkit;
     }
 
-    protected abstract boolean isApplicationThread();
-    protected abstract JComponent newPanel();
-    protected abstract void load(Object webView, URL pageUrl, Runnable runnable, ClassLoader loader, Object... ctx);
-    protected abstract Object initHtmlComponent(JComponent p, Consumer<String> titleDisplayer);
-    protected abstract Object initHtmlDialog(String page, DialogDescriptor dd, JComponent p, Runnable onPageLoad, List<String> techIds);
-    protected abstract <C> C convertToComponent(Class<C> type, URL pageUrl, ClassLoader loader, Runnable onPageLoad, List<String> techIds);
-    protected abstract void enterNestedLoop(Object aThis);
-    protected abstract void exitNestedLoop(Object aThis);
+    public abstract boolean isApplicationThread();
+    public abstract JComponent newPanel();
+    public abstract void load(Object webView, URL pageUrl, Runnable runnable, ClassLoader loader, Object... ctx);
+    public abstract Object initHtmlComponent(JComponent p, Consumer<String> titleDisplayer);
+    public abstract Object initHtmlDialog(String page, DialogDescriptor dd, JComponent p, Runnable onPageLoad, List<String> techIds);
+    public abstract <C> C convertToComponent(Class<C> type, URL pageUrl, ClassLoader loader, Runnable onPageLoad, List<String> techIds);
+    public abstract void enterNestedLoop(Object aThis);
+    public abstract void exitNestedLoop(Object aThis);
 }

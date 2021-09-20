@@ -57,7 +57,7 @@ public class HtmlComponentTest {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                tc.loadFX(u, HtmlComponentTest.class, "onLoad");
+                tc.loadFX(HtmlComponentTest.class.getClassLoader(), u, HtmlComponentTest::onLoad);
             }
         });
         lkp = tc.getLookup();

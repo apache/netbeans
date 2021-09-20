@@ -32,7 +32,7 @@ final class HtmlPair<HtmlView> {
         this.view = view;
     }
 
-    static Class loadClass(String c) throws ClassNotFoundException {
+    static Class<?> loadClass(String c) throws ClassNotFoundException {
         ClassLoader l = Lookup.getDefault().lookup(ClassLoader.class);
         if (l == null) {
             l = Thread.currentThread().getContextClassLoader();
@@ -44,7 +44,7 @@ final class HtmlPair<HtmlView> {
     }
 
     static HtmlPair<?> newView() {
-        for (HtmlViewer viewer : Lookup.getDefault().lookupAll(HtmlViewer.class)) {
+        for (HtmlViewer<?> viewer : Lookup.getDefault().lookupAll(HtmlViewer.class)) {
             HtmlPair<?> pair = newView(viewer);
             if (pair != null) {
                 return pair;

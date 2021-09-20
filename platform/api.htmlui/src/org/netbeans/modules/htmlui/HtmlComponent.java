@@ -18,12 +18,12 @@
  */
 package org.netbeans.modules.htmlui;
 
+import org.netbeans.spi.htmlui.HtmlToolkit;
 import org.netbeans.spi.htmlui.HtmlViewer;
 import java.awt.BorderLayout;
 import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +34,7 @@ import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import javax.swing.JComponent;
 import net.java.html.js.JavaScriptBody;
-import static org.netbeans.modules.htmlui.HtmlToolkit.LOG;
+import static org.netbeans.spi.htmlui.HtmlToolkit.LOG;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.windows.TopComponent;
@@ -61,7 +61,7 @@ public final class HtmlComponent extends TopComponent {
         add(p, BorderLayout.CENTER);
     }
     
-    void loadFX(ClassLoader loader, URL pageUrl, Callable<Object> init, String... ctx) {
+    public final void loadFX(ClassLoader loader, URL pageUrl, Callable<Object> init, String... ctx) {
         webView = HtmlToolkit.getDefault().initHtmlComponent(p, this::setDisplayName);
         HtmlToolkit.getDefault().load(webView, pageUrl, new Runnable() {
             @Override

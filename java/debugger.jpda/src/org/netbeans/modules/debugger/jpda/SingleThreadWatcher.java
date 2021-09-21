@@ -32,14 +32,11 @@ public class SingleThreadWatcher implements Runnable {
 
     private static final int DELAY = 3000;
 
-    private final JPDAThreadImpl t;
+    private JPDAThreadImpl t;
     private Task watchTask;
 
     public SingleThreadWatcher(JPDAThreadImpl t) {
         this.t = t;
-        if (!Boolean.valueOf(Bundle.USE_JPDA_DEADLOCK_DETECTOR())) {
-            return;
-        }
         //System.err.println("\nnew SingleThreadWatcher("+t+")");
         watchTask = t.getDebugger().getRequestProcessor().post(this, DELAY);
     }

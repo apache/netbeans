@@ -31,8 +31,7 @@ import org.openide.util.Exceptions;
  */
 public final class JDIExceptionReporter {
 
-    private static final Logger LOGGER = Logger.getLogger("org.netbeans.modules.debugger.jpda.jdi");    // NOI18N
-    private static final Level LOGLEVEL = Level.FINER;
+    private static final Logger logger = Logger.getLogger("org.netbeans.modules.debugger.jpda.jdi");    // NOI18N
 
     public static final Object RET_VOID = new Object();
 
@@ -47,14 +46,14 @@ public final class JDIExceptionReporter {
     }
 
     public static boolean isLoggable() {
-        return LOGGER.isLoggable(java.util.logging.Level.SEVERE);
+        return logger.isLoggable(java.util.logging.Level.FINER);
     }
 
     public static void logCallStart(String className, String methodName, String msg, Object[] args) {
         try {
-            LOGGER.log(LOGLEVEL, msg, args);
+            logger.log(java.util.logging.Level.FINER, msg, args);
         } catch (Exception exc) {
-            LOGGER.log(LOGLEVEL, "Logging of "+className+"."+methodName+"() threw exception:", exc);
+            logger.log(java.util.logging.Level.FINER, "Logging of "+className+"."+methodName+"() threw exception:", exc);
         }
         callStartTime.set(System.nanoTime());
     }
@@ -63,13 +62,10 @@ public final class JDIExceptionReporter {
         long t2 = System.nanoTime();
         long t1 = callStartTime.get();
         callStartTime.remove();
-        LOGGER.log(LOGLEVEL, "          {0}.{1}() returned after {2} ns, return value = {3}",
+        logger.log(java.util.logging.Level.FINER, "          {0}.{1}() returned after {2} ns, return value = {3}",
                    new Object[] {className, methodName, (t2 - t1), (RET_VOID == ret) ? "void" : ret});
         if (ret instanceof Throwable) {
-            LOGGER.log(LOGLEVEL, "", (Throwable) ret);
-        }
-        if ((t2 - t1) > 100_000_000) {
-            LOGGER.log(LOGLEVEL, "", new RuntimeException("TooLongCall"));
+            logger.log(Level.FINER, "", (Throwable) ret);
         }
     }
 

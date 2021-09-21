@@ -82,11 +82,7 @@ public class ConvertToSwitchPatternInstanceOf {
         }
         Tree ifPath = ctx.getPath().getLeaf();
         String expr0 = null;
-        try{
-            expr0 = ctx.getVariables().get("$expr0").getLeaf().toString();
-        }catch(ClassCastException cce){
-            Exceptions.printStackTrace(cce);
-        }
+        expr0 = ctx.getVariables().get("$expr0").getLeaf().toString();
         int matchVarIndex = 1;
         while (ifPath != null && ifPath.getKind() == Tree.Kind.IF) {
             matchVarIndex++;
@@ -189,11 +185,7 @@ public class ConvertToSwitchPatternInstanceOf {
         }
         Tree ifPath = ctx.getPath().getLeaf();
         String expr0 = null;
-        try{
-            expr0 = ctx.getVariables().get("$expr0").getLeaf().toString();
-        }catch(ClassCastException cce){
-            Exceptions.printStackTrace(cce);
-        }
+        expr0 = ctx.getVariables().get("$expr0").getLeaf().toString();
         int matchVarIndex = 1;
         while (ifPath != null && ifPath.getKind() == Tree.Kind.IF) {
             matchVarIndex++;

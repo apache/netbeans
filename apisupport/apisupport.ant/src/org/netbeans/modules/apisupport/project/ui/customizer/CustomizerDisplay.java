@@ -126,7 +126,7 @@ final class CustomizerDisplay extends NbPropertyPanel.Single {
                 final SortedSet<String> moduleCategories = getProperties().getModuleCategories();
                 EventQueue.invokeLater(new Runnable() {
                     public void run() {
-                        DefaultComboBoxModel model = new DefaultComboBoxModel();
+                        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
                         categoryValue.removeAllItems();
                         for (String cat : moduleCategories) {
                             model.addElement(cat);

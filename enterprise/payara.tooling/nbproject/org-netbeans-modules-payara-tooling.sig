@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.7
+#Version 2.8
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1318,6 +1318,7 @@ supr java.lang.Object
 hfds artifactId,groupId,version
 
 CLSS public org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion
+fld public final static java.lang.String DEFAULT_REPOSITORY_URL = "https://repo1.maven.org/maven2/"
 fld public final static org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI EMPTY
 intf java.lang.Comparable<org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI>
 intf org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI
@@ -1338,13 +1339,18 @@ meth public short getMajor()
 meth public short getMinor()
 meth public short getUpdate()
 meth public static java.util.List<org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI> getVersions()
+meth public static java.util.List<org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI> getVersions(java.lang.String)
 meth public static java.util.Map<java.lang.String,org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI> getVersionMap()
 meth public static org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI getLatestVersion()
 meth public static org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI toValue(java.lang.String)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public static org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI toValue(java.lang.String,java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
-hfds CDDL_LICENSE,DOWNLOAD_URL,METADATA_URL,build,directUrl,indirectUrl,latestVersion,major,minor,update,uriFragment,value,versions
+hfds CDDL_LICENSE,DOWNLOAD_URL,LOCAL_METADATA_URL,LOGGER,METADATA_URL,build,directUrl,indirectUrl,latestVersion,major,minor,update,uriFragment,value,versions
 
 CLSS public abstract interface org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI
 fld public final static char SEPARATOR = '.'

@@ -83,8 +83,8 @@ METHOD     findLastIndexOf(Closure)                   int
 METHOD     findLastIndexOf(int, Closure)              int
 METHOD     findResult(Closure)                        Object
 METHOD     findResult(Object, Closure)                Object
-METHOD     format(Locale, String, Object[  [STATIC,   String
-METHOD     format(String, Object[])        [STATIC,   String
+METHOD     format(Locale, String, Object.  [STATIC,   String
+METHOD     format(String, Object...)       [STATIC,   String
 METHOD     getAt(Collection)                          String
 METHOD     getAt(EmptyRange)                          String
 METHOD     getAt(IntRange)                            String

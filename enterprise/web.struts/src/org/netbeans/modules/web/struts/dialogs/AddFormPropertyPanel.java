@@ -47,7 +47,7 @@ public class AddFormPropertyPanel extends javax.swing.JPanel implements Validati
         this.config=config;
         initComponents();
         List beans = StrutsConfigUtilities.getAllFormBeansInModule(config);
-        DefaultComboBoxModel model = (DefaultComboBoxModel)jComboBoxFormName.getModel();
+        DefaultComboBoxModel<String> model = (DefaultComboBoxModel<String>)jComboBoxFormName.getModel();
         Iterator iter = beans.iterator();
         while (iter.hasNext()) {
             String name=((FormBean)iter.next()).getAttributeValue("name"); //NOI18N

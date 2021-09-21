@@ -51,11 +51,12 @@ import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
-import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -64,8 +65,8 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Dusan Balek
  */
-@ServiceProvider(service = CodeGenerator.class, position = 10)
-public final class ConstructorGenerator extends CodeGenerator {
+@ServiceProvider(service = CodeActionsProvider.class, position = 10)
+public final class ConstructorGenerator extends CodeActionsProvider {
 
     public static final String GENERATE_CONSTRUCTOR =  "java.generate.constructor";
 
@@ -79,7 +80,12 @@ public final class ConstructorGenerator extends CodeGenerator {
     @NbBundle.Messages({
         "DN_GenerateConstructor=Generate Constructor...",
     })
-    public List<CodeAction> getCodeActions(CompilationInfo info, CodeActionParams params) {
+    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+        CompilationController info = CompilationController.get(resultIterator.getParserResult());
+        if (info == null) {
+            return Collections.emptyList();
+        }
+        info.toPhase(JavaSource.Phase.RESOLVED);
         List<String> only = params.getContext().getOnly();
         boolean isSource = only != null && only.contains(CodeActionKind.Source);
         int startOffset = getOffset(info, params.getRange().getStart());

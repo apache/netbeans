@@ -84,6 +84,42 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="ASTPath.outer">
+        <api name="groovy-parsing"/>
+        <summary>Alternative construction for path more suitable for expressions, API to resolve types</summary>
+        <version major="1" minor="80"/>
+        <date day="25" month="8" year="2021"/>
+        <author login="sdedic"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" />
+        <description>
+            <p>
+                ASTPath can be constructed so it terminates on the outer expression that spans
+                the given  index. By default the path was constructed to the deepest node.
+            </p>
+            <p>
+                GroovyParserResult can resolve type names to ClassNodes using proper environment.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.groovy.editor.api" name="ASTPath"/>
+        <class package="org.netbeans.modules.groovy.editor.api.parser" name="GroovyParserResult"/>
+    </change>
+    <change id="Completion.improvements">
+        <api name="groovy-completion"/>
+        <summary>Accessor for CompletionContext.declaringClass</summary>
+        <version major="1" minor="80"/>
+        <date day="25" month="8" year="2021"/>
+        <author login="sdedic"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" />
+        <description>
+            <p>
+                Added setter for <a href="@TOP@/org/netbeans/modules/groovy/editor/api/completion/util/CompletionContext.html#declaringClass">
+                    CompletionContext.declaringClass</a> that refreshes access restrictions. Added flag to only present static members. 
+                    Added sort priority to <a href="@TOP@/org/netbeans/modules/groovy/editor/api/completion/CompletionItem.html">CompletionItem</a>.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.groovy.editor.api.completion.util" name="CompletionContext"/>
+        <class package="org.netbeans.modules.groovy.editor.api.completion" name="CompletionItem"/>
+    </change>
     <change id="DisableTransformers">
       <api name="groovy-parsing"/>
       <summary>Allow to enable/disable AST transformation during parsing and indexing</summary>

@@ -178,7 +178,7 @@ class NodeTableModel extends AbstractTableModel {
                     if ((o != null) && o instanceof Integer) {
                         sort.put(new Double(((Integer) o).doubleValue()), Integer.valueOf(ia));
                     } else {
-                        sort.put(new Double(ia + 0.1), new Integer(ia));
+                        sort.put(new Double(ia + 0.1), Integer.valueOf(ia));
                     }
                 } else {
                     allPropertyColumns[ia].setVisibleIndex(-1);
@@ -831,7 +831,7 @@ class NodeTableModel extends AbstractTableModel {
          * @param visibleIndex New value of property visibleIndex.
          */
         public void setVisibleIndex(int visibleIndex) {
-            property.setValue(ATTR_ORDER_NUMBER, new Integer(visibleIndex));
+            property.setValue(ATTR_ORDER_NUMBER, Integer.valueOf(visibleIndex));
         }
     }
 }

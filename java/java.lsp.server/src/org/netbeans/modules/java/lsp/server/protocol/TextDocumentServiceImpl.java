@@ -42,14 +42,12 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -158,8 +156,6 @@ import org.netbeans.api.project.Sources;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.java.GoToSupport;
 import org.netbeans.modules.editor.java.GoToSupport.GoToTarget;
-import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController.TestMethod;
-import org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods;
 import org.netbeans.modules.java.editor.base.fold.JavaElementFoldVisitor;
 import org.netbeans.modules.java.editor.base.fold.JavaElementFoldVisitor.FoldCreator;
 import org.netbeans.modules.java.editor.base.semantic.MarkOccurrencesHighlighterBase;
@@ -175,7 +171,6 @@ import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
-import org.netbeans.modules.java.lsp.server.files.OpenedDocuments;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.impl.indexing.implspi.ActiveDocumentProvider.IndexingAware;
@@ -838,62 +833,68 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
 
         final CompletableFuture<List<Either<Command, CodeAction>>> resultFuture = new CompletableFuture<>();
-        JavaSource js = JavaSource.forDocument(doc);
-        if (js == null) {
-            resultFuture.complete(result);
-            return resultFuture;
-        }
+        Source source = Source.create(doc);
         BACKGROUND_TASKS.post(() -> {
             try {
-                js.runUserActionTask(cc -> {
-                    cc.toPhase(JavaSource.Phase.RESOLVED);
-                    //code generators:
-                    for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
-                        for (CodeAction codeAction : codeGenerator.getCodeActions(cc, params)) {
-                            result.add(Either.forRight(codeAction));
+                ParserManager.parse(Collections.singleton(source), new UserTask() {
+                    @Override
+                    public void run(ResultIterator resultIterator) throws Exception {
+                        //code generators:
+                        for (CodeActionsProvider codeGenerator : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
+                            try {
+                                for (CodeAction codeAction : codeGenerator.getCodeActions(resultIterator, params)) {
+                                    result.add(Either.forRight(codeAction));
+                                }
+                            } catch (Exception ex) {
+                                client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                            }
                         }
-                    }
-                    //introduce hints
-                    if (!range.getStart().equals(range.getEnd())) {
-                        for (ErrorDescription err : IntroduceHint.computeError(cc, startOffset, endOffset, new EnumMap<IntroduceKind, Fix>(IntroduceKind.class), new EnumMap<IntroduceKind, String>(IntroduceKind.class), new AtomicBoolean())) {
-                            for (Fix fix : err.getFixes().getFixes()) {
-                                if (fix instanceof IntroduceFixBase) {
-                                    try {
-                                        ModificationResult changes = ((IntroduceFixBase) fix).getModificationResult();
-                                        if (changes != null) {
-                                            List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
-                                            Set<? extends FileObject> fos = changes.getModifiedFileObjects();
-                                            if (fos.size() == 1) {
-                                                FileObject fileObject = fos.iterator().next();
-                                                List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
-                                                if (diffs != null) {
-                                                    List<TextEdit> edits = new ArrayList<>();
-                                                    for (ModificationResult.Difference diff : diffs) {
-                                                        String newText = diff.getNewText();
-                                                        edits.add(new TextEdit(new Range(Utils.createPosition(fileObject, diff.getStartPosition().getOffset()),
-                                                                Utils.createPosition(fileObject, diff.getEndPosition().getOffset())),
-                                                                newText != null ? newText : ""));
+                        //introduce hints:
+                        CompilationController cc = CompilationController.get(resultIterator.getParserResult());
+                        if (cc != null) {
+                            cc.toPhase(JavaSource.Phase.RESOLVED);
+                            if (!range.getStart().equals(range.getEnd())) {
+                                for (ErrorDescription err : IntroduceHint.computeError(cc, startOffset, endOffset, new EnumMap<IntroduceKind, Fix>(IntroduceKind.class), new EnumMap<IntroduceKind, String>(IntroduceKind.class), new AtomicBoolean())) {
+                                    for (Fix fix : err.getFixes().getFixes()) {
+                                        if (fix instanceof IntroduceFixBase) {
+                                            try {
+                                                ModificationResult changes = ((IntroduceFixBase) fix).getModificationResult();
+                                                if (changes != null) {
+                                                    List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
+                                                    Set<? extends FileObject> fos = changes.getModifiedFileObjects();
+                                                    if (fos.size() == 1) {
+                                                        FileObject fileObject = fos.iterator().next();
+                                                        List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
+                                                        if (diffs != null) {
+                                                            List<TextEdit> edits = new ArrayList<>();
+                                                            for (ModificationResult.Difference diff : diffs) {
+                                                                String newText = diff.getNewText();
+                                                                edits.add(new TextEdit(new Range(Utils.createPosition(fileObject, diff.getStartPosition().getOffset()),
+                                                                        Utils.createPosition(fileObject, diff.getEndPosition().getOffset())),
+                                                                        newText != null ? newText : ""));
+                                                            }
+                                                            documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toUri(fileObject), -1), edits)));
+                                                        }
+                                                        CodeAction codeAction = new CodeAction(fix.getText());
+                                                        codeAction.setKind(CodeActionKind.RefactorExtract);
+                                                        codeAction.setEdit(new WorkspaceEdit(documentChanges));
+                                                        int renameOffset = ((IntroduceFixBase) fix).getNameOffset(changes);
+                                                        if (renameOffset >= 0) {
+                                                            codeAction.setCommand(new Command("Rename", "java.rename.element.at", Collections.singletonList(renameOffset)));
+                                                        }
+                                                        result.add(Either.forRight(codeAction));
                                                     }
-                                                    documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toUri(fileObject), -1), edits)));
                                                 }
-                                                CodeAction codeAction = new CodeAction(fix.getText());
-                                                codeAction.setKind(CodeActionKind.RefactorExtract);
-                                                codeAction.setEdit(new WorkspaceEdit(documentChanges));
-                                                int renameOffset = ((IntroduceFixBase) fix).getNameOffset(changes);
-                                                if (renameOffset >= 0) {
-                                                    codeAction.setCommand(new Command("Rename", "java.rename.element.at", Collections.singletonList(renameOffset)));
-                                                }
-                                                result.add(Either.forRight(codeAction));
+                                            } catch (GeneratorUtils.DuplicateMemberException dme) {
                                             }
                                         }
-                                    } catch (GeneratorUtils.DuplicateMemberException dme) {
                                     }
                                 }
                             }
                         }
                     }
-                }, true);
-            } catch (IOException ex) {
+                });
+            } catch (ParseException ex) {
                 //TODO: include stack trace:
                 client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
             } finally {
@@ -903,8 +904,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         return resultFuture;
     }
                 
-
-    private ConcurrentHashMap<String, Boolean> upToDateTests = new ConcurrentHashMap<>();
 
     @NbBundle.Messages({"# {0} - method name", "LBL_Run=Run {0}",
                         "# {0} - method name", "LBL_Debug=Debug {0}",
@@ -923,38 +922,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
         CompletableFuture<List<? extends CodeLens>> result = new CompletableFuture<>();
         try {
-            ParserManager.parse(Collections.singleton(source), new UserTask() {
+            ParserManager.parseWhenScanFinished(Collections.singleton(source), new UserTask() {
                 @Override
                 public void run(ResultIterator resultIterator) throws Exception {
                     Parser.Result parserResult = resultIterator.getParserResult();
-                    //look for test methods:
-                    if (!upToDateTests.getOrDefault(uri, Boolean.FALSE)) {
-                        List<TestMethod> testMethods = new ArrayList<>();
-                        for (ComputeTestMethods ctm : MimeLookup.getLookup(parserResult.getSnapshot().getMimePath()).lookupAll(ComputeTestMethods.class)) {
-                            testMethods.addAll(ctm.computeTestMethods(parserResult, new AtomicBoolean()));
-                        }
-                        if (!testMethods.isEmpty()) {
-                            String testClassName = null;
-                            Integer testClassLine = null;
-                            List<TestSuiteInfo.TestCaseInfo> tests = new ArrayList<>(testMethods.size());
-                            for (TestMethod testMethod : testMethods) {
-                                if (testClassName == null) {
-                                    testClassName = testMethod.getTestClassName();
-                                }
-                                if (testClassLine == null) {
-                                    testClassLine = testMethod.getTestClassPosition() != null
-                                            ? Utils.createPosition(parserResult.getSnapshot().getSource().getFileObject(), testMethod.getTestClassPosition().getOffset()).getLine()
-                                            : null;
-                                }
-                                String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
-                                String fullName = testMethod.getTestClassName() + '.' + testMethod.method().getMethodName();
-                                int testLine = Utils.createPosition(parserResult.getSnapshot().getSource().getFileObject(), testMethod.start().getOffset()).getLine();
-                                tests.add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), fullName, uri, testLine, TestSuiteInfo.State.Loaded, null));
-                            }
-                            client.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(testClassName, uri, testClassLine, TestSuiteInfo.State.Loaded, tests)));
-                            upToDateTests.put(uri, Boolean.TRUE);
-                        }
-                    }
                     //look for main methods:
                     List<CodeLens> lens = new ArrayList<>();
                     CompilationController cc = CompilationController.get(parserResult);
@@ -1201,7 +1172,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 }
                 for (ModificationResult mr : results) {
                     for (FileObject modified : mr.getModifiedFileObjects()) {
-                        resultChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(params.getTextDocument().getUri(), /*XXX*/-1), fileModifications(mr, modified, null))));
+                        resultChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toUri(modified), /*XXX*/-1), fileModifications(mr, modified, null))));
                     }
                 }
                 List<RefactoringElementImplementation> fileChanges = APIAccessor.DEFAULT.getFileChanges(session);
@@ -1331,7 +1302,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public void didChange(DidChangeTextDocumentParams params) {
         String uri = params.getTextDocument().getUri();
-        upToDateTests.put(uri, Boolean.FALSE);
         Document doc = server.getOpenedDocuments().getDocument(uri);
         if (doc != null) {
             NbDocument.runAtomic((StyledDocument) doc, () -> {
@@ -1355,7 +1325,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     public void didClose(DidCloseTextDocumentParams params) {
         try {
             String uri = params.getTextDocument().getUri();
-            upToDateTests.remove(uri);
             // the order here is important ! As the file may cease to exist, it's
             // important that the doucment is already gone form the client.
             server.getOpenedDocuments().notifyClosed(uri);

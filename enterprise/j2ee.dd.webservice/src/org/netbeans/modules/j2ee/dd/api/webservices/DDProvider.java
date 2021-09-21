@@ -28,18 +28,19 @@ import org.netbeans.modules.j2ee.dd.impl.webservices.WebServicesProxy;
 import org.netbeans.modules.schema2beans.Common;
 import org.openide.filesystems.*;
 import org.xml.sax.*;
+import java.util.HashMap;
 import java.util.Map;
 import org.w3c.dom.Document;
 
 public final class DDProvider {
     
     private static final DDProvider ddProvider = new DDProvider();
-    private Map ddMap;
+    private Map<FileObject, WebServicesProxy> ddMap;
     
     /** Creates a new instance of WebSvcModule */
     private DDProvider() {
         //ddMap=new java.util.WeakHashMap(5);
-        ddMap = new java.util.HashMap(5);
+        ddMap = new HashMap<>(5);
     }
     
     /**

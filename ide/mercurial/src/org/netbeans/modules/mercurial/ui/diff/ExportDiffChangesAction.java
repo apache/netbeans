@@ -261,7 +261,7 @@ public class ExportDiffChangesAction extends ContextAction {
                 }
             }
             if (success) {
-                StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(ExportDiffChangesAction.class, "BK3004", new Integer(exportedFiles)));
+                StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(ExportDiffChangesAction.class, "BK3004", Integer.valueOf(exportedFiles)));
                 if (exportedFiles == 0) {
                     destination.delete();
                 } else {

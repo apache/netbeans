@@ -44,6 +44,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource.Phase;
@@ -77,8 +79,10 @@ public final class TestClassInfoTask implements Task<CompilationController> {
     }
 
     public static List<TestMethod> computeTestMethods(CompilationInfo info, AtomicBoolean cancel, int caretPosIfAny) {
-        //TODO: first verify if this is a test class/class in a test source group?
         FileObject fileObject = info.getFileObject();
+        if (!isTestSource(fileObject)) {
+            return Collections.emptyList();
+        }
         ClassTree clazz;
         List<TreePath> methods;
         if (caretPosIfAny == (-1)) {
@@ -147,6 +151,17 @@ public final class TestClassInfoTask implements Task<CompilationController> {
 
     SingleMethod getSingleMethod() {
         return singleMethod;
+    }
+
+    private static boolean isTestSource(FileObject fo) {
+        ClassPath cp = ClassPath.getClassPath(fo, ClassPath.SOURCE);
+        if (cp != null) {
+            FileObject root = cp.findOwnerRoot(fo);
+            if (root != null) {
+                return UnitTestForSourceQuery.findSources(root).length > 0;
+            }
+        }
+        return false;
     }
 
     private static boolean isJunit4Test(List<? extends AnnotationMirror> allAnnotationMirrors) {

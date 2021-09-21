@@ -710,7 +710,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
                 if (currentProjects != projects || cancel) {
                     return;
                 }
-                DefaultListModel listModel = new DefaultListModel();
+                DefaultListModel<String> listModel = new DefaultListModel<>();
                 // Put all the strings into the list model
                 for (String displayName : subprojectNames) {
                     listModel.addElement(displayName);

@@ -109,6 +109,7 @@ public final class JavaElementHandle implements ElementHandle {
             case FIELD:         return ElementKind.FIELD;
             case CONSTRUCTOR:   return ElementKind.CONSTRUCTOR;
             case ENUM:          return ElementKind.CONSTANT;
+            case ENUM_CONSTANT: return ElementKind.CONSTANT;
             case ANNOTATION_TYPE: return ElementKind.INTERFACE;
                     
             default:

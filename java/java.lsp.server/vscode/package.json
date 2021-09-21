@@ -243,6 +243,25 @@
 								"default": "internalConsole"
 							}
 						}
+					},
+					"attach": {
+						"properties": {
+							"nativeImagePath": {
+								"type": "string",
+								"description": "Absolute path to the application native image.",
+								"default": "${workspaceFolder}/build/native-image/application"
+							},
+							"processId": {
+								"type": "string",
+								"default": "${command:nativeImage.attachDebugger.pickProcess}",
+								"description": "Process Id of the native image"
+							},
+							"miDebugger": {
+								"type": "string",
+								"description": "MI Debugger",
+								"default": "gdb"
+							}
+						}
 					}
 				},
 				"initialConfigurations": [
@@ -255,13 +274,24 @@
 				],
 				"configurationSnippets": [
 					{
-						"label": "Launch Native Image",
+						"label": "Native Image: Launch",
 						"description": "Launch a native image with MI debugger.",
 						"body": {
 							"type": "nativeimage",
 							"request": "launch",
 							"name": "Launch Native Image",
 							"nativeImagePath": "^\"${1:\\${workspaceFolder\\}/build/native-image/application}\""
+						}
+					},
+					{
+						"label": "Native Image: Attach to Process",
+						"description": "Attach to a native image process with MI debugger.",
+						"body": {
+							"type": "nativeimage",
+							"request": "attach",
+							"name": "Attach to Native Image",
+							"processId": "^\"\\${command:nativeImage.attachDebugger.pickProcess\\}\"",
+							"nativeImagePath": ""
 						}
 					}
 				]
@@ -357,8 +387,9 @@
 		"watch": "tsc -watch -p ./",
 		"test": "node ./out/test/runTest.js",
 		"nbcode": "node ./out/nbcode.js",
-		"nbjavac": "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install .*nbjavac.*"
-	},
+		"nbjavac": "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install .*nbjavac.*",
+		"apisupport": "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install '(org.netbeans.libs.xerces|org.netbeans.modules.editor.structure|org.netbeans.modules.xml|org.netbeans.modules.xml.axi|org.netbeans.modules.xml.retriever|org.netbeans.modules.xml.schema.model|org.netbeans.modules.xml.tax|org.netbeans.modules.xml.text|org.netbeans.modules.ant.browsetask|.*apisupport.*|org.netbeans.modules.debugger.jpda.ant)' && node ./out/nbcode.js -J-Dnetbeans.close=true --modules --enable .*apisupport.ant"
+        },
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^7.0.2",

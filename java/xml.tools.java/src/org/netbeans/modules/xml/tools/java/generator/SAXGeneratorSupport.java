@@ -363,7 +363,7 @@ public final class SAXGeneratorSupport implements XMLGenerateCookie {
             }
 
             in = previous.getInputStream();
-            InputSource input = new InputSource(previous.getURL().toExternalForm());
+            InputSource input = new InputSource(previous.toURL().toExternalForm());
             input.setByteStream(in);
 
             SAXBindingsHandlerImpl handler = new SAXBindingsHandlerImpl();

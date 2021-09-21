@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.12
+#Version 1.13
 
 CLSS public abstract com.oracle.js.parser.AbstractParser
 cons protected init(com.oracle.js.parser.Source,com.oracle.js.parser.ErrorManager,boolean,int)
@@ -213,6 +213,7 @@ meth public int getColumnNumber()
 meth public int getLineNumber()
 meth public int getPosition()
 meth public java.lang.String getFileName()
+meth public java.lang.String getMessage()
 meth public long getToken()
 meth public void setColumnNumber(int)
 meth public void setFileName(java.lang.String)
@@ -576,9 +577,9 @@ fld protected final com.oracle.js.parser.ir.Scope scope
 fld protected final int flags
 fld protected final java.util.List<com.oracle.js.parser.ir.Statement> statements
 fld public final static int IS_BODY = 32
-fld public final static int IS_EXPRESSION_BLOCK
+fld public final static int IS_EXPRESSION_BLOCK = 256
 fld public final static int IS_GLOBAL_SCOPE = 8
-fld public final static int IS_MODULE_BODY
+fld public final static int IS_MODULE_BODY = 512
 fld public final static int IS_PARAMETER_BLOCK = 64
 fld public final static int IS_SWITCH_BLOCK = 128
 fld public final static int IS_SYNTHETIC = 16

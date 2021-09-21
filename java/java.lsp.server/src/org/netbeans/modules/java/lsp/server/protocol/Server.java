@@ -613,7 +613,7 @@ public final class Server {
                 completionOptions.setTriggerCharacters(Collections.singletonList("."));
                 capabilities.setCompletionProvider(completionOptions);
                 capabilities.setHoverProvider(true);
-                capabilities.setCodeActionProvider(new CodeActionOptions(Arrays.asList(CodeActionKind.QuickFix, CodeActionKind.Source)));
+                capabilities.setCodeActionProvider(new CodeActionOptions(Arrays.asList(CodeActionKind.QuickFix, CodeActionKind.Source, CodeActionKind.Refactor)));
                 capabilities.setDocumentSymbolProvider(true);
                 capabilities.setDefinitionProvider(true);
                 capabilities.setTypeDefinitionProvider(true);
@@ -633,9 +633,10 @@ public final class Server {
                         JAVA_NEW_FROM_TEMPLATE,
                         JAVA_NEW_PROJECT,
                         JAVA_PROJECT_CONFIGURATION_COMPLETION,
-                        JAVA_SUPER_IMPLEMENTATION));
-                for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
-                    commands.addAll(codeGenerator.getCommands());
+                        JAVA_SUPER_IMPLEMENTATION,
+                        NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH));
+                for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
+                    commands.addAll(codeActionsProvider.getCommands());
                 }
                 capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(commands));
                 capabilities.setWorkspaceSymbolProvider(true);
@@ -768,6 +769,10 @@ public final class Server {
      */
     public static final String JAVA_FIND_DEBUG_PROCESS_TO_ATTACH = "java.attachDebugger.pickProcess";
     /**
+     * Enumerates native processes eligible for debugger attach.
+     */
+    public static final String NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH = "nativeImage.attachDebugger.pickProcess";
+    /**
      * Provides code-completion of configurations.
      */
     public static final String JAVA_PROJECT_CONFIGURATION_COMPLETION = "java.project.configuration.completion";
@@ -865,7 +870,7 @@ public final class Server {
      * @param caps 
      */
     private static void hackConfigureGroovySupport(NbCodeClientCapabilities caps) {
-        boolean b = caps.wantsGroovySupport();
+        boolean b = caps != null && caps.wantsGroovySupport();
         try {
             Class clazz = Lookup.getDefault().lookup(ClassLoader.class).loadClass("org.netbeans.modules.groovy.editor.api.GroovyIndexer");
             Method m = clazz.getDeclaredMethod("setIndexingEnabled", Boolean.TYPE);

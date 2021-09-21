@@ -43,17 +43,18 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.modules.editor.java.Utilities;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
+import org.netbeans.modules.parsing.api.ResultIterator;
 
 /**
  *
  * @author Dusan Balek
  */
-public abstract class CodeGenerator {
+public abstract class CodeActionsProvider {
 
     public static final String CODE_GENERATOR_KIND = "source.generate";
     protected static final String ERROR = "<error>"; //NOI18N
 
-    public abstract List<CodeAction> getCodeActions(CompilationInfo info, CodeActionParams params);
+    public abstract List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception;
 
     public abstract Set<String> getCommands();
 
@@ -71,9 +72,35 @@ public abstract class CodeGenerator {
         return action;
     }
 
+    protected static String createLabel(CompilationInfo info, Element e) {
+        return createLabel(info, e, false);
+    }
+
+    protected static String createLabel(CompilationInfo info, Element e, boolean fqn) {
+        switch (e.getKind()) {
+            case ANNOTATION_TYPE:
+            case CLASS:
+            case ENUM:
+            case INTERFACE:
+                return createLabel(info, (TypeElement) e, fqn);
+            case CONSTRUCTOR:
+            case METHOD:
+                return createLabel(info, (ExecutableElement) e, fqn);
+            case ENUM_CONSTANT:
+            case FIELD:
+                return createLabel(info, (VariableElement) e, fqn);
+            default:
+                return null;
+        }
+    }
+
     protected static String createLabel(CompilationInfo info, TypeElement e) {
+        return createLabel(info, e, false);
+    }
+
+    protected static String createLabel(CompilationInfo info, TypeElement e, boolean fqn) {
         StringBuilder sb = new StringBuilder();
-        sb.append(e.getSimpleName());
+        sb.append(fqn ? e.getQualifiedName() : e.getSimpleName());
         List<? extends TypeParameterElement> typeParams = e.getTypeParameters();
         if (typeParams != null && !typeParams.isEmpty()) {
             sb.append("<"); // NOI18N
@@ -85,7 +112,7 @@ public abstract class CodeGenerator {
                     if (bounds.size() > 1 || !"java.lang.Object".equals(bounds.get(0).toString())) { // NOI18N
                         sb.append(" extends "); // NOI18N
                         for (Iterator<? extends TypeMirror> bIt = bounds.iterator(); bIt.hasNext();) {
-                            sb.append(Utilities.getTypeName(info, bIt.next(), false));
+                            sb.append(Utilities.getTypeName(info, bIt.next(), fqn));
                             if (bIt.hasNext()) {
                                 sb.append(" & "); // NOI18N
                             }
@@ -102,16 +129,24 @@ public abstract class CodeGenerator {
     }
 
     protected static String createLabel(CompilationInfo info, VariableElement e) {
+        return createLabel(info, e, false);
+    }
+
+    protected static String createLabel(CompilationInfo info, VariableElement e, boolean fqn) {
         StringBuilder sb = new StringBuilder();
         sb.append(e.getSimpleName());
         if (e.getKind() != ElementKind.ENUM_CONSTANT) {
             sb.append(" : "); // NOI18N
-            sb.append(Utilities.getTypeName(info, e.asType(), false));
+            sb.append(Utilities.getTypeName(info, e.asType(), fqn));
         }
         return sb.toString();
     }
 
     protected static String createLabel(CompilationInfo info, ExecutableElement e) {
+        return createLabel(info, e, false);
+    }
+
+    protected static String createLabel(CompilationInfo info, ExecutableElement e, boolean fqn) {
         StringBuilder sb = new StringBuilder();
         if (e.getKind() == ElementKind.CONSTRUCTOR) {
             sb.append(e.getEnclosingElement().getSimpleName());
@@ -122,10 +157,10 @@ public abstract class CodeGenerator {
         for (Iterator<? extends VariableElement> it = e.getParameters().iterator(); it.hasNext();) {
             VariableElement param = it.next();
             if (!it.hasNext() && e.isVarArgs() && param.asType().getKind() == TypeKind.ARRAY) {
-                sb.append(Utilities.getTypeName(info, ((ArrayType) param.asType()).getComponentType(), false));
+                sb.append(Utilities.getTypeName(info, ((ArrayType) param.asType()).getComponentType(), fqn));
                 sb.append("...");
             } else {
-                sb.append(Utilities.getTypeName(info, param.asType(), false));
+                sb.append(Utilities.getTypeName(info, param.asType(), fqn));
             }
             sb.append(" "); // NOI18N
             sb.append(param.getSimpleName());
@@ -138,7 +173,7 @@ public abstract class CodeGenerator {
             TypeMirror rt = e.getReturnType();
             if (rt.getKind() != TypeKind.VOID) {
                 sb.append(" : "); // NOI18N
-                sb.append(Utilities.getTypeName(info, e.getReturnType(), false));
+                sb.append(Utilities.getTypeName(info, e.getReturnType(), fqn));
             }
         }
         return sb.toString();
@@ -153,14 +188,20 @@ public abstract class CodeGenerator {
         }
 
         public ElementData(Element element) {
-            ElementHandle<Element> handle = ElementHandle.create(element);
+            this(ElementHandle.create(element));
+        }
+
+        public ElementData(ElementHandle<? extends Element> handle) {
             this.kind = handle.getKind().name();
             this.signature = ElementHandleAccessor.getInstance().getJVMSignature(handle);
         }
 
+        ElementHandle toHandle() {
+            return ElementHandleAccessor.getInstance().create(ElementKind.valueOf(kind), signature);
+        }
+
         Element resolve(CompilationInfo info) {
-            ElementHandle handle = ElementHandleAccessor.getInstance().create(ElementKind.valueOf(kind), signature);
-            return handle.resolve(info);
+            return toHandle().resolve(info);
         }
 
         @Pure

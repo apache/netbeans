@@ -22,9 +22,11 @@ package org.netbeans.modules.groovy.editor.compiler;
 import groovy.lang.GroovyClassLoader;
 import groovyjarjarasm.asm.Opcodes;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.security.CodeSource;
 import java.util.*;
 import java.util.concurrent.CancellationException;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -39,9 +41,10 @@ import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.GenericsType;
 import org.codehaus.groovy.ast.MixinNode;
 import org.codehaus.groovy.control.ClassNodeResolver.LookupResult;
-import org.codehaus.groovy.control.ClassNodeResolver;
 import org.codehaus.groovy.control.CompilerConfiguration;
+import org.codehaus.groovy.control.SourceUnit;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
@@ -49,13 +52,16 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.modules.groovy.editor.api.parser.GroovyParser;
 import org.netbeans.modules.groovy.editor.java.ElementSearch;
 import org.netbeans.modules.groovy.editor.java.Utilities;
+import org.netbeans.modules.parsing.api.Snapshot;
 import org.openide.util.Exceptions;
 
 /**
  *
  * @author Martin Adamek
  */
-public final class CompilationUnit extends org.codehaus.groovy.control.CompilationUnit {
+public class CompilationUnit extends org.codehaus.groovy.control.CompilationUnit {
+    protected final Snapshot mainSnapshot;
+    
     static CompilerConfiguration processConfiguration(CompilerConfiguration configuration, boolean isIndexing) {
         Map<String, Boolean> opts = configuration.getOptimizationOptions();
         opts.put("classLoaderResolving", Boolean.FALSE); // NOI18N
@@ -68,7 +74,7 @@ public final class CompilationUnit extends org.codehaus.groovy.control.Compilati
             @NonNull final GroovyClassLoader transformationLoader,
             @NonNull final ClasspathInfo cpInfo,
             @NonNull final ClassNodeCache classNodeCache) {
-        this(parser, configuration, security, loader, transformationLoader, cpInfo, classNodeCache, true);
+        this(parser, configuration, security, loader, transformationLoader, cpInfo, classNodeCache, true, null);
     }
     
     public CompilationUnit(GroovyParser parser, CompilerConfiguration configuration,
@@ -76,10 +82,11 @@ public final class CompilationUnit extends org.codehaus.groovy.control.Compilati
             @NonNull final GroovyClassLoader loader,
             @NonNull final GroovyClassLoader transformationLoader,
             @NonNull final ClasspathInfo cpInfo,
-            @NonNull final ClassNodeCache classNodeCache, boolean isIndexing) {
+            @NonNull final ClassNodeCache classNodeCache, boolean isIndexing, Snapshot snapshot) {
     
         super(processConfiguration(configuration, isIndexing), 
                 security, loader, transformationLoader);
+        this.mainSnapshot = snapshot;
         Map<String, Boolean> opts = this.configuration.getOptimizationOptions();
         opts.put("classLoaderResolving", Boolean.FALSE);
         this.configuration.setOptimizationOptions(opts);
@@ -101,7 +108,7 @@ public final class CompilationUnit extends org.codehaus.groovy.control.Compilati
         private final GroovyParser parser;
         private final JavaSource javaSource;
         private final HashMap<String, ClassNode> temp = new HashMap<>();
-
+        
         public CompileUnit(GroovyParser parser, GroovyClassLoader classLoader,
                 Function<String, ClassNode> classResolver,
                 CodeSource codeSource, CompilerConfiguration config,
@@ -292,6 +299,35 @@ public final class CompilationUnit extends org.codehaus.groovy.control.Compilati
                 classNode.setGenericsTypes(generics.toArray(new GenericsType[generics.size()]));
             }
             return classNode;
+        }
+    }
+    
+    protected void runSourceVisitor(String visitorName, Consumer<SourceUnit> callback) {
+        for (SourceUnit su : sources.values()) {
+            callback.accept(su);
+        }
+    }
+    
+    private static Method getCachedClassPathMethod;
+    
+    public static ClassPath pryOutCachedClassPath(ClasspathInfo cpInfo, ClasspathInfo.PathKind kind) {
+        try {
+            if (getCachedClassPathMethod == null) {
+                Method m = ClasspathInfo.class.getDeclaredMethod("getCachedClassPath", ClasspathInfo.PathKind.class);
+                m.setAccessible(true);
+                getCachedClassPathMethod = m;
+            } else if (getCachedClassPathMethod.getDeclaringClass() == String.class) {
+                return cpInfo.getClassPath(kind);
+            }
+            return (ClassPath)getCachedClassPathMethod.invoke(cpInfo, kind);
+        } catch (ReflectiveOperationException | SecurityException ex) {
+            Exceptions.printStackTrace(ex);
+            try {
+                getCachedClassPathMethod = String.class.getMethod("toString");
+            } catch (ReflectiveOperationException | SecurityException ex2) {
+                Exceptions.printStackTrace(ex2);
+            }
+            return cpInfo.getClassPath(kind);
         }
     }
 }

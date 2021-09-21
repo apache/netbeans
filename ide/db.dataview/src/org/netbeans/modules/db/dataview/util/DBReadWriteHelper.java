@@ -454,7 +454,7 @@ public class DBReadWriteHelper {
                 case Types.INTEGER: {
                     long ldata = Long.parseLong(valueObj.toString());
                         if(ldata >= ((long) Integer.MIN_VALUE) && ldata <= ((long) Integer.MAX_VALUE)) {
-                        return new Integer((int) ldata);
+                        return Integer.valueOf((int) ldata);
                         } else if ( ldata < maxUnsignedInt ) {
                         return new Long(ldata);
                     } else {

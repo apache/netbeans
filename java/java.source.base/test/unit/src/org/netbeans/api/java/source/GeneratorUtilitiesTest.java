@@ -1489,7 +1489,7 @@ public class GeneratorUtilitiesTest extends NbTestCase {
                     "package test; public class Test implements I { } interface I { public default void t() { } } \n",
                     "1.8",
                     new T2(),
-                    new ContentValidator("package test; public class Test implements I { \n\n    @Override\n    public void t() {\n        I.super.t(); //To change body of generated methods, choose Tools | Templates.\n    }\n } interface I { public default void t() { } } \n"),
+                    new ContentValidator("package test; public class Test implements I { \n\n    @Override\n    public void t() {\n        I.super.t(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody\n    }\n } interface I { public default void t() { } } \n"),
                     false);
     }
     
@@ -1498,7 +1498,7 @@ public class GeneratorUtilitiesTest extends NbTestCase {
                     "package test; public interface Test extends I { } interface I { public void t(); } \n",
                     "1.8",
                     new T2(),
-                    new ContentValidator("package test; public interface Test extends I { \n\n    @Override\n    public default void t() {\n        throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates.\n    }\n } interface I { public void t(); } \n"),
+                    new ContentValidator("package test; public interface Test extends I { \n\n    @Override\n    public default void t() {\n        throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n    }\n } interface I { public void t(); } \n"),
                     false);
     }
     
@@ -1507,7 +1507,7 @@ public class GeneratorUtilitiesTest extends NbTestCase {
                     "package test; public interface Test extends I { } interface I { public default void t() { } } \n",
                     "1.8",
                     new T2(),
-                    new ContentValidator("package test; public interface Test extends I { \n\n    @Override\n    public default void t() {\n        I.super.t(); //To change body of generated methods, choose Tools | Templates.\n    }\n } interface I { public default void t() { } } \n"),
+                    new ContentValidator("package test; public interface Test extends I { \n\n    @Override\n    public default void t() {\n        I.super.t(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody\n    }\n } interface I { public default void t() { } } \n"),
                     false);
     }
     
@@ -1516,7 +1516,7 @@ public class GeneratorUtilitiesTest extends NbTestCase {
                     "package test; public class Test implements I { } interface I { public void t(); } \n",
                     "1.8",
                     new T2(),
-                    new ContentValidator("package test; public class Test implements I { \n\n    @Override\n    public void t() {\n        throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates.\n    }\n } interface I { public void t(); } \n"),
+                    new ContentValidator("package test; public class Test implements I { \n\n    @Override\n    public void t() {\n        throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n    }\n } interface I { public void t(); } \n"),
                     false);
     }
     

@@ -74,7 +74,7 @@ public class ReflectiveBeanProp extends BeanProp {
     public Object getValue(int index) {
         try {
             if (isIndexed())
-                return reader.invoke(bean, new Object[] {new Integer(index)});
+                return reader.invoke(bean, new Object[] {Integer.valueOf(index)});
             else
                 return reader.invoke(bean, new Object[] {});
         } catch (java.lang.IllegalAccessException e) {
@@ -144,7 +144,7 @@ public class ReflectiveBeanProp extends BeanProp {
             if (add)
                 index = ((Integer) adder.invoke(bean, new Object[] {value})).intValue();
             else if (isIndexed())
-                writer.invoke(bean, new Object[] {new Integer(index), value});
+                writer.invoke(bean, new Object[] {Integer.valueOf(index), value});
             else
                 writer.invoke(bean, new Object[] {value});
             return index;

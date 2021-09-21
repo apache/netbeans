@@ -24,7 +24,6 @@
     <folder name="Services">
         <folder name="AutoupdateType">
             <file name="82pluginportal-update-provider.instance_hidden"/>
-            <file name="distribution-update-provider.instance_hidden"/>
             <file name="pluginportal-update-provider.instance_hidden"/>
         </folder>
     </folder>

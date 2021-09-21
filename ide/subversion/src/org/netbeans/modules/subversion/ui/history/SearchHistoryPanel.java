@@ -799,12 +799,12 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
     }
 
     private void initializeFilter () {
-        DefaultComboBoxModel filterModel = new DefaultComboBoxModel();
+        DefaultComboBoxModel<FilterKind> filterModel = new DefaultComboBoxModel<>();
         filterModel.addElement(FilterKind.ALL);
         filterModel.addElement(FilterKind.ID);
         filterModel.addElement(FilterKind.MESSAGE);
         filterModel.addElement(FilterKind.USER);
-//        filterModel.addElement(FilterKind.FILE);
+
         cmbFilterKind.setModel(filterModel);
         cmbFilterKind.setSelectedItem(FilterKind.ALL);
         txtFilter.getDocument().addDocumentListener(this);

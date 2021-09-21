@@ -201,7 +201,7 @@ public class CloneAndCloneableTest extends NbTestCase {
         "public class CloneTest4 implements Cloneable {\n" +
         "    @Override\n" +
         "    public Object clone() throws CloneNotSupportedException {\n" +
-        "        return super.clone(); //To change body of generated methods, choose Tools | Templates.\n" +
+        "        return super.clone(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody\n" +
         "    }\n" +
         "}"
         );

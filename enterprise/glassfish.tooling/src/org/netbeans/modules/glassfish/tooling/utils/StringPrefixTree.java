@@ -188,7 +188,7 @@ public class StringPrefixTree<Type> {
             sb.append("Value=");
             sb.append(value != null ? value.toString() : "null");
             sb.append(" Transitions=[");
-            for (Iterator i = next.keySet().iterator(); i.hasNext(); ) {
+            for (Iterator<Character> i = next.keySet().iterator(); i.hasNext(); ) {
                 sb.append(i.next());
                 if (i.hasNext()) {
                     sb.append(',');

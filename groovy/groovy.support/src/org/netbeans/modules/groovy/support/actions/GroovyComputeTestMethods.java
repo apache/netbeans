@@ -27,6 +27,8 @@ import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
@@ -49,6 +51,10 @@ public class GroovyComputeTestMethods implements ComputeTestMethods {
         if (cancel.get()) {
             return result;
         }
+        FileObject fileObject = parserResult.getSnapshot().getSource().getFileObject();
+        if (!isTestSource(fileObject)) {
+            return result;
+        }
         String text = parserResult.getSnapshot().getText().toString();
         ModuleNode moduleNode = TestMethodUtil.extractModuleNode(parserResult);
         for (ClassNode classNode : moduleNode.getClasses()) {
@@ -68,7 +74,6 @@ public class GroovyComputeTestMethods implements ComputeTestMethods {
                                 int startOffset = getOffset(text, startLine, startColumn);
                                 int endOffset = getOffset(text, endLine, endColumn);
                                 String name = annotation.getMember("name").getText();
-                                FileObject fileObject = parserResult.getSnapshot().getSource().getFileObject();
                                 Project project = FileOwnerQuery.getOwner(fileObject);
                                 boolean isMaven = project != null && project.getLookup().lookup(NbMavenProject.class) != null;
                                 result.add(new TestMethodController.TestMethod(isMaven ? classNode.getNameWithoutPackage() : classNode.getName(),
@@ -84,6 +89,17 @@ public class GroovyComputeTestMethods implements ComputeTestMethods {
             }
         }
         return result;
+    }
+
+    private static boolean isTestSource(FileObject fo) {
+        ClassPath cp = ClassPath.getClassPath(fo, ClassPath.SOURCE);
+        if (cp != null) {
+            FileObject root = cp.findOwnerRoot(fo);
+            if (root != null) {
+                return UnitTestForSourceQuery.findSources(root).length > 0;
+            }
+        }
+        return false;
     }
 
     private static int getOffset(String text, int lineNumber, int columnNumber) {

@@ -46,7 +46,7 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 
 /**
- * Debugger attach configurations provider.
+ * Java Debugger attach configurations provider.
  *
  * @author Martin Entlicher
  */

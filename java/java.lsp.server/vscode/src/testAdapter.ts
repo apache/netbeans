@@ -60,6 +60,7 @@ export class NbTestAdapter implements TestAdapter {
             loadedTests.forEach((suite: TestSuite) => {
                 this.updateTests(suite);
             });
+            this.children.sort((a, b) => a.label.localeCompare(b.label));
         }
         if (this.children.length > 0) {
             this.testsEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished', suite: this.testSuite });
@@ -152,9 +153,13 @@ export class NbTestAdapter implements TestAdapter {
 	}
 
     testProgress(suite: TestSuite): void {
+        let cnt = this.children.length;
         switch (suite.state) {
             case 'loaded':
                 if (this.updateTests(suite)) {
+                    if (this.children.length !== cnt) {
+                        this.children.sort((a, b) => a.label.localeCompare(b.label));
+                    }
                     this.testsEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished', suite: this.testSuite });
                 }
                 break;
@@ -166,6 +171,9 @@ export class NbTestAdapter implements TestAdapter {
                 let errMessage: string | undefined;
                 if (suite.tests) {
                     if (this.updateTests(suite, true)) {
+                        if (this.children.length !== cnt) {
+                            this.children.sort((a, b) => a.label.localeCompare(b.label));
+                        }
                         this.testsEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished', suite: this.testSuite });
                     }
                     const currentSuite = this.children.find(s => s.id === suite.suiteName);

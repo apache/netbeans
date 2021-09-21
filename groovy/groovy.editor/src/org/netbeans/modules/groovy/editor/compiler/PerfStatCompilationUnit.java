@@ -235,7 +235,7 @@ public class PerfStatCompilationUnit extends CompilationUnit {
             if (cn.contains("$$Lambda")) { // NOI18N
                 StackTraceElement invokedFrom = null;
                 for (StackTraceElement ele : new Throwable().getStackTrace()) {
-                    boolean myClass = ele.getClassName().startsWith(GroovyParser.class.getName());
+                    boolean myClass = ele.getClassName().startsWith(PerfStatCompilationUnit.class.getName());
                     if (!myClass) {
                         invokedFrom = ele;
                         break;

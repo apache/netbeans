@@ -39,6 +39,7 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.nativeimage.debugger.actions.Processes.ProcessInfo;
 import org.netbeans.modules.java.nativeimage.debugger.api.NIDebugRunner;
+import org.netbeans.modules.nativeimage.api.debug.StartDebugParameters;
 import org.netbeans.spi.debugger.ui.Controller;
 import static org.netbeans.spi.debugger.ui.Controller.PROP_VALID;
 import org.netbeans.spi.debugger.ui.PersistentController;

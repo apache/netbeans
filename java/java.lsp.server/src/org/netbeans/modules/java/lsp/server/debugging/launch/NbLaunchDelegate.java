@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -72,6 +73,7 @@ import org.netbeans.modules.java.lsp.server.progress.ProgressOperationListener;
 import org.netbeans.modules.java.lsp.server.progress.TestProgressHandler;
 import org.netbeans.modules.java.nativeimage.debugger.api.NIDebugRunner;
 import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
+import org.netbeans.modules.nativeimage.api.debug.StartDebugParameters;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectConfiguration;
@@ -173,16 +175,7 @@ public abstract class NbLaunchDelegate {
             W writer = new W();
             CompletableFuture<Pair<ActionProvider, String>> commandFuture = findTargetWithPossibleRebuild(toRun, singleMethod, debug, testRun, ioContext);
             commandFuture.thenAccept((providerAndCommand) -> {
-                List<String> args = argsToStringList(launchArguments.get("args"));
-                List<String> vmArgs = argsToStringList(launchArguments.get("vmArgs"));
-                ExplicitProcessParameters params = ExplicitProcessParameters.empty();
-                if (!(args.isEmpty() && vmArgs.isEmpty())) {
-                    ExplicitProcessParameters.Builder bld = ExplicitProcessParameters.builder();
-                    bld.launcherArgs(vmArgs);
-                    bld.args(args);
-                    bld.replaceArgs(false);
-                    params = bld.build();
-                }
+                ExplicitProcessParameters params = createExplicitProcessParameters(launchArguments);
                 OperationContext ctx = OperationContext.find(Lookup.getDefault());
                 ctx.addProgressOperationListener(null, new ProgressOperationListener() {
                     @Override
@@ -320,6 +313,7 @@ public abstract class NbLaunchDelegate {
                     .showSuspended(true)
                     .frontWindowOnError(true)
                     .controllable(true);
+            ExplicitProcessParameters params = createExplicitProcessParameters(launchArguments);
             Lookup launchCtx = new ProxyLookup(
                     Lookups.fixed(ioContext, progress),
                     Lookup.getDefault()
@@ -335,7 +329,7 @@ public abstract class NbLaunchDelegate {
                     });
                     Lookups.executeWith(execLookup, () -> {
                         String miDebugger = (String) launchArguments.get("miDebugger");
-                        startNativeDebug(nativeImageFile, args, miDebugger, context, ed, launchFuture, debugProgress);
+                        startNativeDebug(nativeImageFile, args, miDebugger, context, ed, Lookups.fixed(params), launchFuture, debugProgress);
                     });
                 });
             } else {
@@ -344,19 +338,64 @@ public abstract class NbLaunchDelegate {
                     notifyFinished(context, exitCode != null && exitCode == 0);
                 });
                 Lookups.executeWith(execLookup, () -> {
-                    execNative(nativeImageFile, args, context, ed, launchFuture);
+                    execNative(nativeImageFile, args, context, ed, params, launchFuture);
                 });
             }
         }
         return launchFuture;
     }
 
-    private static void execNative(File nativeImageFile, List<String> args, DebugAdapterContext context, ExecutionDescriptor executionDescriptor, CompletableFuture<Void> launchFuture) {
+    private static ExplicitProcessParameters createExplicitProcessParameters(Map<String, Object> launchArguments) {
+        List<String> args = argsToStringList(launchArguments.get("args"));
+        List<String> vmArgs = argsToStringList(launchArguments.get("vmArgs"));
+        String cwd = Objects.toString(launchArguments.get("cwd"), null);
+        Object envObj = launchArguments.get("env");
+        Map<String, String> env = envObj != null ? (Map<String, String>) envObj : Collections.emptyMap();
+        ExplicitProcessParameters.Builder bld = ExplicitProcessParameters.builder();
+        if (!args.isEmpty()) {
+            bld.launcherArgs(vmArgs);
+        }
+        if (!vmArgs.isEmpty()) {
+            bld.args(args);
+        }
+        bld.replaceArgs(false);
+        if (cwd != null) {
+            bld.workingDirectory(new File(cwd));
+        }
+        if (!env.isEmpty()) {
+            bld.environmentVariables(env);
+        }
+        ExplicitProcessParameters params = bld.build();
+        return params;
+    }
+
+    private static void execNative(File nativeImageFile, List<String> args,
+                                   DebugAdapterContext context,
+                                   ExecutionDescriptor executionDescriptor,
+                                   ExplicitProcessParameters params,
+                                   CompletableFuture<Void> launchFuture) {
         ExecutionService.newService(() -> {
             launchFuture.complete(null);
-            List<String> command = args.isEmpty() ? Collections.singletonList(nativeImageFile.getAbsolutePath()) : join(nativeImageFile.getAbsolutePath(), args);
+            List<String> command = join(nativeImageFile.getAbsolutePath(), args);
             try {
-                return new ProcessBuilder(command).start();
+                ProcessBuilder pb = new ProcessBuilder(command);
+                File workingDirectory = params.getWorkingDirectory();
+                if (workingDirectory != null) {
+                    pb.directory(workingDirectory);
+                }
+                if (!params.getEnvironmentVariables().isEmpty()) {
+                    Map<String, String> environment = pb.environment();
+                    for (Map.Entry<String, String> entry : params.getEnvironmentVariables().entrySet()) {
+                        String env = entry.getKey();
+                        String val = entry.getValue();
+                        if (val != null) {
+                            environment.put(env, val);
+                        } else {
+                            environment.remove(env);
+                        }
+                    }
+                }
+                return pb.start();
             } catch (IOException ex) {
                 ErrorUtilities.completeExceptionally(launchFuture,
                     "Failed to run debuggee native image: " + ex.getLocalizedMessage(),
@@ -367,18 +406,32 @@ public abstract class NbLaunchDelegate {
     }
 
     private static List<String> join(String first, List<String> next) {
+        if (next.isEmpty()) {
+            return Collections.singletonList(first);
+        }
         List<String> joined = new ArrayList<>(next.size() + 1);
         joined.add(first);
         joined.addAll(next);
         return joined;
     }
 
-    private static void startNativeDebug(File nativeImageFile, List<String> args, String miDebugger, DebugAdapterContext context, ExecutionDescriptor executionDescriptor, CompletableFuture<Void> launchFuture, ActionProgress debugProgress) {
+    private static void startNativeDebug(File nativeImageFile, List<String> args,
+                                         String miDebugger, DebugAdapterContext context,
+                                         ExecutionDescriptor executionDescriptor,
+                                         Lookup contextLookup,
+                                         CompletableFuture<Void> launchFuture,
+                                         ActionProgress debugProgress) {
         AtomicReference<NbDebugSession> debugSessionRef = new AtomicReference<>();
         CompletableFuture<Void> finished = new CompletableFuture<>();
+        List<String> command = join(nativeImageFile.getAbsolutePath(), args);
+        StartDebugParameters.Builder parametersBuilder = StartDebugParameters.newBuilder(command)
+                .debugger(miDebugger)
+                .executionDescriptor(executionDescriptor)
+                .lookup(contextLookup);
+        StartDebugParameters parameters = parametersBuilder.build();
         NIDebugger niDebugger;
         try {
-            niDebugger = NIDebugRunner.start(nativeImageFile, args, miDebugger, null, null, executionDescriptor, engine -> {
+            niDebugger = NIDebugRunner.start(nativeImageFile, parameters, null, engine -> {
                 Session session = engine.lookupFirst(null, Session.class);
                 NbDebugSession debugSession = new NbDebugSession(session);
                 debugSessionRef.set(debugSession);
@@ -405,7 +458,7 @@ public abstract class NbLaunchDelegate {
     }
 
     @NonNull
-    private List<String> argsToStringList(Object o) {
+    private static List<String> argsToStringList(Object o) {
         if (o == null) {
             return Collections.emptyList();
         }

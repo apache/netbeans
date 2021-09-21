@@ -153,6 +153,21 @@
 								"description": "Arguments for the Java VM",
 								"default": null
 							},
+							"cwd": {
+								"type": [
+									"string",
+									"null"
+								],
+								"description": "Working directory for the program execution",
+								"default": null
+							},
+							"env": {
+								"type": [
+									"object"
+								],
+								"description": "Environment variables for the program execution",
+								"default": {}
+							},
 							"launchConfiguration": {
 								"type": [
 									"string",

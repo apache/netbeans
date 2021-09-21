@@ -19,10 +19,12 @@
 
 package org.netbeans.modules.cpplite.debugger;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -31,16 +33,33 @@ import org.netbeans.api.annotations.common.NullAllowed;
 public final class CPPLiteDebuggerConfig {
 
     private final List<String> executable;
-    private final File directory;
+    private final ExplicitProcessParameters processParameters;
     @NullAllowed
     private final Long processId;
     private final String debugger;
 
-    public CPPLiteDebuggerConfig(List<String> executable, File directory, @NullAllowed Long processId, String debugger) {
-        this.executable = executable;
-        this.directory = directory;
+    public CPPLiteDebuggerConfig(List<String> executable, ExplicitProcessParameters processParameters, @NullAllowed Long processId, String debugger) {
+        this.processParameters = processParameters;
         this.processId = processId;
         this.debugger = debugger;
+        if (processParameters.isArgReplacement()) {
+            this.executable = new ArrayList<>();
+            this.executable.add(executable.get(0));
+            if (processParameters.getArguments() != null) {
+                this.executable.addAll(processParameters.getArguments());
+            }
+        } else {
+            if (processParameters.getArguments() != null) {
+                this.executable = new ArrayList<>();
+                this.executable.addAll(executable);
+                this.executable.addAll(processParameters.getArguments());
+            } else {
+                this.executable = executable;
+            }
+        }
+        if (processParameters.getLauncherArguments() != null) {
+            Exceptions.printStackTrace(new IllegalStateException("Launcher arguments " + processParameters.getLauncherArguments() + " can not be accepted by CPPLite debugger"));
+        }
     }
 
     public String getDisplayName() {
@@ -55,10 +74,10 @@ public final class CPPLiteDebuggerConfig {
     }
 
     /**
-     * Get the directory in which the executable command is to be launched.
+     * Get the parameters which the executable command is to be launched with.
      */
-    public File getDirectory() {
-        return directory;
+    public ExplicitProcessParameters getProcessParameters() {
+        return processParameters;
     }
 
     /**

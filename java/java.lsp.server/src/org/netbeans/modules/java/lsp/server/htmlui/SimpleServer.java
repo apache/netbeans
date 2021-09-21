@@ -384,6 +384,9 @@ final class SimpleServer extends HttpServer<SimpleServer.ReqRes, SimpleServer.Re
         if (args != null) {
             for (String arg : args.substring(1).split("&")) {
                 String[] valueAndKey = arg.split("=");
+                if (valueAndKey.length != 2) {
+                    continue;
+                }
 
                 String key = valueAndKey[1].replaceAll("\\+", " ");
                 for (int idx = 0;;) {

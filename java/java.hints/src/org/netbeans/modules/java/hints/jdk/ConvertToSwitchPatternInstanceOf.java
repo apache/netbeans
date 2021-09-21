@@ -1,5 +1,3 @@
-package org.netbeans.modules.java.hints.jdk;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,8 @@ package org.netbeans.modules.java.hints.jdk;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.modules.java.hints.jdk;
+
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ExpressionStatementTree;
@@ -81,14 +81,19 @@ public class ConvertToSwitchPatternInstanceOf {
             return null;
         }
         Tree ifPath = ctx.getPath().getLeaf();
-        Name expr0 = ((IdentifierTree) ctx.getVariables().get("$expr0").getLeaf()).getName();
+        String expr0 = null;
+        try{
+            expr0 = ctx.getVariables().get("$expr0").getLeaf().toString();
+        }catch(ClassCastException cce){
+            Exceptions.printStackTrace(cce);
+        }
         int matchVarIndex = 1;
         while (ifPath != null && ifPath.getKind() == Tree.Kind.IF) {
             matchVarIndex++;
             IfTree it = (IfTree) ifPath;
             if (MatcherUtilities.matches(ctx, new TreePath(ctx.getPath(), it.getCondition()), "($expr" + matchVarIndex + " instanceof $typeI" + matchVarIndex + ")", true)
                     && MatcherUtilities.matches(ctx, new TreePath(ctx.getPath(), it.getThenStatement()), "{ $typeV" + matchVarIndex + " $var" + matchVarIndex + " = ($typeC" + matchVarIndex + ") $expr" + matchVarIndex + "; $other" + matchVarIndex + "$;}", true)) {
-                if (!((IdentifierTree) ctx.getVariables().get("$expr" + matchVarIndex).getLeaf()).getName().equals(expr0)) {
+                if (!ctx.getVariables().get("$expr" + matchVarIndex).getLeaf().toString().equals(expr0)) {
                     return null;
                 }
                 for (TreePath tp : ctx.getMultiVariables().get("$other" + matchVarIndex + "$")) {
@@ -183,7 +188,12 @@ public class ConvertToSwitchPatternInstanceOf {
             return null;
         }
         Tree ifPath = ctx.getPath().getLeaf();
-        Name expr0 = ((IdentifierTree) ctx.getVariables().get("$expr0").getLeaf()).getName();
+        String expr0 = null;
+        try{
+            expr0 = ctx.getVariables().get("$expr0").getLeaf().toString();
+        }catch(ClassCastException cce){
+            Exceptions.printStackTrace(cce);
+        }
         int matchVarIndex = 1;
         while (ifPath != null && ifPath.getKind() == Tree.Kind.IF) {
             matchVarIndex++;
@@ -193,7 +203,7 @@ public class ConvertToSwitchPatternInstanceOf {
                 if (ctx.getMultiVariables().get("$other" + matchVarIndex + "$").isEmpty()) {
                     return null;
                 }
-                if (!((IdentifierTree) ctx.getVariables().get("$expr" + matchVarIndex).getLeaf()).getName().equals(expr0)) {
+                if (!(ctx.getVariables().get("$expr" + matchVarIndex).getLeaf().toString().equals(expr0))) {
                     return null;
                 }
                 for (TreePath tp : ctx.getMultiVariables().get("$other" + matchVarIndex + "$")) {
@@ -288,7 +298,12 @@ public class ConvertToSwitchPatternInstanceOf {
         if (!isPatternMatch) {
             return null;
         }
-        IdentifierTree expression = (IdentifierTree) ((ParenthesizedTree) (switchTree).getExpression()).getExpression();
+        Tree expression = null;
+        try {
+            expression = ((ParenthesizedTree) switchTree.getExpression()).getExpression();
+        } catch (ClassCastException cce) {
+            Exceptions.printStackTrace(cce);
+        }
         Tree parent = (Tree) ctx.getPath().getParentPath().getLeaf();
         int indexOf;
         if (parent instanceof BlockTree) {
@@ -298,7 +313,7 @@ public class ConvertToSwitchPatternInstanceOf {
         }
         Tree ifTree = ((BlockTree) parent).getStatements().get(indexOf);
         if ((!(ifTree instanceof IfTree) || !MatcherUtilities.matches(ctx, new TreePath(ctx.getPath(), ((IfTree) ifTree).getCondition()), "($expr0 == null)", true))
-                || !((IdentifierTree) ctx.getVariables().get("$expr0").getLeaf()).getName().equals(expression.getName())) {
+                || !(ctx.getVariables().get("$expr0").getLeaf().toString().equals(expression.toString()))) {
             return null;
         }
         Fix fix = new FixSwitchPatternMatchToSwitchNull(ctx.getInfo(), ctx.getPath().getParentPath(), indexOf).toEditorFix();
@@ -332,7 +347,8 @@ public class ConvertToSwitchPatternInstanceOf {
             StatementTree thenStatement = ((IfTree) ifTree).getThenStatement();
             caseNullLabel.add(wc.getTreeMaker().Identifier("null"));
             BlockTree blockTree = (BlockTree)thenStatement;
-            CaseTree caseMultipleSwitchPatterns = wc.getTreeMaker().CasePatterns(caseNullLabel, blockTree.getStatements().size() == 1 ? blockTree.getStatements().get(0) : blockTree);
+            Tree statementTree = blockTree.getStatements().size() == 1 && isValidCaseTree(blockTree.getStatements().get(0))? blockTree.getStatements().get(0) : blockTree;
+            CaseTree caseMultipleSwitchPatterns = wc.getTreeMaker().CasePatterns(caseNullLabel, statementTree);
             SwitchTree insertSwitchCase = make.insertSwitchCase(switchTree, 0, caseMultipleSwitchPatterns);
             wc.rewrite(switchTree, insertSwitchCase);
             BlockTree removeBlockStatement = make.removeBlockStatement((BlockTree) main.getLeaf(), indexOf);

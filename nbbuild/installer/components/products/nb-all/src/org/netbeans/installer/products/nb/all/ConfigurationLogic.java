@@ -907,7 +907,7 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
     public static final String ICON_UNIX =
             "/netbeans/" + NB_CLUSTER + "/netbeans.png"; // NOI18N
     public static final String ICON_MACOSX =
-            "/netbeans/" + NB_CLUSTER + "/netbeans.icns"; // NOI18N
+            "/netbeans/" + NB_CLUSTER + "/netbeans_mac.icns"; // NOI18N
     
     public static final String SHORTCUT_FILENAME =
             "Apache NetBeans-{display-version}.desktop"; // NOI18N

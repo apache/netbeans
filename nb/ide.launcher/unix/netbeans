@@ -154,7 +154,7 @@ case "`uname`" in
         eval launchNbexec \
             --jdkhome '"$netbeans_jdkhome"' \
             -J-Xdock:name=NetBeans \
-            '"-J-Xdock:icon=$basedir/nb/netbeans.icns"' \
+            '"-J-Xdock:icon=$basedir/nb/netbeans_mac.icns"' \
             --branding nb \
             --clusters '"$netbeans_clusters"' \
             -J-Dnetbeans.importclass=org.netbeans.upgrade.AutoUpgrade \

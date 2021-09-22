@@ -206,6 +206,8 @@ public final class JavaElementHandler {
         @Override
         public void run(CompilationController info) throws Exception {
             Elements elements = info.getElements();
+            info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+            
             ElementAcceptor acceptor = new ElementAcceptor() {
 
                 public boolean accept(Element e, TypeMirror type) {
@@ -385,6 +387,7 @@ public final class JavaElementHandler {
 
             Elements elements = info.getElements();
             if (elements != null) {
+                info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                 ElementAcceptor acceptor = new ElementAcceptor() {
 
                     public boolean accept(Element e, TypeMirror type) {

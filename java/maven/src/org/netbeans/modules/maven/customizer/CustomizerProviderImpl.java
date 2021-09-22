@@ -119,6 +119,8 @@ public class CustomizerProviderImpl implements CustomizerProvider2 {
                "# {0} - project display name",
                "TIT_Project_Properties=Project Properties - {0}", 
                "ERR_MissingPOM=Project's pom.xml file contains invalid xml content. Please fix the file before proceeding.",
+               "# {0} - error message",
+               "ERR_MissingPOMErr=Project''s pom.xml file contains invalid xml content: {0}. Please fix the file before proceeding.",
                "TXT_Unloadable=Project is unloadable, you have to fix the problems before accessing the project properties dialog. Show Problem Resolution dialog?",
                "TIT_Unloadable=Project unlodable"
     })
@@ -136,7 +138,9 @@ public class CustomizerProviderImpl implements CustomizerProvider2 {
             POMModel mdl = init();
             //#171958 start
             if (!mdl.getState().equals(State.VALID)) {
-                NotifyDescriptor nd = new NotifyDescriptor.Message(ERR_MissingPOM(), NotifyDescriptor.ERROR_MESSAGE);
+                String statusMessage = mdl.getStatusMessage();
+                String errMessage = (statusMessage != null) ? ERR_MissingPOMErr(statusMessage) : ERR_MissingPOM();
+                NotifyDescriptor nd = new NotifyDescriptor.Message(errMessage, NotifyDescriptor.ERROR_MESSAGE);
                 DialogDisplayer.getDefault().notify(nd);
                 return;
             }

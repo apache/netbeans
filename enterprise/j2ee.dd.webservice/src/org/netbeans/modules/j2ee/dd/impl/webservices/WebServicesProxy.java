@@ -51,8 +51,7 @@ public class WebServicesProxy implements Webservices {
     public void setOriginal(Webservices webSvc) {
         if (this.webSvc != webSvc) {
             for (int i=0;i<listeners.size();i++) {
-                PropertyChangeListener pcl = 
-                    (PropertyChangeListener)listeners.get(i);
+                PropertyChangeListener pcl = listeners.get(i);
                 if (this.webSvc != null) this.webSvc.removePropertyChangeListener(pcl);
                 if (webSvc != null) webSvc.addPropertyChangeListener(pcl);
                 

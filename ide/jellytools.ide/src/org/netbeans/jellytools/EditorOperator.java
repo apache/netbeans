@@ -650,7 +650,7 @@ public class EditorOperator extends TopComponentOperator {
                     Class annotationsClass = Class.forName("org.netbeans.editor.Annotations");
                     Field lineAnnotationsArrayField = annotationsClass.getDeclaredField("lineAnnotationsArray");
                     lineAnnotationsArrayField.setAccessible(true);
-                    List lineAnnotationsArray = (ArrayList) lineAnnotationsArrayField.get(getAnnotationsInstance());
+                    List lineAnnotationsArray = (List) lineAnnotationsArrayField.get(getAnnotationsInstance());
                     // loop through all lines
                     for (int i = 0; i < lineAnnotationsArray.size(); i++) {
                         result.addAll(getAnnotations(lineAnnotationsArray.get(i)));

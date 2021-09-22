@@ -62,7 +62,7 @@ public class EjbJarProxy implements EjbJar {
         if (this.ejbJar!=ejbJar) {
             for (int i=0;i<listeners.size();i++) {
                 java.beans.PropertyChangeListener pcl =
-                    (PropertyChangeListener)listeners.get(i);
+                    listeners.get(i);
                 if (this.ejbJar!=null) this.ejbJar.removePropertyChangeListener(pcl);
                 if (ejbJar!=null) ejbJar.addPropertyChangeListener(pcl);
 

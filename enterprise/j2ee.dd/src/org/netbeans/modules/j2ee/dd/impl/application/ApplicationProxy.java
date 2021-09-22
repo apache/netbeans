@@ -51,7 +51,7 @@ public class ApplicationProxy implements Application {
     public void setOriginal(Application app) {
         if (this.app != app) {
             for (int i=0;i<listeners.size();i++) {
-                java.beans.PropertyChangeListener pcl = (PropertyChangeListener)listeners.get(i);
+                java.beans.PropertyChangeListener pcl = listeners.get(i);
                 if (this.app != null) this.app.removePropertyChangeListener(pcl);
                 if (app != null) app.addPropertyChangeListener(pcl);
                 

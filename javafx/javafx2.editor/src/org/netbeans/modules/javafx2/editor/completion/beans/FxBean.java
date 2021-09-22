@@ -455,7 +455,7 @@ public final class FxBean extends FxDefinition {
     
     @SuppressWarnings("unchecked")
     private void appendMap(StringBuilder sb, Map m) {
-        List al = new ArrayList(m.keySet());
+        List<String> al = new ArrayList<>(m.keySet());
         Collections.sort(al);
         
         for (Object o : al) {

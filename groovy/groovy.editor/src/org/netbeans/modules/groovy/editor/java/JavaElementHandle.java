@@ -214,6 +214,7 @@ public final class JavaElementHandle implements ElementHandle {
             @Override
             public void run(CompilationController parameter) throws Exception {
                 try {
+                    parameter.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                     result = resolver.apply(parameter, toElement(parameter));
                 } catch (Exception ex) {
                     thrown = ex;

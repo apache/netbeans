@@ -26,12 +26,13 @@ import net.java.html.json.ComputedProperty;
 import net.java.html.json.Function;
 import net.java.html.json.ModelOperation;
 import org.netbeans.api.htmlui.OpenHTMLRegistration;
+import org.netbeans.modules.java.lsp.server.htmlui.demo.HelloWorldCntrl.Modifier;
 import org.openide.util.NbBundle;
 import org.openide.awt.ActionID;
 import org.openide.awt.StatusDisplayer;
 
 @Model(className = "HelloWorld", targetId = "", instance = true, builder = "with", properties = {
-    @Property(name = "selectedModifier", type = String.class),
+    @Property(name = "selectedModifier", type = Modifier.class),
     @Property(name = "name", type = String.class),
     @Property(name = "returnType", type = String.class),
     @Property(name = "parameters", type = Parameter.class, array = true)
@@ -83,17 +84,38 @@ public final class HelloWorldCntrl {
         model.getParameters().remove(data);
     }
 
+    public enum Modifier {
+        PUBLIC("public"), PROTECTED("protected"), PACKAGE_PRIVATE("", "package private"), PRIVATE("private");
+
+        final String javaName;
+        final String humanName;
+
+        Modifier(String javaName) {
+            this(javaName, null);
+        }
+
+        Modifier(String javaName, String humanName) {
+            this.javaName = javaName;
+            this.humanName = humanName;
+        }
+
+        @Override
+        public String toString() {
+            return humanName == null ? javaName : humanName;
+        }
+    }
+
     @ComputedProperty
-    static List<String> availableModifiers() {
-        return Arrays.asList("public", "protected", "package-package", "private");
+    static List<Modifier> availableModifiers() {
+        return Arrays.asList(Modifier.values());
     }
 
     @ComputedProperty
     static String preview(
-        String selectedModifier, String returnType, String name, List<Parameter> parameters
+        Modifier selectedModifier, String returnType, String name, List<Parameter> parameters
     ) {
         StringBuilder sb = new StringBuilder();
-        sb.append(selectedModifier).append(" ").append(returnType);
+        sb.append(selectedModifier != null ? selectedModifier.javaName : "").append(" ").append(returnType);
         sb.append(" ").append(name).append("(");
         String sep = "";
         for (Parameter p : parameters) {
@@ -120,7 +142,7 @@ public final class HelloWorldCntrl {
         model.
             withName("openSource").
             withReturnType("boolean").
-            withSelectedModifier("public").
+            withSelectedModifier(Modifier.PUBLIC).
             withParameters(
                 new Parameter("Lookup.Provider", "project"),
                 new Parameter("String", "className"),

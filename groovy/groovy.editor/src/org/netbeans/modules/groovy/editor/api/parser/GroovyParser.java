@@ -585,6 +585,13 @@ public class GroovyParser extends Parser {
         ClassPath compilePath = fo == null ? ClassPath.EMPTY : ClassPath.getClassPath(fo, ClassPath.COMPILE);
         ClassPath sourcePath = fo == null ? ClassPath.EMPTY : ClassPath.getClassPath(fo, ClassPath.SOURCE);
         
+        if (bootPath == null) {
+            bootPath = ClassPath.EMPTY;
+        }
+        if (compilePath == null) {
+            compilePath = ClassPath.EMPTY;
+        }
+        
         CompilerConfiguration configuration = new CompilerConfiguration();
         final ClassNodeCache classNodeCache = ClassNodeCache.get();
         classNodeCache.setPerfData(context.perfData);

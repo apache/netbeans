@@ -18,17 +18,16 @@
  */
 'use strict';
 
-import {
-    DecorationRenderOptions,
-    QuickPickItem,
-    Range,
-    TextEditorDecorationType,
-} from 'vscode';
+import * as vscode from 'vscode';
 import {
     NotificationType,
     RequestType,
     ShowMessageParams
 } from 'vscode-languageclient';
+import {
+    Position,
+    Range
+} from 'vscode-languageserver-protocol';
 
 export interface ShowStatusMessageParams extends ShowMessageParams {
     /**
@@ -53,11 +52,11 @@ export interface ShowQuickPickParams {
     /**
      * A list of items.
      */
-    items: QuickPickItem[];
+    items: vscode.QuickPickItem[];
 }
 
 export namespace QuickPickRequest {
-    export const type = new RequestType<ShowQuickPickParams, QuickPickItem[], void, void>('window/showQuickPick');
+    export const type = new RequestType<ShowQuickPickParams, vscode.QuickPickItem[], void, void>('window/showQuickPick');
 }
 
 export interface ShowInputBoxParams {
@@ -81,20 +80,19 @@ export interface TestProgressParams {
 }
 
 export interface TestSuite {
-    suiteName: string;
+    name: string;
     file?: string;
-    line?: number;
-    state: 'loaded' | 'running' | 'completed' | 'errored';
+    range?: Range;
+    state: 'loaded' | 'started' | 'completed' | 'errored';
     tests?: TestCase[];
 }
 
 export interface TestCase {
     id: string;
-    shortName: string;
-    fullName: string;
+    name: string;
     file?: string;
-    line?: number;
-    state: 'loaded' | 'running' | 'passed' | 'failed' | 'skipped' | 'errored';
+    range?: Range;
+    state: 'loaded' | 'started' | 'passed' | 'failed' | 'skipped' | 'errored';
     stackTrace?: string[];
 }
 
@@ -118,7 +116,7 @@ export interface SetTextEditorDecorationParams {
 };
 
 export namespace TextEditorDecorationCreateRequest {
-    export const type = new RequestType<DecorationRenderOptions, string, void, void>('window/createTextEditorDecoration');
+    export const type = new RequestType<vscode.DecorationRenderOptions, string, void, void>('window/createTextEditorDecoration');
 };
 
 export namespace TextEditorDecorationSetNotification {
@@ -128,3 +126,27 @@ export namespace TextEditorDecorationSetNotification {
 export namespace TextEditorDecorationDisposeNotification {
     export const type = new NotificationType<string, void>('window/disposeTextEditorDecoration');
 };
+
+export function asPosition(value: undefined | null): undefined;
+export function asPosition(value: Position): vscode.Position;
+export function asPosition(value: Position | undefined | null): vscode.Position | undefined;
+export function asPosition(value: Position | undefined | null): vscode.Position | undefined {
+    if (!value) {
+        return undefined;
+    }
+    return new vscode.Position(value.line, value.character);
+}
+
+export function asRange(value: undefined | null): undefined;
+export function asRange(value: Range): vscode.Range;
+export function asRange(value: Range | undefined | null): vscode.Range | undefined;
+export function asRange(value: Range | undefined | null): vscode.Range | undefined {
+    if (!value) {
+        return undefined;
+    }
+    return new vscode.Range(asPosition(value.start), asPosition(value.end));
+}
+
+export function asRanges(value: Range[]): vscode.Range[] {
+    return value.map(value => asRange(value));
+}

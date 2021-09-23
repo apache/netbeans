@@ -107,7 +107,9 @@ public final class TestMethodFinderImpl extends EmbeddingIndexer {
                     pw.print("method: "); //NOI18N
                     pw.print(method.method().getMethodName());
                     pw.print(':'); //NOI18N
-                    pw.println(method.start().getOffset());
+                    pw.print(method.start().getOffset());
+                    pw.print('-'); //NOI18N
+                    pw.println(method.end().getOffset());
                 }
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);

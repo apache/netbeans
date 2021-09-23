@@ -102,8 +102,10 @@ public final class TestMethodFinder {
                     String info = line.substring(8);
                     int idx = info.lastIndexOf(':');
                     String name = (idx < 0 ? info : info.substring(0, idx)).trim();
-                    Position methodPosition = idx < 0 ? null : () -> Integer.parseInt(info.substring(idx + 1));
-                    testMethods.add(new TestMethodController.TestMethod(className, classPosition, new SingleMethod(fo, name), methodPosition, null, null));
+                    String[] range = idx < 0 ? new String[0] : info.substring(idx + 1).split("-");
+                    Position methodStart = range.length > 0 ? () -> Integer.parseInt(range[0]) : null;
+                    Position methodEnd = range.length > 1 ? () -> Integer.parseInt(range[1]) : null;
+                    testMethods.add(new TestMethodController.TestMethod(className, classPosition, new SingleMethod(fo, name), methodStart, null, methodEnd));
                 }
             }
         } catch (IOException ex) {

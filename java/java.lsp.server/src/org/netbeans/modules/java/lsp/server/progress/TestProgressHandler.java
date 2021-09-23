@@ -70,12 +70,12 @@ public final class TestProgressHandler implements TestResultDisplayHandler.Spi<T
 
     @Override
     public void displaySuiteRunning(TestProgressHandler token, String suiteName) {
-        lspClient.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(suiteName, TestSuiteInfo.State.Running)));
+        lspClient.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(suiteName, TestSuiteInfo.State.Started)));
     }
 
     @Override
     public void displaySuiteRunning(TestProgressHandler token, TestSuite suite) {
-        lspClient.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(suite.getName(), TestSuiteInfo.State.Running)));
+        lspClient.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(suite.getName(), TestSuiteInfo.State.Started)));
     }
 
     @Override
@@ -121,7 +121,7 @@ public final class TestProgressHandler implements TestResultDisplayHandler.Spi<T
             if (info != null) {
                 updateState(info, status);
             } else {
-                info = new TestSuiteInfo.TestCaseInfo(id, name, className + '.' + name, fo != null ? Utils.toUri(fo) : null, null, status, stackTrace);
+                info = new TestSuiteInfo.TestCaseInfo(id, name, fo != null ? Utils.toUri(fo) : null, null, status, stackTrace);
                 testCases.put(id, info);
             }
         }

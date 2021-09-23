@@ -508,7 +508,7 @@ public abstract class NbLaunchDelegate {
 
         if (provider == null) {
             command = debug ? mainSource ? ActionProvider.COMMAND_DEBUG
-                                         : ActionProvider.COMMAND_DEBUG // DEBUG_TEST is missing?
+                                         : ActionProvider.COMMAND_TEST //TODO: COMMAND_DEBUG_TEST is missing?
                             : mainSource ? ActionProvider.COMMAND_RUN
                                          : ActionProvider.COMMAND_TEST;
             provider = findActionProvider(command, actionProviders, testLookup);

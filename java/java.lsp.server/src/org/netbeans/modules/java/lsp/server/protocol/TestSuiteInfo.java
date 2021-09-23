@@ -20,6 +20,7 @@ package org.netbeans.modules.java.lsp.server.protocol;
 
 import java.util.List;
 import java.util.Objects;
+import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.util.Preconditions;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -36,7 +37,7 @@ public final class TestSuiteInfo {
      * The test suite name to be displayed by the Test Explorer.
      */
     @NonNull
-    private String suiteName;
+    private String name;
 
     /**
      * The file containing this suite (if known).
@@ -44,13 +45,13 @@ public final class TestSuiteInfo {
     private String file;
 
     /**
-     * The line within the specified file where the suite definition starts (if known).
+     * The range within the specified file where the suite definition is located (if known).
      */
-    private Integer line;
+    private Range range;
 
     /**
      * The state of the tests suite. Can be one of the following values:
-     * "loaded" | "running" | "completed" | "errored"
+     * "loaded" | "started" | "completed" | "errored"
      */
     @NonNull
     private String state;
@@ -64,15 +65,15 @@ public final class TestSuiteInfo {
         this("", "");
     }
 
-    public TestSuiteInfo(@NonNull final String suiteName, @NonNull final String state) {
-        this.suiteName = Preconditions.checkNotNull(suiteName, "suiteName");
+    public TestSuiteInfo(@NonNull final String name, @NonNull final String state) {
+        this.name = Preconditions.checkNotNull(name, "name");
         this.state = Preconditions.checkNotNull(state, "state");
     }
 
-    public TestSuiteInfo(@NonNull final String suiteName, final String file, final Integer line, @NonNull final String state, final List<TestCaseInfo> tests) {
-        this(suiteName, state);
+    public TestSuiteInfo(@NonNull final String name, final String file, final Range range, @NonNull final String state, final List<TestCaseInfo> tests) {
+        this(name, state);
         this.file = file;
-        this.line = line;
+        this.range = range;
         this.tests = tests;
     }
 
@@ -81,15 +82,15 @@ public final class TestSuiteInfo {
      */
     @Pure
     @NonNull
-    public String getSuiteName() {
-        return suiteName;
+    public String getName() {
+        return name;
     }
 
     /**
      * The test suite name to be displayed by the Test Explorer.
      */
-    public void setSuiteName(@NonNull final String suiteName) {
-        this.suiteName = Preconditions.checkNotNull(suiteName, "suiteName");
+    public void setSuiteName(@NonNull final String name) {
+        this.name = Preconditions.checkNotNull(name, "name");
     }
 
     /**
@@ -108,23 +109,23 @@ public final class TestSuiteInfo {
     }
 
     /**
-     * The line within the specified file where the suite definition starts (if known).
+     * The range within the specified file where the suite definition is located (if known).
      */
     @Pure
-    public Integer getLine() {
-        return line;
+    public Range getRange() {
+        return range;
     }
 
     /**
-     * The line within the specified file where the suite definition starts (if known).
+     * The range within the specified file where the suite definition is located (if known).
      */
-    public void setLine(final Integer line) {
-        this.line = line;
+    public void setRange(final Range range) {
+        this.range = range;
     }
 
     /**
      * The state of the tests suite. Can be one of the following values:
-     * "loaded" | "running" | "completed" | "errored"
+     * "loaded" | "started" | "completed" | "errored"
      */
     @Pure
     @NonNull
@@ -134,7 +135,7 @@ public final class TestSuiteInfo {
 
     /**
      * The state of the tests suite. Can be one of the following values:
-     * "loaded" | "running" | "completed" | "errored"
+     * "loaded" | "started" | "completed" | "errored"
      */
     public void setState(@NonNull final String state) {
         this.state = Preconditions.checkNotNull(state, "state");
@@ -159,9 +160,9 @@ public final class TestSuiteInfo {
     @Pure
     public String toString() {
         ToStringBuilder b = new ToStringBuilder(this);
-        b.add("suiteName", suiteName);
+        b.add("name", name);
         b.add("file", file);
-        b.add("line", line);
+        b.add("range", range);
         b.add("state", state);
         b.add("tests", tests);
         return b.toString();
@@ -171,9 +172,9 @@ public final class TestSuiteInfo {
     @Pure
     public int hashCode() {
         int hash = 7;
-        hash = 67 * hash + Objects.hashCode(this.suiteName);
+        hash = 67 * hash + Objects.hashCode(this.name);
         hash = 67 * hash + Objects.hashCode(this.file);
-        hash = 67 * hash + Objects.hashCode(this.line);
+        hash = 67 * hash + Objects.hashCode(this.range);
         hash = 67 * hash + Objects.hashCode(this.state);
         hash = 67 * hash + Objects.hashCode(this.tests);
         return hash;
@@ -192,13 +193,13 @@ public final class TestSuiteInfo {
             return false;
         }
         final TestSuiteInfo other = (TestSuiteInfo) obj;
-        if (!Objects.equals(this.suiteName, other.suiteName)) {
+        if (!Objects.equals(this.name, other.name)) {
             return false;
         }
         if (!Objects.equals(this.file, other.file)) {
             return false;
         }
-        if (!Objects.equals(this.line, other.line)) {
+        if (!Objects.equals(this.range, other.range)) {
             return false;
         }
         if (!Objects.equals(this.state, other.state)) {
@@ -213,7 +214,7 @@ public final class TestSuiteInfo {
     /**
      * Information about a test case.
      */
-    public static class TestCaseInfo {
+    public static final class TestCaseInfo {
 
         /**
          * The test case ID.
@@ -222,17 +223,10 @@ public final class TestSuiteInfo {
         private String id;
 
         /**
-         * The short name to be displayed by the Test Explorer for this test case.
+         * The name to be displayed by the Test Explorer for this test case.
          */
         @NonNull
-        private String shortName;
-
-        /**
-         * The full name to be displayed by the Test Explorer when you hover over
-         * this test case.
-         */
-        @NonNull
-        private String fullName;
+        private String name;
 
         /**
          * The file containing this test case (if known).
@@ -240,13 +234,13 @@ public final class TestSuiteInfo {
         private String file;
 
         /**
-         * The line within the specified file where the test case definition starts (if known).
+         * The range within the specified file where the test case definition is located (if known).
          */
-        private Integer line;
+        private Range range;
 
         /**
          * The state of the test case. Can be one of the following values:
-         * "loaded" | "running" | "passed" | "failed" | "skipped" | "errored"
+         * "loaded" | "started" | "passed" | "failed" | "skipped" | "errored"
          */
         @NonNull
         private String state;
@@ -257,20 +251,19 @@ public final class TestSuiteInfo {
         private List<String> stackTrace;
 
         public TestCaseInfo() {
-            this("", "", "", "");
+            this("", "", "");
         }
 
-        public TestCaseInfo(@NonNull final String id, @NonNull final String shortName, @NonNull final String fullName, @NonNull final String state) {
+        public TestCaseInfo(@NonNull final String id, @NonNull final String name, @NonNull final String state) {
             this.id = Preconditions.checkNotNull(id, "id");
-            this.shortName = Preconditions.checkNotNull(shortName, "shortName");
-            this.fullName = Preconditions.checkNotNull(fullName, "fullName");
+            this.name = Preconditions.checkNotNull(name, "name");
             this.state = Preconditions.checkNotNull(state, "state");
         }
 
-        public TestCaseInfo(@NonNull final String id, @NonNull final String shortName, @NonNull final String fullName, final String file, final Integer line, @NonNull final String state, final List<String> stackTrace) {
-            this(id, shortName, fullName, state);
+        public TestCaseInfo(@NonNull final String id, @NonNull final String name, final String file, final Range range, @NonNull final String state, final List<String> stackTrace) {
+            this(id, name, state);
             this.file = file;
-            this.line = line;
+            this.range = range;
             this.stackTrace = stackTrace;
         }
 
@@ -291,37 +284,19 @@ public final class TestSuiteInfo {
         }
 
         /**
-         * The short name to be displayed by the Test Explorer for this test case.
+         * The name to be displayed by the Test Explorer for this test case.
          */
         @Pure
         @NonNull
-        public String getShortName() {
-            return shortName;
+        public String getName() {
+            return name;
         }
 
         /**
-         * The short name to be displayed by the Test Explorer for this test case.
+         * The name to be displayed by the Test Explorer for this test case.
          */
-        public void setShortName(@NonNull final String shortName) {
-            this.shortName = Preconditions.checkNotNull(shortName, "shortName");
-        }
-
-        /**
-         * The full name to be displayed by the Test Explorer when you hover over
-         * this test case.
-         */
-        @Pure
-        @NonNull
-        public String getFullName() {
-            return fullName;
-        }
-
-        /**
-         * The full name to be displayed by the Test Explorer when you hover over
-         * this test case.
-         */
-        public void setFullName(@NonNull final String fullName) {
-            this.fullName = Preconditions.checkNotNull(fullName, "fullName");
+        public void setName(@NonNull final String name) {
+            this.name = Preconditions.checkNotNull(name, "name");
         }
 
         /**
@@ -340,23 +315,23 @@ public final class TestSuiteInfo {
         }
 
         /**
-         * The line within the specified file where the test case definition starts (if known).
+         * The range within the specified file where the test case definition is located (if known).
          */
         @Pure
-        public Integer getLine() {
-            return line;
+        public Range getRange() {
+            return range;
         }
 
         /**
-         * The line within the specified file where the test case definition starts (if known).
+         * The range within the specified file where the test case definition is located (if known).
          */
-        public void setLine(final Integer line) {
-            this.line = line;
+        public void setRange(final Range range) {
+            this.range = range;
         }
 
         /**
          * The state of the test case. Can be one of the following values:
-         * "loaded" | "running" | "passed" | "failed" | "skipped" | "errored"
+         * "loaded" | "started" | "passed" | "failed" | "skipped" | "errored"
          */
         @Pure
         @NonNull
@@ -366,7 +341,7 @@ public final class TestSuiteInfo {
 
         /**
          * The state of the test case. Can be one of the following values:
-         * "loaded" | "running" | "passed" | "failed" | "skipped" | "errored"
+         * "loaded" | "started" | "passed" | "failed" | "skipped" | "errored"
          */
         public void setState(@NonNull final String state) {
             this.state = Preconditions.checkNotNull(state, "state");
@@ -392,10 +367,9 @@ public final class TestSuiteInfo {
         public String toString() {
             ToStringBuilder b = new ToStringBuilder(this);
             b.add("id", id);
-            b.add("shortName", shortName);
-            b.add("fullName", fullName);
+            b.add("name", name);
             b.add("file", file);
-            b.add("line", line);
+            b.add("range", range);
             b.add("state", state);
             b.add("stackTrace", stackTrace);
             return b.toString();
@@ -406,10 +380,9 @@ public final class TestSuiteInfo {
         public int hashCode() {
             int hash = 5;
             hash = 97 * hash + Objects.hashCode(this.id);
-            hash = 97 * hash + Objects.hashCode(this.shortName);
-            hash = 97 * hash + Objects.hashCode(this.fullName);
+            hash = 97 * hash + Objects.hashCode(this.name);
             hash = 97 * hash + Objects.hashCode(this.file);
-            hash = 97 * hash + Objects.hashCode(this.line);
+            hash = 97 * hash + Objects.hashCode(this.range);
             hash = 97 * hash + Objects.hashCode(this.state);
             hash = 97 * hash + Objects.hashCode(this.stackTrace);
             return hash;
@@ -431,16 +404,13 @@ public final class TestSuiteInfo {
             if (!Objects.equals(this.id, other.id)) {
                 return false;
             }
-            if (!Objects.equals(this.shortName, other.shortName)) {
-                return false;
-            }
-            if (!Objects.equals(this.fullName, other.fullName)) {
+            if (!Objects.equals(this.name, other.name)) {
                 return false;
             }
             if (!Objects.equals(this.file, other.file)) {
                 return false;
             }
-            if (!Objects.equals(this.line, other.line)) {
+            if (!Objects.equals(this.range, other.range)) {
                 return false;
             }
             if (!Objects.equals(this.state, other.state)) {
@@ -462,7 +432,7 @@ public final class TestSuiteInfo {
 
         public static final String Loaded = "loaded";
 
-        public static final String Running = "running";
+        public static final String Started = "started";
 
         public static final String Completed  = "completed";
 

@@ -1182,10 +1182,8 @@ public class QueryBuilder extends TopComponent
             }
             else if (paramCount != 0) {
                 // we have a query which can not be parsed.
-                List list = new ArrayList<>(paramCount);
                 if (DEBUG) {
                     System.out.println(" param count = " + paramCount);
-                    System.out.println(" list size  = " + list.size());
                 }
                 String[] parameters = new String[paramCount];
                 String[] values = new String[paramCount];

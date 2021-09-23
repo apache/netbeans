@@ -498,12 +498,12 @@ public class EarDataObject extends DD2beansDataObject
 
     private RequestProcessor.Task elementTask;
     private List deletedEjbNames;
-    private List newFileNames;
+    private List<String> newFileNames;
     
     private void elementCreated(final String elementName) {
         synchronized (this) {
             if (newFileNames==null) {
-                newFileNames=new ArrayList();
+                newFileNames=new ArrayList<>();
             }
             newFileNames.add(elementName);
         }

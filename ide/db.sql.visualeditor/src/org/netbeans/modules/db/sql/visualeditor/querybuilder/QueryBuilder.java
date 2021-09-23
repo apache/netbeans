@@ -810,7 +810,7 @@ public class QueryBuilder extends TopComponent
         if (DEBUG)
             System.out.println("checkSelect called. _queryModel.getSelect() = " + _queryModel.getSelect() ); // NOI18N
         if ( _queryModel.getSelect() != null ) {
-            List selectColumns = new ArrayList<>();
+            List<Column> selectColumns = new ArrayList<>();
             _queryModel.getSelect().getReferencedColumns(selectColumns);
             if ( ! checkColumns( selectColumns ) )
                 return false;
@@ -825,7 +825,7 @@ public class QueryBuilder extends TopComponent
         if (DEBUG)
             System.out.println("checkWhere called... " ); // NOI18N
         if ( _queryModel.getWhere() != null ) {
-            List whereColumns = new ArrayList<>();
+            List<Column> whereColumns = new ArrayList<>();
             _queryModel.getWhere().getReferencedColumns(whereColumns);
             if ( ! checkColumns( whereColumns ) ) 
                 return false;
@@ -840,7 +840,7 @@ public class QueryBuilder extends TopComponent
         if (DEBUG)
             System.out.println("checkGroupBy called... " ); // NOI18N
         if ( _queryModel.getGroupBy() != null ) {
-            List groupByColumns = new ArrayList<>();
+            List<Column> groupByColumns = new ArrayList<>();
             _queryModel.getGroupBy().getReferencedColumns(groupByColumns);
             if ( ! checkColumns( groupByColumns ) ) return false;
         }
@@ -854,7 +854,7 @@ public class QueryBuilder extends TopComponent
         if (DEBUG)
             System.out.println("checkHaving called... " ); // NOI18N
         if ( _queryModel.getHaving() != null ) {
-            List havingColumns = new ArrayList<>();
+            List<Column> havingColumns = new ArrayList<>();
             _queryModel.getHaving().getReferencedColumns(havingColumns);
             if ( ! checkColumns( havingColumns ) ) return false;
         }
@@ -889,7 +889,7 @@ public class QueryBuilder extends TopComponent
     //    case 3 : <alias_table_name>.<column_name>
     //    case 4 : <column_name>
     //
-    private boolean checkColumns(List columns)  throws SQLException {
+    private boolean checkColumns(List<Column> columns)  throws SQLException {
 	Log.getLogger().entering("QueryBuilder", "checkColumns"); // NOI18N
         for ( int i = 0; i < columns.size(); i++ ) {
             Column column = (Column) columns.get(i);

@@ -93,7 +93,7 @@ public final class ProcessorGenerated extends TransactionContext.Service {
         }
         return result;
     }
-    
+
     public boolean canWrite() {
         return root != null;
     }

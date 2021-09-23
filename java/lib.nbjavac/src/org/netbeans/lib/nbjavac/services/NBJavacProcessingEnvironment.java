@@ -60,7 +60,7 @@ public class NBJavacProcessingEnvironment extends JavacProcessingEnvironment {
                         .method(ElementMatchers.named("createClassFile")).intercept(Advice.to(Interceptor.class))
                         .method(ElementMatchers.named("createResourceFile")).intercept(Advice.to(Interceptor.class))
                         .make().load(JavacFiler.class.getClassLoader(), new ClassLoadingStrategy.ForUnsafeInjection()).getLoaded();
-        
+
         try {
             Field filer = JavacProcessingEnvironment.class.getDeclaredField("filer");
             Object newFiler = c.getConstructor(Context.class).newInstance(context);
@@ -70,7 +70,7 @@ public class NBJavacProcessingEnvironment extends JavacProcessingEnvironment {
             Logger.getLogger(NBJavacProcessingEnvironment.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private static final class Interceptor {
         @Advice.OnMethodEnter(inline=true)
         public static void enter(@Advice.This Object ths, @Advice.Origin Executable method, @Advice.AllArguments Object[] args) throws ReflectiveOperationException {

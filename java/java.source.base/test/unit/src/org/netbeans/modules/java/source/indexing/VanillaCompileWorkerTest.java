@@ -2098,7 +2098,6 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         }
     }
 
-//    @ServiceProvider(service=AnnotationProcessingQueryImplementation.class)
     public class AnnotationProcessingQueryImpl implements AnnotationProcessingQueryImplementation {
 
         @Override
@@ -2137,6 +2136,6 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 }
             };
         }
-        
+
     }
 }

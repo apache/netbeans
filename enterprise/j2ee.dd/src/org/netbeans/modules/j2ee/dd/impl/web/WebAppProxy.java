@@ -58,7 +58,7 @@ public class WebAppProxy implements WebApp {
     public void setOriginal(WebApp webApp) {
         if (this.webApp!=webApp) {
             for (int i=0;i<listeners.size();i++) {
-                java.beans.PropertyChangeListener pcl = (PropertyChangeListener)listeners.get(i);
+                java.beans.PropertyChangeListener pcl = listeners.get(i);
                 if (this.webApp!=null) this.webApp.removePropertyChangeListener(pcl);
                 if (webApp!=null) webApp.addPropertyChangeListener(pcl);
 

@@ -29,7 +29,7 @@
     <target name="clean" depends="projectized-common.clean">
       <delete>
 	<fileset dir="src/org/netbeans/modules/db/sql/visualeditor/parser">
-	  <include name="ide/*.java" />
+	  <include name="*.java" />
         </fileset>
       </delete>
     </target>

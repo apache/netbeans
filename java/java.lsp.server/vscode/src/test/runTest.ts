@@ -1,8 +1,7 @@
 import * as path from 'path';
 
-import { downloadAndUnzipVSCode, resolveCliPathFromVSCodeExecutablePath, runTests } from 'vscode-test';
+import { downloadAndUnzipVSCode, runTests } from 'vscode-test';
 
-import * as cp from 'child_process';
 import * as fs from 'fs';
 
 async function main() {
@@ -11,13 +10,7 @@ async function main() {
         // Passed to `--extensionDevelopmentPath`
         const extensionDevelopmentPath = path.resolve(__dirname, '../../');
 
-        const vscodeExecutablePath: string = await downloadAndUnzipVSCode('1.56.2');
-        const cliPath: string = resolveCliPathFromVSCodeExecutablePath(vscodeExecutablePath);
-
-        cp.spawnSync(cliPath, ['--install-extension', 'hbenl.vscode-test-explorer'], {
-            encoding: 'utf-8',
-            stdio: 'inherit',
-        });
+        const vscodeExecutablePath: string = await downloadAndUnzipVSCode('stable');
 
         // The path to test runner
         // Passed to --extensionTestsPath
@@ -37,7 +30,11 @@ async function main() {
             extensionTestsEnv: {
                 'ENABLE_CONSOLE_LOG' : 'true'
             },
-            launchArgs: [workspaceDir, '--async-stack-traces']
+            launchArgs: [
+                workspaceDir,
+                '--disable-extensions',
+                '--disable-workspace-trust'
+            ]
         });
     } catch (err) {
         console.error('Failed to run tests');

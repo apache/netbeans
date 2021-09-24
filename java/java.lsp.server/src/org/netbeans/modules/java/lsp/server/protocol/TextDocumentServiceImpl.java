@@ -131,6 +131,7 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.project.JavaProjectConstants;
@@ -287,7 +288,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
-            final int caret = Utils.getOffset(doc, params.getPosition());
+            if (!(doc instanceof LineDocument)) {
+                return CompletableFuture.completedFuture(Either.forRight(completionList));
+            }
+            final int caret = Utils.getOffset((LineDocument) doc, params.getPosition());
             List<CompletionItem> items = new ArrayList<>();
             Completion.Context context = params.getContext() != null
                     ? new Completion.Context(Completion.TriggerKind.valueOf(params.getContext().getTriggerKind().name()),
@@ -442,10 +446,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         String uri = params.getTextDocument().getUri();
         FileObject file = fromURI(uri);
         Document doc = server.getOpenedDocuments().getDocument(uri);
-        if (file == null || doc == null) {
+        if (file == null || !(doc instanceof LineDocument)) {
             return CompletableFuture.completedFuture(null);
         }
-        return org.netbeans.api.lsp.Hover.getContent(doc, Utils.getOffset(doc, params.getPosition())).thenApply(content -> {
+        return org.netbeans.api.lsp.Hover.getContent(doc, Utils.getOffset((LineDocument) doc, params.getPosition())).thenApply(content -> {
             if (content != null) {
                 MarkupContent markup = new MarkupContent();
                 markup.setKind("markdown");
@@ -466,10 +470,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         try {
             String uri = params.getTextDocument().getUri();
             Document doc = server.getOpenedDocuments().getDocument(uri);
-            if (doc != null) {
+            if (doc instanceof LineDocument) {
                 FileObject file = Utils.fromUri(uri);
                 if (file != null) {
-                    int offset = Utils.getOffset(doc, params.getPosition());
+                    int offset = Utils.getOffset((LineDocument) doc, params.getPosition());
                     return HyperlinkLocation.resolve(doc, offset).thenApply(locs -> {
                         return Either.forLeft(locs.stream().map(location -> {
                             FileObject fo = location.getFileObject();
@@ -489,10 +493,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         try {
             String uri = params.getTextDocument().getUri();
             Document doc = server.getOpenedDocuments().getDocument(uri);
-            if (doc != null) {
+            if (doc instanceof LineDocument) {
                 FileObject file = Utils.fromUri(uri);
                 if (file != null) {
-                    int offset = Utils.getOffset(doc, params.getPosition());
+                    int offset = Utils.getOffset((LineDocument) doc, params.getPosition());
                     return HyperlinkLocation.resolveTypeDefinition(doc, offset).thenApply(locs -> {
                         return Either.forLeft(locs.stream().map(location -> {
                             FileObject fo = location.getFileObject();
@@ -548,39 +552,41 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     cc.toPhase(JavaSource.Phase.RESOLVED);
                     if (cancel.get()) return ;
                     Document doc = cc.getSnapshot().getSource().getDocument(true);
-                    TreePath path = cc.getTreeUtilities().pathFor(Utils.getOffset(doc, position));
-                    query[0] = new WhereUsedQuery(Lookups.singleton(TreePathHandle.create(path, cc)));
-                    if (implementations) {
-                        query[0].putValue(WhereUsedQueryConstants.FIND_SUBCLASSES, true);
-                        query[0].putValue(WhereUsedQueryConstants.FIND_OVERRIDING_METHODS, true);
-                        query[0].putValue(WhereUsedQuery.FIND_REFERENCES, false);
-                    } else if (includeDeclaration) {
-                        Element decl = cc.getTrees().getElement(path);
-                        if (decl != null) {
-                            TreePath declPath = cc.getTrees().getPath(decl);
-                            if (declPath != null && cc.getCompilationUnit() == declPath.getCompilationUnit()) {
-                                Range range = declarationRange(cc, declPath);
-                                if (range != null) {
-                                    locations.add(new Location(Utils.toUri(cc.getFileObject()),
-                                                               range));
-                                }
-                            } else {
-                                ElementHandle<Element> declHandle = ElementHandle.create(decl);
-                                FileObject sourceFile = SourceUtils.getFile(declHandle, cc.getClasspathInfo());
-                                JavaSource source = sourceFile != null ? JavaSource.forFileObject(sourceFile) : null;
-                                if (source != null) {
-                                    source.runUserActionTask(nestedCC -> {
-                                        nestedCC.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                                        Element declHandle2 = declHandle.resolve(nestedCC);
-                                        TreePath declPath2 = declHandle2 != null ? nestedCC.getTrees().getPath(declHandle2) : null;
-                                        if (declPath2 != null) {
-                                            Range range = declarationRange(nestedCC, declPath2);
-                                            if (range != null) {
-                                                locations.add(new Location(Utils.toUri(nestedCC.getFileObject()),
-                                                                           range));
+                    if (doc instanceof LineDocument) {
+                        TreePath path = cc.getTreeUtilities().pathFor(Utils.getOffset((LineDocument) doc, position));
+                        query[0] = new WhereUsedQuery(Lookups.singleton(TreePathHandle.create(path, cc)));
+                        if (implementations) {
+                            query[0].putValue(WhereUsedQueryConstants.FIND_SUBCLASSES, true);
+                            query[0].putValue(WhereUsedQueryConstants.FIND_OVERRIDING_METHODS, true);
+                            query[0].putValue(WhereUsedQuery.FIND_REFERENCES, false);
+                        } else if (includeDeclaration) {
+                            Element decl = cc.getTrees().getElement(path);
+                            if (decl != null) {
+                                TreePath declPath = cc.getTrees().getPath(decl);
+                                if (declPath != null && cc.getCompilationUnit() == declPath.getCompilationUnit()) {
+                                    Range range = declarationRange(cc, declPath);
+                                    if (range != null) {
+                                        locations.add(new Location(Utils.toUri(cc.getFileObject()),
+                                                                   range));
+                                    }
+                                } else {
+                                    ElementHandle<Element> declHandle = ElementHandle.create(decl);
+                                    FileObject sourceFile = SourceUtils.getFile(declHandle, cc.getClasspathInfo());
+                                    JavaSource source = sourceFile != null ? JavaSource.forFileObject(sourceFile) : null;
+                                    if (source != null) {
+                                        source.runUserActionTask(nestedCC -> {
+                                            nestedCC.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                                            Element declHandle2 = declHandle.resolve(nestedCC);
+                                            TreePath declPath2 = declHandle2 != null ? nestedCC.getTrees().getPath(declHandle2) : null;
+                                            if (declPath2 != null) {
+                                                Range range = declarationRange(nestedCC, declPath2);
+                                                if (range != null) {
+                                                    locations.add(new Location(Utils.toUri(nestedCC.getFileObject()),
+                                                                               range));
+                                                }
                                             }
-                                        }
-                                    }, true);
+                                        }, true);
+                                    }
                                 }
                             }
                         }
@@ -688,12 +694,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             js.runUserActionTask(cc -> {
                 cc.toPhase(JavaSource.Phase.RESOLVED);
                 Document doc = cc.getSnapshot().getSource().getDocument(true);
-                int offset = Utils.getOffset(doc, params.getPosition());
-                List<int[]> spans = new MOHighligther().processImpl(cc, node, doc, offset);
-                if (spans != null) {
-                    for (int[] span : spans) {
-                        result.add(new DocumentHighlight(new Range(Utils.createPosition(cc.getCompilationUnit(), span[0]),
-                                                                   Utils.createPosition(cc.getCompilationUnit(), span[1]))));
+                if (doc instanceof LineDocument) {
+                    int offset = Utils.getOffset((LineDocument) doc, params.getPosition());
+                    List<int[]> spans = new MOHighligther().processImpl(cc, node, doc, offset);
+                    if (spans != null) {
+                        for (int[] span : spans) {
+                            result.add(new DocumentHighlight(new Range(Utils.createPosition(cc.getCompilationUnit(), span[0]),
+                                                                       Utils.createPosition(cc.getCompilationUnit(), span[1]))));
+                        }
                     }
                 }
             }, true);
@@ -765,13 +773,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
         Document doc = server.getOpenedDocuments().getDocument(params.getTextDocument().getUri());
-        if (doc == null) {
+        if (!(doc instanceof LineDocument)) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
 
         Range range = params.getRange();
-        int startOffset = Utils.getOffset(doc, range.getStart());
-        int endOffset = Utils.getOffset(doc, range.getEnd());
+        int startOffset = Utils.getOffset((LineDocument) doc, range.getStart());
+        int endOffset = Utils.getOffset((LineDocument) doc, range.getEnd());
 
         ArrayList<Diagnostic> diagnostics = new ArrayList<>(params.getContext().getDiagnostics());
         diagnostics.addAll(computeDiags(params.getTextDocument().getUri(), startOffset, ErrorProvider.Kind.HINTS, documentVersion(doc)));
@@ -1048,7 +1056,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             source.runUserActionTask(cc -> {
                 cc.toPhase(JavaSource.Phase.RESOLVED);
                 Document doc = cc.getSnapshot().getSource().getDocument(true);
-                int pos = Utils.getOffset(doc, params.getPosition());
+                if (!(doc instanceof LineDocument)) {
+                    result.complete(null);
+                }
+                int pos = Utils.getOffset((LineDocument) doc, params.getPosition());
                 TreePath path = cc.getTreeUtilities().pathFor(pos);
                 RenameRefactoring ref = new RenameRefactoring(Lookups.singleton(TreePathHandle.create(path, cc)));
                 ref.setNewName("any");
@@ -1112,24 +1123,26 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     cc.toPhase(JavaSource.Phase.RESOLVED);
                     if (cancel.get()) return ;
                     Document doc = cc.getSnapshot().getSource().getDocument(true);
-                    TreePath path = cc.getTreeUtilities().pathFor(Utils.getOffset(doc, params.getPosition()));
-                    List<Object> lookupContent = new ArrayList<>();
+                    if (doc instanceof LineDocument) {
+                        TreePath path = cc.getTreeUtilities().pathFor(Utils.getOffset((LineDocument) doc, params.getPosition()));
+                        List<Object> lookupContent = new ArrayList<>();
 
-                    lookupContent.add(TreePathHandle.create(path, cc));
+                        lookupContent.add(TreePathHandle.create(path, cc));
 
-                    //from RenameRefactoringUI:
-                    Element selected = cc.getTrees().getElement(path);
-                    if (selected instanceof TypeElement && !((TypeElement) selected).getNestingKind().isNested()) {
-                        ElementHandle<TypeElement> handle = ElementHandle.create((TypeElement) selected);
-                        FileObject f = SourceUtils.getFile(handle, cc.getClasspathInfo());
-                        if (f != null && selected.getSimpleName().toString().equals(f.getName())) {
-                            lookupContent.add(f);
+                        //from RenameRefactoringUI:
+                        Element selected = cc.getTrees().getElement(path);
+                        if (selected instanceof TypeElement && !((TypeElement) selected).getNestingKind().isNested()) {
+                            ElementHandle<TypeElement> handle = ElementHandle.create((TypeElement) selected);
+                            FileObject f = SourceUtils.getFile(handle, cc.getClasspathInfo());
+                            if (f != null && selected.getSimpleName().toString().equals(f.getName())) {
+                                lookupContent.add(f);
+                            }
                         }
-                    }
 
-                    refactoring[0] = new RenameRefactoring(Lookups.fixed(lookupContent.toArray(new Object[0])));
-                    refactoring[0].setNewName(params.getNewName());
-                    refactoring[0].setSearchInComments(true); //TODO?
+                        refactoring[0] = new RenameRefactoring(Lookups.fixed(lookupContent.toArray(new Object[0])));
+                        refactoring[0].setNewName(params.getNewName());
+                        refactoring[0].setSearchInComments(true); //TODO?
+                    }
                 }, true);
                 if (cancel.get()) return ;
                 cancelCallback[0] = () -> refactoring[0].cancelRequest();
@@ -1307,8 +1320,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             NbDocument.runAtomic((StyledDocument) doc, () -> {
                 for (TextDocumentContentChangeEvent change : params.getContentChanges()) {
                     try {
-                        int start = Utils.getOffset(doc, change.getRange().getStart());
-                        int end   = Utils.getOffset(doc, change.getRange().getEnd());
+                        int start = Utils.getOffset((LineDocument) doc, change.getRange().getStart());
+                        int end   = Utils.getOffset((LineDocument) doc, change.getRange().getEnd());
                         doc.remove(start, end - start);
                         doc.insertString(start, change.getText(), null);
                     } catch (BadLocationException ex) {
@@ -1353,55 +1366,57 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 js.runUserActionTask(cc -> {
                     cc.toPhase(JavaSource.Phase.RESOLVED);
                     Document doc = cc.getSnapshot().getSource().getDocument(true);
-                    int offset = Utils.getOffset(doc, position);
-                    TreeUtilities treeUtilities = cc.getTreeUtilities();
-                    TreePath path = treeUtilities.getPathElementOfKind(EnumSet.of(Kind.CLASS, Kind.INTERFACE, Kind.ENUM, Kind.ANNOTATION_TYPE, Kind.METHOD), treeUtilities.pathFor(offset));
-                    if (path != null) {
-                        Trees trees = cc.getTrees();
-                        Element resolved = trees.getElement(path);
-                        if (resolved != null) {
-                            if (resolved.getKind() == ElementKind.METHOD) {
-                                Map<ElementHandle<? extends Element>, List<ElementDescription>> overriding = new ComputeOverriding(new AtomicBoolean()).process(cc);
-                                List<ElementDescription> eds = overriding.get(ElementHandle.create(resolved));
-                                if (eds != null) {
-                                    for (ElementDescription ed : eds) {
-                                        Element el = ed.getHandle().resolve(cc);
-                                        TreePath tp = trees.getPath(el);
-                                        long startPos = tp != null && cc.getCompilationUnit() == tp.getCompilationUnit() ? trees.getSourcePositions().getStartPosition(cc.getCompilationUnit(), tp.getLeaf()) : -1;
-                                        if (startPos >= 0) {
-                                            long endPos = trees.getSourcePositions().getEndPosition(cc.getCompilationUnit(), tp.getLeaf());
-                                            targets.add(new GoToTarget(cc.getSnapshot().getOriginalOffset((int) startPos),
-                                                    cc.getSnapshot().getOriginalOffset((int) endPos), GoToSupport.getNameSpan(tp.getLeaf(), treeUtilities),
-                                                    null, null, null, ed.getDisplayName(), true));
-                                        } else {
-                                            TypeElement te = el != null ? cc.getElementUtilities().outermostTypeElement(el) : null;
-                                            targets.add(new GoToTarget(-1, -1, null, ed.getOriginalCPInfo(), ed.getHandle(), getResourceName(te, ed.getHandle()), ed.getDisplayName(), true));
+                    if (doc instanceof LineDocument) {
+                        int offset = Utils.getOffset((LineDocument) doc, position);
+                        TreeUtilities treeUtilities = cc.getTreeUtilities();
+                        TreePath path = treeUtilities.getPathElementOfKind(EnumSet.of(Kind.CLASS, Kind.INTERFACE, Kind.ENUM, Kind.ANNOTATION_TYPE, Kind.METHOD), treeUtilities.pathFor(offset));
+                        if (path != null) {
+                            Trees trees = cc.getTrees();
+                            Element resolved = trees.getElement(path);
+                            if (resolved != null) {
+                                if (resolved.getKind() == ElementKind.METHOD) {
+                                    Map<ElementHandle<? extends Element>, List<ElementDescription>> overriding = new ComputeOverriding(new AtomicBoolean()).process(cc);
+                                    List<ElementDescription> eds = overriding.get(ElementHandle.create(resolved));
+                                    if (eds != null) {
+                                        for (ElementDescription ed : eds) {
+                                            Element el = ed.getHandle().resolve(cc);
+                                            TreePath tp = trees.getPath(el);
+                                            long startPos = tp != null && cc.getCompilationUnit() == tp.getCompilationUnit() ? trees.getSourcePositions().getStartPosition(cc.getCompilationUnit(), tp.getLeaf()) : -1;
+                                            if (startPos >= 0) {
+                                                long endPos = trees.getSourcePositions().getEndPosition(cc.getCompilationUnit(), tp.getLeaf());
+                                                targets.add(new GoToTarget(cc.getSnapshot().getOriginalOffset((int) startPos),
+                                                        cc.getSnapshot().getOriginalOffset((int) endPos), GoToSupport.getNameSpan(tp.getLeaf(), treeUtilities),
+                                                        null, null, null, ed.getDisplayName(), true));
+                                            } else {
+                                                TypeElement te = el != null ? cc.getElementUtilities().outermostTypeElement(el) : null;
+                                                targets.add(new GoToTarget(-1, -1, null, ed.getOriginalCPInfo(), ed.getHandle(), getResourceName(te, ed.getHandle()), ed.getDisplayName(), true));
+                                            }
+                                        }
+                                    }
+                                } else if (resolved.getKind().isClass() || resolved.getKind().isInterface()) {
+                                    List<TypeMirror> superTypes = new ArrayList<>();
+                                    superTypes.add(((TypeElement)resolved).getSuperclass());
+                                    superTypes.addAll(((TypeElement)resolved).getInterfaces());
+                                    for (TypeMirror superType : superTypes) {
+                                        if (superType.getKind() == TypeKind.DECLARED) {
+                                            Element el = ((DeclaredType) superType).asElement();
+                                            TreePath tp = trees.getPath(el);
+                                            long startPos = tp != null && cc.getCompilationUnit() == tp.getCompilationUnit() ? trees.getSourcePositions().getStartPosition(cc.getCompilationUnit(), tp.getLeaf()) : -1;
+                                            if (startPos >= 0) {
+                                                long endPos = trees.getSourcePositions().getEndPosition(cc.getCompilationUnit(), tp.getLeaf());
+                                                targets.add(new GoToTarget(cc.getSnapshot().getOriginalOffset((int) startPos),
+                                                        cc.getSnapshot().getOriginalOffset((int) endPos), GoToSupport.getNameSpan(tp.getLeaf(), treeUtilities),
+                                                        null, null, null, cc.getElementUtilities().getElementName(el, false).toString(), true));
+                                            } else {
+                                                TypeElement te = el != null ? cc.getElementUtilities().outermostTypeElement(el) : null;
+                                                targets.add(new GoToTarget(-1, -1, null, cc.getClasspathInfo(), ElementHandle.create(el), getResourceName(te, null),
+                                                        cc.getElementUtilities().getElementName(el, false).toString(), true));
+                                            }
                                         }
                                     }
                                 }
-                            } else if (resolved.getKind().isClass() || resolved.getKind().isInterface()) {
-                                List<TypeMirror> superTypes = new ArrayList<>();
-                                superTypes.add(((TypeElement)resolved).getSuperclass());
-                                superTypes.addAll(((TypeElement)resolved).getInterfaces());
-                                for (TypeMirror superType : superTypes) {
-                                    if (superType.getKind() == TypeKind.DECLARED) {
-                                        Element el = ((DeclaredType) superType).asElement();
-                                        TreePath tp = trees.getPath(el);
-                                        long startPos = tp != null && cc.getCompilationUnit() == tp.getCompilationUnit() ? trees.getSourcePositions().getStartPosition(cc.getCompilationUnit(), tp.getLeaf()) : -1;
-                                        if (startPos >= 0) {
-                                            long endPos = trees.getSourcePositions().getEndPosition(cc.getCompilationUnit(), tp.getLeaf());
-                                            targets.add(new GoToTarget(cc.getSnapshot().getOriginalOffset((int) startPos),
-                                                    cc.getSnapshot().getOriginalOffset((int) endPos), GoToSupport.getNameSpan(tp.getLeaf(), treeUtilities),
-                                                    null, null, null, cc.getElementUtilities().getElementName(el, false).toString(), true));
-                                        } else {
-                                            TypeElement te = el != null ? cc.getElementUtilities().outermostTypeElement(el) : null;
-                                            targets.add(new GoToTarget(-1, -1, null, cc.getClasspathInfo(), ElementHandle.create(el), getResourceName(te, null),
-                                                    cc.getElementUtilities().getElementName(el, false).toString(), true));
-                                        }
-                                    }
-                                }
+                                thisFileLineMap[0] = cc.getCompilationUnit().getLineMap();
                             }
-                            thisFileLineMap[0] = cc.getCompilationUnit().getLineMap();
                         }
                     }
                 }, true);

@@ -146,6 +146,10 @@ public class JavacParserTest extends NbTestCase {
     }
 
     public void testMultiSourceOutOfMemory() throws Exception {
+        if (NoJavacHelper.hasNbJavac()) {
+            return ;
+        }
+
         FileObject f1 = createFile("test/Test1.java", "package test; class Test1 {}");
         FileObject f2 = createFile("test/Test2.java", "package test; class Test2 {}");
         FileObject f3 = createFile("test/Test3.java", "package test; class Test3 {}");

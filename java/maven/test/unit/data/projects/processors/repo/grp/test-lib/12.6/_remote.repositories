@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Fri Sep 24 09:44:34 CEST 2021
+test-lib-12.6.jar>=
+test-lib-12.6.pom>=

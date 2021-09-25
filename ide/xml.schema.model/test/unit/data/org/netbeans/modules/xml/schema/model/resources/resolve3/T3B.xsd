@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="windows-1252"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,13 +19,11 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="ide/git">
-    <description>Builds, tests, and runs the project org.netbeans.modules.git</description>
-    <import file="../../nbbuild/templates/projectized.xml"/>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://xml.netbeans.org/schema/B"
+            xmlns:tns="http://xml.netbeans.org/schema/B"
+            elementFormDefault="qualified">
+
+    <xsd:include schemaLocation="T3D.xsd"/>
     
-    <target name="do-qa-functional-test-build" depends="projectized.do-qa-functional-test-build">
-        <zip destfile="${build.test.qa-functional.dir}/data/files/pp.zip">
-            <zipfileset dir="${build.test.qa-functional.dir}/data/files" includes="pp.TIFF"/>
-        </zip>
-    </target>
-</project>
+</xsd:schema>

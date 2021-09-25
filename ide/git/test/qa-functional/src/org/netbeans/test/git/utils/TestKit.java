@@ -69,7 +69,7 @@ public final class TestKit {
     private final static String WORK_PATH = "work";
     public static final String PROJECT_NAME = "JavaApp";
     public static final String PROJECT_TYPE = "Java Application";
-    public static final String PROJECT_CATEGORY = "Java";
+    public static final String PROJECT_CATEGORY = "Java with Ant";
     public static final String CLONE_SUF_0 = "_clone0";
     public static final String CLONE_SUF_1 = "_clone1";
     public final static String LOGGER_NAME = "org.netbeans.modules.git.t9y";

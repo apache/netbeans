@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="windows-1252"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,13 +19,23 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="ide/git">
-    <description>Builds, tests, and runs the project org.netbeans.modules.git</description>
-    <import file="../../nbbuild/templates/projectized.xml"/>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://xml.netbeans.org/schema/G"
+            xmlns:tns="http://xml.netbeans.org/schema/G"
+            elementFormDefault="qualified">
     
-    <target name="do-qa-functional-test-build" depends="projectized.do-qa-functional-test-build">
-        <zip destfile="${build.test.qa-functional.dir}/data/files/pp.zip">
-            <zipfileset dir="${build.test.qa-functional.dir}/data/files" includes="pp.TIFF"/>
-        </zip>
-    </target>
-</project>
+    <xsd:complexType name="G1">
+        <xsd:sequence>
+            <xsd:element name="G11"/>
+            <xsd:element name="G12"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="G2">
+        <xsd:sequence>
+            <xsd:element name="G21"/>
+            <xsd:element name="G22"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+</xsd:schema>

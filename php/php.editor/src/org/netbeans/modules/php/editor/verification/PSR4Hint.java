@@ -101,6 +101,9 @@ public abstract class PSR4Hint extends HintRule {
                         if (CancelSupport.getDefault().isCancelled()) {
                             return;
                         }
+                        if (currentDir.getName().equals("src")) { // PSR-4 require corrispondence to the directory structure only for the contiguos subnamespaces
+                            return;                               // after the namespace prefix. Since "src" is a common name for the base directory, there is no
+                        }                                         // need to go further. https://www.php-fig.org/psr/psr-4 2.3.2. See section 3 for examples
                         Identifier segment = segmentsIterator.previous();
                         if (!segment.getName().equals(currentDir.getName())) {
                             createHint(namespaceName, Bundle.PSR4WrongNamespaceNameHintText(), endOffset);

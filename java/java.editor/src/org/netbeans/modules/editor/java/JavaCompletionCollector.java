@@ -180,7 +180,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             return CompletionCollector.newBuilder(kwd)
                     .kind(Completion.Kind.Keyword)
                     .sortText(String.format("%04d%s", smartType ? 670 : 1670, kwd))
-                    .insertText(kwd + postfix)
+                    .insertText(postfix != null ? kwd + postfix : kwd)
                     .insertTextFormat(Completion.TextFormat.PlainText)
                     .build();
         }

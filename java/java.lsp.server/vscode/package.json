@@ -4,7 +4,7 @@
 	"description": "Apache NetBeans Language Server Extension for Visual Studio Code",
 	"author": "Apache NetBeans",
 	"license": "Apache 2.0",
-	"version": "12.4.0",
+	"version": "0.1.0",
 	"preview": true,
 	"repository": {
 		"type": "git",
@@ -15,13 +15,14 @@
 	"categories": [
 		"Programming Languages",
 		"Debuggers",
+		"Testing",
 		"Other"
 	],
 	"keywords": [
 		"multi-root ready"
 	],
 	"engines": {
-		"vscode": "^1.49.0"
+		"vscode": "^1.60.0"
 	},
 	"activationEvents": [
 		"onLanguage:java",
@@ -389,13 +390,13 @@
 		"nbcode": "node ./out/nbcode.js",
 		"nbjavac": "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install .*nbjavac.*",
 		"apisupport": "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install '(org.netbeans.libs.xerces|org.netbeans.modules.editor.structure|org.netbeans.modules.xml|org.netbeans.modules.xml.axi|org.netbeans.modules.xml.retriever|org.netbeans.modules.xml.schema.model|org.netbeans.modules.xml.tax|org.netbeans.modules.xml.text|org.netbeans.modules.ant.browsetask|.*apisupport.*|org.netbeans.modules.debugger.jpda.ant)' && node ./out/nbcode.js -J-Dnetbeans.close=true --modules --enable .*apisupport.ant"
-        },
+	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^7.0.2",
 		"@types/node": "^13.11.0",
 		"@types/ps-node": "^0.1.0",
-		"@types/vscode": "^1.49.0",
+		"@types/vscode": "^1.60.0",
 		"glob": "^7.1.6",
 		"mocha": "^7.1.2",
 		"ps-node": "^0.1.6",
@@ -405,11 +406,6 @@
 	"dependencies": {
 		"jsonc-parser": "3.0.0",
 		"vscode-debugadapter": "1.42.1",
-		"vscode-languageclient": "6.1.3",
-		"vscode-test-adapter-api": "^1.9.0",
-		"vscode-test-adapter-util": "^0.7.1"
-	},
-	"extensionDependencies": [
-		"hbenl.vscode-test-explorer"
-	]
+		"vscode-languageclient": "6.1.3"
+	}
 }

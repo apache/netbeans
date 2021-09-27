@@ -18,125 +18,78 @@
  */
 'use strict';
 
-import { WorkspaceFolder, Event, EventEmitter, Uri, commands, debug } from "vscode";
+import { commands, debug, tests, workspace, CancellationToken, TestController, TestItem, TestRunProfileKind, TestRunRequest, Uri, TestRun, TestMessage, Location, Position } from "vscode";
 import * as path from 'path';
-import { TestAdapter, TestSuiteEvent, TestEvent, TestLoadFinishedEvent, TestLoadStartedEvent, TestRunFinishedEvent, TestRunStartedEvent, TestSuiteInfo, TestInfo, TestDecoration } from "vscode-test-adapter-api";
-import { TestSuite } from "./protocol";
+import { asRange, TestSuite } from "./protocol";
 import { LanguageClient } from "vscode-languageclient";
 
-export class NbTestAdapter implements TestAdapter {
+export class NbTestAdapter {
 
+    private readonly testController: TestController;
 	private disposables: { dispose(): void }[] = [];
-    private children: TestSuiteInfo[] = [];
-    private readonly testSuite: TestSuiteInfo;
+    private currentRun: TestRun | undefined;
 
-	private readonly testsEmitter = new EventEmitter<TestLoadStartedEvent | TestLoadFinishedEvent>();
-	private readonly statesEmitter = new EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>();
-
-    constructor(
-        public readonly workspaceFolder: WorkspaceFolder,
-        private readonly client: Promise<LanguageClient>
-    ) {
-        this.disposables.push(this.testsEmitter);
-        this.disposables.push(this.statesEmitter);
-        this.testSuite = { type: 'suite', id: '*', label: 'Tests', children: this.children };
-    }
-
-	get tests(): Event<TestLoadStartedEvent | TestLoadFinishedEvent> {
-        return this.testsEmitter.event;
-    }
-
-    get testStates(): Event<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent> {
-        return this.statesEmitter.event;
+    constructor(client: Promise<LanguageClient>) {
+        this.testController = tests.createTestController('apacheNetBeansController', 'Apache NetBeans');
+        const runHandler = (request: TestRunRequest, cancellation: CancellationToken) => this.run(request, cancellation);
+        this.testController.createRunProfile('Run Tests', TestRunProfileKind.Run, runHandler);
+        this.testController.createRunProfile('Debug Tests', TestRunProfileKind.Debug, runHandler);
+        this.disposables.push(this.testController);
+        client.then(async () => await this.load());
     }
 
     async load(): Promise<void> {
-        this.testsEmitter.fire(<TestLoadStartedEvent>{ type: 'started' });
-        let clnt = await this.client;
-        console.log(clnt);
-        this.children.length = 0;
-        const loadedTests: any = await commands.executeCommand('java.load.workspace.tests', this.workspaceFolder.uri.toString());
-        if (loadedTests) {
-            loadedTests.forEach((suite: TestSuite) => {
-                this.updateTests(suite);
-            });
-            this.children.sort((a, b) => a.label.localeCompare(b.label));
-        }
-        if (this.children.length > 0) {
-            this.testsEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished', suite: this.testSuite });
-        } else {
-            this.testsEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished' });
+        for (let workspaceFolder of workspace.workspaceFolders || []) {
+            const loadedTests: any = await commands.executeCommand('java.load.workspace.tests', workspaceFolder.uri.toString());
+            if (loadedTests) {
+                loadedTests.forEach((suite: TestSuite) => {
+                    this.updateTests(suite);
+                });
+            }
         }
     }
 
-    async run(tests: string[]): Promise<void> {
-		this.statesEmitter.fire(<TestRunStartedEvent>{ type: 'started', tests });
-		if (tests.length === 1) {
-            if (tests[0] === '*') {
-                await commands.executeCommand('java.run.test', this.workspaceFolder.uri.toString());
-                this.statesEmitter.fire(<TestRunFinishedEvent>{ type: 'finished' });
-            } else {
-                const idx = tests[0].indexOf(':');
-                const suiteName = idx < 0 ? tests[0] : tests[0].slice(0, idx);
-                const current = this.children.find(s => s.id === suiteName);
-                if (current && current.file) {
-                    let methodName;
-                    if (idx >= 0) {
-                        let test = current.children.find(t => t.id === tests[0]);
-                        if (test) {
-                            methodName = tests[0].slice(idx + 1);
-                        } else {
-                            let parents = current.children.filter(ti => tests[0].startsWith(ti.id));
-                            if (parents && parents.length === 1 && parents[0].type === 'suite') {
-                                methodName = parents[0].id.slice(idx + 1);
-                            }
-                        }
-                    }
-                    if (methodName) {
-                        await commands.executeCommand('java.run.single', Uri.file(current.file).toString(), methodName);
-                    } else {
-                        await commands.executeCommand('java.run.single', Uri.file(current.file).toString());
-                    }
-                    this.statesEmitter.fire(<TestRunFinishedEvent>{ type: 'finished' });
-                } else {
-                    this.statesEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished', errorMessage: `Cannot find suite to run: ${tests[0]}` });
+    async run(request: TestRunRequest, cancellation: CancellationToken): Promise<void> {
+        cancellation.onCancellationRequested(() => this.cancel());
+        this.currentRun = this.testController.createTestRun(request);
+		if (request.include) {
+            const include = [...new Map(request.include.map(item => !item.uri && item.parent?.uri ? [item.parent.id, item.parent] : [item.id, item])).values()];
+            for (let item of include) {
+                if (item.uri) {
+                    this.set(item, 'enqueued');
+                    const idx = item.id.indexOf(':');
+                    await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? 'java.debug.single' : 'java.run.single', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1));
                 }
             }
 		} else {
-			this.statesEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished', errorMessage: 'Failed to run mutliple tests'});
+            this.testController.items.forEach(item => this.set(item, 'enqueued'));
+            for (let workspaceFolder of workspace.workspaceFolders || []) {
+                if (!cancellation.isCancellationRequested) {
+                    await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? 'java.debug.test': 'java.run.test', workspaceFolder.uri.toString());
+                }
+            }
         }
+        this.currentRun.end();
+        this.currentRun = undefined;
     }
 
-    async debug(tests: string[]): Promise<void> {
-		this.statesEmitter.fire(<TestRunStartedEvent>{ type: 'started', tests });
-		if (tests.length === 1) {
-            const idx = tests[0].indexOf(':');
-            const suiteName = idx < 0 ? tests[0] : tests[0].slice(0, idx);
-            const current = this.children.find(s => s.id === suiteName);
-            if (current && current.file) {
-                let methodName;
-                if (idx >= 0) {
-                    let test = current.children.find(t => t.id === tests[0]);
-                    if (test) {
-                        methodName = tests[0].slice(idx + 1);
-                    } else {
-                        let parents = current.children.filter(ti => tests[0].startsWith(ti.id));
-                        if (parents && parents.length === 1 && parents[0].type === 'suite') {
-                            methodName = parents[0].id.slice(idx + 1);
-                        }
-                    }
-                }
-                if (methodName) {
-                    await commands.executeCommand('java.debug.single', Uri.file(current.file).toString(), methodName);
-                } else {
-                    await commands.executeCommand('java.debug.single', Uri.file(current.file).toString());
-                }
-                this.statesEmitter.fire(<TestRunFinishedEvent>{ type: 'finished' });
-            } else {
-                this.statesEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished', errorMessage: `Cannot find suite to debug: ${tests[0]}` });
+    set(item: TestItem, state: 'enqueued' | 'started' | 'passed' | 'failed' | 'skipped' | 'errored', message?: TestMessage | readonly TestMessage[], noPassDown? : boolean): void {
+        if (this.currentRun) {
+            switch (state) {
+                case 'enqueued':
+                case 'started':
+                case 'passed':
+                case 'skipped':
+                    this.currentRun[state](item);
+                    break;
+                case 'failed':
+                case 'errored':
+                    this.currentRun[state](item, message || new TestMessage(''));
+                    break;
             }
-		} else {
-			this.statesEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished', errorMessage: 'Failed to debug mutliple tests'});
+            if (!noPassDown) {
+                item.children.forEach(child => this.set(child, state, message, noPassDown));
+            }
         }
     }
 
@@ -153,151 +106,135 @@ export class NbTestAdapter implements TestAdapter {
 	}
 
     testProgress(suite: TestSuite): void {
-        let cnt = this.children.length;
+        const currentSuite = this.testController.items.get(suite.name);
         switch (suite.state) {
             case 'loaded':
-                if (this.updateTests(suite)) {
-                    if (this.children.length !== cnt) {
-                        this.children.sort((a, b) => a.label.localeCompare(b.label));
-                    }
-                    this.testsEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished', suite: this.testSuite });
-                }
+                this.updateTests(suite);
                 break;
-            case 'running':
-                this.statesEmitter.fire(<TestSuiteEvent>{ type: 'suite', suite: suite.suiteName, state: suite.state });
+            case 'started':
+                if (currentSuite) {
+                    this.set(currentSuite, 'started');
+                }
                 break;
             case 'completed':
             case 'errored':
-                let errMessage: string | undefined;
                 if (suite.tests) {
-                    if (this.updateTests(suite, true)) {
-                        if (this.children.length !== cnt) {
-                            this.children.sort((a, b) => a.label.localeCompare(b.label));
-                        }
-                        this.testsEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished', suite: this.testSuite });
-                    }
-                    const currentSuite = this.children.find(s => s.id === suite.suiteName);
+                    this.updateTests(suite, true);
                     if (currentSuite) {
-                        suite.tests.forEach(test => {
-                            let message: string | undefined;
-                            let decorations: TestDecoration[] | undefined;
-                            if (test.stackTrace) {
-                                message = test.stackTrace.join('\n');
-                                const testFile = test.file ? Uri.parse(test.file)?.path : undefined;
-                                if (testFile) {
-                                    const fileName = path.basename(testFile);
-                                    const line = test.stackTrace.map(frame => {
-                                        const info = frame.match(/^\s*at\s*\S*\((\S*):(\d*)\)$/);
-                                        if (info && info.length >= 3 && info[1] === fileName) {
-                                            return parseInt(info[2]);
+                        const suiteMessages: TestMessage[] = [];
+                        suite.tests?.forEach(test => {
+                            if (this.currentRun) {
+                                let currentTest = currentSuite.children.get(test.id);
+                                if (!currentTest) {
+                                    currentSuite.children.forEach(item => {
+                                        if (!currentTest && test.id.startsWith(item.id)) {
+                                            currentTest = item.children.get(test.id);
                                         }
-                                        return null;
-                                    }).find(l => l);
-                                    if (line) {
-                                        decorations = [{ line: line - 1, message: test.stackTrace[0] }];
+                                    });
+                                }
+                                let message: TestMessage | undefined;
+                                if (test.stackTrace) {
+                                    message = new TestMessage(test.stackTrace.join('\n'));
+                                    if (currentTest) {
+                                        const testUri = currentTest.uri || currentTest.parent?.uri;
+                                        if (testUri) {
+                                            const fileName = path.basename(testUri.path);
+                                            const line = test.stackTrace.map(frame => {
+                                                const info = frame.match(/^\s*at[^\(]*\((\S*):(\d*)\)$/);
+                                                if (info && info.length >= 3 && info[1] === fileName) {
+                                                    return parseInt(info[2]);
+                                                }
+                                                return null;
+                                            }).find(l => l);
+                                            const pos = line ? new Position(line - 1, 0) : currentTest.range?.start;
+                                            if (pos) {
+                                                message.location = new Location(testUri, pos);
+                                            }
+                                        }
+                                    } else {
+                                        message.location = new Location(currentSuite.uri!, currentSuite.range!.start);
                                     }
                                 }
-                            }
-                            let currentTest = (currentSuite as TestSuiteInfo).children.find(ti => ti.id === test.id);
-                            if (!currentTest) {
-                                let parents = (currentSuite as TestSuiteInfo).children.filter(ti => test.id.startsWith(ti.id));
-                                if (parents && parents.length === 1 && parents[0].type === 'suite') {
-                                    currentTest = parents[0].children.find(ti => ti.id === test.id);
+                                if (currentTest && test.state !== 'loaded') {
+                                    this.set(currentTest, test.state, message, true);
+                                } else if (test.state !== 'passed' && message) {
+                                    suiteMessages.push(message);
                                 }
                             }
-                            if (currentTest) {
-                                this.statesEmitter.fire(<TestEvent>{ type: 'test', test: test.id, state: test.state, message, decorations });
-                            } else if (test.state !== 'passed' && message && !errMessage) {
-                                suite.state = 'errored';
-                                errMessage = message;
-                            }
                         });
+                        if (suiteMessages.length > 0) {
+                            this.set(currentSuite, 'errored', suiteMessages, true);
+                            currentSuite.children.forEach(item => this.set(item, 'skipped'));
+                        }
                     }
                 }
-                this.statesEmitter.fire(<TestSuiteEvent>{ type: 'suite', suite: suite.suiteName, state: suite.state, message: errMessage });
                 break;
         }
     }
 
-    updateTests(suite: TestSuite, preserveMissingTests?: boolean): boolean {
-        let changed = false;
-        const currentSuite = this.children.find(s => s.id === suite.suiteName);
-        if (currentSuite) {
-            const file = suite.file ? Uri.parse(suite.file)?.path : undefined;
-            if (file && currentSuite.file !== file) {
-                currentSuite.file = file;
-                changed = true;
-            }
-            if (suite.line && currentSuite.line !== suite.line) {
-                currentSuite.line = suite.line;
-                changed = true
-            }
-            if (suite.tests) {
-                const ids: Set<string> = new Set();
-                const parentSuites: Map<TestSuiteInfo, string[]> = new Map();
-                suite.tests.forEach(test => {
-                    ids.add(test.id);
-                    let currentTest = (currentSuite as TestSuiteInfo).children.find(ti => ti.id === test.id);
-                    if (currentTest) {
-                        const file = test.file ? Uri.parse(test.file)?.path : undefined;
-                        if (file && currentTest.file !== file) {
-                            currentTest.file = file;
-                            changed = true;
+    updateTests(suite: TestSuite, testExecution?: boolean): void {
+        let currentSuite = this.testController.items.get(suite.name);
+        const suiteUri = suite.file ? Uri.parse(suite.file) : undefined;
+        if (!currentSuite || suiteUri && currentSuite.uri?.toString() !== suiteUri.toString()) {
+            currentSuite = this.testController.createTestItem(suite.name, suite.name, suiteUri);
+            this.testController.items.add(currentSuite);
+        }
+        const suiteRange = asRange(suite.range);
+        if (!testExecution && suiteRange && suiteRange !== currentSuite.range) {
+            currentSuite.range = suiteRange;
+        }
+        const children: TestItem[] = []
+        const parentTests: Map<TestItem, TestItem[]> = new Map();
+        suite.tests?.forEach(test => {
+            let currentTest = currentSuite?.children.get(test.id);
+            const testUri = test.file ? Uri.parse(test.file) : undefined;
+            if (currentTest) {
+                if (currentTest.uri?.toString() !== testUri?.toString()) {
+                    currentTest = this.testController.createTestItem(test.id, test.name, testUri);
+                    currentSuite?.children.add(currentTest);
+                }
+                const testRange = asRange(test.range);
+                if (!testExecution && testRange && testRange !== currentTest.range) {
+                    currentTest.range = testRange;
+                }
+                children.push(currentTest);
+            } else {
+                if (testExecution) {
+                    const parents: TestItem[] = [];
+                    currentSuite?.children.forEach(item => {
+                        if (test.id.startsWith(item.id)) {
+                            parents.push(item);
                         }
-                        if (test.line && currentTest.line !== test.line) {
-                            currentTest.line = test.line;
-                            changed = true;
+                    });
+                    if (parents.length === 1) {
+                        let arr = parentTests.get(parents[0]);
+                        if (!arr) {
+                            parentTests.set(parents[0], arr = []);
+                            children.push(parents[0]);
                         }
-                    } else {
-                        let parents = (currentSuite as TestSuiteInfo).children.filter(ti => test.id.startsWith(ti.id));
-                        if (parents && parents.length === 1) {
-                            let childSuite: TestSuiteInfo = parents[0].type === 'suite' ? parents[0] : { type: 'suite', id: parents[0].id, label: parents[0].label, file: parents[0].file, line: parents[0].line, children: [] };
-                            if (!parentSuites.has(childSuite)) {
-                                parentSuites.set(childSuite, childSuite.children.map(ti => ti.id));
-                            }
-                            if (parents[0].type === 'test') {
-                                (currentSuite as TestSuiteInfo).children[(currentSuite as TestSuiteInfo).children.indexOf(parents[0])] = childSuite;
-                                changed = true;
-                            }
-                            currentTest = childSuite.children.find(ti => ti.id === test.id);
-                            if (currentTest) {
-                                let arr = parentSuites.get(childSuite);
-                                let idx = arr ? arr.indexOf(currentTest.id) : -1;
-                                if (idx >= 0) {
-                                    arr?.splice(idx, 1);
-                                }
-                            } else {
-                                let label = test.shortName;
-                                if (label.startsWith(childSuite.label)) {
-                                    label = label.slice(childSuite.label.length).trim();
-                                }
-                                childSuite.children.push({ type: 'test', id: test.id, label, tooltip: test.fullName, file: test.file ? Uri.parse(test.file)?.path : undefined, line: test.line });
-                                changed = true;
-                            }
-                        } else {
-                            (currentSuite as TestSuiteInfo).children.push({ type: 'test', id: test.id, label: test.shortName, tooltip: test.fullName, file: test.file ? Uri.parse(test.file)?.path : undefined, line: test.line });
-                            changed = true;
+                        let label = test.name;
+                        if (label.startsWith(parents[0].label)) {
+                            label = label.slice(parents[0].label.length).trim();
                         }
+                        arr.push(this.testController.createTestItem(test.id, label));
                     }
-                });
-                parentSuites.forEach((val, key) => {
-                    if (val.length > 0) {
-                        key.children = key.children.filter(ti => val.indexOf(ti.id) < 0);
-                        changed = true;
-                    }
-                });
-                if (!preserveMissingTests && (currentSuite as TestSuiteInfo).children.length !== ids.size) {
-                    (currentSuite as TestSuiteInfo).children = (currentSuite as TestSuiteInfo).children.filter(ti => ids.has(ti.id));
-                    changed = true;
+                } else {
+                    currentTest = this.testController.createTestItem(test.id, test.name, testUri);
+                    currentTest.range = asRange(test.range);
+                    children.push(currentTest);
+                    currentSuite?.children.add(currentTest);
                 }
             }
+        });
+        if (testExecution) {
+            parentTests.forEach((val, key) => {
+                const item = this.testController.createTestItem(key.id, key.label, key.uri);
+                item.range = key.range;
+                item.children.replace(val);
+                currentSuite?.children.add(item);
+            });
         } else {
-            const children: TestInfo[] = suite.tests ? suite.tests.map(test => {
-                return { type: 'test', id: test.id, label: test.shortName, tooltip: test.fullName, file: test.file ? Uri.parse(test.file)?.path : undefined, line: test.line };
-            }) : [];
-            this.children.push({ type: 'suite', id: suite.suiteName, label: suite.suiteName, file: suite.file ? Uri.parse(suite.file)?.path : undefined, line: suite.line, children });
-            changed = true;
+            currentSuite.children.replace(children);
         }
-        return changed;
     }
 }

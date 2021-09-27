@@ -30,8 +30,7 @@ import {
     MessageType,
     LogMessageNotification,
     RevealOutputChannelOn,
-    DocumentSelector,
-    DocumentFilter
+    DocumentSelector
 } from 'vscode-languageclient';
 
 import * as net from 'net';
@@ -39,18 +38,16 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { ChildProcess } from 'child_process';
 import * as vscode from 'vscode';
-import { testExplorerExtensionId, TestHub } from 'vscode-test-adapter-api';
-import { TestAdapterRegistrar } from 'vscode-test-adapter-util';
 import * as launcher from './nbcode';
 import {NbTestAdapter} from './testAdapter';
-import { StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification, DebugConnector,
+import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification, DebugConnector,
          TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification,
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
 
 const API_VERSION : string = "1.0";
 let client: Promise<LanguageClient>;
-let testAdapterRegistrar: TestAdapterRegistrar<NbTestAdapter>;
+let testAdapter: NbTestAdapter | null = null;
 let nbProcess : ChildProcess | null = null;
 let debugPort: number = -1;
 let consoleLog: boolean = !!process.env['ENABLE_CONSOLE_LOG'];
@@ -333,6 +330,9 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(commands.registerCommand('java.run.test', async (uri, methodName?, launchConfiguration?) => {
         await runDebug(true, true, uri, methodName, launchConfiguration);
     }));
+    context.subscriptions.push(commands.registerCommand('java.debug.test', async (uri, methodName?, launchConfiguration?) => {
+        await runDebug(false, true, uri, methodName, launchConfiguration);
+    }));
     context.subscriptions.push(commands.registerCommand('java.run.single', async (uri, methodName?, launchConfiguration?) => {
         await runDebug(true, false, uri, methodName, launchConfiguration);
     }));
@@ -343,16 +343,8 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     // register completions:
     launchConfigurations.registerCompletion(context);
 
-    // get the Test Explorer extension and register TestAdapter
-    const testExplorerExtension = vscode.extensions.getExtension<TestHub>(testExplorerExtensionId);
-    if (testExplorerExtension) {
-        const testHub = testExplorerExtension.exports;
-        testAdapterRegistrar = new TestAdapterRegistrar(
-            testHub,
-            workspaceFolder => new NbTestAdapter(workspaceFolder, client)
-        );
-        context.subscriptions.push(testAdapterRegistrar);
-    }
+    // register TestAdapter
+    context.subscriptions.push(testAdapter = new NbTestAdapter(client));
 
     return Object.freeze({
         version : API_VERSION
@@ -606,14 +598,8 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 return await window.showInputBox({ prompt: param.prompt, value: param.value });
             });
             c.onNotification(TestProgressNotification.type, param => {
-                if (testAdapterRegistrar) {
-                    const ws = workspace.getWorkspaceFolder(vscode.Uri.parse(param.uri));
-                    if (ws) {
-                        const adapter = testAdapterRegistrar.getAdapter(ws);
-                        if (adapter) {
-                            adapter.testProgress(param.suite);
-                        }
-                    }
+                if (testAdapter) {
+                    testAdapter.testProgress(param.suite);
                 }
             });
             let decorations = new Map<string, TextEditorDecorationType>();
@@ -629,7 +615,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                         editor => editor.document.uri.toString() == param.uri
                     );
                     if (editorsWithUri.length > 0) {
-                        editorsWithUri[0].setDecorations(decorationType, param.ranges);
+                        editorsWithUri[0].setDecorations(decorationType, asRanges(param.ranges));
                     }
                 }
             });

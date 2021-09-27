@@ -152,7 +152,7 @@ public final class GradleDistributionManager {
         File[] gradleLauncher = lib.listFiles((dir, name) -> {
             return name.startsWith("gradle-launcher-") && name.endsWith(".jar"); //NOI18N
         });
-        if (gradleLauncher.length != 1) {
+        if ((gradleLauncher == null) || (gradleLauncher.length != 1)) {
             throw new FileNotFoundException(lib.getAbsolutePath() + "lib/gradle-launcher-xxxx.jar not found or ambigous!"); //NOI18N
         }
         JarFile launcherJar = new JarFile(gradleLauncher[0]);

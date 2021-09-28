@@ -27,19 +27,16 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.FontMetrics;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyEditor;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.border.EmptyBorder;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.colorchooser.ColorSelectionModel;
@@ -54,6 +51,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import org.netbeans.core.UIExceptions;
+import org.openide.awt.GraphicsUtils;
 import org.openide.explorer.propertysheet.editors.XMLPropertyEditor;
 import org.openide.util.NbBundle;
 
@@ -130,16 +128,8 @@ public final class ColorEditor implements PropertyEditor, XMLPropertyEditor {
     private static Color swingColors[];
 
     static final boolean GTK = "GTK".equals(UIManager.getLookAndFeel().getID());//NOI18N
-    static final boolean AQUA = "Aqua".equals(UIManager.getLookAndFeel().getID());//NOI18N
-    
-    private static final boolean antialias = Boolean.getBoolean("nb.cellrenderer.antialiasing") // NOI18N
-         ||Boolean.getBoolean("swing.aatext") // NOI18N
-         ||(GTK && gtkShouldAntialias()) // NOI18N
-         ||AQUA; 
 
     private static Boolean gtkAA;
-    private static Map hintsMap;
-    
     
     // static initializer .........................................
     
@@ -405,7 +395,7 @@ public final class ColorEditor implements PropertyEditor, XMLPropertyEditor {
     public void paintValue(Graphics g, Rectangle rectangle) {
         int px;
 
-        ((Graphics2D)g).setRenderingHints (getHints ());
+        GraphicsUtils.configureDefaultRenderingHints(g);
         
         if (this.superColor != null) {
             Color color = g.getColor();
@@ -804,8 +794,8 @@ public final class ColorEditor implements PropertyEditor, XMLPropertyEditor {
             /** Paints this component. */
             @Override
             public void paint (Graphics g) {
-                ((Graphics2D)g).setRenderingHints (getHints ());
-                
+                GraphicsUtils.configureDefaultRenderingHints(g);
+
                 Dimension rectangle = this.getSize ();
                 Color color = g.getColor ();
 
@@ -947,6 +937,9 @@ public final class ColorEditor implements PropertyEditor, XMLPropertyEditor {
         return el;
     }
 
+    /**
+     * @deprecated Use {@link GraphicsUtils#configureDefaultRenderingHints(java.awt.Graphics)} instead
+     */
     public static final boolean gtkShouldAntialias() {
         if (gtkAA == null) {
             Object o = Toolkit.getDefaultToolkit().getDesktopProperty("gnome.Xft/Antialias"); //NOI18N
@@ -954,20 +947,5 @@ public final class ColorEditor implements PropertyEditor, XMLPropertyEditor {
         }
 
         return gtkAA.booleanValue();
-    }
-
-    // copied from openide/awt/HtmlLabelUI
-    @SuppressWarnings("unchecked") // need to use reflective access, no idea of type
-    private static Map getHints () {
-        if (hintsMap == null) {
-            hintsMap = (Map)(Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints")); //NOI18N
-            if (hintsMap == null) {
-                hintsMap = new HashMap();
-                if (antialias) {
-                    hintsMap.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-                }
-            }
-        }
-        return hintsMap;
     }
 }

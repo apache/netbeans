@@ -19,15 +19,13 @@
 
 package org.netbeans.core.output2;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.*;
 import java.awt.*;
 import javax.swing.text.Position.Bias;
 import org.netbeans.core.output2.options.OutputOptions;
+import org.openide.awt.GraphicsUtils;
 
 /**
  * Extension to PlainView which can paint hyperlinked lines in different
@@ -42,27 +40,6 @@ class ExtPlainView extends PlainView {
     private static final int MAX_LINE_LENGTH = 4096;
     private static final String LINE_TOO_LONG_MSG = org.openide.util.NbBundle.getMessage(ExtPlainView.class, "MSG_LINE_TOO_LONG");
 
-    /** set antialiasing hints when it's requested. */
-    private static final boolean antialias = Boolean.getBoolean ("swing.aatext") || //NOI18N
-                                             "Aqua".equals (UIManager.getLookAndFeel().getID()); // NOI18N
-
-    private static Map<RenderingHints.Key, Object> hintsMap = null;
-
-    @SuppressWarnings("unchecked")
-    static Map<RenderingHints.Key, Object> getHints() {
-        if (hintsMap == null) {
-            //Thanks to Phil Race for making this possible
-            hintsMap = (Map)(Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints")); //NOI18N
-            if (hintsMap == null) {
-                hintsMap = new HashMap<RenderingHints.Key, Object>();
-                if (antialias) {
-                    hintsMap.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-                }
-            }
-        }
-        return hintsMap;
-    }
-
     /** Creates a new instance of ExtPlainView */
     ExtPlainView(Element elem) {
         super (elem);
@@ -70,7 +47,7 @@ class ExtPlainView extends PlainView {
 
     @Override
     public void paint(Graphics g, Shape allocation) {
-        ((Graphics2D)g).addRenderingHints(getHints());
+        GraphicsUtils.configureDefaultRenderingHints(g);
         super.paint(g, allocation);
     }
 

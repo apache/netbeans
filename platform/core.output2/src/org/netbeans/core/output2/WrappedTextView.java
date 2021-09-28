@@ -30,6 +30,7 @@ import static javax.swing.SwingConstants.NORTH;
 import static javax.swing.SwingConstants.SOUTH;
 import static javax.swing.SwingConstants.WEST;
 import javax.swing.text.Position.Bias;
+import org.openide.awt.GraphicsUtils;
 import org.openide.util.Exceptions;
 
 /**
@@ -93,35 +94,14 @@ public class WrappedTextView extends View implements TabExpander {
      * We do a somewhat prettier arrow if it is.
      */
     private boolean aa = false;
-    /** set antialiasing hints when it's requested. */
-    private static final boolean antialias = Boolean.getBoolean ("swing.aatext") || //NOI18N
-                                             "Aqua".equals (UIManager.getLookAndFeel().getID()); // NOI18N
 
     static final Color arrowColor = new Color (80, 162, 80);
 
-    private static Map<RenderingHints.Key, Object> hintsMap = null;
-    
     int tabSize;
     int tabBase;
     private int tabOffsetX = 0;
     
     private final PropertyChangeListener propertyChangeListener;
-
-    @SuppressWarnings("unchecked")
-    static Map<RenderingHints.Key, Object> getHints() {
-        if (hintsMap == null) {
-            //Thanks to Phil Race for making this possible
-            hintsMap = (Map)(Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints")); //NOI18N
-            if (hintsMap == null) {
-                hintsMap = new HashMap<RenderingHints.Key, Object>();
-                if (antialias) {
-                    hintsMap.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-                    hintsMap.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                }
-            }
-        }
-        return hintsMap;
-    }
 
     public WrappedTextView(Element elem, JTextComponent comp,
             PropertyChangeListener propertyChangeListener1) {
@@ -245,8 +225,7 @@ public class WrappedTextView extends View implements TabExpander {
     }
 
     public void paint(Graphics g, Shape allocation) {
-        
-        ((Graphics2D)g).addRenderingHints(getHints());
+        GraphicsUtils.configureDefaultRenderingHints(g);
         
         comp.getHighlighter().paint(g);
 

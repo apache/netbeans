@@ -19,14 +19,22 @@
     under the License.
 
 -->
-<metadata>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
   <groupId>nbtest.grp</groupId>
-  <artifactId>test-lib2</artifactId>
-  <versioning>
-    <release>12.6</release>
-    <versions>
+  <artifactId>test-processor</artifactId>
+  <version>12.6</version>
+
+  <name>Test processor</name>
+  <description>Annotation processor library stub</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>nbtest.grp</groupId>
+      <artifactId>annotation</artifactId>
       <version>12.6</version>
-    </versions>
-    <lastUpdated>20210924093514</lastUpdated>
-  </versioning>
-</metadata>
+    </dependency>
+  </dependencies>
+</project>
+

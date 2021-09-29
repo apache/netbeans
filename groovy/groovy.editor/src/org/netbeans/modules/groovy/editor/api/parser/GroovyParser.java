@@ -528,6 +528,9 @@ public class GroovyParser extends Parser {
         @Override
         public void gotoPhase(int phase) throws CompilationFailedException {
             super.gotoPhase(phase);
+            if (phase > Phases.CONVERSION) {
+                ((NbGroovyErrorCollector)errorCollector).setDisableErrors(true);
+            }
             if (phase != Phases.INSTRUCTION_SELECTION) {
                 return;
             }
@@ -640,7 +643,6 @@ public class GroovyParser extends Parser {
             start = System.currentTimeMillis();
         }
         NbGroovyErrorCollector coll = (NbGroovyErrorCollector)compilationUnit.getErrorCollector();
-        coll.setDisableErrors(true);
         try {
             try {
                 PerfData.withPerfData(context.perfData, () -> {

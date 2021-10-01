@@ -1989,28 +1989,26 @@ public class JPDADebuggerImpl extends JPDADebugger {
 
         // Create threads in parallel.
         // Constructor of JPDAThreadImpl calls getName() and getStatus(), which take time on slow connection during remote debugging.
-        List<JPDAThread> threads = new ArrayList<>(n);
+        JPDAThread[] threads = new JPDAThread[n];
         if (n > 0) {
-            AtomicBoolean filteredThreads = new AtomicBoolean(false);
             processInParallel(n, (i) -> {
                 JPDAThreadImpl thread = getThread(tl.get(i));
                 if (!thread.getName().contains(ThreadsCache.THREAD_NAME_FILTER_PATTERN)) {
-                    threads.set(i, thread);
+                    threads[i] = thread;
                 } else {
-                    threads.set(i, null);
-                    filteredThreads.set(true);
+                    threads[i] = null;
                 }
             });
-            if (filteredThreads.get()) {
-                Iterator<JPDAThread> it = threads.iterator();
-                while (it.hasNext()) {
-                    if (it.next() == null) {
-                        it.remove();
-                    }
+            List<JPDAThread> threadsFiltered = new ArrayList<>(n);
+            for (JPDAThread t : threads) {
+                if (t != null) {
+                    threadsFiltered.add(t);
                 }
             }
+            return Collections.unmodifiableList(threadsFiltered);
+        } else {
+            return Collections.emptyList();
         }
-        return Collections.unmodifiableList(threads);
     }
 
     private void processInParallel(int n, Consumer<Integer> task) {

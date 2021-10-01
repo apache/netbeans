@@ -1063,11 +1063,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(PrepareRenameParams params) {
         // shortcut: if the projects are not yet initialized, return empty:
         if (server.openedProjects().getNow(null) == null) {
-            return CompletableFuture.completedFuture(Either.forLeft(null));
+            return CompletableFuture.completedFuture(null);
         }
         JavaSource source = getJavaSource(params.getTextDocument().getUri());
         if (source == null) {
-            return CompletableFuture.completedFuture(Either.forLeft(null));
+            return CompletableFuture.completedFuture(null);
         }
         CompletableFuture<Either<Range, PrepareRenameResult>> result = new CompletableFuture<>();
         try {

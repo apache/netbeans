@@ -85,7 +85,7 @@ public class ProjectTrust {
                 return true;
             }
         }
-        return isTrustedPermanetly(project);
+        return isTrustedPermanently(project);
     }
 
     /**
@@ -96,7 +96,7 @@ public class ProjectTrust {
      * @param project of the trust check.
      * @return true if the given project is trusted.
      */
-    public boolean isTrustedPermanetly(Project project) {
+    public boolean isTrustedPermanently(Project project) {
         String pathId = getPathId(project);
         String projectId = projectTrust.get(pathId, null);
         if (projectId == null) {
@@ -124,7 +124,7 @@ public class ProjectTrust {
         synchronized (this) {
             temporaryTrustedIds.add(pathId);
         }
-        if (permanently && !isTrustedPermanetly(project)) {
+        if (permanently && !isTrustedPermanently(project)) {
             Path trustFile = getProjectTrustFile(project);
             byte[] rnd = new byte[16];
             new Random().nextBytes(rnd);

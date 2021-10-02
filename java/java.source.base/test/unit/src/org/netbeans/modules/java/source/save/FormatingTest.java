@@ -1734,6 +1734,12 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testSwitch() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+            return;
+        } catch (IllegalArgumentException ex) {
+            //OK,RELEASE_17, skip test
+        }
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile,
                 "package hierbas.del.litoral;\n\n"
@@ -1961,6 +1967,243 @@ public class FormatingTest extends NbTestCase {
         preferences.putBoolean("indentCasesFromSwitch", false);
         reformat(doc, content, golden);
         preferences.putBoolean("indentCasesFromSwitch", true);
+    }
+
+    public void testSwitchOnJDK17() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile,
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n"
+                + "    public void taragui(int i) {\n"
+                + "    }\n"
+                + "}\n");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie)testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        JavaSource testSource = JavaSource.forDocument(doc);
+        final String stmt =
+                "switch (i) {case 0: System.out.println(i); break; default: System.out.println(\"DEFAULT\");}";
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            @Override
+            public void run(WorkingCopy workingCopy) throws java.io.IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                ClassTree clazz = (ClassTree)workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                MethodTree method = (MethodTree)clazz.getMembers().get(1);
+                BlockTree block = method.getBody();
+                StatementTree statement = workingCopy.getTreeUtilities().parseStatement(stmt, new SourcePositions[1]);
+                workingCopy.rewrite(block, workingCopy.getTreeMaker().addBlockStatement(block, statement));
+            }
+        };
+        testSource.runModificationTask(task).commit();
+
+        Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
+        preferences.putBoolean("spaceBeforeSwitchParen", false);
+        preferences.putBoolean("spaceWithinSwitchParens", true);
+        preferences.putBoolean("spaceBeforeSwitchLeftBrace", false);
+        testSource.runModificationTask(task).commit();
+        preferences.putBoolean("spaceBeforeSwitchParen", true);
+        preferences.putBoolean("spaceWithinSwitchParens", false);
+        preferences.putBoolean("spaceBeforeSwitchLeftBrace", true);
+
+        preferences.put("otherBracePlacement", CodeStyle.BracePlacement.NEW_LINE.name());
+        testSource.runModificationTask(task).commit();
+
+        preferences.put("otherBracePlacement", CodeStyle.BracePlacement.NEW_LINE_HALF_INDENTED.name());
+        testSource.runModificationTask(task).commit();
+
+        preferences.put("otherBracePlacement", CodeStyle.BracePlacement.NEW_LINE_INDENTED.name());
+        testSource.runModificationTask(task).commit();
+        preferences.put("otherBracePlacement", CodeStyle.BracePlacement.SAME_LINE.name());
+
+        preferences.putBoolean("indentCasesFromSwitch", false);
+        testSource.runModificationTask(task).commit();
+        preferences.putBoolean("indentCasesFromSwitch", true);
+
+        ec.saveDocument();
+        String res = TestUtilities.copyFileToString(testFile);
+        System.err.println(res);
+
+        String golden =
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch (i) {\n"
+                + "            case 0:\n"
+                + "                System.out.println(i);\n"
+                + "                break;\n"
+                + "            case default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "        }\n"
+                + "        switch( i ){\n"
+                + "            case 0:\n"
+                + "                System.out.println(i);\n"
+                + "                break;\n"
+                + "            case default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "        }\n"
+                + "        switch (i)\n"
+                + "        {\n"
+                + "            case 0:\n"
+                + "                System.out.println(i);\n"
+                + "                break;\n"
+                + "            case default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "        }\n"
+                + "        switch (i)\n"
+                + "          {\n"
+                + "            case 0:\n"
+                + "                System.out.println(i);\n"
+                + "                break;\n"
+                + "            case default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "          }\n"
+                + "        switch (i)\n"
+                + "            {\n"
+                + "            case 0:\n"
+                + "                System.out.println(i);\n"
+                + "                break;\n"
+                + "            case default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "            }\n"
+                + "        switch (i) {\n"
+                + "        case 0:\n"
+                + "            System.out.println(i);\n"
+                + "            break;\n"
+                + "        case default:\n"
+                + "            System.out.println(\"DEFAULT\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        assertEquals(golden, res);
+
+        String content =
+                "package hierbas.del.litoral;"
+                + "public class Test{"
+                + "public void taragui(int i){"
+                + "switch(i){"
+                + "case 0:"
+                + "System.out.println(i);"
+                + "break;"
+                + "default:"
+                + "System.out.println(\"DEFAULT\");"
+                + "}"
+                + "}"
+                + "}\n";
+
+        golden =
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch (i) {\n"
+                + "            case 0:\n"
+                + "                System.out.println(i);\n"
+                + "                break;\n"
+                + "            default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+
+        golden =
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch( i ){\n"
+                + "            case 0:\n"
+                + "                System.out.println(i);\n"
+                + "                break;\n"
+                + "            default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        preferences.putBoolean("spaceBeforeSwitchParen", false);
+        preferences.putBoolean("spaceWithinSwitchParens", true);
+        preferences.putBoolean("spaceBeforeSwitchLeftBrace", false);
+        reformat(doc, content, golden);
+        preferences.putBoolean("spaceBeforeSwitchParen", true);
+        preferences.putBoolean("spaceWithinSwitchParens", false);
+        preferences.putBoolean("spaceBeforeSwitchLeftBrace", true);
+
+        golden =
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch (i)\n"
+                + "        {\n"
+                + "            case 0:\n"
+                + "                System.out.println(i);\n"
+                + "                break;\n"
+                + "            default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        preferences.put("otherBracePlacement", CodeStyle.BracePlacement.NEW_LINE.name());
+        reformat(doc, content, golden);
+
+        golden =
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch (i)\n"
+                + "          {\n"
+                + "            case 0:\n"
+                + "                System.out.println(i);\n"
+                + "                break;\n"
+                + "            default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "          }\n"
+                + "    }\n"
+                + "}\n";
+        preferences.put("otherBracePlacement", CodeStyle.BracePlacement.NEW_LINE_HALF_INDENTED.name());
+        reformat(doc, content, golden);
+
+        golden =
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch (i)\n"
+                + "            {\n"
+                + "            case 0:\n"
+                + "                System.out.println(i);\n"
+                + "                break;\n"
+                + "            default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "            }\n"
+                + "    }\n"
+                + "}\n";
+        preferences.put("otherBracePlacement", CodeStyle.BracePlacement.NEW_LINE_INDENTED.name());
+        reformat(doc, content, golden);
+        preferences.put("otherBracePlacement", CodeStyle.BracePlacement.SAME_LINE.name());
+
+        golden =
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch (i) {\n"
+                + "        case 0:\n"
+                + "            System.out.println(i);\n"
+                + "            break;\n"
+                + "        default:\n"
+                + "            System.out.println(\"DEFAULT\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        preferences.putBoolean("indentCasesFromSwitch", false);
+        reformat(doc, content, golden);
+        preferences.putBoolean("indentCasesFromSwitch", true);
+
     }
     public void testRuleSwitch() throws Exception {
         testFile = new File(getWorkDir(), "Test.java");
@@ -2359,6 +2602,776 @@ public class FormatingTest extends NbTestCase {
                 + "        }\n"
                 + "    }\n"
                 + "}\n";
+        reformat(doc, content, golden);
+    }
+
+    public void testSwitchCaseNull() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package p;"
+                + "public class Test{    \n"
+                + "void testSwitchCaseNull() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + " case \n"
+                + "         null           ->                      System.out.println(\"case with null formatting\");\n"
+                + "            default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}";
+
+        String golden
+                = "package p;\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    void testSwitchCaseNull() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "            case null ->\n"
+                + "                System.out.println(\"case with null formatting\");\n"
+                + "            default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+    }
+
+    public void testSwitchCaseDefault() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package p;"
+                + "public class Test{    \n"
+                + " void testSwitchCaseDefault() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "            case\n"
+                + "          \n"
+                + " default\n"
+                + "                    ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }"
+                + "}";
+
+        String golden
+                = "package p;\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    void testSwitchCaseDefault() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "            case default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+    }
+
+    public void testSwitchCaseNullAndDefault() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package p;"
+                + "public class Test{    \n"
+                + "void testSwitchCaseNullAndDefault() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "   case \n"
+                + "null,        default         ->System.out.println(\"case with null and default formatting\");\n"
+                + "           \n"
+                + "        }\n"
+                + "    }"
+                + "}";
+
+        String golden
+                = "package p;\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    void testSwitchCaseNullAndDefault() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "            case null, default ->\n"
+                + "                System.out.println(\"case with null and default formatting\");\n"
+                + "\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+    }
+
+    public void testSwitchCaseBindingPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package p;"
+                + "public class Test{    \n"
+                + " void testSwitchCaseBindingPattern() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "    case \n"
+                + "            String          \n"
+                + "            s \n"
+                + "            ->      System.out.println(\"case with binding pattern formatting\");\n"
+                + "            default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }"
+                + "}";
+
+        String golden
+                = "package p;\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    void testSwitchCaseBindingPattern() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "            case String s ->\n"
+                + "                System.out.println(\"case with binding pattern formatting\");\n"
+                + "            default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n"
+                + "";
+        reformat(doc, content, golden);
+    }
+
+    public void testSwitchCaseNullAndBindingPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package p;"
+                + "public class Test{    \n"
+                + "void testSwitchCaseNullAndBindingPattern() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "    case            null,\n"
+                + "            String          \n"
+                + "            s \n"
+                + "            ->      System.out.println(\"case with null and binding pattern formatting\");\n"
+                + "            default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }"
+                + "}";
+
+        String golden
+                = "package p;\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    void testSwitchCaseNullAndBindingPattern() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "            case null, String s ->\n"
+                + "                System.out.println(\"case with null and binding pattern formatting\");\n"
+                + "            default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n"
+                + "";
+        reformat(doc, content, golden);
+    }
+
+    public void testSwitchCaseGuardedPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package p;"
+                + "public class Test{    \n"
+                + "void testSwitchCaseGuardedPattern() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "case \n"
+                + "      String       s &&       s.length() == 1\n"
+                + "                    \n"
+                + "                    ->\n"
+                + "                System.out.println(\"case with guarded pattern formatting\");\n"
+                + "            default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }"
+                + "}";
+
+        String golden
+                = "package p;\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    void testSwitchCaseGuardedPattern() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "            case String s && s.length() == 1 ->\n"
+                + "                System.out.println(\"case with guarded pattern formatting\");\n"
+                + "            default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n"
+                + "";
+        reformat(doc, content, golden);
+    }
+
+    public void testSwitchCaseNullAndGuardedPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package p;"
+                + "public class Test{    \n"
+                + "void testSwitchCaseNullAndGuardedPattern() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "case            \n"
+                + "                    null,\n"
+                + "      String       s &&       s.length() == 1\n"
+                + "                    \n"
+                + "                    ->\n"
+                + "                System.out.println(\"case with null and guarded pattern formatting\");\n"
+                + "            default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }"
+                + "}";
+
+        String golden
+                = "package p;\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    void testSwitchCaseNullAndGuardedPattern() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "            case null, String s && s.length() == 1 ->\n"
+                + "                System.out.println(\"case with null and guarded pattern formatting\");\n"
+                + "            default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n"
+                + "";
+        reformat(doc, content, golden);
+    }
+
+    public void testSwitchCaseParenthesizedBindingPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package p;"
+                + "public class Test{    \n"
+                + "void testSwitchCaseParenthesizedBindingPattern() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "case \n"
+                + "        (String       \n"
+                + "        s )\n"
+                + "                    \n"
+                + "                    ->\n"
+                + "                System.out.println(\"case with Parenthesized Binding Pattern formatting\");\n"
+                + "            default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    } "
+                + "}";
+
+        String golden
+                = "package p;\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    void testSwitchCaseParenthesizedBindingPattern() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "            case (String s ) ->\n"
+                + "                System.out.println(\"case with Parenthesized Binding Pattern formatting\");\n"
+                + "            default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n"
+                + "";
+        reformat(doc, content, golden);
+    }
+
+    public void testSwitchCaseNullAndParenthesizedBindingPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package p;"
+                + "public class Test{    \n"
+                + "void testSwitchCaseNullAndParenthesizedBindingPattern() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "case            null,\n"
+                + "        (String       \n"
+                + "        s )\n"
+                + "                    \n"
+                + "                    ->System.out.println(\"case with null and Parenthesized Binding Pattern formatting\");\n"
+                + "            default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }"
+                + "}";
+
+        String golden
+                = "package p;\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    void testSwitchCaseNullAndParenthesizedBindingPattern() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "            case null, (String s ) ->\n"
+                + "                System.out.println(\"case with null and Parenthesized Binding Pattern formatting\");\n"
+                + "            default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n"
+                + "";
+        reformat(doc, content, golden);
+    }
+
+    public void testSwitchCaseParenthesizedGuardedPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package p;"
+                + "public class Test{    \n"
+                + "void testSwitchCaseParenthesizedGuardedPattern() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "case \n"
+                + "        (String       \n"
+                + "        s       &&\n"
+                + "        s.length() == 1\n"
+                + "        )\n"
+                + "                    \n"
+                + "                    ->\n"
+                + "                System.out.println(\"case with Parenthesized Guarded Pattern formatting\");default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }"
+                + "}";
+
+        String golden
+                = "package p;\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    void testSwitchCaseParenthesizedGuardedPattern() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "            case (String s && s.length() == 1 ) ->\n"
+                + "                System.out.println(\"case with Parenthesized Guarded Pattern formatting\");\n"
+                + "            default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n"
+                + "";
+        reformat(doc, content, golden);
+    }
+
+    public void testSwitchCaseParenthesizedGuardedPatternAndNull() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package p;"
+                + "public class Test{    \n"
+                + "void testSwitchCaseParenthesizedGuardedPatternAndNull() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "case \n"
+                + "        (String       \n"
+                + "        s       &&\n"
+                + "        s.length() == 1\n"
+                + "        ) , \n"
+                + "        null\n"
+                + "                    \n"
+                + "                    ->\n"
+                + "                System.out.println(\"case with Parenthesized Binding Pattern formatting\");default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }"
+                + "}";
+
+        String golden
+                = "package p;\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    void testSwitchCaseParenthesizedGuardedPatternAndNull() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "            case (String s && s.length() == 1 ) , null ->\n"
+                + "                System.out.println(\"case with Parenthesized Binding Pattern formatting\");\n"
+                + "            default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n"
+                + "";
+        reformat(doc, content, golden);
+    }
+   
+    public void testSwitchCaseGuardedPatternNestedParenthesizedPatternWithNull() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package p;"
+                + "public class Test{    \n"
+                + "void testSwitchCaseGuardedPatternNestedParenthesizedPattern() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "case \n"
+                + "        (String       \n"
+                + "        s )      &&\n"
+                + "        s.length() == 1\n"
+                + "         , \n"
+                + "        null\n"
+                + "                    \n"
+                + "                    ->\n"
+                + "                System.out.println(\"SwitchCaseGuardedPatternNestedParenthesizedPattern\");default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }"
+                + "}";
+
+        String golden
+                = "package p;\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    void testSwitchCaseGuardedPatternNestedParenthesizedPattern() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "            case (String s ) && s.length() == 1 , null ->\n"
+                + "                System.out.println(\"SwitchCaseGuardedPatternNestedParenthesizedPattern\");\n"
+                + "            default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n"
+                + "";
+        reformat(doc, content, golden);
+    }
+    
+    public void testSwitchCaseGuardedPatternNestedParenthesizedPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package p;"
+                + "public class Test{    \n"
+                + "    void testSwitchCaseGuardedPatternNestedParenthesizedPattern() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "case (  \n"
+                + "                String s) && s.length() >= 2 && \n"
+                + "                \n"
+                + "                            (s.contains(\"@\") || s.contains(\"!\")) \n"
+                + "                \n"
+                + "                ->\n"
+                + "                String.format(\"Valid string value is %s\", s);default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}";
+
+        String golden
+                = "package p;\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    void testSwitchCaseGuardedPatternNestedParenthesizedPattern() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        switch (str) {\n"
+                + "            case ( String s) && s.length() >= 2\n"
+                + "            && (s.contains(\"@\") || s.contains(\"!\")) ->\n"
+                + "                String.format(\"Valid string value is %s\", s);\n"
+                + "            default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n"
+                + "";
+        reformat(doc, content, golden);
+    }
+
+    public void testSwitchCaseAllPatterns() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package p;"
+                + "public class Test{    \n"
+                + "    void testSwitchCaseAllPatterns() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        IntStream iso = IntStream.of(1, 2);\n"
+                + "        switch (str) {\n"
+                + "case null ->\n"
+                + "     System.out.println(\"case with null formatting\");\n"
+                + "  case String string\n"
+                + "          && (string.length()==  iso.filter(i -> i / 2 == 0).count() || string.length() == 0)\n"
+                + "          ->\n"
+                + "      System.out.println(\"case with pattern matching + condition + lambda expression formatting\");\n"
+                + "  case                  String s && s.length() == 1 ->System.out.println(\"case with pattern matching + condition formatting\");\n"
+                + "  case      (String s &&    true )-> \n"
+                + "      System.out.println(\"case with pattern matching + condition formatting\");\n"
+                + "  case CharSequence\n"
+                + "          s ->\n"
+                + "                System.out.println(\"case with pattern matching formatting\");\n"
+                + "            case\n"
+                + "                    default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "\n"
+                + "        }\n"
+                + "    }"
+                + "}";
+
+        String golden
+                = "package p;\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    void testSwitchCaseAllPatterns() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        IntStream iso = IntStream.of(1, 2);\n"
+                + "        switch (str) {\n"
+                + "            case null ->\n"
+                + "                System.out.println(\"case with null formatting\");\n"
+                + "            case String string && (string.length() == iso.filter(i -> i / 2 == 0).count() || string.length() == 0) ->\n"
+                + "                System.out.println(\"case with pattern matching + condition + lambda expression formatting\");\n"
+                + "            case String s && s.length() == 1 ->\n"
+                + "                System.out.println(\"case with pattern matching + condition formatting\");\n"
+                + "            case (String s && true ) ->\n"
+                + "                System.out.println(\"case with pattern matching + condition formatting\");\n"
+                + "            case CharSequence s ->\n"
+                + "                System.out.println(\"case with pattern matching formatting\");\n"
+                + "            case default ->\n"
+                + "                System.out.println(\"default formatting\");\n"
+                + "\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n"
+                + "";
+        reformat(doc, content, golden);
+    }
+
+    public void testSwitchCaseAllPatternsWithReturnValue() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package p;"
+                + "public class Test{    \n"
+                + "void testSwitchCaseAllPatterns() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        IntStream iso = IntStream.of(1, 2);\n"
+                + "        String retVal = switch (str) {\n"
+                + "case null ->\n"
+                + "     \"case with null formatting\";\n"
+                + "  case String string\n"
+                + "          && (string.length()==  iso.filter(i -> i / 2 == 0).count() || string.length() == 0)\n"
+                + "          ->\n"
+                + "      \"case with pattern matching + condition + lambda expression formatting\";\n"
+                + "  case                  String s && s.length() == 1 ->\"case with pattern matching + condition formatting\";\n"
+                + "  case      (String s &&    true )-> \n"
+                + "      \"case with pattern matching + condition formatting\";\n"
+                + "  case CharSequence\n"
+                + "          s ->\n"
+                + "                \"case with pattern matching formatting\";\n"
+                + "            case\n"
+                + "                    default ->\n"
+                + "                \"default formatting\";\n"
+                + "\n"
+                + "        };\n"
+                + "    }"
+                + "}";
+
+        String golden
+                = "package p;\n"
+                + "\n"
+                + "public class Test {\n"
+                + "\n"
+                + "    void testSwitchCaseAllPatterns() {\n"
+                + "        Object str = \"pattern matching switch\";\n"
+                + "        IntStream iso = IntStream.of(1, 2);\n"
+                + "        String retVal = switch (str) {\n"
+                + "            case null ->\n"
+                + "                \"case with null formatting\";\n"
+                + "            case String string && (string.length() == iso.filter(i -> i / 2 == 0).count() || string.length() == 0) ->\n"
+                + "                \"case with pattern matching + condition + lambda expression formatting\";\n"
+                + "            case String s && s.length() == 1 ->\n"
+                + "                \"case with pattern matching + condition formatting\";\n"
+                + "            case (String s && true ) ->\n"
+                + "                \"case with pattern matching + condition formatting\";\n"
+                + "            case CharSequence s ->\n"
+                + "                \"case with pattern matching formatting\";\n"
+                + "            case default ->\n"
+                + "                \"default formatting\";\n"
+                + "\n"
+                + "        };\n"
+                + "    }\n"
+                + "}\n"
+                + "";
         reformat(doc, content, golden);
     }
 
@@ -5134,13 +6147,12 @@ public class FormatingTest extends NbTestCase {
 
     public void testRecord1() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+            SourceVersion.valueOf("RELEASE_16"); //NOI18N
         } catch (IllegalArgumentException ex) {
             //OK, no RELEASE_14, skip test
             return;
         }
-        sourceLevel="15";
-        EXTRA_OPTIONS.add("--enable-preview");
+        sourceLevel="16";
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");
@@ -5171,13 +6183,12 @@ public class FormatingTest extends NbTestCase {
 
     public void testRecord2() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+            SourceVersion.valueOf("RELEASE_16"); //NOI18N
         } catch (IllegalArgumentException ex) {
             //OK, no RELEASE_14, skip test
             return;
         }
-        sourceLevel="15";
-        EXTRA_OPTIONS.add("--enable-preview");
+        sourceLevel="16";
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");
@@ -5214,13 +6225,12 @@ public class FormatingTest extends NbTestCase {
 
     public void testRecord3() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+            SourceVersion.valueOf("RELEASE_16"); //NOI18N
         } catch (IllegalArgumentException ex) {
             //OK, no RELEASE_14, skip test
             return;
         }
-        sourceLevel="15";
-        EXTRA_OPTIONS.add("--enable-preview");
+        sourceLevel="16";
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");
@@ -5246,13 +6256,12 @@ public class FormatingTest extends NbTestCase {
     
     public void testRecord4() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+            SourceVersion.valueOf("RELEASE_16"); //NOI18N
         } catch (IllegalArgumentException ex) {
             //OK, no RELEASE_14, skip test
             return;
         }
-        sourceLevel="15";
-        EXTRA_OPTIONS.add("--enable-preview");
+        sourceLevel="16";
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");

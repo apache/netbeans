@@ -489,7 +489,7 @@ public class BuildArtifactMapperImpl {
     }
 
     public static boolean isCompileOnSaveSupported() {
-        return NoJavacHelper.hasNbJavac();
+        return true;
     }
 
     @org.openide.util.lookup.ServiceProvider(service=org.netbeans.spi.queries.FileBuiltQueryImplementation.class, position=1000)

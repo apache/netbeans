@@ -51,18 +51,22 @@ public class ParentRootProviderImpl implements ParentProjectProvider, RootProjec
         GradleBaseProject gbp = GradleBaseProject.get(project);
         if ((gbp != null) && !gbp.isRoot()) {
             int lastcol = gbp.getPath().lastIndexOf(':');
-            if (lastcol > 0) {
-                String parentPath = gbp.getPath().substring(0, lastcol);
-                Project root = getRootProject();
-                GradleBaseProject rbp = GradleBaseProject.get(root);
-                File parentDir = rbp.getSubProjects().get(parentPath);
-                if (parentDir != null) {
-                    FileObject fo = FileUtil.toFileObject(parentDir);
-                    try {
-                        ret = ProjectManager.getDefault().findProject(fo);
-                    } catch (IllegalArgumentException | IOException ex) {
-                        ErrorManager.getDefault().notify(ex);
-                    }
+            if (lastcol == -1) {
+                return null;
+            }
+            String parentPath = gbp.getPath().substring(0, lastcol);
+            Project root = getRootProject();
+            if (parentPath.isEmpty()) {
+                return root;
+            }
+            GradleBaseProject rbp = GradleBaseProject.get(root);
+            File parentDir = rbp.getSubProjects().get(parentPath);
+            if (parentDir != null) {
+                FileObject fo = FileUtil.toFileObject(parentDir);
+                try {
+                    ret = ProjectManager.getDefault().findProject(fo);
+                } catch (IllegalArgumentException | IOException ex) {
+                    ErrorManager.getDefault().notify(ex);
                 }
             }
         }

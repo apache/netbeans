@@ -31,6 +31,7 @@ import java.net.URI;
 import java.text.Collator;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -48,12 +49,14 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.queries.CollocationQuery;
+import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectContainerProvider;
 import org.netbeans.spi.project.SubprojectProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Cancellable;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
@@ -73,7 +76,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
 
     private Map<Project,Set<? extends Project>> subprojectsCache = new HashMap<Project,Set<? extends Project>>(); // #59098
     /** Creates new form ProjectChooserAccessory */
-    public ProjectChooserAccessory(JFileChooser chooser, boolean isOpenSubprojects) {
+    public ProjectChooserAccessory(JFileChooser chooser, boolean isOpenSubprojects, boolean trustAndPrime) {
         initComponents();
 
         modelUpdater = new ModelUpdater();
@@ -87,6 +90,9 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
         jCheckBoxSubprojects.setSelected( isOpenSubprojects );
         jCheckBoxSubprojects.addActionListener( this );
 
+        jCheckBoxPrime.setSelected(trustAndPrime);
+        jCheckBoxPrime.addActionListener(this);
+
         // Listen on the chooser to update the Accessory
         chooser.addPropertyChangeListener( this );
 
@@ -95,7 +101,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
 
         // Disable the Accessory. JFileChooser does not select a file
         // by default
-        setAccessoryEnablement( false, 0 );
+        setAccessoryEnablement(false, 0, 0);
     }
 
     /** This method is called from within the constructor to
@@ -109,6 +115,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
 
         jLabelProjectName = new javax.swing.JLabel();
         jTextFieldProjectName = new javax.swing.JTextField();
+        jCheckBoxPrime = new javax.swing.JCheckBox();
         jCheckBoxSubprojects = new javax.swing.JCheckBox();
         jScrollPaneSubprojects = new javax.swing.JScrollPane();
         jListSubprojects = new javax.swing.JList();
@@ -133,6 +140,15 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 6, 0);
         add(jTextFieldProjectName, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxPrime, org.openide.util.NbBundle.getMessage(ProjectChooserAccessory.class, "LBL_PrjChooser_Prime_CheckBox")); // NOI18N
+        jCheckBoxPrime.setToolTipText(org.openide.util.NbBundle.getMessage(ProjectChooserAccessory.class, "LBL_PrjChooser_Prime_CheckBoxTooltipText")); // NOI18N
+        jCheckBoxPrime.setMargin(new java.awt.Insets(2, 0, 2, 2));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
+        add(jCheckBoxPrime, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxSubprojects, org.openide.util.NbBundle.getMessage(ProjectChooserAccessory.class, "LBL_PrjChooser_Subprojects_CheckBox")); // NOI18N
         jCheckBoxSubprojects.setMargin(new java.awt.Insets(2, 0, 2, 2));
@@ -160,6 +176,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox jCheckBoxPrime;
     private javax.swing.JCheckBox jCheckBoxSubprojects;
     private javax.swing.JLabel jLabelProjectName;
     private javax.swing.JList jListSubprojects;
@@ -173,6 +190,9 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
     public void actionPerformed( ActionEvent e ) {
         if ( e.getSource() == jCheckBoxSubprojects ) {
             OpenProjectListSettings.getInstance().setOpenSubprojects( jCheckBoxSubprojects.isSelected() );
+        }
+        if (e.getSource() == jCheckBoxPrime) {
+            OpenProjectListSettings.getInstance().setTrustAndPrime(jCheckBoxPrime.isSelected());
         }
     }
 
@@ -229,7 +249,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
 
             if ( !projects.isEmpty() ) {
                 // Enable all components acessory
-                setAccessoryEnablement( true, projects.size() );
+                setAccessoryEnablement(true, projects.size(), countPrimable(projects));
 
                 if ( projects.size() == 1 ) {
                     String projectName = projectNames.get(0);
@@ -274,7 +294,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
                 }
 
                 // Disable all components in accessory
-                setAccessoryEnablement( false, 0 );
+                setAccessoryEnablement(false, 0, 0);
 
                 // But, in case it is a load error, show that:
                 if (projectDirs.length == 1 && projectDirs[0] != null) {
@@ -316,12 +336,28 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
         }
         else if ( JFileChooser.DIRECTORY_CHANGED_PROPERTY.equals( e.getPropertyName() ) ) {
             // Selection lost => disable accessory
-            setAccessoryEnablement( false, 0 );
+            setAccessoryEnablement(false, 0, 0);
         }
     }
 
-
     // Private methods ---------------------------------------------------------
+
+    private static int countPrimable(Iterable<Project> projects) {
+        int cnt = 0;
+        for (Project p : projects) {
+            final Lookup lkp = p.getLookup();
+            final ActionProvider ap = lkp.lookup(ActionProvider.class);
+            if (ap == null) {
+                // a Project without any actions ? Most probably ergonomics-proxy, count it in!
+                cnt++;
+            } else if (
+                Arrays.asList(ap.getSupportedActions()).contains(ActionProvider.COMMAND_PRIME) &&
+                ap.isActionEnabled(ActionProvider.COMMAND_PRIME, lkp)) {
+                cnt++;
+            }
+        }
+        return cnt;
+    }
 
     private static Project getProject( File dir ) {
         return OpenProjectList.fileToProject( dir );
@@ -337,11 +373,12 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
 
     }
 
-    private void setAccessoryEnablement( boolean enable, int numberOfProjects ) {
+    private void setAccessoryEnablement( boolean enable, int numberOfProjects, int numberOfPrimable ) {
         jLabelProjectName.setEnabled( enable );
         jTextFieldProjectName.setEnabled( enable );
         jTextFieldProjectName.setForeground(/* i.e. L&F default */null);
         jCheckBoxSubprojects.setEnabled( enable );
+        jCheckBoxPrime.setEnabled(numberOfPrimable > 0);
         jScrollPaneSubprojects.setEnabled( enable );
     }
 
@@ -426,7 +463,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
 
 
         if ( defaultAccessory ) {
-            chooser.setAccessory(new ProjectChooserAccessory(chooser, opls.isOpenSubprojects()));
+            chooser.setAccessory(new ProjectChooserAccessory(chooser, opls.isOpenSubprojects(), opls.isTrustAndPrime()));
         }
 
         File currDir = null;
@@ -673,7 +710,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
                 if (currentProjects != projects || cancel) {
                     return;
                 }
-                DefaultListModel listModel = new DefaultListModel();
+                DefaultListModel<String> listModel = new DefaultListModel<>();
                 // Put all the strings into the list model
                 for (String displayName : subprojectNames) {
                     listModel.addElement(displayName);

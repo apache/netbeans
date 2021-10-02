@@ -69,23 +69,30 @@ public class CPPLiteBreakpointActionProvider extends ActionsProviderSupport
     @Override
     public void doAction (Object action) {
         Line line = getCurrentLine ();
-        if (line == null) return ;
-        Breakpoint[] breakpoints = DebuggerManager.getDebuggerManager ().
-            getBreakpoints ();
+        if (line == null) {
+            return ;
+        }
+        Breakpoint[] breakpoints = DebuggerManager.getDebuggerManager().getBreakpoints ();
+        FileObject fo = line.getLookup().lookup(FileObject.class);
+        if (fo == null) {
+            return ;
+        }
+        int lineNumber = line.getLineNumber() + 1;
         int i, k = breakpoints.length;
-        for (i = 0; i < k; i++)
-            if ( breakpoints [i] instanceof CPPLiteBreakpoint &&
-                 ((CPPLiteBreakpoint) breakpoints [i]).getLine ().equals (line)
-            ) {
-                DebuggerManager.getDebuggerManager ().removeBreakpoint
-                    (breakpoints [i]);
-                break;
+        for (i = 0; i < k; i++) {
+            if (breakpoints[i] instanceof CPPLiteBreakpoint) {
+                CPPLiteBreakpoint cppb = (CPPLiteBreakpoint) breakpoints[i];
+                if (fo.equals(cppb.getFileObject()) && cppb.getLineNumber() == lineNumber) {
+                    DebuggerManager.getDebuggerManager().removeBreakpoint(cppb);
+                    break;
+                }
             }
-        if (i == k)
+        }
+        if (i == k) {
             DebuggerManager.getDebuggerManager ().addBreakpoint (
-                new CPPLiteBreakpoint (line)
+                CPPLiteBreakpoint.create(line)
             );
-        //S ystem.out.println("toggle");
+        }
     }
 
     /**

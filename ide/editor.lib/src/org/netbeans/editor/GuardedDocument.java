@@ -219,7 +219,7 @@ public class GuardedDocument extends BaseDocument
                         MessageFormat.format(
                             NbBundle.getBundle(BaseKit.class).getString(FMT_GUARDED_INSERT_LOCALE),
                             new Object [] {
-                                new Integer(offset)
+                                Integer.valueOf(offset)
                             }
                         ),
                         offset
@@ -272,7 +272,7 @@ public class GuardedDocument extends BaseDocument
                     MessageFormat.format(
                         NbBundle.getBundle(BaseKit.class).getString(FMT_GUARDED_REMOVE_LOCALE),
                         new Object [] {
-                            new Integer(offset)
+                            Integer.valueOf(offset)
                         }
                     ),
                     offset

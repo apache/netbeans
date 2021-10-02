@@ -28,6 +28,7 @@ import org.codehaus.groovy.ast.FieldNode;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.ast.Parameter;
+import org.codehaus.groovy.ast.expr.ClassExpression;
 import org.codehaus.groovy.ast.expr.ClosureExpression;
 import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.ConstructorCallExpression;
@@ -70,15 +71,17 @@ public final class CompletionContext {
     public final int lexOffset;
     public final int astOffset;
     public final BaseDocument doc;
+    private boolean staticMembers;
     
     public boolean scriptMode;
     public CaretLocation location;
     public CompletionSurrounding context;
     public AstPath path;
+    public ClassNode rawDseclaringClass;
     public ClassNode declaringClass;
     public DotCompletionContext dotContext;
     public Set<AccessLevel> access;
-
+    private int addSortOverride;
 
     public CompletionContext(
             ParserResult parseResult,
@@ -107,15 +110,53 @@ public final class CompletionContext {
         this.dotContext = getDotCompletionContext();
         this.nameOnly = dotContext != null && dotContext.isMethodsOnly();
 
-        this.declaringClass = getBeforeDotDeclaringClass();
+        ClassNode dc = getBeforeDotDeclaringClass();
+        this.rawDseclaringClass = dc;
+        this.declaringClass = dc == null ? null : dc.redirect();
+    }
+
+    /**
+     * @return true, if just static members or meta-members should be considered.
+     * @since 1.80
+     */
+    public boolean isStaticMembers() {
+        return staticMembers;
+    }
+
+    /**
+     * If nonzero, the provider should adjust CompletionItems priority by this amount
+     * to sort the items lower/higher than usual.
+     * @return adjustment for sort priority.
+     * @since 1.80
+     */
+    public int getAddSortOverride() {
+        return addSortOverride;
+    }
+    
+    /**
+     * Set an offset to the default sort priority for the provided items.
+     * The provider should increase / decrease sort priority of the items
+     * @param addSortOverride the delta.
+     * @since 1.80
+     */
+    public void setAddSortOverride(int addSortOverride) {
+        this.addSortOverride = addSortOverride;
     }
     
     // TODO: Move this to the constructor and change ContextHelper.getSurroundingClassNode()
     // to prevent NPE caused by leaking this in constructor
     public void init() {
+        setDeclaringClass(rawDseclaringClass, this.staticMembers);
+    }
+
+    public void setDeclaringClass(ClassNode declaringClass, boolean staticMembers) {
+        this.rawDseclaringClass = declaringClass;
         if (declaringClass != null) {
+            this.declaringClass = declaringClass.redirect();
             this.access = AccessLevel.create(ContextHelper.getSurroundingClassNode(this), declaringClass);
+            this.staticMembers = staticMembers;
         } else {
+            this.declaringClass = null;
             this.access = null;
         }
     }
@@ -183,6 +224,10 @@ public final class CompletionContext {
     }
 
     private AstPath getPath(ParserResult parseResult, BaseDocument doc, int astOffset) {
+        return getPath(parseResult, doc, astOffset, false);
+    }
+    
+    private AstPath getPath(ParserResult parseResult, BaseDocument doc, int astOffset, boolean outermost) {
         ASTNode root = ASTUtils.getRoot(parseResult);
 
         // in some cases we can not repair the code, therefore root == null
@@ -190,7 +235,7 @@ public final class CompletionContext {
         if (root == null) {
             return null;
         }
-        return new AstPath(root, astOffset, doc);
+        return new AstPath(root, astOffset, doc, outermost);
     }
     
     /**
@@ -247,12 +292,15 @@ public final class CompletionContext {
         // now were heading to the beginning to the document ...
 
         boolean classDefBeforePosition = false;
+        boolean openBraceBeforePosition = false;
 
         ts.move(position);
 
         while (ts.isValid() && ts.movePrevious() && ts.offset() >= 0) {
             Token<GroovyTokenId> t = ts.token();
-            if (t.id() == GroovyTokenId.LITERAL_class || t.id() == GroovyTokenId.LITERAL_interface || t.id() == GroovyTokenId.LITERAL_trait) {
+            if (t.id() == GroovyTokenId.LBRACE) {
+                openBraceBeforePosition = true;
+            } else if (t.id() == GroovyTokenId.LITERAL_class || t.id() == GroovyTokenId.LITERAL_interface || t.id() == GroovyTokenId.LITERAL_trait) {
                 classDefBeforePosition = true;
                 break;
             }
@@ -296,6 +344,10 @@ public final class CompletionContext {
                     }
                 }
             }
+        }
+
+        if (classDefBeforePosition && !openBraceBeforePosition) {
+            return null;
         }
 
         if (!scriptMode && !classDefBeforePosition && classDefAfterPosition) {
@@ -623,8 +675,8 @@ public final class CompletionContext {
         }
 
         int lexOffset = ts.offset();
-        int astOffset = ASTUtils.getAstOffset(parserResult, lexOffset);
-        AstPath realPath = getPath(parserResult, doc, astOffset);
+        int astOffset = ASTUtils.getAstOffset(parserResult, lexOffset) + ts.token().length() - 1;
+        AstPath realPath = getPath(parserResult, doc, astOffset, true);
 
         return new DotCompletionContext(lexOffset, astOffset, realPath, fieldsOnly, methodsOnly);
     }
@@ -691,7 +743,11 @@ public final class CompletionContext {
         // FIXME static/script context...
         if (!isBehindDot() && context.before1 == null
                 && (location == CaretLocation.INSIDE_CLOSURE || location == CaretLocation.INSIDE_METHOD)) {
-            declaringClass = ContextHelper.getSurroundingClassNode(this);
+            ASTNode an = ContextHelper.getSurroundingClassMember(this);
+            boolean st = 
+                    ((an instanceof FieldNode) && ((FieldNode)an).isStatic()) ||
+                    ((an instanceof MethodNode) && ((MethodNode)an).isStatic());
+            setDeclaringClass(ContextHelper.getSurroundingClassNode(this), st);
             return declaringClass;
         }
 
@@ -700,8 +756,6 @@ public final class CompletionContext {
             return null;
         }
 
-        ClassNode declClass = null;
-
         // experimental type inference
         GroovyTypeAnalyzer typeAnalyzer = new GroovyTypeAnalyzer(doc);
         Set<ClassNode> infered = typeAnalyzer.getTypes(dotCompletionContext.getAstPath(),
@@ -709,28 +763,23 @@ public final class CompletionContext {
         // FIXME multiple types
         // FIXME is there any test (?)
         if (!infered.isEmpty()) {
-            return infered.iterator().next();
-        }
-
-        // type inferred
-        if (declClass != null) {
-            declaringClass = declClass;
-            return declaringClass;
+            setDeclaringClass(infered.iterator().next(), false);
+            return rawDseclaringClass;
         }
 
         if (dotCompletionContext.getAstPath().leaf() instanceof VariableExpression) {
             VariableExpression variable = (VariableExpression) dotCompletionContext.getAstPath().leaf();
             if ("this".equals(variable.getName())) { // NOI18N
-                declaringClass = ContextHelper.getSurroundingClassNode(this);
-                return declaringClass;
+                setDeclaringClass(ContextHelper.getSurroundingClassNode(this), false);
+                return rawDseclaringClass;
             }
             if ("super".equals(variable.getName())) { // NOI18N
                 ClassNode thisClass = ContextHelper.getSurroundingClassNode(this);
-                declaringClass = thisClass.getSuperClass();
+                setDeclaringClass(declaringClass, false);
                 if (declaringClass == null) {
                     return new ClassNode("java.lang.Object", ClassNode.ACC_PUBLIC, null);
                 }
-                return declaringClass;
+                return rawDseclaringClass;
             }
         }
 
@@ -754,10 +803,10 @@ public final class CompletionContext {
                     constantExpression.setType(new ClassNode(constantExpression.getValue().getClass()));
                 }
             }
-            declaringClass = expression.getType();
+            setDeclaringClass(expression.getType(), false);
         }
 
-        return declaringClass;
+        return rawDseclaringClass;
     }
     
     /**

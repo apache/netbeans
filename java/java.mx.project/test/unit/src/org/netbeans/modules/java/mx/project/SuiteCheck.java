@@ -30,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import javax.tools.Diagnostic;
+import junit.framework.Test;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
@@ -50,16 +51,25 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Utilities;
 
 abstract class SuiteCheck extends NbTestCase {
     SuiteCheck(String name) {
         super(name);
         log(Level.INFO, "Test created by %s classloader", getClass().getClassLoader());
+    }
+
+    static Test suite(final Class<? extends Test> clazz) {
+        DumpStack.start();
+        return NbModuleSuite.emptyConfiguration().
+                gui(false).
+                enableClasspathModules(true).
+                addTest(clazz).
+                suite();
     }
 
     @Override

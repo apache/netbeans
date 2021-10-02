@@ -24,6 +24,7 @@ import com.sun.source.tree.*;
 import org.netbeans.api.java.source.*;
 import static org.netbeans.api.java.source.JavaSource.*;
 import org.netbeans.junit.NbTestSuite;
+import org.netbeans.modules.java.source.TreeShims;
 
 /**
  *
@@ -60,13 +61,9 @@ public class ModuleInfoTest extends GeneratorTestMDRCompat {
                 CompilationUnitTree cut = workingCopy.getCompilationUnit();
                 TreeMaker make = workingCopy.getTreeMaker();
 
-                for (Tree typeDecl : cut.getTypeDecls()) {
-                    // ensure that it is module
-                    if (typeDecl.getKind() == Tree.Kind.MODULE) {
-                        ExpressionTree nju = make.QualIdent("hierbas.test");
-                        workingCopy.rewrite(((ModuleTree)typeDecl).getName(), nju);
-                    }
-                }
+                ModuleTree moduleTree = TreeShims.getModule(cut);
+                ExpressionTree nju = make.QualIdent("hierbas.test");
+                workingCopy.rewrite(moduleTree.getName(), nju);
             }
             
         };
@@ -98,18 +95,12 @@ public class ModuleInfoTest extends GeneratorTestMDRCompat {
                 workingCopy.toPhase(Phase.RESOLVED);
                 CompilationUnitTree cut = workingCopy.getCompilationUnit();
                 TreeMaker make = workingCopy.getTreeMaker();
-
-                for (Tree typeDecl : cut.getTypeDecls()) {
-                    // ensure that it is module
-                    if (typeDecl.getKind() == Tree.Kind.MODULE) {
-                        ModuleTree moduleTree = (ModuleTree) typeDecl;
-                        ModuleTree nju = moduleTree;
-                        for (DirectiveTree tree : moduleTree.getDirectives()) {
-                            nju = make.removeModuleDirective(nju, tree);
-                        }
-                        workingCopy.rewrite(moduleTree, nju);
-                    }
+                ModuleTree moduleTree = TreeShims.getModule(cut);
+                ModuleTree nju = moduleTree;
+                for (DirectiveTree tree : moduleTree.getDirectives()) {
+                    nju = make.removeModuleDirective(nju, tree);
                 }
+                workingCopy.rewrite(moduleTree, nju);
             }
             
         };
@@ -140,15 +131,10 @@ public class ModuleInfoTest extends GeneratorTestMDRCompat {
                 CompilationUnitTree cut = workingCopy.getCompilationUnit();
                 TreeMaker make = workingCopy.getTreeMaker();
 
-                for (Tree typeDecl : cut.getTypeDecls()) {
-                    // ensure that it is module
-                    if (typeDecl.getKind() == Tree.Kind.MODULE) {
-                        ModuleTree moduleTree = (ModuleTree) typeDecl;
-                        ExpressionTree name = make.QualIdent("java.base");
-                        ModuleTree copy = make.insertModuleDirective(moduleTree, 0, make.Requires(false, false, name));
-                        workingCopy.rewrite(moduleTree, copy);
-                    }
-                }
+                ModuleTree moduleTree = TreeShims.getModule(cut);
+                ExpressionTree name = make.QualIdent("java.base");
+                ModuleTree copy = make.insertModuleDirective(moduleTree, 0, make.Requires(false, false, name));
+                workingCopy.rewrite(moduleTree, copy);
             }
             
         };
@@ -178,15 +164,10 @@ public class ModuleInfoTest extends GeneratorTestMDRCompat {
                 workingCopy.toPhase(Phase.RESOLVED);
                 CompilationUnitTree cut = workingCopy.getCompilationUnit();
                 TreeMaker make = workingCopy.getTreeMaker();
-                for (Tree typeDecl : cut.getTypeDecls()) {
-                    // ensure that it is module
-                    if (typeDecl.getKind() == Tree.Kind.MODULE) {
-                        ModuleTree moduleTree = (ModuleTree) typeDecl;
-                        ExpressionTree pkgName = make.QualIdent("hierbas.del.litoral");
-                        ModuleTree copy = make.addModuleDirective(moduleTree, make.Exports(pkgName, Collections.emptyList()));
-                        workingCopy.rewrite(moduleTree, copy);
-                    }
-                }
+                ModuleTree moduleTree = TreeShims.getModule(cut);
+                ExpressionTree pkgName = make.QualIdent("hierbas.del.litoral");
+                ModuleTree copy = make.addModuleDirective(moduleTree, make.Exports(pkgName, Collections.emptyList()));
+                workingCopy.rewrite(moduleTree, copy);
             }
             
         };
@@ -215,15 +196,10 @@ public class ModuleInfoTest extends GeneratorTestMDRCompat {
                 CompilationUnitTree cut = workingCopy.getCompilationUnit();
                 TreeMaker make = workingCopy.getTreeMaker();
 
-                for (Tree typeDecl : cut.getTypeDecls()) {
-                    // ensure that it is module
-                    if (typeDecl.getKind() == Tree.Kind.MODULE) {
-                        ModuleTree moduleTree = (ModuleTree) typeDecl;
-                        ExpressionTree pkgName = make.QualIdent("hierbas.del.litoral");
-                        ModuleTree copy = make.addModuleDirective(moduleTree, make.Exports(pkgName, Collections.emptyList()));
-                        workingCopy.rewrite(moduleTree, copy);
-                    }
-                }
+                ModuleTree moduleTree = TreeShims.getModule(cut);
+                ExpressionTree pkgName = make.QualIdent("hierbas.del.litoral");
+                ModuleTree copy = make.addModuleDirective(moduleTree, make.Exports(pkgName, Collections.emptyList()));
+                workingCopy.rewrite(moduleTree, copy);
             }
             
         };

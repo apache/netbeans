@@ -21,11 +21,13 @@ package org.netbeans.swing.tabcontrol;
 
 import java.awt.AWTEvent;
 import java.awt.Component;
+import static java.awt.KeyboardFocusManager.getCurrentKeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -83,6 +85,8 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
     private boolean isDragging = true;
 
     private final TabDisplayer displayer;
+    private static final long AWT_EVENT_MASK = AWTEvent.KEY_EVENT_MASK |
+            AWTEvent.WINDOW_EVENT_MASK;
     
     /**
      * Creates and shows the popup with given <code>items</code>. When user
@@ -119,7 +123,7 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
 
         displayer.getModel().addComplexListDataListener( this );
 
-        Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
+        Toolkit.getDefaultToolkit().addAWTEventListener(this, AWT_EVENT_MASK);
 
         popup = new JPopupMenu();
         popup.setBorderPainted( false );
@@ -299,6 +303,22 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
                 } else {
                     ((KeyEvent)event).consume();
                 }
+            }
+        } else if (event instanceof WindowEvent) {
+            // In the case that some other application grabs focus while the 
+            // popup is open, it is possible to wind up double-listening, resulting
+            // in a popup which appears and disappears as soon as the user releases
+            // the mouse-button, so detect that and auto-hide
+            WindowEvent we = (WindowEvent) event;
+            switch(we.getID()) {
+                case WindowEvent.WINDOW_DEACTIVATED :
+                    // Make sure focus has really left the application, not a
+                    // heavyweight Swing popup for the switcher became the active
+                    // window, which would be a false-positive and cause the
+                    // popup to close as soon as it opens
+                    if (getCurrentKeyboardFocusManager().getActiveWindow() == null) {
+                        hidePopup();
+                    }
             }
         }
     }

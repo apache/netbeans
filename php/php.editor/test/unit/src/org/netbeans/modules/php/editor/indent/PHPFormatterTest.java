@@ -943,6 +943,11 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/php80/namedArguments_01b.php", options);
     }
 
+    public void testNamedArguments_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php80/namedArguments_02.php", options);
+    }
+
     public void testNamedArgumentsWithLambdaFunction_01a() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         reformatFileContents("testfiles/formatting/php80/namedArgumentsWithLambdaFunction_01a.php", options);

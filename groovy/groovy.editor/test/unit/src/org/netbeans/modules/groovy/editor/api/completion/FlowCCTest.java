@@ -86,4 +86,12 @@ public class FlowCCTest extends GroovyCCTestBase {
         checkCompletion(BASE + "CollectionLiterals2.groovy", "map.ent^", false);
     }
     
+    public void testReassignment_1() throws Exception {
+        checkCompletion(BASE + "Reassignment.groovy", "def sub = varA.subs^", false);
+    }
+
+    public void testReassignment_2() throws Exception {
+        checkCompletion(BASE + "Reassignment.groovy", "varA.lis^", false);
+    }
+    
 }

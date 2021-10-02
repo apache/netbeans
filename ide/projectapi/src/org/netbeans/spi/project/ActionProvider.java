@@ -30,6 +30,9 @@ import org.openide.util.Lookup;
  * lookup does not enable the action for a given command on the selected file then
  * the first implementation found in default lookup that is enabled will be used.
  * </p>
+ * If the project supports {@link ProjectConfiguration}s, the ActionProvider implementation 
+ * must check {@link ProjectConfiguration} presence in the action's context Lookup whether the caller
+ * requested a specific configuration, and use it to process the requested action, if found.
  * @see org.netbeans.api.project.Project#getLookup
  * @see <a href="@org-apache-tools-ant-module@/org/apache/tools/ant/module/api/support/ActionUtils.html"><code>ActionUtils</code></a>
  * @see <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/support/ProjectSensitiveActions.html#projectCommandAction(java.lang.String,%20java.lang.String,%20javax.swing.Icon)"><code>ProjectSensitiveActions.projectCommandAction(...)</code></a>
@@ -150,6 +153,13 @@ public interface ActionProvider {
     String COMMAND_RENAME = "rename"; // NOI18N
     
     /**
+     * Standard command for priming / initializing
+     * the project.
+     * @since 1.80
+     */
+    String COMMAND_PRIME = "prime"; // NOI18N
+    
+    /**
      * Get a list of all commands which this project supports.
      * @return a list of command names suitable for {@link #invokeAction}
      * @see #COMMAND_BUILD
@@ -182,5 +192,4 @@ public interface ActionProvider {
      * @throws IllegalArgumentException if the requested command is not supported
      */
     boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException;
-    
 }

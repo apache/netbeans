@@ -113,7 +113,7 @@ public class Column extends PropertySupport.ReadWrite {
     public Object getValue (String propertyName) {
         if (PROP_ORDER_NUMBER.equals (propertyName)) {
             int index = columnModel.getCurrentOrderNumber();
-            return new Integer(index);
+            return Integer.valueOf(index);
         }
         if ("InvisibleInTreeTableView".equals (propertyName)) 
             return Boolean.valueOf (!columnModel.isVisible ());

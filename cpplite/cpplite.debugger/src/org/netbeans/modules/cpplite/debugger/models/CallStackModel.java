@@ -19,6 +19,8 @@
 
 package org.netbeans.modules.cpplite.debugger.models;
 
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.Action;
@@ -39,6 +41,9 @@ import org.netbeans.spi.viewmodel.TreeModel;
 import org.netbeans.spi.viewmodel.ModelListener;
 import org.netbeans.spi.viewmodel.UnknownTypeException;
 import org.netbeans.spi.debugger.ui.Constants;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.URLMapper;
 
 import org.openide.text.Line;
 import org.openide.util.NbBundle;
@@ -190,7 +195,7 @@ public class CallStackModel implements TreeModel, NodeModel, NodeActionsProvider
     public String getDisplayName (Object node) throws UnknownTypeException {
         if (node instanceof CPPFrame) {
             CPPFrame frame = (CPPFrame) node;
-            return frame.functionName + "; " + frame.shortFileName + ":" + frame.line;
+            return frame.getName();
         }
         if (node == ROOT) {
             return ROOT;
@@ -232,7 +237,7 @@ public class CallStackModel implements TreeModel, NodeModel, NodeActionsProvider
     public String getShortDescription (Object node) throws UnknownTypeException {
         if (node instanceof CPPFrame) {
             CPPFrame frame = (CPPFrame) node;
-            return frame.functionName + "; " + frame.fullFileName + ":" + frame.line;
+            return frame.getDescription();
         }
         throw new UnknownTypeException (node);
     }
@@ -295,7 +300,23 @@ public class CallStackModel implements TreeModel, NodeModel, NodeActionsProvider
         if (columnID == Constants.CALL_STACK_FRAME_LOCATION_COLUMN_ID) {
             if (node instanceof CPPFrame) {
                 CPPFrame frame = (CPPFrame) node;
-                return frame.fullFileName + ":" + frame.line;
+                URI sourceURI = frame.getSourceURI();
+                if (sourceURI == null) {
+                    return "";
+                }
+                String sourceName;
+                try {
+                    FileObject file = URLMapper.findFileObject(sourceURI.toURL());
+                    sourceName = file.getPath();
+                } catch (MalformedURLException ex) {
+                    sourceName = sourceURI.toString();
+                }
+                int line = frame.getLine();
+                if (line > 0) {
+                    return sourceName + ':' + line;
+                } else {
+                    return sourceName + ":?";
+                }
             }
         }
         throw new UnknownTypeException (node);

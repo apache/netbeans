@@ -1,0 +1,10 @@
+class TestClass1 extends TestAbstractClass
+      ----------
+HINT:\Netbeans5370\TestClass1 is not abstract and does not override abstract method  test() in \Netbeans5370\TestAbstractClass
+FIX:Implement All Abstract Methods
+FIX:Declare Abstract Class
+class TestClass2 implements TestInterface
+      ----------
+HINT:\Netbeans5370\TestClass2 is not abstract and does not override abstract method  test() in \Netbeans5370\TestInterface
+FIX:Implement All Abstract Methods
+FIX:Declare Abstract Class

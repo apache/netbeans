@@ -19,17 +19,17 @@
 
 package org.netbeans.modules.gradle.java.newproject;
 
-import org.netbeans.modules.gradle.java.newproject.Bundle;
-import static org.netbeans.modules.gradle.spi.newproject.BaseGradleWizardIterator.PROP_PACKAGE_BASE;
-import org.netbeans.modules.gradle.spi.newproject.SimpleGradleWizardIterator;
 import org.netbeans.modules.gradle.spi.newproject.TemplateOperation;
 import java.io.File;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.api.templates.TemplateRegistration;
+import org.netbeans.modules.gradle.spi.newproject.BaseGradleWizardIterator;
+import static org.netbeans.modules.gradle.spi.newproject.BaseGradleWizardIterator.PROP_INIT_WRAPPER;
+import static org.netbeans.modules.gradle.spi.newproject.BaseGradleWizardIterator.PROP_NAME;
+import static org.netbeans.modules.gradle.spi.newproject.BaseGradleWizardIterator.PROP_PACKAGE_BASE;
+import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle.Messages;
 
@@ -39,50 +39,39 @@ import org.openide.util.NbBundle.Messages;
  */
 @TemplateRegistration(folder="Project/Gradle", position=100, displayName="#template.simpleAppProject", iconBase="org/netbeans/modules/gradle/java/resources/javaseProjectIcon.png", description="SimpleApplicationDescription.html")
 @Messages("template.simpleAppProject=Java Application")
-public class SimpleApplicationProjectWizard extends SimpleGradleWizardIterator {
-
-    private static final String MAIN_TEMPLATE = "Templates/Classes/Main.java"; //NOI18N
-    private static final String DEFAULT_LICENSE_TEMPLATE = "/Templates/Licenses/license-default.txt"; //NOI18N
-    
-    @Messages("LBL_SimpleApplicationProject=Java Application with Gradle")
+public class SimpleApplicationProjectWizard extends BaseGradleWizardIterator {
     public SimpleApplicationProjectWizard() {
-        super(Bundle.LBL_SimpleApplicationProject(), initParams());
     }
 
-    private static Map<String, Object> initParams() {
-        Map<String, Object> params = new HashMap<>();
-        params.put(PROP_PLUGINS, Arrays.asList("java", "jacoco", "application"));
-        params.put(PROP_DEPENDENCIES, Arrays.asList(
-                "testImplementation     'junit:junit:4.13'"
-        ));
-        return params;
-    }
-    
     @Override
     protected List<? extends WizardDescriptor.Panel<WizardDescriptor>> createPanels() {
-        return Collections.singletonList(createProjectAttributesPanel(new MainClassPanel()));
+        return Collections.singletonList(createProjectAttributesPanel(null));
+    }
+
+    @Messages("LBL_SimpleApplicationProject=Java Application with Gradle")
+    @Override
+    protected String getTitle() {
+        return Bundle.LBL_SimpleApplicationProject();
     }
 
     @Override
     protected void collectOperations(TemplateOperation ops, Map<String, Object> params) {
-        super.collectOperations(ops, params);
-        String packageBase = (String) params.get(PROP_PACKAGE_BASE);
-        String mainClassName = (String) params.get(MainClassPanel.PROP_MAIN_CLASS_NAME);
-        
-        File mainJava = (File) params.get(PROP_MAIN_JAVA_DIR);
-        File packageDir = new File(mainJava, packageBase.replace('.', '/'));
-        
-        Map<String, Object> mainParams = new HashMap<>(params);
-        mainParams.put("project", new DummyProject());
-        mainParams.put("package", packageBase); //NOI18N
-        mainParams.put("name", mainClassName); //NOI18N
-        File target = new File(packageDir, mainClassName + ".java"); //NOI18N
-        ops.openFromTemplate(MAIN_TEMPLATE, target, mainParams);
+        collectOperationsForType(params, ops, "java-application", "app");
     }
 
-    public static class DummyProject {
-        public String getLicensePath() {
-            return DEFAULT_LICENSE_TEMPLATE;
+    static void collectOperationsForType(Map<String, Object> params, TemplateOperation ops, String type, String subFolder) {
+        final String name = (String) params.get(PROP_NAME);
+        final String packageBase = (String) params.get(PROP_PACKAGE_BASE);
+        final File loc = (File) params.get(CommonProjectActions.PROJECT_PARENT_FOLDER);
+        final File root = new File(loc, name);
+
+        ops.createGradleInit(root, type).basePackage(packageBase).projectName(name).add(); // NOI18N
+        ops.addProjectPreload(root);
+        ops.addProjectPreload(new File(root, subFolder));
+
+        Boolean initWrapper = (Boolean) params.get(PROP_INIT_WRAPPER);
+        if (initWrapper == null || initWrapper) {
+            ops.addWrapperInit(root);
         }
     }
 

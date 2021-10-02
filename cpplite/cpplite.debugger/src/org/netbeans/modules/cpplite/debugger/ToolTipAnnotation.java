@@ -37,6 +37,7 @@ import org.openide.util.RequestProcessor;
 import org.netbeans.api.debugger.DebuggerManager;
 
 import org.netbeans.spi.debugger.ui.EditorContextDispatcher;
+import org.netbeans.modules.nativeimage.spi.debug.filters.VariableDisplayer;
 
 
 public class ToolTipAnnotation extends Annotation implements Runnable {
@@ -96,8 +97,11 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
         if (d == null || (frame = d.getCurrentFrame()) == null) {
             return;
         }
-        frame.evaluateLazy(expression,
-                           variable -> {
+        frame.evaluateAsync(expression).thenAccept(variable -> {
+                               VariableDisplayer displayer = currentEngine.lookupFirst(null, VariableDisplayer.class);
+                               if (displayer != null) {
+                                   variable = displayer.displayed(variable)[0];
+                               }
                                String value = variable.getValue();
                                if (!value.equals(expression)) {
                                    String toolTipText;
@@ -109,9 +113,10 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
                                    }
                                    firePropertyChange (PROP_SHORT_DESCRIPTION, null, toolTipText);
                                }
-                           }, exception -> {
+                           }).exceptionally(exception -> {
                                String toolTipText = exception.getLocalizedMessage();
                                firePropertyChange (PROP_SHORT_DESCRIPTION, null, toolTipText);
+                               return null;
                            });
     }
 

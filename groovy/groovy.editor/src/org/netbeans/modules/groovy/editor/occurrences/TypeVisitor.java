@@ -148,8 +148,8 @@ public class TypeVisitor extends ClassCodeVisitorSupport {
 
         if (visitOtherClasses) {
             ModuleNode moduleNode = (ModuleNode) path.root();
-            for (Object object : moduleNode.getClasses()) {
-                visitClass((ClassNode) object);
+            for (ClassNode classNode : moduleNode.getClasses()) {
+                visitClass(classNode);
             }
         }
     }

@@ -26,6 +26,7 @@ import javax.swing.text.Document;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.gsf.testrunner.api.CommonUtils;
+import org.netbeans.modules.gsf.testrunner.ui.annotation.TestMethodAnnotation;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController.TestMethod;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.SingleMethod;
@@ -145,7 +146,7 @@ public abstract class TestMethodRunnerProvider {
     }
 
     static SingleMethod findTestMethod(Document doc, int cursor, BiFunction<Document, Integer, SingleMethod> fallback) {
-        List<TestMethod> methods = (List<TestMethod>) doc.getProperty(TestMethodController.DOCUMENT_METHOD_KEYS);
+        List<TestMethod> methods = (List<TestMethod>) doc.getProperty(TestMethodAnnotation.DOCUMENT_METHODS_KEY);
         if (methods != null) {
             int s = 0;
             int e = methods.size();

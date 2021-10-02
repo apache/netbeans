@@ -152,17 +152,19 @@ public class YamlCompletion implements CodeCompletionHandler {
             StringBuilder sb = new StringBuilder();
 
             try {
-                is = new BufferedInputStream(YamlCompletion.class.getResourceAsStream("refcard.html"));
-                while (true) {
-                    int c = is.read();
+                InputStream stream = YamlCompletion.class.getResourceAsStream("refcard.html");
+                if (stream != null) {
+                    is = new BufferedInputStream(stream);
+                    while (true) {
+                        int c = is.read();
 
-                    if (c == -1) {
-                        break;
+                        if (c == -1) {
+                            break;
+                        }
+
+                        sb.append((char) c);
                     }
-
-                    sb.append((char) c);
                 }
-
                 if (sb.length() > 0) {
                     refcard = sb.toString();
                 }

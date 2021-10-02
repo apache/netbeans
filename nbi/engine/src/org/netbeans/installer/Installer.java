@@ -252,7 +252,7 @@ public class Installer implements FinishHandler {
                 (errorCode != CRITICAL_ERRORCODE)) {
             System.getProperties().put(
                     EXIT_CODE_PROPERTY,
-                    new Integer(errorCode));
+                    Integer.valueOf(errorCode));
         } else {
             System.exit(errorCode);
         }

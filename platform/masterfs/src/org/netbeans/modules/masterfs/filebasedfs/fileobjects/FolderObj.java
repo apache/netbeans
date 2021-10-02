@@ -80,7 +80,7 @@ public final class FolderObj extends BaseFileObj {
     }
 
     @Override
-    public FileObject getFileObject(String relativePath) {
+    public FileObject getFileObject(String relativePath, boolean onlyExisting) {
         if (relativePath.equals(".")) { // NOI18N
             return this;
         }
@@ -101,14 +101,14 @@ public final class FolderObj extends BaseFileObj {
         
         FileObjectFactory factory = getFactory();
         assert factory != null : "No factory for " + getPath() + " this: " + this;
-        return factory.getValidFileObject(file, FileObjectFactory.Caller.GetFileObject);
+        return factory.getValidFileObject(file, FileObjectFactory.Caller.GetFileObject, onlyExisting);
     }
 
 
     public final FileObject getFileObject(final String name, final String ext) {
         File file = BaseFileObj.getFile(getFileName().getFile(), name, ext);
         FileObjectFactory factory = getFactory();
-        return (name.indexOf("/") == -1) ? factory.getValidFileObject(file, FileObjectFactory.Caller.GetFileObject) : null;
+        return (name.indexOf("/") == -1) ? factory.getValidFileObject(file, FileObjectFactory.Caller.GetFileObject, true) : null;
     }
 
     @Override
@@ -165,7 +165,7 @@ public final class FolderObj extends BaseFileObj {
 
                 final FileObject fo = onlyExisting ?
                     lfs.getCachedOnly(fileName.getFile()) :
-                    lfs.getFileObject(fInfo, FileObjectFactory.Caller.GetChildern);
+                    lfs.getFileObject(fInfo, FileObjectFactory.Caller.GetChildern, true);
                 if (fo != null) {
                     final FileNaming foFileName = ((BaseFileObj)fo).getFileName();
                     if (!fo.isValid()) {
@@ -246,7 +246,7 @@ public final class FolderObj extends BaseFileObj {
 
         final FileObjectFactory factory = getFactory();
         if (factory != null) {
-            BaseFileObj exists = factory.getValidFileObject(folder2Create, FileObjectFactory.Caller.Others);
+            BaseFileObj exists = factory.getValidFileObject(folder2Create, FileObjectFactory.Caller.Others, true);
             if (exists instanceof FolderObj) {
                 retVal = (FolderObj)exists;
             } else {
@@ -337,7 +337,7 @@ public final class FolderObj extends BaseFileObj {
         final FileObjectFactory factory = getFactory();
         retVal = null;
         if (factory != null) {
-            final BaseFileObj fo = factory.getValidFileObject(file2Create, FileObjectFactory.Caller.Others);
+            final BaseFileObj fo = factory.getValidFileObject(file2Create, FileObjectFactory.Caller.Others, true);
             try {
                 retVal = (FileObj) fo;
             } catch (ClassCastException ex) {
@@ -466,7 +466,7 @@ public final class FolderObj extends BaseFileObj {
             final Integer operationId = entry.getValue();
 
             BaseFileObj newChild = (operationId == ChildrenCache.ADDED_CHILD) ? 
-                factory.getFileObject(new FileInfo(child.getFile()), FileObjectFactory.Caller.Refresh) 
+                factory.getFileObject(new FileInfo(child.getFile()), FileObjectFactory.Caller.Refresh, true) 
                 : 
                 factory.getCachedOnly(child.getFile());
             newChild = (BaseFileObj) ((newChild != null) ? newChild : getFileObject(child.getName()));

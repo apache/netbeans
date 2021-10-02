@@ -48,8 +48,8 @@ public class AddExceptionDialogPanel extends javax.swing.JPanel implements Valid
         this.config=config;
         initComponents();
         List actions = StrutsConfigUtilities.getAllActionsInModule(config);
-        DefaultComboBoxModel model = (DefaultComboBoxModel)jComboBoxCallAction.getModel();
-        DefaultComboBoxModel model1 = (DefaultComboBoxModel)jComboBoxActionExc.getModel();
+        DefaultComboBoxModel<String> model = (DefaultComboBoxModel<String>)jComboBoxCallAction.getModel();
+        DefaultComboBoxModel<String> model1 = (DefaultComboBoxModel<String>)jComboBoxActionExc.getModel();
         Iterator iter = actions.iterator();
         while (iter.hasNext()) {
             String actionPath=((Action)iter.next()).getAttributeValue("path"); //NOI18N

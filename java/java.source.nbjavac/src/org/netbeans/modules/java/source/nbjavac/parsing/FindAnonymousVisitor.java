@@ -24,10 +24,8 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
-import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import java.util.HashSet;
 import java.util.Set;
-import org.netbeans.lib.nbjavac.services.NBTreeMaker.IndexedClassDecl;
 
 /**
  * Partial reparse helper visitor.
@@ -38,14 +36,12 @@ class FindAnonymousVisitor extends ErrorAwareTreeScanner<Void,Void> {
 
     private static enum Mode {COLLECT, CHECK};
 
-    int firstInner = -1;
     int noInner;
     boolean hasLocalClass;
     final Set<Tree> docOwners = new HashSet<Tree>();
     private Mode mode = Mode.COLLECT;            
     
     public final void reset () {
-        this.firstInner = -1;
         this.noInner = 0;
         this.hasLocalClass = false;
         this.mode = Mode.CHECK;
@@ -53,9 +49,6 @@ class FindAnonymousVisitor extends ErrorAwareTreeScanner<Void,Void> {
 
     @Override
     public Void visitClass(ClassTree node, Void p) {
-        if (firstInner == -1) {
-            firstInner = ((IndexedClassDecl)node).index;
-        }
         if (node.getSimpleName().length() != 0) {
             hasLocalClass = true;
         }

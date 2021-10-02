@@ -587,7 +587,7 @@ public abstract class Group {
                 h.switchToIndeterminate();
                 h.progress(Group_progress_opening(toOpen.size()));
                 //open the projects with current group
-                opl.open(toOpen.toArray(new Project[toOpen.size()]), false, h, null);
+                opl.open(toOpen.toArray(new Project[toOpen.size()]), false, false, h, null);
                 
                 if(!isNewGroup) {
                     //for old and new group project intersection, save the old files list,

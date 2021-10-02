@@ -18,27 +18,33 @@
  */
 package org.netbeans.modules.cpplite.debugger;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 
 import org.netbeans.modules.cnd.debugger.gdb2.mi.MIConst;
+import org.netbeans.modules.cnd.debugger.gdb2.mi.MIRecord;
 import org.netbeans.modules.cnd.debugger.gdb2.mi.MIValue;
+import org.netbeans.modules.nativeimage.api.debug.NIFrame;
+import org.netbeans.modules.nativeimage.api.debug.NIVariable;
 
 /**
  * Representation of a variable.
  */
-public final class CPPVariable {
+public final class CPPVariable implements NIVariable {
 
     private final CPPFrame frame;
+    private final CPPVariable parentVariable;
     private final String uniqueName;
     private final String name;
     private final String type;
     private final String value;
     private final int numChildren;
-    private volatile Map<String, CPPVariable> children;
+    private volatile Map<String, NIVariable> children;
 
-    CPPVariable(CPPFrame frame, String uniqueName, String name, String type, MIValue value, int numChildren) {
+    CPPVariable(CPPFrame frame, CPPVariable parentVariable, String uniqueName, String name, String type, MIValue value, int numChildren) {
         this.frame = frame;
+        this.parentVariable = parentVariable;
         this.uniqueName = uniqueName;
         this.name = name;
         this.type = type;
@@ -46,28 +52,42 @@ public final class CPPVariable {
         this.numChildren = numChildren;
     }
 
+    @Override
+    public NIFrame getFrame() {
+        return frame.getFrame();
+    }
+
+    @Override
+    public CPPVariable getParent() {
+        return parentVariable;
+    }
+
     public String getUniqueName() {
         return uniqueName;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public String getType() {
         return type;
     }
 
+    @Override
     public String getValue() {
         return value;
     }
 
+    @Override
     public int getNumChildren() {
         return numChildren;
     }
 
-    public Map<String, CPPVariable> getChildrenVariables() {
-        Map<String, CPPVariable> vars = children;
+    public Map<String, NIVariable> getChildrenByNames() {
+        Map<String, NIVariable> vars = children;
         if (vars == null) {
             synchronized (this) {
                 vars = children;
@@ -78,4 +98,35 @@ public final class CPPVariable {
         }
         return vars;
     }
+
+    @Override
+    public NIVariable[] getChildren(int from, int to) {
+        Map<String, NIVariable> childrenVariables = getChildrenByNames();
+        NIVariable[] array = childrenVariables.values().toArray(new NIVariable[0]);
+        if (array.length == 1 && array[0] == null) {
+            return new NIVariable[0]; // Error
+        }
+        if (from >= 0) {
+            to = Math.min(to, array.length);
+            if (from < to) {
+                array = Arrays.copyOfRange(array, from, to);
+            } else {
+                array = new NIVariable[0];
+            }
+        }
+        return array;
+    }
+
+    @Override
+    public String getExpressionPath() {
+        MIRecord pathRecord;
+        try {
+            pathRecord = frame.getThread().getDebugger().sendAndGet("-var-info-path-expression " + uniqueName);
+        } catch (InterruptedException ex) {
+            return null;
+        }
+        String pathExpression = pathRecord.results().getConstValue("path_expr");
+        return pathExpression;
+    }
+
 }

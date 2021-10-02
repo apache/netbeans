@@ -265,7 +265,7 @@ public class CustomizerCompile extends javax.swing.JPanel implements HelpCtx.Pro
         Dialog dlg = DialogDisplayer.getDefault().createDialog(desc);
         dlg.setVisible(true);
         if (desc.getValue() == DialogDescriptor.OK_OPTION) {
-            ((DefaultListModel)annotationProcessorsList.getModel()).addElement(panel.getProcessorFQN());
+            ((DefaultListModel<String>)annotationProcessorsList.getModel()).addElement(panel.getProcessorFQN());
         }
         dlg.dispose();
 }//GEN-LAST:event_addProcessorButtonActionPerformed

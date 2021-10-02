@@ -124,12 +124,11 @@ public class OptionsPanel extends JPanel {
     private final boolean isMac = UIManager.getLookAndFeel ().getID ().equals ("Aqua");
     private final boolean isNimbus = UIManager.getLookAndFeel ().getID ().equals ("Nimbus");
     private final boolean isMetal = UIManager.getLookAndFeel() instanceof MetalLookAndFeel;
-    private final boolean isFlatLaf = UIManager.getLookAndFeel().getID().startsWith("FlatLaf");
     private final boolean isGTK = UIManager.getLookAndFeel ().getID ().equals ("GTK");
     private final Color selected = isMac ? new Color(221, 221, 221) : getSelectionBackground();
-    private final Color selectedB = isMac ? new Color(183, 183, 183) : (isFlatLaf ? selected : new Color (149, 106, 197));
+    private final Color selectedB = isMac ? new Color(183, 183, 183) : getUIColorOrDefault("nb.options.categories.selectionBorderColor", new Color (149, 106, 197));
     private final Color highlighted = isMac ? new Color(221, 221, 221) : getHighlightBackground();
-    private final Color highlightedB = isFlatLaf ? highlighted : new Color (152, 180, 226);
+    private final Color highlightedB = getUIColorOrDefault("nb.options.categories.highlightBorderColor", new Color (152, 180, 226));
     //private final Color iconViewBorder = new Color (127, 157, 185);
     private final ControllerListener controllerListener = new ControllerListener ();
     
@@ -394,7 +393,7 @@ public class OptionsPanel extends JPanel {
         showHint(true);
         
         pCategories = new JPanel (new BorderLayout ());
-        pCategories.setBorder (BorderFactory.createMatteBorder(0,0,1,0,isFlatLaf ? UIManager.getColor("Separator.foreground"): Color.lightGray)); //NOI18N
+        pCategories.setBorder (BorderFactory.createMatteBorder(0,0,1,0,getUIColorOrDefault("nb.options.categories.separatorColor", Color.lightGray))); //NOI18N
         pCategories.setBackground (getTabPanelBackground());
         categoriesScrollPane = new JScrollPane(pCategories2, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         categoriesScrollPane.setBorder(null);
@@ -965,6 +964,11 @@ public class OptionsPanel extends JPanel {
     }
 
     private Color getTabPanelBackground() {
+        Color uiColor = UIManager.getColor("nb.options.categories.tabPanelBackground"); //NOI18N
+        if (uiColor != null) {
+            return uiColor;
+        }
+
         if( useUIDefaultsColors() ) {
             Color res = UIManager.getColor( "Tree.background" ); //NOI18N
             if( null == res )
@@ -975,6 +979,11 @@ public class OptionsPanel extends JPanel {
     }
 
     private Color getTabPanelForeground() {
+        Color uiColor = UIManager.getColor("nb.options.categories.tabPanelForeground"); //NOI18N
+        if (uiColor != null) {
+            return uiColor;
+        }
+
         if( useUIDefaultsColors() ) {
             Color res = UIManager.getColor( "Tree.foreground" ); //NOI18N
             if( null == res )
@@ -985,6 +994,11 @@ public class OptionsPanel extends JPanel {
     }
 
     private Color getSelectionBackground() {
+        Color uiColor = UIManager.getColor("nb.options.categories.selectionBackground"); //NOI18N
+        if (uiColor != null) {
+            return uiColor;
+        }
+
         if( useUIDefaultsColors() ) {
             if( !Color.white.equals( getTabPanelBackground() ) ) {
                 Color res = UIManager.getColor( "Tree.selectionBackground" ); //NOI18N
@@ -997,6 +1011,11 @@ public class OptionsPanel extends JPanel {
     }
 
     private Color getHighlightBackground() {
+        Color uiColor = UIManager.getColor("nb.options.categories.highlightBackground"); //NOI18N
+        if (uiColor != null) {
+            return uiColor;
+        }
+
         if( useUIDefaultsColors() ) {
             if( !Color.white.equals( getTabPanelBackground() ) ) {
                 Color res = UIManager.getColor( "Tree.selectionBackground" ); //NOI18N
@@ -1009,7 +1028,12 @@ public class OptionsPanel extends JPanel {
     }
 
     private boolean useUIDefaultsColors() {
-        return isMetal || isNimbus || isFlatLaf;
+        return isMetal || isNimbus;
+    }
+
+    private Color getUIColorOrDefault(String uiKey, Color defaultColor) {
+        Color uiColor = UIManager.getColor(uiKey);
+        return (uiColor != null) ? uiColor : defaultColor;
     }
 
     // innerclasses ............................................................

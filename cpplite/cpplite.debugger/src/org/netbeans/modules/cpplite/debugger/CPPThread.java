@@ -21,6 +21,7 @@ package org.netbeans.modules.cpplite.debugger;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.AbstractList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -230,8 +231,14 @@ public final class CPPThread implements DVThread {
                 stack[0] = topFrame;
                 i++;
             }
-            for (; i < l; i++) {
-                stack[i] = new CPPFrame(this, (MITList) ((MIResult) stackList.get(i)).value());
+            for (int li = i; li < l; li++) {
+                CPPFrame frame = CPPFrame.create(this, (MITList) ((MIResult) stackList.get(li)).value());
+                if (frame != null) {
+                    stack[i++] = frame;
+                }
+            }
+            if (i < l) {
+                stack = Arrays.copyOf(stack, i);
             }
             this.stack = stack;
         }

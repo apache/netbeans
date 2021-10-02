@@ -84,6 +84,9 @@ public final class MavenExecuteUtils {
     static final String DEFAULT_DEBUG_PARAMS = "-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}"; //NOI18N
     static final String DEFAULT_EXEC_ARGS_CLASSPATH2 =  "${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}"; // NOI18N
 
+    public static final String ENV_PREFIX = "Env."; // NOI18N
+    public static final String ENV_REMOVED = new String("null"); // A special instance for env vars to be removed. // NOI18N
+
     /**
      * ID of the 'profile' action.
      */
@@ -513,6 +516,10 @@ public final class MavenExecuteUtils {
         return null;
     }
     
+    public static boolean isEnvRemovedValue(String value) {
+        return value == ENV_REMOVED; // It's crutial to test the instance identity
+    }
+    
     /**
      * Creates a helper to edit the mapping instances. Individual settings can be
      * inspected by getters and changed by setters on the helper, changes can be then
@@ -550,34 +557,33 @@ public final class MavenExecuteUtils {
         return c == '\'' || c == '"';
     }
     
-    public static String joinParameters(List<String> params) {
-        StringBuilder sb = new StringBuilder();
+    public static List<String> escapeParameters(List<String> params) {
+        List<String> ret = new ArrayList<>();
         for (String s : params) {
             if (s == null) {
                 continue;
             }
-            if (sb.length() > 0) {
-                sb.append(" ");
-            }
             if (s.length() > 1) {
                 char c = s.charAt(0);
                 if (isQuoteChar(c) && s.charAt(s.length() - 1) == c) {
-                    sb.append(s);
+                    ret.add(s);
                     continue;
                 }
             }
             // note: does not care about escaped spaces.
             if (!s.contains(" ")) {
-                sb.append(s.replace("'", "\\'").replace("\"", "\\\""));
+                ret.add(s.replace("'", "\\'").replace("\"", "\\\""));
             } else {
-                sb.append("\"").append(
-                        s.replace("\"", "\\\"")
-                ).append("\"");
+                ret.add("\"" + s.replace("\"", "\\\"") + "\"");
             }
         }
-        return sb.toString();
+        return ret;
     }
     
+    public static String joinParameters(List<String> params) {
+        return String.join(" ", escapeParameters(params));
+    }
+
     public static List<String> extractDebugJVMOptions(String argLine) {
         Iterable<String> split = propertySplitter(argLine, true);
         List<String> toRet = new ArrayList<String>();
@@ -615,9 +621,9 @@ public final class MavenExecuteUtils {
      * @return
      */
     public static String[] splitAll(String argline, boolean filterClassPath) {
-        String jvm = splitJVMParams(argline, false);
-        String mainClazz = splitMainClass(argline);
-        String args = splitParams(argline);
+        String jvm = argline == null ? null : splitJVMParams(argline, false);
+        String mainClazz = argline == null ? null : splitMainClass(argline);
+        String args = argline == null ? null : splitParams(argline);
         if (filterClassPath && jvm != null && jvm.contains("-classpath %classpath")) {
             jvm = jvm.replace("-classpath %classpath", "");
         }

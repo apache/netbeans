@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.6.0
+#Version 1.9.0
 
 CLSS public java.lang.Object
 cons public init()
@@ -50,7 +50,7 @@ supr java.lang.Object
 CLSS public final static org.netbeans.modules.java.lsp.server.ui.AbstractLspInputOutputProvider$LspIO
  outer org.netbeans.modules.java.lsp.server.ui.AbstractLspInputOutputProvider
 supr java.lang.Object
-hfds ctx,err,in,lookup,name,out
+hfds closed,ctx,err,in,lookup,name,out
 hcls LspWriter
 
 CLSS public abstract org.netbeans.modules.java.lsp.server.ui.AbstractLspStatusDisplayer
@@ -63,11 +63,24 @@ meth public final void setStatusText(java.lang.String)
 supr org.openide.awt.StatusDisplayer
 hfds text
 
+CLSS public abstract org.netbeans.modules.java.lsp.server.ui.AbstractProgressEnvironment
+cons protected init()
+cons protected init(org.openide.util.Lookup)
+intf org.netbeans.modules.progress.spi.ProgressEnvironment
+meth public org.netbeans.api.progress.ProgressHandle createHandle(java.lang.String,org.openide.util.Cancellable,boolean)
+meth public org.netbeans.modules.progress.spi.Controller findController(org.netbeans.modules.progress.spi.InternalHandle)
+meth public org.netbeans.modules.progress.spi.Controller getController()
+supr java.lang.Object
+hfds MASK_CANCELLABLES,NO_CONTEXT_CONTROLLER,env,patternMaskingCancellables
+hcls NoContextHandle
+
 CLSS public abstract org.netbeans.modules.java.lsp.server.ui.IOContext
 cons public init()
 meth protected abstract boolean isValid()
 meth protected abstract void stdErr(java.lang.String)
 meth protected abstract void stdOut(java.lang.String)
+meth protected java.io.InputStream getStdIn() throws java.io.IOException
+meth protected void stdIn(java.lang.String) throws java.io.IOException
 supr java.lang.Object
 hfds lastCtx
 hcls StdErrContext
@@ -86,6 +99,10 @@ meth public static org.netbeans.modules.java.lsp.server.ui.UIContext find(org.op
 supr java.lang.Object
 hfds lastCtx
 hcls LogImpl
+
+CLSS public abstract interface org.netbeans.modules.progress.spi.ProgressEnvironment
+meth public abstract org.netbeans.api.progress.ProgressHandle createHandle(java.lang.String,org.openide.util.Cancellable,boolean)
+meth public abstract org.netbeans.modules.progress.spi.Controller getController()
 
 CLSS public abstract interface org.netbeans.spi.io.InputOutputProvider<%0 extends java.lang.Object, %1 extends java.io.PrintWriter, %2 extends java.lang.Object, %3 extends java.lang.Object>
 meth public abstract boolean isIOClosed({org.netbeans.spi.io.InputOutputProvider%0})

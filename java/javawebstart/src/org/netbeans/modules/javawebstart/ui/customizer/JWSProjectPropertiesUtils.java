@@ -369,7 +369,7 @@ public final class JWSProjectPropertiesUtils {
         }
         Document xmlDoc = null;
         try {
-            xmlDoc = XMLUtil.parse(new InputSource(buildXmlFO.getURL().toExternalForm()), false, true, null, null);
+            xmlDoc = XMLUtil.parse(new InputSource(buildXmlFO.toURL().toExternalForm()), false, true, null, null);
         } catch (SAXException ex) {
             Exceptions.printStackTrace(ex);
         }

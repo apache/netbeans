@@ -91,7 +91,36 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
-
+        <change>
+            <api name="extexecution_api"/>
+            <summary>StartupExtender may return unescaped parameters</summary>
+            <version major="1" minor="62"/>
+            <date day="10" month="8" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                The <a href="@TOP@/org/netbeans/spi/extexecution/startup/StartupExtenderImplementation.html">StartupExtenderImplementation</a> 
+                javadoc did not specify how to handle parameters with spaces in them. Some of the implementations quote/escape the parameters they 
+                return, but most of them not. This causes issues later when the parameters are processed or re-arranged into the final 
+                commandline. This change allows a <a href="@TOP@/org/netbeans/spi/extexecution/startup/StartupExtenderImplementation.html">StartupExtenderImplementation</a>
+                to declare its quoting policy.
+            </description>
+            <class package="org.netbeans.spi.extexecution.startup" name="StartupExtenderImplementation"/>
+            <class package="org.netbeans.api.extexecution.startup" name="StartupExtender"/>
+        </change>
+        <change>
+            <api name="extexecution_api"/>
+            <summary>postExecution callback with exit code value</summary>
+            <version major="1" minor="61"/>
+            <date day="12" month="5" year="2021"/>
+            <author login="jtulach"/>
+            <compatibility addition="yes"/>
+            <description>
+                Use overloaded <code>ExecutionDescriptor.postExecution</code>
+                method to obtain exit code of just finished application.
+            </description>
+            <class package="org.netbeans.api.extexecution" name="ExecutionDescriptor"/>
+        </change>
         <change>
             <api name="extexecution_api"/>
             <summary>Rerun action callback</summary>

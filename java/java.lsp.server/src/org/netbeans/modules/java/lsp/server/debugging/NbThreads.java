@@ -55,28 +55,27 @@ public final class NbThreads {
             @Override
             public void sessionAdded(Session session) {
                 DebuggerManager.getDebuggerManager().removeDebuggerListener(DebuggerManager.PROP_SESSIONS, this);
-                JPDADebugger debugger = session.lookupFirst(null, JPDADebugger.class);
-                initThreads(context, debugger);
+                initThreads(context, session);
             }
         });
     }
 
-    private void initThreads(DebugAdapterContext context, JPDADebugger debugger) {
-        DebuggerEngine engine = debugger.getSession().getCurrentEngine();
+    private void initThreads(DebugAdapterContext context, Session session) {
+        DebuggerEngine engine = session.getCurrentEngine();
         if (engine == null) {
-            debugger.getSession().addPropertyChangeListener(Session.PROP_CURRENT_LANGUAGE, new PropertyChangeListener() {
+            session.addPropertyChangeListener(Session.PROP_CURRENT_LANGUAGE, new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
-                    DebuggerEngine currentEngine = debugger.getSession().getCurrentEngine();
+                    DebuggerEngine currentEngine = session.getCurrentEngine();
                     if (currentEngine != null) {
-                        debugger.getSession().removePropertyChangeListener(Session.PROP_CURRENT_LANGUAGE, this);
+                        session.removePropertyChangeListener(Session.PROP_CURRENT_LANGUAGE, this);
                         if (!initialized.getAndSet(true)) {
                             initThreads(context, currentEngine);
                         }
                     }
                 }
             });
-            engine = debugger.getSession().getCurrentEngine();
+            engine = session.getCurrentEngine();
         }
         if (engine != null && !initialized.getAndSet(true)) {
             initThreads(context, engine);
@@ -209,7 +208,11 @@ public final class NbThreads {
 
     private JPDAThread getJPDAThread(DVThread dvThread) {
         // JPDA implementation implements Supplier.
-        return ((Supplier<JPDAThread>) dvThread).get();
+        if (dvThread instanceof Supplier) {
+            return ((Supplier<JPDAThread>) dvThread).get();
+        } else {
+            return null;
+        }
     }
 
     public void visitThreads(BiConsumer<Integer, DVThread> threadsConsumer) {

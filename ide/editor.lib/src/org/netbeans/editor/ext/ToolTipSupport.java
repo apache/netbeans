@@ -668,7 +668,7 @@ public class ToolTipSupport {
             int oldStatus = this.status;
             this.status = status;
             firePropertyChange(PROP_STATUS,
-                new Integer(oldStatus), new Integer(this.status));
+                Integer.valueOf(oldStatus), Integer.valueOf(this.status));
         }
     }
 
@@ -926,7 +926,7 @@ public class ToolTipSupport {
             enterTimer.setDelay(delay);
 
             firePropertyChange(PROP_INITIAL_DELAY,
-                new Integer(oldDelay), new Integer(enterTimer.getDelay()));
+                Integer.valueOf(oldDelay), Integer.valueOf(enterTimer.getDelay()));
         }
     }
 
@@ -948,7 +948,7 @@ public class ToolTipSupport {
             exitTimer.setDelay(delay);
             
             firePropertyChange(PROP_DISMISS_DELAY,
-                new Integer(oldDelay), new Integer(exitTimer.getDelay()));
+                Integer.valueOf(oldDelay), Integer.valueOf(exitTimer.getDelay()));
         }
     }
 

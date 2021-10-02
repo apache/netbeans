@@ -260,6 +260,7 @@ public final class Manager {
             LOGGER.log(Level.FINE, "Finishing session: " + session);
         }
 
+        displayHandlers.remove(session);
         testSessions.remove(session);   //must be after displayMessage(...)
                                          //otherwise the window would get
                                          //activated
@@ -465,7 +466,7 @@ public final class Manager {
     /** singleton of the <code>ResultDisplayHandler</code> */
     // the ResultDisplayHandler holds TestSession and is referenced from other
     // places so we use WeakReference, otherwise there would be memory leak
-    private Map<TestSession,WeakReference<TestResultDisplayHandler>> displayHandlers;
+    private Map<TestSession,TestResultDisplayHandler> displayHandlers;
     private Semaphore lock;
     /**
      */
@@ -475,20 +476,17 @@ public final class Manager {
         assert session != null : Bundle.Null_Session_Error();
         TestResultDisplayHandler displayHandler = null;
         if (displayHandlers != null) {
-            WeakReference<TestResultDisplayHandler> reference = displayHandlers.get(session);
-            if (reference != null) {
-                displayHandler = reference.get();
-            }
+            displayHandler = displayHandlers.get(session);
         } else {
-            displayHandlers = new WeakHashMap<TestSession,WeakReference<TestResultDisplayHandler>>(7);
+            displayHandlers = new WeakHashMap<TestSession,TestResultDisplayHandler>(7);
         }
 
         if (displayHandler == null) {
             displayHandler = TestResultDisplayHandler.create(session);
-            displayHandlers.put(session, new WeakReference<TestResultDisplayHandler>(displayHandler));
-            TestResultDisplayHandler.Spi handlerSpi = displayHandler.getSpi();
-            if (handlerSpi instanceof ResultDisplayHandler) {
-                createIO((ResultDisplayHandler)handlerSpi);
+            displayHandlers.put(session, displayHandler);
+            Object handlerToken = displayHandler.getToken() instanceof WeakReference ? ((WeakReference)displayHandler.getToken()).get() : null;
+            if (handlerToken instanceof ResultDisplayHandler) {
+                createIO((ResultDisplayHandler)handlerToken);
                 lock = new Semaphore(1);
                 try {
                     lock.acquire(1);
@@ -499,8 +497,8 @@ public final class Manager {
 
                     @Override
                     public void run() {
-                        StatisticsPanel comp = (StatisticsPanel) ((ResultDisplayHandler)handlerSpi).getDisplayComponent().getLeftComponent();
-                        ((ResultDisplayHandler)handlerSpi).setTreePanel(comp.getTreePanel());
+                        StatisticsPanel comp = (StatisticsPanel) ((ResultDisplayHandler)handlerToken).getDisplayComponent().getLeftComponent();
+                        ((ResultDisplayHandler)handlerToken).setTreePanel(comp.getTreePanel());
                         lock.release();
                     }
                 });

@@ -18,10 +18,12 @@
  */
 package org.netbeans.modules.java.mx.project;
 
+import java.io.File;
 import java.util.concurrent.Future;
 import org.netbeans.modules.java.mx.project.suitepy.MxSuite;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
@@ -30,16 +32,19 @@ final class SuiteProject implements Project {
     private final FileObject dir;
     private final Lookup lkp;
     private final MxSuite suite;
+    private final FileObject suitePy;
 
     SuiteProject(FileObject dir, FileObject suitePy, MxSuite suite) {
         this.dir = dir;
         this.suite = suite;
+        this.suitePy = suitePy;
         try {
+            Jdks jdks = new Jdks(this);
             this.lkp = Lookups.fixed(
                 this,
-                new SuiteSources(this, dir, suite),
+                new SuiteSources(this, jdks, dir, suite),
                 new SuiteLogicalView(this),
-                new SuiteClassPathProvider(this),
+                new SuiteClassPathProvider(this, jdks),
                 new SuiteProperties(),
                 new SuiteActionProvider(this)
             );
@@ -78,5 +83,25 @@ final class SuiteProject implements Project {
         return "MxProject[" + dir.getPath() + "]";
     }
 
+    final FileObject getSuitePy() {
+        return suitePy;
+    }
+
+    final FileObject getSuiteEnv() {
+        FileObject dir = getProjectDirectory();
+        FileObject suiteEnv = dir.getFileObject("mx." + dir.getNameExt() + "/env", false);
+        return suiteEnv;
+    }
+
+    final FileObject getGlobalEnv() {
+        String home = System.getProperty("user.home"); // NOI18N
+        if (home != null) {
+            FileObject userHome = FileUtil.toFileObject(new File(home));
+            if (userHome != null) {
+                return userHome.getFileObject(".mx/env", false); // NOI18N
+            }
+        }
+        return null;
+    }
 
 }

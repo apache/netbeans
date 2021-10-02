@@ -76,7 +76,7 @@ public class ItemSelector<I extends Item> implements ListSelectionListener {
 
     public void setBranches(List<I> branches) {
         Collections.sort(branches);
-        DefaultListModel model = new DefaultListModel();
+        DefaultListModel<I> model = new DefaultListModel<>();
         for (I i : branches) {
             model.addElement(i);
             if (i.isDeletion()) {

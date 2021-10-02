@@ -25,18 +25,50 @@ import java.net.URL;
 import org.netbeans.modules.javascript2.debug.EditorLineHandler;
 import org.netbeans.modules.javascript2.debug.EditorLineHandlerFactory;
 import org.netbeans.modules.javascript2.debug.breakpoints.JSLineBreakpoint;
+
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Lookup;
 
 public class TruffleLineBreakpoint extends JSLineBreakpoint {
-    
+
+    private volatile boolean suspend = true;
+    private volatile String printText;
+
     public TruffleLineBreakpoint(EditorLineHandler lineHandler) {
         super(lineHandler);
     }
 
     public TruffleLineBreakpoint(URL url, int lineNumber) {
         this(getEditorLineHandler(url, lineNumber));
+    }
+
+    /**
+     * Test whether the breakpoint suspends execution when hit.
+     */
+    public final boolean isSuspend() {
+        return suspend;
+    }
+
+    /**
+     * Set whether the breakpoint should suspend execution when hit.
+     */
+    public final void setSuspend(boolean suspend) {
+        this.suspend = suspend;
+    }
+
+    /**
+     * Get a logging text that is printed to an output console when the breakpoint is hit.
+     */
+    public final String getPrintText() {
+        return printText;
+    }
+
+    /**
+     * Set a logging text that is printed to an output console when the breakpoint is hit.
+     */
+    public final void setPrintText(String printText) {
+        this.printText = printText;
     }
 
     private static EditorLineHandler getEditorLineHandler(URL url, int lineNumber) {

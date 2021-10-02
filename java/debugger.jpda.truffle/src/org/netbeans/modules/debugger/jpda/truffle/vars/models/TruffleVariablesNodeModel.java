@@ -50,6 +50,8 @@ import org.openide.util.datatransfer.PasteType;
 })
 public class TruffleVariablesNodeModel implements ExtendedNodeModelFilter {
 
+    private static final String SCOPE_ICON = "org/netbeans/modules/debugger/resources/threadsView/call_stack_16.png";
+
     @Override
     public boolean canRename(ExtendedNodeModel original, Object node) throws UnknownTypeException {
         return original.canRename(node);
@@ -88,12 +90,14 @@ public class TruffleVariablesNodeModel implements ExtendedNodeModelFilter {
     @Override
     public String getIconBaseWithExtension(ExtendedNodeModel original, Object node) throws UnknownTypeException {
         if (node instanceof TruffleVariable) {
-            String name = ((TruffleVariable) node).getName();
-            if ("this".equals(name)) {
+            TruffleVariable var = (TruffleVariable) node;
+            if (var.isReceiver()) {
                 return original.getIconBaseWithExtension(EmptyThis.INSTANCE);
             } else {
                 return original.getIconBaseWithExtension(EmptyVar.INSTANCE);
             }
+        } else if (node instanceof TruffleScope) {
+            return SCOPE_ICON;
         }
         return original.getIconBaseWithExtension(node);
     }

@@ -23,6 +23,7 @@ import org.netbeans.lib.profiler.heap.*;
 import org.netbeans.modules.profiler.heapwalk.ui.HeapFragmentWalkerUI;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -316,6 +317,25 @@ public class HeapFragmentWalker {
         }
 
         return null;
+    }
+
+    private Integer classLoaderCount;
+    public final int countClassLoaders() {
+        if (this.classLoaderCount != null) {
+            return this.classLoaderCount;
+        }
+        int nclassloaders = 0;
+        JavaClass cl = heapFragment.getJavaClassByName("java.lang.ClassLoader"); // NOI18N
+        if (cl != null) {
+            nclassloaders = cl.getInstancesCount();
+
+            Collection<JavaClass> jcs = cl.getSubClasses();
+
+            for (JavaClass jc : jcs) {
+                nclassloaders += jc.getInstancesCount();
+            }
+        }
+        return this.classLoaderCount = nclassloaders;
     }
 
 

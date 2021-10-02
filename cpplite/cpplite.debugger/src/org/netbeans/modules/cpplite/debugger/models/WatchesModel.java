@@ -32,8 +32,8 @@ import org.netbeans.modules.cpplite.debugger.CPPFrame;
 import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger;
 import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger.StateListener;
 import org.netbeans.modules.cpplite.debugger.CPPThread;
-import org.netbeans.modules.cpplite.debugger.CPPVariable;
-import org.netbeans.modules.cpplite.debugger.EvaluateException;
+import org.netbeans.modules.nativeimage.api.debug.EvaluateException;
+import org.netbeans.modules.nativeimage.api.debug.NIVariable;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 import org.netbeans.spi.viewmodel.ModelEvent;
@@ -99,7 +99,7 @@ public class WatchesModel implements TreeModelFilter, NodeModelFilter, TableMode
         if (ew != null) {
             switch (ew.getStatus()) {
                 case READY:
-                    CPPVariable result = ew.getResult();
+                    NIVariable result = ew.getResult();
                     return result.getNumChildren();
             }
         }
@@ -115,7 +115,7 @@ public class WatchesModel implements TreeModelFilter, NodeModelFilter, TableMode
         if (ew != null) {
             switch (ew.getStatus()) {
                 case READY:
-                    CPPVariable result = ew.getResult();
+                    NIVariable result = ew.getResult();
                     return result.getNumChildren() == 0;
             }
         }
@@ -171,7 +171,7 @@ public class WatchesModel implements TreeModelFilter, NodeModelFilter, TableMode
             ew.startEvaluate();
             switch (ew.getStatus()) {
                 case READY:
-                    CPPVariable result = ew.getResult();
+                    NIVariable result = ew.getResult();
                     return ew.getExpression() + " = " + result.getValue();
                 case FAILED:
                     EvaluateException exc = ew.getException();
@@ -212,7 +212,7 @@ public class WatchesModel implements TreeModelFilter, NodeModelFilter, TableMode
                 ew.startEvaluate();
                 switch (ew.getStatus()) {
                     case READY:
-                        CPPVariable result = ew.getResult();
+                        NIVariable result = ew.getResult();
                         if (showValue) {
                             return result.getValue();
                         } else {
@@ -342,7 +342,7 @@ public class WatchesModel implements TreeModelFilter, NodeModelFilter, TableMode
         private final Watch watch;
         private volatile AtomicReference<EvalStatus> status = new AtomicReference<>(EvalStatus.NEW);
         private volatile String expression;
-        private volatile CPPVariable result;
+        private volatile NIVariable result;
         private volatile EvaluateException exception;
 
         private EvalWatch(Watch watch) {
@@ -364,16 +364,17 @@ public class WatchesModel implements TreeModelFilter, NodeModelFilter, TableMode
                 exception = null;
                 String expression = watch.getExpression();
                 this.expression = expression;
-                frame.evaluateLazy(expression,
-                                   (CPPVariable variable) -> {
+                frame.evaluateAsync(expression).thenAccept(
+                                   (NIVariable variable) -> {
                                        result = variable;
                                        status.set(EvalStatus.READY);
                                        fireChanged(watch);
-                                   },
-                                   (EvaluateException exc) -> {
-                                       exception = exc;
+                                   }).exceptionally(
+                                   exc -> {
+                                       exception = (EvaluateException) exc;
                                        status.set(EvalStatus.FAILED);
                                        fireChanged(watch);
+                                       return null;
                                    });
             }
         }
@@ -382,7 +383,7 @@ public class WatchesModel implements TreeModelFilter, NodeModelFilter, TableMode
             return expression;
         }
 
-        CPPVariable getResult() {
+        NIVariable getResult() {
             return result;
         }
 

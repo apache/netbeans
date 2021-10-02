@@ -120,6 +120,7 @@ public class ElementsTest extends NbTestCase {
         JavaSource javaSource = JavaSource.forFileObject(testFO);
         javaSource.runUserActionTask(new Task<CompilationController>() {
             public void run(CompilationController controller) throws IOException {
+                SourceUtils.forceSource(controller, otherFO);
                 controller.toPhase(JavaSource.Phase.RESOLVED);
                 TypeElement typeElement = controller.getElements().getTypeElement("test.A");
                 assertNotNull(typeElement);

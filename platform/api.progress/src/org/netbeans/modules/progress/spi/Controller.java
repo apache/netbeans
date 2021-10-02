@@ -344,6 +344,10 @@ public class Controller {
                         if (lastEvent.isSwitched()) {
                             event.markAsSwitched();
                         }
+                        // preserve finish type
+                        if (lastEvent.getType() == ProgressEvent.TYPE_FINISH) {
+                            event.markAsFinished();
+                        }
                         LOG.log(Level.FINER, "Event merged with {0} to {1}", 
                                 new Object [] { lastEvent, event} );
                     }

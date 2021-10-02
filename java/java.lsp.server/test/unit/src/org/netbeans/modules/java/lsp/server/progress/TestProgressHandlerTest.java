@@ -27,6 +27,7 @@ import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.eclipse.lsp4j.debug.services.IDebugProtocolClient;
 import org.junit.Test;
 import org.netbeans.api.extexecution.print.LineConvertors;
 import org.netbeans.api.project.Project;
@@ -36,9 +37,11 @@ import org.netbeans.modules.gsf.testrunner.api.Status;
 import org.netbeans.modules.gsf.testrunner.api.TestSession;
 import org.netbeans.modules.gsf.testrunner.api.Testcase;
 import org.netbeans.modules.gsf.testrunner.api.Trouble;
+import org.netbeans.modules.java.lsp.server.protocol.DecorationRenderOptions;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.protocol.SetTextEditorDecorationParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
@@ -71,7 +74,7 @@ public class TestProgressHandlerTest extends NbTestCase {
         assertNotNull(fo);
         List<TestProgressParams> msgs = new ArrayList<>();
         MockLanguageClient mlc = new MockLanguageClient(msgs);
-        TestProgressHandler progressHandler = new TestProgressHandler(mlc, fo.toURI().toString());
+        TestProgressHandler progressHandler = new TestProgressHandler(mlc, new IDebugProtocolClient() {}, fo.toURI().toString());
         progressHandler.displaySuiteRunning(progressHandler, "TestSuiteName");
         FileObject projectDir = fo;
         Project project = new Project() {
@@ -113,24 +116,22 @@ public class TestProgressHandlerTest extends NbTestCase {
         assertEquals("Two messages", 2, msgs.size());
         assertEquals(fo.toURI().toString(), msgs.get(0).getUri());
         TestSuiteInfo suite = msgs.get(0).getSuite();
-        assertEquals("TestSuiteName", suite.getSuiteName());
-        assertEquals(TestSuiteInfo.State.Running, suite.getState());
+        assertEquals("TestSuiteName", suite.getName());
+        assertEquals(TestSuiteInfo.State.Started, suite.getState());
         assertEquals(fo.toURI().toString(), msgs.get(1).getUri());
         suite = msgs.get(1).getSuite();
-        assertEquals("TestSuiteName", suite.getSuiteName());
+        assertEquals("TestSuiteName", suite.getName());
         assertEquals(TestSuiteInfo.State.Completed, suite.getState());
         assertEquals(2, suite.getTests().size());
         TestSuiteInfo.TestCaseInfo testCase = suite.getTests().get(0);
         assertEquals("TestSuiteName:test1", testCase.getId());
-        assertEquals("test1", testCase.getShortName());
-        assertEquals("TestSuiteName.test1", testCase.getFullName());
+        assertEquals("test1", testCase.getName());
         assertEquals(fo.toURI().toString(), testCase.getFile());
         assertEquals(TestSuiteInfo.State.Passed, testCase.getState());
         assertNull(testCase.getStackTrace());
         testCase = suite.getTests().get(1);
         assertEquals("TestSuiteName:test2", testCase.getId());
-        assertEquals("test2", testCase.getShortName());
-        assertEquals("TestSuiteName.test2", testCase.getFullName());
+        assertEquals("test2", testCase.getName());
         assertEquals(fo.toURI().toString(), testCase.getFile());
         assertEquals(TestSuiteInfo.State.Failed, testCase.getState());
         assertNotNull(testCase.getStackTrace());
@@ -195,6 +196,22 @@ public class TestProgressHandlerTest extends NbTestCase {
         public NbCodeClientCapabilities getNbCodeCapabilities() {
             fail();
             return null;
+        }
+
+        @Override
+        public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
+            fail();
+            return null;
+        }
+
+        @Override
+        public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
+            fail();
+        }
+
+        @Override
+        public void disposeTextEditorDecoration(String params) {
+            fail();
         }
     }
 }

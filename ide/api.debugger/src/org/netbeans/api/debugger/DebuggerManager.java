@@ -160,14 +160,14 @@ public final class DebuggerManager implements ContextProvider {
     private DebuggerEngine                    currentEngine;
     private final List                        sessions = new ArrayList();
     private final Set                         engines = new HashSet ();
-    private final Vector                      breakpoints = new Vector ();
+    private final Vector<Breakpoint>          breakpoints = new Vector<>();
     private boolean                           breakpointsInitializing = false;
     private boolean                           breakpointsInitialized = false;
     private final Vector<Watch>               watches = new Vector<>();
     private boolean                           watchesInitialized = false;
     private ThreadLocal<Boolean>              watchesInitializing = new ThreadLocal<Boolean>();
     private SessionListener                   sessionListener = new SessionListener ();
-    private Vector                            listeners = new Vector ();
+    private Vector<DebuggerManagerListener>   listeners = new Vector<>();
     private final HashMap                     listenersMap = new HashMap ();
     private ActionsManager                    actionsManager = null;
     
@@ -507,13 +507,11 @@ public final class DebuggerManager implements ContextProvider {
      *
      * @param breakpoint a new breakpoint
      */
-    public void addBreakpoint (
-        Breakpoint breakpoint
-    ) {
+    public void addBreakpoint (Breakpoint breakpoint) {
         if (initBreakpoints (breakpoint)) {
             // do not add one breakpoint more than once.
             if (registerBreakpoint(breakpoint)) {
-                breakpoints.addElement (breakpoint);
+                breakpoints.addElement(breakpoint);
                 fireBreakpointCreated (breakpoint, null);
             }
         }
@@ -806,15 +804,12 @@ public final class DebuggerManager implements ContextProvider {
      * @param propertyName a name of property to listen on
      * @param l the debuggerManager listener to add
      */
-    public void addDebuggerListener (
-        String propertyName, 
-        DebuggerManagerListener l
-    ) {
+    public void addDebuggerListener(String propertyName, DebuggerManagerListener l) {
         synchronized (listenersMap) {
-            Vector listeners = (Vector) listenersMap.get (propertyName);
+            Vector<DebuggerManagerListener> listeners = (Vector<DebuggerManagerListener>)listenersMap.get(propertyName);
             if (listeners == null) {
-                listeners = new Vector ();
-                listenersMap.put (propertyName, listeners);
+                listeners = new Vector<>();
+                listenersMap.put(propertyName, listeners);
             }
             listeners.addElement (l);
         }

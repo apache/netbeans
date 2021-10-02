@@ -72,7 +72,7 @@ public class StepTest extends AbstractDebugTest {
         compileCPP("main", wd);
         LineCookie lc = DataObject.find(source).getLookup().lookup(LineCookie.class);
         assertNotNull(lc);
-        DebuggerManager.getDebuggerManager().addBreakpoint(new CPPLiteBreakpoint(lc.getLineSet().getCurrent(4)));
+        DebuggerManager.getDebuggerManager().addBreakpoint(CPPLiteBreakpoint.create(lc.getLineSet().getCurrent(4)));
         startDebugging("main", wd);
 
         waitSuspended(1);
@@ -87,7 +87,8 @@ public class StepTest extends AbstractDebugTest {
 
         assertStoppedAt(source.toURI(), 6);
 
-        engine.getActionsManager().doAction(ActionsManager.ACTION_KILL);
+        engine.getActionsManager().doAction(ActionsManager.ACTION_CONTINUE);
+        assertEquals(0, waitAppProcessExit());
     }
 
     public static Test suite() {

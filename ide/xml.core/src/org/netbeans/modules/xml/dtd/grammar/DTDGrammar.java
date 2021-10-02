@@ -272,7 +272,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
             
             String prefix = ctx.getCurrentPrefix();
             LinkedList en = new LinkedList ();
-            Iterator it = values.iterator();
+            Iterator<String> it = values.iterator();
             while (it.hasNext()) {
                 String next = (String) it.next();
                 if (next.startsWith(prefix)) {

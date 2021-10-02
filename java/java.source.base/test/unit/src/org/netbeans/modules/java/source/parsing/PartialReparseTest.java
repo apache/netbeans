@@ -329,6 +329,19 @@ public class PartialReparseTest extends NbTestCase {
                   "System.err.println(2);");
     }
 
+    public void testConstructorEnum3() throws Exception {
+        doRunTest("package test;\n" +
+                  "public enum E {\n" +
+                  "    A;\n" +
+                  "    E() {\n" +
+                  "        super();\n" +
+                  "        System.err.println(\"^^\");\n" +
+                  "    }" +
+                  "}",
+                  "a",
+                  info -> {});
+    }
+
     private void doRunTest(String code, String inject) throws Exception {
         doRunTest(code, inject, info -> {});
     }

@@ -138,7 +138,7 @@ final class JavaDebuggerPanel extends StorablePanel {
 
     private void categoriesListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_categoriesListValueChanged
         int c = categoriesList.getSelectedIndex();
-        if (c >= 0 && c <= 3) {
+        if (c >= 0 && c < categoryPanels.length) {
             selectCategory(c);
         }
 }//GEN-LAST:event_categoriesListValueChanged

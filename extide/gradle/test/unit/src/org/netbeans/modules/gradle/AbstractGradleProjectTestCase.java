@@ -26,7 +26,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FULL_ONLINE;
 import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 import org.netbeans.modules.project.uiapi.ProjectOpenedTrampoline;
@@ -42,7 +41,7 @@ import org.openide.modules.DummyInstalledFileLocator;
  */
 public class AbstractGradleProjectTestCase extends NbTestCase {
 
-    @org.openide.util.lookup.ServiceProvider(service=org.openide.modules.InstalledFileLocator.class)
+    @org.openide.util.lookup.ServiceProvider(service=org.openide.modules.InstalledFileLocator.class, position = 1000)
     public static class InstalledFileLocator extends DummyInstalledFileLocator {
     }
 
@@ -84,17 +83,14 @@ public class AbstractGradleProjectTestCase extends NbTestCase {
         NbGradleProjectImpl.RELOAD_RP.submit(() -> {
             // A bit low level calls, just to allow UI interaction to
             // Trust the project.
-            impl.project = GradleProjectCache.loadProject(impl, FULL_ONLINE, true, true);
-            NbGradleProjectImpl.ACCESSOR.doFireReload(NbGradleProject.get(impl));
+            impl.loadOwnProject(null, true, true, FULL_ONLINE);
         }).get();
     }
     
     protected FileObject createGradleProject(String path, String buildScript, String settingsScript) throws IOException {
         FileObject ret = FileUtil.toFileObject(getWorkDir());
         if (path != null) {
-            for (String p : path.split("/")) {
-                ret = ret.getFileObject(p) != null ? ret.getFileObject(p): ret.createFolder(p);
-            }
+            ret = FileUtil.createFolder(ret, path);
         }
         if (buildScript != null) {
             TestFileUtils.writeFile(ret, "build.gradle", buildScript);

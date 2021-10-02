@@ -28,18 +28,16 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
-import java.util.Map;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.ToolTipManager;
+import org.openide.awt.GraphicsUtils;
 
 /**
  * Custom component for painting code coverage. I was initially using a JProgressBar, with the
@@ -129,20 +127,8 @@ public class CoverageBar extends JComponent {
     public @Override
     void paint(Graphics g) {
         // Antialiasing if necessary
-        Object value = (Map) (Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints")); //NOI18N
-        Map renderingHints = (value instanceof Map) ? (java.util.Map) value : null;
-        if (renderingHints != null && g instanceof Graphics2D) {
-            Graphics2D g2d = (Graphics2D) g;
-            RenderingHints oldHints = g2d.getRenderingHints();
-            g2d.setRenderingHints(renderingHints);
-            try {
-                super.paint(g2d);
-            } finally {
-                g2d.setRenderingHints(oldHints);
-            }
-        } else {
-            super.paint(g);
-        }
+        GraphicsUtils.configureDefaultRenderingHints(g);
+        super.paint(g);
     }
 
     @Override

@@ -535,7 +535,7 @@ public class AutoupdateInfoParser extends DefaultHandler {
                 if (b.length() > 0) {
                     b.append(", ");
                 }
-                b.append(requiredBundleName); // dep CNB
+                b.append(requiredBundleName.replace('-', '_')); // dep CNB
                 while (m2.find()) {
                     if (!m2.group(1).equals("bundle-version")) {
                         continue;

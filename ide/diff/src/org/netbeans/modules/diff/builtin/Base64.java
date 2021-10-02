@@ -19,7 +19,7 @@
 package org.netbeans.modules.diff.builtin;
 
 import java.io.ByteArrayOutputStream;
-import java.util.*;
+import java.util.List;
 
 /**
  * Base64 utility methods.
@@ -27,52 +27,26 @@ import java.util.*;
  * @author Maros Sandor
  */
 class Base64 {
-    
+
+    private static final java.util.Base64.Decoder DECODER = java.util.Base64.getMimeDecoder();
+
     private Base64() {
     }
-    
-    public static byte [] decode(List<String> ls) {
+
+    /**
+     * Decodes multiple Base64 strings into a single byteArray
+     */
+    public static byte[] decode(List<String> ls) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         for (String s : ls) {
             decode(s, bos);
         }
         return bos.toByteArray();
     }
-  
+
     private static void decode(String s, ByteArrayOutputStream bos) {
-        int i = 0;
-        int len = s.length();
-        while (true) {
-            while (i < len && s.charAt(i) <= ' ') i++;
-            if (i == len) break;
-            int tri = (decode(s.charAt(i)) << 18)
-            + (decode(s.charAt(i+1)) << 12)
-            + (decode(s.charAt(i+2)) << 6)
-            + (decode(s.charAt(i+3)));
-          
-            bos.write((tri >> 16) & 255);
-            if (s.charAt(i+2) == '=') break;
-            bos.write((tri >> 8) & 255);
-            if (s.charAt(i+3) == '=') break;
-            bos.write(tri & 255);
-          
-            i += 4;
-        }
+        final byte[] decoded = DECODER.decode(s);
+        bos.write(decoded, 0, decoded.length);
     }
 
-    private static int decode(char c) {
-        if (c >= 'A' && c <= 'Z') return ((int) c) - 65;
-        else if (c >= 'a' && c <= 'z') return ((int) c) - 97 + 26;
-        else if (c >= '0' && c <= '9') return ((int) c) - 48 + 26 + 26;
-        else {
-            switch (c) {
-                case '+': return 62;
-                case '/': return 63;
-                case '=': return 0;
-                default:
-                    throw new RuntimeException("unexpected code: " + c);
-            }
-        }
-    }
-    
 }

@@ -813,14 +813,14 @@ public class AnnotationView extends JComponent implements FoldHierarchyListener,
             }
             
             if (errors == 0 && warnings != 0) {
-                return MessageFormat.format(NbBundle.getBundle(AnnotationView.class).getString("TP_X_warning(s)"), new Object[] {new Integer(warnings)}); // NOI18N
+                return MessageFormat.format(NbBundle.getBundle(AnnotationView.class).getString("TP_X_warning(s)"), new Object[] {Integer.valueOf(warnings)}); // NOI18N
             }
             
             if (errors != 0 && warnings == 0) {
-                return MessageFormat.format(NbBundle.getBundle(AnnotationView.class).getString("TP_X_error(s)"), new Object[] {new Integer(errors)}); // NOI18N
+                return MessageFormat.format(NbBundle.getBundle(AnnotationView.class).getString("TP_X_error(s)"), new Object[] {Integer.valueOf(errors)}); // NOI18N
             }
             
-            return MessageFormat.format(NbBundle.getBundle(AnnotationView.class).getString("TP_X_error(s)_Y_warning(s)"), new Object[] {new Integer(errors), new Integer(warnings)}); // NOI18N
+            return MessageFormat.format(NbBundle.getBundle(AnnotationView.class).getString("TP_X_error(s)_Y_warning(s)"), new Object[] {Integer.valueOf(errors), Integer.valueOf(warnings)}); // NOI18N
         }
         
         Mark mark = getMarkForPoint(y);

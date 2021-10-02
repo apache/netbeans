@@ -22,10 +22,13 @@ import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.InstanceOfTree;
+import com.sun.source.tree.ModuleTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.tree.DocTreeMaker;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
@@ -38,9 +41,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Name;
-import org.openide.util.Exceptions;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
@@ -52,13 +54,29 @@ public class TreeShims {
     public static final String YIELD = "YIELD"; //NOI18N
     public static final String BINDING_VARIABLE = "BINDING_VARIABLE"; //NOI18N
     public static final String RECORD = "RECORD"; //NOI18N
-
+    public static final int PATTERN_MATCHING_INSTANCEOF_PREVIEW_JDK_VERSION = 15; //NOI18N
+    public static final String DEFAULT_CASE_LABEL = "DEFAULT_CASE_LABEL"; //NOI18N
+    public static final String NULL_LITERAL = "NULL_LITERAL"; //NOI18N
+    public static final String PARENTHESIZED_PATTERN = "PARENTHESIZED_PATTERN"; //NOI18N
+    public static final String GUARDED_PATTERN = "GUARDED_PATTERN"; //NOI18N
+    
     public static List<? extends ExpressionTree> getExpressions(CaseTree node) {
         try {
             Method getExpressions = CaseTree.class.getDeclaredMethod("getExpressions");
             return (List<? extends ExpressionTree>) getExpressions.invoke(node);
         } catch (NoSuchMethodException ex) {
             return Collections.singletonList(node.getExpression());
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
+    public static List<? extends Tree> getLabels(CaseTree node) {
+        try {
+            Method getLabels = CaseTree.class.getDeclaredMethod("getLabels");
+            return (List<? extends Tree>) getLabels.invoke(node);
+        } catch (NoSuchMethodException ex) {
+            return null;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw TreeShims.<RuntimeException>throwAny(ex);
         }
@@ -156,15 +174,60 @@ public class TreeShims {
 
     public static Name getBinding(Tree node) {
         try {
-            Class bpt = Class.forName("com.sun.source.tree.BindingPatternTree");
-            Method getBinding = bpt.getDeclaredMethod("getBinding");
-            return (Name) getBinding.invoke(node);
+            Class bpt = Class.forName("com.sun.source.tree.BindingPatternTree"); //NOI18N
+            return isJDKVersionSupportEnablePreview() 
+                    ? (Name)bpt.getDeclaredMethod("getBinding").invoke(node)  //NOI18N
+                    : ((VariableTree)bpt.getDeclaredMethod("getVariable").invoke(node)).getName(); //NOI18N
+
         } catch (NoSuchMethodException | ClassNotFoundException ex) {
             return null;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw TreeShims.<RuntimeException>throwAny(ex);
         }
     }
+
+    public static Tree getGuardedPattern(Tree node) {
+        try {
+            Class gpt = Class.forName("com.sun.source.tree.GuardedPatternTree"); //NOI18N
+            return isJDKVersionRelease17_Or_Above()
+                    ? (Tree)gpt.getDeclaredMethod("getPattern").invoke(node)  //NOI18N
+                    : null;
+
+        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
+    public static Tree getParenthesizedPattern(Tree node) {
+        try {
+            Class ppt = Class.forName("com.sun.source.tree.ParenthesizedPatternTree"); //NOI18N
+            return isJDKVersionRelease17_Or_Above()
+                    ? (Tree)ppt.getDeclaredMethod("getPattern").invoke(node)  //NOI18N
+                    : null;
+
+        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
+    public static ExpressionTree getGuardedExpression(Tree node) {
+        try {
+            Class gpt = Class.forName("com.sun.source.tree.GuardedPatternTree"); //NOI18N
+            return isJDKVersionRelease17_Or_Above()
+                    ? (ExpressionTree)gpt.getDeclaredMethod("getExpression").invoke(node)  //NOI18N
+                    : null;
+
+        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
     public static List<? extends Tree> getPermits(ClassTree node) {
         List<? extends Tree> perms = null;
         try {
@@ -238,9 +301,11 @@ public class TreeShims {
             return null;
         }
         try {
-            Class bindingPatternTreeClass = Class.forName("com.sun.source.tree.BindingPatternTree"); //NOI18N
-            Method getType = bindingPatternTreeClass.getDeclaredMethod("getType");  //NOI18N
-            return (Tree) getType.invoke(node);
+            Class bpt = Class.forName("com.sun.source.tree.BindingPatternTree"); //NOI18N
+            return isJDKVersionSupportEnablePreview()
+                    ? (Tree) bpt.getDeclaredMethod("getType").invoke(node) //NOI18N
+                    : ((VariableTree) bpt.getDeclaredMethod("getVariable").invoke(node)).getType(); //NOI18N
+
         } catch (NoSuchMethodException ex) {
             return null;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException ex) {
@@ -249,7 +314,7 @@ public class TreeShims {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends Throwable> RuntimeException throwAny(Throwable t) throws T {
+    public static <T extends Throwable> RuntimeException throwAny(Throwable t) throws T {
         throw (T) t;
     }
     public static boolean isRecord(Element el) {
@@ -305,5 +370,34 @@ public class TreeShims {
         } catch (IllegalAccessException | IllegalArgumentException ex) {
             throw TreeShims.<RuntimeException>throwAny(ex);
         }
+    }
+    
+    public static boolean isJDKVersionSupportEnablePreview() {
+        return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(PATTERN_MATCHING_INSTANCEOF_PREVIEW_JDK_VERSION) <= 0;
+    }
+	
+    public static boolean isJDKVersionRelease16_Or_Above(){
+        return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(16) >= 0;
+    }
+
+    public static boolean isJDKVersionRelease17_Or_Above(){
+        return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(17) >= 0;
+    }
+
+    public static ModuleTree getModule(CompilationUnitTree cut) {
+        try {
+            return (ModuleTree) CompilationUnitTree.class.getDeclaredMethod("getModule").invoke(cut);
+        } catch (NoSuchMethodException | SecurityException ex) {
+            final List<? extends Tree> typeDecls = cut.getTypeDecls();
+            if (!typeDecls.isEmpty()) {
+                final Tree typeDecl = typeDecls.get(0);
+                if (typeDecl.getKind() == Tree.Kind.MODULE) {
+                    return (ModuleTree)typeDecl;
+                }
+            }
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throwAny(ex);
+        }
+        return null;
     }
 }

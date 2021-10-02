@@ -82,6 +82,19 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="public-api">
+            <api name="j2selibraries"/>
+            <summary>Make API / SPI packages public.</summary>
+            <version major="1" minor="55"/>
+            <date day="5" month="2" year="2021"/>
+            <author login="emi"/>
+            <compatibility binary="compatible" source="compatible" deprecation="no" deletion="no" addition="yes" />
+            <description>
+                <p>
+                    The API / SPI packages are public and any module can use them, not only friend modules.
+                </p>
+            </description>
+        </change>
         <change id="ask.on.volume.attach">
             <api name="j2selibraries"/>
             <summary>Rebrand defaults for attach source and javaddoc user questions</summary>

@@ -26,6 +26,22 @@
 <apidef name="awt">AWT API</apidef>
 </apidefs>
 <changes>
+    <change id="configureDefaultRenderingHints">
+        <api name="awt"/>
+        <summary>Added GraphicsUtils.configureDefaultRenderingHints(Graphics).</summary>
+        <version major="7" minor="82"/>
+        <date day="28" month="9" year="2021"/>
+        <author login="ebakke"/>
+        <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+        <description>
+        Add the GraphicsUtils.configureDefaultRenderingHints(Graphics) method (with a new
+        GraphicsUtils class), to allow configuration of standard anti-aliasing settings from custom
+        JComponent.paint(Graphics) implementations. These standard incantations were previously
+        duplicated extensively throughout the NetBeans codebase.
+        </description>
+        <class package="org.openide.awt" name="GraphicsUtils"/>
+        <issue number="NETBEANS-5931"/>
+    </change>
     <change id="getArrowIcon">
         <api name="awt"/>
         <summary>Added DropDownButtonFactory.getArrowIcon method.</summary>

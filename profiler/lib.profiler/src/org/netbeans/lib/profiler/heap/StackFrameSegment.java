@@ -114,7 +114,7 @@ class StackFrameSegment extends TagBounds {
                     idToFrame.put(frameIDMask, new Long(start));
                 }
             }
-//            System.out.println("idToFrame size:"+idToFrame.size());
+//            Systems.debug("idToFrame size:"+idToFrame.size());
         }
     }
     

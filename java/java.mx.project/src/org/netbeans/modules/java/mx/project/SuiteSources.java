@@ -21,7 +21,6 @@ package org.netbeans.modules.java.mx.project;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -38,7 +37,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -70,6 +68,7 @@ import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 import org.openide.util.Utilities;
 import java.util.stream.Collectors;
+import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import static org.netbeans.spi.java.classpath.FlaggedClassPathImplementation.PROP_FLAGS;
 import org.netbeans.spi.java.queries.MultipleRootsUnitTestForSourceQueryImplementation;
@@ -84,7 +83,7 @@ final class SuiteSources implements Sources,
 
     static {
         MxSuite coreSuite = CoreSuite.CORE_5_279_0;
-        CORE = new SuiteSources(null, null, coreSuite);
+        CORE = new SuiteSources(null, null, null, coreSuite);
     }
 
     private final MxSuite suite;
@@ -101,10 +100,12 @@ final class SuiteSources implements Sources,
      */
     private final SuiteProject prj;
     private final Map<String, SuiteSources> imported;
+    private final Jdks jdks;
 
-    SuiteSources(SuiteProject owner, FileObject dir, MxSuite suite) {
+    SuiteSources(SuiteProject owner, Jdks jdks, FileObject dir, MxSuite suite) {
         final Map<String, Dep> fillDeps = new HashMap<>();
         this.prj = owner;
+        this.jdks = jdks;
         this.dir = dir;
         this.groups = findGroups(fillDeps, suite, dir);
         this.libraries = findLibraries(fillDeps, suite);
@@ -131,12 +132,7 @@ final class SuiteSources implements Sources,
             }
             String prevName = null;
             Group firstGroup = null;
-            String binPrefix;
-            if (mxPrj.subDir() == null) {
-                binPrefix = "mxbuild/";
-            } else {
-                binPrefix = "mxbuild/" + mxPrj.subDir() + "/";
-            }
+            String binPrefix = "mxbuild/";
             for (String rel : mxPrj.sourceDirs()) {
                 FileObject srcDir = prjDir.getFileObject(rel);
                 FileObject binDir = getSubDir(dir, binPrefix + name + "/bin");
@@ -443,53 +439,6 @@ final class SuiteSources implements Sources,
         return findSourceRoots2(url);
     }
 
-    final Iterable<File> jdks() {
-        Set<File> jdks = new LinkedHashSet<>();
-        String home = System.getProperty("user.home");
-        if (home != null) {
-            File userEnv = new File(new File(new File(home), ".mx"), "env");
-            findJdksInEnv(jdks, userEnv);
-        }
-        FileObject suiteEnv = dir.getFileObject("mx." + dir.getNameExt() + "/env");
-        if (suiteEnv != null) {
-            findJdksInEnv(jdks, FileUtil.toFile(suiteEnv));
-        }
-
-        String javaHomeEnv = System.getenv("JAVA_HOME");
-        if (javaHomeEnv != null) {
-            jdks.add(new File(javaHomeEnv));
-        }
-        String javaHomeProp = System.getProperty("java.home");
-        if (javaHomeProp != null) {
-            jdks.add(new File(javaHomeProp));
-        }
-        return jdks;
-    }
-
-    private void findJdksInEnv(Set<File> jdks, File env) {
-        if (env == null || !env.isFile()) {
-            return;
-        }
-        try (final FileInputStream is = new FileInputStream(env)) {
-            Properties p = new Properties();
-            p.load(is);
-
-            String javaHome = p.getProperty("JAVA_HOME");
-            if (javaHome != null) {
-                jdks.add(new File(javaHome));
-            }
-
-            String extraJavaHomes = p.getProperty("EXTRA_JAVA_HOMES");
-            if (extraJavaHomes != null) {
-                for (String extraHome : extraJavaHomes.split(File.pathSeparator)) {
-                    jdks.add(new File(extraHome));
-                }
-            }
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-    }
-
     @Override
     public SourceLevelQueryImplementation2.Result getSourceLevel(FileObject fo) {
         Group g = findGroup(fo);
@@ -625,11 +574,10 @@ final class SuiteSources implements Sources,
             if (SuiteSources.this.dir == null) {
                 return null;
             }
-            FileObject dists = SuiteSources.this.dir.getFileObject("mxbuild/dists");
-            if (dists == null) {
-                return null;
-            }
-            List<FileObject> dist = Arrays.stream(dists.getChildren()).filter((fo) -> fo.isFolder() && fo.getName().startsWith("jdk")).collect(Collectors.toList());
+            FileObject dists = getSubDir(SuiteSources.this.dir, "mxbuild/dists");
+            List<FileObject> dist = Arrays.stream(dists.getChildren()).
+                filter((fo) -> fo.isFolder() && fo.getName().startsWith("jdk")).
+                collect(Collectors.toList());
             dist.sort((fo1, fo2) -> fo2.getName().compareTo(fo1.getName()));
             for (FileObject jdkDir : dist) {
                 FileObject jar = jdkDir.getFileObject(name.toLowerCase().replace("_", "-") + ".jar");
@@ -637,11 +585,7 @@ final class SuiteSources implements Sources,
                     return jar;
                 }
             }
-            FileObject jar = dists.getFileObject(name.toLowerCase().replace("_", "-") + ".jar");
-            if (jar != null) {
-                return jar;
-            }
-            return null;
+            return dists.getFileObject(name.toLowerCase().replace("_", "-") + ".jar", false);
         }
 
         @Override
@@ -726,6 +670,8 @@ final class SuiteSources implements Sources,
         private ClassPath cp;
         private ClassPath processorPath;
         private Collection<Dep> allDeps;
+        private ClassPath bootCP;
+        private Object platformOrThis;
 
         Group(String mxName, MxProject mxPrj, FileObject srcDir, FileObject srcGenDir, FileObject binDir, String name, String displayName) {
             this.mxName = mxName;
@@ -921,6 +867,44 @@ final class SuiteSources implements Sources,
         public SuiteSources owner() {
             return SuiteSources.this;
         }
+
+        ClassPath getBootCP() {
+            if (this.bootCP == null) {
+                JavaPlatform platform = getJavaPlatform();
+                if (platform == null) {
+                    platform = JavaPlatform.getDefault();
+                }
+                List<ClassPath.Entry> entries = platform.getBootstrapLibraries().entries();
+                List<URL> roots = new ArrayList<>();
+                for (ClassPath.Entry entry : entries) {
+                    URL root = entry.getURL();
+                    if (root.getPath().contains("/graal-sdk.jar")) {
+                        continue;
+                    }
+                    if (root.getPath().contains("/graaljs-scriptengine.jar")) {
+                        continue;
+                    }
+                    if (root.getPath().contains("/graal-sdk.src.zip")) {
+                        continue;
+                    }
+                    roots.add(entry.getURL());
+                }
+                this.bootCP = ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
+            }
+            return this.bootCP;
+        }
+
+        final JavaPlatform getJavaPlatform() {
+            if (this.platformOrThis == null) {
+                JavaPlatform p = jdks.find(compliance);
+                if (p == null) {
+                    this.platformOrThis = this;
+                } else {
+                    this.platformOrThis = p;
+                }
+            }
+            return this.platformOrThis instanceof JavaPlatform ? (JavaPlatform) this.platformOrThis : null;
+        }
     }
 
     private class Library extends SharedSupport implements FlaggedClassPathImplementation, Dep {
@@ -1032,7 +1016,7 @@ final class SuiteSources implements Sources,
         @Override
         File getJar(boolean dumpIfMissing) {
             File first = null;
-            for (File jdk : jdks()) {
+            for (File jdk : jdks.jdks()) {
                 File jre = new File(jdk, "jre");
                 File jrePath = new File(jre, lib.path().replace('/', File.separatorChar));
                 if (jrePath.exists()) {
@@ -1052,7 +1036,7 @@ final class SuiteSources implements Sources,
             }
 
             if (dumpIfMissing) {
-                for (File jdk : jdks()) {
+                for (File jdk : jdks.jdks()) {
                     File libPath = new File(jdk, lib.path().replace('/', File.separatorChar));
                     if (!libPath.exists()) {
                         LOG.log(Level.WARNING, "{0} does not exist", libPath);

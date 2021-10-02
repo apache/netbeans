@@ -639,4 +639,20 @@ public class SelectedPropertyMethodsCreatorTest extends PHPTestBase {
                 new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
         ));
     }
+
+    public void testNetbeans5370_01() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class TestClass1 extends TestAbstractClass {^", PhpVersion.PHP_70);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testNetbeans5370_02() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class TestClass2 implements TestInterface {^", PhpVersion.PHP_70);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
 }

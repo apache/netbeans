@@ -36,6 +36,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Utilities;
 import org.netbeans.api.queries.VisibilityQuery;
+import org.openide.util.BaseUtilities;
 
 /**
  *
@@ -130,7 +131,7 @@ public class FileUtils {
                     if (toFile != null) {
                         URI resolve = null;
                         try {
-                            resolve = Utilities.toURI(toFile).resolve(pathPrefix).normalize();
+                            resolve = BaseUtilities.normalizeURI(Utilities.toURI(toFile).resolve(pathPrefix));
                         } catch (IllegalArgumentException ex) {
                             resolve = null;
                         }

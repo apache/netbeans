@@ -23,16 +23,19 @@ import java.util.Locale;
 import java.util.Map;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
+import static org.netbeans.modules.payara.tooling.data.PayaraVersion.values;
 import org.netbeans.modules.payara.tooling.utils.EnumUtils;
 import org.openide.util.Parameters;
 
 /**
- * Payara server version.
+ * Payara server version is now deprecated and replaced by.PayaraPlatformVersion
+ * class.
  * <p/>
  * @author Tomas Kraus, Peter Benedikovic
  * @author Gaurav Gupta
  */
-public enum PayaraVersion {
+@Deprecated
+public enum PayaraVersion implements PayaraPlatformVersionAPI {
 
     //add new version
     ////////////////////////////////////////////////////////////////////////////
@@ -497,6 +500,51 @@ public enum PayaraVersion {
         sb.append(SEPARATOR);
         sb.append(Integer.toString(build));
         return sb.toString();
+    }
+
+    @Override
+    public String getUriFragment() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getDirectUrl() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getIndirectUrl() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getLicenseUrl() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean isMinimumSupportedVersion() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean isEE7Supported() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean isEE8Supported() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean equalsMajorMinor(PayaraPlatformVersionAPI version) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean equals(PayaraPlatformVersionAPI version) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

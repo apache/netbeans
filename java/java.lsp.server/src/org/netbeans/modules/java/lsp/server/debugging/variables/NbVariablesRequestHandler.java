@@ -28,8 +28,8 @@ import org.eclipse.lsp4j.debug.Variable;
 import org.eclipse.lsp4j.debug.VariablesArguments;
 import org.eclipse.lsp4j.debug.VariablesResponse;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
+import org.netbeans.api.debugger.Session;
 
-import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.NbScope;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDebugSession;
@@ -63,8 +63,8 @@ public final class NbVariablesRequestHandler {
             // Nothing, or an old container
             response.setVariables(new Variable[0]);
         } else {
-            JPDADebugger debugger = context.getDebugSession().getDebugger();
-            Models.CompoundModel localsModel = localsModelProvider.getModel(debugger.getSession());
+            Session session = context.getDebugSession().getSession();
+            Models.CompoundModel localsModel = localsModelProvider.getModel(session);
             int threadId;
             if (container instanceof NbScope) {
                 threadId = ((NbScope) container).getFrame().getThreadId();
@@ -84,14 +84,21 @@ public final class NbVariablesRequestHandler {
                 }
                 for (Object child : children) {
                     String name = localsModel.getDisplayName(child);
-                    String value = String.valueOf(localsModel.getValueAt(child, LOCALS_TO_STRING_COLUMN_ID));
+                    String value;
+                    try {
+                        value = String.valueOf(localsModel.getValueAt(child, LOCALS_TO_STRING_COLUMN_ID));
+                    } catch (UnknownTypeException ex) {
+                        value = String.valueOf(localsModel.getValueAt(child, LOCALS_VALUE_COLUMN_ID));
+                    }
                     String type = String.valueOf(localsModel.getValueAt(child, LOCALS_TYPE_COLUMN_ID));
-                    int id = context.getThreadsProvider().getThreadObjects().addObject(threadId, child);
                     Variable variable = new Variable();
                     variable.setName(name);
                     variable.setValue(value);
                     variable.setType(type);
-                    variable.setVariablesReference(id);
+                    if (!localsModel.isLeaf(child)) {
+                        int id = context.getThreadsProvider().getThreadObjects().addObject(threadId, child);
+                        variable.setVariablesReference(id);
+                    }
                     list.add(variable);
                 }
             } catch (UnknownTypeException e) {
@@ -132,8 +139,8 @@ public final class NbVariablesRequestHandler {
             return future;
         }
 
-        JPDADebugger debugger = ((NbDebugSession) context.getDebugSession()).getDebugger();
-        Models.CompoundModel localsModel = localsModelProvider.getModel(debugger.getSession());
+        Session session = ((NbDebugSession) context.getDebugSession()).getSession();
+        Models.CompoundModel localsModel = localsModelProvider.getModel(session);
 
         int threadId;
         if (container instanceof NbScope) {

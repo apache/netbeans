@@ -40,6 +40,13 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.libs.jcodings</code-name-base>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>0.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.editor.lib2</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -197,12 +204,8 @@
                 <binary-origin>external/joni-2.1.11.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jcodings-1.0.18.jar</runtime-relative-path>
-                <binary-origin>external/jcodings-1.0.18.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.tm4e.core_0.2.0.201809031154.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.tm4e.core_0.2.0.201809031154.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.tm4e.core-0.4.1-pack1.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.tm4e.core-0.4.1-pack1.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

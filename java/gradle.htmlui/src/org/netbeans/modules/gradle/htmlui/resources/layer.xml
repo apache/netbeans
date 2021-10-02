@@ -103,6 +103,7 @@
                                         <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                                     </file>
                                     <file name="index.html" url="src_main_webapp_pages_index.html.fmk">
+                                        <attr name="important" boolvalue="true"/>
                                         <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                                     </file>
                                 </folder>

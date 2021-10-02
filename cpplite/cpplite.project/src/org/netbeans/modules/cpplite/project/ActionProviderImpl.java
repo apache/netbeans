@@ -19,6 +19,7 @@
 package org.netbeans.modules.cpplite.project;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -49,6 +50,7 @@ import org.openide.windows.OutputListener;
 public class ActionProviderImpl implements ActionProvider {
     private static final String[] SUPPORTED_ACTIONS = {
         COMMAND_BUILD,
+        COMMAND_CLEAN,
         COMMAND_REBUILD,
         COMMAND_RUN,
         COMMAND_DEBUG,
@@ -59,8 +61,9 @@ public class ActionProviderImpl implements ActionProvider {
     public ActionProviderImpl(CPPLiteProject prj) {
         this.prj = prj;
     }
-    
+
     @Override
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
     public String[] getSupportedActions() {
         return SUPPORTED_ACTIONS;
     }
@@ -84,24 +87,34 @@ public class ActionProviderImpl implements ActionProvider {
                 List<List<String>> executablesFor = config.executablesFor(COMMAND_RUN);
                 return Debugger.startInDebugger(executablesFor.get(0), FileUtil.toFile(prj.getProjectDirectory()));
             }
-            List<List<String>> executablesFor = config.executablesFor(command);
+            List<List<String>> executablesFor;
+            if (COMMAND_REBUILD.equals(command)) {
+                executablesFor = new ArrayList<>();
+                executablesFor.addAll(config.executablesFor(COMMAND_CLEAN));
+                executablesFor.addAll(config.executablesFor(COMMAND_BUILD));
+            } else {
+                executablesFor = config.executablesFor(command);
+            }
             String arg = executablesFor.stream().map(c -> quote(c.stream().map(p -> quote(p)).collect(Collectors.joining(" ")))).collect(Collectors.joining(" "));
             return new ProcessBuilder("java", "-classpath", module.getAbsolutePath(), Runner.class.getName(), arg).directory(FileUtil.toFile(prj.getProjectDirectory())).start();
         }, executionDescriptor, ProjectUtils.getInformation(prj).getDisplayName() + " - " + command).run();
     }
 
-    private String quote(String s) {
+    private static String quote(String s) {
         return s.replace("_", "_u_").replace(" ", "_s_");
     }
 
     @Override
     public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
         if (COMMAND_DEBUG.equals(command)) {
-            command = COMMAND_RUN;
+            return isActionEnabled(COMMAND_RUN, context);
+        } else if (COMMAND_REBUILD.equals(command)) {
+            return isActionEnabled(COMMAND_CLEAN, context) && isActionEnabled(COMMAND_BUILD, context);
+        } else {
+            return prj.getActiveBuildConfiguration().executablesFor(command) != null;
         }
-        return prj.getActiveBuildConfiguration().executablesFor(command) != null;
     }
-    
+
     private static class ErrorLineConvertor implements LineConvertor {
 
         @Override

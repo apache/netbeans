@@ -79,7 +79,7 @@ public class CodeCompletionOptionsPanel extends JPanel implements PropertyChange
             this.selector.addPropertyChangeListener(weakListener);
 
             // Languages combobox model
-            DefaultComboBoxModel model = new DefaultComboBoxModel();
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
             ArrayList<String> mimeTypes = new ArrayList<String>();
             mimeTypes.addAll(selector.getMimeTypes());
             Collections.sort(mimeTypes, new LanguagesComparator());

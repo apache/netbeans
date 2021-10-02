@@ -20,7 +20,7 @@
 package org.netbeans.modules.gradle.nodes;
 
 import org.netbeans.modules.gradle.ActionProviderImpl;
-import org.netbeans.modules.gradle.GradleArtifactStore;
+import org.netbeans.modules.gradle.loaders.GradleArtifactStore;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.api.GradleDependency;
 import org.netbeans.modules.gradle.GradleProject;

@@ -104,7 +104,7 @@ public class BreakpointAnnotationProvider extends DebuggerManagerAdapter impleme
             for (Breakpoint breakpoint : DebuggerManager.getDebuggerManager().getBreakpoints()) {
                 if (breakpoint instanceof CPPLiteBreakpoint) {
                     CPPLiteBreakpoint b = (CPPLiteBreakpoint) breakpoint;
-                    if (isAt(b, fo)) {
+                    if (!b.isHidden() && isAt(b, fo)) {
                         if (!breakpointToAnnotations.containsKey(b)) {
                             b.addPropertyChangeListener(this);
                         }
@@ -118,13 +118,13 @@ public class BreakpointAnnotationProvider extends DebuggerManagerAdapter impleme
     }
 
     private static boolean isAt(CPPLiteBreakpoint b, FileObject fo) {
-        FileObject bfo = (FileObject) b.getLine().getLookup().lookup(FileObject.class);
+        FileObject bfo = b.getFileObject();
         return fo.equals(bfo);
     }
 
     @Override
     public void breakpointAdded(Breakpoint breakpoint) {
-        if (breakpoint instanceof CPPLiteBreakpoint) {
+        if (breakpoint instanceof CPPLiteBreakpoint && !((CPPLiteBreakpoint) breakpoint).isHidden()) {
             postAnnotationRefresh((CPPLiteBreakpoint) breakpoint, false, true);
             breakpoint.addPropertyChangeListener (this);
         }
@@ -132,7 +132,7 @@ public class BreakpointAnnotationProvider extends DebuggerManagerAdapter impleme
 
     @Override
     public void breakpointRemoved(Breakpoint breakpoint) {
-        if (breakpoint instanceof CPPLiteBreakpoint) {
+        if (breakpoint instanceof CPPLiteBreakpoint && !((CPPLiteBreakpoint) breakpoint).isHidden()) {
             breakpoint.removePropertyChangeListener (this);
             postAnnotationRefresh((CPPLiteBreakpoint) breakpoint, true, false);
         }
@@ -231,7 +231,10 @@ public class BreakpointAnnotationProvider extends DebuggerManagerAdapter impleme
         String condition = getCondition(b);
         boolean isConditional = condition.trim().length() > 0 || b.getHitCountFilteringStyle() != null;
         String annotationType = getAnnotationType(b, isConditional, breakpointsActive);
-        DebuggerBreakpointAnnotation annotation = new DebuggerBreakpointAnnotation (annotationType, b);
+        DebuggerBreakpointAnnotation annotation = DebuggerBreakpointAnnotation.create(annotationType, b);
+        if (annotation == null) {
+            return ;
+        }
         Set<Annotation> bpAnnotations = breakpointToAnnotations.get(b);
         if (bpAnnotations == null) {
             Set<Annotation> set = new WeakSet<>();

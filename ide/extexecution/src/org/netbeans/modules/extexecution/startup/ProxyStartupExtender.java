@@ -80,4 +80,22 @@ public class ProxyStartupExtender implements StartupExtenderImplementation {
             return delegate;
         }
     }
+    
+    /**
+     * Returns false only if the extender registration explicitly says it does not escape arguments.
+     */
+    public boolean argumentsQuoted() {
+        Object o = attributes.get(StartupExtenderRegistrationProcessor.QUOTED_ATTRIBUTE);
+        // older binaries do not contain the attribute, so fall back to 'escaped' mode.
+        return o == null || o != Boolean.FALSE;
+    }
+
+    /**
+     * Enhanced version that declares escaping policy from 1.62
+     */
+    public static class V2 extends ProxyStartupExtender implements StartupExtenderRegistrationOptions {
+        public V2(Map<String, ?> attributes) {
+            super(attributes);
+        }
+    }
 }

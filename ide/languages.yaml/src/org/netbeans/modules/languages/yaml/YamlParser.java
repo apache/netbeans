@@ -31,10 +31,14 @@ import java.util.regex.Pattern;
 import javax.swing.event.ChangeListener;
 import org.jruby.util.ByteList;
 import org.jvyamlb.Composer;
+import org.jvyamlb.ParserImpl;
 import org.jvyamlb.PositioningComposerImpl;
 import org.jvyamlb.PositioningParserImpl;
 import org.jvyamlb.PositioningScannerImpl;
 import org.jvyamlb.ResolverImpl;
+import org.jvyamlb.YAMLConfig;
+import org.jvyamlb.events.Event;
+import org.jvyamlb.exceptions.PositionedComposerException;
 import org.jvyamlb.exceptions.PositionedParserException;
 import org.jvyamlb.exceptions.PositionedScannerException;
 import org.jvyamlb.nodes.Node;
@@ -194,6 +198,7 @@ public class YamlParser extends Parser {
         source = replaceCommonSpecialCharacters(source);
         source = replaceInlineRegexBrackets(source);
 
+        List<Node> nodes = new ArrayList<Node>();
         try {
             if (isTooLarge(source)) {
                 return resultForTooLargeFile(snapshot);
@@ -248,8 +253,56 @@ public class YamlParser extends Parser {
                 byteList = new ByteList(out.toByteArray());
             }
 
-            Composer composer = new PositioningComposerImpl(new PositioningParserImpl(new PositioningScannerImpl(byteList)), new ResolverImpl());
-            List<Node> nodes = new ArrayList<Node>();
+            final List<DefaultError> errors = new ArrayList<>();
+            PositioningScannerImpl scanner = new PositioningScannerImpl(byteList) {
+                @Override
+                protected void scannerException(String when, String what, String note) {
+                    try {
+                        super.scannerException(when, what, note);
+                    } catch (PositionedScannerException pse) {
+                        int pos = pse.getPosition().offset;
+                        String message = pse.getMessage();
+                        if (message != null && message.length() > 0) {
+                            errors.add(processError(message, snapshot, pos));
+                        }
+                        // Move local pointer to the next char to make progress
+                        this.pointer++;
+                    }
+                }
+            };
+            PositioningParserImpl parser = new PositioningParserImpl(scanner) {
+                @Override
+                protected ParserImpl.ProductionEnvironment getEnvironment(YAMLConfig cfg) {
+                    return new PositioningProductionEnvironment(cfg) {
+                        @Override
+                        protected void parserException(String when, String what, String note, org.jvyamlb.tokens.Token t) {
+                            try {
+                                super.parserException(when, what, note, t);
+                            } catch (PositionedParserException ppe) {
+                                int pos = ppe.getPosition().offset;
+                                String message = ppe.getMessage();
+                                if (message != null && message.length() > 0) {
+                                    errors.add(processError(message, snapshot, pos));
+                                }
+                            }
+                        }
+                    };
+                }
+            };
+            Composer composer = new PositioningComposerImpl(parser, new ResolverImpl()) {
+                @Override
+                protected void composerException(String when, String what, String note, Event e) {
+                    try {
+                        super.composerException(when, what, note, e);
+                    } catch (PositionedComposerException pce) {
+                        int pos = pce.getPosition().offset;
+                        String message = pce.getMessage();
+                        if (message != null && message.length() > 0) {
+                            errors.add(processError(message, snapshot, pos));
+                        }
+                    }
+                }
+            };
             Iterator iterator = composer.eachNode();
             while (iterator.hasNext()) {
                 Node node = (Node) iterator.next();
@@ -259,57 +312,37 @@ public class YamlParser extends Parser {
                 nodes.add(node);
             }
 
-            //Object yaml = YAML.load(stream);
-            return new YamlParserResult(nodes, this, snapshot, true, byteToUtf8, utf8toByte);
-        } catch (Exception ex) {
-            int pos = 0;
-            if (ex instanceof PositionedParserException) {
-                PositionedParserException ppe = (PositionedParserException) ex;
-                pos = ppe.getPosition().offset;
-            } else if (ex instanceof PositionedScannerException) {
-                PositionedScannerException pse = (PositionedScannerException) ex;
-                pos = pse.getPosition().offset;
-                // The scanner possition is on the next token. We need to reallocate it
-                // on the previous token.
-                TokenHierarchy th = snapshot.getTokenHierarchy();
-                if (th != null) {
-                    TokenSequence ts = th.tokenSequence();
-                    if (ts != null) {
-                        ts.move(pos);
-                        ts.moveNext();
-                        Token token = ts.token();
-                        // don't move the error, when there is more values on the line. See #171633
-                        if (token != null && token.text().toString().indexOf('{') == -1 && ts.movePrevious()) {
-                            pos = ts.offset();
-                        }
-                    }
-                }
+            YamlParserResult result = new YamlParserResult(nodes, this, snapshot, true, byteToUtf8, utf8toByte);
+            if (!errors.isEmpty()) {
+                result.addError(errors.get(0));
             }
-
+            return result;
+        } catch (Exception ex) {
             YamlParserResult result = new YamlParserResult(Collections.<Node>emptyList(), this, snapshot, false, null, null);
             String message = ex.getMessage();
             if (message != null && message.length() > 0) {
-                // Strip off useless prefixes to make errors more readable
-                if (message.startsWith("ScannerException null ")) { // NOI18N
-                    message = message.substring(22);
-                } else if (message.startsWith("ParserException ")) { // NOI18N
-                    message = message.substring(16);
-                }
-                // Capitalize sentences
-                char firstChar = message.charAt(0);
-                char upcasedChar = Character.toUpperCase(firstChar);
-                if (firstChar != upcasedChar) {
-                    message = upcasedChar + message.substring(1);
-                }
-
-                // FIXME this can violate contract of DefaultError (null fo)
-                DefaultError error = new DefaultError(null, message, null, snapshot.getSource().getFileObject(),
-                        pos, pos, Severity.ERROR);
-                result.addError(error);
+                result.addError(processError(message, snapshot, 0));
             }
-
             return result;
         }
+    }
+
+    private DefaultError processError(String message, Snapshot snapshot, int pos) {
+        // Strip off useless prefixes to make errors more readable
+        if (message.startsWith("ScannerException null ")) { // NOI18N
+            message = message.substring(22);
+        } else if (message.startsWith("ParserException ")) { // NOI18N
+            message = message.substring(16);
+        }
+        // Capitalize sentences
+        char firstChar = message.charAt(0);
+        char upcasedChar = Character.toUpperCase(firstChar);
+        if (firstChar != upcasedChar) {
+            message = upcasedChar + message.substring(1);
+        }
+        // FIXME this can violate contract of DefaultError (null fo)
+        return new DefaultError(null, message, null, snapshot.getSource().getFileObject(),
+                pos, pos, Severity.ERROR);
     }
 
     @Override

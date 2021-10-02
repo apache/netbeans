@@ -29,6 +29,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -195,12 +196,12 @@ public final class ExecutionService {
         realDescriptor = realDescriptor.postExecution(new ParametrizedRunnable<Integer>() {
 
             @Override
-            public void run(Integer parameter) {
+            public void run(Integer exitCode) {
                 cleanup(handle, ioData, ioData.getInputOutput() != descriptor.getInputOutput(),
-                        descriptor.isFrontWindowOnError() && parameter != null && parameter != 0);
-                Runnable orig = descriptor.getPostExecution();
+                        descriptor.isFrontWindowOnError() && exitCode != null && exitCode != 0);
+                Consumer<? super Integer> orig = descriptor.getPostExecution();
                 if (orig != null) {
-                    orig.run();
+                    orig.accept(exitCode);
                 }
             }
         });

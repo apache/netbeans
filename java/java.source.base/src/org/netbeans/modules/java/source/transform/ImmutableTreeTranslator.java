@@ -27,6 +27,7 @@ import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.tree.JCTree.JCLambda;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import com.sun.tools.javac.util.Context;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ import javax.lang.model.util.Elements;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.modules.java.source.GeneratorUtilitiesAccessor;
 import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.builder.ASTService;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
@@ -46,9 +48,12 @@ import org.netbeans.modules.java.source.builder.QualIdentTree;
 import org.netbeans.modules.java.source.builder.TreeFactory;
 import org.netbeans.modules.java.source.pretty.ImportAnalysis2;
 import org.netbeans.modules.java.source.query.CommentHandler;
+import org.netbeans.modules.java.source.save.CasualDiff;
 import org.netbeans.modules.java.source.save.ElementOverlay;
 
 import static org.netbeans.modules.java.source.save.PositionEstimator.*;
+import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /** A subclass of Tree.Visitor, this class defines
  *  a general tree translator pattern. Translation proceeds recursively in
@@ -117,9 +122,11 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
     /** Visitor method: Translate a single node.
      */
     public Tree translate(Tree tree) {
-	if (tree == null)
+	if (tree == null) {
 	    return null;
-	else {
+        } else if (tree.getKind().name().equals(TreeShims.BINDING_PATTERN)) {
+            return rewriteChildrenBindingPattern(tree);
+        } else {
 	    Tree t = tree.accept(this, null);
             
             if (tree2Tag != null && tree != t && tmaker != null) {
@@ -542,11 +549,13 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
         importAnalysis.setImports(imps);
         
         List<? extends AnnotationTree> annotations = translate(tree.getPackageAnnotations());
-        List<? extends Tree> types = translate(tree.getTypeDecls());
+        List<? extends Tree> types = translate(TreeHelpers.getCombinedTopLevelDecls(tree));
         
         Set<? extends Element> newImports = importAnalysis.getImports();
         if (copy != null && newImports != null && !newImports.isEmpty()) {
-            imps = GeneratorUtilities.get(copy).addImports(tree, newImports).getImports();
+            imps = GeneratorUtilitiesAccessor.getInstance()
+                                             .addImports(GeneratorUtilities.get(copy), tree, imps, newImports)
+                                             .getImports();
         }
         
 	if (!annotations.equals(tree.getPackageAnnotations()) || pid!=tree.getPackageName() || !imps.equals(tree.getImports()) ||
@@ -1130,9 +1139,13 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
     
     protected final InstanceOfTree rewriteChildren(InstanceOfTree tree) {
 	ExpressionTree expr = (ExpressionTree)translate(tree.getExpression());
-	Tree clazz = translateClassRef(tree.getType());
-	if (expr!=tree.getExpression() || clazz!=tree.getType()) {
-	    InstanceOfTree n = make.InstanceOf(expr, clazz);
+        Tree origPattern = TreeShims.getPattern(tree);
+        if (origPattern == null) {
+            origPattern = tree.getType();
+        }
+	Tree newPattern = translate(origPattern);
+	if (expr!=tree.getExpression() || newPattern!=origPattern) {
+	    InstanceOfTree n = make.InstanceOf(expr, newPattern);
             model.setType(n, model.getType(tree));
 	    copyCommentTo(tree,n);
             copyPosTo(tree,n);
@@ -1400,5 +1413,18 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
 	    tree = n;
 	}
 	return tree;
+    }
+
+    private Tree rewriteChildrenBindingPattern(Tree tree) {
+        VariableTree var = CasualDiff.getBindingVariableTree(tree); //replace with tree.getVariable when javac supported is 16+:
+        VariableTree newVar = (VariableTree) translate(var);
+        if (newVar != var) {
+            Tree n = make.BindingPattern(newVar);
+            model.setType(n, model.getType(tree));
+            copyCommentTo(tree,n);
+            copyPosTo(tree,n);
+            tree = n;
+        }
+        return tree;
     }
 }

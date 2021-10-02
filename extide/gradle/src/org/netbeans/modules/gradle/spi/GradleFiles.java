@@ -22,7 +22,7 @@ package org.netbeans.modules.gradle.spi;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.api.annotations.common.NonNull;
@@ -64,6 +65,8 @@ public final class GradleFiles implements Serializable {
         public static final Set<Kind> PROJECT_FILES = EnumSet.of(ROOT_SCRIPT, BUILD_SCRIPT, SETTINGS_SCRIPT, PROJECT_PROPERTIES, ROOT_PROPERTIES);
     }
 
+    private static final Logger LOG = Logger.getLogger(GradleFiles.class.getName());
+    
     public static final String SETTINGS_FILE_NAME     = "settings.gradle"; //NOI18N
     public static final String SETTINGS_FILE_NAME_KTS = "settings.gradle.kts"; //NOI18N
     public static final String BUILD_FILE_NAME        = "build.gradle"; //NOI18N
@@ -85,6 +88,7 @@ public final class GradleFiles implements Serializable {
     }
     
     public GradleFiles(File dir, boolean knownProject) {
+        LOG.fine("Gradle Files for: " + dir.getAbsolutePath());
         this.knownProject = knownProject;
         try {
             dir = dir.getCanonicalFile();
@@ -218,11 +222,17 @@ public final class GradleFiles implements Serializable {
     }
 
     public boolean isProject() {
-        boolean ret = knownProject || (buildScript != null);
-        if (!ret && (settingsScript != null)) {
-            ret = SettingsFile.getSubProjects(settingsScript).contains(projectDir);
+        if (knownProject || buildScript != null) {
+            return true;
         }
-        return ret;
+        if (settingsScript != null) {
+            if (projectDir.equals(settingsScript.getParentFile())) {
+                return true;
+            }
+            Set<File> parsed = SettingsFile.getSubProjects(settingsScript);
+            return parsed.contains(projectDir); 
+        }
+        return false;
     }
 
     /**
@@ -350,7 +360,7 @@ public final class GradleFiles implements Serializable {
             Map<String, String> projectPaths = new HashMap<>();
             String rootDir = f.getParentFile().getAbsolutePath();
             try {
-                List<String> lines = Files.readAllLines(f.toPath(), Charset.forName("UTF-8")); //NOI18N
+                List<String> lines = Files.readAllLines(f.toPath(), StandardCharsets.UTF_8);
                 for (String line : lines) {
                     line = line.trim();
                     if (!line.startsWith("//")) { //NOI18N

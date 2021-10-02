@@ -28,18 +28,22 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
+import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.InputMap;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
@@ -57,6 +61,8 @@ import org.openide.util.NbBundle;
 public class FixDuplicateImportStmts extends javax.swing.JPanel {
     private JComboBox[] combos;
     private JCheckBox checkUnusedImports;
+    private ItemVariant[] defaultVariants;
+    private ItemVariant[] dontUseVariants;
 
     public FixDuplicateImportStmts() {
         initComponents();
@@ -64,6 +70,7 @@ public class FixDuplicateImportStmts extends javax.swing.JPanel {
 
     public void initPanel(ImportData importData, boolean removeUnusedImports) {
         initComponentsMore(importData, removeUnusedImports);
+        initButtons(importData);
         setAccessible();
     }
 
@@ -147,6 +154,60 @@ public class FixDuplicateImportStmts extends javax.swing.JPanel {
         return NbBundle.getMessage(FixDuplicateImportStmts.class, s);
     }
 
+    @NbBundle.Messages({
+        "ClearSuggestionsButton=&Clear Suggestions",
+        "RestoreDefaultsButton=Restore &Defaults"
+    })
+    private void initButtons(ImportData importData) {
+        int numberOfItems = importData.getItems().size();
+        defaultVariants = new ItemVariant[numberOfItems];
+        dontUseVariants = new ItemVariant[numberOfItems];
+        for (int i = 0; i < numberOfItems; i++) {
+            DataItem dataItem = importData.getItems().get(i);
+            defaultVariants[i] = dataItem.getDefaultVariant();
+            dontUseVariants[i] = dataItem.getDefaultVariant();
+            for (ItemVariant variant : dataItem.getVariants()) {
+                if (!variant.canBeUsed()) {
+                    dontUseVariants[i] = variant;
+                }
+            }
+        }
+
+        bottomPanel.add(Box.createHorizontalStrut(150));
+
+        JPanel buttonsPanel = new JPanel(new BorderLayout(5, 3));
+        bottomPanel.add(buttonsPanel, BorderLayout.LINE_END);
+
+        JButton changeNothingButton = new JButton();
+        Mnemonics.setLocalizedText(changeNothingButton, Bundle.ClearSuggestionsButton());
+        changeNothingButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                deselectAllButtonActionPerformed(evt);
+            }
+        });
+        buttonsPanel.add(changeNothingButton, BorderLayout.LINE_START);
+
+        JButton restoreDefaultsButton = new JButton();
+        Mnemonics.setLocalizedText(restoreDefaultsButton, Bundle.RestoreDefaultsButton());
+        restoreDefaultsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                restoreDefaultsButtonActionPerformed(evt);
+            }
+        });
+        buttonsPanel.add(restoreDefaultsButton, BorderLayout.LINE_END);
+    }
+
+    private void deselectAllButtonActionPerformed(ActionEvent evt) {
+        for (int i = 0; i < combos.length; i++) {
+            combos[i].setSelectedItem(dontUseVariants[i]);
+        }
+    }
+
+    private void restoreDefaultsButtonActionPerformed(ActionEvent evt) {
+        for (int i = 0; i < combos.length; i++) {
+            combos[i].setSelectedItem(defaultVariants[i]);
+        }
+    }
 
     private void setAccessible() {
         getAccessibleContext().setAccessibleDescription(getBundleString("FixDupImportStmts_IntroLbl")); // NOI18N

@@ -21,6 +21,8 @@ package org.netbeans.modules.java.source;
 
 import java.awt.Dialog;
 import java.awt.GraphicsEnvironment;
+import java.awt.HeadlessException;
+import java.util.logging.Level;
 import java.util.prefs.Preferences;
 import javax.lang.model.SourceVersion;
 import org.netbeans.api.annotations.common.StaticResource;
@@ -31,6 +33,7 @@ import org.openide.DialogDisplayer;
 import org.openide.awt.NotificationDisplayer;
 import org.openide.awt.NotificationDisplayer.Priority;
 import org.openide.modules.ModuleInstall;
+import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
@@ -80,15 +83,19 @@ public class JBrowseModule extends ModuleInstall {
                 Preferences prefs = NbPreferences.forModule(NoJavacHelper.class);
                 if (!NoJavacHelper.hasWorkingJavac() && !prefs.getBoolean(KEY_WARNING_SHOWN, false)) {
                     String install = Bundle.BN_Install();
-                    Dialog[] d = new Dialog[1];
-                    DialogDescriptor dd = new DialogDescriptor(Bundle.DESC_FeaturesLimited(), Bundle.TITLE_FeaturesLimited(), true, new Object[] {install, DialogDescriptor.CANCEL_OPTION}, install, DialogDescriptor.DEFAULT_ALIGN, HelpCtx.DEFAULT_HELP, evt -> {
-                        if (install.equals(evt.getActionCommand())) {
-                            PluginManager.installSingle("org.netbeans.modules.nbjavac", Bundle.DN_nbjavac());
-                        }
-                        d[0].setVisible(false);
-                    });
-                    d[0] = DialogDisplayer.getDefault().createDialog(dd);
-                    d[0].setVisible(true);
+                    try {
+                        Dialog[] d = new Dialog[1];
+                        DialogDescriptor dd = new DialogDescriptor(Bundle.DESC_FeaturesLimited(), Bundle.TITLE_FeaturesLimited(), true, new Object[] {install, DialogDescriptor.CANCEL_OPTION}, install, DialogDescriptor.DEFAULT_ALIGN, HelpCtx.DEFAULT_HELP, evt -> {
+                            if (install.equals(evt.getActionCommand())) {
+                                PluginManager.installSingle("org.netbeans.modules.nbjavac", Bundle.DN_nbjavac());
+                            }
+                            d[0].setVisible(false);
+                        });
+                        d[0] = DialogDisplayer.getDefault().createDialog(dd);
+                        d[0].setVisible(true);
+                    } catch (HeadlessException ex) {
+                        Exceptions.printStackTrace(Exceptions.attachSeverity(ex, Level.FINE));
+                    }
                     prefs.putBoolean(KEY_WARNING_SHOWN, true);
                 }
 

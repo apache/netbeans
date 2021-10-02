@@ -30,6 +30,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.apache.maven.project.MavenProject;
@@ -147,7 +148,7 @@ public final class UnitTestsCompilerOptionsQueryImpl implements CompilerOptionsQ
                                 testModuleInfo == null ?
                                     TestMode.INLINED:
                                     TestMode.MODULE;
-                        args = mode.createArguments(proj.getOriginalMavenProject(), srcModuleInfo, testModuleInfo);
+                        args = mode.createArguments(proj, srcModuleInfo, testModuleInfo);
                         synchronized (this) {
                             if (cache == null) {
                                 cache = args;
@@ -286,7 +287,7 @@ public final class UnitTestsCompilerOptionsQueryImpl implements CompilerOptionsQ
              */
             LEGACY {
                 @Override
-                List<String> createArguments(MavenProject project,
+                List<String> createArguments(NbMavenProjectImpl project,
                         @NullAllowed final FileObject srcModuleInfo,
                         @NullAllowed final FileObject testModuleInfo) {
                     return Collections.emptyList();
@@ -297,7 +298,7 @@ public final class UnitTestsCompilerOptionsQueryImpl implements CompilerOptionsQ
              */
             UNNAMED {
                 @Override
-                List<String> createArguments(MavenProject project,
+                List<String> createArguments(NbMavenProjectImpl project,
                         @NullAllowed final FileObject srcModuleInfo,
                         @NullAllowed final FileObject testModuleInfo) {
                     return Collections.emptyList();
@@ -308,7 +309,7 @@ public final class UnitTestsCompilerOptionsQueryImpl implements CompilerOptionsQ
              */
             INLINED {
                 @Override
-                List<String> createArguments(MavenProject project,
+                List<String> createArguments(NbMavenProjectImpl project,
                         @NullAllowed final FileObject srcModuleInfo,
                         @NullAllowed final FileObject testModuleInfo) {
                     final String moduleName = getModuleName(srcModuleInfo);
@@ -327,7 +328,7 @@ public final class UnitTestsCompilerOptionsQueryImpl implements CompilerOptionsQ
              */
             MODULE {
                 @Override
-                List<String> createArguments(MavenProject project,
+                List<String> createArguments(NbMavenProjectImpl project,
                         @NullAllowed final FileObject srcModuleInfo,
                         @NullAllowed final FileObject testModuleInfo) {
                     final String testModuleName = getModuleName(testModuleInfo);
@@ -339,7 +340,13 @@ public final class UnitTestsCompilerOptionsQueryImpl implements CompilerOptionsQ
                         return Collections.emptyList();
                     }
                     if (testModuleName != null && srcModuleName != null && testModuleName.equals(srcModuleName)) {
-                        return Collections.unmodifiableList(Arrays.asList("--patch-module", srcModuleName + "=" + project.getCompileSourceRoots().stream().collect(Collectors.joining(System.getProperty("path.separator")))));
+                        String paths =
+                            Stream.concat(Arrays.stream(project.getSourceRoots(false)),
+                                          Arrays.stream(project.getGeneratedSourceRoots(false)))
+                                  .filter(u -> "file".equals(u.getScheme()))
+                                  .map(u -> u.getPath())
+                                  .collect(Collectors.joining(System.getProperty("path.separator")));
+                        return Collections.unmodifiableList(Arrays.asList("--patch-module", srcModuleName + "=" + paths));
                     }
                     final List<String> result = Arrays.asList(
                         "--add-reads",                                  //NOI18N
@@ -349,7 +356,7 @@ public final class UnitTestsCompilerOptionsQueryImpl implements CompilerOptionsQ
             };
 
             @NonNull
-            abstract List<String> createArguments(MavenProject project,
+            abstract List<String> createArguments(NbMavenProjectImpl project,
                     @NullAllowed final FileObject srcModuleInfo,
                     @NullAllowed final FileObject testModuleInfo);
         }

@@ -1,8 +1,9 @@
 #Signature file v4.1
-#Version 1.5
+#Version 1.7
 
 CLSS public abstract interface com.formdev.flatlaf.FlatClientProperties
 fld public final static java.lang.String BUTTON_TYPE = "JButton.buttonType"
+fld public final static java.lang.String BUTTON_TYPE_BORDERLESS = "borderless"
 fld public final static java.lang.String BUTTON_TYPE_HELP = "help"
 fld public final static java.lang.String BUTTON_TYPE_ROUND_RECT = "roundRect"
 fld public final static java.lang.String BUTTON_TYPE_SQUARE = "square"
@@ -66,8 +67,12 @@ fld public final static java.lang.String TABBED_PANE_TRAILING_COMPONENT = "JTabb
 fld public final static java.lang.String TAB_BUTTON_SELECTED_BACKGROUND = "JToggleButton.tab.selectedBackground"
 fld public final static java.lang.String TAB_BUTTON_UNDERLINE_COLOR = "JToggleButton.tab.underlineColor"
 fld public final static java.lang.String TAB_BUTTON_UNDERLINE_HEIGHT = "JToggleButton.tab.underlineHeight"
+fld public final static java.lang.String TEXT_FIELD_PADDING = "JTextField.padding"
+fld public final static java.lang.String TITLE_BAR_BACKGROUND = "JRootPane.titleBarBackground"
+fld public final static java.lang.String TITLE_BAR_FOREGROUND = "JRootPane.titleBarForeground"
 fld public final static java.lang.String TREE_PAINT_SELECTION = "JTree.paintSelection"
 fld public final static java.lang.String TREE_WIDE_SELECTION = "JTree.wideSelection"
+fld public final static java.lang.String USE_WINDOW_DECORATIONS = "JRootPane.useWindowDecorations"
 meth public static boolean clientPropertyBoolean(javax.swing.JComponent,java.lang.String,boolean)
 meth public static boolean clientPropertyEquals(javax.swing.JComponent,java.lang.String,java.lang.Object)
 meth public static int clientPropertyInt(javax.swing.JComponent,java.lang.String,int)
@@ -80,6 +85,8 @@ fld public final static java.lang.String NAME = "FlatLaf Darcula"
 meth public java.lang.String getDescription()
 meth public java.lang.String getName()
 meth public static boolean install()
+ anno 0 java.lang.Deprecated()
+meth public static boolean setup()
 meth public static void installLafInfo()
 supr com.formdev.flatlaf.FlatDarkLaf
 
@@ -90,6 +97,8 @@ meth public boolean isDark()
 meth public java.lang.String getDescription()
 meth public java.lang.String getName()
 meth public static boolean install()
+ anno 0 java.lang.Deprecated()
+meth public static boolean setup()
 meth public static void installLafInfo()
 supr com.formdev.flatlaf.FlatLaf
 
@@ -138,6 +147,8 @@ fld public final static java.lang.String NAME = "FlatLaf IntelliJ"
 meth public java.lang.String getDescription()
 meth public java.lang.String getName()
 meth public static boolean install()
+ anno 0 java.lang.Deprecated()
+meth public static boolean setup()
 meth public static void installLafInfo()
 supr com.formdev.flatlaf.FlatLightLaf
 
@@ -156,14 +167,22 @@ meth public java.lang.String getID()
 meth public javax.swing.Icon getDisabledIcon(javax.swing.JComponent,javax.swing.Icon)
 meth public javax.swing.UIDefaults getDefaults()
 meth public static boolean install(javax.swing.LookAndFeel)
+ anno 0 java.lang.Deprecated()
 meth public static boolean isLafDark()
 meth public static boolean isShowMnemonics()
+meth public static boolean isUseNativeWindowDecorations()
+meth public static boolean setup(javax.swing.LookAndFeel)
+meth public static boolean supportsNativeWindowDecorations()
+meth public static javax.swing.UIDefaults$ActiveValue createActiveFontValue(float)
 meth public static void hideMnemonics()
 meth public static void initIconColors(javax.swing.UIDefaults,boolean)
 meth public static void installLafInfo(java.lang.String,java.lang.Class<? extends javax.swing.LookAndFeel>)
 meth public static void registerCustomDefaultsSource(java.io.File)
 meth public static void registerCustomDefaultsSource(java.lang.String)
 meth public static void registerCustomDefaultsSource(java.lang.String,java.lang.ClassLoader)
+meth public static void repaintAllFramesAndDialogs()
+meth public static void revalidateAndRepaintAllFramesAndDialogs()
+meth public static void setUseNativeWindowDecorations(boolean)
 meth public static void showMnemonics(java.awt.Component)
 meth public static void unregisterCustomDefaultsSource(java.io.File)
 meth public static void unregisterCustomDefaultsSource(java.lang.String)
@@ -173,7 +192,7 @@ meth public static void updateUILater()
 meth public void initialize()
 meth public void uninitialize()
 supr javax.swing.plaf.basic.BasicLookAndFeel
-hfds DESKTOPFONTHINTS,LOG,aquaLoaded,customDefaultsSources,desktopPropertyListener,desktopPropertyName,desktopPropertyName2,mnemonicHandler,oldDialogWindowDecorated,oldFrameWindowDecorated,oldPopupFactory,postInitialization,updateUIPending
+hfds DESKTOPFONTHINTS,aquaLoaded,customDefaultsSources,desktopPropertyListener,desktopPropertyName,desktopPropertyName2,mnemonicHandler,oldPopupFactory,postInitialization,updateUIPending
 hcls ActiveFont,ImageIconUIResource
 
 CLSS public abstract interface static com.formdev.flatlaf.FlatLaf$DisabledIconProvider
@@ -187,6 +206,8 @@ meth public boolean isDark()
 meth public java.lang.String getDescription()
 meth public java.lang.String getName()
 meth public static boolean install()
+ anno 0 java.lang.Deprecated()
+meth public static boolean setup()
 meth public static void installLafInfo()
 supr com.formdev.flatlaf.FlatLaf
 
@@ -207,6 +228,7 @@ CLSS public abstract interface com.formdev.flatlaf.FlatSystemProperties
 fld public final static java.lang.String ANIMATION = "flatlaf.animation"
 fld public final static java.lang.String MENUBAR_EMBEDDED = "flatlaf.menuBarEmbedded"
 fld public final static java.lang.String UI_SCALE = "flatlaf.uiScale"
+fld public final static java.lang.String UI_SCALE_ALLOW_SCALE_DOWN = "flatlaf.uiScale.allowScaleDown"
 fld public final static java.lang.String UI_SCALE_ENABLED = "flatlaf.uiScale.enabled"
 fld public final static java.lang.String USE_JETBRAINS_CUSTOM_DECORATIONS = "flatlaf.useJetBrainsCustomDecorations"
 fld public final static java.lang.String USE_TEXT_Y_CORRECTION = "flatlaf.useTextYCorrection"
@@ -222,6 +244,8 @@ fld public final java.lang.String author
 fld public final java.lang.String name
 innr public static ThemeLaf
 meth public static boolean install(java.io.InputStream)
+ anno 0 java.lang.Deprecated()
+meth public static boolean setup(java.io.InputStream)
 meth public static com.formdev.flatlaf.FlatLaf createLaf(com.formdev.flatlaf.IntelliJTheme)
 meth public static com.formdev.flatlaf.FlatLaf createLaf(java.io.InputStream) throws java.io.IOException
 supr java.lang.Object
@@ -415,7 +439,6 @@ meth public void fillPolygon(int[],int[],int)
 meth public void fillPolygon(java.awt.Polygon)
 meth public void fillRect(int,int,int,int)
 meth public void fillRoundRect(int,int,int,int,int,int)
-meth public void finalize()
 meth public void rotate(double)
 meth public void rotate(double,double,double)
 meth public void scale(double,double)
@@ -500,6 +523,11 @@ meth public static void drawStringUnderlineCharAt(javax.swing.JComponent,java.aw
 supr java.lang.Object
 hfds drawStringUnderlineCharAtMethod,getClippedStringMethod
 
+CLSS public abstract interface com.formdev.flatlaf.util.LoggingFacade
+fld public final static com.formdev.flatlaf.util.LoggingFacade INSTANCE
+meth public abstract void logConfig(java.lang.String,java.lang.Throwable)
+meth public abstract void logSevere(java.lang.String,java.lang.Throwable)
+
 CLSS public com.formdev.flatlaf.util.MultiResolutionImageSupport
 cons public init()
 meth public !varargs static java.awt.Image create(int,java.awt.Image[])
@@ -510,6 +538,12 @@ meth public static java.awt.Image getResolutionVariant(java.awt.Image,int,int)
 meth public static java.awt.Image map(java.awt.Image,java.util.function.Function<java.awt.Image,java.awt.Image>)
 meth public static java.util.List<java.awt.Image> getResolutionVariants(java.awt.Image)
 supr java.lang.Object
+
+CLSS public com.formdev.flatlaf.util.NativeLibrary
+cons public init(java.lang.String,java.lang.ClassLoader,boolean)
+meth public boolean isLoaded()
+supr java.lang.Object
+hfds DELETE_SUFFIX,deletedTemporary,loaded
 
 CLSS public com.formdev.flatlaf.util.ScaledEmptyBorder
 cons public init(int,int,int,int)
@@ -550,8 +584,12 @@ fld public final static boolean isMacOS
 fld public final static boolean isMacOS_10_11_ElCapitan_orLater
 fld public final static boolean isMacOS_10_14_Mojave_orLater
 fld public final static boolean isMacOS_10_15_Catalina_orLater
+fld public final static boolean isProjector
+fld public final static boolean isWebswing
+fld public final static boolean isWinPE
 fld public final static boolean isWindows
 fld public final static boolean isWindows_10_orLater
+fld public final static boolean isX86_64
 fld public final static long javaVersion
 fld public final static long osVersion
 meth public static long scanVersion(java.lang.String)
@@ -642,7 +680,6 @@ meth public static java.awt.Color getColor(java.lang.String,int)
 meth public static java.awt.Color getColor(java.lang.String,java.awt.Color)
 meth public static java.awt.Color getHSBColor(float,float,float)
 supr java.lang.Object
-hfds FACTOR,cs,falpha,frgbvalue,fvalue,serialVersionUID,value
 
 CLSS public abstract java.awt.Graphics
 cons protected init()
@@ -687,7 +724,7 @@ meth public java.awt.FontMetrics getFontMetrics()
 meth public java.awt.Graphics create(int,int,int,int)
 meth public java.awt.Rectangle getClipBounds(java.awt.Rectangle)
 meth public java.awt.Rectangle getClipRect()
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String toString()
 meth public void draw3DRect(int,int,int,int,boolean)
 meth public void drawBytes(byte[],int,int,int,int)
@@ -697,7 +734,6 @@ meth public void drawRect(int,int,int,int)
 meth public void fill3DRect(int,int,int,int,boolean)
 meth public void fillPolygon(java.awt.Polygon)
 meth public void finalize()
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 supr java.lang.Object
 
 CLSS public abstract java.awt.Graphics2D
@@ -824,7 +860,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -836,7 +871,6 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -966,6 +1000,4 @@ meth public javax.swing.UIDefaults getDefaults()
 meth public void initialize()
 meth public void uninitialize()
 supr javax.swing.LookAndFeel
-hfds audioLock,clipPlaying,disposer,invocator,needsEventHelper
-hcls AWTEventHelper,AudioAction
 

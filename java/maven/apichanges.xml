@@ -83,6 +83,48 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="disable-actions">
+            <api name="general"/>
+            <summary>Plugin-dependent Lookup</summary>
+            <version major="2" minor="149"/>
+            <date day="24" month="6" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                <p>
+                    Actions can be <b>disabled</b> by the MavenActionsProvider for a configuration.
+                </p>
+            </description>
+            <class name="ActionToGoalUtils" package="org.netbeans.modules.maven.execute"/>
+        </change>
+        <change id="plugin-lookup">
+            <api name="general"/>
+            <summary>Plugin-dependent Lookup</summary>
+            <version major="2" minor="148"/>
+            <date day="15" month="5" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                <p>
+                    Register services for a specific <i>maven plugin</i>
+                    used in the project. See <a href="@TOP@/architecture-summary.html#layer-PluginLookup">PluginLookup</a>.
+                </p>
+            </description>
+        </change>
+        <change id="disable-maven-repo-indexing">
+            <api name="general"/>
+            <summary>Default for frequency of indexing</summary>
+            <version major="2" minor="147"/>
+            <date day="1" month="4" year="2021"/>
+            <author login="jtulach"/>
+            <compatibility semantic="compatible"/>
+            <description>
+                <p>
+                    Introducing <a href="@TOP@architecture-summary.html#group-branding">branding APIs</a>
+                    specify default frequency for downloading Maven index.
+                </p>
+            </description>
+        </change>
         <change id="ProjectLookup.fallback">
             <api name="general"/>
             <summary>Allow project services, that are ordered <b>after</b> specific packaging type</summary>

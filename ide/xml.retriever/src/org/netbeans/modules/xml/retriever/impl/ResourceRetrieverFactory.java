@@ -31,7 +31,6 @@ package org.netbeans.modules.xml.retriever.impl;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import org.netbeans.modules.xml.retriever.*;
 
 /**
  *

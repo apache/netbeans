@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import org.netbeans.modules.xml.retriever.*;
 
 /**
  *

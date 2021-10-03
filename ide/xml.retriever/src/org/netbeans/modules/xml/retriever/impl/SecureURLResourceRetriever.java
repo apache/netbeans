@@ -37,7 +37,6 @@ import javax.net.ssl.*;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.ErrorManager;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**

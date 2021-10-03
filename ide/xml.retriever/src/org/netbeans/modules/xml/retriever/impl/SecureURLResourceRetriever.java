@@ -51,6 +51,7 @@ public class SecureURLResourceRetriever extends URLResourceRetriever {
     /** Creates a new instance of SecureURLResourceRetriever */
     public SecureURLResourceRetriever() {}
 
+    @Override
     public boolean accept(String baseAddr, String currentAddr) throws URISyntaxException {
         URI currURI = new URI(currentAddr);
         if( (currURI.isAbsolute()) && (currURI.getScheme().equalsIgnoreCase(URI_SCHEME)))
@@ -63,6 +64,7 @@ public class SecureURLResourceRetriever extends URLResourceRetriever {
         return false;
     }
     
+    @Override
     public Map<String, InputStream> retrieveDocument(String baseAddress, String documentAddress) throws IOException,URISyntaxException{
         String effAddr = getEffectiveAddress(baseAddress, documentAddress);
         if(effAddr == null)
@@ -88,11 +90,16 @@ public class SecureURLResourceRetriever extends URLResourceRetriever {
     private void setRetrieverTrustManager(HttpsURLConnection con) {
         TrustManager[] trustAllCerts = new TrustManager[]{
             new X509TrustManager() {
+                @Override
                 public X509Certificate[] getAcceptedIssuers() {
                     return new X509Certificate[0];
                 }
+
+                @Override
                 public void checkClientTrusted(X509Certificate[] certs, String authType) {
                 }
+
+                @Override
                 public void checkServerTrusted(X509Certificate[] certs, String authType)
                 throws CertificateException {
                     // ask user to accept the unknown certificate
@@ -157,6 +164,7 @@ public class SecureURLResourceRetriever extends URLResourceRetriever {
         }
     }
     
+    @Override
     public String getEffectiveAddress(String baseAddress, String documentAddress) throws IOException, URISyntaxException {
         URI currURI = new URI(documentAddress);
         String result = null;

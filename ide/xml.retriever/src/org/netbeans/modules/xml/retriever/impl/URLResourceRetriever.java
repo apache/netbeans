@@ -70,6 +70,7 @@ public class URLResourceRetriever implements ResourceRetriever{
     public URLResourceRetriever() {
     }
     
+    @Override
     public boolean accept(String baseAddr, String currentAddr) throws URISyntaxException {
         URI currURI = new URI(currentAddr);
         if( (currURI.isAbsolute()) && (currURI.getScheme().equalsIgnoreCase(URI_SCHEME)))
@@ -84,6 +85,7 @@ public class URLResourceRetriever implements ResourceRetriever{
         return false;
     }
     
+    @Override
     public Map<String, InputStream> retrieveDocument(String baseAddress,
             String documentAddress) throws IOException,URISyntaxException{
         
@@ -166,10 +168,12 @@ public class URLResourceRetriever implements ResourceRetriever{
         
     }
     
+    @Override
     public long getStreamLength() {
         return streamLength;
     }
     
+    @Override
     public String getEffectiveAddress(String baseAddress, String documentAddress) throws IOException, URISyntaxException {
         return resolveURL(baseAddress, documentAddress, true);
     }

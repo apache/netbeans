@@ -20,7 +20,6 @@
 package org.netbeans.modules.java.hints.providers.code;
 
 import com.sun.source.tree.Tree.Kind;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -54,7 +53,6 @@ import org.netbeans.modules.java.hints.providers.spi.HintProvider;
 import org.netbeans.modules.java.hints.providers.spi.Trigger.Kinds;
 import org.netbeans.modules.java.hints.providers.spi.Trigger.PatternDescription;
 import org.netbeans.spi.editor.hints.ErrorDescription;
-import org.netbeans.spi.editor.hints.Severity;
 import org.netbeans.spi.java.hints.BooleanOption;
 import org.netbeans.spi.java.hints.ConstraintVariableType;
 import org.netbeans.spi.java.hints.Hint;
@@ -259,7 +257,6 @@ public class CodeHintProviderImpl implements HintProvider {
             for (TriggerPattern pattern : patternTriggers.value()) {
                 processPatternHint(hints, pattern, m, metadata);
             }
-            return ;
         }
     }
 
@@ -361,62 +358,6 @@ public class CodeHintProviderImpl implements HintProvider {
         //used by tests:
         Method getMethod() throws NoSuchMethodException, ClassNotFoundException {
             return FSWrapper.resolveMethod(className, methodName);
-        }
-
-    }
-
-    private static final class EmptyHintMetadataDescription implements Hint {
-
-        public String id() {
-            return "";
-        }
-        
-        public String minSourceVersion() {
-            return "";
-        }
-
-        public String category() {
-            return "general";
-        }
-
-        public boolean enabled() {
-            return true;
-        }
-
-        public Severity severity() {
-            return Severity.VERIFIER;
-        }
-
-        private static final String[] EMPTY_SW = new String[0];
-        
-        public String[] suppressWarnings() {
-            return EMPTY_SW;
-        }
-
-        public Class<? extends Annotation> annotationType() {
-            return Hint.class;
-        }
-
-        public Class<? extends CustomizerProvider> customizerProvider() {
-            return CustomizerProvider.class;
-        }
-
-        public Kind hintKind() {
-            return Kind.INSPECTION;
-        }
-
-        private static final Options[] EMPTY_OPTIONS = new Options[0];
-
-        public Options[] options() {
-            return EMPTY_OPTIONS;
-        }
-
-        @Override public String displayName() {
-            return "";
-        }
-
-        @Override public String description() {
-            return "";
         }
 
     }

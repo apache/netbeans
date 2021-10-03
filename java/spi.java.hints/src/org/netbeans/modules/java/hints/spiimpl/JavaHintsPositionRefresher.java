@@ -87,7 +87,7 @@ public class JavaHintsPositionRefresher implements PositionRefresher {
 
             public void run() {
                 try {
-                    js.runUserActionTask(new RefreshTask(eds, refreshers, context, doc), true);
+                    js.runUserActionTask(new RefreshTask(eds, refreshers, context), true);
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -105,13 +105,11 @@ public class JavaHintsPositionRefresher implements PositionRefresher {
         private final Map<String, List<ErrorDescription>> eds;
         private final List<? extends PositionRefresherHelper<?>> refreshers;
         private final Context ctx;
-        private final Document doc;
 
-        public RefreshTask(Map<String, List<ErrorDescription>> eds, List<? extends PositionRefresherHelper<?>> refreshers, Context ctx, Document doc) {
+        public RefreshTask(Map<String, List<ErrorDescription>> eds, List<? extends PositionRefresherHelper<?>> refreshers, Context ctx) {
             this.eds = eds;
             this.refreshers = refreshers;
             this.ctx = ctx;
-            this.doc = doc;
         }
 
         public void run(CompilationController controller) throws Exception {

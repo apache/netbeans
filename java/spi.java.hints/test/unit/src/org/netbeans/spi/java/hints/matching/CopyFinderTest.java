@@ -54,7 +54,6 @@ import org.netbeans.api.java.source.matching.Occurrence;
 import org.netbeans.api.java.source.matching.Pattern;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.java.hints.introduce.IntroduceHint;
 import org.netbeans.modules.java.hints.introduce.IntroduceMethodFix;
 import org.netbeans.modules.java.hints.spiimpl.pm.BulkSearch;
 import org.netbeans.modules.java.hints.spiimpl.pm.BulkSearch.BulkPattern;

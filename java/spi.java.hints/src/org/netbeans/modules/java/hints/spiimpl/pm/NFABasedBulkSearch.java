@@ -35,7 +35,7 @@ import com.sun.source.util.TreePath;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -440,7 +440,7 @@ public class NFABasedBulkSearch extends BulkSearch {
                 ctx.getOut().write((size >>  8) & 0xFF);
                 ctx.getOut().write((size >>  0) & 0xFF);
                 for (String ident : identifiers) {
-                    ctx.getOut().write(ident.getBytes("UTF-8"));//XXX: might probably contain ';'
+                    ctx.getOut().write(ident.getBytes(StandardCharsets.UTF_8));//XXX: might probably contain ';'
                     ctx.getOut().write(';');
                 }
             } catch (IOException ex) {
@@ -470,7 +470,7 @@ public class NFABasedBulkSearch extends BulkSearch {
                     if (i.name != null) {
                         if (encode) {
                             ctx.getOut().write('$');
-                            ctx.getOut().write(i.name.getBytes("UTF-8"));
+                            ctx.getOut().write(i.name.getBytes(StandardCharsets.UTF_8));
                             ctx.getOut().write(';');
                         }
                         if (isIdentifierAcceptable(i.name)) content.add(i.name);
@@ -559,7 +559,7 @@ public class NFABasedBulkSearch extends BulkSearch {
                 read = encoded.read();
             }
 
-            identifiers.add(new String(baos.toByteArray(), "UTF-8"));
+            identifiers.add(new String(baos.toByteArray(), StandardCharsets.UTF_8));
         }
 
         Map<String, Integer> patternsAndFrequencies = new HashMap<String, Integer>();
@@ -589,7 +589,7 @@ public class NFABasedBulkSearch extends BulkSearch {
                     }
 
                     read = encoded.read();
-                    name = new String(baos.toByteArray(), "UTF-8");
+                    name = new String(baos.toByteArray(), StandardCharsets.UTF_8);
                 } else {
                     name = null;
                 }
@@ -652,18 +652,15 @@ public class NFABasedBulkSearch extends BulkSearch {
                 enc = "0" + enc;
             }
 
-            try {
-                final byte[] bytes = enc.getBytes("UTF-8");
+            final byte[] bytes = enc.getBytes(StandardCharsets.UTF_8);
 
-                assert bytes.length == 2;
+            assert bytes.length == 2;
 
-                kind2Encoded.put(k, bytes);
-                kind2EncodedString.put(k, enc);
+            kind2Encoded.put(k, bytes);
+            kind2EncodedString.put(k, enc);
 
-                encoded2Kind.put((bytes[0] << 8) + bytes[1], k);
-            } catch (UnsupportedEncodingException ex) {
-                throw new IllegalStateException(ex);
-            }
+            encoded2Kind.put((bytes[0] << 8) + bytes[1], k);
+
         }
     }
 

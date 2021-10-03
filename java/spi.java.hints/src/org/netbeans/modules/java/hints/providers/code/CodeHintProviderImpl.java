@@ -335,13 +335,7 @@ public class CodeHintProviderImpl implements HintProvider {
                 }
 
                 //XXX: log if result was ignored...
-            } catch (IllegalAccessException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (IllegalArgumentException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (ClassNotFoundException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (NoSuchMethodException ex) {
+            } catch (IllegalAccessException | IllegalArgumentException | ClassNotFoundException | NoSuchMethodException ex) {
                 Exceptions.printStackTrace(ex);
             } catch (InvocationTargetException ex) {
                 boolean newOccurrence;
@@ -438,14 +432,8 @@ public class CodeHintProviderImpl implements HintProvider {
         @Override
         public JComponent getCustomizer(Preferences prefs) {
             try {
-                return component.newInstance().getCustomizer(prefs);
-            } catch (SecurityException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (InstantiationException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (IllegalAccessException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (IllegalArgumentException ex) {
+                return component.getDeclaredConstructor().newInstance().getCustomizer(prefs);
+            } catch (ReflectiveOperationException ex) {
                 Exceptions.printStackTrace(ex);
             }
 

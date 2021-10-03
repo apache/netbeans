@@ -35,7 +35,7 @@ import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.Task;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.spi.editor.hints.Context;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.PositionRefresher;
@@ -89,7 +89,7 @@ public class JavaHintsPositionRefresher implements PositionRefresher {
             }
         };
         
-        ProgressUtils.runOffEventDispatchThread(r, NbBundle.getMessage(JavaHintsPositionRefresher.class, "Refresh_hints"), context.getCancel(), false); // NOI18N
+        BaseProgressUtils.runOffEventDispatchThread(r, NbBundle.getMessage(JavaHintsPositionRefresher.class, "Refresh_hints"), context.getCancel(), false); // NOI18N
 
         return eds;
     }

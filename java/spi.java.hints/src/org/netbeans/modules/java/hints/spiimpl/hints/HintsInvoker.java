@@ -199,7 +199,7 @@ public class HintsInvoker {
                                         boolean recursive,
                                         Iterable<? extends HintDescription> hints,
                                         Collection<? super MessageImpl> problems) {
-        Map<Class, List<HintDescription>> triggerKind2Hints = new HashMap<Class, List<HintDescription>>();
+        Map<Class<?>, List<HintDescription>> triggerKind2Hints = new HashMap<>();
 
         for (Class<? extends Trigger> c : TRIGGER_KINDS) {
             triggerKind2Hints.put(c, new ArrayList<HintDescription>());
@@ -232,7 +232,7 @@ public class HintsInvoker {
 
     private Map<HintDescription, List<ErrorDescription>> computeHintsImpl(CompilationInfo info,
                                         TreePath startAt,
-                                        Map<Class, List<HintDescription>> triggerKind2Hints,
+                                        Map<Class<?>, List<HintDescription>> triggerKind2Hints,
                                         Collection<? super MessageImpl> problems) {
         Map<HintDescription, List<ErrorDescription>> errors = new HashMap<HintDescription, List<ErrorDescription>>();
         List<HintDescription> kindBasedHints = triggerKind2Hints.get(Kinds.class);
@@ -294,7 +294,7 @@ public class HintsInvoker {
     }
 
     private Map<HintDescription, List<ErrorDescription>> computeHintsInSpan(CompilationInfo info,
-                                        Map<Class, List<HintDescription>> triggerKind2Hints,
+                                        Map<Class<?>, List<HintDescription>> triggerKind2Hints,
                                         Collection<? super MessageImpl> problems) {
 
         TreePath path = info.getTreeUtilities().pathFor((from + to) / 2);
@@ -370,7 +370,7 @@ public class HintsInvoker {
     private Map<HintDescription, List<ErrorDescription>> computeSuggestions(CompilationInfo info,
                                         TreePath workOn,
                                         boolean up,
-                                        Map<Class, List<HintDescription>> triggerKind2Hints,
+                                        Map<Class<?>, List<HintDescription>> triggerKind2Hints,
                                         Collection<? super MessageImpl> problems) {
         Map<HintDescription, List<ErrorDescription>> errors = new HashMap<HintDescription, List<ErrorDescription>>();
         List<HintDescription> kindBasedHints = triggerKind2Hints.get(Kinds.class);

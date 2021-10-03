@@ -86,7 +86,7 @@ public class JackpotTrees {
                 baseClass2Impl.put(clazz, fake);
             }
 
-            NEXT: for (Constructor c : fake.getDeclaredConstructors()) {
+            NEXT: for (Constructor<?> c : fake.getDeclaredConstructors()) {
                 if (c.getParameterCount() < requiredConstructor.length)
                     continue;
                 for (int e = 0; e < requiredConstructor.length; e++) {

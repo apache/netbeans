@@ -347,7 +347,7 @@ public class BatchSearch {
             return result;
         }
 
-        public static Folder[] convert(Collection list) {
+        public static Folder[] convert(Collection<?> list) {
             Folder[] result = new Folder[list.size()];
             int i=0;
             for (Object item:list) {

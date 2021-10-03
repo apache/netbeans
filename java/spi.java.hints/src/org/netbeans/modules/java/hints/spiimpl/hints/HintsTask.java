@@ -204,7 +204,7 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
         }
 
         private static void setVersion(Document doc) {
-            for (PositionRefresherHelper h : MimeLookup.getLookup("text/x-java").lookupAll(PositionRefresherHelper.class)) {
+            for (PositionRefresherHelper<?> h : MimeLookup.getLookup("text/x-java").lookupAll(PositionRefresherHelper.class)) {
                 if (h instanceof HintPositionRefresherHelper) {
                     ((HintPositionRefresherHelper) h).setVersion(doc, new DocumentVersion(doc));
                 }
@@ -231,7 +231,7 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
         }
 
         private static void setVersion(Document doc, int caret) {
-            for (PositionRefresherHelper h : MimeLookup.getLookup("text/x-java").lookupAll(PositionRefresherHelper.class)) {
+            for (PositionRefresherHelper<?> h : MimeLookup.getLookup("text/x-java").lookupAll(PositionRefresherHelper.class)) {
                 if (h instanceof SuggestionsPositionRefresherHelper) {
                     ((SuggestionsPositionRefresherHelper) h).setVersion(doc, new SuggestionsDocumentVersion(doc, caret));
                 }

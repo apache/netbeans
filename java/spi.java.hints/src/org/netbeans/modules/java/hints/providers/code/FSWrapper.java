@@ -266,10 +266,11 @@ public class FSWrapper {
     }
 
     
+    @SuppressWarnings("unchecked")
     private static <T extends Annotation> T loadAnnotation(ClassLoader l, FileObject annotationFolder) throws ClassNotFoundException {
         Class<?> clazz = l.loadClass(annotationFolder.getName().replace('-', '.'));
 
-        return (T) Proxy.newProxyInstance(l, new Class[] {clazz}, new InvocationHandlerImpl(l, annotationFolder));
+        return (T) Proxy.newProxyInstance(l, new Class<?>[] {clazz}, new InvocationHandlerImpl(l, annotationFolder));
     }
     
     private static final class InvocationHandlerImpl implements InvocationHandler {

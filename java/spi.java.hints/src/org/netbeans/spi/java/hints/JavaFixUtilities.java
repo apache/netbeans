@@ -1151,6 +1151,7 @@ public class JavaFixUtilities {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public Number visitMethodInvocation(MethodInvocationTree node, Void p) {
             List<? extends ExpressionTree> typeArgs = (List<? extends ExpressionTree>) resolveMultiParameters(node.getTypeArguments());
             List<? extends ExpressionTree> args = resolveMultiParameters(node.getArguments());
@@ -1162,6 +1163,7 @@ public class JavaFixUtilities {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public Number visitNewClass(NewClassTree node, Void p) {
             List<? extends ExpressionTree> typeArgs = (List<? extends ExpressionTree>) resolveMultiParameters(node.getTypeArguments());
             List<? extends ExpressionTree> args = resolveMultiParameters(node.getArguments());
@@ -1172,6 +1174,7 @@ public class JavaFixUtilities {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public Number visitParameterizedType(ParameterizedTypeTree node, Void p) {
             List<? extends ExpressionTree> typeArgs = (List<? extends ExpressionTree>) resolveMultiParameters(node.getTypeArguments());
             ParameterizedTypeTree nue = make.ParameterizedType(node.getType(), typeArgs);
@@ -1302,6 +1305,7 @@ public class JavaFixUtilities {
             return super.visitAnnotation(node, p);
         }
 
+        @SuppressWarnings("unchecked")
         private <T extends Tree> List<T> resolveMultiParameters(List<T> list) {
             if (list == null) return null;
             if (!Utilities.containsMultistatementTrees(list)) return list;
@@ -1327,6 +1331,7 @@ public class JavaFixUtilities {
             return result;
         }
         
+        @SuppressWarnings("unchecked")
         private <T extends Tree> T resolveOptionalValue(T in) {
             if (in != null && Utilities.isMultistatementWildcardTree(in)) {
                 TreePath out = parameters.get(Utilities.getWildcardTreeName(in).toString());

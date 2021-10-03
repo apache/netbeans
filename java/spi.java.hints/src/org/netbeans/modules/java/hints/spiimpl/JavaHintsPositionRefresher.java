@@ -21,6 +21,7 @@ package org.netbeans.modules.java.hints.spiimpl;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,6 +41,7 @@ import org.netbeans.spi.editor.hints.Context;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.PositionRefresher;
 import org.netbeans.modules.java.hints.providers.spi.PositionRefresherHelper;
+import org.netbeans.modules.java.hints.providers.spi.PositionRefresherHelper.DocumentVersion;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -54,10 +56,13 @@ public class JavaHintsPositionRefresher implements PositionRefresher {
 
     @Override
     public Map<String, List<ErrorDescription>> getErrorDescriptionsAt(final Context context, final Document doc) {
-        final List<PositionRefresherHelper> refreshers = new ArrayList<PositionRefresherHelper>(MimeLookup.getLookup("text/x-java").lookupAll(PositionRefresherHelper.class));
 
-        for (Iterator<PositionRefresherHelper> it = refreshers.iterator(); it.hasNext();) {
-            PositionRefresherHelper h = it.next();
+        @SuppressWarnings("unchecked")
+        Collection<? extends PositionRefresherHelper<? extends DocumentVersion>> col = MimeLookup.getLookup("text/x-java").lookupAll(PositionRefresherHelper.class);
+        final List<? extends PositionRefresherHelper<? extends DocumentVersion>> refreshers = new ArrayList<>(col);
+
+        for (Iterator<? extends PositionRefresherHelper<?>> it = refreshers.iterator(); it.hasNext();) {
+            PositionRefresherHelper<?> h = it.next();
 
             if (h.upToDateCheck(context, doc)) {
                 LOG.log(Level.FINE, "Not computing warnings for {0}, results are up-to-date.", h.getKey());
@@ -98,11 +103,11 @@ public class JavaHintsPositionRefresher implements PositionRefresher {
     private class RefreshTask implements Task<CompilationController> {
 
         private final Map<String, List<ErrorDescription>> eds;
-        private final List<PositionRefresherHelper> refreshers;
+        private final List<? extends PositionRefresherHelper<?>> refreshers;
         private final Context ctx;
         private final Document doc;
 
-        public RefreshTask(Map<String, List<ErrorDescription>> eds, List<PositionRefresherHelper> refreshers, Context ctx, Document doc) {
+        public RefreshTask(Map<String, List<ErrorDescription>> eds, List<? extends PositionRefresherHelper<?>> refreshers, Context ctx, Document doc) {
             this.eds = eds;
             this.refreshers = refreshers;
             this.ctx = ctx;
@@ -120,12 +125,12 @@ public class JavaHintsPositionRefresher implements PositionRefresher {
                 return;
             }
 
-            for (PositionRefresherHelper h : refreshers) {
+            for (PositionRefresherHelper<?> h : refreshers) {
                 if (ctx.isCanceled()) {
                     return;
                 }
                 
-                List errors = h.getErrorDescriptionsAt(controller, ctx, doc);
+                List<ErrorDescription> errors = h.getErrorDescriptionsAt(controller, ctx, doc);
                 
                 if (errors == null) continue;
                 

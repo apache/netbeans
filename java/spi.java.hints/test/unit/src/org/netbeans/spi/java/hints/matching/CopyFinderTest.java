@@ -73,6 +73,7 @@ import org.openide.loaders.DataObject;
  *
  * @author Jan Lahoda
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class CopyFinderTest extends NbTestCase {
 
     public CopyFinderTest(String testName) {

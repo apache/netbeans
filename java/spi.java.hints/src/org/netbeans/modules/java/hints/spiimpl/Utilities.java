@@ -1370,7 +1370,7 @@ public class Utilities {
             }
             JCTree.JCVariableDecl result = null;
             try {
-                Class[] paramTypes = {boolean.class, boolean.class};
+                Class<?>[] paramTypes = {boolean.class, boolean.class};
                 result = (JCTree.JCVariableDecl) MethodHandles.lookup()
                         .findSpecial(JavacParser.class, "formalParameter", MethodType.methodType(JCTree.JCVariableDecl.class, paramTypes), JackpotJavacParser.class) // NOI18N
                         .invoke(this, lambdaParam, recordComponents);
@@ -1456,7 +1456,7 @@ public class Utilities {
             }
 
             com.sun.tools.javac.util.List<JCTree> result = null;
-            Class[] argsType = {com.sun.tools.javac.util.Name.class, boolean.class, boolean.class};
+            Class<?>[] argsType = {com.sun.tools.javac.util.Name.class, boolean.class, boolean.class};
             try {
                 result = (com.sun.tools.javac.util.List<JCTree>) MethodHandles.lookup().findSpecial(JavacParser.class, "classOrInterfaceOrRecordBodyDeclaration", MethodType.methodType(com.sun.tools.javac.util.List.class, argsType), JackpotJavacParser.class) // NOI18N
                         .invoke(this, className, false, false);
@@ -1516,7 +1516,7 @@ public class Utilities {
 
                         JCIdent identTree = F.at(pos).Ident(name);
 
-                        return JackpotTrees.createInstance(ctx, JCCase.class, name, identTree, new Class[] {JCExpression.class, com.sun.tools.javac.util.List.class}, new Object[] {identTree, com.sun.tools.javac.util.List.nil()});
+                        return JackpotTrees.createInstance(ctx, JCCase.class, name, identTree, new Class<?>[] {JCExpression.class, com.sun.tools.javac.util.List.class}, new Object[] {identTree, com.sun.tools.javac.util.List.nil()});
                     }
                 }
             }
@@ -1545,16 +1545,25 @@ public class Utilities {
                             nextToken();
                         }
 
+                        @SuppressWarnings("rawtypes")
                         Class caseKind = Class.forName("com.sun.source.tree.CaseTree$CaseKind", false, JCCase.class.getClassLoader());
+                        @SuppressWarnings("unchecked")
+                        Object statement = Enum.valueOf(caseKind, "STATEMENT");
+
                         JCIdent identTree = F.at(pos).Ident(name);
-                        return com.sun.tools.javac.util.List.of(JackpotTrees.createInstance(ctx, JCCase.class, name, identTree, new Class[] {caseKind, com.sun.tools.javac.util.List.class, com.sun.tools.javac.util.List.class, JCTree.class}, new Object[] {Enum.valueOf(caseKind, "STATEMENT"), com.sun.tools.javac.util.List.of(identTree), com.sun.tools.javac.util.List.nil(), null}));
+                        return com.sun.tools.javac.util.List.of(
+                                    JackpotTrees.createInstance(ctx, JCCase.class, name, identTree,
+                                        new Class<?>[] {caseKind, com.sun.tools.javac.util.List.class, com.sun.tools.javac.util.List.class, JCTree.class},
+                                        new Object[] {statement, com.sun.tools.javac.util.List.of(identTree), com.sun.tools.javac.util.List.nil(), null}
+                                    )
+                                );
                     }
                 }
             }
 
-            return (com.sun.tools.javac.util.List) MethodHandles.lookup()
-                                                                .findSpecial(NBJavacParser.class, "switchBlockStatementGroup", MethodType.methodType(com.sun.tools.javac.util.List.class), JackpotJavacParser.class)
-                                                                .invoke(this);
+            return (com.sun.tools.javac.util.List<JCCase>) MethodHandles.lookup()
+                        .findSpecial(NBJavacParser.class, "switchBlockStatementGroup", MethodType.methodType(com.sun.tools.javac.util.List.class), JackpotJavacParser.class)
+                        .invoke(this);
         }
 
         @Override

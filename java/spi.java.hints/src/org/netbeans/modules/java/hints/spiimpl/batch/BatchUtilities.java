@@ -112,7 +112,8 @@ public class BatchUtilities {
     public static Collection<ModificationResult> applyFixes(BatchResult candidates, @NonNull final ProgressHandleWrapper progress, AtomicBoolean cancel, final Collection<? super RefactoringElementImplementation> fileChanges, final Map<JavaFix, ModificationResult> changesPerFix, final Collection<? super MessageImpl> problems) {
         return applyFixes(candidates, progress, cancel, fileChanges, changesPerFix, false, problems);
     }
-    
+
+    @SuppressWarnings("unchecked")
     public static Collection<ModificationResult> applyFixes(BatchResult candidates, @NonNull final ProgressHandleWrapper progress, AtomicBoolean cancel, final Collection<? super RefactoringElementImplementation> fileChanges, final Map<JavaFix, ModificationResult> changesPerFix, boolean doNotRegisterClassPath, final Collection<? super MessageImpl> problems) {
         final Map<Project, Set<String>> processedDependencyChanges = new IdentityHashMap<Project, Set<String>>();
         final Map<FileObject, List<ModificationResult.Difference>> result = new LinkedHashMap<FileObject, List<ModificationResult.Difference>>();
@@ -270,6 +271,7 @@ public class BatchUtilities {
         return applyFixes(copy, processedDependencyChanges, hints, resourceContentChanges, fileChanges, null, problems);
     }
     
+    @SuppressWarnings("unchecked")
     public static boolean applyFixes(WorkingCopy copy, Map<Project, Set<String>> processedDependencyChanges, Collection<? extends ErrorDescription> hints, Map<FileObject, byte[]> resourceContentChanges, Collection<? super RefactoringElementImplementation> fileChanges, Map<JavaFix, ModificationResult> changesPerFix, Collection<? super MessageImpl> problems) throws IllegalStateException, Exception {
         Set<JavaFix> fixes = new LinkedHashSet<JavaFix>();
         for (ErrorDescription ed : hints) {

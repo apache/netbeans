@@ -63,7 +63,7 @@ public class SecureURLResourceRetriever extends URLResourceRetriever {
         return false;
     }
     
-    public HashMap<String, InputStream> retrieveDocument(String baseAddress, String documentAddress) throws IOException,URISyntaxException{
+    public Map<String, InputStream> retrieveDocument(String baseAddress, String documentAddress) throws IOException,URISyntaxException{
         String effAddr = getEffectiveAddress(baseAddress, documentAddress);
         if(effAddr == null)
             return null;

@@ -84,18 +84,18 @@ public class URLResourceRetriever implements ResourceRetriever{
         return false;
     }
     
-    public HashMap<String, InputStream> retrieveDocument(String baseAddress,
+    public Map<String, InputStream> retrieveDocument(String baseAddress,
             String documentAddress) throws IOException,URISyntaxException{
         
         String effAddr = getEffectiveAddress(baseAddress, documentAddress);
         if(effAddr == null)
             return null;
         URI currURI = new URI(effAddr);
-        HashMap<String, InputStream> result = null;
+        Map<String, InputStream> result = null;
         
         InputStream is = getInputStreamOfURL(currURI.toURL(), ProxySelector.
                 getDefault().select(currURI).get(0));
-        result = new HashMap<String, InputStream>();
+        result = new HashMap<>();
         result.put(effectiveURL.toString(), is);
         return result;
         

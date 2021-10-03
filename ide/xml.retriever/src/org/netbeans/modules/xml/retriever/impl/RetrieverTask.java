@@ -37,6 +37,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.xml.retriever.*;
@@ -86,7 +87,7 @@ public class RetrieverTask {
                 throw new IOException("File already exists"); //NOI18N
             }
 
-            HashMap<String, InputStream> srcAddrNContent;
+            Map<String, InputStream> srcAddrNContent;
             ResourceRetriever rr;
             
             for (;;) {

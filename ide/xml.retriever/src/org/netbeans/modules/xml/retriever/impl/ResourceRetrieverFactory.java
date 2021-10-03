@@ -37,7 +37,7 @@ import java.util.List;
  * @author girix
  */
 public class ResourceRetrieverFactory {
-    private static ArrayList<ResourceRetriever> registeredResourceRetrievers = new ArrayList<ResourceRetriever>();
+    private static final List<ResourceRetriever> registeredResourceRetrievers = new ArrayList<ResourceRetriever>();
     
     static{
         registeredResourceRetrievers.add(new FileResourceRetriever());
@@ -54,7 +54,7 @@ public class ResourceRetrieverFactory {
     }
     
     public static List<ResourceRetriever>getRegisteredResourceRetrievers(){
-        return (List<ResourceRetriever>) registeredResourceRetrievers;
+        return registeredResourceRetrievers;
     }
     
     public static boolean removeRegisteredResourceRetriever(ResourceRetriever oldResourceRetriever){

@@ -68,6 +68,18 @@ import org.openide.util.NbBundle;
  */
 public class Tiny {
 
+    private static final SourceVersion RELEASE_11;
+
+    static {
+        SourceVersion tmp;
+        try {
+            tmp = SourceVersion.valueOf("RELEASE_11");
+        } catch (IllegalArgumentException ex) {
+            tmp = null;
+        }
+        RELEASE_11 = tmp;
+    }
+
     static final boolean SC_IGNORE_SUBSTRING_DEFAULT = true;
     @BooleanOption(displayName = "#LBL_org.netbeans.modules.java.hints.perf.Tiny.SC_IGNORE_SUBSTRING", tooltip = "#TP_org.netbeans.modules.java.hints.perf.Tiny.SC_IGNORE_SUBSTRING", defaultValue=SC_IGNORE_SUBSTRING_DEFAULT)
     static final String SC_IGNORE_SUBSTRING = "ignore.substring";
@@ -358,7 +370,7 @@ public class Tiny {
             TreePath type = ctx.getVariables().get("$clazz");
             String typeName = type.getLeaf().toString();
             
-            if (Integer.parseInt(version.name().substring(version.name().indexOf('_')+1)) >= 11) {
+            if (RELEASE_11 != null && version.compareTo(RELEASE_11) >= 0) {
                 String byRef = NbBundle.getMessage(Tiny.class, "FIX_Tiny_collectionsToArrayByMethodRef", typeName);
                 fixes = new Fix[] {
                     JavaFixUtilities.rewriteFix(ctx, byRef, ctx.getPath(), "$collection.toArray($clazz[]::new)"),

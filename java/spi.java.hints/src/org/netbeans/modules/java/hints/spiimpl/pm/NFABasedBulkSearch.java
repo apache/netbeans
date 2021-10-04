@@ -36,9 +36,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -50,7 +52,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Name;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -536,7 +537,7 @@ public class NFABasedBulkSearch extends BulkSearch {
     public Map<String, Integer> matchesImpl(InputStream encoded, AtomicBoolean cancel, BulkPattern patternIn, boolean withFrequencies) throws IOException {
         BulkPatternImpl pattern = (BulkPatternImpl) patternIn;
         final NFA<Input, Res> nfa = pattern.toNFA();
-        Stack<NFA.State> skips = new Stack<>();
+        Deque<NFA.State> skips = new ArrayDeque<>();
         NFA.State active = nfa.getStartingState();
         int identSize = 0;
 

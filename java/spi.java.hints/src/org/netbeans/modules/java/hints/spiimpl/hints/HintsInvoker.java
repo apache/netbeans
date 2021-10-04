@@ -20,7 +20,6 @@
 package org.netbeans.modules.java.hints.spiimpl.hints;
 
 import com.sun.source.tree.Tree;
-import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
@@ -38,10 +37,12 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -607,7 +608,7 @@ public class HintsInvoker {
 
     private final class ScannerImpl extends CancellableTreePathScanner<Void, Map<HintDescription, List<ErrorDescription>>> {
 
-        private final Stack<Set<String>> suppresWarnings = new Stack<>();
+        private final Deque<Set<String>> suppresWarnings = new ArrayDeque<>();
         private final CompilationInfo info;
         private final FileObject file;
         private final ProcessingEnvironment env;
@@ -646,7 +647,7 @@ public class HintsInvoker {
                     HintMetadata hm = hd.getMetadata();
 
                     for (String wname : hm.suppressWarnings) {
-                        if( !suppresWarnings.empty() && suppresWarnings.peek().contains(wname)) {
+                        if( !suppresWarnings.isEmpty() && suppresWarnings.peek().contains(wname)) {
                             continue OUTER;
                         }
                     }

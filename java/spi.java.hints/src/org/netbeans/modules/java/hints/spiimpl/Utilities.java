@@ -193,11 +193,7 @@ public class Utilities {
     
 
     public static <E> Iterable<E> checkedIterableByFilter(final Iterable<?> raw, final Class<E> type, final boolean strict) {
-        return new Iterable<E>() {
-            public Iterator<E> iterator() {
-                return NbCollections.checkedIteratorByFilter(raw.iterator(), type, strict);
-            }
-        };
+        return () -> NbCollections.checkedIteratorByFilter(raw.iterator(), type, strict);
     }
     
 //    public static AnnotationTree constructConstraint(WorkingCopy wc, String name, TypeMirror tm) {

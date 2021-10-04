@@ -89,10 +89,8 @@ public class BatchSearch {
         final BatchResult[] result = new BatchResult[1];
 
         try {
-            JavaSource.create(Utilities.createUniversalCPInfo()).runUserActionTask(new Task<CompilationController>() {
-                public void run(CompilationController parameter) throws Exception {
-                    result[0] = findOccurrencesLocalImpl(parameter, patterns, indexMapper, todo, progress, settingsProvider);
-                }
+            JavaSource.create(Utilities.createUniversalCPInfo()).runUserActionTask((CompilationController parameter) -> {
+                result[0] = findOccurrencesLocalImpl(parameter, patterns, indexMapper, todo, progress, settingsProvider);
             }, true);
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
@@ -459,12 +457,10 @@ public class BatchSearch {
             final List<int[]> span = new LinkedList<>();
 
             try {
-                js.runUserActionTask(new Task<CompilationController>() {
-                    public void run(CompilationController cc) throws Exception {
-                        cc.toPhase(Phase.PARSED);
-
-                        span.addAll(doComputeSpans(cc));
-                    }
+                js.runUserActionTask((CompilationController cc) -> {
+                    cc.toPhase(Phase.PARSED);
+                    
+                    span.addAll(doComputeSpans(cc));
                 }, true);
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
@@ -576,27 +572,25 @@ public class BatchSearch {
                     if (bulkPattern != null) {
                         long start = System.currentTimeMillis();
 
-                        JavaSource.create(Utilities.createUniversalCPInfo(), files).runUserActionTask(new Task<CompilationController>() {
-                            public void run(CompilationController cc) throws Exception {
-                                if (cc.toPhase(Phase.PARSED).compareTo(Phase.PARSED) <0) {
-                                    return ;
-                                }
-
-                                try {
-                                    boolean matches = BulkSearch.getDefault().matches(cc, new AtomicBoolean(), new TreePath(cc.getCompilationUnit()), bulkPattern.call());
-
-                                    if (matches) {
-                                        result.add(new Resource(FileSystemBasedIndexEnquirer.this, FileUtil.getRelativePath(src, cc.getFileObject()), hints, bulkPattern.call(), settingsProvider));
-                                    }
-                                } catch (ThreadDeath td) {
-                                    throw td;
-                                } catch (Throwable t) {
-                                    LOG.log(Level.INFO, "Exception while performing batch search in " + FileUtil.getFileDisplayName(cc.getFileObject()), t);
-                                    problems.add(new MessageImpl(MessageKind.WARNING, "An exception occurred while testing file: " + FileUtil.getFileDisplayName(cc.getFileObject()) + " (" + t.getLocalizedMessage() + ")."));
-                                }
-
-                                innerProgress.tick();
+                        JavaSource.create(Utilities.createUniversalCPInfo(), files).runUserActionTask((CompilationController cc) -> {
+                            if (cc.toPhase(Phase.PARSED).compareTo(Phase.PARSED) <0) {
+                                return ;
                             }
+                            
+                            try {
+                                boolean matches = BulkSearch.getDefault().matches(cc, new AtomicBoolean(), new TreePath(cc.getCompilationUnit()), bulkPattern.call());
+                                
+                                if (matches) {
+                                    result.add(new Resource(FileSystemBasedIndexEnquirer.this, FileUtil.getRelativePath(src, cc.getFileObject()), hints, bulkPattern.call(), settingsProvider));
+                                }
+                            } catch (ThreadDeath td) {
+                                throw td;
+                            } catch (Throwable t) {
+                                LOG.log(Level.INFO, "Exception while performing batch search in " + FileUtil.getFileDisplayName(cc.getFileObject()), t);
+                                problems.add(new MessageImpl(MessageKind.WARNING, "An exception occurred while testing file: " + FileUtil.getFileDisplayName(cc.getFileObject()) + " (" + t.getLocalizedMessage() + ")."));
+                            }
+                            
+                            innerProgress.tick();
                         }, true);
 
                         long end = System.currentTimeMillis();

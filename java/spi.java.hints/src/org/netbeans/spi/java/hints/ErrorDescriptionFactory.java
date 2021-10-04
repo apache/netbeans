@@ -384,20 +384,17 @@ public class ErrorDescriptionFactory {
 
         @Override
         public ChangeInfo implement() throws Exception {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (transform) {
-                        final InspectAndTransformOpener o = Lookup.getDefault().lookup(InspectAndTransformOpener.class);
-
-                        if (o != null) {
-                            o.openIAT(metadata);
-                        } else {
-                            //warn
-                        }
+            SwingUtilities.invokeLater(() -> {
+                if (transform) {
+                    final InspectAndTransformOpener o = Lookup.getDefault().lookup(InspectAndTransformOpener.class);
+                    
+                    if (o != null) {
+                        o.openIAT(metadata);
                     } else {
-                        CodeAnalysis.open(WarningDescription.create("text/x-java:" + metadata.id, null, null, null));
+                        //warn
                     }
+                } else {
+                    CodeAnalysis.open(WarningDescription.create("text/x-java:" + metadata.id, null, null, null));
                 }
             });
             

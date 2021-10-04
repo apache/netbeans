@@ -69,17 +69,15 @@ public class JavaFixImpl implements Fix {
 
         JavaSource js = JavaSource.forFileObject(file);
 
-        ModificationResult result = js.runModificationTask(new Task<WorkingCopy>() {
-            public void run(WorkingCopy wc) throws Exception {
-                if (wc.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) {
-                    return;
-                }
-                Map<FileObject, byte[]> resourceContentChanges = new HashMap<>();
-                Accessor.INSTANCE.process(jf, wc, true, resourceContentChanges, /*Ignored in editor:*/new ArrayList<>());
-                Map<FileObject, List<Difference>> resourceContentDiffs = new HashMap<>();
-                BatchUtilities.addResourceContentChanges(resourceContentChanges, resourceContentDiffs);
-                JavaSourceAccessor.getINSTANCE().createModificationResult(resourceContentDiffs, Collections.<Object, int[]>emptyMap()).commit();
+        ModificationResult result = js.runModificationTask((WorkingCopy wc) -> {
+            if (wc.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) {
+                return;
             }
+            Map<FileObject, byte[]> resourceContentChanges = new HashMap<>();
+            Accessor.INSTANCE.process(jf, wc, true, resourceContentChanges, /*Ignored in editor:*/new ArrayList<>());
+            Map<FileObject, List<Difference>> resourceContentDiffs = new HashMap<>();
+            BatchUtilities.addResourceContentChanges(resourceContentChanges, resourceContentDiffs);
+            JavaSourceAccessor.getINSTANCE().createModificationResult(resourceContentDiffs, Collections.<Object, int[]>emptyMap()).commit();
         });
 
         result.commit();

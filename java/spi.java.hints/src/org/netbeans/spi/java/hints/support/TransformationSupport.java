@@ -204,8 +204,7 @@ public final class TransformationSupport {
             final String triggerPattern = ((Trigger.PatternDescription) hd.getTrigger()).getPattern();
             descriptions.add(HintDescriptionFactory.create().setTrigger(hd.getTrigger()).
                     setTriggerOptions(hd.getTrigger().getOptions()).
-                setWorker(new HintDescription.Worker() {
-                @Override public Collection<? extends ErrorDescription> createErrors(HintContext ctx) {
+                setWorker((HintContext ctx) -> {
                     final Map<String, TypeMirrorHandle<?>> constraintsHandles = new HashMap<>();
 
                     for (Map.Entry<String, TypeMirror> c : ctx.getConstraints().entrySet()) {
@@ -234,7 +233,6 @@ public final class TransformationSupport {
                     }.toEditorFix();
                     
                     return Collections.singletonList(ErrorDescriptionFactory.createErrorDescription(Severity.WARNING, "", Collections.singletonList(fix), ctx.getInfo().getFileObject(), 0, 0));
-                }
             }).produce());
 
         }
@@ -251,16 +249,12 @@ public final class TransformationSupport {
      * @return
      */
     private static Collection<? extends ModificationResult> performTransformation(String inputJackpotPattern, final String transformationJackpotPattern, AtomicBoolean cancel) {
-        return performTransformation(inputJackpotPattern, new Transformer() {
-
-            @Override
-            public void transform(WorkingCopy copy, Occurrence occurrence) {
-                try {
-                    Fix toFix = TransformationSupport.rewriteFix(copy, "whatever", occurrence.getOccurrenceRoot(), transformationJackpotPattern, occurrence.getVariables(), occurrence.getMultiVariables(), occurrence.getVariables2Names(), Collections.<String, TypeMirror>emptyMap(), Collections.<String, String>emptyMap());
-                    TransformationSupport.process(((JavaFixImpl) toFix).jf, copy, false, null, new ArrayList<>());
-                } catch (Exception ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+        return performTransformation(inputJackpotPattern, (WorkingCopy copy, Occurrence occurrence) -> {
+            try {
+                Fix toFix = TransformationSupport.rewriteFix(copy, "whatever", occurrence.getOccurrenceRoot(), transformationJackpotPattern, occurrence.getVariables(), occurrence.getMultiVariables(), occurrence.getVariables2Names(), Collections.<String, TypeMirror>emptyMap(), Collections.<String, String>emptyMap());
+                TransformationSupport.process(((JavaFixImpl) toFix).jf, copy, false, null, new ArrayList<>());
+            } catch (Exception ex) {
+                Exceptions.printStackTrace(ex);
             }
         }, cancel);
     }

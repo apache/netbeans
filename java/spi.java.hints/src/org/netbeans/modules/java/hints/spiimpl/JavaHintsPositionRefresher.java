@@ -83,14 +83,11 @@ public class JavaHintsPositionRefresher implements PositionRefresher {
 
         final Map<String, List<ErrorDescription>> eds = new HashMap<>();
 
-        Runnable r = new Runnable() {
-
-            public void run() {
-                try {
-                    js.runUserActionTask(new RefreshTask(eds, refreshers, context), true);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+        Runnable r = () -> {
+            try {
+                js.runUserActionTask(new RefreshTask(eds, refreshers, context), true);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
             }
         };
         

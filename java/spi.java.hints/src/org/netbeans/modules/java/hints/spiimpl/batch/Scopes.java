@@ -95,14 +95,11 @@ public class Scopes {
     }
 
     public static MapIndices getDefaultIndicesMapper() {
-        return new MapIndices() {
-            @Override
-            public IndexEnquirer findIndex(FileObject root, ProgressHandleWrapper progress, boolean recursive) {
-                IndexEnquirer e = findIndexEnquirer(root, progress, recursive);
-
-                if (e != null) return e;
-                else return new BatchSearch.FileSystemBasedIndexEnquirer(root, recursive);
-            }
+        return (FileObject root, ProgressHandleWrapper progress, boolean recursive) -> {
+            IndexEnquirer e = findIndexEnquirer(root, progress, recursive);
+            
+            if (e != null) return e;
+            else return new BatchSearch.FileSystemBasedIndexEnquirer(root, recursive);
         };
     }
     

@@ -282,13 +282,11 @@ public abstract class JavaFix {
                 if (doc != null) {
                     final String[] result = new String[1];
 
-                    doc.render(new Runnable() {
-                        @Override public void run() {
-                            try {
-                                result[0] = doc.getText(0, doc.getLength());
-                            } catch (BadLocationException ex) {
-                                Exceptions.printStackTrace(ex);
-                            }
+                    doc.render(() -> {
+                        try {
+                            result[0] = doc.getText(0, doc.getLength());
+                        } catch (BadLocationException ex) {
+                            Exceptions.printStackTrace(ex);
                         }
                     });
 

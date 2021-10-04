@@ -770,14 +770,11 @@ public class HintsInvoker {
                 final int end = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree.getLeaf());
                 final GuardedDocument gdoc = (GuardedDocument) doc;
                 final boolean[] ret = { false };
-                gdoc.render(new Runnable() {
-                    @Override
-                    public void run() {
-                        // MarkBlockChain should only be accessed under doc's readlock to guarantee a stability of the offsets.
-                        MarkBlockChain guardedBlockChain = gdoc.getGuardedBlockChain();
-                        if (guardedBlockChain.compareBlock(start, end) == MarkBlock.INNER) {
-                            ret[0] = true;
-                        }
+                gdoc.render(() -> {
+                    // MarkBlockChain should only be accessed under doc's readlock to guarantee a stability of the offsets.
+                    MarkBlockChain guardedBlockChain = gdoc.getGuardedBlockChain();
+                    if (guardedBlockChain.compareBlock(start, end) == MarkBlock.INNER) {
+                        ret[0] = true;
                     }
                 });
                 return ret[0];
@@ -858,12 +855,7 @@ public class HintsInvoker {
 
         List<Entry<String, Long>> l = new ArrayList<>(hint2SpentTime.entrySet());
 
-        l.sort(new Comparator<Entry<String, Long>>() {
-            @Override
-            public int compare(Entry<String, Long> o1, Entry<String, Long> o2) {
-                return (int) Math.signum(o1.getValue() - o2.getValue());
-            }
-        });
+        l.sort((Entry<String, Long> o1, Entry<String, Long> o2) -> (int) Math.signum(o1.getValue() - o2.getValue()));
 
         for (Entry<String, Long> e : l) {
             System.err.println(e.getKey() + "=" + String.format("%3.2f", e.getValue() / 1000000.0));

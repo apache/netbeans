@@ -182,14 +182,12 @@ public class BatchUtilities {
                 final String[] origContent = new String[1];
                 final Source[] s = new Source[1];
                 if (originalDocument != null) {
-                    originalDocument.render(new Runnable() {
-                        @Override public void run() {
-                            try {
-                                origContent[0] = originalDocument.getText(0, originalDocument.getLength());
-                                s[0] = Source.create(originalDocument);
-                            } catch (BadLocationException ex) {
-                                Exceptions.printStackTrace(ex);
-                            }
+                    originalDocument.render(() -> {
+                        try {
+                            origContent[0] = originalDocument.getText(0, originalDocument.getLength());
+                            s[0] = Source.create(originalDocument);
+                        } catch (BadLocationException ex) {
+                            Exceptions.printStackTrace(ex);
                         }
                     });
                 }
@@ -363,14 +361,11 @@ public class BatchUtilities {
 
         for (Entry<ClasspathInfo, Collection<FileObject>> e : cp2Files.entrySet()) {
             try {
-                ModificationResult mr = JavaSource.create(e.getKey(), e.getValue()).runModificationTask(new Task<WorkingCopy>() {
-                    @Override
-                    public void run(WorkingCopy parameter) throws Exception {
-                        if (parameter.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) return ;
-
-                        for (JavaFix jf : toRun.get(parameter.getFileObject())) {
-                            JavaFixImpl.Accessor.INSTANCE.process(jf, parameter, false, resourceContentChanges, new ArrayList<>());
-                        }
+                ModificationResult mr = JavaSource.create(e.getKey(), e.getValue()).runModificationTask((WorkingCopy parameter) -> {
+                    if (parameter.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) return ;
+                    
+                    for (JavaFix jf : toRun.get(parameter.getFileObject())) {
+                        JavaFixImpl.Accessor.INSTANCE.process(jf, parameter, false, resourceContentChanges, new ArrayList<>());
                     }
                 });
                 

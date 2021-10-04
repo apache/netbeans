@@ -112,7 +112,7 @@ public class BatchSearch {
         }
 
         final Callable<BulkPattern> bulkPattern = hasKindPatterns ? null : new Callable<BulkPattern>() {
-            private final AtomicReference<BulkPattern> pattern = new AtomicReference<BulkPattern>();
+            private final AtomicReference<BulkPattern> pattern = new AtomicReference<>();
             public BulkPattern call() {
                 if (pattern.get() == null) {
                     pattern.set(preparePattern(patterns, info));
@@ -121,8 +121,8 @@ public class BatchSearch {
                 return pattern.get();
             }
         };
-        final Map<IndexEnquirer, Collection<? extends Resource>> result = new HashMap<IndexEnquirer, Collection<? extends Resource>>();
-        final Collection<MessageImpl> problems = new LinkedList<MessageImpl>();
+        final Map<IndexEnquirer, Collection<? extends Resource>> result = new HashMap<>();
+        final Collection<MessageImpl> problems = new LinkedList<>();
         ProgressHandleWrapper innerForAll = progress.startNextPartWithEmbedding(ProgressHandleWrapper.prepareParts(2 * todo.size()));
         
         for (final Folder src : todo) {
@@ -147,9 +147,9 @@ public class BatchSearch {
     }
 
     private static BulkPattern preparePattern(final Iterable<? extends HintDescription> patterns, CompilationInfo info) {
-        Collection<String> code = new LinkedList<String>();
-        Collection<Tree> trees = new LinkedList<Tree>();
-        Collection<AdditionalQueryConstraints> additionalConstraints = new LinkedList<AdditionalQueryConstraints>();
+        Collection<String> code = new LinkedList<>();
+        Collection<Tree> trees = new LinkedList<>();
+        Collection<AdditionalQueryConstraints> additionalConstraints = new LinkedList<>();
 
         for (HintDescription pattern : patterns) {
             String textPattern = ((PatternDescription) pattern.getTrigger()).getPattern();
@@ -186,8 +186,8 @@ public class BatchSearch {
     }
 
     private static void getLocalVerifiedSpans(Collection<? extends Resource> resources, @NonNull final ProgressHandleWrapper progress, final VerifiedSpansCallBack callback, boolean doNotRegisterClassPath, final Collection<? super MessageImpl> problems, final AtomicBoolean cancel) {
-        Collection<FileObject> files = new LinkedList<FileObject>();
-        final Map<FileObject, Resource> file2Resource = new HashMap<FileObject, Resource>();
+        Collection<FileObject> files = new LinkedList<>();
+        final Map<FileObject, Resource> file2Resource = new HashMap<>();
 
         for (Resource r : resources) {
             FileObject file = r.getResolvedFile();
@@ -205,7 +205,7 @@ public class BatchSearch {
         ClassPath[] toRegister = null;
 
         if (!doNotRegisterClassPath) {
-            Set<ClassPath> toRegisterSet = new HashSet<ClassPath>();
+            Set<ClassPath> toRegisterSet = new HashSet<>();
 
             for (ClasspathInfo cpInfo : cp2Files.keySet()) {
                 toRegisterSet.add(cpInfo.getClassPath(PathKind.SOURCE));
@@ -226,7 +226,7 @@ public class BatchSearch {
         try {
             for (Entry<ClasspathInfo, Collection<FileObject>> e : cp2Files.entrySet()) {
                 try {
-                    List<FileObject> toProcess = new ArrayList<FileObject>(e.getValue());
+                    List<FileObject> toProcess = new ArrayList<>(e.getValue());
                     final AtomicInteger currentPointer = new AtomicInteger();
                     callback.groupStarted();
 
@@ -391,7 +391,7 @@ public class BatchSearch {
         }
 
         public Map<FileObject, Collection<? extends Resource>> getResourcesWithRoots() {
-            Map<FileObject, Collection<? extends Resource>> result = new HashMap<FileObject, Collection<? extends Resource>>();
+            Map<FileObject, Collection<? extends Resource>> result = new HashMap<>();
 
             for (Entry<? extends IndexEnquirer, ? extends Collection<? extends Resource>> e : projectId2Resources.entrySet()) {
                 result.put(e.getKey().src, e.getValue());
@@ -456,7 +456,7 @@ public class BatchSearch {
                 js = JavaSource.create(Utilities.createUniversalCPInfo(), file);
             }
 
-            final List<int[]> span = new LinkedList<int[]>();
+            final List<int[]> span = new LinkedList<>();
 
             try {
                 js.runUserActionTask(new Task<CompilationController>() {
@@ -474,7 +474,7 @@ public class BatchSearch {
         }
 
         private Collection<int[]> doComputeSpans(CompilationInfo ci) {
-            Collection<int[]> result = new LinkedList<int[]>();
+            Collection<int[]> result = new LinkedList<>();
             Map<String, Collection<TreePath>> found = BulkSearch.getDefault().match(ci, new AtomicBoolean(), new TreePath(ci.getCompilationUnit()), pattern);
             
             for (Entry<String, Collection<TreePath>> e : found.entrySet()) {
@@ -559,7 +559,7 @@ public class BatchSearch {
             this.recursive = recursive;
         }
         public Collection<? extends Resource> findResources(final Iterable<? extends HintDescription> hints, ProgressHandleWrapper progress, final @NullAllowed Callable<BulkPattern> bulkPattern, final Collection<? super MessageImpl> problems, final HintsSettings settingsProvider) {
-            Collection<FileObject> files = new LinkedList<FileObject>();
+            Collection<FileObject> files = new LinkedList<>();
 
             final ProgressHandleWrapper innerProgress = progress.startNextPartWithEmbedding(30, 70);
 
@@ -569,7 +569,7 @@ public class BatchSearch {
 
             innerProgress.startNextPart(files.size());
 
-            final Collection<Resource> result = new ArrayList<Resource>();
+            final Collection<Resource> result = new ArrayList<>();
 
             if (!files.isEmpty()) {
                 try {

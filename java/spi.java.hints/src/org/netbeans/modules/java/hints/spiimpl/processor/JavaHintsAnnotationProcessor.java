@@ -256,7 +256,7 @@ public class JavaHintsAnnotationProcessor extends LayerGeneratingProcessor {
         if (clazz.isArray()) {
             Iterable<?> attributes = getAttributeValueInternal(annotation, attribute, Iterable.class);
             
-            Collection<Object> coll = new ArrayList<Object>();
+            Collection<Object> coll = new ArrayList<>();
             Class<?> componentType = clazz.getComponentType();
 
             for (Object attr : attributes) {
@@ -411,7 +411,7 @@ public class JavaHintsAnnotationProcessor extends LayerGeneratingProcessor {
 
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\$[a-zA-Z0-9_]+");
     private boolean verifyTriggerAnnotations(ExecutableElement method) {
-        List<AnnotationMirror> patternAnnotations = new ArrayList<AnnotationMirror>();
+        List<AnnotationMirror> patternAnnotations = new ArrayList<>();
         AnnotationMirror am = findAnnotation(method.getAnnotationMirrors(), "org.netbeans.spi.java.hints.TriggerPattern");
 
         if (am != null) {
@@ -429,7 +429,7 @@ public class JavaHintsAnnotationProcessor extends LayerGeneratingProcessor {
 
             if (pattern == null) continue;
 
-            Set<String> variables = new HashSet<String>();
+            Set<String> variables = new HashSet<>();
             Matcher m = VARIABLE_PATTERN.matcher(pattern);
 
             while (m.find()) {

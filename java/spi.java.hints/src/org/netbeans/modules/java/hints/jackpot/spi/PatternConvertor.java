@@ -42,7 +42,7 @@ public abstract class PatternConvertor {
     protected abstract @CheckForNull Iterable<? extends HintDescription> parseString(@NonNull String code);
 
     public static @CheckForNull Iterable<? extends HintDescription> create(@NonNull String code) {
-        Collection<String> patterns = new ArrayList<String>();
+        Collection<String> patterns = new ArrayList<>();
         
         //XXX:
         if (code.contains(";;")) {
@@ -64,7 +64,7 @@ public abstract class PatternConvertor {
             patterns.add(code);
         }
 
-        Collection<HintDescription> result = new ArrayList<HintDescription>(patterns.size());
+        Collection<HintDescription> result = new ArrayList<>(patterns.size());
 
         for (String pattern : patterns) {
             PatternDescription pd = PatternDescription.create(pattern, Collections.<String, String>emptyMap());

@@ -234,11 +234,11 @@ public class ErrorDescriptionFactory {
     }
 
     static List<Fix> resolveDefaultFixes(HintContext ctx, Fix... provided) {
-        List<Fix> auxiliaryFixes = new LinkedList<Fix>();
+        List<Fix> auxiliaryFixes = new LinkedList<>();
         HintMetadata hm = SPIAccessor.getINSTANCE().getHintMetadata(ctx);
 
         if (hm != null) {
-            Set<String> suppressWarningsKeys = new LinkedHashSet<String>();
+            Set<String> suppressWarningsKeys = new LinkedHashSet<>();
 
             for (String key : hm.suppressWarnings) {
                 if (key == null || key.length() == 0) {
@@ -263,7 +263,7 @@ public class ErrorDescriptionFactory {
                 auxiliaryFixes.addAll(createSuppressWarnings(ctx.getInfo(), ctx.getPath(), suppressWarningsKeys.toArray(new String[0])));
             }
 
-            List<Fix> result = new LinkedList<Fix>();
+            List<Fix> result = new LinkedList<>();
 
             for (Fix f : provided != null ? provided : new Fix[0]) {
                 if (f == null) continue;

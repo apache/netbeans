@@ -234,7 +234,7 @@ public class Utilities {
 
     public static List<AnnotationTree> findArrayValue(AnnotationTree at, String name) {
         ExpressionTree fixesArray = findValue(at, name);
-        List<AnnotationTree> fixes = new LinkedList<AnnotationTree>();
+        List<AnnotationTree> fixes = new LinkedList<>();
 
         if (fixesArray != null && fixesArray.getKind() == Kind.NEW_ARRAY) {
             NewArrayTree trees = (NewArrayTree) fixesArray;
@@ -266,7 +266,7 @@ public class Utilities {
             Collection<HintDescription> h = output.get(d.getMetadata().displayName);
 
             if (h == null) {
-                output.put(d.getMetadata().displayName, h = new LinkedList<HintDescription>());
+                output.put(d.getMetadata().displayName, h = new LinkedList<>());
             }
 
             h.add(d);
@@ -276,7 +276,7 @@ public class Utilities {
     }
 
     public static List<HintDescription> listAllHints(Set<ClassPath> cps) {
-        List<HintDescription> result = new LinkedList<HintDescription>();
+        List<HintDescription> result = new LinkedList<>();
 
         for (Collection<? extends HintDescription> hints : RulesManager.getInstance().readHints(null, cps, new AtomicBoolean()).values()) {
             for (HintDescription hd : hints) {
@@ -291,8 +291,8 @@ public class Utilities {
     }
 
     public static List<HintDescription> listClassPathHints(Set<ClassPath> sourceCPs, Set<ClassPath> binaryCPs) {
-        List<HintDescription> result = new LinkedList<HintDescription>();
-        Set<FileObject> roots = new HashSet<FileObject>();
+        List<HintDescription> result = new LinkedList<>();
+        Set<FileObject> roots = new HashSet<>();
 
         for (ClassPath cp : binaryCPs) {
             for (FileObject r : cp.getRoots()) {
@@ -306,7 +306,7 @@ public class Utilities {
             }
         }
 
-        Set<ClassPath> cps = new HashSet<ClassPath>(sourceCPs);
+        Set<ClassPath> cps = new HashSet<>(sourceCPs);
 
         cps.add(ClassPathSupport.createClassPath(roots.toArray(new FileObject[0])));
 
@@ -351,7 +351,7 @@ public class Utilities {
         Context c = jti.getContext();
         JavaCompiler.instance(c); //force reasonable initialization order
         TreeFactory make = TreeFactory.instance(c);
-        List<Diagnostic<? extends JavaFileObject>> patternTreeErrors = new LinkedList<Diagnostic<? extends JavaFileObject>>();
+        List<Diagnostic<? extends JavaFileObject>> patternTreeErrors = new LinkedList<>();
         Tree toAttribute;
         Tree patternTree = toAttribute = !isStatement(pattern) ? parseExpression(c, pattern, true, sourcePositions, patternTreeErrors) : null;
         int offset = 0;
@@ -359,7 +359,7 @@ public class Utilities {
         boolean classMember = false;
 
         if (pattern.startsWith("case ")) {//XXX: should be a lexer token
-            List<Diagnostic<? extends JavaFileObject>> currentPatternTreeErrors = new LinkedList<Diagnostic<? extends JavaFileObject>>();
+            List<Diagnostic<? extends JavaFileObject>> currentPatternTreeErrors = new LinkedList<>();
             Tree switchTree = parseStatement(c, "switch ($$foo) {" + pattern + "}", sourcePositions, currentPatternTreeErrors);
 
             offset = "switch ($$foo) {".length();
@@ -370,7 +370,7 @@ public class Utilities {
 
         if (patternTree == null || isErrorTree(patternTree) || SWITCH_EXPRESSION.equals(patternTree.getKind().name())) {
             SourcePositions[] currentPatternTreePositions = new SourcePositions[1];
-            List<Diagnostic<? extends JavaFileObject>> currentPatternTreeErrors = new LinkedList<Diagnostic<? extends JavaFileObject>>();
+            List<Diagnostic<? extends JavaFileObject>> currentPatternTreeErrors = new LinkedList<>();
             Tree currentPatternTree = parseStatement(c, "{" + pattern + "}", currentPatternTreePositions, currentPatternTreeErrors);
 
             assert currentPatternTree.getKind() == Kind.BLOCK : currentPatternTree.getKind();
@@ -396,7 +396,7 @@ public class Utilities {
             if (!currentPatternTreeErrors.isEmpty() || containsError(currentPatternTree)) {
                 //maybe a class member?
                 SourcePositions[] classPatternTreePositions = new SourcePositions[1];
-                List<Diagnostic<? extends JavaFileObject>> classPatternTreeErrors = new LinkedList<Diagnostic<? extends JavaFileObject>>();
+                List<Diagnostic<? extends JavaFileObject>> classPatternTreeErrors = new LinkedList<>();
                 Tree classPatternTree = parseExpression(c, "new Object() {" + pattern + "}", false, classPatternTreePositions, classPatternTreeErrors);
 
                 if (!containsError(classPatternTree)) {
@@ -436,7 +436,7 @@ public class Utilities {
                 //maybe type?
                 if (Utilities.isPureMemberSelect(patternTree, false)) {
                     SourcePositions[] varPositions = new SourcePositions[1];
-                    List<Diagnostic<? extends JavaFileObject>> varErrors = new LinkedList<Diagnostic<? extends JavaFileObject>>();
+                    List<Diagnostic<? extends JavaFileObject>> varErrors = new LinkedList<>();
                     Tree var = parseExpression(c, pattern + ".Class.class;", false, varPositions, varErrors);
 
                     attributeTree(jti, var, scope, varErrors);
@@ -498,7 +498,7 @@ public class Utilities {
 
             if (members.size() > 1 + syntheticOffset) {
                 ModifiersTree mt = make.Modifiers(EnumSet.noneOf(Modifier.class));
-                List<Tree> newMembers = new LinkedList<Tree>();
+                List<Tree> newMembers = new LinkedList<>();
 
                 newMembers.add(make.ExpressionStatement(make.Identifier("$$1$")));
                 newMembers.addAll(members.subList(syntheticOffset, members.size()));
@@ -772,7 +772,7 @@ public class Utilities {
             compiler.enterTrees(com.sun.tools.javac.util.List.of(cut));
 
             Todo todo = compiler.todo;
-            ListBuffer<Env<AttrContext>> defer = new ListBuffer<Env<AttrContext>>();
+            ListBuffer<Env<AttrContext>> defer = new ListBuffer<>();
             
             while (todo.peek() != null) {
                 Env<AttrContext> env = todo.remove();
@@ -899,7 +899,7 @@ public class Utilities {
 
     public static Set<? extends String> findSuppressedWarnings(CompilationInfo info, TreePath path) {
         //TODO: cache?
-        Set<String> keys = new HashSet<String>();
+        Set<String> keys = new HashSet<>();
 
         while (path != null) {
             Tree leaf = path.getLeaf();
@@ -1028,7 +1028,7 @@ public class Utilities {
 
         assert translated.getKind() == Kind.BLOCK;
 
-        List<StatementTree> newStatements = new LinkedList<StatementTree>();
+        List<StatementTree> newStatements = new LinkedList<>();
         BlockTree block = (BlockTree) translated;
 
         if (firstStatement != lastStatement) {
@@ -1097,8 +1097,8 @@ public class Utilities {
     
     private static final class GeneralizePattern extends ErrorAwareTreePathScanner<Void, Void> {
 
-        public final Map<Tree, Tree> tree2Variable = new HashMap<Tree, Tree>();
-        private final Map<Element, String> element2Variable = new HashMap<Element, String>();
+        public final Map<Tree, Tree> tree2Variable = new HashMap<>();
+        private final Map<Element, String> element2Variable = new HashMap<>();
         private final Trees javacTrees;
         private final TreeFactory make;
 
@@ -1596,7 +1596,7 @@ public class Utilities {
      * Only for members (i.e. generated constructor):
      */
     public static List<? extends Tree> filterHidden(TreePath basePath, Iterable<? extends Tree> members) {
-        List<Tree> result = new LinkedList<Tree>();
+        List<Tree> result = new LinkedList<>();
 
         for (Tree t : members) {
             if (!isSynthetic(basePath != null ? basePath.getCompilationUnit() : null, t)) {

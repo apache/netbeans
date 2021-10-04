@@ -87,7 +87,7 @@ import org.openide.util.Exceptions;
  */
 public class HintsInvoker {
 
-    private final Map<String, Long> timeLog = new HashMap<String, Long>();
+    private final Map<String, Long> timeLog = new HashMap<>();
 
     private final HintsSettings settings;
     private final int caret;
@@ -127,7 +127,7 @@ public class HintsInvoker {
     }
 
     private List<ErrorDescription> computeHints(CompilationInfo info, TreePath startAt) {
-        List<HintDescription> descs = new LinkedList<HintDescription>();
+        List<HintDescription> descs = new LinkedList<>();
         Map<HintMetadata, ? extends Collection<? extends HintDescription>> allHints = RulesManager.getInstance().readHints(info, null, cancel);
 
         if (allHints == null || cancel.get()) return null;
@@ -161,7 +161,7 @@ public class HintsInvoker {
             }
         }
 
-        List<ErrorDescription> errors = join(computeHints(info, startAt, descs, new LinkedList<MessageImpl>()));
+        List<ErrorDescription> errors = join(computeHints(info, startAt, descs, new LinkedList<>()));
 
         dumpTimeSpentInHints();
         
@@ -171,7 +171,7 @@ public class HintsInvoker {
     @CheckForNull
     public List<ErrorDescription> computeHints(CompilationInfo info,
                                                Iterable<? extends HintDescription> hints) {
-        return computeHints(info, hints, new LinkedList<MessageImpl>());
+        return computeHints(info, hints, new LinkedList<>());
     }
 
     @CheckForNull
@@ -200,7 +200,7 @@ public class HintsInvoker {
         Map<Class<?>, List<HintDescription>> triggerKind2Hints = new HashMap<>();
 
         for (Class<? extends Trigger> c : TRIGGER_KINDS) {
-            triggerKind2Hints.put(c, new ArrayList<HintDescription>());
+            triggerKind2Hints.put(c, new ArrayList<>());
         }
         SourceVersion srcVersion = info.getSourceVersion();
         for (HintDescription hd : hints) {
@@ -232,7 +232,7 @@ public class HintsInvoker {
                                         TreePath startAt,
                                         Map<Class<?>, List<HintDescription>> triggerKind2Hints,
                                         Collection<? super MessageImpl> problems) {
-        Map<HintDescription, List<ErrorDescription>> errors = new HashMap<HintDescription, List<ErrorDescription>>();
+        Map<HintDescription, List<ErrorDescription>> errors = new HashMap<>();
         List<HintDescription> kindBasedHints = triggerKind2Hints.get(Kinds.class);
 
         timeLog.put("[C] Kind Based Hints", (long) kindBasedHints.size());
@@ -308,7 +308,7 @@ public class HintsInvoker {
             path = path.getParentPath();
         }
 
-        Map<HintDescription, List<ErrorDescription>> errors = new HashMap<HintDescription, List<ErrorDescription>>();
+        Map<HintDescription, List<ErrorDescription>> errors = new HashMap<>();
         List<HintDescription> kindBasedHints = triggerKind2Hints.get(Kinds.class);
 
         if (!kindBasedHints.isEmpty()) {
@@ -370,7 +370,7 @@ public class HintsInvoker {
                                         boolean up,
                                         Map<Class<?>, List<HintDescription>> triggerKind2Hints,
                                         Collection<? super MessageImpl> problems) {
-        Map<HintDescription, List<ErrorDescription>> errors = new HashMap<HintDescription, List<ErrorDescription>>();
+        Map<HintDescription, List<ErrorDescription>> errors = new HashMap<>();
         List<HintDescription> kindBasedHints = triggerKind2Hints.get(Kinds.class);
 
         if (!kindBasedHints.isEmpty()) {
@@ -403,7 +403,7 @@ public class HintsInvoker {
             //pretend that all the patterns occur on all treepaths from the current path
             //up (probably faster than using BulkSearch over whole file)
             //TODO: what about machint trees under the current path?
-            Set<TreePath> paths = new HashSet<TreePath>();
+            Set<TreePath> paths = new HashSet<>();
 
             TreePath tp = workOn;
 
@@ -413,7 +413,7 @@ public class HintsInvoker {
                 tp = tp.getParentPath();
             }
 
-            Map<String, Collection<TreePath>> occurringPatterns = new HashMap<String, Collection<TreePath>>();
+            Map<String, Collection<TreePath>> occurringPatterns = new HashMap<>();
 
             for (String p : patternTests.keySet()) {
                 occurringPatterns.put(p, paths);
@@ -460,18 +460,18 @@ public class HintsInvoker {
     }
 
     public Map<HintDescription, List<ErrorDescription>> doComputeHints(CompilationInfo info, Map<String, Collection<TreePath>> occurringPatterns, Map<String, List<PatternDescription>> patterns, Map<PatternDescription, List<HintDescription>> patternHints) throws IllegalStateException {
-        return doComputeHints(info, occurringPatterns, patterns, patternHints, new LinkedList<MessageImpl>());
+        return doComputeHints(info, occurringPatterns, patterns, patternHints, new LinkedList<>());
     }
 
     private static Map<Kind, List<HintDescription>> sortByKinds(List<HintDescription> kindBasedHints) {
-        Map<Kind, List<HintDescription>> result = new EnumMap<Kind, List<HintDescription>>(Kind.class);
+        Map<Kind, List<HintDescription>> result = new EnumMap<>(Kind.class);
 
         for (HintDescription hd : kindBasedHints) {
             for (Kind k : ((Kinds) hd.getTrigger()).getKinds()) {
                 List<HintDescription> hints = result.get(k);
 
                 if (hints == null) {
-                    result.put(k, hints = new ArrayList<HintDescription>());
+                    result.put(k, hints = new ArrayList<>());
                 }
 
                 hints.add(hd);
@@ -482,13 +482,13 @@ public class HintsInvoker {
     }
 
     private static Map<PatternDescription, List<HintDescription>> sortByPatterns(List<HintDescription> kindBasedHints) {
-        Map<PatternDescription, List<HintDescription>> result = new HashMap<PatternDescription, List<HintDescription>>();
+        Map<PatternDescription, List<HintDescription>> result = new HashMap<>();
 
         for (HintDescription hd : kindBasedHints) {
             List<HintDescription> hints = result.get((PatternDescription) hd.getTrigger());
 
             if (hints == null) {
-                result.put((PatternDescription) hd.getTrigger(), hints = new ArrayList<HintDescription>());
+                result.put((PatternDescription) hd.getTrigger(), hints = new ArrayList<>());
             }
 
             hints.add(hd);
@@ -498,12 +498,12 @@ public class HintsInvoker {
     }
 
     public static Map<String, List<PatternDescription>> computePatternTests(Map<PatternDescription, List<HintDescription>> patternHints) {
-        Map<String, List<PatternDescription>> patternTests = new HashMap<String, List<PatternDescription>>();
+        Map<String, List<PatternDescription>> patternTests = new HashMap<>();
         for (Entry<PatternDescription, List<HintDescription>> e : patternHints.entrySet()) {
             String p = e.getKey().getPattern();
             List<PatternDescription> descs = patternTests.get(p);
             if (descs == null) {
-                patternTests.put(p, descs = new LinkedList<PatternDescription>());
+                patternTests.put(p, descs = new LinkedList<>());
             }
             descs.add(e.getKey());
         }
@@ -511,13 +511,13 @@ public class HintsInvoker {
     }
 
     private Map<HintDescription, List<ErrorDescription>> doComputeHints(CompilationInfo info, Map<String, Collection<TreePath>> occurringPatterns, Map<String, List<PatternDescription>> patterns, Map<PatternDescription, List<HintDescription>> patternHints, Collection<? super MessageImpl> problems) throws IllegalStateException {
-        Map<HintDescription, List<ErrorDescription>> errors = new HashMap<HintDescription, List<ErrorDescription>>();
+        Map<HintDescription, List<ErrorDescription>> errors = new HashMap<>();
 
         for (Entry<String, Collection<TreePath>> occ : occurringPatterns.entrySet()) {
             PATTERN_LOOP: for (PatternDescription d : patterns.get(occ.getKey())) {
                 if (cancel.get()) return null;
                 
-                Map<String, TypeMirror> constraints = new HashMap<String, TypeMirror>();
+                Map<String, TypeMirror> constraints = new HashMap<>();
 
                 for (Entry<String, String> e : d.getConstraints().entrySet()) {
                     TypeMirror designedType = Hacks.parseFQNType(info, e.getValue());
@@ -541,7 +541,7 @@ public class HintsInvoker {
                         continue;
                     }
 
-                    Set<String> suppressedWarnings = new HashSet<String>(Utilities.findSuppressedWarnings(info, candidate));
+                    Set<String> suppressedWarnings = new HashSet<>(Utilities.findSuppressedWarnings(info, candidate));
                     Occurrence verifiedVariables = verified.next();
                     
                     boolean guarded = isInGuarded(info, candidate);
@@ -607,7 +607,7 @@ public class HintsInvoker {
 
     private final class ScannerImpl extends CancellableTreePathScanner<Void, Map<HintDescription, List<ErrorDescription>>> {
 
-        private final Stack<Set<String>> suppresWarnings = new Stack<Set<String>>();
+        private final Stack<Set<String>> suppresWarnings = new Stack<>();
         private final CompilationInfo info;
         private final FileObject file;
         private final ProcessingEnvironment env;
@@ -651,7 +651,7 @@ public class HintsInvoker {
                         }
                     }
 
-                    HintContext c = SPIAccessor.getINSTANCE().createHintContext(info, settings, hm, path, Collections.<String, TreePath>emptyMap(), Collections.<String, Collection<? extends TreePath>>emptyMap(), Collections.<String, String>emptyMap(), Collections.<String, TypeMirror>emptyMap(), new ArrayList<MessageImpl>(), bulkMode, cancel, caret);
+                    HintContext c = SPIAccessor.getINSTANCE().createHintContext(info, settings, hm, path, Collections.<String, TreePath>emptyMap(), Collections.<String, Collection<? extends TreePath>>emptyMap(), Collections.<String, String>emptyMap(), Collections.<String, TypeMirror>emptyMap(), new ArrayList<>(), bulkMode, cancel, caret);
                     Collection<? extends ErrorDescription> errors = runHint(hd, c);
 
                     if (errors != null) {
@@ -718,7 +718,7 @@ public class HintsInvoker {
                 case METHOD:
                 case VARIABLE:
                     Set<String> current = suppresWarnings.size() == 0 ? null : suppresWarnings.peek();
-                    Set<String> nju = current == null ? new HashSet<String>() : new HashSet<String>(current);
+                    Set<String> nju = current == null ? new HashSet<>() : new HashSet<>(current);
 
                     Element e = getTrees().getElement(path);
 
@@ -804,7 +804,7 @@ public class HintsInvoker {
         List<V> toColl = to.get(key);
 
         if (toColl == null) {
-            to.put(key, toColl = new LinkedList<V>());
+            to.put(key, toColl = new LinkedList<>());
         }
 
         toColl.addAll(value);
@@ -817,7 +817,7 @@ public class HintsInvoker {
             List<V> toColl = to.get(e.getKey());
 
             if (toColl == null) {
-                to.put(e.getKey(), toColl = new LinkedList<V>());
+                to.put(e.getKey(), toColl = new LinkedList<>());
             }
 
             toColl.addAll(e.getValue());
@@ -829,7 +829,7 @@ public class HintsInvoker {
     public static List<ErrorDescription> join(Map<?, ? extends List<? extends ErrorDescription>> errors) {
         if (errors == null) return null;
         
-        List<ErrorDescription> result = new LinkedList<ErrorDescription>();
+        List<ErrorDescription> result = new LinkedList<>();
 
         for (Entry<?, ? extends Collection<? extends ErrorDescription>> e : errors.entrySet()) {
             result.addAll(e.getValue());
@@ -839,7 +839,7 @@ public class HintsInvoker {
     }
 
     private static final boolean logTimeSpentInHints = Boolean.getBoolean("java.HintsInvoker.time.in.hints");
-    private final Map<String, Long> hint2SpentTime = new HashMap<String, Long>();
+    private final Map<String, Long> hint2SpentTime = new HashMap<>();
 
     private void reportSpentTime(String id, long nanoTime) {
         if (!logTimeSpentInHints) return;
@@ -856,7 +856,7 @@ public class HintsInvoker {
     private void dumpTimeSpentInHints() {
         if (!logTimeSpentInHints) return;
 
-        List<Entry<String, Long>> l = new ArrayList<Entry<String, Long>>(hint2SpentTime.entrySet());
+        List<Entry<String, Long>> l = new ArrayList<>(hint2SpentTime.entrySet());
 
         l.sort(new Comparator<Entry<String, Long>>() {
             @Override

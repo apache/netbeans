@@ -48,7 +48,7 @@ public class FSWrapper {
             loader = ClassLoader.getSystemClassLoader();
         }
 
-        List<ClassWrapper> result = new LinkedList<ClassWrapper>();
+        List<ClassWrapper> result = new LinkedList<>();
         FileObject main = FileUtil.getConfigFile("org-netbeans-modules-java-hints/code-hints/");
 
         if (main != null) {
@@ -74,7 +74,7 @@ public class FSWrapper {
             this.folder = folder;
         }
 
-        private final Map<Class<? extends Annotation>, Annotation> annotations = new HashMap<Class<? extends Annotation>, Annotation>();
+        private final Map<Class<? extends Annotation>, Annotation> annotations = new HashMap<>();
 
         public synchronized <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
             if (!this.annotations.containsKey(annotationClass)) {
@@ -109,7 +109,7 @@ public class FSWrapper {
 
         public synchronized Iterable<? extends MethodWrapper> getMethods() {
             if (this.methods == null) {
-                List<MethodWrapper> methods = new LinkedList<MethodWrapper>();
+                List<MethodWrapper> methods = new LinkedList<>();
 
                 for (FileObject c : folder.getChildren()) {
                     if (c.getExt().equals("method")) {
@@ -127,7 +127,7 @@ public class FSWrapper {
 
         public synchronized Iterable<? extends FieldWrapper> getFields() {
             if (this.fields == null) {
-                List<FieldWrapper> fields = new LinkedList<FieldWrapper>();
+                List<FieldWrapper> fields = new LinkedList<>();
 
                 for (FileObject c : folder.getChildren()) {
                     if (c.getExt().equals("field")) {
@@ -216,7 +216,7 @@ public class FSWrapper {
                 result = defaulValue;
             } else {
                 if (returnType.isArray()) {
-                    List<Object> items = new LinkedList<Object>();
+                    List<Object> items = new LinkedList<>();
                     int c = 0;
 
                     while (true) {
@@ -277,7 +277,7 @@ public class FSWrapper {
 
         private final ClassLoader loader;
         private final FileObject folder;
-        private final Map<String, Object> attributes = new HashMap<String, Object>();
+        private final Map<String, Object> attributes = new HashMap<>();
 
         public InvocationHandlerImpl(ClassLoader loader, FileObject folder) {
             this.loader = loader;

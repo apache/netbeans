@@ -83,7 +83,7 @@ public class CodeHintProviderImpl implements HintProvider {
     }
 
     private Map<HintMetadata, ? extends Collection<? extends HintDescription>> computeHints(ClassLoader l, String path) {
-        Map<HintMetadata, Collection<HintDescription>> result = new HashMap<HintMetadata, Collection<HintDescription>>();
+        Map<HintMetadata, Collection<HintDescription>> result = new HashMap<>();
         
         for (ClassWrapper c : FSWrapper.listClasses()) {
             try {
@@ -174,10 +174,10 @@ public class CodeHintProviderImpl implements HintProvider {
 
             if (useOptions == null) return null;
 
-            allowedOptions = new HashSet<String>(Arrays.asList(useOptions.value()));
+            allowedOptions = new HashSet<>(Arrays.asList(useOptions.value()));
         }
 
-        List<OptionDescriptor> declarativeOptions = new ArrayList<OptionDescriptor>();
+        List<OptionDescriptor> declarativeOptions = new ArrayList<>();
 
         for (FieldWrapper fw : clazz.getFields()) {
             BooleanOption option = fw.getAnnotation(BooleanOption.class);
@@ -262,7 +262,7 @@ public class CodeHintProviderImpl implements HintProvider {
 
     private static void processPatternHint(Map<HintMetadata, Collection<HintDescription>> hints, TriggerPattern patternTrigger, MethodWrapper m, HintMetadata metadata) {
         String pattern = patternTrigger.value();
-        Map<String, String> constraints = new HashMap<String, String>();
+        Map<String, String> constraints = new HashMap<>();
 
         for (ConstraintVariableType c : patternTrigger.constraints()) {
             constraints.put(c.variable(), c.type());
@@ -282,7 +282,7 @@ public class CodeHintProviderImpl implements HintProvider {
         Collection<HintDescription> list = hints.get(metadata);
 
         if (list == null) {
-            hints.put(metadata, list = new LinkedList<HintDescription>());
+            hints.put(metadata, list = new LinkedList<>());
         }
 
         list.add(hint);
@@ -299,7 +299,7 @@ public class CodeHintProviderImpl implements HintProvider {
             this.methodName = methodName;
         }
 
-        private final AtomicReference<Method> methodRef = new AtomicReference<Method>();
+        private final AtomicReference<Method> methodRef = new AtomicReference<>();
         private Set<FileObject> exceptionThrownFor;
 
         @Override
@@ -318,7 +318,7 @@ public class CodeHintProviderImpl implements HintProvider {
                 }
 
                 if (result instanceof Iterable) {
-                    List<ErrorDescription> out = new LinkedList<ErrorDescription>();
+                    List<ErrorDescription> out = new LinkedList<>();
 
                     for (ErrorDescription ed : NbCollections.iterable(NbCollections.checkedIteratorByFilter(((Iterable) result).iterator(), ErrorDescription.class, false))) {
                         out.add(ed);

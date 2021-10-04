@@ -129,7 +129,7 @@ public abstract class JavaFix {
     
     JavaFix(TreePathHandle handle, Map<String, String> options, String sortText) {
         this.handle = handle;
-        this.options = Collections.unmodifiableMap(new HashMap<String, String>(options));
+        this.options = Collections.unmodifiableMap(new HashMap<>(options));
         this.sortText = sortText;
     }
 

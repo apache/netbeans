@@ -39,7 +39,7 @@ public class HintsRunner {
 
     @CheckForNull
     public static Map<HintDescription, List<ErrorDescription>> computeErrors(CompilationInfo info, Iterable<? extends HintDescription> hints, AtomicBoolean cancel) {
-        return new HintsInvoker(HintsSettings.getSettingsFor(info.getFileObject()), cancel).computeHints(info, new TreePath(info.getCompilationUnit()), hints, new LinkedList<MessageImpl>());
+        return new HintsInvoker(HintsSettings.getSettingsFor(info.getFileObject()), cancel).computeHints(info, new TreePath(info.getCompilationUnit()), hints, new LinkedList<>());
     }
 
 }

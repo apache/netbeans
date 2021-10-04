@@ -81,7 +81,7 @@ public class JavaHintsPositionRefresher implements PositionRefresher {
             return Collections.emptyMap();
         }
 
-        final Map<String, List<ErrorDescription>> eds = new HashMap<String, List<ErrorDescription>>();
+        final Map<String, List<ErrorDescription>> eds = new HashMap<>();
 
         Runnable r = new Runnable() {
 

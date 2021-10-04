@@ -65,7 +65,7 @@ public class JavaFixImpl implements Fix {
     public ChangeInfo implement() throws Exception {
         FileObject file = Accessor.INSTANCE.getFile(jf);
         
-        BatchUtilities.fixDependencies(file, Collections.singletonList(jf), new IdentityHashMap<Project, Set<String>>());
+        BatchUtilities.fixDependencies(file, Collections.singletonList(jf), new IdentityHashMap<>());
 
         JavaSource js = JavaSource.forFileObject(file);
 
@@ -74,9 +74,9 @@ public class JavaFixImpl implements Fix {
                 if (wc.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) {
                     return;
                 }
-                Map<FileObject, byte[]> resourceContentChanges = new HashMap<FileObject, byte[]>();
-                Accessor.INSTANCE.process(jf, wc, true, resourceContentChanges, /*Ignored in editor:*/new ArrayList<RefactoringElementImplementation>());
-                Map<FileObject, List<Difference>> resourceContentDiffs = new HashMap<FileObject, List<Difference>>();
+                Map<FileObject, byte[]> resourceContentChanges = new HashMap<>();
+                Accessor.INSTANCE.process(jf, wc, true, resourceContentChanges, /*Ignored in editor:*/new ArrayList<>());
+                Map<FileObject, List<Difference>> resourceContentDiffs = new HashMap<>();
                 BatchUtilities.addResourceContentChanges(resourceContentChanges, resourceContentDiffs);
                 JavaSourceAccessor.getINSTANCE().createModificationResult(resourceContentDiffs, Collections.<Object, int[]>emptyMap()).commit();
             }

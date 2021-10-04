@@ -51,7 +51,7 @@ public class Scopes {
 
         @Override
         public Collection<? extends Folder> getTodo() {
-            Set<Folder> todo = new HashSet<Folder>();
+            Set<Folder> todo = new HashSet<>();
 
             for (ClassPath source : GlobalPathRegistry.getDefault().getPaths(ClassPath.SOURCE)) {
                 todo.addAll(Arrays.asList(Folder.convert(source.getRoots())));

@@ -514,6 +514,7 @@ public class ErrorDescriptionFactory {
             this.file = file;
         }
 
+        @Override
         public String getText() {
             StringBuilder keyNames = new StringBuilder();
             for (int i = 0; i < keys.length; i++) {
@@ -527,10 +528,12 @@ public class ErrorDescriptionFactory {
             return NbBundle.getMessage(ErrorDescriptionFactory.class, "LBL_FIX_Suppress_Waning",  keyNames.toString() );  // NOI18N
         }
 
+        @Override
         public ChangeInfo implement() throws IOException {
             JavaSource js = JavaSource.forFileObject(file);
 
             js.runModificationTask(new Task<WorkingCopy>() {
+                @Override
                 public void run(WorkingCopy copy) throws IOException {
                     copy.toPhase(Phase.RESOLVED); //XXX: performance
                     TreePath path = handle.resolve(copy);

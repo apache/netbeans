@@ -77,6 +77,7 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
         this.caretAware = caretAware;
     }
     
+    @Override
     public void run(CompilationInfo info) {
         cancel.set(false);
 
@@ -134,6 +135,7 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
         }
     }
 
+    @Override
     public void cancel() {
         cancel.set(true);
     }

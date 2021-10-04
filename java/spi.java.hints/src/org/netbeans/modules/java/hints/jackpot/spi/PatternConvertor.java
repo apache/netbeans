@@ -83,6 +83,7 @@ public abstract class PatternConvertor {
 
     private static final class WorkerImpl implements Worker {
 
+        @Override
         public Collection<? extends ErrorDescription> createErrors(HintContext ctx) {
             ErrorDescription ed = ErrorDescriptionFactory.forTree(ctx, ctx.getPath(), "Found pattern occurrence");
 

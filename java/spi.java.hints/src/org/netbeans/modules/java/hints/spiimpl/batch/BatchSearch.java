@@ -111,6 +111,7 @@ public class BatchSearch {
 
         final Callable<BulkPattern> bulkPattern = hasKindPatterns ? null : new Callable<BulkPattern>() {
             private final AtomicReference<BulkPattern> pattern = new AtomicReference<>();
+            @Override
             public BulkPattern call() {
                 if (pattern.get() == null) {
                     pattern.set(preparePattern(patterns, info));
@@ -237,6 +238,7 @@ public class BatchSearch {
                         JavaSource js = JavaSource.create(e.getKey(), toProcess.subList(currentPointer.get(), toProcess.size()));
 
                         js.runUserActionTask(new Task<CompilationController>() {
+                            @Override
                             public void run(CompilationController parameter) throws Exception {
                                 if (stop.get()) return;
                                 if (cancel.get()) return;
@@ -543,6 +545,7 @@ public class BatchSearch {
         public LocalIndexEnquirer(FileObject src) {
             super(src);
         }
+        @Override
         public void validateResource(Collection<? extends Resource> resources, ProgressHandleWrapper progress, VerifiedSpansCallBack callback, boolean doNotRegisterClassPath, Collection<? super MessageImpl> problems, AtomicBoolean cancel) {
             getLocalVerifiedSpans(resources, progress, callback, doNotRegisterClassPath, problems, cancel);
         }
@@ -554,6 +557,7 @@ public class BatchSearch {
             super(src);
             this.recursive = recursive;
         }
+        @Override
         public Collection<? extends Resource> findResources(final Iterable<? extends HintDescription> hints, ProgressHandleWrapper progress, final @NullAllowed Callable<BulkPattern> bulkPattern, final Collection<? super MessageImpl> problems, final HintsSettings settingsProvider) {
             Collection<FileObject> files = new LinkedList<>();
 

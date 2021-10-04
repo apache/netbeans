@@ -120,9 +120,11 @@ public class BatchUtilities {
 
         BatchSearch.VerifiedSpansCallBack callback = new BatchSearch.VerifiedSpansCallBack() {
             private ElementOverlay overlay;
+            @Override
             public void groupStarted() {
                 overlay = ElementOverlay.getOrCreateOverlay();
             }
+            @Override
             public boolean spansVerified(CompilationController wc, Resource r, Collection<? extends ErrorDescription> hints) throws Exception {
                 if (hints.isEmpty()) return true;
                 
@@ -158,10 +160,12 @@ public class BatchUtilities {
                 return true;
             }
 
+            @Override
             public void groupFinished() {
                 overlay = null;
             }
 
+            @Override
             public void cannotVerifySpan(Resource r) {
                 problems.add(new MessageImpl(MessageKind.WARNING, "Cannot parse: " + r.getRelativePath()));
             }

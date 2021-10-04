@@ -748,6 +748,7 @@ public class HintsInvokerTest extends TestBase {
             this.fix = fix;
         }
 
+        @Override
         public Collection<? extends ErrorDescription> createErrors(HintContext ctx) {
             if (ctx.getInfo().getTreeUtilities().isSynthetic(ctx.getPath())) {
                 return null;

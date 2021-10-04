@@ -129,6 +129,7 @@ public class JackpotTrees {
             this.jcIdent = jcIdent;
         }
 
+        @Override
         public Name getName() {
             return ident;
         }
@@ -166,6 +167,7 @@ public class JackpotTrees {
             this.jcIdent = jcIdent;
         }
 
+        @Override
         public Name getName() {
             return ident;
         }

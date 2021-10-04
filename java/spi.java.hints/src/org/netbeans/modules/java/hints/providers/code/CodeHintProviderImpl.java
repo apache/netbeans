@@ -78,6 +78,7 @@ public class CodeHintProviderImpl implements HintProvider {
 
     private static final Logger LOG = Logger.getLogger(WorkerImpl.class.getName());
     
+    @Override
     public Map<HintMetadata, ? extends Collection<? extends HintDescription>> computeHints() {
         return computeHints(findLoader(), "META-INF/nb-hints/hints");
     }

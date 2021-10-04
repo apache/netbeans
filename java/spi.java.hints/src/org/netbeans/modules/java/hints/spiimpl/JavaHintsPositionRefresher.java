@@ -109,6 +109,7 @@ public class JavaHintsPositionRefresher implements PositionRefresher {
             this.ctx = ctx;
         }
 
+        @Override
         public void run(CompilationController controller) throws Exception {
             if (controller.toPhase(JavaSource.Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) {
                 return ;

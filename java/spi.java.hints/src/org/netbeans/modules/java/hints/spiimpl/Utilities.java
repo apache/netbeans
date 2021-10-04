@@ -937,57 +937,73 @@ public class Utilities {
                     continue;
 
                 e.getValue().accept(new AnnotationValueVisitor<Void, Void>() {
+                    @Override
                     public Void visit(AnnotationValue av, Void p) {
                         av.accept(this, p);
                         return null;
                     }
+                    @Override
                     public Void visit(AnnotationValue av) {
                         av.accept(this, null);
                         return null;
                     }
+                    @Override
                     public Void visitBoolean(boolean b, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitByte(byte b, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitChar(char c, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitDouble(double d, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitFloat(float f, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitInt(int i, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitLong(long i, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitShort(short s, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitString(String s, Void p) {
                         keys.add(s);
                         return null;
                     }
+                    @Override
                     public Void visitType(TypeMirror t, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitEnumConstant(VariableElement c, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitAnnotation(AnnotationMirror a, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitArray(List<? extends AnnotationValue> vals, Void p) {
                         for (AnnotationValue av : vals) {
                             av.accept(this, p);
                         }
                         return null;
                     }
+                    @Override
                     public Void visitUnknown(AnnotationValue av, Void p) {
                         return null;
                     }
@@ -1055,6 +1071,7 @@ public class Utilities {
         // @GuardedBy(this)
         private PropertyChangeListener weakL;
 
+        @Override
         public synchronized ClasspathInfo createUniversalCPInfo() {
             Reference<ClasspathInfo> r = cached;
             if (r != null) {
@@ -1668,10 +1685,12 @@ public class Utilities {
             this.offset = offset;
         }
 
+        @Override
         public long getStartPosition(CompilationUnitTree cut, Tree tree) {
             return delegate.getStartPosition(cut, tree) + offset;
         }
 
+        @Override
         public long getEndPosition(CompilationUnitTree cut, Tree tree) {
             return delegate.getEndPosition(cut, tree) + offset;
         }
@@ -1689,22 +1708,27 @@ public class Utilities {
             this.offset = offset;
         }
 
+        @Override
         public Diagnostic.Kind getKind() {
             return delegate.getKind();
         }
 
+        @Override
         public S getSource() {
             return delegate.getSource();
         }
 
+        @Override
         public long getPosition() {
             return delegate.getPosition() + offset;
         }
 
+        @Override
         public long getStartPosition() {
             return delegate.getStartPosition() + offset;
         }
 
+        @Override
         public long getEndPosition() {
             if (delegate instanceof JCDiagnostic) {
                 JCDiagnostic dImpl = (JCDiagnostic) delegate;
@@ -1724,18 +1748,22 @@ public class Utilities {
             return delegate.getEndPosition() + offset;
         }
 
+        @Override
         public long getLineNumber() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Override
         public long getColumnNumber() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Override
         public String getCode() {
             return delegate.getCode();
         }
 
+        @Override
         public String getMessage(Locale locale) {
             return delegate.getMessage(locale);
         }
@@ -1750,10 +1778,12 @@ public class Utilities {
             this.parser = parser;
         }
 
+        @Override
         public long getStartPosition(CompilationUnitTree file, Tree tree) {
             return parser.getStartPos((JCTree)tree);
         }
 
+        @Override
         public long getEndPosition(CompilationUnitTree file, Tree tree) {
             return parser.getEndPos((JCTree)tree);
         }

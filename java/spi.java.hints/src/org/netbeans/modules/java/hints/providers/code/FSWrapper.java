@@ -284,6 +284,7 @@ public class FSWrapper {
             this.folder = folder;
         }
 
+        @Override
         public synchronized Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             if (!attributes.containsKey(method.getName())) {
                 Object result = computeAttributeValue(loader, folder, method.getName(), method.getReturnType(), method.getDefaultValue());

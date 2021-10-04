@@ -58,10 +58,12 @@ public class JavaFixImpl implements Fix {
         this.jf = jf;
     }
 
+    @Override
     public String getText() {
         return Accessor.INSTANCE.getText(jf);
     }
 
+    @Override
     public ChangeInfo implement() throws Exception {
         FileObject file = Accessor.INSTANCE.getFile(jf);
         

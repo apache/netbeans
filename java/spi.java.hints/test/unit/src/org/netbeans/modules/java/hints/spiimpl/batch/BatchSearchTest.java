@@ -242,11 +242,13 @@ public class BatchSearchTest extends NbTestCase {
         final Set<FileObject> removed = new HashSet<FileObject>();
 
         GlobalPathRegistry.getDefault().addGlobalPathRegistryListener(new GlobalPathRegistryListener() {
+            @Override
             public void pathsAdded(GlobalPathRegistryEvent event) {
                 for (ClassPath cp : event.getChangedPaths()) {
                     added.addAll(Arrays.asList(cp.getRoots()));
                 }
             }
+            @Override
             public void pathsRemoved(GlobalPathRegistryEvent event) {
                 for (ClassPath cp : event.getChangedPaths()) {
                     removed.addAll(Arrays.asList(cp.getRoots()));
@@ -333,7 +335,9 @@ public class BatchSearchTest extends NbTestCase {
         final Map<String, Map<String, Iterable<String>>> result = new HashMap<String, Map<String, Iterable<String>>>();
         List<MessageImpl> errors = new LinkedList<MessageImpl>();
         BatchSearch.getVerifiedSpans(candidates, new ProgressHandleWrapper(1), new BatchSearch.VerifiedSpansCallBack() {
+            @Override
             public void groupStarted() {}
+            @Override
             public boolean spansVerified(CompilationController wc, Resource r, Collection<? extends ErrorDescription> hints) throws Exception {
                 Map<String, Iterable<String>> files = result.get(r.getRoot().toURL().toExternalForm());
 
@@ -351,7 +355,9 @@ public class BatchSearchTest extends NbTestCase {
 
                 return true;
             }
+            @Override
             public void groupFinished() {}
+            @Override
             public void cannotVerifySpan(Resource r) {
                 fail("Cannot verify: " +r.getRelativePath());
             }
@@ -373,6 +379,7 @@ public class BatchSearchTest extends NbTestCase {
             return sourceRoots;
         }
 
+        @Override
         public synchronized ClassPath findClassPath(FileObject file, String type) {
             if (ClassPath.BOOT.equals(type)) {
                 return ClassPathSupport.createClassPath(getBootClassPath().toArray(new URL[0]));

@@ -167,6 +167,7 @@ public class BatchUtilitiesTest extends NbTestCase {
 
         private Lookup javaLookup = Lookups.fixed(JavaTokenId.language());
 
+        @Override
         public Lookup getLookup(MimePath mimePath) {
             if (mimePath.getPath().endsWith(JavacParser.MIME_TYPE)) {
                 return javaLookup;

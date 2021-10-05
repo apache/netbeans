@@ -21,6 +21,7 @@ package org.netbeans.modules.maven.execute.cmd;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,13 +45,14 @@ public class ShellConstructor implements Constructor {
 
         // use mvnd if its the home of a daemon
         String ex = Files.exists(Paths.get(mavenHome.getPath(), "bin", "mvnd")) ? "mvnd" : "mvn"; //NOI18N
-
-        //#164234
-        //if maven.bat file is in space containing path, we need to quote with simple quotes.
-        String quote = "\"";
-        List<String> toRet = new ArrayList<>();
+        List<String> command = new ArrayList<>();
 
         if (Utilities.isWindows()) {
+
+            //#153101, since #228901 always on windows use cmd /c
+            command.add("cmd"); //NOI18N
+            command.add("/c"); //NOI18N
+
             String version = MavenSettings.getCommandLineMavenVersion(mavenHome);
             if (null == version) {
                 ex += ".bat"; // NOI18N
@@ -66,14 +68,15 @@ public class ShellConstructor implements Constructor {
                 }
             }
         }
-        File bin = new File(mavenHome, "bin" + File.separator + ex);//NOI18N
-        toRet.add(quoteSpaces(bin.getAbsolutePath(), quote));
 
-        if (Utilities.isWindows()) { //#153101, since #228901 always on windows use cmd /c
-            toRet.add(0, "/c"); //NOI18N
-            toRet.add(0, "cmd"); //NOI18N
-        }
-        return toRet;
+        //#164234
+        //if maven.bat file is in space containing path, we need to quote with simple quotes.
+        String quote = "\"";
+
+        Path bin = Paths.get(mavenHome.getPath(), "bin", ex).toAbsolutePath();//NOI18N
+        command.add(quoteSpaces(bin.toString(), quote));
+
+        return command;
     }
 
     // we run the shell/bat script in the process, on windows we need to quote any spaces

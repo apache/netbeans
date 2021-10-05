@@ -18,30 +18,14 @@
  */
 package org.netbeans.modules.languages.yaml;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.event.ChangeListener;
-import org.jruby.util.ByteList;
-import org.jvyamlb.Composer;
-import org.jvyamlb.ParserImpl;
-import org.jvyamlb.PositioningComposerImpl;
-import org.jvyamlb.PositioningParserImpl;
-import org.jvyamlb.PositioningScannerImpl;
-import org.jvyamlb.ResolverImpl;
-import org.jvyamlb.YAMLConfig;
-import org.jvyamlb.events.Event;
-import org.jvyamlb.exceptions.PositionedComposerException;
-import org.jvyamlb.exceptions.PositionedParserException;
-import org.jvyamlb.exceptions.PositionedScannerException;
-import org.jvyamlb.nodes.Node;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
@@ -54,6 +38,12 @@ import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
 import org.openide.util.NbBundle;
+import org.snakeyaml.engine.v2.api.LoadSettings;
+import org.snakeyaml.engine.v2.composer.Composer;
+import org.snakeyaml.engine.v2.nodes.Node;
+import org.snakeyaml.engine.v2.parser.ParserImpl;
+import org.snakeyaml.engine.v2.scanner.ScannerImpl;
+import org.snakeyaml.engine.v2.scanner.StreamReader;
 
 /**
  * Parser for YAML. Delegates to the YAML parser shipped with JRuby (jvyamlb)
@@ -103,7 +93,7 @@ public class YamlParser extends Parser {
     }
 
     private YamlParserResult resultForTooLargeFile(Snapshot snapshot) {
-        YamlParserResult result = new YamlParserResult(Collections.<Node>emptyList(), this, snapshot, false, null, null);
+        YamlParserResult result = new YamlParserResult(Collections.<Node>emptyList(), this, snapshot, false);
         // FIXME this can violate contract of DefaultError (null fo)
         DefaultError error = new DefaultError(null, NbBundle.getMessage(YamlParser.class, "TooLarge"), null,
                 snapshot.getSource().getFileObject(), 0, 0, Severity.WARNING);
@@ -203,122 +193,23 @@ public class YamlParser extends Parser {
             if (isTooLarge(source)) {
                 return resultForTooLargeFile(snapshot);
             }
-            ByteList byteList;
-            int[] byteToUtf8 = null;
-            int[] utf8toByte = null;
-
-            byte[] bytes = source.getBytes("UTF-8"); // NOI18N
-            if (bytes.length == source.length()) {
-                // No position translations necessary - this should be fast
-                byteList = new ByteList(bytes);
-            } else {
-                // There's some encoding happening of unicode characters.
-                // I need to produce functions to translate between a byte offset
-                // and a unicode offset.
-                // I couldn't find an API for this in the various Charset functions.
-                // So for now, here is a fantastically lame but functional way to do it:
-                // I'm encoding the string, one character at a time, flushing after
-                // each operation to compute the current byte offset. I then build
-                // up an array of these offsets such that I can do quick translations.
-                ByteArrayOutputStream out = new ByteArrayOutputStream(2 * source.length());
-                OutputStreamWriter writer = new OutputStreamWriter(out, "UTF-8"); // NOI18N
-                utf8toByte = new int[source.length()];
-                int currentPos = 0;
-                for (int i = 0, n = source.length(); i < n; i++) {
-                    writer.write(source.charAt(i));
-                    writer.flush(); // flush because otherwise we don't know the correct offset
-                    utf8toByte[i] = currentPos;
-                    currentPos = out.size();
-                }
-
-                if (currentPos > 0) {
-                    byteToUtf8 = new int[currentPos];
-                    for (int i = 0, n = utf8toByte.length; i < n; i++) {
-                        byteToUtf8[utf8toByte[i]] = i;
-                    }
-                    // Fill in holes - these are the middles of unicode encodings.
-                    int last = 0;
-                    for (int i = 0, n = byteToUtf8.length; i < n; i++) {
-                        int p = byteToUtf8[i];
-                        if (p == 0) {
-                            byteToUtf8[i] = last;
-                        } else {
-                            last = p;
-                        }
-                    }
-                } else {
-                    byteToUtf8 = new int[0];
-                }
-
-                byteList = new ByteList(out.toByteArray());
-            }
-
-            final List<DefaultError> errors = new ArrayList<>();
-            PositioningScannerImpl scanner = new PositioningScannerImpl(byteList) {
-                @Override
-                protected void scannerException(String when, String what, String note) {
-                    try {
-                        super.scannerException(when, what, note);
-                    } catch (PositionedScannerException pse) {
-                        int pos = pse.getPosition().offset;
-                        String message = pse.getMessage();
-                        if (message != null && message.length() > 0) {
-                            errors.add(processError(message, snapshot, pos));
-                        }
-                        // Move local pointer to the next char to make progress
-                        this.pointer++;
-                    }
-                }
-            };
-            PositioningParserImpl parser = new PositioningParserImpl(scanner) {
-                @Override
-                protected ParserImpl.ProductionEnvironment getEnvironment(YAMLConfig cfg) {
-                    return new PositioningProductionEnvironment(cfg) {
-                        @Override
-                        protected void parserException(String when, String what, String note, org.jvyamlb.tokens.Token t) {
-                            try {
-                                super.parserException(when, what, note, t);
-                            } catch (PositionedParserException ppe) {
-                                int pos = ppe.getPosition().offset;
-                                String message = ppe.getMessage();
-                                if (message != null && message.length() > 0) {
-                                    errors.add(processError(message, snapshot, pos));
-                                }
-                            }
-                        }
-                    };
-                }
-            };
-            Composer composer = new PositioningComposerImpl(parser, new ResolverImpl()) {
-                @Override
-                protected void composerException(String when, String what, String note, Event e) {
-                    try {
-                        super.composerException(when, what, note, e);
-                    } catch (PositionedComposerException pce) {
-                        int pos = pce.getPosition().offset;
-                        String message = pce.getMessage();
-                        if (message != null && message.length() > 0) {
-                            errors.add(processError(message, snapshot, pos));
-                        }
-                    }
-                }
-            };
-            Iterator iterator = composer.eachNode();
-            while (iterator.hasNext()) {
-                Node node = (Node) iterator.next();
+            LoadSettings settings = LoadSettings.builder().build();
+            ScannerImpl scanner = new ScannerImpl(settings, new StreamReader(settings, source));
+            ParserImpl parser = new ParserImpl(settings, scanner);
+            Composer composer = new Composer(settings, parser);
+            
+            while (composer.hasNext()) {
+                Node node = composer.next();
                 if (node == null) {
                     break;
                 }
                 nodes.add(node);
             }
-
-            YamlParserResult result = new YamlParserResult(nodes, this, snapshot, true, byteToUtf8, utf8toByte);
-            if (!errors.isEmpty()) {
-                result.addError(errors.get(0));
-            }
+            //TODO: add errors
+            YamlParserResult result = new YamlParserResult(nodes, this, snapshot, true);
             return result;
         } catch (Exception ex) {
-            YamlParserResult result = new YamlParserResult(Collections.<Node>emptyList(), this, snapshot, false, null, null);
+            YamlParserResult result = new YamlParserResult(Collections.<Node>emptyList(), this, snapshot, false);
             String message = ex.getMessage();
             if (message != null && message.length() > 0) {
                 result.addError(processError(message, snapshot, 0));
@@ -403,7 +294,7 @@ public class YamlParser extends Parser {
 
             lastResult = parse(source, snapshot);
         } catch (Exception ioe) {
-            lastResult = new YamlParserResult(Collections.<Node>emptyList(), this, snapshot, false, null, null);
+            lastResult = new YamlParserResult(Collections.<Node>emptyList(), this, snapshot, false);
         }
     }
 }

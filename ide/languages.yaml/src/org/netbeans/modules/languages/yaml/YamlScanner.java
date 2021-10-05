@@ -19,11 +19,10 @@
 package org.netbeans.modules.languages.yaml;
 
 import java.io.CharConversionException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.IdentityHashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,11 +30,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.text.BadLocationException;
-import org.jruby.util.ByteList;
-import org.jvyamlb.Positionable;
-import org.jvyamlb.nodes.Node;
-import org.jvyamlb.nodes.PositionedScalarNode;
-import org.jvyamlb.nodes.PositionedSequenceNode;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.ElementHandle;
@@ -50,6 +44,7 @@ import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.openide.util.Exceptions;
 import org.openide.xml.XMLUtil;
+import org.snakeyaml.engine.v2.nodes.Node;
 
 /**
  * Structure Scanner for YAML
@@ -92,22 +87,20 @@ public class YamlScanner implements StructureScanner {
             return Collections.emptyMap();
         }
 
-        Map<String, List<OffsetRange>> folds = new HashMap<String, List<OffsetRange>>();
-        List<OffsetRange> codeblocks = new ArrayList<OffsetRange>();
+        Map<String, List<OffsetRange>> folds = new HashMap<>();
+        List<OffsetRange> codeblocks = new ArrayList<>();
         folds.put("tags", codeblocks); // NOI18N
 
         BaseDocument doc = (BaseDocument) result.getSnapshot().getSource().getDocument(false);
 
-        //if (doc != null) {
-            for (StructureItem item : items) {
-                try {
-                    addBlocks(result, doc, result.getSnapshot().getText(), codeblocks, item);
-                } catch (BadLocationException ble) {
-                    Exceptions.printStackTrace(ble);
-                    break;
-                }
+        for (StructureItem item : items) {
+            try {
+                addBlocks(result, doc, result.getSnapshot().getText(), codeblocks, item);
+            } catch (BadLocationException ble) {
+                Exceptions.printStackTrace(ble);
+                break;
             }
-        //}
+        }
 
         return folds;
     }
@@ -143,18 +136,10 @@ public class YamlScanner implements StructureScanner {
         private final String name;
         private List<YamlStructureItem> children;
         private final Node node;
-        private final long begin;
-        private final long end;
 
-        YamlStructureItem(Node node, String name, long begin, long end) {
+        YamlStructureItem(Node node, String name) {
             this.node = node;
             this.name = name;
-            this.begin = begin;
-            this.end = end;
-        }
-
-        YamlStructureItem(Node node, String name, OffsetRange positions) {
-            this(node, name, positions.getStart(), positions.getEnd());
         }
 
         @Override
@@ -202,10 +187,10 @@ public class YamlScanner implements StructureScanner {
         private static List<? extends StructureItem> initialize(YamlParserResult result, List<Node> roots) {
             // Really need IdentitySet or IdentityHashSet but there isn't one built in
             // or in our available libraries...
-            IdentityHashMap<Object, Boolean> seen = new IdentityHashMap<Object, Boolean>(100);
-            List<StructureItem> children = new ArrayList<StructureItem>();
+            Set<Node> seen = new HashSet<>(100);
+            List<StructureItem> children = new ArrayList<>();
             for (Node root : roots) {
-                YamlStructureItem fakeRoot = new YamlStructureItem(root, null, OffsetRange.NONE);
+                YamlStructureItem fakeRoot = new YamlStructureItem(root, null);
                 initializeChildren(result, fakeRoot, seen, 0);
                 children.addAll(fakeRoot.children);
             }
@@ -213,138 +198,22 @@ public class YamlScanner implements StructureScanner {
         }
 
         @SuppressWarnings("unchecked")
-        private static void initializeChildren(YamlParserResult result, YamlStructureItem item, IdentityHashMap<Object, Boolean> seen, int depth) {
-            if (depth > 20) {
-                // Avoid boundless recursion in some yaml parse trees
-                // This should already be handled now with the seen map, but
-                // leave this just in case since we're right before code freeze
-                item.children = Collections.emptyList();
-                return;
-            }
+        private static void initializeChildren(YamlParserResult result, YamlStructureItem item, Set<Node> seen, int depth) {
             Node node = item.node;
-            Object value = node.getValue();
-            if (value == null) {
-                item.children = Collections.emptyList();
-                return;
+            if (seen.contains(node)) {
+                return;                
             }
-
-            boolean alreadySeen = false;
-            if (seen.containsKey(value)) {
-                alreadySeen = true;
+            seen.add(node);
+            
+            switch (node.getNodeType()) {
+                case MAPPING:
+                    break;
+                case SEQUENCE:
+                    break;
+                case SCALAR:
+                    break;
             }
-
-            seen.put(value, Boolean.TRUE);
-            if (value instanceof Map) {
-                Map map = (Map) value;
-                List<YamlStructureItem> children = new ArrayList<YamlStructureItem>();
-                item.children = children;
-
-                Set<Map.Entry> entrySet = map.entrySet();
-
-                for (Map.Entry entry : entrySet) {
-
-                    Object key = entry.getKey();
-                    if (key instanceof PositionedSequenceNode) {
-                        PositionedSequenceNode psn = (PositionedSequenceNode) key;
-                        Object keyValue = psn.getValue();
-                        assert keyValue instanceof List;
-                        @SuppressWarnings("unchecked")
-                        List<Node> list = (List<Node>) keyValue;
-                        for (Node o : list) {
-                            //String childName = o.getValue().toString();
-                            Object childValue = o.getValue();
-                            if (childValue instanceof List || childValue instanceof Map) {
-                                children.add(new YamlStructureItem(o, "list item", result.getAstRange(o)));
-                            } else {
-                                String childName = childValue.toString();
-                                children.add(new YamlStructureItem(o, childName, result.getAstRange(o)));
-                            }
-                        }
-                        Object entryValue = entry.getValue();
-                        if (entryValue instanceof PositionedSequenceNode) {
-                            psn = (PositionedSequenceNode) entryValue;
-                            keyValue = psn.getValue();
-                            assert keyValue instanceof List;
-                            list = (List<Node>) keyValue;
-                            for (Node o : list) {
-                                //String childName = o.getValue().toString();
-                                Object childValue = o.getValue();
-                                if (childValue instanceof List || childValue instanceof Map) {
-                                    children.add(new YamlStructureItem(o, "list item", result.getAstRange(o)));
-                                } else {
-                                    String childName = childValue.toString();
-                                    children.add(new YamlStructureItem(o, childName, result.getAstRange(o)));
-                                }
-                            }
-                        }
-                    } else if (key instanceof PositionedScalarNode) {
-                        //ScalarNode scalar = (ScalarNode)key;
-                        PositionedScalarNode scalar = (PositionedScalarNode) key;
-                        Object childNameValue = scalar.getValue();
-                        assert childNameValue instanceof ByteList;
-                        ByteList byteListChildName = (ByteList) childNameValue;
-                        String childName = byteListChildName.toString();
-                        try {
-                            childName = new String(byteListChildName.bytes, "UTF-8"); //NOI18N
-                        } catch (UnsupportedEncodingException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
-                        Node child = (Node) entry.getValue();
-                        if (child != null) {
-                            int e = result.convertByteToUtf8(((Positionable) child).getRange().end.offset);
-                            // If you have an "empty" key, e.g.
-                            //   foo:
-                            //   bar: Hello World
-                            // here foo is "empty" but I get a child of "" positioned at the beginning
-                            // of "bar", which is wrong. In this case, don't include the child in the
-                            // position bounds.
-                            if (child.getValue() instanceof ByteList && ((ByteList) child.getValue()).length() == 0) {
-                                e = result.convertByteToUtf8(((Positionable) scalar).getRange().end.offset);
-                            }
-                            children.add(new YamlStructureItem(child, childName.trim(),
-                                    // Range: beginning of -key- to ending of -value-
-                                    result.convertByteToUtf8(((Positionable) scalar).getRange().start.offset),
-                                    e));
-                        }
-                    }
-                }
-                // Keep the list ordered, same order as in the document!!
-                Collections.sort(children);
-            } else if (value instanceof List) {
-                @SuppressWarnings("unchecked")
-                List<Node> list = (List<Node>) value;
-
-                List<YamlStructureItem> children = new ArrayList<YamlStructureItem>(list.size());
-                item.children = children;
-                for (Node o : list) {
-                    //String childName = o.getValue().toString();
-                    Object childValue = o.getValue();
-                    if (childValue instanceof List || childValue instanceof Map) {
-                        children.add(new YamlStructureItem(o, "list item", result.getAstRange(o)));
-                    } else {
-                        String childName = childValue.toString();
-                        children.add(new YamlStructureItem(o, childName, result.getAstRange(o)));
-                    }
-                }
-            } else {
-                item.children = Collections.emptyList();
-            }
-
-            if (item.children.size() > 0) {
-                for (YamlStructureItem child : item.children) {
-                    if (alreadySeen) {
-                        // I delayed the alreadySeen abort to the creation of
-                        // children rather than processing the main node itself
-                        // such that we include one level of referenced data.
-                        // See the fixtures3.yml test for example, where we want
-                        // to include the created_on attribute in the sites that
-                        // include it <<.
-                        child.children = Collections.emptyList();
-                    } else {
-                        initializeChildren(result, child, seen, depth + 1);
-                    }
-                }
-            }
+            item.children = Collections.emptyList();
         }
 
         @Override
@@ -355,12 +224,12 @@ public class YamlScanner implements StructureScanner {
 
         @Override
         public long getPosition() {
-            return begin;
+            return node.getStartMark().get().getPointer();
         }
 
         @Override
         public long getEndPosition() {
-            return end;
+            return node.getEndMark().get().getPointer();
         }
 
         @Override
@@ -370,7 +239,7 @@ public class YamlScanner implements StructureScanner {
 
         @Override
         public int compareTo(YamlStructureItem other) {
-            return (int) (begin - other.begin);
+            return (int) (getPosition() - other.getPosition());
         }
 
     }

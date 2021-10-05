@@ -21,14 +21,12 @@ package org.netbeans.modules.languages.yaml;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.jvyamlb.Position.Range;
-import org.jvyamlb.Positionable;
-import org.jvyamlb.nodes.Node;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.StructureItem;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.Snapshot;
+import org.snakeyaml.engine.v2.nodes.Node;
 
 /**
  * A result from Parsing YAML
@@ -40,15 +38,11 @@ public class YamlParserResult extends ParserResult {
     private final List<Error> errors = new ArrayList<Error>();
     private List<Node> nodes;
     private List<? extends StructureItem> items;
-    private int[] byteToUtf8;
-    private int[] utf8ToByte;
 
-    public YamlParserResult(List<Node> nodes, YamlParser parser, Snapshot snapshot, boolean valid, int[] byteToUtf8, int[] utf8ToByte) {
+    public YamlParserResult(List<Node> nodes, YamlParser parser, Snapshot snapshot, boolean valid) {
         super(snapshot);
         assert nodes != null;
         this.nodes = nodes;
-        this.byteToUtf8 = byteToUtf8;
-        this.utf8ToByte = utf8ToByte;
     }
 
     public List<Node> getRootNodes() {
@@ -82,51 +76,9 @@ public class YamlParserResult extends ParserResult {
         this.items = items;
     }
 
-    public int convertUtf8ToByte(int utf8Pos) {
-        if (utf8ToByte == null) {
-            return utf8Pos;
-        }
-        if (utf8Pos < utf8ToByte.length) {
-            return utf8ToByte[utf8Pos];
-        } else {
-            return utf8ToByte.length;
-        }
-    }
-
-    public int convertByteToUtf8(int bytePos) {
-        if (byteToUtf8 == null) {
-            return bytePos;
-        }
-        if (bytePos < byteToUtf8.length) {
-            return byteToUtf8[bytePos];
-        } else {
-            return byteToUtf8.length;
-        }
-    }
-
-    public OffsetRange getAstRange(Range range) {
-        int start = range.start.offset;
-        int end = range.end.offset;
-        if (byteToUtf8 == null) {
-            return new OffsetRange(start, end);
-        } else {
-            int s, e;
-            if (start >= byteToUtf8.length) {
-                s = byteToUtf8.length;
-            } else {
-                s = byteToUtf8[start];
-            }
-            if (end >= byteToUtf8.length) {
-                e = byteToUtf8.length;
-            } else {
-                e = byteToUtf8[end];
-            }
-
-            return new OffsetRange(s, e);
-        }
-    }
-
-    public OffsetRange getAstRange(Node node) {
-        return getAstRange(((Positionable) node).getRange());
+    public static OffsetRange getAstRange(Node node) {
+        int s = node.getStartMark().get().getPointer();
+        int e = node.getEndMark().get().getPointer();
+        return new OffsetRange(s, e);
     }
 }

@@ -24,16 +24,19 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.jvyamlb.Position.Range;
-import org.jvyamlb.nodes.Node;
-import org.jvyamlb.nodes.PositionedScalarNode;
-import org.jvyamlb.nodes.PositionedSequenceNode;
 import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.SemanticAnalyzer;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
+import org.snakeyaml.engine.v2.nodes.MappingNode;
+import org.snakeyaml.engine.v2.nodes.Node;
+import org.snakeyaml.engine.v2.nodes.NodeTuple;
+
+import static org.snakeyaml.engine.v2.nodes.NodeType.*;
+import org.snakeyaml.engine.v2.nodes.ScalarNode;
+import org.snakeyaml.engine.v2.nodes.SequenceNode;
 
 /**
  * Semantic Analyzer for YAML
@@ -105,62 +108,31 @@ public class YamlSemanticAnalyzer extends SemanticAnalyzer {
             // Avoid boundless recursion; some datastructures from YAML appear to be recursive
             return;
         }
-        Object value = node.getValue();
-        if (seen.containsKey(value)) {
+        if (seen.containsKey(node)) {
             return;
         }
-        seen.put(value, Boolean.TRUE);
+        seen.put(node, Boolean.TRUE);
 
-        if (value instanceof Map) {
-            Map map = (Map) value;
-            Set<Map.Entry> entrySet = map.entrySet();
-
-            for (Map.Entry entry : entrySet) {
-                Object key = entry.getKey();
-                if (key instanceof PositionedSequenceNode) {
-                    PositionedSequenceNode psn = (PositionedSequenceNode) key;
-                    Object keyValue = psn.getValue();
-                    assert keyValue instanceof List;
-                    List<Node> list = (List<Node>) keyValue;
-                    for (Node child : list) {
-                        if (child == node) {
-                            // Circularity??
-                            return;
-                        }
-                        addHighlights(ypr, child, highlights, seen, depth + 1);
-                    }
-                    Object entryValue = entry.getValue();
-                    if (entryValue instanceof PositionedSequenceNode) {
-                        psn = (PositionedSequenceNode) entryValue;
-                        keyValue = psn.getValue();
-                        assert keyValue instanceof List;
-                        list = (List<Node>) keyValue;
-                        for (Node o : list) {
-                            if (o == node) {
-                                // Circularity??
-                                return;
-                            }
-                            addHighlights(ypr, o, highlights, seen, depth + 1);
-                        }
-                    }
-                } else if (key instanceof PositionedScalarNode){
-                    PositionedScalarNode scalar = (PositionedScalarNode) key;
-                    Range r = scalar.getRange();
-                    OffsetRange range = ypr.getAstRange(r);
-                    highlights.put(range, ColoringAttributes.METHOD_SET);
-                    Node child = (Node) entry.getValue();
-                    addHighlights(ypr, child, highlights, seen, depth + 1);
+        switch (node.getNodeType()) {
+            case MAPPING:
+                MappingNode mappings = (MappingNode) node;
+                List<NodeTuple> tuples = mappings.getValue();
+                for (NodeTuple tuple : tuples) {
+                    addHighlights(ypr, tuple.getValueNode(), highlights, seen, depth + 1);
                 }
-            }
-        } else if (value instanceof List) {
-            List<Node> list = (List<Node>) value;
-            for (Node child : list) {
-                if (child == node) {
-                    // Circularity??
-                    return;
+                break;
+            case SEQUENCE:
+                SequenceNode sequence = (SequenceNode) node;
+                List<Node> nodes = sequence.getValue();
+                for (Node node1 : nodes) {
+                    addHighlights(ypr, node, highlights, seen, depth + 1);
                 }
-                addHighlights(ypr, child, highlights, seen, depth + 1);
-            }
+                break;
+            case SCALAR:
+                ScalarNode scalar = (ScalarNode) node;
+                OffsetRange range = YamlParserResult.getAstRange(scalar);
+                highlights.put(range, ColoringAttributes.METHOD_SET);
+                break;
         }
     }
 }

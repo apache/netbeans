@@ -28,6 +28,7 @@ export class NbTestAdapter {
     private readonly testController: TestController;
 	private disposables: { dispose(): void }[] = [];
     private currentRun: TestRun | undefined;
+    private itemsToRun: Set<TestItem> | undefined;
 
     constructor(client: Promise<LanguageClient>) {
         this.testController = tests.createTestController('apacheNetBeansController', 'Apache NetBeans');
@@ -52,6 +53,7 @@ export class NbTestAdapter {
     async run(request: TestRunRequest, cancellation: CancellationToken): Promise<void> {
         cancellation.onCancellationRequested(() => this.cancel());
         this.currentRun = this.testController.createTestRun(request);
+        this.itemsToRun = new Set();
 		if (request.include) {
             const include = [...new Map(request.include.map(item => !item.uri && item.parent?.uri ? [item.parent.id, item.parent] : [item.id, item])).values()];
             for (let item of include) {
@@ -69,6 +71,8 @@ export class NbTestAdapter {
                 }
             }
         }
+        this.itemsToRun.forEach(item => this.set(item, 'skipped'));
+        this.itemsToRun = undefined;
         this.currentRun.end();
         this.currentRun = undefined;
     }
@@ -77,13 +81,18 @@ export class NbTestAdapter {
         if (this.currentRun) {
             switch (state) {
                 case 'enqueued':
+                    this.itemsToRun?.add(item);
+                    this.currentRun.enqueued(item);
+                    break;
                 case 'started':
                 case 'passed':
                 case 'skipped':
+                    this.itemsToRun?.delete(item);
                     this.currentRun[state](item);
                     break;
                 case 'failed':
                 case 'errored':
+                    this.itemsToRun?.delete(item);
                     this.currentRun[state](item, message || new TestMessage(''));
                     break;
             }

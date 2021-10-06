@@ -544,9 +544,6 @@ public final class ClassNodeCache {
                     return null;
                 }
                 URL u = resourceCache.getResource(name);
-                if (u == null) {
-                    cache.addNonExistentResource(name);
-                }
                 if (u == null && name.endsWith(".class")) {
                     String sigName = name.substring(0, name.length() - 5) + "sig";
                     u = resourceCache.getResource(sigName);

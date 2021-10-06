@@ -57,6 +57,10 @@ public class GroovyComputeTestMethods implements ComputeTestMethods {
         }
         String text = parserResult.getSnapshot().getText().toString();
         ModuleNode moduleNode = TestMethodUtil.extractModuleNode(parserResult);
+        if (moduleNode == null) {
+            // total parser failure
+            return result;
+        }
         for (ClassNode classNode : moduleNode.getClasses()) {
             ClassNode superClass = classNode.getSuperClass();
             if ("spock.lang.Specification".equals(superClass.getName())) {

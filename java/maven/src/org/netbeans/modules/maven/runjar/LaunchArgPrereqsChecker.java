@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.maven.runjar;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -86,7 +87,7 @@ public class LaunchArgPrereqsChecker implements LateBoundPrerequisitesChecker {
                 }
             }
             for (StartupExtender group : StartupExtender.getExtenders(new AbstractLookup(ic), mode)) {
-                fixedArgs.addAll(group.getArguments());
+                fixedArgs.addAll(group.getRawArguments());
             }
         }
 
@@ -121,6 +122,20 @@ public class LaunchArgPrereqsChecker implements LateBoundPrerequisitesChecker {
                     MavenExecuteUtils.joinParameters(vmArgs));
             config.setProperty(MavenExecuteUtils.RUN_APP_PARAMS, 
                     MavenExecuteUtils.joinParameters(appArgsValue));
+        }
+        File workingDirectory = injectParams.getWorkingDirectory();
+        if (workingDirectory != null) {
+            config.setProperty(MavenExecuteUtils.RUN_WORKDIR,
+                    workingDirectory.getAbsolutePath());
+        }
+        Map<String, String> environmentVariables = injectParams.getEnvironmentVariables();
+        for (Map.Entry<String, String> env : environmentVariables.entrySet()) {
+            String value = env.getValue();
+            if (value == null) {
+                // The environment variable is to be removed when the value is null
+                value = MavenExecuteUtils.ENV_REMOVED;
+            }
+            config.setProperty(MavenExecuteUtils.ENV_PREFIX + env.getKey(), value);
         }
         return true;
     }

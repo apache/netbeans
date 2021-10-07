@@ -241,7 +241,8 @@ public final class GroovyIndex {
             String[] constructors = map.getValues(GroovyIndexer.CONSTRUCTOR);
 
             for (String constructor : constructors) {
-                String paramList = constructor.substring(constructor.indexOf(";") + 1, constructor.length()); // NOI18N
+                String[] parts = constructor.split(";");
+                String paramList = parts.length > 1 ? parts[1] : ""; // NOI18N
                 String[] params = paramList.split(",");
 
                 List<MethodParameter> methodParams = new ArrayList<>();
@@ -250,8 +251,11 @@ public final class GroovyIndex {
                         methodParams.add(new MethodParameter(param, GroovyUtils.stripPackage(param)));
                     }
                 }
-
-                result.add(new IndexedMethod(map, className, className, "void", methodParams, "", 0));
+                int flags = 0;
+                if (parts.length > 2) {
+                    flags = IndexedElement.stringToFlag(parts[2], 0);
+                }
+                result.add(new IndexedMethod(map, className, className, "void", methodParams, "", flags));
             }
         }
 

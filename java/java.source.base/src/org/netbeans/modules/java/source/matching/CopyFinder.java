@@ -1111,7 +1111,10 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
         if (!checkLists(node.getTypeParameters(), t.getTypeParameters(), p))
             return false;
 
-        if (!scan(node.getReturnType(), t.getReturnType(), p))
+        Tree normalizedReturnType = "<init>".contentEquals(node.getName()) ? null : node.getReturnType();
+        Tree normalizedReturnTypePattern = "<init>".contentEquals(t.getName()) ? null : t.getReturnType();
+
+        if (!scan(normalizedReturnType, normalizedReturnTypePattern, p))
             return false;
 
         String name = t.getName().toString();

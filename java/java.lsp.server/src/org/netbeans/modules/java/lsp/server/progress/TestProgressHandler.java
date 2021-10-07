@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.eclipse.lsp4j.debug.OutputEventArguments;
 import org.eclipse.lsp4j.debug.services.IDebugProtocolClient;
 import org.netbeans.api.extexecution.print.LineConvertors;
@@ -71,21 +70,21 @@ public final class TestProgressHandler implements TestResultDisplayHandler.Spi<T
 
     @Override
     public void displaySuiteRunning(TestProgressHandler token, String suiteName) {
-        lspClient.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(suiteName, TestSuiteInfo.State.Running)));
+        lspClient.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(suiteName, TestSuiteInfo.State.Started)));
     }
 
     @Override
     public void displaySuiteRunning(TestProgressHandler token, TestSuite suite) {
-        lspClient.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(suite.getName(), TestSuiteInfo.State.Running)));
+        lspClient.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(suite.getName(), TestSuiteInfo.State.Started)));
     }
 
     @Override
     public void displayReport(TestProgressHandler token, Report report) {
         Map<String, FileObject> fileLocations = new HashMap<>();
         Map<String, TestSuiteInfo.TestCaseInfo> testCases = new LinkedHashMap<>();
+        String className = report.getSuiteClassName();
         for (Testcase test : report.getTests()) {
-            String className = test.getClassName();
-            String name = test.getName();
+            String name = test.getDisplayName();
             int idx = name.indexOf('(');
             if (idx > 0) {
                 name = name.substring(0, idx);
@@ -122,7 +121,7 @@ public final class TestProgressHandler implements TestResultDisplayHandler.Spi<T
             if (info != null) {
                 updateState(info, status);
             } else {
-                info = new TestSuiteInfo.TestCaseInfo(id, name, className + '.' + name, fo != null ? Utils.toUri(fo) : null, null, status, stackTrace);
+                info = new TestSuiteInfo.TestCaseInfo(id, name, fo != null ? Utils.toUri(fo) : null, null, status, stackTrace);
                 testCases.put(id, info);
             }
         }

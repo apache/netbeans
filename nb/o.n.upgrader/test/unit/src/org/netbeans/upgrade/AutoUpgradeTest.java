@@ -20,9 +20,10 @@
 package org.netbeans.upgrade;
 import java.io.File;
 import java.net.URL;
-
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.openide.filesystems.FileObject;
-
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.LocalFileSystem;
@@ -87,4 +88,15 @@ public final class AutoUpgradeTest extends org.netbeans.junit.NbTestCase {
         assertNotNull(newFooBarFO);
         assertEquals(attrValue, newFooBarFO.getAttribute(attrName));
     }
+    
+    public void testComparatorUpgrade() throws Exception {
+        // verify version ordering
+        List<String> versions = Arrays.asList("12.3,12.4,8.0,12.4.301".split(",")).stream().sorted(AutoUpgrade.APACHE_VERSION_COMPARATOR.reversed()).collect(Collectors.toList());
+        assertEquals(4,versions.size());
+        assertEquals("12.4.301",versions.get(0));
+        assertEquals("12.4",versions.get(1));
+        assertEquals("12.3",versions.get(2));
+        assertEquals("8.0",versions.get(3));
+    }
+    
  }

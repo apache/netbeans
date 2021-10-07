@@ -20,14 +20,13 @@ package org.netbeans.modules.java.api.common.singlesourcefile;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.util.logging.Logger;
 import static junit.framework.TestCase.assertEquals;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Lookup;
 
 /**
  *
@@ -41,17 +40,24 @@ public class JavaFileTest extends NbTestCase {
         super(name);
     }
     
-    public void testSingleJavaSourceRun() throws IOException {
-        File f1 = new File(new File(new File(getDataDir().getAbsolutePath()), "files"), "TestSingleJavaFile.java");
+    public void testSingleJavaSourceRun() throws Exception {
+        clearWorkDir();
+        File f1 = new File(getWorkDir(), "TestSingleJavaFile.java");
+        FileWriter w = new FileWriter(f1);
+        w.write("public class TestSingleJavaFile {\n" +
+        "    \n" +
+        "    public static void main (String args[]) {\n" +
+        "        System.out.print(\"hello world\");\n" +
+        "    }\n" +
+        "    \n" +
+        "}");
+        w.close();
         FileObject javaFO = FileUtil.toFileObject(f1);
+        assertNotNull("FileObject found: " + f1, javaFO);
         SingleJavaSourceRunActionProvider runActionProvider = new SingleJavaSourceRunActionProvider();
-        if (!isJDK11OrNewer()) {
-            assertFalse("The action is only enabled on JDK11 and newer", runActionProvider.isActionEnabled("run.single", Lookup.EMPTY));
-            return;
-        }
-        RunProcess process = runActionProvider.invokeActionHelper("run.single", javaFO);
+        LaunchProcess process = runActionProvider.invokeActionHelper(null, "run.single", javaFO);
         BufferedReader reader
-                = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                = new BufferedReader(new InputStreamReader(process.call().getInputStream()));
         StringBuilder builder = new StringBuilder();
         String line = null;
         while ((line = reader.readLine()) != null) {
@@ -59,15 +65,22 @@ public class JavaFileTest extends NbTestCase {
         }
         String result = builder.toString();
         assertEquals("hello world", result);
+        FileObject[] siblings = javaFO.getParent().getChildren();
+        if (isJDK11OrNewer()) {
+            assertEquals("No other sibling", 1, siblings.length);
+            assertEquals(javaFO, siblings[0]);
+        } else {
+            assertEquals("One other sibling created", 2, siblings.length);
+            if (javaFO.equals(siblings[0])) {
+                assertEquals("TestSingleJavaFile.class", siblings[1].getNameExt());
+            } else {
+                assertEquals("TestSingleJavaFile.class", siblings[0].getNameExt());
+            }
+        }
     }
     
     private boolean isJDK11OrNewer() {
-        String javaVersion = System.getProperty("java.specification.version");
-        if (javaVersion.startsWith("1.")) {
-            javaVersion = javaVersion.substring(2);
-        }
-        int version = Integer.parseInt(javaVersion);
-        return version >= 11;
+        return SingleSourceFileUtil.findJavaVersion() >= 11;
     }
     
 }

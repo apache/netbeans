@@ -81,7 +81,7 @@ public enum GlassFishContainer implements Comparator<GlassFishContainer> {
      * conversion.
      */
     private static final Map<String, GlassFishContainer> stringValuesMap
-            = new HashMap(2 * values().length);
+            = new HashMap<>(2 * values().length);
 
     // Initialize backward String conversion Map.
     static {

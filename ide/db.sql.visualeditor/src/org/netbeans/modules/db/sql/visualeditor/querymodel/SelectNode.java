@@ -19,6 +19,7 @@
 package org.netbeans.modules.db.sql.visualeditor.querymodel;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Collection;
 
 import org.netbeans.api.db.sql.support.SQLIdentifiers;
@@ -31,7 +32,7 @@ public class SelectNode implements Select {
     // This will eventually include functions, but for now is simple columns
 
     // ToDo: consider replacing this with a HashMap
-    private ArrayList _selectItemList;
+    private List<Column>   _selectItemList;
     private String _quantifier;
 
 
@@ -40,12 +41,12 @@ public class SelectNode implements Select {
     public SelectNode() {
     }
 
-    public SelectNode(ArrayList columnList, String quantifier) {
+    public SelectNode(List columnList, String quantifier) {
         _selectItemList = columnList;
         _quantifier = quantifier;
     }
 
-    public SelectNode(ArrayList columnList) {
+    public SelectNode(List columnList) {
         this(columnList, "");  // NOI18N
     }
 
@@ -75,7 +76,7 @@ public class SelectNode implements Select {
 
     // Accessors/Mutators
 
-    public void setColumnList(ArrayList columnList) {
+    public void setColumnList(List columnList) {
         _selectItemList = columnList;
     }
 

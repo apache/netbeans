@@ -34,6 +34,7 @@ import java.awt.geom.CubicCurve2D;
 import java.awt.geom.GeneralPath;
 import java.util.*;
 import java.util.List;
+import org.openide.awt.GraphicsUtils;
 
 /**
  * Split pane divider with Diff decorations.
@@ -147,8 +148,6 @@ class DiffSplitPaneDivider extends BasicSplitPaneDivider implements MouseMotionL
         "TT_DiffPanel_JumpToCurrent=Go to Current Difference"
     })
     private class DiffSplitDivider extends JPanel {
-    
-        private Map renderingHints;
         private final DividerAction rollbackAction = new DividerAction(NbBundle.getMessage(DiffSplitDivider.class, "TT_DiffPanel_MoveAll"), null) { //NOI18N
 
             @Override
@@ -170,8 +169,6 @@ class DiffSplitPaneDivider extends BasicSplitPaneDivider implements MouseMotionL
         public DiffSplitDivider() {
             setBackground(UIManager.getColor("SplitPane.background")); // NOI18N
             setOpaque(true);
-            renderingHints = (Map)(Toolkit.getDefaultToolkit().getDesktopProperty(
-                    "awt.font.desktophints")); // NOI18N
             
             // aqua background workaround
             if( "Aqua".equals( UIManager.getLookAndFeel().getID() ) ) {         // NOI18N
@@ -207,9 +204,7 @@ class DiffSplitPaneDivider extends BasicSplitPaneDivider implements MouseMotionL
             int rightOffset = -rightView.y + editorsOffset;
             int leftOffset = -leftView.y + editorsOffset;
 
-            if (renderingHints != null) {
-                g.addRenderingHints(renderingHints);
-            }
+            GraphicsUtils.configureDefaultRenderingHints(g);
             int currDiff = master.getCurrentDifference();
             String diffInfo = (currDiff + 1) + "/" + master.getDifferenceCount(); // NOI18N
             int width = g.getFontMetrics().stringWidth(diffInfo);

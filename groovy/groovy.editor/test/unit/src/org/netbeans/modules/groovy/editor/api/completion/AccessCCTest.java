@@ -26,6 +26,7 @@ public class AccessCCTest extends GroovyCCTestBase {
 
     public AccessCCTest(String testName) {
         super(testName);
+        checkLspCompletion = true;
     }
 
     @Override

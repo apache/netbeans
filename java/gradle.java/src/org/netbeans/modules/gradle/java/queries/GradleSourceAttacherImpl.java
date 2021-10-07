@@ -39,6 +39,7 @@ import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.GradleDependency.ModuleDependency;
 import org.netbeans.modules.gradle.api.GradleProjects;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
+import org.netbeans.modules.gradle.java.JavaActionProvider;
 import org.netbeans.spi.java.queries.SourceJavadocAttacherImplementation;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
@@ -46,6 +47,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
@@ -68,12 +70,12 @@ public class GradleSourceAttacherImpl implements SourceJavadocAttacherImplementa
     /**
      * Name of the 'download.sources' standard action
      */
-    private static final String COMMAND_DL_SOURCES = "download.sources"; //NOI18N
+    private static final String COMMAND_DL_SOURCES = JavaActionProvider.COMMAND_DL_SOURCES;
 
     /**
      * Name of the 'download.javadoc' standard action
      */
-    private static final String COMMAND_DL_JAVADOC = "download.javadoc"; //NOI18N
+    private static final String COMMAND_DL_JAVADOC = JavaActionProvider.COMMAND_DL_JAVADOC;
 
     /**
      * Caches last queried URL. The workflow is to filter Definers that work with the given URL
@@ -297,11 +299,15 @@ public class GradleSourceAttacherImpl implements SourceJavadocAttacherImplementa
             }
             // assume the action is invoked asynchronously.
             try {
-                ap.invokeAction(command, 
-                        Lookups.fixed(
+                Lookup ctx = Lookups.fixed(
                                 this,
                                 RunUtils.simpleReplaceTokenProvider(REQUESTED_COMPONENT, dep.getId())
-                        ));
+                );
+                if (!ap.isActionEnabled(command, ctx)) {
+                    // disabled action will not even report action end through the Listener.
+                    return false;
+                }
+                ap.invokeAction(command, ctx);
             } catch (IllegalArgumentException ex) {
                 // since we cannot test whether action exists / is enabled, catch the exception
                 // if the action is really unsupported

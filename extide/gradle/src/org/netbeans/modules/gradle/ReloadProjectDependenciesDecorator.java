@@ -47,7 +47,7 @@ public class ReloadProjectDependenciesDecorator implements AfterBuildActionHook 
         for (Project dep : dependencies.values()) {
             NbGradleProjectImpl impl = dep.getLookup().lookup(NbGradleProjectImpl.class);
             if ((impl != null) && impl.getAimedQuality().betterThan(impl.getGradleProject().getQuality())) {
-                impl.reloadProject(true, impl.getAimedQuality());
+                impl.forceReloadProject(null, false, impl.getAimedQuality());
             }
         }
     }

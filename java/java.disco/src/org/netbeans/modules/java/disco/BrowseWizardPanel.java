@@ -30,7 +30,7 @@ public class BrowseWizardPanel extends AbstractWizardPanel<BrowsePanel> {
 
     @Override
     protected BrowsePanel createComponent() {
-        return BrowsePanel.create(state);
+        return new BrowsePanel(this, state);
     }
 
     @Override

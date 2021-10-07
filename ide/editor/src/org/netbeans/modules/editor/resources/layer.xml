@@ -311,10 +311,18 @@
             
         <folder name="HyperlinkProviders">
             <file name="org-netbeans-modules-editor-url-HyperlinkImpl.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.url.HyperlinkImpl.getDefault"/>
                 <attr name="position" intvalue="2100"/>
             </file>
         </folder>
-        
+
+        <folder name="HyperlinkLocationProviders">
+            <file name="org-netbeans-modules-editor-url-HyperlinkImpl.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.url.HyperlinkImpl.getDefault"/>
+                <attr name="position" intvalue="2100"/>
+            </file>
+        </folder>
+
         <folder name="AnnotationTypes">
             <file name="org-netbeans-modules-editor-annotations-is_overridden.xml" url="override/is-overridden-annotation.xml"/>
             <file name="org-netbeans-modules-editor-annotations-has_implementations.xml" url="override/has-implementations-annotation.xml"/>

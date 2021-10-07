@@ -79,7 +79,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>1.50</specification-version>
+                        <specification-version>1.61</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -155,6 +155,14 @@
                 </dependency>
                 <dependency>
                     <code-name-base>org.openide.filesystems</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>9.23</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.filesystems.nb</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>

@@ -42,6 +42,7 @@ import org.netbeans.modules.groovy.editor.language.GroovyFormatter;
 import org.netbeans.modules.groovy.editor.api.GroovyIndex;
 import org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId;
 import org.netbeans.modules.groovy.editor.api.parser.GroovyLanguage;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -138,26 +139,7 @@ public class GroovyTestBase extends CslTestBase {
     }
 
     private static ClassPath createBootClassPath() {
-        String bcp = System.getProperty("sun.boot.class.path");	//NOI18N
-        assertNotNull(bcp);
-        StringTokenizer tk = new StringTokenizer(bcp, File.pathSeparator);
-        List<URL> roots = new ArrayList<URL>();
-        while (tk.hasMoreTokens()) {
-            String token = tk.nextToken();
-            File f = new File(token);
-            try {
-                URL url = Utilities.toURI(f).toURL();
-                if (FileUtil.isArchiveFile(url)) {
-                    url = FileUtil.getArchiveRoot(url);
-                } else if (!f.exists()) {
-                    url = new URL(url.toExternalForm() + '/');
-                }
-                roots.add(url);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-        }
-        return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+        return BootClassPathUtil.getBootClassPath();
     }
 
     private static ClassPath createCompilePath() {
@@ -169,7 +151,7 @@ public class GroovyTestBase extends CslTestBase {
         List<FileObject> classPathSources = new ArrayList<FileObject>();
         classPathSources.addAll(additionalSources());
 
-        return ClassPathSupport.createClassPath(classPathSources.toArray(new FileObject[0]));
+        return ClassPathSupport.createClassPath(classPathSources.toArray(new FileObject[classPathSources.size()]));
     }
 
     private Set<FileObject> additionalSources() {

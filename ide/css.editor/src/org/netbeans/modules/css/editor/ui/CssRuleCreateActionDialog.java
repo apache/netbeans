@@ -73,8 +73,7 @@ public class CssRuleCreateActionDialog extends javax.swing.JPanel {
             htmlTagsModel1.addElement(htmlTags[i]);
         }
 
-        DefaultComboBoxModel htmlTagsModel = new DefaultComboBoxModel();
-        //htmlTagsModel.addElement(NONE);
+        DefaultComboBoxModel<String> htmlTagsModel = new DefaultComboBoxModel<>();
         for( int i=0; i< htmlTags.length; i++){
             htmlTagsModel.addElement(htmlTags[i]);
         }

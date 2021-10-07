@@ -297,7 +297,7 @@ public class JavadocCompletionQueryTest extends JavadocTestSupport {
         
         performCompletionTest(code, "public static final double PI");
     }
-    
+
     public void testThrows1() throws Exception {
         String code =
                 "package p;\n" +

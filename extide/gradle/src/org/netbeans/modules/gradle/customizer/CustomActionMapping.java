@@ -42,9 +42,9 @@ public class CustomActionMapping implements ActionMapping {
     }
 
 
-    public CustomActionMapping(ActionMapping original) {
+    public CustomActionMapping(ActionMapping original, String name) {
         this.original = original;
-        name = original.getName();
+        this.name = original.getName() == null ? name : original.getName();
         displayName = original.getDisplayName();
         args = original.getArgs();
         reloadRule = original.getReloadRule();

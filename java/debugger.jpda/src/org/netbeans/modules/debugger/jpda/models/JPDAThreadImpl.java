@@ -626,35 +626,31 @@ public final class JPDAThreadImpl implements JPDAThread, Customizer, BeanContext
             }
             List l;
             CallStackFrame[] theCachedFrames = null;
-                int max;
-                synchronized (cachedFramesLock) {
-                    if (stackDepth < 0) {
-                        stackDepth = ThreadReferenceWrapper.frameCount(threadReference);
-                    }
-                    max = stackDepth;
+            CallStackFrame[] frames;
+            // synchronize the whole retrieval of frames to prevent from concurrent retrieval of the same frames.
+            synchronized (cachedFramesLock) {
+                if (stackDepth < 0) {
+                    stackDepth = ThreadReferenceWrapper.frameCount(threadReference);
                 }
+                int max = stackDepth;
                 if (to < 0) to = max; // Fight strange negative frame counts from http://www.netbeans.org/issues/show_bug.cgi?id=162448
                 from = Math.min(from, max);
                 to = Math.min(to, max);
-                if (to - from > 1) {  /*TODO: Frame caching cause problems with invalid frames. Some fix is necessary...
-                 *  as a workaround, frames caching is disabled.*/
-                    synchronized (cachedFramesLock) {
-                        if (from == cachedFramesFrom && to == cachedFramesTo) {
-                            return cachedFrames;
-                        }
-                        if (from >= cachedFramesFrom && to <= cachedFramesTo) {
-                            // TODO: Arrays.copyOfRange(cachedFrames, from - cachedFramesFrom, to);
-                            return copyOfRange(cachedFrames, from - cachedFramesFrom, to - cachedFramesFrom);
-                        }
-                        if (cachedFramesFrom >= 0 && cachedFramesTo > cachedFramesFrom) {
-                            int length = to - from;
-                            theCachedFrames = new CallStackFrame[length];
-                            for (int i = 0; i < length; i++) {
-                                if (i >= cachedFramesFrom && i < cachedFramesTo) {
-                                    theCachedFrames[i] = cachedFrames[i - cachedFramesFrom];
-                                } else {
-                                    theCachedFrames[i] = null;
-                                }
+                if (to - from > 1) {
+                    if (from == cachedFramesFrom && to == cachedFramesTo) {
+                        return cachedFrames;
+                    }
+                    if (from >= cachedFramesFrom && to <= cachedFramesTo) {
+                        return Arrays.copyOfRange(cachedFrames, from - cachedFramesFrom, to - cachedFramesFrom);
+                    }
+                    if (cachedFramesFrom >= 0 && cachedFramesTo > cachedFramesFrom) {
+                        int length = to - from;
+                        theCachedFrames = new CallStackFrame[length];
+                        for (int i = 0; i < length; i++) {
+                            if (i >= cachedFramesFrom && i < cachedFramesTo) {
+                                theCachedFrames[i] = cachedFrames[i - cachedFramesFrom];
+                            } else {
+                                theCachedFrames[i] = null;
                             }
                         }
                     }
@@ -694,25 +690,22 @@ public final class JPDAThreadImpl implements JPDAThread, Customizer, BeanContext
                 if (l == null) {
                     l = java.util.Collections.emptyList();
                 }
-            int n = l.size();
-            CallStackFrame[] frames = new CallStackFrame[n];
-            for (int i = 0; i < n; i++) {
-                if (theCachedFrames != null && theCachedFrames[i] != null) {
-                    frames[i] = theCachedFrames[i];
-                } else {
-                    frames[i] = new CallStackFrameImpl(this, (StackFrame) l.get(i), from + i, debugger);
+                int n = l.size();
+                frames = new CallStackFrame[n];
+                for (int i = 0; i < n; i++) {
+                    if (theCachedFrames != null && theCachedFrames[i] != null) {
+                        frames[i] = theCachedFrames[i];
+                    } else {
+                        frames[i] = new CallStackFrameImpl(this, (StackFrame) l.get(i), from + i, debugger);
+                    }
+                    if (from == 0 && i == 0 && currentOperation != null) {
+                        ((CallStackFrameImpl) frames[i]).setCurrentOperation(currentOperation);
+                    }
                 }
-                if (from == 0 && i == 0 && currentOperation != null) {
-                    ((CallStackFrameImpl) frames[i]).setCurrentOperation(currentOperation);
-                }
+                cachedFrames = frames;
+                cachedFramesFrom = from;
+                cachedFramesTo = to;
             }
-            //if (to - from > 1) {
-                synchronized (cachedFramesLock) {
-                    cachedFrames = frames;
-                    cachedFramesFrom = from;
-                    cachedFramesTo = to;
-                }
-            //}
             return frames;
         } catch (IncompatibleThreadStateException ex) {
             String msg = ex.getLocalizedMessage() + " " + getThreadStateLog();
@@ -745,17 +738,6 @@ public final class JPDAThreadImpl implements JPDAThread, Customizer, BeanContext
         }
     }
     
-    private static CallStackFrame[] copyOfRange(CallStackFrame[] original, int from, int to) {
-        // TODO: Use Arrays.copyOfRange(cachedFrames, from, to);
-        int newLength = to - from;
-        if (newLength < 0)
-            throw new IllegalArgumentException(from + " > " + to);
-        CallStackFrame[] copy = new CallStackFrame[newLength];
-        System.arraycopy(original, from, copy, 0,
-                         Math.min(original.length - from, newLength));
-        return copy;
-    }
-
     private void cleanCachedFrames() {
         synchronized (cachedFramesLock) {
             stackDepth = -1;
@@ -1229,6 +1211,10 @@ public final class JPDAThreadImpl implements JPDAThread, Customizer, BeanContext
     }
 
     public PropertyChangeEvent notifySuspended(boolean doFire, boolean explicitelyPaused) {
+        return notifySuspended(doFire, explicitelyPaused, true);
+    }
+
+    private PropertyChangeEvent notifySuspended(boolean doFire, boolean explicitelyPaused, boolean verifyStatusAndName) {
         if (loggerS.isLoggable(Level.FINE)) {
             loggerS.fine("["+threadName+"]: "+"notifySuspended(doFire = "+doFire+", explicitelyPaused = "+explicitelyPaused+")");
         }
@@ -1246,22 +1232,26 @@ public final class JPDAThreadImpl implements JPDAThread, Customizer, BeanContext
                 }
                 return null;
             }
-            try {
-                suspendCount = ThreadReferenceWrapper.suspendCount(threadReference);
-                threadName = ThreadReferenceWrapper.name(threadReference);
-            } catch (IllegalThreadStateExceptionWrapper ex) {
-                return null; // Thrown when thread has exited
-            } catch (ObjectCollectedExceptionWrapper ocex) {
-                return null; // The thread is gone
-            } catch (VMDisconnectedExceptionWrapper ex) {
-                return null; // The VM is gone
-            } catch (InternalExceptionWrapper ex) {
-                return null; // Something is gone
+            if (verifyStatusAndName) {
+                try {
+                    suspendCount = ThreadReferenceWrapper.suspendCount(threadReference);
+                    threadName = ThreadReferenceWrapper.name(threadReference);
+                } catch (IllegalThreadStateExceptionWrapper ex) {
+                    return null; // Thrown when thread has exited
+                } catch (ObjectCollectedExceptionWrapper ocex) {
+                    return null; // The thread is gone
+                } catch (VMDisconnectedExceptionWrapper ex) {
+                    return null; // The VM is gone
+                } catch (InternalExceptionWrapper ex) {
+                    return null; // Something is gone
+                }
+            } else {
+                suspendCount = 1;
             }
             //System.err.println("notifySuspended("+getName()+") suspendCount = "+suspendCount+", var suspended = "+suspended);
             suspendedNoFire = false;
             debugger.setCurrentSuspendedNoFireThread(null);
-            if ((!suspended || suspendedNoFire && doFire) && isThreadSuspended()) {
+            if ((!suspended || suspendedNoFire && doFire) && (!verifyStatusAndName || isThreadSuspended())) {
                 //System.err.println("  setting suspended = true");
                 suspended = true;
                 suspendedToFire = Boolean.TRUE;
@@ -1479,7 +1469,7 @@ public final class JPDAThreadImpl implements JPDAThread, Customizer, BeanContext
         }
         // Do not notify suspended state when was already unsuspended when started invoking.
         if (!wasUnsuspendedStateWhenInvoking) {
-            PropertyChangeEvent evt = notifySuspended(false, false);
+            PropertyChangeEvent evt = notifySuspended(false, false, false);
             if (evt != null) {
                 evt.setPropagationId("methodInvoke"); // NOI18N
                 pch.firePropertyChange(evt);

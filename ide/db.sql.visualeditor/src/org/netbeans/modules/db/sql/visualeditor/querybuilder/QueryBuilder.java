@@ -789,7 +789,7 @@ public class QueryBuilder extends TopComponent
                 }
 
                 // now check the columns in the condition if any.
-                List fromColumns = new ArrayList();
+                List<Column> fromColumns = new ArrayList<>();
                 ( (JoinTable) fromTables.get(i) ).getReferencedColumns(fromColumns);
                 for ( int j = 0; j < fromColumns.size(); j++ ) {
                     Column fromColumn = (Column) fromColumns.get(j);
@@ -810,7 +810,7 @@ public class QueryBuilder extends TopComponent
         if (DEBUG)
             System.out.println("checkSelect called. _queryModel.getSelect() = " + _queryModel.getSelect() ); // NOI18N
         if ( _queryModel.getSelect() != null ) {
-            ArrayList selectColumns = new ArrayList();
+            List<Column> selectColumns = new ArrayList<>();
             _queryModel.getSelect().getReferencedColumns(selectColumns);
             if ( ! checkColumns( selectColumns ) )
                 return false;
@@ -825,7 +825,7 @@ public class QueryBuilder extends TopComponent
         if (DEBUG)
             System.out.println("checkWhere called... " ); // NOI18N
         if ( _queryModel.getWhere() != null ) {
-            ArrayList whereColumns = new ArrayList();
+            List<Column> whereColumns = new ArrayList<>();
             _queryModel.getWhere().getReferencedColumns(whereColumns);
             if ( ! checkColumns( whereColumns ) ) 
                 return false;
@@ -840,7 +840,7 @@ public class QueryBuilder extends TopComponent
         if (DEBUG)
             System.out.println("checkGroupBy called... " ); // NOI18N
         if ( _queryModel.getGroupBy() != null ) {
-            ArrayList groupByColumns = new ArrayList();
+            List<Column> groupByColumns = new ArrayList<>();
             _queryModel.getGroupBy().getReferencedColumns(groupByColumns);
             if ( ! checkColumns( groupByColumns ) ) return false;
         }
@@ -854,7 +854,7 @@ public class QueryBuilder extends TopComponent
         if (DEBUG)
             System.out.println("checkHaving called... " ); // NOI18N
         if ( _queryModel.getHaving() != null ) {
-            ArrayList havingColumns = new ArrayList();
+            List<Column> havingColumns = new ArrayList<>();
             _queryModel.getHaving().getReferencedColumns(havingColumns);
             if ( ! checkColumns( havingColumns ) ) return false;
         }
@@ -869,10 +869,10 @@ public class QueryBuilder extends TopComponent
             System.out.println("checkOrderBy called... " ); // NOI18N
         OrderBy orderBy = _queryModel.getOrderBy();
         if ( orderBy != null ) {
-            ArrayList orderByColumns = new ArrayList();
+            List<Column> orderByColumns = new ArrayList<>();
             for ( int i = 0; i < orderBy.getSortSpecificationCount(); i++ ) {
                 Column sortColumn = orderBy.getSortSpecification(i).getColumn();
-                orderByColumns.add( sortColumn);
+                orderByColumns.add(sortColumn);
             }
             if ( ! checkColumns( orderByColumns ) ) return false;
         }
@@ -889,7 +889,7 @@ public class QueryBuilder extends TopComponent
     //    case 3 : <alias_table_name>.<column_name>
     //    case 4 : <column_name>
     //
-    private boolean checkColumns( ArrayList columns )  throws SQLException {
+    private boolean checkColumns(List<Column> columns)  throws SQLException {
 	Log.getLogger().entering("QueryBuilder", "checkColumns"); // NOI18N
         for ( int i = 0; i < columns.size(); i++ ) {
             Column column = (Column) columns.get(i);
@@ -1141,7 +1141,7 @@ public class QueryBuilder extends TopComponent
         {
             if ( getParseErrorMessage() == null && _queryModel.isParameterized()) {
 
-                ArrayList  list = new ArrayList();
+                List<String>  list = new ArrayList<>();
                 _queryModel.getParameterizedPredicates(list);
                 String[] parameters = new String[list.size()];
                 String[] values = new String[list.size()];
@@ -1182,10 +1182,8 @@ public class QueryBuilder extends TopComponent
             }
             else if (paramCount != 0) {
                 // we have a query which can not be parsed.
-                ArrayList  list = new ArrayList(paramCount);
                 if (DEBUG) {
                     System.out.println(" param count = " + paramCount);
-                    System.out.println(" list size  = " + list.size());
                 }
                 String[] parameters = new String[paramCount];
                 String[] values = new String[paramCount];
@@ -1195,7 +1193,7 @@ public class QueryBuilder extends TopComponent
                 }
     
                 for (int i = 0; i < paramCount; i++) {
-                    parameters[i] = new String( "Parameter " + new Integer(i).toString());
+                    parameters[i] = new String( "Parameter " + Integer.valueOf(i).toString());
                 }
                 if (DEBUG) {
                     for (int i = 0; i < parameters.length; i++) {

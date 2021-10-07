@@ -40,6 +40,7 @@ import org.netbeans.modules.javascript2.requirejs.RequireJsPreferences;
 import org.netbeans.modules.javascript2.requirejs.editor.index.RequireJsIndex;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.Utilities;
 
@@ -104,7 +105,7 @@ public class FSCompletionUtils {
                     if (toFile != null) {
                         URI resolve = null;
                         try {
-                            resolve = Utilities.toURI(toFile).resolve(pathPrefix).normalize();
+                            resolve = BaseUtilities.normalizeURI(Utilities.toURI(toFile).resolve(pathPrefix));
                         } catch (IllegalArgumentException ex) {
                             resolve = null;
                         }

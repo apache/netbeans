@@ -31,7 +31,7 @@ public final class NbDebugSession {
     private final Session session;
     private volatile NIDebugger niDebugger;
 
-    NbDebugSession(Session session) {
+    public NbDebugSession(Session session) {
         this.session = session;
     }
 
@@ -47,7 +47,8 @@ public final class NbDebugSession {
         return niDebugger;
     }
 
-    void setNIDebugger(NIDebugger niDebugger) {
+    public void setNIDebugger(NIDebugger niDebugger) {
+        assert this.niDebugger == null;
         this.niDebugger = niDebugger;
     }
 

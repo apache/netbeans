@@ -24,8 +24,11 @@
  */
 package org.netbeans.modules.j2ee.dd.impl.commonws;
 
+import java.util.Iterator;
+import java.util.List;
 import org.netbeans.modules.schema2beans.Version;
 import org.netbeans.modules.j2ee.dd.api.common.*;
+import org.netbeans.modules.j2ee.dd.api.common.Icon;
 import org.openide.ErrorManager;
 
 public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple implements DisplayNameInterface, IconInterface {
@@ -83,7 +86,7 @@ public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple impl
     public void setAllDisplayNames(java.util.Map displayNames) throws VersionNotSupportedException {
         removeAllDisplayNames();
         if (displayNames!=null) {
-            java.util.Iterator keys = displayNames.keySet().iterator();
+            Iterator<String> keys = displayNames.keySet().iterator();
             int i=0;
             while (keys.hasNext()) {
                 String key = (String) keys.next();
@@ -317,8 +320,8 @@ public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple impl
     }
     
     public void removeIcon(String locale, boolean isSmall) throws VersionNotSupportedException  {
-        org.netbeans.modules.j2ee.dd.api.common.Icon[] icons = getIcon();
-        java.util.List iconList = new java.util.ArrayList();
+        Icon[] icons = getIcon();
+        List<Icon> iconList = new java.util.ArrayList<>();
         for (int i=0;i<icons.length;i++) {
             String loc=icons[i].getXmlLang();
             if ((locale==null && loc==null) || (locale!=null && locale.equalsIgnoreCase(loc))) {
@@ -331,7 +334,7 @@ public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple impl
                 }
             }
         }
-        java.util.Iterator it = iconList.iterator();
+        Iterator<Icon> it = iconList.iterator();
         while(it.hasNext()) removeIcon((org.netbeans.modules.j2ee.dd.api.common.Icon)it.next());
     }
 }

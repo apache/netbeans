@@ -29,8 +29,12 @@ import org.openide.loaders.DataObject;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileLock;
 
+import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.OutputStream;
+
 import org.w3c.dom.Element;
 
 /**
@@ -40,7 +44,7 @@ import org.w3c.dom.Element;
 public class EjbJarProxy implements EjbJar {
     private EjbJar ejbJar;
     private String version;
-    private java.util.List listeners;
+    private List<PropertyChangeListener> listeners;
     public boolean writing=false;
     private org.xml.sax.SAXParseException error;
     private int ddStatus;
@@ -50,7 +54,7 @@ public class EjbJarProxy implements EjbJar {
     public EjbJarProxy(EjbJar ejbJar, String version) {
         this.ejbJar=ejbJar;
         this.version = version;
-        listeners = new java.util.ArrayList();
+        listeners = new ArrayList<>();
         addPropertyChangeListener(reindentationListener);
     }
 
@@ -58,7 +62,7 @@ public class EjbJarProxy implements EjbJar {
         if (this.ejbJar!=ejbJar) {
             for (int i=0;i<listeners.size();i++) {
                 java.beans.PropertyChangeListener pcl =
-                    (java.beans.PropertyChangeListener)listeners.get(i);
+                    listeners.get(i);
                 if (this.ejbJar!=null) this.ejbJar.removePropertyChangeListener(pcl);
                 if (ejbJar!=null) ejbJar.addPropertyChangeListener(pcl);
 

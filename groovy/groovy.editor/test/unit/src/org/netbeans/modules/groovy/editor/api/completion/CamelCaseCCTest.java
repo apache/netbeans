@@ -19,6 +19,9 @@
 
 package org.netbeans.modules.groovy.editor.api.completion;
 
+import org.netbeans.modules.csl.api.ElementKind;
+import org.netbeans.modules.csl.api.HtmlFormatter;
+
 /**
  *
  * @author Martin Janicek
@@ -27,8 +30,60 @@ public class CamelCaseCCTest extends GroovyCCTestBase {
 
     public CamelCaseCCTest(String testName) {
         super(testName);
+        checkLspCompletion = true;
     }
 
+    final boolean deprecatedHolder[] = new boolean[1];
+
+    final HtmlFormatter formatter = new HtmlFormatter() {
+        private StringBuilder sb = new StringBuilder();
+
+        @Override
+        public void reset() {
+            sb.setLength(0);
+        }
+
+        @Override
+        public void appendHtml(String html) {
+            sb.append(html);
+        }
+
+        @Override
+        public void appendText(String text, int fromInclusive, int toExclusive) {
+            sb.append(text, fromInclusive, toExclusive);
+        }
+
+        @Override
+        public void emphasis(boolean start) {
+        }
+
+        @Override
+        public void active(boolean start) {
+        }
+
+        @Override
+        public void name(ElementKind kind, boolean start) {
+        }
+
+        @Override
+        public void parameters(boolean start) {
+        }
+
+        @Override
+        public void type(boolean start) {
+        }
+
+        @Override
+        public void deprecated(boolean start) {
+            deprecatedHolder[0] = true;
+        }
+
+        @Override
+        public String getText() {
+            return sb.toString();
+        }
+    };
+    
     @Override
     protected String getTestType() {
         return "camelcase";

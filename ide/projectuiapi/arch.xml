@@ -529,6 +529,14 @@ Nothing.
    modules that seem to provide support for technologies used in the about 
    to be opened projects.
    </api>
+
+   <api name="templateCategory" category="stable" group="property" type="export">
+       <a href="@TOP@/org/netbeans/spi/project/ui/templates/support/package-summary.html">org.netbeans.spi.project.ui.templates.support</a>
+       package defines a special <code>templateCategory</code> property which
+       allows one to categorize templates. See
+       <a href="@TOP@/org/netbeans/spi/project/ui/templates/support/package-summary.html">package summary</a>
+       for detailed info.
+   </api>
   </p>
  </answer>
 

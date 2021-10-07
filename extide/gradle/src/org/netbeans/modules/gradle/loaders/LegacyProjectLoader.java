@@ -19,6 +19,8 @@
 package org.netbeans.modules.gradle.loaders;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -46,7 +48,7 @@ import static org.netbeans.modules.gradle.loaders.GradleDaemon.INIT_SCRIPT;
 import static org.netbeans.modules.gradle.loaders.GradleDaemon.TOOLING_JAR;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
-import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FALLBACK;
+import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.EVALUATED;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FULL_ONLINE;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.SIMPLE;
 import org.netbeans.modules.gradle.api.NbProjectInfo;
@@ -94,7 +96,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
 
     @Override
     public boolean isEnabled() {
-        return ctx.aim.betterThan(FALLBACK);
+        return ctx.aim.betterThan(EVALUATED);
     }
 
     @NbBundle.Messages({
@@ -142,38 +144,40 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
             errors.clear();
             info = retrieveProjectInfo(goOnline, pconn, cmd, token, pl);
 
+            if (!info.getProblems().isEmpty()) {
+                errors.openNotification(
+                        TIT_LOAD_ISSUES(base.getProjectDir().getName()),
+                        TIT_LOAD_ISSUES(base.getProjectDir().getName()),
+                        GradleProjectErrorNotifications.bulletedList(info.getProblems()));                
+            }
             if (!info.hasException()) {
                 if (!info.getProblems().isEmpty()) {
                     // If we do not have exception, but seen some problems the we mark the quality as SIMPLE
                     quality = SIMPLE;
-                    errors.openNotification(
-                            TIT_LOAD_ISSUES(base.getProjectDir().getName()),
-                            TIT_LOAD_ISSUES(base.getProjectDir().getName()),
-                            GradleProjectErrorNotifications.bulletedList(info.getProblems()));
-
                 } else {
                     quality = ctx.aim;
                 }
             } else {
-                String problem = info.getGradleException();
-                String[] lines = problem.split("\n");
-                LOG.log(INFO, "Failed to retrieve project information for: {0}\nReason: {1}", new Object[] {base.getProjectDir(), problem}); //NOI18N
-                errors.openNotification(TIT_LOAD_FAILED(base.getProjectDir().getName()), lines[0], problem);
-                return ctx.previous.invalidate(problem);
+                if (info.getProblems().isEmpty()) {
+                    String problem = info.getGradleException();
+                    String[] lines = problem.split("\n");
+                    LOG.log(INFO, "Failed to retrieve project information for: {0}\nReason: {1}", new Object[] {base.getProjectDir(), problem}); //NOI18N
+                    errors.openNotification(TIT_LOAD_FAILED(base.getProjectDir().getName()), lines[0], problem);
+                    return ctx.previous.invalidate(problem);
+                } else {
+                    return ctx.previous.invalidate(info.getProblems().toArray(new String[0]));
+                }
             }
         } catch (GradleConnectionException | IllegalStateException ex) {
             LOG.log(FINE, "Failed to retrieve project information for: " + base.getProjectDir(), ex);
-            StringBuilder sb = new StringBuilder();
+            List<String> problems = new ArrayList<>();
             Throwable th = ex;
-            String separator = "";
             while (th != null) {
-                sb.insert(0, separator);
-                sb.insert(0, th.getMessage());
+                problems.add(th.getMessage());
                 th = th.getCause();
-                separator = "<br/>";
             }
-            errors.openNotification(TIT_LOAD_FAILED(base.getProjectDir()), ex.getMessage(), sb.toString());
-            return ctx.previous.invalidate(sb.toString());
+            errors.openNotification(TIT_LOAD_FAILED(base.getProjectDir()), ex.getMessage(), GradleProjectErrorNotifications.bulletedList(problems));
+            return ctx.previous.invalidate(problems.toArray(new String[0]));
         } finally {
             loadedProjects.incrementAndGet();
         }

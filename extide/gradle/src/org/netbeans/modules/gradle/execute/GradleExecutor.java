@@ -31,4 +31,5 @@ public interface GradleExecutor extends Runnable, Cancellable {
     
     void setTask(ExecutorTask task);
     InputOutput getInputOutput();
+    ExecutorTask createTask(ExecutorTask process);
 }

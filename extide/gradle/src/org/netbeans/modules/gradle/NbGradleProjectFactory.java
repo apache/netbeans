@@ -87,7 +87,12 @@ public final class NbGradleProjectFactory implements ProjectFactory2 {
 
     @Override
     public Project loadProject(FileObject dir, ProjectState ps) throws IOException {
-        return isProject(dir) ? new NbGradleProjectImpl(dir, ps) : null;
+        if (!isProject(dir)) {
+            return null;
+        }
+        NbGradleProjectImpl prj = new NbGradleProjectImpl(dir, ps);
+        prj.getGradleProject();
+        return prj;
     }
 
     @Override

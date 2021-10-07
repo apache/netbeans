@@ -36,10 +36,10 @@ public class GradleProjectErrorNotifications {
 
     public synchronized void openNotification(String title, String problem, String details) {
         StringBuilder sb = new StringBuilder(details.length());
-        sb.append("<html>");
-        String[] lines = details.split("\n");
+        sb.append("<html>");                                 //NOI18N
+        String[] lines = details.split("\n");                //NOI18N
         for (String line : lines) {
-            sb.append(line).append("<br/>");
+            sb.append(line).append("<br/>");                 //NOI18N
         }
         Notification ntn = NotificationDisplayer.getDefault().notify(title,
                 NbGradleProject.getWarningIcon(),
@@ -59,22 +59,39 @@ public class GradleProjectErrorNotifications {
 
     public static String bulletedList(Collection<? extends Object> elements) {
         StringBuilder sb = new StringBuilder();
-        sb.append("<ul>");
+        sb.append("<ul>");                                   //NOI18N
         for (Object element : elements) {
-            sb.append("<li>");
-            String[] lines = element.toString().split("\n");
+            sb.append("<li>");                               //NOI18N
+            String[] lines = element.toString().split("\n"); //NOI18N
             for (int i = 0; i < lines.length; i++) {
                 String line = lines[i];
-                sb.append(line);
+                sb.append(lineWrap(line, 78));
                 if (i < lines.length - 1) {
-                    sb.append("<br/>");
+                    sb.append("<br/>");                      //NOI18N
                 }
             }
-            sb.append("</li>");
+            sb.append("</li>");                              //NOI18N
         }
-        sb.append("</ul>");
+        sb.append("</ul>");                                  //NOI18N
         return sb.toString();
     }
 
 
+    private static String lineWrap(String line, int maxCol) {
+        StringBuilder sb = new StringBuilder(line.length());
+        String[] parts = line.split(" ");                    //NOI18N
+        int col = 0;
+        String delim = "";                                   //NOI18N
+        for (String part : parts) {
+            if ((sb.length() > 0) && (col + part.length() > maxCol)) {
+                sb.append("<br/>").append(part);             //NOI18N
+                col = part.length();
+            } else {
+                sb.append(delim).append(part);
+                col += delim.length() + part.length();
+                delim = " ";                                 //NOI18N
+            }
+        }
+        return sb.toString();
+    }
 }

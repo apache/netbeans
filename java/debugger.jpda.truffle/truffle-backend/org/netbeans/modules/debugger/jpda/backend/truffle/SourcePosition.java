@@ -47,20 +47,26 @@ final class SourcePosition {
     final String mimeType;
 
     public SourcePosition(SourceSection sourceSection, LanguageInfo languageInfo) {
-        Source source = sourceSection.getSource();
-        this.id = getId(source);
-        this.name = source.getName();
-        this.hostClassName = null;
-        this.hostMethodName = null;
-        String sourcePath = source.getPath();
-        if (sourcePath == null) {
-            sourcePath = name;
+        if (sourceSection != null) {
+            Source source = sourceSection.getSource();
+            this.id = getId(source);
+            this.name = source.getName();
+            this.hostClassName = null;
+            this.hostMethodName = null;
+            String sourcePath = source.getPath();
+            if (sourcePath == null) {
+                sourcePath = name;
+            }
+            this.path = sourcePath;
+            this.sourceSection = sourceSection.getStartLine() + "," + sourceSection.getStartColumn() + "," + sourceSection.getEndLine() + "," + sourceSection.getEndColumn();
+            this.code = source.getCharacters().toString();
+            this.uri = source.getURI();
+            this.mimeType = findMIMEType(source, languageInfo);
+        } else {
+            this.id = -1;
+            this.name = this.hostClassName = this.hostMethodName = this.path = this.sourceSection = this.code = this.mimeType = null;
+            this.uri = null;
         }
-        this.path = sourcePath;
-        this.sourceSection = sourceSection.getStartLine() + "," + sourceSection.getStartColumn() + "," + sourceSection.getEndLine() + "," + sourceSection.getEndColumn();
-        this.code = source.getCharacters().toString();
-        this.uri = source.getURI();
-        this.mimeType = findMIMEType(source, languageInfo);
     }
 
     public SourcePosition(StackTraceElement ste) {

@@ -80,7 +80,7 @@ public class FileMovePlugin implements RefactoringPlugin {
     public void cancelRequest() {
     }
     
-    private class MoveFile extends SimpleRefactoringElementImplementation {
+    public class MoveFile extends SimpleRefactoringElementImplementation {
         
         private FileObject fo;
         public MoveFile(FileObject fo, RefactoringElementsBag session) {

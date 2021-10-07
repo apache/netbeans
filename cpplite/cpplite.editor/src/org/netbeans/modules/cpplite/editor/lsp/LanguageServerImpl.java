@@ -89,7 +89,7 @@ public class LanguageServerImpl implements LanguageServerProvider {
         String ccls = Utils.getCCLSPath();
         String clangd = Utils.getCLANGDPath();
         if (ccls != null || clangd != null) {
-            return prj2Server.compute(prj, (p, pair) -> {
+            Pair<Process, LanguageServerDescription> serverEntry = prj2Server.compute(prj, (p, pair) -> {
                 if (pair != null && pair.first().isAlive()) {
                     return pair;
                 }
@@ -139,7 +139,11 @@ public class LanguageServerImpl implements LanguageServerProvider {
                     LOG.log(Level.FINE, null, ex);
                     return null;
                 }
-            }).second();
+            });
+            if(serverEntry != null) {
+                return serverEntry.second();
+            }
+            return null;
         }
         return null;
     }
@@ -172,7 +176,13 @@ public class LanguageServerImpl implements LanguageServerProvider {
     private static File getCompileCommandsDir(CProjectConfigurationProvider configProvider) {
         ProjectConfiguration config = configProvider.getProjectConfiguration();
 
-        if (config.commandJsonCommand != null || config.commandJsonPath != null || config.commandJsonContent != null) {
+        if (config == null) {
+            return null;
+        }
+
+        File commandsPath = config.commandJsonPath != null ? new File(config.commandJsonPath) : null;
+
+        if (config.commandJsonCommand != null || (commandsPath != null && commandsPath.canRead()) || config.commandJsonContent != null) {
             File tempFile = Places.getCacheSubfile("cpplite/compile_commands/" + tempDirIndex++ + "/compile_commands.json");
             if (config.commandJsonCommand != null) {
                 try {
@@ -181,16 +191,13 @@ public class LanguageServerImpl implements LanguageServerProvider {
                     LOG.log(Level.WARNING, null, ex);
                     return null;
                 }
-            } else if (config.commandJsonPath != null) {
-                File commandsPath = new File(config.commandJsonPath);
-                if (commandsPath.canRead()) {
-                    try (InputStream in = new FileInputStream(commandsPath);
-                         OutputStream out = new FileOutputStream(tempFile)) {
-                        FileUtil.copy(in, out);
-                    } catch (IOException ex) {
-                        LOG.log(Level.WARNING, null, ex);
-                        return null;
-                    }
+            } else if (commandsPath != null && commandsPath.canRead()) {
+                try (InputStream in = new FileInputStream(commandsPath);
+                     OutputStream out = new FileOutputStream(tempFile)) {
+                    FileUtil.copy(in, out);
+                } catch (IOException ex) {
+                    LOG.log(Level.WARNING, null, ex);
+                    return null;
                 }
             } else if (config.commandJsonContent != null) {
                 try (OutputStream out = new FileOutputStream(tempFile)) {

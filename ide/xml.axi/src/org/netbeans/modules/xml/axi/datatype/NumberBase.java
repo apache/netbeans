@@ -230,7 +230,7 @@ public abstract class NumberBase extends Datatype {
             this.totalDigits = new ArrayList<Integer>(1);
             hasFacets = true;
         }
-        this.totalDigits.add(new Integer(totalDigits));
+        this.totalDigits.add(Integer.valueOf(totalDigits));
     }
     
     /*
@@ -243,7 +243,7 @@ public abstract class NumberBase extends Datatype {
             this.fractionDigits = new ArrayList<Integer>(1);
             hasFacets = true;
         }
-        this.fractionDigits.add(new Integer(fractionDigits));
+        this.fractionDigits.add(Integer.valueOf(fractionDigits));
     }
     
     /*

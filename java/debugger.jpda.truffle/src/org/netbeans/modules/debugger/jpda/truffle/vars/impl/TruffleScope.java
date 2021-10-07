@@ -19,9 +19,6 @@
 
 package org.netbeans.modules.debugger.jpda.truffle.vars.impl;
 
-import org.netbeans.api.debugger.jpda.JPDADebugger;
-import org.netbeans.api.debugger.jpda.ObjectVariable;
-import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable;
 
 /**
@@ -29,61 +26,19 @@ import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable;
  */
 public final class TruffleScope {
 
-    private final JPDADebugger debugger;
     private final String name;
-    private final boolean function;
-    private final ObjectVariable debugScope;
-    private TruffleVariable[] arguments;
     private TruffleVariable[] variables;
 
-    public TruffleScope(String name, boolean function, TruffleVariable[] arguments, TruffleVariable[] variables) {
+    public TruffleScope(String name, TruffleVariable[] variables) {
         this.name = name;
-        this.function = function;
-        this.arguments = arguments;
         this.variables = variables;
-        this.debugger = null;
-        this.debugScope = null;
-    }
-
-    public TruffleScope(String name, boolean function, boolean hasArgs, boolean hasVars, JPDADebugger debugger, ObjectVariable debugScope) {
-        this.name = name;
-        this.function = function;
-        if (!hasArgs) {
-            arguments = new TruffleVariable[] {};
-        }
-        if (!hasVars) {
-            variables = new TruffleVariable[] {};
-        }
-        this.debugger = debugger;
-        this.debugScope = debugScope;
     }
 
     public String getName() {
         return name;
     }
 
-    public boolean isFunction() {
-        return function;
-    }
-
-    public synchronized TruffleVariable[] getArguments() {
-        if (arguments == null) {
-            loadArgsAndVars();
-        }
-        return arguments;
-    }
-
     public synchronized TruffleVariable[] getVariables() {
-        if (variables == null) {
-            loadArgsAndVars();
-        }
         return variables;
-    }
-
-    private void loadArgsAndVars() {
-        assert Thread.holdsLock(this);
-        TruffleVariable[][] argsAndVars = TruffleAccess.getScopeArgsAndVars(debugger, debugScope);
-        arguments = argsAndVars[0];
-        variables = argsAndVars[1];
     }
 }

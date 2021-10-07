@@ -26,6 +26,7 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ClassTree;
@@ -65,11 +66,9 @@ public class JavaCodeTemplateFilter implements CodeTemplateFilter {
     private Tree.Kind treeKindCtx = null;
     private String stringCtx = null;
     
-    private JavaCodeTemplateFilter(JTextComponent component, int offset) {
-        if (Utilities.isJavaContext(component, offset, true)) {
-            final int startOffset = offset;
-            final int endOffset = component.getSelectionStart() == offset ? component.getSelectionEnd() : -1;
-            final Source source = Source.create(component.getDocument());
+    private JavaCodeTemplateFilter(Document doc, int startOffset, int endOffset) {
+        if (Utilities.isJavaContext(doc, startOffset, true)) {
+            final Source source = Source.create(doc);
             if (source != null) {
                 final AtomicBoolean cancel = new AtomicBoolean();
                 BaseProgressUtils.runOffEventDispatchThread(() -> {
@@ -216,7 +215,12 @@ public class JavaCodeTemplateFilter implements CodeTemplateFilter {
         
         @Override
         public CodeTemplateFilter createFilter(JTextComponent component, int offset) {
-            return new JavaCodeTemplateFilter(component, offset);
+            return createFilter(component.getDocument(), offset, component.getSelectionStart() == offset ? component.getSelectionEnd() : -1);
+        }
+
+        @Override
+        public CodeTemplateFilter createFilter(Document doc, int startOffset, int endOffset) {
+            return new JavaCodeTemplateFilter(doc, startOffset, endOffset);
         }
 
         @Override

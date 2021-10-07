@@ -247,8 +247,10 @@ public enum CssTokenId implements TokenId {
 
     AT_SIGN(Css3Lexer.AT_SIGN, AT_RULE_SYMBOL),
 
-    SASS_AT_ROOT(Css3Lexer.SASS_AT_ROOT, AT_RULE_SYMBOL)
+    SASS_AT_ROOT(Css3Lexer.SASS_AT_ROOT, AT_RULE_SYMBOL),
 
+    SASS_USE(Css3Lexer.SASS_USE, AT_RULE_SYMBOL),
+    SASS_FORWARD(Css3Lexer.SASS_FORWARD, AT_RULE_SYMBOL)
     ;
 
     private static final Map<Integer, CssTokenId> codesMap = new HashMap<>();

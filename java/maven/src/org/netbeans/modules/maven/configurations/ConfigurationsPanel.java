@@ -102,13 +102,10 @@ public class ConfigurationsPanel extends javax.swing.JPanel implements HelpCtx.P
 
     private void createListModel() {
 //        boolean isProfile = false;
-        DefaultListModel model = new DefaultListModel();
+        DefaultListModel<ModelHandle2.Configuration> model = new DefaultListModel<>();
         if (handle.getConfigurations() != null) {
             for (ModelHandle2.Configuration hndl : handle.getConfigurations()) {
                 model.addElement(hndl);
-//                if (hndl.isProfileBased()) {
-//                    isProfile = true;
-//                }
             }
         }
         lstConfigurations.setModel(model);

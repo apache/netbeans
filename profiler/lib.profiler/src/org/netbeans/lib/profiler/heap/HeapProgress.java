@@ -28,35 +28,47 @@ import javax.swing.SwingUtilities;
  * @author Tomas Hurka
  */
 public final class HeapProgress {
-    
+
     public static final int PROGRESS_MAX = 1000;
     private static ThreadLocal progressThreadLocal = new ThreadLocal();
+    private static Progress.Listener listener;
 
     private HeapProgress() {
-        
     }
-    
+
     public static BoundedRangeModel getProgress() {
+        registerListener();
+
         ModelInfo info = (ModelInfo) progressThreadLocal.get();
-        
         if (info == null) {
             info = new ModelInfo();
             progressThreadLocal.set(info);
         }
         return info.model;
     }
-    
-    static void progress(long counter, long startOffset, long value, long endOffset) {
-        // keep this method short so that it can be inlined 
-        if (counter % 100000 == 0) {
-            progress(value, endOffset, startOffset);
+
+    private static synchronized void registerListener() {
+        if (listener == null) {
+            listener = new Progress.Listener() {
+                @Override
+                public void started(Progress.Handle h) {
+                    progressStart();
+                }
+
+                @Override
+                public void progress(Progress.Handle h) {
+                    HeapProgress.progress(h.getValue(), h.getEndOffset(), h.getStartOffset());
+                }
+
+                @Override
+                public void finished(Progress.Handle h) {
+                    progressFinish();
+                }
+            };
+            Progress.register(listener);
         }
     }
 
-    static void progress(long value, long endValue) {
-        progress(value,0,value,endValue);
-    }
-    
     private static void progress(final long value, final long endOffset, final long startOffset) {
         ModelInfo info = (ModelInfo) progressThreadLocal.get();
         if (info != null) {
@@ -68,20 +80,20 @@ public final class HeapProgress {
             setValue(info.model, modelVal);
         }
     }
-    
-    private static int levelAdd(ModelInfo info, int diff) {        
+
+    private static int levelAdd(ModelInfo info, int diff) {
         info.level+=diff;
         return info.level;
     }
 
-    static void progressStart() {
+    private static void progressStart() {
         ModelInfo info = (ModelInfo) progressThreadLocal.get();
         if (info != null) {
             levelAdd(info, 1);
         }
     }
 
-    static void progressFinish() {
+    private static void progressFinish() {
         ModelInfo info = (ModelInfo) progressThreadLocal.get();
         if (info != null) {
             int level = levelAdd(info, -1);
@@ -93,7 +105,7 @@ public final class HeapProgress {
             info.offset = info.model.getValue();
         }
     }
-    
+
     private static void setValue(final BoundedRangeModel model, final int val) {
         if (SwingUtilities.isEventDispatchThread()) {
             model.setValue(val);
@@ -103,7 +115,7 @@ public final class HeapProgress {
             });
         }
     }
-    
+
     private static class ModelInfo {
         private BoundedRangeModel model;
         private int level;
@@ -112,6 +124,6 @@ public final class HeapProgress {
 
         private ModelInfo() {
             model = new DefaultBoundedRangeModel(0,0,0,PROGRESS_MAX);
-        } 
+        }
     }
 }

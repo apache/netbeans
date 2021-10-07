@@ -106,7 +106,7 @@ public class AddIndexAction extends BaseAction {
             Map<Integer, String> rset = new HashMap<Integer, String>();
             while (rs.next()) {
                 rset = drvSpec.getRow();
-                cols.add(rset.get(new Integer(4)));
+                cols.add(rset.get(Integer.valueOf(4)));
                 rset.clear();
             }
             rs.close();

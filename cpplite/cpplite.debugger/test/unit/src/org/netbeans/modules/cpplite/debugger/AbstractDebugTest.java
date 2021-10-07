@@ -18,26 +18,48 @@
  */
 package org.netbeans.modules.cpplite.debugger;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.List;
 import junit.framework.Test;
 
 import org.netbeans.api.debugger.DebuggerEngine;
+import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 
 public abstract class AbstractDebugTest extends NbTestCase {
 
     protected DebuggerEngine engine;
     protected CPPLiteDebugger debugger;
+    protected Process process;
+    protected StringBuffer stdOut;
+    protected StringBuffer stdErr;
 
     private final int[] suspendCount = new int[]{0};
     private final int[] resumeCount = new int[]{0};
 
     protected AbstractDebugTest(String s) {
         super(s);
+    }
+
+    protected final static void createSourceFile(String fileName, File wd, String content) throws IOException {
+        FileObject source = FileUtil.createData(FileUtil.toFileObject(wd), "main.cpp");
+        try (OutputStream os = source.getOutputStream();
+            Writer w = new OutputStreamWriter(os)) {
+            w.append(content);
+        }
     }
 
     protected final static void compileC(String name, File wd) throws IOException, InterruptedException {
@@ -51,7 +73,20 @@ public abstract class AbstractDebugTest extends NbTestCase {
     }
 
     protected final void startDebugging(String name, File wd) throws IOException {
-        engine = CPPLiteDebugger.startDebugging(new CPPLiteDebuggerConfig(Arrays.asList(new File(wd, name).getAbsolutePath()), wd, "gdb")).first();
+        ExplicitProcessParameters processParameters = ExplicitProcessParameters.builder().workingDirectory(wd).build();
+        startDebugging(name, wd, processParameters);
+    }
+
+    protected final void startDebugging(String name, File wd, ExplicitProcessParameters processParameters) throws IOException {
+        startDebugging(Arrays.asList(new File(wd, name).getAbsolutePath()), processParameters);
+    }
+
+    protected final void startDebugging(List<String> executable, ExplicitProcessParameters processParameters) throws IOException {
+        this.process = CPPLiteDebugger.startDebugging(
+                new CPPLiteDebuggerConfig(executable, processParameters, null, "gdb"),
+                engine -> this.engine = engine);
+        stdOut = outputFrom(process.getInputStream());
+        stdErr = outputFrom(process.getErrorStream());
         debugger = engine.lookupFirst(null, CPPLiteDebugger.class);
         debugger.addStateListener(new CPPLiteDebugger.StateListener() {
             @Override
@@ -99,6 +134,14 @@ public abstract class AbstractDebugTest extends NbTestCase {
         }
     }
 
+    protected boolean isAppProcessAlive() {
+        return process.isAlive();
+    }
+
+    protected final int waitAppProcessExit() throws InterruptedException {
+        return process.waitFor();
+    }
+
     protected final void assertStoppedAt(URI file, int line) {
         CPPFrame currentFrame = debugger.getCurrentFrame();
         assertNotNull(currentFrame);
@@ -108,5 +151,24 @@ public abstract class AbstractDebugTest extends NbTestCase {
 
     public static Test suite() {
         return NbModuleSuite.emptyConfiguration().gui(false).suite();
+    }
+
+    private static StringBuffer outputFrom(InputStream inputStream) {
+        StringBuffer buffer = new StringBuffer();
+        new Thread("Process output") {
+            @Override
+            public void run() {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        buffer.append(line);
+                        buffer.append('\n');
+                    }
+                } catch (IOException ex) {
+                    buffer.append(ex);
+                }
+            }
+        }.start();
+        return buffer;
     }
 }

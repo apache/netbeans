@@ -46,6 +46,8 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = ProjectFactory.class, position = 50 /* must be lower than ant java project support*/)
 public class SuiteFactory implements ProjectFactory2 {
+    static final String ICON = "org/netbeans/modules/java/mx/project/mx-knife.png";
+
     @Override
     public boolean isProject(FileObject fo) {
         return findSuitePy(fo) != null;
@@ -96,9 +98,7 @@ public class SuiteFactory implements ProjectFactory2 {
     @Override
     public ProjectManager.Result isProject2(FileObject fo) {
         if (isProject(fo)) {
-            return new ProjectManager.Result(
-                ImageUtilities.loadImageIcon("org/netbeans/modules/java/mx/project/mx-knife.png", false)
-            );
+            return new ProjectManager.Result(ImageUtilities.loadImageIcon(ICON, false));
         } else {
             return null;
         }

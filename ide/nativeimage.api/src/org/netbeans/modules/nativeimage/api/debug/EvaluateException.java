@@ -21,7 +21,7 @@ package org.netbeans.modules.nativeimage.api.debug;
 /**
  * Thrown when evaluation in the native debugger fails.
  *
- * @since 1.0
+ * @since 0.1
  */
 public class EvaluateException extends Exception {
 
@@ -30,7 +30,7 @@ public class EvaluateException extends Exception {
      * specified detail message.
      *
      * @param msg the detail message.
-     * @since 1.0
+     * @since 0.1
      */
     public EvaluateException(String msg) {
         super(msg);
@@ -41,10 +41,9 @@ public class EvaluateException extends Exception {
      * existing exception.
      *
      * @param t exception.
-     * @since 1.0
+     * @since 0.1
      */
     public EvaluateException(Throwable t) {
         super(t.getLocalizedMessage(), t);
-        
     }
 }

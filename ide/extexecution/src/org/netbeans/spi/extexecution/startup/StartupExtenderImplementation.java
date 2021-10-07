@@ -32,7 +32,12 @@ import org.openide.util.Lookup;
  * startup. Typically the server plugin implementor or project will query
  * the arguments via API counterpart {@link StartupExtender}. Of course it is
  * not mandatory to use such arguments and there is no way to force it.
- *
+ * <p>
+ * The implementation <b>should not quote or escape parameters</b> it returns. Each item in the
+ * {@link #getArguments(org.openide.util.Lookup, org.netbeans.api.extexecution.startup.StartupExtender.StartMode) returned list}
+ * should be passed as it should be seen by the target process and the API user (launcher) decides on quoting appropriate for the
+ * intended purpose (i.e. to construct a command line, depending on OS). 
+ * 
  * @author Petr Hejl
  * @since 1.30
  * @see StartupExtender
@@ -82,5 +87,15 @@ public interface StartupExtenderImplementation {
          */
         int position() default Integer.MAX_VALUE;
 
+        /**
+         * Value {@code false} means the extender leaves escaping or quoting arguments
+         * to the user who constructs the commandline or processes the arguments. To
+         * preserve backwards compatibility, the default value is {@code true}.
+         * <p>
+         * Implementors are <b>strongly encouraged</b> to declare escaping as false.
+         * @return false, if the arguments are not escaped. True otherwise.
+         * @since 1.62
+         */
+        boolean argumentsQuoted() default true;
     }
 }

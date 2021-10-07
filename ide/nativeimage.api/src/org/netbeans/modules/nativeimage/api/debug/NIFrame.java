@@ -21,49 +21,49 @@ package org.netbeans.modules.nativeimage.api.debug;
 /**
  * Representation of a native stack frame.
  *
- * @since 1.0
+ * @since 0.1
  */
 public interface NIFrame {
 
     /**
      * Frame's thread ID.
-     * @since 1.0
+     * @since 0.1
      */
     String getThreadId();
 
     /**
      * Frame's depth level. The top frame has level 0.
-     * @since 1.0
+     * @since 0.1
      */
     int getLevel();
 
     /**
      * Frame's native address.
-     * @since 1.0
+     * @since 0.1
      */
     String getAddress();
 
     /**
      * A short name of the file associated with the frame.
-     * @since 1.0
+     * @since 0.1
      */
     String getShortFileName();
 
     /**
      * A full name of the file associated with the frame.
-     * @since 1.0
+     * @since 0.1
      */
     String getFullFileName();
 
     /**
      * Name of the function associated with the frame.
-     * @since 1.0
+     * @since 0.1
      */
     String getFunctionName();
 
     /**
      * 1-based line of the frame location.
-     * @since 1.0
+     * @since 0.1
      */
     int getLine();
 }

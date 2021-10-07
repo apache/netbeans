@@ -230,14 +230,14 @@ public class MultiKeyBinding extends JTextComponent.KeyBinding
     throws java.io.IOException {
 
         if( keys != null ) {
-            out.writeObject( new Integer( keys.length ) );
+            out.writeObject( Integer.valueOf( keys.length ) );
             for( int i=0; i<keys.length; i++ ) {
                 out.writeInt( keys[i].getKeyCode() );
                 out.writeInt( keys[i].getModifiers() );
                 out.writeBoolean( keys[i].isOnKeyRelease() );
             }
         } else {
-            out.writeObject( new Integer( -1 ) );
+            out.writeObject( Integer.valueOf( -1 ) );
         }
 
         if( key != null ) {

@@ -70,7 +70,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Dusan Balek
  */
 @ServiceProvider(service = CodeActionsProvider.class, position = 170)
-public class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactoring {
+public final class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactoring {
 
     private static final String EXTRACT_SUPERCLASS_REFACTORING_COMMAND =  "java.refactor.extract.superclass";
     private static final String EXTRACT_INTERFACE_REFACTORING_COMMAND =  "java.refactor.extract.interface";
@@ -81,8 +81,8 @@ public class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactoring {
 
     @Override
     @NbBundle.Messages({
-        "DN_ExtractSuperclass= Extract Superclass...",
-        "DN_ExtractInterface= Extract Interface...",
+        "DN_ExtractSuperclass=Extract Superclass...",
+        "DN_ExtractInterface=Extract Interface...",
     })
     public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
         List<String> only = params.getContext().getOnly();
@@ -176,12 +176,14 @@ public class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactoring {
                     String label = EXTRACT_SUPERCLASS_REFACTORING_COMMAND.equals(command) ? Bundle.DN_SelectClassName() : Bundle.DN_SelectInterfaceName();
                     String value = EXTRACT_SUPERCLASS_REFACTORING_COMMAND.equals(command) ? "NewClass" : "NewInterface";
                     client.showInputBox(new ShowInputBoxParams(label, value)).thenAccept(name -> {
-                        extract(client, uri, command, type, selected, name);
+                        if (name != null && !name.isEmpty()) {
+                            extract(client, uri, command, type, selected, name);
+                        }
                     });
                 }
             });
         } else {
-            client.logMessage(new MessageParams(MessageType.Error, String.format("Illegal number of arguments received for command: %s", command)));
+            client.showMessage(new MessageParams(MessageType.Error, String.format("Illegal number of arguments received for command: %s", command)));
         }
         return CompletableFuture.completedFuture(true);
     }
@@ -232,7 +234,7 @@ public class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactoring {
             refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(file));
             client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, EXTRACT_SUPERCLASS_REFACTORING_COMMAND.equals(command) ? "Extract Superclass" : "Extract Interface")));
         } catch (Exception ex) {
-            client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+            client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }
     }
 }

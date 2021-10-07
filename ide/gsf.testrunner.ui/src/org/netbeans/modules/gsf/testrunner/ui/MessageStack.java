@@ -141,8 +141,8 @@ public final class MessageStack {
             throw new IllegalArgumentException(
                     java.text.MessageFormat.format(
                         "Message type out of bounds (0 .. {1}): {0}",   //NOI18N
-                        new Object[] { new Integer(layer),
-                                       new Integer(messageLayers.length) }));
+                        new Object[] { Integer.valueOf(layer),
+                                       Integer.valueOf(messageLayers.length) }));
         }
         
         /* unify parameters: */

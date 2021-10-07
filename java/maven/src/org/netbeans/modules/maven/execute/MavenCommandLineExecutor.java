@@ -37,6 +37,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -79,6 +80,7 @@ import org.netbeans.modules.maven.execute.cmd.ShellConstructor;
 import org.netbeans.modules.maven.indexer.api.RepositoryIndexer;
 import org.netbeans.modules.maven.indexer.api.RepositoryPreferences;
 import org.netbeans.modules.maven.options.MavenSettings;
+import org.netbeans.modules.maven.runjar.MavenExecuteUtils;
 import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
 import org.openide.LifecycleManager;
 import org.openide.awt.HtmlBrowser;
@@ -123,9 +125,9 @@ import org.openide.windows.OutputListener;
  * @author  Svata Dedic (svatopluk.dedic@gmail.com)
  */
 public class MavenCommandLineExecutor extends AbstractMavenExecutor {
-    static final String ENV_PREFIX = "Env."; //NOI18N
+    static final String ENV_PREFIX = MavenExecuteUtils.ENV_PREFIX;
     static final String INTERNAL_PREFIX = "NbIde."; //NOI18N
-    static final String ENV_JAVAHOME = "Env.JAVA_HOME"; //NOI18N
+    static final String ENV_JAVAHOME = ENV_PREFIX + "JAVA_HOME"; //NOI18N
 
     private static final String KEY_UUID = "NB_EXEC_MAVEN_PROCESS_UUID"; //NOI18N
 
@@ -363,7 +365,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         out.waitFor();
         return executionresult;
     }
-
+    
     private void kill(Process prcs, String uuid) {
         Map<String, String> env = new HashMap<String, String>();
         env.put(KEY_UUID, uuid);
@@ -674,7 +676,11 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                 continue;// #191374: would prevent bin/mvn from using selected installation
             }
             // TODO: do we really put *all* the env vars there? maybe filter, M2_HOME and JDK_HOME?
-            builder.environment().put(env, val);
+            if (MavenExecuteUtils.isEnvRemovedValue(val)) {
+                builder.environment().remove(env);
+            } else {
+                builder.environment().put(env, val);
+            }
             if (!env.equals(CosChecker.NETBEANS_PROJECT_MAPPINGS)
                     && !env.equals(NETBEANS_MAVEN_COMMAND_LINE)) { //don't show to user
                 display.append(Utilities.escapeParameters(new String[] {env + "=" + val})).append(' '); // NOI18N

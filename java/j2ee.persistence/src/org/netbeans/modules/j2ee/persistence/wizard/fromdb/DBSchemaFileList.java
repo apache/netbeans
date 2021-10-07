@@ -40,8 +40,8 @@ import org.openide.util.NbBundle;
  */
 public class DBSchemaFileList {
 
-    private final Map<FileObject,String> dbschema2DisplayName = new HashMap<FileObject,String>();
-    private final List dbschemaList;
+    private final Map<FileObject, String> dbschema2DisplayName = new HashMap<>();
+    private final List<FileObject> dbschemaList;
 
     public DBSchemaFileList(Project project, FileObject configFilesFolder) {
         SourceGroup[] sourceGroups = SourceGroups.getJavaSourceGroups(project);
@@ -56,7 +56,7 @@ public class DBSchemaFileList {
             searchRoot(configFilesFolder, configFilesDisplayName);
         }
 
-        List tempDBSchemaList = new ArrayList(dbschema2DisplayName.keySet());
+        List<FileObject> tempDBSchemaList = new ArrayList<>(dbschema2DisplayName.keySet());
         Collections.sort(tempDBSchemaList, new DBSchemaComparator());
 
         dbschemaList = Collections.unmodifiableList(tempDBSchemaList);

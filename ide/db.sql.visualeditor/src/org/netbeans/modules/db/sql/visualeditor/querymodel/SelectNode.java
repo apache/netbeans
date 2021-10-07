@@ -41,12 +41,12 @@ public class SelectNode implements Select {
     public SelectNode() {
     }
 
-    public SelectNode(ArrayList columnList, String quantifier) {
+    public SelectNode(List columnList, String quantifier) {
         _selectItemList = columnList;
         _quantifier = quantifier;
     }
 
-    public SelectNode(ArrayList columnList) {
+    public SelectNode(List columnList) {
         this(columnList, "");  // NOI18N
     }
 
@@ -76,7 +76,7 @@ public class SelectNode implements Select {
 
     // Accessors/Mutators
 
-    public void setColumnList(ArrayList columnList) {
+    public void setColumnList(List columnList) {
         _selectItemList = columnList;
     }
 

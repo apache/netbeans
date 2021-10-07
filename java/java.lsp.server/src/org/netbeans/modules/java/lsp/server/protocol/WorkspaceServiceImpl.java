@@ -205,22 +205,22 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                                 List<TestSuiteInfo.TestCaseInfo> tests = new ArrayList<>(methods.size());
                                 String url = Utils.toUri(fo);
                                 String testClassName = null;
-                                Integer testClassLine = null;
+                                Range testClassRange = null;
                                 for (TestMethodController.TestMethod testMethod : methods) {
                                     if (testClassName == null) {
                                         testClassName = testMethod.getTestClassName();
                                     }
-                                    if (testClassLine == null) {
-                                        testClassLine = testMethod.getTestClassPosition() != null
-                                                ? Utils.createPosition(fo, testMethod.getTestClassPosition().getOffset()).getLine()
-                                                : null;
+                                    if (testClassRange == null && testMethod.getTestClassPosition() != null) {
+                                        Position pos = Utils.createPosition(fo, testMethod.getTestClassPosition().getOffset());
+                                        testClassRange = new Range(pos, pos);
                                     }
                                     String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
-                                    String fullName = testMethod.getTestClassName() + '.' + testMethod.method().getMethodName();
-                                    int testLine = Utils.createPosition(fo, testMethod.start().getOffset()).getLine();
-                                    tests.add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), fullName, url, testLine, TestSuiteInfo.State.Loaded, null));
+                                    Position startPos = testMethod.start() != null ? Utils.createPosition(fo, testMethod.start().getOffset()) : null;
+                                    Position endPos = testMethod.end() != null ? Utils.createPosition(fo, testMethod.end().getOffset()) : startPos;
+                                    Range range = startPos != null ? new Range(startPos, endPos) : null;
+                                    tests.add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), url, range, TestSuiteInfo.State.Loaded, null));
                                 }
-                                return new TestSuiteInfo(testClassName, url, testClassLine, TestSuiteInfo.State.Loaded, tests);
+                                return new TestSuiteInfo(testClassName, url, testClassRange, TestSuiteInfo.State.Loaded, tests);
                             };
                             testMethodsListener.compareAndSet(null, (fo, methods) -> {
                                 try {

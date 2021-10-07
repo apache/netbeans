@@ -69,7 +69,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Dusan Balek
  */
 @ServiceProvider(service = CodeActionsProvider.class, position = 160)
-public class MoveRefactoring extends CodeRefactoring {
+public final class MoveRefactoring extends CodeRefactoring {
 
     private static final String MOVE_REFACTORING_KIND = "refactor.move";
     private static final String MOVE_REFACTORING_COMMAND =  "java.refactor.move";
@@ -80,7 +80,7 @@ public class MoveRefactoring extends CodeRefactoring {
 
     @Override
     @NbBundle.Messages({
-        "DN_Move= Move...",
+        "DN_Move=Move...",
     })
     public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
         List<String> only = params.getContext().getOnly();
@@ -181,7 +181,7 @@ public class MoveRefactoring extends CodeRefactoring {
                 throw new IllegalArgumentException(String.format("Illegal number of arguments received for command: %s", command));
             }
         } catch (Exception ex) {
-            client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+            client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }
         return CompletableFuture.completedFuture(true);
     }
@@ -206,7 +206,7 @@ public class MoveRefactoring extends CodeRefactoring {
             }
             client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, "Move")));
         } catch (Exception ex) {
-            client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+            client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }
     }
 

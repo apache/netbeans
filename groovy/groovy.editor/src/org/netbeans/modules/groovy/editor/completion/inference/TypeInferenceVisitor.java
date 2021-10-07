@@ -25,13 +25,13 @@ import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.Parameter;
 import org.codehaus.groovy.ast.Variable;
 import org.codehaus.groovy.ast.expr.BinaryExpression;
 import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.ConstructorCallExpression;
 import org.codehaus.groovy.ast.expr.DeclarationExpression;
-import org.codehaus.groovy.ast.expr.EmptyExpression;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.ast.expr.ListExpression;
 import org.codehaus.groovy.ast.expr.MapExpression;
@@ -43,10 +43,12 @@ import org.codehaus.groovy.ast.stmt.BlockStatement;
 import org.codehaus.groovy.ast.stmt.Statement;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.syntax.Types;
+import org.codehaus.groovy.transform.stc.StaticTypesMarker;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.groovy.editor.api.ASTUtils;
 import org.netbeans.modules.groovy.editor.api.AstPath;
 import org.netbeans.modules.groovy.editor.occurrences.TypeVisitor;
+import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 
 /**
  *
@@ -96,17 +98,7 @@ public class TypeInferenceVisitor extends TypeVisitor {
     public void visitField(FieldNode node) {
         if (sameVariableName(leaf, node)) {
             if (node.hasInitialExpression()){
-                Expression expression = node.getInitialExpression();
-                if (expression instanceof ConstantExpression
-                        && !expression.getText().equals("null")) { // NOI18N
-                    guessedType = ((ConstantExpression) expression).getType();
-                } else if (expression instanceof ConstructorCallExpression) {
-                    guessedType = ((ConstructorCallExpression) expression).getType();
-                } else if (expression instanceof MethodCallExpression) {
-                    int newOffset = ASTUtils.getOffset(doc, expression.getLineNumber(), expression.getColumnNumber());
-                    AstPath newPath = new AstPath(path.root(), newOffset, doc);
-                    guessedType = MethodInference.findCallerType(expression, newPath, doc, newOffset);
-                }
+                guessedType = deriveExpressonType(node.getInitialExpression());
             }
         }
     }
@@ -242,13 +234,22 @@ public class TypeInferenceVisitor extends TypeVisitor {
     }
 
     private ClassNode deriveExpressonType(Expression expression) {
-        ClassNode derivedExpressionType = null;
+        ClassNode derivedExpressionType = GroovyUtils.findInferredType(expression);
+        if (derivedExpressionType != null) {
+            return derivedExpressionType;
+        }
         if (expression instanceof ConstantExpression
                 && !expression.getText().equals("null")) { // NOI18N
             derivedExpressionType = ((ConstantExpression) expression).getType();
         } else if (expression instanceof ConstructorCallExpression) {
             derivedExpressionType = ((ConstructorCallExpression) expression).getType();
         } else if (expression instanceof MethodCallExpression) {
+            Object o = expression.getNodeMetaData(StaticTypesMarker.DIRECT_METHOD_CALL_TARGET);
+            if (o instanceof MethodNode) {
+                MethodNode mn = (MethodNode)o;
+                return mn.getReturnType();
+            }
+
             int newOffset = ASTUtils.getOffset(doc, expression.getLineNumber(), expression.getColumnNumber());
             AstPath newPath = new AstPath(path.root(), newOffset, doc);
             derivedExpressionType = MethodInference.findCallerType(expression, newPath, doc, newOffset);

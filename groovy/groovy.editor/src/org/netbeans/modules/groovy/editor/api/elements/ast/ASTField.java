@@ -41,6 +41,11 @@ public final class ASTField extends ASTElement {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String getSignature() {
+        return name;
+    }
     
     @Override
     public ElementKind getKind() {

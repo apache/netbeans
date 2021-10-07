@@ -34,7 +34,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Properties;
 import javax.lang.model.element.ElementKind;
-import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
@@ -128,8 +127,8 @@ public class Utils {
         }
     }
 
-    public static int getOffset(Document doc, Position pos) {
-        return LineDocumentUtils.getLineStartFromIndex((LineDocument) doc, pos.getLine()) + pos.getCharacter();
+    public static int getOffset(LineDocument doc, Position pos) {
+        return LineDocumentUtils.getLineStartFromIndex(doc, pos.getLine()) + pos.getCharacter();
     }
 
     public static synchronized String toUri(FileObject file) {

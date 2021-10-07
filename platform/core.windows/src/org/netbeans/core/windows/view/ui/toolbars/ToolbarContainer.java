@@ -35,8 +35,6 @@ import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -507,21 +505,6 @@ final class ToolbarContainer extends JPanel {
         public Dimension getMaximumSize () {
             return max;
         }
-    }
-
-    private static java.util.Map<RenderingHints.Key, Object> hintsMap = null;
-    @SuppressWarnings("unchecked")
-    static final Map getHints() {
-        //XXX We REALLY need to put this in a graphics utils lib
-        if (hintsMap == null) {
-            //Thanks to Phil Race for making this possible
-            hintsMap = (Map<RenderingHints.Key, Object>)(Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints")); //NOI18N
-            if (hintsMap == null) {
-                hintsMap = new HashMap<RenderingHints.Key, Object>();
-                hintsMap.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            }
-        }
-        return hintsMap;
     }
 
     private final class ToolbarXP extends JPanel {

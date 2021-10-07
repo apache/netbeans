@@ -513,6 +513,7 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
             Elements elements = info.getElements();
 
             if (elements != null) {
+                info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                 final javax.lang.model.element.TypeElement typeElement = ElementSearch.getClass(elements, fqName);
 
                 if (typeElement != null) {

@@ -685,7 +685,7 @@ public class QueryBuilderGraphFrame extends JPanel
                     ? criteriaCount+1
                             : Integer.parseInt(order);
                     _inputTableAddCriteria = true;
-                    model.setValueAt(new Integer(orderNum).toString(), row,
+                    model.setValueAt(Integer.valueOf(orderNum).toString(), row,
                             QueryBuilderInputTable.CriteriaOrder_COLUMN);
                     _inputTableAddCriteria = false;
                     if ( orderNum < criteriaCount+1 ) {
@@ -1582,7 +1582,7 @@ public class QueryBuilderGraphFrame extends JPanel
                         QueryBuilderInputTable.Criteria_Uneditable_String,
                         QueryBuilderInputTable.CriteriaOrder_Uneditable_String);
             } else {
-                String orderString = (order == -1) ? "" : new Integer(order+1).toString();
+                String orderString = (order == -1) ? "" : Integer.valueOf(order+1).toString();
                 
                 // Update the appropriate row, or add a new one
                 _queryBuilderInputTable.addCriterion(tableSpec, columnName,

@@ -104,7 +104,7 @@ class SmallObjectMap implements ObjectMap {
         table[bucket] = o;
 
         // add the wrapping info
-        if (wrap) wrappers.put(o, new Integer(idCounter++));
+        if (wrap) wrappers.put(o, Integer.valueOf(idCounter++));
         return wrap;
     }
 

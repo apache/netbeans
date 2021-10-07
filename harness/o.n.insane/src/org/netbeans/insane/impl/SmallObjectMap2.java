@@ -124,7 +124,7 @@ class SmallObjectMap2 implements ObjectMap {
         table[bucket] = o;
 
         // add the wrapping info
-        if (wrap) wrappers.put(o, new Integer(nextFreeId()));
+        if (wrap) wrappers.put(o, Integer.valueOf(nextFreeId()));
         return wrap;
     }
 

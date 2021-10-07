@@ -83,6 +83,23 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="tooling-runWorkingDir-runEnvironment">
+            <api name="general"/>
+            <summary>NetBeans Tooling plugin recognizes "runWorkingDir" and "runEnvironment" properties.</summary>
+            <version major="2" minor="21"/>
+            <date day="23" month="9" year="2021"/>
+            <author login="entlicher"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                Introduced <code>runWorkingDir</code> and <code>runEnvironment</code> project properties that can be passed
+                to NetBeans Tooling plugin in order to inject user parameters into gradle JavaExec task configurations.
+                The property <code>runWorkingDir</code> shall contain an absolute path of the working directory.
+                The property <code>runEnvironment</code> shall contain possibly quoted space-separated expressions of
+                <code>VAR_NAME=VAR_VALUE</code>, or <code>!VAR_NAME</code>. The <code>VAR_NAME=VAR_VALUE</code> sets
+                environment variable <code>VAR_NAME</code> to value <code>VAR_VALUE</code> and <code>!VAR_NAME</code>
+                removes variable <code>VAR_NAME</code> from the set of environment variables.
+            </description>
+        </change>
         <change id="gradle-init">
             <api name="general"/>
             <summary>

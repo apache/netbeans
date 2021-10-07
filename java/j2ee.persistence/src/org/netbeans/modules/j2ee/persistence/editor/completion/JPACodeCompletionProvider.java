@@ -171,7 +171,7 @@ public class JPACodeCompletionProvider implements CompletionProvider {
             if (prefix.length() == 0) {
                 return data;
             }
-            List ret = new ArrayList();
+            List<CompletionItem> ret = new ArrayList<>();
             for (Iterator<JPACompletionItem> it = data.iterator(); it.hasNext();) {
                 CompletionItem itm = it.next();
                 if (itm.getInsertPrefix().toString().startsWith(prefix)) {

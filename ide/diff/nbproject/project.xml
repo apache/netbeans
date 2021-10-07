@@ -160,7 +160,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>7.50</specification-version>
+                        <specification-version>7.82</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

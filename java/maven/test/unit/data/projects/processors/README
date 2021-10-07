@@ -1,0 +1,5 @@
+The 'src' directory contains sources for maven projects, that are using in the testing. 
+The project were "compiled" locally and their local repository data are in 'repo'
+The contents of the 'repo' directory is copied to the local maven repository during the tests,
+and the (sole) directory 'nbtest' is removed from the local repo in test's tearDown().
+

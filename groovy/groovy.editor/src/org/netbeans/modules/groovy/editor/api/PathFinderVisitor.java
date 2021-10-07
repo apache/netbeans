@@ -107,11 +107,21 @@ public class PathFinderVisitor extends ClassCodeVisitorSupport {
     private final int column;
 
     private final List<ASTNode> path = new ArrayList<ASTNode>();
+    
+    /**
+     * Terminate at outermost node.
+     */
+    private final boolean outermost;
 
     public PathFinderVisitor(SourceUnit sourceUnit, int line, int column) {
+        this(sourceUnit, line, column, false);
+    }
+    
+    PathFinderVisitor(SourceUnit sourceUnit, int line, int column, boolean outermost) {
         this.sourceUnit = sourceUnit;
         this.line = line;
         this.column = column;
+        this.outermost = outermost;
     }
 
     public List<ASTNode> getPath() {
@@ -135,15 +145,58 @@ public class PathFinderVisitor extends ClassCodeVisitorSupport {
     @Override
     protected void visitStatement(Statement statement) {
     }
+    
+    /**
+     * Possibly terminates the search after adding node to the path. Returns false, if
+     * the `outermost' is true and the line:column corresponds to the last character of
+     * the tested node (returns false). This ensures that path terminates at the outermost
+     * expression. 
+     * 
+     * @param node added/tested node
+     * @return false to terminate depth-first traversal
+     */
+    private boolean addToPath(ASTNode node) {
+        path.add(node);
+        if (!outermost || node == null || !isInSource(node)) {
+            return false;
+        }
+        if (!isInside(node, line, column, true, false)) {
+            return false;
+        }
+        
+        // exception: if the expression is a method expression and
+        // the method expression does not use parenthesis, then any trailing thing will
+        // be joined to the last method's argument expr.
+        if (node instanceof MethodCallExpression) {
+            MethodCallExpression mce = (MethodCallExpression)node;
+            if (mce.getArguments() instanceof ArgumentListExpression) {
+                ArgumentListExpression ale = (ArgumentListExpression)mce.getArguments();
+                if (ale.getLastLineNumber() == mce.getLastLineNumber() &&
+                    ale.getLastColumnNumber() == mce.getLastColumnNumber()) {
+                    return false;
+                }
+            }
+        } else if (!(
+                (node instanceof PropertyExpression) ||
+                (node instanceof GStringExpression)
+            )) {
+            return false;
+        }
+        return true;
+    }
 
     @Override
     public void visitBlockStatement(BlockStatement node) {
         if (isInside(node, line, column, false)) {
-            path.add(node);
+            if (addToPath(node)) {
+                return;
+            }
         } else {
             for (Object object : node.getStatements()) {
                 if (isInside((ASTNode) object, line, column, false)) {
-                    path.add(node);
+                    if (addToPath(node)) {
+                        return;
+                    }
                     break;
                 }
             }
@@ -382,11 +435,15 @@ public class PathFinderVisitor extends ClassCodeVisitorSupport {
         Expression property = node.getProperty();
 
         if (isInside(node, line, column, false)) {
-            path.add(node);
+            if (addToPath(node)) {
+                return;
+            }
         } else {
             boolean nodeAdded = false;
             if (isInside(objectExpression, line, column, false)) {
-                path.add(node);
+                if (addToPath(node)) {
+                    return;
+                }
                 nodeAdded = true;
             }
             if (isInside(property, line, column, false)) {
@@ -608,8 +665,28 @@ public class PathFinderVisitor extends ClassCodeVisitorSupport {
     private boolean isInside(ASTNode node, int line, int column) {
         return isInside(node, line, column, true);
     }
-
+    
     private boolean isInside(ASTNode node, int line, int column, boolean addToPath) {
+        return isInside(node, line, column, false, addToPath);
+    }
+    
+    /**
+     * Determines if the line:column is inside a node. 
+     * Note: this method is hacked up, as the AST does not contain proper positions for some nodes,
+     * the brute-force search in all subtrees must be done. So if `addToPath` is true, the method
+     * returns true regardless of whether the line:column is inside or not.
+     * This behaviour will be fixed - see NETBEANS-5935
+     * <p>
+     * Includes a special case behaviour if `atEnd` is true: checks just for the ending position in 
+     * the node (= returns true iff line:column correspond to the end position)
+     * @param node node to check
+     * @param line the anchor line
+     * @param column the anchor column
+     * @param atEnd true, if we just check the end position
+     * @param addToPath true, if the matching node should be added to path, false for pure query.
+     * @return 
+     */
+    private boolean isInside(ASTNode node, int line, int column, boolean atEnd, boolean addToPath) {
         if (node == null || !isInSource(node)) {
             return false;
         }
@@ -629,7 +706,7 @@ public class PathFinderVisitor extends ClassCodeVisitorSupport {
         if (beginLine == -1 || beginColumn == -1 || endLine == -1 || endColumn == -1) {
             // this node doesn't provide its coordinates, some wrappers do that
             // let's say yes and visit its children
-            return addToPath ? true : false;
+            return !atEnd && addToPath ? true : false;
         }
 
         if (node instanceof ArgumentListExpression || node instanceof TupleExpression) {
@@ -641,24 +718,38 @@ public class PathFinderVisitor extends ClassCodeVisitorSupport {
 
         if (beginLine == endLine) {
             if (line == beginLine && column >= beginColumn && column < endColumn) {
-                result = true;
+                if (atEnd) {
+                    if (column == endColumn - 1) {
+                        result = true;
+                    }
+                } else {
+                    result = true;
+                }
             }
         } else if (line == beginLine) {
             if (column >= beginColumn) {
-                result = true;
+                result = !atEnd;
             }
         } else if (line == endLine) {
             if (column < endColumn) {
-                result = true;
+                if (atEnd) {
+                    if (column == endColumn - 1) {
+                        result = true;
+                    }
+                } else {
+                    result = true;
+                }
             }
         } else if (beginLine < line && line < endLine) {
-            result = true;
+            result = !atEnd;
         } else {
             result = false;
         }
 
         if (result && addToPath) {
-            path.add(node);
+            if (addToPath(node)) {
+                return false;
+            }
             LOG.log(Level.FINEST, "Path: {0}", path);
         }
 

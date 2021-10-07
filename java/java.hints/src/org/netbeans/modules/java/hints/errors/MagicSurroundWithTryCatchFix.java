@@ -444,6 +444,9 @@ final class MagicSurroundWithTryCatchFix extends JavaFix {
     }
 
     private static StatementTree createPrintStackTraceStatement(CompilationInfo info, TreeMaker make, String name) {
+        if (!ErrorFixesFakeHint.isPrintStackTrace(ErrorFixesFakeHint.getPreferences(info.getFileObject(), FixKind.SURROUND_WITH_TRY_CATCH))) {
+            return null;
+        }
         return make.ExpressionStatement(make.MethodInvocation(Collections.<ExpressionTree>emptyList(), make.MemberSelect(make.Identifier(name), "printStackTrace"), Collections.<ExpressionTree>emptyList()));
     }
 
@@ -466,7 +469,7 @@ final class MagicSurroundWithTryCatchFix extends JavaFix {
             logStatement = createPrintStackTraceStatement(info, make, name);
         }
 
-        return make.Catch(make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), name, make.Type(type), null), make.Block(Collections.singletonList(logStatement), false));
+        return make.Catch(make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), name, make.Type(type), null), make.Block(logStatement != null ? Collections.singletonList(logStatement) : Collections.emptyList(), false));
     }
 
     static List<CatchTree> createCatches(WorkingCopy info, TreeMaker make, List<TypeMirrorHandle> thandles, TreePath currentPath) {

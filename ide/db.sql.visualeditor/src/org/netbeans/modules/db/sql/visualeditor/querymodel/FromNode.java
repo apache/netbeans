@@ -41,7 +41,7 @@ public class FromNode implements From {
     public FromNode() {
     }
 
-    public FromNode(ArrayList tableList) {
+    public FromNode(List tableList) {
         _tableList = tableList;
     }
 

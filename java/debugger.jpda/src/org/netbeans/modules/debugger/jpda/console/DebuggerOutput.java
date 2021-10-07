@@ -295,7 +295,6 @@ public class DebuggerOutput implements PropertyChangeListener {
             final int lineNumber = t.getLineNumber (language);
             Operation op = t.getCurrentOperation();
             try {
-                final String sourceName = t.getSourceName (language);
                 String url = null;
                 SourcePath sourcePath = contextProvider.lookupFirst(null, SourcePath.class);
                 if (sourcePath != null) {
@@ -304,6 +303,14 @@ public class DebuggerOutput implements PropertyChangeListener {
                     } catch (InternalExceptionWrapper | InvalidStackFrameExceptionWrapper |
                              ObjectCollectedExceptionWrapper | VMDisconnectedExceptionWrapper ex) {}
                 }
+                String urlName = null;
+                if (url != null) {
+                    int index = url.lastIndexOf('/');
+                    if (index > 0) {
+                        urlName = url.substring(index + 1);
+                    }
+                }
+                final String sourceName = (urlName != null) ? urlName : t.getSourceName(language);
 //                String relativePath = EditorContextBridge.getRelativePath 
 //                    (t, language);
 //                synchronized (this) {

@@ -53,9 +53,6 @@ public final class LspSession {
      * Set the launched LSP server.
      */
     void setLspServer(NbLspServer lspServer) {
-        if (lspServer != null && this.lspServer != null) {
-            throw new IllegalStateException("LSP server is set already");
-        }
         setServerLookup(lspServer, lspServices);
         this.lspServer = lspServer;
     }
@@ -64,9 +61,6 @@ public final class LspSession {
      * Set the launched DAP server.
      */
     void setDapServer(NbProtocolServer dapServer) {
-        if (dapServer != null && this.dapServer != null) {
-            throw new IllegalStateException("DAP server is set already");
-        }
         setServerLookup(dapServer, dapServices);
         this.dapServer = dapServer;
     }

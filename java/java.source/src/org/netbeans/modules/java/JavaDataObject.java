@@ -96,6 +96,9 @@ public final class JavaDataObject extends MultiDataObject {
 
     @Override
     protected DataObject handleCreateFromTemplate(DataFolder df, String name) throws IOException {
+        if (name == null) {
+            return super.handleCreateFromTemplate(df, name);
+        }
         String[] packageAndName = name.split("\\.");
         if (packageAndName.length > 1) {
             verifyJavaNames(packageAndName);
@@ -108,7 +111,9 @@ public final class JavaDataObject extends MultiDataObject {
                 packageAndName[packageAndName.length - 1]
             );
         } else {
-            verifyJavaNames(name);
+            if (!getName().equals(name)) {
+                verifyJavaNames(name);
+            }
             return super.handleCreateFromTemplate(df, name);
         }
     }
@@ -167,6 +172,12 @@ public final class JavaDataObject extends MultiDataObject {
     private static void verifyJavaNames(String... names) throws IOException {
         for (int i = 0; i < names.length; i++) {
             String name = names[i];
+            if ("package-info".equals(name)) { // NOI18N
+                continue;
+            }
+            if ("module-info".equals(name)) { // NOI18N
+                continue;
+            }
             if (!Utilities.isJavaIdentifier(name)) {
                 throw Exceptions.attachLocalizedMessage(new IOException(name + " is not Java identifier"), Bundle.MSG_NotIdentifier(name));
             }

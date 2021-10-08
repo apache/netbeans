@@ -42,8 +42,10 @@ import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
 import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 import org.openide.windows.TopComponent;
 
 @NbBundle.Messages({
@@ -96,6 +98,7 @@ public final class JavaDataObject extends MultiDataObject {
     protected DataObject handleCreateFromTemplate(DataFolder df, String name) throws IOException {
         String[] packageAndName = name.split("\\.");
         if (packageAndName.length > 1) {
+            verifyJavaNames(packageAndName);
             FileObject f = df.getPrimaryFile();
             for (int i = 0; i < packageAndName.length - 1; i++) {
                 f = FileUtil.createFolder(f, packageAndName[i]);
@@ -105,6 +108,7 @@ public final class JavaDataObject extends MultiDataObject {
                 packageAndName[packageAndName.length - 1]
             );
         } else {
+            verifyJavaNames(name);
             return super.handleCreateFromTemplate(df, name);
         }
     }
@@ -154,5 +158,18 @@ public final class JavaDataObject extends MultiDataObject {
         };
         final ModificationResult taskResult = javaSource.runModificationTask(task);
         taskResult.commit();
+    }
+
+    @NbBundle.Messages({
+        "# {0} - name of file",
+        "MSG_NotIdentifier={0} is not proper Java identifier"
+    })
+    private static void verifyJavaNames(String... names) throws IOException {
+        for (int i = 0; i < names.length; i++) {
+            String name = names[i];
+            if (!Utilities.isJavaIdentifier(name)) {
+                throw Exceptions.attachLocalizedMessage(new IOException(name + " is not Java identifier"), Bundle.MSG_NotIdentifier(name));
+            }
+        }
     }
 }

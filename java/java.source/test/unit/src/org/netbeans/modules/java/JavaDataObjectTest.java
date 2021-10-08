@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.java;
 
+import java.io.IOException;
 import static org.junit.Assert.assertNotEquals;
 import org.netbeans.junit.NbTestCase;
 import org.openide.cookies.EditorCookie;
@@ -29,6 +30,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.text.CloneableEditorSupport;
+import org.openide.util.Exceptions;
 import org.openide.util.test.MockLookup;
 
 /**
@@ -93,5 +95,49 @@ public class JavaDataObjectTest extends NbTestCase {
         assertEquals("pkg", java.getFolder().getFolder().getName());
         assertEquals("great", java.getFolder().getFolder().getFolder().getName());
         assertEquals("my", java.getFolder().getFolder().getFolder().getFolder().getName());
+    }
+
+    public void testInvalidCharacters() throws Exception {
+        MockLookup.setInstances(JavaDataLoader.getLoader(JavaDataLoader.class));
+
+        FileObject clazzFo = FileUtil.getConfigFile("Templates/Classes/Main.java");
+        assertNotNull("Java template found", clazzFo);
+
+        DataObject clazzDo = DataObject.find(clazzFo);
+        assertTrue("Template is template", clazzDo.isTemplate());
+
+        FileSystem fs = FileUtil.createMemoryFileSystem();
+        FileObject f = fs.getRoot().createFolder("src");
+        DataFolder folder = DataFolder.findFolder(f);
+
+        try {
+            DataObject java = clazzDo.createFromTemplate(folder, "my#class");
+            fail("No Java class should be created: " + java.getName());
+        } catch (IOException ex) {
+            String msg = Exceptions.findLocalizedMessage(ex);
+            assertNotEquals("Contains my#class: " + msg, -1, msg.indexOf("my#class"));
+        }
+    }
+
+    public void testInvalidCharactersWithDot() throws Exception {
+        MockLookup.setInstances(JavaDataLoader.getLoader(JavaDataLoader.class));
+
+        FileObject clazzFo = FileUtil.getConfigFile("Templates/Classes/Main.java");
+        assertNotNull("Java template found", clazzFo);
+
+        DataObject clazzDo = DataObject.find(clazzFo);
+        assertTrue("Template is template", clazzDo.isTemplate());
+
+        FileSystem fs = FileUtil.createMemoryFileSystem();
+        FileObject f = fs.getRoot().createFolder("src");
+        DataFolder folder = DataFolder.findFolder(f);
+
+        try {
+            DataObject java = clazzDo.createFromTemplate(folder, "pkg.my/class");
+            fail("No Java class should be created: " + java.getName());
+        } catch (IOException ex) {
+            String msg = Exceptions.findLocalizedMessage(ex);
+            assertNotEquals("Contains my/class: " + msg, -1, msg.indexOf("my/class"));
+        }
     }
 }

@@ -34,6 +34,7 @@ import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
@@ -89,6 +90,23 @@ public final class JavaDataObject extends MultiDataObject {
     )
     public static MultiViewEditorElement createMultiViewEditorElement(Lookup context) {
         return new MultiViewEditorElement(context);
+    }
+
+    @Override
+    protected DataObject handleCreateFromTemplate(DataFolder df, String name) throws IOException {
+        String[] packageAndName = name.split("\\.");
+        if (packageAndName.length > 1) {
+            FileObject f = df.getPrimaryFile();
+            for (int i = 0; i < packageAndName.length - 1; i++) {
+                f = FileUtil.createFolder(f, packageAndName[i]);
+            }
+            return super.handleCreateFromTemplate(
+                DataFolder.findFolder(f),
+                packageAndName[packageAndName.length - 1]
+            );
+        } else {
+            return super.handleCreateFromTemplate(df, name);
+        }
     }
     
     /**

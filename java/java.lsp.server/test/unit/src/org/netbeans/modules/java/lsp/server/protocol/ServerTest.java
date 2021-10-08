@@ -3489,7 +3489,8 @@ public class ServerTest extends NbTestCase {
                      "    @Override\n" +
                      "    public String toString() {\n" +
                      "        StringBuilder sb = new StringBuilder();\n" +
-                     "        sb.append(\"Test{f1=\").append(f1);\n" +
+                     "        sb.append(\"Test{\");\n" +
+                     "        sb.append(\"f1=\").append(f1);\n" +
                      "        sb.append('}');\n" +
                      "        return sb.toString();\n" +
                      "    }\n",

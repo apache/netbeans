@@ -62,8 +62,7 @@ public class GroovyComputeTestMethods implements ComputeTestMethods {
             return result;
         }
         for (ClassNode classNode : moduleNode.getClasses()) {
-            ClassNode superClass = classNode.getSuperClass();
-            if ("spock.lang.Specification".equals(superClass.getName())) {
+            if (extendsSpecification(classNode)) {
                 int classStartLine = classNode.getLineNumber();
                 int classStartColumn = classNode.getColumnNumber();
                 int classOffset = classStartLine > 0 && classStartColumn > 0 ? getOffset(text, classStartLine, classStartColumn) : 0;
@@ -93,6 +92,14 @@ public class GroovyComputeTestMethods implements ComputeTestMethods {
             }
         }
         return result;
+    }
+
+    private static boolean extendsSpecification(ClassNode classNode) {
+        ClassNode superClass = classNode.getSuperClass();
+        if (superClass != null) {
+            return "spock.lang.Specification".equals(superClass.getName()) ? true : extendsSpecification(superClass);
+        }
+        return false;
     }
 
     private static boolean isTestSource(FileObject fo) {

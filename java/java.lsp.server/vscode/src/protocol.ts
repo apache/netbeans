@@ -83,7 +83,7 @@ export interface TestSuite {
     name: string;
     file?: string;
     range?: Range;
-    state: 'loaded' | 'started' | 'completed' | 'errored';
+    state: 'loaded' | 'started' | 'passed' | 'failed' | 'skipped' | 'errored';
     tests?: TestCase[];
 }
 

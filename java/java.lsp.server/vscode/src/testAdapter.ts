@@ -20,7 +20,7 @@
 
 import { commands, debug, tests, workspace, CancellationToken, TestController, TestItem, TestRunProfileKind, TestRunRequest, Uri, TestRun, TestMessage, Location, Position } from "vscode";
 import * as path from 'path';
-import { asRange, TestSuite } from "./protocol";
+import { asRange, TestCase, TestSuite } from "./protocol";
 import { LanguageClient } from "vscode-languageclient";
 
 export class NbTestAdapter {
@@ -114,6 +114,12 @@ export class NbTestAdapter {
 		this.disposables = [];
 	}
 
+    testOutput(output: string): void {
+        if (this.currentRun && output) {
+            this.currentRun.appendOutput(output.replace(/\n/g, '\r\n'));
+        }
+    }
+
     testProgress(suite: TestSuite): void {
         const currentSuite = this.testController.items.get(suite.name);
         switch (suite.state) {
@@ -125,8 +131,10 @@ export class NbTestAdapter {
                     this.set(currentSuite, 'started');
                 }
                 break;
-            case 'completed':
+            case 'passed':
+            case "failed":
             case 'errored':
+            case 'skipped':
                 if (suite.tests) {
                     this.updateTests(suite, true);
                     if (currentSuite) {
@@ -136,8 +144,11 @@ export class NbTestAdapter {
                                 let currentTest = currentSuite.children.get(test.id);
                                 if (!currentTest) {
                                     currentSuite.children.forEach(item => {
-                                        if (!currentTest && test.id.startsWith(item.id)) {
-                                            currentTest = item.children.get(test.id);
+                                        if (!currentTest) {
+                                            const subName = this.subTestName(item, test);
+                                            if (subName) {
+                                                currentTest = item.children.get(test.id);
+                                            }
                                         }
                                     });
                                 }
@@ -174,6 +185,8 @@ export class NbTestAdapter {
                         if (suiteMessages.length > 0) {
                             this.set(currentSuite, 'errored', suiteMessages, true);
                             currentSuite.children.forEach(item => this.set(item, 'skipped'));
+                        } else {
+                            this.set(currentSuite, suite.state, undefined, true);
                         }
                     }
                 }
@@ -209,23 +222,22 @@ export class NbTestAdapter {
                 children.push(currentTest);
             } else {
                 if (testExecution) {
-                    const parents: TestItem[] = [];
+                    const parents: Map<TestItem, string> = new Map();
                     currentSuite?.children.forEach(item => {
-                        if (test.id.startsWith(item.id)) {
-                            parents.push(item);
+                        const subName = this.subTestName(item, test);
+                        if (subName) {
+                            parents.set(item, subName);
                         }
                     });
-                    if (parents.length === 1) {
-                        let arr = parentTests.get(parents[0]);
-                        if (!arr) {
-                            parentTests.set(parents[0], arr = []);
-                            children.push(parents[0]);
-                        }
-                        let label = test.name;
-                        if (label.startsWith(parents[0].label)) {
-                            label = label.slice(parents[0].label.length).trim();
-                        }
-                        arr.push(this.testController.createTestItem(test.id, label));
+                    if (parents.size === 1) {
+                        parents.forEach((label, parentTest) => {
+                            let arr = parentTests.get(parentTest);
+                            if (!arr) {
+                                parentTests.set(parentTest, arr = []);
+                                children.push(parentTest);
+                            }
+                            arr.push(this.testController.createTestItem(test.id, label));
+                        });
                     }
                 } else {
                     currentTest = this.testController.createTestItem(test.id, test.name, testUri);
@@ -245,5 +257,22 @@ export class NbTestAdapter {
         } else {
             currentSuite.children.replace(children);
         }
+    }
+
+    subTestName(item: TestItem, test: TestCase): string | undefined {
+        if (test.id.startsWith(item.id)) {
+            let label = test.name;
+            if (label.startsWith(item.label)) {
+                label = label.slice(item.label.length).trim();
+            }
+            return label;
+        } else {
+            const regexp = new RegExp(item.id.replace(/#\S*/g, '\\S*'));
+            if (regexp.test(test.id)) {
+                let idx = test.id.indexOf(':');
+                return idx < 0 ? test.id : test.id.slice(idx + 1);
+            }
+        }
+        return undefined;
     }
 }

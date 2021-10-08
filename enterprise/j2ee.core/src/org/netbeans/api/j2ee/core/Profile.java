@@ -244,12 +244,8 @@ public final class Profile {
             if (profileToCompareVersion.equals(comparingProfileVersion)) {
                 return compareWebAndFull(profileToCompare, comparingVersion);
             } else {
-                if (comparisonResult > 0) {
-                    // profileToCompare has lower version than comparingVersion
-                    return false;
-                } else {
-                    return true;
-                }
+                // profileToCompare has lower version than comparingVersion
+                return comparisonResult <= 0;
             }
         }
     }

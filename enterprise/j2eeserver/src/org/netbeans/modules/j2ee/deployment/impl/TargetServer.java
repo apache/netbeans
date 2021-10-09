@@ -855,7 +855,7 @@ public class TargetServer {
         ProgressUI ui = new ProgressUI(NbBundle.getMessage(TargetServer.class,
                 provider.isOnlyCompileOnSaveEnabled() ? "MSG_CompileOnSave" : "MSG_DeployOnSave",
                 provider.getDeploymentName()), false);
-        ui.start(Integer.valueOf(0));
+        ui.start(0);
         try {
             boolean serverResources = false;
             for (Artifact artifact : artifacts) {

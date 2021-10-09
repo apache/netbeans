@@ -100,16 +100,16 @@ public class AddCMPFieldTest extends AddMethodBase {
         new JTextFieldOperator((JTextField) lblOper.getLabelFor()).setText(returnType);
 
         if (localGetter != null) {
-            dialog.checkLocalGetter(localGetter.booleanValue());
+            dialog.checkLocalGetter(localGetter);
         }
         if (localSetter != null) {
-            dialog.checkLocalSetter(localSetter.booleanValue());
+            dialog.checkLocalSetter(localSetter);
         }
         if (remoteGetter != null) {
-            dialog.checkRemoteGetter(remoteGetter.booleanValue());
+            dialog.checkRemoteGetter(remoteGetter);
         }
         if (remoteSetter != null) {
-            dialog.checkRemoteSetter(remoteSetter.booleanValue());
+            dialog.checkRemoteSetter(remoteSetter);
         }
         dialog.ok();
         editor.txtEditorPane().waitText(methodName);

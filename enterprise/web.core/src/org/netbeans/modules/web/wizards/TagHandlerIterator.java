@@ -182,9 +182,9 @@ public class TagHandlerIterator implements TemplateWizard.AsynchronousInstantiat
                             TldAttributeType attr = new TldAttributeType();
                             attr.setName((String)attrs[i][0]);
                             attr.setType((String)attrs[i][1]);
-                            boolean required = ((Boolean)attrs[i][2]).booleanValue();
+                            boolean required = ((Boolean)attrs[i][2]);
                             if (required) attr.setRequired("true"); //NOI18N
-                            boolean rtexpr = ((Boolean)attrs[i][3]).booleanValue();
+                            boolean rtexpr = ((Boolean)attrs[i][3]);
                             //if (rtexpr) attr.setRtexprvalue("true"); //NOI18N
                             // #252857 there is likely a bug in 2.1 xsd where rtexprvalue is mandatory
                             // while the docs says opposite, we chose not to fix the xsd as it
@@ -245,7 +245,7 @@ public class TagHandlerIterator implements TemplateWizard.AsynchronousInstantiat
             if (c instanceof JComponent) { // assume Swing components
                 JComponent jc = (JComponent) c;
                 // Step #.
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(i));
+                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
                 // Step name (actually the whole list for reference).
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
             }

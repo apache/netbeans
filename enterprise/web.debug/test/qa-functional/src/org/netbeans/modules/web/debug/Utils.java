@@ -91,12 +91,12 @@ public class Utils {
         JSpinnerOperator serverPortOper = new JSpinnerOperator(serverManagerOper, 0);
         // satisfy focus on spinner which causes changes are reflected
         serverPortOper.getNumberSpinner().scrollToValue((Number) serverPortOper.getNextValue());
-        serverPortOper.setValue(new Integer(getPort()));
+        serverPortOper.setValue(getPort());
         // set shutdown port
         JSpinnerOperator shutdownPortOper = new JSpinnerOperator(serverManagerOper, 1);
         // satisfy focus on spinner which causes changes are reflected
         shutdownPortOper.getNumberSpinner().scrollToValue((Number) shutdownPortOper.getNextValue());
-        shutdownPortOper.setValue(new Integer(getPort()));
+        shutdownPortOper.setValue(getPort());
 
         // set socket debugger transport
         // "Startup"
@@ -110,7 +110,7 @@ public class Utils {
         // satisfy focus on spinner which causes changes are reflected
         socketPortOper.getNumberSpinner().scrollToValue((Number) socketPortOper.getNextValue());
         socketPort = getPort();
-        socketPortOper.setValue(new Integer(socketPort));
+        socketPortOper.setValue(socketPort);
 
         serverManagerOper.close();
     }

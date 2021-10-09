@@ -128,7 +128,7 @@ public class StrutsConfigHyperlinkProvider implements HyperlinkProvider {
     public void performClickAction(javax.swing.text.Document doc, int offset) {
         if (debug) debug(":: performClickAction");
         if (hyperlinkTable.get(eav[0]+"#"+eav[1])!= null){
-            int type = ((Integer)hyperlinkTable.get(eav[0]+"#"+eav[1])).intValue();
+            int type = ((Integer)hyperlinkTable.get(eav[0]+"#"+eav[1]));
             switch (type){
                 case JAVA_CLASS: findJavaClass(eav[2], doc); break;
                 case FORM_NAME: findForm(eav[2], (BaseDocument)doc);break;

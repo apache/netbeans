@@ -512,7 +512,7 @@ class InstallPanelVisual extends javax.swing.JPanel {
                         return false;
                     }
                 });
-                return files.length != 0 ? true : false;
+                return files.length != 0;
             }
         }
         return false;

@@ -579,7 +579,7 @@ public class PageFlowController {
             List<NavigationCase> navCases = rule.getNavigationCases();
 
             /* this is for ALL_FACES_CONFIG scope*/
-            boolean isModifableEdge = editableRules.contains(rule) ? true : false;
+            boolean isModifableEdge = editableRules.contains(rule);
 
             for (NavigationCase navCase : navCases) {
 

@@ -161,7 +161,6 @@ public class J2EEProfilerSPI implements org.netbeans.modules.j2ee.deployment.pro
             } catch (Exception ex) {
             }
 
-            ;
         }
 
         String refreshServerInstanceProperty = System.getProperty("profiler.serverstate.refresh"); // NOI18N

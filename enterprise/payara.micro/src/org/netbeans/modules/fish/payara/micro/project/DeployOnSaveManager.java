@@ -443,7 +443,7 @@ public final class DeployOnSaveManager {
             DeploymentState state;
             try {
                 distributeOnSave(FileUtil.toFile(provider.getJ2eeModule().getContentDirectory()), artifacts);
-                ReloadAction.reloadApplication(provider.getJ2eeModule().getContentDirectory().getPath());
+                Actions.reloadApplication(provider.getJ2eeModule().getContentDirectory().getPath());
                 state = DeploymentState.MODULE_UPDATED;
             } catch (IOException ex) {
                 LOGGER.log(Level.INFO, null, ex);

@@ -41,7 +41,7 @@ public class MicroIcon extends WarIcon {
 
     private Project project;
 
-    public void setProject(Project project) {
+    public MicroIcon(Project project) {
         this.project = project;
     }
 

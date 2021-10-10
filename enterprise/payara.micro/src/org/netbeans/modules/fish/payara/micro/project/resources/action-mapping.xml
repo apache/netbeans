@@ -21,7 +21,7 @@
 -->
 <actions>
     <action>
-        <actionName>run</actionName>
+        <actionName>micro.run</actionName>
         <packagings>
             <packaging>war</packaging>
         </packagings>
@@ -37,7 +37,7 @@
         </properties>
     </action>
     <action>
-        <actionName>run.single.deploy</actionName>
+        <actionName>micro.run.single.deploy</actionName>
         <packagings>
             <packaging>war</packaging>
         </packagings>
@@ -54,7 +54,7 @@
         </properties>
     </action>
     <action>
-        <actionName>debug</actionName>
+        <actionName>micro.debug</actionName>
         <packagings>
             <packaging>war</packaging>
         </packagings>
@@ -73,7 +73,7 @@
         </properties>
     </action>
     <action>
-        <actionName>debug.single.deploy</actionName>
+        <actionName>micro.debug.single.deploy</actionName>
         <packagings>
             <packaging>war</packaging>
         </packagings>
@@ -93,7 +93,7 @@
         </properties>
     </action>
     <action>
-        <actionName>profile</actionName>
+        <actionName>micro.profile</actionName>
         <packagings>
             <packaging>war</packaging>
         </packagings>
@@ -112,7 +112,7 @@
         </properties>
     </action>
     <action>
-        <actionName>profile.single.deploy</actionName>
+        <actionName>micro.profile.single.deploy</actionName>
         <packagings>
             <packaging>war</packaging>
         </packagings>

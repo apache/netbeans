@@ -18,32 +18,32 @@
  */
 package org.netbeans.modules.fish.payara.micro.project;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.prefs.Preferences;
 import org.netbeans.api.project.Project;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.MAVEN_WAR_PROJECT_TYPE;
-import static org.netbeans.modules.fish.payara.micro.project.MicroApplication.isPayaraMicroProject;
-import org.netbeans.spi.project.LookupProvider;
+import static org.netbeans.api.project.ProjectUtils.getPreferences;
+import static org.netbeans.modules.fish.payara.micro.plugin.Constants.VERSION;
+import org.netbeans.modules.maven.spi.actions.ReplaceTokenProvider;
 import org.openide.util.Lookup;
-import org.openide.util.lookup.Lookups;
 
 /**
  *
- * @author Gaurav Gupta <gaurav.gupta@payara.fish>
+ * @author lkishalmi
  */
-@LookupProvider.Registration(projectType = MAVEN_WAR_PROJECT_TYPE)
-public class LookupProviderImpl implements LookupProvider {
+public class MicroReplaceTokenProvider implements ReplaceTokenProvider {
+    
+    private final Project project;
 
+    public MicroReplaceTokenProvider(Project project) {
+        this.project = project;
+    }
+    
     @Override
-    public Lookup createAdditionalLookup(Lookup lookup) {
-        Project project = lookup.lookup(Project.class);
-        MicroApplication application = null;
-        if (isPayaraMicroProject(project)) {
-            application = new MicroApplication(project);
-        }
-        return Lookups.fixed(
-                new MicroApplicationContent(application),
-                new MicroActionConvertor(project),
-                new MicroReplaceTokenProvider(project)
-        );
+    public Map<String, String> createReplacements(String action, Lookup lookup) {
+        Preferences pref = getPreferences(project, MicroApplication.class, true);
+        String microVersionText = pref.get(VERSION, "");
+        return Collections.singletonMap("version.payara", microVersionText);
     }
 
 }

@@ -541,7 +541,7 @@ public class Utils {
        getMethod = getMethod(getClass(object), methodName,
                 argumentTypes);
 
-       Integer in = Integer.valueOf(index);
+       Integer in = index;
        Object[] argumentValues = new Object[] {in};
        return invoke(object, getMethod, argumentValues);
     }

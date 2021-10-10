@@ -148,7 +148,7 @@ public class JaxWsRootNode extends AbstractNode implements PropertyChangeListene
                 boolean newJsr109Supported = stackUtils.isJsr109Supported();
                 if(jsr109Supported != newJsr109Supported) {
                     JaxWsModel jaxWsModel = (JaxWsModel)project.getLookup().lookup(JaxWsModel.class);
-                    boolean isJsr109Project = jaxWsModel.getJsr109().booleanValue();
+                    boolean isJsr109Project = jaxWsModel.getJsr109();
                     if(isJsr109Project != newJsr109Supported){
                         String msg = NbBundle.getMessage(JaxWsRootNode.class, "MSG_IncompatibleWSServer"); //NOI18N
                         DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(msg, NotifyDescriptor.INFORMATION_MESSAGE));

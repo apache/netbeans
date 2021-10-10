@@ -144,7 +144,7 @@ public class AddServerInstanceWizard extends WizardDescriptor {
         String[] contentData = getContentData();
         if (contentData != null) {
             putProperty(PROP_CONTENT_DATA, contentData);
-            putProperty(PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(getContentSelectedIndex()));
+            putProperty(PROP_CONTENT_SELECTED_INDEX, getContentSelectedIndex());
         }
     }
 
@@ -184,7 +184,7 @@ public class AddServerInstanceWizard extends WizardDescriptor {
             JComponent component = (JComponent)iterator.current().getComponent();
             Integer componentIndex = (Integer)component.getClientProperty(PROP_CONTENT_SELECTED_INDEX);
             if (componentIndex != null)
-                return componentIndex.intValue() + 1;
+                return componentIndex + 1;
             else
                 return 1;
         }

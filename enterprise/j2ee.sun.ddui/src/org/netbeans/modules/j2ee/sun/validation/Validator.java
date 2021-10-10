@@ -228,7 +228,7 @@ class Validator {
         String sizeMethodName =  utils.methodNameFromBeanName(
             elementName, SIZE_PREFIX);
         Method sizeMethod = validatee.getMethod(sizeMethodName);
-        noOfElements = ((Integer)validatee.invoke(sizeMethod)).intValue();
+        noOfElements = ((Integer)validatee.invoke(sizeMethod));
         
         ArrayList constraintList =
             (ArrayList)elementToConstraints.get(elementDtdName);

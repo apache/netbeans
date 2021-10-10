@@ -91,7 +91,7 @@ public class ErrorPagesTablePanel extends DefaultTablePanel {
                 Integer val = (Integer)model.getValueAt(row,1);
                 String[] initValues = new String[] {
                     (String)model.getValueAt(row,0),
-                    val==null?"":((Integer)val).toString(),
+                    val==null?"":(val).toString(),
                     (String)model.getValueAt(row,2)
                 };
                 descriptor.setInitValues(initValues);

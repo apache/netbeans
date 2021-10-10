@@ -24,14 +24,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DefaultArtifact;
+import org.apache.maven.artifact.handler.ArtifactHandler;
+import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
+import org.apache.maven.artifact.resolver.ArtifactResolutionException;
+import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
+import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
+import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
+import org.apache.maven.artifact.versioning.VersionRange;
+import org.apache.maven.model.Dependency;
+import org.apache.maven.model.InputLocation;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginExecution;
 import org.apache.maven.model.ReportPlugin;
 import org.apache.maven.model.ReportSet;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.repository.RepositorySystem;
 import org.apache.maven.settings.Settings;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
@@ -586,4 +600,244 @@ public class PluginPropertyUtils {
         return exes;
     }
 
+    /**
+     * Reads dependency list from the XML
+     */
+    static class DependencyListBuilder implements ConfigurationBuilder<List<Dependency>> {
+        private static final String PROP_ARTIFACT_ID = "artifactId"; // NOI18N
+        private static final String PROP_GROUP_ID = "groupId"; // NOI18N
+        private static final String PROP_CLASSIFIER = "classifier"; // NOI18N
+        private static final String PROP_TYPE = "type"; // NOI18N
+        private static final String PROP_VERSION = "version"; // NOI18N
+        private static final String PROP_SCOPE = "scope"; // NOI18N
+        
+        private final MavenProject mvnProject;
+        private final String multiPropertyName;
+        private final String propertyItemName;
+        private final String filterType;
+        
+        public DependencyListBuilder(MavenProject mvnProject, String multiPropertyName, String propertyItemName, String filterType) {
+            this.mvnProject = mvnProject;
+            this.multiPropertyName = multiPropertyName;
+            this.propertyItemName = propertyItemName;
+            this.filterType = filterType;
+        }
+        
+        @Override
+        public List<Dependency> build(Xpp3Dom configRoot, ExpressionEvaluator eval) {
+            if (configRoot == null) {
+                return null;
+            }
+            List<Dependency> coords = new ArrayList<>();
+            Xpp3Dom source = configRoot.getChild(multiPropertyName);
+            if (source == null) {
+                return null;
+            }
+            for (Xpp3Dom ch : source.getChildren(propertyItemName)) {
+                Xpp3Dom a = ch.getChild(PROP_ARTIFACT_ID);
+                Xpp3Dom g = ch.getChild(PROP_GROUP_ID);
+                Xpp3Dom v = ch.getChild(PROP_VERSION);
+                Xpp3Dom t = ch.getChild(PROP_TYPE);
+                Xpp3Dom c = ch.getChild(PROP_CLASSIFIER);
+                Xpp3Dom s = ch.getChild(PROP_SCOPE);
+                
+                // XXX todo: transfer locations from Xpp3Dom to Dependency
+                
+                if (t != null && filterType != null && !filterType.equals(t)) {
+                    continue;
+                }
+                
+                Dependency item = new Dependency();
+                if (a != null) {
+                    item.setArtifactId(a.getValue());
+                    item.setLocation(PROP_ARTIFACT_ID, (InputLocation)a.getInputLocation()); 
+                }
+                if (g != null) {
+                    item.setGroupId(g.getValue());
+                    item.setLocation(PROP_GROUP_ID, (InputLocation)g.getInputLocation());
+                }
+                if (v != null) {
+                    item.setVersion(v.getValue());
+                    item.setLocation(PROP_VERSION, (InputLocation)v.getInputLocation());
+                }
+                if (c != null) {
+                    item.setClassifier(c.getValue());
+                    item.setLocation(PROP_CLASSIFIER, (InputLocation)c.getInputLocation());
+                }
+                if (t != null) {
+                    item.setType(t.getValue());
+                    item.setLocation(PROP_TYPE, (InputLocation)t.getInputLocation());
+                }
+                if (s != null) {
+                    item.setScope(s.getValue());
+                    item.setLocation(PROP_SCOPE, (InputLocation)s.getInputLocation());
+                }
+                coords.add(item);
+            }
+            return coords;
+        }
+    }
+
+    /**
+     * Query parameters to convert property containing a dependency list into artifact list.
+     * @since 2.151
+     */
+    public static final class PluginConfigPathParams {
+        private final String pluginGroupId;
+        private final String pluginArtifactId;
+        private final String pathProperty;
+        private final String pathItemName;
+
+        private String goal;
+        private String artifactType;
+        private String defaultScope;
+
+        /**
+         * Creates a query instance with mandatory parameters
+         * @param pluginGroupId plugin's group ID
+         * @param pluginArtifactId plugin's artifact ID
+         * @param pathProperty name of the property (the property should contain a list of items)
+         * @param pathItemName name of the single item's element
+         */
+        public PluginConfigPathParams(String pluginGroupId, String pluginArtifactId, String pathProperty, String pathItemName) {
+            this.pluginGroupId = pluginGroupId;
+            this.pluginArtifactId = pluginArtifactId;
+            this.pathProperty = pathProperty;
+            this.pathItemName = pathItemName;
+        }
+
+        /**
+         * Optional. Specifies the goal whose configuration should be inspected.
+         * @param goal goal ID
+         */
+        public void setGoal(String goal) {
+            this.goal = goal;
+        }
+
+        /**
+         * Optional. Filters artifact types that are accepted. If unspecified, the type defaults to "jar".
+         * @param artifactType accepted artifact type.
+         */
+        public void setArtifactType(String artifactType) {
+            this.artifactType = artifactType;
+        }
+
+        public void setDefaultScope(String defaultScope) {
+            this.defaultScope = defaultScope;
+        }
+
+        public String getPluginGroupId() {
+            return pluginGroupId;
+        }
+
+        public String getPluginArtifactId() {
+            return pluginArtifactId;
+        }
+
+        public String getGoal() {
+            return goal;
+        }
+
+        public String getPathProperty() {
+            return pathProperty;
+        }
+
+        public String getPathItemName() {
+            return pathItemName;
+        }
+
+        public String getArtifactType() {
+            return artifactType;
+        }
+
+        public String getDefaultScope() {
+            return defaultScope;
+        }
+    }
+
+    /**
+     * Converts a list of dependency declarations in the plugin configuration into list of Artifacts. Can add (transitive) dependencies. Useful to convert
+     * list of some dependencies into artifacts and subsequently into classpaths or (artifact) file lists. The {@link PluginConfigPathParams} contains a property
+     * selector and other data to process the dependency list. If `errorsOpt` is not {@code null}, it will receive errors from artifact resolution, if any. Otherwise,
+     * errors are just ignored. The method returns {@code null} if the plugin/execution property is not defined at all.
+     * 
+     * @param project the maven project
+     * @param query specifies the query for artifacts.
+     * @param transitiveDependencies if true, returns also transitive dependencies.
+     * @param errorsOpt if not {@code null}, will receive list of errors encountered.
+     * @return list of artifacts for the property, or {@code null} if the property does not exist
+     * @since 2.151
+     */
+    public static @CheckForNull List<Artifact> getPluginPathProperty(
+            @NonNull Project project, @NonNull PluginConfigPathParams query, boolean transitiveDependencies, 
+            @NullAllowed List<ArtifactResolutionException> errorsOpt) {
+
+        NbMavenProjectImpl projectImpl = project instanceof NbMavenProjectImpl ? (NbMavenProjectImpl)project : project.getLookup().lookup(NbMavenProjectImpl.class);
+        if (projectImpl == null) {
+            return null;
+        }
+        
+        MavenProject mavenProject = projectImpl.getOriginalMavenProject();
+        DependencyListBuilder bld = new DependencyListBuilder(mavenProject, query.getPathProperty(), query.getPathItemName(), query.getArtifactType());
+        List<Dependency> coordinates = PluginPropertyUtils.getPluginPropertyBuildable(mavenProject, query.getPluginGroupId(), query.getPluginArtifactId(), query.getGoal(), bld);
+        if (coordinates == null) {
+            return null;
+        }
+        // maintain somewhat the order
+        Set<Artifact> requiredArtifacts = new LinkedHashSet<>(coordinates.size());
+        projectImpl.getEmbedder().setUpLegacySupport();
+        ArtifactHandlerManager ahm = projectImpl.getEmbedder().lookupComponent(ArtifactHandlerManager.class);
+        RepositorySystem repos = projectImpl.getEmbedder().lookupComponent(RepositorySystem.class);
+        
+        if (ahm == null || repos == null) {
+            // cannot resolve artifacts or dependencies, sorry.
+            return null;
+        }
+        String scope = query.getDefaultScope();
+        if (scope == null) {
+            scope = Artifact.SCOPE_RUNTIME;
+        }
+        for (Dependency coord : coordinates) {
+            ArtifactHandler handler = ahm.getArtifactHandler(coord.getType());
+
+            // BEGIN:copied from maven-compiler-plugin + adapted
+            Artifact artifact;
+            try {
+                artifact = new DefaultArtifact(
+                     coord.getGroupId(),
+                     coord.getArtifactId(),
+                     VersionRange.createFromVersionSpec( coord.getVersion() ),
+                     coord.getScope() == null ? query.getDefaultScope() : coord.getScope(),
+                     coord.getType(),
+                     coord.getClassifier(),
+                     handler,
+                     false );
+            } catch (InvalidVersionSpecificationException ex) {
+                errorsOpt.add(new ArtifactResolutionException(ex.getMessage(), 
+                        coord.getGroupId(), coord.getArtifactId(), coord.getVersion(), 
+                        coord.getType(), coord.getClassifier(), ex));
+                continue;
+            }
+
+            requiredArtifacts.add( artifact );
+
+            ArtifactResolutionRequest request = new ArtifactResolutionRequest()
+                            .setArtifact( requiredArtifacts.iterator().next() )
+                            .setResolveRoot(true)
+                            .setResolveTransitively(true)
+                            .setArtifactDependencies(requiredArtifacts)
+                            .setLocalRepository(projectImpl.getEmbedder().getLocalRepository())
+                            .setRemoteRepositories( mavenProject.getRemoteArtifactRepositories() );
+
+            ArtifactResolutionResult resolutionResult = repos.resolve(request);
+            // END:copied from maven-compiler-plugin + adapted
+            if (errorsOpt != null) {
+                errorsOpt.addAll(resolutionResult.getMetadataResolutionExceptions());
+                errorsOpt.addAll(resolutionResult.getErrorArtifactExceptions());
+            }
+            requiredArtifacts.addAll(resolutionResult.getArtifacts());
+        }
+        return new ArrayList<>(requiredArtifacts);
+    }
+    
 }

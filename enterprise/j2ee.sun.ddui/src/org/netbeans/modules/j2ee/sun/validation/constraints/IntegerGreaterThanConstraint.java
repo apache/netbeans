@@ -127,7 +127,7 @@ public class IntegerGreaterThanConstraint extends ConstraintUtils
      * @param value the value represented by this object.
      */
     public void setValue(Integer value){
-        this.value = value.intValue();
+        this.value = value;
     }
 
 

@@ -24,6 +24,7 @@ import com.sun.jdi.ThreadGroupReference;
 import com.sun.jdi.ThreadReference;
 
 import com.sun.jdi.VMDisconnectedException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.netbeans.api.debugger.jpda.JPDAThread;
@@ -84,8 +85,14 @@ public class JPDAThreadGroupImpl implements JPDAThreadGroup {
         List<ThreadReference> l = tc.getThreads(tgr);
         int i, k = l.size ();
         JPDAThreadImpl[] ts = new JPDAThreadImpl[k];
-        for (i = 0; i < k; i++) {
-            ts [i] = debugger.getThread(l.get (i));
+        i = 0;
+        for (ThreadReference t : l) {
+            JPDAThreadImpl thread = debugger.getThread(t);
+            if (thread.getName().contains(ThreadsCache.THREAD_NAME_FILTER_PATTERN)) {
+                ts = Arrays.copyOf(ts, k - 1);
+            } else {
+                ts[i++] = thread;
+            }
         }
         return ts;
     }

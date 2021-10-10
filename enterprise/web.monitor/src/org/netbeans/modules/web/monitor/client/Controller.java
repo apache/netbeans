@@ -1014,7 +1014,7 @@ class Controller  {
             int idx = statusCode.indexOf(':');
             if (idx != -1) {
                 statusCode = statusCode.substring(0, idx);
-                statusCodeNum = Integer.valueOf(statusCode).intValue();
+                statusCodeNum = Integer.valueOf(statusCode);
             }
         } catch(NumberFormatException nfe) {
             // ignore

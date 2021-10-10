@@ -191,7 +191,7 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
             // If we knew the errors were sorted by file & line number,
             // this would be easy (and we wouldn't need to do the hashmap
             // "sort"
-            Integer lineInt = new Integer(line);
+            Integer lineInt = line;
             /*LineSetAnnotation prev = (LineSetAnnotation)map.get(lineInt);
             if (prev != null) {
                 prev.chain(ann);

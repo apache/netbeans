@@ -21,6 +21,8 @@ package org.netbeans.modules.java.lsp.server.debugging.variables;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.lsp4j.debug.SetVariableArguments;
 import org.eclipse.lsp4j.debug.SetVariableResponse;
@@ -31,11 +33,13 @@ import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.netbeans.api.debugger.Session;
 
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
+import org.netbeans.modules.java.lsp.server.debugging.NbProtocolServer;
 import org.netbeans.modules.java.lsp.server.debugging.NbScope;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDebugSession;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.spi.viewmodel.Models;
 import org.netbeans.spi.viewmodel.UnknownTypeException;
+import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -43,72 +47,78 @@ import org.netbeans.spi.viewmodel.UnknownTypeException;
  */
 public final class NbVariablesRequestHandler {
 
+    private static final Logger LOGGER = Logger.getLogger(NbProtocolServer.class.getName());
+    private static final Level LOGLEVEL = Level.FINE;
+
     private static final String LOCALS_VIEW_NAME = "LocalsView";
     private static final String LOCALS_VALUE_COLUMN_ID = "LocalsValue";
     private static final String LOCALS_TO_STRING_COLUMN_ID = "LocalsToString";
     private static final String LOCALS_TYPE_COLUMN_ID = "LocalsType";
 
     private final ViewModel.Provider localsModelProvider;
+    private final RequestProcessor variablesRP = new RequestProcessor(NbVariablesRequestHandler.class.getName(), 2);
 
     public NbVariablesRequestHandler() {
         this.localsModelProvider = new ViewModel.Provider(LOCALS_VIEW_NAME);
     }
 
     public CompletableFuture<VariablesResponse> variables(VariablesArguments arguments, DebugAdapterContext context) {
-        CompletableFuture<VariablesResponse> future = new CompletableFuture<>();
-
-        VariablesResponse response = new VariablesResponse();
-        Object container = context.getThreadsProvider().getThreadObjects().getObject(arguments.getVariablesReference());
-        if (container == null) {
-            // Nothing, or an old container
-            response.setVariables(new Variable[0]);
-        } else {
-            Session session = context.getDebugSession().getSession();
-            Models.CompoundModel localsModel = localsModelProvider.getModel(session);
-            int threadId;
-            if (container instanceof NbScope) {
-                threadId = ((NbScope) container).getFrame().getThreadId();
-                container = localsModel.getRoot();
+        return CompletableFuture.supplyAsync(() -> {
+            LOGGER.log(LOGLEVEL, "variables() START");
+            long t1 = System.nanoTime();
+            VariablesResponse response = new VariablesResponse();
+            Object container = context.getThreadsProvider().getThreadObjects().getObject(arguments.getVariablesReference());
+            if (container == null) {
+                // Nothing, or an old container
+                response.setVariables(new Variable[0]);
             } else {
-                threadId = context.getThreadsProvider().getThreadObjects().findObjectThread(arguments.getVariablesReference());
-            }
-            List<Variable> list = new ArrayList<>();
-            try {
-                Object[] children;
-                int count = arguments.getCount() != null ? arguments.getCount() : 0;
-                if (count > 0) {
-                    int start = arguments.getStart() != null ? arguments.getStart() : 0;
-                    children = localsModel.getChildren(container, start, start + count);
+                Session session = context.getDebugSession().getSession();
+                Models.CompoundModel localsModel = localsModelProvider.getModel(session);
+                int threadId;
+                if (container instanceof NbScope) {
+                    threadId = ((NbScope) container).getFrame().getThreadId();
+                    container = localsModel.getRoot();
                 } else {
-                    children = localsModel.getChildren(container, 0, Integer.MAX_VALUE);
+                    threadId = context.getThreadsProvider().getThreadObjects().findObjectThread(arguments.getVariablesReference());
                 }
-                for (Object child : children) {
-                    String name = localsModel.getDisplayName(child);
-                    String value;
-                    try {
-                        value = String.valueOf(localsModel.getValueAt(child, LOCALS_TO_STRING_COLUMN_ID));
-                    } catch (UnknownTypeException ex) {
-                        value = String.valueOf(localsModel.getValueAt(child, LOCALS_VALUE_COLUMN_ID));
+                List<Variable> list = new ArrayList<>();
+                try {
+                    Object[] children;
+                    int count = arguments.getCount() != null ? arguments.getCount() : 0;
+                    if (count > 0) {
+                        int start = arguments.getStart() != null ? arguments.getStart() : 0;
+                        children = localsModel.getChildren(container, start, start + count);
+                    } else {
+                        children = localsModel.getChildren(container, 0, Integer.MAX_VALUE);
                     }
-                    String type = String.valueOf(localsModel.getValueAt(child, LOCALS_TYPE_COLUMN_ID));
-                    Variable variable = new Variable();
-                    variable.setName(name);
-                    variable.setValue(value);
-                    variable.setType(type);
-                    if (!localsModel.isLeaf(child)) {
-                        int id = context.getThreadsProvider().getThreadObjects().addObject(threadId, child);
-                        variable.setVariablesReference(id);
+                    for (Object child : children) {
+                        String name = localsModel.getDisplayName(child);
+                        String value;
+                        try {
+                            value = String.valueOf(localsModel.getValueAt(child, LOCALS_TO_STRING_COLUMN_ID));
+                        } catch (UnknownTypeException ex) {
+                            value = String.valueOf(localsModel.getValueAt(child, LOCALS_VALUE_COLUMN_ID));
+                        }
+                        String type = String.valueOf(localsModel.getValueAt(child, LOCALS_TYPE_COLUMN_ID));
+                        Variable variable = new Variable();
+                        variable.setName(name);
+                        variable.setValue(value);
+                        variable.setType(type);
+                        if (!localsModel.isLeaf(child)) {
+                            int id = context.getThreadsProvider().getThreadObjects().addObject(threadId, child);
+                            variable.setVariablesReference(id);
+                        }
+                        list.add(variable);
                     }
-                    list.add(variable);
+                } catch (UnknownTypeException e) {
+                    throw ErrorUtilities.createResponseErrorException(e.getMessage(), ResponseErrorCode.InternalError);
                 }
-            } catch (UnknownTypeException e) {
-                ErrorUtilities.completeExceptionally(future, e.getMessage(), ResponseErrorCode.InternalError);
-                return future;
+                response.setVariables(list.toArray(new Variable[list.size()]));
             }
-            response.setVariables(list.toArray(new Variable[list.size()]));
-        }
-        future.complete(response);
-        return future;
+            long t2 = System.nanoTime();
+            LOGGER.log(LOGLEVEL, "variables() END after {0} ns", (t2 - t1));
+            return response;
+        }, variablesRP);
     }
 
     public CompletableFuture<SetVariableResponse> setVariable(SetVariableArguments args, DebugAdapterContext context) {

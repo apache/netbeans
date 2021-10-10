@@ -111,7 +111,7 @@ public class FacesComponentIterator implements TemplateWizard.Iterator {
             }
             if (c instanceof JComponent) { // assume Swing components
                 JComponent jc = (JComponent) c;
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(i));
+                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
             }
         }
@@ -129,7 +129,7 @@ public class FacesComponentIterator implements TemplateWizard.Iterator {
 
     @Override
     public String name() {
-        return NbBundle.getMessage(TemplateIterator.class, "TITLE_x_of_y", new Integer(index + 1), new Integer(panels.length)); //NOI18N
+        return NbBundle.getMessage(TemplateIterator.class, "TITLE_x_of_y", index + 1, panels.length); //NOI18N
     }
 
     @Override

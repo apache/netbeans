@@ -148,7 +148,6 @@ import org.netbeans.modules.java.hints.infrastructure.JavaErrorProvider;
 import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.parsing.impl.indexing.implspi.CacheFolderProvider;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
-import org.netbeans.spi.java.classpath.PathResourceImplementation;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.java.queries.AnnotationProcessingQueryImplementation;
 import org.netbeans.spi.lsp.ErrorProvider;
@@ -340,7 +339,7 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, closingBrace), new Position(0, closingBrace)), 0, "public String c(Object o) {\nreturn o;\n}"))));
         List<Diagnostic> diagnostics = assertDiags(diags, "Error:1:0-1:9"); //errors
         assertDiags(diags, "Error:1:0-1:9");//hints
-        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 0), new Position(1, 9)), new CodeActionContext(Arrays.asList(diagnostics.get(0))))).get();
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 4), new Position(1, 4)), new CodeActionContext(Arrays.asList(diagnostics.get(0))))).get();
         String log = codeActions.toString();
         assertTrue(log, codeActions.size() >= 2);
         assertTrue(log, codeActions.get(0).isRight());
@@ -627,7 +626,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic> diagnostics = assertDiags(diags, "Warning:1:7-1:19");//hints
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(1);
         id.setUri(toURI(src));
-        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 7), new Position(1, 19)), new CodeActionContext(Arrays.asList(diagnostics.get(0))))).get();
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 13), new Position(1, 13)), new CodeActionContext(Arrays.asList(diagnostics.get(0))))).get();
         String log = codeActions.toString();
         assertTrue(log, codeActions.size() >= 1);
         assertTrue(log, codeActions.get(0).isRight());
@@ -2014,7 +2013,6 @@ public class ServerTest extends NbTestCase {
         }
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 17), new Position(2, 17)), new CodeActionContext(diags[0]))).get();
-        assertTrue(codeActions.size() >= 1);
         Optional<CodeAction> generateMehtod =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -2036,7 +2034,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(0).getRange());
         assertEquals("\n" +
                      "    private String convertToString(int value) {\n" +
-                     "        throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates.\n" +
+                     "        throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
                      "    }\n",
                      fileChanges.get(0).getNewText());
     }
@@ -2100,8 +2098,7 @@ public class ServerTest extends NbTestCase {
             }
         }
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
-        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 14), new Position(2, 14)), new CodeActionContext(diags[0]))).get();
-        assertTrue(codeActions.size() >= 2);
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 14), new Position(1, 14)), new CodeActionContext(diags[0]))).get();
         Optional<CodeAction> generateClass =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -2212,7 +2209,7 @@ public class ServerTest extends NbTestCase {
         assertEquals("\n" +
                      "    @Override\n" +
                      "    public void run() {\n" +
-                     "        throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates.\n" +
+                     "        throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
                      "    }\n",
                      fileChanges.get(0).getNewText());
     }
@@ -2302,7 +2299,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(0).getRange());
         assertEquals("            @Override\n" +
                      "            public void run() {\n" +
-                     "                throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates.\n" +
+                     "                throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
                      "            }\n",
                      fileChanges.get(0).getNewText());
     }
@@ -2390,7 +2387,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(0).getRange());
         assertEquals("        @Override\n" +
                      "        public void run() {\n" +
-                     "            throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates.\n" +
+                     "            throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
                      "        }\n",
                      fileChanges.get(0).getNewText());
     }
@@ -3734,12 +3731,12 @@ public class ServerTest extends NbTestCase {
         assertEquals("\n" +
                      "    @Override\n" +
                      "    protected void finalize() throws Throwable {\n" +
-                     "        super.finalize(); //To change body of generated methods, choose Tools | Templates.\n" +
+                     "        super.finalize(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody\n" +
                      "    }\n" +
                      "\n" +
                      "    @Override\n" +
                      "    public String toString() {\n" +
-                     "        return super.toString(); //To change body of generated methods, choose Tools | Templates.\n" +
+                     "        return super.toString(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody\n" +
                      "    }\n",
                      fileChanges.get(0).getNewText());
     }
@@ -5172,7 +5169,7 @@ public class ServerTest extends NbTestCase {
                 codeActions.stream()
                            .filter(Either::isRight)
                            .map(Either::getRight)
-                           .filter(a -> a.getTitle().startsWith(Bundle.DN_SurroundWith("do { ...")))
+                           .filter(a -> a.getTitle().startsWith(Bundle.DN_SurroundWith("do")))
                            .findAny();
         assertTrue(surroundWith.isPresent());
         Command command = surroundWith.get().getCommand();

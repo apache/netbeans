@@ -239,7 +239,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                 "generateApplicationXml", //NOI18N
                 "generate-application-xml", null);//NOI18N
         //either the default or explicitly set generation of application.xml file
-        return (str == null || Boolean.valueOf(str).booleanValue());
+        return (str == null || Boolean.valueOf(str));
     }
 
     boolean isValid() {

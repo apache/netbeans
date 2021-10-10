@@ -34,7 +34,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-import org.netbeans.modules.j2ee.sun.ide.editors.NameValuePair;
 
 import org.netbeans.modules.j2ee.sun.ide.editors.ui.DDTablePanel;
 import org.netbeans.modules.j2ee.sun.ide.editors.ui.AbstractDDTableModel;

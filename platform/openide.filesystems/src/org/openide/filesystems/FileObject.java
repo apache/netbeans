@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Enumerations;
 import org.openide.util.NbBundle;
 import org.openide.util.Lookup;
@@ -1268,7 +1269,7 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
         try {
             URI uri = toURL().toURI();
             assert uri.isAbsolute() : uri;
-            assert uri.equals(uri.normalize()) : uri + " == " + uri.normalize() + " from " + this;
+            assert uri.equals(BaseUtilities.normalizeURI(uri)) : uri + " == " + BaseUtilities.normalizeURI(uri) + " from " + this;
             return uri;
         } catch (URISyntaxException x) {
             throw new IllegalStateException(x);

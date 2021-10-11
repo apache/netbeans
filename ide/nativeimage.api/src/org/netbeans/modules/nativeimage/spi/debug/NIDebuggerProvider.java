@@ -20,15 +20,20 @@ package org.netbeans.modules.nativeimage.spi.debug;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
+
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerEngine;
-
 import org.netbeans.api.extexecution.ExecutionDescriptor;
+import org.netbeans.modules.nativeimage.api.Location;
+import org.netbeans.modules.nativeimage.api.SourceInfo;
+import org.netbeans.modules.nativeimage.api.Symbol;
 import org.netbeans.modules.nativeimage.api.debug.NIFrame;
 import org.netbeans.modules.nativeimage.api.debug.NILineBreakpointDescriptor;
 import org.netbeans.modules.nativeimage.api.debug.NIVariable;
+import org.netbeans.modules.nativeimage.api.debug.StartDebugParameters;
 import org.netbeans.modules.nativeimage.spi.debug.filters.FrameDisplayer;
 import org.netbeans.modules.nativeimage.spi.debug.filters.VariableDisplayer;
 
@@ -36,7 +41,7 @@ import org.netbeans.modules.nativeimage.spi.debug.filters.VariableDisplayer;
  * Provider of the native image debugger.
  *
  * @author martin
- * @since 1.0
+ * @since 0.1
  */
 public interface NIDebuggerProvider {
 
@@ -48,7 +53,7 @@ public interface NIDebuggerProvider {
      * @param id a unique ID of the breakpoint
      * @param breakpointDescriptor the breakpoint descriptor
      * @return an instance of the native breakpoint
-     * @since 1.0
+     * @since 0.1
      */
     Breakpoint addLineBreakpoint(Object id, NILineBreakpointDescriptor breakpointDescriptor);
 
@@ -56,7 +61,7 @@ public interface NIDebuggerProvider {
      * Remove breakpoint with the given id.
      *
      * @param id the ID of the breakpoint to remove
-     * @since 1.0
+     * @since 0.1
      */
     void removeBreakpoint(Object id);
 
@@ -64,7 +69,7 @@ public interface NIDebuggerProvider {
      * Set a displayer of native frames.
      *
      * @param frameDisplayer translator of the native frame to it's displayed information
-     * @since 1.0
+     * @since 0.1
      */
     void setFrameDisplayer(FrameDisplayer frameDisplayer);
 
@@ -72,7 +77,7 @@ public interface NIDebuggerProvider {
      * Set a displayer of native variables.
      *
      * @param variablesDisplayer translator of native variables to displayed variables.
-     * @since 1.0
+     * @since 0.1
      */
     void setVariablesDisplayer(VariableDisplayer variablesDisplayer);
 
@@ -85,10 +90,49 @@ public interface NIDebuggerProvider {
      * @param displayName display name of the debugger task
      * @param executionDescriptor execution descriptor that describes the runtime attributes
      * @param startedEngine the corresponding DebuggerEngine is passed to this consumer
-     * @param finishedCallback notification of the execution finish
-     * @since 1.0
+     * @since 0.1
+     * @deprecated Use {@link #start(org.netbeans.modules.nativeimage.api.debug.StartDebugParameters, java.util.function.Consumer)}
      */
-    CompletableFuture<Void> start(List<String> command, File workingDirectory, String debugger, String displayName, ExecutionDescriptor executionDescriptor, Consumer<DebuggerEngine> startedEngine);
+    @Deprecated
+    default CompletableFuture<Void> start(List<String> command, File workingDirectory, String debugger, String displayName, ExecutionDescriptor executionDescriptor, Consumer<DebuggerEngine> startedEngine) {
+        StartDebugParameters parameters = StartDebugParameters.newBuilder(command)
+                .workingDirectory(workingDirectory)
+                .debugger(debugger)
+                .displayName(displayName)
+                .executionDescriptor(executionDescriptor)
+                .build();
+        return start(parameters, startedEngine);
+    }
+
+    /**
+     * Start the actual debugging session. Called typically after breakpoints are added.
+     * 
+     * @param debugParameters parameters to start the debugging with
+     * @param startedEngine the corresponding DebuggerEngine is passed to this consumer
+     * @return a future which is completed when the started debugger session finishes
+     * @since 0.5
+     */
+    default CompletableFuture<Void> start(StartDebugParameters debugParameters, Consumer<DebuggerEngine> startedEngine) {
+        CompletableFuture cf = new CompletableFuture();
+        cf.completeExceptionally(new UnsupportedOperationException());
+        return cf;
+    }
+
+    /**
+     * Attach to a process and create a debugging session. Called typically after breakpoints are added.
+     *
+     * @param executablePath path to an executable representing the native image
+     * @param processId a process to attach to
+     * @param debugger the native debugger command
+     * @param startedEngine the corresponding DebuggerEngine is passed to this consumer
+     * @return future that completes on the execution finish
+     * @since 0.4
+     */
+    default CompletableFuture<Void> attach(String executablePath, long processId, String debugger, Consumer<DebuggerEngine> startedEngine) {
+        CompletableFuture cf = new CompletableFuture();
+        cf.completeExceptionally(new UnsupportedOperationException());
+        return cf;
+    }
 
     /**
      * An asynchronous expression evaluation.
@@ -98,7 +142,7 @@ public interface NIDebuggerProvider {
      *                   when <code>null</code> the expression is used as the name
      * @param frame the frame to evaluate at
      * @return the completable future with the evaluation result
-     * @since 1.0
+     * @since 0.1
      */
     CompletableFuture<NIVariable> evaluateAsync(String expression, String resultName, NIFrame frame);
 
@@ -110,14 +154,44 @@ public interface NIDebuggerProvider {
      * @param length number of bytes to read
      * @return hexadecimal representation of the memory content, or <code>null</code>
      *         when the read is not successful
-     * @since 1.0
+     * @since 0.1
      */
     String readMemory(String address, long offset, int length);
 
     /**
      * Get version of the underlying native debugger.
      *
-     * @since 1.0
+     * @since 0.1
      */
     String getVersion();
+
+    /**
+     * Provide a list of locations for a given file path.
+     *
+     * @param filePath a file path
+     * @return list of locations, or <code>null</code> when there's no location
+     *         information about such file.
+     * @since 0.2
+     */
+    default List<Location> listLocations(String filePath) {
+        return null;
+    }
+
+    /**
+     * Provide a list of functions in the debuggee.
+     *
+     * @since 0.2
+     */
+    default Map<SourceInfo, List<Symbol>> listFunctions(String name, boolean includeNondebug, int maxResults) {
+        return null;
+    }
+
+    /**
+     * Provide a list of global variables in the debuggee.
+     *
+     * @since 0.2
+     */
+    default Map<SourceInfo, List<Symbol>> listVariables(String name, boolean includeNondebug, int maxResults) {
+        return null;
+    }
 }

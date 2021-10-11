@@ -99,7 +99,11 @@ public class CustomActionRegistrationSupport {
             ProjectActionMappingProvider fa = actionP;
             Set<String> customizedActions = actionP.customizedActions();
             customizedActions.forEach((action) -> {
-                CustomActionMapping mapping = new CustomActionMapping(fa.findMapping(action));
+                ActionMapping ca = fa.findMapping(action);
+                if (ca == null) {
+                    ca = DefaultActionMapping.DISABLED;
+                }
+                CustomActionMapping mapping = new CustomActionMapping(ca, action);
                 nh.customActions.put(action, mapping);
             });
         }

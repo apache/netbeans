@@ -19,12 +19,15 @@
 package org.netbeans.modules.groovy.editor.completion.provider;
 
 import java.util.List;
+import java.util.Set;
 import javax.lang.model.element.ElementKind;
 import org.netbeans.modules.groovy.editor.api.completion.CompletionItem;
 import org.netbeans.modules.groovy.editor.api.completion.CompletionItem.ConstructorItem;
 import org.netbeans.modules.groovy.editor.api.completion.CompletionItem.TypeItem;
 import org.netbeans.modules.groovy.editor.api.elements.common.MethodElement;
+import org.netbeans.modules.groovy.editor.api.elements.common.MethodElement.MethodParameter;
 import org.netbeans.modules.groovy.editor.java.JavaElementHandle;
+import org.openide.util.Pair;
 
 /**
  * Avoids publishing additional API methods; the API needs a thorough review, I am not 
@@ -61,4 +64,14 @@ public abstract class CompletionAccessor {
     public abstract ConstructorItem createConstructor(JavaElementHandle h, List<MethodElement.MethodParameter> parameters, int anchorOffset, boolean expand);
     
     public abstract TypeItem createType(JavaElementHandle h, String qn, String n,  int anchorOffset, javax.lang.model.element.ElementKind ek);
+    
+    public abstract CompletionItem createJavaMethod(String className, String simpleName, List<MethodParameter> parameters,
+            String returnType, Set<javax.lang.model.element.Modifier> modifiers, int anchorOffset,
+            boolean emphasise, boolean nameOnly);
+    
+    public abstract CompletionItem createDynamicMethod(int anchorOffset, String name, List<MethodParameter> parameters, String returnType, boolean prefix);
+    
+    public abstract Pair<String, List<MethodParameter>> getParametersAndType(CompletionItem item);
+    
+    public abstract CompletionItem sortOverride(CompletionItem item, int override);
 }

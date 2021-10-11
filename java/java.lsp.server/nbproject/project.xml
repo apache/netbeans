@@ -92,7 +92,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.1</specification-version>
+                        <specification-version>1.4</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -139,6 +139,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.editor.codetemplates</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.56</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.editor.document</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -174,6 +183,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.editor.util</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.77</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.extexecution</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -188,7 +206,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>1.17</specification-version>
+                        <specification-version>1.20</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -205,7 +223,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.22</specification-version>
+                        <specification-version>1.27</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -257,7 +275,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>0</release-version>
-                        <specification-version>0.1</specification-version>
+                        <specification-version>0.3</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -335,7 +353,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>0</release-version>
-                        <specification-version>0.1</specification-version>
+                        <specification-version>0.5</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -423,7 +441,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>2.67</specification-version>
+                        <specification-version>2.72</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -521,7 +539,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>9.10</specification-version>
+                        <specification-version>9.20</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -587,6 +605,18 @@
                         <code-name-base>org.netbeans.modules.editor.tools.storage</code-name-base>
                     </test-dependency>
                     <test-dependency>
+                        <code-name-base>org.netbeans.modules.extexecution.process</code-name-base>
+                        <recursive/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.extexecution.process.jdk9</code-name-base>
+                        <recursive/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.java.hints.declarative</code-name-base>
+                        <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
                         <code-name-base>org.netbeans.modules.java.j2seplatform</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
@@ -609,6 +639,10 @@
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.lexer.nbbridge</code-name-base>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.maven</code-name-base>
+                        <recursive/>
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.nbjunit</code-name-base>
@@ -634,18 +668,6 @@
                     <test-dependency>
                         <code-name-base>org.netbeans.spi.editor.hints.projects</code-name-base>
                         <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.modules.maven</code-name-base>
-                        <recursive/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.modules.extexecution.process</code-name-base>
-                        <recursive/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.modules.extexecution.process.jdk9</code-name-base>
-                        <recursive/>
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.openide.util.lookup</code-name-base>

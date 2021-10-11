@@ -21,15 +21,10 @@ package org.netbeans.modules.welcome.content;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.Action;
 import javax.swing.UIManager;
@@ -50,17 +45,6 @@ public class Utils {
 
     /** Creates a new instance of Utils */
     private Utils() {
-    }
-
-    public static Graphics2D prepareGraphics(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-        Map rhints = (Map)(Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints")); //NOI18N
-        if( rhints == null && Boolean.getBoolean("swing.aatext") ) { //NOI18N
-             g2.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
-        } else if( rhints != null ) {
-            g2.addRenderingHints( rhints );
-        }
-        return g2;
     }
 
     public static void showURL(String href) {

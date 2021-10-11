@@ -41,6 +41,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.api.FileUtilities;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.execute.ExecutionContext;
+import org.netbeans.modules.maven.api.execute.RunUtils;
 import org.netbeans.modules.maven.execute.model.ActionToGoalMapping;
 import org.netbeans.modules.maven.execute.model.NetbeansActionMapping;
 import org.netbeans.modules.maven.execute.model.io.xpp3.NetbeansBuildActionXpp3Reader;
@@ -187,17 +188,32 @@ public final class ActionToGoalUtils {
         return isActionEnable(action, project, null, lookup);
     }
     
+    
+    /**
+     * Determines if the action mapping actually disables the action. Mapping that disables an action
+     * has no goal - cannot be executed by Maven anyway.
+     * 
+     * @param am the checked action mapping
+     * @return {@code true}, if the action is disabled.
+     * @since 2.149
+     */
+    public static boolean isDisabledMapping(NetbeansActionMapping am) {
+        return am.getGoals().isEmpty();
+    }
+
     public static boolean isActionEnable(String action, NbMavenProjectImpl project, ProjectConfiguration c, Lookup lookup) {
         PackagingProvider packProv = new PackagingProvider(project);
         M2ConfigProvider configs = project.getLookup().lookup(M2ConfigProvider.class);
         M2Configuration active = configs.getActiveConfiguration();
         M2Configuration useConfiguration = (c instanceof M2Configuration) ? (M2Configuration)c : active;        
-        if(isActionEnable(useConfiguration, action, project, packProv, lookup)) {
-            return true;
+        NetbeansActionMapping m = findEnabledAction(useConfiguration, action, project, packProv, lookup);
+        if(m != null) {
+            return !isDisabledMapping(m);
         }
         //check fallback default config as well..
-        if(isActionEnable(configs.getDefaultConfig(), action, project, packProv, lookup)) {
-            return true;
+        m = findEnabledAction(configs.getDefaultConfig(), action, project, packProv, lookup);
+        if(m != null) {
+            return !isDisabledMapping(m);
         }
         if (ActionProvider.COMMAND_BUILD.equals(action) ||
                 ActionProvider.COMMAND_REBUILD.equals(action)) {
@@ -214,8 +230,9 @@ public final class ActionToGoalUtils {
         M2Configuration save = configs.setLocalConfiguration(useConfiguration);
         try {
             for (MavenActionsProvider add : actionProviders(project)) {
-                if(isActionEnable(add, action, project, packProv, lookup)) {
-                    return true;
+                m = findEnabledAction(add, action, project, packProv, lookup);
+                if(m != null) {
+                    return !isDisabledMapping(m);
                 }
             }
         } finally {
@@ -224,17 +241,19 @@ public final class ActionToGoalUtils {
         return false;
     }
 
-    private static boolean isActionEnable(MavenActionsProvider activeConfiguration, String action, NbMavenProjectImpl project, PackagingProvider packProv, Lookup lookup) {
+    private static NetbeansActionMapping findEnabledAction(MavenActionsProvider activeConfiguration, String action, NbMavenProjectImpl project, PackagingProvider packProv, Lookup lookup) {
+        NetbeansActionMapping mapping = activeConfiguration.getMappingForAction(action, project);
         if (activeConfiguration instanceof AbstractMavenActionsProvider) {
-            if (((AbstractMavenActionsProvider)activeConfiguration).isActionEnable(action, packProv.getPackaging())) {
-                return true;
+            boolean enabled = ((AbstractMavenActionsProvider)activeConfiguration).isActionEnable(action, packProv.getPackaging());
+            if (enabled) {
+                return mapping;
             }
         } else {
             if (activeConfiguration.isActionEnable(action, project, lookup)) {
-                return true;
+                return mapping;
             }
         }
-        return false;
+        return null;
     }
 
     public static NetbeansActionMapping getActiveMapping(String action, Project project, M2Configuration configuration) {

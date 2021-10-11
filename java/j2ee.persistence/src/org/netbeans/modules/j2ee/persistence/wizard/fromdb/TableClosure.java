@@ -363,7 +363,7 @@ public class TableClosure {
         public Queue(Set<T> initialContents) {
             assert !initialContents.contains(null);
 
-            queue = new ArrayList(initialContents);
+            queue = new ArrayList<>(initialContents);
             contents = new HashSet(initialContents);
         }
 

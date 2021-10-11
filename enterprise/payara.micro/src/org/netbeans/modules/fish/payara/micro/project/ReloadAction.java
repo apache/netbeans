@@ -28,7 +28,6 @@ import static org.netbeans.modules.fish.payara.micro.plugin.Constants.COMPILE_EX
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.EXPLODE_ACTION;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.RELOAD_FILE;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.RELOAD_ICON;
-import org.netbeans.modules.fish.payara.micro.project.MicroApplication;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.execute.RunUtils;
 import static org.netbeans.modules.maven.api.execute.RunUtils.isCompileOnSaveEnabled;

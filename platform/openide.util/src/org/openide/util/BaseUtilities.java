@@ -1613,6 +1613,29 @@ widthcheck:  {
         return new File(u);    
     }
 
+    /**
+     * Normalizes the given {@code URI}. Like {@link URI#normalize()}, but does
+     * not break certain special {@code URI}s, so should be preferred over
+     * {@linkplain URI#normalize()}.
+     *
+     * @param uri the {@code URI} to normalize
+     * @return the normalized URI
+     */
+    public static URI normalizeURI(URI uri) {
+        @SuppressWarnings("URI.normalize")
+        URI normalized = uri.normalize();
+
+        if (uri.getAuthority() == null && "file".equals(uri.getScheme()) && uri.getPath().startsWith("//")) {
+            try {
+                normalized = new URI(normalized.getScheme(), null, "///" + normalized.getPath(), normalized.getQuery(), normalized.getFragment());
+            } catch (URISyntaxException ex) {
+                throw new IllegalStateException(ex); //unexpected
+            }
+        }
+
+        return normalized;
+    }
+
     /** Interfaces for communication between Utilities.translate and regular
      * expression impl.
      *

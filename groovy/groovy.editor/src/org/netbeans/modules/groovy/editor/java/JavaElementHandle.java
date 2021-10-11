@@ -109,6 +109,7 @@ public final class JavaElementHandle implements ElementHandle {
             case FIELD:         return ElementKind.FIELD;
             case CONSTRUCTOR:   return ElementKind.CONSTRUCTOR;
             case ENUM:          return ElementKind.CONSTANT;
+            case ENUM_CONSTANT: return ElementKind.CONSTANT;
             case ANNOTATION_TYPE: return ElementKind.INTERFACE;
                     
             default:
@@ -213,6 +214,7 @@ public final class JavaElementHandle implements ElementHandle {
             @Override
             public void run(CompilationController parameter) throws Exception {
                 try {
+                    parameter.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                     result = resolver.apply(parameter, toElement(parameter));
                 } catch (Exception ex) {
                     thrown = ex;

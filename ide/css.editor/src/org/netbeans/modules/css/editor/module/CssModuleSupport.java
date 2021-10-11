@@ -468,7 +468,7 @@ public class CssModuleSupport {
             public int compare(HelpResolver t1, HelpResolver t2) {
                 int i1 = t1.getPriority();
                 int i2 = t2.getPriority();
-                return new Integer(i1).compareTo(new Integer(i2));
+                return Integer.valueOf(i1).compareTo(Integer.valueOf(i2));
             }
         });
 

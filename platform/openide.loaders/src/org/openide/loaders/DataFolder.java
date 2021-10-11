@@ -833,8 +833,9 @@ public class DataFolder extends MultiDataObject implements DataObject.Container 
         DataFolder f, String name
     ) throws IOException {
         int[] fileBuilderUsed = { 0 };
-        DataFolder newFolder = (DataFolder)super.handleCreateFromTemplate (f, name, fileBuilderUsed);
-        if (fileBuilderUsed[0] == 0) {
+        final DataObject newObj = super.handleCreateFromTemplate (f, name, fileBuilderUsed);
+        if (fileBuilderUsed[0] == 0 && newObj instanceof DataFolder) {
+            DataFolder newFolder = (DataFolder) newObj;
             Enumeration<DataObject> en = children ();
 
             Map<String, Object> params = CreateAction.getCallParameters(null);
@@ -847,7 +848,7 @@ public class DataFolder extends MultiDataObject implements DataObject.Container 
                 }
             }
         }
-        return newFolder;
+        return newObj;
     }
 
     /** Creates shadow for this object in specified folder (overridable in subclasses).

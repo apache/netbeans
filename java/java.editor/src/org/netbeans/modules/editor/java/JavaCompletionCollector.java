@@ -111,7 +111,16 @@ public class JavaCompletionCollector implements CompletionCollector {
             ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
                 @Override
                 public void run(ResultIterator resultIterator) throws Exception {
-                    TokenSequence<JavaTokenId> ts = resultIterator.getSnapshot().getTokenHierarchy().tokenSequence(JavaTokenId.language());
+                    TokenSequence<JavaTokenId> ts = null;
+                    for (TokenSequence<?> cand : resultIterator.getSnapshot().getTokenHierarchy().embeddedTokenSequences(offset, false)) {
+                        if (cand.language() == JavaTokenId.language()) {
+                            ts = (TokenSequence<JavaTokenId>) cand;
+                            break;
+                        }
+                    }
+                    if (ts == null) {//No Java on this offset
+                        return ;
+                    }
                     if (ts.move(offset) == 0 || !ts.moveNext()) {
                         if (!ts.movePrevious()) {
                             ts.moveNext();
@@ -171,7 +180,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             return CompletionCollector.newBuilder(kwd)
                     .kind(Completion.Kind.Keyword)
                     .sortText(String.format("%04d%s", smartType ? 670 : 1670, kwd))
-                    .insertText(kwd + postfix)
+                    .insertText(postfix != null ? kwd + postfix : kwd)
                     .insertTextFormat(Completion.TextFormat.PlainText)
                     .build();
         }
@@ -1086,7 +1095,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             if (t1.getKind().isPrimitive() && types.isSameType(types.boxedClass((PrimitiveType)t1).asType(), t2)) {
                 return true;
             }
-            return t2.getKind().isPrimitive() && types.isSameType(t1, types.boxedClass((PrimitiveType)t1).asType());
+            return t2.getKind().isPrimitive() && types.isSameType(t1, types.boxedClass((PrimitiveType)t2).asType());
         }
 
         private static boolean isOfKind(Element e, EnumSet<ElementKind> kinds) {

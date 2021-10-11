@@ -42,6 +42,22 @@
     <folder name="Projects">
         <folder name="org-netbeans-modules-gradle">
             <folder name="Plugins">
+                <folder name="java-library-distribution">
+                    <folder name="Lookup">
+                        <file name="disable-action.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.gradle.spi.actions.DefaultGradleActionsProvider.forProjectLayer"/>
+                            <attr name="service" stringvalue="org.netbeans.modules.gradle.spi.actions.GradleActionsProvider"/>
+                            <attr name="resource" stringvalue="nbres:/org/netbeans/modules/gradle/actions/declarative-actions2.xml"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Projects">
+        <folder name="org-netbeans-modules-gradle">
+            <folder name="Plugins">
                 <folder name="java">
                     <folder name="Lookup">
                         <file name="org-netbeans-modules-gradle-execute-GradleProjectConfigProviderTest-createTestProvider.instance">

@@ -61,7 +61,7 @@ class DatasourceCustomizer extends javax.swing.JPanel {
     public DatasourceCustomizer(List<Datasource> datasources) {
         if (datasources != null) { // transform Set to Map for faster searching
             this.datasources = new HashMap<String, Datasource>();
-            for (Iterator it = datasources.iterator(); it.hasNext();) {
+            for (Iterator<Datasource> it = datasources.iterator(); it.hasNext();) {
                 Datasource ds = (Datasource) it.next();
                 if (ds.getJndiName() != null)
                     this.datasources.put(ds.getJndiName(), ds);

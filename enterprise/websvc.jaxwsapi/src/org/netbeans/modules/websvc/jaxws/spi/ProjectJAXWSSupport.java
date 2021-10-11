@@ -404,13 +404,8 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
     }
 
     public URL getCatalog() {
-        try {
-            FileObject catalog = getCatalogFileObject();
-            return catalog==null?null:catalog.getURL();
-        } catch (FileStateInvalidException ex) {
-            return null;
-        }
-
+        FileObject catalog = getCatalogFileObject();
+        return catalog == null ? null : catalog.toURL();
     }
 
     private FileObject getWsdlFolderForService(String name) throws IOException {

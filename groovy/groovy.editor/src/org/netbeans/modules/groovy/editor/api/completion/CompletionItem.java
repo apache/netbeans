@@ -20,6 +20,7 @@
 package org.netbeans.modules.groovy.editor.api.completion;
 
 import groovy.lang.MetaMethod;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +31,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.swing.ImageIcon;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.Variable;
+import org.codehaus.groovy.reflection.CachedClass;
 import org.netbeans.api.java.source.ui.ElementIcons;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
@@ -48,6 +50,7 @@ import org.netbeans.modules.groovy.editor.java.Utilities;
 import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 import org.netbeans.modules.groovy.support.api.GroovySources;
 import org.openide.util.ImageUtilities;
+import org.openide.util.Pair;
 
 
 /**
@@ -63,6 +66,8 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
     private static volatile ImageIcon groovyIcon;
     private static volatile ImageIcon javaIcon;
     private static volatile ImageIcon newConstructorIcon;
+    
+    private int sortOverride;
     
     static {
         CompletionAccessor.setInstance(new CompletionAccessor() {
@@ -101,6 +106,40 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
                 }
                 return ti;
             }
+            
+            public Pair<String, List<MethodParameter>> getParametersAndType(CompletionItem item) {
+                if (item instanceof ConstructorItem) {
+                    ConstructorItem ci = (ConstructorItem)item;
+                    return Pair.of(ci.className, ci.parameters);
+                } else if (item instanceof JavaMethodItem) {
+                    JavaMethodItem jmi = (JavaMethodItem)item;
+                    return Pair.of(jmi.returnType, jmi.parameters);
+                } else if (item instanceof MetaMethodItem) {
+                    MetaMethodItem mmi = (MetaMethodItem)item;
+                    return Pair.of(mmi.getReturnType(), mmi.getParameters());
+                } else if (item instanceof DynamicMethodItem) {
+                    DynamicMethodItem dmi = (DynamicMethodItem)item;
+                    return Pair.of(dmi.returnType, dmi.parameters);
+                } else {
+                    return Pair.of(null, Collections.emptyList());
+                }
+            }
+
+            @Override
+            public CompletionItem createJavaMethod(String className, String simpleName, List<MethodParameter> parameters, String returnType, Set<javax.lang.model.element.Modifier> modifiers, int anchorOffset, boolean emphasise, boolean nameOnly) {
+                return new JavaMethodItem(className, simpleName, parameters, returnType, modifiers, anchorOffset, emphasise, nameOnly, true);
+            }
+
+            @Override
+            public CompletionItem createDynamicMethod(int anchorOffset, String name, List<MethodParameter> parameters, String returnType, boolean prefix) {
+                return new DynamicMethodItem(anchorOffset, name, parameters, returnType, prefix);
+            }
+
+            @Override
+            public CompletionItem sortOverride(CompletionItem item, int override) {
+                item.sortOverride = override;
+                return item;
+            }
         });
     }
 
@@ -120,7 +159,7 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
     public ElementHandle getElement() {
         LOG.log(Level.FINEST, "getElement() element : {0}", element);
 
-        return null;
+        return element;
     }
 
     @Override
@@ -131,6 +170,10 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
     @Override
     public Set<Modifier> getModifiers() {
         return element.getModifiers();
+    }
+
+    public int getSortPrioOverride() {
+        return sortOverride;
     }
 
     @Override
@@ -191,7 +234,7 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
 
         private final String className;
         private final String simpleName;
-        private final List<String> parameters;
+        private final List<MethodParameter> parameters;
         private final String returnType;
         private final Set<javax.lang.model.element.Modifier> modifiers;
         private final boolean emphasise;
@@ -207,6 +250,21 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
 
         public JavaMethodItem(String className, String simpleName, List<String> parameters, String returnType,
                 Set<javax.lang.model.element.Modifier> modifiers, int anchorOffset, boolean emphasise, boolean nameOnly) {
+            super(null, anchorOffset);
+            this.className = className;
+            this.simpleName = simpleName;
+            this.parameters = new ArrayList<>(parameters.size());
+            for (String s : parameters) {
+                this.parameters.add(new MethodParameter(s, s, null));
+            }
+            this.returnType = GroovyUtils.stripPackage(returnType);
+            this.modifiers = modifiers;
+            this.emphasise = emphasise;
+            this.nameOnly = nameOnly;
+        }
+        
+        JavaMethodItem(String className, String simpleName, List<MethodParameter> parameters, String returnType,
+                Set<javax.lang.model.element.Modifier> modifiers, int anchorOffset, boolean emphasise, boolean nameOnly, boolean _unused) {
             super(null, anchorOffset);
             this.className = className;
             this.simpleName = simpleName;
@@ -241,11 +299,11 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
         
         private String getParameters() {
             StringBuilder sb = new StringBuilder();
-            for (String string : parameters) {
+            for (MethodParameter par : parameters) {
                 if (sb.length() > 0) {
                     sb.append(", ");
                 }
-                sb.append(GroovyUtils.stripPackage(string));
+                sb.append(GroovyUtils.stripPackage(par.getType()));
             }
             return sb.toString();
         }
@@ -353,12 +411,23 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
     private static class DynamicMethodItem extends CompletionItem {
 
         private final String name;
-        private final String[] parameters;
+        private final List<MethodParameter> parameters;
         private final String returnType;
         private final boolean prefix;
         
 
         public DynamicMethodItem(int anchorOffset, String name, String[] parameters, String returnType, boolean prefix) {
+            super(null, anchorOffset);
+            this.name = name;
+            this.parameters = new ArrayList<>(parameters.length);
+            for (String s : parameters) {
+                this.parameters.add(new MethodParameter(s, s, null));
+            }
+            this.returnType = returnType;
+            this.prefix = prefix;
+        }
+
+        DynamicMethodItem(int anchorOffset, String name, List<MethodParameter> parameters, String returnType, boolean prefix) {
             super(null, anchorOffset);
             this.name = name;
             this.parameters = parameters;
@@ -373,7 +442,7 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
 
         @Override
         public String getSortText() {
-            return (name + (prefix ? 1 : 0)) + parameters.length;
+            return (name + (prefix ? 1 : 0)) + parameters.size();
         }
 
         @Override
@@ -393,11 +462,11 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
             if (!prefix) {
                 StringBuilder buf = new StringBuilder();
                 // construct signature by removing package names.
-                for (String param : parameters) {
+                for (MethodParameter param : parameters) {
                     if (buf.length() > 0) {
                         buf.append(", ");
                     }
-                    buf.append(GroovyUtils.stripPackage(Utilities.translateClassLoaderTypeName(param)));
+                    buf.append(GroovyUtils.stripPackage(Utilities.translateClassLoaderTypeName(param.getFqnType())));
                 }
 
                 String simpleSig = buf.toString();
@@ -480,6 +549,29 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
         @Override
         public ElementKind getKind() {
             return ElementKind.METHOD;
+        }
+
+        @Override
+        public int getSortPrioOverride() {
+            // sort meta-methods after normal ones, but before keywords
+            return 550;
+        }
+        
+        // accessed by CompletionAccessor
+        List<MethodParameter> getParameters() {
+            List<MethodParameter> params = new ArrayList<>(method.getParameterTypes().length);
+            for (CachedClass cc : method.getParameterTypes()) {
+                String tn = cc.getName();
+                MethodParameter mp = new MethodParameter(tn, GroovyUtils.stripPackage(tn));
+                params.add(mp);
+            }
+            return params;
+        }
+        
+        // accessed by CompletionAccessor
+        String getReturnType() {
+            Class c = method.getReturnType();
+            return c == null ? null : c.getName();
         }
 
         @Override
@@ -707,6 +799,7 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
 
         @Override
         public ElementKind getKind() {
+            // TODO: kind could be class or interface, depending on ek - NETBEANS-5788
             return ElementKind.CLASS;
         }
 

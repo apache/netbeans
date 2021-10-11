@@ -222,7 +222,7 @@ public class ServletsMultiViewElement extends ToolBarMultiViewElement implements
         AddAction(final DDDataObject dObj, String actionName) {
             super(actionName);
             char mnem = NbBundle.getMessage(ServletsMultiViewElement.class,"LBL_addServlet_mnem").charAt(0);
-            putValue(MNEMONIC_KEY,new Integer((int)mnem));
+            putValue(MNEMONIC_KEY, (int)mnem);
         }
         public void actionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -342,7 +342,7 @@ public class ServletsMultiViewElement extends ToolBarMultiViewElement implements
         RemoveAction(String actionName) {
             super(actionName);
             char mnem = NbBundle.getMessage(ServletsMultiViewElement.class,"LBL_remove_mnem").charAt(0);
-            putValue(MNEMONIC_KEY,new Integer((int)mnem));
+            putValue(MNEMONIC_KEY, (int)mnem);
         }
         
         public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -72,6 +72,7 @@ import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileSystem.AtomicAction;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.SpecificationVersion;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.Mutex;
 import org.openide.util.MutexException;
@@ -351,7 +352,7 @@ public final class EarProjectGenerator {
                     SourceGroup sgs[] = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
                     if (sgs.length > 0) {
                         ProjectClassPathModifier.addAntArtifacts(new AntArtifact[]{artifact},
-                            new URI[]{locations[0].normalize()}, sgs[0].getRootFolder(), JavaClassPathConstants.COMPILE_ONLY);
+                            new URI[]{BaseUtilities.normalizeURI(locations[0])}, sgs[0].getRootFolder(), JavaClassPathConstants.COMPILE_ONLY);
                     }
                 }
             }

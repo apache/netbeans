@@ -119,7 +119,7 @@ public class ConfigurationsPanel extends javax.swing.JPanel implements HelpCtx.P
     }
 
     private void createListModel() {
-        DefaultListModel model = new DefaultListModel();
+        DefaultListModel<GradleExecConfiguration> model = new DefaultListModel<>();
         for (GradleExecConfiguration c : handle.getConfigurations()) {
             model.addElement(c);
         }

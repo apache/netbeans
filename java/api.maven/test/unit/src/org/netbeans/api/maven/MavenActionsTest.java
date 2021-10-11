@@ -18,20 +18,30 @@
  */
 package org.netbeans.api.maven;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.maven.api.MavenConfiguration;
+import org.netbeans.modules.maven.api.NbMavenProject;
+import org.netbeans.modules.maven.configurations.M2ConfigProvider;
 import org.netbeans.modules.maven.spi.actions.MavenActionsProvider;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -43,11 +53,7 @@ public class MavenActionsTest extends NbTestCase {
         super(name);
     }
     
-    /**
-     * Checks that the custom provider is included when the project contains appropriate
-     * plugin and trashed when the plugin vanishes from the model.
-     */
-    public void testCustomActionsProvider() throws Exception {
+    private Project createProject() throws Exception {
         clearWorkDir();
         FileObject wd = FileUtil.toFileObject(getWorkDir());
         
@@ -66,10 +72,30 @@ public class MavenActionsTest extends NbTestCase {
         OpenProjects.getDefault().open(new Project[] { p } , false);
         OpenProjects.getDefault().openProjects().get();
         
+        return p;
+    }
+    
+    /**
+     * Checks that the custom provider is included when the project contains appropriate
+     * plugin and trashed when the plugin vanishes from the model.
+     */
+    public void testCustomActionsProvider() throws Exception {
+        Project p = createProject();
         ActionProvider ap = p.getLookup().lookup(ActionProvider.class);
         assertTrue(Arrays.asList(ap.getSupportedActions()).contains("extra"));
         
-        CountDownLatch change = new CountDownLatch(1);
+        CountDownLatch change = new CountDownLatch(2); // Lookup and set of project configurations
+
+        // Lookup or project change will imply a configuration change. We need both
+        ProjectConfigurationProvider pcp = p.getLookup().lookup(ProjectConfigurationProvider.class);
+        pcp.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (ProjectConfigurationProvider.PROP_CONFIGURATIONS.equals(evt.getNewValue())) {
+                    change.countDown();
+                }
+            }
+        });
         
         p.getLookup().lookupResult(MavenActionsProvider.class).addLookupListener(new LookupListener() {
             @Override
@@ -77,7 +103,7 @@ public class MavenActionsTest extends NbTestCase {
                 change.countDown();
             }
         });
-        
+        FileObject wd = FileUtil.toFileObject(getWorkDir());
         FileObject pom = wd.getFileObject("pom.xml");
 
         try (OutputStream o = pom.getOutputStream();
@@ -89,9 +115,42 @@ public class MavenActionsTest extends NbTestCase {
         }
         
         // wait for the set of providers to refresh. PROP_PROJECT comes first, but Lookup takes some
-        // additional time.
-        change.await();
-   
+        // additional time. The change should be almost immediate.
+        change.await(1000, TimeUnit.MILLISECONDS);
         assertFalse(Arrays.asList(ap.getSupportedActions()).contains("extra"));
+    }
+    
+    /**
+     * Checks that a configuration can override action to disabled.
+     * @throws Exception 
+     */
+    public void testDebugDisabledInSpecialConfig() throws Exception {
+        Project p = createProject();
+        ActionProvider ap = p.getLookup().lookup(ActionProvider.class);
+        assertTrue(Arrays.asList(ap.getSupportedActions()).contains("debug"));
+        
+        ProjectConfigurationProvider<MavenConfiguration> mavenConf = p.getLookup().lookup(ProjectConfigurationProvider.class);
+        MavenConfiguration mc = mavenConf.getConfigurations().stream().filter(c -> "Example Configuration".equals(c.getDisplayName())).findAny().get();
+        Lookup lkp = Lookups.singleton(mc);
+        
+        assertTrue(ap.isActionEnabled("debug", Lookup.EMPTY));
+        assertFalse(ap.isActionEnabled("debug", lkp));
+    }
+    
+    /**
+     * Checks that unspecified actions still default to the default config's behaviour.
+     * @throws Exception 
+     */
+    public void testDebugEnabledInDefaultConfig() throws Exception {
+        Project p = createProject();
+        ActionProvider ap = p.getLookup().lookup(ActionProvider.class);
+        assertTrue(Arrays.asList(ap.getSupportedActions()).contains("debug"));
+        
+        ProjectConfigurationProvider<MavenConfiguration> mavenConf = p.getLookup().lookup(ProjectConfigurationProvider.class);
+        MavenConfiguration mc = mavenConf.getConfigurations().stream().filter(c -> "Still enabled actions".equals(c.getDisplayName())).findAny().get();
+        Lookup lkp = Lookups.singleton(mc);
+        
+        assertTrue(ap.isActionEnabled("debug", Lookup.EMPTY));
+        assertTrue(ap.isActionEnabled("debug", lkp));
     }
 }

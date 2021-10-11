@@ -259,7 +259,7 @@ public class ListenerIterator implements TemplateWizard.AsynchronousInstantiatin
             if (c instanceof JComponent) { // assume Swing components
                 JComponent jc = (JComponent) c;
                 // Step #.
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(i));
+                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
                 // Step name (actually the whole list for reference).
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
             }

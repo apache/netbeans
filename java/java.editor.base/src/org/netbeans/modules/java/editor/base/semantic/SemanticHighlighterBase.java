@@ -1015,7 +1015,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             }
             return super.scan(tree, p);
         }
-        
+
         private void visitModifier(Tree tree) {
             tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), tree));
             Token t = null;

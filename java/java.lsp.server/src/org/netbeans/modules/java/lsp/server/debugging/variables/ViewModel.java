@@ -179,40 +179,40 @@ final class ViewModel {
             models.add(joinLists(tableModels));
         }
         synchronized (tableModelFilters) {
-            models.add(new ArrayList<Object>(tableModelFilters));
+            models.add(new ArrayList<>(tableModelFilters));
         }
         synchronized (nodeActionsProviders) {
-            models.add(new ArrayList<Object>(nodeActionsProviders));
+            models.add(new ArrayList<>(nodeActionsProviders));
         }
         synchronized (nodeActionsProviderFilters) {
-            models.add(new ArrayList<Object>(nodeActionsProviderFilters));
+            models.add(new ArrayList<>(nodeActionsProviderFilters));
         }
         synchronized (columnModels) {
-            models.add(new ArrayList<Object>(columnModels));
+            models.add(new ArrayList<>(columnModels));
         }
         synchronized (mm) {
-            models.add(new ArrayList<Object>(mm));
+            models.add(new ArrayList<>(mm));
         }
         synchronized (treeExpansionModelFilters) {
-            models.add(new ArrayList<Object>(treeExpansionModelFilters));
+            models.add(new ArrayList<>(treeExpansionModelFilters));
         }
         synchronized (asynchModelFilters) {
-            models.add(new ArrayList<Object>(asynchModelFilters));
+            models.add(new ArrayList<>(asynchModelFilters));
         }
         synchronized (tableRenderers) {
-            models.add(new ArrayList(tableRenderers));
+            models.add(new ArrayList<>(tableRenderers));
         }
         synchronized (tableRendererFilters) {
-            models.add(new ArrayList(tableRendererFilters));
+            models.add(new ArrayList<>(tableRendererFilters));
         }
         synchronized (tableHTMLModelFilters) {
-            models.add(new ArrayList(tableHTMLModelFilters));
+            models.add(new ArrayList<>(tableHTMLModelFilters));
         }
         synchronized (tablePropertyEditors) {
-            models.add(new ArrayList(tablePropertyEditors));
+            models.add(new ArrayList<>(tablePropertyEditors));
         }
         synchronized (tablePropertyEditorsFilters) {
-            models.add(new ArrayList(tablePropertyEditorsFilters));
+            models.add(new ArrayList<>(tablePropertyEditorsFilters));
         }
 
         boolean haveTreeModels = false;

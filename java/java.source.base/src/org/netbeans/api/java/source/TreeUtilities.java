@@ -374,7 +374,12 @@ public final class TreeUtilities {
             
             public Void scan(Tree tree, Void p) {
                 if (tree != null) {
-                    if (sourcePositions.getStartPosition(getCurrentPath().getCompilationUnit(), tree) < pos && sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), tree) >= pos) {
+                    long endPos = sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), tree);
+                    if (endPos == (-1) && tree.getKind() == Kind.ASSIGNMENT && getCurrentPath().getLeaf().getKind() == Kind.ANNOTATION) {
+                        ExpressionTree value = ((AssignmentTree) tree).getExpression();
+                        endPos = sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), value);
+                    }
+                    if (sourcePositions.getStartPosition(getCurrentPath().getCompilationUnit(), tree) < pos && endPos >= pos) {
                         if (tree.getKind() == Tree.Kind.ERRONEOUS) {
                             tree.accept(this, p);
                             throw new Result(getCurrentPath());

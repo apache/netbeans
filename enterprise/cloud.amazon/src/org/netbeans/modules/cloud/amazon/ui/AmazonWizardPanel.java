@@ -62,7 +62,7 @@ public class AmazonWizardPanel implements WizardDescriptor.AsynchronousValidatin
         if (component == null) {
             component = new AmazonWizardComponent(this, null);
             component.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, getPanelContentData());            
-            component.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(0));
+            component.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 0);
         }
         return component;
     }

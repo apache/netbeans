@@ -18,21 +18,18 @@
  */
 package org.netbeans.modules.java.lsp.server.debugging.attach;
 
-import com.sun.jdi.Bootstrap;
-import com.sun.jdi.VirtualMachineManager;
 import com.sun.jdi.connect.AttachingConnector;
 import com.sun.jdi.connect.Connector.Argument;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.io.File;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
@@ -48,8 +45,11 @@ import org.netbeans.api.debugger.jpda.DebuggerStartException;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDebugSession;
+import org.netbeans.modules.java.lsp.server.debugging.ni.NILocationVisualizer;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
+import org.netbeans.modules.java.nativeimage.debugger.api.NIDebugRunner;
+import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 
@@ -63,8 +63,13 @@ public final class NbAttachRequestHandler {
     private static final String CONNECTOR_ARG_HOST = "hostname";    // NOI18N
     private static final String CONNECTOR_ARG_PORT = "port";        // NOI18N
     private static final String CONNECTOR_ARG_NAME = "name";        // NOI18N
-    // The default attributes of DebugConfiguration
-    private static final Set<String> CONFIG_ATTRIBUTES = new HashSet<>(Arrays.asList("type", "name", "request", "classPaths", "console"));   // NOI18N
+
+    private static final Map<String, String> ATTR_CONFIG_TO_CONNECTOR = Stream.of(new String[][] {
+        { ConfigurationAttributes.PROCESS_ARG_PID, CONNECTOR_ARG_PID },
+        { ConfigurationAttributes.SOCKET_ARG_HOST, CONNECTOR_ARG_HOST },
+        { ConfigurationAttributes.SOCKET_ARG_PORT, CONNECTOR_ARG_PORT },
+        { ConfigurationAttributes.SHMEM_ARG_NAME, CONNECTOR_ARG_NAME },
+    }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
     private static final RequestProcessor RP = new RequestProcessor(AttachConfigurations.class);
 
@@ -79,92 +84,101 @@ public final class NbAttachRequestHandler {
 
     private CompletableFuture<Void> attachToNative(Map<String, Object> attachArguments, DebugAdapterContext context) {
         CompletableFuture<Void> resultFuture = new CompletableFuture<>();
-        // TODO
-        ErrorUtilities.completeExceptionally(resultFuture,
-                "Attach to native image is not implemented yet", ResponseErrorCode.serverErrorStart);
+        String processAndExe = (String) attachArguments.get("processId");   // NOI18N
+        long processId;
+        String nativeImagePath = (String) attachArguments.get("nativeImagePath");   // NOI18N
+        String miDebugger = (String) attachArguments.get("miDebugger");     // NOI18N
+        int index = processAndExe.indexOf(' ');
+        try {
+            if (index > 0) {
+                processId = Long.parseLong(processAndExe.substring(0, index));
+                if (nativeImagePath.isEmpty()) {
+                    nativeImagePath = processAndExe.substring(index + 1);
+                }
+            } else {
+                processId = Long.parseLong(processAndExe);
+            }
+            String executable = nativeImagePath;
+            RP.post(() -> attachNativeDebug(new File(executable), processId, miDebugger, context, resultFuture));
+        } catch (NumberFormatException nfex) {
+            ErrorUtilities.completeExceptionally(resultFuture,
+                    nfex.getLocalizedMessage(),
+                    ResponseErrorCode.serverErrorStart);
+        }
         return resultFuture;
+    }
+
+    private void attachNativeDebug(File nativeImageFile, long processId, String miDebugger, DebugAdapterContext context, CompletableFuture<Void> resultFuture) {
+        AtomicReference<NbDebugSession> debugSessionRef = new AtomicReference<>();
+        CompletableFuture<Void> finished = new CompletableFuture<>();
+        NIDebugger niDebugger;
+        resultFuture.complete(null);
+        try {
+            niDebugger = NIDebugRunner.attach(nativeImageFile, processId, miDebugger, null, engine -> {
+                Session session = engine.lookupFirst(null, Session.class);
+                NbDebugSession debugSession = new NbDebugSession(session);
+                debugSessionRef.set(debugSession);
+                context.setDebugSession(debugSession);
+                context.getClient().initialized();
+                context.getConfigurationSemaphore().waitForConfigurationDone();
+                session.addPropertyChangeListener(Session.PROP_CURRENT_LANGUAGE, evt -> {
+                    if (evt.getNewValue() == null) {
+                        // No current language => finished
+                        boolean didFinish = finished.complete(null);
+                        if (didFinish) {
+                            notifyTerminated(context);
+                        }
+                    }
+                });
+            });
+        } catch (IllegalStateException ex) {
+            notifyErrorMessage(context, Bundle.MSG_FailedToAttach());
+            notifyTerminated(context);
+            return ;
+        }
+        NbDebugSession debugSession = debugSessionRef.get();
+        debugSession.setNIDebugger(niDebugger);
+        NILocationVisualizer.handle(nativeImageFile, niDebugger, finished, context.getLspSession().getLspServer().getOpenedDocuments());
     }
 
     @Messages({"# {0} - connector name", "MSG_InvalidConnector=Invalid connector name: {0}"})
     private CompletableFuture<Void> attachToJVM(Map<String, Object> attachArguments, DebugAdapterContext context) {
-        String name = (String) attachArguments.get("name");     // NOI18N
-        AttachingDICookie attachingCookie;
-        String connectorName;
-        Map<String, String> translatedArguments = new HashMap<>();
         CompletableFuture<Void> resultFuture = new CompletableFuture<>();
-        switch (name) {
-            case AttachConfigurations.NAME_ATTACH_PROCESS:
-                Object pid = attachArguments.get(AttachConfigurations.PROCESS_ARG_PID);
-                connectorName = AttachConfigurations.CONNECTOR_PROCESS;
-                translatedArguments.put(AttachConfigurations.PROCESS_ARG_PID, CONNECTOR_ARG_PID);
-                break;
-            case AttachConfigurations.NAME_ATTACH_SOCKET:
-                connectorName = AttachConfigurations.CONNECTOR_SOCKET;
-                translatedArguments.put(AttachConfigurations.SOCKET_ARG_HOST, CONNECTOR_ARG_HOST);
-                translatedArguments.put(AttachConfigurations.SOCKET_ARG_PORT, CONNECTOR_ARG_PORT);
-                break;
-            case AttachConfigurations.NAME_ATTACH_SHMEM:
-                connectorName = AttachConfigurations.CONNECTOR_SHMEM;
-                translatedArguments.put(AttachConfigurations.SHMEM_ARG_NAME, CONNECTOR_ARG_NAME);
-                break;
-            default:
-                if (name.startsWith(AttachConfigurations.NAME_ATTACH_BY)) {
-                    connectorName = name.substring(AttachConfigurations.NAME_ATTACH_BY.length());
-                } else {
-                    ErrorUtilities.completeExceptionally(resultFuture,
-                            Bundle.MSG_InvalidConnector(name),
-                            ResponseErrorCode.serverErrorStart);
-                    connectorName = null;
-                }
-        }
-        if (connectorName != null) {
-            context.setDebugMode(true);
-            RP.post(() -> attachTo(connectorName, attachArguments, translatedArguments, context, resultFuture));
+        ConfigurationAttributes configurationAttributes = AttachConfigurations.get().findConfiguration(attachArguments);
+        if (configurationAttributes != null) {
+            AttachingConnector connector = configurationAttributes.getConnector();
+            RP.post(() -> attachTo(connector, attachArguments, context, resultFuture));
         } else {
-            assert resultFuture.isCompletedExceptionally();
+            context.setDebugMode(true);
+            String name = (String) attachArguments.get("name");     // NOI18N
+            ErrorUtilities.completeExceptionally(resultFuture,
+                    Bundle.MSG_InvalidConnector(name),
+                    ResponseErrorCode.serverErrorStart);
         }
         return resultFuture;
     }
 
-    @Messages({"# {0} - connector name", "# {1} - argument name", "MSG_ConnectorArgumentNotFound=Argument {0} of {1} was not found.",
-               "# {0} - argument name", "# {1} - value", "MSG_ConnectorInvalidValue=Invalid value of {0}: {1}",
-               "# {0} - connector name", "MSG_ConnectorNotFound=Connector {0} was not found."})
-    private void attachTo(String connectorName, Map<String, Object> arguments, Map<String, String> translatedArguments, DebugAdapterContext context, CompletableFuture<Void> resultFuture) {
-        VirtualMachineManager vmm = Bootstrap.virtualMachineManager ();
-        List<AttachingConnector> attachingConnectors = vmm.attachingConnectors();
-        for (AttachingConnector connector : attachingConnectors) {
-            if (connector.name().equals(connectorName)) {
-                Map<String, Argument> args = connector.defaultArguments();
-                for (String argName : arguments.keySet()) {
-                    if (CONFIG_ATTRIBUTES.contains(argName) || argName.startsWith("__")) {
-                        continue;
-                    }
-                    String argNameTranslated = translatedArguments.getOrDefault(argName, argName);
-                    Argument arg = args.get(argNameTranslated);
-                    if (arg == null) {
-                        ErrorUtilities.completeExceptionally(resultFuture,
-                            Bundle.MSG_ConnectorArgumentNotFound(connectorName, argNameTranslated),
-                            ResponseErrorCode.serverErrorStart);
-                        return ;
-                    }
-                    String value = arguments.get(argName).toString();
-                    if (!arg.isValid(value)) {
-                        ErrorUtilities.completeExceptionally(resultFuture,
-                            Bundle.MSG_ConnectorInvalidValue(argName, value),
-                            ResponseErrorCode.serverErrorStart);
-                        return ;
-                    }
-                    arg.setValue(value);
-                }
-                AttachingDICookie attachingCookie = AttachingDICookie.create(connector, args);
-                resultFuture.complete(null);
-                startAttaching(attachingCookie, context);
+    @Messages({"# {0} - argument name", "# {1} - value", "MSG_ConnectorInvalidValue=Invalid value of {0}: {1}"})
+    private void attachTo(AttachingConnector connector, Map<String, Object> arguments, DebugAdapterContext context, CompletableFuture<Void> resultFuture) {
+        Map<String, Argument> args = connector.defaultArguments();
+        for (String argName : arguments.keySet()) {
+            String argNameTranslated = ATTR_CONFIG_TO_CONNECTOR.getOrDefault(argName, argName);
+            Argument arg = args.get(argNameTranslated);
+            if (arg == null) {
+                continue;
+            }
+            String value = arguments.get(argName).toString();
+            if (!arg.isValid(value)) {
+                ErrorUtilities.completeExceptionally(resultFuture,
+                    Bundle.MSG_ConnectorInvalidValue(argName, value),
+                    ResponseErrorCode.serverErrorStart);
                 return ;
             }
+            arg.setValue(value);
         }
-        ErrorUtilities.completeExceptionally(resultFuture,
-                Bundle.MSG_ConnectorNotFound(connectorName),
-                ResponseErrorCode.serverErrorStart);
+        AttachingDICookie attachingCookie = AttachingDICookie.create(connector, args);
+        resultFuture.complete(null);
+        startAttaching(attachingCookie, context);
     }
 
     @Messages("MSG_FailedToAttach=Failed to attach.")

@@ -359,7 +359,7 @@ public class NodeExecutable {
         List<String> params = new ArrayList<>();
         List<StartupExtender> extenders = StartupExtender.getExtenders(project.getLookup(), StartupExtender.StartMode.DEBUG);
         for (StartupExtender e : extenders) {
-            params.addAll(e.getArguments());
+            params.addAll(e.getRawArguments());
         }
         if (params.isEmpty()) {
             params.add(String.format(getDebugCommand(), port));

@@ -107,7 +107,7 @@ class StackTraceSegment extends TagBounds {
                     serialNumToStackTrace.put(serialNumberMask, new Long(start));
                 }
             }
-//            System.out.println("serialNumToStackTrace size:"+serialNumToStackTrace.size());
+//            Systems.debug("serialNumToStackTrace size:"+serialNumToStackTrace.size());
         }
     }
 }

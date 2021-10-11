@@ -27,12 +27,16 @@ plugins {
 def commonProject = project.parent
 def jdk8 = System.getProperty("java.version").startsWith("1.8")
 
-mainClassName = '${packageBase}.DesktopMain'
+if (hasProperty("runClassName")) {
+    mainClassName = runClassName
+} else {
+    mainClassName = '${packageBase}.DesktopMain'
+}
 
 <#noparse>
 distributions {
     main {
-        baseName = commonProject.name + '-desktop'
+        distributionBaseName = commonProject.name + '-desktop'
         contents {
             from "${commonProject.projectDir}/src/main/webapp/"
         }
@@ -50,7 +54,9 @@ if (!jdk8) {
 }
 </#noparse>
 dependencies {
-    compile commonProject
-    compile "org.netbeans.html:net.java.html.boot:1.6.1"
-    runtime "org.netbeans.html:net.java.html.boot.fx:1.6.1"
+    implementation commonProject
+    implementation "org.netbeans.html:net.java.html.boot:1.7.2"
+    implementation "com.dukescript.api:javafx.beaninfo:0.6"
+    runtimeOnly "com.dukescript.api:javafx.base:8.60.11"
+    runtimeOnly "org.netbeans.html:net.java.html.boot.fx:1.7.2"
 }

@@ -281,7 +281,7 @@ public class PagesMultiViewElement extends ToolBarMultiViewElement implements ja
         AddAction(final DDDataObject dObj, String actionName) {
             super(actionName);
             char mnem = NbBundle.getMessage(PagesMultiViewElement.class,"LBL_addJspPG_mnem").charAt(0);
-            putValue(MNEMONIC_KEY,new Integer((int)mnem));
+            putValue(MNEMONIC_KEY, (int)mnem);
         }
         public void actionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -385,7 +385,7 @@ public class PagesMultiViewElement extends ToolBarMultiViewElement implements ja
         RemoveAction(String actionName) {
             super(actionName);
             char mnem = NbBundle.getMessage(PagesMultiViewElement.class,"LBL_remove_mnem").charAt(0);
-            putValue(MNEMONIC_KEY,new Integer((int)mnem));
+            putValue(MNEMONIC_KEY, (int)mnem);
         }
         
         public void actionPerformed(java.awt.event.ActionEvent evt) {

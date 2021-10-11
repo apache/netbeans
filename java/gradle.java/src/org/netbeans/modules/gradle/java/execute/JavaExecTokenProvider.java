@@ -64,6 +64,20 @@ public class JavaExecTokenProvider implements ReplaceTokenProvider {
     public static String TOKEN_JAVAEXEC_ARGS = ProjectActions.TOKEN_JAVAEXEC_ARGS;
 
     /**
+     * Replaceable token for working directory project property. Generates project property for NB Tooling Gradle plugin, if the working directory is present, otherwise
+     * generates an empty String.
+     * @see #TOKEN_JAVA_CWD
+     */
+    public static String TOKEN_JAVAEXEC_CWD = ProjectActions.TOKEN_JAVAEXEC_CWD;
+
+    /**
+     * Replaceable token for environment variables project property. Generates project property for NB Tooling Gradle plugin, if the environment variables are present,
+     * otherwise generates an empty String.
+     * @see #TOKEN_JAVA_ENV
+     */
+    public static String TOKEN_JAVAEXEC_ENV = ProjectActions.TOKEN_JAVAEXEC_ENV;
+
+    /**
      * Replaceable token for JVM arguments. Generates escaped / quoted arguments as a single String.
      */
     public static String TOKEN_JAVA_ARGS = "java.args"; // NOI18N
@@ -73,7 +87,19 @@ public class JavaExecTokenProvider implements ReplaceTokenProvider {
      * a space-delimited String.
      */
     public static String TOKEN_JAVA_JVMARGS = "java.jvmArgs"; // NOI18N
-    
+
+    /**
+     * Replaceable token for application working directory.
+     */
+    public static String TOKEN_JAVA_CWD = "java.workingDir"; // NOI18N
+
+    /**
+     * Replaceable token for environment variables. Generates escaped / quoted variable assignments as a single String.
+     * Expression <code>VAR_NAME=VAR_VALUE</code> sets environment variable of name <code>VAR_NAME</code> to value
+     * <code>VAR_VALUE</code>, expression <code>!VAR_NAME</code> unsets environment variable <code>VAR_NAME</code>.
+     */
+    public static String TOKEN_JAVA_ENV = "java.environment"; // NOI18N
+
     private static final Set<String> TOKENS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
             TOKEN_JAVAEXEC_ARGS, TOKEN_JAVAEXEC_JVMARGS,
             TOKEN_JAVA_ARGS, TOKEN_JAVA_JVMARGS
@@ -136,7 +162,7 @@ public class JavaExecTokenProvider implements ReplaceTokenProvider {
         List<String> extraArgs = new ArrayList<>();
         if (mode != null) {
             for (StartupExtender group : StartupExtender.getExtenders(new AbstractLookup(ic), mode)) {
-                extraArgs.addAll(group.getArguments());
+                extraArgs.addAll(group.getRawArguments());
             }
         }
         
@@ -144,8 +170,12 @@ public class JavaExecTokenProvider implements ReplaceTokenProvider {
         Map<String, String> result = new HashMap<>();
         result.put(TOKEN_JAVAEXEC_ARGS, ""); // NOI18N
         result.put(TOKEN_JAVAEXEC_JVMARGS, ""); // NOI18N
+        result.put(TOKEN_JAVAEXEC_CWD, ""); // NOI18N
+        result.put(TOKEN_JAVAEXEC_ENV, ""); // NOI18N
         result.put(TOKEN_JAVA_ARGS, ""); // NOI18N
         result.put(TOKEN_JAVA_JVMARGS, ""); // NOI18N
+        result.put(TOKEN_JAVA_CWD, ""); // NOI18N
+        result.put(TOKEN_JAVA_ENV, ""); // NOI18N
         if (extraArgs.isEmpty() && contextParams.isEmpty()) {
             return result;
         }
@@ -177,6 +207,32 @@ public class JavaExecTokenProvider implements ReplaceTokenProvider {
             });
             result.put(TOKEN_JAVA_ARGS, args);
             result.put(TOKEN_JAVAEXEC_ARGS, "--args " + prop);  // NOI18N
+        }
+        if (changedParams.getWorkingDirectory() != null) {
+            String wd = Utilities.escapeParameters(new String[] {
+                changedParams.getWorkingDirectory().getAbsolutePath()
+            });
+            result.put(TOKEN_JAVA_CWD, wd);
+            String prop = Utilities.escapeParameters(new String[] {
+                "-PrunWorkingDir=" + wd     // NOI18N
+            });
+            result.put(TOKEN_JAVAEXEC_CWD, prop);
+        }
+        if (!changedParams.getEnvironmentVariables().isEmpty()) {
+            List<String> envParams = new ArrayList<>(changedParams.getEnvironmentVariables().size());
+            for (Map.Entry<String, String> entry : changedParams.getEnvironmentVariables().entrySet()) {
+                if (entry.getValue() != null) {
+                    envParams.add(entry.getKey() + "=" + entry.getValue());
+                } else {
+                    envParams.add("!" + entry.getKey());
+                }
+            }
+            String env = Utilities.escapeParameters(envParams.toArray(new String[envParams.size()]));
+            result.put(TOKEN_JAVA_ENV, env);
+            String prop = Utilities.escapeParameters(new String[] {
+                "-PrunEnvironment=" + env   // NOI18N
+            });
+            result.put(TOKEN_JAVAEXEC_ENV, prop);
         }
         return result;
     }

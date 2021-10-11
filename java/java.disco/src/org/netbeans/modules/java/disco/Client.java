@@ -37,7 +37,9 @@ import io.foojay.api.discoclient.pkg.Scope;
 import io.foojay.api.discoclient.pkg.SemVer;
 import io.foojay.api.discoclient.pkg.TermOfSupport;
 import io.foojay.api.discoclient.pkg.VersionNumber;
+import io.foojay.api.discoclient.util.Constants;
 import io.foojay.api.discoclient.util.PkgInfo;
+import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.Future;
@@ -54,8 +56,13 @@ public class Client {
     }
 
     private synchronized DiscoClient getDisco() {
-        if (client == null)
+        if (client == null) {
             client = new DiscoClient();
+            // @TODO : this is just a workaround for NPE in Disco Client library
+            for (Distribution dist : Distribution.values()) {
+                Constants.SCOPE_LOOKUP.putIfAbsent(dist, Collections.EMPTY_LIST);
+            }
+        }
         return client;
     }
 
@@ -63,10 +70,10 @@ public class Client {
     }
 
     public synchronized final List<MajorVersion> getAllLTSVersions() {
-        Queue<MajorVersion> majorVersions = getDisco().getAllMajorVersions(true);
+        Queue<MajorVersion> majorVersions = getDisco().getAllMajorVersions(false);
         return majorVersions.stream()
-                            .filter(majorVersion -> majorVersion.isMaintained())
-                            .collect(Collectors.toList());
+                .filter(majorVersion -> majorVersion.isMaintained())
+                .collect(Collectors.toList());
     }
 
     public synchronized MajorVersion getLatestLts(boolean b) {

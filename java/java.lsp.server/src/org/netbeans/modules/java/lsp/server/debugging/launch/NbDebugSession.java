@@ -47,7 +47,8 @@ public final class NbDebugSession {
         return niDebugger;
     }
 
-    void setNIDebugger(NIDebugger niDebugger) {
+    public void setNIDebugger(NIDebugger niDebugger) {
+        assert this.niDebugger == null;
         this.niDebugger = niDebugger;
     }
 

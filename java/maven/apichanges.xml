@@ -83,6 +83,34 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="plugin.conf.paths">
+            <api name="general"/>
+            <summary>Added helper method to get artifact paths from build plugin configurations.</summary>
+            <version major="2" minor="151"/>
+            <date day="24" month="9" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                In addition to String property values, or String lists, artifact-based paths, that are convertible to
+                files, are sometimes present in plugin configuration. The new helper function 
+                <a href="@TOP@/org/netbeans/modules/maven/api/PluginPropertyUtils.html#getPluginPathProperty-org.netbeans.api.project.Project-org.netbeans.modules.maven.api.PluginPropertyUtils.PluginConfigPathParams-boolean-java.util.List-">getPluginPathProperty</a>
+                resolves a list of artifacts from the POM configuration and reports errors encountered.
+            </description>
+        </change>
+        <change id="disable-actions">
+            <api name="general"/>
+            <summary>Plugin-dependent Lookup</summary>
+            <version major="2" minor="149"/>
+            <date day="24" month="6" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                <p>
+                    Actions can be <b>disabled</b> by the MavenActionsProvider for a configuration.
+                </p>
+            </description>
+            <class name="ActionToGoalUtils" package="org.netbeans.modules.maven.execute"/>
+        </change>
         <change id="plugin-lookup">
             <api name="general"/>
             <summary>Plugin-dependent Lookup</summary>

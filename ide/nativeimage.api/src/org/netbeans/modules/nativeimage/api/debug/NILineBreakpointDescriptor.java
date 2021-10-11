@@ -23,7 +23,7 @@ import org.netbeans.api.annotations.common.CheckForNull;
 /**
  * Description of a line native breakpoint.
  *
- * @since 1.0
+ * @since 0.1
  */
 public final class NILineBreakpointDescriptor {
 
@@ -46,7 +46,7 @@ public final class NILineBreakpointDescriptor {
      *
      * @param filePath file path of the breakpoint
      * @param lineNumber 1-based line number
-     * @since 1.0
+     * @since 0.1
      */
     public static Builder newBuilder(String filePath, int lineNumber) {
         return new Builder(filePath, lineNumber);
@@ -55,7 +55,7 @@ public final class NILineBreakpointDescriptor {
     /**
      * Get path of the file.
      *
-     * @since 1.0
+     * @since 0.1
      */
     public String getFilePath() {
         return filePath;
@@ -64,7 +64,7 @@ public final class NILineBreakpointDescriptor {
     /**
      * Get 1-based line number.
      *
-     * @since 1.0
+     * @since 0.1
      */
     public int getLine() {
         return line;
@@ -73,7 +73,7 @@ public final class NILineBreakpointDescriptor {
     /**
      * Check if the breakpoint is to be enabled.
      *
-     * @since 1.0
+     * @since 0.1
      */
     public boolean isEnabled() {
         return enabled;
@@ -83,7 +83,7 @@ public final class NILineBreakpointDescriptor {
      * Get the breakpoint condition.
      *
      * @return the condition, or <code>null</code> when the breakpoint does not have any condition.
-     * @since 1.0
+     * @since 0.1
      */
     @CheckForNull
     public String getCondition() {
@@ -93,7 +93,7 @@ public final class NILineBreakpointDescriptor {
     /**
      * Check if the breakpoint is to be hidden (not user-visible).
      *
-     * @since 1.0
+     * @since 0.1
      */
     public boolean isHidden() {
         return hidden;
@@ -103,7 +103,7 @@ public final class NILineBreakpointDescriptor {
      * Builder of a line native breakpoint descriptor. The builder is reusable
      * and the built breakpoint descriptor can be used to update existing breakpoints.
      *
-     * @since 1.0
+     * @since 0.1
      */
     public static final class Builder {
 
@@ -121,7 +121,7 @@ public final class NILineBreakpointDescriptor {
         /**
          * Set a file path.
          *
-         * @since 1.0
+         * @since 0.1
          */
         public Builder filePath(String filePath) {
             this.filePath = filePath;
@@ -131,7 +131,7 @@ public final class NILineBreakpointDescriptor {
         /**
          * Set a 1-based line number.
          *
-         * @since 1.0
+         * @since 0.1
          */
         public Builder line(int lineNumber) {
             this.line = lineNumber;
@@ -141,7 +141,7 @@ public final class NILineBreakpointDescriptor {
         /**
          * Set a condition.
          *
-         * @since 1.0
+         * @since 0.1
          */
         public Builder condition(String condition) {
             this.condition = condition;
@@ -151,7 +151,7 @@ public final class NILineBreakpointDescriptor {
         /**
          * Set an enabled state of the breakpoint. The breakpoint is enabled by default.
          *
-         * @since 1.0
+         * @since 0.1
          */
         public Builder enabled(boolean enabled) {
             this.enabled = enabled;
@@ -162,7 +162,7 @@ public final class NILineBreakpointDescriptor {
          * Set a hidden state of the breakpoint. Hidden breakpoints are not visible
          * to users. The breakpoint is not hidden by default.
          *
-         * @since 1.0
+         * @since 0.1
          */
         public Builder hidden(boolean hidden) {
             this.hidden = hidden;

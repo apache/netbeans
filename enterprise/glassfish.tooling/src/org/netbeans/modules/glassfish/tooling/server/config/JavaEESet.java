@@ -125,7 +125,7 @@ public class JavaEESet extends JavaSet {
         }
         Boolean result = checkResults.get(name);
         if (result != null) {
-            return result.booleanValue();
+            return result;
         }
         List<String> files = checks.get(name);
         boolean resultValue = true;
@@ -138,7 +138,7 @@ public class JavaEESet extends JavaSet {
                 }
             }
         }
-        checkResults.put(name, Boolean.valueOf(resultValue));
+        checkResults.put(name, resultValue);
         return resultValue;
     }
 

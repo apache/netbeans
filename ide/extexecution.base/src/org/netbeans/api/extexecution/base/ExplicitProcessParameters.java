@@ -18,11 +18,15 @@
  */
 package org.netbeans.api.extexecution.base;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.openide.util.Lookup;
@@ -45,8 +49,7 @@ import org.openide.util.Lookup;
  * process arguments.
  * <div class="nonnormative">
  * For <b>java applications</b> when {@code java} executable is used to launch the application, or even Maven project (see below), the <b>launcherArgs</b> should correspond to VM
- * arguments, and <b>args</b> correspond to the main class' arguments (passed to the main class). Environment variables for the new process are not 
- * supported at the moment.
+ * arguments, and <b>args</b> correspond to the main class' arguments (passed to the main class). Additional environment variables can be specified.
  * </div>
  * <p>
  * If the object is marked as {@link #isArgReplacement()}, the launcher implementor SHOULD replace all
@@ -92,17 +95,22 @@ public final class ExplicitProcessParameters {
     private final List<String>    arguments;
     private final boolean  replaceArgs;
     private final boolean  replaceLauncherArgs;
+    private final File workingDirectory;
+    private final Map<String, String> environmentVars;
 
     private ExplicitProcessParameters(int position, List<String> launcherArguments, 
-            List<String> arguments, boolean appendArgs, boolean appendLauncherArgs) {
+            List<String> arguments, boolean appendArgs, boolean appendLauncherArgs,
+            File workingDirectory, Map<String, String> environmentVars) {
         this.position = position;
         this.launcherArguments = launcherArguments == null ? null : Collections.unmodifiableList(launcherArguments);
         this.arguments = arguments == null ? null : Collections.unmodifiableList(arguments);
         this.replaceArgs = appendArgs;
         this.replaceLauncherArgs = appendLauncherArgs;
+        this.workingDirectory = workingDirectory;
+        this.environmentVars = environmentVars == null ? null : Collections.unmodifiableMap(environmentVars);
     }
     
-    private static final ExplicitProcessParameters EMPTY = new ExplicitProcessParameters(0, null, null, false, false);
+    private static final ExplicitProcessParameters EMPTY = new ExplicitProcessParameters(0, null, null, false, false, null, null);
     
     /**
      * Returns an empty instance of parameters that has no effect. DO NOT check for emptiness by
@@ -122,7 +130,10 @@ public final class ExplicitProcessParameters {
         if (isArgReplacement() || isLauncherArgReplacement()) {
             return false;
         }
-        return (((arguments == null) || arguments.isEmpty()) && (launcherArguments == null || launcherArguments.isEmpty()));
+        return  ((arguments == null) || arguments.isEmpty()) &&
+                (launcherArguments == null || launcherArguments.isEmpty()) &&
+                workingDirectory == null &&
+                (environmentVars == null || environmentVars.isEmpty());
     }
 
     /**
@@ -190,6 +201,29 @@ public final class ExplicitProcessParameters {
     }
 
     /**
+     * Returns working directory to be set for the process.
+     *
+     * @return working directory, or <code>nul</code>
+     * @since 1.20
+     */
+    public @CheckForNull File getWorkingDirectory() {
+        return workingDirectory;
+    }
+
+    /**
+     * Returns a map of additional environment variables to be set for the process.
+     * Always non-null. Values of existing environment variables are overridden.
+     * A <code>null</code> value of a variable should be interpreted as a removal
+     * of that variable from the environment.
+     *
+     * @return map of additional environment variables
+     * @since 1.20
+     */
+    public @NonNull Map<String, String> getEnvironmentVariables() {
+        return environmentVars != null ? environmentVars : Collections.emptyMap();
+    }
+
+    /**
      * Merges ExplicitProcessParameters instructions found in the Lookup. See {@link #buildExplicitParameters(java.util.Collection)}
      * for more details.
      * @param context context for the execution
@@ -214,6 +248,8 @@ public final class ExplicitProcessParameters {
      * <i>Note:</i> if a replacement instruction and all the following (if any) have {@link #getArguments()} {@code null} (= no change), 
      * the result will report <b>no change</b>. It is therefore possible to <b>discard all contributions</b> by appending a no-change replacement 
      * last.
+     * <p>
+     * Environment variables are overridden by newly set variables.
      * 
      * @param items individual instructions.
      * @return combined instructions.
@@ -238,7 +274,7 @@ public final class ExplicitProcessParameters {
      * <li><b>appends</b> launcher arguments
      * <li><b>replaces</b> (normal) arguments
      * </ul>
-     * and the mode can be overriden for each group.
+     * and the mode can be overridden for each group.
      */
     public final static class Builder {
         private int position = 0;
@@ -246,6 +282,8 @@ public final class ExplicitProcessParameters {
         private List<String> arguments = null;
         private Boolean  replaceArgs;
         private Boolean  replaceLauncherArgs;
+        private File workingDirectory = null;
+        private Map<String, String> environmentVars;
         
         private void initArgs() {
             if (arguments == null) {
@@ -371,6 +409,54 @@ public final class ExplicitProcessParameters {
         }
 
         /**
+         * Sets working directory to be used for the process.
+         *
+         * @param workingDirectory the working directory
+         * @return the builder
+         * @since 1.20
+         */
+        public Builder workingDirectory(File workingDirectory) {
+            this.workingDirectory = workingDirectory;
+            return this;
+        }
+
+        /**
+         * Provide additional environment variables for the process. Values of
+         * existing environment variables are overridden. <code>null</code> values
+         * are interpreted as removal of the respective variables from the environment.
+         *
+         * @param env a map of additional environment variables
+         * @return the builder
+         * @since 1.20
+         */
+        public Builder environmentVariables(Map<String, String> env) {
+            if (!env.isEmpty()) {
+                if (this.environmentVars == null) {
+                    this.environmentVars = new HashMap<>();
+                }
+                this.environmentVars.putAll(env);
+            }
+            return this;
+        }
+
+        /**
+         * Provide an additional environment variable for the process. If the variable
+         * already exists, it's overridden with the new value.
+         *
+         * @param name name of the environment variable
+         * @param value value of the environment variable, or <code>null</code> in which case an existing variable is to be removed.
+         * @return the builder
+         * @since 1.20
+         */
+        public Builder environmentVariable(String name, String value) {
+            if (this.environmentVars == null) {
+                this.environmentVars = new HashMap<>();
+            }
+            this.environmentVars.put(name, value);
+            return this;
+        }
+
+        /**
          * Defines a position for combining. The default rank is {@code 0}. When used in a collection in
          * {@link ExplicitProcessParameters#buildExplicitParameters(java.util.Collection)}, instances are sorted
          * by their position, in ascending order (lowest first).
@@ -416,6 +502,12 @@ public final class ExplicitProcessParameters {
             if (p.getArguments() != null) {
                 args(p.getArguments());
             }
+            if (p.getWorkingDirectory() != null) {
+                workingDirectory(p.getWorkingDirectory());
+            }
+            if (!p.getEnvironmentVariables().isEmpty()) {
+                environmentVariables(p.getEnvironmentVariables());
+            }
             return this;
         }
         
@@ -430,7 +522,7 @@ public final class ExplicitProcessParameters {
             return new ExplicitProcessParameters(position, launcherArguments, arguments, 
                     // if no args / launcher args given and no explicit instruction on append,
                     // make the args appending.
-                    aa, apa);
+                    aa, apa, workingDirectory, environmentVars);
         }
     }
 }

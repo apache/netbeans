@@ -55,9 +55,7 @@ public final class TestMethodFinder {
      * @since 1.27
      */
     public static Map<FileObject, Collection<TestMethodController.TestMethod>> findTestMethods(Iterable<FileObject> testRoots, BiConsumer<FileObject, Collection<TestMethodController.TestMethod>> listener) {
-        if (TestMethodFinderImpl.INSTANCE != null) {
-            TestMethodFinderImpl.INSTANCE.addListener(listener);
-        }
+        TestMethodFinderImpl.INSTANCE.addListener(listener);
         Map<FileObject, Collection<TestMethodController.TestMethod>> file2TestMethods = new HashMap<>();
         for (FileObject testRoot : testRoots) {
             try {

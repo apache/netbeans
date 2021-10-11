@@ -19,7 +19,9 @@
 package org.netbeans.modules.groovy.support.actions;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.text.Position;
 import org.codehaus.groovy.ast.AnnotationNode;
@@ -62,8 +64,7 @@ public class GroovyComputeTestMethods implements ComputeTestMethods {
             return result;
         }
         for (ClassNode classNode : moduleNode.getClasses()) {
-            ClassNode superClass = classNode.getSuperClass();
-            if ("spock.lang.Specification".equals(superClass.getName())) {
+            if (isSpecification(classNode.getSuperClass())) {
                 int classStartLine = classNode.getLineNumber();
                 int classStartColumn = classNode.getColumnNumber();
                 int classOffset = classStartLine > 0 && classStartColumn > 0 ? getOffset(text, classStartLine, classStartColumn) : 0;
@@ -93,6 +94,19 @@ public class GroovyComputeTestMethods implements ComputeTestMethods {
             }
         }
         return result;
+    }
+
+    private static boolean isSpecification(ClassNode classNode) {
+        Set<String> visited = new HashSet<>();
+        String name;
+        while (classNode != null && !visited.contains(name = classNode.getName())) {
+            if ("spock.lang.Specification".equals(name)) {
+                return true;
+            }
+            visited.add(name);
+            classNode = classNode.getSuperClass();
+        }
+        return false;
     }
 
     private static boolean isTestSource(FileObject fo) {

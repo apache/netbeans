@@ -174,6 +174,8 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     });
 
     //register debugger:
+    let debugTrackerFactory =new NetBeansDebugAdapterTrackerFactory();
+    context.subscriptions.push(vscode.debug.registerDebugAdapterTrackerFactory('java8+', debugTrackerFactory));
     let configInitialProvider = new NetBeansConfigurationInitialProvider();
     context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java8+', configInitialProvider, vscode.DebugConfigurationProviderTriggerKind.Initial));
     let configDynamicProvider = new NetBeansConfigurationDynamicProvider(context);
@@ -710,6 +712,19 @@ export function deactivate(): Thenable<void> {
         nbProcess.kill();
     }
     return stopClient(client);
+}
+
+class NetBeansDebugAdapterTrackerFactory implements vscode.DebugAdapterTrackerFactory {
+
+    createDebugAdapterTracker(_session: vscode.DebugSession): vscode.ProviderResult<vscode.DebugAdapterTracker> {
+        return {
+            onDidSendMessage(message: any): void {
+                if (testAdapter && message.type === 'event' && message.event === 'output') {
+                    testAdapter.testOutput(message.body.output);
+                }
+            }
+        }
+    }
 }
 
 class NetBeansDebugAdapterDescriptionFactory implements vscode.DebugAdapterDescriptorFactory {

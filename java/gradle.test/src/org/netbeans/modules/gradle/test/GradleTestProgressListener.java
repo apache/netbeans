@@ -177,6 +177,7 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
         String suiteName = GradleTestSuite.suiteName(op);
         if (suiteName.equals(currentSuite.getName())) {
             Report report = session.getReport(result.getEndTime() - result.getStartTime());
+            session.finishSuite(currentSuite);
             CoreManager manager = getManager();
             if (manager != null) {
                 manager.displayReport(session, report, true);

@@ -24,6 +24,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.Task;
+import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController.TestMethod;
 import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods;
 import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods.Factory;
@@ -64,6 +66,7 @@ public final class TestClassInfoTask implements Task<CompilationController> {
     private SingleMethod singleMethod;
 
     private static final String JUNIT4_ANNOTATION = "org.junit.Test"; //NOI18N
+    private static final String JUNIT5_NESTED_ANNOTATION = "org.junit.jupiter.api.Nested"; //NOI18N
     private static final String JUNIT5_ANNOTATION = "org.junit.platform.commons.annotation.Testable"; //NOI18N
     private static final String TESTCASE = "junit.framework.TestCase"; //NOI18N
 
@@ -83,39 +86,46 @@ public final class TestClassInfoTask implements Task<CompilationController> {
         if (!isTestSource(fileObject)) {
             return Collections.emptyList();
         }
-        ClassTree clazz;
-        List<TreePath> methods;
+        List<TestMethod> result = new ArrayList<>();
         if (caretPosIfAny == (-1)) {
             Optional<? extends Tree> anyClass = info.getCompilationUnit().getTypeDecls().stream().filter(t -> t.getKind() == Kind.CLASS).findAny();
             if (!anyClass.isPresent()) {
                 return Collections.emptyList();
             }
-            clazz = (ClassTree) anyClass.get();
+            ClassTree clazz = (ClassTree) anyClass.get();
             TreePath pathToClass = new TreePath(new TreePath(info.getCompilationUnit()), clazz);
-            methods = clazz.getMembers().stream().filter(m -> m.getKind() == Kind.METHOD).map(m -> new TreePath(pathToClass, m)).collect(Collectors.toList());
-        } else {
-            TreePath tp = info.getTreeUtilities().pathFor(caretPosIfAny);
-            while (tp != null && tp.getLeaf().getKind() != Kind.METHOD) {
-                tp = tp.getParentPath();
-            }
-            if (tp != null) {
-                clazz = (ClassTree) tp.getParentPath().getLeaf();
-                methods = Collections.singletonList(tp);
-            } else {
-                return Collections.emptyList();
-            }
+            List<TreePath> methods = clazz.getMembers().stream().filter(m -> m.getKind() == Kind.METHOD).map(m -> new TreePath(pathToClass, m)).collect(Collectors.toList());
+            collect(info, pathToClass, methods, true, cancel, result);
+            return result;
         }
-        int clazzPreferred = info.getTreeUtilities().findNameSpan(clazz)[0];
-        TypeElement typeElement = (TypeElement) info.getTrees().getElement(new TreePath(new TreePath(info.getCompilationUnit()), clazz));
+        TreePath tp = info.getTreeUtilities().pathFor(caretPosIfAny);
+        while (tp != null && tp.getLeaf().getKind() != Kind.METHOD) {
+            tp = tp.getParentPath();
+        }
+        if (tp != null) {
+            collect(info, tp.getParentPath(), Collections.singletonList(tp), false, cancel, result);
+            return result;
+        }
+        return Collections.emptyList();
+    }
+
+    SingleMethod getSingleMethod() {
+        return singleMethod;
+    }
+
+    private static void collect(CompilationInfo info, TreePath clazz, List<TreePath> methods, boolean searchNested, AtomicBoolean cancel, List<TestMethod> result) {
+        Trees trees = info.getTrees();
         Elements elements = info.getElements();
+        TreeUtilities treeUtilities = info.getTreeUtilities();
+        int clazzPreferred = treeUtilities.findNameSpan((ClassTree) clazz.getLeaf())[0];
+        TypeElement typeElement = (TypeElement) trees.getElement(clazz);
         TypeElement testcase = elements.getTypeElement(TESTCASE);
         boolean junit3 = (testcase != null && typeElement != null) ? info.getTypes().isSubtype(typeElement.asType(), testcase.asType()) : false;
-        List<TestMethod> result = new ArrayList<>();
         for (TreePath tp : methods) {
             if (cancel.get()) {
-                return null;
+                return;
             }
-            Element element = info.getTrees().getElement(tp);
+            Element element = trees.getElement(tp);
             if (element != null) {
                 String mn = element.getSimpleName().toString();
                 boolean testMethod = false;
@@ -128,15 +138,15 @@ public final class TestClassInfoTask implements Task<CompilationController> {
                     }
                 }
                 if (testMethod) {
-                    SourcePositions sp = info.getTrees().getSourcePositions();
+                    SourcePositions sp = trees.getSourcePositions();
                     int start = (int) sp.getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
-                    int preferred = info.getTreeUtilities().findNameSpan((MethodTree) tp.getLeaf())[0];
+                    int preferred = treeUtilities.findNameSpan((MethodTree) tp.getLeaf())[0];
                     int end = (int) sp.getEndPosition(tp.getCompilationUnit(), tp.getLeaf());
                     Document doc = info.getSnapshot().getSource().getDocument(false);
                     try {
-                        result.add(new TestMethod(typeElement.getQualifiedName().toString(),
+                        result.add(new TestMethod(elements.getBinaryName(typeElement).toString(),
                                 doc != null ? doc.createPosition(clazzPreferred) : new SimplePosition(clazzPreferred),
-                                new SingleMethod(fileObject, mn),
+                                new SingleMethod(info.getFileObject(), mn),
                                 doc != null ? doc.createPosition(start) : new SimplePosition(start),
                                 doc != null ? doc.createPosition(preferred) : new SimplePosition(preferred),
                                 doc != null ? doc.createPosition(end) : new SimplePosition(end)));
@@ -146,11 +156,20 @@ public final class TestClassInfoTask implements Task<CompilationController> {
                 }
             }
         }
-        return result;
-    }
-
-    SingleMethod getSingleMethod() {
-        return singleMethod;
+        if (searchNested && !cancel.get()) {
+            ((ClassTree)clazz.getLeaf()).getMembers().stream().filter(m -> m.getKind() == Kind.CLASS).map(n -> new TreePath(clazz, n)).forEach(nested -> {
+                if (!cancel.get()) {
+                    Element nestedElement = trees.getElement(nested);
+                    if (nestedElement != null && !junit3) {
+                        List<? extends AnnotationMirror> allAnnotationMirrors = elements.getAllAnnotationMirrors(nestedElement);
+                        if (isJunit5Nested(allAnnotationMirrors)) {
+                            List<TreePath> nestedMethods = ((ClassTree) nested.getLeaf()).getMembers().stream().filter(m -> m.getKind() == Kind.METHOD).map(m -> new TreePath(nested, m)).collect(Collectors.toList());
+                            collect(info, nested, nestedMethods, true, cancel, result);
+                        }
+                    }
+                }
+            });
+        }
     }
 
     private static boolean isTestSource(FileObject fo) {
@@ -175,6 +194,17 @@ public final class TestClassInfoTask implements Task<CompilationController> {
         return false;
     }
     
+    private static boolean isJunit5Nested(List<? extends AnnotationMirror> allAnnotationMirrors) {
+        for (Iterator<? extends AnnotationMirror> it = allAnnotationMirrors.iterator(); it.hasNext();) {
+            AnnotationMirror annotationMirror = it.next();
+            TypeElement typeElement = (TypeElement) annotationMirror.getAnnotationType().asElement();
+            if (typeElement.getQualifiedName().contentEquals(JUNIT5_NESTED_ANNOTATION)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static boolean isJunit5Testable(List<? extends AnnotationMirror> allAnnotationMirrors) {
         Queue<AnnotationMirror> pendingMirrorsToCheck = new ArrayDeque<>(allAnnotationMirrors);
         Set<AnnotationMirror> alreadyAddedMirrorsToCheck = new HashSet<>(allAnnotationMirrors);

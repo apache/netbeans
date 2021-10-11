@@ -80,6 +80,7 @@ import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.api.debugger.jpda.Variable;
 import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable;
 import org.netbeans.modules.java.lsp.server.LspSession;
+import org.netbeans.modules.java.lsp.server.URITranslator;
 import org.netbeans.modules.java.lsp.server.debugging.breakpoints.NbBreakpointsRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.attach.NbAttachRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDebugSession;
@@ -321,6 +322,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
                         stackFrame.setName(frame.getName());
                         URI sourceURI = frame.getSourceURI();
                         if (sourceURI != null) {
+                            sourceURI = URI.create(URITranslator.getDefault().uriToLSP(sourceURI.toString()));
                             Source source = new Source();
                             String scheme = sourceURI.getScheme();
                             if (null == scheme || scheme.isEmpty() || "file".equalsIgnoreCase(scheme)) {

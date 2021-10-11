@@ -1,6 +1,5 @@
 CRC:2060355642
 SIZE:220438
-URL:https://netbeans.osuosl.org/binaries/nb-javac-17.0.0.0-api.jar
-URL:https://hg.netbeans.org/binaries/nb-javac-17.0.0.0-api.jar
+URL:m2:/com.dukescript.nbjavac:nb-javac:17.0.0.0:jar:api
 MessageDigest: SHA-256 04927865b886f22ba27ec771fb2f7c9c21c401b6b530c17dc7efe49117bdd1f5
 MessageDigest: SHA-512 afe668060108d9d0f6d366d29544051d5b8041cc28f3c0090638af8e36617c7b00af6ef98bc61961922fdd8a94dff5065bc517a51161d23f9dcefc578b67198e

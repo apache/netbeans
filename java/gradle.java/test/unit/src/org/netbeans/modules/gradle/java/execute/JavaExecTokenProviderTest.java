@@ -128,7 +128,7 @@ public class JavaExecTokenProviderTest extends NbTestCase {
                 build();
         
         Map<String, String> map = jetp.createReplacements(ActionProvider.COMMAND_RUN, Lookups.singleton(params));
-        assertEquals(4, map.size());
+        assertEquals(8, map.size());
         
         assertParamList(map.get("java.jvmArgs"), TWO_PROPS);
         assertListInValue(map.get("javaExec.jvmArgs"), TWO_PROPS);
@@ -142,7 +142,7 @@ public class JavaExecTokenProviderTest extends NbTestCase {
                 build();
         
         Map<String, String> map = jetp.createReplacements(ActionProvider.COMMAND_RUN, Lookups.singleton(params));
-        assertEquals(4, map.size());
+        assertEquals(8, map.size());
 
         assertParamList(map.get("java.jvmArgs"), THREE_PROPS);
         assertListInValue(map.get("javaExec.jvmArgs"), THREE_PROPS);
@@ -156,7 +156,7 @@ public class JavaExecTokenProviderTest extends NbTestCase {
                 build();
 
         Map<String, String> map = jetp.createReplacements(ActionProvider.COMMAND_RUN, Lookups.singleton(params));
-        assertEquals(4, map.size());
+        assertEquals(8, map.size());
 
         assertArgs(map.get("javaExec.args"), TWO_PROPS);
         assertParamList(map.get("java.args"), TWO_PROPS);
@@ -170,7 +170,7 @@ public class JavaExecTokenProviderTest extends NbTestCase {
                 build();
 
         Map<String, String> map = jetp.createReplacements(ActionProvider.COMMAND_RUN, Lookups.singleton(params));
-        assertEquals(4, map.size());
+        assertEquals(8, map.size());
 
         assertArgs(map.get("javaExec.args"), THREE_PROPS);
         assertParamList(map.get("java.args"), THREE_PROPS);
@@ -186,7 +186,7 @@ public class JavaExecTokenProviderTest extends NbTestCase {
                 build();
 
         Map<String, String> map = jetp.createReplacements(ActionProvider.COMMAND_RUN, Lookups.singleton(params));
-        assertEquals(6, map.size());
+        assertEquals(8, map.size());
 
         assertParamList(map.get("java.workingDir"), wd);
         assertParamList(map.get("javaExec.workingDir"), "-PrunWorkingDir=\"" + wd + "\"");
@@ -203,7 +203,7 @@ public class JavaExecTokenProviderTest extends NbTestCase {
                 build();
 
         Map<String, String> map = jetp.createReplacements(ActionProvider.COMMAND_RUN, Lookups.singleton(params));
-        assertEquals(6, map.size());
+        assertEquals(8, map.size());
 
         assertParamList(map.get("java.environment"), new String[]{"TestVar1=Env Value 1",  "!TestVar2"});
         assertParamList(map.get("javaExec.environment"), "-PrunEnvironment=\"TestVar1=Env Value 1\" !TestVar2");

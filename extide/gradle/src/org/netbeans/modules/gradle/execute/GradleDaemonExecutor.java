@@ -216,6 +216,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                     buildLauncher.setEnvironmentVariables(envs);
                 } catch (IOException ex) {
                     io.getErr().println(Bundle.NO_PLATFORM(ex.getMessage()));
+                    gradleTask.finish(1);
                     return;
                 }
             }

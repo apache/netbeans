@@ -80,7 +80,7 @@ public class NewWebServiceWizardIterator implements TemplateWizard.Iterator /*, 
         params[1] = project.getClass().getName();
         J2eeModule j2eeModule = JaxWsUtils.getJ2eeModule(project);
         params[2] = j2eeModule == null ? "J2SE" : j2eeModule.getModuleVersion()+"("+JaxWsUtils.getModuleType(project)+")"; //NOI18N
-        int serviceType = ((Integer) wiz.getProperty(WizardProperties.WEB_SERVICE_TYPE)).intValue();
+        int serviceType = ((Integer) wiz.getProperty(WizardProperties.WEB_SERVICE_TYPE));
         params[3] = serviceType == WizardProperties.FROM_SCRATCH ? "WS FROM JAVA": "WS FROM EJB"; //NOI18N
         params[4] = (Boolean)wiz.getProperty(WizardProperties.IS_STATELESS_BEAN) ? "STATELESS EJB" : "SERVLET"; //NOI18N
         LogUtils.logWsWizard(params);
@@ -136,7 +136,7 @@ public class NewWebServiceWizardIterator implements TemplateWizard.Iterator /*, 
             if (c instanceof JComponent) { // assume Swing components
                 JComponent jc = (JComponent) c;
                 // Step #.
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(i)); // NOI18N
+                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i); // NOI18N
                 // Step name (actually the whole list for reference).
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps); // NOI18N
             }

@@ -82,6 +82,39 @@ public class CacheClassPath implements ClassPathImplementation, PropertyChangeLi
     }
 
     @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 53 * hash + Objects.hashCode(this.cp);
+        hash = 53 * hash + (this.translate ? 1 : 0);
+        hash = 53 * hash + (this.scan ? 1 : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final CacheClassPath other = (CacheClassPath) obj;
+        if (this.translate != other.translate) {
+            return false;
+        }
+        if (this.scan != other.scan) {
+            return false;
+        }
+        if (!Objects.equals(this.cp, other.cp)) {
+            return false;
+        }
+        return true;
+    }
+    
+    @Override
     public void removePropertyChangeListener(final PropertyChangeListener listener) {
         this.listeners.removePropertyChangeListener(listener);
     }

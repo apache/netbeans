@@ -126,7 +126,7 @@ public class TokenTypes {
     public String getTokenTypeName(int tokenTypeValue) {
         inspect();
 
-        return (String)value2name.get(new Integer(tokenTypeValue));
+        return (String)value2name.get(Integer.valueOf(tokenTypeValue));
     }
 
     /**
@@ -177,7 +177,7 @@ public class TokenTypes {
                     int value = f.getInt(null);
                     String fieldName = f.getName();
                     if (isAccepted(fieldName, value)) {
-                        Integer valueInteger = new Integer(value);
+                        Integer valueInteger = Integer.valueOf(value);
                         name2value.put(fieldName, valueInteger);
                         value2name.put(valueInteger, fieldName);
                     }

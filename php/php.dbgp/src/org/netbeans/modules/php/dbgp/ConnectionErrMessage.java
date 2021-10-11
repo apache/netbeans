@@ -113,7 +113,6 @@ public class ConnectionErrMessage extends JPanel {
         noteLabel = new JLabel();
         debuggerPortOptionLabel = new JLabel();
         optionsLabel = new JLabel();
-        informationLabel = new JLabel();
         learnMoreLabel = new JLabel();
         emptyLabel = new JLabel();
         copySettingsLabel = new JLabel();
@@ -133,16 +132,6 @@ public class ConnectionErrMessage extends JPanel {
             }
             public void mouseEntered(MouseEvent evt) {
                 optionsLabelMouseEntered(evt);
-            }
-        });
-
-        informationLabel.setText("<html><a href=\"#\">More information about Xdebug2 installation/configuration</a>");
-        informationLabel.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent evt) {
-                informationLabelMousePressed(evt);
-            }
-            public void mouseEntered(MouseEvent evt) {
-                informationLabelMouseEntered(evt);
             }
         });
 
@@ -186,7 +175,6 @@ public class ConnectionErrMessage extends JPanel {
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addComponent(noteLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(informationLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                             .addComponent(learnMoreLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                             .addComponent(emptyLabel)
                             .addGroup(layout.createSequentialGroup()
@@ -219,9 +207,7 @@ public class ConnectionErrMessage extends JPanel {
                 .addComponent(debuggerPortOptionLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(optionsLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(informationLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(learnMoreLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(emptyLabel)
@@ -241,14 +227,6 @@ public class ConnectionErrMessage extends JPanel {
     private void learnMoreLabelMousePressed(MouseEvent evt) {//GEN-FIRST:event_learnMoreLabelMousePressed
         showUrl("https://xdebug.org/docs"); // NOI18N
     }//GEN-LAST:event_learnMoreLabelMousePressed
-
-    private void informationLabelMouseEntered(MouseEvent evt) {//GEN-FIRST:event_informationLabelMouseEntered
-        setHandCursor(evt);
-    }//GEN-LAST:event_informationLabelMouseEntered
-
-    private void informationLabelMousePressed(MouseEvent evt) {//GEN-FIRST:event_informationLabelMousePressed
-        showUrl("http://wiki.netbeans.org/HowToConfigureXDebug"); // NOI18N
-    }//GEN-LAST:event_informationLabelMousePressed
 
     private void optionsLabelMouseEntered(MouseEvent evt) {//GEN-FIRST:event_optionsLabelMouseEntered
         setHandCursor(evt);
@@ -322,7 +300,6 @@ public class ConnectionErrMessage extends JPanel {
     private JButton copySettingsXdebug3Button;
     private JLabel debuggerPortOptionLabel;
     private JLabel emptyLabel;
-    private JLabel informationLabel;
     private JLabel learnMoreLabel;
     private JLabel messageTextLabel;
     private JLabel noteLabel;

@@ -18,8 +18,11 @@
  */
 package org.netbeans.modules.debugger.jpda.truffle.frames.models;
 
+import java.io.InvalidObjectException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import org.netbeans.api.debugger.jpda.JPDADebugger;
+import org.netbeans.api.debugger.jpda.JPDAThread;
 import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame;
@@ -27,6 +30,9 @@ import org.netbeans.modules.debugger.jpda.truffle.source.Source;
 import org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVFrame;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVThread;
+import org.netbeans.spi.debugger.ui.DebuggingView.PopException;
+import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -110,6 +116,26 @@ public final class TruffleDVFrame implements DVFrame {
             return sourcePosition.getStartColumn();
         } else {
             return -1;
+        }
+    }
+
+    @Override
+    @NbBundle.Messages("MSG_FramePopFailed=Pop of the stack frame has failed.")
+    public void popOff() throws PopException {
+        JPDADebugger debugger = truffleFrame.getDebugger();
+        JPDAThread tr = truffleFrame.getThread();
+        int depth = truffleFrame.getDepth();
+        boolean unwindScheduled = TruffleAccess.unwind(debugger, tr, depth);
+        if (unwindScheduled) {
+            CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentGuestPCInfo(tr);
+            try {
+                currentPCInfo.getStepCommandVar().setFromMirrorObject(-1);
+                tr.resume();
+            } catch (InvalidObjectException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } else {
+            throw new PopException(Bundle.MSG_FramePopFailed());
         }
     }
 

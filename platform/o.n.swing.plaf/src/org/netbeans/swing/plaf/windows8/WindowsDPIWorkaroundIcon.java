@@ -29,6 +29,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Icon;
+import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
 /**
@@ -63,15 +64,17 @@ public class WindowsDPIWorkaroundIcon implements Icon {
     private final Icon delegate;
     private final int width;
     private final int height;
+    private Object restoreUIdefaultsKey;
 
     /**
+     * @param uiDefaultsKey the icon's original key in {@link UIDefaults}
      * @param delegate an icon implementation from
      *        {@code com.sun.java.swing.plaf.windows.WindowsIconFactory}, in its initial state at
      *        the time of LAF initialization (before display configuration changes are likely to
      *        have happened)
      */
-    public WindowsDPIWorkaroundIcon(Icon delegate) {
-        if (delegate == null) {
+    public WindowsDPIWorkaroundIcon(Object uiDefaultsKey, Icon delegate) {
+        if (uiDefaultsKey == null || delegate == null) {
             throw new NullPointerException();
         }
         this.delegate = delegate;
@@ -81,6 +84,9 @@ public class WindowsDPIWorkaroundIcon implements Icon {
         display configuration changes have happened, the initial value is the correct one. */
         this.width = delegate.getIconWidth();
         this.height = delegate.getIconHeight();
+        // See comment in paintIcon.
+        this.restoreUIdefaultsKey = delegate.getClass().getName().contains("VistaMenuItemCheckIcon")
+                ? uiDefaultsKey : null;
     }
 
     /**
@@ -103,6 +109,24 @@ public class WindowsDPIWorkaroundIcon implements Icon {
 
     @Override
     public void paintIcon(Component c, Graphics g0, int x, int y) {
+        if (restoreUIdefaultsKey != null) {
+            /* This ugly switching is necessary for
+            com.sun.java.swing.plaf.windows.WindowsIconFactory.VistaMenuItemCheckIcon, which expects
+            to find itself in UIDefaults. I stepped through the "put" call in the debugger to
+            confirm that no expensive listeners are triggered in response to this call (when opening
+            the "View" menu in the NetBeans IDE for testing purposes). */
+            UIManager.put(restoreUIdefaultsKey, delegate);
+        }
+        try {
+            paintIconInternal(c, g0, x, y);
+        } finally {
+            if (restoreUIdefaultsKey != null) {
+                UIManager.put(restoreUIdefaultsKey, this);
+            }
+        }
+    }
+
+    private void paintIconInternal(Component c, Graphics g0, int x, int y) {
         final double thisPaintScale = getScaling(((Graphics2D) g0).getTransform());
         final double toolkitScale = Toolkit.getDefaultToolkit().getScreenResolution() / 96.0;
         /* When the delegate (incorrectly) changes its reported icon width, it also paints the icon

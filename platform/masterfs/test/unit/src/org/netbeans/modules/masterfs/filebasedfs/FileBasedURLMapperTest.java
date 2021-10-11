@@ -25,6 +25,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.filesystems.FileUtil;
 import java.net.URL;
+import org.openide.util.BaseUtilities;
 
 /**
  * @author Radek Matous
@@ -60,11 +61,23 @@ public class FileBasedURLMapperTest extends NbTestCase {
     public void testSlashifyUNCPath() throws Exception {
         String unc = "\\\\192.168.0.201\\data\\services\\web\\com_resource\\";
         URI uri = FileBasedURLMapper.toURI(unc, true, '\\');
-        final URI norm = uri.normalize();
+        final URI norm = BaseUtilities.normalizeURI(uri);
 
         assertTrue("Is normalized: " + uri + " == " + norm, uri.equals(norm));
         assertEquals("192.168.0.201", uri.getHost());
         assertEquals("/data/services/web/com_resource/", uri.getPath());
     }
-    
+
+    public void testWSLPath() throws Exception {
+        String wsl = "\\\\wsl$\\Target\\";
+        URI uri = FileBasedURLMapper.toURI(wsl, true, '\\');
+        final URI converted = uri.toURL().toURI();
+        final URI norm = BaseUtilities.normalizeURI(uri);
+
+        assertTrue("same after converted to URL and back: " + uri + " == " + converted, uri.equals(converted));
+        assertTrue("Is normalized: " + uri + " == " + norm, uri.equals(norm));
+        assertNull(uri.getHost());
+        assertEquals("//wsl$/Target/", uri.getPath());
+    }
+
 }

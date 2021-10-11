@@ -24,8 +24,12 @@ import java.util.Set;
 
 /**
  * Mapping for IDE actions to Gradle command line.
- *
+ * <p>
+ * The mapping can cause the action to be <b>disabled</b>: if {@link #getReloadRule()} == {@link ReloadRule#NEVER} and
+ * {@link #getArgs()} == {@code null}. Such mapping had no effect in previous versions. This can be checked by a
+ * convenience method {@link RunUtils#isActionDisabled}.
  * @since 1.0
+ * @since 2.14 concept of empty/disabled action
  * @author Laszlo Kishalmi
  */
 public interface ActionMapping extends Serializable, Comparable<ActionMapping> {
@@ -108,4 +112,21 @@ public interface ActionMapping extends Serializable, Comparable<ActionMapping> {
      * @return true if the action can be repeated after execution.
      */
     boolean isRepeatable();
+
+
+    /**
+     * Checks if the action is disabled. Use in preference to plain <code>actionMapping == null</code>
+     * as it also handles a mapping that forcefully deconfigures an action.
+     * 
+     * @param am action mapping to check
+     * @return true, if the action is <b>disabled</b>
+     * @since 2.14
+     */
+    static boolean isDisabled(ActionMapping am) {
+        return am == null || (
+                    am.getReloadRule() == ActionMapping.ReloadRule.NEVER &&
+                    (am.getArgs() == null || am.getArgs().isEmpty()) &&
+                    (am.getReloadArgs() == null || am.getReloadArgs().isEmpty())
+                );
+    }
 }

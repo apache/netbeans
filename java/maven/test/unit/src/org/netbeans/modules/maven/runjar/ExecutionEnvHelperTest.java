@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.maven.runjar;
 
+import java.io.File;
 import org.netbeans.modules.maven.execute.MavenExecutionTestBase;
 import java.io.StringReader;
 import java.util.Map;
@@ -62,6 +63,10 @@ public abstract class ExecutionEnvHelperTest extends MavenExecutionTestBase {
     }
     
     protected void assertActionCustomVMProperties(String vmArg, String mainClass, String appArg) throws Exception {}
+
+    protected void assertActionWorkingDir(String workingDir) throws Exception {}
+
+    protected void assertActionEnvVariable(String varName, String varValue) throws Exception {}
 
     public static class NetBeans123Config extends ExecutionEnvHelperTest {
 
@@ -156,6 +161,16 @@ public abstract class ExecutionEnvHelperTest extends MavenExecutionTestBase {
             if (mainClass != null) {
                 assertEquals(mainClass, mavenExecutorDefines.get(MavenExecuteUtils.RUN_MAIN_CLASS));
             }
+        }
+
+        @Override
+        protected void assertActionWorkingDir(String workingDir) throws Exception {
+            assertEquals(workingDir, mavenExecutorDefines.get(MavenExecuteUtils.RUN_WORKDIR));
+        }
+
+        @Override
+        protected void assertActionEnvVariable(String varName, String varValue) throws Exception {
+            assertEquals(varValue, mavenExecutorEnvironment.get(varName));
         }
 
         @Override
@@ -461,6 +476,43 @@ public abstract class ExecutionEnvHelperTest extends MavenExecutionTestBase {
         assertActionOverridesArguments("-DvmArg2=2", "test.mavenapp.App", "paramY");
         assertFalse(mavenVmArgs.contains("-Dprop=val"));
         assertTrue(mavenVmArgs.contains("-Dbar=foo"));
+    }
+
+    /**
+     * Checks that pre-12.3 default actions will inject working directory from Lookup.
+     */
+    public void test123DefaultActionWithCWD() throws Exception {
+        initCustomizedProperties();
+        createNbActions(runP, debugP, profileP);
+        File wd = new File("WorkingDirectory");
+        ExplicitProcessParameters explicit = ExplicitProcessParameters.builder().
+                workingDirectory(wd).build();
+        actionData.add(explicit);
+        createPomWithArguments();
+        final Project project = ProjectManager.getDefault().findProject(pom.getParent());
+        loadActionMappings(project);
+        assertMavenRunAction(project, runMapping, "run", c -> {});
+        assertActionWorkingDir(wd.getAbsolutePath());
+    }
+
+    /**
+     * Checks that pre-12.3 default actions will inject environment variables from Lookup.
+     */
+    public void test123DefaultActionWithEnvVars() throws Exception {
+        initCustomizedProperties();
+        createNbActions(runP, debugP, profileP);
+        ExplicitProcessParameters explicit = ExplicitProcessParameters.builder().
+                environmentVariable("TEST_VAR1", "test value 1").
+                environmentVariable("TEST_VAR2", "test value 2").
+                environmentVariable("PATH", null).build();
+        actionData.add(explicit);
+        createPomWithArguments();
+        final Project project = ProjectManager.getDefault().findProject(pom.getParent());
+        loadActionMappings(project);
+        assertMavenRunAction(project, runMapping, "run", c -> {});
+        assertActionEnvVariable("TEST_VAR1", "test value 1");
+        assertActionEnvVariable("TEST_VAR2", "test value 2");
+        assertActionEnvVariable("PATH", null);
     }
 
     private ExecutionEnvHelper load123ProjectExecutionHelper(boolean defaultProps) throws Exception {

@@ -93,11 +93,7 @@ public final class NbURLMapper extends URLMapper {
         }
         
         if (f != null) {
-            try {
-                return f.getURL();
-            } catch (FileStateInvalidException e) {
-                LOG.log(Level.WARNING, "Can't get URL for " + f, e); //NOI18N
-            }
+            return f.toURL();
         }
         
         return null;

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.8
+#Version 1.10
 
 CLSS public java.lang.Object
 cons public init()
@@ -177,6 +177,7 @@ meth public abstract org.netbeans.api.debugger.jpda.ObjectVariable setValue(org.
 meth public abstract org.netbeans.modules.debugger.jpda.truffle.LanguageName getLanguage()
 meth public abstract org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition getTypeSource()
 meth public abstract org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition getValueSource()
+meth public boolean isReceiver()
 meth public static org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable get(org.netbeans.api.debugger.jpda.Variable)
 
 CLSS public org.netbeans.modules.javascript2.debug.breakpoints.JSLineBreakpoint

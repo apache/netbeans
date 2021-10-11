@@ -57,7 +57,7 @@ final class Asm {
         // must analyze the extender class, as some annotations there may trigger
         ClassReader clr = new ClassReader(data);
         ClassWriter wr = new ClassWriter(clr, 0);
-        ClassNode theClass = new ClassNode(Opcodes.ASM7);
+        ClassNode theClass = new ClassNode(Opcodes.ASM9);
         
         clr.accept(theClass, 0);
         
@@ -74,7 +74,7 @@ final class Asm {
                 throw new IOException("Could not find classfile for extender class"); // NOI18N
             }
             ClassReader extenderReader = new ClassReader(istm);
-            ClassNode extenderClass = new ClassNode(Opcodes.ASM7);
+            ClassNode extenderClass = new ClassNode(Opcodes.ASM9);
             extenderReader.accept(extenderClass, ClassReader.SKIP_FRAMES);
             
             // search for a no-arg ctor, replace all invokespecial calls in ctors
@@ -145,7 +145,7 @@ final class Asm {
      */
     private static class NullSignVisitor extends SignatureVisitor {
         public NullSignVisitor() {
-            super(Opcodes.ASM7);
+            super(Opcodes.ASM9);
         }
     }
     
@@ -168,13 +168,13 @@ final class Asm {
          * @param firstSelf if true, assumes the first parameter is reference to self and will generate aload_0
          */
         public CallParametersWriter(MethodNode mn, boolean firstSelf) {
-            super(Opcodes.ASM7);
+            super(Opcodes.ASM9);
             this.mn = mn;
             this.paramIndex = firstSelf ? 0 : 1;
         }
         
         public CallParametersWriter(MethodNode mn, int[] indices) {
-            super(Opcodes.ASM7);
+            super(Opcodes.ASM9);
             this.mn = mn;
             this.paramIndices = indices;
         }
@@ -387,11 +387,11 @@ final class Asm {
         MethodNode noArgCtor
     ) {
         String desc = targetMethod.desc;
-        CtorDelVisitor v = new CtorDelVisitor(Opcodes.ASM7);
+        CtorDelVisitor v = new CtorDelVisitor(Opcodes.ASM9);
         an.accept(v);
         int nextPos = desc.indexOf(';', 2); // NOI18N
         desc = "(" + desc.substring(nextPos + 1); // NOI18N
-        MethodNode mn = new MethodNode(Opcodes.ASM7, 
+        MethodNode mn = new MethodNode(Opcodes.ASM9, 
                 targetMethod.access & (~Opcodes.ACC_STATIC), CONSTRUCTOR_NAME,
                 desc,
                 targetMethod.signature,

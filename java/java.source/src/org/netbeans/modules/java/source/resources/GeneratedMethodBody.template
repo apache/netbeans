@@ -10,4 +10,4 @@ ${method_name}              name of the created method
 ${class_name}               qualified name of the enclosing class
 ${simple_class_name}        simple name of the enclosing class
 -->
-throw new java.lang.UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+throw new java.lang.UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody

@@ -176,7 +176,7 @@ public class ExportPatch {
                 }
             }
             if (success) {
-                StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(ExportPatch.class, "BK3004", new Integer(exportedFiles)));
+                StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(ExportPatch.class, "BK3004", Integer.valueOf(exportedFiles)));
                 if (exportedFiles == 0) {
                     destination.delete();
                 } else {

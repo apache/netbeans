@@ -68,6 +68,7 @@ import org.netbeans.spi.project.support.ant.ReferenceHelper;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
@@ -814,7 +815,7 @@ public final class ProjectOperations {
         private static URI resolve (
                 @NonNull final FileObject prjDir,
                 @NonNull final URI relative) {
-            return prjDir.toURI().resolve(relative).normalize();
+            return BaseUtilities.normalizeURI(prjDir.toURI().resolve(relative));
         }
 
         @NonNull

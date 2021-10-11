@@ -127,7 +127,7 @@ public class RestResourceGenerator {
                     FileObject localWsdlFolder = clientSupport.getLocalWsdlFolderForClient(clientName, false);
 
                     FileObject localWsdl = localWsdlFolder.getFileObject(client.getLocalWsdlFile());
-                    WsdlModeler wsdlModeler = WsdlModelerFactory.getDefault().getWsdlModeler(localWsdl.getURL());
+                    WsdlModeler wsdlModeler = WsdlModelerFactory.getDefault().getWsdlModeler(localWsdl.toURL());
                     wsdlModeler.setPackageName(clientPackageName);
                     wsdlModeler.setCatalog(clientSupport.getCatalog());
                     WsdlModel model = wsdlModeler.getAndWaitForWsdlModel();

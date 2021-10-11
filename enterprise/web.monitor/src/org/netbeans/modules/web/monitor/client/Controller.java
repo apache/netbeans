@@ -959,7 +959,7 @@ class Controller  {
 	}
         RequestProcessor.getDefault().post(new Runnable () {
             public void run() {
-                for (Iterator it = fileObjectsToDelete.iterator(); it.hasNext(); ) {
+                for (Iterator<FileObject> it = fileObjectsToDelete.iterator(); it.hasNext(); ) {
                     try {
                         ((FileObject) it.next()).delete();
                     } catch (IOException e) {
@@ -1014,7 +1014,7 @@ class Controller  {
             int idx = statusCode.indexOf(':');
             if (idx != -1) {
                 statusCode = statusCode.substring(0, idx);
-                statusCodeNum = Integer.valueOf(statusCode).intValue();
+                statusCodeNum = Integer.valueOf(statusCode);
             }
         } catch(NumberFormatException nfe) {
             // ignore

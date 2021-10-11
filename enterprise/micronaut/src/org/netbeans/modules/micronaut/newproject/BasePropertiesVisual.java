@@ -60,6 +60,7 @@ public class BasePropertiesVisual extends JPanel implements DocumentListener, Ac
                 customRadioButton.setSelected(true);
                 versionTextField.setText("");
                 applicationTypeComboBox.removeAllItems();
+                javaVersionComboBox.removeAllItems();
             }
             @Override
             public void focusLost(FocusEvent e) {
@@ -152,8 +153,6 @@ public class BasePropertiesVisual extends JPanel implements DocumentListener, Ac
 
         javaVersionLabel.setLabelFor(javaVersionComboBox);
         org.openide.awt.Mnemonics.setLocalizedText(javaVersionLabel, org.openide.util.NbBundle.getMessage(BasePropertiesVisual.class, "LBL_JavaVersion")); // NOI18N
-
-        javaVersionComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "8", "9", "10", "11", "12", "13", "14", "15" }));
 
         org.openide.awt.Mnemonics.setLocalizedText(languageLabel, org.openide.util.NbBundle.getMessage(BasePropertiesVisual.class, "LBL_Language")); // NOI18N
 
@@ -402,6 +401,9 @@ public class BasePropertiesVisual extends JPanel implements DocumentListener, Ac
             for (MicronautLaunchService.ApplicationType type : service.getApplicationTypes(serviceUrl)) {
                 applicationTypeComboBox.addItem(type);
             }
+            for (String version : service.getJdkVersions(serviceUrl)) {
+                javaVersionComboBox.addItem(version);
+            }
             versionTextField.setText(micronautVersion);
             initialized = true;
         } catch (Exception ex) {
@@ -423,6 +425,7 @@ public class BasePropertiesVisual extends JPanel implements DocumentListener, Ac
     public void actionPerformed(ActionEvent e) {
         versionTextField.setText("");
         applicationTypeComboBox.removeAllItems();
+        javaVersionComboBox.removeAllItems();
         if ("CUSTOM".equals(e.getActionCommand())) {
             customTextField.requestFocus();
         } else {

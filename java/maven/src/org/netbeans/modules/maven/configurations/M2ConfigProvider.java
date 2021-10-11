@@ -260,8 +260,13 @@ public class M2ConfigProvider implements ProjectConfigurationProvider<M2Configur
         M2Configuration _active;
         Collection<M2Configuration> confs;
         Boolean b = inConfigInit.get();
+        _active  = activeOverride.get();
+        if (_active != null) {
+            // explicit temporary override, skip all the 'is still there' & fire change logic.
+            return _active;
+        }
         synchronized (this) {
-            _active = internalActive();
+            _active = active;
             confs = getConfigurations(false);
             String initAct = getInitialActive();
             OUTER: if (initAct != null) {
@@ -427,7 +432,13 @@ public class M2ConfigProvider implements ProjectConfigurationProvider<M2Configur
                                         // silently ignore
                                     }
                                     ActionToGoalMapping m = new ActionToGoalMapping();
-                                    ActionToGoalMapping allMappings = ((AbstractMavenActionsProvider) p).getRawMappings();
+                                    ActionToGoalMapping allMappings;
+                                    M2Configuration save = setLocalConfiguration(getDefaultConfig());
+                                    try {
+                                        allMappings = ((AbstractMavenActionsProvider) p).getRawMappings();
+                                    } finally {
+                                        setLocalConfiguration(save);
+                                    }
                                     List<NetbeansActionProfile> profiles = ((AbstractMavenActionsProvider) p).getRawMappings().getProfiles();
                                     for (NetbeansActionProfile p : profiles) {
                                         if (prof.getId().equals(p.getId())) {

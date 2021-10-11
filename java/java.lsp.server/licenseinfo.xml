@@ -42,4 +42,9 @@
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
+    <fileset>
+        <file>vscode/syntaxes/java.tmLanguage.json</file>
+        <license ref="MIT-java-grammar" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
 </licenseinfo>

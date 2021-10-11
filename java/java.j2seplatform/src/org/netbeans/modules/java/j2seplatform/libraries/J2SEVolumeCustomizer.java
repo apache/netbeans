@@ -462,8 +462,6 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
                 Exceptions.printStackTrace(mue);
             } catch (URISyntaxException ue) {
                 Exceptions.printStackTrace(ue);
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
             }
         }
     }//GEN-LAST:event_addResource

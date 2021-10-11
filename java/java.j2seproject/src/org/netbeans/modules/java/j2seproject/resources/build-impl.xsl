@@ -132,8 +132,8 @@ is divided into following sections:
                 <property file="${{user.properties.file}}"/>
                 <xsl:comment> The two properties below are usually overridden </xsl:comment>
                 <xsl:comment> by the active platform. Just a fallback. </xsl:comment>
-                <property name="default.javac.source" value="1.6"/>
-                <property name="default.javac.target" value="1.6"/>
+                <property name="default.javac.source" value="1.8"/>
+                <property name="default.javac.target" value="1.8"/>
             </target>
             
             <target name="-init-project">

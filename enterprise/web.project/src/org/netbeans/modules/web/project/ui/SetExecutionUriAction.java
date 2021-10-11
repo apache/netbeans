@@ -126,7 +126,7 @@ public final class SetExecutionUriAction extends NodeAction {
                                 //we tried
                             }
                         }
-                        servletAttr = Boolean.valueOf(isServletFile);
+                        servletAttr = isServletFile;
                     }
                     return Boolean.TRUE.equals(servletAttr);
                 }

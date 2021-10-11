@@ -96,6 +96,7 @@ public final class GradleDistributionManager {
         GradleVersion.version("6.3"), // JDK-14
         GradleVersion.version("6.7"), // JDK-15
         GradleVersion.version("7.0"), // JDK-16
+        GradleVersion.version("7.2"), // JDK-17
     };
     private static final int JAVA_VERSION;
 
@@ -152,7 +153,7 @@ public final class GradleDistributionManager {
         File[] gradleLauncher = lib.listFiles((dir, name) -> {
             return name.startsWith("gradle-launcher-") && name.endsWith(".jar"); //NOI18N
         });
-        if (gradleLauncher.length != 1) {
+        if ((gradleLauncher == null) || (gradleLauncher.length != 1)) {
             throw new FileNotFoundException(lib.getAbsolutePath() + "lib/gradle-launcher-xxxx.jar not found or ambigous!"); //NOI18N
         }
         JarFile launcherJar = new JarFile(gradleLauncher[0]);

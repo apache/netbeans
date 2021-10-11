@@ -857,7 +857,7 @@ public final class ModuleList {
         static final String CNB = "org.netbeans.libs.junit4";
         JUnitPlaceholderEntry(File root) {
             super(CNB, new File(root, "platform/modules/" + CNB.replace('.', '-') + ".jar"),
-                    new File[] {new File(System.getProperty("user.home"), ".m2/repository/junit/junit/4.8.2/junit-4.8.2.jar")},
+                    new File[] {new File(System.getProperty("user.home"), ".m2/repository/junit/junit/4.13.2/junit-4.13.2.jar")},
                     new File(root, "platform"), null, null, new String[0],
                     new ManifestManager.PackageExport[] {new ManifestManager.PackageExport("junit", true), new ManifestManager.PackageExport("org.junit", true)},
                     null, false, Collections.<Dependency>emptySet());

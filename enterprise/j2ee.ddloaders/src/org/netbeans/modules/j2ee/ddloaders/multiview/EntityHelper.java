@@ -195,7 +195,7 @@ public class EntityHelper extends EntityAndSessionHelper {
         }
         
         protected void firePropertyChange(PropertyChangeEvent evt) {
-            for (Iterator iterator = listeners.iterator(); iterator.hasNext();) {
+            for (Iterator<PropertyChangeListener> iterator = listeners.iterator(); iterator.hasNext();) {
                 ((PropertyChangeListener) iterator.next()).propertyChange(evt);
             }
         }
@@ -301,7 +301,7 @@ public class EntityHelper extends EntityAndSessionHelper {
         }
         
         protected void firePropertyChange(PropertyChangeEvent evt) {
-            for (Iterator iterator = listeners.iterator(); iterator.hasNext();) {
+            for (Iterator<PropertyChangeListener> iterator = listeners.iterator(); iterator.hasNext();) {
                 ((PropertyChangeListener) iterator.next()).propertyChange(evt);
             }
         }

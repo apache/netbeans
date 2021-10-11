@@ -637,7 +637,7 @@ public class WebFreeFormActionProvider implements ActionProvider {
      * @return the line number (0-based), or -1 if not found
      */
     static final int findLine(FileObject file, final String match, final String elementLocalName, final String elementAttributeName) throws IOException, SAXException, ParserConfigurationException {
-        InputSource in = new InputSource(file.getURL().toString());
+        InputSource in = new InputSource(file.toURL().toString());
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setNamespaceAware(true);
         SAXParser parser = factory.newSAXParser();
@@ -664,7 +664,7 @@ public class WebFreeFormActionProvider implements ActionProvider {
         Element data = Util.getPrimaryConfigurationData(helper);
         Element foldersEl = XMLUtil.findElement(data, "folders", Util.NAMESPACE); // NOI18N
         if (foldersEl != null) {
-            for (Iterator i = XMLUtil.findSubElements(foldersEl).iterator(); i.hasNext();) {
+            for (Iterator<Element> i = XMLUtil.findSubElements(foldersEl).iterator(); i.hasNext();) {
                 Element sourceFolderEl = (Element)i.next();
                 Element typeEl = XMLUtil.findElement(sourceFolderEl , "type", Util.NAMESPACE); // NOI18N
                 if (typeEl == null || !XMLUtil.findText(typeEl).equals(type))

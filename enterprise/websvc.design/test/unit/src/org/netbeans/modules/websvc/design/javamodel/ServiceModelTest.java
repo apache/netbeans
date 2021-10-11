@@ -548,7 +548,7 @@ public class ServiceModelTest extends NbTestCase {
     private String getFormatedDocument(SOAPMessage message) {
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            transformerFactory.setAttribute("indent-number", new Integer(4));
+            transformerFactory.setAttribute("indent-number", 4);
             Transformer transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 

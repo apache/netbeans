@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.tomcat5.optional;
 
-import org.netbeans.modules.tomcat5.optional.OptionalFactory;
 import org.netbeans.junit.NbTestCase;
 
 /**

@@ -195,6 +195,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         rbOutputTabId.addActionListener(listener);
         rbOutputTabName.addActionListener(listener);
         cbDisableIndex.addActionListener(listener);
+        cbPreferWrapper.addActionListener(listener);
         cbUseBestMaven.addActionListener(listener);
         cbAlternateLocation.addActionListener(listener);
         cbAlternateLocation.addChangeListener(new ChangeListener() {
@@ -392,6 +393,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         lblJdkHome = new javax.swing.JLabel();
         comJdkHome = new javax.swing.JComboBox();
         comManageJdks = new javax.swing.JButton();
+        cbPreferWrapper = new javax.swing.JCheckBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         lstCategory = new javax.swing.JList();
         lblCategory = new javax.swing.JLabel();
@@ -683,6 +685,8 @@ public class SettingsPanel extends javax.swing.JPanel {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(cbPreferWrapper, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbPreferWrapper.text")); // NOI18N
+
         javax.swing.GroupLayout pnlExecutionLayout = new javax.swing.GroupLayout(pnlExecution);
         pnlExecution.setLayout(pnlExecutionLayout);
         pnlExecutionLayout.setHorizontalGroup(
@@ -710,26 +714,29 @@ public class SettingsPanel extends javax.swing.JPanel {
                                     .addComponent(btnGoals))
                                 .addGap(18, 18, 18))
                             .addComponent(cbSkipTests, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(0, 45, Short.MAX_VALUE))
+                        .addGap(0, 55, Short.MAX_VALUE))
                     .addGroup(pnlExecutionLayout.createSequentialGroup()
                         .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlExecutionLayout.createSequentialGroup()
+                                .addComponent(lblOptions)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtOptions)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnOptions))
                             .addGroup(pnlExecutionLayout.createSequentialGroup()
                                 .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblCommandLine)
                                     .addComponent(lblJdkHome))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(pnlExecutionLayout.createSequentialGroup()
+                                        .addComponent(cbPreferWrapper)
+                                        .addGap(0, 0, Short.MAX_VALUE))
                                     .addComponent(comMavenHome, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(pnlExecutionLayout.createSequentialGroup()
                                         .addComponent(comJdkHome, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(comManageJdks))))
-                            .addGroup(pnlExecutionLayout.createSequentialGroup()
-                                .addComponent(lblOptions)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtOptions)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnOptions)))
+                                        .addComponent(comManageJdks)))))
                         .addContainerGap())))
             .addGroup(pnlExecutionLayout.createSequentialGroup()
                 .addGap(119, 119, 119)
@@ -744,6 +751,8 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addComponent(comMavenHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblExternalVersion, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbPreferWrapper)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblJdkHome)
@@ -924,6 +933,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbCollapseSuccessFolds;
     private javax.swing.JCheckBox cbDisableIndex;
     private javax.swing.JCheckBox cbOutputTabShowConfig;
+    private javax.swing.JCheckBox cbPreferWrapper;
     private javax.swing.JComboBox cbProjectNodeNameMode;
     private javax.swing.JCheckBox cbReuse;
     private javax.swing.JCheckBox cbShowInfoLevel;
@@ -1107,6 +1117,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         cbReuse.setSelected(MavenSettings.getDefault().isReuseOutputTabs());
         cbCollapseSuccessFolds.setSelected(MavenSettings.getDefault().isCollapseSuccessFolds());
         cbOutputTabShowConfig.setSelected(MavenSettings.getDefault().isOutputTabShowConfig());
+        cbPreferWrapper.setSelected(MavenSettings.getDefault().isPreferMavenWrapper());
         cbUseBestMaven.setSelected(MavenSettings.getDefault().isUseBestMaven());
         cbAlternateLocation.setSelected(MavenSettings.getDefault().isUseBestMavenAltLocation());
         txtDirectory.setText(MavenSettings.getDefault().getBestMavenAltLocation());
@@ -1182,6 +1193,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         MavenSettings.getDefault().setReuseOutputTabs(cbReuse.isSelected());
         MavenSettings.getDefault().setCollapseSuccessFolds(cbCollapseSuccessFolds.isSelected());
         MavenSettings.getDefault().setOutputTabShowConfig(cbOutputTabShowConfig.isSelected());
+        MavenSettings.getDefault().setPreferMavenWrapper(cbPreferWrapper.isSelected());
         MavenSettings.getDefault().setUseBestMaven(cbUseBestMaven.isSelected());
         MavenSettings.getDefault().setUseBestMavenAltLocation(cbAlternateLocation.isSelected());
         if (cbAlternateLocation.isSelected()) {
@@ -1250,6 +1262,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         isChanged |= MavenSettings.getDefault().isReuseOutputTabs() != cbReuse.isSelected();
         isChanged |= MavenSettings.getDefault().isCollapseSuccessFolds() != cbCollapseSuccessFolds.isSelected();
         isChanged |= MavenSettings.getDefault().isOutputTabShowConfig() != cbOutputTabShowConfig.isSelected();
+        isChanged |= MavenSettings.getDefault().isPreferMavenWrapper() != cbPreferWrapper.isSelected();
         isChanged |= MavenSettings.getDefault().isUseBestMaven() != cbUseBestMaven.isSelected();
         isChanged |= MavenSettings.getDefault().isUseBestMavenAltLocation() != cbAlternateLocation.isSelected();
         MavenSettings.OutputTabName name = rbOutputTabName.isSelected() ? MavenSettings.OutputTabName.PROJECT_NAME : MavenSettings.OutputTabName.PROJECT_ID;

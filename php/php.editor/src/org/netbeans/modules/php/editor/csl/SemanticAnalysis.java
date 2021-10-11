@@ -576,6 +576,9 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                 return;
             }
             if (node.isAnonymous()) {
+                // NETBEANS-5719 scan ctor params before ClassInstanceCreationTypeInfo is created
+                // to avoid recognizing $this as an instance of an anonymous class
+                scan(node.ctorParams());
                 addToPath(node);
                 typeInfo = new ClassInstanceCreationTypeInfo(node);
                 scan(node.getAttributes());

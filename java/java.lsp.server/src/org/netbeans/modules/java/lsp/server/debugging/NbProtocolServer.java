@@ -28,8 +28,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.lsp4j.debug.Capabilities;
@@ -45,6 +48,7 @@ import org.eclipse.lsp4j.debug.ExceptionInfoResponse;
 import org.eclipse.lsp4j.debug.InitializeRequestArguments;
 import org.eclipse.lsp4j.debug.NextArguments;
 import org.eclipse.lsp4j.debug.PauseArguments;
+import org.eclipse.lsp4j.debug.RestartFrameArguments;
 import org.eclipse.lsp4j.debug.Scope;
 import org.eclipse.lsp4j.debug.ScopesArguments;
 import org.eclipse.lsp4j.debug.ScopesResponse;
@@ -86,8 +90,11 @@ import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.nativeimage.api.debug.EvaluateException;
 import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
 import org.netbeans.modules.nativeimage.api.debug.NIVariable;
+import org.netbeans.spi.debugger.ui.DebuggingView;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVFrame;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVThread;
+import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -95,12 +102,17 @@ import org.netbeans.spi.debugger.ui.DebuggingView.DVThread;
  */
 public final class NbProtocolServer implements IDebugProtocolServer, LspSession.ScheduledServer {
 
+    private static final Logger LOGGER = Logger.getLogger(NbProtocolServer.class.getName());
+    private static final Level LOGLEVEL = Level.FINE;
+
     private final DebugAdapterContext context;
     private final NbLaunchRequestHandler launchRequestHandler = new NbLaunchRequestHandler();
     private final NbAttachRequestHandler attachRequestHandler = new NbAttachRequestHandler();
     private final NbDisconnectRequestHandler disconnectRequestHandler = new NbDisconnectRequestHandler();
     private final NbBreakpointsRequestHandler breakpointsRequestHandler = new NbBreakpointsRequestHandler();
     private final NbVariablesRequestHandler variablesRequestHandler = new NbVariablesRequestHandler();
+    private final RequestProcessor evaluationRP = new RequestProcessor(NbProtocolServer.class.getName(), 3);
+    private final RequestProcessor threadsRP = new RequestProcessor(NbProtocolServer.class.getName(), 1);
     private boolean initialized = false;
     private Future<Void> runningServer;
 
@@ -278,70 +290,102 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
 
     @Override
     public CompletableFuture<StackTraceResponse> stackTrace(StackTraceArguments args) {
-        CompletableFuture<StackTraceResponse> future = new CompletableFuture<>();
         if (context.getDebugSession() == null) {
+            CompletableFuture<StackTraceResponse> future = new CompletableFuture<>();
             ErrorUtilities.completeExceptionally(future, "Debug Session doesn't exist.", ResponseErrorCode.InvalidParams);
+            return future;
         } else {
-            List<StackFrame> result = new ArrayList<>();
-            int cnt = 0;
-            DVThread dvThread = context.getThreadsProvider().getThread(args.getThreadId());
-            if (dvThread != null) {
-                cnt = dvThread.getFrameCount();
-                int from = args.getStartFrame() != null ? args.getStartFrame() : 0;
-                int to = args.getLevels() != null ? from + args.getLevels() : Integer.MAX_VALUE;
-                List<DVFrame> stackFrames = dvThread.getFrames(from, to);
-                for (DVFrame frame : stackFrames) {
-                    int frameId = context.getThreadsProvider().getThreadObjects().addObject(args.getThreadId(), new NbFrame(args.getThreadId(), frame));
-                    int line = frame.getLine();
-                    if (line < 0) { // unknown
-                        line = 0;
-                    }
-                    int column = frame.getColumn();
-                    if (column < 0) { // unknown
-                        column = 0;
-                    }
-                    StackFrame stackFrame = new StackFrame();
-                    stackFrame.setId(frameId);
-                    stackFrame.setName(frame.getName());
-                    URI sourceURI = frame.getSourceURI();
-                    if (sourceURI != null) {
-                        Source source = new Source();
-                        String scheme = sourceURI.getScheme();
-                        if (null == scheme || scheme.isEmpty() || "file".equalsIgnoreCase(scheme)) {
-                            source.setName(Paths.get(sourceURI).getFileName().toString());
-                            source.setPath(sourceURI.getPath());
-                            source.setSourceReference(0);
-                        } else {
-                            int ref = context.createSourceReference(sourceURI, frame.getSourceMimeType());
-                            String path = sourceURI.getPath();
-                            if (path == null) {
-                                path = sourceURI.getSchemeSpecificPart();
-                            }
-                            if (path != null) {
-                                int sepIndex = Math.max(path.lastIndexOf('/'), path.lastIndexOf(File.separatorChar));
-                                source.setName(path.substring(sepIndex + 1));
-                                if ("jar".equalsIgnoreCase(scheme)) {
-                                    try {
-                                        path = new URI(path).getPath();
-                                    } catch (URISyntaxException ex) {
-                                        // ignore, we just tried
-                                    }
-                                }
-                                source.setPath(path);
-                            }
-                            source.setSourceReference(ref);
+            return CompletableFuture.supplyAsync(() -> {
+                LOGGER.log(LOGLEVEL, "stackTrace() START");
+                long t1 = System.nanoTime();
+                List<StackFrame> result = new ArrayList<>();
+                int cnt = 0;
+                DVThread dvThread = context.getThreadsProvider().getThread(args.getThreadId());
+                if (dvThread != null) {
+                    cnt = dvThread.getFrameCount();
+                    int from = args.getStartFrame() != null ? args.getStartFrame() : 0;
+                    int to = args.getLevels() != null ? from + args.getLevels() : Integer.MAX_VALUE;
+                    List<DVFrame> stackFrames = dvThread.getFrames(from, to);
+                    for (DVFrame frame : stackFrames) {
+                        int frameId = context.getThreadsProvider().getThreadObjects().addObject(args.getThreadId(), new NbFrame(args.getThreadId(), frame));
+                        int line = frame.getLine();
+                        if (line < 0) { // unknown
+                            line = 0;
                         }
-                        stackFrame.setSource(source);
+                        int column = frame.getColumn();
+                        if (column < 0) { // unknown
+                            column = 0;
+                        }
+                        StackFrame stackFrame = new StackFrame();
+                        stackFrame.setId(frameId);
+                        stackFrame.setName(frame.getName());
+                        URI sourceURI = frame.getSourceURI();
+                        if (sourceURI != null) {
+                            Source source = new Source();
+                            String scheme = sourceURI.getScheme();
+                            if (null == scheme || scheme.isEmpty() || "file".equalsIgnoreCase(scheme)) {
+                                source.setName(Paths.get(sourceURI).getFileName().toString());
+                                source.setPath(sourceURI.getPath());
+                                source.setSourceReference(0);
+                            } else {
+                                int ref = context.createSourceReference(sourceURI, frame.getSourceMimeType());
+                                String path = sourceURI.getPath();
+                                if (path == null) {
+                                    path = sourceURI.getSchemeSpecificPart();
+                                }
+                                if (path != null) {
+                                    int sepIndex = Math.max(path.lastIndexOf('/'), path.lastIndexOf(File.separatorChar));
+                                    source.setName(path.substring(sepIndex + 1));
+                                    if ("jar".equalsIgnoreCase(scheme)) {
+                                        try {
+                                            path = new URI(path).getPath();
+                                        } catch (URISyntaxException ex) {
+                                            // ignore, we just tried
+                                        }
+                                    }
+                                    source.setPath(path);
+                                }
+                                source.setSourceReference(ref);
+                            }
+                            stackFrame.setSource(source);
+                        }
+                        stackFrame.setLine(line);
+                        stackFrame.setColumn(column);
+                        result.add(stackFrame);
                     }
-                    stackFrame.setLine(line);
-                    stackFrame.setColumn(column);
-                    result.add(stackFrame);
                 }
+                StackTraceResponse response = new StackTraceResponse();
+                response.setStackFrames(result.toArray(new StackFrame[result.size()]));
+                response.setTotalFrames(cnt);
+                long t2 = System.nanoTime();
+                LOGGER.log(LOGLEVEL, "stackTrace() END after {0} ns", (t2 - t1));
+                return response;
+            }, threadsRP);
+        }
+    }
+
+    @Override
+    @NbBundle.Messages({"MSG_FrameRestartUnsupported=Restart of frames is not supported.",
+                        "# {0} - frame pop error message",
+                        "MSG_FrameRestartFailed=Unable to restart frame: {0}"})
+    public CompletableFuture<Void> restartFrame(RestartFrameArguments args) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        NbFrame stackFrame = (NbFrame) context.getThreadsProvider().getThreadObjects().getObject(args.getFrameId());
+        String popError = null;
+        if (stackFrame != null) {
+            try {
+                stackFrame.getDVFrame().popOff();
+                ActionsManager am = DebuggerManager.getDebuggerManager().getCurrentEngine().getActionsManager();
+                am.doAction("stepInto");
+                future.complete(null);
+            } catch (UnsupportedOperationException ex) {
+                popError = Bundle.MSG_FrameRestartUnsupported();
+            } catch (DebuggingView.PopException ex) {
+                popError = Bundle.MSG_FrameRestartFailed(ex.getLocalizedMessage());
             }
-            StackTraceResponse response = new StackTraceResponse();
-            response.setStackFrames(result.toArray(new StackFrame[result.size()]));
-            response.setTotalFrames(cnt);
-            future.complete(response);
+        }
+        if (popError != null) {
+            ErrorUtilities.completeExceptionally(future, popError, ResponseErrorCode.InvalidParams);
         }
         return future;
     }
@@ -395,22 +439,28 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
 
     @Override
     public CompletableFuture<ThreadsResponse> threads() {
-        CompletableFuture<ThreadsResponse> future = new CompletableFuture<>();
         if (context.getDebugSession() == null) {
+            CompletableFuture<ThreadsResponse> future = new CompletableFuture<>();
             ErrorUtilities.completeExceptionally(future, "Debug Session doesn't exist.", ResponseErrorCode.InvalidParams);
+            return future;
         } else {
-            List<org.eclipse.lsp4j.debug.Thread> result = new ArrayList<>();
-            context.getThreadsProvider().visitThreads((id, dvThread) -> {
-                org.eclipse.lsp4j.debug.Thread thread = new org.eclipse.lsp4j.debug.Thread();
-                thread.setId(id);
-                thread.setName(dvThread.getName());
-                result.add(thread);
-            });
-            ThreadsResponse response = new ThreadsResponse();
-            response.setThreads(result.toArray(new org.eclipse.lsp4j.debug.Thread[result.size()]));
-            future.complete(response);
+            return CompletableFuture.supplyAsync(() -> {
+                LOGGER.log(LOGLEVEL, "threads() START");
+                long t1 = System.nanoTime();
+                List<org.eclipse.lsp4j.debug.Thread> result = new ArrayList<>();
+                context.getThreadsProvider().visitThreads((id, dvThread) -> {
+                    org.eclipse.lsp4j.debug.Thread thread = new org.eclipse.lsp4j.debug.Thread();
+                    thread.setId(id);
+                    thread.setName(dvThread.getName());
+                    result.add(thread);
+                });
+                ThreadsResponse response = new ThreadsResponse();
+                response.setThreads(result.toArray(new org.eclipse.lsp4j.debug.Thread[result.size()]));
+                long t2 = System.nanoTime();
+                LOGGER.log(LOGLEVEL, "threads() END after {0} ns", (t2 - t1));
+                return response;
+            }, threadsRP);
         }
-        return future;
     }
     
     private EvaluateResponse passToApplication(String args) {
@@ -458,7 +508,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
                 evaluateNative(niDebugger, expression, threadId, response);
             }
             return response;
-        });
+        }, evaluationRP);
     }
 
     private void evaluateJPDA(JPDADebugger debugger, String expression, int threadId, EvaluateResponse response) {
@@ -487,7 +537,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
                 } catch (InvalidExpressionException ex) {
                     toString = variable.getValue();
                 }
-                response.setResult(toString);
+                response.setResult(Objects.toString(toString));
                 response.setVariablesReference(referenceId);
                 response.setType(variable.getType());
                 response.setIndexedVariables(Math.max(indexedVariables, 0));

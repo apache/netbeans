@@ -40,5 +40,15 @@ public class SingleSourceFileUtilTest {
         assertEquals("Java FileObject found in the lookup", java, result);
     }
 
-    
+    @Test
+    public void testCanFindSiblingClass() throws IOException {
+        final FileObject folder = FileUtil.createMemoryFileSystem().getRoot().createFolder("dir");
+        FileObject java = folder.createData("Ahoj.java");
+        assertFalse("No sibling found", SingleSourceFileUtil.hasClassSibling(java));
+
+        FileObject clazz = folder.createData("Ahoj.class");
+        assertNotNull("class created", clazz);
+
+        assertTrue("Sibling found", SingleSourceFileUtil.hasClassSibling(java));
+    }
 }

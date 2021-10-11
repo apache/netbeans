@@ -377,7 +377,7 @@ public abstract class RestTestBase extends WebServicesTestBase {
 
     private static int resolveServerPort() {
         Integer i = Integer.getInteger("glassfish.server.port"); //NOI18N
-        return i != null ? i.intValue() : 8080;
+        return i != null ? i : 8080;
     }
 
     private void workaroundIZ106586() {

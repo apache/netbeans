@@ -23,7 +23,6 @@ import static org.netbeans.modules.fish.payara.micro.plugin.Constants.MAVEN_WAR_
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROFILE_SINGLE_ACTION;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.RUN_SINGLE_ACTION;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.WAR_PACKAGING;
-import org.netbeans.modules.fish.payara.micro.project.MicroApplication;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,40 +103,34 @@ public class MicroActionsProvider implements MavenActionsProvider {
     @Override
     public RunConfig createConfigForDefaultAction(String actionName, Project project, Lookup lookup) {
         MicroApplication microApplication = MicroApplication.getInstance(project);
-        if (microApplication == null) {
-            return project.getLookup()
-                    .lookup(J2eeActionsProvider.class)
-                    .createConfigForDefaultAction(actionName, project, lookup);
+        if (microApplication != null) {
+            Preferences pref = getPreferences(project, MicroApplication.class, true);
+            String microVersionText = pref.get(VERSION, "");
+            RunConfig config = actionsProvider.createConfigForDefaultAction(actionName, project, lookup);
+            if (!microVersionText.isEmpty()) {
+                config.setProperty("version.payara", microVersionText);
+            }
+            return config;
         }
-        Preferences pref = getPreferences(project, MicroApplication.class, true);
-        String microVersionText = pref.get(VERSION, "");
-        RunConfig config = actionsProvider.createConfigForDefaultAction(actionName, project, lookup);
-        if(!microVersionText.isEmpty()){
-            config.setProperty("version.payara", microVersionText);
-        }
-        return config;
+        return null;
     }
 
     @Override
     public NetbeansActionMapping getMappingForAction(String actionName, Project project) {
         MicroApplication microApplication = MicroApplication.getInstance(project);
-        if (microApplication == null) {
-            return project.getLookup()
-                .lookup(J2eeActionsProvider.class)
-                .getMappingForAction(actionName, project);
+        if (microApplication != null) {
+            return actionsProvider.getMappingForAction(actionName, project);
         }
-        return actionsProvider.getMappingForAction(actionName, project);
+        return null;
     }
 
     @Override
     public boolean isActionEnable(String action, Project project, Lookup lookup) {
         MicroApplication microApplication = MicroApplication.getInstance(project);
-        if (microApplication == null) {
-            return project.getLookup()
-                    .lookup(J2eeActionsProvider.class)
-                    .isActionEnable(action, project, lookup);
+        if (microApplication != null) {
+            return actionsProvider.isActionEnable(action, project, lookup);
         }
-        return actionsProvider.isActionEnable(action, project, lookup);
+        return false;
     }
 
     @Override

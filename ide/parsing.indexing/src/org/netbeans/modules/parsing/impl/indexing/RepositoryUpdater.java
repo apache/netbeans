@@ -3124,7 +3124,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                     return false;
                 }
 
-                Collection<? extends IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> infos = eifInfosMap.get(dirty.getMimeType());
+                Collection<? extends IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> infos = getIndexerInfos(eifInfosMap, dirty.getMimeType());
                 if (infos != null && infos.size() > 0) {
                     final URL url = dirty.getURL();
                     if (url == null) {
@@ -3140,11 +3140,12 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                     try {
                         // log parsing for the mimetype:
                         logStartIndexer(src.getMimeType());
-                        ParserManager.parse(Collections.singleton(src), new UserTask() {
+                        
+                        class T extends UserTask implements IndexingTask {
                             @Override
                             public void run(ResultIterator resultIterator) throws Exception {
                                 final String mimeType = resultIterator.getSnapshot().getMimeType();
-                                final Collection<? extends IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> infos = eifInfosMap.get(mimeType);
+                                final Collection<? extends IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> infos = getIndexerInfos(eifInfosMap, mimeType);
 
                                 if (infos != null && infos.size() > 0) {
                                     boolean finished = false;
@@ -3231,7 +3232,8 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                                     run(resultIterator.getResultIterator(embedding));
                                 }
                             }
-                        });
+                        }
+                        ParserManager.parse(Collections.singleton(src), new T());
                     } catch (final ParseException e) {
                         logFinishIndexer(src.getMimeType());
                         LOGGER.log(Level.WARNING, null, e);
@@ -3574,6 +3576,21 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                 result[i+2] = countTimePair[1];
             }
             return result;
+        }
+
+        private static final String ALL_MIME_TYPES = ""; //NOI18N
+
+        private static Collection<? extends IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> getIndexerInfos(
+                final Map<String, Collection<IndexerCache.IndexerInfo<EmbeddingIndexerFactory>>> eifInfosMap,
+                final String mimeType) {
+            final Collection<IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> infos = new ArrayList<>();
+            if (eifInfosMap.containsKey(mimeType)) {
+                infos.addAll(eifInfosMap.get(mimeType));
+            }
+            if (eifInfosMap.containsKey(ALL_MIME_TYPES)) {
+                infos.addAll(eifInfosMap.get(ALL_MIME_TYPES));
+            }
+            return infos;
         }
 
         protected final boolean storeChanges(

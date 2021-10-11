@@ -25,10 +25,9 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
@@ -37,16 +36,20 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.ElementUtilities.ElementAcceptor;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TypeMirrorHandle;
+import org.netbeans.modules.parsing.api.ParserManager;
+import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.modules.parsing.api.UserTask;
+import org.netbeans.modules.parsing.spi.ParseException;
 
 /**
  *
  * @author sdedic
  */
 final class FieldValidator implements MemberValidator {
-    private final JavaSource            theSource;
+    private final Source            theSource;
     private final TypeMirrorHandle      fieldTypeHandle;
     private final TreePathHandle        srcHandle;
     
@@ -54,7 +57,7 @@ final class FieldValidator implements MemberValidator {
     private ElementHandle<Element>  target;
     private MemberSearchResult lastResult;
 
-    public FieldValidator(JavaSource theSource, TypeMirrorHandle fieldTypeHandle, TreePathHandle srcHandle) {
+    public FieldValidator(Source theSource, TypeMirrorHandle fieldTypeHandle, TreePathHandle srcHandle) {
         this.theSource = theSource;
         this.fieldTypeHandle = fieldTypeHandle;
         this.srcHandle = srcHandle;
@@ -71,15 +74,15 @@ final class FieldValidator implements MemberValidator {
         }
         SearchImpl impl = new SearchImpl(target, n);
         try {
-            theSource.runUserActionTask(impl, true);
-        } catch (IOException ex) {
+            ParserManager.parse(Collections.singleton(theSource), impl);
+        } catch (ParseException ex) {
            return null;
         }
         
         return lastResult;
     }
     
-    private class SearchImpl implements Task<CompilationController>, ElementAcceptor {
+    private class SearchImpl extends UserTask implements ElementAcceptor {
         private final TreePathHandle targetHandle;
         private final String name;
         
@@ -93,9 +96,10 @@ final class FieldValidator implements MemberValidator {
         }
         
         @Override
-        public void run(CompilationController parameter) throws Exception {
-            parameter.toPhase(JavaSource.Phase.RESOLVED);
-            this.cinfo = parameter;
+        public void run(ResultIterator resultIterator) throws Exception {
+            CompilationController cc = CompilationController.get(resultIterator.getParserResult());
+            cc.toPhase(JavaSource.Phase.RESOLVED);
+            this.cinfo = cc;
             if (targetHandle == null || srcHandle == null) {
                 return;
             }
@@ -109,7 +113,7 @@ final class FieldValidator implements MemberValidator {
             }
             initialScope = cinfo.getTrees().getScope(srcPath);
             Scope targetScope = cinfo.getTrees().getScope(targetPath);
-            Map<? extends Element, Scope> visibleVariables = 
+            Map<? extends Element, Scope> visibleVariables =
                     cinfo.getElementUtilities().findElementsAndOrigins(initialScope, this);
             lastResult = null;
             Element target = cinfo.getTrees().getElement(targetPath);
@@ -216,7 +220,6 @@ final class FieldValidator implements MemberValidator {
                         }
                         break;
                     }
-                        
                 }
                 srcPath = srcPath.getParentPath();
             }
@@ -248,5 +251,4 @@ final class FieldValidator implements MemberValidator {
                    cinfo.getTrees().isAccessible(initialScope, e, (DeclaredType)type);
         }
     }
-    
 }

@@ -27,6 +27,9 @@ import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Semaphore;
+import org.gradle.tooling.ProjectConnection;
+import org.junit.After;
+import org.junit.Before;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -49,6 +52,26 @@ public class NbGradleProjectImplTest extends AbstractGradleProjectTestCase {
     }
     
     private FileObject projectDir;
+    private Project prj;
+    
+    @Before
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        prj = createProject();
+    }
+    
+    @After
+    @Override
+    public void tearDown() throws Exception {
+        ProjectConnection pconn = prj.getLookup().lookup(ProjectConnection.class);
+        if (pconn instanceof GradleProjectConnection) {
+            GradleProjectConnection gpconn = (GradleProjectConnection) pconn;
+            gpconn.close();
+        }
+        prj = null;
+        super.tearDown();
+    }
     
     private Project createProject() throws Exception {
         int rnd = new Random().nextInt(1000000);
@@ -58,12 +81,19 @@ public class NbGradleProjectImplTest extends AbstractGradleProjectTestCase {
         return ProjectManager.getDefault().findProject(a);
     }
     
+    private void assertHasNoConnection(Project p) throws Exception {
+        ProjectConnection pconn = p.getLookup().lookup(ProjectConnection.class);
+        if (pconn instanceof GradleProjectConnection) {
+            GradleProjectConnection gpconn = (GradleProjectConnection) pconn;
+            assertFalse(gpconn.hasConnection());
+        }
+    }
+    
     /**
      * Checks that untrusted unopened project will present itself as a fallback.
      * @throws Exception 
      */
     public void testUntrustedProjectFallback() throws Exception {
-        Project prj = createProject();
         NbGradleProject ngp = NbGradleProject.get(prj);
         
         assertTrue(ngp.getQuality().worseThan(NbGradleProject.Quality.EVALUATED));
@@ -74,9 +104,9 @@ public class NbGradleProjectImplTest extends AbstractGradleProjectTestCase {
      * @throws Exception 
      */
     public void testInitialLoadDoesNotFireChange() throws Exception {
-        Project prj = createProject();
         NbGradleProject ngp = NbGradleProject.get(prj);
         assertTrue(ngp.getQuality().worseThan(NbGradleProject.Quality.EVALUATED));
+        assertHasNoConnection(prj);
     }
     
     /**
@@ -85,7 +115,6 @@ public class NbGradleProjectImplTest extends AbstractGradleProjectTestCase {
      * @throws Exception 
      */
     public void testUntrustedProjectCannotGoUp() throws Exception {
-        Project prj = createProject();
         
         NbGradleProjectImpl prjImpl = prj.getLookup().lookup(NbGradleProjectImpl.class);
         assertTrue(prjImpl.getGradleProject().getQuality().worseThan(NbGradleProject.Quality.EVALUATED));
@@ -93,6 +122,7 @@ public class NbGradleProjectImplTest extends AbstractGradleProjectTestCase {
         prjImpl.setAimedQuality(NbGradleProject.Quality.FULL);
         // ... it loaded, but did not escalate the quality bcs not trusted
         assertTrue(prjImpl.getGradleProject().getQuality().worseThan(NbGradleProject.Quality.EVALUATED));
+        assertHasNoConnection(prj);
     }
     
     /**
@@ -100,7 +130,6 @@ public class NbGradleProjectImplTest extends AbstractGradleProjectTestCase {
      * @throws Exception 
      */
     public void testTrustedProjectLoadsToEvaluated() throws Exception {
-        Project prj = createProject();
         
         NbGradleProjectImpl prjImpl = prj.getLookup().lookup(NbGradleProjectImpl.class);
         assertTrue(prjImpl.getGradleProject().getQuality().worseThan(NbGradleProject.Quality.EVALUATED));
@@ -138,7 +167,6 @@ public class NbGradleProjectImplTest extends AbstractGradleProjectTestCase {
      * event.
      */
     public void testInitialLoadReloadNotFired() throws Exception {
-        Project prj = createProject();
         NbGradleProject ngp = NbGradleProject.get(prj);
         
         ngp.addPropertyChangeListener(projL);
@@ -152,7 +180,6 @@ public class NbGradleProjectImplTest extends AbstractGradleProjectTestCase {
      * that the ProjectInfo property change is fired.
      */
     public void testProjectQualityUpgradeFiresChange() throws Exception {
-        Project prj = createProject();
         NbGradleProject ngp = NbGradleProject.get(prj);
         ProjectTrust.getDefault().trustProject(prj);
         // initializes the project
@@ -172,7 +199,6 @@ public class NbGradleProjectImplTest extends AbstractGradleProjectTestCase {
      * Checks that ProjectInfo events are processed before completion of the load future
      */
     public void testEventsProcessedBeforeCompletion() throws Exception {
-        Project prj = createProject();
         NbGradleProject ngp = NbGradleProject.get(prj);
         ProjectTrust.getDefault().trustProject(prj);
         // initializes the project
@@ -200,7 +226,6 @@ public class NbGradleProjectImplTest extends AbstractGradleProjectTestCase {
      * as Gradle script execution is permitted (now).
      */
     public void testIncreaseAimedQualityChangesProject() throws Exception {
-        Project prj = createProject();
         NbGradleProject ngp = NbGradleProject.get(prj);
         ProjectTrust.getDefault().trustProject(prj);
         // initializes the project
@@ -220,18 +245,18 @@ public class NbGradleProjectImplTest extends AbstractGradleProjectTestCase {
      * the evaluated state does not exist.
      */
     public void testEvaluateTrustedDoesNotExecuteScript() throws Exception {
-        Project prj = createProject();
         NbGradleProject ngp = NbGradleProject.get(prj);
         ProjectTrust.getDefault().trustProject(prj);
         // initializes the project
         assertTrue(ngp.getQuality().worseThan(NbGradleProject.Quality.EVALUATED));
-        
+        assertHasNoConnection(prj);
         NbGradleProjectImpl prjImpl = prj.getLookup().lookup(NbGradleProjectImpl.class);
         GradleProject curProject = prjImpl.getGradleProject();
         prjImpl.setAimedQuality(Quality.EVALUATED);
         GradleProject newProject = prjImpl.getGradleProject();
         assertTrue(newProject.getQuality().worseThan(NbGradleProject.Quality.EVALUATED));
         assertSame(newProject, curProject);
+        assertHasNoConnection(prj);
     }
     
     /**
@@ -241,7 +266,6 @@ public class NbGradleProjectImplTest extends AbstractGradleProjectTestCase {
      * was full before).
      */
     public void testAllowedProjectLoadsImmediately() throws Exception {
-        Project prj = createProject();
         NbGradleProject ngp = NbGradleProject.get(prj);
         ProjectTrust.getDefault().trustProject(prj);
 
@@ -296,7 +320,6 @@ public class NbGradleProjectImplTest extends AbstractGradleProjectTestCase {
     }
     
     private void checkProjectDoesNotChange(Quality aimed) throws Exception {
-        Project prj = createProject();
         NbGradleProject ngp = NbGradleProject.get(prj);
         ProjectTrust.getDefault().trustProject(prj);
         NbGradleProjectImpl prjImpl = prj.getLookup().lookup(NbGradleProjectImpl.class);

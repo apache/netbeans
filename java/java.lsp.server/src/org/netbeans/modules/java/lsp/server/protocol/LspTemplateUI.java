@@ -24,9 +24,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
@@ -44,47 +48,122 @@ import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.util.Pair;
+import org.openide.util.RequestProcessor;
 import org.openide.util.UserCancelException;
+import org.openide.util.Utilities;
 
-class LspTemplateUI {
+@NbBundle.Messages({
+    "CTL_TemplateUI_SelectGroup=Select Template Type",
+    "CTL_TemplateUI_SelectTemplate=Select Template",
+    "CTL_TemplateUI_SelectTarget=Where to put the object?",
+    "CTL_TemplateUI_SelectProjectTarget=Specify the project directory",
+    "CTL_TemplateUI_SelectPackageName=Package name of your project?",
+    "CTL_TemplateUI_SelectPackageNameSuggestion=org.yourcompany.yourproject",
+    "CTL_TemplateUI_SelectName=Name of the object?",
+    "# {0} - path",
+    "ERR_InvalidPath={0} isn't valid folder",
+    "# {0} - path",
+    "ERR_ExistingPath={0} already exists",
+})
+abstract class LspTemplateUI {
+    /**
+     * Creation thread. All requests are serialized; make sure that no creation process can block e.g. waiting
+     * for the client's response.
+     */
+    private static final RequestProcessor    CREATION_RP = new RequestProcessor(LspTemplateUI.class);
+    
     private LspTemplateUI() {
     }
+
+    abstract CompletionStage<Pair<DataFolder,String>> findTargetAndName(CompletionStage<DataObject> findTemplate, NbCodeLanguageClient client, ExecuteCommandParams params);
 
     static CompletableFuture<Object> createFromTemplate(String templates, NbCodeLanguageClient client, ExecuteCommandParams params) {
         final FileObject fo = FileUtil.getConfigFile(templates);
         final DataFolder folder = DataFolder.findFolder(fo);
-        return displayUI(folder, client, params);
+        LspTemplateUI ui = new LspTemplateUI() {
+            @Override
+            CompletionStage<Pair<DataFolder, String>> findTargetAndName(CompletionStage<DataObject> findTemplate, NbCodeLanguageClient client, ExecuteCommandParams params) {
+                return findTargetAndNameForTemplate(findTemplate, client, params);
+            }
+        };
+        return ui.templateUI(folder, client, params);
     }
 
-    @NbBundle.Messages({
-        "CTL_TemplateUI_SelectGroup=Select Template Type",
-        "CTL_TemplateUI_SelectTemplate=Select Template",
-        "CTL_TemplateUI_SelectTarget=Where to put the object?",
-        "CTL_TemplateUI_SelectName=Name of the object?",
-        "# {0} - path",
-        "ERR_InvalidPath={0} isn't valid folder",
-    })
-    private static CompletableFuture<Object> displayUI(DataFolder templates, NbCodeLanguageClient client, ExecuteCommandParams params) {
-        final List<QuickPickItem> categories = quickPickTemplates(templates);
-        final CompletionStage<List<QuickPickItem>> pickGroup = client.showQuickPick(new ShowQuickPickParams(Bundle.CTL_TemplateUI_SelectGroup(), false, categories));
-        final CompletionStage<DataFolder> group = pickGroup.thenApply((selectedGroups) -> {
-            final String chosen = singleSelection(selectedGroups);
-            FileObject chosenFo = templates.getPrimaryFile().getFileObject(chosen);
-            return DataFolder.findFolder(chosenFo);
-        });
-        final CompletionStage<List<QuickPickItem>> pickProject = group.thenCompose(chosenGroup -> {
-            List<QuickPickItem> projectTypes = quickPickTemplates(chosenGroup);
-            return client.showQuickPick(new ShowQuickPickParams(Bundle.CTL_TemplateUI_SelectTemplate(), false, projectTypes));
-        });
-        final CompletionStage<DataObject> findTemplate = pickProject.thenCombine(group, (selectedTemplates, chosenGroup) -> {
+    static CompletableFuture<Object> createProject(String templates, NbCodeLanguageClient client, ExecuteCommandParams params) {
+        final FileObject fo = FileUtil.getConfigFile(templates);
+        final DataFolder folder = DataFolder.findFolder(fo);
+        LspTemplateUI ui = new LspTemplateUI() {
+            @Override
+            CompletionStage<Pair<DataFolder, String>> findTargetAndName(CompletionStage<DataObject> findTemplate, NbCodeLanguageClient client, ExecuteCommandParams params) {
+                return findTargetAndNameForProject(findTemplate, client, params);
+            }
+        };
+        return ui.projectUI(folder, client, params);
+    }
+
+    private CompletableFuture<Object> templateUI(DataFolder templates, NbCodeLanguageClient client, ExecuteCommandParams params) {
+        CompletionStage<DataObject> findTemplate = findTemplate(templates, client);
+        CompletionStage<Pair<DataFolder, String>> findTargetFolderAndName = findTargetAndName(findTemplate, client, params);
+        return findTargetFolderAndName.thenCombineAsync(findTemplate, (targetAndName, source) -> {
+            final String name = targetAndName.second();
+            if (name == null || name.isEmpty()) {
+                throw raise(RuntimeException.class, new UserCancelException());
+            }
             try {
-                final String templateName = singleSelection(selectedTemplates);
-                final FileObject templateFo = chosenGroup.getPrimaryFile().getFileObject(templateName);
-                return DataObject.find(templateFo);
-            } catch (DataObjectNotFoundException ex) {
+                DataFolder target = targetAndName.first();
+                Map<String,String> prjParams = new HashMap<>();
+                DataObject newObject = source.createFromTemplate(target, name, prjParams);
+                return (Object) newObject.getPrimaryFile().toURI().toString();
+            } catch (IOException ex) {
                 throw raise(RuntimeException.class, ex);
             }
-        });
+        }, CREATION_RP).exceptionally((error) -> {
+            if (error instanceof UserCancelException || error.getCause() instanceof UserCancelException) {
+                return null;
+            }
+            Exceptions.printStackTrace(error);
+            return null;
+        }).toCompletableFuture();
+    }
+
+    private CompletableFuture<Object> projectUI(DataFolder templates, NbCodeLanguageClient client, ExecuteCommandParams params) {
+        CompletionStage<DataObject> findTemplate = findTemplate(templates, client);
+        CompletionStage<Pair<DataFolder, String>> findTargetFolderAndName = findTargetAndName(findTemplate, client, params);
+        CompletionStage<Pair<DataObject, String>> findTemplateAndPackage = findTemplate.thenCombine(findPackage(findTargetFolderAndName, client), Pair::of);
+        return findTargetFolderAndName.thenCombineAsync(findTemplateAndPackage, (targetAndName, templateAndPackage) -> {
+            try {
+                final DataObject template = templateAndPackage.first();
+                final String pkg = templateAndPackage.second();
+                final DataFolder target = targetAndName.first();
+                final String name = targetAndName.second();
+                Map<String,String> prjParams = new HashMap<>();
+                prjParams.put("version", "1.0-SNAPSHOT"); // NOI18N
+                prjParams.put("artifactId", name);  // NOI18N
+                prjParams.put("groupId", findGroupId(pkg, name));
+                prjParams.put("package", pkg);
+                prjParams.put("packageBase", pkg);
+                DataObject newObject = template.createFromTemplate(target, name, prjParams);
+                return (Object) newObject.getPrimaryFile().toURI().toString();
+            } catch (IOException ex) {
+                throw raise(RuntimeException.class, ex);
+            }
+        }, CREATION_RP).exceptionally((error) -> {
+            if (error instanceof UserCancelException || error.getCause() instanceof UserCancelException) {
+                return null;
+            }
+            Exceptions.printStackTrace(error);
+            return null;
+        }).toCompletableFuture();
+    }
+
+    private static CompletionStage<String> findPackage(CompletionStage<?> uiBefore, NbCodeLanguageClient client) {
+        return uiBefore.thenCompose((__) ->
+            client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectPackageName(), Bundle.CTL_TemplateUI_SelectPackageNameSuggestion()))
+        );
+    }
+
+    private static CompletionStage<Pair<DataFolder, String>> findTargetAndNameForTemplate(CompletionStage<DataObject> findTemplate, NbCodeLanguageClient client, ExecuteCommandParams params) {
         final CompletionStage<DataFolder> findTarget = findTemplate.thenCompose(any -> client.workspaceFolders()).thenCompose(folders -> {
             boolean[] suggestionIsExact = { true };
             DataFolder suggestion = findTargetFolder(params, folders, suggestionIsExact);
@@ -114,22 +193,66 @@ class LspTemplateUI {
             String templateExtension = source.getPrimaryFile().getExt();
             return removeExtensionFromFileName(nameWithExtension, templateExtension);
         });
-        return findTargetName.thenCombine(findTemplate.thenCombine(findTarget, (source, target) -> new DataObject[] { source, target }), (name, sourceAndTarget) -> {
+        return findTarget.thenCombine(findTargetName, (t, u) -> {
+            return Pair.of(t, u);
+        });
+    }
+
+    private static CompletionStage<Pair<DataFolder, String>> findTargetAndNameForProject(CompletionStage<DataObject> findTemplate, NbCodeLanguageClient client, ExecuteCommandParams params) {
+        return findTemplate.thenCompose(__ -> client.workspaceFolders()).thenCompose(folders -> {
+            class VerifyNonExistingFolder implements Function<String, CompletionStage<Pair<DataFolder,String>>> {
+                @Override
+                public CompletionStage<Pair<DataFolder,String>> apply(String path) {
+                    if (path == null) {
+                        throw raise(RuntimeException.class, new UserCancelException(path));
+                    }
+                    final File targetPath = new File(path);
+                    if (targetPath.exists()) {
+                        client.showMessage(new MessageParams(MessageType.Error, Bundle.ERR_ExistingPath(path)));
+                        return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectProjectTarget(), suggestWorkspaceRoot(folders))).thenCompose(this);
+                    }
+                    targetPath.getParentFile().mkdirs();
+                    FileObject fo = FileUtil.toFileObject(targetPath.getParentFile());
+                    if (fo == null || !fo.isFolder()) {
+                    }
+                    return CompletableFuture.completedFuture(Pair.of(DataFolder.findFolder(fo), targetPath.getName()));
+                }
+            }
+            return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectProjectTarget(), suggestWorkspaceRoot(folders))).thenCompose(new VerifyNonExistingFolder());
+        });
+    }
+
+    private static String suggestWorkspaceRoot(List<WorkspaceFolder> folders) throws IllegalArgumentException {
+        String suggestion = System.getProperty("user.dir");
+        if (folders != null && !folders.isEmpty()) try {
+            suggestion = Utilities.toFile(new URI(folders.get(0).getUri())).getParent();
+        } catch (URISyntaxException ex) {
+        }
+        return suggestion;
+    }
+
+    private static CompletionStage<DataObject> findTemplate(DataFolder templates, NbCodeLanguageClient client) {
+        final List<QuickPickItem> categories = quickPickTemplates(templates);
+        final CompletionStage<List<QuickPickItem>> pickGroup = client.showQuickPick(new ShowQuickPickParams(Bundle.CTL_TemplateUI_SelectGroup(), false, categories));
+        final CompletionStage<DataFolder> group = pickGroup.thenApply((selectedGroups) -> {
+            final String chosen = singleSelection(selectedGroups);
+            FileObject chosenFo = templates.getPrimaryFile().getFileObject(chosen);
+            return DataFolder.findFolder(chosenFo);
+        });
+        final CompletionStage<List<QuickPickItem>> pickProject = group.thenCompose(chosenGroup -> {
+            List<QuickPickItem> projectTypes = quickPickTemplates(chosenGroup);
+            return client.showQuickPick(new ShowQuickPickParams(Bundle.CTL_TemplateUI_SelectTemplate(), false, projectTypes));
+        });
+        final CompletionStage<DataObject> findTemplate = pickProject.thenCombine(group, (selectedTemplates, chosenGroup) -> {
             try {
-                DataObject source = sourceAndTarget[0];
-                DataFolder target = (DataFolder) sourceAndTarget[1];
-                DataObject newPrj = source.createFromTemplate(target, name);
-                return (Object) newPrj.getPrimaryFile().toURI().toString();
-            } catch (IOException ex) {
+                final String templateName = singleSelection(selectedTemplates);
+                final FileObject templateFo = chosenGroup.getPrimaryFile().getFileObject(templateName);
+                return DataObject.find(templateFo);
+            } catch (DataObjectNotFoundException ex) {
                 throw raise(RuntimeException.class, ex);
             }
-        }).exceptionally((error) -> {
-            if (error instanceof UserCancelException || error.getCause() instanceof UserCancelException) {
-                return null;
-            }
-            Exceptions.printStackTrace(error);
-            return null;
-        }).toCompletableFuture();
+        });
+        return findTemplate;
     }
 
     private static DataFolder findWorkspaceRoot(List<WorkspaceFolder> folders) {
@@ -188,7 +311,7 @@ class LspTemplateUI {
     }
 
     private static String removeExtensionFromFileName(String nameWithExtension, String templateExtension) {
-        if (nameWithExtension.endsWith('.' + templateExtension)) {
+        if (nameWithExtension != null && nameWithExtension.endsWith('.' + templateExtension)) {
             return nameWithExtension.substring(0, nameWithExtension.length() - templateExtension.length() - 1);
         } else {
             return nameWithExtension;
@@ -224,12 +347,8 @@ class LspTemplateUI {
             if (display) {
                 String detail = findDetail(obj);
                 final String displayName = n.getDisplayName();
-                String description = n.getShortDescription();
-                if (description != null && description.equals(displayName)) {
-                    description = null;
-                }
                 categories.add(new QuickPickItem(
-                    displayName, description, detail,
+                    displayName, null, detail,
                     false, fo.getNameExt()
                 ));
             }
@@ -243,14 +362,8 @@ class LspTemplateUI {
         if (description != null) {
             try (ByteArrayOutputStream os = new ByteArrayOutputStream(); InputStream is = description.openStream()) {
                 FileUtil.copy(is, os);
-                descriptionText = os.toString("UTF-8");
-                int bodyBegin = descriptionText.toUpperCase().indexOf("<BODY>");
-                int bodyEnd = descriptionText.toUpperCase().indexOf("</BODY>");
-                if (bodyBegin >= 0 && bodyEnd > bodyBegin) {
-                    descriptionText = descriptionText.substring(bodyBegin + 6, bodyEnd);
-                } else {
-                    descriptionText = null;
-                }
+                String s = os.toString("UTF-8");
+                descriptionText = stripHtml(s);
             } catch (IOException ex) {
                 Exceptions.printStackTrace(Exceptions.attachSeverity(ex, Level.FINE));
                 return descriptionText;
@@ -259,7 +372,35 @@ class LspTemplateUI {
         return descriptionText;
     }
 
+    static String stripHtml(String s) {
+        boolean inTag = false;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (inTag) {
+                if (ch == '>') {
+                    inTag = false;
+                }
+            } else {
+                if (ch == '<') {
+                    inTag = true;
+                    continue;
+                }
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
+    }
+
     private static <T extends Exception> T raise(Class<T> clazz, Exception ex) throws T {
         throw (T)ex;
+    }
+
+    private static String findGroupId(String pkg, String name) {
+        if (pkg.endsWith("." + name)) {
+            return pkg.substring(0, pkg.length() - 1 - name.length());
+        } else {
+            return pkg;
+        }
     }
 }

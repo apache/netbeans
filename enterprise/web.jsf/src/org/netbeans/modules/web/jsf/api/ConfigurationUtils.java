@@ -21,8 +21,9 @@ package org.netbeans.modules.web.jsf.api;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.WeakHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 import java.lang.ref.WeakReference;
 import org.netbeans.modules.j2ee.dd.api.web.DDProvider;
 import org.netbeans.modules.j2ee.dd.api.web.Servlet;
@@ -151,7 +152,7 @@ public class ConfigurationUtils {
             if (documentBase == null) {
                 return new FileObject [0];
             }
-            ArrayList files = new ArrayList();
+            List<FileObject> files = new ArrayList<>();
             FileObject file;
             for (int i = 0; i < sFiles.length; i++){
                 file = documentBase.getFileObject(sFiles[i]);

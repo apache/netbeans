@@ -56,6 +56,10 @@ public class TruffleEval {
         if (currentPCInfo == null) {
             throw new InvalidExpressionException(Bundle.MSG_NoSuspend());
         }
+        return evaluate(debugger, currentPCInfo, expression);
+    }
+
+    public static Variable evaluate(JPDADebugger debugger, CurrentPCInfo currentPCInfo, String expression) throws InvalidExpressionException {
         TruffleStackFrame selectedStackFrame = currentPCInfo.getSelectedStackFrame();
         if (selectedStackFrame == null) {
             throw new InvalidExpressionException(Bundle.MSG_NoSuspend());

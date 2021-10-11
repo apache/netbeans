@@ -394,7 +394,7 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
             @Override
             public void run() {
                 try {
-                    final DefaultComboBoxModel model = new DefaultComboBoxModel();
+                    final DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
                     
                     try {
                         List<ConnectionSettings> settings = GitModuleConfig.getDefault().getRecentConnectionSettings();

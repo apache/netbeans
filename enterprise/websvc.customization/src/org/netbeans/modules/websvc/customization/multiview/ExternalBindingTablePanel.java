@@ -117,7 +117,7 @@ public class ExternalBindingTablePanel extends DefaultTablePanel{
         }
         try{
             relativePath = Utilities.relativize(FileUtil.toFile(wsdlFolder).toURI(),
-                    new URI(localWsdlFile.getURL().toExternalForm()));
+                    new URI(localWsdlFile.toURL().toExternalForm()));
         }catch(Exception e){
             return "Unable to obtain relative path";
         }

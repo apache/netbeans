@@ -77,11 +77,7 @@ final class JspSourcePathImplementation implements ClassPathImplementation, Prop
         if (webDocbaseDir != null) {
             FileObject webDocbaseDirFO = helper.resolveFileObject(webDocbaseDir);
             if (webDocbaseDirFO != null) {
-                try {
-                    webDocbaseDirRes = ClassPathSupport.createResource(webDocbaseDirFO.getURL());
-                } catch (FileStateInvalidException e) {
-                    Exceptions.printStackTrace(e);
-                }
+                webDocbaseDirRes = ClassPathSupport.createResource(webDocbaseDirFO.toURL());
             }
         }
         synchronized (this) {

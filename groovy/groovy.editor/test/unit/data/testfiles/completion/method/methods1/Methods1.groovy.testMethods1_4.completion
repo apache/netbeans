@@ -131,7 +131,6 @@ FIELD      authority                       [PUBLIC]   String
 FIELD      class                           [PUBLIC]   Class
 FIELD      content                         [PUBLIC]   Object
 FIELD      defaultPort                     [PUBLIC]   int
-FIELD      deserializedFields              [PRIVATE]  URLStreamHandler
 FIELD      file                            [PUBLIC]   String
 FIELD      host                            [PUBLIC]   String
 FIELD      path                            [PUBLIC]   String
@@ -139,5 +138,4 @@ FIELD      port                            [PUBLIC]   int
 FIELD      protocol                        [PUBLIC]   String
 FIELD      query                           [PUBLIC]   String
 FIELD      ref                             [PUBLIC]   String
-FIELD      serializedHashCode              [PRIVATE]  int
 FIELD      userInfo                        [PUBLIC]   String

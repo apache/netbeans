@@ -251,14 +251,14 @@ public final class CodeTemplateManagerOperation
         return result;
     }
     
-    public static Collection<? extends CodeTemplateFilter> getTemplateFilters(JTextComponent component, int offset) {
-        MimePath mimeType = getFullMimePath(component.getDocument(), offset);
+    public static Collection<? extends CodeTemplateFilter> getTemplateFilters(Document doc, int startOffset, int endOffset) {
+        MimePath mimeType = getFullMimePath(doc, startOffset);
         Collection<? extends CodeTemplateFilter.Factory> filterFactories = 
             MimeLookup.getLookup(mimeType).lookupAll(CodeTemplateFilter.Factory.class);
         
         List<CodeTemplateFilter> result = new ArrayList<CodeTemplateFilter>(filterFactories.size());
         for (CodeTemplateFilter.Factory factory : filterFactories) {
-            result.add(factory.createFilter(component, offset));
+            result.add(factory.createFilter(doc, startOffset, endOffset));
         }
         return result;
     }

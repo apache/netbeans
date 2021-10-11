@@ -30,31 +30,20 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import static net.java.html.json.Models.applyBindings;
 
-public final class Demo implements FXBeanInfo.Provider {
-    private final StringProperty desc = new SimpleStringProperty(this, "desc", "Buy Milk");
-    private final ListProperty<String> todos = new SimpleListProperty<>(this, "todos", FXCollections.observableArrayList());
-    private final IntegerBinding numTodos = Bindings.createIntegerBinding(todos::size, todos);
+@FXBeanInfo.Generate
+public final class Demo extends DemoBeanInfo {
+    final StringProperty desc = new SimpleStringProperty(this, "desc", "");
+    final ListProperty<String> todos = new SimpleListProperty<>(this, "todos", FXCollections.observableArrayList());
+    final IntegerBinding numTodos = Bindings.createIntegerBinding(todos::size, todos);
 
     void addTodo() {
         todos.getValue().add(desc.getValue());
         desc.setValue("");
     }
 
-    private final FXBeanInfo info = FXBeanInfo.newBuilder(this)
-            .property(desc)
-            .property(todos)
-            .property("numTodos", numTodos)
-            .action("addTodo", this::addTodo)
-            .build();
-
-    @Override
-    public FXBeanInfo getFXBeanInfo() {
-        return info;
-    }
-
     public static void onPageLoad() {
         Demo model = new Demo();
+        model.desc.setValue("Try Java in browser!");
         applyBindings(model);
     }
-
 }

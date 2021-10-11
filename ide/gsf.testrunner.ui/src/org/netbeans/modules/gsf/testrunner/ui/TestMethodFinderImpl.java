@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
+import java.util.logging.Logger;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
@@ -55,7 +56,7 @@ public final class TestMethodFinderImpl extends EmbeddingIndexer {
 
     public static final String NAME = "tests"; // NOI18N
     public static final int VERSION = 1;
-    public static TestMethodFinderImpl INSTANCE = new TestMethodFinderImpl();
+    public static final TestMethodFinderImpl INSTANCE = new TestMethodFinderImpl();
 
     private final WeakSet<BiConsumer<FileObject, Collection<TestMethodController.TestMethod>>> listeners = new WeakSet<>();
 
@@ -79,6 +80,7 @@ public final class TestMethodFinderImpl extends EmbeddingIndexer {
     public void addListener(BiConsumer<FileObject, Collection<TestMethodController.TestMethod>> listener) {
         synchronized(listeners) {
             listeners.putIfAbsent(listener);
+            Logger.getLogger(TestMethodFinderImpl.class.getName()).info("Listener added: " + listener);
         }
     }
 

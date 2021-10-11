@@ -43,6 +43,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -218,14 +219,18 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                                 return suite2infos.values();
                             };
                             testMethodsListener.compareAndSet(null, (fo, methods) -> {
+                                Logger.getLogger(WorkspaceServiceImpl.class.getName()).info("FileObject reindexed: " + fo.getPath());
                                 try {
                                     for (TestSuiteInfo testSuiteInfo : f.apply(fo, methods)) {
                                         client.notifyTestProgress(new TestProgressParams(Utils.toUri(fo), testSuiteInfo));
                                     }
                                 } catch (Exception e) {
+                                    Logger.getLogger(WorkspaceServiceImpl.class.getName()).severe(e.getMessage());
+                                    Exceptions.printStackTrace(e);
                                     testMethodsListener.set(null);
                                 }
                             });
+                            Logger.getLogger(WorkspaceServiceImpl.class.getName()).info("Attaching listener: " + testMethodsListener.get());
                             Map<FileObject, Collection<TestMethodController.TestMethod>> testMethods = TestMethodFinder.findTestMethods(testRoots, testMethodsListener.get());
                             Collection<TestSuiteInfo> suites = new ArrayList<>(testMethods.size());
                             for (Entry<FileObject, Collection<TestMethodController.TestMethod>> entry : testMethods.entrySet()) {

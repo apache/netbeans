@@ -181,8 +181,10 @@ public class TestSession {
                 output.clear();
             }
         }
-        suiteIdxs.push(testSuites.size());
-        testSuites.add(suite);
+        synchronized (this) {
+            suiteIdxs.push(testSuites.size());
+            testSuites.add(suite);
+        }
     }
 
     /**
@@ -191,7 +193,7 @@ public class TestSession {
      * @param suite the suite to mark as finished
      * @since 2.26
      */
-    public void finishSuite(TestSuite suite) {
+    public synchronized void finishSuite(TestSuite suite) {
         if (!suiteIdxs.isEmpty() && suite == getCurrentSuite()) {
             suiteIdxs.pop();
         }
@@ -222,7 +224,7 @@ public class TestSession {
      * @return the suite that is currently running or <code>null</code> if 
      * no suite is running.
      */
-    public TestSuite getCurrentSuite() {
+    public synchronized TestSuite getCurrentSuite() {
         return testSuites.isEmpty() ? null : testSuites.get(suiteIdxs.isEmpty() ? testSuites.size() -1 : suiteIdxs.peek());
     }
 

@@ -540,7 +540,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 { language: 'properties', pattern: '**/{application,bootstrap}*.properties' },
                 { language: 'jackpot-hint' }
         ];
-        const enableGroovy : boolean = conf.get("netbeans.groovySupport.enabled") || false;
+        const enableGroovy : boolean = conf.get("netbeans.groovySupport.enabled") || true;
         if (enableGroovy) {
             documentSelectors.push({ language: 'groovy'});
         }

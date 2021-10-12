@@ -301,7 +301,7 @@ public class JSFClientGenerator {
             JSFFrameworkProvider.createFile(target, content, projectEncoding);
         }
 
-        final String facesServletMapping = ConfigurationUtils.getFacesServletMapping(wm);;
+        final String facesServletMapping = ConfigurationUtils.getFacesServletMapping(wm);
         final String busyIconPath = wm.getContextPath() + "/"+ConfigurationUtils.translateURI(facesServletMapping, JSFCRUD_AJAX_BUSY_IMAGE);
         
         if (pagesRootFolder.getFileObject(JSFCRUD_JAVASCRIPT) == null) {

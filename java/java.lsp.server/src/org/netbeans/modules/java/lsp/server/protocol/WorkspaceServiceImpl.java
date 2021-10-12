@@ -174,15 +174,24 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             case Server.JAVA_GET_PROJECT_PACKAGES: {
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 boolean srcOnly = params.getArguments().size() > 1 ? ((JsonPrimitive) params.getArguments().get(1)).getAsBoolean() : false;
-                return getSourceRoots(uri, JavaProjectConstants.SOURCES_TYPE_JAVA).thenApply(roots -> {
-                    HashSet<String> packages = new HashSet<>();
-                    EnumSet<ClassIndex.SearchScope> scope = srcOnly ? EnumSet.of(ClassIndex.SearchScope.SOURCE) : EnumSet.allOf(ClassIndex.SearchScope.class);
-                    for(FileObject root : roots) {
-                        packages.addAll(ClasspathInfo.create(root).getClassIndex().getPackageNames("", false, scope));
+                return getSourceRoots(uri, JavaProjectConstants.SOURCES_TYPE_JAVA).thenCompose(roots -> {
+                    CompletableFuture<Object> future = new CompletableFuture<>();
+                    JavaSource js = JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY));
+                    try {
+                        js.runWhenScanFinished(controller -> {
+                            HashSet<String> packages = new HashSet<>();
+                            EnumSet<ClassIndex.SearchScope> scope = srcOnly ? EnumSet.of(ClassIndex.SearchScope.SOURCE) : EnumSet.allOf(ClassIndex.SearchScope.class);
+                            for(FileObject root : roots) {
+                                packages.addAll(ClasspathInfo.create(root).getClassIndex().getPackageNames("", false, scope));
+                            }
+                            ArrayList<String> ret = new ArrayList<>(packages);
+                            Collections.sort(ret);
+                            future.complete(ret);
+                        }, true);
+                    } catch (IOException ex) {
+                        future.completeExceptionally(ex);
                     }
-                    ArrayList<String> ret = new ArrayList<>(packages);
-                    Collections.sort(ret);
-                    return ret;
+                    return future;
                 });
             }
             case Server.JAVA_LOAD_WORKSPACE_TESTS: {

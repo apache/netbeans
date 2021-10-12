@@ -43,8 +43,10 @@ public class JavaCompletionTask117FeaturesTest extends CompletionTestBase {
     public static NbTestSuite suite() {
         NbTestSuite suite = new NbTestSuite();
         try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-            suite.addTestSuite(JavaCompletionTask117FeaturesTest.class);
+            if(Double.parseDouble(System.getProperty("java.specification.version")) >= 17){
+                SourceVersion.valueOf("RELEASE_17"); //NOI18N
+                suite.addTestSuite(JavaCompletionTask117FeaturesTest.class);
+            }
         } catch (IllegalArgumentException ex) {
             //OK, no RELEASE_13, skip tests
             suite.addTest(new JavaCompletionTask117FeaturesTest("noop")); //NOI18N

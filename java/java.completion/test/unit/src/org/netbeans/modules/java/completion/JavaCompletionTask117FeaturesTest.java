@@ -34,23 +34,13 @@ import org.openide.util.lookup.ServiceProvider;
  */
 public class JavaCompletionTask117FeaturesTest extends CompletionTestBase {
 
-    private static String SOURCE_LEVEL = "17"; //NOI18N
-
     public JavaCompletionTask117FeaturesTest(String testName) {
         super(testName);
     }
 
     public static NbTestSuite suite() {
         NbTestSuite suite = new NbTestSuite();
-        try {
-            if(Double.parseDouble(System.getProperty("java.specification.version")) >= 17){
-                SourceVersion.valueOf("RELEASE_17"); //NOI18N
-                suite.addTestSuite(JavaCompletionTask117FeaturesTest.class);
-            }
-        } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_13, skip tests
-            suite.addTest(new JavaCompletionTask117FeaturesTest("noop")); //NOI18N
-        }
+        suite.addTestSuite(JavaCompletionTask117FeaturesTest.class);
         return suite;
     }
 

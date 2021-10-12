@@ -47,7 +47,7 @@ import * as launchConfigurations from './launchConfigurations';
 
 const API_VERSION : string = "1.0";
 let client: Promise<LanguageClient>;
-let testAdapter: NbTestAdapter | null = null;
+let testAdapter: NbTestAdapter | undefined;
 let nbProcess : ChildProcess | null = null;
 let debugPort: number = -1;
 let consoleLog: boolean = !!process.env['ENABLE_CONSOLE_LOG'];
@@ -345,9 +345,6 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     // register completions:
     launchConfigurations.registerCompletion(context);
 
-    // register TestAdapter
-    context.subscriptions.push(testAdapter = new NbTestAdapter(client));
-
     return Object.freeze({
         version : API_VERSION
     });
@@ -590,6 +587,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         handleLog(log, 'Language Client: Starting');
         c.start();
         c.onReady().then(() => {
+            testAdapter = new NbTestAdapter();
             c.onNotification(StatusMessageRequest.type, showStatusBarMessage);
             c.onNotification(LogMessageNotification.type, (param) => handleLog(log, param.message));
             c.onRequest(QuickPickRequest.type, async param => {
@@ -704,6 +702,10 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
 }
 
 function stopClient(clinetPromise: Promise<LanguageClient>): Thenable<void> {
+    if (testAdapter) {
+        testAdapter.dispose();
+        testAdapter = undefined;
+    }
     return clinetPromise ? clinetPromise.then(c => c.stop()) : Promise.resolve();
 }
 

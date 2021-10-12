@@ -30,13 +30,13 @@ export class NbTestAdapter {
     private currentRun: TestRun | undefined;
     private itemsToRun: Set<TestItem> | undefined;
 
-    constructor(client: Promise<LanguageClient>) {
+    constructor() {
         this.testController = tests.createTestController('apacheNetBeansController', 'Apache NetBeans');
         const runHandler = (request: TestRunRequest, cancellation: CancellationToken) => this.run(request, cancellation);
         this.testController.createRunProfile('Run Tests', TestRunProfileKind.Run, runHandler);
         this.testController.createRunProfile('Debug Tests', TestRunProfileKind.Debug, runHandler);
         this.disposables.push(this.testController);
-        client.then(async () => await this.load());
+        this.load();
     }
 
     async load(): Promise<void> {

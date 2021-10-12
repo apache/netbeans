@@ -352,10 +352,10 @@ public abstract class NbLaunchDelegate {
         Object envObj = launchArguments.get("env");
         Map<String, String> env = envObj != null ? (Map<String, String>) envObj : Collections.emptyMap();
         ExplicitProcessParameters.Builder bld = ExplicitProcessParameters.builder();
-        if (!args.isEmpty()) {
+        if (!vmArgs.isEmpty()) {
             bld.launcherArgs(vmArgs);
         }
-        if (!vmArgs.isEmpty()) {
+        if (!args.isEmpty()) {
             bld.args(args);
         }
         bld.replaceArgs(false);

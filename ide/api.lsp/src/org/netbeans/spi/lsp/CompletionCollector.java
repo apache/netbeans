@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javax.swing.text.Document;
@@ -352,6 +354,17 @@ public interface CompletionCollector {
                     this.completeExceptionally(ex);
                 }
                 return super.get();
+            }
+
+            @Override
+            public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+                CompletableFuture.supplyAsync(supplier).thenAccept(t -> {
+                    this.complete(t);
+                }).exceptionally(ex -> {
+                    this.completeExceptionally(ex);
+                    return null;
+                });
+                return super.get(timeout, unit);
             }
         }
     }

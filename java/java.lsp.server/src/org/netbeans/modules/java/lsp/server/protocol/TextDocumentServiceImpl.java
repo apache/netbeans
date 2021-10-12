@@ -20,6 +20,7 @@ package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.MethodTree;
@@ -49,6 +50,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -81,6 +83,8 @@ import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.CompletionItemTag;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
+import org.eclipse.lsp4j.ConfigurationItem;
+import org.eclipse.lsp4j.ConfigurationParams;
 import org.eclipse.lsp4j.CreateFile;
 import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Diagnostic;
@@ -223,6 +227,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     
     private static final String COMMAND_RUN_SINGLE = "java.run.single";         // NOI18N
     private static final String COMMAND_DEBUG_SINGLE = "java.debug.single";     // NOI18N
+    private static final String NETBEANS_JAVADOC_LOAD_TIMEOUT = "netbeans.javadoc.load.timeout";// NOI18N
     
     private static final RequestProcessor BACKGROUND_TASKS = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
     private static final RequestProcessor WORKER = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
@@ -271,6 +276,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
     }
 
+    private final AtomicInteger javadocTimeout = new AtomicInteger(-1);
     private List<Completion> lastCompletions = null;
 
     @Override
@@ -284,6 +290,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
         try {
             String uri = params.getTextDocument().getUri();
+            ConfigurationItem conf = new ConfigurationItem();
+            conf.setScopeUri(uri);
+            conf.setSection(NETBEANS_JAVADOC_LOAD_TIMEOUT);
+            client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenAccept(c -> {
+                if (c != null && !c.isEmpty()) {
+                    javadocTimeout.set(((JsonPrimitive)c.get(0)).getAsInt());
+                }
+            });
             FileObject file = fromURI(uri);
             if (file == null) {
                 return CompletableFuture.completedFuture(Either.forRight(completionList));
@@ -380,8 +394,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         this.client = (NbCodeLanguageClient)client;
     }
 
-    private static final RequestProcessor JAVADOC_WORKER = new RequestProcessor(TextDocumentServiceImpl.class.getName() + ".javadoc", 1);
-
     @Override
     public CompletableFuture<CompletionItem> resolveCompletionItem(CompletionItem ci) {
         JsonObject rawData = (JsonObject) ci.getData();
@@ -392,24 +404,12 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 FileObject file = fromURI(data.uri);
                 if (file != null) {
                     CompletableFuture<CompletionItem> result = new CompletableFuture<>();
-                    JAVADOC_WORKER.post(() -> {
+                    BACKGROUND_TASKS.post(() -> {
                         if (completion.getDetail() != null) {
                             try {
                                 String detail = completion.getDetail().get();
                                 if (detail != null) {
                                     ci.setDetail(detail);
-                                }
-                            } catch (Exception ex) {
-                            }
-                        }
-                        if (completion.getDocumentation() != null) {
-                            try {
-                                String documentation = completion.getDocumentation().get();
-                                if (documentation != null) {
-                                    MarkupContent markup = new MarkupContent();
-                                    markup.setKind("markdown");
-                                    markup.setValue(html2MD(documentation));
-                                    ci.setDocumentation(markup);
                                 }
                             } catch (Exception ex) {
                             }
@@ -421,6 +421,22 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                     ci.setAdditionalTextEdits(additionalTextEdits.stream().map(ed -> {
                                         return new TextEdit(new Range(Utils.createPosition(file, ed.getStartOffset()), Utils.createPosition(file, ed.getEndOffset())), ed.getNewText());
                                     }).collect(Collectors.toList()));
+                                }
+                            } catch (Exception ex) {
+                            }
+                        }
+                        if (completion.getDocumentation() != null) {
+                            try {
+                                int timeout = javadocTimeout.get();
+                                String documentation = timeout < 0
+                                        ? completion.getDocumentation().get()
+                                        : timeout == 0 ? completion.getDocumentation().getNow(null)
+                                        : completion.getDocumentation().get(timeout, TimeUnit.MILLISECONDS);
+                                if (documentation != null) {
+                                    MarkupContent markup = new MarkupContent();
+                                    markup.setKind("markdown");
+                                    markup.setValue(html2MD(documentation));
+                                    ci.setDocumentation(markup);
                                 }
                             } catch (Exception ex) {
                             }

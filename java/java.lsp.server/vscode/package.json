@@ -90,6 +90,11 @@
 					"type": "boolean",
 					"default": true,
 					"description": "Enables experimental Groovy and Spock support in Language Server"
+				},
+				"netbeans.javadoc.load.timeout": {
+					"type": "integer",
+					"default": 100,
+					"description": "Timeout (in milliseconds) for loading Javadoc in code completion (-1 for unlimited)"
 				}
 			}
 		},

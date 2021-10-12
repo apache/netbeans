@@ -290,14 +290,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
         try {
             String uri = params.getTextDocument().getUri();
-            ConfigurationItem conf = new ConfigurationItem();
-            conf.setScopeUri(uri);
-            conf.setSection(NETBEANS_JAVADOC_LOAD_TIMEOUT);
-            client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenAccept(c -> {
-                if (c != null && !c.isEmpty()) {
-                    javadocTimeout.set(((JsonPrimitive)c.get(0)).getAsInt());
-                }
-            });
             FileObject file = fromURI(uri);
             if (file == null) {
                 return CompletableFuture.completedFuture(Either.forRight(completionList));
@@ -307,65 +299,73 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             if (!(doc instanceof LineDocument)) {
                 return CompletableFuture.completedFuture(Either.forRight(completionList));
             }
-            final int caret = Utils.getOffset((LineDocument) doc, params.getPosition());
-            List<CompletionItem> items = new ArrayList<>();
-            Completion.Context context = params.getContext() != null
-                    ? new Completion.Context(Completion.TriggerKind.valueOf(params.getContext().getTriggerKind().name()),
-                            params.getContext().getTriggerCharacter() == null || params.getContext().getTriggerCharacter().isEmpty() ? null : params.getContext().getTriggerCharacter().charAt(0))
-                    : null;
-            boolean isComplete = Completion.collect(doc, caret, context, completion -> {
-                CompletionItem item = new CompletionItem(completion.getLabel());
-                if (completion.getKind() != null) {
-                    item.setKind(CompletionItemKind.valueOf(completion.getKind().name()));
+            ConfigurationItem conf = new ConfigurationItem();
+            conf.setScopeUri(uri);
+            conf.setSection(NETBEANS_JAVADOC_LOAD_TIMEOUT);
+            return client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenApply(c -> {
+                if (c != null && !c.isEmpty()) {
+                    javadocTimeout.set(((JsonPrimitive)c.get(0)).getAsInt());
                 }
-                if (completion.getTags() != null) {
-                    item.setTags(completion.getTags().stream().map(tag -> CompletionItemTag.valueOf(tag.name())).collect(Collectors.toList()));
-                }
-                if (completion.getDetail() != null && completion.getDetail().isDone()) {
-                    item.setDetail(completion.getDetail().getNow(null));
-                }
-                if (completion.getDocumentation() != null && completion.getDocumentation().isDone()) {
-                    String documentation = completion.getDocumentation().getNow(null);
-                    if (documentation != null) {
-                        MarkupContent markup = new MarkupContent();
-                        markup.setKind("markdown");
-                        markup.setValue(html2MD(documentation));
-                        item.setDocumentation(markup);
+                final int caret = Utils.getOffset((LineDocument) doc, params.getPosition());
+                List<CompletionItem> items = new ArrayList<>();
+                Completion.Context context = params.getContext() != null
+                        ? new Completion.Context(Completion.TriggerKind.valueOf(params.getContext().getTriggerKind().name()),
+                                params.getContext().getTriggerCharacter() == null || params.getContext().getTriggerCharacter().isEmpty() ? null : params.getContext().getTriggerCharacter().charAt(0))
+                        : null;
+                boolean isComplete = Completion.collect(doc, caret, context, completion -> {
+                    CompletionItem item = new CompletionItem(completion.getLabel());
+                    if (completion.getKind() != null) {
+                        item.setKind(CompletionItemKind.valueOf(completion.getKind().name()));
                     }
-                }
-                if (completion.isPreselect()) {
-                    item.setPreselect(true);
-                }
-                item.setSortText(completion.getSortText());
-                item.setFilterText(completion.getFilterText());
-                item.setInsertText(completion.getInsertText());
-                if (completion.getInsertTextFormat() != null) {
-                    item.setInsertTextFormat(InsertTextFormat.valueOf(completion.getInsertTextFormat().name()));
-                }
-                org.netbeans.api.lsp.TextEdit edit = completion.getTextEdit();
-                if (edit != null) {
-                    item.setTextEdit(new TextEdit(new Range(Utils.createPosition(file, edit.getStartOffset()), Utils.createPosition(file, edit.getEndOffset())), edit.getNewText()));
-                }
-                if (completion.getAdditionalTextEdits() != null && completion.getAdditionalTextEdits().isDone()) {
-                    List<org.netbeans.api.lsp.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().getNow(null);
-                    if (additionalTextEdits != null && !additionalTextEdits.isEmpty()) {
-                        item.setAdditionalTextEdits(additionalTextEdits.stream().map(ed -> {
-                            return new TextEdit(new Range(Utils.createPosition(file, ed.getStartOffset()), Utils.createPosition(file, ed.getEndOffset())), ed.getNewText());
-                        }).collect(Collectors.toList()));
+                    if (completion.getTags() != null) {
+                        item.setTags(completion.getTags().stream().map(tag -> CompletionItemTag.valueOf(tag.name())).collect(Collectors.toList()));
                     }
+                    if (completion.getDetail() != null && completion.getDetail().isDone()) {
+                        item.setDetail(completion.getDetail().getNow(null));
+                    }
+                    if (completion.getDocumentation() != null && completion.getDocumentation().isDone()) {
+                        String documentation = completion.getDocumentation().getNow(null);
+                        if (documentation != null) {
+                            MarkupContent markup = new MarkupContent();
+                            markup.setKind("markdown");
+                            markup.setValue(html2MD(documentation));
+                            item.setDocumentation(markup);
+                        }
+                    }
+                    if (completion.isPreselect()) {
+                        item.setPreselect(true);
+                    }
+                    item.setSortText(completion.getSortText());
+                    item.setFilterText(completion.getFilterText());
+                    item.setInsertText(completion.getInsertText());
+                    if (completion.getInsertTextFormat() != null) {
+                        item.setInsertTextFormat(InsertTextFormat.valueOf(completion.getInsertTextFormat().name()));
+                    }
+                    org.netbeans.api.lsp.TextEdit edit = completion.getTextEdit();
+                    if (edit != null) {
+                        item.setTextEdit(new TextEdit(new Range(Utils.createPosition(file, edit.getStartOffset()), Utils.createPosition(file, edit.getEndOffset())), edit.getNewText()));
+                    }
+                    if (completion.getAdditionalTextEdits() != null && completion.getAdditionalTextEdits().isDone()) {
+                        List<org.netbeans.api.lsp.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().getNow(null);
+                        if (additionalTextEdits != null && !additionalTextEdits.isEmpty()) {
+                            item.setAdditionalTextEdits(additionalTextEdits.stream().map(ed -> {
+                                return new TextEdit(new Range(Utils.createPosition(file, ed.getStartOffset()), Utils.createPosition(file, ed.getEndOffset())), ed.getNewText());
+                            }).collect(Collectors.toList()));
+                        }
+                    }
+                    if (completion.getCommitCharacters() != null) {
+                        item.setCommitCharacters(completion.getCommitCharacters().stream().map(ch -> ch.toString()).collect(Collectors.toList()));
+                    }
+                    lastCompletions.add(completion);
+                    item.setData(new CompletionData(uri, index.getAndIncrement()));
+                    items.add(item);
+                });
+                if (!isComplete) {
+                    completionList.setIsIncomplete(true);
                 }
-                if (completion.getCommitCharacters() != null) {
-                    item.setCommitCharacters(completion.getCommitCharacters().stream().map(ch -> ch.toString()).collect(Collectors.toList()));
-                }
-                lastCompletions.add(completion);
-                item.setData(new CompletionData(uri, index.getAndIncrement()));
-                items.add(item);
+                completionList.setItems(items);
+                return Either.forRight(completionList);
             });
-            if (!isComplete) {
-                completionList.setIsIncomplete(true);
-            }
-            completionList.setItems(items);
-            return CompletableFuture.completedFuture(Either.forRight(completionList));
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
@@ -404,7 +404,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 FileObject file = fromURI(data.uri);
                 if (file != null) {
                     CompletableFuture<CompletionItem> result = new CompletableFuture<>();
-                    BACKGROUND_TASKS.post(() -> {
+                    WORKER.post(() -> {
                         if (completion.getDetail() != null) {
                             try {
                                 String detail = completion.getDetail().get();

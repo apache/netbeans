@@ -1751,7 +1751,7 @@ public class Utilities {
         }
     }
 
-    private static final Set<String> PRIMITIVE_NAMES = new HashSet<String>(7);
+    private static final Set<String> PRIMITIVE_NAMES = new HashSet<String>(8);
     
     static {
         PRIMITIVE_NAMES.add("java.lang.Integer"); // NOI18N

@@ -22,11 +22,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.netbeans.modules.csl.api.Error;
-import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.StructureItem;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.Snapshot;
-import org.snakeyaml.engine.v2.nodes.Node;
 
 /**
  * A result from Parsing YAML
@@ -35,22 +33,19 @@ import org.snakeyaml.engine.v2.nodes.Node;
  */
 public class YamlParserResult extends ParserResult {
 
-    private final List<Error> errors = new ArrayList<Error>();
-    private List<Node> nodes;
-    private List<? extends StructureItem> items;
+    private final List<Error> errors = new ArrayList<>();
+    private final List<StructureItem> structure = new ArrayList<>();
 
-    public YamlParserResult(List<Node> nodes, YamlParser parser, Snapshot snapshot, boolean valid) {
+    public YamlParserResult(Snapshot snapshot, boolean valid) {
         super(snapshot);
-        assert nodes != null;
-        this.nodes = nodes;
-    }
-
-    public List<Node> getRootNodes() {
-        return nodes;
     }
 
     public void addError(Error error) {
         errors.add(error);
+    }
+
+    public void addStructure(List<? extends StructureItem> items) {
+        structure.addAll(items);
     }
 
     @Override
@@ -65,20 +60,7 @@ public class YamlParserResult extends ParserResult {
     }
 
     public synchronized List<? extends StructureItem> getItems() {
-        if (items == null) {
-            items = new YamlScanner().scanStructure(this);
-        }
-
-        return items;
+        return structure;
     }
 
-    public void setItems(List<? extends StructureItem> items) {
-        this.items = items;
-    }
-
-    public static OffsetRange getAstRange(Node node) {
-        int s = node.getStartMark().get().getPointer();
-        int e = node.getEndMark().get().getPointer();
-        return new OffsetRange(s, e);
-    }
 }

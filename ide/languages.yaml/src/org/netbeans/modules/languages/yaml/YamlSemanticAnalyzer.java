@@ -20,23 +20,15 @@ package org.netbeans.modules.languages.yaml;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.SemanticAnalyzer;
+import org.netbeans.modules.csl.api.StructureItem;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
-import org.snakeyaml.engine.v2.nodes.MappingNode;
-import org.snakeyaml.engine.v2.nodes.Node;
-import org.snakeyaml.engine.v2.nodes.NodeTuple;
-
-import static org.snakeyaml.engine.v2.nodes.NodeType.*;
-import org.snakeyaml.engine.v2.nodes.ScalarNode;
-import org.snakeyaml.engine.v2.nodes.SequenceNode;
 
 /**
  * Semantic Analyzer for YAML
@@ -85,54 +77,47 @@ public class YamlSemanticAnalyzer extends SemanticAnalyzer {
         }
 
         YamlParserResult ypr = (YamlParserResult) result;
-        if (ypr == null || ypr.getRootNodes().isEmpty()) {
+        if (ypr == null || ypr.getItems().isEmpty()) {
             this.semanticHighlights = Collections.emptyMap();
             return;
         }
 
-        List<Node> rootNodes = ypr.getRootNodes();
-
         Map<OffsetRange, Set<ColoringAttributes>> highlights =
                 new HashMap<OffsetRange, Set<ColoringAttributes>>(100);
 
-        IdentityHashMap<Object, Boolean> seen = new IdentityHashMap<Object, Boolean>(100);
-        for (Node root : rootNodes) {
-            addHighlights(ypr, root, highlights, seen, 0);
+        for (StructureItem item : ypr.getItems()) {
+            YamlStructureItem yamlItem = (YamlStructureItem) item;
+            addHighlights(yamlItem, highlights);
         }
 
         this.semanticHighlights = highlights;
     }
 
-    private void addHighlights(YamlParserResult ypr, Node node, Map<OffsetRange, Set<ColoringAttributes>> highlights, IdentityHashMap<Object, Boolean> seen, int depth) {
-        if (depth > 10 || node == null) {
-            // Avoid boundless recursion; some datastructures from YAML appear to be recursive
-            return;
-        }
-        if (seen.containsKey(node)) {
-            return;
-        }
-        seen.put(node, Boolean.TRUE);
-
-        switch (node.getNodeType()) {
-            case MAPPING:
-                MappingNode mappings = (MappingNode) node;
-                List<NodeTuple> tuples = mappings.getValue();
-                for (NodeTuple tuple : tuples) {
-                    addHighlights(ypr, tuple.getValueNode(), highlights, seen, depth + 1);
-                }
-                break;
+    private void addHighlights(YamlStructureItem item, Map<OffsetRange, Set<ColoringAttributes>> highlights) {
+        switch (item.getType()) {
+            case MAP:                
             case SEQUENCE:
-                SequenceNode sequence = (SequenceNode) node;
-                List<Node> nodes = sequence.getValue();
-                for (Node node1 : nodes) {
-                    addHighlights(ypr, node, highlights, seen, depth + 1);
+                YamlStructureItem.Collection coll = (YamlStructureItem.Collection) item;
+                for (YamlStructureItem child : coll.getChildren()) {
+                    addHighlights(child, highlights);
                 }
                 break;
-            case SCALAR:
-                ScalarNode scalar = (ScalarNode) node;
-                OffsetRange range = YamlParserResult.getAstRange(scalar);
-                highlights.put(range, ColoringAttributes.METHOD_SET);
+            case MAPPING:
+                YamlStructureItem.MapEntry entry = (YamlStructureItem.MapEntry) item;
+                if (entry.keyItem.getType() == YamlStructureItem.NodeType.SCALAR) {
+                    highlights.put(getAstRange(entry.keyItem), ColoringAttributes.METHOD_SET);
+                } else {
+                    addHighlights(entry.keyItem, highlights);
+                }
+                addHighlights(entry.valueItem, highlights);
                 break;
         }
     }
+
+    private static OffsetRange getAstRange(YamlStructureItem item) {
+        int s = (int) item.getPosition();
+        int e = (int) item.getEndPosition();
+        return new OffsetRange(s, e);
+    }
+
 }

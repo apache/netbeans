@@ -34,7 +34,7 @@ public class NbRepositoryCacheTest {
      */
     @Test
     public void testConstants() throws Exception {
-        Class cl = Class.forName("org.eclipse.aether.internal.impl.DataPool");
+        Class cl = Class.forName("org.eclipse.aether.internal.impl.collect.DataPool");
         assertNotNull("The constant value has changed most likely", cl);
     }
 

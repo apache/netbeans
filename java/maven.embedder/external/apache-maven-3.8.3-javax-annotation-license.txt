@@ -1,9 +1,9 @@
 Name: JSR-250 Common Annotations for the JavaTM Platform
 Description: Part of Apache Maven Distribution
-Version: 3.6.3
+Version: 3.8.3
 License: CDDL-1.0
 Origin: Apache Software Foundation
-Files: apache-maven-3.6.3-bin.zip!/apache-maven-3.6.3/lib/jsr250-api-1.0.jar
+Files: apache-maven-3.8.3-bin.zip!/apache-maven-3.8.3/lib/javax.annotation-api-1.2.jar
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
 

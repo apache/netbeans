@@ -18,8 +18,8 @@
  */
 package org.netbeans.modules.languages.yaml;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,26 +31,23 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.Severity;
+import org.netbeans.modules.csl.api.StructureItem;
 import org.netbeans.modules.csl.spi.DefaultError;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Task;
 import org.netbeans.modules.parsing.spi.ParseException;
-import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
 import org.openide.util.NbBundle;
-import org.snakeyaml.engine.v2.api.LoadSettings;
-import org.snakeyaml.engine.v2.composer.Composer;
-import org.snakeyaml.engine.v2.nodes.Node;
-import org.snakeyaml.engine.v2.parser.ParserImpl;
-import org.snakeyaml.engine.v2.scanner.ScannerImpl;
-import org.snakeyaml.engine.v2.scanner.StreamReader;
+import org.snakeyaml.engine.v2.exceptions.MarkedYamlEngineException;
+import org.snakeyaml.engine.v2.exceptions.ParserException;
+import org.snakeyaml.engine.v2.exceptions.ScannerException;
 
 /**
  * Parser for YAML. Delegates to the YAML parser shipped with JRuby (jvyamlb)
  *
  * @author Tor Norbye
  */
-public class YamlParser extends Parser {
+public class YamlParser extends org.netbeans.modules.parsing.spi.Parser {
 
     private static final Logger LOGGER = Logger.getLogger(YamlParser.class.getName());
     /**
@@ -93,7 +90,7 @@ public class YamlParser extends Parser {
     }
 
     private YamlParserResult resultForTooLargeFile(Snapshot snapshot) {
-        YamlParserResult result = new YamlParserResult(Collections.<Node>emptyList(), this, snapshot, false);
+        YamlParserResult result = new YamlParserResult(snapshot, false);
         // FIXME this can violate contract of DefaultError (null fo)
         DefaultError error = new DefaultError(null, NbBundle.getMessage(YamlParser.class, "TooLarge"), null,
                 snapshot.getSource().getFileObject(), 0, 0, Severity.WARNING);
@@ -102,68 +99,56 @@ public class YamlParser extends Parser {
     }
 
     // package private for unit tests
-    static String replacePhpFragments(String source) {
+    static void replaceWithSpaces(StringBuilder source, String startToken, String endToken) {
+        int startReplace = source.indexOf(startToken);
+        if (startReplace == -1) {
+            return;
+        }
+
+        while (startReplace > -1) {
+            int endReplace = source.indexOf(endToken, startReplace) + 1;
+            if (endReplace > startReplace) {
+                for (int i = startReplace; i <= endReplace; i++) {
+                    source.setCharAt(i, ' ');
+                }
+                startReplace = source.indexOf(startToken, endReplace);
+            } else {
+                startReplace = -1;
+            }
+        }
+    }
+    
+    static void replacePhpFragments(StringBuilder source) {
         // this is a hack. The right solution would be to create a toplevel language, which
         // will have embeded yaml and php.
         // This code replaces php fragments with space, because jruby parser fails
         // on this.
-        int startReplace = source.indexOf("<?");
-        if (startReplace == -1) {
-            return source;
-        }
-
-        StringBuilder result = new StringBuilder(source);
-
-        while (startReplace > -1) {
-            int endReplace = result.indexOf("?>", startReplace);
-            if (endReplace > -1) {
-                endReplace = endReplace + 1;
-                StringBuilder spaces = new StringBuilder(endReplace - startReplace);
-                for (int i = 0; i <= endReplace - startReplace; i++) {
-                    spaces.append(' ');
-                }
-                result.replace(startReplace, endReplace + 1, spaces.toString());
-                startReplace = result.indexOf("<?", endReplace);
-            } else {
-                startReplace = -1;
-            }
-        }
-        return result.toString();
+        replaceWithSpaces(source, "<?", "?>");
     }
 
-    static String replaceMustache(String source) {
+    static void replaceMustache(StringBuilder source) {
         // this is a hack. The right solution would be to create a toplevel language, which
         // will have embeded yaml and something.
         // This code replaces mouthstache fragments with space.
-        int startReplace = source.indexOf("{{");
-        if (startReplace == -1) {
-            return source;
-        }
-
-        StringBuilder result = new StringBuilder(source);
-
-        while (startReplace > -1) {
-            int endReplace = result.indexOf("}}", startReplace);
-            if (endReplace > -1) {
-                endReplace = endReplace + 1;
-                StringBuilder spaces = new StringBuilder(endReplace - startReplace);
-                for (int i = 0; i <= endReplace - startReplace; i++) {
-                    spaces.append(' ');
-                }
-                result.replace(startReplace, endReplace + 1, spaces.toString());
-                startReplace = result.indexOf("{{", endReplace);
-            } else {
-                startReplace = -1;
-            }
-        }
-        return result.toString();
+        replaceWithSpaces(source, "{{", "}}");
     }
 
-    private static String replaceCommonSpecialCharacters(String source) {
-        source = source.replace('@', '_'); //NOI18N
-        source = source.replace('?', '_'); //NOI18N
-        source = source.replaceAll("!(?!(omap|!omap))", "_"); //NOI18N
-        return source;
+    final static Pattern[] SPEC_PATTERN_REPLACEMENTS = new Pattern[]{
+        Pattern.compile("@"),
+        Pattern.compile("\\?"),
+        Pattern.compile("!(?!(omap|!omap))"),};
+
+    private static void replaceCommonSpecialCharacters(StringBuilder source) {
+
+        for (int i = 0; i < SPEC_PATTERN_REPLACEMENTS.length; i++) {
+            Pattern pattern = SPEC_PATTERN_REPLACEMENTS[i];
+            Matcher m = pattern.matcher(source);
+            while (m.find()) {
+                for (int idx = m.start(); idx < m.end(); idx++) {
+                    source.setCharAt(idx, '_');
+                }
+            }
+        }
     }
 
     private static String replaceInlineRegexBrackets(String source) {
@@ -180,43 +165,55 @@ public class YamlParser extends Parser {
     }
 
     // for test package private
+    YamlParserResult parse(String src, Snapshot snapshot) {
 
-    YamlParserResult parse(String source, Snapshot snapshot) {
-
-        source = replacePhpFragments(source);
-        source = replaceMustache(source);
-        source = replaceCommonSpecialCharacters(source);
-        source = replaceInlineRegexBrackets(source);
-
-        List<Node> nodes = new ArrayList<Node>();
-        try {
-            if (isTooLarge(source)) {
-                return resultForTooLargeFile(snapshot);
-            }
-            LoadSettings settings = LoadSettings.builder().build();
-            ScannerImpl scanner = new ScannerImpl(settings, new StreamReader(settings, source));
-            ParserImpl parser = new ParserImpl(settings, scanner);
-            Composer composer = new Composer(settings, parser);
-            
-            while (composer.hasNext()) {
-                Node node = composer.next();
-                if (node == null) {
-                    break;
-                }
-                nodes.add(node);
-            }
-            //TODO: add errors
-            YamlParserResult result = new YamlParserResult(nodes, this, snapshot, true);
-            return result;
-        } catch (Exception ex) {
-            YamlParserResult result = new YamlParserResult(Collections.<Node>emptyList(), this, snapshot, false);
-            String message = ex.getMessage();
-            if (message != null && message.length() > 0) {
-                result.addError(processError(message, snapshot, 0));
-            }
-            return result;
+        if (isTooLarge(src)) {
+            return resultForTooLargeFile(snapshot);
         }
-    }
+
+        StringBuilder sb = new StringBuilder(src);
+        replacePhpFragments(sb);
+        replaceMustache(sb);
+        replaceCommonSpecialCharacters(sb);
+//        source = replaceInlineRegexBrackets(source);
+
+        YamlParserResult result = new YamlParserResult(snapshot, false);
+
+        Deque<YamlSection> sources = new LinkedList<>();
+        sources.push(new YamlSection(sb.toString()));
+        while (!sources.isEmpty()) {
+            
+            YamlSection section = sources.pop();
+            try {
+                List<?  extends StructureItem> items = section.collectItems();
+                result.addStructure(items);
+            } catch (ScannerException se) {
+                result.addError(section.processScannerException(snapshot, se));
+                YamlSection after = section.after(se.getProblemMark().get().getIndex());
+                YamlSection before = section.before(se.getContextMark().get().getIndex());
+                if (!after.isEmpty()) sources.push(after);
+                if (!before.isEmpty()) sources.push(before);
+                if ((before.getLength() + after.getLength()) == section.getLength()) {
+                    LOGGER.info("Chanche to loop forever");
+                }
+            } catch (ParserException pe ){
+                result.addError(section.processParserException(snapshot, pe));
+                YamlSection after = section.after(pe.getProblemMark().get().getIndex());
+                YamlSection before = section.before(pe.getProblemMark().get().getIndex());
+                if (!after.isEmpty()) sources.push(after);
+                if (!before.isEmpty()) sources.push(before);
+                if ((before.getLength() + after.getLength()) == section.getLength()) {
+                    LOGGER.info("Chanche to loop forever");
+                }
+            } catch (Exception ex) {
+                String message = ex.getMessage();
+                if (message != null && message.length() > 0) {
+                    result.addError(processError(message, snapshot, 0));
+                }
+            }
+        }
+        return result;
+    }    
 
     private DefaultError processError(String message, Snapshot snapshot, int pos) {
         // Strip off useless prefixes to make errors more readable
@@ -294,7 +291,7 @@ public class YamlParser extends Parser {
 
             lastResult = parse(source, snapshot);
         } catch (Exception ioe) {
-            lastResult = new YamlParserResult(Collections.<Node>emptyList(), this, snapshot, false);
+            lastResult = new YamlParserResult(snapshot, false);
         }
     }
 }

@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.languages.yaml;
 
-import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -103,7 +102,6 @@ public class YamlParser extends org.netbeans.modules.parsing.spi.Parser {
         if (startReplace == -1) {
             return;
         }
-
         while (startReplace > -1) {
             int endReplace = source.indexOf(endToken, startReplace) + 1;
             if (endReplace > startReplace) {
@@ -178,28 +176,45 @@ public class YamlParser extends org.netbeans.modules.parsing.spi.Parser {
 
         YamlParserResult result = new YamlParserResult(snapshot);
 
-        Deque<YamlSection> sources = new LinkedList<>();
+        LinkedList<YamlSection> sources = new LinkedList<>();
         sources.push(new YamlSection(sb.toString()));
+        int sourceLength = Integer.MAX_VALUE;
+        int stallCounter = 0;
         while (!sources.isEmpty()) {
+            int len = 0;
+            for (YamlSection source : sources) {
+                len += source.length();
+            }
             
-            YamlSection section = sources.pop();
-            try {
-                List<?  extends StructureItem> items = section.collectItems();
-                result.addStructure(items);
-            } catch (ScannerException se) {
-                result.addError(section.processScannerException(snapshot, se));
-//                YamlSection after = section.after(se.getProblemMark().get().getIndex());
-//                YamlSection before = section.before(se.getContextMark().get().getIndex());
-//                if (!after.isEmpty()) sources.push(after);
-//                if (!before.isEmpty()) sources.push(before);
-            } catch (ParserException pe ){
-                result.addError(section.processParserException(snapshot, pe));
-//                sources.addAll(section.splitOnParserException(pe));
-            } catch (Exception ex) {
-                String message = ex.getMessage();
-                if (message != null && message.length() > 0) {
-                    result.addError(processError(message, snapshot, 0));
+            if (len < sourceLength) {
+                sourceLength = len;
+                stallCounter = 0;
+            } else {
+                stallCounter++;
+            }
+            if (stallCounter < 2) {
+                YamlSection section = sources.pop();
+                try {
+                    List<?  extends StructureItem> items = section.collectItems();
+                    result.addStructure(items);
+                } catch (ScannerException se) {
+                    result.addError(section.processException(snapshot, se));
+                    for (YamlSection part : section.splitOnException(se)) {
+                        sources.push(part);
+                    }
+                } catch (ParserException pe ){
+                    result.addError(section.processException(snapshot, pe));
+                    for (YamlSection part : section.splitOnException(pe)) {
+                        sources.push(part);
+                    }
+                } catch (Exception ex) {
+                    String message = ex.getMessage();
+                    if (message != null && message.length() > 0) {
+                        result.addError(processError(message, snapshot, 0));
+                    }
                 }
+            } else {
+                sources.clear();
             }
         }
         return result;

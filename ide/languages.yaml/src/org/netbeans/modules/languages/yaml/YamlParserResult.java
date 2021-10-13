@@ -41,7 +41,16 @@ public class YamlParserResult extends ParserResult {
     }
 
     public void addError(Error error) {
-        errors.add(error);
+        boolean alreadyReported = false;
+        for (Error e : errors) {
+            if ((e.getStartPosition() <= error.getStartPosition()) && (e.getEndPosition() >= error.getStartPosition())) {
+                alreadyReported = true;
+                break;
+            }
+        }
+        if (!alreadyReported) {
+            errors.add(error);
+        }
     }
 
     public void addStructure(List<? extends StructureItem> items) {

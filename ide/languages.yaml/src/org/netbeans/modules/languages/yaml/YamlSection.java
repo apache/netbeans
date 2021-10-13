@@ -180,17 +180,21 @@ public class YamlSection {
         return item;
     }
 
-    DefaultError processScannerException(Snapshot snapshot, ScannerException se) {
-        int contextIndex = getIndex(se.getContextMark());
+    DefaultError processException(Snapshot snapshot, ScannerException se) {
         int problemIndex = getIndex(se.getProblemMark());
-        StringBuilder message = new StringBuilder(se.getContext());
-        message.append(", ").append(se.getProblem());
+        int contextIndex = problemIndex;
+        StringBuilder message = new StringBuilder();
+        if (se.getContext() != null) {
+            contextIndex = getIndex(se.getContextMark());
+            message.append(se.getContext()).append(", ");
+        }
+        message.append(se.getProblem());
         char upper = Character.toUpperCase(message.charAt(0));
         message.setCharAt(0, upper);
         return new DefaultError(null, message.toString(), null, snapshot.getSource().getFileObject(), contextIndex, problemIndex, Severity.ERROR);
     }
 
-    DefaultError processParserException(Snapshot snapshot, ParserException se) {
+    DefaultError processException(Snapshot snapshot, ParserException se) {
         int problemIndex = se.getProblemMark().isPresent() ? getIndex(se.getProblemMark()) : 0;
         int contextIndex = problemIndex;
         StringBuilder message = new StringBuilder();
@@ -204,13 +208,23 @@ public class YamlSection {
         return new DefaultError(null, message.toString(), null, snapshot.getSource().getFileObject(), contextIndex, problemIndex, Severity.ERROR);
     }
 
-    List<YamlSection> splitOnParserException(ParserException pe) {
+    List<YamlSection> splitOnException(ScannerException se) {
+        int problemIndex = se.getProblemMark().get().getIndex();
+        if (se.getContextMark().isPresent()) {
+            int contextIndex = se.getContextMark().get().getIndex();
+            return split(contextIndex, problemIndex);
+        } else {
+            return split(problemIndex, problemIndex);
+        }
+    }
+
+    List<YamlSection> splitOnException(ParserException pe) {
         if (pe.getContextMark().isPresent()) {
             int contextIndex = pe.getContextMark().get().getIndex();
-            return split(contextIndex, contextIndex + 1);
+            return split(contextIndex, contextIndex);
         } else {
             int problemIndex = pe.getProblemMark().get().getIndex();
-            return split(problemIndex, problemIndex + 1);
+            return split(problemIndex, problemIndex);
         }
     }
 
@@ -224,11 +238,11 @@ public class YamlSection {
         if (after.isEmpty()) {
             before = before.trimTail();
         }
-        if (!before.isEmpty()) {
-            ret.add(before);
-        }
         if (!after.isEmpty()) {
             ret.add(after);
+        }
+        if (!before.isEmpty()) {
+            ret.add(before);
         }
         return ret;
     }

@@ -38,7 +38,6 @@ import org.netbeans.modules.parsing.api.Task;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
 import org.openide.util.NbBundle;
-import org.snakeyaml.engine.v2.exceptions.MarkedYamlEngineException;
 import org.snakeyaml.engine.v2.exceptions.ParserException;
 import org.snakeyaml.engine.v2.exceptions.ScannerException;
 
@@ -90,7 +89,7 @@ public class YamlParser extends org.netbeans.modules.parsing.spi.Parser {
     }
 
     private YamlParserResult resultForTooLargeFile(Snapshot snapshot) {
-        YamlParserResult result = new YamlParserResult(snapshot, false);
+        YamlParserResult result = new YamlParserResult(snapshot);
         // FIXME this can violate contract of DefaultError (null fo)
         DefaultError error = new DefaultError(null, NbBundle.getMessage(YamlParser.class, "TooLarge"), null,
                 snapshot.getSource().getFileObject(), 0, 0, Severity.WARNING);
@@ -177,7 +176,7 @@ public class YamlParser extends org.netbeans.modules.parsing.spi.Parser {
         replaceCommonSpecialCharacters(sb);
 //        source = replaceInlineRegexBrackets(source);
 
-        YamlParserResult result = new YamlParserResult(snapshot, false);
+        YamlParserResult result = new YamlParserResult(snapshot);
 
         Deque<YamlSection> sources = new LinkedList<>();
         sources.push(new YamlSection(sb.toString()));
@@ -189,22 +188,13 @@ public class YamlParser extends org.netbeans.modules.parsing.spi.Parser {
                 result.addStructure(items);
             } catch (ScannerException se) {
                 result.addError(section.processScannerException(snapshot, se));
-                YamlSection after = section.after(se.getProblemMark().get().getIndex());
-                YamlSection before = section.before(se.getContextMark().get().getIndex());
-                if (!after.isEmpty()) sources.push(after);
-                if (!before.isEmpty()) sources.push(before);
-                if ((before.getLength() + after.getLength()) == section.getLength()) {
-                    LOGGER.info("Chanche to loop forever");
-                }
+//                YamlSection after = section.after(se.getProblemMark().get().getIndex());
+//                YamlSection before = section.before(se.getContextMark().get().getIndex());
+//                if (!after.isEmpty()) sources.push(after);
+//                if (!before.isEmpty()) sources.push(before);
             } catch (ParserException pe ){
                 result.addError(section.processParserException(snapshot, pe));
-                YamlSection after = section.after(pe.getProblemMark().get().getIndex());
-                YamlSection before = section.before(pe.getProblemMark().get().getIndex());
-                if (!after.isEmpty()) sources.push(after);
-                if (!before.isEmpty()) sources.push(before);
-                if ((before.getLength() + after.getLength()) == section.getLength()) {
-                    LOGGER.info("Chanche to loop forever");
-                }
+//                sources.addAll(section.splitOnParserException(pe));
             } catch (Exception ex) {
                 String message = ex.getMessage();
                 if (message != null && message.length() > 0) {
@@ -291,7 +281,7 @@ public class YamlParser extends org.netbeans.modules.parsing.spi.Parser {
 
             lastResult = parse(source, snapshot);
         } catch (Exception ioe) {
-            lastResult = new YamlParserResult(snapshot, false);
+            lastResult = new YamlParserResult(snapshot);
         }
     }
 }

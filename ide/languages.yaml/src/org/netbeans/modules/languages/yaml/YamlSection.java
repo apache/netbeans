@@ -19,6 +19,7 @@
 package org.netbeans.modules.languages.yaml;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import org.netbeans.modules.csl.api.Severity;
@@ -42,6 +43,7 @@ import org.snakeyaml.engine.v2.scanner.ScannerImpl;
 import org.snakeyaml.engine.v2.scanner.StreamReader;
 
 import static org.netbeans.modules.languages.yaml.YamlStructureItem.NodeType.*;
+
 /**
  *
  * @author lkishalmi
@@ -53,7 +55,7 @@ public class YamlSection {
     final String source;
 
     private Parser parser = null;
-    
+
     YamlSection(int offset, String source) {
         this.offset = offset;
         this.source = source;
@@ -71,14 +73,36 @@ public class YamlSection {
         return new YamlSection(offset + index, source.substring(index));
     }
 
+    public YamlSection trimTail() {
+        int index = source.length() - 1;
+        while ((index > 0) && Character.isWhitespace(source.charAt(index))) {
+            index--;
+        }
+        while ((index > 0) && !Character.isWhitespace(source.charAt(index))) {
+            index--;
+        }
+        return before(index);
+    }
+
+    public YamlSection trimHead() {
+        int index = 0;
+        while ((index < source.length()) && Character.isWhitespace(source.charAt(index))) {
+            index++;
+        }
+        while ((index < source.length()) && !Character.isWhitespace(source.charAt(index))) {
+            index++;
+        }
+        return after(index);
+    }
+
     public boolean isEmpty() {
         return source.isEmpty();
     }
-    
-    public int getLength() {
+
+    public int length() {
         return source.length();
     }
-    
+
     List<? extends StructureItem> collectItems() {
         if (parser != null) {
             throw new IllegalStateException("This YAML segment is already parsed.");
@@ -87,7 +111,7 @@ public class YamlSection {
         ScannerImpl scanner = new ScannerImpl(SETTINGS, new StreamReader(SETTINGS, source));
         parser = new ParserImpl(SETTINGS, scanner);
         while (parser.hasNext()) {
-            YamlStructureItem root = processItem(); 
+            YamlStructureItem root = processItem();
             if (root != null) {
                 ret.addAll(root.getNestedItems());
             }
@@ -123,10 +147,9 @@ public class YamlSection {
     }
 
     private YamlStructureItem processScalar(ScalarEvent evt) {
-        return new YamlStructureItem.Simple(SCALAR,evt.getValue(), getIndex(evt.getStartMark()), getIndex(evt.getEndMark()));
+        return new YamlStructureItem.Simple(SCALAR, evt.getValue(), getIndex(evt.getStartMark()), getIndex(evt.getEndMark()));
     }
 
-    
     private YamlStructureItem processMapping(MappingStartEvent evt) {
         YamlStructureItem.Collection item = new YamlStructureItem.Collection(MAP, getIndex(evt.getStartMark()));
         while (parser.hasNext() && !parser.checkEvent(Event.ID.MappingEnd)) {
@@ -168,18 +191,52 @@ public class YamlSection {
     }
 
     DefaultError processParserException(Snapshot snapshot, ParserException se) {
-        int problemIndex = getIndex(se.getProblemMark());
-        StringBuilder message = new StringBuilder(se.getContext());
-        message.append(", ").append(se.getProblem());
+        int problemIndex = se.getProblemMark().isPresent() ? getIndex(se.getProblemMark()) : 0;
+        int contextIndex = problemIndex;
+        StringBuilder message = new StringBuilder();
+        if (se.getContext() != null) {
+            contextIndex = getIndex(se.getContextMark());
+            message.append(se.getContext()).append(", ");
+        }
+        message.append(se.getProblem());
         char upper = Character.toUpperCase(message.charAt(0));
         message.setCharAt(0, upper);
-        return new DefaultError(null, message.toString(), null, snapshot.getSource().getFileObject(), problemIndex, problemIndex, Severity.ERROR);
+        return new DefaultError(null, message.toString(), null, snapshot.getSource().getFileObject(), contextIndex, problemIndex, Severity.ERROR);
+    }
+
+    List<YamlSection> splitOnParserException(ParserException pe) {
+        if (pe.getContextMark().isPresent()) {
+            int contextIndex = pe.getContextMark().get().getIndex();
+            return split(contextIndex, contextIndex + 1);
+        } else {
+            int problemIndex = pe.getProblemMark().get().getIndex();
+            return split(problemIndex, problemIndex + 1);
+        }
+    }
+
+    List<YamlSection> split(int a, int b) {
+        List<YamlSection> ret = new LinkedList<>();
+        YamlSection before = before(a);
+        YamlSection after = after(b);
+        if (before.isEmpty()) {
+            after = after.trimHead();
+        }
+        if (after.isEmpty()) {
+            before = before.trimTail();
+        }
+        if (!before.isEmpty()) {
+            ret.add(before);
+        }
+        if (!after.isEmpty()) {
+            ret.add(after);
+        }
+        return ret;
     }
 
     private int getIndex(Optional<Mark> om) {
         return om.get().getIndex() + offset;
     }
-    
+
     @Override
     public String toString() {
         return "" + offset + ":" + source;

@@ -1,1 +1,1 @@
-31-31:While parsing a block mapping, expected <block end>, but found '<block mapping start>'
+0-31:While parsing a block mapping, expected <block end>, but found '<block mapping start>'

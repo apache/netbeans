@@ -82,7 +82,7 @@ Class level refactorings as well as variable refactorings are supported in VSCod
 ### Surroung with refactorings
 ![Surrond with Refactorings](images/Surrond_With_refactorings.png)
 
-Some refactorings are two steps with like Override method ... where method to be overriden is selected in 2nd step:Surrond_With_refactorings
+Some refactorings are two steps with like Override method ... where method to be overriden is selected in 2nd step:
 
 ![Override refactoring](images/Override_refactoring.png)
 ### Some of supported refactorings:

@@ -36,7 +36,7 @@ public class YamlParserResult extends ParserResult {
     private final List<Error> errors = new ArrayList<>();
     private final List<StructureItem> structure = new ArrayList<>();
 
-    public YamlParserResult(Snapshot snapshot, boolean valid) {
+    public YamlParserResult(Snapshot snapshot) {
         super(snapshot);
     }
 

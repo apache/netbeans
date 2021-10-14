@@ -360,7 +360,7 @@ public final class GradleDistributionManager {
     File distributionBaseDir(URI downloadLocation, String version) {
         WrapperConfiguration conf = new WrapperConfiguration();
         conf.setDistribution(downloadLocation);
-        PathAssembler pa = new PathAssembler(gradleUserHome);
+        PathAssembler pa = new PathAssembler(gradleUserHome, null);
         PathAssembler.LocalDistribution dist = pa.getDistribution(conf);
         return new File(dist.getDistributionDir(), "gradle-" + version);
     }
@@ -566,7 +566,7 @@ public final class GradleDistributionManager {
             try {
                 WrapperConfiguration conf = new WrapperConfiguration();
                 conf.setDistribution(dist.getDistributionURI());
-                PathAssembler pa = new PathAssembler(gradleUserHome);
+                PathAssembler pa = new PathAssembler(gradleUserHome, null);
                 Install install = new Install(new Logger(true), this, pa);
                 install.createDist(conf);
             } catch (Exception ex) {

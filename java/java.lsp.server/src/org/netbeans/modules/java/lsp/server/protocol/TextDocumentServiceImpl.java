@@ -1651,7 +1651,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
             missingFileDiscovered(uri);
         } catch (MalformedURLException ex) {
-            LOG.log(Level.WARNING, "Invalid file URL: " + uri, ex);
+            if (!uri.startsWith("untitled:")) {
+                LOG.log(Level.WARNING, "Invalid file URL: " + uri, ex);
+            }
         }
         return null;
     }

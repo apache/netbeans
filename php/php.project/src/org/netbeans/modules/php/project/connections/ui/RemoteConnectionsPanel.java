@@ -152,7 +152,7 @@ public final class RemoteConnectionsPanel extends JPanel implements ChangeListen
                         addConfig();
                     } else {
                         // this would need to implement hashCode() and equals() for RemoteConfiguration.... hmm, probably not needed
-                        //assert getConfigurations().contains(remoteConfiguration) : "Unknow remote configration: " + remoteConfiguration;
+                        //assert getConfigurations().contains(remoteConfiguration) : "Unknown remote configration: " + remoteConfiguration;
                         if (remoteConfiguration != null) {
                             // select config
                             selectConfiguration(remoteConfiguration.getName());

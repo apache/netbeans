@@ -425,7 +425,7 @@ public abstract class MarkOccurrencesHighlighterBase extends JavaParserResultTas
             case PACKAGE:
                 return false; //never mark occurrence modules and packages
             default:
-                Logger.getLogger(MarkOccurrencesHighlighterBase.class.getName()).log(Level.INFO, "Unknow element type: {0}.", el.getKind());
+                Logger.getLogger(MarkOccurrencesHighlighterBase.class.getName()).log(Level.INFO, "Unknown element type: {0}.", el.getKind());
                 return true;
         }
     }

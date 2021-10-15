@@ -64,7 +64,10 @@ import javax.lang.model.type.TypeVariable;
 import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.document.LineDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CodeStyle;
@@ -158,6 +161,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             JavaCompletionTask.LambdaItemFactory<Completion>, JavaCompletionTask.ModuleItemFactory<Completion> {
 
         private static final Set<String> SUPPORTED_ELEMENT_KINDS = new HashSet<>(Arrays.asList("PACKAGE", "CLASS", "INTERFACE", "ENUM", "ANNOTATION_TYPE", "METHOD", "CONSTRUCTOR", "INSTANCE_INIT", "STATIC_INIT", "FIELD", "ENUM_CONSTANT", "TYPE_PARAMETER", "MODULE"));
+        private static final String EMPTY = "";
         private static final String ERROR = "<error>";
         private static final int DEPRECATED = 10;
         private final Document doc;
@@ -200,7 +204,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             return CompletionCollector.newBuilder(simpleName)
                     .kind(Completion.Kind.Folder)
                     .sortText(String.format("%04d%s#%s", 1900, simpleName, pkgFQN))
-                    .insertText(simpleName + (inPackageStatement ? "" : "."))
+                    .insertText(simpleName + (inPackageStatement ? EMPTY : "."))
                     .insertTextFormat(Completion.TextFormat.PlainText)
                     .build();
         }
@@ -251,7 +255,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                 TypeElement elem = (TypeElement)dt.asElement();
                 String name = elem.getQualifiedName().toString();
                 int idx = name.lastIndexOf('.');
-                String pkgName = idx < 0 ? "" : name.substring(0, idx);
+                String pkgName = idx < 0 ? EMPTY : name.substring(0, idx);
                 CompletionCollector.Builder builder = CompletionCollector.newBuilder(new StringBuilder(label).insert(0, elem.getSimpleName()).toString())
                         .kind(elementKind2CompletionItemKind(elem.getKind()))
                         .sortText(String.format("%04d%s#%02d#%s", 800, elem.getSimpleName().toString(), Utilities.getImportanceLevel(name), pkgName))
@@ -382,8 +386,16 @@ public class JavaCompletionCollector implements CompletionCollector {
                         GeneratorUtils.generateMethodOverride(wc, tp, elem, substitutionOffset);
                     }
                 });
-                if (textEdit != null) {
-                    builder.textEdit(textEdit);
+                if (textEdit != null && doc instanceof LineDocument) {
+                    try {
+                        int idx = LineDocumentUtils.getLineIndex((LineDocument) doc, substitutionOffset);
+                        if (idx == LineDocumentUtils.getLineIndex((LineDocument) doc, textEdit.getStartOffset()) && idx == LineDocumentUtils.getLineIndex((LineDocument) doc, textEdit.getEndOffset())) {
+                            builder.textEdit(textEdit);
+                        } else {
+                            builder.textEdit(new TextEdit(substitutionOffset, substitutionOffset, EMPTY))
+                                    .additionalTextEdits(Collections.singletonList(textEdit));
+                        }
+                    } catch (BadLocationException badLocationException) {}
                 }
             } catch (IOException ex) {
             }
@@ -443,8 +455,16 @@ public class JavaCompletionCollector implements CompletionCollector {
                         }
                     }
                 });
-                if (textEdit != null) {
-                    builder.textEdit(textEdit);
+                if (textEdit != null && doc instanceof LineDocument) {
+                    try {
+                        int idx = LineDocumentUtils.getLineIndex((LineDocument) doc, substitutionOffset);
+                        if (idx == LineDocumentUtils.getLineIndex((LineDocument) doc, textEdit.getStartOffset()) && idx == LineDocumentUtils.getLineIndex((LineDocument) doc, textEdit.getEndOffset())) {
+                            builder.textEdit(textEdit);
+                        } else {
+                            builder.textEdit(new TextEdit(substitutionOffset, substitutionOffset, EMPTY))
+                                    .additionalTextEdits(Collections.singletonList(textEdit));
+                        }
+                    } catch (BadLocationException badLocationException) {}
                 }
             } catch (IOException ex) {
             }
@@ -699,8 +719,16 @@ public class JavaCompletionCollector implements CompletionCollector {
                         }
                     }
                 });
-                if (textEdit != null) {
-                    builder.textEdit(textEdit);
+                if (textEdit != null && doc instanceof LineDocument) {
+                    try {
+                        int idx = LineDocumentUtils.getLineIndex((LineDocument) doc, substitutionOffset);
+                        if (idx == LineDocumentUtils.getLineIndex((LineDocument) doc, textEdit.getStartOffset()) && idx == LineDocumentUtils.getLineIndex((LineDocument) doc, textEdit.getEndOffset())) {
+                            builder.textEdit(textEdit);
+                        } else {
+                            builder.textEdit(new TextEdit(substitutionOffset, substitutionOffset, EMPTY))
+                                    .additionalTextEdits(Collections.singletonList(textEdit));
+                        }
+                    } catch (BadLocationException badLocationException) {}
                 }
             } catch (IOException ex) {
             }
@@ -767,7 +795,7 @@ public class JavaCompletionCollector implements CompletionCollector {
         private Completion createTypeItem(CompilationInfo info, String prefix, ElementHandle<TypeElement> handle, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars, boolean addSimpleName, boolean smartType) {
             String name = elem.getQualifiedName().toString();
             int idx = name.lastIndexOf('.');
-            String pkgName = idx < 0 ? "" : name.substring(0, idx);
+            String pkgName = idx < 0 ? EMPTY : name.substring(0, idx);
             StringBuilder label = new StringBuilder();
             StringBuilder insertText = new StringBuilder();
             if (prefix != null) {

@@ -43,6 +43,7 @@ public interface Constants {
     String PROP_CONTEXT_ROOT = "contextRoot";
 
     String VERSION = "version";
+    String HOT_DEPLOY = "hotDeploy";
 
     String WAR_PACKAGING = "war";
 

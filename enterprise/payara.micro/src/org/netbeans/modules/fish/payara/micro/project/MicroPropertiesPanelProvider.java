@@ -58,6 +58,7 @@ public class MicroPropertiesPanelProvider implements ProjectCustomizer.Composite
         MicroPropertiesPanel microPanel = new MicroPropertiesPanel(handle, project);
         category.setOkButtonListener(event -> microPanel.applyChanges());
         category.setStoreListener(event -> microPanel.applyChanges());
+        category.setCloseListener(event -> microPanel.applyChanges());
         return microPanel;
     }
 

@@ -58,15 +58,15 @@ public final class JavaHyperlinkProvider implements HyperlinkProviderExt {
 
     @Override
     public boolean isHyperlinkPoint(Document doc, int offset, HyperlinkType type) {
+        FileObject file = NbEditorUtilities.getFileObject(doc);
+        if (file != null && SourceUtils.hasRemoteEditorPlatform(file)) {
+            return false;
+        }
         return getHyperlinkSpan(doc, offset, type) != null;
     }
 
     @Override
     public int[] getHyperlinkSpan(Document doc, int offset, HyperlinkType type) {
-        FileObject file = NbEditorUtilities.getFileObject(doc);
-        if (file != null && SourceUtils.hasRemoteEditorPlatform(file)) {
-            return null;
-        }
         return GoToSupport.getIdentifierOrLambdaArrowSpan(doc, offset, null);
     }
 

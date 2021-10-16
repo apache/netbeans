@@ -40,7 +40,7 @@ import org.netbeans.spi.java.source.RemoteEditorPlatform;
 public class LanguageServerProviderImpl implements LanguageServerProvider {
     @Override
     public LanguageServerDescription startServer(Lookup lookup) {
-        if (RemoteEditorPlatform.isRemoteEditorPlatformSupported()) {
+        if (!RemoteEditorPlatform.isRemoteEditorPlatformSupported()) {
             return null;
         }
 

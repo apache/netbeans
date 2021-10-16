@@ -34,7 +34,7 @@ public interface RemoteEditorPlatform {
      * @return true if this run supports remote platforms
      */
     public static boolean isRemoteEditorPlatformSupported() {
-        return Impl.REMOTE_PLATFORM_RUNNING;
+        return !Impl.REMOTE_PLATFORM_RUNNING;
     }
 
     /**
@@ -79,8 +79,7 @@ public interface RemoteEditorPlatform {
         public @CheckForNull RemoteEditorPlatform findPlatform(FileObject source);
     }
 
-}
-
-class Impl {
-    static final boolean REMOTE_PLATFORM_RUNNING = Boolean.getBoolean("remote.editor.platform.running");
+    class Impl {
+        static final boolean REMOTE_PLATFORM_RUNNING = Boolean.getBoolean("remote.editor.platform.running");
+    }
 }

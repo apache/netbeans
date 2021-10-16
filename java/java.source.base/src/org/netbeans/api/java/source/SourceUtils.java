@@ -1383,8 +1383,15 @@ public class SourceUtils {
         cc.addForceSource(file);
     }
 
+    /**
+     * Is remote platform enabled for the given source?
+     *
+     * @param source to test
+     * @return true iff the remote platform is enabled for the given source
+     * @since 2.54
+     */
     public static boolean hasRemoteEditorPlatform(FileObject source) {
-        if (RemoteEditorPlatform.isRemoteEditorPlatformSupported()) {
+        if (!RemoteEditorPlatform.isRemoteEditorPlatformSupported()) {
             return false;
         }
 

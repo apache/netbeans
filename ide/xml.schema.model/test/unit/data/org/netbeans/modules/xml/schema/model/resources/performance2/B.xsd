@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="hl7_performance_test"
+            xmlns:tns="hl7_performance_test"
+            elementFormDefault="qualified">
+
+    <xsd:element name="B000" type="xsd:string"/>
+    <xsd:element name="B001" type="xsd:string"/>
+    <xsd:element name="B002" type="xsd:string"/>
+    <xsd:element name="B003" type="xsd:string"/>
+    <xsd:element name="B004" type="xsd:string"/>
+    <xsd:element name="B005" type="xsd:string"/>
+    <xsd:element name="B006" type="xsd:string"/>
+    <xsd:element name="B007" type="xsd:string"/>
+    <xsd:element name="B008" type="xsd:string"/>
+    <xsd:element name="B009" type="xsd:string"/>
+
+    <xsd:element name="B010" type="xsd:string"/>
+    <xsd:element name="B011" type="xsd:string"/>
+    <xsd:element name="B012" type="xsd:string"/>
+    <xsd:element name="B013" type="xsd:string"/>
+    <xsd:element name="B014" type="xsd:string"/>
+    <xsd:element name="B015" type="xsd:string"/>
+    <xsd:element name="B016" type="xsd:string"/>
+    <xsd:element name="B017" type="xsd:string"/>
+    <xsd:element name="B018" type="xsd:string"/>
+    <xsd:element name="B019" type="xsd:string"/>
+
+    <xsd:element name="B020" type="xsd:string"/>
+    <xsd:element name="B021" type="xsd:string"/>
+    <xsd:element name="B022" type="xsd:string"/>
+    <xsd:element name="B023" type="xsd:string"/>
+    <xsd:element name="B024" type="xsd:string"/>
+    <xsd:element name="B025" type="xsd:string"/>
+    <xsd:element name="B026" type="xsd:string"/>
+    <xsd:element name="B027" type="xsd:string"/>
+    <xsd:element name="B028" type="xsd:string"/>
+    <xsd:element name="B029" type="xsd:string"/>
+
+    <xsd:element name="B030" type="xsd:string"/>
+    <xsd:element name="B031" type="xsd:string"/>
+    <xsd:element name="B032" type="xsd:string"/>
+    <xsd:element name="B033" type="xsd:string"/>
+    <xsd:element name="B034" type="xsd:string"/>
+    <xsd:element name="B035" type="xsd:string"/>
+    <xsd:element name="B036" type="xsd:string"/>
+    <xsd:element name="B037" type="xsd:string"/>
+    <xsd:element name="B038" type="xsd:string"/>
+    <xsd:element name="B039" type="xsd:string"/>
+
+    <xsd:element name="B040" type="xsd:string"/>
+    <xsd:element name="B041" type="xsd:string"/>
+    <xsd:element name="B042" type="xsd:string"/>
+    <xsd:element name="B043" type="xsd:string"/>
+    <xsd:element name="B044" type="xsd:string"/>
+    <xsd:element name="B045" type="xsd:string"/>
+    <xsd:element name="B046" type="xsd:string"/>
+    <xsd:element name="B047" type="xsd:string"/>
+    <xsd:element name="B048" type="xsd:string"/>
+    <xsd:element name="B049" type="xsd:string"/>
+
+    <xsd:element name="B050" type="xsd:string"/>
+    <xsd:element name="B051" type="xsd:string"/>
+    <xsd:element name="B052" type="xsd:string"/>
+    <xsd:element name="B053" type="xsd:string"/>
+    <xsd:element name="B054" type="xsd:string"/>
+    <xsd:element name="B055" type="xsd:string"/>
+    <xsd:element name="B056" type="xsd:string"/>
+    <xsd:element name="B057" type="xsd:string"/>
+    <xsd:element name="B058" type="xsd:string"/>
+    <xsd:element name="B059" type="xsd:string"/>
+
+    <xsd:element name="B060" type="xsd:string"/>
+    <xsd:element name="B061" type="xsd:string"/>
+    <xsd:element name="B062" type="xsd:string"/>
+    <xsd:element name="B063" type="xsd:string"/>
+    <xsd:element name="B064" type="xsd:string"/>
+    <xsd:element name="B065" type="xsd:string"/>
+    <xsd:element name="B066" type="xsd:string"/>
+    <xsd:element name="B067" type="xsd:string"/>
+    <xsd:element name="B068" type="xsd:string"/>
+    <xsd:element name="B069" type="xsd:string"/>
+
+    <xsd:element name="B070" type="xsd:string"/>
+    <xsd:element name="B071" type="xsd:string"/>
+    <xsd:element name="B072" type="xsd:string"/>
+    <xsd:element name="B073" type="xsd:string"/>
+    <xsd:element name="B074" type="xsd:string"/>
+    <xsd:element name="B075" type="xsd:string"/>
+    <xsd:element name="B076" type="xsd:string"/>
+    <xsd:element name="B077" type="xsd:string"/>
+    <xsd:element name="B078" type="xsd:string"/>
+    <xsd:element name="B079" type="xsd:string"/>
+
+    <xsd:element name="B080" type="xsd:string"/>
+    <xsd:element name="B081" type="xsd:string"/>
+    <xsd:element name="B082" type="xsd:string"/>
+    <xsd:element name="B083" type="xsd:string"/>
+    <xsd:element name="B084" type="xsd:string"/>
+    <xsd:element name="B085" type="xsd:string"/>
+    <xsd:element name="B086" type="xsd:string"/>
+    <xsd:element name="B087" type="xsd:string"/>
+    <xsd:element name="B088" type="xsd:string"/>
+    <xsd:element name="B089" type="xsd:string"/>
+
+
+</xsd:schema>

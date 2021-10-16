@@ -21,6 +21,7 @@ package org.netbeans.modules.languages.yaml;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.netbeans.modules.csl.api.Severity;
 import org.netbeans.modules.csl.api.StructureItem;
@@ -78,10 +79,10 @@ public class YamlSection {
         while ((index > 0) && Character.isWhitespace(source.charAt(index))) {
             index--;
         }
-        while ((index > 0) && !Character.isWhitespace(source.charAt(index))) {
+        while ((index > -1) && !Character.isWhitespace(source.charAt(index))) {
             index--;
         }
-        return before(index);
+        return before(index + 1);
     }
 
     public YamlSection trimHead() {
@@ -228,16 +229,26 @@ public class YamlSection {
         }
     }
 
+    List<YamlSection> split(int a) {
+        List<YamlSection> ret = new LinkedList<>();
+        YamlSection before = a < source.length() ? before(a) : trimTail();
+        YamlSection after = a > 0 ? after(a) : trimHead();
+        if (!after.isEmpty()) {
+            ret.add(after);
+        }
+        if (!before.isEmpty()) {
+            ret.add(before);
+        }
+        return ret;
+    }
+    
     List<YamlSection> split(int a, int b) {
+        if (a == b){
+            return split(a);
+        }
         List<YamlSection> ret = new LinkedList<>();
         YamlSection before = before(a);
         YamlSection after = after(b);
-        if (before.isEmpty()) {
-            after = after.trimHead();
-        }
-        if (after.isEmpty()) {
-            before = before.trimTail();
-        }
         if (!after.isEmpty()) {
             ret.add(after);
         }
@@ -251,6 +262,36 @@ public class YamlSection {
         return om.get().getIndex() + offset;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 79 * hash + this.offset;
+        hash = 79 * hash + Objects.hashCode(this.source);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final YamlSection other = (YamlSection) obj;
+        if (this.offset != other.offset) {
+            return false;
+        }
+        if (!Objects.equals(this.source, other.source)) {
+            return false;
+        }
+        return true;
+    }
+
+    
     @Override
     public String toString() {
         return "" + offset + ":" + source;

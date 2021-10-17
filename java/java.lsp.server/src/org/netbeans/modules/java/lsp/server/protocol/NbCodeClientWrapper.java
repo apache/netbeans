@@ -28,7 +28,6 @@ import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.ProgressParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.RegistrationParams;
-import org.eclipse.lsp4j.SemanticHighlightingParams;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.UnregistrationParams;
 import org.eclipse.lsp4j.WorkDoneProgressCreateParams;
@@ -128,11 +127,6 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     @Override
     public CompletableFuture<List<Object>> configuration(ConfigurationParams configurationParams) {
         return remote.configuration(configurationParams);
-    }
-
-    @Override
-    public void semanticHighlighting(SemanticHighlightingParams params) {
-        remote.semanticHighlighting(params);
     }
 
     @Override

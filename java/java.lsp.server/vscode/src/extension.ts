@@ -30,10 +30,9 @@ import {
     RevealOutputChannelOn,
     DocumentSelector
 } from 'vscode-languageclient';
-
 import {
     LanguageClient,
-    StreamInfo,
+    StreamInfo
 } from 'vscode-languageclient/node';
 
 import * as net from 'net';

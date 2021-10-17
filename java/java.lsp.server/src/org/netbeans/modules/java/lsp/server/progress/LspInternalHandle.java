@@ -54,7 +54,7 @@ public final class LspInternalHandle extends InternalHandle {
      */
     private final StackTraceElement[] creatorTrace;
     
-    private CompletableFuture<Either<String, Number>> tokenPromise;
+    private CompletableFuture<Either<String, Integer>> tokenPromise;
     private int reportedPercentage;
     
     /**
@@ -198,7 +198,7 @@ public final class LspInternalHandle extends InternalHandle {
         notify(report);
     }
     
-    Either<String, Number> token() {
+    Either<String, Integer> token() {
         if (tokenPromise == null || tokenPromise.isCompletedExceptionally()) {
             return null;
         } else {
@@ -213,7 +213,7 @@ public final class LspInternalHandle extends InternalHandle {
         opContext.removeHandle(token(), this);
     }
     
-    CompletableFuture<Either<String, Number>> findProgressToken() {
+    CompletableFuture<Either<String, Integer>> findProgressToken() {
         if (tokenPromise != null) {
             return tokenPromise;
         }
@@ -227,7 +227,7 @@ public final class LspInternalHandle extends InternalHandle {
                         id(), msg
                     )
             );
-            ProgressParams param = new ProgressParams(token, msg);
+            ProgressParams param = new ProgressParams(token, Either.forLeft(msg));
             lspClient.notifyProgress(param);
         });
     }

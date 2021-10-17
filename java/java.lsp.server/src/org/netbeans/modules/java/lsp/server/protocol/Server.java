@@ -18,10 +18,12 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import com.google.gson.InstanceCreator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,8 +57,11 @@ import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.RenameOptions;
+import org.eclipse.lsp4j.SemanticTokensCapabilities;
+import org.eclipse.lsp4j.SemanticTokensParams;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
 import org.eclipse.lsp4j.WorkDoneProgressCancelParams;
 import org.eclipse.lsp4j.WorkDoneProgressParams;
@@ -142,49 +147,18 @@ public final class Server {
             .setInput(io.first())
             .setOutput(io.second())
             .wrapMessages(processor)
-//<<<<<<< HEAD
-//            .configureGson(gb -> {
-//                gb.registerTypeAdapter(SemanticTokensCapabilities.class, new InstanceCreator<SemanticTokensCapabilities>() {
-//                    @Override public SemanticTokensCapabilities createInstance(Type type) {
-//                        return new SemanticTokensCapabilities(null);
-//                    }
-//                });
-//                gb.registerTypeAdapter(SemanticTokensParams.class, new InstanceCreator<SemanticTokensParams>() {
-//                    @Override public SemanticTokensParams createInstance(Type type) {
-//                        return new SemanticTokensParams(new TextDocumentIdentifier(""));
-//                    }
-//                });
-//                gb.registerTypeAdapterFactory(new TypeAdapterFactory() {
-//                    @Override
-//                    public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
-//                        if (RenameCapabilities.class.equals(type.getRawType())) {
-//                            return new TypeAdapter<T>() {
-//                                @Override
-//                                public void write(JsonWriter out, T value) throws IOException {
-//                                    throw new UnsupportedOperationException("Not supported.");
-//                                }
-//
-//                                @Override
-//                                public T read(JsonReader in) throws IOException {
-//                                    //a bug in LSP4J: RenameCapabilities expects
-//                                    //prepareSupportDefaultBehavior to have type boolean,
-//                                    //but the final protocol says it should be an int:
-//                                    Map props = gson.fromJson(in, Map.class);
-//                                    if (props.containsKey("prepareSupportDefaultBehavior")) {
-//                                        props.put("prepareSupportDefaultBehavior", "true");
-//                                    }
-//                                    return (T) new Gson().fromJson(gson.toJson(props), RenameCapabilities.class);
-//                                }
-//                            };
-//                        }
-//                        return null;
-//                    }
-//                });
-//            })
-//                .traceMessages(new PrintWriter(System.err))
-//=======
-//                .traceMessages(new java.io.PrintWriter(System.err))
-//>>>>>>> master
+            .configureGson(gb -> {
+                gb.registerTypeAdapter(SemanticTokensCapabilities.class, new InstanceCreator<SemanticTokensCapabilities>() {
+                    @Override public SemanticTokensCapabilities createInstance(Type type) {
+                        return new SemanticTokensCapabilities(null);
+                    }
+                });
+                gb.registerTypeAdapter(SemanticTokensParams.class, new InstanceCreator<SemanticTokensParams>() {
+                    @Override public SemanticTokensParams createInstance(Type type) {
+                        return new SemanticTokensParams(new TextDocumentIdentifier(""));
+                    }
+                });
+            })
             .create();
     }
 

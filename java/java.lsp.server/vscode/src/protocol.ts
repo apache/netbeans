@@ -56,7 +56,7 @@ export interface ShowQuickPickParams {
 }
 
 export namespace QuickPickRequest {
-    export const type = new RequestType<ShowQuickPickParams, vscode.QuickPickItem[], void, void>('window/showQuickPick');
+    export const type = new RequestType<ShowQuickPickParams, vscode.QuickPickItem[], void>('window/showQuickPick');
 }
 
 export interface ShowInputBoxParams {
@@ -97,7 +97,7 @@ export interface TestCase {
 }
 
 export namespace TestProgressNotification {
-    export const type = new NotificationType<TestProgressParams, void>('window/notifyTestProgress');
+    export const type = new NotificationType<TestProgressParams>('window/notifyTestProgress');
 };
 
 export interface DebugConnector {
@@ -116,15 +116,15 @@ export interface SetTextEditorDecorationParams {
 };
 
 export namespace TextEditorDecorationCreateRequest {
-    export const type = new RequestType<vscode.DecorationRenderOptions, string, void, void>('window/createTextEditorDecoration');
+    export const type = new RequestType<vscode.DecorationRenderOptions, string, void>('window/createTextEditorDecoration');
 };
 
 export namespace TextEditorDecorationSetNotification {
-    export const type = new NotificationType<SetTextEditorDecorationParams, void>('window/setTextEditorDecoration');
+    export const type = new NotificationType<SetTextEditorDecorationParams>('window/setTextEditorDecoration');
 };
 
 export namespace TextEditorDecorationDisposeNotification {
-    export const type = new NotificationType<string, void>('window/disposeTextEditorDecoration');
+    export const type = new NotificationType<string>('window/disposeTextEditorDecoration');
 };
 
 export function asPosition(value: undefined | null): undefined;

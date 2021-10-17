@@ -17,13 +17,13 @@
  * under the License.
  */
 
-#define COMPANY "Oracle Corporation"
+#define COMPANY "Apache Software Foundation"
 #define COMPONENT "NetBeans Profiler"
-#define VER "8.0.0.0"
-#define FVER 8,0,0,0
-#define BUILD_ID "22102013"
+#define VER "12.3.0.0"
+#define FVER 12,3,0,0
+#define BUILD_ID "19012021"
 #define INTERNAL_NAME "profilerinterface"
-#define COPYRIGHT "\xA9 2007, 2013, Oracle and/or its affiliates. All rights reserved."
+#define COPYRIGHT "\xA9 2017-2020 The Apache Software Foundation"
 #define FNAME "profilerinterface.dll"
-#define NAME "NetBeans Profiler 8.0"
+#define NAME "NetBeans Profiler 12.3"
 

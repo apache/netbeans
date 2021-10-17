@@ -20,7 +20,6 @@ package org.netbeans.modules.fish.payara.micro.project.ui;
 
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.ARCHETYPE_ARTIFACT_ID;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.ARCHETYPE_GROUP_ID;
-import org.netbeans.modules.fish.payara.micro.project.VersionRepository;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -34,7 +33,6 @@ import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROJECT_TY
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_ARTIFACT_ID;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_AUTO_BIND_HTTP;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_GROUP_ID;
-import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_JAVA_EE_VERSION;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_PACKAGE;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_PAYARA_MICRO_VERSION;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_VERSION;
@@ -84,8 +82,9 @@ public final class MicroProjectWizardIterator extends BaseWizardIterator {
         Archetype archetype = createMojoArchetype();
 
         Map<String, String> properties = new HashMap<>();
-        properties.put(PROP_PAYARA_MICRO_VERSION, payaraMicroVersion);
-        properties.put(PROP_JAVA_EE_VERSION, VersionRepository.getInstance().getJavaEEVersion(payaraMicroVersion));
+        if (payaraMicroVersion != null) {
+            properties.put(PROP_PAYARA_MICRO_VERSION, payaraMicroVersion);
+        }
         properties.put(PROP_AUTO_BIND_HTTP, autoBindHttp);
         properties.put(PROP_CONTEXT_ROOT, contextRoot);
 

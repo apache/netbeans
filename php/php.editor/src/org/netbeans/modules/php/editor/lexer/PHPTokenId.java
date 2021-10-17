@@ -122,6 +122,7 @@ public enum PHPTokenId implements TokenId {
     PHP_CONST(null, "keyword"), //NOI18N
     PHP_PUBLIC(null, "keyword"), //NOI18N
     PHP_RETURN(null, "keyword"), //NOI18N
+    PHP_ATTRIBUTE(null, "php"), //NOI18N NETBEANS-4443 PHP 8.0 #[
     PHP_YIELD(null, "keyword"), //NOI18N
     PHP_YIELD_FROM(null, "keyword"), //NOI18N
     PHP_LOGICAL_AND(null, "operator"), //NOI18N

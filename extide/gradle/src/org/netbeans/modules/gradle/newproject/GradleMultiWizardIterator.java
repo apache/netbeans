@@ -112,19 +112,21 @@ public class GradleMultiWizardIterator extends BaseGradleWizardIterator {
         }
 
         Boolean initWrapper = (Boolean) params.get(PROP_INIT_WRAPPER);
-        if ((initWrapper != null) && initWrapper) {
+        if (initWrapper == null || initWrapper) {
             ops.addWrapperInit(root);
         }
 
     }
 
     private static Set<SubProject> parseSubProjects(String text) {
-        String[] lines = text.split("\\n");
         Set<SubProject> ret = new LinkedHashSet<>();
-        for (String line : lines) {
-            line = line.trim();
-            if (!line.isEmpty()) {
-                ret.add(new SubProject(line));
+        if (text != null) {
+            String[] lines = text.split("\\n");
+            for (String line : lines) {
+                line = line.trim();
+                if (!line.isEmpty()) {
+                    ret.add(new SubProject(line));
+                }
             }
         }
         return ret;

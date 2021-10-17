@@ -153,7 +153,7 @@ public class ElementBindings extends HashMap {
     }
     
     public String toString() {
-        Iterator it = values().iterator();
+        Iterator<String> it = values().iterator();
         StringBuffer sb = new StringBuffer();
         sb.append("{"); // NOI18N
         while (it.hasNext()) {

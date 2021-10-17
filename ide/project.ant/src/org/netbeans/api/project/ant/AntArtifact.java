@@ -175,7 +175,7 @@ public abstract class AntArtifact {
         URL artifact;
         try {
             // XXX this should probably use something in PropertyUtils?
-            artifact = BaseUtilities.toURI(getScriptLocation()).resolve(artifactLocation).normalize().toURL();
+            artifact = BaseUtilities.normalizeURI(BaseUtilities.toURI(getScriptLocation()).resolve(artifactLocation)).toURL();
         } catch (MalformedURLException e) {
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, null, e);
             return null;

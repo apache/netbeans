@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Stream;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 
 /**
@@ -192,19 +193,22 @@ public final class GradleModuleFileCache21 {
         }
 
         private void readEntries() throws IOException {
-            if (entries.size() != Files.list(getPath()).count()) {
-                entries.clear();
-                Files.walkFileTree(getPath(), new SimpleFileVisitor<Path>() {
-                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                        try {
-                            Entry entry = new Entry(file);
-                            entries.put(entry.getName(), entry);
-                        } catch(IllegalArgumentException ex) {
-                            // Ignore non-artifact files, highly unlikely to happen
+            try (Stream<Path> stream = Files.list(getPath())) {
+                if (entries.size() != stream.count()) {
+                    entries.clear();
+                    Files.walkFileTree(getPath(), new SimpleFileVisitor<Path>() {
+                        @Override
+                        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                            try {
+                                Entry entry = new Entry(file);
+                                entries.put(entry.getName(), entry);
+                            } catch(IllegalArgumentException ex) {
+                                // Ignore non-artifact files, highly unlikely to happen
+                            }
+                            return FileVisitResult.CONTINUE;
                         }
-                        return FileVisitResult.CONTINUE;
-                    }
-                });
+                    });
+                }
             }
         }
     }
@@ -240,15 +244,20 @@ public final class GradleModuleFileCache21 {
     }
 
     public static String[] gavSplit(String gav) {
-        int firstColon = gav.indexOf(':');
-        int lastColon = gav.lastIndexOf(':');
-        if (firstColon == -1 || firstColon == lastColon) {
-            throw new IllegalArgumentException("Invalig GAV format: " + gav);
+        // the general GAV format is - <group>:<artifact>:<version/snapshot>[:<classifier>][@extension]
+        int firstColon = gav.indexOf(':'); // NOI18N
+        int versionColon = gav.indexOf(':', firstColon + 1); // NOI18N
+        int versionEnd = versionColon > firstColon ? gav.indexOf(':', versionColon + 1) : -1; // NO18N
+
+        if (firstColon == -1 || versionColon == -1 || firstColon == versionColon) {
+            throw new IllegalArgumentException("Invalid GAV format: '" + gav + "'"); //NOI18N
         }
-        return new String[] {
+        int end = versionEnd == -1 ? gav.length() : versionEnd;
+
+        return new String[]{
             gav.substring(0, firstColon),
-            gav.substring(firstColon + 1, lastColon),
-            gav.substring(lastColon + 1)
+            gav.substring(firstColon + 1, versionColon),
+            gav.substring(versionColon + 1, end)
         };
     }
 }

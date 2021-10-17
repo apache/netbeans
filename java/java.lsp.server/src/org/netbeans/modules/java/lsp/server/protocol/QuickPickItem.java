@@ -86,7 +86,7 @@ public class QuickPickItem {
      * A human-readable string which is rendered prominent.
      */
     public void setLabel(@NonNull final String label) {
-        this.label = label;
+        this.label = Preconditions.checkNotNull(label, "label");
     }
 
     /**

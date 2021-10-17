@@ -52,6 +52,58 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="TestMethodsFinder">
+        <api name="CommonTestrunnerUIAPI"/>
+        <summary>Added FindTestMethods API</summary>
+        <version major="1" minor="27"/>
+        <date day="25" month="8" year="2021"/>
+        <author login="dbalek"/>
+        <compatibility addition="yes"/>
+        <description>
+            Added API to provide a list of TestMethods found in sources under particutlar test roots.
+        </description>
+        <class package="org.netbeans.modules.gsf.testrunner.ui.api" name="TestMethodFinder"/>
+    </change>
+    <change id="ComputeTestMethodsAndTestMethodGetTestClassPosition">
+        <api name="CommonTestrunnerUIAPI"/>
+        <summary>Added ComputeTestMethods SPI and getTestClassPosition() to TestMethod</summary>
+        <version major="1" minor="25"/>
+        <date day="26" month="6" year="2021"/>
+        <author login="dbalek"/>
+        <compatibility addition="yes"/>
+        <description>
+            Added SPI to provide a list of TestMethods found in a parsed Sources.
+            Added preferred position of the class which contains the test method.
+        </description>
+        <class package="org.netbeans.modules.gsf.testrunner.ui.spi" name="ComputeTestMethods"/>
+        <class package="org.netbeans.modules.gsf.testrunner.ui.api" name="TestMethodController"/>
+    </change>
+    <change id="TestMethodPreferred">
+        <api name="CommonTestrunnerUIAPI"/>
+        <summary>Added preferred position to TestMethod</summary>
+        <version major="1" minor="24"/>
+        <date day="4" month="4" year="2021"/>
+        <author login="jlahoda"/>
+        <compatibility addition="yes"/>
+        <description>
+            Added preferred position to TestMethod, to represent place where the method name starts.
+        </description>
+        <class package="org.netbeans.modules.gsf.testrunner.ui.api" name="TestMethodController"/>
+    </change>
+    <change id="TestResultDisplayHandler">
+        <api name="CommonTestrunnerUIAPI"/>
+        <summary>Added API class and SPI interface for handlers displaying test results</summary>
+        <version major="1" minor="22"/>
+        <date day="19" month="2" year="2021"/>
+        <author login="dbalek"/>
+        <compatibility addition="yes"/>
+        <description>
+            Added API class and SPI interface for handlers displaying test results.
+            Allows for alternative handling of tests results (e.g. sending over
+            LSP to clients for display).
+        </description>
+        <class package="org.netbeans.modules.gsf.testrunner.ui.spi" name="TestResultDisplayHandler"/>
+    </change>
     <change id="TestCreatorConfiguration_validity">
         <api name="CommonTestrunnerUIAPI"/>
         <summary>Added methods to determine the validity of the configuration panel in the "Create Tests" dialog</summary>

@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
@@ -78,11 +79,13 @@ import org.netbeans.modules.lsp.client.options.MimeTypeInfo;
 import org.netbeans.modules.lsp.client.spi.ServerRestarter;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider.LanguageServerDescription;
+import org.openide.awt.NotificationDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.OnStop;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
@@ -99,10 +102,12 @@ public class LSPBindings {
 
     private static final int DELAY = 500;
     private static final int LSP_KEEP_ALIVE_MINUTES = 10;
+    private static final int INVALID_START_TIME = 1 * 60 * 1000;
+    private static final int INVALID_START_MAX_COUNT = 5;
     private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
     private static final ChangeSupport cs = new ChangeSupport(LSPBindings.class);
     private static final Map<LSPBindings,Long> lspKeepAlive = new IdentityHashMap<>();
-    private static final Map<URI, Map<String, WeakReference<LSPBindings>>> project2MimeType2Server = new HashMap<>();
+    private static final Map<URI, Map<String, ServerDescription>> project2MimeType2Server = new HashMap<>();
     private static final Map<FileObject, Map<String, LSPBindings>> workspace2Extension2Server = new HashMap<>();
 
     static {
@@ -129,7 +134,7 @@ public class LSPBindings {
             TimeUnit.MINUTES);
     }
 
-    private final Map<FileObject, Map<BackgroundTask, RequestProcessor.Task>> backgroundTasks = new WeakHashMap<>();
+    private static final Map<FileObject, Map<BackgroundTask, RequestProcessor.Task>> backgroundTasks = new WeakHashMap<>();
     private final Set<FileObject> openedFiles = new HashSet<>();
 
     public static synchronized LSPBindings getBindings(FileObject file) {
@@ -172,23 +177,28 @@ public class LSPBindings {
         URI uri = dir.toURI();
 
         LSPBindings bindings = null;
-        WeakReference<LSPBindings> bindingsReference =
+        ServerDescription description =
                 project2MimeType2Server.computeIfAbsent(uri, p -> new HashMap<>())
-                                       .get(mimeType);
+                                       .computeIfAbsent(mimeType, m -> new ServerDescription());
 
-        if(bindingsReference != null) {
-            bindings = bindingsReference.get();
+        if (description.bindings != null) {
+            bindings = description.bindings.get();
         }
 
         if (bindings != null && bindings.process != null && !bindings.process.isAlive()) {
+            startFailed(description, mimeType);
             bindings = null;
         }
 
+        if (description.failedCount >= INVALID_START_MAX_COUNT) {
+            return null;
+        }
+
         if (bindings == null) {
-            bindings = buildBindings(prj, mimeType, dir, uri);
+            bindings = buildBindings(description, prj, mimeType, dir, uri);
             if (bindings != null) {
-                project2MimeType2Server.computeIfAbsent(uri, p -> new HashMap<>())
-                    .put(mimeType, new WeakReference<>(bindings));
+                description.bindings = new WeakReference<>(bindings);
+                description.lastStartTimeStamp = System.currentTimeMillis();
                 WORKER.post(() -> cs.fireChange());
             }
         }
@@ -200,12 +210,34 @@ public class LSPBindings {
         return bindings != null ? bindings : null;
     }
 
+    @Messages({
+        "# {0} - the mime type for which the LSP server failed to start",
+        "TITLE_FailedToStart=LSP Server for {0} failed to start too many times.",
+        "DETAIL_FailedToStart=The LSP Server failed to start too many times in a short time, and will not be restarted anymore."
+    })
+    private static void startFailed(ServerDescription description, String mimeType) {
+        long timeStamp = System.currentTimeMillis();
+        if (timeStamp - description.lastStartTimeStamp < INVALID_START_TIME) {
+            description.failedCount++;
+            if (description.failedCount == INVALID_START_MAX_COUNT) {
+                NotificationDisplayer.getDefault().notify(Bundle.TITLE_FailedToStart(mimeType),
+                                                          ImageUtilities.loadImageIcon("/org/netbeans/modules/lsp/client/resources/error_16.png", false),
+                                                          Bundle.DETAIL_FailedToStart(),
+                                                          null);
+            }
+        } else {
+            description.failedCount = 0;
+        }
+        description.lastStartTimeStamp = timeStamp;
+    }
+
     @SuppressWarnings({"AccessingNonPublicFieldOfAnotherObject", "ResultOfObjectAllocationIgnored"})
-    private static LSPBindings buildBindings(Project prj, String mt, FileObject dir, URI baseUri) {
+    private static LSPBindings buildBindings(ServerDescription inDescription, Project prj, String mt, FileObject dir, URI baseUri) {
         MimeTypeInfo mimeTypeInfo = new MimeTypeInfo(mt);
         ServerRestarter restarter = () -> {
             synchronized (LSPBindings.class) {
-                WeakReference<LSPBindings> bRef = project2MimeType2Server.getOrDefault(baseUri, Collections.emptyMap()).remove(mt);
+                ServerDescription description = project2MimeType2Server.getOrDefault(baseUri, Collections.emptyMap()).remove(mt);
+                Reference<LSPBindings> bRef = description != null ? description.bindings : null;
                 LSPBindings b = bRef != null ? bRef.get() : null;
 
                 if (b != null) {
@@ -223,6 +255,8 @@ public class LSPBindings {
             }
         };
 
+        boolean foundServer = false;
+
         for (LanguageServerProvider provider : MimeLookup.getLookup(mt).lookupAll(LanguageServerProvider.class)) {
             final Lookup lkp = prj != null ? Lookups.fixed(prj, mimeTypeInfo, restarter) : Lookups.fixed(mimeTypeInfo, restarter);
             LanguageServerDescription desc = provider.startServer(lkp);
@@ -232,6 +266,7 @@ public class LSPBindings {
                 if (b != null) {
                     return b;
                 }
+                foundServer = true;
                 try {
                     LanguageClientImpl lci = new LanguageClientImpl();
                     InputStream in = LanguageServerProviderAccessor.getINSTANCE().getInputStream(desc);
@@ -268,6 +303,9 @@ public class LSPBindings {
                     LOG.log(Level.WARNING, null, ex);
                 }
             }
+        }
+        if (foundServer) {
+            startFailed(inDescription, mt);
         }
         return null;
     }
@@ -348,7 +386,7 @@ public class LSPBindings {
         project2MimeType2Server.values()
                                .stream()
                                .flatMap(n -> n.values().stream())
-                               .map(bindingRef -> bindingRef.get())
+                               .map(description -> description.bindings != null ? description.bindings.get() : null)
                                .filter(binding -> binding != null)
                                .forEach(allBindings::add);
         workspace2Extension2Server.values()
@@ -383,25 +421,22 @@ public class LSPBindings {
     }
 
     @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
-    public static void addBackgroundTask(FileObject file, BackgroundTask task) {
-        LSPBindings bindings = getBindings(file);
+    public static synchronized void addBackgroundTask(FileObject file, BackgroundTask task) {
+        RequestProcessor.Task req = WORKER.create(() -> {
+            LSPBindings bindings = getBindings(file);
 
-        if (bindings == null)
-            return ;
+            if (bindings == null)
+                return ;
 
-        RequestProcessor.Task req = WORKER.create(() -> task.run(bindings, file));
+            task.run(bindings, file);
+        });
 
-        bindings.backgroundTasks.computeIfAbsent(file, f -> new LinkedHashMap<>()).put(task, req);
-        bindings.scheduleBackgroundTask(req);
+        backgroundTasks.computeIfAbsent(file, f -> new LinkedHashMap<>()).put(task, req);
+        scheduleBackgroundTask(req);
     }
 
-    public static void removeBackgroundTask(FileObject file, BackgroundTask task) {
-        LSPBindings bindings = getBindings(file);
-
-        if (bindings == null)
-            return ;
-
-        RequestProcessor.Task req = bindings.backgroundTasksMapFor(file).remove(task);
+    public static synchronized void removeBackgroundTask(FileObject file, BackgroundTask task) {
+        RequestProcessor.Task req = backgroundTasksMapFor(file).remove(task);
 
         if (req != null) {
             req.cancel();
@@ -416,28 +451,23 @@ public class LSPBindings {
         WORKER.post(r);
     }
 
-    public void scheduleBackgroundTask(RequestProcessor.Task req) {
-        WORKER.post(req, DELAY);
+    private static void scheduleBackgroundTask(RequestProcessor.Task req) {
+        req.schedule(DELAY);
     }
 
-    public static void rescheduleBackgroundTask(FileObject file, BackgroundTask task) {
-        LSPBindings bindings = getBindings(file);
-
-        if (bindings == null)
-            return ;
-
-        RequestProcessor.Task req = bindings.backgroundTasksMapFor(file).get(task);
+    public static synchronized void rescheduleBackgroundTask(FileObject file, BackgroundTask task) {
+        RequestProcessor.Task req = backgroundTasksMapFor(file).get(task);
 
         if (req != null) {
-            WORKER.post(req, DELAY);
+            scheduleBackgroundTask(req);
         }
     }
 
-    public void scheduleBackgroundTasks(FileObject file) {
-        backgroundTasksMapFor(file).values().stream().forEach(this::scheduleBackgroundTask);
+    public static synchronized void scheduleBackgroundTasks(FileObject file) {
+        backgroundTasksMapFor(file).values().stream().forEach(LSPBindings::scheduleBackgroundTask);
     }
 
-    private Map<BackgroundTask, Task> backgroundTasksMapFor(FileObject file) {
+    private static Map<BackgroundTask, Task> backgroundTasksMapFor(FileObject file) {
         return backgroundTasks.computeIfAbsent(file, f -> new IdentityHashMap<>());
     }
 
@@ -455,9 +485,9 @@ public class LSPBindings {
         @Override
         @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
         public void run() {
-            for (Map<String, WeakReference<LSPBindings>> mime2Bindings : project2MimeType2Server.values()) {
-                for (WeakReference<LSPBindings> bRef : mime2Bindings.values()) {
-                    LSPBindings b = bRef != null ? bRef.get() : null;
+            for (Map<String, ServerDescription> mime2Bindings : project2MimeType2Server.values()) {
+                for (ServerDescription description : mime2Bindings.values()) {
+                    LSPBindings b = description.bindings != null ? description.bindings.get() : null;
                     if (b != null && b.process != null) {
                         b.process.destroy();
                     }
@@ -515,5 +545,10 @@ public class LSPBindings {
             }
 
         }
+    }
+    private static class ServerDescription {
+        public long lastStartTimeStamp;
+        public int failedCount;
+        public Reference<LSPBindings> bindings;
     }
 }

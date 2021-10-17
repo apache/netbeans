@@ -418,7 +418,8 @@ public final class CGSGenerator implements CodeGenerator {
         Preferences preferences = null;
         Project project = FileOwnerQuery.getOwner(fo);
         if (project != null) {
-            preferences = ProjectUtils.getPreferences(project, CGSGenerator.class, false);
+            // Share settings because style of generated code is part of project coding standard.
+            preferences = ProjectUtils.getPreferences(project, CGSGenerator.class, true);
             try {
                 cgsInfo.setHowToGenerate(GenWay.valueOf(preferences.get(GETTER_SETTER_PROJECT_PROPERTY, GenWay.AS_JAVA.name())));
             } catch (IllegalArgumentException ex) {

@@ -19,6 +19,9 @@
 package org.netbeans.modules.cpplite.editor.file;
 
 import java.io.IOException;
+import org.netbeans.api.annotations.common.StaticResource;
+import org.netbeans.core.spi.multiview.MultiViewElement;
+import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.netbeans.modules.textmate.lexer.api.GrammarRegistration;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -29,7 +32,9 @@ import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
+import org.openide.windows.TopComponent;
 
 @Messages({
     "LBL_HPP_LOADER=Files of HPP"
@@ -42,7 +47,7 @@ import org.openide.util.NbBundle.Messages;
 )
 @DataObject.Registration(
         mimeType = MIMETypes.HPP,
-        iconBase = "org/netbeans/modules/cpplite/editor/file/resources/HDataIcon.gif",
+        iconBase = HPPDataObject.ICON,
         displayName = "#LBL_HPP_LOADER",
         position = 300
 )
@@ -100,16 +105,24 @@ import org.openide.util.NbBundle.Messages;
     @ActionReference(
             path = "Editors/" + MIMETypes.CPP + "/Popup",
             id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.WhereUsedAction"),
-            position = 1400,
-            separatorAfter = 1450
+            position = 1400
+    ),
+    @ActionReference(
+            path = "Editors/" + MIMETypes.CPP + "/Popup",
+            id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.RenameAction"),
+            position = 1500,
+            separatorAfter = 1550
     )
 })
 @GrammarRegistration(grammar="resources/cpp.tmLanguage.json", mimeType=MIMETypes.HPP)
 public class HPPDataObject extends MultiDataObject {
 
+    @StaticResource
+    static final String ICON = "org/netbeans/modules/cpplite/editor/file/resources/HDataIcon.gif";
+
     public HPPDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
-        registerEditor(MIMETypes.HPP, false);
+        registerEditor(MIMETypes.HPP, true);
     }
 
     @Override
@@ -117,4 +130,15 @@ public class HPPDataObject extends MultiDataObject {
         return 1;
     }
 
+    @MultiViewElement.Registration(
+        displayName = "#Source",
+        iconBase = HPPDataObject.ICON,
+        persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
+        mimeType = MIMETypes.HPP,
+        preferredID = "hpp.source",
+        position = 100
+    )
+    public static MultiViewEditorElement createEditor(Lookup lkp) {
+        return new MultiViewEditorElement(lkp);
+    }
 }

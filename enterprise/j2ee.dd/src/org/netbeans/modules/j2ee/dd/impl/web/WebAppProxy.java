@@ -20,6 +20,7 @@
 package org.netbeans.modules.j2ee.dd.impl.web;
 
 import org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException;
+import org.netbeans.modules.j2ee.dd.api.web.AbsoluteOrdering;
 import org.netbeans.modules.j2ee.dd.api.web.JspConfig;
 import org.netbeans.modules.j2ee.dd.api.web.WebApp;
 import org.netbeans.modules.j2ee.dd.impl.common.DDProviderDataObject;
@@ -27,8 +28,12 @@ import org.netbeans.modules.schema2beans.Schema2BeansUtil;
 import org.netbeans.modules.schema2beans.BaseBean;
 import org.openide.loaders.DataObject;
 import org.openide.filesystems.FileLock;
+
+import java.beans.PropertyChangeListener;
+
 import java.io.OutputStream;
-import org.netbeans.modules.j2ee.dd.api.web.AbsoluteOrdering;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author  mk115033
@@ -36,7 +41,7 @@ import org.netbeans.modules.j2ee.dd.api.web.AbsoluteOrdering;
 public class WebAppProxy implements WebApp {
     private WebApp webApp;
     private String version;
-    private java.util.List listeners;
+    private final List<PropertyChangeListener> listeners;
     public boolean writing=false;
     private org.xml.sax.SAXParseException error;
     private int ddStatus;
@@ -46,15 +51,14 @@ public class WebAppProxy implements WebApp {
     public WebAppProxy(WebApp webApp, String version) {
         this.webApp=webApp;
         this.version = version;
-        listeners = new java.util.ArrayList();
+        listeners = new ArrayList<>();
         addPropertyChangeListener(reindentationListener);
     }
 
     public void setOriginal(WebApp webApp) {
         if (this.webApp!=webApp) {
             for (int i=0;i<listeners.size();i++) {
-                java.beans.PropertyChangeListener pcl =
-                    (java.beans.PropertyChangeListener)listeners.get(i);
+                java.beans.PropertyChangeListener pcl = listeners.get(i);
                 if (this.webApp!=null) this.webApp.removePropertyChangeListener(pcl);
                 if (webApp!=null) webApp.addPropertyChangeListener(pcl);
 
@@ -98,7 +102,7 @@ public class WebAppProxy implements WebApp {
     public void setStatus(int value) {
         if (ddStatus!=value) {
             java.beans.PropertyChangeEvent evt =
-                new java.beans.PropertyChangeEvent(this, PROPERTY_STATUS, new Integer(ddStatus), new Integer(value));
+                new java.beans.PropertyChangeEvent(this, PROPERTY_STATUS, ddStatus, value);
             ddStatus=value;
             for (int i=0;i<listeners.size();i++) {
                 ((java.beans.PropertyChangeListener)listeners.get(i)).propertyChange(evt);

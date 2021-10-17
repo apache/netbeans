@@ -367,7 +367,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
                 if (readBufferSize <= 0) {
                     readBufferSize = EditorPreferencesDefaults.defaultReadBufferSize;
                 }
-                putProperty(EditorPreferencesKeys.READ_BUFFER_SIZE, new Integer(readBufferSize));
+                putProperty(EditorPreferencesKeys.READ_BUFFER_SIZE, Integer.valueOf(readBufferSize));
             }
 
             if (key == null || EditorPreferencesKeys.WRITE_BUFFER_SIZE.equals(key)) {
@@ -375,7 +375,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
                 if (writeBufferSize <= 0) {
                     writeBufferSize = EditorPreferencesDefaults.defaultWriteBufferSize;
                 }
-                putProperty(EditorPreferencesKeys.WRITE_BUFFER_SIZE, new Integer(writeBufferSize));
+                putProperty(EditorPreferencesKeys.WRITE_BUFFER_SIZE, Integer.valueOf(writeBufferSize));
             }
 
             if (key == null || EditorPreferencesKeys.MARK_DISTANCE.equals(key)) {
@@ -383,7 +383,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
                 if (markDistance <= 0) {
                     markDistance = EditorPreferencesDefaults.defaultMarkDistance;
                 }
-                putProperty(EditorPreferencesKeys.MARK_DISTANCE, new Integer(markDistance));
+                putProperty(EditorPreferencesKeys.MARK_DISTANCE, Integer.valueOf(markDistance));
             }
 
             if (key == null || EditorPreferencesKeys.MAX_MARK_DISTANCE.equals(key)) {
@@ -391,7 +391,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
                 if (maxMarkDistance <= 0) {
                     maxMarkDistance = EditorPreferencesDefaults.defaultMaxMarkDistance;
                 }
-                putProperty(EditorPreferencesKeys.MAX_MARK_DISTANCE, new Integer(maxMarkDistance));
+                putProperty(EditorPreferencesKeys.MAX_MARK_DISTANCE, Integer.valueOf(maxMarkDistance));
             }
 
             if (key == null || EditorPreferencesKeys.MIN_MARK_DISTANCE.equals(key)) {
@@ -399,7 +399,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
                 if (minMarkDistance <=0 ) {
                     minMarkDistance = EditorPreferencesDefaults.defaultMinMarkDistance;
                 }
-                putProperty(EditorPreferencesKeys.MIN_MARK_DISTANCE, new Integer(minMarkDistance));
+                putProperty(EditorPreferencesKeys.MIN_MARK_DISTANCE, Integer.valueOf(minMarkDistance));
             }
 
             if (key == null || EditorPreferencesKeys.READ_MARK_DISTANCE.equals(key)) {
@@ -407,7 +407,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
                 if (readMarkDistance <= 0) {
                     readMarkDistance = EditorPreferencesDefaults.defaultReadMarkDistance;
                 }
-                putProperty(EditorPreferencesKeys.READ_MARK_DISTANCE, new Integer(readMarkDistance));
+                putProperty(EditorPreferencesKeys.READ_MARK_DISTANCE, Integer.valueOf(readMarkDistance));
             }
 
             if (key == null || EditorPreferencesKeys.SYNTAX_UPDATE_BATCH_SIZE.equals(key)) {
@@ -415,7 +415,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
                 if (syntaxUpdateBatchSize <= 0) {
                     syntaxUpdateBatchSize = 7 * (Integer) getProperty(EditorPreferencesKeys.MARK_DISTANCE);
                 }
-                putProperty(EditorPreferencesKeys.SYNTAX_UPDATE_BATCH_SIZE, new Integer(syntaxUpdateBatchSize));
+                putProperty(EditorPreferencesKeys.SYNTAX_UPDATE_BATCH_SIZE, Integer.valueOf(syntaxUpdateBatchSize));
             }
 
             if (key == null || LINE_BATCH_SIZE.equals(key)) {
@@ -423,7 +423,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
                 if (lineBatchSize <= 0) {
                     lineBatchSize = EditorPreferencesDefaults.defaultLineBatchSize;
                 }
-                putProperty(LINE_BATCH_SIZE, new Integer(lineBatchSize));
+                putProperty(LINE_BATCH_SIZE, Integer.valueOf(lineBatchSize));
             }
 
             if (key == null || EditorPreferencesKeys.IDENTIFIER_ACCEPTOR.equals(key)) {

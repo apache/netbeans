@@ -25,11 +25,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.spi.debugger.ActionsProvider.Registration;
-import org.netbeans.spi.debugger.ActionsProvider.Registrations;
 import org.netbeans.spi.debugger.ActionsProviderSupport;
 import org.netbeans.spi.debugger.ui.EditorContextDispatcher;
 import org.openide.filesystems.FileObject;
@@ -43,16 +43,16 @@ import org.openide.util.WeakListeners;
 @Registration(actions={"toggleBreakpoint"}, activateForMIMETypes={"text/X-c", "text/X-c++", "text/X-h", "text/X-h++"})
 public class CPPLiteBreakpointActionProvider extends ActionsProviderSupport
                                          implements PropertyChangeListener {
-    
+
     private static final String[] C_MIME_TYPES = new String[] {"text/X-c", "text/X-c++", "text/X-h", "text/X-h++"}; // NOI18N
     private static final Set<String> C_MIME_TYPES_SET = new HashSet<>(Arrays.asList(C_MIME_TYPES));
-    
-    private static final Set actions = Collections.singleton (
+
+    private static final Set ACTIONS = Collections.singleton (
         ActionsManager.ACTION_TOGGLE_BREAKPOINT
     );
-    
+
     EditorContextDispatcher context = EditorContextDispatcher.getDefault();
-    
+
     public CPPLiteBreakpointActionProvider () {
         for (String mimeType : C_MIME_TYPES) {
             context.addPropertyChangeListener(mimeType,
@@ -60,7 +60,7 @@ public class CPPLiteBreakpointActionProvider extends ActionsProviderSupport
         }
         setEnabled (ActionsManager.ACTION_TOGGLE_BREAKPOINT, false);
     }
-    
+
     /**
      * Called when the action is called (action button is pressed).
      *
@@ -69,25 +69,32 @@ public class CPPLiteBreakpointActionProvider extends ActionsProviderSupport
     @Override
     public void doAction (Object action) {
         Line line = getCurrentLine ();
-        if (line == null) return ;
-        Breakpoint[] breakpoints = DebuggerManager.getDebuggerManager ().
-            getBreakpoints ();
+        if (line == null) {
+            return ;
+        }
+        Breakpoint[] breakpoints = DebuggerManager.getDebuggerManager().getBreakpoints ();
+        FileObject fo = line.getLookup().lookup(FileObject.class);
+        if (fo == null) {
+            return ;
+        }
+        int lineNumber = line.getLineNumber() + 1;
         int i, k = breakpoints.length;
-        for (i = 0; i < k; i++)
-            if ( breakpoints [i] instanceof CPPLiteBreakpoint &&
-                 ((CPPLiteBreakpoint) breakpoints [i]).getLine ().equals (line)
-            ) {
-                DebuggerManager.getDebuggerManager ().removeBreakpoint
-                    (breakpoints [i]);
-                break;
+        for (i = 0; i < k; i++) {
+            if (breakpoints[i] instanceof CPPLiteBreakpoint) {
+                CPPLiteBreakpoint cppb = (CPPLiteBreakpoint) breakpoints[i];
+                if (fo.equals(cppb.getFileObject()) && cppb.getLineNumber() == lineNumber) {
+                    DebuggerManager.getDebuggerManager().removeBreakpoint(cppb);
+                    break;
+                }
             }
-        if (i == k)
+        }
+        if (i == k) {
             DebuggerManager.getDebuggerManager ().addBreakpoint (
-                new CPPLiteBreakpoint (line)
+                CPPLiteBreakpoint.create(line)
             );
-        //S ystem.out.println("toggle");
+        }
     }
-    
+
     /**
      * Returns set of actions supported by this ActionsProvider.
      *
@@ -95,10 +102,9 @@ public class CPPLiteBreakpointActionProvider extends ActionsProviderSupport
      */
     @Override
     public Set getActions () {
-        return actions;
+        return ACTIONS;
     }
-    
-    
+
     private static Line getCurrentLine () {
         FileObject fo = EditorContextDispatcher.getDefault().getCurrentFile();
         //System.out.println("n = "+n+", FO = "+fo+" => is ANT = "+isAntFile(fo));
@@ -107,8 +113,7 @@ public class CPPLiteBreakpointActionProvider extends ActionsProviderSupport
         }
         return EditorContextDispatcher.getDefault().getCurrentLine();
     }
-    
-    
+
     private static boolean isCFile(FileObject fo) {
         if (fo == null) {
             return false;
@@ -116,12 +121,12 @@ public class CPPLiteBreakpointActionProvider extends ActionsProviderSupport
             return C_MIME_TYPES_SET.contains(fo.getMIMEType());
         }
     }
-    
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         // We need to push the state there :-(( instead of wait for someone to be interested in...
         boolean enabled = getCurrentLine() != null;
         setEnabled (ActionsManager.ACTION_TOGGLE_BREAKPOINT, enabled);
     }
-    
+
 }

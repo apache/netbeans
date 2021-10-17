@@ -213,7 +213,7 @@ public class JavaUtil {
      * Take a String (@param value) and generate Java code to coerce it.
      *   eg:  ('String', "Hello") -> '"Hello"'
      *        ('int', '10') -> '10'
-     *        ('Integer', '43') -> 'new Integer(43)'
+     *        ('Integer', '43') -> 'Integer.valueOf(43)'
      *        ('java.util.Locale', 'Locale.US') -> 'Locale.US'
      */
     public static String instanceFrom(String type, String value) {
@@ -571,7 +571,7 @@ public class JavaUtil {
      * @return a default value for that type.
      *  eg: X -> new X()
      *      java.math.BigDecimal -> new java.math.BigDecimal("0")
-     *      Integer -> new Integer("0")
+     *      Integer -> Integer.valueOf("0")
      */
     public static String genNewDefault(String type) {
         type = type.intern();

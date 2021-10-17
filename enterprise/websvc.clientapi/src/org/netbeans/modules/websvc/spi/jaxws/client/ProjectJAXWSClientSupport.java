@@ -83,6 +83,7 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
     protected static final String JAVA_EE_VERSION_17="java-ee-version-17"; //NOI18N
     protected static final String JAVA_EE_VERSION_18="java-ee-version-18";
     protected static final String JAKARTA_EE_VERSION_8="jakarta-ee-version-8"; //NOI18N
+    protected static final String JAKARTA_EE_VERSION_9="jakarta-ee-version-9"; //NOI18N
 
     Project project;
     private AntProjectHelper helper;
@@ -314,7 +315,7 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
                             ActionUtils.runTarget(buildImplFo,new String[]{"wsimport-client-"+finalName},props); //NOI18N
                     return Boolean.TRUE;
                 }
-            }).booleanValue();
+            });
         } catch (MutexException e) {
             ErrorManager.getDefault().notify(e);
         }

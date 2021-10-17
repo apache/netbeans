@@ -49,10 +49,18 @@ public class DefaultPlatformImpl extends J2SEPlatformImpl {
         if (properties == null) {
             properties = new HashMap<> ();
         }
+        Map<Object,Object> p = System.getProperties();
+        synchronized (p) {
+            p = new HashMap<>(p);
+        }
         String  jdkHome = System.getProperty("jdk.home"); // NOI18N
         File javaHome;
         if (jdkHome == null) {
-            javaHome = FileUtil.normalizeFile(new File(System.getProperty("java.home")).getParentFile()); // NOI18N
+            if (Util.getSpecificationVersion((String) p.get("java.specification.version")).compareTo(Util.JDK9) < 0) {
+                javaHome = FileUtil.normalizeFile(new File(System.getProperty("java.home")).getParentFile()); // NOI18N
+            } else {
+                javaHome = FileUtil.normalizeFile(new File(System.getProperty("java.home"))); // NOI18N
+            }
         } else {
             javaHome = FileUtil.normalizeFile(new File(jdkHome));
         }
@@ -63,10 +71,6 @@ public class DefaultPlatformImpl extends J2SEPlatformImpl {
             Exceptions.printStackTrace(mue);
         }
         final Map<String,String> systemProperties = new HashMap<>();
-        Map<Object,Object> p = System.getProperties();
-        synchronized (p) {
-            p = new HashMap<>(p);
-        }
         for (Map.Entry<Object,Object> e : p.entrySet()) {
             final String key = (String) e.getKey();
             final String value = Util.fixSymLinks(

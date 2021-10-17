@@ -61,6 +61,9 @@
                         <file name="build.gradle" url="desktop_build.gradle.fmk">
                             <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                         </file>
+                        <file name="gradle.properties" url="desktop_gradle.properties.fmk">
+                            <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                        </file>
                         <folder name="src">
                             <folder name="main">
                                 <folder name="java">
@@ -75,6 +78,9 @@
                     <folder name="web">
                         <attr boolvalue="true" name="project"/>
                         <file name="build.gradle" url="web_build.gradle.fmk">
+                            <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                        </file>
+                        <file name="gradle.properties" url="web_gradle.properties.fmk">
                             <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                         </file>
                         <folder name="src">
@@ -103,6 +109,7 @@
                                         <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                                     </file>
                                     <file name="index.html" url="src_main_webapp_pages_index.html.fmk">
+                                        <attr name="important" boolvalue="true"/>
                                         <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                                     </file>
                                 </folder>

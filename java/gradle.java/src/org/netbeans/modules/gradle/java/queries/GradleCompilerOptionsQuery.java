@@ -30,7 +30,6 @@ import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.java.api.GradleJavaProject;
 import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet;
 import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
@@ -42,7 +41,6 @@ import static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceTyp
  *
  * @author lkishalmi
  */
-@ProjectServiceProvider(service = CompilerOptionsQueryImplementation.class, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public final class GradleCompilerOptionsQuery implements CompilerOptionsQueryImplementation {
 
     final Project project;
@@ -124,7 +122,7 @@ public final class GradleCompilerOptionsQuery implements CompilerOptionsQueryImp
 
         private List<String> checkArgs() {
             GradleJavaProject gjp = GradleJavaProject.get(project);
-            GradleJavaSourceSet ss = gjp.getSourceSets().get(sourceSetName);
+            GradleJavaSourceSet ss = gjp != null ? gjp.getSourceSets().get(sourceSetName) : null;
             return ss != null ? ss.getCompilerArgs(type) : Collections.emptyList();
         }
 

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test xmlns="urn:foobar">
+    <configurations xmlns="http://www.netbeans.org/ns/gradle-config/data/1">
+        <configuration displayName="&lt;default&gt;" id="%%DEFAULT%%"/>
+        <configuration id="custom2"/>
+        <configuration id="custom3"/>
+        <configuration displayName="Boo boo" id="custom4">
+            <args>--arg1 arg2</args>
+        </configuration>
+        <configuration id="custom5">
+            <property name="normal"> with spaces around </property>
+            <property name="novalue"/>
+            <property name="spaced">val2</property>
+            <property name="justnull"/>
+            <args>--nospace --evenafter</args>
+        </configuration>
+        <configuration id="custom6">
+            <property name="normal">value</property>
+            <args>--without spaces</args>
+        </configuration>
+    </configurations>
+</test>

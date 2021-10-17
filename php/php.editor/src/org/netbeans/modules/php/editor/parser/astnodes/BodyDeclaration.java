@@ -18,17 +18,26 @@
  */
 package org.netbeans.modules.php.editor.parser.astnodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
- * Base class for class member declarations
+ * Base class for class member declarations.
  */
-public abstract class BodyDeclaration extends Statement {
+public abstract class BodyDeclaration extends Statement implements Attributed {
 
     private int modifier;
+    private final List<Attribute> attributes = new ArrayList<>();
+
+    public BodyDeclaration(int start, int end, int modifier, boolean shouldComplete, List<Attribute> attributes) {
+        super(start, end);
+        this.modifier = (shouldComplete ? completeModifier(modifier) : modifier);
+        this.attributes.addAll(attributes);
+    }
 
     public BodyDeclaration(int start, int end, int modifier, boolean shouldComplete) {
-        super(start, end);
-
-        this.modifier = (shouldComplete ? completeModifier(modifier) : modifier);
+        this(start, end, modifier, shouldComplete, Collections.emptyList());
     }
 
     public BodyDeclaration(int start, int end, int modifier) {
@@ -44,7 +53,35 @@ public abstract class BodyDeclaration extends Statement {
     }
 
     /**
-     * Complets the modidifer to public if needed
+     * Get attributes.
+     *
+     * e.g.
+     * <pre>
+     * #[A1(1)] // attribute
+     * pulic const CONSTANT = 'constant';
+     *
+     * #[A2(2)] // attribute
+     * public $x;
+     *
+     * #[A3(3)] // attribute
+     * public function fnc() {};
+     * </pre>
+     *
+     * @return attributes
+     */
+    @Override
+    public List<Attribute> getAttributes() {
+        return Collections.unmodifiableList(attributes);
+    }
+
+    @Override
+    public boolean isAttributed() {
+        return !attributes.isEmpty();
+    }
+
+    /**
+     * Complets the modidifer to public if needed.
+     *
      * @param mod
      */
     private static int completeModifier(int mod) {
@@ -55,7 +92,7 @@ public abstract class BodyDeclaration extends Statement {
     }
 
     /**
-     * This is a utility for member modifiers
+     * This is a utility for member modifiers.
      */
     public static class Modifier {
 
@@ -92,7 +129,7 @@ public abstract class BodyDeclaration extends Statement {
          * Return <tt>true</tt> if the integer argument includes the
          * <tt>public</tt> modifer, <tt>false</tt> otherwise.
          *
-         * @param 	mod a set of modifers
+         * @param mod a set of modifers
          * @return <tt>true</tt> if <code>mod</code> includes the
          * <tt>public</tt> modifier; <tt>false</tt> otherwise.
          */
@@ -116,7 +153,7 @@ public abstract class BodyDeclaration extends Statement {
          * Return <tt>true</tt> if the integer argument includes the
          * <tt>private</tt> modifer, <tt>false</tt> otherwise.
          *
-         * @param 	mod a set of modifers
+         * @param mod a set of modifers
          * @return <tt>true</tt> if <code>mod</code> includes the
          * <tt>private</tt> modifier; <tt>false</tt> otherwise.
          */
@@ -128,7 +165,7 @@ public abstract class BodyDeclaration extends Statement {
          * Return <tt>true</tt> if the integer argument includes the
          * <tt>protected</tt> modifer, <tt>false</tt> otherwise.
          *
-         * @param 	mod a set of modifers
+         * @param mod a set of modifers
          * @return <tt>true</tt> if <code>mod</code> includes the
          * <tt>protected</tt> modifier; <tt>false</tt> otherwise.
          */
@@ -140,7 +177,7 @@ public abstract class BodyDeclaration extends Statement {
          * Return <tt>true</tt> if the integer argument includes the
          * <tt>static</tt> modifer, <tt>false</tt> otherwise.
          *
-         * @param 	mod a set of modifers
+         * @param mod a set of modifers
          * @return <tt>true</tt> if <code>mod</code> includes the
          * <tt>static</tt> modifier; <tt>false</tt> otherwise.
          */
@@ -152,7 +189,7 @@ public abstract class BodyDeclaration extends Statement {
          * Return <tt>true</tt> if the integer argument includes the
          * <tt>final</tt> modifer, <tt>false</tt> otherwise.
          *
-         * @param 	mod a set of modifers
+         * @param mod a set of modifers
          * @return <tt>true</tt> if <code>mod</code> includes the
          * <tt>final</tt> modifier; <tt>false</tt> otherwise.
          */
@@ -164,7 +201,7 @@ public abstract class BodyDeclaration extends Statement {
          * Return <tt>true</tt> if the integer argument includes the
          * <tt>abstract</tt> modifer, <tt>false</tt> otherwise.
          *
-         * @param 	mod a set of modifers
+         * @param mod a set of modifers
          * @return <tt>true</tt> if <code>mod</code> includes the
          * <tt>abstract</tt> modifier; <tt>false</tt> otherwise.
          */
@@ -172,8 +209,22 @@ public abstract class BodyDeclaration extends Statement {
             return (mod & ABSTRACT) != 0;
         }
 
+        /**
+         * Check whether the modifier is a visibility modifier(public,
+         * protected, or private).
+         *
+         * @param modifier the modifier
+         * @return {@code true} it's a visibility modifier, otherwise
+         * {@code false}
+         */
+        public static boolean isVisibilityModifier(int modifier) {
+            return isPublic(modifier)
+                    || isProtected(modifier)
+                    || isPrivate(modifier);
+        }
+
         public static String toString(int mod) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
 
             if ((mod & PUBLIC) != 0 || (mod & IMPLICIT_PUBLIC) != 0) {
                 sb.append("public "); //$NON-NLS-1$

@@ -53,6 +53,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.api.lsp</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.2</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.api.progress</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -92,7 +101,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>2.21</specification-version>
+                        <specification-version>2.43</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -198,7 +207,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.7</specification-version>
+                        <specification-version>1.53</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -232,7 +241,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.6</specification-version>
+                        <specification-version>1.58</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -249,7 +258,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.0</specification-version>
+                        <specification-version>2.12</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -275,7 +284,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>9.0</specification-version>
+                        <specification-version>9.22</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -419,6 +428,14 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
+                        <code-name-base>org.netbeans.modules.java.j2seplatform</code-name-base>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.java.source.base</code-name-base>
+                        <compile-dependency/>
+                        <test/>
+                    </test-dependency>
+                    <test-dependency>
                         <code-name-base>org.netbeans.modules.lexer</code-name-base>
                         <compile-dependency/>
                         <test/>
@@ -447,12 +464,12 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.openide.util.ui</code-name-base>
+                        <code-name-base>org.openide.util.lookup</code-name-base>
                         <compile-dependency/>
                         <test/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.openide.util.lookup</code-name-base>
+                        <code-name-base>org.openide.util.ui</code-name-base>
                         <compile-dependency/>
                         <test/>
                     </test-dependency>

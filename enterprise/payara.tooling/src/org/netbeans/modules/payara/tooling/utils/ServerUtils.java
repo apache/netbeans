@@ -35,9 +35,11 @@ import java.util.regex.Pattern;
 import javax.xml.bind.DatatypeConverter;
 import org.netbeans.modules.payara.tooling.admin.CommandException;
 import org.netbeans.modules.payara.tooling.data.PayaraContainer;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.logging.Logger;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
+import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 
 /**
  * Common utilities.
@@ -542,32 +544,21 @@ public class ServerUtils {
         return null;
     }
 
-    /**
-     * Retrieve Payara version from local installation using file access.
-     * <p/>
-     * Payara version is read from modules <code>common-util.jar</code>
-     * archive and <code>com.sun.appserv.server.util.Version</code> class.
-     * It's not public Payara API so there is no guaranty for this to work
-     * forever. However Payara development team promised to keep this
-     * API working the same way in Payara 3 and 4.
-     * <p/>
-     * @param serverHome Payara server home directory.
-     * @return Payara server version.
-     */
+    @Deprecated
     public static PayaraVersion getServerVersion(final String serverHome) {
         PayaraVersion version = null;
         File commonUtilJar = getCommonUtilJarInModules(serverHome);
         if (commonUtilJar.canRead()) {
             try {
-                ClassLoader cl = new URLClassLoader(new URL[] {commonUtilJar.
-                            toURI().toURL()});
+                ClassLoader cl = new URLClassLoader(new URL[]{commonUtilJar.
+                    toURI().toURL()});
                 Class c = cl.loadClass(VERSION_CLASS);
                 // Try to get version from com.sun.appserv.server.util.Version.
                 try {
                     Method mGetFullVersion = c.getMethod(FULL_VERSION_METHOD);
                     System.getProperties().put(PF_HOME_PROPERTY, serverHome);
                     String fullVersionString
-                            = (String)mGetFullVersion.invoke(c);
+                            = (String) mGetFullVersion.invoke(c);
                     System.getProperties().remove(PF_HOME_PROPERTY);
                     String versionString
                             = getVersionString(fullVersionString);
@@ -589,6 +580,72 @@ public class ServerUtils {
                                 .getMainAttributes().getValue(BUNDLE_VERSION));
                         if (versionString != null) {
                             version = PayaraVersion.toValue(versionString);
+                        }
+                    } catch (IOException ioe) {
+                        Logger.log(Level.WARNING, "Cannot retrieve Payara version: "
+                                + commonUtilJar.getAbsolutePath() + ": ", ioe);
+                    }
+                }
+            } catch (MalformedURLException | ClassNotFoundException ex) {
+                Logger.log(Level.WARNING, "Cannot retrieve Payara version: "
+                        + commonUtilJar.getAbsolutePath() + ": ", ex);
+            }
+        } else {
+            Logger.log(Level.WARNING, "Cannot retrieve Payara version: "
+                    + commonUtilJar.getAbsolutePath() + " is not readable:"
+                    + " Exists: " + commonUtilJar.exists()
+                    + " Can read: " + commonUtilJar.canRead(), (Throwable) null);
+        }
+        return version;
+    }
+
+    /**
+     * Retrieve Payara Platform version from local installation using file access.
+     * <p/>
+     * Payara version is read from modules <code>common-util.jar</code>
+     * archive and <code>com.sun.appserv.server.util.Version</code> class.
+     * It's not public Payara API so there is no guaranty for this to work
+     * forever. However Payara development team promised to keep this
+     * API working the same way in Payara 3 and 4.
+     * <p/>
+     * @param serverHome Payara server home directory.
+     * @return Payara server version.
+     */
+    public static PayaraPlatformVersionAPI getPlatformVersion(final String serverHome) {
+        PayaraPlatformVersionAPI version = null;
+        File commonUtilJar = getCommonUtilJarInModules(serverHome);
+        if (commonUtilJar.canRead()) {
+            try {
+                ClassLoader cl = new URLClassLoader(new URL[] {commonUtilJar.
+                            toURI().toURL()});
+                Class c = cl.loadClass(VERSION_CLASS);
+                // Try to get version from com.sun.appserv.server.util.Version.
+                try {
+                    Method mGetFullVersion = c.getMethod(FULL_VERSION_METHOD);
+                    System.getProperties().put(PF_HOME_PROPERTY, serverHome);
+                    String fullVersionString
+                            = (String)mGetFullVersion.invoke(c);
+                    System.getProperties().remove(PF_HOME_PROPERTY);
+                    String versionString
+                            = getVersionString(fullVersionString);
+                    if (versionString != null) {
+                        version = PayaraPlatformVersion.toValue(versionString);
+                    }
+                } catch (IllegalAccessException | IllegalArgumentException
+                        | InvocationTargetException | NoSuchMethodException
+                        | SecurityException | NoClassDefFoundError ex) {
+                    Logger.log(Level.WARNING, "Cannot retrieve Payara version: "
+                            + commonUtilJar.getAbsolutePath() + ": ", ex);
+                }
+                // Use Manifest Bundle-Version as fallback option.
+                if (version == null) {
+                    try {
+                        JarFile jar = new JarFile(commonUtilJar);
+                        Manifest manifest = jar.getManifest();
+                        String versionString = getVersionString(manifest
+                                .getMainAttributes().getValue(BUNDLE_VERSION));
+                        if (versionString != null) {
+                            version = PayaraPlatformVersion.toValue(versionString);
                         }
                     } catch (IOException ioe) {
                         Logger.log(Level.WARNING, "Cannot retrieve Payara version: "

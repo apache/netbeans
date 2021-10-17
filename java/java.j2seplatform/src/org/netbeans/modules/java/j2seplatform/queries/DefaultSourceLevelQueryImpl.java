@@ -205,7 +205,7 @@ public class DefaultSourceLevelQueryImpl implements SourceLevelQueryImplementati
                     .map((xt) -> xt.toString())
                     .orElse(pkg);
             }
-        } catch (IOException ioe) {
+        } catch (Exception e) {
             //TODO: Log & pass
         }
         return pkg;

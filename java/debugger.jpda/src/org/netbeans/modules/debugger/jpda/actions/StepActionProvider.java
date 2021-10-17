@@ -54,6 +54,7 @@ import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
 import org.netbeans.modules.debugger.jpda.JPDAStepImpl;
 import org.netbeans.modules.debugger.jpda.JPDAStepImpl.MethodExitBreakpointListener;
 import org.netbeans.modules.debugger.jpda.SourcePath;
+import org.netbeans.modules.debugger.jpda.impl.StepUtils;
 import org.netbeans.modules.debugger.jpda.jdi.IllegalThreadStateExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InvalidRequestStateExceptionWrapper;
@@ -221,6 +222,7 @@ implements Executor {
                     stepSize,
                     stepDepth
                 );
+            StepUtils.markOriginalStepDepth(stepRequest, tr);
             EventRequestWrapper.addCountFilter (stepRequest, 1);
             getDebuggerImpl ().getOperator ().register (stepRequest, StepActionProvider.this);
             EventRequestWrapper.setSuspendPolicy (stepRequest, suspendPolicy);
@@ -416,6 +418,7 @@ implements Executor {
                     StepRequest.STEP_LINE,
                     step
                 );
+                StepUtils.markOriginalStepDepth(stepRequest, tr);
                 EventRequestWrapper.addCountFilter(stepRequest, 1);
                 getDebuggerImpl ().getOperator ().register (stepRequest, this);
                 EventRequestWrapper.setSuspendPolicy(stepRequest, suspendPolicy);
@@ -604,6 +607,9 @@ implements Executor {
         } catch (IllegalThreadStateExceptionWrapper itsex) {
             return 0;
         } catch (InternalExceptionWrapper iex) {
+            return 0;
+        } catch (IndexOutOfBoundsException iobe) {
+            // no frames on stack
             return 0;
         } catch (InvalidStackFrameExceptionWrapper iex) {
             return 0;

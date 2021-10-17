@@ -64,6 +64,16 @@ public class RunJarPrereqChecker implements PrerequisitesChecker {
     private static final String[] MAIN_CLASS_PROPERTIES = {"mainClass", "exec.mainClass", "project.mainClass", "project.mainclass"}; // NOI18N
 
     private String mainClass;
+    
+    private static String testedMainClass;
+    
+    /**
+     * For testing purposes only
+     * @param mainClass 
+     */
+    public static void setMainClass(String mainClass) {
+        testedMainClass = mainClass;
+    }
 
     @Override public boolean checkRunConfig(RunConfig config) {
         String actionName = config.getActionName();
@@ -99,6 +109,8 @@ public class RunJarPrereqChecker implements PrerequisitesChecker {
                         return false;
                     }
                     config.setProperty(entry.getKey(), entry.getValue().replace("${packageClassName}", mc)); // NOI18N
+                    // send a note to RunJarStartupArgs
+                    config.setProperty(MavenExecuteUtils.RUN_MAIN_CLASS, mc); // NOI18N
                 }
             }
         }
@@ -163,6 +175,10 @@ public class RunJarPrereqChecker implements PrerequisitesChecker {
     })
     private String eventuallyShowDialog(Project project, String actionName) {
         if (mainClass != null) {
+            return mainClass;
+        } 
+        if (testedMainClass != null) {
+            mainClass = testedMainClass;
             return mainClass;
         }
         List<FileObject> roots = new ArrayList<FileObject>();

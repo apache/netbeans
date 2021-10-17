@@ -43,22 +43,22 @@ class Test {
 
 }
 
-$closure = function($param1, $param2, $param3, $param4,) {
+$closure = function ($param1, $param2, $param3, $param4,) {
     echo "Trailing Comma in Parameter List" . PHP_EOL;
 };
 
-$closureWithLexical = function($param1, $param2,) use ($lexical) {
+$closureWithLexical = function ($param1, $param2,) use ($lexical) {
     echo "Trailing Comma in Parameter List" . PHP_EOL;
 };
 
-$closureWithReturnType = function(int $param1, $param2,): void {
+$closureWithReturnType = function (int $param1, $param2,): void {
     echo "Trailing Comma in Parameter List" . PHP_EOL;
 };
 
-$closureWithLexixalAndReturnType = function($param1, $param2,) use ($lexical): void {
+$closureWithLexixalAndReturnType = function ($param1, $param2,) use ($lexical): void {
     echo "Trailing Comma in Parameter List" . PHP_EOL;
 };
 
-$closureWithLexixalAndReturnType = function($param1, $param2,) use (&$lexical1, $lexical2): void {
+$closureWithLexixalAndReturnType = function ($param1, $param2,) use (&$lexical1, $lexical2): void {
     echo "Trailing Comma in Parameter List" . PHP_EOL;
 };

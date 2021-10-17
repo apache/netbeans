@@ -57,6 +57,7 @@ import org.netbeans.modules.parsing.impl.indexing.lucene.LuceneIndexFactory;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.ErrorsCache;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation2;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -179,7 +180,7 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
     
     @Override
     protected void setUp() throws Exception {
-        SourceUtilsTestUtil.prepareTest(new String[0], new Object[] {new SourceLevelQueryImpl()});
+        SourceUtilsTestUtil.prepareTest(new String[0], new Object[] {new SourceLevelQueryImpl(), new CompilerOptionsQueryImpl()});
         
         clearWorkDir();
         File wdFile = getWorkDir();
@@ -199,6 +200,7 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
     private FileObject src;
     private FileObject extraSrc;
     private String sourceLevel;
+    private List<String> compilerOptions = Collections.emptyList();
     
     private FileObject createSrcFile(String pathAndName, String content) throws Exception {
         FileObject testFile = FileUtil.createData(src, pathAndName);
@@ -225,6 +227,10 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
         this.sourceLevel = sourceLevel;
     }
 
+    protected void setCompilerOptions(List<String> compilerOptions) {
+        this.compilerOptions = compilerOptions;
+    }
+
     private final class SourceLevelQueryImpl implements SourceLevelQueryImplementation2 {
 
         @Override
@@ -241,6 +247,28 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
                 @Override
                 public void removeChangeListener(ChangeListener l) {}
             };
+        }
+
+    }
+
+    private final class CompilerOptionsQueryImpl implements CompilerOptionsQueryImplementation {
+
+        private final Result result = new Result() {
+            @Override
+            public List<? extends String> getArguments() {
+                return compilerOptions;
+            }
+
+            @Override
+            public void addChangeListener(ChangeListener listener) {}
+
+            @Override
+            public void removeChangeListener(ChangeListener listener) {}
+        };
+
+        @Override
+        public Result getOptions(FileObject file) {
+            return result;
         }
 
     }

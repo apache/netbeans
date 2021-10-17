@@ -3,6 +3,14 @@ text.t|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 METHOD     take(int)                                  String
+METHOD     takeAfter(CharSequence)                    String
+METHOD     takeBefore(CharSequence)                   CharSequence
+METHOD     takeBefore(String)                         String
+METHOD     takeBetween(CharSequence)                  String
+METHOD     takeBetween(CharSequence,  int             String
+METHOD     takeBetween(CharSequence, Char             String
+METHOD     takeBetween(CharSequence, Char             String
+METHOD     takeRight(int)                             String
 METHOD     takeWhile(Closure)                         String
 METHOD     tap(Closure)                               Object
 METHOD     toBigDecimal()                             BigDecimal

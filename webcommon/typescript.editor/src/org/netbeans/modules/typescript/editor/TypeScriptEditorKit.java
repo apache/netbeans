@@ -21,12 +21,15 @@ package org.netbeans.modules.typescript.editor;
 import javax.swing.Action;
 import javax.swing.text.EditorKit;
 import javax.swing.text.TextAction;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.modules.editor.NbEditorKit;
 
 @MimeRegistration(mimeType = TypeScriptEditorKit.TYPESCRIPT_MIME_TYPE, service = EditorKit.class)
 public class TypeScriptEditorKit extends NbEditorKit {
 
+    @StaticResource
+    static final String TYPESCRIPT_ICON = "org/netbeans/modules/typescript/editor/icon.png";
     public static final String TYPESCRIPT_MIME_TYPE = "application/x-typescript"; // NOI18N
 
     @Override

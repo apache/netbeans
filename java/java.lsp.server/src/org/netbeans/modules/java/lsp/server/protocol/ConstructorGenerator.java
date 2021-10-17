@@ -19,11 +19,14 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -48,11 +51,12 @@ import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
-import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -61,8 +65,8 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Dusan Balek
  */
-@ServiceProvider(service = CodeGenerator.class, position = 10)
-public final class ConstructorGenerator extends CodeGenerator {
+@ServiceProvider(service = CodeActionsProvider.class, position = 10)
+public final class ConstructorGenerator extends CodeActionsProvider {
 
     public static final String GENERATE_CONSTRUCTOR =  "java.generate.constructor";
 
@@ -76,13 +80,16 @@ public final class ConstructorGenerator extends CodeGenerator {
     @NbBundle.Messages({
         "DN_GenerateConstructor=Generate Constructor...",
     })
-    public List<CodeAction> getCodeActions(CompilationInfo info, CodeActionParams params) {
-        List<String> only = params.getContext().getOnly();
-        if (only == null || !only.contains(CodeActionKind.Source)) {
+    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+        CompilationController info = CompilationController.get(resultIterator.getParserResult());
+        if (info == null) {
             return Collections.emptyList();
         }
-        int offset = getOffset(info, params.getRange().getStart());
-        TreePath tp = info.getTreeUtilities().pathFor(offset);
+        info.toPhase(JavaSource.Phase.RESOLVED);
+        List<String> only = params.getContext().getOnly();
+        boolean isSource = only != null && only.contains(CodeActionKind.Source);
+        int startOffset = getOffset(info, params.getRange().getStart());
+        TreePath tp = info.getTreeUtilities().pathFor(startOffset);
         tp = info.getTreeUtilities().getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, tp);
         if (tp == null) {
             return Collections.emptyList();
@@ -92,6 +99,24 @@ public final class ConstructorGenerator extends CodeGenerator {
             return Collections.emptyList();
         }
         final Set<? extends VariableElement> uninitializedFields = info.getTreeUtilities().getUninitializedFields(tp);
+        if (!isSource) {
+            final Set<VariableElement> selectedFields = new HashSet<>();
+            int endOffset = getOffset(info, params.getRange().getEnd());
+            for (Tree m : ((ClassTree) tp.getLeaf()).getMembers()) {
+                if (m.getKind() != Tree.Kind.VARIABLE) continue;
+                int start = (int) info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), m);
+                int end   = (int) info.getTrees().getSourcePositions().getEndPosition(tp.getCompilationUnit(), m);
+                if (startOffset <= end && endOffset >= start) {
+                    VariableElement var = (VariableElement) info.getTrees().getElement(new TreePath(tp, m));
+                    if (uninitializedFields.contains(var)) {
+                        selectedFields.add(var);
+                    }
+                }
+            }
+            if (selectedFields.isEmpty()) {
+                return Collections.emptyList();
+            }
+        }
         final List<ExecutableElement> inheritedConstructors = new ArrayList<>();
         TypeMirror superClassType = typeElement.getSuperclass();
         if (superClassType.getKind() == TypeKind.DECLARED) {
@@ -110,9 +135,14 @@ public final class ConstructorGenerator extends CodeGenerator {
         }
         List<QuickPickItem> constructors;
         if (typeElement.getKind() != ElementKind.ENUM && inheritedConstructors.size() == 1) {
-            QuickPickItem item = new QuickPickItem(createLabel(info, inheritedConstructors.get(0)));
-            item.setUserData(new ElementData(inheritedConstructors.get(0)));
-            constructors = Collections.singletonList(item);
+            if (uninitializedFields.isEmpty() && inheritedConstructors.get(0).getParameters().isEmpty()
+                    && ElementFilter.constructorsIn(typeElement.getEnclosedElements()).stream().filter(ctor -> ctor.getParameters().isEmpty() && !info.getElementUtilities().isSynthetic(ctor)).count() > 0) {
+                constructors = Collections.emptyList();
+            } else {
+                QuickPickItem item = new QuickPickItem(createLabel(info, inheritedConstructors.get(0)));
+                item.setUserData(new ElementData(inheritedConstructors.get(0)));
+                constructors = Collections.singletonList(item);
+            }
         } else if (inheritedConstructors.size() > 1) {
             constructors = new ArrayList<>(inheritedConstructors.size());
             for (ExecutableElement constructorElement : inheritedConstructors) {
@@ -131,6 +161,7 @@ public final class ConstructorGenerator extends CodeGenerator {
             for (VariableElement variableElement : uninitializedFields) {
                 QuickPickItem item = new QuickPickItem(createLabel(info, variableElement));
                 item.setUserData(new ElementData(variableElement));
+                item.setPicked(variableElement.getModifiers().contains(Modifier.FINAL));
                 fields.add(item);
             }
         }
@@ -138,7 +169,7 @@ public final class ConstructorGenerator extends CodeGenerator {
             return Collections.emptyList();
         }
         String uri = Utils.toUri(info.getFileObject());
-        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateConstructor(), CODE_GENERATOR_KIND, GENERATE_CONSTRUCTOR, uri, offset, constructors, fields));
+        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateConstructor(), isSource ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, GENERATE_CONSTRUCTOR, uri, startOffset, constructors, fields));
     }
 
     @Override
@@ -190,6 +221,9 @@ public final class ConstructorGenerator extends CodeGenerator {
         }
     }
 
+    @NbBundle.Messages({
+        "DN_ConstructorAlreadyExists=Given constructor already exists",
+    })
     private void generate(NbCodeLanguageClient client, String uri, int offset, List<QuickPickItem> constructors, List<QuickPickItem> fields) {
         try {
             FileObject file = Utils.fromUri(uri);
@@ -214,6 +248,8 @@ public final class ConstructorGenerator extends CodeGenerator {
                 }
             });
             client.applyEdit(new ApplyWorkspaceEditParams(new WorkspaceEdit(Collections.singletonMap(uri, edits))));
+        } catch (GeneratorUtils.DuplicateMemberException dme) {
+            client.showMessage(new MessageParams(MessageType.Info, Bundle.DN_ConstructorAlreadyExists()));
         } catch (IOException | IllegalArgumentException ex) {
             client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }

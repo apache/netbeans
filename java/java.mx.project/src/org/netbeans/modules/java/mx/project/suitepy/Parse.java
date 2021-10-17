@@ -39,33 +39,13 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
-import org.netbeans.api.scripting.Scripting;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 final class Parse {
-    private static final String JS_MIMETYPE = "text/javascript";
-    private final ScriptEngine ENGINE;
-    private final JavaScriptFunctions FUNCS;
     private Parse() {
-        try {
-            ENGINE = Scripting.createManager().getEngineByMimeType(JS_MIMETYPE);
-            Object twoFunctions = ENGINE.eval("(function() {\n"
-                    + "  return {\n"
-                    + "    getProperty : function(obj, prop) {\n"
-                    + "      var value = obj ? obj[prop] : null;\n"
-                    + "      return value ? value : null;\n"
-                    + "    },\n"
-                    + "    getOwnPropertyNames : function(obj) {\n"
-                    + "      return obj ? Object.getOwnPropertyNames(obj) : [];\n"
-                    + "    }\n"
-                    + "  }\n"
-                    + "})()");
-            FUNCS = ((Invocable)ENGINE).getInterface(twoFunctions, JavaScriptFunctions.class);
-        } catch (ScriptException ex) {
-            throw new IllegalStateException(ex);
-        }
     }
 
     static MxSuite parse(URL u) throws IOException {
@@ -83,21 +63,22 @@ final class Parse {
                 if (line == null) {
                     break;
                 }
-                sb.append(line).append("\n");
+                sb.append(jsonify(line)).append("\n");
             }
         }
-        String content = jsonify(sb.toString());
-        Value suite;
+        Object value;
         try {
-            suite = new Value(ENGINE.eval(content));
-        } catch (ScriptException ex) {
-            throw new IOException(ex);
+            final JSONParser p = new JSONParser();
+            value = p.parse(sb.toString());
+        } catch (ParseException ex) {
+            throw new IOException("Cannot parse " + u, ex);
         }
+        Value suite = new Value(value);
         return Meta.create(MxSuite.class).cast(suite);
     }
 
-    private static String jsonify(String text) {
-        text = text.replace("^suite *= *{", "{");
+    private static String jsonify(String content) {
+        String text = content.replaceFirst("^suite *= *\\{", "{");
         text = text.replace("True", "true").replace("False", "false");
         text = text.replaceAll("(\\s*)#.*", "$1");
         text = text.replaceAll(",\\s*(\\]|\\})", "$1");
@@ -117,6 +98,11 @@ final class Parse {
         }
         m.appendTail(sb);
         return sb.toString();
+    }
+
+    @SuppressWarnings("unchecked")
+    static List<String> objectKeys(JSONObject o) {
+        return new ArrayList<>(o.keySet());
     }
 
     private static final class Handler implements InvocationHandler {
@@ -303,28 +289,31 @@ final class Parse {
 
         Value getMember(String key) {
             Value value = members.get(key);
-            if (value == null) {
-                value = new Value(FUNCS.getProperty(obj, key));
+            if (value == null && obj instanceof JSONObject) {
+                value = new Value(((JSONObject)obj).get(key));
                 members.put(key, value);
             }
             return value;
         }
 
         Value getArrayElement(int index) {
+            if (obj instanceof List<?>) {
+                return new Value(((List<?>)obj).get(index));
+            }
             return getMember("" + index);
         }
 
         int getArraySize() {
             if (arraySize == null) {
-                final Object size = FUNCS.getProperty(obj, "length");
-                arraySize = size instanceof Number ? ((Number)size).intValue() : 0;
+                arraySize = ((JSONArray) obj).size();
             }
             return arraySize.intValue();
         }
 
         Iterable<String> getMemberKeys() {
-            Value names = new Value(FUNCS.getOwnPropertyNames(obj));
-            final int namesCount = names.getArraySize();
+            final List<?> keys = objectKeys((JSONObject) obj);
+            Value names = new Value(keys);
+            final int namesCount = keys.size();
             List<String> arrOfNames = new ArrayList<>(namesCount);
             for (int i = 0; i < namesCount; i++) {
                 arrOfNames.add(names.getArrayElement(i).asString());

@@ -19,6 +19,8 @@
 package org.netbeans.modules.java.lsp.server.debugging;
 
 import java.io.IOError;
+import java.io.InputStream;
+import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
@@ -28,15 +30,20 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 
 import org.eclipse.lsp4j.debug.services.IDebugProtocolClient;
 
+import org.netbeans.modules.java.lsp.server.LspSession;
 import org.netbeans.modules.java.lsp.server.debugging.breakpoints.BreakpointsManager;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDebugSession;
+import org.netbeans.modules.java.lsp.server.progress.LspInternalHandle;
+import org.netbeans.modules.progress.spi.InternalHandle;
 import org.openide.util.Pair;
 
 public final class DebugAdapterContext {
 
+    private final LspSession lspSession;
     private IDebugProtocolClient client;
     private NbDebugSession debugSession;
     private boolean clientLinesStartAt1 = true;
@@ -50,6 +57,8 @@ public final class DebugAdapterContext {
     private Charset debuggeeEncoding;
     private boolean isVmStopOnEntry = false;
     private boolean isDebugMode = true;
+    private InternalHandle processExecutorHandle;
+    private Supplier<Writer> inputSinkProvider;
 
     private final AtomicInteger lastSourceReferenceId = new AtomicInteger(0);
     private final Map<Integer, Pair<URI, String>> sourcesById = new ConcurrentHashMap<>();
@@ -60,7 +69,12 @@ public final class DebugAdapterContext {
     private final NbThreads threadsProvider = new NbThreads();
     private final BreakpointsManager breakpointManager = new BreakpointsManager(threadsProvider);
 
-    public DebugAdapterContext() {
+    DebugAdapterContext(LspSession lspSession) {
+        this.lspSession = lspSession;
+    }
+
+    public LspSession getLspSession() {
+        return lspSession;
     }
 
     public IDebugProtocolClient getClient() {
@@ -115,6 +129,25 @@ public final class DebugAdapterContext {
 
     void setClientPathsAreUri(boolean clientPathsAreUri) {
         this.clientPathsAreUri = clientPathsAreUri;
+    }
+    
+    public boolean requestProcessTermination() {
+        InternalHandle ih;
+        synchronized (this) {
+            ih = processExecutorHandle;
+        }
+        if (ih != null) {
+            ((LspInternalHandle)ih).forceRequestCancel();
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public void setProcessExecutorHandle(InternalHandle h) {
+        synchronized (this) {
+            this.processExecutorHandle = h;
+        }
     }
 
     public String getClientPath(String debuggerPath) {
@@ -245,5 +278,13 @@ public final class DebugAdapterContext {
 
     public BreakpointsManager getBreakpointManager() {
         return this.breakpointManager;
+    }
+
+    public Writer getInputSink() {
+        return inputSinkProvider == null ? null : inputSinkProvider.get();
+    }
+
+    public void setInputSinkProvider(Supplier<Writer> inputSinkProvider) {
+        this.inputSinkProvider = inputSinkProvider;
     }
 }

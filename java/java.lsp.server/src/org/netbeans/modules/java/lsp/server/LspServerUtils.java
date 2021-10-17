@@ -85,7 +85,7 @@ public class LspServerUtils {
     public static final void avoidClientMessageThread(Lookup context) {
         NbCodeLanguageClient client = LspServerUtils.findLspClient(context);
         if (LspServerUtils.isClientResponseThread(client)) {
-            throw new IllegalStateException("Can not block LSP server message loop. Use RequestProcessor to run the calling code, or use notifyLater()");
+            throw new IllegalStateException("Cannot block LSP server message loop. Use RequestProcessor to run the calling code, or use notifyLater()");
         }
     }
 }

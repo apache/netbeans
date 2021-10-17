@@ -29,7 +29,6 @@ import java.util.logging.Logger;
 import org.netbeans.modules.xml.catalog.spi.CatalogDescriptor2;
 import org.netbeans.modules.xml.catalog.spi.CatalogListener;
 import org.netbeans.modules.xml.catalog.spi.CatalogReader;
-import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -132,28 +131,34 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
 
     }
 
+    @Override
     public String getIconResource(int type) {
         return "org/netbeans/modules/j2ee/ddloaders/catalog/resources/DDCatalog.gif"; // NOI18N
     }
 
+    @Override
     public String getDisplayName() {
         return NbBundle.getMessage (EnterpriseCatalog.class, "LBL_EnterpriseCatalog");
     }
 
+    @Override
     public String getShortDescription() {
         return NbBundle.getMessage (EnterpriseCatalog.class, "DESC_EnterpriseCatalog");
     }
 
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener l) {
     }
 
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener l) {
     }
 
+    @Override
     public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
         // additional logging for #127276
         if (LOGGER.isLoggable(Level.FINE)) {
-            LOGGER.log(Level.FINE, "Resolving entity [publicId: '" + publicId + "', systemId: '" + systemId + "']");
+            LOGGER.log(Level.FINE, "Resolving entity [publicId: ''{0}'', systemId: ''{1}'']", new Object[]{publicId, systemId});
         }
         if (systemId == null){
             return null;
@@ -162,18 +167,19 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
             if (systemId.endsWith(each.getSchemaName())){
                 // additional logging for #127276
                 if (LOGGER.isLoggable(Level.FINE)) {
-                    LOGGER.log(Level.FINE, "Got resource: " + each.getResourcePath());
+                    LOGGER.log(Level.FINE, "Got resource: {0}", each.getResourcePath());
                 }
                 return new InputSource(each.getResourcePath());
             }
         }
         // additional logging for #127276
         if (LOGGER.isLoggable(Level.FINE)) {
-            LOGGER.log(Level.FINE, "No resource found for publicId: " + publicId);
+            LOGGER.log(Level.FINE, "No resource found for publicId: {0}", publicId);
         }
         return null;
     }
 
+    @Override
     public Iterator getPublicIDs() {
         List<String> result = new ArrayList<String>();
         for (SchemaInfo each : schemas){
@@ -182,9 +188,11 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
         return result.iterator();
     }
 
+    @Override
     public void refresh() {
     }
 
+    @Override
     public String getSystemID(String publicId) {
         if (publicId == null){
             return null;
@@ -197,17 +205,21 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
         return null;
     }
 
+    @Override
     public String resolveURI(String name) {
         return null;
     }
 
+    @Override
     public String resolvePublic(String publicId) {
         return null;
     }
 
+    @Override
     public void addCatalogListener(CatalogListener l) {
     }
 
+    @Override
     public void removeCatalogListener(CatalogListener l) {
     }
 

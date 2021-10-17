@@ -368,4 +368,64 @@ public class OccurrencesFinderImplPHP80Test extends OccurrencesFinderImplTestBas
         checkOccurrences(getTestPath(), "        return $this?->addr^ess;", true);
     }
 
+    public void testConstructorPropertyPromotion_01a() throws Exception {
+        checkOccurrences(getTestPath(), "private int $fie^ld1,", true);
+    }
+
+    public void testConstructorPropertyPromotion_01b() throws Exception {
+        checkOccurrences(getTestPath(), "$this->fiel^d1;", true);
+    }
+
+    public void testConstructorPropertyPromotion_01c() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump($this->fi^eld1);", true);
+    }
+
+    public void testConstructorPropertyPromotion_01d() throws Exception {
+        checkOccurrences(getTestPath(), "echo $fiel^d1;", true);
+    }
+
+    public void testConstructorPropertyPromotion_02a() throws Exception {
+        checkOccurrences(getTestPath(), "protected int|string|\\Test2\\Foo $fiel^d2,", true);
+    }
+
+    public void testConstructorPropertyPromotion_02b() throws Exception {
+        checkOccurrences(getTestPath(), "$this->fiel^d2;", true);
+    }
+
+    public void testConstructorPropertyPromotion_02c() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump($this->fi^eld2);", true);
+    }
+
+    public void testConstructorPropertyPromotion_02d() throws Exception {
+        checkOccurrences(getTestPath(), "echo $fiel^d2;", true);
+    }
+
+    public void testConstructorPropertyPromotion_03a() throws Exception {
+        checkOccurrences(getTestPath(), "public ?string $field^3 = \"default value\",", true);
+    }
+
+    public void testConstructorPropertyPromotion_03b() throws Exception {
+        checkOccurrences(getTestPath(), "$this->fiel^d3;", true);
+    }
+
+    public void testConstructorPropertyPromotion_03c() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump($this->fi^eld3);", true);
+    }
+
+    public void testConstructorPropertyPromotion_03d() throws Exception {
+        checkOccurrences(getTestPath(), "$instance->fiel^d3;", true);
+    }
+
+    public void testConstructorPropertyPromotion_03e() throws Exception {
+        checkOccurrences(getTestPath(), "echo $fiel^d3;", true);
+    }
+
+    public void testConstructorPropertyPromotion_04a() throws Exception {
+        checkOccurrences(getTestPath(), "protected int|string|\\Test2\\Fo^o $field2,", true);
+    }
+
+    public void testConstructorPropertyPromotion_04b() throws Exception {
+        checkOccurrences(getTestPath(), "class F^oo {}", true);
+    }
+
 }

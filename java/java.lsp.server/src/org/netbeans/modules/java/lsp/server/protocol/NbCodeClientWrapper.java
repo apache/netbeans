@@ -25,11 +25,13 @@ import org.eclipse.lsp4j.ApplyWorkspaceEditResponse;
 import org.eclipse.lsp4j.ConfigurationParams;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.ProgressParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.RegistrationParams;
 import org.eclipse.lsp4j.SemanticHighlightingParams;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.UnregistrationParams;
+import org.eclipse.lsp4j.WorkDoneProgressCreateParams;
 import org.eclipse.lsp4j.WorkspaceFolder;
 
 /**
@@ -71,6 +73,11 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     @Override
     public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
         return remote.showInputBox(params);
+    }
+
+    @Override
+    public void notifyTestProgress(TestProgressParams params) {
+        remote.notifyTestProgress(params);
     }
 
     @Override
@@ -126,5 +133,30 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     @Override
     public void semanticHighlighting(SemanticHighlightingParams params) {
         remote.semanticHighlighting(params);
+    }
+
+    @Override
+    public CompletableFuture<Void> createProgress(WorkDoneProgressCreateParams params) {
+        return remote.createProgress(params);
+    }
+
+    @Override
+    public void notifyProgress(ProgressParams params) {
+        remote.notifyProgress(params);
+    }
+
+    @Override
+    public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
+        return remote.createTextEditorDecoration(params);
+    }
+
+    @Override
+    public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
+        remote.setTextEditorDecoration(params);
+    }
+
+    @Override
+    public void disposeTextEditorDecoration(String params) {
+        remote.disposeTextEditorDecoration(params);
     }
 }

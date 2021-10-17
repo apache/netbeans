@@ -49,6 +49,7 @@ import org.netbeans.spi.project.support.ant.ReferenceHelper;
 
 import org.netbeans.spi.project.support.ant.EditableProperties;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Parameters;
 import org.openide.util.Utilities;
 
@@ -146,7 +147,7 @@ public final class ClassPathSupport {
                     AntArtifact artifact = (AntArtifact)ret[0];
                     URI uri = (URI)ret[1];
                     File usedFile = antProjectHelper.resolveFile(evaluator.evaluate(pe[i]));
-                    File artifactFile = Utilities.toFile(Utilities.toURI(artifact.getScriptLocation()).resolve(uri).normalize());
+                    File artifactFile = Utilities.toFile(BaseUtilities.normalizeURI(Utilities.toURI(artifact.getScriptLocation()).resolve(uri)));
                     if (usedFile.equals(artifactFile)) {
                         item = Item.create( artifact, uri, pe[i]);
                     }

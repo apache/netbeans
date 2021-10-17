@@ -52,6 +52,7 @@ public class HTMLTemplateTest {
     }
     
     @Test public void checkTheIterator() throws Exception {
+        EnsureJavaFXPresent.checkAndThrow();
         final String path = "Templates/Test/x.js";
         FileObject fo = FileUtil.getConfigFile(path);
         assertNotNull(fo);

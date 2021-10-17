@@ -834,7 +834,7 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
             int oldLineHeight = lineHeight;
             lineHeight = (int)(maxHeight * lineHeightCorrection);
             if (oldLineHeight != lineHeight && oldLineHeight != -1) {
-                firePropertyChange(LINE_HEIGHT_CHANGED_PROP, new Integer(oldLineHeight), new Integer(lineHeight));
+                firePropertyChange(LINE_HEIGHT_CHANGED_PROP, Integer.valueOf(oldLineHeight), Integer.valueOf(lineHeight));
             }
         }
     }

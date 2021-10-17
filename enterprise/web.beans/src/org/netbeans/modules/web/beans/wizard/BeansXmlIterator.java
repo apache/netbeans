@@ -20,7 +20,6 @@
 package org.netbeans.modules.web.beans.wizard;
 
 import java.awt.Component;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import javax.swing.JComponent;
@@ -70,19 +69,21 @@ public class BeansXmlIterator implements TemplateWizard.Iterator {
     private transient WizardDescriptor.Panel[] panels;
     private transient J2eeProjectType type;
 
+    @Override
     public Set<DataObject> instantiate(TemplateWizard wizard) throws IOException {
         String targetName = Templates.getTargetName(wizard);
         FileObject targetDir = Templates.getTargetFolder(wizard);
         Project project = Templates.getProject(wizard);
-        boolean useCDI11 = true;
+        Profile profile = null;
         if (project != null) {
             J2eeProjectCapabilities cap = J2eeProjectCapabilities.forProject(project);
-            if (cap != null && !cap.isCdi11Supported()) {
-                useCDI11 = false;
+            if (cap != null && cap.isCdi20Supported()) {
+                profile = Profile.JAVA_EE_8_FULL;
+            } else if (cap != null && cap.isCdi11Supported()) {
+                profile = Profile.JAVA_EE_7_FULL;
             }
         }
-        FileObject fo = DDHelper.createBeansXml(
-                useCDI11 ? Profile.JAVA_EE_7_FULL : Profile.JAVA_EE_6_FULL, targetDir, targetName);
+        FileObject fo = DDHelper.createBeansXml(profile != null ? profile : Profile.JAVA_EE_6_FULL, targetDir, targetName);
         if (fo != null) {
             if ( project != null ){
                 CdiUtil logger = project.getLookup().lookup( CdiUtil.class );
@@ -98,6 +99,7 @@ public class BeansXmlIterator implements TemplateWizard.Iterator {
         }
     }
 
+    @Override
     public void initialize(TemplateWizard wizard) {
         WizardDescriptor.Panel folderPanel;
         Project project = Templates.getProject( wizard );
@@ -143,7 +145,7 @@ public class BeansXmlIterator implements TemplateWizard.Iterator {
             if (steps[i] == null) {
                 steps[i] = jc.getName ();
             }
-            jc.putClientProperty (WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(i));
+            jc.putClientProperty (WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
             jc.putClientProperty (WizardDescriptor.PROP_CONTENT_DATA, steps); 
         }
 
@@ -200,40 +202,49 @@ public class BeansXmlIterator implements TemplateWizard.Iterator {
         return project.getProjectDirectory();
     }
 
+    @Override
     public void uninitialize(TemplateWizard wiz) {
         panels = null;
     }
 
+    @Override
     public Panel<WizardDescriptor> current() {
         return panels[index];
     }
 
+    @Override
     public String name() {
         return NbBundle.getMessage(BeansXmlIterator.class, "TITLE_x_of_y",
                 index + 1, panels.length);
     }
 
+    @Override
     public boolean hasNext() {
         return index < panels.length - 1;
     }
 
+    @Override
     public boolean hasPrevious() {
         return index > 0;
     }
 
+    @Override
     public void nextPanel() {
         if (! hasNext ()) throw new NoSuchElementException ();
         index++;
     }
 
+    @Override
     public void previousPanel() {
         if (! hasPrevious ()) throw new NoSuchElementException ();
         index--;
     }
 
+    @Override
     public void addChangeListener(ChangeListener l) {
     }
 
+    @Override
     public void removeChangeListener(ChangeListener l) {
     }
 

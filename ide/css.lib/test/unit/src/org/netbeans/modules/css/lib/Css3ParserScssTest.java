@@ -784,6 +784,10 @@ public class Css3ParserScssTest extends CssTestBase {
 
     }
 
+    public void testExtendMultipleSelectors() {
+        assertParses("dummy {@extend .message, .info;};");
+    }
+
     public void testDebug() {
         String source = "@debug 10em + 12em;\n"
                 + ".class {\n"
@@ -1564,6 +1568,17 @@ public class Css3ParserScssTest extends CssTestBase {
                 + "  &-primary { background: orange; }\n"
                 + "  &-secondary { background: blue; }\n"
                 + "}\n");
+        // Test parent selector combined with interpolation
+        assertParses("$i: 1;\n"
+            + ".selector\n"
+            + "{\n"
+            + "    &--#{$i}\n"
+            + "    {\n"
+            + "    }\n"
+            + "    &__#{$i}\n"
+            + "    {\n"
+            + "    }\n"
+            + "}", true);
     }
 
     public void testAtRoot() {
@@ -1990,5 +2005,18 @@ public class Css3ParserScssTest extends CssTestBase {
                 + "@media screen and #{$information-phone} {\n"
                 + "  background: red;\n"
                 + "}");
+    }
+
+    public void testScssUseForward() {
+        assertParses("@use 'test1';");
+        assertParses("@use 'test2' as t;");
+        assertParses("@use 'test2' with ($black: #222, $border-radius: 0.1rem);");
+        assertParses("@use 'test2' as t with ($black: #222, $border-radius: 0.1rem);");
+        assertParses("@forward 'test1';");
+        assertParses("@forward 'test2' as t;");
+        assertParses("@forward 'test2' with ($black: #222, $border-radius: 0.1rem);");
+        assertParses("@forward 'test2' as t with ($black: #222, $border-radius: 0.1rem);");
+        assertParses("@forward 'test2' hide dummy1;");
+        assertParses("@forward 'test2' show dummy1, dummy2;");
     }
 }

@@ -198,6 +198,10 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
                                break;
                 case v8_0_0:     profiles[index++] = Profile.JAKARTA_EE_8_FULL;
                                break;
+                case v9_0_0_web: profiles[index++] = Profile.JAKARTA_EE_9_WEB;
+                               break;
+                case v9_0_0:     profiles[index++] = Profile.JAKARTA_EE_9_FULL;
+                               break;
             }
         } else {
             profiles = new Profile[0];

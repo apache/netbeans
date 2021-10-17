@@ -37,6 +37,7 @@ import org.openide.util.RequestProcessor;
 import org.netbeans.api.debugger.DebuggerManager;
 
 import org.netbeans.spi.debugger.ui.EditorContextDispatcher;
+import org.netbeans.modules.nativeimage.spi.debug.filters.VariableDisplayer;
 
 
 public class ToolTipAnnotation extends Annotation implements Runnable {
@@ -76,11 +77,11 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
             doc = ec.openDocument();
         } catch (IOException ex) {
             return ;
-        }                    
+        }
         JEditorPane ep = EditorContextDispatcher.getDefault().getCurrentEditor();
         if (ep == null) return ;
         String expression = getIdentifier (
-            doc, 
+            doc,
             ep,
             NbDocument.findLineOffset (
                 doc,
@@ -92,13 +93,31 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
             getCurrentEngine ();
         if (currentEngine == null) return;
         CPPLiteDebugger d = currentEngine.lookupFirst(null, CPPLiteDebugger.class);
-        if (d == null) return;
-        String value = d.evaluate (expression);
-        if ( value == null ||
-             value.equals (expression)
-        ) return;
-        String toolTipText = expression + " = " + value;
-        firePropertyChange (PROP_SHORT_DESCRIPTION, null, toolTipText);
+        CPPFrame frame;
+        if (d == null || (frame = d.getCurrentFrame()) == null) {
+            return;
+        }
+        frame.evaluateAsync(expression).thenAccept(variable -> {
+                               VariableDisplayer displayer = currentEngine.lookupFirst(null, VariableDisplayer.class);
+                               if (displayer != null) {
+                                   variable = displayer.displayed(variable)[0];
+                               }
+                               String value = variable.getValue();
+                               if (!value.equals(expression)) {
+                                   String toolTipText;
+                                   String type = variable.getType();
+                                   if (type != null) {
+                                       toolTipText = expression + " = (" + type + ") " + value;
+                                   } else {
+                                       toolTipText = expression + " = " + value;
+                                   }
+                                   firePropertyChange (PROP_SHORT_DESCRIPTION, null, toolTipText);
+                               }
+                           }).exceptionally(exception -> {
+                               String toolTipText = exception.getLocalizedMessage();
+                               firePropertyChange (PROP_SHORT_DESCRIPTION, null, toolTipText);
+                               return null;
+                           });
     }
 
     @Override
@@ -136,24 +155,29 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
             t = doc.getText (lineStartOffset, lineLen);
             lineLen = t.length ();
             int identStart = col;
-            while ( (identStart > 0) && 
-                    (t.charAt (identStart - 1) != '"')
-            ) {
+            while (identStart > 0 &&
+                   (Character.isJavaIdentifierPart(t.charAt (identStart - 1)) ||
+                    (t.charAt (identStart - 1) == '.'))) {
                 identStart--;
             }
-            int identEnd = Math.max (col, 1);
-            while ( (identEnd < lineLen) && 
-                    (t.charAt (identEnd - 1) != '"')
-            ) {
+            int identEnd = col;
+            while (identEnd < lineLen &&
+                   Character.isJavaIdentifierPart(t.charAt(identEnd))) {
                 identEnd++;
             }
-
-            if (identStart == identEnd) return null;
-            return t.substring (identStart, identEnd - 1);
+            if (identStart == identEnd) {
+                return null;
+            }
+            String ident = t.substring (identStart, identEnd);
+            while (identEnd < lineLen &&
+                   Character.isWhitespace(t.charAt(identEnd))) {
+                identEnd++;
+            }
+            return ident;
         } catch (BadLocationException e) {
             return null;
         }
     }
-    
+
 }
 

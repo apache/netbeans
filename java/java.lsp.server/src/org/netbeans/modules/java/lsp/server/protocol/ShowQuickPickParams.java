@@ -78,7 +78,7 @@ public class ShowQuickPickParams {
      * A string to show as placeholder in the input box to guide the user what to pick on.
      */
     public void setPlaceHolder(@NonNull final String placeHolder) {
-        this.placeHolder = placeHolder;
+        this.placeHolder = Preconditions.checkNotNull(placeHolder, "placeHolder");
     }
 
     /**
@@ -109,7 +109,7 @@ public class ShowQuickPickParams {
      * A list of items.
      */
     public void setItems(@NonNull final List<QuickPickItem> items) {
-        this.items = items;
+        this.items = Preconditions.checkNotNull(items, "items");
     }
 
     @Override

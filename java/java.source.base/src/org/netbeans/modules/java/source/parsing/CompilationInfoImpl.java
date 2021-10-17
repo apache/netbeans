@@ -28,6 +28,8 @@ import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.Log;
 
 import java.io.IOException;
+import java.lang.ref.Reference;
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -84,6 +86,7 @@ public final class CompilationInfoImpl {
     final AbstractSourceFileObject jfo;
     //@NotThreadSafe    //accessed under parser lock
     private Snapshot snapshot;
+    private Reference<Snapshot> partialReparseLastGoodSnapshot;
     private final JavacParser parser;
     private final boolean isClassFile;
     private final boolean isDetached;
@@ -102,7 +105,7 @@ public final class CompilationInfoImpl {
      * @param detached true if the CompilationInfoImpl is detached from parsing infrastructure.
      * @throws java.io.IOException
      */
-    CompilationInfoImpl (final JavacParser parser,
+    public CompilationInfoImpl (final JavacParser parser,
                          final FileObject file,
                          final FileObject root,
                          final JavacTaskImpl javacTask,
@@ -116,6 +119,7 @@ public final class CompilationInfoImpl {
         this.file = file;
         this.root = root;
         this.snapshot = snapshot;
+        this.partialReparseLastGoodSnapshot = new SoftReference<>(snapshot);
         assert file == null || snapshot != null;
         this.jfo = file != null ?
             FileObjects.sourceFileObject(file, root, JavaFileFilterQuery.getFilter(file), snapshot.getText()) :
@@ -175,7 +179,16 @@ public final class CompilationInfoImpl {
     public Snapshot getSnapshot () {
         return this.snapshot;
     }
-    
+
+    public Snapshot getPartialReparseLastGoodSnapshot() {
+        return partialReparseLastGoodSnapshot != null ? partialReparseLastGoodSnapshot.get()
+                                                      : null;
+    }
+
+    public void setPartialReparseLastGoodSnapshot(Snapshot snapshot) {
+        this.partialReparseLastGoodSnapshot = new SoftReference<>(snapshot);
+    }
+
     /**
      * Returns the current phase of the {@link JavaSource}.
      * @return {@link JavaSource.Phase} the state which was reached by the {@link JavaSource}.

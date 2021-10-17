@@ -51,7 +51,6 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="noteLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="informationLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="learnMoreLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="emptyLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
@@ -94,9 +93,7 @@
               <Component id="debuggerPortOptionLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="optionsLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
-              <Component id="informationLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
               <Component id="learnMoreLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="emptyLabel" min="-2" max="-2" attributes="0"/>
@@ -133,15 +130,6 @@
       <Events>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="optionsLabelMousePressed"/>
         <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="optionsLabelMouseEntered"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JLabel" name="informationLabel">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;#&quot;&gt;More information about Xdebug2 installation/configuration&lt;/a&gt;"/>
-      </Properties>
-      <Events>
-        <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="informationLabelMousePressed"/>
-        <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="informationLabelMouseEntered"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="learnMoreLabel">

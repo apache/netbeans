@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import org.netbeans.modules.gradle.GradleModuleFileCache21;
 
 /**
  * This object represents a configuration in a Gradle project.
@@ -86,10 +87,7 @@ public final class GradleConfiguration implements Serializable, ModuleSearchSupp
 
     @Override
     public Set<GradleDependency.ModuleDependency> findModules(String gav) {
-        String parts[] = GradleDependency.gavSplit(gav);
-        if (parts.length != 3) {
-            throw new IllegalArgumentException("Invalid gav filter: "  + gav);
-        }
+        String parts[] = GradleModuleFileCache21.gavSplit(gav);
         String group = parts[0].isEmpty() ? null : parts[0];
         String artifact = parts[1].isEmpty() ? null : parts[1];
         String version = parts[2].isEmpty() ? null : parts[2];

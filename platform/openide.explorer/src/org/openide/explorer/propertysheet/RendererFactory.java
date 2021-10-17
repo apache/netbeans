@@ -62,6 +62,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
+import org.openide.awt.GraphicsUtils;
 import org.openide.awt.HtmlRenderer;
 import org.openide.nodes.Node.Property;
 import org.openide.util.ImageUtilities;
@@ -791,6 +792,7 @@ final class RendererFactory {
                         && ! isEnabled() && ! htmlValueUsed) {
                     // the shadow effect from the label was making a problem
                     // let's paint the text "manually" in this case
+                    GraphicsUtils.configureDefaultRenderingHints(g);
                     g.setColor(lbl.getBackground());
                     g.fillRect(0, 0, lbl.getWidth(), lbl.getHeight());
                     g.setColor(lbl.getForeground());

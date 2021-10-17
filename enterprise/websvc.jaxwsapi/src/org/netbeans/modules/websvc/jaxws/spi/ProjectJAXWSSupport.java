@@ -79,6 +79,7 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
     protected static final String JAVA_EE_VERSION_17="java-ee-version-17"; //NOI18N
     protected static final String JAVA_EE_VERSION_18="java-ee-version-18"; //NOI18N
     protected static final String JAKARTA_EE_VERSION_8="jakarta-ee-version-8"; //NOI18N
+    protected static final String JAKARTA_EE_VERSION_9="jakarta-ee-version-9"; //NOI18N
 
     private Project project;
     private AntProjectHelper antProjectHelper;
@@ -403,13 +404,8 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
     }
 
     public URL getCatalog() {
-        try {
-            FileObject catalog = getCatalogFileObject();
-            return catalog==null?null:catalog.getURL();
-        } catch (FileStateInvalidException ex) {
-            return null;
-        }
-
+        FileObject catalog = getCatalogFileObject();
+        return catalog == null ? null : catalog.toURL();
     }
 
     private FileObject getWsdlFolderForService(String name) throws IOException {

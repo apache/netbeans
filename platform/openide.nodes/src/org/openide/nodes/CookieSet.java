@@ -240,7 +240,7 @@ public final class CookieSet extends Object implements Lookup.Provider {
      */
     static Object entryAllClassesMode() {
         Object prev = QUERY_MODE.get();
-        QUERY_MODE.set(new HashSet());
+        QUERY_MODE.set(new HashSet<Object>());
 
         return prev;
     }

@@ -270,7 +270,7 @@ public class SecurityMultiViewElement extends ToolBarMultiViewElement
             super(NbBundle.getMessage(SecurityMultiViewElement.class,"LBL_AddSecurityConstraint"));
             char mnem = NbBundle.getMessage(SecurityMultiViewElement.class,"LBL_AddSecurityConstraint_mnem").charAt(0);
             
-            putValue(MNEMONIC_KEY,new Integer((int)mnem));
+            putValue(MNEMONIC_KEY, (int)mnem);
         }
         
         public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -320,7 +320,7 @@ public class SecurityMultiViewElement extends ToolBarMultiViewElement
         RemoveConstraintAction() {
             super(NbBundle.getMessage(SecurityMultiViewElement.class,"LBL_remove"));
             char mnem = NbBundle.getMessage(SecurityMultiViewElement.class,"LBL_remove_mnem").charAt(0);
-            putValue(MNEMONIC_KEY,new Integer((int)mnem));
+            putValue(MNEMONIC_KEY, (int)mnem);
         }
         
         public void actionPerformed(java.awt.event.ActionEvent evt) {

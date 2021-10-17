@@ -32,6 +32,7 @@ import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation2;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -78,7 +79,7 @@ public class ToStringGeneratorTest extends NbTestCase {
                     }
                 };
             }
-        }}, getClass().getClassLoader());
+        }, BootClassPathUtil.getBootClassPathProvider()}, getClass().getClassLoader());
     }
 
     public void testToStringWithPlusOperator() throws Exception {

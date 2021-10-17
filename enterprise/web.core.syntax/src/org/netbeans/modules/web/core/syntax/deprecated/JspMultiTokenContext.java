@@ -21,13 +21,10 @@ package org.netbeans.modules.web.core.syntax.deprecated;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.modules.web.core.syntax.deprecated.JspJavaFakeTokenContext;
 import org.netbeans.editor.BaseTokenID;
 import org.netbeans.editor.TokenContext;
 import org.netbeans.editor.TokenContextPath;
-import org.netbeans.modules.web.core.syntax.deprecated.HtmlTokenContext;
 import org.netbeans.editor.ext.plain.PlainTokenContext;
-import org.netbeans.modules.web.core.syntax.deprecated.ELTokenContext;
 
 /**
 * Token context for JSP.

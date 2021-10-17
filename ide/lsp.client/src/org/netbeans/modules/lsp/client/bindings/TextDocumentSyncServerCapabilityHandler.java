@@ -216,7 +216,7 @@ public class TextDocumentSyncServerCapabilityHandler {
                                     });
                                 }
                             }
-                            server.scheduleBackgroundTasks(file);
+                            LSPBindings.scheduleBackgroundTasks(file);
                         });
                     } catch (BadLocationException ex) {
                         Exceptions.printStackTrace(ex);
@@ -308,7 +308,7 @@ public class TextDocumentSyncServerCapabilityHandler {
                                                                      text[0]);
 
             server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(textDocumentItem));
-            server.scheduleBackgroundTasks(file);
+            LSPBindings.scheduleBackgroundTasks(file);
         });
     }
 

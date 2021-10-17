@@ -83,7 +83,17 @@ public final class InsaneEngine {
         
         // dispatch the recognition
         if (o instanceof Class) {
-            recognizeClass((Class)o);
+            try {
+                recognizeClass((Class)o);
+            } catch (SecurityException ex) {
+                if (ex.getMessage() == null || !ex.getMessage().contains("java.lang")) {
+                    throw ex;
+                }
+                // just report: possibly an upwards-compatible method 
+                // not linkable on current runtime.
+                System.err.println("Failed analysing class " + ((Class)o).getName() +
+                        " because of " + ex.getMessage());
+            }
         } else {
             recognizeObject(o);
         }

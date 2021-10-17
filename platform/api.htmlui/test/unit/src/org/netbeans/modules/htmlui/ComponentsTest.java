@@ -47,6 +47,7 @@ public class ComponentsTest {
 
     @Test(timeOut = 9000)
     public void loadSwing() throws Exception {
+        EnsureJavaFXPresent.checkAndThrow();
         CountDownLatch cdl = new CountDownLatch(1);
         JComponent p = TestPages.getSwing(10, cdl);
         JFrame f = new JFrame();
@@ -58,9 +59,12 @@ public class ComponentsTest {
 
     @Test(timeOut = 9000)
     public void loadFX() throws Exception {
+        EnsureJavaFXPresent.checkAndThrow();
         final CountDownLatch cdl = new CountDownLatch(1);
         final CountDownLatch done = new CountDownLatch(1);
+        System.err.println("p1: " + JFXPanel.class.getProtectionDomain().getCodeSource().getLocation());
         final JFXPanel p = new JFXPanel();
+        System.err.println("p2: " + p.getClass().getProtectionDomain().getCodeSource().getLocation());
         Platform.runLater(new Runnable() {
             @Override
             public void run() {

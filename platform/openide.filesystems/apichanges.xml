@@ -25,6 +25,38 @@
         <apidef name="filesystems">Filesystems API</apidef>
     </apidefs>
     <changes>
+        <change>
+            <api name="filesystems"/>
+            <summary>Utility to check valid filenames</summary>
+            <version major="9" minor="24"/>
+            <date year="2021" month="5" day="28"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" source="compatible" semantic="compatible" binary="compatible"/>
+            <description>
+                <p>
+                    An utility method <a href="@TOP@/org/openide/filesystems/FileUtil.html#isValidFileName-java.lang.String-">isValidFileName()</a> was added
+                    to check for illegal characters that may vary on supported platforms/OSes.
+                </p>
+            </description>
+        </change>
+        <change id="getFileObjectNonExisting">
+            <api name="filesystems"/>
+            <summary>getFileObject can return non-existing files</summary>
+            <version major="9" minor="23"/>
+            <date year="2021" month="3" day="5"/>
+            <author login="jtulach"/>
+            <compatibility addition="yes" source="compatible" semantic="compatible" binary="compatible"/>
+            <description>
+                <p>
+                    New method 
+                    <a href="@TOP@/org/openide/filesystems/FileObject.html#getFileObject-java.lang.String-boolean-"><code>getFileObject(relativePath, false)</code></a>
+                    in 
+                    <a href="@TOP@/org/openide/filesystems/FileObject.html"><code>FileObject</code></a>
+                    class to return a relative object even if it doesn't exist.
+                </p>
+            </description>
+            <class name="FileObject" package="org.openide.filesystems"/>
+        </change>
         <change id="LayerProcessorSupportedSource">
             <api name="filesystems"/>
             <summary>Declare support for all source levels.</summary>

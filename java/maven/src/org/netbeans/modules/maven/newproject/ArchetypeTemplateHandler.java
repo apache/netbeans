@@ -54,12 +54,11 @@ public final class ArchetypeTemplateHandler extends CreateFromTemplateHandler {
     }
 
     @NbBundle.Messages({
-        "MSG_NoVersion=No version attribute specified for the Maven project",
         "MSG_NoArtifactId=No artifactId attribute specified for the Maven project",
         "MSG_NoGroupId=No groupId attribute specified for the Maven project",
     })
     @Override
-    protected List<FileObject> createFromTemplate(CreateDescriptor desc) throws IOException {
+    public List<FileObject> createFromTemplate(CreateDescriptor desc) throws IOException {
         Properties archetype = new Properties();
         try (InputStream is = desc.getTemplate().getInputStream()) {
             archetype.load(is);
@@ -68,14 +67,14 @@ public final class ArchetypeTemplateHandler extends CreateFromTemplateHandler {
         
         String version = archetype.getProperty("version"); // NOI18N
         if (version == null) {
-            throw new IOException(Bundle.MSG_NoVersion());
+            version = "1.0-SNAPSHOT"; // NOI18N
         }
         String artifactId = archetype.getProperty("artifactId"); // NOI18N
-        if (version == null) {
+        if (artifactId == null) {
             throw new IOException(Bundle.MSG_NoArtifactId());
         }
         String groupId = archetype.getProperty("groupId"); // NOI18N
-        if (version == null) {
+        if (groupId == null) {
             throw new IOException(Bundle.MSG_NoGroupId());
         }
         String packageName = archetype.getProperty("package"); // NOI18N
@@ -86,7 +85,7 @@ public final class ArchetypeTemplateHandler extends CreateFromTemplateHandler {
         arch.setVersion(archetype.getProperty("archetypeVersion")); // NOI18N
         File projDir = desc.getValue(CommonProjectActions.PROJECT_PARENT_FOLDER);
         if (projDir == null) {
-            projDir = FileUtil.toFile(desc.getTarget()).getParentFile();
+            projDir = FileUtil.toFile(desc.getTarget());
         }
         if (projDir == null) {
             throw new IOException(CommonProjectActions.PROJECT_PARENT_FOLDER + " not specified");

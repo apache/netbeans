@@ -18,12 +18,16 @@
  */
 'use strict';
 
-import {QuickPickItem} from 'vscode';
+import * as vscode from 'vscode';
 import {
     NotificationType,
     RequestType,
     ShowMessageParams
 } from 'vscode-languageclient';
+import {
+    Position,
+    Range
+} from 'vscode-languageserver-protocol';
 
 export interface ShowStatusMessageParams extends ShowMessageParams {
     /**
@@ -48,11 +52,11 @@ export interface ShowQuickPickParams {
     /**
      * A list of items.
      */
-    items: QuickPickItem[];
+    items: vscode.QuickPickItem[];
 }
 
 export namespace QuickPickRequest {
-    export const type = new RequestType<ShowQuickPickParams, QuickPickItem[], void>('window/showQuickPick');
+    export const type = new RequestType<ShowQuickPickParams, vscode.QuickPickItem[], void, void>('window/showQuickPick');
 }
 
 export interface ShowInputBoxParams {
@@ -68,4 +72,81 @@ export interface ShowInputBoxParams {
 
 export namespace InputBoxRequest {
     export const type = new RequestType<ShowInputBoxParams, string | undefined, void>('window/showInputBox');
+}
+
+export interface TestProgressParams {
+    uri: string;
+    suite: TestSuite;
+}
+
+export interface TestSuite {
+    name: string;
+    file?: string;
+    range?: Range;
+    state: 'loaded' | 'started' | 'passed' | 'failed' | 'skipped' | 'errored';
+    tests?: TestCase[];
+}
+
+export interface TestCase {
+    id: string;
+    name: string;
+    file?: string;
+    range?: Range;
+    state: 'loaded' | 'started' | 'passed' | 'failed' | 'skipped' | 'errored';
+    stackTrace?: string[];
+}
+
+export namespace TestProgressNotification {
+    export const type = new NotificationType<TestProgressParams, void>('window/notifyTestProgress');
+};
+
+export interface DebugConnector {
+    id: string;
+    name: string;
+    type: string;
+    arguments: string[];
+    defaultValues: string[];
+    descriptions: string[];
+}
+
+export interface SetTextEditorDecorationParams {
+    key: string;
+    uri: string;
+    ranges: Range[];
+};
+
+export namespace TextEditorDecorationCreateRequest {
+    export const type = new RequestType<vscode.DecorationRenderOptions, string, void, void>('window/createTextEditorDecoration');
+};
+
+export namespace TextEditorDecorationSetNotification {
+    export const type = new NotificationType<SetTextEditorDecorationParams, void>('window/setTextEditorDecoration');
+};
+
+export namespace TextEditorDecorationDisposeNotification {
+    export const type = new NotificationType<string, void>('window/disposeTextEditorDecoration');
+};
+
+export function asPosition(value: undefined | null): undefined;
+export function asPosition(value: Position): vscode.Position;
+export function asPosition(value: Position | undefined | null): vscode.Position | undefined;
+export function asPosition(value: Position | undefined | null): vscode.Position | undefined {
+    if (!value) {
+        return undefined;
+    }
+    return new vscode.Position(value.line, value.character);
+}
+
+export function asRange(value: undefined | null): undefined;
+export function asRange(value: Range): vscode.Range;
+export function asRange(value: Range | undefined | null): vscode.Range | undefined;
+export function asRange(value: Range | undefined | null): vscode.Range | undefined {
+    if (!value) {
+        return undefined;
+    }
+    return new vscode.Range(asPosition(value.start), asPosition(value.end));
+}
+
+export function asRanges(value: Range[]): vscode.Range[] {
+    return value.map(value => asRange(value));
 }

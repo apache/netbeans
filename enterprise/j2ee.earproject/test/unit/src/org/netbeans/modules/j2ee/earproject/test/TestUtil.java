@@ -210,7 +210,7 @@ public final class TestUtil {
     public static int projectLoadCount(FileObject dir) {
         Integer i = loadCount.get(dir);
         if (i != null) {
-            return i.intValue();
+            return i;
         } else {
             return 0;
         }

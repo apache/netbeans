@@ -40,8 +40,13 @@ import org.netbeans.swing.tabcontrol.plaf.TabControlButton;
  */
 public class FlatLFCustoms extends LFCustoms {
 
+    private static final ModifiableColor unifiedBackground = new ModifiableColor();
+    private static final ModifiableColor quicksearchBackground = new ModifiableColor();
+
     @Override
     public Object[] createApplicationSpecificKeysAndValues() {
+        updateUnifiedBackground();
+
         Color editorContentBorderColor = UIManager.getColor("TabbedContainer.editor.contentBorderColor"); // NOI18N
 
         Object[] removeCtrlPageUpDownKeyBindings = {
@@ -50,6 +55,17 @@ public class FlatLFCustoms extends LFCustoms {
         };
 
         return new Object[] {
+            // unified background
+            "nb.options.categories.tabPanelBackground", unifiedBackground,
+            "nb.quicksearch.background", quicksearchBackground,
+
+            // options
+            "TitlePane.useWindowDecorations", FlatLafPrefs.isUseWindowDecorations(),
+            "TitlePane.unifiedBackground", FlatLafPrefs.isUnifiedTitleBar(),
+            "TitlePane.menuBarEmbedded", FlatLafPrefs.isMenuBarEmbedded(),
+            "MenuItem.selectionType", FlatLafPrefs.isUnderlineMenuSelection() ? "underline" : null,
+            "Component.hideMnemonics", !FlatLafPrefs.isAlwaysShowMnemonics(),
+
             // necessary for org.openide.explorer.propertysheet.PropertySheet and others
             CONTROLFONT, UIManager.getFont("Label.font"), // NOI18N
 
@@ -104,6 +120,34 @@ public class FlatLFCustoms extends LFCustoms {
             "Table.ancestorInputMap.RightToLeft", new LazyModifyInputMap( "Table.ancestorInputMap.RightToLeft", removeCtrlPageUpDownKeyBindings ), // NOI18N
             "Tree.focusInputMap", new LazyModifyInputMap( "Tree.focusInputMap", removeCtrlPageUpDownKeyBindings ), // NOI18N
         };
+    }
+
+    static void updateUnifiedBackground() {
+        boolean unified = FlatLafPrefs.isUnifiedTitleBar() && FlatLafPrefs.isUseWindowDecorations();
+        unifiedBackground.setRGB(UIManager.getColor(unified ? "Panel.background" : "Tree.background").getRGB()); // NOI18N
+        quicksearchBackground.setRGB(UIManager.getColor(unified ? "Panel.background" : "MenuBar.background").getRGB()); // NOI18N
+    }
+
+    //---- class ModifiableColor ----------------------------------------------
+
+    private static class ModifiableColor
+        extends Color
+    {
+        private int rgb;
+
+        public ModifiableColor() {
+            super(Color.red.getRGB());
+            rgb = super.getRGB();
+        }
+
+        @Override
+        public int getRGB() {
+            return rgb;
+        }
+
+        public void setRGB(int rgb) {
+            this.rgb = rgb;
+        }
     }
 
     //---- class LazyModifyInputMap -------------------------------------------

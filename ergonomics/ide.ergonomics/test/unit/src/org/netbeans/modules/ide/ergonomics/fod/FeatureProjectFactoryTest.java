@@ -43,6 +43,20 @@ public class FeatureProjectFactoryTest {
         assertTrue(isProject(yes1, relative));
     }
 
+    @Test
+    public void recognizeParentPath() throws IOException {
+        FileObject root = FileUtil.createMemoryFileSystem().getRoot();
+        FileObject src = FileUtil.createFolder(root, "src");
+        FileObject marker = FileUtil.createFolder(src, "marker");
+        FileObject other = FileUtil.createFolder(src, "other");
+
+        final String relative = "../marker";
+
+        assertFalse(isProject(src, relative));
+        assertTrue(isProject(marker, relative));
+        assertTrue(isProject(other, relative));
+    }
+
     private static FileObject prj(FileObject root, String base, String mx, String file) throws IOException {
         return root.createFolder(base).createFolder(mx).createData(file).getParent().getParent();
     }

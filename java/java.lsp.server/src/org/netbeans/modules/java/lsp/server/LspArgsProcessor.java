@@ -18,10 +18,12 @@
  */
 package org.netbeans.modules.java.lsp.server;
 
-import org.netbeans.modules.java.lsp.server.protocol.Server;
 import java.io.IOException;
+
 import org.netbeans.api.sendopts.CommandException;
 import org.netbeans.modules.java.lsp.server.debugging.Debugger;
+import org.netbeans.modules.java.lsp.server.protocol.Server;
+
 import org.netbeans.spi.sendopts.Arg;
 import org.netbeans.spi.sendopts.ArgsProcessor;
 import org.netbeans.spi.sendopts.Description;
@@ -42,6 +44,7 @@ public final class LspArgsProcessor implements ArgsProcessor {
 
     @Override
     public void process(Env env) throws CommandException {
+        LspSession session = new LspSession();
         if (lsPort != null) {
             try {
                 ConnectionSpec connectTo = ConnectionSpec.parse(lsPort);
@@ -49,6 +52,8 @@ public final class LspArgsProcessor implements ArgsProcessor {
                     "Java Language Server",
                     env.getInputStream(),
                     env.getOutputStream(),
+                    session,
+                    LspSession::setLspServer,
                     Server::launchServer
                 );
             } catch (IOException ex) {
@@ -62,6 +67,8 @@ public final class LspArgsProcessor implements ArgsProcessor {
                     "Java Debug Server Adapter",
                     env.getInputStream(),
                     env.getOutputStream(),
+                    session,
+                    LspSession::setDapServer,
                     Debugger::startDebugger
                 );
             } catch (IOException ex) {

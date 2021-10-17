@@ -33,6 +33,7 @@ import org.eclipse.lsp4j.debug.Source;
 
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerManager;
+import org.netbeans.api.debugger.jpda.JPDABreakpoint;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
 import org.netbeans.modules.debugger.jpda.truffle.breakpoints.TruffleLineBreakpoint;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
@@ -92,19 +93,31 @@ public final class NbBreakpoint {
             this.hitCount = hitCount;
             if (hitCount > 0) {
                 breakpoint.setHitCountFilter(hitCount, Breakpoint.HIT_COUNT_FILTERING_STYLE.GREATER);
+            } else {
+                breakpoint.setHitCountFilter(0, null);
             }
         }
     }
 
     public CompletableFuture<NbBreakpoint> install() {
         Breakpoint breakpoint;
-        if (sourceURL.toLowerCase().endsWith(".java")) {
-            LineBreakpoint b = LineBreakpoint.create(sourceURL, line);
+        String sourceURLLower = sourceURL.toLowerCase();
+        boolean isJava = sourceURLLower.endsWith(".java");      // NOI18N
+        boolean isGroovy = sourceURLLower.endsWith(".groovy");  // NOI18N
+        if (isJava || isGroovy) {
+            LineBreakpoint b;
+            if (isJava) {
+                b = LineBreakpoint.create(sourceURL, line);
+            } else {
+                b = GroovyBreakpointFactory.create(sourceURL, line);
+            }
             if (condition != null && !condition.isEmpty()) {
                 b.setCondition(condition);
             }
             if (logMessage != null && !logMessage.isEmpty()) {
-                b.setPrintText(logMessage);
+                String message = lsp2NBLogMessage(logMessage);
+                b.setPrintText(message);
+                b.setSuspend(JPDABreakpoint.SUSPEND_NONE);
             }
             breakpoint = b;
         } else {
@@ -119,6 +132,11 @@ public final class NbBreakpoint {
             if (condition != null && !condition.isEmpty()) {
                 b.setCondition(condition);
             }
+            if (logMessage != null && !logMessage.isEmpty()) {
+                String message = lsp2NBLogMessage(logMessage);
+                b.setPrintText(message);
+                b.setSuspend(false);
+            }
             breakpoint = b;
         }
         if (hitCount > 0) {
@@ -132,6 +150,10 @@ public final class NbBreakpoint {
         updateValid(breakpoint, false);
         this.breakpoint = breakpoint;
         return CompletableFuture.completedFuture(this);
+    }
+
+    private static final String lsp2NBLogMessage(String message) {
+        return message.replaceAll("\\{([^\\}]+)\\}", "{=$1}");      // NOI18N
     }
 
     private void updateValid(Breakpoint breakpoint, boolean sendNotify) {
@@ -188,7 +210,7 @@ public final class NbBreakpoint {
             if (breakpoint instanceof LineBreakpoint) {
                 ((LineBreakpoint) breakpoint).setPrintText(logMessage);
             } else {
-                // no print text
+                ((TruffleLineBreakpoint) breakpoint).setPrintText(logMessage);
             }
         }
     }

@@ -145,11 +145,7 @@ public final class TldAntLogger extends AntLogger {
                 }
                 
                 if (messageLevel <= sessionLevel && !event.isConsumed()) {
-                    try {
-                        session.println(tldFile, true, session.createStandardHyperlink(tldSource.getURL(), errorText + tldFile, lineNumber, columnNumber, -1, -1));
-                    } catch (FileStateInvalidException e) {
-                        assert false : e;
-                    }
+                    session.println(tldFile, true, session.createStandardHyperlink(tldSource.toURL(), errorText + tldFile, lineNumber, columnNumber, -1, -1));
                 }
             }
             event.consume();

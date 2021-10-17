@@ -159,8 +159,13 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
                         PHPTokenId.PHP_LINE_COMMENT));
                 if (helpToken.id() == PHPTokenId.PHP_TOKEN
                         && (helpToken.text().charAt(0) == ',' || helpToken.text().charAt(0) == '(' || helpToken.text().charAt(0) == '[') && ts.movePrevious()) {
-                    // only in array declaration we will add new line
+                    // e.g.
+                    // $array = [^];
+                    // $array = array(^);
+                    // function something(^){};
                     if (helpToken.text().charAt(0) == '[') {
+                        sb.append("\n"); // NOI18N
+                    } else if (helpToken.text().charAt(0) == '(') {
                         sb.append("\n"); // NOI18N
                     } else {
                         helpToken = LexUtilities.findPrevious(ts, Arrays.asList(
@@ -172,6 +177,8 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
                             sb.append("\n"); // NOI18N
                         }
                     }
+                } else if (helpToken.id() == PHPTokenId.PHP_ATTRIBUTE) {
+                    sb.append("\n"); // NOI18N
                 }
                 sb.append(IndentUtils.createIndentString(doc, indent));
             } else {

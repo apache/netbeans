@@ -329,9 +329,8 @@ public class ResourceTable
 //        return (Set<String>)Collections.unmodifiableSet(fontProperties.keySet());
 //    }
     
-    public Set<String> getLocalPropertyNames()
-    {
-        return (Set<String>)Collections.unmodifiableSet(properties.keySet());
+    public Set<String> getLocalPropertyNames() {
+        return Collections.unmodifiableSet(properties.keySet());
     }
     
     ////////////////////////////////////////////////////////////////////////////
@@ -352,12 +351,11 @@ public class ResourceTable
         {
             PropertyChangeListenerProxy proxy = (PropertyChangeListenerProxy) listener;
             addPropertyChangeListener(proxy.getPropertyName(),
-                                      (PropertyChangeListener)proxy.getListener());
-            
+                                      proxy.getListener());
         }
         else
         {
-            listeners.add(new WeakReference<PropertyChangeListener>(listener));
+            listeners.add(new WeakReference<>(listener));
         }
     }
     

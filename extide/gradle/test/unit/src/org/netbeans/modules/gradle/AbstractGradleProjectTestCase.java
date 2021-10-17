@@ -20,11 +20,14 @@ package org.netbeans.modules.gradle;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 import static junit.framework.TestCase.assertNotNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.NbTestCase;
+import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FULL_ONLINE;
+import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 import org.netbeans.modules.project.uiapi.ProjectOpenedTrampoline;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.filesystems.FileObject;
@@ -38,7 +41,7 @@ import org.openide.modules.DummyInstalledFileLocator;
  */
 public class AbstractGradleProjectTestCase extends NbTestCase {
 
-    @org.openide.util.lookup.ServiceProvider(service=org.openide.modules.InstalledFileLocator.class)
+    @org.openide.util.lookup.ServiceProvider(service=org.openide.modules.InstalledFileLocator.class, position = 1000)
     public static class InstalledFileLocator extends DummyInstalledFileLocator {
     }
 
@@ -55,6 +58,7 @@ public class AbstractGradleProjectTestCase extends NbTestCase {
         clearWorkDir();
         destDirF = getTestNBDestDir();
         DummyInstalledFileLocator.registerDestDir(destDirF);
+        GradleExperimentalSettings.getDefault().setOpenLazy(false);
     }
 
     @Override
@@ -74,12 +78,19 @@ public class AbstractGradleProjectTestCase extends NbTestCase {
         return prj;
     }
 
+    protected void reloadProject(Project project) throws InterruptedException, ExecutionException {
+        NbGradleProjectImpl impl = (NbGradleProjectImpl) project;
+        NbGradleProjectImpl.RELOAD_RP.submit(() -> {
+            // A bit low level calls, just to allow UI interaction to
+            // Trust the project.
+            impl.loadOwnProject(null, true, true, FULL_ONLINE);
+        }).get();
+    }
+    
     protected FileObject createGradleProject(String path, String buildScript, String settingsScript) throws IOException {
         FileObject ret = FileUtil.toFileObject(getWorkDir());
         if (path != null) {
-            for (String p : path.split("/")) {
-                ret = ret.getFileObject(p) != null ? ret.getFileObject(p): ret.createFolder(p);
-            }
+            ret = FileUtil.createFolder(ret, path);
         }
         if (buildScript != null) {
             TestFileUtils.writeFile(ret, "build.gradle", buildScript);

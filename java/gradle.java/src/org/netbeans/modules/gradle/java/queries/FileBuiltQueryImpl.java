@@ -36,7 +36,6 @@ import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.queries.FileBuiltQuery;
 import static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType.JAVA;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.netbeans.spi.queries.FileBuiltQueryImplementation;
 import org.openide.filesystems.FileAttributeEvent;
@@ -54,8 +53,6 @@ import org.openide.util.WeakListeners;
  *
  * @author Laszlo Kishalmi
  */
-@ProjectServiceProvider(service = {FileBuiltQueryImplementation.class, ProjectOpenedHook.class},
-        projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public class FileBuiltQueryImpl extends ProjectOpenedHook implements FileBuiltQueryImplementation {
 
     final Project project;
@@ -85,13 +82,9 @@ public class FileBuiltQueryImpl extends ProjectOpenedHook implements FileBuiltQu
 
     public FileBuiltQueryImpl(Project project) {
         this.project = project;
-        this.pcl = new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (NbGradleProject.PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
-                    cache.clear();
-                }
+        this.pcl = (PropertyChangeEvent evt) -> {
+            if (NbGradleProject.PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
+                cache.clear();
             }
         };
     }
@@ -120,15 +113,17 @@ public class FileBuiltQueryImpl extends ProjectOpenedHook implements FileBuiltQu
             GradleJavaSourceSet sourceSet = gjp.containingSourceSet(f);
             if (sourceSet != null) {
                 String relFile = sourceSet.relativePath(f);
-                String relClass = relFile.substring(0, relFile.lastIndexOf('.')) + ".class"; //NOI18N
-                String moduleRoot = null;
-                File moduleInfo = sourceSet.findResource("module-info.java", false, JAVA); //NOI18N
-                if (moduleInfo != null && sourceSet.getCompilerArgs(JAVA).contains("--module-source-path")) {
-                    moduleRoot = SourceUtils.parseModuleName(FileUtil.toFileObject(moduleInfo));
+                if (relFile != null) {
+                    String relClass = relFile.substring(0, relFile.lastIndexOf('.')) + ".class"; //NOI18N
+                    String moduleRoot = null;
+                    File moduleInfo = sourceSet.findResource("module-info.java", false, JAVA); //NOI18N
+                    if (moduleInfo != null && sourceSet.getCompilerArgs(JAVA).contains("--module-source-path")) {
+                        moduleRoot = SourceUtils.parseModuleName(FileUtil.toFileObject(moduleInfo));
+                    }
+                    try {
+                        ret = new StatusImpl(file, sourceSet.getOutputClassDirs(), relClass, moduleRoot);
+                    } catch (DataObjectNotFoundException ex) {}
                 }
-                try {
-                    ret = new StatusImpl(file, sourceSet.getOutputClassDirs(), relClass, moduleRoot);
-                } catch (DataObjectNotFoundException ex) {}
             }
 
         }

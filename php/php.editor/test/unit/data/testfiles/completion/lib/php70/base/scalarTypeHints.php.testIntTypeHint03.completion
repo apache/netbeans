@@ -58,5 +58,8 @@ KEYWORD    mixed                                      null
 KEYWORD    null                                       null
 KEYWORD    object                                     null
 KEYWORD    parent                                     null
+KEYWORD    private                                    null
+KEYWORD    protected                                  null
+KEYWORD    public                                     null
 KEYWORD    self                                       null
 KEYWORD    string                                     null

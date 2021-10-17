@@ -19,7 +19,7 @@
 
 package org.netbeans.modules.gradle.api;
 
-import org.netbeans.modules.gradle.GradleArtifactStore;
+import org.netbeans.modules.gradle.loaders.GradleArtifactStore;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
@@ -50,6 +50,17 @@ public final class GradleProjects {
         GradleModuleFileCache21.CachedArtifactVersion av = cache.resolveCachedArtifactVersion(binary.toPath());
         GradleModuleFileCache21.CachedArtifactVersion.Entry sources = av != null ? av.getSources() : null;
         return sources != null ? sources.getPath().toFile() : GradleArtifactStore.getDefault().getSources(binary);
+    }
+    
+    public static boolean isGradleCacheArtifact(File toCheck) {
+        try {
+            GradleModuleFileCache21 cache = GradleModuleFileCache21.getGradleFileCache();
+            GradleModuleFileCache21.CachedArtifactVersion av = cache.resolveCachedArtifactVersion(toCheck.toPath());
+            return av != null;
+        } catch (IllegalArgumentException ex) {
+            // expected: not an artifact
+            return false;
+        }
     }
 
     /**

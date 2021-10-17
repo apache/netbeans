@@ -47,8 +47,8 @@ class IncludeExcludeVisualizerPanel extends JPanel implements HelpCtx.Provider {
         }
         public void changedUpdate(DocumentEvent e) {}
     };
-    private final DefaultListModel includedListModel = new DefaultListModel();
-    private final DefaultListModel excludedListModel = new DefaultListModel();
+    private final DefaultListModel<File> includedListModel = new DefaultListModel<>();
+    private final DefaultListModel<File> excludedListModel = new DefaultListModel<>();
     private String rootPrefix;
 
     @Override

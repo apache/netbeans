@@ -1,15 +1,15 @@
 <#-- FreeMarker template (see http://freemarker.org/) -->
-<#if description != "">
+<#if description?? && description != "">
 description = '${description}'
 </#if>
 allprojects {
 
-<#if group != "">
+<#if group?? && group != "">
     group = '${group}'
-
 </#if>
+
     repositories {
-        jcenter()
+        mavenCentral()
     }
 }
 

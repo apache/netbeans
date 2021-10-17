@@ -430,12 +430,12 @@ final class ProjectServerPanel extends javax.swing.JPanel implements DocumentLis
                     continue;
                 }
                 if (j2eeModuleType ==J2eeModule.Type.WAR) {
-                    if (Profile.JAVA_EE_6_FULL.equals(profile) || Profile.JAVA_EE_7_FULL.equals(profile) || Profile.JAVA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_8_FULL.equals(profile)) {
+                    if (Profile.JAVA_EE_6_FULL.equals(profile) || Profile.JAVA_EE_7_FULL.equals(profile) || Profile.JAVA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_9_FULL.equals(profile)) {
                         // for web apps always offer only JAVA_EE_6_WEB profile and skip full one
                         continue;
                     }
                 } else {
-                    if (Profile.JAVA_EE_6_WEB.equals(profile) || Profile.JAVA_EE_7_WEB.equals(profile) || Profile.JAVA_EE_8_WEB.equals(profile) || Profile.JAKARTA_EE_8_WEB.equals(profile)) {
+                    if (Profile.JAVA_EE_6_WEB.equals(profile) || Profile.JAVA_EE_7_WEB.equals(profile) || Profile.JAVA_EE_8_WEB.equals(profile) || Profile.JAKARTA_EE_8_WEB.equals(profile) || Profile.JAKARTA_EE_9_WEB.equals(profile)) {
                         // for EE apps always skip web profile
                         continue;
                     }
@@ -584,10 +584,10 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
         d.putProperty(ProjectServerWizardPanel.JAR_NAME, jTextFieldEjbModuleName.getText());
         d.putProperty(ProjectServerWizardPanel.CAR_NAME, jTextFieldCarName.getText());
         d.putProperty(ProjectServerWizardPanel.MAIN_CLASS, J2eeModule.Type.CAR.equals(j2eeModuleType) ? mainClassTextField.getText().trim() : mainClassTextFieldWithinEar.getText().trim()); // NOI18N
-        d.putProperty(ProjectServerWizardPanel.CREATE_WAR, Boolean.valueOf(createWARCheckBox.isVisible() ? createWARCheckBox.isSelected() : false));
-        d.putProperty(ProjectServerWizardPanel.CREATE_JAR, Boolean.valueOf(createEjbCheckBox.isVisible() ? createEjbCheckBox.isSelected() : false));
-        d.putProperty(ProjectServerWizardPanel.CREATE_CAR, Boolean.valueOf(createCarCheckBox.isVisible() ? createCarCheckBox.isSelected() : false));
-        d.putProperty(ProjectServerWizardPanel.CDI, Boolean.valueOf(cdiCheckbox.isVisible() && cdiCheckbox.isSelected()));
+        d.putProperty(ProjectServerWizardPanel.CREATE_WAR, createWARCheckBox.isVisible() ? createWARCheckBox.isSelected() : false);
+        d.putProperty(ProjectServerWizardPanel.CREATE_JAR, createEjbCheckBox.isVisible() ? createEjbCheckBox.isSelected() : false);
+        d.putProperty(ProjectServerWizardPanel.CREATE_CAR, createCarCheckBox.isVisible() ? createCarCheckBox.isSelected() : false);
+        d.putProperty(ProjectServerWizardPanel.CDI, cdiCheckbox.isVisible() && cdiCheckbox.isSelected());
         d.putProperty(ProjectServerWizardPanel.SOURCE_LEVEL, getSourceLevel(d, serverInstanceId, j2ee));
     }
 
@@ -607,7 +607,11 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
                 Set<String> jdks = j2eePlatform.getSupportedJavaPlatformVersions();
                 // make sure that chosen source level is suported by server:
                 if (jdks != null && !jdks.contains(sourceLevel)) { // workaround for #212146 when jdks == null
-                    if ("1.7".equals(sourceLevel) && jdks.contains("1.6")) {
+                    if ("11".equals(sourceLevel) && jdks.contains("1.8")) {
+                        sourceLevel = "1.8";
+                    } else if ("1.8".equals(sourceLevel) && jdks.contains("1.7")) {
+                        sourceLevel = "1.7";
+                    } else if ("1.7".equals(sourceLevel) && jdks.contains("1.6")) {
                         sourceLevel = "1.6";
                     } else if ("1.6".equals(sourceLevel) && jdks.contains("1.5")) {
                         sourceLevel = "1.5";
@@ -623,10 +627,14 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
             if (j2ee != null) {
                 String warningType = warningPanel.getWarningType();
                 if (warningType != null) {
-                    if (warningType.equals(J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_15)) {
-                        sourceLevel = "1.5"; //NOI18N
+                    if (warningType.equals(J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_8)) {
+                        sourceLevel = "1.8"; //NOI18N
+                    } else if (warningType.equals(J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_7)) {
+                        sourceLevel = "1.7"; //NOI18N
                     } else if (warningType.equals(J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_6)) {
                         sourceLevel = "1.6"; //NOI18N
+                    } else if (warningType.equals(J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_15)) {
+                        sourceLevel = "1.5"; //NOI18N
                     }
                 }
             }

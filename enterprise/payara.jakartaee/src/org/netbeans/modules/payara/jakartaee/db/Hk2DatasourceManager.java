@@ -49,7 +49,7 @@ import org.netbeans.modules.payara.eecommon.api.UrlData;
 import org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration;
 import org.netbeans.modules.payara.jakartaee.Hk2DeploymentManager;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.utils.OsUtils;
 import org.netbeans.modules.payara.tooling.utils.ServerUtils;
 import org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException;
@@ -153,7 +153,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
             // XXX This won't read app scoped DS. This does not seem to be a problem.
             File domainXml = new File(domainsDir, domainName + File.separatorChar + DOMAIN_XML_PATH);
             return readDatasources(
-                    domainXml, "/domain/", null, server.getVersion(), false);
+                    domainXml, "/domain/", null, server.getPlatformVersion(), false);
         } else {
             return Collections.emptySet();
         }
@@ -183,7 +183,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
      * @return {@link Datasource} objects found in first available file.
      */
     public static Set<Datasource> getDatasources(
-            final J2eeModule module, final PayaraVersion version) {
+            final J2eeModule module, final PayaraPlatformVersionAPI version) {
         Pair<File, Boolean> result = PayaraConfiguration.getExistingResourceFile(module, version);
         if (result != null) {
             return readDatasources(result.first(), "/", module, version, result.second());
@@ -210,7 +210,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
      * a new file when no resource file exists.
      * <br/>
      * <i>Internal {@link #createDataSource(String, String, String,
-     * String, String, J2eeModule, PayaraVersion)} helper method.</i>
+     * String, String, J2eeModule, PayaraPlatformVersionAPI)} helper method.</i>
      * <p/>
      * @param jndiName Data source JNDI name.
      * @param url      Database URL.
@@ -229,7 +229,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
     private static ApplicationScopedResourcesUtils.ResourceFileDescription resourceFileForDSCreation(
             final String jndiName, final String url, final String username,
             final String password, final String driver, final J2eeModule module,
-            final PayaraVersion version,final ConnectionPoolFinder cpFinder
+            final PayaraPlatformVersionAPI version, final ConnectionPoolFinder cpFinder
     ) throws ConfigurationException, DatasourceAlreadyExistsException {
         Pair<File, Boolean> pair = PayaraConfiguration.getExistingResourceFile(module, version);
         File file = pair == null ? null : pair.first();
@@ -285,7 +285,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
     public static Datasource createDataSource(
             final String jndiName, final String url, final String username,
             final String password, final String driver,
-            final J2eeModule module, final PayaraVersion version
+            final J2eeModule module, final PayaraPlatformVersionAPI version
     ) throws ConfigurationException, DatasourceAlreadyExistsException {
         SunDatasource ds;
         ConnectionPoolFinder cpFinder = new ConnectionPoolFinder();
@@ -355,7 +355,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
      */
     private static Set<Datasource> readDatasources(
             final File xmlFile, final String xPathPrefix,
-            final J2eeModule module, final PayaraVersion version, boolean applicationScoped) {
+            final J2eeModule module, final PayaraPlatformVersionAPI version, boolean applicationScoped) {
         final Set<Datasource> dataSources = new HashSet<>();
 
         if (xmlFile.canRead()) {
@@ -400,8 +400,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
                         dataSources.add(dataSource);
                         // Add Java EE 7 comp/DefaultDataSource data source
                         // as jdbc/__default clone (since PF 4).
-                        if (version != null && version.ordinal()
-                                >= PayaraVersion.PF_4_1_144.ordinal()
+                        if (version != null && version.isEE7Supported()
                                 && DataSourcesReader.DEFAULT_DATA_SOURCE
                                 .equals(jdbc.getJndiName()) ) {
                             dataSources.add(dataSource.copy(

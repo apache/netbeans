@@ -23,10 +23,14 @@ package org.netbeans.modules.j2ee.dd.impl.client;
  *
  * @author  Nitya Doraisamy
  */
+import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
 import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.netbeans.modules.j2ee.dd.api.client.AppClient;
 import org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException;
 import org.openide.filesystems.FileAlreadyLockedException;
@@ -36,7 +40,7 @@ public class AppClientProxy implements AppClient {
     
     private AppClient app;
     private String version;
-    private java.util.List listeners;
+    private List<PropertyChangeListener> listeners;
     public boolean writing=false;
     private OutputProvider outputProvider;
     private org.xml.sax.SAXParseException error;
@@ -51,7 +55,7 @@ public class AppClientProxy implements AppClient {
     public AppClientProxy(AppClient app, String version) {
         this.app = app;
         this.version = version;
-        listeners = new java.util.ArrayList();
+        listeners = new ArrayList<>();
     }
     
     public void setOriginal(AppClient app) {
@@ -81,7 +85,7 @@ public class AppClientProxy implements AppClient {
                     new java.beans.PropertyChangeEvent(this, PROPERTY_VERSION, version, value);
             version=value;
             for (Iterator i = listeners.iterator(); i.hasNext();) {
-                ((java.beans.PropertyChangeListener) i.next()).propertyChange(evt);
+                ((PropertyChangeListener) i.next()).propertyChange(evt);
             }
         }
     }
@@ -183,7 +187,7 @@ public class AppClientProxy implements AppClient {
     public void setStatus(int value) {
         if (ddStatus!=value) {
             java.beans.PropertyChangeEvent evt =
-                    new java.beans.PropertyChangeEvent(this, PROPERTY_STATUS, new Integer(ddStatus), new Integer(value));
+                    new java.beans.PropertyChangeEvent(this, PROPERTY_STATUS, ddStatus, value);
             ddStatus=value;
             for (Iterator i = listeners.iterator(); i.hasNext();) {
                 ((java.beans.PropertyChangeListener) i.next()).propertyChange(evt);

@@ -45,12 +45,15 @@ import org.openide.util.NbBundle;
 
 public class ConnectionPanel implements AddConnectionWizard.Panel, WizardDescriptor.AsynchronousValidatingPanel<AddConnectionWizard>, WizardDescriptor.FinishablePanel<AddConnectionWizard> {
 
+    private final int stepIndex;
     private DatabaseConnection databaseConnection;
     private JDBCDriver drv;
     private JDBCDriver oldDriver;
     private static HelpCtx CONNECTION_PANEL_HELPCTX = new HelpCtx(ConnectionPanel.class);
 
-    public ConnectionPanel() {}
+    public ConnectionPanel(int stepIndex) {
+        this.stepIndex = stepIndex;
+    }
     /**
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
@@ -78,12 +81,12 @@ public class ConnectionPanel implements AddConnectionWizard.Panel, WizardDescrip
             component = new NewConnectionPanel(pw, this, drv.getClassName(), databaseConnection);
             oldDriver = drv;
             JComponent jc = (JComponent) component;
-            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 1);
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, stepIndex);
             jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, pw.getSteps());
             jc.putClientProperty(WizardDescriptor.PROP_AUTO_WIZARD_STYLE, Boolean.TRUE);
             jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DISPLAYED, Boolean.FALSE);
             jc.putClientProperty(WizardDescriptor.PROP_CONTENT_NUMBERED, Boolean.FALSE);
-            component.setName(pw.getSteps()[1]);
+            component.setName(pw.getSteps()[stepIndex]);
             fireChangeEvent();
             component.checkValid();
         }
@@ -189,7 +192,7 @@ public class ConnectionPanel implements AddConnectionWizard.Panel, WizardDescrip
 
             databaseConnection.addExceptionListener(excListener);
             databaseConnection.connectAsync();
-            int maxLoops = 60;
+            int maxLoops = 20;
             int loop = 0;
             while (loop < maxLoops) {
                 try {

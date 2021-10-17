@@ -22,6 +22,7 @@ package org.netbeans.modules.groovy.editor.completion.provider;
 import org.netbeans.modules.groovy.editor.api.completion.CompletionItem;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +38,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
@@ -44,15 +46,20 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
+import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.ElementUtilities.ElementAcceptor;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
+import org.netbeans.api.java.source.TypeUtilities;
 import org.netbeans.modules.csl.spi.ParserResult;
-import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
-import org.netbeans.modules.groovy.editor.api.completion.CompletionHandler;
 import org.netbeans.modules.groovy.editor.api.completion.FieldSignature;
 import org.netbeans.modules.groovy.editor.api.completion.MethodSignature;
+import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
+import org.netbeans.modules.groovy.editor.api.elements.common.MethodElement.MethodParameter;
 import org.netbeans.modules.groovy.editor.completion.AccessLevel;
+import org.netbeans.modules.groovy.editor.java.JavaElementHandle;
+import org.netbeans.modules.groovy.editor.java.Utilities;
+import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -64,31 +71,34 @@ public final class JavaElementHandler {
     private static final Logger LOG = Logger.getLogger(GroovyElementsProvider.class.getName());
 
     private final ParserResult info;
+    private final CompletionContext context;
 
-    private JavaElementHandler(ParserResult info) {
+    private JavaElementHandler(ParserResult info, CompletionContext context) {
         this.info = info;
+        this.context = context;
     }
 
-    public static JavaElementHandler forCompilationInfo(ParserResult info) {
-        return new JavaElementHandler(info);
+    public static JavaElementHandler forCompilationInfo(ParserResult info, CompletionContext context) {
+        return new JavaElementHandler(info, context);
     }
 
     // FIXME ideally there should be something like nice CompletionRequest once public and stable
     // then this class could implement some common interface
-    public Map<MethodSignature, CompletionItem> getMethods(String className,
-            String prefix, int anchor, String[] typeParameters, boolean emphasise, Set<AccessLevel> levels, boolean nameOnly) {
+    public Map<MethodSignature, CompletionItem> getMethods(String className, String prefix, int anchor, String[] typeParameters, boolean emphasise, Set<AccessLevel> levels, boolean nameOnly) {
         JavaSource javaSource = createJavaSource();
-
+        
         if (javaSource == null) {
             return Collections.emptyMap();
         }
+        
+        FileObject f = info.getSnapshot().getSource().getFileObject();
 
         CountDownLatch cnt = new CountDownLatch(1);
 
         Map<MethodSignature, CompletionItem> result = Collections.synchronizedMap(new HashMap<MethodSignature, CompletionItem>());
         try {
-            javaSource.runUserActionTask(new MethodCompletionHelper(cnt, javaSource, className, typeParameters,
-                    levels, prefix, anchor, result, emphasise, nameOnly), true);
+            javaSource.runUserActionTask(new MethodCompletionHelper(cnt, javaSource, f, className, typeParameters,
+                    levels, prefix, anchor, result, emphasise, nameOnly, context.isStaticMembers()), true);
         } catch (IOException ex) {
             LOG.log(Level.FINEST, "Problem in runUserActionTask :  {0}", ex.getMessage());
             return Collections.emptyMap();
@@ -114,9 +124,10 @@ public final class JavaElementHandler {
         CountDownLatch cnt = new CountDownLatch(1);
 
         Map<FieldSignature, CompletionItem> result = Collections.synchronizedMap(new HashMap<FieldSignature, CompletionItem>());
+        FileObject f = info.getSnapshot().getSource().getFileObject();
         try {
-            javaSource.runUserActionTask(new FieldCompletionHelper(cnt, javaSource, className,
-                    Collections.singleton(AccessLevel.PUBLIC), prefix, anchor, result, emphasise), true);
+            javaSource.runUserActionTask(new FieldCompletionHelper(cnt, javaSource, f, className,
+                    Collections.singleton(AccessLevel.PUBLIC), prefix, anchor, result, emphasise, context.isStaticMembers()), true);
         } catch (IOException ex) {
             LOG.log(Level.FINEST, "Problem in runUserActionTask :  {0}", ex.getMessage());
             return Collections.emptyMap();
@@ -154,6 +165,8 @@ public final class JavaElementHandler {
 
         private final JavaSource javaSource;
 
+        private final FileObject groovySource;
+
         private final String className;
 
         private final String[] typeParameters;
@@ -169,13 +182,16 @@ public final class JavaElementHandler {
         private final Map<MethodSignature, CompletionItem> proposals;
 
         private final boolean nameOnly;
+        
+        private final boolean staticMethods;
 
-        public MethodCompletionHelper(CountDownLatch cnt, JavaSource javaSource, String className,
+        public MethodCompletionHelper(CountDownLatch cnt, JavaSource javaSource, FileObject groovySource, String className, 
                 String[] typeParameters, Set<AccessLevel> levels, String prefix, int anchor,
-                Map<MethodSignature, CompletionItem> proposals, boolean emphasise, boolean nameOnly) {
+                Map<MethodSignature, CompletionItem> proposals, boolean emphasise, boolean nameOnly, boolean staticMethods) {
 
             this.cnt = cnt;
             this.javaSource = javaSource;
+            this.groovySource = groovySource;
             this.className = className;
             this.typeParameters = typeParameters;
             this.levels = levels;
@@ -184,14 +200,20 @@ public final class JavaElementHandler {
             this.proposals = proposals;
             this.emphasise = emphasise;
             this.nameOnly = nameOnly;
+            this.staticMethods = staticMethods;
         }
 
         @Override
         public void run(CompilationController info) throws Exception {
             Elements elements = info.getElements();
+            info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+            
             ElementAcceptor acceptor = new ElementAcceptor() {
 
                 public boolean accept(Element e, TypeMirror type) {
+                    if (staticMethods && !e.getModifiers().contains(javax.lang.model.element.Modifier.STATIC)) {
+                        return false;
+                    }
                     if (e.getKind() != ElementKind.METHOD) {
                         return false;
                     }
@@ -203,7 +225,7 @@ public final class JavaElementHandler {
                     return false;
                 }
             };
-
+            info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
             TypeElement te = elements.getTypeElement(className);
             if (te != null) {
                 for (ExecutableElement element : ElementFilter.methodsIn(te.getEnclosedElements())) {
@@ -212,15 +234,23 @@ public final class JavaElementHandler {
                     }
 
                     String simpleName = element.getSimpleName().toString();
-                    List<String> params = getParameterListForMethod(element);
                     // FIXME this should be more accurate
                     TypeMirror returnType = element.getReturnType();
-
+                    String returnTypeString = info.getTypeUtilities().getTypeName(returnType, TypeUtilities.TypeNameOptions.PRINT_FQN).toString();
                     if (simpleName.toUpperCase(Locale.ENGLISH).startsWith(prefix.toUpperCase(Locale.ENGLISH)) &&
                         !simpleName.contains("$")) {
                         
-                        proposals.put(getSignature(te, element, typeParameters, info.getTypes()), CompletionItem.forJavaMethod(
-                                className, simpleName, params, returnType, element.getModifiers(), anchor, emphasise, nameOnly));
+                        JavaElementHandle h = new JavaElementHandle(
+                                simpleName, className, ElementHandle.create(element),
+                                signatureOf(te, element, info.getTypes()), Utilities.modelModifiersToGsf(element.getModifiers()));
+                        
+                        CompletionItem ci = CompletionAccessor.instance().createJavaMethod(
+                                className, simpleName, getParametersForElement(info, te, element), returnTypeString, 
+                                element.getModifiers(), anchor, emphasise, nameOnly);
+
+                        proposals.put(getSignature(te, element, info.getTypes()), 
+                                CompletionAccessor.instance().assignHandle(ci, h)
+                        );
                     }
                 }
             }
@@ -228,33 +258,69 @@ public final class JavaElementHandler {
             cnt.countDown();
         }
         
-        private List<String> getParameterListForMethod(ExecutableElement exe) {
-            List<String> parameters = new ArrayList<String>();
-
-            if (exe != null) {
-                // generate a list of parameters
-                // unfortunately, we have to work around # 139695 in an ugly fashion
-
-                try {
-                    List<? extends VariableElement> params = exe.getParameters(); // this can cause NPE's
-
-                    for (VariableElement variableElement : params) {
-                        TypeMirror tm = variableElement.asType();
-
-                        if (tm.getKind() == TypeKind.DECLARED || tm.getKind() == TypeKind.ARRAY) {
-                            parameters.add(GroovyUtils.stripPackage(tm.toString()));
-                        } else {
-                            parameters.add(tm.toString());
-                        }
-                    }
-                } catch (NullPointerException e) {
-                    // simply do nothing.
+        private List<String> signatureOf(TypeElement classElement, ExecutableElement exe, Types types) {
+            MethodSignature sign = getSignature(classElement, exe, types);
+            return Arrays.asList(sign.getParameters());
+        }
+        
+        private List<MethodParameter> getParametersForElement(CompilationController info, TypeElement classElement, ExecutableElement exe) {
+            List<MethodParameter> result = new ArrayList<>();
+            if (exe == null) {
+                return result;
+            }
+            List<? extends VariableElement> params = exe.getParameters(); // this can cause NPE's
+            
+            for (VariableElement variableElement : params) {
+                TypeMirror tm = variableElement.asType();
+                String fullName;
+                String typeName;
+                
+                if (tm.getKind() == TypeKind.TYPEVAR) {
+                    fullName = substituteActualType(tm, classElement, exe, info.getTypes());
+                    typeName = GroovyUtils.stripPackage(fullName);
+                } else if (tm.getKind() == TypeKind.ARRAY &&
+                        variableElement == params.get(params.size() - 1) &&
+                        exe.isVarArgs()) {
+                    tm = ((ArrayType)tm).getComponentType();
+                    fullName = info.getTypeUtilities().getTypeName(tm, TypeUtilities.TypeNameOptions.PRINT_FQN).toString() + "..."; // NOI18N
+                    typeName = info.getTypeUtilities().getTypeName(tm).toString() + "..."; // NOI18N
+                } else { 
+                    fullName = info.getTypeUtilities().getTypeName(tm, TypeUtilities.TypeNameOptions.PRINT_FQN).toString();
+                    typeName = info.getTypeUtilities().getTypeName(tm).toString();
+                }
+                result.add(new MethodParameter(fullName, typeName, variableElement.getSimpleName().toString()));
+            }
+            return result;
+        }
+        
+        private String substituteActualType(TypeMirror type, TypeElement classElement, ExecutableElement element, Types types) {
+            List<? extends TypeParameterElement> declaredTypeParameters = element.getTypeParameters();
+            if (declaredTypeParameters.isEmpty()) {
+                // FIXME: this will not work well, if BOTH the class AND the method declares type parameters.
+                declaredTypeParameters = classElement.getTypeParameters();
+            } 
+            int j = -1;
+            for (TypeParameterElement typeParam : declaredTypeParameters) {
+                j++;
+                if (typeParam.getSimpleName().toString().equals(type.toString())) {
+                    break;
                 }
             }
-            return parameters;
+            String typeString;
+            if (j >= 0 && j < typeParameters.length) {
+                typeString = typeParameters[j];
+                // HACK HACK: currently the CC signatures contains typevar names. If the substituted type is not specific,
+                // let's leave the old (also buggy) behaviour rather than presenting Object everywhere.
+                if ("java.lang.Object".equals(typeString)) {
+                    typeString = type.toString();
+                }
+            } else {
+                typeString = type.toString();
+            }
+            return typeString;
         }
-
-        private MethodSignature getSignature(TypeElement classElement, ExecutableElement element, String[] typeParameters, Types types) {
+        
+        private MethodSignature getSignature(TypeElement classElement, ExecutableElement element, Types types) {
             String name = element.getSimpleName().toString();
             String[] parameters = new String[element.getParameters().size()];
 
@@ -264,23 +330,7 @@ public final class JavaElementHandler {
                 String typeString = null;
 
                 if (type.getKind() == TypeKind.TYPEVAR) {
-                    List<? extends TypeParameterElement> declaredTypeParameters = element.getTypeParameters();
-                    if (declaredTypeParameters.isEmpty()) {
-                        declaredTypeParameters = classElement.getTypeParameters();
-                    }
-                    int j = -1;
-                    for (TypeParameterElement typeParam : declaredTypeParameters) {
-                        j++;
-                        if (typeParam.getSimpleName().toString().equals(type.toString())) {
-                            break;
-                        }
-                    }
-// FIXME why we were doing this for signatures ??
-//                    if (j >= 0 && j < typeParameters.length) {
-//                        typeString = typeParameters[j];
-//                    } else {
-                        typeString = types.erasure(type).toString();
-//                    }
+                    typeString = substituteActualType(type, classElement, element, types);
                 } else {
                     typeString = type.toString();
                 }
@@ -312,29 +362,39 @@ public final class JavaElementHandler {
         private final boolean emphasise;
 
         private final Map<FieldSignature, CompletionItem> proposals;
-
-        public FieldCompletionHelper(CountDownLatch cnt, JavaSource javaSource, String className,
+        
+        private final FileObject groovySource;
+        
+        private final boolean staticMembers;
+        
+        public FieldCompletionHelper(CountDownLatch cnt, JavaSource javaSource, FileObject groovySource, String className,
                 Set<AccessLevel> levels, String prefix, int anchor,
-                Map<FieldSignature, CompletionItem> proposals, boolean emphasise) {
+                Map<FieldSignature, CompletionItem> proposals, boolean emphasise, boolean staticMembers) {
 
             this.cnt = cnt;
             this.javaSource = javaSource;
+            this.groovySource = groovySource;
             this.className = className;
             this.levels = levels;
             this.prefix = prefix;
             this.anchor = anchor;
             this.proposals = proposals;
             this.emphasise = emphasise;
+            this.staticMembers = staticMembers;
         }
 
         public void run(CompilationController info) throws Exception {
 
             Elements elements = info.getElements();
             if (elements != null) {
+                info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                 ElementAcceptor acceptor = new ElementAcceptor() {
 
                     public boolean accept(Element e, TypeMirror type) {
-                        if (e.getKind() != ElementKind.FIELD) {
+                        if (!e.getKind().isField()) {
+                            return false;
+                        }
+                        if (staticMembers && !e.getModifiers().contains(javax.lang.model.element.Modifier.STATIC)) {
                             return false;
                         }
                         for (AccessLevel level : levels) {
@@ -345,7 +405,7 @@ public final class JavaElementHandler {
                         return false;
                     }
                 };
-
+                info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                 TypeElement te = elements.getTypeElement(className);
                 if (te != null) {
                     for (VariableElement element : ElementFilter.fieldsIn(te.getEnclosedElements())) {
@@ -360,9 +420,15 @@ public final class JavaElementHandler {
                             if (LOG.isLoggable(Level.FINEST)) {
                                 LOG.log(Level.FINEST, simpleName + " " + type.toString());
                             }
+                            
+                            JavaElementHandle jh = new JavaElementHandle(
+                                    simpleName, className, ElementHandle.create(element), null, 
+                                    Utilities.modelModifiersToGsf(element.getModifiers()));
 
-                            proposals.put(getSignature(te, element), new CompletionItem.JavaFieldItem(
-                                    className, simpleName, type, element.getModifiers(), anchor, emphasise));
+                            CompletionItem ci = new CompletionItem.JavaFieldItem(
+                                        className, simpleName, type, element.getModifiers(), anchor, emphasise);
+                            proposals.put(getSignature(te, element), 
+                                CompletionAccessor.instance().assignHandle(ci, jh));
                         }
                     }
                 }

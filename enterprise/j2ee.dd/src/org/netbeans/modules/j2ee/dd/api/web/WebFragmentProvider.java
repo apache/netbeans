@@ -79,19 +79,19 @@ public final class WebFragmentProvider {
 
     private WebFragment createWebFragment(FileObject fo, String version) throws IOException, SAXException {
         try {
-            if (WebFragment.VERSION_3_0.equals(version)) {
-                InputStream inputStream = fo.getInputStream();
-                try {
-                    return org.netbeans.modules.j2ee.dd.impl.web.model_3_0_frag.WebFragment.createGraph(inputStream);
-                } finally {
-                    inputStream.close();
-                }
-            } else if (WebFragment.VERSION_3_1.equals(version)) {
-                InputStream inputStream = fo.getInputStream();
-                try {
+//            TODO
+//            if (WebFragment.VERSION_4_0.equals(version)) {
+//                try (InputStream inputStream = fo.getInputStream()) {
+//                    return org.netbeans.modules.j2ee.dd.impl.web.model_4_0_frag.WebFragment.createGraph(inputStream);
+//                }
+//            }
+            if (WebFragment.VERSION_3_1.equals(version)) {
+                try (InputStream inputStream = fo.getInputStream()) {
                     return org.netbeans.modules.j2ee.dd.impl.web.model_3_1_frag.WebFragment.createGraph(inputStream);
-                } finally {
-                    inputStream.close();
+                }
+            } else if (WebFragment.VERSION_3_0.equals(version)) {
+                try (InputStream inputStream = fo.getInputStream()) {
+                    return org.netbeans.modules.j2ee.dd.impl.web.model_3_0_frag.WebFragment.createGraph(inputStream);
                 }
             } else {
                 throw new IOException("Unsupported version of web-fragment.xml found! Version: "+version);

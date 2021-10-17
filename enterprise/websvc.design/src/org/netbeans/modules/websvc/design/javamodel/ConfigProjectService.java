@@ -124,7 +124,7 @@ class ConfigProjectService implements ProjectService {
             // remove non JSR109 entries
             Boolean isJsr109 = getProject().getLookup().lookup(JaxWsModel.class)
                     .getJsr109();
-            if (isJsr109 != null && !isJsr109.booleanValue()) {
+            if (isJsr109 != null && !isJsr109) {
                 if (getService().getWsdlUrl() != null) {
                     // if coming from wsdl
                     serviceName = getService().getServiceName();

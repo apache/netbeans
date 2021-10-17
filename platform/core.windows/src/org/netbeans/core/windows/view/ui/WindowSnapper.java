@@ -27,7 +27,6 @@ import java.awt.PointerInfo;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import org.netbeans.core.windows.options.WinSysPrefs;
-import sun.font.GraphicComponent;
 
 /**
  *

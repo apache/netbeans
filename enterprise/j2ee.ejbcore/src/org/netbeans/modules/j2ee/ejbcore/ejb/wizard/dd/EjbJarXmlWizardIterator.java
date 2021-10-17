@@ -69,7 +69,7 @@ public final class EjbJarXmlWizardIterator implements WizardDescriptor.Instantia
                 if (component instanceof JComponent) { // assume Swing components
                     JComponent jComponent = (JComponent) component;
                     // Sets step number of a component
-                    jComponent.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(i));
+                    jComponent.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
                     // Sets steps names for a panel
                     jComponent.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
                     // Turn on subtitle creation on each step
@@ -94,7 +94,7 @@ public final class EjbJarXmlWizardIterator implements WizardDescriptor.Instantia
             String resource;
             // see #213631 - caused by fact that EJB DD schemas have different numbering than WEB DD schemas
             //   (so Java EE6 Web-DD is of the version 3.0, but Ejb-DD is of the version 3.1)
-            if (j2eeProfile == Profile.JAVA_EE_7_WEB || j2eeProfile == Profile.JAVA_EE_8_WEB || j2eeProfile == Profile.JAKARTA_EE_8_WEB) {
+            if (j2eeProfile == Profile.JAVA_EE_7_WEB || j2eeProfile == Profile.JAVA_EE_8_WEB || j2eeProfile == Profile.JAKARTA_EE_8_WEB || j2eeProfile == Profile.JAKARTA_EE_9_WEB) {
                 resource = "org-netbeans-modules-j2ee-ejbjarproject/ejb-jar-3.2.xml";
             } else if (j2eeProfile == Profile.JAVA_EE_6_WEB) {
                 // ee6 web module is of the version 3.0 but the ee6 deployment descriptor schema should be of version 3.1

@@ -1,6 +1,6 @@
 {
 	"name": "apache-netbeans-java",
-	"displayName": "Apache NetBeans Language Server",
+	"displayName": "Language Server",
 	"description": "Apache NetBeans Language Server Extension for Visual Studio Code",
 	"author": "Apache NetBeans",
 	"license": "Apache 2.0",
@@ -15,20 +15,23 @@
 	"categories": [
 		"Programming Languages",
 		"Debuggers",
+		"Testing",
 		"Other"
 	],
 	"keywords": [
 		"multi-root ready"
 	],
 	"engines": {
-		"vscode": "^1.52.0"
+		"vscode": "^1.60.0"
 	},
 	"activationEvents": [
 		"onLanguage:java",
+		"onCommand:java.workspace.newproject",
 		"workspaceContains:**/*.java",
 		"workspaceContains:pom.xml",
 		"workspaceContains:build.gradle",
-		"onDebug"
+		"onDebug",
+		"onDebugDynamicConfigurations"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -39,6 +42,22 @@
 					"text/javascript",
 					"application/javascript"
 				]
+			},
+			{
+				"id": "jackpot-hint",
+				"extensions": [
+					".hint"
+				],
+				"aliases": [
+					"Java Hints"
+				]
+			}
+		],
+		"grammars": [
+			{
+				"language": "jackpot-hint",
+				"scopeName": "source.java",
+				"path": "./syntaxes/java.tmLanguage.json"
 			}
 		],
 		"configuration": {
@@ -66,12 +85,25 @@
 					"type": "boolean",
 					"default": false,
 					"description": "Enable Run/Debug test in editor"
+				},
+				"netbeans.groovySupport.enabled": {
+					"type": "boolean",
+					"default": true,
+					"description": "Enables experimental Groovy and Spock support in Language Server"
+				},
+				"netbeans.javadoc.load.timeout": {
+					"type": "integer",
+					"default": 100,
+					"description": "Timeout (in milliseconds) for loading Javadoc in code completion (-1 for unlimited)"
 				}
 			}
 		},
 		"breakpoints": [
 			{
 				"language": "java"
+			},
+			{
+				"language": "groovy"
 			}
 		],
 		"debuggers": [
@@ -80,7 +112,8 @@
 				"label": "Java 8+",
 				"runtime": "node",
 				"languages": [
-					"java"
+					"java",
+					"groovy"
 				],
 				"configurationAttributes": {
 					"launch": {
@@ -108,6 +141,72 @@
 								],
 								"description": "The specified console to launch the program.",
 								"default": "internalConsole"
+							},
+							"args": {
+								"type": [
+									"string",
+									"null"
+								],
+								"description": "Arguments for the executed class",
+								"default": null
+							},
+							"vmArgs": {
+								"type": [
+									"string",
+									"null"
+								],
+								"description": "Arguments for the Java VM",
+								"default": null
+							},
+							"cwd": {
+								"type": [
+									"string",
+									"null"
+								],
+								"description": "Working directory for the program execution",
+								"default": null
+							},
+							"env": {
+								"type": [
+									"object"
+								],
+								"description": "Environment variables for the program execution",
+								"default": {}
+							},
+							"launchConfiguration": {
+								"type": [
+									"string",
+									"null"
+								],
+								"description": "Mode and default behaviour for launch"
+							}
+						}
+					},
+					"attach": {
+						"properties": {
+							"hostName": {
+								"type": "string",
+								"default": "localhost",
+								"description": "Host name or IP address to which to attach"
+							},
+							"port": {
+								"type": "string",
+								"default": "8000",
+								"description": "Port number to which to attach"
+							},
+							"sharedMemoryName": {
+								"type": "string",
+								"description": "Shared memory name of the debuggee"
+							},
+							"processId": {
+								"type": "string",
+								"default": "${command:java.attachDebugger.pickProcess}",
+								"description": "Process Id of the debuggee"
+							},
+							"timeout": {
+								"type": "string",
+								"default": "30000",
+								"description": "Timeout while waiting to attach"
 							}
 						}
 					}
@@ -132,12 +231,112 @@
 						}
 					}
 				]
+			},
+			{
+				"type": "nativeimage",
+				"label": "Native Image",
+				"runtime": "node",
+				"languages": [
+					"java"
+				],
+				"configurationAttributes": {
+					"launch": {
+						"required": [
+							"nativeImagePath"
+						],
+						"properties": {
+							"nativeImagePath": {
+								"type": "string",
+								"description": "Absolute path to the application native image.",
+								"default": "${workspaceFolder}/build/native-image/application"
+							},
+							"miDebugger": {
+								"type": "string",
+								"description": "MI Debugger",
+								"default": "gdb"
+							},
+							"console": {
+								"type": "string",
+								"enum": [
+									"internalConsole"
+								],
+								"description": "The specified console to launch the program.",
+								"default": "internalConsole"
+							}
+						}
+					},
+					"attach": {
+						"properties": {
+							"nativeImagePath": {
+								"type": "string",
+								"description": "Absolute path to the application native image.",
+								"default": "${workspaceFolder}/build/native-image/application"
+							},
+							"processId": {
+								"type": "string",
+								"default": "${command:nativeImage.attachDebugger.pickProcess}",
+								"description": "Process Id of the native image"
+							},
+							"miDebugger": {
+								"type": "string",
+								"description": "MI Debugger",
+								"default": "gdb"
+							}
+						}
+					}
+				},
+				"initialConfigurations": [
+					{
+						"type": "nativeimage",
+						"request": "launch",
+						"name": "Launch Native Image",
+						"nativeImagePath": "${workspaceFolder}/build/native-image/application"
+					}
+				],
+				"configurationSnippets": [
+					{
+						"label": "Native Image: Launch",
+						"description": "Launch a native image with MI debugger.",
+						"body": {
+							"type": "nativeimage",
+							"request": "launch",
+							"name": "Launch Native Image",
+							"nativeImagePath": "^\"${1:\\${workspaceFolder\\}/build/native-image/application}\""
+						}
+					},
+					{
+						"label": "Native Image: Attach to Process",
+						"description": "Attach to a native image process with MI debugger.",
+						"body": {
+							"type": "nativeimage",
+							"request": "attach",
+							"name": "Attach to Native Image",
+							"processId": "^\"\\${command:nativeImage.attachDebugger.pickProcess\\}\"",
+							"nativeImagePath": ""
+						}
+					}
+				]
 			}
 		],
 		"commands": [
 			{
 				"command": "java.workspace.compile",
 				"title": "Compile Workspace",
+				"category": "Java"
+			},
+			{
+				"command": "java.workspace.new",
+				"title": "New from Template...",
+				"category": "Java"
+			},
+			{
+				"command": "java.workspace.newproject",
+				"title": "New Project...",
+				"category": "Java"
+			},
+			{
+				"command": "java.goto.super.implementation",
+				"title": "Go to Super Implementation",
 				"category": "Java"
 			},
 			{
@@ -151,13 +350,50 @@
 				"command": "java.workspace.compile",
 				"key": "shift+alt+b",
 				"when": "nbJavaLSReady"
+			},
+			{
+				"command": "java.goto.super.implementation",
+				"key": "alt+U",
+				"mac": "alt+cmd+U",
+				"when": "editorHasCodeActionsProvider && editorTextFocus"
+			},
+			{
+				"command": "editor.action.sourceAction",
+				"key": "alt+insert",
+				"mac": "ctrl+alt+enter",
+				"when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly"
 			}
 		],
 		"menus": {
+			"editor/context": [
+				{
+					"command": "java.goto.super.implementation",
+					"when": "nbJavaLSReady && editorLangId == java && editorTextFocus",
+					"group": "navigation@100"
+				}
+			],
+			"explorer/context": [
+				{
+					"command": "java.workspace.new",
+					"when": "nbJavaLSReady && explorerResourceIsFolder",
+					"group": "navigation@3"
+				}
+			],
 			"commandPalette": [
+				{
+					"command": "java.workspace.new",
+					"when": "nbJavaLSReady"
+				},
+				{
+					"command": "java.workspace.newproject"
+				},
 				{
 					"command": "java.workspace.compile",
 					"when": "nbJavaLSReady"
+				},
+				{
+					"command": "java.goto.super.implementation",
+					"when": "nbJavaLSReady && editorLangId == java"
 				},
 				{
 					"command": "graalvm.pause.script",
@@ -172,20 +408,23 @@
 		"watch": "tsc -watch -p ./",
 		"test": "node ./out/test/runTest.js",
 		"nbcode": "node ./out/nbcode.js",
-		"nbjavac": "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install .*nbjavac.*"
+		"nbjavac": "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install .*nbjavac.*",
+		"apisupport": "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install '(org.netbeans.libs.xerces|org.netbeans.modules.editor.structure|org.netbeans.modules.xml|org.netbeans.modules.xml.axi|org.netbeans.modules.xml.retriever|org.netbeans.modules.xml.schema.model|org.netbeans.modules.xml.tax|org.netbeans.modules.xml.text|org.netbeans.modules.ant.browsetask|.*apisupport.*|org.netbeans.modules.debugger.jpda.ant)' && node ./out/nbcode.js -J-Dnetbeans.close=true --modules --enable .*apisupport.ant"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.52.0",
 		"@types/glob": "^7.1.1",
-		"@types/mocha": "^7.0.2",
+		"@types/mocha": "^9.0.0",
 		"@types/node": "^13.11.0",
+		"@types/ps-node": "^0.1.0",
+		"@types/vscode": "^1.60.0",
 		"glob": "^7.1.6",
-		"mocha": "^7.1.2",
+		"mocha": "^9.1.2",
+		"ps-node": "^0.1.6",
 		"typescript": "^3.8.3",
 		"vscode-test": "^1.4.1"
 	},
 	"dependencies": {
-		"vscode-languageclient": "7.0.0",
-		"vscode-debugadapter": "1.42.1"
-	}
+		"jsonc-parser": "3.0.0",
+		"vscode-debugadapter": "1.42.1",
+		"vscode-languageclient": "6.1.3"
 }

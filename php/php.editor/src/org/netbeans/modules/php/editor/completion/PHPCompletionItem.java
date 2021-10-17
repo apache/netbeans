@@ -596,7 +596,9 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                             param.hasDeclaredType(),
                             param.isReference(),
                             param.isVariadic(),
-                            param.isUnionType());
+                            param.isUnionType(),
+                            param.getModifier()
+                    );
                 }
             }
             return param;
@@ -1278,7 +1280,8 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                             appendSpace = codeStyle.spaceBeforeSwitchParen();
                             break;
                         case "array": //NOI18N
-                            if (request.context == CompletionContext.TYPE_NAME) {
+                            if (request.context == CompletionContext.TYPE_NAME
+                                    || request.context == CompletionContext.VISIBILITY_MODIFIER_OR_TYPE_NAME) {
                                 // e.g. return type
                                 appendBrackets = false;
                                 appendSpace = false;
@@ -1751,6 +1754,65 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                 }
             }
             return typeName;
+        }
+    }
+
+    @NbBundle.Messages("LBL_PARAMETER_NAME=Parameter Name")
+    static class ParameterNameItem extends PHPCompletionItem {
+
+        private final ParameterElement parameterElement;
+
+        public ParameterNameItem(ParameterElement parameterElement, CompletionRequest request) {
+            super(null, request);
+            this.parameterElement = parameterElement;
+        }
+
+        @Override
+        public String getName() {
+            return parameterElement.getName().substring(1) + ":"; // NOI18N
+        }
+
+        @Override
+        public ElementKind getKind() {
+            return ElementKind.PARAMETER;
+        }
+
+        public ParameterElement getParameterElement() {
+            return parameterElement;
+        }
+
+        @Override
+        public String getLhsHtml(HtmlFormatter formatter) {
+            formatter.name(getKind(), true);
+            formatter.appendText(getName());
+            formatter.name(getKind(), false);
+            return formatter.getText();
+        }
+
+        @Override
+        public String getRhsHtml(HtmlFormatter formatter) {
+            return Bundle.LBL_PARAMETER_NAME();
+        }
+
+        @Override
+        public boolean isSmart() {
+            return true;
+        }
+
+        @Override
+        public int getSortPrioOverride() {
+            // NamespaceItem can be -10001
+            return -10010;
+        }
+
+        @Override
+        public String getInsertPrefix() {
+            return getName();
+        }
+
+        @Override
+        public String getCustomInsertTemplate() {
+            return getName() + " "; // NOI18N
         }
     }
 

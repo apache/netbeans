@@ -106,11 +106,18 @@ public final class FileBasedURLMapper extends URLMapper {
     }
     
     static URI toURI(String path, boolean isDirectory, char separator) {
+        String sp = slashify(path, isDirectory, separator);
         try {
-            String sp = slashify(path, isDirectory, separator);
             return new URI("file", null, sp, null);  //NOI18N
         } catch (URISyntaxException x) {
-            throw new Error(x);		// Can't happen
+            try {
+                //can be a path in form "\\wsl$\<server>\", '$' not allowed
+                //in the host part, put everything into path
+                //note this URI is *not* normalized:
+                return new URI("file", null, "//" + sp, null);  //NOI18N
+            } catch (URISyntaxException ex) {
+                throw new Error(x);		// Can't happen
+            }
         }
     }
 

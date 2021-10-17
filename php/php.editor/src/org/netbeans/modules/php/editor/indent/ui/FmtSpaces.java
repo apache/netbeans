@@ -250,6 +250,7 @@ public final class FmtSpaces extends JPanel implements TreeCellRenderer, MouseLi
 
             new Item("BeforeParentheses",                       // NOI18N
                 new Item(SPACE_BEFORE_ANONYMOUS_CLASS_PAREN),
+                new Item(SPACE_BEFORE_ANONYMOUS_FUNCTION_PAREN),
                 new Item(SPACE_BEFORE_METHOD_DECL_PAREN),
                 new Item(SPACE_BEFORE_METHOD_CALL_PAREN),
                 new Item(SPACE_BEFORE_IF_PAREN),
@@ -258,7 +259,8 @@ public final class FmtSpaces extends JPanel implements TreeCellRenderer, MouseLi
                 new Item(SPACE_BEFORE_CATCH_PAREN),
                 new Item(SPACE_BEFORE_SWITCH_PAREN),
                 new Item(SPACE_BEFORE_MATCH_PAREN),
-                new Item(SPACE_BEFORE_ARRAY_DECL_PAREN)
+                new Item(SPACE_BEFORE_ARRAY_DECL_PAREN),
+                new Item(SPACE_BEFORE_ATTRIBUTE_DECL_PAREN)
                 ),
 
             new Item("AroundOperators",                         // NOI18N
@@ -301,7 +303,9 @@ public final class FmtSpaces extends JPanel implements TreeCellRenderer, MouseLi
                 new Item(SPACE_WITHIN_CATCH_PARENS),
                 new Item(SPACE_WITHIN_ARRAY_DECL_PARENS),
                 new Item(SPACE_WITHIN_TYPE_CAST_PARENS),
-                new Item(SPACE_WITHIN_ARRAY_BRACKETS)
+                new Item(SPACE_WITHIN_ARRAY_BRACKETS),
+                new Item(SPACE_WITHIN_ATTRIBUTE_BRACKETS),
+                new Item(SPACE_WITHIN_ATTRIBUTE_DECL_PARENS)
             ),
 
 

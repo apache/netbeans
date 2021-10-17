@@ -979,6 +979,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 String tokenText = t.text().toString();
                 String[] lines = tokenText.split("\n");
                 int indent = Arrays.stream(lines, 1, lines.length)
+                                   .filter(l -> !l.trim().isEmpty())
                                    .mapToInt(this::leadingIndent)
                                    .min()
                                    .orElse(0);
@@ -1009,18 +1010,12 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 if (t != null) {
                     contextKeywords.add(t);
                 }
-            } else if (tree != null && TreeShims.BINDING_PATTERN.equals(tree.getKind().name())) {
-                super.scan(tree, p);
-                TreePath tp = new TreePath(getCurrentPath(), tree);
-                handlePossibleIdentifier(tp, true, info.getTrees().getElement(tp));
-                tl.moveToOffset(sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), TreeShims.getBindingPatternType(tree)));
-                firstIdentifier(tp, TreeShims.getBinding(tree).toString());
             } else if (tree != null && tree.getKind().equals(Kind.MODIFIERS)) {
                visitModifier(tree);
             }
             return super.scan(tree, p);
         }
-        
+
         private void visitModifier(Tree tree) {
             tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), tree));
             Token t = null;

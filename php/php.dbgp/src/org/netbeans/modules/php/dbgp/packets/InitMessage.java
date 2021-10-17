@@ -33,6 +33,7 @@ import org.w3c.dom.Node;
  *
  */
 public class InitMessage extends DbgpMessage {
+
     private static final String IDEKEY = "idekey"; // NOI18N
     private static final String FILE = "fileuri"; // NOI18N
 
@@ -53,6 +54,7 @@ public class InitMessage extends DbgpMessage {
     public void process(DebugSession session, DbgpCommand command) {
         setId(session);
         setShowHidden(session);
+        setBreakpointResolution(session);
         setMaxDepth(session);
         setMaxChildren(session);
         setMaxDataSize(session);
@@ -78,6 +80,12 @@ public class InitMessage extends DbgpMessage {
 
     private void setShowHidden(DebugSession session) {
         setFeature(session, Feature.SHOW_HIDDEN, "1"); //NOI18N
+    }
+
+    private void setBreakpointResolution(DebugSession session) {
+        if (DebuggerOptions.getGlobalInstance().resolveBreakpoints()) {
+            setFeature(session, Feature.RESOLVED_BREAKPOINTS, "1"); // NOI18N
+        }
     }
 
     private void setMaxDepth(DebugSession session) {

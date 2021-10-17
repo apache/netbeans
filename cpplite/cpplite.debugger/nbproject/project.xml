@@ -52,6 +52,33 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.extexecution</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>1.59</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.extexecution.base</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>1.20</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.nativeimage.api</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>0</release-version>
+                        <specification-version>0.5</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.projectapi</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -190,8 +217,8 @@
                 <package>org.netbeans.modules.cpplite.debugger.api</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/cpplite-mi-1.0-SNAPSHOT.jar</runtime-relative-path>
-                <binary-origin>external/cpplite-mi-1.0-SNAPSHOT.jar</binary-origin>
+                <runtime-relative-path>ext/cpplite-mi-f8f8250283be.jar</runtime-relative-path>
+                <binary-origin>external/cpplite-mi-f8f8250283be.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

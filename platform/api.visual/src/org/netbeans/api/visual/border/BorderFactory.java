@@ -631,6 +631,7 @@ public final class BorderFactory {
      * @return the fancy dashed border
      * @deprecated use createDashedBorder (color, width, height, true) method instead
      */
+    @Deprecated
     public static Border createFancyDashedBorder (Color color, int width, int height) {
         GeomUtil.LOG.warning ("BorderFactory.createFancyDashedBorder() method is deprecated. Use BorderFactory.createDashedBorder(color,width,height,true) method instead."); // NOI18N
         return new FancyDashedBorder (color != null ? color : (new DefaultLookFeel()).getForeground()/*Color.BLACK*/, width, height);

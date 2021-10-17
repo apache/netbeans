@@ -37,13 +37,13 @@ import java.util.stream.Collectors;
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleIcon;
-import javax.accessibility.AccessibleText;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.Actions;
 import org.openide.util.NbBundle;
 
 /**
@@ -222,7 +222,8 @@ class NotifyDescriptorAdapter {
                 text = mapDescriptorOption(o);
             }
             if (text != null) {
-                addMessageItem(new MessageActionItem(text), o);
+                // Discard ampersands, LSP spec does not support such pattern.
+                addMessageItem(new MessageActionItem(Actions.cutAmpersand(text)), o);
             } else {
                 reportUnknownOption(o);
             }

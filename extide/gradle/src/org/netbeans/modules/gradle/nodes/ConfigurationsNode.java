@@ -20,7 +20,7 @@
 package org.netbeans.modules.gradle.nodes;
 
 import org.netbeans.modules.gradle.ActionProviderImpl;
-import org.netbeans.modules.gradle.GradleArtifactStore;
+import org.netbeans.modules.gradle.loaders.GradleArtifactStore;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.api.GradleDependency;
 import org.netbeans.modules.gradle.GradleProject;
@@ -253,7 +253,7 @@ public class ConfigurationsNode extends AbstractNode {
                                 NbGradleProjectImpl proj = (NbGradleProjectImpl) prj;
                                 assert prj.getLookup().lookup(LogicalViewProvider.class) != null;
                                 Node original = proj.getLookup().lookup(LogicalViewProvider.class).createLogicalView();
-                                ret.add(new SubProjectsNode.ProjectFilterNode(proj, original));
+                                ret.add(new SubProjectsNode.ProjectFilterNode(original));
                             }
                         } catch (IllegalArgumentException | IOException ex) {
                             ex.printStackTrace();//TODO log ?

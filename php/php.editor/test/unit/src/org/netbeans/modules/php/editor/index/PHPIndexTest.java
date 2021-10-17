@@ -604,6 +604,10 @@ public class PHPIndexTest extends PHPNavTestBase {
         checkIndexer(getTestPath());
     }
 
+    public void testPHP80ConstructorPropertyPromotion() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
     @Override
     protected FileObject[] createSourceClassPathsForTest() {
         final File folder = new File(getDataDir(), getTestFolderPath());

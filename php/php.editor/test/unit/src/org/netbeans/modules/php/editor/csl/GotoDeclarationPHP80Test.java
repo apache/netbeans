@@ -273,4 +273,48 @@ public class GotoDeclarationPHP80Test extends GotoDeclarationTestBase {
         checkDeclaration(getTestPath(), "$country = $session->ge^tUser()::create(\"test\")?->getAddress()->country;", "    public function ^getUser(): ?User {");
     }
 
+    public void testConstructorPropertyPromotion_01a() throws Exception {
+        checkDeclaration(getTestPath(), "$this->fie^ld1;", "        private int $^field1,");
+    }
+
+    public void testConstructorPropertyPromotion_01b() throws Exception {
+        checkDeclaration(getTestPath(), "var_dump($this->fie^ld1);", "        private int $^field1,");
+    }
+
+    public void testConstructorPropertyPromotion_01c() throws Exception {
+        checkDeclaration(getTestPath(), "echo $fiel^d1;", "        private int $^field1,");
+    }
+
+    public void testConstructorPropertyPromotion_02a() throws Exception {
+        checkDeclaration(getTestPath(), "$this->fie^ld2;", "            protected int|string|\\Test2\\Foo $^field2,");
+    }
+
+    public void testConstructorPropertyPromotion_02b() throws Exception {
+        checkDeclaration(getTestPath(), "var_dump($this->fie^ld2);", "        protected int|string|\\Test2\\Foo $^field2,");
+    }
+
+    public void testConstructorPropertyPromotion_02c() throws Exception {
+        checkDeclaration(getTestPath(), "echo $fiel^d2;", "        protected int|string|\\Test2\\Foo $^field2,");
+    }
+
+    public void testConstructorPropertyPromotion_03a() throws Exception {
+        checkDeclaration(getTestPath(), "$this->field^3;", "        public ?string $^field3 = \"default value\",");
+    }
+
+    public void testConstructorPropertyPromotion_03b() throws Exception {
+        checkDeclaration(getTestPath(), "var_dump($this->f^ield3);", "        public ?string $^field3 = \"default value\",");
+    }
+
+    public void testConstructorPropertyPromotion_03c() throws Exception {
+        checkDeclaration(getTestPath(), "echo $fie^ld3;", "        public ?string $^field3 = \"default value\",");
+    }
+
+    public void testConstructorPropertyPromotion_03d() throws Exception {
+        checkDeclaration(getTestPath(), "$instance->fie^ld3;", "        public ?string $^field3 = \"default value\",");
+    }
+
+    public void testConstructorPropertyPromotion_04a() throws Exception {
+        checkDeclaration(getTestPath(), "protected int|string|\\Test2\\F^oo $field2,", "    class ^Foo {}");
+    }
+
 }

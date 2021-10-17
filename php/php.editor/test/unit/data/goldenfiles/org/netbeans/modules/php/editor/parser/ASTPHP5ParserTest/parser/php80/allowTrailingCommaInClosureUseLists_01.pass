@@ -1,0 +1,573 @@
+<testresult testFile='allowTrailingCommaInClosureUseLists_01.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='816' end='825'>
+            <text>$lexical1</text>
+        </token>
+        <token id='T_EQUAL' start='826' end='827'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='828' end='829'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='829' end='830'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='831' end='840'>
+            <text>$lexical2</text>
+        </token>
+        <token id='T_EQUAL' start='841' end='842'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='843' end='844'>
+            <text>2</text>
+        </token>
+        <token id='T_SEMICOLON' start='844' end='845'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='847' end='855'>
+            <text>$lambda1</text>
+        </token>
+        <token id='T_EQUAL' start='856' end='857'>
+            <text>=</text>
+        </token>
+        <token id='T_FUNCTION' start='858' end='866'>
+            <text>function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='867' end='868'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='868' end='871'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='872' end='878'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='878' end='879'>
+            <text>)</text>
+        </token>
+        <token id='T_USE' start='880' end='883'>
+            <text>use</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='884' end='885'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='885' end='894'>
+            <text>$lexical1</text>
+        </token>
+        <token id='T_COMMA' start='894' end='895'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='896' end='905'>
+            <text>$lexical2</text>
+        </token>
+        <token id='T_COMMA' start='905' end='906'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='906' end='907'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='908' end='909'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='915' end='916'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='916' end='917'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='919' end='927'>
+            <text>$lambda1</text>
+        </token>
+        <token id='T_EQUAL' start='928' end='929'>
+            <text>=</text>
+        </token>
+        <token id='T_FUNCTION' start='930' end='938'>
+            <text>function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='939' end='940'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='940' end='943'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='944' end='950'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='950' end='951'>
+            <text>)</text>
+        </token>
+        <token id='T_USE' start='952' end='955'>
+            <text>use</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='956' end='957'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='957' end='966'>
+            <text>$lexical1</text>
+        </token>
+        <token id='T_COMMA' start='966' end='967'>
+            <text>,</text>
+        </token>
+        <token id='T_REFERENCE' start='968' end='969'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_VARIABLE' start='969' end='978'>
+            <text>$lexical2</text>
+        </token>
+        <token id='T_COMMA' start='978' end='979'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='979' end='980'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='981' end='982'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='988' end='989'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='989' end='990'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='992' end='1000'>
+            <text>$lambda1</text>
+        </token>
+        <token id='T_EQUAL' start='1001' end='1002'>
+            <text>=</text>
+        </token>
+        <token id='T_STATIC' start='1003' end='1009'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1010' end='1018'>
+            <text>function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1019' end='1020'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1020' end='1023'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1024' end='1030'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1030' end='1031'>
+            <text>)</text>
+        </token>
+        <token id='T_USE' start='1032' end='1035'>
+            <text>use</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1036' end='1037'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1037' end='1046'>
+            <text>$lexical1</text>
+        </token>
+        <token id='T_COMMA' start='1046' end='1047'>
+            <text>,</text>
+        </token>
+        <token id='T_REFERENCE' start='1048' end='1049'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_VARIABLE' start='1049' end='1058'>
+            <text>$lexical2</text>
+        </token>
+        <token id='T_COMMA' start='1058' end='1059'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1059' end='1060'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1061' end='1062'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1068' end='1069'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1069' end='1070'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1072' end='1080'>
+            <text>$lambda2</text>
+        </token>
+        <token id='T_EQUAL' start='1081' end='1082'>
+            <text>=</text>
+        </token>
+        <token id='T_FUNCTION' start='1083' end='1091'>
+            <text>function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1092' end='1093'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1093' end='1096'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1097' end='1103'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1103' end='1104'>
+            <text>)</text>
+        </token>
+        <token id='T_USE' start='1105' end='1108'>
+            <text>use</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1109' end='1110'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1119' end='1128'>
+            <text>$lexical1</text>
+        </token>
+        <token id='T_COMMA' start='1128' end='1129'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1138' end='1147'>
+            <text>$lexical2</text>
+        </token>
+        <token id='T_COMMA' start='1147' end='1148'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1149' end='1150'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1151' end='1152'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1158' end='1159'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1159' end='1160'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1162' end='1170'>
+            <text>$lambda2</text>
+        </token>
+        <token id='T_EQUAL' start='1171' end='1172'>
+            <text>=</text>
+        </token>
+        <token id='T_FUNCTION' start='1173' end='1181'>
+            <text>function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1182' end='1183'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1183' end='1186'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1187' end='1193'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1193' end='1194'>
+            <text>)</text>
+        </token>
+        <token id='T_USE' start='1195' end='1198'>
+            <text>use</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1199' end='1200'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1209' end='1218'>
+            <text>$lexical1</text>
+        </token>
+        <token id='T_COMMA' start='1218' end='1219'>
+            <text>,</text>
+        </token>
+        <token id='T_REFERENCE' start='1228' end='1229'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_VARIABLE' start='1229' end='1238'>
+            <text>$lexical2</text>
+        </token>
+        <token id='T_COMMA' start='1238' end='1239'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1240' end='1241'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1242' end='1243'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1249' end='1250'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1250' end='1251'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1253' end='1261'>
+            <text>$lambda2</text>
+        </token>
+        <token id='T_EQUAL' start='1262' end='1263'>
+            <text>=</text>
+        </token>
+        <token id='T_STATIC' start='1264' end='1270'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1271' end='1279'>
+            <text>function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1280' end='1281'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1281' end='1284'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1285' end='1291'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1291' end='1292'>
+            <text>)</text>
+        </token>
+        <token id='T_USE' start='1293' end='1296'>
+            <text>use</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1297' end='1298'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1307' end='1316'>
+            <text>$lexical1</text>
+        </token>
+        <token id='T_COMMA' start='1316' end='1317'>
+            <text>,</text>
+        </token>
+        <token id='T_REFERENCE' start='1326' end='1327'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_VARIABLE' start='1327' end='1336'>
+            <text>$lexical2</text>
+        </token>
+        <token id='T_COMMA' start='1336' end='1337'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1338' end='1339'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1340' end='1341'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1347' end='1348'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1348' end='1349'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='1350' end='1350'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1350'>
+        <Comments>
+            <Comment start='7' end='814' commentType='multiLine'/>
+            <Comment start='7' end='814' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='816' end='830'>
+                <Assignment start='816' end='829' operator='EQUAL'>
+                    <Variable start='816' end='825' isDollared='true'>
+                        <Identifier start='817' end='825' name='lexical1'/>
+                    </Variable>
+                    <Scalar start='828' end='829' type='INT' value='1'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='831' end='845'>
+                <Assignment start='831' end='844' operator='EQUAL'>
+                    <Variable start='831' end='840' isDollared='true'>
+                        <Identifier start='832' end='840' name='lexical2'/>
+                    </Variable>
+                    <Scalar start='843' end='844' type='INT' value='2'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='847' end='917'>
+                <Assignment start='847' end='916' operator='EQUAL'>
+                    <Variable start='847' end='855' isDollared='true'>
+                        <Identifier start='848' end='855' name='lambda1'/>
+                    </Variable>
+                    <LambdaFunctionDeclaration start='858' end='916' isReference='false'>
+                        <FormalParameter start='868' end='878' isMandatory='true' isVariadic='false'>
+                            <ParametrType>
+                                <NamespaceName start='868' end='871' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='868' end='871' name='int'/>
+                                </NamespaceName>
+                            </ParametrType>
+                            <ParametrName>
+                                <Variable start='872' end='878' isDollared='true'>
+                                    <Identifier start='873' end='878' name='param'/>
+                                </Variable>
+                            </ParametrName>
+                            <DefaultValue>
+                            </DefaultValue>
+                        </FormalParameter>
+                        <Variable start='885' end='894' isDollared='true'>
+                            <Identifier start='886' end='894' name='lexical1'/>
+                        </Variable>
+                        <Variable start='896' end='905' isDollared='true'>
+                            <Identifier start='897' end='905' name='lexical2'/>
+                        </Variable>
+                        <Block start='908' end='916' isCurly='true'>
+                        </Block>
+                    </LambdaFunctionDeclaration>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='919' end='990'>
+                <Assignment start='919' end='989' operator='EQUAL'>
+                    <Variable start='919' end='927' isDollared='true'>
+                        <Identifier start='920' end='927' name='lambda1'/>
+                    </Variable>
+                    <LambdaFunctionDeclaration start='930' end='989' isReference='false'>
+                        <FormalParameter start='940' end='950' isMandatory='true' isVariadic='false'>
+                            <ParametrType>
+                                <NamespaceName start='940' end='943' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='940' end='943' name='int'/>
+                                </NamespaceName>
+                            </ParametrType>
+                            <ParametrName>
+                                <Variable start='944' end='950' isDollared='true'>
+                                    <Identifier start='945' end='950' name='param'/>
+                                </Variable>
+                            </ParametrName>
+                            <DefaultValue>
+                            </DefaultValue>
+                        </FormalParameter>
+                        <Variable start='957' end='966' isDollared='true'>
+                            <Identifier start='958' end='966' name='lexical1'/>
+                        </Variable>
+                        <Reference start='968' end='978'>
+                            <Variable start='969' end='978' isDollared='true'>
+                                <Identifier start='970' end='978' name='lexical2'/>
+                            </Variable>
+                        </Reference>
+                        <Block start='981' end='989' isCurly='true'>
+                        </Block>
+                    </LambdaFunctionDeclaration>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='992' end='1070'>
+                <Assignment start='992' end='1069' operator='EQUAL'>
+                    <Variable start='992' end='1000' isDollared='true'>
+                        <Identifier start='993' end='1000' name='lambda1'/>
+                    </Variable>
+                    <LambdaFunctionDeclaration start='1010' end='1069' isReference='false'>
+                        <FormalParameter start='1020' end='1030' isMandatory='true' isVariadic='false'>
+                            <ParametrType>
+                                <NamespaceName start='1020' end='1023' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1020' end='1023' name='int'/>
+                                </NamespaceName>
+                            </ParametrType>
+                            <ParametrName>
+                                <Variable start='1024' end='1030' isDollared='true'>
+                                    <Identifier start='1025' end='1030' name='param'/>
+                                </Variable>
+                            </ParametrName>
+                            <DefaultValue>
+                            </DefaultValue>
+                        </FormalParameter>
+                        <Variable start='1037' end='1046' isDollared='true'>
+                            <Identifier start='1038' end='1046' name='lexical1'/>
+                        </Variable>
+                        <Reference start='1048' end='1058'>
+                            <Variable start='1049' end='1058' isDollared='true'>
+                                <Identifier start='1050' end='1058' name='lexical2'/>
+                            </Variable>
+                        </Reference>
+                        <Block start='1061' end='1069' isCurly='true'>
+                        </Block>
+                    </LambdaFunctionDeclaration>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1072' end='1160'>
+                <Assignment start='1072' end='1159' operator='EQUAL'>
+                    <Variable start='1072' end='1080' isDollared='true'>
+                        <Identifier start='1073' end='1080' name='lambda2'/>
+                    </Variable>
+                    <LambdaFunctionDeclaration start='1083' end='1159' isReference='false'>
+                        <FormalParameter start='1093' end='1103' isMandatory='true' isVariadic='false'>
+                            <ParametrType>
+                                <NamespaceName start='1093' end='1096' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1093' end='1096' name='int'/>
+                                </NamespaceName>
+                            </ParametrType>
+                            <ParametrName>
+                                <Variable start='1097' end='1103' isDollared='true'>
+                                    <Identifier start='1098' end='1103' name='param'/>
+                                </Variable>
+                            </ParametrName>
+                            <DefaultValue>
+                            </DefaultValue>
+                        </FormalParameter>
+                        <Variable start='1119' end='1128' isDollared='true'>
+                            <Identifier start='1120' end='1128' name='lexical1'/>
+                        </Variable>
+                        <Variable start='1138' end='1147' isDollared='true'>
+                            <Identifier start='1139' end='1147' name='lexical2'/>
+                        </Variable>
+                        <Block start='1151' end='1159' isCurly='true'>
+                        </Block>
+                    </LambdaFunctionDeclaration>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1162' end='1251'>
+                <Assignment start='1162' end='1250' operator='EQUAL'>
+                    <Variable start='1162' end='1170' isDollared='true'>
+                        <Identifier start='1163' end='1170' name='lambda2'/>
+                    </Variable>
+                    <LambdaFunctionDeclaration start='1173' end='1250' isReference='false'>
+                        <FormalParameter start='1183' end='1193' isMandatory='true' isVariadic='false'>
+                            <ParametrType>
+                                <NamespaceName start='1183' end='1186' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1183' end='1186' name='int'/>
+                                </NamespaceName>
+                            </ParametrType>
+                            <ParametrName>
+                                <Variable start='1187' end='1193' isDollared='true'>
+                                    <Identifier start='1188' end='1193' name='param'/>
+                                </Variable>
+                            </ParametrName>
+                            <DefaultValue>
+                            </DefaultValue>
+                        </FormalParameter>
+                        <Variable start='1209' end='1218' isDollared='true'>
+                            <Identifier start='1210' end='1218' name='lexical1'/>
+                        </Variable>
+                        <Reference start='1228' end='1238'>
+                            <Variable start='1229' end='1238' isDollared='true'>
+                                <Identifier start='1230' end='1238' name='lexical2'/>
+                            </Variable>
+                        </Reference>
+                        <Block start='1242' end='1250' isCurly='true'>
+                        </Block>
+                    </LambdaFunctionDeclaration>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1253' end='1349'>
+                <Assignment start='1253' end='1348' operator='EQUAL'>
+                    <Variable start='1253' end='1261' isDollared='true'>
+                        <Identifier start='1254' end='1261' name='lambda2'/>
+                    </Variable>
+                    <LambdaFunctionDeclaration start='1271' end='1348' isReference='false'>
+                        <FormalParameter start='1281' end='1291' isMandatory='true' isVariadic='false'>
+                            <ParametrType>
+                                <NamespaceName start='1281' end='1284' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1281' end='1284' name='int'/>
+                                </NamespaceName>
+                            </ParametrType>
+                            <ParametrName>
+                                <Variable start='1285' end='1291' isDollared='true'>
+                                    <Identifier start='1286' end='1291' name='param'/>
+                                </Variable>
+                            </ParametrName>
+                            <DefaultValue>
+                            </DefaultValue>
+                        </FormalParameter>
+                        <Variable start='1307' end='1316' isDollared='true'>
+                            <Identifier start='1308' end='1316' name='lexical1'/>
+                        </Variable>
+                        <Reference start='1326' end='1336'>
+                            <Variable start='1327' end='1336' isDollared='true'>
+                                <Identifier start='1328' end='1336' name='lexical2'/>
+                            </Variable>
+                        </Reference>
+                        <Block start='1340' end='1348' isCurly='true'>
+                        </Block>
+                    </LambdaFunctionDeclaration>
+                </Assignment>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

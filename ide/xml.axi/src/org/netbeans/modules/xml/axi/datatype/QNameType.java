@@ -118,7 +118,7 @@ public class QNameType extends StringBase {
             lengths = new ArrayList<Integer>(1);
             hasFacets = true;
         }
-        this.lengths.add(new Integer(length));
+        this.lengths.add(Integer.valueOf(length));
     }
     
     /*
@@ -131,7 +131,7 @@ public class QNameType extends StringBase {
             minLengths = new ArrayList<Integer>(1);
             hasFacets = true;
         }
-        this.minLengths.add(new Integer(minLength));
+        this.minLengths.add(Integer.valueOf(minLength));
     }
     
     /*
@@ -144,7 +144,7 @@ public class QNameType extends StringBase {
             maxLengths = new ArrayList<Integer>(1);
             hasFacets = true;
         }
-        this.maxLengths.add(new Integer(maxLength));
+        this.maxLengths.add(Integer.valueOf(maxLength));
     }
     
     /*
@@ -196,7 +196,7 @@ public class QNameType extends StringBase {
             lengths = new ArrayList<Integer>(1);
             hasFacets = true;
         }
-        this.lengths.remove(new Integer(length));
+        this.lengths.remove(Integer.valueOf(length));
     }
     
     /*
@@ -209,7 +209,7 @@ public class QNameType extends StringBase {
             minLengths = new ArrayList<Integer>(1);
             hasFacets = true;
         }
-        this.minLengths.remove(new Integer(minLength));
+        this.minLengths.remove(Integer.valueOf(minLength));
     }
     
     /*
@@ -222,7 +222,7 @@ public class QNameType extends StringBase {
             maxLengths = new ArrayList<Integer>(1);
             hasFacets = true;
         }
-        this.maxLengths.remove(new Integer(maxLength));
+        this.maxLengths.remove(Integer.valueOf(maxLength));
     }
     
     /*

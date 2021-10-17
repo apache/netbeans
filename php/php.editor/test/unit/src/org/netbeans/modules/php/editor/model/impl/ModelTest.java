@@ -350,6 +350,41 @@ public class ModelTest extends ModelTestBase {
         assertTrue(name.startsWith("LambdaFunctionDeclaration"));
     }
 
+    public void testConstructorPropertyPromotion() throws Exception {
+        Model model = getModel(getTestSource("testfiles/model/constructorPropertyPromotion.php"), false);
+        FileScope topScope = model.getFileScope();
+        ClassScope classScope = ModelUtils.getFirst(ModelUtils.filter(ModelUtils.getDeclaredClasses(topScope), "ConstructorPropertyPromotion"));
+        assertNotNull(classScope);
+        MethodScope methodScope = ModelUtils.getFirst(ModelUtils.filter(classScope.getDeclaredMethods(), "__construct"));
+        assertNotNull(methodScope);
+        FieldElement fieldElement = ModelUtils.getFirst(classScope.getDeclaredFields(), "$param1");
+        assertNotNull(fieldElement);
+        assertTrue(fieldElement.getPhpModifiers().isPublic());
+        fieldElement = ModelUtils.getFirst(classScope.getDeclaredFields(), "$param2");
+        assertNotNull(fieldElement);
+        assertTrue(fieldElement.getPhpModifiers().isProtected());
+        assertTrue(fieldElement.getDefaultTypeNames().size() == 1);
+        assertTrue(fieldElement.getDefaultTypeNames().contains("int"));
+        fieldElement = ModelUtils.getFirst(classScope.getDeclaredFields(), "$param3");
+        assertNotNull(fieldElement);
+        assertTrue(fieldElement.getPhpModifiers().isPrivate());
+        fieldElement = ModelUtils.getFirst(classScope.getDeclaredFields(), "$param4");
+        assertNotNull(fieldElement);
+        assertTrue(fieldElement.getPhpModifiers().isPrivate());
+        fieldElement = ModelUtils.getFirst(classScope.getDeclaredFields(), "$param5");
+        assertNotNull(fieldElement);
+        assertTrue(fieldElement.getPhpModifiers().isPrivate());
+        fieldElement = ModelUtils.getFirst(classScope.getDeclaredFields(), "$param6");
+        assertNotNull(fieldElement);
+        assertTrue(fieldElement.getPhpModifiers().isPublic());
+        fieldElement = ModelUtils.getFirst(classScope.getDeclaredFields(), "$param7");
+        assertNotNull(fieldElement);
+        assertTrue(fieldElement.getPhpModifiers().isPublic());
+        assertTrue(fieldElement.getDefaultTypeNames().size() == 2);
+        assertTrue(fieldElement.getDefaultTypeNames().contains("string"));
+        assertTrue(fieldElement.getDefaultTypeNames().contains("int"));
+    }
+
     private void varContainerTestForGlobal2(VariableScope topScope) {
         VariableName my = ModelUtils.getFirst(ModelUtils.filter(topScope.getDeclaredVariables(),"$my"));
         assertNotNull(my);

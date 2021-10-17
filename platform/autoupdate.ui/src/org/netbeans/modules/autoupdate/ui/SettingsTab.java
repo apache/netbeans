@@ -397,7 +397,7 @@ private void bProxyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                 Utilities.setGlobalInstallation(false);
                 break;
             default:
-                assert false : "Unknow index";
+                assert false : "Unknown index";
         }
     }//GEN-LAST:event_cbLocationActionPerformed
 

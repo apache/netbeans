@@ -77,7 +77,7 @@ public class MeasureStartupTimeTestCase extends org.netbeans.junit.NbPerformance
     protected static int repeatNewUserdir = Integer.getInteger("org.netbeans.performance.repeat.with.new.userdir", 1).intValue();
 
     /**
-     * Number used for unknow time.
+     * Number used for unknown time.
      */
     protected final static long UNKNOWN_TIME = -1;
 

@@ -217,7 +217,7 @@ public class SELECTCustomizer extends javax.swing.JPanel {
 
         jSpinner1.setModel(new SpinnerNumberModel(select.getOptions(), 0, Integer.MAX_VALUE, 1));
         jSpinner1.setEditor(new JSpinner.NumberEditor(jSpinner1, "#"));
-        jSpinner1.setValue(new Integer(select.getOptions()));
+        jSpinner1.setValue(Integer.valueOf(select.getOptions()));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -240,7 +240,7 @@ public class SELECTCustomizer extends javax.swing.JPanel {
 
         jSpinner2.setModel(new SpinnerNumberModel(select.getOptionsVisible(), 1, Integer.MAX_VALUE, 1));
         jSpinner2.setEditor(new JSpinner.NumberEditor(jSpinner2, "#"));
-        jSpinner2.setValue(new Integer(select.getOptionsVisible()));
+        jSpinner2.setValue(Integer.valueOf(select.getOptionsVisible()));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;

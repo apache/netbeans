@@ -22,10 +22,12 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import org.netbeans.modules.payara.tooling.PayaraIdeException;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.logging.Logger;
 import org.netbeans.modules.payara.tooling.utils.ServerUtils;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
+import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 
 /**
  * Payara Server Version Command Entity.
@@ -75,16 +77,7 @@ public class CommandVersion extends Command {
         }
     }
 
-    /**
-     * Retrieve version from server.
-     * <p/>
-     * @param server Payara server entity.
-     * @return Payara command result containing {@link PayaraVersion}
-     *         object retrieved from server or <code>null</code> if no
-     *         version was returned.
-     * @throws PayaraIdeException When error occurred during administration
-     *         command execution.
-     */
+    @Deprecated
     public static PayaraVersion getPayaraVersion(
             final PayaraServer server) {
         ResultString result;
@@ -97,6 +90,33 @@ public class CommandVersion extends Command {
                 ? ServerUtils.getVersionString(result.getValue()) : null;
         if (value != null) {
             return PayaraVersion.toValue(value);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Retrieve version from server.
+     * <p/>
+     * @param server Payara server entity.
+     * @return Payara command result containing {@link PayaraPlatformVersionAPI}
+     *         object retrieved from server or <code>null</code> if no
+     *         version was returned.
+     * @throws PayaraIdeException When error occurred during administration
+     *         command execution.
+     */
+    public static PayaraPlatformVersionAPI getPayaraPlatformVersion(
+            final PayaraServer server) {
+        ResultString result;
+        try {
+            result = getVersion(server);
+        } catch (CommandException ce) {
+            return null;
+        }
+        String value = result != null
+                ? ServerUtils.getVersionString(result.getValue()) : null;
+        if (value != null) {
+            return PayaraPlatformVersion.toValue(value);
         } else {
             return null;
         }
@@ -117,8 +137,8 @@ public class CommandVersion extends Command {
         boolean verifyResult = false;
         String value = ServerUtils.getVersionString(result.getValue());
         if (value != null) {
-            PayaraVersion valueVersion = PayaraVersion.toValue(value);
-            PayaraVersion serverVersion = server.getVersion();
+            PayaraPlatformVersionAPI valueVersion = PayaraPlatformVersion.toValue(value);
+            PayaraPlatformVersionAPI serverVersion = server.getPlatformVersion();
             if (valueVersion != null && serverVersion != null) {
                 verifyResult = serverVersion.equals(valueVersion);
             }

@@ -399,6 +399,199 @@ public class PHPBracesMatcherTest extends PHPTestBase {
         );
     }
 
+    public void testAttributeSyntax_01() throws Exception {
+        matchesBackward(""
+                + "~#[A(1)@]^\n"
+                + "class AttributeSyntax {}"
+        );
+        matchesForward(""
+                + "@^#[A(1)~]\n"
+                + "class AttributeSyntax {}"
+        );
+    }
+
+    public void testAttributeSyntax_02() throws Exception {
+        matchesBackward(""
+                + "~#[A(1), B(\"param\"), \\C\\Test()@]^\n"
+                + "class AttributeSyntax {}"
+        );
+        matchesForward(""
+                + "@#^[A(1), B(\"param\"), \\C\\Test()~]\n"
+                + "class AttributeSyntax {}"
+        );
+    }
+
+    public void testAttributeSyntax_03() throws Exception {
+        matchesBackward(""
+                + "~#[\n"
+                + "    A(1),\n"
+                + "    A(2),\n"
+                + "    A(3),\n"
+                + "    A(4),\n"
+                + "@]^\n"
+                + "class AttributeSyntax {}"
+        );
+        matchesForward(""
+                + "@^#[\n"
+                + "    A(1),\n"
+                + "    A(2),\n"
+                + "    A(3),\n"
+                + "    A(4),\n"
+                + "~]\n"
+                + "class AttributeSyntax {}"
+        );
+    }
+
+    public void testAttributeSyntax_04a() throws Exception {
+        matchesBackward(""
+                + "~#[\n"
+                + "    A([\n"
+                + "        1,\n"
+                + "        2,\n"
+                + "    ]),\n"
+                + "@]^\n"
+                + "class AttributeSyntax {}"
+        );
+        matchesForward(""
+                + "@^#[\n"
+                + "    A([\n"
+                + "        1,\n"
+                + "        2,\n"
+                + "    ]),\n"
+                + "~]\n"
+                + "class AttributeSyntax {}"
+        );
+    }
+
+    public void testAttributeSyntax_04b() throws Exception {
+        matchesBackward(""
+                + "#[\n"
+                + "    A(~[\n"
+                + "        1,\n"
+                + "        2,\n"
+                + "    @]^),\n"
+                + "]\n"
+                + "class AttributeSyntax {}"
+        );
+        matchesForward(""
+                + "#[\n"
+                + "    A(@^[\n"
+                + "        1,\n"
+                + "        2,\n"
+                + "    ~]),\n"
+                + "]\n"
+                + "class AttributeSyntax {}"
+        );
+    }
+
+    public void testAttributeSyntax_05a() throws Exception {
+        matchesBackward(""
+                + "#[Class1(1)]\n"
+                + "class AttributeSyntax\n"
+                + "~{\n"
+                + "    #[Class1(4), Class2(4)] // group\n"
+                + "    public $staticField;\n"
+                + "\n"
+                + "    #[Class1(5)]\n"
+                + "    public function method(#[Class1(6)] $param1, #[Class1('foo', 'bar', 7)] int $pram2) {}\n"
+                + "\n"
+                + "@}^"
+        );
+        matchesForward(""
+                + "#[Class1(1)]\n"
+                + "class AttributeSyntax\n"
+                + "@^{\n"
+                + "    #[Class1(4), Class2(4)] // group\n"
+                + "    public $staticField;\n"
+                + "\n"
+                + "    #[Class1(5)]\n"
+                + "    public function method(#[Class1(6)] $param1, #[Class1('foo', 'bar', 7)] int $pram2) {}\n"
+                + "\n"
+                + "~}"
+        );
+    }
+
+    public void testAttributeSyntax_05b() throws Exception {
+        matchesBackward(""
+                + "#[Class1(1)]\n"
+                + "class AttributeSyntax\n"
+                + "{\n"
+                + "    #[Class1(4), Class2(4)] // group\n"
+                + "    public $staticField;\n"
+                + "\n"
+                + "    #[Class1(5)]\n"
+                + "    public function method~(#[Class1(6)] $param1, #[Class1('foo', 'bar', 7)] int $pram2@)^ {}\n"
+                + "\n"
+                + "@}^"
+        );
+        matchesForward(""
+                + "#[Class1(1)]\n"
+                + "class AttributeSyntax\n"
+                + "{\n"
+                + "    #[Class1(4), Class2(4)] // group\n"
+                + "    public $staticField;\n"
+                + "\n"
+                + "    #[Class1(5)]\n"
+                + "    public function method@^(#[Class1(6)] $param1, #[Class1('foo', 'bar', 7)] int $pram2~) {}\n"
+                + "\n"
+                + "~}"
+        );
+    }
+
+    public void testAttributeSyntax_05c() throws Exception {
+        matchesBackward(""
+                + "#[Class1(1)]\n"
+                + "class AttributeSyntax\n"
+                + "{\n"
+                + "    #[Class1(4), Class2(4)] // group\n"
+                + "    public $staticField;\n"
+                + "\n"
+                + "    #[Class1(5)]\n"
+                + "    public function method(#[Class1(6)] $param1, ~#[Class1('foo', 'bar', 7)@]^ int $pram2) {}\n"
+                + "\n"
+                + "@}^"
+        );
+        matchesForward(""
+                + "#[Class1(1)]\n"
+                + "class AttributeSyntax\n"
+                + "{\n"
+                + "    #[Class1(4), Class2(4)] // group\n"
+                + "    public $staticField;\n"
+                + "\n"
+                + "    #[Class1(5)]\n"
+                + "    public function method(#[Class1(6)] $param1, @^#[Class1('foo', 'bar', 7)~] int $pram2) {}\n"
+                + "\n"
+                + "~}"
+        );
+    }
+
+    public void testAttributeSyntax_05d() throws Exception {
+        matchesBackward(""
+                + "#[Class1(1)]\n"
+                + "class AttributeSyntax\n"
+                + "{\n"
+                + "    #[Class1(4), Class2(4)] // group\n"
+                + "    public $staticField;\n"
+                + "\n"
+                + "    #[Class1(5)]\n"
+                + "    public function method(#[Class1(6)] $param1, #[Class1~('foo', 'bar', 7@)^] int $pram2) {}\n"
+                + "\n"
+                + "@}^"
+        );
+        matchesForward(""
+                + "#[Class1(1)]\n"
+                + "class AttributeSyntax\n"
+                + "{\n"
+                + "    #[Class1(4), Class2(4)] // group\n"
+                + "    public $staticField;\n"
+                + "\n"
+                + "    #[Class1(5)]\n"
+                + "    public function method(#[Class1(6)] $param1, #[Class1@^('foo', 'bar', 7~)] int $pram2) {}\n"
+                + "\n"
+                + "~}"
+        );
+    }
+
     public void testFindContext_01() throws Exception {
         checkBraceContext("braceContextTest.php", "^} elseif ($i == 1) { // if", true);
     }

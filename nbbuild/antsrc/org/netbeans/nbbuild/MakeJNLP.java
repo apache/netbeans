@@ -35,6 +35,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -739,7 +740,7 @@ public class MakeJNLP extends Task {
         
         StringTokenizer tok = new StringTokenizer(path, ", ");
         while(tok.hasMoreElements()) {
-            String s = tok.nextToken();
+            String s = URLDecoder.decode(tok.nextToken(), "UTF-8");
             
             if (s.contains("${java.home}")) {
                 continue;

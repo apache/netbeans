@@ -1107,7 +1107,7 @@ public  class XMLGraphDeserializer extends BaseSpecificXMLDeserializer implement
                 this.pushObject(new Character(lRowValue.charAt(0)));
             else
             {
-                System.out.println("Found and unknow type in a row");
+                System.out.println("Found and unknown type in a row");
                 this.pushObject(null);
             }
 

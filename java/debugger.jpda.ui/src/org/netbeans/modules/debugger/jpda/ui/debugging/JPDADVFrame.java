@@ -18,6 +18,10 @@
  */
 package org.netbeans.modules.debugger.jpda.ui.debugging;
 
+import com.sun.jdi.IncompatibleThreadStateException;
+import com.sun.jdi.InvalidStackFrameException;
+import com.sun.jdi.NativeMethodException;
+import com.sun.jdi.VMCannotBeModifiedException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import org.netbeans.api.debugger.Session;
@@ -30,6 +34,7 @@ import org.netbeans.modules.debugger.jpda.jdi.ObjectCollectedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
 import org.netbeans.modules.debugger.jpda.ui.models.CallStackNodeModel;
+import org.netbeans.spi.debugger.ui.DebuggingView;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVFrame;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVThread;
 import org.openide.util.Exceptions;
@@ -113,5 +118,15 @@ public final class JPDADVFrame implements DVFrame {
     public int getColumn() {
         return -1;
     }
-    
+
+    @Override
+    public void popOff() throws DebuggingView.PopException {
+        try {
+            stackFrame.popFrame();
+        } catch (VMCannotBeModifiedException ex) {
+            throw new UnsupportedOperationException(ex.getLocalizedMessage());
+        } catch (InvalidStackFrameException | IllegalArgumentException | NativeMethodException ex) {
+            throw new DebuggingView.PopException(ex.getLocalizedMessage());
+        }
+    }
 }

@@ -83,7 +83,22 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
-        
+        <change id="plugin.actions">
+           <api name="general"/>
+           <summary>Allow declarative action registrations</summary>
+           <version major="1" minor="17"/>
+           <date day="13" month="5" year="2021"/>
+           <author login="sdedic"/>
+           <compatibility addition="yes" semantic="compatible"/>
+           <description>
+               <p>
+                   Actions and Project Configurations can be contributed to a Maven project declaratively,
+                   using the Layer XML. See <a href="@TOP@/org/netbeans/api/maven/MavenActions.html">MavenActions</a> for spec and examples.
+               </p>
+           </description>
+           <class package="org.netbeans.api.maven" name="MavenActions"/>
+           <issue number="NETBEANS-5670"/>
+        </change>
         <change id="maven.archetype.api.init">
            <api name="general"/>
            <summary>Created the public Maven Archetype api</summary>

@@ -25,13 +25,19 @@ import java.security.PermissionCollection;
 import java.security.Permissions;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
-import org.openide.windows.IOProvider;
+import org.openide.util.lookup.Lookups;
 import org.openide.windows.InputOutput;
 
 /**
  * Engine providing the environment necessary to run long-lived processes.
  * May perform tasks such as setting up thread groups, etc.
  * Modules should not implement this class.
+ * <p>
+ * <b>Note for implementors</b>: it is highly advised that the value {@code Lookup#getDefault} is saved,
+ * and established in the forked thread before the executed {@link Runnable} is called. This is
+ * done by OpenIDE libraries If the  ExecutionEngine implementation uses {@link RequestProcessor} for 
+ * planning the tasks.
+ * 
  * @author Jaroslav Tulach, Ales Novak
  */
 public abstract class ExecutionEngine extends Object {
@@ -117,15 +123,18 @@ public abstract class ExecutionEngine extends Object {
         }
         
         private static final class ET extends ExecutorTask {
+            private final Lookup originalLookup;
             private RequestProcessor.Task task;
             private int resultValue;
             private final String name;
-            private InputOutput io;
+            private final InputOutput io;
             
             public ET(Runnable run, String name, InputOutput io) {
                 super(run);
+                this.originalLookup = Lookup.getDefault();
                 this.resultValue = resultValue;
                 this.name = name;
+                this.io = io;
                 task = RequestProcessor.getDefault().post(this);
             }
             
@@ -143,12 +152,14 @@ public abstract class ExecutionEngine extends Object {
             }
             
             public void run() {
-                try {
-                    super.run();
-                } catch (RuntimeException x) {
-                    x.printStackTrace();
-                    resultValue = 1;
-                }
+                Lookups.executeWith(originalLookup, () -> {
+                    try {
+                        super.run();
+                    } catch (RuntimeException x) {
+                        x.printStackTrace();
+                        resultValue = 1;
+                    }
+                });
             }
             
         }

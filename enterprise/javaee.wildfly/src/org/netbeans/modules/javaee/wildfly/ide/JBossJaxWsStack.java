@@ -62,7 +62,7 @@ public class JBossJaxWsStack implements WSStackImplementation<JaxWs> {
         } catch (IOException ex) {
             // Default Version
             version = "2.1.3"; // NOI18N
-        };
+        }
         jaxWs = new JaxWs(getUriDescriptor());
     }
 

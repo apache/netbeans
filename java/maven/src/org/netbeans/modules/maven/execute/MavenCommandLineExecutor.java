@@ -56,6 +56,7 @@ import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.api.extexecution.base.Processes;
 import org.netbeans.api.extexecution.startup.StartupExtender;
@@ -620,15 +621,25 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             }
         }
 
-        File mavenHome = EmbedderFactory.getEffectiveMavenHome();
-        if (MavenSettings.getDefault().isUseBestMaven()) {
-            File n = guessBestMaven(clonedConfig, ioput);
-            if (n != null) {
-                mavenHome = n;
-            }
+        Constructor constructeur;
+        File mavenHome = null;
+        File wrapper = null;
+        if (MavenSettings.getDefault().isPreferMavenWrapper()) {
+            wrapper = searchMavenWrapper(config);
         }
-        Constructor constructeur = new ShellConstructor(mavenHome);
-
+        if (wrapper != null) {
+            constructeur = new WrapperShellConstructor(wrapper);
+        } else {
+            mavenHome = EmbedderFactory.getEffectiveMavenHome();
+            if (MavenSettings.getDefault().isUseBestMaven()) {
+                File n = guessBestMaven(clonedConfig, ioput);
+                if (n != null) {
+                    mavenHome = n;
+                }
+            }
+            constructeur = new ShellConstructor(mavenHome);
+        }
+        
         List<String> cmdLine = createMavenExecutionCommand(clonedConfig, constructeur);
 
         //#228901 on windows, since u21 we must use cmd /c
@@ -989,5 +1000,61 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             }
         }
         return Places.getCacheSubdirectory("downloaded-mavens");
+    }
+    
+    private File searchMavenWrapper(RunConfig config) {
+        String fileName = Utilities.isWindows() ? "mvnw.cmd" : "mvnw"; //NOI18N
+        MavenProject project = config.getMavenProject();
+        while (project != null) {
+            File baseDir = project.getBasedir();
+            if (baseDir != null) {
+                File mvnw = new File(baseDir, fileName);
+                if (mvnw.exists()) {
+                    return mvnw;
+                }
+            }
+            project = project.getParent();
+        }
+        return null;
+    }
+
+    // part copied from ShellConstructor - @TODO consolidate here
+    private static class WrapperShellConstructor implements Constructor {
+
+        private final @NonNull File wrapper;
+
+        WrapperShellConstructor(@NonNull File wrapper) {
+            this.wrapper = wrapper;
+        }
+
+        @Override
+        public List<String> construct() {
+            //#164234
+            //if maven.bat file is in space containing path, we need to quote with simple quotes.
+            String quote = "\"";
+            List<String> toRet = new ArrayList<>();
+            toRet.add(quoteSpaces(wrapper.getAbsolutePath(), quote));
+
+            if (Utilities.isWindows()) { //#153101, since #228901 always on windows use cmd /c
+                toRet.add(0, "/c"); //NOI18N
+                toRet.add(0, "cmd"); //NOI18N
+            }
+            return toRet;
+        }
+
+        // we run the shell/bat script in the process, on windows we need to quote any spaces
+        //once/if we get rid of shell/bat execution, we might need to remove this
+        //#164234
+        private static String quoteSpaces(String val, String quote) {
+            if (Utilities.isWindows()) {
+                //since #228901 always quote
+                //#208065 not only space but a few other characters are to be quoted..
+                //if (val.indexOf(' ') != -1 || val.indexOf('=') != -1 || val.indexOf(";") != -1 || val.indexOf(",") != -1) { //NOI18N
+                return quote + val + quote;
+                //}
+            }
+            return val;
+        }
+
     }
 }

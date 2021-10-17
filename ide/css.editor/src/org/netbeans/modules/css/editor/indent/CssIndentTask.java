@@ -156,10 +156,21 @@ public class CssIndentTask implements IndentTask, Lookup.Provider {
         }
         Collections.reverse(newlinesMissing);
         for (int index : newlinesMissing) {
-            context.document().insertString(index, "\n", null);
+            if(isPositionInFormatRegions(index)) {
+                context.document().insertString(index, "\n", null);
+            }
         }
     }
 
+    private boolean isPositionInFormatRegions(int pos) {
+        for(Region r: context.indentRegions()) {
+            if(r.getStartOffset() <= pos && r.getEndOffset() > pos) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     private int determineBlocklevel(TokenSequence<?> ts) {
         int blockLevel = 0;
         ts.moveStart();

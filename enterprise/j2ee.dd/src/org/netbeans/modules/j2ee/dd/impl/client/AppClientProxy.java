@@ -187,7 +187,7 @@ public class AppClientProxy implements AppClient {
     public void setStatus(int value) {
         if (ddStatus!=value) {
             java.beans.PropertyChangeEvent evt =
-                    new java.beans.PropertyChangeEvent(this, PROPERTY_STATUS, new Integer(ddStatus), new Integer(value));
+                    new java.beans.PropertyChangeEvent(this, PROPERTY_STATUS, ddStatus, value);
             ddStatus=value;
             for (Iterator i = listeners.iterator(); i.hasNext();) {
                 ((java.beans.PropertyChangeListener) i.next()).propertyChange(evt);

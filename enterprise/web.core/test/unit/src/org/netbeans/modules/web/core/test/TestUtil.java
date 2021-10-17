@@ -182,9 +182,9 @@ public final class TestUtil extends ProxyLookup {
      * (with any outcome) on a given project directory.
      */
     public static int projectLoadCount(FileObject dir) {
-        Integer i = (Integer)loadCount.get(dir);
+        Integer i = loadCount.get(dir);
         if (i != null) {
-            return i.intValue();
+            return i;
         } else {
             return 0;
         }

@@ -734,6 +734,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
             } else { // update report status as a minimum
                 session.getReport(timeinmilis).setCompleted(true);
             }
+            session.finishSuite(suite);
             if (output.isFile()) {
                 if (junitManager != null) {
                     junitManager.displayOutput(session, FileUtils.fileRead(output), false);

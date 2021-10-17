@@ -43,7 +43,6 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.hints.declarative.APIAccessor;
 import org.netbeans.modules.java.hints.spiimpl.Hacks;
@@ -70,16 +69,7 @@ public class Context {
     }
 
     public @NonNull SourceVersion sourceVersion() {
-        String sourceLevel = SourceLevelQuery.getSourceLevel(ctx.getInfo().getFileObject());
-
-        if (sourceLevel == null) {
-            return SourceVersion.latest(); //TODO
-        }
-
-        String[] splited = sourceLevel.split("\\.");
-        String   spec    = splited[1];
-
-        return SourceVersion.valueOf("RELEASE_"+  spec);//!!!
+        return ctx.getInfo().getSourceVersion();
     }
 
     public @NonNull Set<Modifier> modifiers(@NonNull Variable variable) {

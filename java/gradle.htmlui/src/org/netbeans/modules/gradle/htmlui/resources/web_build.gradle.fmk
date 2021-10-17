@@ -23,7 +23,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "org.apidesign.bck2brwsr:bck2brwsr-maven-plugin:0.51"
+        classpath "org.apidesign.bck2brwsr:bck2brwsr-maven-plugin:0.54"
     }
 }
 
@@ -33,7 +33,11 @@ apply plugin: 'bck2brwsr'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 
-mainClassName = '${packageBase}.BrowserMain'
+if (hasProperty("runClassName")) {
+    mainClassName = runClassName
+} else {
+    mainClassName = '${packageBase}.BrowserMain'
+}
 
 <#noparse>
 
@@ -41,7 +45,7 @@ def commonProject = project.parent
 
 dependencies {
     implementation commonProject
-    implementation "com.dukescript.api:javafx.beaninfo:0.5"
+    implementation "com.dukescript.api:javafx.beaninfo:0.6"
     runtimeOnly "com.dukescript.api:javafx.base:8.60.11"
 }
 

@@ -132,97 +132,12 @@ public class Utils {
     }
 
     public static synchronized String toUri(FileObject file) {
-        if (FileUtil.isArchiveArtifact(file)) {
-            //VS code cannot open jar:file: URLs, workaround:
-            File cacheDir = getCacheDir();
-            cacheDir.mkdirs();
-            File segments = new File(cacheDir, "segments");
-            Properties props = new Properties();
-
-            try (InputStream in = new FileInputStream(segments)) {
-                props.load(in);
-            } catch (IOException ex) {
-                //OK, may not exist yet
-            }
-            FileObject archive = FileUtil.getArchiveFile(file);
-            String archiveString = archive.toURL().toString();
-            File foundSegment = null;
-            for (String segment : props.stringPropertyNames()) {
-                if (archiveString.equals(props.getProperty(segment))) {
-                    foundSegment = new File(cacheDir, segment);
-                    break;
-                }
-            }
-            if (foundSegment == null) {
-                int i = 0;
-                while (props.getProperty("s" + i) != null)
-                    i++;
-                foundSegment = new File(cacheDir, "s" + i);
-                props.put("s" + i, archiveString);
-                try (OutputStream in = new FileOutputStream(segments)) {
-                    props.store(in, "");
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-            File cache = new File(foundSegment, FileUtil.getRelativePath(FileUtil.getArchiveRoot(archive), file));
-            cache.getParentFile().mkdirs();
-            try (OutputStream out = new FileOutputStream(cache)) {
-                out.write(file.asBytes());
-                return cache.toURI().toString();
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-        URI uri = file.toURI();
-        if (uri.getScheme().equals("nbfs")) {
-            try {
-                String txt = file.asText("UTF-8");
-                try (OutputStream os = file.getOutputStream()) {
-                    os.write(txt.getBytes("UTF-8"));
-                }
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            try {
-                uri = URLMapper.findURL(file, URLMapper.EXTERNAL).toURI();
-            } catch (URISyntaxException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-        return uri.toString();
+        return URITranslator.getDefault().uriToLSP(file.toURI().toString());
     }
 
     public static synchronized FileObject fromUri(String uri) throws MalformedURLException {
-        File cacheDir = getCacheDir();
-        URI uriUri = URI.create(uri);
-        URI relative = cacheDir.toURI().relativize(uriUri);
-        if (relative != null && new File(cacheDir, relative.toString()).canRead()) {
-            String segmentAndPath = relative.toString();
-            int slash = segmentAndPath.indexOf('/');
-            String segment = segmentAndPath.substring(0, slash);
-            String path = segmentAndPath.substring(slash + 1);
-            File segments = new File(cacheDir, "segments");
-            Properties props = new Properties();
-
-            try (InputStream in = new FileInputStream(segments)) {
-                props.load(in);
-                String archiveUri = props.getProperty(segment);
-                FileObject archive = URLMapper.findFileObject(URI.create(archiveUri).toURL());
-                archive = archive != null ? FileUtil.getArchiveRoot(archive) : null;
-                FileObject file = archive != null ? archive.getFileObject(path) : null;
-                if (file != null) {
-                    return file;
-                }
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
+        uri = URITranslator.getDefault().uriFromLSP(uri);
         return URLMapper.findFileObject(URI.create(uri).toURL());
-    }
-
-    private static File getCacheDir() {
-        return Places.getCacheSubfile("java-server");
     }
 
     private static final char[] SNIPPET_ESCAPE_CHARS = new char[] { '\\', '$', '}' };

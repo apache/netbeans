@@ -238,7 +238,7 @@ public class TransactionNode extends AbstractNode {
     private void setTimeStamp() {
 	
 	try { 
-	    long ldate = Long.valueOf(id).longValue(); 
+	    long ldate = Long.valueOf(id); 
 	    Date date = new Date(ldate); 
 
 	    StringBuilder buf = new StringBuilder('['); //NOI18N

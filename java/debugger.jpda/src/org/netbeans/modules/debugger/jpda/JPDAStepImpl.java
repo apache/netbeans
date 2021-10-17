@@ -62,6 +62,7 @@ import org.netbeans.api.debugger.jpda.event.JPDABreakpointListener;
 import org.netbeans.modules.debugger.jpda.actions.CompoundSmartSteppingListener;
 import org.netbeans.modules.debugger.jpda.actions.SmartSteppingFilterImpl;
 import org.netbeans.modules.debugger.jpda.actions.StepIntoActionProvider;
+import org.netbeans.modules.debugger.jpda.impl.StepUtils;
 import org.netbeans.modules.debugger.jpda.jdi.ClassNotPreparedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.ClassTypeWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.IllegalThreadStateExceptionWrapper;
@@ -225,6 +226,7 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
                     size,
                     getDepth()
                 );
+                StepUtils.markOriginalStepDepth(stepRequest, trImpl.getThreadReference());
                 //stepRequest.addCountFilter(1); - works bad with exclusion filters!
                 String[] exclusionPatterns = applyExclusionPatterns(stepRequest);
                 debuggerImpl.getOperator().register(stepRequest, this);
@@ -468,6 +470,7 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
             StepRequest.STEP_LINE,
             StepRequest.STEP_OVER
         );
+        StepUtils.markOriginalStepDepth(boundaryStepRequest, trRef);
         if (isNextOperationFromDifferentExpression) {
             EventRequestWrapper.addCountFilter(boundaryStepRequest, 2);
         } else {
@@ -632,6 +635,7 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
                                 StepRequest.STEP_LINE,
                                 StepRequest.STEP_OUT
                             );
+                            StepUtils.markOriginalStepDepth(stepRequest, tr.getThreadReference());
                             EventRequestWrapper.addCountFilter(stepRequest, 1);
                             String[] exclusionPatterns = getCurrentExclusionPatterns();
                             // JDI is inconsistent!!! Step into steps *through* filters, but step out does *NOT*
@@ -946,6 +950,7 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
                             doStepSize,
                             doStepDepth
                         );
+                        StepUtils.markOriginalStepDepth(stepRequest, tr);
                         //EventRequestWrapper.addCountFilter(stepRequest, 1);
                         String[] exclusionPatterns = applyExclusionPatterns(stepRequest);
                         debuggerImpl.getOperator ().register (stepRequest, this);
@@ -1002,6 +1007,7 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
                     doStepSize,
                     depth
                 );
+                StepUtils.markOriginalStepDepth(stepRequest, tr);
                 if (logger.isLoggable(Level.FINE)) {
                     try {
                         logger.fine("Can not stop at " + ThreadReferenceWrapper.frame(tr, 0) + ", smart-stepping. Submitting step = " + stepRequest + "; depth = " + depth);

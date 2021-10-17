@@ -235,7 +235,7 @@ public class EarDataObject extends DD2beansDataObject
      * @return String for node delegate
     */
     public String getStringForInvalidDocument(SAXParseError error) {
-        return NbBundle.getMessage (EarDataObject.class, "TXT_errorOnLine", new Integer(error.getErrorLine()));
+        return NbBundle.getMessage (EarDataObject.class, "TXT_errorOnLine", error.getErrorLine());
     }
                     
     /** Create document from the Node. This method is called after Node (Node properties)is changed.

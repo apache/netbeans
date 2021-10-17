@@ -481,7 +481,7 @@ public class ServerInstance implements Node.Cookie, Comparable {
     /** Is it forbidden to remove this server instance from the server registry? */
     public boolean isRemoveForbidden() {
         String removeForbid = instanceProperties.getProperty(InstanceProperties.REMOVE_FORBIDDEN);
-        return Boolean.valueOf(removeForbid).booleanValue();
+        return Boolean.valueOf(removeForbid);
     }
 
     /**

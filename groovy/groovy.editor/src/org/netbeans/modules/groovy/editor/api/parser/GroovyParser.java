@@ -519,6 +519,17 @@ public class GroovyParser extends Parser {
             this.indexing = indexing;
             this.errorCollector = new NbGroovyErrorCollector(configuration);
         }
+        
+        boolean inited;
+        
+        public void addPhaseOperation(final ISourceUnitOperation op, final int phase) {
+            if (!inited) {
+                ((ClassNodeCache.TransformationClassLoader)getTransformLoader()).setUnit(this);
+                inited = true;
+            }
+            super.addPhaseOperation(op, phase);
+        }
+        
         /**
          * Inject static compilation transformation; apply them in the
          *
@@ -578,9 +589,10 @@ public class GroovyParser extends Parser {
 
         String fileName = "";
         String path = "";
-        if (context.snapshot.getSource().getFileObject() != null) {
-            fileName = context.snapshot.getSource().getFileObject().getNameExt();
-            path = context.snapshot.getSource().getFileObject().getPath();
+        FileObject file = context.snapshot.getSource().getFileObject();
+        if (file != null) {
+            fileName = file.getNameExt();
+            path = file.getPath();
         }
 
         FileObject fo = context.snapshot.getSource().getFileObject();
@@ -609,7 +621,8 @@ public class GroovyParser extends Parser {
         ClassPath transformPath = ClassPathSupport.createProxyClassPath(bootPath, cachedCompile);
         ClassPath cp = ClassPathSupport.createProxyClassPath(transformPath, sourcePath);
         final ParsingClassLoader classLoader = classNodeCache.createResolveLoader(cp, configuration);
-        final GroovyClassLoader transformationLoader = classNodeCache.createTransformationLoader(transformPath, configuration);
+        final GroovyClassLoader transformationLoader = classNodeCache.createTransformationLoader(
+                transformPath, configuration, file, bootPath, cachedCompile);
         
         if (LOG.isLoggable(Level.FINEST)) {
             FileObject[] roots = cp.getRoots();

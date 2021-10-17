@@ -102,7 +102,7 @@ public class WebAppProxy implements WebApp {
     public void setStatus(int value) {
         if (ddStatus!=value) {
             java.beans.PropertyChangeEvent evt =
-                new java.beans.PropertyChangeEvent(this, PROPERTY_STATUS, new Integer(ddStatus), new Integer(value));
+                new java.beans.PropertyChangeEvent(this, PROPERTY_STATUS, ddStatus, value);
             ddStatus=value;
             for (int i=0;i<listeners.size();i++) {
                 ((java.beans.PropertyChangeListener)listeners.get(i)).propertyChange(evt);

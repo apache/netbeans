@@ -19,14 +19,12 @@
 package org.netbeans.modules.java.hints.regex.parser;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import junit.framework.AssertionFailedError;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -78,7 +76,7 @@ public class ExampleGeneratorTest {
                 "ab",
                 "[^a-z]",
                 "\\d\\w\\s",
-                "\n\r\f\\",
+                "\n\r\f\\\\",
                 "a|(b|c|d)|e",
                 "z*[1-9d-f](ab|bc|cd)\\d+",
                 "a*|b{2,4}",
@@ -92,8 +90,6 @@ public class ExampleGeneratorTest {
                 "[a-z1-9&&[^a-z]]",
                 "\\p{Lower}\\p{Punct}\\p{Graph}",
                 "^[a-z0-9_-]{3,15}$",
-                "[^a-z&&A-Z]",
-                "[^1234&&[^3456]]",
                 "(ab(cd(ef)))\\2\\3{2}\\1",
                 "(?<new>ab)(ba)\\k<new>{2}\\2\\1+",
                 "(ab{2,8}[^abcd])",
@@ -124,11 +120,10 @@ public class ExampleGeneratorTest {
                 assertEquals(generate.size(), n);
 
                 for (String examples : generate) {
-                    m = pat.matcher(examples);
-                    assertTrue(m.matches());
+                        m = pat.matcher(examples);
+                        assertTrue(m.matches()); 
                 }
             }
         }
     }
-
 }

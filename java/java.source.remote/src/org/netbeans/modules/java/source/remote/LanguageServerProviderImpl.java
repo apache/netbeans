@@ -45,6 +45,11 @@ public class LanguageServerProviderImpl implements LanguageServerProvider {
         }
 
         Project prj = lookup.lookup(Project.class);
+
+        if (prj == null) {
+            return null;
+        }
+
         RemoteEditorPlatform remotePlatform = null;
 
         for (Provider p : Lookup.getDefault().lookupAll(Provider.class)) {

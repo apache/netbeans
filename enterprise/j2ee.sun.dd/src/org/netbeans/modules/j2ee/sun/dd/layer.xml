@@ -36,7 +36,7 @@
                 <attr name="systemId" stringvalue="http://www.sun.com/software/appserver/dtds/sun-resources_1_4.dtd"/>
             </file>
             <file name="glassfish-resources_1_5.dtd" url="impl/resources/glassfish-resources_1_5.dtd">
-                <attr name="systemId" stringvalue="http://glassfish.org/dtds/glassfish-resources_1_5.dtd"/>
+                <attr name="systemId" stringvalue="http://raw.githubusercontent.com/eclipse-ee4j/jakartaee-tck/master/lib/dtds/glassfish-resources_1_5.dtd"/>
             </file>
         </folder>
     </folder>

@@ -85,7 +85,7 @@ public final class DTDRegistry {
     public static final String GLASSFISH_RESOURCE_15_DTD_PUBLIC_ID =
         "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN";
     public static final String GLASSFISH_RESOURCE_15_DTD_SYSTEM_ID =
-        "http://glassfish.org/dtds/glassfish-resources_1_5.dtd";
+        "http://raw.githubusercontent.com/eclipse-ee4j/jakartaee-tck/master/lib/dtds/glassfish-resources_1_5.dtd";
     public static final String SUN_RESOURCE_13_DTD_PUBLIC_ID =
         "-//Sun Microsystems, Inc.//DTD Application Server 9.0 Resource Definitions //EN";
     public static final String SUN_RESOURCE_13_DTD_SYSTEM_ID =
@@ -125,7 +125,7 @@ public final class DTDRegistry {
     public static final String GLASSFISH_APPLICATION_601_DTD_PUBLIC_ID =
         "-//GlassFish.org//DTD GlassFish Application Server 3.1 Java EE Application 6.0//EN";
     public static final String GLASSFISH_APPLICATION_601_DTD_SYSTEM_ID =
-        "http://glassfish.org/dtds/glassfish-application_6_0-1.dtd";
+        "http://raw.githubusercontent.com/eclipse-ee4j/jakartaee-tck/master/lib/dtds/glassfish-application_6_0-1.dtd";
     /**
      * EJB: Sun ONE App Server specific dtd info.
      */
@@ -169,7 +169,7 @@ public final class DTDRegistry {
     public static final String GLASSFISH_EJBJAR_311_DTD_PUBLIC_ID =
         "-//GlassFish.org//DTD GlassFish Application Server 3.1 EJB 3.1//EN";
     public static final String GLASSFISH_EJBJAR_311_DTD_SYSTEM_ID =
-        "http://glassfish.org/dtds/glassfish-ejb-jar_3_1-1.dtd";
+        "http://raw.githubusercontent.com/eclipse-ee4j/jakartaee-tck/master/lib/dtds/glassfish-ejb-jar_3_1-1.dtd";
     /**
      * Application Client: Sun ONE App Server specific dtd info.
      */
@@ -201,7 +201,7 @@ public final class DTDRegistry {
     public static final String GLASSFISH_APPCLIENT_601_DTD_PUBLIC_ID =
         "-//GlassFish.org//DTD GlassFish Application Server 3.1 Java EE Application Client 6.0//EN";
     public static final String GLASSFISH_APPCLIENT_601_DTD_SYSTEM_ID =
-        "http://glassfish.org/dtds/glassfish-application-client_6_0-1.dtd";
+        "http://raw.githubusercontent.com/eclipse-ee4j/jakartaee-tck/master/lib/dtds/glassfish-application-client_6_0-1.dtd";
     /**
      * Connectors: Sun ONE App Server specific dtd info.
      */

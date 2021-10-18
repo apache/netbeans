@@ -14,7 +14,7 @@
 
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 -->
-<!DOCTYPE glassfish-web-app PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Servlet 3.0//EN" "http://glassfish.org/dtds/glassfish-web-app_3_0-1.dtd">
+<!DOCTYPE glassfish-web-app PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Servlet 3.0//EN" "http://raw.githubusercontent.com/eclipse-ee4j/jakartaee-tck/master/lib/dtds/glassfish-web-app_3_0-1.dtd">
 <glassfish-web-app error-url="">
   <class-loader delegate="true"/>
   <jsp-config>

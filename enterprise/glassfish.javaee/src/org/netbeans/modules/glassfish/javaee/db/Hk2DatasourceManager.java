@@ -819,7 +819,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
     private static final String GF_RESOURCES_XML_HEADER =
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
         "<!DOCTYPE resources PUBLIC " +"\"-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN\" " +
-            "\"http://glassfish.org/dtds/glassfish-resources_1_5.dtd\">\n" +
+            "\"http://raw.githubusercontent.com/eclipse-ee4j/jakartaee-tck/master/lib/dtds/glassfish-resources_1_5.dtd\">\n" +
 //            "\"-//Sun Microsystems, Inc.//DTD Application Server 9.0 Resource Definitions //EN\" " +
 //            "\"http://www.sun.com/software/appserver/dtds/sun-resources_1_3.dtd\">\n" +
         "<resources/>";

@@ -43,7 +43,7 @@
 
 <!--  
   A resources instance document referring to this DTD should have a DOCTYPE as follows:
- <!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">-->
+ <!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://raw.githubusercontent.com/eclipse-ee4j/jakartaee-tck/master/lib/dtds/glassfish-resources_1_5.dtd">-->
 <!-- ENTITIES -->
 <!-- boolean
 

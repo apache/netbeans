@@ -46,7 +46,7 @@
 
   It must include a DOCTYPE of the following form:
 
-  <!DOCTYPE glassfish-application-client PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Java EE Application Client 6.0//EN" "http://glassfish.org/dtds/glassfish-application-client_6_0-1.dtd">
+  <!DOCTYPE glassfish-application-client PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Java EE Application Client 6.0//EN" "http://raw.githubusercontent.com/eclipse-ee4j/jakartaee-tck/master/lib/dtds/glassfish-application-client_6_0-1.dtd">
 
 -->
 

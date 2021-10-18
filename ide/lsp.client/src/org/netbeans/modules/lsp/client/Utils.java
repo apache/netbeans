@@ -291,4 +291,8 @@ public class Utils {
     public static boolean isTrue(Boolean b) {
         return b != null && b;
     }
+    public static boolean isEnabled(Either<Boolean, ?> settings) {
+        return settings != null && (settings.isLeft() ? isTrue(settings.getLeft())
+                                                       : settings.getRight() != null);
+    }
 }

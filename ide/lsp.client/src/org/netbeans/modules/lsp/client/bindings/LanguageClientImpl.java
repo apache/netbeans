@@ -63,6 +63,7 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkDoneProgressBegin;
 import org.eclipse.lsp4j.WorkDoneProgressCreateParams;
 import org.eclipse.lsp4j.WorkDoneProgressEnd;
+import org.eclipse.lsp4j.WorkDoneProgressNotification;
 import org.eclipse.lsp4j.WorkDoneProgressReport;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
@@ -117,10 +118,15 @@ public class LanguageClientImpl implements LanguageClient {
     private final Map<Object, ProgressHandle> key2Progress = new HashMap<>();
 
     public void notifyProgress(ProgressParams params) {
+        Either<WorkDoneProgressNotification, Object> value = params.getValue();
+        if (value.isRight()) {
+            return ;
+        }
+        WorkDoneProgressNotification n = value.getLeft();
         SwingUtilities.invokeLater(() -> {
-            switch (params.getValue().getKind()) {
+            switch (n.getKind()) {
                 case begin: {
-                    WorkDoneProgressBegin progress = (WorkDoneProgressBegin) params.getValue();
+                    WorkDoneProgressBegin progress = (WorkDoneProgressBegin) n;
                     ProgressHandle handle = ProgressHandle.createHandle(progress.getTitle());
                     key2Progress.put(params.getToken().get(), handle);
                     handle.start();
@@ -128,7 +134,7 @@ public class LanguageClientImpl implements LanguageClient {
                     break;
                 }
                 case report: {
-                    WorkDoneProgressReport progress = (WorkDoneProgressReport) params.getValue();
+                    WorkDoneProgressReport progress = (WorkDoneProgressReport) n;
                     ProgressHandle handle = key2Progress.get(params.getToken().get());
                     if (progress.getPercentage() != null) {
                         handle.switchToDeterminate(100);
@@ -142,7 +148,7 @@ public class LanguageClientImpl implements LanguageClient {
                     break;
                 }
                 case end: {
-                    WorkDoneProgressEnd progress = (WorkDoneProgressEnd) params.getValue();
+                    WorkDoneProgressEnd progress = (WorkDoneProgressEnd) n;
                     ProgressHandle handle = key2Progress.get(params.getToken().get());
                     handle.finish();
                     break;

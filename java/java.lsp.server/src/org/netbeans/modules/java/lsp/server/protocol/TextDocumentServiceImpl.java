@@ -370,7 +370,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         completionList.setIsIncomplete(true);
                     }
                 } finally {
-                    prefs.put("classMemberInsertionPoint", point);
+                    if (point != null) {
+                        prefs.put("classMemberInsertionPoint", point);
+                    } else {
+                        prefs.remove("classMemberInsertionPoint");
+                    }
                 }
                 completionList.setItems(items);
                 return Either.forRight(completionList);

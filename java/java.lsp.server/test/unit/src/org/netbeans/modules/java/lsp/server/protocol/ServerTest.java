@@ -73,6 +73,7 @@ import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
+import org.eclipse.lsp4j.ConfigurationParams;
 import org.eclipse.lsp4j.CreateFile;
 import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Diagnostic;
@@ -283,6 +284,11 @@ public class ServerTest extends NbTestCase {
         @Override
         public void logMessage(MessageParams arg0) {
             loggedMessages.add(arg0);
+        }
+
+        @Override
+        public CompletableFuture<List<Object>> configuration(ConfigurationParams configurationParams) {
+            return CompletableFuture.completedFuture(null);
         }
     }
 
@@ -1364,12 +1370,12 @@ public class ServerTest extends NbTestCase {
         InitializeParams initParams = new InitializeParams();
         initParams.setRootUri(toURI(getWorkDir()));
         InitializeResult result = server.initialize(initParams).get();
-        indexingComplete.await();
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        indexingComplete.await();
 
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(toURI(src), 1);
         {
-            VersionedTextDocumentIdentifier id1 = new VersionedTextDocumentIdentifier(toURI(src), 1);
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id1, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 8), new Position(2, 8)), 0, "s."))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 8), new Position(2, 8)), 0, "s."))));
 
             Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(2, 8 + "s.".length()))).get();
             assertTrue(completion.isRight());
@@ -1384,8 +1390,7 @@ public class ServerTest extends NbTestCase {
         }
 
         {
-            VersionedTextDocumentIdentifier id2 = new VersionedTextDocumentIdentifier(toURI(src), 1);
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(1, 1), new Position(1, 1)), 0, "@java.lang."))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(1, 1), new Position(1, 1)), 0, "@java.lang."))));
 
             Position afterJavaLang = new Position(1, 1 + "@java.lang.".length());
 
@@ -1398,7 +1403,7 @@ public class ServerTest extends NbTestCase {
                 assertEquals(CompletionItemKind.Folder, annotationItem.get().getKind());
             }
 
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(afterJavaLang, afterJavaLang), 0, "annotation."))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(afterJavaLang, afterJavaLang), 0, "annotation."))));
 
             Position afterJavaLangAnnotation = new Position(1, afterJavaLang.getCharacter() + "annotation.".length());
 
@@ -1412,7 +1417,7 @@ public class ServerTest extends NbTestCase {
                 assertEquals(CompletionItemKind.Interface, targetItem.get().getKind());
             }
 
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(afterJavaLangAnnotation, afterJavaLangAnnotation), 0, "Target("))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(afterJavaLangAnnotation, afterJavaLangAnnotation), 0, "Target("))));
 
             Position afterTarget = new Position(1, afterJavaLangAnnotation.getCharacter() + "Target(".length());
 
@@ -1432,7 +1437,7 @@ public class ServerTest extends NbTestCase {
                 assertEquals("\nimport java.lang.annotation.ElementType;\n\n", methodItem.get().getAdditionalTextEdits().get(0).getNewText());
             }
 
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 0), new Position(0, 0)), 0, "import java.lang.annotation.ElementType;"))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 0), new Position(0, 0)), 0, "import java.lang.annotation.ElementType;"))));
 
             {
                 //import already exists:
@@ -1500,12 +1505,12 @@ public class ServerTest extends NbTestCase {
         InitializeParams initParams = new InitializeParams();
         initParams.setRootUri(toURI(getWorkDir()));
         server.initialize(initParams).get();
-        indexingComplete.await();
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        indexingComplete.await();
 
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(toURI(src), 1);
         {
-            VersionedTextDocumentIdentifier id1 = new VersionedTextDocumentIdentifier(toURI(src), 1);
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id1, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 8), new Position(2, 8)), 0, "ArrayL"))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 8), new Position(2, 8)), 0, "ArrayL"))));
 
             Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(2, 8 + "ArrayL".length()))).get();
             assertTrue(completion.isRight());
@@ -1522,9 +1527,7 @@ public class ServerTest extends NbTestCase {
         }
 
         {
-            VersionedTextDocumentIdentifier id2 = new VersionedTextDocumentIdentifier(toURI(src), 1);
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 0), new Position(0, 0)), 0, "import java.util.ArrayList;\n"))));
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(3, 8), new Position(3, 8)), 0, "ArrayL"))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 0), new Position(0, 0)), 0, "import java.util.ArrayList;\n"))));
 
             Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(3, 8 + "ArrayL".length()))).get();
             assertTrue(completion.isRight());
@@ -3369,10 +3372,7 @@ public class ServerTest extends NbTestCase {
                      "        if (!Objects.equals(this.f1, other.f1)) {\n" +
                      "            return false;\n" +
                      "        }\n" +
-                     "        if (!Objects.equals(this.f2, other.f2)) {\n" +
-                     "            return false;\n" +
-                     "        }\n" +
-                     "        return true;\n" +
+                     "        return Objects.equals(this.f2, other.f2);\n" +
                      "    }\n",
                      fileChanges.get(0).getNewText());
     }

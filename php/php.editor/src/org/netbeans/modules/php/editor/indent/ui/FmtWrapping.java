@@ -22,7 +22,6 @@ package org.netbeans.modules.php.editor.indent.ui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.FocusTraversalPolicy;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,7 +44,6 @@ import org.netbeans.modules.php.editor.indent.FmtOptions.CategorySupport;
 import static org.netbeans.modules.php.editor.indent.FmtOptions.CategorySupport.OPTION_ID;
 import org.openide.awt.Mnemonics;
 import org.openide.util.NbBundle;
-
 
 /**
  *
@@ -96,17 +94,23 @@ public class FmtWrapping extends javax.swing.JPanel implements FocusListener {
         wrapAfterBinOpsCheckBox.putClientProperty(OPTION_ID, WRAP_AFTER_BIN_OPS);
         wrapAfterAssignOpsCheckBox.putClientProperty(OPTION_ID, WRAP_AFTER_ASSIGN_OPS);
         groupUseBracesCheckBox.putClientProperty(OPTION_ID, WRAP_GROUP_USE_BRACES);
+        wrapMethodParamsAfterLeftParenCheckBox.putClientProperty(OPTION_ID, WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN);
+        wrapMethodParamsRightParenCheckBox.putClientProperty(OPTION_ID, WRAP_METHOD_PARAMS_RIGHT_PAREN);
+        wrapMethodParamsKeepParenAndBraceOnSameLineCheckBox.putClientProperty(OPTION_ID, WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE);
+        wrapMethodCallArgsAfterLeftParenCheckBox.putClientProperty(OPTION_ID, WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN);
+        wrapMethodCallArgsRightParenCheckBox.putClientProperty(OPTION_ID, WRAP_METHOD_CALL_ARGS_RIGHT_PAREN);
+        wrapForAfterLeftParenCheckBox.putClientProperty(OPTION_ID, WRAP_FOR_AFTER_LEFT_PAREN);
+        wrapForRightParenCheckBox.putClientProperty(OPTION_ID, WRAP_FOR_RIGHT_PAREN);
     }
 
     public static PreferencesCustomizer.Factory getController() {
-        String preview = "";
+        String preview = ""; // NOI18N
         try {
-            preview = Utils.loadPreviewText(FmtWrapping.class.getClassLoader().getResourceAsStream("org/netbeans/modules/php/editor/indent/ui/Wrapping.php"));
+            preview = Utils.loadPreviewText(FmtWrapping.class.getClassLoader().getResourceAsStream("org/netbeans/modules/php/editor/indent/ui/Wrapping.php")); // NOI18N
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }
-        return new CategorySupport.Factory("wrapping", FmtWrapping.class, //NOI18N
-                preview);
+        return new CategorySupport.Factory("wrapping", FmtWrapping.class, preview); // NOI18N
     }
 
     @Override
@@ -163,13 +167,17 @@ public class FmtWrapping extends javax.swing.JPanel implements FocusListener {
         wrapAfterBinOpsCheckBox = new JCheckBox();
         wrapAfterAssignOpsCheckBox = new JCheckBox();
         groupUseBracesCheckBox = new JCheckBox();
+        wrapMethodParamsKeepParenAndBraceOnSameLineCheckBox = new JCheckBox();
+        wrapMethodParamsAfterLeftParenCheckBox = new JCheckBox();
+        wrapMethodParamsRightParenCheckBox = new JCheckBox();
+        wrapMethodCallArgsAfterLeftParenCheckBox = new JCheckBox();
+        wrapMethodCallArgsRightParenCheckBox = new JCheckBox();
+        wrapForAfterLeftParenCheckBox = new JCheckBox();
+        wrapForRightParenCheckBox = new JCheckBox();
 
         setName(NbBundle.getMessage(FmtWrapping.class, "LBL_Wrapping")); // NOI18N
         setOpaque(false);
         setLayout(new BorderLayout());
-
-        scrollPane.setMinimumSize(new Dimension(300, 200));
-        scrollPane.setPreferredSize(new Dimension(350, 600));
 
         panel1.setFocusCycleRoot(true);
         panel1.setFocusTraversalPolicy(new FocusTraversalPolicy() {
@@ -375,6 +383,21 @@ public class FmtWrapping extends javax.swing.JPanel implements FocusListener {
 
             Mnemonics.setLocalizedText(groupUseBracesCheckBox, NbBundle.getMessage(FmtWrapping.class, "FmtWrapping.groupUseBracesCheckBox.text_1")); // NOI18N
 
+            Mnemonics.setLocalizedText(wrapMethodParamsKeepParenAndBraceOnSameLineCheckBox, NbBundle.getMessage(FmtWrapping.class, "FmtWrapping.wrapMethodParamsKeepParenAndBraceOnSameLineCheckBox.text_1")); // NOI18N
+            wrapMethodParamsKeepParenAndBraceOnSameLineCheckBox.setToolTipText(NbBundle.getMessage(FmtWrapping.class, "FmtWrapping.wrapMethodParamsKeepParenAndBraceOnSameLineCheckBox.toolTipText")); // NOI18N
+
+            Mnemonics.setLocalizedText(wrapMethodParamsAfterLeftParenCheckBox, NbBundle.getMessage(FmtWrapping.class, "FmtWrapping.wrapMethodParamsAfterLeftParenCheckBox.text_1")); // NOI18N
+
+            Mnemonics.setLocalizedText(wrapMethodParamsRightParenCheckBox, NbBundle.getMessage(FmtWrapping.class, "FmtWrapping.wrapMethodParamsRightParenCheckBox.text")); // NOI18N
+
+            Mnemonics.setLocalizedText(wrapMethodCallArgsAfterLeftParenCheckBox, NbBundle.getMessage(FmtWrapping.class, "FmtWrapping.wrapMethodCallArgsAfterLeftParenCheckBox.text_1")); // NOI18N
+
+            Mnemonics.setLocalizedText(wrapMethodCallArgsRightParenCheckBox, NbBundle.getMessage(FmtWrapping.class, "FmtWrapping.wrapMethodCallArgsRightParenCheckBox.text")); // NOI18N
+
+            Mnemonics.setLocalizedText(wrapForAfterLeftParenCheckBox, NbBundle.getMessage(FmtWrapping.class, "FmtWrapping.wrapForAfterLeftParenCheckBox.text_1")); // NOI18N
+
+            Mnemonics.setLocalizedText(wrapForRightParenCheckBox, NbBundle.getMessage(FmtWrapping.class, "FmtWrapping.wrapForRightParenCheckBox.text")); // NOI18N
+
             GroupLayout panel1Layout = new GroupLayout(panel1);
             panel1.setLayout(panel1Layout);
             panel1Layout.setHorizontalGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -383,49 +406,64 @@ public class FmtWrapping extends javax.swing.JPanel implements FocusListener {
                         .addGroup(panel1Layout.createSequentialGroup()
                             .addGap(12, 12, 12)
                             .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                .addComponent(wrapAfterBinOpsCheckBox)
-                                .addComponent(groupUseBracesCheckBox)
-                                .addGroup(panel1Layout.createSequentialGroup()
-                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(extendsImplemetsKeywordLabel)
-                                        .addComponent(groupUseListLabel)
-                                        .addComponent(extendsImplementsListLabel)
-                                        .addComponent(methodParamsLabel)
-                                        .addComponent(methodCallArgsLabel)
-                                        .addComponent(chainedMethodCallsLabel)
-                                        .addComponent(arrayInitLabel)
-                                        .addComponent(forLabel)
-                                        .addComponent(forStatementLabel)
-                                        .addComponent(ifStatementLabel)
-                                        .addComponent(whileStatementLabel)
-                                        .addComponent(doWhileStatementLabel)
-                                        .addComponent(binaryOpsLabel)
-                                        .addComponent(ternaryOpsLabel)
-                                        .addComponent(assignOpsLabel))
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(extendsImplementsKeywordCombo, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(groupUseListCombo, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(extendsImplementsListCombo, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(methodParamsCombo, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(methodCallArgsCombo, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(chainedMethodCallsCombo, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(arrayInitCombo, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(forCombo, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(forStatementCombo, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(ifStatementCombo, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(whileStatementComboBox, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(doWhileStatementCombo, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(binaryOpsCombo, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(ternaryOpsCombo, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(assignOpsCombo, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(extendsImplemetsKeywordLabel)
+                                .addComponent(methodCallArgsLabel))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addComponent(methodParamsCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(methodCallArgsCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(groupUseListCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(extendsImplementsKeywordCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(extendsImplementsListCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(chainedMethodCallsCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(arrayInitCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(forCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(forStatementCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(ifStatementCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(whileStatementComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(doWhileStatementCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(binaryOpsCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(ternaryOpsCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(assignOpsCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
                         .addGroup(panel1Layout.createSequentialGroup()
                             .addContainerGap()
                             .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                 .addComponent(wrapAfterAssignOpsCheckBox)
                                 .addComponent(cbOpenCloseBlockBrace)
-                                .addComponent(cbStatements))))
-                    .addContainerGap())
+                                .addComponent(cbStatements)))
+                        .addGroup(panel1Layout.createSequentialGroup()
+                            .addGap(12, 12, 12)
+                            .addComponent(wrapAfterBinOpsCheckBox))
+                        .addGroup(panel1Layout.createSequentialGroup()
+                            .addGap(12, 12, 12)
+                            .addComponent(groupUseBracesCheckBox))
+                        .addGroup(panel1Layout.createSequentialGroup()
+                            .addGap(12, 12, 12)
+                            .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addComponent(groupUseListLabel)
+                                .addComponent(extendsImplementsListLabel)
+                                .addComponent(methodParamsLabel)
+                                .addComponent(chainedMethodCallsLabel)
+                                .addComponent(arrayInitLabel)
+                                .addComponent(forLabel)
+                                .addComponent(forStatementLabel)
+                                .addComponent(ifStatementLabel)
+                                .addComponent(whileStatementLabel)
+                                .addComponent(doWhileStatementLabel)
+                                .addComponent(binaryOpsLabel)
+                                .addComponent(ternaryOpsLabel)
+                                .addComponent(assignOpsLabel)
+                                .addGroup(panel1Layout.createSequentialGroup()
+                                    .addGap(12, 12, 12)
+                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(wrapMethodParamsRightParenCheckBox)
+                                        .addComponent(wrapMethodParamsAfterLeftParenCheckBox)
+                                        .addComponent(wrapMethodCallArgsAfterLeftParenCheckBox)
+                                        .addComponent(wrapMethodCallArgsRightParenCheckBox)
+                                        .addComponent(wrapMethodParamsKeepParenAndBraceOnSameLineCheckBox)
+                                        .addComponent(wrapForAfterLeftParenCheckBox)
+                                        .addComponent(wrapForRightParenCheckBox))))))
+                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             );
             panel1Layout.setVerticalGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addGroup(panel1Layout.createSequentialGroup()
@@ -447,11 +485,21 @@ public class FmtWrapping extends javax.swing.JPanel implements FocusListener {
                     .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(methodParamsLabel)
                         .addComponent(methodParamsCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGap(1, 1, 1)
+                    .addComponent(wrapMethodParamsAfterLeftParenCheckBox)
+                    .addGap(10, 10, 10)
+                    .addComponent(wrapMethodParamsRightParenCheckBox)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(wrapMethodParamsKeepParenAndBraceOnSameLineCheckBox)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                     .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(methodCallArgsLabel)
                         .addComponent(methodCallArgsCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(wrapMethodCallArgsAfterLeftParenCheckBox)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(wrapMethodCallArgsRightParenCheckBox)
+                    .addGap(9, 9, 9)
                     .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(chainedMethodCallsLabel)
                         .addComponent(chainedMethodCallsCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
@@ -463,6 +511,10 @@ public class FmtWrapping extends javax.swing.JPanel implements FocusListener {
                     .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(forLabel)
                         .addComponent(forCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(wrapForAfterLeftParenCheckBox)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(wrapForRightParenCheckBox)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                     .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(forStatementLabel)
@@ -617,6 +669,13 @@ public class FmtWrapping extends javax.swing.JPanel implements FocusListener {
     private JLabel whileStatementLabel;
     private JCheckBox wrapAfterAssignOpsCheckBox;
     private JCheckBox wrapAfterBinOpsCheckBox;
+    private JCheckBox wrapForAfterLeftParenCheckBox;
+    private JCheckBox wrapForRightParenCheckBox;
+    private JCheckBox wrapMethodCallArgsAfterLeftParenCheckBox;
+    private JCheckBox wrapMethodCallArgsRightParenCheckBox;
+    private JCheckBox wrapMethodParamsAfterLeftParenCheckBox;
+    private JCheckBox wrapMethodParamsKeepParenAndBraceOnSameLineCheckBox;
+    private JCheckBox wrapMethodParamsRightParenCheckBox;
     // End of variables declaration//GEN-END:variables
 
 }

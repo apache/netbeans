@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.TokenSequence;
@@ -186,6 +187,13 @@ public class TokenFormatter {
         public boolean wrapStatementsOnTheSameLine;
         public boolean wrapAfterBinOps;
         public boolean wrapAfterAssignOps;
+        public boolean wrapMethodParamsAfterLeftParen;
+        public boolean wrapMethodParamsRightParen;
+        public boolean wrapMethodParamsKeepParenAndBraceOnTheSameLine;
+        public boolean wrapMethodCallArgsAfterLeftParen;
+        public boolean wrapMethodCallArgsRightParen;
+        public boolean wrapForAfterLeftParen;
+        public boolean wrapForRightParen;
         public boolean alignMultilineMethodParams;
         public boolean alignMultilineCallArgs;
         public boolean alignMultilineImplements;
@@ -327,10 +335,17 @@ public class TokenFormatter {
             wrapExtendsImplementsKeyword = codeStyle.wrapExtendsImplementsKeyword();
             wrapExtendsImplementsList = codeStyle.wrapExtendsImplementsList();
             wrapMethodParams = codeStyle.wrapMethodParams();
+            wrapMethodParamsAfterLeftParen = codeStyle.wrapMethodParamsAfterLeftParen();
+            wrapMethodParamsRightParen = codeStyle.wrapMethodParamsRightParen();
+            wrapMethodParamsKeepParenAndBraceOnTheSameLine = codeStyle.wrapMethodParamsKeepParenAndBraceOnTheSameLine();
             wrapMethodCallArgs = codeStyle.wrapMethodCallArgs();
+            wrapMethodCallArgsAfterLeftParen = codeStyle.wrapMethodCallArgsAfterLeftParen();
+            wrapMethodCallArgsRightParen = codeStyle.wrapMethodCallArgsRightParen();
             wrapChainedMethodCalls = codeStyle.wrapChainedMethodCalls();
             wrapArrayInit = codeStyle.wrapArrayInit();
             wrapFor = codeStyle.wrapFor();
+            wrapForAfterLeftParen = codeStyle.wrapForAfterLeftParen();
+            wrapForRightParen = codeStyle.wrapForRightParen();
             wrapForStatement = codeStyle.wrapForStatement();
             wrapIfStatement = codeStyle.wrapIfStatement();
             wrapWhileStatement = codeStyle.wrapWhileStatement();
@@ -435,6 +450,7 @@ public class TokenFormatter {
                     int changeOffset = -1;
                     int deltaForLastMoveBeforeLineComment = 0;
                     FormatToken.AnchorToken lastAnchor = null;
+                    boolean hasNewLineBeforeRightParen = false;
                     while (index < formatTokens.size()) {
                         formatToken = formatTokens.get(index);
                         oldText = null; //NOI18N
@@ -497,6 +513,13 @@ public class TokenFormatter {
                                                 peekLastBracedIndent(lastBracedBlockIndent));
                                         newLines = ws.lines;
                                         countSpaces = ws.spaces;
+                                        // NETBEANS-3391
+                                        if (hasNewLineBeforeRightParen
+                                                && docOptions.wrapMethodParamsKeepParenAndBraceOnTheSameLine) {
+                                            newLines = 0;
+                                            countSpaces = docOptions.spaceBeforeMethodDeclLeftBrace ? 1 : 0;
+                                        }
+                                        hasNewLineBeforeRightParen = false;
                                         break;
                                     case WHITESPACE_BEFORE_IF_LEFT_BRACE:
                                         indentRule = true;
@@ -1320,6 +1343,15 @@ public class TokenFormatter {
                                         }
                                         break;
                                     case WHITESPACE_WITHIN_METHOD_DECL_PARENS:
+                                        // NETBEANS-3391
+                                        // reset the flag
+                                        // e.g.
+                                        // abstract public function abstractMethod(
+                                        //     $param
+                                        // ); // there is a newline before ")", however, there is no braces
+                                        // public function method($param) {
+                                        // }
+                                        hasNewLineBeforeRightParen = false;
                                         helpIndex = index - 1;
                                         while (helpIndex > 0
                                                 && formatTokens.get(helpIndex).getId() != FormatToken.Kind.WHITESPACE_WITHIN_METHOD_DECL_PARENS
@@ -1332,10 +1364,47 @@ public class TokenFormatter {
                                                  */)) {
                                             helpIndex--;
                                         }
-                                        if (helpIndex > 0 && formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE_WITHIN_METHOD_DECL_PARENS) {
+                                        boolean noParams = helpIndex > 0 && formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE_WITHIN_METHOD_DECL_PARENS;
+                                        if (noParams) {
                                             countSpaces = 0;
                                         } else {
                                             countSpaces = docOptions.spaceWithinMethodDeclParens ? 1 : 0;
+                                        }
+
+                                        // NETBEANS-3391
+                                        // Before:
+                                        // function test($arg1,
+                                        //     $arg2): string {
+                                        //     return 'foo';
+                                        // }
+                                        // After:
+                                        // function test(
+                                        //     $arg1,
+                                        //     $arg2
+                                        // ): string {
+                                        //     return 'foo';
+                                        // }
+                                        if (isLeftParen(formatTokens.get(index - 1))) {
+                                            helpIndex = index + 1;
+                                            while (helpIndex < formatTokens.size()
+                                                    && formatTokens.get(helpIndex).getId() != FormatToken.Kind.WHITESPACE_WITHIN_METHOD_DECL_PARENS
+                                                    && (formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE
+                                                    || formatTokens.get(helpIndex).getId() == FormatToken.Kind.INDENT)) {
+                                                helpIndex++;
+                                            }
+                                            if (docOptions.wrapMethodParamsAfterLeftParen) {
+                                                if (hasNewLineWithinParensForward(index, formatTokens, formatToken.getId())) {
+                                                    indentLine = true;
+                                                    newLines = 1;
+                                                }
+                                            }
+                                        } else {
+                                            if (docOptions.wrapMethodParamsRightParen) {
+                                                if (hasNewLineWithinParensBackward(index, formatTokens, formatToken.getId())) {
+                                                    indentLine = true;
+                                                    newLines = 1;
+                                                }
+                                            }
                                         }
                                         break;
                                     case WHITESPACE_WITHIN_METHOD_CALL_PARENS:
@@ -1351,12 +1420,40 @@ public class TokenFormatter {
                                         } else {
                                             countSpaces = docOptions.spaceWithinMethodCallParens ? 1 : 0;
                                         }
+                                        // NETBEANS-3391
+                                        if (isLeftParen(formatTokens.get(index - 1))) {
+                                            if (hasNewLineWithinParensForward(index, formatTokens, formatToken.getId())
+                                                    && docOptions.wrapMethodCallArgsAfterLeftParen) {
+                                                indentLine = true;
+                                                newLines = 1;
+                                            }
+                                        } else {
+                                            if (hasNewLineWithinParensBackward(index, formatTokens, formatToken.getId())
+                                                    && docOptions.wrapMethodCallArgsRightParen) {
+                                                indentLine = true;
+                                                newLines = 1;
+                                            }
+                                        }
                                         break;
                                     case WHITESPACE_WITHIN_IF_PARENS:
                                         countSpaces = docOptions.spaceWithinIfParens ? 1 : 0;
                                         break;
                                     case WHITESPACE_WITHIN_FOR_PARENS:
                                         countSpaces = docOptions.spaceWithinForParens ? 1 : 0;
+                                        // NETBEANS-3391
+                                        if (isLeftParen(formatTokens.get(index - 1))) {
+                                            if (hasNewLineWithinParensForward(index, formatTokens, formatToken.getId())
+                                                    && docOptions.wrapForAfterLeftParen) {
+                                                indentLine = true;
+                                                newLines = 1;
+                                            }
+                                        } else {
+                                            if (hasNewLineWithinParensBackward(index, formatTokens, formatToken.getId())
+                                                    && docOptions.wrapForRightParen) {
+                                                indentLine = true;
+                                                newLines = 1;
+                                            }
+                                        }
                                         break;
                                     case WHITESPACE_WITHIN_WHILE_PARENS:
                                         countSpaces = docOptions.spaceWithinWhileParens ? 1 : 0;
@@ -1497,6 +1594,15 @@ public class TokenFormatter {
                                                 isAfterLineComment(formatTokens, index));
                                         newLines = ws.lines;
                                         countSpaces = ws.spaces;
+                                        if (docOptions.wrapFor == CodeStyle.WrapStyle.WRAP_NEVER) {
+                                            // for keeping the same line
+                                            int countOfNewLines = countOfNewLines(oldText);
+                                            if (isAfterLineComment(formatTokens, index)
+                                                    || (!docOptions.wrapNeverKeepLines && countOfNewLines > 0)) {
+                                                newLines = 1;
+                                                countSpaces = indent;
+                                            }
+                                        }
                                         break;
                                     case WHITESPACE_IN_TERNARY_OP:
                                         indentRule = true;
@@ -1829,6 +1935,12 @@ public class TokenFormatter {
                                                     } else if (token.getId() == FormatToken.Kind.TEXT
                                                             && (")".equals(token.getOldText()) || "]".equals(token.getOldText()))) {
                                                         bracketsInLine = true;
+                                                    } else if (token.getId() == FormatToken.Kind.WHITESPACE_WITHIN_METHOD_CALL_PARENS) {
+                                                        // NETBEANS-3391
+                                                        if (hasNewLineWithinParensBackward(hIndex, formatTokens, FormatToken.Kind.WHITESPACE_WITHIN_METHOD_CALL_PARENS)
+                                                                && docOptions.wrapMethodCallArgsRightParen) {
+                                                            break;
+                                                        }
                                                     }
 
                                                     hIndex++;
@@ -1908,7 +2020,14 @@ public class TokenFormatter {
                                         }
                                     }
                                 }
-
+                                // NETBEANS-3391 keep ")" and "{" on the same line
+                                // e.g.
+                                // funciton test(
+                                //    param,
+                                // ): string {
+                                if (isRightParen(formatToken) && newLines > 0) {
+                                    hasNewLineBeforeRightParen = true;
+                                }
                                 newText = createWhitespace(docOptions, newLines, countSpaces);
                                 if (wsBetweenBraces) {
                                     if (lastBracePlacement == CodeStyle.BracePlacement.PRESERVE_EXISTING) {
@@ -2722,6 +2841,112 @@ public class TokenFormatter {
                 }
                 value = index < formatTokens.size() && ";".equals(token.getOldText());
                 return value;
+            }
+
+            private boolean hasNewLineWithinParensForward(int index, List<FormatToken> formatTokens, FormatToken.Kind tokenKind) {
+                int helpIndex = index - 1;
+                int balance = 0;
+                boolean hasNewLine = false;
+                if (helpIndex > 0 && isLeftParen(formatTokens.get(helpIndex))) {
+                    helpIndex = index + 1;
+                    balance++;
+                    while (helpIndex < formatTokens.size()) {
+                        switch (tokenKind) {
+                            case WHITESPACE_WITHIN_METHOD_DECL_PARENS:
+                                if (formatTokens.get(helpIndex).getId() == FormatToken.Kind.HAS_NEWLINE_WITHIN_METHOD_PARAMS) {
+                                    hasNewLine = true;
+                                }
+                                break;
+                            case WHITESPACE_WITHIN_METHOD_CALL_PARENS:
+                                if (formatTokens.get(helpIndex).getId() == FormatToken.Kind.HAS_NEWLINE_WITHIN_METHOD_CALL_ARGS) {
+                                    hasNewLine = true;
+                                }
+                                break;
+                            case WHITESPACE_WITHIN_FOR_PARENS:
+                                if (formatTokens.get(helpIndex).getId() == FormatToken.Kind.HAS_NEWLINE_WITHIN_FOR) {
+                                    hasNewLine = true;
+                                }
+                                break;
+                            default:
+                                if (formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE_INDENT) {
+                                    hasNewLine = true;
+                                }
+                                break;
+                        }
+                        if (hasNewLine) {
+                            break;
+                        }
+                        if (isLeftParen(formatTokens.get(helpIndex))) {
+                            balance++;
+                        }
+                        if (isRightParen(formatTokens.get(helpIndex))) {
+                            balance--;
+                            if (balance == 0) {
+                                break;
+                            }
+                        }
+                        helpIndex++;
+                    }
+                }
+                return hasNewLine;
+            }
+
+            private boolean hasNewLineWithinParensBackward(int index, List<FormatToken> formatTokens, FormatToken.Kind tokenKind) {
+                int helpIndex = index + 1;
+                int balance = 0;
+                boolean hasNewLine = false;
+                if (helpIndex > 0 && isRightParen(formatTokens.get(helpIndex))) {
+                    helpIndex = index - 1;
+                    balance++;
+                    while (helpIndex > 0) {
+                        switch (tokenKind) {
+                            case WHITESPACE_WITHIN_METHOD_DECL_PARENS:
+                                if (formatTokens.get(helpIndex).getId() == FormatToken.Kind.HAS_NEWLINE_WITHIN_METHOD_PARAMS) {
+                                    hasNewLine = true;
+                                }
+                                break;
+                            case WHITESPACE_WITHIN_METHOD_CALL_PARENS:
+                                if (formatTokens.get(helpIndex).getId() == FormatToken.Kind.HAS_NEWLINE_WITHIN_METHOD_CALL_ARGS) {
+                                    hasNewLine = true;
+                                }
+                                break;
+                            case WHITESPACE_WITHIN_FOR_PARENS:
+                                if (formatTokens.get(helpIndex).getId() == FormatToken.Kind.HAS_NEWLINE_WITHIN_FOR) {
+                                    hasNewLine = true;
+                                }
+                                break;
+                            default:
+                                if (formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE_INDENT) {
+                                    hasNewLine = true;
+                                }
+                                break;
+                        }
+                        if (hasNewLine) {
+                            break;
+                        }
+                        if (isLeftParen(formatTokens.get(helpIndex))) {
+                            balance--;
+                            if (balance == 0) {
+                                break;
+                            }
+                        }
+                        if (isRightParen(formatTokens.get(helpIndex))) {
+                            balance++;
+                        }
+                        helpIndex--;
+                    }
+                }
+                return hasNewLine;
+            }
+
+            private boolean isLeftParen(FormatToken formatToken) {
+                return formatToken.getId() == FormatToken.Kind.TEXT
+                        && "(".equals(formatToken.getOldText()); // NOI18N
+            }
+
+            private boolean isRightParen(FormatToken formatToken) {
+                return formatToken.getId() == FormatToken.Kind.TEXT
+                        && ")".equals(formatToken.getOldText()); // NOI18N
             }
         });
     }

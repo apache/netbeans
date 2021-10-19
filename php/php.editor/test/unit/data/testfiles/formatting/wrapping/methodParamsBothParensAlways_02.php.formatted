@@ -1,0 +1,598 @@
+<?php
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+// has newlines
+//function testEmptyParams(
+//        ): void {
+//}
+function testEmptyParams(
+): void {
+    
+}
+
+//function test1a(
+//        $param1, $param2, $param3): void {
+//    
+//}
+function test1a(
+        $param1,
+        $param2,
+        $param3
+): void {
+    
+}
+
+//function test1b($param1,
+//        $param2, $param3): void {
+//    
+//}
+function test1b(
+        $param1,
+        $param2,
+        $param3
+): void {
+    
+}
+
+//function test1c($param1, $param2, $param3
+//        ): void {
+//    
+//}
+function test1c(
+        $param1,
+        $param2,
+        $param3
+): void {
+    
+}
+
+//function test1d(
+//$param1,
+//$param2,
+//$param3,): void {
+//    
+//}
+function test1d(
+        $param1,
+        $param2,
+        $param3,
+): void {
+    
+}
+
+//function test1e(
+//$param1,
+//$param2,
+//$param3,
+//): void {
+//    
+//}
+function test1e(
+        $param1,
+        $param2,
+        $param3,
+): void {
+    
+}
+
+//function test2a(
+//        int $param1, string $param2, object $param3): void {
+//    
+//}
+function test2a(
+        int $param1,
+        string $param2,
+        object $param3
+): void {
+    
+}
+
+//function test2b(int $param1,
+//        string $param2, object $param3): void {
+//    
+//}
+function test2b(
+        int $param1,
+        string $param2,
+        object $param3
+): void {
+    
+}
+
+//function test2c(int $param1, string $param2, object $param3
+//        ): void {
+//    
+//}
+function test2c(
+        int $param1,
+        string $param2,
+        object $param3
+): void {
+    
+}
+
+//function test2d(
+//  int $param1,
+//  string $param2,
+//  object $param3
+//): void {
+//    
+//}
+function test2d(
+        int $param1,
+        string $param2,
+        object $param3
+): void {
+    
+}
+
+//function test2e(
+//  int $param1,
+//  string $param2,
+//  object $param3,
+//): void {
+//    
+//}
+function test2e(
+        int $param1,
+        string $param2,
+        object $param3,
+): void {
+    
+}
+
+//$labmda = function (
+//        ) {
+//    
+//};
+$labmda = function (
+) {
+    
+};
+
+//$labmda = function (
+//        ) use ($test): int {
+//    
+//};
+$labmda = function (
+) use ($test): int {
+    
+};
+
+//$labmda = function (
+//        $param1) use ($test): int {
+//    
+//};
+$labmda = function (
+        $param1
+) use ($test): int {
+    
+};
+
+//$labmda = function ($param1
+//        ) use ($test): int {
+//    
+//};
+$labmda = function (
+        $param1
+) use ($test): int {
+    
+};
+
+//$labmda = function (
+//        $param1
+//        ) use ($test): int {
+//    
+//};
+$labmda = function (
+        $param1
+) use ($test): int {
+    
+};
+
+//$labmda = function (
+//        $param1, int $param2): int {
+//    
+//};
+$labmda = function (
+        $param1,
+        int $param2
+): int {
+    
+};
+
+//$labmda = function ($param1,
+//        int $param2): int {
+//    
+//};
+$labmda = function (
+        $param1,
+        int $param2
+): int {
+    
+};
+
+//$labmda = function ($param1, int $param2
+//        ): int {
+//    
+//};
+$labmda = function (
+        $param1,
+        int $param2
+): int {
+    
+};
+
+//$labmda = function (
+//        $param1,
+//        int $param2
+//        ): int {
+//    
+//};
+$labmda = function (
+        $param1,
+        int $param2
+): int {
+    
+};
+
+//$labmda = function (
+//        string $param1, int $param2) use ($test): int {
+//    
+//};
+$labmda = function (
+        string $param1,
+        int $param2
+) use ($test): int {
+    
+};
+
+//$labmda = function (string $param1,
+//        int $param2) use ($test): int {
+//    
+//};
+$labmda = function (
+        string $param1,
+        int $param2
+) use ($test): int {
+    
+};
+
+//$labmda = function (string $param1, int $param2
+//        ) use ($test): int {
+//    
+//};
+$labmda = function (
+        string $param1,
+        int $param2
+) use ($test): int {
+    
+};
+
+//$labmda = function (string $param1, int $param2,
+//        ) use ($test): int {
+//    
+//};
+$labmda = function (
+        string $param1,
+        int $param2,
+) use ($test): int {
+    
+};
+
+//$labmda = function (
+//        string $param1,
+//        int $param2
+//        ) use ($test): int {
+//    
+//};
+//
+$labmda = function (
+        string $param1,
+        int $param2
+) use ($test): int {
+    
+};
+
+//$labmda = function (string $param1) use (
+//        $test1, $test2): int {
+//    
+//};
+$labmda = function (string $param1) use (
+        $test1,
+        $test2
+): int {
+    
+};
+
+//$labmda = function (string $param1) use ($test1,
+//        $test2): int {
+//    
+//};
+$labmda = function (string $param1) use (
+        $test1,
+        $test2
+): int {
+    
+};
+
+//$labmda = function (string $param1) use ($test1, $test2
+//        ): int {
+//    
+//};
+$labmda = function (string $param1) use (
+        $test1,
+        $test2
+): int {
+    
+};
+
+//$labmda = function (string $param1) use (
+//        $test1,
+//        $test2
+//        ): int {
+//    
+//};
+$labmda = function (string $param1) use (
+        $test1,
+        $test2
+): int {
+    
+};
+
+//$labmda = function (
+//        string $param1, int $param2,) use (
+//        $test1, $test2,): int {
+//    
+//};
+$labmda = function (
+        string $param1,
+        int $param2,
+) use (
+        $test1,
+        $test2,
+): int {
+    
+};
+
+//$labmda = function (string $param1,
+//        int $param2,) use ($test1,
+//        $test2,): int {
+//    
+//};
+$labmda = function (
+        string $param1,
+        int $param2,
+) use (
+        $test1,
+        $test2,
+): int {
+    
+};
+
+//$labmda = function (string $param1, int $param2,
+//        ) use ($test1, $test2,
+//        ): int {
+//    
+//};
+$labmda = function (
+        string $param1,
+        int $param2,
+) use (
+        $test1,
+        $test2,
+): int {
+    
+};
+
+//$labmda = function (
+//        string $param1,
+//        int $param2,
+//        ) use (
+//        $test1,
+//        $test2,
+//        ): int {
+//    
+//};
+$labmda = function (
+        string $param1,
+        int $param2,
+) use (
+        $test1,
+        $test2,
+): int {
+    
+};
+
+class Test {
+
+//  public function testEmptyParams(
+//          ) {
+//      
+//  }
+    public function testEmptyParams(
+    ) {
+        
+    }
+
+//  public function testParams1a(
+//          $param) : int {
+//      
+//  }
+    public function testParams1a(
+            $param
+    ): int {
+        
+    }
+
+//  public function testParams1b($param
+//          ) : int {
+//      
+//  }
+    public function testParams1b(
+            $param
+    ): int {
+        
+    }
+
+//  public function testParams1c(
+//          $param
+//          ) : int {
+//      
+//  }
+    public function testParams1c(
+            $param
+    ): int {
+        
+    }
+
+//  private function testParams2a(
+//          $param1, int $param2, string $param3) : int {
+//      
+//  }
+    private function testParams2a(
+            $param1,
+            int $param2,
+            string $param3
+    ): int {
+        
+    }
+
+//  private function testParams2b($param1,
+//          int $param2, string $param3) : int {
+//      
+//  }
+    private function testParams2b(
+            $param1,
+            int $param2,
+            string $param3
+    ): int {
+        
+    }
+
+//  private function testParams2c($param1, int $param2, string $param3
+//          ) : int {
+//      
+//  }
+    private function testParams2c(
+            $param1,
+            int $param2,
+            string $param3
+    ): int {
+        
+    }
+
+//  private function testParams2d($param1, int $param2, string $param3,
+//          ) : int {
+//      
+//  }
+    private function testParams2d(
+            $param1,
+            int $param2,
+            string $param3,
+    ): int {
+        
+    }
+
+//  private function testParams2e(
+//          $param1,int $param2, string $param3
+//          ) : int {
+//      
+//  }
+    private function testParams2e(
+            $param1,
+            int $param2,
+            string $param3
+    ): int {
+        
+    }
+
+}
+
+interface TestInterface {
+
+//  public function testEmptyParams(
+//          );
+    public function testEmptyParams(
+    );
+
+//  public function testParams1a(
+//          $param) : int;
+    public function testParams1a(
+            $param
+    ): int;
+
+//  public function testParams1b($param
+//          ) : int;
+    public function testParams1b(
+            $param
+    ): int;
+
+//  public function testParams1c(
+//          $param
+//          ) : int;
+    public function testParams1c(
+            $param
+    ): int;
+
+//  public function testParams2a(
+//          $param1, int $param2, string $param3);
+    public function testParams2a(
+            $param1,
+            int $param2,
+            string $param3
+    );
+
+//  public function testParams2b($param1,
+//          int $param2, string $param3);
+    public function testParams2b(
+            $param1,
+            int $param2,
+            string $param3
+    );
+
+//  public function testParams2c($param1,
+//          int $param2, string $param3,);
+    public function testParams2c(
+            $param1,
+            int $param2,
+            string $param3,
+    );
+
+//  public function testParams2d($param1, int $param2, string $param3
+//          );
+    public function testParams2d(
+            $param1,
+            int $param2,
+            string $param3
+    );
+
+//  public function testParams2e(
+//          $param1,
+//          int $param2,
+//          string $param3
+//          );
+    public function testParams2e(
+            $param1,
+            int $param2,
+            string $param3
+    );
+}

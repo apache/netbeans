@@ -76,7 +76,7 @@ public class GradleSourceForBinary implements SourceForBinaryQueryImplementation
                                 File outputDir = ss.getCompilerArgs(JAVA).contains("--module-source-path") ? //NOI18N
                                         root.getParentFile() : root;
                                 if (ss.getOutputClassDirs().contains(outputDir)) {
-                                    ret = new Res(project, ss.getName(), EnumSet.of(JAVA, GROOVY, SCALA, GENERATED));
+                                    ret = new Res(project, ss.getName(), EnumSet.of(JAVA, GROOVY, SCALA, KOTLIN, GENERATED));
                                     break;
                                 }
                                 if ((ret == null) && root.equals(ss.getOutputResources())) {

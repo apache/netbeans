@@ -33,6 +33,7 @@ import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.editor.BaseDocument;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.php.editor.indent.FormatToken.AssignmentAnchorToken;
 import org.netbeans.modules.php.editor.indent.TokenFormatter.DocumentOptions;
@@ -279,8 +280,15 @@ public class FormatVisitor extends DefaultVisitor {
             }
             delta = modifyDeltaForEnclosingFunctionInvocations(delta);
             if (path.get(1) instanceof FunctionInvocation
-                    || path.get(1) instanceof AttributeDeclaration) {
+                    || (path.size() > 2 && path.get(1) instanceof NamedArgument && path.get(2) instanceof FunctionInvocation) // e.g. test:[1, 2]
+                    || path.get(1) instanceof AttributeDeclaration
+                    || path.get(1) instanceof ForEachStatement) {
                 int hindex = formatTokens.size() - 1;
+                // consider named argument
+                int offset = path.get(1) instanceof NamedArgument ? path.get(1).getStartOffset() : node.getStartOffset();
+                while (offset <= formatTokens.get(hindex).getOffset()) {
+                    hindex--;
+                }
                 while (hindex > 0 && formatTokens.get(hindex).getId() != FormatToken.Kind.TEXT
                         && formatTokens.get(hindex).getId() != FormatToken.Kind.WHITESPACE_INDENT
                         && lastIndex < ts.index()) {
@@ -290,6 +298,36 @@ public class FormatVisitor extends DefaultVisitor {
                     delta = options.indentArrayItems;
                 }
             }
+            if (options.wrapMethodCallArgsAfterLeftParen
+                    && (path.size() > 1 && path.get(1) instanceof FunctionInvocation
+                    || path.size() > 2 && path.get(1) instanceof NamedArgument && path.get(2) instanceof FunctionInvocation)) {
+                // e.g.
+                // test(array(
+                //     "a" => 1,
+                //     "b" => 2,
+                // )
+                // );
+                int originalOffset = ts.offset();
+                ts.move(node.getEndOffset());
+                while (ts.moveNext()) {
+                    if (ts.token().id() != PHPTokenId.WHITESPACE
+                            && ts.token().id() != PHPTokenId.PHP_TOKEN) {
+                        break;
+                    }
+                    if (ts.token().id() == PHPTokenId.PHP_TOKEN
+                            && !TokenUtilities.textEquals(",", ts.token().text())) { // NOI18N
+                        break;
+                    }
+                    if (ts.token().id() == PHPTokenId.WHITESPACE
+                            && countOfNewLines(ts.token().text()) > 0) {
+                        delta = options.indentArrayItems;
+                        break;
+                    }
+                }
+                ts.move(originalOffset);
+                ts.moveNext();
+            }
+
             if (TokenUtilities.textEquals(ts.token().text(), "[")) { // NOI18N
                 formatTokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                 isShortArray = true;
@@ -327,6 +365,8 @@ public class FormatVisitor extends DefaultVisitor {
         for (int i = 1; i < path.size(); i++) {
             if (path.get(i) instanceof FunctionInvocation) {
                 depthInFunctionInvocation++;
+            } else if (path.get(i) instanceof NamedArgument) {
+                // noop
             } else {
                 break;
             }
@@ -1101,7 +1141,27 @@ public class FormatVisitor extends DefaultVisitor {
 
     @Override
     public void visit(ForEachStatement node) {
+        int expressionStart = node.getExpression().getStartOffset();
+        addAllUntilOffset(expressionStart);
+        int index = formatTokens.size() - 1;
+        String oldText = formatTokens.get(formatTokens.size() - 1).getOldText();
+        boolean addIndent = !((oldText == null || oldText.indexOf('\n') == -1) && !options.wrapForAfterLeftParen);
+        // e.g.
+        // foreach (array_filter($array, function ($a) {
+        //     return $a === 'b';
+        // }) as $data) {
+        // }
+        FormatToken.IndentToken addIndentToken = new FormatToken.IndentToken(expressionStart, options.continualIndentSize);
+        FormatToken.IndentToken removeIndentToken = new FormatToken.IndentToken(node.getExpression().getEndOffset(), -1 * options.continualIndentSize);
+        if (addIndent) {
+            formatTokens.add(addIndentToken);
+            formatTokens.add(new FormatToken.UnbreakableSequenceToken(expressionStart, null, FormatToken.Kind.UNBREAKABLE_SEQUENCE_START));
+        }
         scan(node.getExpression());
+        if (addIndent) {
+            addEndOfUnbreakableSequence(node.getExpression().getEndOffset());
+            formatTokens.add(removeIndentToken);
+        }
         boolean wrap = node.getKey() != null;
         if (wrap) {
             int start = node.getKey().getStartOffset();
@@ -1128,6 +1188,29 @@ public class FormatVisitor extends DefaultVisitor {
             addEndOfUnbreakableSequence(node.getValue().getEndOffset());
             formatTokens.add(new FormatToken.IndentToken(ts.offset(), -1 * options.continualIndentSize));
         }
+
+        // until before ")"
+        addAllUntilOffset(node.getStatement().getStartOffset(), ")"); // NOI18N
+
+        OffsetRange expressionRange = new OffsetRange(node.getExpression().getStartOffset(), node.getExpression().getEndOffset());
+        boolean hasIndent = false;
+        for (int i = index; i < formatTokens.size(); i++) {
+            FormatToken formatToken = formatTokens.get(i);
+            if (formatToken.getId() == FormatToken.Kind.WHITESPACE_INDENT) {
+                if (expressionRange.containsInclusive(formatToken.getOffset())) {
+                    continue;
+                }
+                hasIndent = true;
+                break;
+            }
+        }
+        if (hasIndent || options.wrapFor == CodeStyle.WrapStyle.WRAP_ALWAYS) {
+            formatTokens.add(new FormatToken(FormatToken.Kind.HAS_NEWLINE_WITHIN_FOR, node.getValue().getEndOffset()));
+        } else {
+            formatTokens.remove(addIndentToken);
+            formatTokens.remove(removeIndentToken);
+        }
+
         ASTNode body = node.getStatement();
         if (body != null && (body instanceof Block && !((Block) body).isCurly())) {
             addAllUntilOffset(body.getStartOffset());
@@ -1147,8 +1230,19 @@ public class FormatVisitor extends DefaultVisitor {
 
     @Override
     public void visit(ForStatement node) {
+        addAllUntilOffset(node.getBody().getStartOffset(), "("); // NOI18N
+        int index = formatTokens.size() - 1;
+        boolean wrap = !node.getInitializers().isEmpty();
+        if (wrap) {
+            int start = node.getInitializers().get(0).getStartOffset();
+            addAllUntilOffset(start);
+            formatTokens.add(new FormatToken.IndentToken(start, options.continualIndentSize));
+        }
         scan(node.getInitializers());
-        boolean wrap = node.getConditions() != null && node.getConditions().size() > 0 ? true : false;
+        if (wrap) {
+            formatTokens.add(new FormatToken.IndentToken(ts.offset(), -1 * options.continualIndentSize));
+        }
+        wrap = node.getConditions() != null && node.getConditions().size() > 0;
         if (wrap) {
             int start = node.getConditions().get(0).getStartOffset();
             addAllUntilOffset(start);
@@ -1161,7 +1255,7 @@ public class FormatVisitor extends DefaultVisitor {
             addEndOfUnbreakableSequence(node.getConditions().get(node.getConditions().size() - 1).getEndOffset());
             formatTokens.add(new FormatToken.IndentToken(ts.offset(), -1 * options.continualIndentSize));
         }
-        wrap = node.getUpdaters() != null && node.getUpdaters().size() > 0 ? true : false;
+        wrap = node.getUpdaters() != null && node.getUpdaters().size() > 0;
         if (wrap) {
             int start = node.getUpdaters().get(0).getStartOffset();
             addAllUntilOffset(start);
@@ -1173,6 +1267,16 @@ public class FormatVisitor extends DefaultVisitor {
         if (wrap) {
             addEndOfUnbreakableSequence(node.getUpdaters().get(node.getUpdaters().size() - 1).getEndOffset());
             formatTokens.add(new FormatToken.IndentToken(ts.offset(), -1 * options.continualIndentSize));
+        }
+        // until before ")"
+        addAllUntilOffset(node.getBody().getStartOffset(), ")"); // NOI18N
+        boolean hasNewline = hasNewline(index);
+        if ((hasNewline || options.wrapFor == CodeStyle.WrapStyle.WRAP_ALWAYS)
+                && !node.getInitializers().isEmpty()
+                && !node.getConditions().isEmpty()
+                && !node.getUpdaters().isEmpty()) {
+            // ignore for(;;) {}
+            formatTokens.add(new FormatToken(FormatToken.Kind.HAS_NEWLINE_WITHIN_FOR, ts.offset() + ts.token().length()));
         }
         ASTNode body = node.getBody();
         if (body != null && (body instanceof Block && !((Block) body).isCurly())) {
@@ -1218,7 +1322,7 @@ public class FormatVisitor extends DefaultVisitor {
             }
         }
         ts.movePrevious();
-
+        int index = formatTokens.size() - 1;
         addParameters(node.getFormalParameters());
 
         // #270903 add indent
@@ -1242,10 +1346,20 @@ public class FormatVisitor extends DefaultVisitor {
                 && (ts.offset() + ts.token().length()) <= indentEndOffset) {
             if (isCloseParen(ts.token())) {
                 formatTokens.add(new FormatToken.IndentToken(ts.offset(), -1 * options.continualIndentSize));
+                break;
             }
             addFormatToken(formatTokens);
         }
         ts.movePrevious();
+
+        boolean hasNewline = hasNewline(index);
+        if (hasNewline) {
+            formatTokens.add(new FormatToken(FormatToken.Kind.HAS_NEWLINE_WITHIN_METHOD_PARAMS, ts.offset() + ts.token().length()));
+        } else {
+            if (!node.getFormalParameters().isEmpty() && node.getFormalParameters().size() > 1 && options.wrapMethodParams == CodeStyle.WrapStyle.WRAP_ALWAYS) {
+                formatTokens.add(new FormatToken(FormatToken.Kind.HAS_NEWLINE_WITHIN_METHOD_PARAMS, ts.offset() + ts.token().length()));
+            }
+        }
 
         addReturnType(node.getReturnType());
         scan(node.getBody());
@@ -1257,6 +1371,7 @@ public class FormatVisitor extends DefaultVisitor {
         scan(node.getAttributes());
         List<FormalParameter> parameters = node.getFormalParameters();
         Block body = node.getBody();
+        int index = formatTokens.size() - 1;
         if (!parameters.isEmpty()) {
             // enable indent only parameter list
             addAllUntilOffset(parameters.get(0).getStartOffset());
@@ -1275,6 +1390,14 @@ public class FormatVisitor extends DefaultVisitor {
                 indentEndOffset = node.getEndOffset();
             }
             formatTokens.add(new FormatToken.IndentToken(indentEndOffset, -1 * options.continualIndentSize));
+        }
+        boolean hasNewline = hasNewline(index);
+        if (hasNewline) {
+            formatTokens.add(new FormatToken(FormatToken.Kind.HAS_NEWLINE_WITHIN_METHOD_PARAMS, ts.offset() + ts.token().length()));
+        } else {
+            if (!node.getFormalParameters().isEmpty() && node.getFormalParameters().size() > 1 && options.wrapMethodParams == CodeStyle.WrapStyle.WRAP_ALWAYS) {
+                formatTokens.add(new FormatToken(FormatToken.Kind.HAS_NEWLINE_WITHIN_METHOD_PARAMS, ts.offset() + ts.token().length()));
+            }
         }
 
         addLexicalVariables(node.getLexicalVariables());
@@ -1320,12 +1443,60 @@ public class FormatVisitor extends DefaultVisitor {
                     }
                 }
             }
+            if (options.wrapMethodCallArgsAfterLeftParen
+                    && disable
+                    && hasNewlineWithinMethodCallArgs((FunctionInvocation) functionInvocation)) {
+                // e.g.
+                // test(function (): int {
+                //         return 1;
+                //     }
+                // );
+                disable = false;
+            }
             if (disable) {
                 // #233353 disable indent for function invocation temporarily
                 formatTokens.add(new FormatToken.IndentToken(offset, -1 * options.continualIndentSize));
             }
         }
         return disable;
+    }
+
+    private boolean hasNewlineWithinMethodCallArgs(FunctionInvocation functionInvocation) {
+        int originalOffset = ts.offset();
+        boolean hasNewline = false;
+        List<Expression> parameters = functionInvocation.getParameters();
+        ts.move(functionInvocation.getStartOffset());
+        while (ts.moveNext() && ts.offset() < functionInvocation.getEndOffset() && !hasNewline) {
+            if (TokenUtilities.indexOf(ts.token().text(), "\n") != -1) { // NOI18N
+                boolean ignore = false;
+                for (Expression parameter : parameters) {
+                    if (parameter.getStartOffset() < ts.offset() && ts.offset() < parameter.getEndOffset()) {
+                        ignore = true;
+                        break;
+                    }
+                }
+                if (!ignore) {
+                    hasNewline = true;
+                    break;
+                }
+            }
+        }
+
+        ts.move(originalOffset);
+        ts.moveNext();
+        return hasNewline;
+    }
+
+    private boolean hasNewline(int startIndex) {
+        boolean hasNewline = false;
+        for (int i = startIndex; i < formatTokens.size(); i++) {
+            FormatToken formatToken = formatTokens.get(i);
+            if (formatToken.getId() == FormatToken.Kind.WHITESPACE_INDENT) {
+                hasNewline = true;
+                break;
+            }
+        }
+        return hasNewline;
     }
 
     private void enableIndentForFunctionInvocation(int offset) {
@@ -1346,9 +1517,18 @@ public class FormatVisitor extends DefaultVisitor {
     private void addLexicalVariables(List<Expression> lexicalVariables) {
         if (!lexicalVariables.isEmpty()) {
             addAllUntilOffset(lexicalVariables.get(0).getStartOffset());
+            int index = formatTokens.size() - 1;
             formatTokens.add(new FormatToken.IndentToken(lexicalVariables.get(0).getStartOffset(), options.continualIndentSize));
             addListOfNodes(lexicalVariables, FormatToken.Kind.WHITESPACE_IN_PARAMETER_LIST);
             formatTokens.add(new FormatToken.IndentToken(lexicalVariables.get(lexicalVariables.size() - 1).getEndOffset(), -1 * options.continualIndentSize));
+            boolean hasNewline = hasNewline(index);
+            if (hasNewline) {
+                formatTokens.add(new FormatToken(FormatToken.Kind.HAS_NEWLINE_WITHIN_METHOD_PARAMS, ts.offset() + ts.token().length()));
+            } else {
+                if (lexicalVariables.size() > 1 && options.wrapMethodParams == CodeStyle.WrapStyle.WRAP_ALWAYS) {
+                    formatTokens.add(new FormatToken(FormatToken.Kind.HAS_NEWLINE_WITHIN_METHOD_PARAMS, ts.offset() + ts.token().length()));
+                }
+            }
         }
     }
 
@@ -1412,48 +1592,136 @@ public class FormatVisitor extends DefaultVisitor {
             if (addIndentation) {
                 formatTokens.add(indentToken);
             }
+            int index = formatTokens.size() - 1;
             processArguments(parameters);
 
+            // consider the following cases as single line parameters
+            // test("a", function(true)) {
+            //     return true;
+            // });
+            // test("a", match(true)) {
+            //     true => "true",
+            //     false => "false",
+            // });
+            // test(array(
+            //     "a" => 1,
+            //     "b" => 2,
+            // ));
+            // test(new class(){
+            // });
+            boolean hasNewline = hasNewlineInMethodCallArgs(parameters, index, new OffsetRange(node.getStartOffset(), node.getEndOffset()));
+            if (hasNewline) {
+                formatTokens.add(new FormatToken(FormatToken.Kind.HAS_NEWLINE_WITHIN_METHOD_CALL_ARGS, node.getEndOffset() - 1));
+            } else {
+                if (!node.getParameters().isEmpty() && node.getParameters().size() > 1 && options.wrapMethodCallArgs == CodeStyle.WrapStyle.WRAP_ALWAYS) {
+                    formatTokens.add(new FormatToken(FormatToken.Kind.HAS_NEWLINE_WITHIN_METHOD_CALL_ARGS, node.getEndOffset() - 1));
+                }
+            }
             // remove an indent token when the last param is an anonymous class
-            addIndentation = removeIndentTokenForAnonymousClass(parameters, indentToken, addIndentation);
+            addIndentation = removeIndentTokenForAnonymousClass(node, indentToken, addIndentation, hasNewline);
 
             if (addIndentation) {
-                List<FormatToken> removed = new ArrayList<>();
-                FormatToken ftoken = formatTokens.get(formatTokens.size() - 1);
-                while (ftoken.getId() == FormatToken.Kind.UNBREAKABLE_SEQUENCE_END
-                        || (ftoken.isWhitespace() && ftoken.getId() != FormatToken.Kind.WHITESPACE_INDENT)
-                        || ftoken.getId() == FormatToken.Kind.COMMENT
-                        || ftoken.getId() == FormatToken.Kind.COMMENT_START
-                        || ftoken.getId() == FormatToken.Kind.COMMENT_END
-                        || ftoken.getId() == FormatToken.Kind.INDENT
-                        || (ftoken.getId() == FormatToken.Kind.TEXT && (")".equals(ftoken.getOldText()) || "]".equals(ftoken.getOldText())))) { // NOI18N
-                    formatTokens.remove(formatTokens.size() - 1);
-                    removed.add(ftoken);
-                    ftoken = formatTokens.get(formatTokens.size() - 1);
-                }
-                if (ftoken.getId() == FormatToken.Kind.WHITESPACE_INDENT) {
-                    formatTokens.remove(formatTokens.size() - 1); // remove WHITESPACE_INDENT
-                    formatTokens.add(new FormatToken.IndentToken(node.getEndOffset(), -1 * options.continualIndentSize));
-                    formatTokens.add(ftoken); // re-add WHITESPACE_INDENT
-                    for (int i = removed.size() - 1; i > -1; i--) {
-                        formatTokens.add(removed.get(i));
+                    List<FormatToken> removed = new ArrayList<>();
+                    FormatToken ftoken = formatTokens.get(formatTokens.size() - 1);
+                    while (ftoken.getId() == FormatToken.Kind.UNBREAKABLE_SEQUENCE_END
+                            || (ftoken.isWhitespace() && ftoken.getId() != FormatToken.Kind.WHITESPACE_INDENT)
+                            || ftoken.getId() == FormatToken.Kind.COMMENT
+                            || ftoken.getId() == FormatToken.Kind.COMMENT_START
+                            || ftoken.getId() == FormatToken.Kind.COMMENT_END
+                            || ftoken.getId() == FormatToken.Kind.INDENT
+                            || (ftoken.getId() == FormatToken.Kind.TEXT && (")".equals(ftoken.getOldText()) || "]".equals(ftoken.getOldText())))) { // NOI18N
+                        formatTokens.remove(formatTokens.size() - 1);
+                        removed.add(ftoken);
+                        ftoken = formatTokens.get(formatTokens.size() - 1);
                     }
-                } else {
-                    for (int i = removed.size() - 1; i > -1; i--) {
-                        formatTokens.add(removed.get(i));
+                    if (ftoken.getId() == FormatToken.Kind.WHITESPACE_INDENT && !hasNewline) {
+                        // e.g.
+                        // func(array(
+                        //     "a" => 1,
+                        //     "b" => 2,
+                        // ));
+                        formatTokens.remove(formatTokens.size() - 1); // remove WHITESPACE_INDENT
+                        formatTokens.add(new FormatToken.IndentToken(node.getEndOffset(), -1 * options.continualIndentSize));
+                        formatTokens.add(ftoken); // re-add WHITESPACE_INDENT
+                        for (int i = removed.size() - 1; i > -1; i--) {
+                            formatTokens.add(removed.get(i));
+                        }
+                    } else {
+                        for (int i = removed.size() - 1; i > -1; i--) {
+                            formatTokens.add(removed.get(i));
+                        }
+                        formatTokens.add(new FormatToken.IndentToken(node.getEndOffset(), -1 * options.continualIndentSize));
                     }
-                    formatTokens.add(new FormatToken.IndentToken(node.getEndOffset(), -1 * options.continualIndentSize));
-                }
             }
         }
         addAllUntilOffset(node.getEndOffset());
     }
 
-    private boolean removeIndentTokenForAnonymousClass(List<Expression> parameters, FormatToken.IndentToken indentToken, boolean addIndentation) {
+    private boolean hasNewlineInMethodCallArgs(List<Expression> parameters, int index, OffsetRange range) {
+        boolean hasIndent = false;
+        List<Expression> expressions = new ArrayList<>(parameters.size());
+        List<Expression> ignoreExpressions = new ArrayList<>();
+        for (Expression parameter : parameters) {
+            Expression param = parameter;
+            if (param instanceof NamedArgument) {
+                param = ((NamedArgument) param).getExpression();
+            }
+            if (param instanceof MethodInvocation) {
+                param = ((MethodInvocation) param).getMethod();
+            }
+            if (param instanceof FunctionInvocation) {
+                FunctionInvocation function = (FunctionInvocation) param;
+                if (!hasNewlineInMethodCallArgs(function.getParameters(), index, new OffsetRange(function.getStartOffset(), function.getEndOffset()))) {
+                     ignoreExpressions.add(param);
+                }
+            }
+            if (param instanceof LambdaFunctionDeclaration
+                    || param instanceof MatchExpression
+                    || param instanceof ArrayCreation
+                    || param instanceof ClassInstanceCreation) {
+                expressions.add(param);
+            }
+        }
+        for (int i = index; i < formatTokens.size(); i++) {
+            FormatToken formatToken = formatTokens.get(i);
+            if (formatToken.getId() == FormatToken.Kind.WHITESPACE_INDENT) {
+                int offset = formatToken.getOffset();
+                if (!range.containsInclusive(offset)) {
+                    continue;
+                }
+                boolean isInExpression = false;
+                boolean ignore = false;
+                for (Expression expression : ignoreExpressions) {
+                    if (expression.getStartOffset() < offset && offset < expression.getEndOffset()) {
+                        ignore = true;
+                    }
+                }
+                if (ignore) {
+                    continue;
+                }
+                for (Expression expression : expressions) {
+                    if (expression.getStartOffset() < offset && offset < expression.getEndOffset()) {
+                        isInExpression = true;
+                        break;
+                    }
+                }
+                if (!isInExpression) {
+                    hasIndent = true;
+                    break;
+                }
+            }
+        }
+        return hasIndent;
+    }
+
+    private boolean removeIndentTokenForAnonymousClass(FunctionInvocation functionInvocation, FormatToken.IndentToken indentToken, boolean addIndentation, boolean hasNewline) {
+        List<Expression> parameters = functionInvocation.getParameters();
         boolean addIndent = addIndentation;
         if (options.wrapMethodCallArgs == CodeStyle.WrapStyle.WRAP_ALWAYS
                 || parameters.isEmpty()) {
-            return addIndent;
+            if ((hasNewline || parameters.isEmpty()) || parameters.size() != 1) {
+                return addIndent;
+            }
         }
         Expression firstParameter = parameters.get(0);
         if (!isAnonymousClass(parameters.get(parameters.size() - 1))) {
@@ -1476,8 +1744,11 @@ public class FormatVisitor extends DefaultVisitor {
                     }
                 }
                 if (lastFormatToken.getId() != FormatToken.Kind.WHITESPACE_INDENT) {
-                    formatTokens.remove(indentToken);
-                    addIndent = false;
+                    if (!options.wrapMethodCallArgsAfterLeftParen
+                            || !hasNewlineWithinMethodCallArgs(functionInvocation)) {
+                        formatTokens.remove(indentToken);
+                        addIndent = false;
+                    }
                 }
                 break;
             }
@@ -1800,7 +2071,7 @@ public class FormatVisitor extends DefaultVisitor {
 
     @Override
     public void visit(MatchExpression node) {
-        disableIndentForFunctionInvocation(node.getStartOffset());
+        boolean disabled = disableIndentForFunctionInvocation(node.getStartOffset());
 
         scan(node.getExpression());
 
@@ -1816,7 +2087,9 @@ public class FormatVisitor extends DefaultVisitor {
         }
         addWhitespaceBeforeMatchRightBraceToken(node);
 
-        enableIndentForFunctionInvocation(node.getEndOffset());
+        if (disabled) {
+            enableIndentForFunctionInvocation(node.getEndOffset());
+        }
     }
 
     private void addWhitespaceBeforeMatchRightBraceToken(MatchExpression node) {
@@ -2542,6 +2815,15 @@ public class FormatVisitor extends DefaultVisitor {
         ts.movePrevious();
     }
 
+    private void addAllUntilOffset(int offset, String terminator) {
+        while (moveNext() && ts.offset() < offset
+                && (ts.offset() + ts.token().length()) <= offset
+                && !TokenUtilities.textEquals(ts.token().text(), terminator)) {
+            addFormatToken(formatTokens);
+        }
+        ts.movePrevious();
+    }
+
     private void addRestOfLine() {
         while (ts.moveNext()
                 && ts.token().id() != PHPTokenId.PHP_LINE_COMMENT
@@ -2889,7 +3171,11 @@ public class FormatVisitor extends DefaultVisitor {
     }
 
     private static boolean isAnonymousClass(ASTNode astNode) {
-        return astNode instanceof ClassInstanceCreation && ((ClassInstanceCreation) astNode).isAnonymous();
+        ASTNode node = astNode;
+        if (astNode instanceof NamedArgument) {
+            node = ((NamedArgument) astNode).getExpression();
+        }
+        return node instanceof ClassInstanceCreation && ((ClassInstanceCreation) node).isAnonymous();
     }
 
 }

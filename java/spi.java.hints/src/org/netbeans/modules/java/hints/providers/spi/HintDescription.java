@@ -92,7 +92,7 @@ public final class HintDescription {
         public final Set<String> requiredErasedTypes;
 
         public AdditionalQueryConstraints(Set<String> requiredErasedTypes) {
-            this.requiredErasedTypes = Collections.unmodifiableSet(new HashSet<String>(requiredErasedTypes));
+            this.requiredErasedTypes = Collections.unmodifiableSet(new HashSet<>(requiredErasedTypes));
         }
 
         private static final AdditionalQueryConstraints EMPTY = new AdditionalQueryConstraints(Collections.<String>emptySet());

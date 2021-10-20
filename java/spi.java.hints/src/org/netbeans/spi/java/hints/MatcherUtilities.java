@@ -62,9 +62,9 @@ public class MatcherUtilities {
     public static boolean matches(@NonNull HintContext ctx, @NonNull TreePath variable, @NonNull String pattern, Map<String, TreePath> outVariables, 
                         Map<String, Collection<? extends TreePath>> outMultiVariables, Map<String, String> outVariables2Names, Map<String, TypeMirror> variable2Type) {
         Pattern p = PatternCompiler.compile(ctx.getInfo(), pattern, variable2Type, Collections.<String>emptyList());
-        Map<String, TreePath> variables = new HashMap<String, TreePath>(ctx.getVariables());
-        Map<String, Collection<? extends TreePath>> multiVariables = new HashMap<String, Collection<? extends TreePath>>(ctx.getMultiVariables());
-        Map<String, String> variables2Names = new HashMap<String, String>(ctx.getVariableNames());
+        Map<String, TreePath> variables = new HashMap<>(ctx.getVariables());
+        Map<String, Collection<? extends TreePath>> multiVariables = new HashMap<>(ctx.getMultiVariables());
+        Map<String, String> variables2Names = new HashMap<>(ctx.getVariableNames());
         Iterable<? extends Occurrence> occurrences = Matcher.create(ctx.getInfo()).setCancel(new AtomicBoolean()).setPresetVariable(variables, multiVariables, variables2Names).setSearchRoot(variable).setTreeTopSearch().match(p);
 
         if (occurrences.iterator().hasNext()) {
@@ -94,9 +94,9 @@ public class MatcherUtilities {
 
         if (variable.size() != patternTrees.size()) return false;
         
-        Map<String, TreePath> variables = new HashMap<String, TreePath>(ctx.getVariables());
-        Map<String, Collection<? extends TreePath>> multiVariables = new HashMap<String, Collection<? extends TreePath>>(ctx.getMultiVariables());
-        Map<String, String> variables2Names = new HashMap<String, String>(ctx.getVariableNames());
+        Map<String, TreePath> variables = new HashMap<>(ctx.getVariables());
+        Map<String, Collection<? extends TreePath>> multiVariables = new HashMap<>(ctx.getMultiVariables());
+        Map<String, String> variables2Names = new HashMap<>(ctx.getVariableNames());
         Iterator<? extends TreePath> variableIt = variable.iterator();
         Iterator<? extends Tree> patternTreesIt = patternTrees.iterator();
 

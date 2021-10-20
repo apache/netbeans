@@ -27,7 +27,6 @@ import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
-import com.sun.tools.javac.tree.JCTree.JCCase;
 import com.sun.tools.javac.tree.JCTree.JCCatch;
 import com.sun.tools.javac.tree.JCTree.JCErroneous;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
@@ -86,7 +85,7 @@ public class JackpotTrees {
                 baseClass2Impl.put(clazz, fake);
             }
 
-            NEXT: for (Constructor c : fake.getDeclaredConstructors()) {
+            NEXT: for (Constructor<?> c : fake.getDeclaredConstructors()) {
                 if (c.getParameterCount() < requiredConstructor.length)
                     continue;
                 for (int e = 0; e < requiredConstructor.length; e++) {
@@ -130,6 +129,7 @@ public class JackpotTrees {
             this.jcIdent = jcIdent;
         }
 
+        @Override
         public Name getName() {
             return ident;
         }
@@ -167,6 +167,7 @@ public class JackpotTrees {
             this.jcIdent = jcIdent;
         }
 
+        @Override
         public Name getName() {
             return ident;
         }

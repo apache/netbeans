@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.java.source;
 
+import com.sun.source.doctree.DocTree;
+import com.sun.source.doctree.TextTree;
 import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
@@ -35,17 +37,20 @@ import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Names;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import org.openide.util.Exceptions;
 
 public class TreeShims {
 
@@ -228,6 +233,32 @@ public class TreeShims {
         }
     }
 
+    public static List<DocTree> getSnippetDocTreeAttributes(DocTree node) {
+        try {
+            Class gpt = Class.forName("com.sun.source.doctree.SnippetTree"); //NOI18N
+            return isJDKVersionRelease18_Or_Above()
+                    ? (List<DocTree>)gpt.getDeclaredMethod("getAttributes").invoke(node)  //NOI18N
+                    : null;
+        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
+    public static TextTree getSnippetDocTreeText(DocTree node) {
+        try {
+            Class gpt = Class.forName("com.sun.source.doctree.SnippetTree"); //NOI18N
+            return isJDKVersionRelease18_Or_Above()
+                    ? (TextTree)gpt.getDeclaredMethod("getBody").invoke(node)  //NOI18N
+                    : null;
+        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
     public static List<? extends Tree> getPermits(ClassTree node) {
         List<? extends Tree> perms = null;
         try {
@@ -382,6 +413,10 @@ public class TreeShims {
 
     public static boolean isJDKVersionRelease17_Or_Above(){
         return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(17) >= 0;
+    }
+
+    public static boolean isJDKVersionRelease18_Or_Above(){
+        return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(18) >= 0;
     }
 
     public static ModuleTree getModule(CompilationUnitTree cut) {

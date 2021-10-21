@@ -90,8 +90,8 @@ public class ConvertTextBlockToString {
         protected void performRewrite(TransformationContext ctx) {
             ExpressionTree ext = ctx.getWorkingCopy().getTreeMaker().Literal(orignalStringArr[orignalStringArr.length - 1]);
             if (orignalStringArr.length > 1) {
-                ext = ctx.getWorkingCopy().getTreeMaker().Binary(Tree.Kind.PLUS, buildTree(orignalStringArr, orignalStringArr.length - 2, ctx), (ExpressionTree) ext);
-                if (orignalStringArr[orignalStringArr.length - 1].equals("")) {
+                ext = ctx.getWorkingCopy().getTreeMaker().Binary(Tree.Kind.PLUS, buildTree(orignalStringArr, orignalStringArr.length - 2, ctx), ext);
+                if (orignalStringArr[orignalStringArr.length - 1].isEmpty()) {
                     ext = (((BinaryTree) ext).getLeftOperand());
                 }
             }

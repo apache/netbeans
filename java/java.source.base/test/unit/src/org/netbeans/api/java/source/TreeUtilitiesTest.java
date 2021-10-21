@@ -390,6 +390,33 @@ public class TreeUtilitiesTest extends NbTestCase {
         assertFalse(Kind.METHOD == tp.getParentPath().getLeaf().getKind());
     }
     
+    public void testAnnotationSyntheticValue1() throws Exception {
+        prepareTest("Test", "package test; @Meta(Test.VALUE) public class Test { public static final String VALUE = \"\"; } @interface Meta { public String value(); }");
+        
+        TreePath tp = info.getTreeUtilities().pathFor(58 - 30);
+        
+        assertEquals(Kind.MEMBER_SELECT, tp.getLeaf().getKind());
+        assertEquals("Test.VALUE", tp.getLeaf().toString());
+    }
+    
+    public void testAnnotationSyntheticValue2() throws Exception {
+        prepareTest("Test", "package test; @Meta(Test.VALUE) public class Test { public static final String VALUE = \"\"; } @interface Meta { public String[] value(); }");
+        
+        TreePath tp = info.getTreeUtilities().pathFor(58 - 30);
+        
+        assertEquals(Kind.MEMBER_SELECT, tp.getLeaf().getKind());
+        assertEquals("Test.VALUE", tp.getLeaf().toString());
+    }
+    
+    public void testAnnotationSyntheticValue3() throws Exception {
+        prepareTest("Test", "package test; @Meta({Test.VALUE}) public class Test { public static final String VALUE = \"\"; } @interface Meta { public String[] value(); }");
+        
+        TreePath tp = info.getTreeUtilities().pathFor(58 - 30);
+        
+        assertEquals(Kind.MEMBER_SELECT, tp.getLeaf().getKind());
+        assertEquals("Test.VALUE", tp.getLeaf().toString());
+    }
+    
     public void testAutoMapComments1() throws Exception {
         prepareTest("Test", "package test;\n" +
                             "import java.io.File;\n" +

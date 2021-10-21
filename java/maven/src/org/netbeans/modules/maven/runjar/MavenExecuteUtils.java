@@ -84,6 +84,9 @@ public final class MavenExecuteUtils {
     static final String DEFAULT_DEBUG_PARAMS = "-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}"; //NOI18N
     static final String DEFAULT_EXEC_ARGS_CLASSPATH2 =  "${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}"; // NOI18N
 
+    public static final String ENV_PREFIX = "Env."; // NOI18N
+    public static final String ENV_REMOVED = new String("null"); // A special instance for env vars to be removed. // NOI18N
+
     /**
      * ID of the 'profile' action.
      */
@@ -511,6 +514,10 @@ public final class MavenExecuteUtils {
             }
         }
         return null;
+    }
+    
+    public static boolean isEnvRemovedValue(String value) {
+        return value == ENV_REMOVED; // It's crutial to test the instance identity
     }
     
     /**

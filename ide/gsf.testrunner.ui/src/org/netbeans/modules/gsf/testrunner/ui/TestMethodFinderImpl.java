@@ -26,9 +26,13 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
+import java.util.logging.Logger;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
@@ -52,7 +56,7 @@ public final class TestMethodFinderImpl extends EmbeddingIndexer {
 
     public static final String NAME = "tests"; // NOI18N
     public static final int VERSION = 1;
-    public static TestMethodFinderImpl INSTANCE = null;
+    public static final TestMethodFinderImpl INSTANCE = new TestMethodFinderImpl();
 
     private final WeakSet<BiConsumer<FileObject, Collection<TestMethodController.TestMethod>>> listeners = new WeakSet<>();
 
@@ -76,6 +80,7 @@ public final class TestMethodFinderImpl extends EmbeddingIndexer {
     public void addListener(BiConsumer<FileObject, Collection<TestMethodController.TestMethod>> listener) {
         synchronized(listeners) {
             listeners.putIfAbsent(listener);
+            Logger.getLogger(TestMethodFinderImpl.class.getName()).info("Listener added: " + listener);
         }
     }
 
@@ -87,27 +92,37 @@ public final class TestMethodFinderImpl extends EmbeddingIndexer {
                 output.delete();
             }
         } else {
+            Map<String, List<TestMethodController.TestMethod>> class2methods = new LinkedHashMap<>();
+            Map<String, Integer> class2offsets = new HashMap<>();
+            for (TestMethodController.TestMethod method : methods) {
+                String className = method.getTestClassName();
+                if (method.getTestClassPosition() != null) {
+                    class2offsets.putIfAbsent(className, method.getTestClassPosition().getOffset());
+                }
+                class2methods.computeIfAbsent(className, name -> new ArrayList<>()).add(method);
+            }
             output.getParentFile().mkdirs();
-            boolean printHeader = true;
             try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output), "UTF-8"))) {
-                for (TestMethodController.TestMethod method : methods) {
-                    if (printHeader) {
-                        pw.print("url: "); //NOI18N
-                        pw.println(url.toString());
-                        pw.print("class: "); //NOI18N
-                        pw.print(method.getTestClassName());
-                        if (method.getTestClassPosition() != null) {
-                            pw.print(':'); //NOI18N
-                            pw.println(method.getTestClassPosition().getOffset());
-                        } else {
-                            pw.println();
-                        }
-                        printHeader = false;
+                pw.print("url: "); //NOI18N
+                pw.println(url.toString());
+                for (Map.Entry<String, List<TestMethodController.TestMethod>> entry : class2methods.entrySet()) {
+                    pw.print("class: "); //NOI18N
+                    pw.print(entry.getKey());
+                    Integer offset = class2offsets.get(entry.getKey());
+                    if (offset != null) {
+                        pw.print(':'); //NOI18N
+                        pw.println(offset);
+                    } else {
+                        pw.println();
                     }
-                    pw.print("method: "); //NOI18N
-                    pw.print(method.method().getMethodName());
-                    pw.print(':'); //NOI18N
-                    pw.println(method.start().getOffset());
+                    for (TestMethodController.TestMethod method : entry.getValue()) {
+                        pw.print("method: "); //NOI18N
+                        pw.print(method.method().getMethodName());
+                        pw.print(':'); //NOI18N
+                        pw.print(method.start().getOffset());
+                        pw.print('-'); //NOI18N
+                        pw.println(method.end().getOffset());
+                    }
                 }
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
@@ -120,9 +135,6 @@ public final class TestMethodFinderImpl extends EmbeddingIndexer {
 
         @Override
         public EmbeddingIndexer createIndexer(Indexable indexable, Snapshot snapshot) {
-            if (INSTANCE == null) {
-                INSTANCE = new TestMethodFinderImpl();
-            }
             return INSTANCE;
         }
 

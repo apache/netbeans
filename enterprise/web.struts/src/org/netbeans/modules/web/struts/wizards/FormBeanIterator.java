@@ -113,7 +113,7 @@ public class FormBeanIterator implements TemplateWizard.Iterator {
             if (steps[i] == null) {
                 steps[i] = jc.getName ();
             }
-	    jc.putClientProperty (WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer (i)); // NOI18N 
+	    jc.putClientProperty (WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i); // NOI18N 
 	    jc.putClientProperty (WizardDescriptor.PROP_CONTENT_DATA, steps); // NOI18N
 	}
     }
@@ -208,8 +208,8 @@ public class FormBeanIterator implements TemplateWizard.Iterator {
     }
     
     public String name () {
-        return NbBundle.getMessage (ActionIterator.class, "TITLE_x_of_y",   //NOI18N
-            new Integer (index + 1), new Integer (panels.length));
+        return NbBundle.getMessage (ActionIterator.class, "TITLE_x_of_y", //NOI18N
+                index + 1, panels.length);
     }
     
     public WizardDescriptor.Panel current () {

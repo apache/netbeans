@@ -584,10 +584,10 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
         d.putProperty(ProjectServerWizardPanel.JAR_NAME, jTextFieldEjbModuleName.getText());
         d.putProperty(ProjectServerWizardPanel.CAR_NAME, jTextFieldCarName.getText());
         d.putProperty(ProjectServerWizardPanel.MAIN_CLASS, J2eeModule.Type.CAR.equals(j2eeModuleType) ? mainClassTextField.getText().trim() : mainClassTextFieldWithinEar.getText().trim()); // NOI18N
-        d.putProperty(ProjectServerWizardPanel.CREATE_WAR, Boolean.valueOf(createWARCheckBox.isVisible() ? createWARCheckBox.isSelected() : false));
-        d.putProperty(ProjectServerWizardPanel.CREATE_JAR, Boolean.valueOf(createEjbCheckBox.isVisible() ? createEjbCheckBox.isSelected() : false));
-        d.putProperty(ProjectServerWizardPanel.CREATE_CAR, Boolean.valueOf(createCarCheckBox.isVisible() ? createCarCheckBox.isSelected() : false));
-        d.putProperty(ProjectServerWizardPanel.CDI, Boolean.valueOf(cdiCheckbox.isVisible() && cdiCheckbox.isSelected()));
+        d.putProperty(ProjectServerWizardPanel.CREATE_WAR, createWARCheckBox.isVisible() ? createWARCheckBox.isSelected() : false);
+        d.putProperty(ProjectServerWizardPanel.CREATE_JAR, createEjbCheckBox.isVisible() ? createEjbCheckBox.isSelected() : false);
+        d.putProperty(ProjectServerWizardPanel.CREATE_CAR, createCarCheckBox.isVisible() ? createCarCheckBox.isSelected() : false);
+        d.putProperty(ProjectServerWizardPanel.CDI, cdiCheckbox.isVisible() && cdiCheckbox.isSelected());
         d.putProperty(ProjectServerWizardPanel.SOURCE_LEVEL, getSourceLevel(d, serverInstanceId, j2ee));
     }
 

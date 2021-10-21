@@ -43,6 +43,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -173,15 +174,24 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             case Server.JAVA_GET_PROJECT_PACKAGES: {
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 boolean srcOnly = params.getArguments().size() > 1 ? ((JsonPrimitive) params.getArguments().get(1)).getAsBoolean() : false;
-                return getSourceRoots(uri, JavaProjectConstants.SOURCES_TYPE_JAVA).thenApply(roots -> {
-                    HashSet<String> packages = new HashSet<>();
-                    EnumSet<ClassIndex.SearchScope> scope = srcOnly ? EnumSet.of(ClassIndex.SearchScope.SOURCE) : EnumSet.allOf(ClassIndex.SearchScope.class);
-                    for(FileObject root : roots) {
-                        packages.addAll(ClasspathInfo.create(root).getClassIndex().getPackageNames("", false, scope));
+                return getSourceRoots(uri, JavaProjectConstants.SOURCES_TYPE_JAVA).thenCompose(roots -> {
+                    CompletableFuture<Object> future = new CompletableFuture<>();
+                    JavaSource js = JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY));
+                    try {
+                        js.runWhenScanFinished(controller -> {
+                            HashSet<String> packages = new HashSet<>();
+                            EnumSet<ClassIndex.SearchScope> scope = srcOnly ? EnumSet.of(ClassIndex.SearchScope.SOURCE) : EnumSet.allOf(ClassIndex.SearchScope.class);
+                            for(FileObject root : roots) {
+                                packages.addAll(ClasspathInfo.create(root).getClassIndex().getPackageNames("", false, scope));
+                            }
+                            ArrayList<String> ret = new ArrayList<>(packages);
+                            Collections.sort(ret);
+                            future.complete(ret);
+                        }, true);
+                    } catch (IOException ex) {
+                        future.completeExceptionally(ex);
                     }
-                    ArrayList<String> ret = new ArrayList<>(packages);
-                    Collections.sort(ret);
-                    return ret;
+                    return future;
                 });
             }
             case Server.JAVA_LOAD_WORKSPACE_TESTS: {
@@ -201,38 +211,39 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     JavaSource js = JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY));
                     try {
                         js.runWhenScanFinished(controller -> {
-                            BiFunction<FileObject, Collection<TestMethodController.TestMethod>, TestSuiteInfo> f = (fo, methods) -> {
-                                List<TestSuiteInfo.TestCaseInfo> tests = new ArrayList<>(methods.size());
+                            BiFunction<FileObject, Collection<TestMethodController.TestMethod>, Collection<TestSuiteInfo>> f = (fo, methods) -> {
                                 String url = Utils.toUri(fo);
-                                String testClassName = null;
-                                Integer testClassLine = null;
+                                Map<String, TestSuiteInfo> suite2infos = new LinkedHashMap<>();
                                 for (TestMethodController.TestMethod testMethod : methods) {
-                                    if (testClassName == null) {
-                                        testClassName = testMethod.getTestClassName();
-                                    }
-                                    if (testClassLine == null) {
-                                        testClassLine = testMethod.getTestClassPosition() != null
-                                                ? Utils.createPosition(fo, testMethod.getTestClassPosition().getOffset()).getLine()
-                                                : null;
-                                    }
+                                    TestSuiteInfo suite = suite2infos.computeIfAbsent(testMethod.getTestClassName(), name -> {
+                                        Position pos = testMethod.getTestClassPosition() != null ? Utils.createPosition(fo, testMethod.getTestClassPosition().getOffset()) : null;
+                                        return new TestSuiteInfo(name, url, pos != null ? new Range(pos, pos) : null, TestSuiteInfo.State.Loaded, new ArrayList<>());
+                                    });
                                     String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
-                                    String fullName = testMethod.getTestClassName() + '.' + testMethod.method().getMethodName();
-                                    int testLine = Utils.createPosition(fo, testMethod.start().getOffset()).getLine();
-                                    tests.add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), fullName, url, testLine, TestSuiteInfo.State.Loaded, null));
+                                    Position startPos = testMethod.start() != null ? Utils.createPosition(fo, testMethod.start().getOffset()) : null;
+                                    Position endPos = testMethod.end() != null ? Utils.createPosition(fo, testMethod.end().getOffset()) : startPos;
+                                    Range range = startPos != null ? new Range(startPos, endPos) : null;
+                                    suite.getTests().add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), url, range, TestSuiteInfo.State.Loaded, null));
                                 }
-                                return new TestSuiteInfo(testClassName, url, testClassLine, TestSuiteInfo.State.Loaded, tests);
+                                return suite2infos.values();
                             };
                             testMethodsListener.compareAndSet(null, (fo, methods) -> {
+                                Logger.getLogger(WorkspaceServiceImpl.class.getName()).info("FileObject reindexed: " + fo.getPath());
                                 try {
-                                    client.notifyTestProgress(new TestProgressParams(Utils.toUri(fo), f.apply(fo, methods)));
+                                    for (TestSuiteInfo testSuiteInfo : f.apply(fo, methods)) {
+                                        client.notifyTestProgress(new TestProgressParams(Utils.toUri(fo), testSuiteInfo));
+                                    }
                                 } catch (Exception e) {
+                                    Logger.getLogger(WorkspaceServiceImpl.class.getName()).severe(e.getMessage());
+                                    Exceptions.printStackTrace(e);
                                     testMethodsListener.set(null);
                                 }
                             });
+                            Logger.getLogger(WorkspaceServiceImpl.class.getName()).info("Attaching listener: " + testMethodsListener.get());
                             Map<FileObject, Collection<TestMethodController.TestMethod>> testMethods = TestMethodFinder.findTestMethods(testRoots, testMethodsListener.get());
                             Collection<TestSuiteInfo> suites = new ArrayList<>(testMethods.size());
                             for (Entry<FileObject, Collection<TestMethodController.TestMethod>> entry : testMethods.entrySet()) {
-                                suites.add(f.apply(entry.getKey(), entry.getValue()));
+                                suites.addAll(f.apply(entry.getKey(), entry.getValue()));
                             }
                             future.complete(suites);
                         }, true);

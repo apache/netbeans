@@ -52,6 +52,18 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="TestSession_finishSuite">
+        <api name="CommonTestrunnerAPI"/>
+        <summary>TestSession.finishSuite method added</summary>
+        <version major="2" minor="26"/>
+        <date day="8" month="10" year="2021"/>
+        <author login="dbalek"/>
+        <compatibility addition="yes"/>
+        <description>
+            TestSession.finishSuite() method added.
+        </description>
+        <class package="org.netbeans.modules.gsf.testrunner.api" name="TestSession"/>
+    </change>
     <change id="CommonTestrunnerAPI_Public">
         <api name="CommonTestrunnerAPI"/>
         <summary>Common Test Runner API made public</summary>

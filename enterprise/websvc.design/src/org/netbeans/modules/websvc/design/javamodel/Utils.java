@@ -857,13 +857,13 @@ public class Utils {
                                 Properties props = WSUtils.identifyWsimport(
                                         support.getAntProjectHelper());
                                 ExecutorTask wsimportTask =
-                                    ActionUtils.runTarget(buildImplFo,
-                                    new String[]{"wsimport-service-clean-"+serviceName,
-                                            "wsimport-service-"+serviceName},props); //NOI18N                                       ActionUtils.runTarget(buildImplFo,new String[]{"wsimport-client-"+finalName,"wsimport-client-compile" },null); //NOI18N
+                                        ActionUtils.runTarget(buildImplFo,
+                                                new String[]{"wsimport-service-clean-"+serviceName,
+                                                    "wsimport-service-"+serviceName},props); //NOI18N                                       ActionUtils.runTarget(buildImplFo,new String[]{"wsimport-client-"+finalName,"wsimport-client-compile" },null); //NOI18N
                                 wsimportTask.waitFinished();
                                 return Boolean.TRUE;
                             }
-                        }).booleanValue();
+                        });
                     } catch (MutexException e) {
                         ErrorManager.getDefault().log(e.getLocalizedMessage());
                     }

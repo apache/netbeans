@@ -19,7 +19,35 @@ Searchable Keys:
   field : updateNotes;java.lang.Object;00;true
   fqn : BookmarkController
   method : addTags(Bookmark);java.lang.Object;02
+  method : getCreate;java.lang.Object;01
+  method : getDelete;java.lang.Object;01
+  method : getDeliciousService;DeliciousService;01
+  method : getEdit;java.lang.Object;01
+  method : getList;java.lang.Object;01
+  method : getMetaClass;groovy.lang.MetaClass;01
+  method : getParams;java.util.Map;01
+  method : getPreview;java.lang.Object;01
+  method : getSave;java.lang.Object;01
+  method : getScaffold;java.lang.Object;01
+  method : getSearch;java.lang.Object;01
+  method : getSuggestTag;java.lang.Object;01
   method : getSuggestions(java.lang.Object,java.lang.Object);java.lang.Object;02
+  method : getUpdate;java.lang.Object;01
+  method : getUpdateNotes;java.lang.Object;01
   method : printParams(java.lang.Object,java.lang.Object);java.lang.Object;02
+  method : setCreate(java.lang.Object);void;01
+  method : setDelete(java.lang.Object);void;01
+  method : setDeliciousService(DeliciousService);void;01
+  method : setEdit(java.lang.Object);void;01
+  method : setList(java.lang.Object);void;01
+  method : setMetaClass(groovy.lang.MetaClass);void;01
+  method : setParams(java.util.Map);void;01
+  method : setPreview(java.lang.Object);void;01
+  method : setSave(java.lang.Object);void;01
+  method : setScaffold(java.lang.Object);void;01
+  method : setSearch(java.lang.Object);void;01
+  method : setSuggestTag(java.lang.Object);void;01
+  method : setUpdate(java.lang.Object);void;01
+  method : setUpdateNotes(java.lang.Object);void;01
 
 Not Searchable Keys:

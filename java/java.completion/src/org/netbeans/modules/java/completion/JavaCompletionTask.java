@@ -523,6 +523,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     insideSwitch(env);
                 } else if (TreeShims.isRecord(path.getLeaf())) {
                     insideRecord(env);
+                } else if (path.getLeaf().getKind().toString().equals("DEFAULT_CASE_LABEL")) {
+                    localResult(env);
+                    addKeywordsForBlock(env);
                 }
                 break;
         }

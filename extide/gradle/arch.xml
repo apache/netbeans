@@ -156,6 +156,20 @@
          If passing more arguments, the whole -P must be properly quoted. Arguments that contain spaces must
          also use quoting or escapes.
      </api>
+     <api category="friend" group="property" name="runWorkingDir" type="export">
+         NetBeans Tooling plugin recognizes <code>runWorkingDir</code> project property, and injects
+         specified working directory into JavaExec executing the user code. Use <code>-PrunWorkingDir=...</code>.
+         If the working directory contain spaces, it must also use quoting or escapes.
+     </api>
+     <api category="friend" group="property" name="runEnvironment" type="export">
+         NetBeans Tooling plugin recognizes <code>runEnvironment</code> project property, and injects
+         specified environmental variables into JavaExec executing the user code. Use <code>-PrunEnvironment=...</code>.
+         The value consists of expressions of <code>VAR_NAME=VAR_VALUE</code>, or <code>!VAR_NAME</code>.
+         The <code>VAR_NAME=VAR_VALUE</code> sets environment variable <code>VAR_NAME</code> to value <code>VAR_VALUE</code>
+         and <code>!VAR_NAME</code> removes variable <code>VAR_NAME</code> from the set of environment variables.
+         If passing more arguments, the whole -P must be properly quoted. Variables whose values contain spaces must
+         also use quoting or escapes.
+     </api>
  </answer>
 
  <answer id="resources-file">

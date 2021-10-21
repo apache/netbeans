@@ -78,6 +78,7 @@ import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.api.debugger.jpda.Variable;
 import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable;
 import org.netbeans.modules.java.lsp.server.LspSession;
+import org.netbeans.modules.java.lsp.server.URITranslator;
 import org.netbeans.modules.java.lsp.server.debugging.breakpoints.NbBreakpointsRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.attach.NbAttachRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDebugSession;
@@ -288,49 +289,54 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
         if (context.getDebugSession() == null) {
             ErrorUtilities.completeExceptionally(future, "Debug Session doesn't exist.", ResponseErrorCode.InvalidParams);
         } else {
-            List<StackFrame> result = new ArrayList<>();
-            int cnt = 0;
-            DVThread dvThread = context.getThreadsProvider().getThread(args.getThreadId());
-            if (dvThread != null) {
-                cnt = dvThread.getFrameCount();
-                int from = args.getStartFrame() != null ? args.getStartFrame() : 0;
-                int to = args.getLevels() != null ? from + args.getLevels() : Integer.MAX_VALUE;
-                List<DVFrame> stackFrames = dvThread.getFrames(from, to);
-                for (DVFrame frame : stackFrames) {
-                    int frameId = context.getThreadsProvider().getThreadObjects().addObject(args.getThreadId(), new NbFrame(args.getThreadId(), frame));
-                    int line = frame.getLine();
-                    if (line < 0) { // unknown
-                        line = 0;
-                    }
-                    int column = frame.getColumn();
-                    if (column < 0) { // unknown
-                        column = 0;
-                    }
-                    StackFrame stackFrame = new StackFrame();
-                    stackFrame.setId(frameId);
-                    stackFrame.setName(frame.getName());
-                    URI sourceURI = frame.getSourceURI();
-                    if (sourceURI != null) {
-                        Source source = new Source();
-                        String scheme = sourceURI.getScheme();
-                        if (null == scheme || scheme.isEmpty() || "file".equalsIgnoreCase(scheme)) {
-                            source.setName(Paths.get(sourceURI).getFileName().toString());
-                            source.setPath(sourceURI.getPath());
-                            source.setSourceReference(0);
-                        } else {
-                            int ref = context.createSourceReference(sourceURI, frame.getSourceMimeType());
-                            String path = sourceURI.getPath();
-                            if (path == null) {
-                                path = sourceURI.getSchemeSpecificPart();
-                            }
-                            if (path != null) {
-                                int sepIndex = Math.max(path.lastIndexOf('/'), path.lastIndexOf(File.separatorChar));
-                                source.setName(path.substring(sepIndex + 1));
-                                if ("jar".equalsIgnoreCase(scheme)) {
-                                    try {
-                                        path = new URI(path).getPath();
-                                    } catch (URISyntaxException ex) {
-                                        // ignore, we just tried
+            return CompletableFuture.supplyAsync(() -> {
+                LOGGER.log(LOGLEVEL, "stackTrace() START");
+                long t1 = System.nanoTime();
+                List<StackFrame> result = new ArrayList<>();
+                int cnt = 0;
+                DVThread dvThread = context.getThreadsProvider().getThread(args.getThreadId());
+                if (dvThread != null) {
+                    cnt = dvThread.getFrameCount();
+                    int from = args.getStartFrame() != null ? args.getStartFrame() : 0;
+                    int to = args.getLevels() != null ? from + args.getLevels() : Integer.MAX_VALUE;
+                    List<DVFrame> stackFrames = dvThread.getFrames(from, to);
+                    for (DVFrame frame : stackFrames) {
+                        int frameId = context.getThreadsProvider().getThreadObjects().addObject(args.getThreadId(), new NbFrame(args.getThreadId(), frame));
+                        int line = frame.getLine();
+                        if (line < 0) { // unknown
+                            line = 0;
+                        }
+                        int column = frame.getColumn();
+                        if (column < 0) { // unknown
+                            column = 0;
+                        }
+                        StackFrame stackFrame = new StackFrame();
+                        stackFrame.setId(frameId);
+                        stackFrame.setName(frame.getName());
+                        URI sourceURI = frame.getSourceURI();
+                        if (sourceURI != null) {
+                            sourceURI = URI.create(URITranslator.getDefault().uriToLSP(sourceURI.toString()));
+                            Source source = new Source();
+                            String scheme = sourceURI.getScheme();
+                            if (null == scheme || scheme.isEmpty() || "file".equalsIgnoreCase(scheme)) {
+                                source.setName(Paths.get(sourceURI).getFileName().toString());
+                                source.setPath(sourceURI.getPath());
+                                source.setSourceReference(0);
+                            } else {
+                                int ref = context.createSourceReference(sourceURI, frame.getSourceMimeType());
+                                String path = sourceURI.getPath();
+                                if (path == null) {
+                                    path = sourceURI.getSchemeSpecificPart();
+                                }
+                                if (path != null) {
+                                    int sepIndex = Math.max(path.lastIndexOf('/'), path.lastIndexOf(File.separatorChar));
+                                    source.setName(path.substring(sepIndex + 1));
+                                    if ("jar".equalsIgnoreCase(scheme)) {
+                                        try {
+                                            path = new URI(path).getPath();
+                                        } catch (URISyntaxException ex) {
+                                            // ignore, we just tried
+                                        }
                                     }
                                 }
                                 source.setPath(path);

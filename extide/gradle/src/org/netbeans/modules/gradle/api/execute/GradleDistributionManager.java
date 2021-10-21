@@ -96,6 +96,7 @@ public final class GradleDistributionManager {
         GradleVersion.version("6.3"), // JDK-14
         GradleVersion.version("6.7"), // JDK-15
         GradleVersion.version("7.0"), // JDK-16
+        GradleVersion.version("7.2"), // JDK-17
     };
     private static final int JAVA_VERSION;
 
@@ -152,7 +153,7 @@ public final class GradleDistributionManager {
         File[] gradleLauncher = lib.listFiles((dir, name) -> {
             return name.startsWith("gradle-launcher-") && name.endsWith(".jar"); //NOI18N
         });
-        if (gradleLauncher.length != 1) {
+        if ((gradleLauncher == null) || (gradleLauncher.length != 1)) {
             throw new FileNotFoundException(lib.getAbsolutePath() + "lib/gradle-launcher-xxxx.jar not found or ambigous!"); //NOI18N
         }
         JarFile launcherJar = new JarFile(gradleLauncher[0]);
@@ -359,7 +360,7 @@ public final class GradleDistributionManager {
     File distributionBaseDir(URI downloadLocation, String version) {
         WrapperConfiguration conf = new WrapperConfiguration();
         conf.setDistribution(downloadLocation);
-        PathAssembler pa = new PathAssembler(gradleUserHome);
+        PathAssembler pa = new PathAssembler(gradleUserHome, null);
         PathAssembler.LocalDistribution dist = pa.getDistribution(conf);
         return new File(dist.getDistributionDir(), "gradle-" + version);
     }
@@ -565,7 +566,7 @@ public final class GradleDistributionManager {
             try {
                 WrapperConfiguration conf = new WrapperConfiguration();
                 conf.setDistribution(dist.getDistributionURI());
-                PathAssembler pa = new PathAssembler(gradleUserHome);
+                PathAssembler pa = new PathAssembler(gradleUserHome, null);
                 Install install = new Install(new Logger(true), this, pa);
                 install.createDist(conf);
             } catch (Exception ex) {

@@ -494,7 +494,7 @@ public final class SAXGeneratorSupport implements XMLGenerateCookie {
                         ClassTree modifiedClass = genUtils.addImplementsClause(javaClass, interfaceName);
                         
                         //add private class fields
-                        List varTree = new ArrayList();
+                        List<VariableTree> varTree = new ArrayList<>();
                         ModifiersTree mods = make.Modifiers(EnumSet.of(Modifier.PRIVATE));
                         Tree tree = make.Identifier(face);
                         VariableTree var = make.Variable(mods, "handler", tree, null);
@@ -531,7 +531,7 @@ public final class SAXGeneratorSupport implements XMLGenerateCookie {
                         sb.append("}");
                         
                         mods = make.Modifiers(EnumSet.of(Modifier.FINAL));
-                        varTree = new ArrayList();
+                        varTree = new ArrayList<>();
                         if (model.hasParslets()) {
                             tree = make.Identifier(face);
                             var = make.Variable(mods, "handler", tree, null);

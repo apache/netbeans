@@ -378,7 +378,7 @@ public class NbBundleProcessor extends AbstractProcessor {
                 }
             }
         }
-        processingEnv.getMessager().printMessage(Kind.WARNING, "Undocumented format parameter {" + i + "}", e, mirror, value);
+        processingEnv.getMessager().printMessage(Kind.WARNING, "Undocumented format parameter {" + i + "} prepend line: # {" + i + "} - some text,", e, mirror, value);
     }
 
 }

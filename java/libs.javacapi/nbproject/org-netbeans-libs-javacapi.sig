@@ -327,6 +327,8 @@ meth public com.sun.source.tree.CaseTree$CaseKind getCaseKind()
  anno 0 java.lang.Deprecated()
 meth public com.sun.source.tree.Tree getBody()
  anno 0 java.lang.Deprecated()
+meth public abstract java.util.List getLabels()
+ anno 0 jdk.internal.PreviewFeature(boolean reflective=true, jdk.internal.PreviewFeature$Feature feature=SWITCH_PATTERN_MATCHING)
 
 CLSS public final static !enum com.sun.source.tree.CaseTree$CaseKind
  outer com.sun.source.tree.CaseTree
@@ -806,6 +808,12 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitVariable(com.sun.s
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitParenthesizedPattern(com.sun.source.tree.ParenthesizedPatternTree,{com.sun.source.tree.TreeVisitor%1})
+ anno 0 jdk.internal.PreviewFeature(boolean reflective=true, jdk.internal.PreviewFeature$Feature feature=SWITCH_PATTERN_MATCHING)
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitGuardedPattern(com.sun.source.tree.GuardedPatternTree,{com.sun.source.tree.TreeVisitor%1})
+ anno 0 jdk.internal.PreviewFeature(boolean reflective=true, jdk.internal.PreviewFeature$Feature feature=SWITCH_PATTERN_MATCHING)
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitDefaultCaseLabel(com.sun.source.tree.DefaultCaseLabelTree,{com.sun.source.tree.TreeVisitor%1})
+ anno 0 jdk.internal.PreviewFeature(boolean reflective=true, jdk.internal.PreviewFeature$Feature feature=SWITCH_PATTERN_MATCHING)
 
 CLSS public abstract interface com.sun.source.tree.TryTree
 intf com.sun.source.tree.StatementTree
@@ -1135,6 +1143,12 @@ meth public {com.sun.source.util.SimpleTreeVisitor%0} visitVariable(com.sun.sour
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.util.SimpleTreeVisitor%1})
+meth public {com.sun.source.util.SimpleTreeVisitor%0} visitParenthesizedPattern(com.sun.source.tree.ParenthesizedPatternTree,{com.sun.source.util.SimpleTreeVisitor%1})
+ anno 0 jdk.internal.PreviewFeature(boolean reflective=true, jdk.internal.PreviewFeature$Feature feature=SWITCH_PATTERN_MATCHING)
+meth public {com.sun.source.util.SimpleTreeVisitor%0} visitGuardedPattern(com.sun.source.tree.GuardedPatternTree,{com.sun.source.util.SimpleTreeVisitor%1})
+ anno 0 jdk.internal.PreviewFeature(boolean reflective=true, jdk.internal.PreviewFeature$Feature feature=SWITCH_PATTERN_MATCHING)
+meth public {com.sun.source.util.SimpleTreeVisitor%0} visitDefaultCaseLabel(com.sun.source.tree.DefaultCaseLabelTree,{com.sun.source.util.SimpleTreeVisitor%1})
+ anno 0 jdk.internal.PreviewFeature(boolean reflective=true, jdk.internal.PreviewFeature$Feature feature=SWITCH_PATTERN_MATCHING)
 supr java.lang.Object
 
 CLSS public abstract interface com.sun.source.util.SourcePositions
@@ -1262,6 +1276,10 @@ meth public {com.sun.source.util.TreeScanner%0} visitVariable(com.sun.source.tre
 meth public {com.sun.source.util.TreeScanner%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitParenthesizedPattern(com.sun.source.tree.ParenthesizedPatternTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitGuardedPattern(com.sun.source.tree.GuardedPatternTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitDefaultCaseLabel(com.sun.source.tree.DefaultCaseLabelTree,{com.sun.source.util.TreeScanner%1})
+ anno 0 jdk.internal.PreviewFeature(boolean reflective=true, jdk.internal.PreviewFeature$Feature feature=SWITCH_PATTERN_MATCHING)
 supr java.lang.Object
 
 CLSS public abstract com.sun.source.util.Trees

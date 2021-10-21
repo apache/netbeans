@@ -407,7 +407,7 @@ public abstract class JavaEEMavenTestBase extends NbTestCase {
             return false;
         }
 
-        return webInf.getFileObject(WEB_XML) != null ? true : false;
+        return webInf.getFileObject(WEB_XML) != null;
     }
 
     protected boolean isWebDDpresent(Project project) {

@@ -71,32 +71,7 @@ suite('Extension Test Suite', () => {
     async function demo(where: number) {
         let folder: string = assertWorkspace();
 
-        await fs.promises.writeFile(path.join(folder, 'pom.xml'), `
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.netbeans.demo.vscode.t1</groupId>
-    <artifactId>basicapp</artifactId>
-    <version>1.0</version>
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
-</project>
-		`);
-
-        let pkg = path.join(folder, 'src', 'main', 'java', 'pkg');
-        let mainJava = path.join(pkg, 'Main.java');
-
-        await fs.promises.mkdir(pkg, { recursive: true });
-
-        await fs.promises.writeFile(mainJava, `
-package pkg;
-class Main {
-	public static void main(String... args) {
-		System.out.println("Hello World!");
-	}
-}
-		`);
+        await prepareProject(folder);
 
         vscode.workspace.saveAll();
 
@@ -131,42 +106,14 @@ class Main {
     async function mavenTerminateWithoutDebugger() {
         let folder: string = assertWorkspace();
 
-        await fs.promises.writeFile(path.join(folder, 'pom.xml'), `
-    <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.netbeans.demo.vscode.t1</groupId>
-    <artifactId>basicapp</artifactId>
-    <version>1.0</version>
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
-    </project>
-        `);
+        await prepareProject(folder);
 
-        let pkg = path.join(folder, 'src', 'main', 'java', 'pkg');
-        let mainJava = path.join(pkg, 'Main.java');
-
-        await fs.promises.mkdir(pkg, { recursive: true });
-
-        await fs.promises.writeFile(mainJava, `
-    package pkg;
-    class Main {
-    public static void main(String... args) throws Exception {
-        System.out.println("Endless wait...");
-        while (true) {
-            Thread.sleep(1000);
-        }
-    }
-    }
-        `);
         vscode.workspace.saveAll();
-        let u : Uri = vscode.Uri.file(mainJava);
+        let u : Uri = vscode.Uri.file(path.join(folder, 'src', 'main', 'java', 'pkg', 'Main.java'));
         let doc : TextDocument = await vscode.workspace.openTextDocument(u);
         let e : TextEditor = await vscode.window.showTextDocument(doc);
 
         try {
-            let terminated = false;
             let r = new Promise((resolve, reject) => {
                 function waitUserApplication(cnt : number, running: boolean, cb : () => void) {
                     ps.lookup({
@@ -210,34 +157,7 @@ class Main {
     async function getProjectInfo() {
         let folder: string = assertWorkspace();
 
-        await fs.promises.writeFile(path.join(folder, 'pom.xml'), `
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.netbeans.demo.vscode.t1</groupId>
-    <artifactId>basicapp</artifactId>
-    <version>1.0</version>
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
-</project>
-		`);
-
-        let pkg = path.join(folder, 'src', 'main', 'java', 'pkg');
-        let resources = path.join(folder, 'src', 'main', 'resources');
-        let mainJava = path.join(pkg, 'Main.java');
-
-        await fs.promises.mkdir(pkg, { recursive: true });
-        await fs.promises.mkdir(resources, { recursive: true });
-
-        await fs.promises.writeFile(mainJava, `
-package pkg;
-class Main {
-	public static void main(String... args) {
-		System.out.println("Hello World!");
-	}
-}
-		`);
+        await prepareProject(folder);
 
         vscode.workspace.saveAll();
 
@@ -245,30 +165,33 @@ class Main {
             console.log("Test: get project java source roots");
             let res: any = await vscode.commands.executeCommand("java.get.project.source.roots", Uri.file(folder).toString());
             console.log(`Test: get project java source roots finished with ${res}`);
-            assert.ok(res, "No java source root rertuned");
-            assert.strictEqual(res.length, 1, `Invalid number of java roots returned`);
-            assert.strictEqual(res[0], path.join('file:', folder, 'src', 'main', 'java') + path.sep, `Invalid java source root returned`);
+            assert.ok(res, "No java source root returned");
+            assert.strictEqual(res.length, 2, `Invalid number of java roots returned`);
+            assert.strictEqual(res[0], path.join('file:', folder, 'src', 'main', 'java') + path.sep, `Invalid java main source root returned`);
+            assert.strictEqual(res[1], path.join('file:', folder, 'src', 'test', 'java') + path.sep, `Invalid java test source root returned`);
 
             console.log("Test: get project resource roots");
             res = await vscode.commands.executeCommand("java.get.project.source.roots", Uri.file(folder).toString(), 'resources');
             console.log(`Test: get project resource roots finished with ${res}`);
             assert.ok(res, "No resource root returned");
             assert.strictEqual(res.length, 1, `Invalid number of resource roots returned`);
-            assert.strictEqual(res[0], path.join('file:', resources) + path.sep, `Invalid resource root returned`);
+            assert.strictEqual(res[0], path.join('file:', folder, 'src', 'main', 'resources') + path.sep, `Invalid resource root returned`);
 
             console.log("Test: get project compile classpath");
             res = await vscode.commands.executeCommand("java.get.project.classpath", Uri.file(folder).toString());
             console.log(`Test: get project compile classpath finished with ${res}`);
             assert.ok(res, "No compile classpath returned");
-            assert.strictEqual(res.length, 1, `Invalid number of compile classpath roots returned`);
-            assert.strictEqual(res[0], path.join('file:', folder, 'target', 'classes') + path.sep, `Invalid compile classpath root returned`);
+            assert.strictEqual(res.length, 9, `Invalid number of compile classpath roots returned`);
+            assert.ok(res.find((item: any) => item === path.join('file:', folder, 'target', 'classes') + path.sep, `Invalid compile classpath root returned`));
 
             console.log("Test: get project source classpath");
             res = await vscode.commands.executeCommand("java.get.project.classpath", Uri.file(folder).toString(), 'SOURCE');
             console.log(`Test: get project source classpath finished with ${res}`);
             assert.ok(res, "No source classpath returned");
-            assert.strictEqual(res.length, 1, `Invalid number of source classpath roots returned`);
-            assert.strictEqual(res[0], path.join('file:', folder, 'src', 'main', 'java') + path.sep, `Invalid source classpath root returned`);
+            assert.strictEqual(res.length, 3, `Invalid number of source classpath roots returned`);
+            assert.ok(res.find((item: any) => item === path.join('file:', folder, 'src', 'main', 'java') + path.sep, `Invalid source classpath root returned`));
+            assert.ok(res.find((item: any) => item === path.join('file:', folder, 'src', 'main', 'resources') + path.sep, `Invalid source classpath root returned`));
+            assert.ok(res.find((item: any) => item === path.join('file:', folder, 'src', 'test', 'java') + path.sep, `Invalid source classpath root returned`));
 
             console.log("Test: get project boot classpath");
             res = await vscode.commands.executeCommand("java.get.project.classpath", Uri.file(folder).toString(), 'BOOT');
@@ -302,6 +225,37 @@ class Main {
 
     test("Get project sources, classpath, and packages", async() => getProjectInfo());
 
+    async function testExplorerTests() {
+        let folder: string = assertWorkspace();
+
+        await prepareProject(folder);
+
+        vscode.workspace.saveAll();
+
+        try {
+            console.log("Test: load workspace tests");
+            let tests: any = await vscode.commands.executeCommand("java.load.workspace.tests", Uri.file(folder).toString());
+            console.log(`Test: load workspace tests finished with ${tests}`);
+            assert.ok(tests, "No tests returned for workspace");
+            assert.strictEqual(tests.length, 2, `Invalid number of test suites returned`);
+            assert.strictEqual(tests[0].name, 'pkg.MainTest', `Invalid test suite name returned`);
+            assert.strictEqual(tests[0].tests.length, 1, `Invalid number of tests in suite returned`);
+            assert.strictEqual(tests[0].tests[0].name, 'testGetName', `Invalid test name returned`);
+            assert.strictEqual(tests[1].name, 'pkg.MainTest$NestedTest', `Invalid test suite name returned`);
+            assert.strictEqual(tests[1].tests.length, 1, `Invalid number of tests in suite returned`);
+            assert.strictEqual(tests[1].tests[0].name, 'testTrue', `Invalid test name returned`);
+
+            console.log("Test: run all workspace tests");
+            const workspaceFolder = (vscode.workspace.workspaceFolders!)[0];
+            await vscode.commands.executeCommand('java.run.test', workspaceFolder.uri.toString());
+            console.log(`Test: run all workspace tests finished`);
+        } catch (error) {
+            dumpJava();
+            throw error;
+        }
+    }
+
+    test("Test Explorer tests", async() => testExplorerTests());
 });
 
 function assertWorkspace(): string {
@@ -311,6 +265,93 @@ function assertWorkspace(): string {
     assert.strictEqual(dirs.length, 1, "One folder provided");
     let folder: string = dirs[0].uri.fsPath;
     return folder;
+}
+
+async function prepareProject(folder: string) {
+    await fs.promises.writeFile(path.join(folder, 'pom.xml'), `
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion>
+<groupId>org.netbeans.demo.vscode.t1</groupId>
+<artifactId>basicapp</artifactId>
+<version>1.0</version>
+<properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+</properties>
+<build>
+<plugins>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.22.0</version>
+    </plugin>
+</plugins>
+</build>
+<dependencies>
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-api</artifactId>
+    <version>5.3.1</version>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-params</artifactId>
+    <version>5.3.1</version>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-engine</artifactId>
+    <version>5.3.1</version>
+    <scope>test</scope>
+</dependency>
+</dependencies>
+</project>
+            `);
+
+            let pkg = path.join(folder, 'src', 'main', 'java', 'pkg');
+            let testPkg = path.join(folder, 'src', 'test', 'java', 'pkg');
+            let resources = path.join(folder, 'src', 'main', 'resources');
+            let mainJava = path.join(pkg, 'Main.java');
+            let mainTestJava = path.join(testPkg, 'MainTest.java');
+
+            await fs.promises.mkdir(pkg, { recursive: true });
+            await fs.promises.mkdir(resources, { recursive: true });
+            await fs.promises.mkdir(testPkg, { recursive: true });
+
+            await fs.promises.writeFile(mainJava, `
+package pkg;
+public class Main {
+    public static void main(String... args) throws Exception {
+        System.out.println("Endless wait...");
+        while (true) {
+            Thread.sleep(1000);
+        }
+    }
+    public String getName() {
+        return "John";
+    }
+}
+            `);
+
+            await fs.promises.writeFile(mainTestJava, `
+package pkg;
+import static org.junit.jupiter.api.Assertions.*;
+class MainTest {
+    @org.junit.jupiter.api.Test
+    public void testGetName() {
+        assertEquals("John", new Main().getName());
+    }
+    @org.junit.jupiter.api.Nested
+    class NestedTest {
+        @org.junit.jupiter.api.Test
+        public void testTrue() {
+            assertTrue(true);
+        }
+    }
+}
+            `);
 }
 
 async function dumpJava() {

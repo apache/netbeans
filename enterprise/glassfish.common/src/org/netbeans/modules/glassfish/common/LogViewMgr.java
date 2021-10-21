@@ -373,7 +373,7 @@ public class LogViewMgr {
         }
         if(setClosedMethod != null) {
             try {
-                setClosedMethod.invoke(io, Boolean.valueOf(closed));
+                setClosedMethod.invoke(io, closed);
             } catch (Exception ex) {
                 if(LOGGER.isLoggable(Level.FINER)) {
                     LOGGER.log(Level.FINER, "invokeSetClosed", ex); // NOI18N

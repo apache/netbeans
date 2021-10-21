@@ -24,7 +24,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import org.netbeans.modules.payara.tooling.data.JDKVersion;
 import org.openide.util.Exceptions;
 
 /**

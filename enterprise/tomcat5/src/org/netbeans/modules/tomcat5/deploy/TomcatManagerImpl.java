@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.tomcat5.deploy;
 
-import org.netbeans.modules.tomcat5.deploy.TomcatManager;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;

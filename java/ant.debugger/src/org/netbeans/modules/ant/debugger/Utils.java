@@ -355,7 +355,7 @@ public class Utils {
         if (line [0] == 0) return null;
 
         int ln = line [0] - 1;
-        List annotatables = new ArrayList ();
+        List<Annotatable> annotatables = new ArrayList<>();
         if (nextTargetName != null) {
             Line fLine = lineCookie.getLineSet ().getCurrent (ln);
             int inx = findIndexOf(fLine.getText (), nextTargetName);

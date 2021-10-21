@@ -118,7 +118,7 @@ public abstract class RulesEngine extends ElementKindVisitor8<Void, ProblemConte
     }
     
     @Override public Void visitUnknown(Element e, ProblemContext p) {
-        Logger.getLogger(getClass().getName()).log(Level.INFO, "Unknow element type: {0}.", e.getKind());
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "Unknown element type: {0}.", e.getKind());
         return null;
     }
     

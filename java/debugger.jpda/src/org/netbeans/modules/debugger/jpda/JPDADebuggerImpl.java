@@ -1876,20 +1876,17 @@ public class JPDADebuggerImpl extends JPDADebugger {
     }
     
     public void notifyToBeResumedAllNoFire(Set<ThreadReference> ignoredThreads) {
-        Collection threads = threadsTranslation.getTranslated();
-        for (Iterator it = threads.iterator(); it.hasNext(); ) {
-            Object threadOrGroup = it.next();
-            if (threadOrGroup instanceof JPDAThreadImpl &&
-                    (ignoredThreads == null || !ignoredThreads.contains(threadOrGroup))) {
-                int status = ((JPDAThreadImpl) threadOrGroup).getState();
-                boolean invalid = (status == JPDAThread.STATE_NOT_STARTED ||
-                                   status == JPDAThread.STATE_UNKNOWN ||
-                                   status == JPDAThread.STATE_ZOMBIE);
-                if (!invalid) {
-                    ((JPDAThreadImpl) threadOrGroup).notifyToBeResumedNoFire();
-                } else if (status == JPDAThread.STATE_UNKNOWN || status == JPDAThread.STATE_ZOMBIE) {
-                    threadsTranslation.remove(((JPDAThreadImpl) threadOrGroup).getThreadReference());
-                }
+        List<? extends JPDAThreadImpl> threads = threadsTranslation.getTranslated((o) ->
+                (o instanceof JPDAThreadImpl && (ignoredThreads == null || !ignoredThreads.contains(o))) ? (JPDAThreadImpl) o : null);
+        for (JPDAThreadImpl thread : threads) {
+            int status = thread.getState();
+            boolean invalid = (status == JPDAThread.STATE_NOT_STARTED ||
+                               status == JPDAThread.STATE_UNKNOWN ||
+                               status == JPDAThread.STATE_ZOMBIE);
+            if (!invalid) {
+                thread.notifyToBeResumedNoFire();
+            } else if (status == JPDAThread.STATE_UNKNOWN || status == JPDAThread.STATE_ZOMBIE) {
+                threadsTranslation.remove(thread.getThreadReference());
             }
         }
     }
@@ -1961,11 +1958,53 @@ public class JPDADebuggerImpl extends JPDADebugger {
             }
         }
         int n = threadList.size();
-        List<JPDAThread> threads = new ArrayList<JPDAThread>(n);
-        for (int i = 0; i < n; i++) {
-            threads.add(getThread(threadList.get(i)));
+       final List<ThreadReference> tl = threadList;
+
+        // Create threads in parallel.
+        // Constructor of JPDAThreadImpl calls getName() and getStatus(), which take time on slow connection during remote debugging.
+        JPDAThread[] threads = new JPDAThread[n];
+        if (n > 0) {
+            processInParallel(n, (i) -> {
+                JPDAThreadImpl thread = getThread(tl.get(i));
+                if (!thread.getName().contains(ThreadsCache.THREAD_NAME_FILTER_PATTERN)) {
+                    threads[i] = thread;
+                } else {
+                    threads[i] = null;
+                }
+            });
+            List<JPDAThread> threadsFiltered = new ArrayList<>(n);
+            for (JPDAThread t : threads) {
+                if (t != null) {
+                    threadsFiltered.add(t);
+                }
+            }
+            return Collections.unmodifiableList(threadsFiltered);
+        } else {
+            return Collections.emptyList();
+        final List<ThreadReference> tl = threadList;
+
+        // Create threads in parallel.
+        // Constructor of JPDAThreadImpl calls getName() and getStatus(), which take time on slow connection during remote debugging.
+        JPDAThread[] threads = new JPDAThread[n];
+        if (n > 0) {
+            processInParallel(n, (i) -> {
+                JPDAThreadImpl thread = getThread(tl.get(i));
+                if (!thread.getName().contains(ThreadsCache.THREAD_NAME_FILTER_PATTERN)) {
+                    threads[i] = thread;
+                } else {
+                    threads[i] = null;
+                }
+            });
+            List<JPDAThread> threadsFiltered = new ArrayList<>(n);
+            for (JPDAThread t : threads) {
+                if (t != null) {
+                    threadsFiltered.add(t);
+                }
+            }
+            return Collections.unmodifiableList(threadsFiltered);
+        } else {
+            return Collections.emptyList();
         }
-        return Collections.unmodifiableList(threads);
     }
 
     public JPDAThreadGroup[] getTopLevelThreadGroups() {

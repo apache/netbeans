@@ -457,7 +457,7 @@ public abstract class PageInfo {
 		throw new JspException(value);
 	    try {
 		Integer k = new Integer(value.substring(0, value.length()-2));
-		buffer = k.intValue() * 1024;
+		buffer = k * 1024;
 	    } catch (NumberFormatException e) {
                 throw new JspException(value);
 	    }

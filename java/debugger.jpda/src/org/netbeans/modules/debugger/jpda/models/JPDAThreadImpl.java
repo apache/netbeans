@@ -75,6 +75,7 @@ import org.netbeans.api.debugger.jpda.Variable;
 import org.netbeans.api.debugger.jpda.event.JPDABreakpointEvent;
 import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
 import org.netbeans.modules.debugger.jpda.SingleThreadWatcher;
+import org.netbeans.modules.debugger.jpda.impl.StepUtils;
 import org.netbeans.modules.debugger.jpda.jdi.IllegalThreadStateExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InvalidRequestStateExceptionWrapper;
@@ -128,8 +129,8 @@ public final class JPDAThreadImpl implements JPDAThread, Customizer, BeanContext
     private static final Logger logger = Logger.getLogger(JPDAThreadImpl.class.getName()); // NOI18N
     private static final Logger loggerS = Logger.getLogger(JPDAThreadImpl.class.getName()+".suspend"); // NOI18N
     
-    private ThreadReference     threadReference;
-    private JPDADebuggerImpl    debugger;
+    private final ThreadReference     threadReference;
+    private final JPDADebuggerImpl    debugger;
     /** Thread is suspended and everybody know about this. */
     private boolean             suspended;
     private boolean             suspendedOnAnEvent; // Suspended by an event that occured in this thread
@@ -1367,7 +1368,9 @@ public final class JPDAThreadImpl implements JPDAThread, Customizer, BeanContext
                             if (stepsToDelete == null) {
                                 stepsToDelete = new ArrayList<StepRequest>();
                             }
-                            stepsToDelete.add(sr);
+                            if (checkToDisableStep(sr, t)) {
+                                stepsToDelete.add(sr);
+                            }
                         }
                     }
                     if (stepsToDelete != null) {
@@ -1414,6 +1417,39 @@ public final class JPDAThreadImpl implements JPDAThread, Customizer, BeanContext
         }
     }
     
+    private static boolean checkToDisableStep(StepRequest sr, ThreadReference t) {
+        int stepKind;
+        try {
+            stepKind = StepRequestWrapper.depth(sr);
+        } catch (InternalExceptionWrapper | VMDisconnectedExceptionWrapper ex) {
+            // A wrong state, do nothing
+            return false;
+        }
+        if (stepKind == StepRequest.STEP_INTO) {
+            // Disable step into as method invocation will suspend on it
+            return true;
+        }
+        int threadDepth;
+        try {
+            threadDepth = ThreadReferenceWrapper.frameCount(t);
+        } catch (IllegalThreadStateExceptionWrapper | IncompatibleThreadStateException |
+                InternalExceptionWrapper | InvalidStackFrameExceptionWrapper ex) {
+            // We can not retrieve the frame depth
+            return true;
+        } catch (ObjectCollectedExceptionWrapper | VMDisconnectedExceptionWrapper ex) {
+            // A wrong state, do nothing
+            return false;
+        }
+        int stepDepth = StepUtils.getOriginalStepDepth(sr);
+        if (stepDepth > 0) {
+            // If the depth at which the step was submitted is less than the current depth,
+            // do not disable the step as it will not interfere with the method invocation.
+            // The invocation will not go up the stack.
+            return stepDepth >= threadDepth;
+        }
+        return true;
+    }
+
     public void notifyMethodInvokeDone() {
         synchronized (suspendToCheckForMonitorsLock) {
             canSuspendToCheckForMonitors = false;

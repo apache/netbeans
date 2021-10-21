@@ -126,7 +126,7 @@ public class ConstraintIterator implements TemplateWizard.Iterator{
             if (c instanceof JComponent) { // assume Swing components
                 JComponent jc = (JComponent) c;
                 // Step #.
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(i));
+                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
                 // Step name (actually the whole list for reference).
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
             }
@@ -163,8 +163,7 @@ public class ConstraintIterator implements TemplateWizard.Iterator{
 
     @Override
     public String name() {
-        return NbBundle.getMessage (ConstraintIterator.class, "TITLE_x_of_y",
-            new Integer (index + 1), new Integer (panels.length));
+        return NbBundle.getMessage (ConstraintIterator.class, "TITLE_x_of_y", index + 1, panels.length);
     }
 
     @Override

@@ -256,7 +256,7 @@ public class JavaHintsAnnotationProcessor extends LayerGeneratingProcessor {
         if (clazz.isArray()) {
             Iterable<?> attributes = getAttributeValueInternal(annotation, attribute, Iterable.class);
             
-            Collection<Object> coll = new ArrayList<Object>();
+            Collection<Object> coll = new ArrayList<>();
             Class<?> componentType = clazz.getComponentType();
 
             for (Object attr : attributes) {
@@ -411,7 +411,7 @@ public class JavaHintsAnnotationProcessor extends LayerGeneratingProcessor {
 
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\$[a-zA-Z0-9_]+");
     private boolean verifyTriggerAnnotations(ExecutableElement method) {
-        List<AnnotationMirror> patternAnnotations = new ArrayList<AnnotationMirror>();
+        List<AnnotationMirror> patternAnnotations = new ArrayList<>();
         AnnotationMirror am = findAnnotation(method.getAnnotationMirrors(), "org.netbeans.spi.java.hints.TriggerPattern");
 
         if (am != null) {
@@ -429,7 +429,7 @@ public class JavaHintsAnnotationProcessor extends LayerGeneratingProcessor {
 
             if (pattern == null) continue;
 
-            Set<String> variables = new HashSet<String>();
+            Set<String> variables = new HashSet<>();
             Matcher m = VARIABLE_PATTERN.matcher(pattern);
 
             while (m.find()) {
@@ -511,46 +511,55 @@ public class JavaHintsAnnotationProcessor extends LayerGeneratingProcessor {
             this.errAnnotationValue = errAnnotationValue;
         }
 
+        @Override
         public Void visitBoolean(boolean b, Void p) {
             annotationFolder.boolvalue(attrName, b);
             return null;
         }
 
+        @Override
         public Void visitByte(byte b, Void p) {
             annotationFolder.bytevalue(attrName, b);
             return null;
         }
 
+        @Override
         public Void visitChar(char c, Void p) {
             annotationFolder.charvalue(attrName, c);
             return null;
         }
 
+        @Override
         public Void visitDouble(double d, Void p) {
             annotationFolder.doublevalue(attrName, d);
             return null;
         }
 
+        @Override
         public Void visitFloat(float f, Void p) {
             annotationFolder.floatvalue(attrName, f);
             return null;
         }
 
+        @Override
         public Void visitInt(int i, Void p) {
             annotationFolder.intvalue(attrName, i);
             return null;
         }
 
+        @Override
         public Void visitLong(long i, Void p) {
             annotationFolder.longvalue(attrName, i);
             return null;
         }
 
+        @Override
         public Void visitShort(short s, Void p) {
             annotationFolder.shortvalue(attrName, s);
             return null;
         }
 
+        @Override
         public Void visitString(String s, Void p) {
             if ("displayName".equals(attrName) || "description".equals(attrName) || "tooltip".equals(attrName)) {
                 try {
@@ -564,17 +573,20 @@ public class JavaHintsAnnotationProcessor extends LayerGeneratingProcessor {
             return null;
         }
 
+        @Override
         public Void visitType(TypeMirror t, Void p) {
             annotationFolder.stringvalue(attrName, getFQN(((TypeElement) ((DeclaredType) t).asElement())));
             return null;
         }
 
+        @Override
         public Void visitEnumConstant(VariableElement c, Void p) {
             TypeElement owner = (TypeElement) c.getEnclosingElement();
             annotationFolder.stringvalue(attrName, getFQN(owner) + "." + c.getSimpleName());
             return null;
         }
 
+        @Override
         public Void visitAnnotation(AnnotationMirror a, Void p) {
             File f = builder.folder(annotationFolder.getPath() + "/" + attrName);
             
@@ -584,6 +596,7 @@ public class JavaHintsAnnotationProcessor extends LayerGeneratingProcessor {
             return null;
         }
 
+        @Override
         public Void visitArray(List<? extends AnnotationValue> vals, Void p) {
             File arr = builder.folder(annotationFolder.getPath() + "/" + attrName);
             int c = 0;

@@ -33,6 +33,25 @@
             <folder name="Maven2">
                 <attr name="displayName" bundlevalue="org.netbeans.modules.maven.newproject.Bundle#Templates/Project/Maven2"/>
                 <attr name="position" intvalue="100"/>
+                <attr name="template" boolvalue="true"/>
+
+                <!-- Simple Java project structure -->
+                <folder name="JavaApplication_hidden"/>
+                <folder name="JavaApplication2">
+                    <folder name="src">
+                        <folder name="main">
+                            <folder name="java">
+                                <folder name="${packagePath}">
+                                    <file name="${mainClassName}.java" url="nbresloc:/org/netbeans/modules/maven/resources/App.java.template">
+                                        <attr name="template" boolvalue="true"/>
+                                        <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                                        <attr name="template.openFile" boolvalue="true"/>
+                                    </file>
+                                </folder>
+                            </folder>
+                        </folder>
+                    </folder>
+                </folder>
             </folder>
         </folder>
     </folder>

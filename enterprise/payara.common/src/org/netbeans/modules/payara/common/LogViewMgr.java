@@ -173,11 +173,11 @@ public class LogViewMgr {
      * Reads a newly included InputSreams.
      *
      * @param recognizers
-     * @param fromFile
+     * @param ignoreEof
      * @param instance
      * @param serverLogs
      */
-    public void readInputStreams(List<Recognizer> recognizers, boolean fromFile,
+    public void readInputStreams(List<Recognizer> recognizers, boolean ignoreEof,
             PayaraInstance instance, FetchLog... serverLogs) {
         synchronized (readers) {
             stopReaders();
@@ -185,7 +185,7 @@ public class LogViewMgr {
             for(FetchLog serverLog : serverLogs){
                 // LoggerRunnable will close the stream if necessary.
                 LoggerRunnable logger = new LoggerRunnable(recognizers,
-                        serverLog, fromFile, instance);
+                        serverLog, ignoreEof, instance);
                 readers.add(new WeakReference<>(logger));
                 Thread t = new Thread(logger);
                 t.start();
@@ -421,9 +421,8 @@ public class LogViewMgr {
 
                 // ignoreEof is true for log files and false for process streams.
                 // FIXME Should differentiate filter types more cleanly.
-                Filter filter = ignoreEof ? new LogFileFilter(localizedLevels) : 
-                    (uri.contains("]deployer:pfv3ee6") ? new LogFileFilter(localizedLevels) :new StreamFilter());
-                
+                Filter filter = ignoreEof ? new LogFileFilter(localizedLevels) : new StreamFilter();
+
                 // read from the input stream and put all the changes to the I/O window
                 char [] chars = new char[1024];
                 int len = 0;

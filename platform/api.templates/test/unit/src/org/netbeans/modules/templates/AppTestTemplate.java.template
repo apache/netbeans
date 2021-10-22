@@ -1,0 +1,16 @@
+<#if package?? && package != "">
+package ${package};
+
+import org.junit.Test;
+
+</#if>
+/**
+ *
+ * @author ${user}
+ */
+public class ${name} {
+    @Test
+    public void testFoo() throws Exception {
+    }
+}
+

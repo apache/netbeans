@@ -29,6 +29,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.script.Bindings;
@@ -69,7 +70,7 @@ public class ScriptingCreateFromTemplateHandler extends CreateFromTemplateHandle
     public List<FileObject> createFromTemplate(CreateDescriptor desc) throws IOException {
         FileObject template = desc.getTemplate();
         String name = desc.getProposedName();
-        Map<String, ?> values = desc.getParameters();
+        Map<String, Object> values = new HashMap<>(desc.getParameters());
         FileObject f = desc.getTarget();
         
         boolean noExt = desc.hasFreeExtension() && name.indexOf('.') != -1;
@@ -92,6 +93,9 @@ public class ScriptingCreateFromTemplateHandler extends CreateFromTemplateHandle
         
         ScriptEngine eng = engine(template);
         Bindings bind = eng.getContext().getBindings(ScriptContext.ENGINE_SCOPE);
+        if (!values.containsKey("name")) { // NOI18N
+            values.put("name", nameUniq); // NOI18N
+        }
         bind.putAll(values);
         
         if(!values.containsKey(ENCODING_PROPERTY_NAME)) {

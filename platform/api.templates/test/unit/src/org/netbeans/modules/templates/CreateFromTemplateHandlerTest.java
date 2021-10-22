@@ -23,16 +23,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import org.netbeans.api.templates.CreateDescriptor;
 import org.netbeans.api.templates.CreateFromTemplateAttributes;
+import org.netbeans.api.templates.CreateFromTemplateHandler;
+import org.netbeans.api.templates.FileBuilder;
+import org.netbeans.api.templates.TemplateRegistration;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.openide.util.ProxyURLStreamHandlerFactory;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.loaders.CreateFromTemplateHandler;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataLoader;
 import org.openide.loaders.DataLoaderPool;
@@ -42,6 +47,9 @@ import org.openide.loaders.FileEntry;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
 import org.openide.util.Enumerations;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.test.MockLookup;
 
 /**
  *
@@ -103,14 +111,88 @@ public class CreateFromTemplateHandlerTest extends NbTestCase {
         fail("Modifications shall be unsupported");
     }
     
-    public static final class Hand extends CreateFromTemplateHandler {
+    /**
+     * Check that a handler / annotation can be bound to a static factory method
+     * @throws Exception 
+     */
+    public void testExplicitCreateHandlerFactory() throws Exception {
+        FileBuilder fb = new FileBuilder(FileUtil.getConfigFile("Templates/Test/test1"), FileUtil.getConfigRoot());
+        executedHandlerId = 0;
+        assertEquals(FileUtil.getConfigRoot(), fb.build().get(0));
+        assertEquals(2, executedHandlerId);
+    }
+
+    /**
+     * Check that a handler / annotation can be bound to a class
+     * @throws Exception 
+     */
+    public void testExplicitCreateHandlerClass() throws Exception {
+        FileBuilder fb = new FileBuilder(FileUtil.getConfigFile("Templates/Test/test2"), FileUtil.getConfigRoot());
+        executedHandlerId = 0;
+        assertEquals(FileUtil.getConfigRoot(), fb.build().get(0));
+        assertEquals(1, executedHandlerId);
+    }
+    
+    /**
+     * Checks that the handler class can be specified by an attribute. Static etc checks are suppressed.
+     * @throws Exception 
+     */
+    @TemplateRegistration(category = "Test", folder = "Test", id = "test3", iconBase = "org/netbeans/modules/templates/default.gif",
+            createHandlerClass = CFTH3.class)
+    public void testExplicitCreateHandlerAttribute() throws Exception {
+        FileBuilder fb = new FileBuilder(FileUtil.getConfigFile("Templates/Test/test3"), FileUtil.getConfigRoot());
+        executedHandlerId = 0;
+        assertEquals(FileUtil.getConfigRoot(), fb.build().get(0));
+        assertEquals(3, executedHandlerId);
+    }
+    
+    static int executedHandlerId;
+    
+    @TemplateRegistration(category = "Test", folder = "Test", id = "test1", iconBase = "org/netbeans/modules/templates/default.gif")
+    public static org.netbeans.api.templates.CreateFromTemplateHandler handlerFactory() {
+        return new CFTH(2);
+    }
+    
+    @TemplateRegistration(category = "Test", folder = "Test", id = "test2", iconBase = "org/netbeans/modules/templates/default.gif")
+    public static class CFTH extends org.netbeans.api.templates.CreateFromTemplateHandler {
+        private final int id;
+        
+        public CFTH() {
+            this(1);
+        }
+        
+        CFTH(int mark) {
+            this.id = mark;
+        }
+
+        @Override
+        protected boolean accept(CreateDescriptor desc) {
+            return true;
+        }
+
+        @Override
+        protected List<FileObject> createFromTemplate(CreateDescriptor desc) throws IOException {
+            executedHandlerId = id;
+            return Collections.singletonList(FileUtil.getConfigRoot());
+        }
+    }
+    
+    public static class CFTH3 extends CFTH {
+
+        public CFTH3() {
+            super(3);
+        }
+    }
+    
+    public static final class Hand extends org.openide.loaders.CreateFromTemplateHandler {
         public static List<FileObject>  fileObject, origObject, acceptObject;
         public static String name;
         public static Map<String, Object> parameters;
     
         public boolean accept(FileObject fo) {
             acceptObject.add(fo);
-            return true;
+            // we cannot be so eager, accept just file from the testCreateFromTemplate.
+            return fo.getNameExt().equals("simpleObject.txt");
         }
 
         public FileObject createFromTemplate(
@@ -218,6 +300,129 @@ public class CreateFromTemplateHandlerTest extends NbTestCase {
         public TwoPartObject(TwoPartLoader l, FileObject folder) throws DataObjectExistsException {
             super(folder, l);
         }
+    }
+    
+    public void testSubstituteNone() throws Exception {
+        assertEquals("Nothing", CreateFromTemplateHandler.mapParameters("Nothing", Collections.emptyMap()));
+    }
+    
+    public void testSubstituteSimple() throws Exception {
+        Map<String, String> m = new HashMap<>();
+        m.put("one", "1");
+        assertEquals("Test 1", CreateFromTemplateHandler.mapParameters("Test ${one}", m));
+    }
+    
+    public void testSubstituteMore() throws Exception {
+        Map<String, String> m = new HashMap<>();
+        m.put("one", "1");
+        m.put("two", "2");
+        assertEquals("Test 1 and 2 plus half", CreateFromTemplateHandler.mapParameters("Test ${one} and ${two} plus half", m));
+    }
+    
+    public void testSubstituteRecursively() throws Exception {
+        Map<String, String> m = new HashMap<>();
+        m.put("one", "one and ${two}");
+        m.put("two", "2");
+        assertEquals("Test one and 2 and 2 plus one and 2 or 2", CreateFromTemplateHandler.mapParameters("Test ${one} and ${two} plus ${half:${one} or ${half:${two}}}", m));
+    }
+    
+    public void testSubstituteDefault() throws Exception {
+        Map<String, String> m = new HashMap<>();
+        m.put("one", "1");
+        m.put("two", "2");
+        assertEquals("Test 1 and 2 plus 1/2", CreateFromTemplateHandler.mapParameters("Test ${one} and ${two} plus ${half:1/2}", m));
+    }
+    
+    public void testSubstituteEscaped() throws Exception {
+        Map<String, String> m = new HashMap<>();
+        m.put("one", "1");
+        m.put("two", "2");
+        assertEquals("Escaped \\${one} but not 2 plus escaped \\${two}", CreateFromTemplateHandler.mapParameters("Escaped \\${one} but not ${two} plus ${half:escaped \\${two}}", m));
+    }
+    
+    public void testSimpleFolderTemplate() throws Exception {
+        org.netbeans.ProxyURLStreamHandlerFactory.register();
+        FileObject root = FileUtil.createMemoryFileSystem().getRoot();
+        FileObject t = FileUtil.getConfigFile("Templates/Test/Simple");
+        
+        FileBuilder b = new FileBuilder(t, root)
+                .defaultMode(FileBuilder.Mode.COPY)
+                .name("BooBoo")
+                .param("unchanged", "replaced");
+        List<FileObject> files = b.build();
+        assertFalse(files.isEmpty());
+
+        // the 'foo.txt' was marked for open, so it should be returned
+        Optional<FileObject> file = files.stream().filter(f -> f.isData()).findFirst();
+        assertTrue(file.isPresent());
+        
+        FileObject foo = file.get();
+        assertEquals("foo.txt", foo.getNameExt());
+        
+        // check the other files:
+        FileObject rawReadme = foo.getParent().getFileObject("README.txt");
+        assertNotNull(rawReadme);
+        // README.txt is not interpolated - no scriptengine was specified.
+        assertTrue(rawReadme.asText().contains("${unchanged}"));  // not interpolated
+        
+        FileObject substReadme = foo.getParent().getFileObject("README-freemarker.txt");
+        assertNotNull(substReadme);
+        // README-freemarker.txt should be processed, the parameter should be replaced.
+        assertFalse(substReadme.asText().contains("${unchanged}"));  // not interpolated
+        assertTrue(substReadme.asText().contains(" replaced."));  // not interpolated
+    }
+    
+    /**
+     * Checks parameter interpolation in filenames and paths.
+     * @throws Exception 
+     */
+    public void testInterpolatedPaths() throws Exception {
+        org.netbeans.ProxyURLStreamHandlerFactory.register();
+        FileObject root = FileUtil.createMemoryFileSystem().getRoot();
+        FileObject t = FileUtil.getConfigFile("Templates/Test/InterpolatedNames");
+        
+        FileBuilder b = new FileBuilder(t, root)
+                .defaultMode(FileBuilder.Mode.COPY)
+                .name("BooBoo")
+                .param("unchanged", "replaced")
+                .param("packagePath", "org/netbeans/modules/templates")
+                .param("package", "org.netbeans.modules.templates");
+        List<FileObject> files = b.build();
+        assertFalse(files.isEmpty());
+        
+        // the 'foo.txt' was marked for open, so it should be returned
+        Optional<FileObject> file = files.stream().filter(f -> f.isData()).findFirst();
+        assertTrue(file.isPresent());
+        
+        FileObject appSource = file.get();
+        assertEquals("App.java", appSource.getNameExt());
+        assertTrue(appSource.getPath().contains("org/netbeans/modules/templates/"));
+    }
+
+
+    @TemplateRegistration(category = "Test", folder = "Test", id = "test4", iconBase = "org/netbeans/modules/templates/default.gif")
+    public static org.netbeans.api.templates.CreateFromTemplateHandler handlerFactory4() {
+        return new CFTH(4) {
+            @Override
+            protected List<FileObject> createFromTemplate(CreateDescriptor desc) throws IOException {
+                Lookup lkp = desc.getLookup();
+                assertNotNull(lkp);
+                assertNotNull(lkp.lookup(CreateFromTemplateHandlerTest.class));
+                return super.createFromTemplate(desc);
+            }
+        };
+    }
+    
+    /**
+     * Checks that the lookup provided by the FileBuilder caller is available in the 
+     * CreateFromTemplateHandler.
+     * @throws Exception 
+     */
+    public void testLookupPassedToHandler() throws Exception {
+        FileBuilder fb = new FileBuilder(FileUtil.getConfigFile("Templates/Test/test4"), FileUtil.getConfigRoot());
+        fb.useLookup(Lookups.fixed(this));
+        executedHandlerId = 0;
+        fb.build();
     }
     
 }

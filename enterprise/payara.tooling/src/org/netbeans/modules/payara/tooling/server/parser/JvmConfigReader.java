@@ -201,7 +201,7 @@ public class JvmConfigReader extends NodeListener implements XMLReader {
     public static class JvmOption {
 
         public final String option;
-        public final Optional<String> vendor;
+        public final Optional<String> vendorOrVM;
         public final Optional<JDKVersion> minVersion;
         public final Optional<JDKVersion> maxVersion;
 
@@ -221,17 +221,17 @@ public class JvmConfigReader extends NodeListener implements XMLReader {
                 if (matcher.group(1).contains("-")  // NOI18N
                         && Character.isLetter(matcher.group(1).charAt(0))) {
                     String[] parts = matcher.group(1).split("-"); // NOI18N
-                    this.vendor = Optional.ofNullable(parts[0]);
+                    this.vendorOrVM = Optional.ofNullable(parts[0]);
                     this.minVersion = Optional.ofNullable(JDKVersion.toValue(parts[1]));
                 } else {
-                    this.vendor = Optional.empty();
+                    this.vendorOrVM = Optional.empty();
                     this.minVersion = Optional.ofNullable(JDKVersion.toValue(matcher.group(1)));
                 }
                 this.maxVersion = Optional.ofNullable(JDKVersion.toValue(matcher.group(2)));
                 this.option = matcher.group(3);
             } else {
                 this.option = option;
-                this.vendor = Optional.empty();
+                this.vendorOrVM = Optional.empty();
                 this.minVersion = Optional.empty();
                 this.maxVersion = Optional.empty();
             }
@@ -239,7 +239,7 @@ public class JvmConfigReader extends NodeListener implements XMLReader {
 
         public JvmOption(String option, String minVersion, String maxVersion) {
             this.option = option;
-            this.vendor = Optional.empty();
+            this.vendorOrVM = Optional.empty();
             this.minVersion = Optional.ofNullable(JDKVersion.toValue(minVersion));
             this.maxVersion = Optional.ofNullable(JDKVersion.toValue(maxVersion));
         }

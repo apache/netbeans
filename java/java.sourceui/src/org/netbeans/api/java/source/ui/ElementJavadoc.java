@@ -95,6 +95,7 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.modules.java.preprocessorbridge.api.JavaSourceUtil;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.JavadocHelper;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -1280,6 +1281,19 @@ public class ElementJavadoc {
                 case TEXT:
                     TextTree ttag = (TextTree)tag;
                     sb.append(ttag.getBody());
+					break;
+				default:
+                    if (tag.getKind().toString().equals("SNIPPET")) {
+                        sb.append("<pre>"); //NOI18N
+                        sb.append("<code>"); //NOI18N
+                        List<DocTree> attributes = TreeShims.getSnippetDocTreeAttributes(tag);
+                        TextTree text =  TreeShims.getSnippetDocTreeText(tag);
+                        try {
+                            sb.append(XMLUtil.toElementContent(text.getBody()));
+                        } catch (IOException ioe) {}
+                        sb.append("</code>"); //NOI18N
+                        sb.append("</pre>"); //NOI18N
+                    }	
             }
         }
         return sb;

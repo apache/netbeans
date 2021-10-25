@@ -39,8 +39,8 @@ import org.apache.maven.model.InputLocation;
 import org.netbeans.api.editor.fold.FoldHierarchy;
 import org.netbeans.modules.maven.api.ModelUtils;
 import org.netbeans.modules.maven.grammar.effpom.LocationAwareMavenXpp3Writer.Location;
-import org.netbeans.modules.maven.hyperlinks.HyperlinkProviderImpl;
 import static org.netbeans.modules.maven.grammar.effpom.Bundle.*;
+import org.openide.awt.GraphicsUtils;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -453,7 +453,7 @@ public final class AnnotationBar extends JComponent implements Accessible, Prope
             if (al != null) {
                 annotation = getDisplayName(al);  // NOI18N
             }
-        } 
+        }
 
         if (al != null && getDisplayName(al).equals(recentLocationName)) {
             g.setColor(selectedColor());
@@ -528,6 +528,8 @@ public final class AnnotationBar extends JComponent implements Accessible, Prope
      */
     @Override
     public void paintComponent(Graphics g) {
+        GraphicsUtils.configureDefaultRenderingHints(g);
+
         super.paintComponent(g);
 
         Rectangle clip = g.getClipBounds();

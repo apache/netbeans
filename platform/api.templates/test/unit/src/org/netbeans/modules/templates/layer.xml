@@ -34,7 +34,7 @@
                     <folder name="main">
                         <file name="README.txt" url="nbres:/org/netbeans/modules/templates/README.txt"/>
                         <file name="README-freemarker.txt" url="nbres:/org/netbeans/modules/templates/README.txt">
-                            <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                            <attr name="replaceHandler" boolvalue="true"/>
                         </file>
                         <file name="foo.txt" url="nbres:/org/netbeans/modules/templates/README.txt">
                             <attr name="template.openFile" boolvalue="true"/>
@@ -50,7 +50,7 @@
                             <folder name="${packagePath:}">
                                 <file name="${mainClassName:App}.java" url="nbres:/org/netbeans/modules/templates/AppTemplate.java.template">
                                     <attr name="template" boolvalue="true"/>
-                                    <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                                    <attr name="replaceHandler" boolvalue="true"/>
                                     <attr name="template.openFile" boolvalue="true"/>
                                 </file>
                             </folder>
@@ -60,7 +60,7 @@
                         <folder name="java">
                             <folder name="${packagePath}">
                                 <file name="${mainClassName:App}Test.java" url="nbres:/org/netbeans/modules/templates/AppTestTemplate.java.template">
-                                    <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                                    <attr name="replaceHandler" boolvalue="true"/>
                                 </file>
                             </folder>
                         </folder>

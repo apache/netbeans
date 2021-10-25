@@ -19,7 +19,14 @@
 
 package org.netbeans.modules.templates;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -27,7 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
+import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.api.templates.CreateDescriptor;
 import org.netbeans.api.templates.CreateFromTemplateAttributes;
 import org.netbeans.api.templates.CreateFromTemplateHandler;
@@ -35,7 +42,7 @@ import org.netbeans.api.templates.FileBuilder;
 import org.netbeans.api.templates.TemplateRegistration;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.openide.util.ProxyURLStreamHandlerFactory;
+import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataFolder;
@@ -340,11 +347,46 @@ public class CreateFromTemplateHandlerTest extends NbTestCase {
         assertEquals("Escaped \\${one} but not 2 plus escaped \\${two}", CreateFromTemplateHandler.mapParameters("Escaped \\${one} but not ${two} plus ${half:escaped \\${two}}", m));
     }
     
+    public static class ReplaceHandler extends CreateFromTemplateHandler {
+        @Override
+        protected boolean accept(CreateDescriptor desc) {
+            return desc.getTemplate().getAttribute("replaceHandler") != null;
+        }
+
+        @Override
+        protected List<FileObject> createFromTemplate(CreateDescriptor desc) throws IOException {
+            //Document doc = createDocument(template.getMIMEType());
+            FileObject template = desc.getTemplate();
+            String n = desc.getName();
+            if (n == null) {
+                n = desc.getProposedName();
+            }
+            if (!desc.hasFreeExtension() || n.indexOf('.') == -1) {
+                n = n + "." + desc.getTemplate().getExt(); // NOI18N
+            }
+            FileObject output = FileUtil.createData(desc.getTarget(), n);
+            FileLock lock = output.lock();
+            Charset targetEnc = FileEncodingQuery.getEncoding(output);
+            Charset sourceEnc = FileEncodingQuery.getEncoding(template);
+            try (Writer w = new OutputStreamWriter(output.getOutputStream(lock), targetEnc);
+                 Reader is = new InputStreamReader(template.getInputStream(), sourceEnc);
+                 BufferedReader br = new BufferedReader(is);
+                 PrintWriter pw = new PrintWriter(w)) {
+                String l;
+                while ((l = br.readLine()) != null) {
+                    pw.println(mapParameters(l, desc.getParameters()));
+                }
+            }
+            return Collections.singletonList(output);
+        }
+    }
+    
     public void testSimpleFolderTemplate() throws Exception {
+        MockLookup.setLayersAndInstances(new ReplaceHandler());
         org.netbeans.ProxyURLStreamHandlerFactory.register();
         FileObject root = FileUtil.createMemoryFileSystem().getRoot();
         FileObject t = FileUtil.getConfigFile("Templates/Test/Simple");
-        
+
         FileBuilder b = new FileBuilder(t, root)
                 .defaultMode(FileBuilder.Mode.COPY)
                 .name("BooBoo")
@@ -355,16 +397,16 @@ public class CreateFromTemplateHandlerTest extends NbTestCase {
         // the 'foo.txt' was marked for open, so it should be returned
         Optional<FileObject> file = files.stream().filter(f -> f.isData()).findFirst();
         assertTrue(file.isPresent());
-        
+
         FileObject foo = file.get();
         assertEquals("foo.txt", foo.getNameExt());
-        
+
         // check the other files:
         FileObject rawReadme = foo.getParent().getFileObject("README.txt");
         assertNotNull(rawReadme);
         // README.txt is not interpolated - no scriptengine was specified.
         assertTrue(rawReadme.asText().contains("${unchanged}"));  // not interpolated
-        
+
         FileObject substReadme = foo.getParent().getFileObject("README-freemarker.txt");
         assertNotNull(substReadme);
         // README-freemarker.txt should be processed, the parameter should be replaced.

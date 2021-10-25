@@ -756,16 +756,7 @@ public class ServerTest extends NbTestCase {
                           "    line = 7\n" +
                           "    character = 5\n" +
                           "  ]\n" +
-                          "]:(Constructor:Inner:Range [\n" +
-                          "  start = Position [\n" +
-                          "    line = 4\n" +
-                          "    character = 4\n" +
-                          "  ]\n" +
-                          "  end = Position [\n" +
-                          "    line = 4\n" +
-                          "    character = 4\n" +
-                          "  ]\n" +
-                          "]:(), Method:innerMethod:Range [\n" +
+                          "]:(Method:innerMethod():Range [\n" +
                           "  start = Position [\n" +
                           "    line = 5\n" +
                           "    character = 8\n" +
@@ -774,16 +765,7 @@ public class ServerTest extends NbTestCase {
                           "    line = 6\n" +
                           "    character = 9\n" +
                           "  ]\n" +
-                          "]:()), Constructor:Test:Range [\n" +
-                          "  start = Position [\n" +
-                          "    line = 0\n" +
-                          "    character = 7\n" +
-                          "  ]\n" +
-                          "  end = Position [\n" +
-                          "    line = 0\n" +
-                          "    character = 7\n" +
-                          "  ]\n" +
-                          "]:(), Field:field:Range [\n" +
+                          "]:()), Field:field:Range [\n" +
                           "  start = Position [\n" +
                           "    line = 1\n" +
                           "    character = 4\n" +
@@ -792,7 +774,7 @@ public class ServerTest extends NbTestCase {
                           "    line = 1\n" +
                           "    character = 22\n" +
                           "  ]\n" +
-                          "]:(), Method:method:Range [\n" +
+                          "]:(), Method:method():Range [\n" +
                           "  start = Position [\n" +
                           "    line = 2\n" +
                           "    character = 4\n" +

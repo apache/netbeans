@@ -39,13 +39,13 @@ import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
  * @author Gaurav Gupta <gaurav.gupta@payara.fish>
  */
 public class MicroPropertiesPanel extends JPanel {
-    
+
     private final Preferences pref;
-    
+
     private final ComboBoxUpdater<PayaraPlatformVersionAPI> microVersionComboBoxUpdater;
-    
+
     private PayaraPlatformVersionAPI selectedPayaraVersion;
-    
+
     public MicroPropertiesPanel(ModelHandle2 handle, Project project) {
         pref = getPreferences(project, MicroApplication.class, true);
         initComponents();
@@ -56,12 +56,12 @@ public class MicroPropertiesPanel extends JPanel {
             public PayaraPlatformVersionAPI getValue() {
                 return microVersion != null ? microVersion : PayaraPlatformVersion.EMPTY;
             }
-            
+
             @Override
             public PayaraPlatformVersionAPI getDefaultValue() {
                 return null;
             }
-            
+
             @Override
             public void setValue(PayaraPlatformVersionAPI microVersion) {
                 selectedPayaraVersion = microVersion;
@@ -69,7 +69,7 @@ public class MicroPropertiesPanel extends JPanel {
         };
         hotDeployCheckBox.setSelected(pref.getBoolean(HOT_DEPLOY, false));
     }
-    
+
     private PayaraPlatformVersionAPI[] getPayaraVersion() {
         List<PayaraPlatformVersionAPI> microVersions = new ArrayList<>();
         microVersions.add(PayaraPlatformVersion.EMPTY);
@@ -81,7 +81,7 @@ public class MicroPropertiesPanel extends JPanel {
         );
         return microVersions.toArray(new PayaraPlatformVersionAPI[]{});
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -94,20 +94,10 @@ public class MicroPropertiesPanel extends JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(microVersionLabel, org.openide.util.NbBundle.getMessage(MicroPropertiesPanel.class, "MicroPropertiesPanel.microVersionLabel.text")); // NOI18N
 
         microVersionCombobox.setModel(new DefaultComboBoxModel(getPayaraVersion()));
-        microVersionCombobox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                microVersionComboboxActionPerformed(evt);
-            }
-        });
 
         org.openide.awt.Mnemonics.setLocalizedText(hotDeployLabel, org.openide.util.NbBundle.getMessage(MicroPropertiesPanel.class, "MicroPropertiesPanel.hotDeployLabel.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(hotDeployCheckBox, org.openide.util.NbBundle.getMessage(MicroPropertiesPanel.class, "MicroPropertiesPanel.hotDeployCheckBox.text")); // NOI18N
-        hotDeployCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                hotDeployCheckBoxActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -141,15 +131,6 @@ public class MicroPropertiesPanel extends JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void hotDeployCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hotDeployCheckBoxActionPerformed
-        pref.put(HOT_DEPLOY, Boolean.toString(hotDeployCheckBox.isSelected()));
-    }//GEN-LAST:event_hotDeployCheckBoxActionPerformed
-
-    private void microVersionComboboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_microVersionComboboxActionPerformed
-        pref.put(VERSION, selectedPayaraVersion.toString());
-    }//GEN-LAST:event_microVersionComboboxActionPerformed
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox hotDeployCheckBox;
     private javax.swing.JLabel hotDeployLabel;
@@ -158,8 +139,8 @@ public class MicroPropertiesPanel extends JPanel {
     // End of variables declaration//GEN-END:variables
 
     public void applyChanges() {
-        pref.put(VERSION, selectedPayaraVersion.toString());
+        pref.put(VERSION, selectedPayaraVersion != null ? selectedPayaraVersion.toString() : "");
         pref.put(HOT_DEPLOY, Boolean.toString(hotDeployCheckBox.isSelected()));
     }
-    
+
 }

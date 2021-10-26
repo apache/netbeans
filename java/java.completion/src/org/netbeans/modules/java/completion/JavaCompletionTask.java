@@ -4664,7 +4664,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 && env.getController().getTreeUtilities().getPathElementOfKind(Tree.Kind.INTERFACE, env.getPath()) != null) {
             results.add(itemFactory.createKeywordItem(DEFAULT_KEYWORD, SPACE, anchorOffset, false));
         }
-        if (isRecordSupported(env)) {
+        if (isRecordSupported(env) && Utilities.startsWith(RECORD_KEYWORD, prefix)) {
             results.add(itemFactory.createKeywordItem(RECORD_KEYWORD, SPACE, anchorOffset, false));
         }
         addPrimitiveTypeKeywords(env);
@@ -4682,7 +4682,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 results.add(itemFactory.createKeywordItem(kw, SPACE, anchorOffset, false));
             }
         }
-        if (isRecordSupported(env)) {
+        if (isRecordSupported(env) && Utilities.startsWith(RECORD_KEYWORD, prefix)) {
             results.add(itemFactory.createKeywordItem(RECORD_KEYWORD, SPACE, anchorOffset, false));
         }
         if (Utilities.startsWith(RETURN_KEYWORD, prefix)) {

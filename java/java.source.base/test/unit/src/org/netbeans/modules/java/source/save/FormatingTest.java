@@ -1734,11 +1734,9 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testSwitch() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-            return;
-        } catch (IllegalArgumentException ex) {
+        if (SourceVersions.supports(17)) {
             //OK,RELEASE_17, skip test
+            return;
         }
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile,
@@ -1970,9 +1968,7 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testSwitchOnJDK17() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(17)) {
             //OK, no RELEASE_17, skip test
             return;
         }
@@ -2333,9 +2329,7 @@ public class FormatingTest extends NbTestCase {
         preferences.putBoolean("indentCasesFromSwitch", true);
     }
     public void testSwitchExpression() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(13)) {
             //OK, skip test
             return ;
         }
@@ -2479,9 +2473,7 @@ public class FormatingTest extends NbTestCase {
         preferences.put("otherBracePlacement", CodeStyle.BracePlacement.SAME_LINE.name());
     }
     public void testSwitchExprWithRuleCase() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(13)) {
             //OK, skip test
             return ;
         }
@@ -2606,9 +2598,7 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testSwitchCaseNull() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(17)) {
             //OK, no RELEASE_17, skip test
             return;
         }
@@ -2651,9 +2641,7 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testSwitchCaseDefault() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(17)) {
             //OK, no RELEASE_17, skip test
             return;
         }
@@ -2695,9 +2683,7 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testSwitchCaseNullAndDefault() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(17)) {
             //OK, no RELEASE_17, skip test
             return;
         }
@@ -2738,9 +2724,7 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testSwitchCaseBindingPattern() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(17)) {
             //OK, no RELEASE_17, skip test
             return;
         }
@@ -2786,9 +2770,7 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testSwitchCaseNullAndBindingPattern() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(17)) {
             //OK, no RELEASE_17, skip test
             return;
         }
@@ -2834,9 +2816,7 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testSwitchCaseGuardedPattern() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(17)) {
             //OK, no RELEASE_17, skip test
             return;
         }
@@ -2883,9 +2863,7 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testSwitchCaseNullAndGuardedPattern() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(17)) {
             //OK, no RELEASE_17, skip test
             return;
         }
@@ -2933,9 +2911,7 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testSwitchCaseParenthesizedBindingPattern() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(17)) {
             //OK, no RELEASE_17, skip test
             return;
         }
@@ -2983,9 +2959,7 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testSwitchCaseNullAndParenthesizedBindingPattern() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(17)) {
             //OK, no RELEASE_17, skip test
             return;
         }
@@ -3032,9 +3006,7 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testSwitchCaseParenthesizedGuardedPattern() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(17)) {
             //OK, no RELEASE_17, skip test
             return;
         }
@@ -3083,9 +3055,7 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testSwitchCaseParenthesizedGuardedPatternAndNull() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(17)) {
             //OK, no RELEASE_17, skip test
             return;
         }
@@ -3135,9 +3105,7 @@ public class FormatingTest extends NbTestCase {
     }
    
     public void testSwitchCaseGuardedPatternNestedParenthesizedPatternWithNull() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(17)) {
             //OK, no RELEASE_17, skip test
             return;
         }
@@ -3187,9 +3155,7 @@ public class FormatingTest extends NbTestCase {
     }
     
     public void testSwitchCaseGuardedPatternNestedParenthesizedPattern() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(17)) {
             //OK, no RELEASE_17, skip test
             return;
         }
@@ -3238,9 +3204,7 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testSwitchCaseAllPatterns() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(17)) {
             //OK, no RELEASE_17, skip test
             return;
         }
@@ -3307,9 +3271,7 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testSwitchCaseAllPatternsWithReturnValue() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(17)) {
             //OK, no RELEASE_17, skip test
             return;
         }
@@ -6106,12 +6068,10 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testTypeTestPatterns() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_14"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(14)) {
             //OK, no RELEASE_14, skip test
             return;
-        }
+        } //NOI18N
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");
         FileObject testSourceFO = FileUtil.toFileObject(testFile);
@@ -6146,12 +6106,10 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testRecord1() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_16"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(16)) {
             //OK, no RELEASE_14, skip test
             return;
-        }
+        } //NOI18N
         sourceLevel="16";
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         testFile = new File(getWorkDir(), "Test.java");
@@ -6182,12 +6140,10 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testRecord2() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_16"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(16)) {
             //OK, no RELEASE_14, skip test
             return;
-        }
+        } //NOI18N
         sourceLevel="16";
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         testFile = new File(getWorkDir(), "Test.java");
@@ -6224,12 +6180,10 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testRecord3() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_16"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(16)) {
             //OK, no RELEASE_14, skip test
             return;
-        }
+        } //NOI18N
         sourceLevel="16";
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         testFile = new File(getWorkDir(), "Test.java");
@@ -6255,12 +6209,10 @@ public class FormatingTest extends NbTestCase {
 
     
     public void testRecord4() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_16"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(16)) {
             //OK, no RELEASE_14, skip test
             return;
-        }
+        } //NOI18N
         sourceLevel="16";
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         testFile = new File(getWorkDir(), "Test.java");
@@ -6304,12 +6256,10 @@ public class FormatingTest extends NbTestCase {
 
     }
     public void testSealed() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_15"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(15)) {
             //OK, no RELEASE_15, skip test
             return;
-        }
+        } //NOI18N
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");
         FileObject testSourceFO = FileUtil.toFileObject(testFile);
@@ -6334,12 +6284,10 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testSealed2() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_15"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(15)) {
             //OK, no RELEASE_15, skip test
             return;
-        }
+        } //NOI18N
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");
         FileObject testSourceFO = FileUtil.toFileObject(testFile);
@@ -6361,12 +6309,10 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testSealed3() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_15"); //NOI18N
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(15)) {
             //OK, no RELEASE_15, skip test
             return;
-        }
+        } //NOI18N
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");
         FileObject testSourceFO = FileUtil.toFileObject(testFile);

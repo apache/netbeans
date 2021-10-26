@@ -26,6 +26,7 @@ import javax.swing.text.PlainDocument;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CodeStyle;
+import org.netbeans.api.java.source.SourceVersions;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.editor.indent.api.Indent;
@@ -1945,9 +1946,7 @@ public class ReindenterTest extends NbTestCase {
     }
 
     public void testNewLineIndentationTextBlock1() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(13)) {
             //OK, skip test:
             return ;
         }
@@ -1956,9 +1955,7 @@ public class ReindenterTest extends NbTestCase {
     }
 
     public void testSpanIndentationTextBlock1() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(13)) {
             //OK, skip test:
             return ;
         }
@@ -1967,9 +1964,7 @@ public class ReindenterTest extends NbTestCase {
     }
 
     public void testSpanIndentationTextBlock2() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(13)) {
             //OK, skip test:
             return ;
         }
@@ -1978,9 +1973,7 @@ public class ReindenterTest extends NbTestCase {
     }
     
     public void testLineIndentationBeforeRecord() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_14");
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(14)) {
             //OK, skip test:
             return;
         }
@@ -1989,9 +1982,7 @@ public class ReindenterTest extends NbTestCase {
     }
 
     public void testNewLineIndentationBeforeRecodBody() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_14");
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(14)) {
             //OK, skip test:
             return;
         }
@@ -2000,9 +1991,7 @@ public class ReindenterTest extends NbTestCase {
     }
 
     public void testLineIndentationBeforeHalfIndentedRecordBody() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_14");
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(14)) {
             //OK, skip test:
             return;
         }
@@ -2017,9 +2006,7 @@ public class ReindenterTest extends NbTestCase {
     }
 
     public void testNewLineIndentationInsideRecord() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_14");
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(14)) {
             //OK, skip test:
             return;
         }
@@ -2028,9 +2015,7 @@ public class ReindenterTest extends NbTestCase {
     }
 
     public void testNewLineIndentationBeforeEmptyRecordEnd() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_14");
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(14)) {
             //OK, skip test:
             return;
         }
@@ -2039,9 +2024,7 @@ public class ReindenterTest extends NbTestCase {
     }
 
     public void testLineIndentationBeforeEmptyRecordEnd() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_14");
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(14)) {
             //OK, skip test:
             return;
         }
@@ -2050,9 +2033,7 @@ public class ReindenterTest extends NbTestCase {
     }
 
     public void testLineIndentationBeforeEmptyHalfIndentedRecordEnd() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_14");
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(14)) {
             //OK, skip test:
             return;
         }

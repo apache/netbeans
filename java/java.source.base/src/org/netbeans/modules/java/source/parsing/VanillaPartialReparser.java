@@ -77,7 +77,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import javax.lang.model.SourceVersion;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
@@ -92,6 +91,7 @@ import org.netbeans.lib.nbjavac.services.NBParserFactory;
 import org.netbeans.modules.java.source.CompilationInfoAccessor;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.parsing.JavacParser.PartialReparser;
+import org.netbeans.api.java.source.SourceVersions;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.impl.Utilities;
 import org.netbeans.modules.parsing.spi.ParseException;
@@ -153,12 +153,9 @@ public class VanillaPartialReparser implements PartialReparser {
         allowPartialReparse = unenter != null && lazyDocCommentsTable != null &&
                               parserDocComments != null && lineMapBuild != null;
         if (!allowPartialReparse) {
-            try {
-                SourceVersion sv16 = SourceVersion.valueOf("RELEASE_16");
-                if (SourceVersion.latest().compareTo(sv16) >= 0) {
-                    LOGGER.warning("Partial reparse disabled!");
-                }
-            } catch (IllegalArgumentException ignore) {}
+            if (SourceVersions.supports(16)) {
+                LOGGER.warning("Partial reparse disabled!");
+            }
         }
     }
 

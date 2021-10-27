@@ -1380,7 +1380,7 @@ public class ServerTest extends NbTestCase {
             Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(2, 8 + "s.".length()))).get();
             assertTrue(completion.isRight());
             Optional<CompletionItem> lengthItem = completion.getRight().getItems().stream().filter(ci -> "length() : int".equals(ci.getLabel())).findAny();
-            assertTrue(lengthItem.isPresent());
+            assertTrue("Expecting length field: " + completion.getRight().getItems(), lengthItem.isPresent());
             assertEquals(InsertTextFormat.PlainText, lengthItem.get().getInsertTextFormat());
             assertEquals("length()", lengthItem.get().getInsertText());
             Optional<CompletionItem> substringItem = completion.getRight().getItems().stream().filter(ci -> ci.getLabel().startsWith("substring(") && ci.getLabel().contains(",")).findAny();

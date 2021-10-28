@@ -45,6 +45,7 @@ import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
@@ -249,12 +250,7 @@ public class ConvertToSwitchPatternInstanceOf {
                 iot = (InstanceOfTree) ((ParenthesizedTree) ifTree.getCondition()).getExpression();
                 StatementTree bt = ifTree.getThenStatement();
                 StatementTree thenBlock = removeFirst ? wc.getTreeMaker().removeBlockStatement((BlockTree) bt, 0) : bt;
-                Tree pattern = null;
-                try {
-                    pattern = (Tree) (iot.getClass().getDeclaredMethod("getPattern")).invoke(iot);
-                } catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
-                    Exceptions.printStackTrace(e);
-                }
+                Tree pattern = TreeShims.getPattern(iot);
                 caseBindPattern.add(pattern);
                 BlockTree blockTree = (BlockTree) thenBlock;
                 Tree statementTree = blockTree.getStatements().size() == 1 && isValidCaseTree(blockTree.getStatements().get(0))? blockTree.getStatements().get(0) : thenBlock;
@@ -282,20 +278,11 @@ public class ConvertToSwitchPatternInstanceOf {
 
         SwitchTree switchTree = (SwitchTree) ctx.getPath().getLeaf();
         boolean isPatternMatch = false;
-        try {
-            isPatternMatch = switchTree.getClass().getDeclaredField("patternSwitch").getBoolean(switchTree);
-        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+        isPatternMatch = TreeShims.isPatternMatch(switchTree);
         if (!isPatternMatch) {
             return null;
         }
-        Tree expression = null;
-        try {
-            expression = ((ParenthesizedTree) switchTree.getExpression()).getExpression();
-        } catch (ClassCastException cce) {
-            Exceptions.printStackTrace(cce);
-        }
+        Tree expression = ((ParenthesizedTree) switchTree.getExpression()).getExpression();
         Tree parent = (Tree) ctx.getPath().getParentPath().getLeaf();
         int indexOf;
         if (parent instanceof BlockTree) {

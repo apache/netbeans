@@ -591,6 +591,7 @@ public final class NbMavenProjectImpl implements Project {
                 if (!test && root.getName().startsWith("test-")) {
                     continue;
                 }
+                root = findJavaRoot(root, test);
                 File[] kids = root.listFiles();
                 URI u = Utilities.toURI(root);
                 if (!test && BHTestUris.contains(u)) {
@@ -637,6 +638,24 @@ public final class NbMavenProjectImpl implements Project {
         }
 
         return uris.toArray(new URI[uris.size()]);
+    }
+
+    private static File findJavaRoot(File root, boolean test) {
+        String javaFolder = test ? "test" + File.separator + "java" : "main" + File.separator + "java"; // NOI18N
+        File newRoot = new File(root, javaFolder);
+        if (newRoot.isDirectory()) {
+            return newRoot;
+        }
+        File[] listFiles = root.listFiles();
+        if (listFiles != null) {
+            for (File f : listFiles) {
+                newRoot = new File(f, javaFolder);
+                if (newRoot.isDirectory()) {
+                    return newRoot;
+                }
+            }
+        }
+        return root;
     }
 
     public URI getWebAppDirectory() {

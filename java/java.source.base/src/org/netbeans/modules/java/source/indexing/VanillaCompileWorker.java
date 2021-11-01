@@ -405,7 +405,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 JavaIndex.LOG.log(Level.FINEST, "VanillaCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), ca);  //NOI18N
             }
         } catch (Throwable t) {
-            t.printStackTrace();
+            Exceptions.printStackTrace(t);
              if (t instanceof ThreadDeath) {
                 throw (ThreadDeath) t;
             } else {

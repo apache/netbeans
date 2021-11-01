@@ -65,4 +65,8 @@ final class HtmlPair<HtmlView> {
     final void load(ClassLoader loader, URL pageUrl, Callable<Object> initialize, String... techIds) {
         viewer.load(view, loader, pageUrl, initialize, techIds);
     }
+
+    final boolean isDefault() {
+        return this.viewer == HtmlComponent.VIEWER;
+    }
 }

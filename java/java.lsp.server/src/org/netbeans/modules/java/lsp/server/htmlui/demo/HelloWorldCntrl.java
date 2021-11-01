@@ -25,6 +25,7 @@ import net.java.html.json.Property;
 import net.java.html.json.ComputedProperty;
 import net.java.html.json.Function;
 import net.java.html.json.ModelOperation;
+import org.netbeans.api.htmlui.HTMLDialog;
 import org.netbeans.api.htmlui.OpenHTMLRegistration;
 import org.netbeans.modules.java.lsp.server.htmlui.demo.HelloWorldCntrl.Modifier;
 import org.openide.util.NbBundle;
@@ -127,20 +128,12 @@ public final class HelloWorldCntrl {
         return sb.toString();
     }
 
-    @ActionID(
-            category = "Tools",
-            id = "org.netbeans.modules.java.lsp.server.protocol.HelloWorld"
-    )
     @NbBundle.Messages("CTL_HelloWorld=Open HTML Hello World!")
-    @OpenHTMLRegistration(
-            url = "HelloWorld.html",
-            displayName = "#CTL_HelloWorld"
-    //, iconBase="SET/PATH/TO/ICON/HERE"
-    )
-    public static HelloWorld onPageLoad() {
+    @HTMLDialog(url = "HelloWorld.html")
+    static HelloWorld showHelloWorld(String name) {
         final HelloWorld model = new HelloWorld();
         model.
-            withName("openSource").
+            withName(name).
             withReturnType("boolean").
             withSelectedModifier(Modifier.PUBLIC).
             withParameters(
@@ -153,6 +146,11 @@ public final class HelloWorldCntrl {
             assignData(new RefactoringData());
 
         return model.applyBindings();
+    }
+
+    public static void show() {
+        String ret = Pages.showHelloWorld("openSource");
+        System.err.println("ret: " + ret);
     }
 
     static final class RefactoringData {

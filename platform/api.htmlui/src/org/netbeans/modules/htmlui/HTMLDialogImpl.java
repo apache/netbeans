@@ -25,38 +25,23 @@ import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import org.openide.*;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
-public final class HTMLDialogImpl implements Runnable {
+final class HTMLDialogImpl extends HTMLDialogBase implements Runnable {
     private volatile int state;
     private JComponent p;
     private DialogDescriptor dd;
     private Object webView;
-    
-    private String url;
-    private Runnable onPageLoad;
-    private List<String> techIds = new ArrayList<>();
     private boolean nestedLoop;
 
-    public void setUrl(String url) {
-        this.url = url;
+    HTMLDialogImpl(String url) {
+        super(url);
     }
 
-    public void setOnPageLoad(Runnable onPageLoad) {
-        this.onPageLoad = onPageLoad;
-    }
-
-    public void addTechIds(String[] ids) {
-        this.techIds.addAll(Arrays.asList(ids));
-    }
-    
     @Override
     public void run() {
         switch (state) {
@@ -117,7 +102,7 @@ public final class HTMLDialogImpl implements Runnable {
         Dialog d = DialogDisplayer.getDefault().createDialog(dd);
         d.setVisible(true);
     }
-    
+
     private void initPanel() {
         p = HtmlToolkit.getDefault().newPanel();
         dd = new DialogDescriptor(p, "");
@@ -125,7 +110,7 @@ public final class HTMLDialogImpl implements Runnable {
         state = 1;
         HtmlToolkit.getDefault().execute(this);
     }
-    
+
     private void initPage() {
         try {
             onPageLoad.run();

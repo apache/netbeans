@@ -87,6 +87,8 @@ import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachNativeConfigurations;
+import org.netbeans.modules.java.lsp.server.htmlui.demo.HelloWorld;
+import org.netbeans.modules.java.lsp.server.htmlui.demo.HelloWorldCntrl;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaTypeProvider;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
@@ -96,7 +98,6 @@ import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
-import org.openide.awt.Actions;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
@@ -134,8 +135,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             case Server.JAVA_NEW_PROJECT:
                 return LspTemplateUI.createProject("Templates/Project", client, params);
             case Server.JAVA_HTML_DEMO: {
-                Action action = Actions.forID("Tools","org.netbeans.modules.java.lsp.server.protocol.HelloWorld");
-                action.actionPerformed(new ActionEvent(this, 0, ""));
+                HelloWorldCntrl.show();
                 return CompletableFuture.completedFuture(true);
             }
             case Server.JAVA_BUILD_WORKSPACE: {
@@ -254,10 +254,10 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 Position pos = gson.fromJson(gson.toJson(params.getArguments().get(1)), Position.class);
                 return (CompletableFuture)((TextDocumentServiceImpl)server.getTextDocumentService()).superImplementations(uri, pos);
-                
+
             case Server.JAVA_FIND_PROJECT_CONFIGURATIONS: {
                 String fileUri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
-                
+
                 FileObject file;
                 try {
                     file = URLMapper.findFileObject(new URL(fileUri));
@@ -343,7 +343,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         }
         return map;
     }
-    
+
     private CompletableFuture<Object> findProjectConfigurations(FileObject ownedFile) {
         return server.asyncOpenFileOwner(ownedFile).thenApply(p -> {
             if (p == null) {

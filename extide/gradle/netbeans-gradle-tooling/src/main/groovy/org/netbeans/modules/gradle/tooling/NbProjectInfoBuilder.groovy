@@ -29,7 +29,8 @@ import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.artifacts.ResolvedDependency
 import org.gradle.api.artifacts.ResolveException
 import org.gradle.api.artifacts.FileCollectionDependency
-import org.gradle.api.artifacts.ExternalModuleDependency
+import org.gradle.api.artifacts.ModuleDependency
+import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.component.ModuleComponentSelector
 import org.gradle.api.artifacts.component.ProjectComponentSelector
 import org.gradle.api.artifacts.result.ArtifactResult
@@ -51,10 +52,53 @@ import org.gradle.util.VersionNumber
  */
 class NbProjectInfoBuilder {
     def NB_PREFIX = 'netbeans.'
-    def CONFIG_EXCLUDES = ['archives', 'checkstyle', 'pmd', 'jacocoAgent', \
-        'jacocoAnt', 'findbugs', 'findbugsPlugins', 'jdepend', 'codenarc', \
-        'classycle']
+    def CONFIG_EXCLUDES = [\
+        'archives', 
+        'checkstyle',
+        'classycle',
+        'codenarc', 
+        'findbugs',
+        'findbugsPlugins',
+        'jacocoAgent',
+        'jacocoAnt',
+        'jdepend',
+        'pmd',
+    ]
 
+    def RECOGNISED_PLUGINS = [
+            'antlr', 
+            'application',
+            'base',
+            'checkstyle',
+            'com.android.application',
+            'com.android.library',
+            'com.github.lkishalmi.gatling',
+            'distribution',
+            'ear',
+            'findbugs',
+            'groovy',
+            'groovy-base',
+            'io.micronaut.application',
+            'ivy-publish',
+            'jacoco',
+            'java',
+            'java-base',
+            'java-library-distribution',
+            'java-platform',
+            'maven',
+            'maven-publish',
+            'org.jetbrains.kotlin.js',
+            'org.jetbrains.kotlin.jvm',
+            'org.jetbrains.kotlin.android',
+            'org.springframework.boot',
+            'osgi', 
+            'play',
+            'pmd',
+            'scala',
+            'scala-base',
+            'war',
+    ]
+    
     final Project project;
     final VersionNumber gradleVersion;
 
@@ -147,18 +191,7 @@ class NbProjectInfoBuilder {
     private void detectPlugins(NbProjectInfoModel model) {
         long time = System.currentTimeMillis()
         Set<String> plugins = new HashSet<>();
-        for (String plugin: ['base', 'java-base', 'java', 'war', \
-            'scala-base', 'scala', 'groovy-base', 'groovy',\
-            'distribution', 'application', 'maven', 'osgi', \
-            'jacoco', 'checkstyle', 'pmd', 'findbugs', 'ear', \
-            'play', 'java-library-distribution', 'maven-publish',
-            'ivy-publish', 'antlr', \
-            'org.springframework.boot', \
-            'com.github.lkishalmi.gatling', \
-            'com.android.library', 'com.android.application',
-            'org.jetbrains.kotlin.android', 'org.jetbrains.kotlin.js',
-            'org.jetbrains.kotlin.jvm',
-            'io.micronaut.application']) {
+        for (String plugin: RECOGNISED_PLUGINS) {
             if (project.plugins.hasPlugin(plugin)) {
                 plugins.add(plugin);
             }
@@ -341,10 +374,18 @@ class NbProjectInfoBuilder {
         }
         //visibleConfigurations = visibleConfigurations.findAll() { resolvable(it) }
         visibleConfigurations.each() {
-            def componentIds = []
+            def componentIds = new HashSet()
             def unresolvedIds = []
             def projectNames = []
             long time_inspect_conf = System.currentTimeMillis()
+            
+            it.dependencies.withType(ModuleDependency) {
+                def group = it.group != null ? it.group : '';
+                def name = it.name
+                def version = it.version != null ? ':' + it.version : ''
+                def id = group + ':' + name + version;
+                componentIds.add(id)                
+            }
             if (resolvable(it)) {
                 try {
                     it.incoming.resolutionResult.allDependencies.each {
@@ -355,14 +396,21 @@ class NbProjectInfoBuilder {
                         }
                         if (it instanceof UnresolvedDependencyResult) {
                             def id = it.requested.displayName
-                            unresolvedIds.add(id)
-                            unresolvedProblems.put(id, it.failure.message)
+                            if (componentIds.contains(id)) {
+                                unresolvedIds.add(id)
+                            }
+                            if (!project.plugins.hasPlugin('java-platform')) {
+                                unresolvedProblems.put(id, it.failure.message)
+                            }
                         }
                     }
                 } catch (ResolveException ex) {
                     model.noteProblem(ex)
                 }
                 ids.addAll(componentIds)
+            } else {
+                unresolvedIds.addAll(componentIds)
+                componentIds.clear()
             }
             long time_project_deps = System.currentTimeMillis()
             model.ext.perf["dependency_inspect_${it.name}_module"] = time_project_deps - time_inspect_conf
@@ -482,10 +530,12 @@ class NbProjectInfoBuilder {
     }
 
     private void collectModuleDependencies(final NbProjectInfoModel model, String confiurationName, boolean includeRoot, final Set deps) {
-        if (includeRoot && !model.info["configuration_${confiurationName}_non_resolving"]) {
+        if (includeRoot) {
             deps.addAll(model.info["configuration_${confiurationName}_components"])
-            deps.addAll(model.info["configuration_${confiurationName}_unresolved"])
             deps.addAll(model.info["configuration_${confiurationName}_files"])
+            if (!model.info["configuration_${confiurationName}_non_resolving"]) {
+                deps.addAll(model.info["configuration_${confiurationName}_unresolved"])                
+            }
         }
         model.info["configuration_${confiurationName}_extendsFrom"].each {
             collectModuleDependencies(model, it, true, deps)

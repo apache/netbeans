@@ -1382,7 +1382,7 @@ public class ServerTest extends NbTestCase {
                 Optional<CompletionItem> annotationItem = completion.getRight().getItems().stream().filter(ci -> "annotation".equals(ci.getLabel())).findAny();
                 assertTrue(annotationItem.isPresent());
                 assertEquals("annotation", annotationItem.get().getLabel());
-                assertEquals(CompletionItemKind.Module, annotationItem.get().getKind());
+                assertEquals(CompletionItemKind.Folder, annotationItem.get().getKind());
             }
 
             server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(afterJavaLang, afterJavaLang), 0, "annotation."))));

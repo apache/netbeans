@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import static junit.framework.TestCase.fail;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
@@ -40,6 +41,7 @@ import org.netbeans.modules.gsf.testrunner.api.Trouble;
 import org.netbeans.modules.java.lsp.server.protocol.DecorationRenderOptions;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
+import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.protocol.SetTextEditorDecorationParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
@@ -215,8 +217,9 @@ public class TestProgressHandlerTest extends NbTestCase {
         }
 
         @Override
-        public void notifyNodeChange(int params) {
-            throw new UnsupportedOperationException("Not supported yet.");
+        public void notifyNodeChange(NodeChangedParams params) {
+            fail();
         }
+
     }
 }

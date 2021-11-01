@@ -33,9 +33,7 @@ import {
     MessageType,
     LogMessageNotification,
     RevealOutputChannelOn,
-    DocumentSelector,
-    DocumentFilter,
-    HandlerResult
+    DocumentSelector
 } from 'vscode-languageclient';
 
 import * as net from 'net';
@@ -47,8 +45,7 @@ import * as launcher from './nbcode';
 import {NbTestAdapter} from './testAdapter';
 import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification, DebugConnector,
          TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification,
-         SetTextEditorDecorationParams,
-         NodeQueryRequest
+         SetTextEditorDecorationParams
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
 import * as explorer from './explorer';
@@ -103,10 +100,6 @@ export function findClusters(myPath : string): string[] {
         }
     }
     return clusters;
-}
-
-export async function findLanguageClient(): Promise<LanguageClient> {
-    return client;
 }
 
 function findJDK(onChange: (path : string | null) => void): void {
@@ -677,6 +670,9 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             handleLog(log, 'Language Client: Ready');
             setClient[0](c);
             commands.executeCommand('setContext', 'nbJavaLSReady', true);
+        
+            // create project explorer:
+            explorer.createTreeView('foundProjects', 'Projects', { canSelectMany : false });
         }).catch(setClient[1]);
     }).catch((reason) => {
         activationPending = false;

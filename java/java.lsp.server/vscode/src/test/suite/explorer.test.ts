@@ -11,7 +11,7 @@ import * as vscode from 'vscode';
 import * as myExtension from '../../extension';
 import * as myExplorer from '../../explorer';
 import { TextDocument, TextEditor, Uri } from 'vscode';
-import { assertWorkspace, dumpJava } from './testutils';
+import { assertWorkspace, dumpJava, prepareProject } from './testutils';
 
 suite('Explorer Test Suite', () => {
     vscode.window.showInformationMessage('Cleaning up workspace.');
@@ -22,8 +22,9 @@ suite('Explorer Test Suite', () => {
     myExtension.enableConsoleLog();
 
     test('Explorer can be created', async () => {
-        const lvp = myExplorer.foundProjects(await myExtension.findLanguageClient());
-        const firstLevelChildren = await (lvp.getChildren(null) as Thenable<any[]>);
-        assert.equal(firstLevelChildren.length, 0, "No child under the root");
+        await prepareProject(folder);
+        const lvp = await myExplorer.createViewProvider('foundProjects');
+        const firstLevelChildren = await (lvp.getChildren() as Thenable<any[]>);
+        assert.strictEqual(firstLevelChildren.length, 0, "No child under the root");
     });
 });

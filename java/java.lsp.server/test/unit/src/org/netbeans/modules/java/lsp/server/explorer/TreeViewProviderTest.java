@@ -30,17 +30,20 @@ import org.openide.filesystems.URLMapper;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.util.Lookup;
 
 public class TreeViewProviderTest {
 
     public TreeViewProviderTest() {
     }
+    
+    TreeNodeRegistry registry = new TreeNodeRegistryImpl(Lookup.EMPTY);
 
     @Test
     public void simpleHierarchyTestWithChange() throws Exception {
         ExplorerManager em = new ExplorerManager();
         em.setRootContext(new FibNode(10));
-        TreeViewProviderImpl tvp = new TreeViewProviderImpl(em);
+        TreeViewProviderImpl tvp = new TreeViewProviderImpl(em, registry);
 
         TreeItem rootInfo = tvp.getRootInfo().toCompletableFuture().get();
         int[] two = tvp.getChildren(rootInfo.id).toCompletableFuture().get();
@@ -57,13 +60,13 @@ public class TreeViewProviderTest {
         assertEquals("Fib(9)", two0.label);
         assertEquals("Fib(8)", two1.label);
 
-        assertEquals("Fib(9) = 34", two0.description);
-        assertEquals("Fib(8) = 21", two1.description);
+        assertEquals("Fib(9) = 34", two0.tooltip);
+        assertEquals("Fib(8) = 21", two1.tooltip);
 
         assertEquals(TreeItem.CollapsibleState.Collapsed, two0.collapsibleState);
         assertEquals(TreeItem.CollapsibleState.Collapsed, two1.collapsibleState);
 
-        Node twoOneNode = TreeItem.findNode(two[1]);
+        Node twoOneNode = tvp.findNode(two[1]);
         ((FibNode)twoOneNode).extraAdd(8);
 
         tvp.assertChanged(twoOneNode);
@@ -71,10 +74,10 @@ public class TreeViewProviderTest {
         TreeItem second1 = tvp.getTreeItem(two[1]).toCompletableFuture().get();
         assertEquals("8", second1.name);
         assertEquals("Fib(8)", second1.label);
-        assertEquals("Fib(8) = 42", second1.description);
+        assertEquals("Fib(8) = 42", second1.tooltip);
         assertEquals("Node id remains", two1.id, second1.id);
 
-        assertSame("Nodes are cached", twoOneNode, TreeItem.findNode(two1.id));
+        assertSame("Nodes are cached", twoOneNode, tvp.findNode(two1.id));
     }
 
     @Test
@@ -82,10 +85,10 @@ public class TreeViewProviderTest {
         AbstractNode an = new AbstractNode(Children.LEAF);
         an.setName("a node");
 
-        TreeItem item = TreeItem.find(an);
+        TreeItem item = new TreeItem(0, an, false, "");
         assertEquals("name is set", "a node", item.name);
         assertEquals("label is inherited", "a node", item.label);
-        assertNull("description isn't copied", item.description);
+        assertNull("description isn't copied", item.tooltip);
     }
 
     @Test
@@ -94,10 +97,10 @@ public class TreeViewProviderTest {
         an.setName("a node");
         an.setShortDescription("better node");
 
-        TreeItem item = TreeItem.find(an);
+        TreeItem item = new TreeItem(0, an, false, "");
         assertEquals("name is set", "a node", item.name);
         assertEquals("label is inherited", "a node", item.label);
-        assertEquals("description is set", "better node", item.description);
+        assertEquals("description is set", "better node", item.tooltip);
     }
 
     @Test
@@ -109,7 +112,7 @@ public class TreeViewProviderTest {
         AbstractNode an = new AbstractNode(Children.LEAF, fo.getLookup());
         an.setName(fo.getNameExt());
 
-        TreeItem item = TreeItem.find(an);
+        TreeItem item = new TreeItem(0, an, false, "");
         assertEquals("label is inherited", fo.getNameExt(), item.label);
         assertNotNull("resource uri specified", item.resourceUri);
         assertEquals(item.resourceUri, URLMapper.findURL(fo, URLMapper.EXTERNAL).toString());
@@ -119,8 +122,8 @@ public class TreeViewProviderTest {
     final static class TreeViewProviderImpl extends TreeViewProvider {
         private Set<Node> changed = new HashSet<>();
 
-        TreeViewProviderImpl(ExplorerManager em) {
-            super(em);
+        TreeViewProviderImpl(ExplorerManager em, TreeNodeRegistry r) {
+            super("", em, r, Lookup.EMPTY);
         }
 
         public void onDidChangeTreeData(Node n, int id) {

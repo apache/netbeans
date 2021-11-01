@@ -18,14 +18,15 @@
  */
 package org.netbeans.modules.java.lsp.server.explorer;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URI;
 import java.util.Objects;
+import org.eclipse.lsp4j.MarkupContent;
+import static org.netbeans.modules.java.lsp.server.protocol.TextDocumentServiceImpl.html2MD;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.nodes.Node;
 
-public final class TreeItem {
+public class TreeItem {
     enum CollapsibleState {
         None, Collapsed, Expanded
     }
@@ -34,13 +35,15 @@ public final class TreeItem {
     public CollapsibleState collapsibleState;
     // executed when the tree item is selected.
     // command?: Command
+    public String command;
     // contribute item specific actions in the tree
     public String contextValue;
     // ?: string | boolean
     // rendered less prominent. When true, it is derived from resourceUri
     public String description;
     // ?: string | Uri | {dark: string | Uri, light: string | Uri} | ThemeIcon
-    public String iconPath;
+    public URI iconUri;
+    public int iconIndex;
     // id for the tree item that has to be unique across tree.
     // The id is used to preserve the selection and expansion state of the tree item.
     public int id;
@@ -52,54 +55,40 @@ public final class TreeItem {
     // resourceUri?: Uri
     public String resourceUri;
     // ?: string | MarkdownString | undefined
-    public String tooltip;
+    public Object tooltip;
 
     public TreeItem() {
     }
+    
+    static Object html2md(String s) {
+        if (s != null && s.startsWith("<html>")) {
+            MarkupContent markup = new MarkupContent();
+            markup.setKind("markdown");
+            markup.setValue(html2MD(s));
+            return markup;
+        } else {
+            return s;
+        }
+    }
 
-    private TreeItem(int id, Node n) {
+    TreeItem(int id, Node n, boolean wasExpanded, String contextValue) {
         if (n.isLeaf()) {
             collapsibleState = TreeItem.CollapsibleState.None;
         } else {
-            collapsibleState = TreeItem.CollapsibleState.Collapsed;
+            collapsibleState = wasExpanded ? TreeItem.CollapsibleState.Expanded : TreeItem.CollapsibleState.Collapsed;
         }
+        this.contextValue = contextValue;
         this.id = id;
         this.name = n.getName();
         this.label = n.getDisplayName();
         final String desc = n.getShortDescription();
-        this.description = Objects.equals(this.label, desc) ? null : desc;
-        this.tooltip = n.getHtmlDisplayName();
+        if (!Objects.equals(this.label, desc)) {
+            this.tooltip = html2md(desc);
+        }
 
         FileObject fo = n.getLookup().lookup(FileObject.class);
         if (fo != null) {
             this.resourceUri = URLMapper.findURL(fo, URLMapper.EXTERNAL).toString();
         }
     }
-
-    private static int counter = 0;
-    private static final Map<Integer, Node> MAP = new HashMap<>();
-
-    public static synchronized int findId(Node n) {
-        Object lspId = n.getValue("lspId");
-        if (!(lspId instanceof Integer)) {
-            lspId = ++counter;
-            n.setValue("lspId", lspId);
-            MAP.put((Integer) lspId, n);
-        }
-        return (int) lspId;
-    }
-
-    public static TreeItem find(Node n) {
-        return new TreeItem(findId(n), n);
-    }
-
-    public static synchronized TreeItem find(int id) {
-        Node n = findNode(id);
-        return n == null ? null : find(n);
-    }
-
-    public synchronized static Node findNode(int id) {
-        return MAP.get(id);
-    }
-
 }

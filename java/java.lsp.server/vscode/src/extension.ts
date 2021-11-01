@@ -21,11 +21,14 @@
 import { commands, window, workspace, ExtensionContext, ProgressLocation, TextEditorDecorationType } from 'vscode';
 
 import {
-    LanguageClient,
-    LanguageClientOptions,
+	LanguageClient,
+	LanguageClientOptions,
+	StreamInfo
+} from 'vscode-languageclient/node';
+
+import {
     CloseAction,
     ErrorAction,
-    StreamInfo,
     Message,
     MessageType,
     LogMessageNotification,

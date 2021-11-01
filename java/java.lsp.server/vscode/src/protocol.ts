@@ -20,8 +20,8 @@
 
 import * as vscode from 'vscode';
 import {
-    NotificationType,
-    RequestType,
+    ProtocolNotificationType,
+    ProtocolRequestType,
     ShowMessageParams
 } from 'vscode-languageclient';
 import {
@@ -37,7 +37,7 @@ export interface ShowStatusMessageParams extends ShowMessageParams {
 }
 
 export namespace StatusMessageRequest {
-    export const type = new NotificationType<ShowStatusMessageParams, void>('window/showStatusBarMessage');
+    export const type = new ProtocolNotificationType<ShowStatusMessageParams, void>('window/showStatusBarMessage');
 };
 
 export interface ShowQuickPickParams {
@@ -56,7 +56,7 @@ export interface ShowQuickPickParams {
 }
 
 export namespace QuickPickRequest {
-    export const type = new RequestType<ShowQuickPickParams, vscode.QuickPickItem[], void, void>('window/showQuickPick');
+    export const type = new ProtocolRequestType<ShowQuickPickParams, vscode.QuickPickItem[], never, void, void>('window/showQuickPick');
 }
 
 export interface ShowInputBoxParams {
@@ -71,7 +71,7 @@ export interface ShowInputBoxParams {
 }
 
 export namespace InputBoxRequest {
-    export const type = new RequestType<ShowInputBoxParams, string | undefined, void, void>('window/showInputBox');
+    export const type = new ProtocolRequestType<ShowInputBoxParams, string | undefined, never, void, void>('window/showInputBox');
 }
 
 export interface TestProgressParams {
@@ -97,7 +97,7 @@ export interface TestCase {
 }
 
 export namespace TestProgressNotification {
-    export const type = new NotificationType<TestProgressParams, void>('window/notifyTestProgress');
+    export const type = new ProtocolNotificationType<TestProgressParams, void>('window/notifyTestProgress');
 };
 
 export interface DebugConnector {
@@ -116,15 +116,15 @@ export interface SetTextEditorDecorationParams {
 };
 
 export namespace TextEditorDecorationCreateRequest {
-    export const type = new RequestType<vscode.DecorationRenderOptions, string, void, void>('window/createTextEditorDecoration');
+    export const type = new ProtocolRequestType<vscode.DecorationRenderOptions, never, string, void, void>('window/createTextEditorDecoration');
 };
 
 export namespace TextEditorDecorationSetNotification {
-    export const type = new NotificationType<SetTextEditorDecorationParams, void>('window/setTextEditorDecoration');
+    export const type = new ProtocolNotificationType<SetTextEditorDecorationParams, void>('window/setTextEditorDecoration');
 };
 
 export namespace TextEditorDecorationDisposeNotification {
-    export const type = new NotificationType<string, void>('window/disposeTextEditorDecoration');
+    export const type = new ProtocolNotificationType<string, void>('window/disposeTextEditorDecoration');
 };
 
 export function asPosition(value: undefined | null): undefined;

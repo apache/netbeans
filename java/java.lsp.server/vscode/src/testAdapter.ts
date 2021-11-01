@@ -21,7 +21,7 @@
 import { commands, debug, tests, workspace, CancellationToken, TestController, TestItem, TestRunProfileKind, TestRunRequest, Uri, TestRun, TestMessage, Location, Position } from "vscode";
 import * as path from 'path';
 import { asRange, TestSuite } from "./protocol";
-import { LanguageClient } from "vscode-languageclient";
+import { LanguageClient } from "vscode-languageclient/node";
 
 export class NbTestAdapter {
 

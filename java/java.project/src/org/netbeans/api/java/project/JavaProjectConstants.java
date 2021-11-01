@@ -47,6 +47,13 @@ public class JavaProjectConstants {
     public static final String SOURCES_TYPE_MODULES = "modules"; // NOI18N
 
     /**
+     * Generated root sources type.
+     * @see org.netbeans.api.project.Sources
+     * @since 1.88
+     */
+    public static final String SOURCES_TYPE_GENERATED = "generated"; // NOI18N
+
+    /**
      * Hint for <code>SourceGroupModifier</code> to create a <code>SourceGroup</code>
      * for main project codebase.
      * @see org.netbeans.api.project.SourceGroupModifier

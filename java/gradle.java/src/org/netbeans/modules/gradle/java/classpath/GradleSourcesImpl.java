@@ -107,7 +107,6 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
     private static final Map<String, String> COMMON_NAMES = new HashMap<>();
     public static final String SOURCE_TYPE_GROOVY    = "groovy";    //NOI18N
     public static final String SOURCE_TYPE_KOTLIN    = "kotlin";    //NOI18N
-    public static final String SOURCE_TYPE_GENERATED = "generated"; //NOI18N
 
     static {
         COMMON_NAMES.put("main.JAVA", "01main.java");
@@ -336,7 +335,7 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
         switch (type) {
             case JavaProjectConstants.SOURCES_TYPE_JAVA: return EnumSet.of(SourceType.JAVA, SourceType.GROOVY);
             case JavaProjectConstants.SOURCES_TYPE_RESOURCES: return EnumSet.of(SourceType.RESOURCES);
-            case SOURCE_TYPE_GENERATED: return EnumSet.of(SourceType.GENERATED);
+            case JavaProjectConstants.SOURCES_TYPE_GENERATED: return EnumSet.of(SourceType.GENERATED);
             case SOURCE_TYPE_GROOVY: return EnumSet.of(SourceType.GROOVY); // Should be in the Groovy support module theoretically
             case SOURCE_TYPE_KOTLIN: return EnumSet.of(SourceType.KOTLIN);
         }

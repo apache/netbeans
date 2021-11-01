@@ -78,7 +78,7 @@ import org.openide.util.Utilities;
 public class MavenSourcesImpl implements Sources, SourceGroupModifierImplementation, OtherSourcesExclude {
     public static final String TYPE_OTHER = "Resources"; //NOI18N
     public static final String TYPE_TEST_OTHER = "TestResources"; //NOI18N
-    public static final String TYPE_GEN_SOURCES = "GeneratedSources"; //NOI18N
+    public static final String TYPE_GEN_SOURCES = JavaProjectConstants.SOURCES_TYPE_GENERATED;
     public static final String NAME_PROJECTROOT = "ProjectRoot"; //NOI18N
     public static final String NAME_XDOCS = "XDocs"; //NOI18N
     public static final String NAME_SOURCE = "1SourceRoot"; //NOI18N

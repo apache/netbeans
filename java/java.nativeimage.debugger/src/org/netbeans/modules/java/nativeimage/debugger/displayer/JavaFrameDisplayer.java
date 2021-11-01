@@ -34,6 +34,7 @@ import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.Sources;
 import org.netbeans.modules.nativeimage.api.debug.NIFrame;
 import org.netbeans.modules.nativeimage.spi.debug.filters.FrameDisplayer;
 import org.netbeans.spi.java.classpath.PathResourceImplementation;
@@ -161,32 +162,41 @@ public final class JavaFrameDisplayer implements FrameDisplayer {
             List<FileObject> allSourceRoots = new ArrayList<>();
             Set<FileObject> preferredRoots = new HashSet<>();
             Set<FileObject> addedBinaryRoots = new HashSet<>();
-            SourceGroup[] sgs = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-            for (SourceGroup sg : sgs) {
-                ClassPath ecp = ClassPath.getClassPath(sg.getRootFolder(), ClassPath.EXECUTE);
-                if (ecp == null) {
-                    ecp = ClassPath.getClassPath(sg.getRootFolder(), ClassPath.SOURCE);
-                }
-                if (ecp != null) {
-                    FileObject[] binaryRoots = ecp.getRoots();
-                    for (FileObject fo : binaryRoots) {
-                        if (addedBinaryRoots.contains(fo)) {
-                            continue;
-                        }
-                        addedBinaryRoots.add(fo);
-                        FileObject[] roots = SourceForBinaryQuery.findSourceRoots(fo.toURL()).getRoots();
-                        for (FileObject fr : roots) {
-                            if (!preferredRoots.contains(fr)) {
-                                allSourceRoots.add(fr);
-                                preferredRoots.add(fr);
-                            }
-                        }
-                    }
-                }
+            Sources sources = ProjectUtils.getSources(project);
+            SourceGroup[] sgs = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+            addSourceRoots(sgs, allSourceRoots, preferredRoots, addedBinaryRoots);
+            sgs = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_GENERATED);
+            if (sgs != null) {
+                addSourceRoots(sgs, allSourceRoots, preferredRoots, addedBinaryRoots);
             }
             return createClassPath(allSourceRoots);
         } else {
             return null;
+        }
+    }
+
+    private static void addSourceRoots(SourceGroup[] sgs, List<FileObject> allSourceRoots, Set<FileObject> preferredRoots, Set<FileObject> addedBinaryRoots) {
+        for (SourceGroup sg : sgs) {
+            ClassPath ecp = ClassPath.getClassPath(sg.getRootFolder(), ClassPath.EXECUTE);
+            if (ecp == null) {
+                ecp = ClassPath.getClassPath(sg.getRootFolder(), ClassPath.SOURCE);
+            }
+            if (ecp != null) {
+                FileObject[] binaryRoots = ecp.getRoots();
+                for (FileObject fo : binaryRoots) {
+                    if (addedBinaryRoots.contains(fo)) {
+                        continue;
+                    }
+                    addedBinaryRoots.add(fo);
+                    FileObject[] roots = SourceForBinaryQuery.findSourceRoots(fo.toURL()).getRoots();
+                    for (FileObject fr : roots) {
+                        if (!preferredRoots.contains(fr)) {
+                            allSourceRoots.add(fr);
+                            preferredRoots.add(fr);
+                        }
+                    }
+                }
+            }
         }
     }
 

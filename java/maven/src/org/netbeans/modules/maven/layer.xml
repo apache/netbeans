@@ -35,7 +35,7 @@
                 <attr name="position" intvalue="100"/>
 
                 <!-- Simple Java project structure -->
-                <folder name="JavaApplication2">
+                <folder name="JavaApp">
                     <folder name="src">
                         <folder name="main">
                             <folder name="java">

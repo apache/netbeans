@@ -29,7 +29,7 @@ import org.openide.util.NbBundle.Messages;
  * @author mkleint
  */
 @TemplateRegistration(
-    id = "JavaApplication2/",
+    id = "JavaApp/",
     displayName="#LBL_Maven_Quickstart_Archetype",
     iconBase="org/netbeans/modules/maven/resources/jaricon.png",
     description="quickstart.html",

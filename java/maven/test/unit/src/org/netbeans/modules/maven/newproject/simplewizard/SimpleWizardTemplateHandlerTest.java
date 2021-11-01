@@ -46,7 +46,7 @@ public class SimpleWizardTemplateHandlerTest extends NbTestCase {
         clearWorkDir();
         whereTo = FileUtil.createFolder(FileUtil.toFileObject(getWorkDir()), "whereTo");
         
-        FileObject template = FileUtil.getConfigFile("Templates/Project/Maven2/JavaApplication2");
+        FileObject template = FileUtil.getConfigFile("Templates/Project/Maven2/JavaApp");
         FileBuilder bld = new FileBuilder(template, whereTo);
         bld.name("TestProject");
         bld.defaultMode(FileBuilder.Mode.COPY);

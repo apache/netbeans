@@ -45,6 +45,7 @@ public class HtmlPreferences {
     public static boolean completionOffersEndTagAfterLt;
     private static boolean autoPopupCompletionWindow;
     private static boolean autoPopupEndTagAutoCompletion;
+    private static boolean isPaletteCompletionEnabled;
 
     //extract inlined style panel preferences
     private static SelectorType selectorType;
@@ -90,6 +91,9 @@ public class HtmlPreferences {
             if (settingName == null || mimetypesWithEnabledHtmlErrorChecking_key.equals(settingName)) {
                 mimetypesWithEnabledHtmlErrorChecking = preferences.get(mimetypesWithEnabledHtmlErrorChecking_key, mimetypesWithEnabledHtmlErrorChecking_default);
             }
+            if (settingName == null || HtmlCompletionOptionsPanel.HTML_ENABLE_PALETTE_COMPLETION.equals(settingName)) {
+                isPaletteCompletionEnabled = preferences.getBoolean(HtmlCompletionOptionsPanel.HTML_ENABLE_PALETTE_COMPLETION, HtmlCompletionOptionsPanel.HTML_ENABLE_PALETTE_COMPLETION_DEFAULT);
+            }
         }
     };
 
@@ -134,12 +138,12 @@ public class HtmlPreferences {
         lazyIntialize();
         return completionOffersEndTagAfterLt;
     }
-    
+
     public static boolean autoPopupCompletionWindow() {
         lazyIntialize();
         return autoPopupCompletionWindow;
     }
-    
+
     public static boolean autoPopupEndTagAutoCompletion() {
         lazyIntialize();
         return autoPopupEndTagAutoCompletion;
@@ -165,6 +169,10 @@ public class HtmlPreferences {
         preferences.put(SECTION_MODE_PROPERTY_NAME, mode.name());
     }
 
+    public static boolean isPaletteCompletionEnabled() {
+        lazyIntialize();
+        return isPaletteCompletionEnabled;
+    }
 
     public static Collection<String> getMimetypesWithEnabledHtmlErrorChecking() {
         lazyIntialize();
@@ -187,7 +195,7 @@ public class HtmlPreferences {
         if(html) {
             enabled = !enabled;
         }
-        
+
         if(mimescol.contains(mimetype)) {
             if(enabled) {
                 return ; //already enabled
@@ -209,7 +217,7 @@ public class HtmlPreferences {
     }
 
     private static boolean isHtmlMimeType(String mimetype) {
-        return "text/html".equals(mimetype) || "text/xhtml".equals(mimetype);
+        return "text/html".equals(mimetype) || "text/xhtml".equals(mimetype); // NOI18N
     }
 
     private static String encodeMimetypes(Collection<String> mimes) {

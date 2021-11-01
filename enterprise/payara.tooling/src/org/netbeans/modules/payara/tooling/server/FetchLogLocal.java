@@ -168,7 +168,7 @@ public class FetchLogLocal extends FetchLogPiped {
                     while (inCount > 0) {
                         int count = fIn.read(buff);
                         LOGGER.log(Level.FINEST, METHOD, "read",
-                                new Object[]{new Integer(count)});
+                                new Object[]{count});
                         if (count > 0) {
                             out.write(buff, 0, count);
                         }

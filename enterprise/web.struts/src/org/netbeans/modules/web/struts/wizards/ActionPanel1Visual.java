@@ -471,7 +471,7 @@ public class ActionPanel1Visual extends javax.swing.JPanel implements HelpCtx.Pr
     }
     
     private Boolean isValidate() {
-        return Boolean.valueOf(CHBValidate.isSelected());
+        return CHBValidate.isSelected();
     }
     
     private String getAttribute() {

@@ -67,4 +67,26 @@
     </target>
 
     <target name="netbeans-extra" depends="nblib"/>    
+
+
+
+    <target name="do-unit-test-build" depends="projectized.do-unit-test-build">
+        <macrodef name="package-artifact-from-dir">
+             <attribute name="jarbasename"/>
+             <attribute name="relpath"/>
+             <sequential>
+                 <jar destfile="${build.test.unit.dir}/data/@{relpath}/@{jarbasename}.jar">
+                     <fileset dir="${build.test.unit.dir}/data/@{relpath}/@{jarbasename}.jardir" includes="**"/>
+                 </jar>
+             </sequential>
+         </macrodef>
+         
+         <package-artifact-from-dir jarbasename="annotation-12.6" relpath="projects/processors/repo/grp/annotation/12.6"/>
+         <package-artifact-from-dir jarbasename="test-lib-12.6" relpath="projects/processors/repo/grp/test-lib/12.6"/>
+         <package-artifact-from-dir jarbasename="test-lib2-12.6" relpath="projects/processors/repo/grp/test-lib2/12.6"/>
+         <package-artifact-from-dir jarbasename="test-lib3-12.6" relpath="projects/processors/repo/grp/test-lib3/12.6"/>
+         <package-artifact-from-dir jarbasename="test-lib4-12.6" relpath="projects/processors/repo/grp/test-lib4/12.6"/>
+         <package-artifact-from-dir jarbasename="test-processor-12.6" relpath="projects/processors/repo/grp/test-processor/12.6"/>
+    </target>
+
 </project>

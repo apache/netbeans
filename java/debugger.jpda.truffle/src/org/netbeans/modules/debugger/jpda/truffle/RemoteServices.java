@@ -95,17 +95,17 @@ public final class RemoteServices {
     
     private static final Logger logger = Logger.getLogger(RemoteServices.class.getName());
     
-    static final String REMOTE_CLASSES_ZIPFILE = "/org/netbeans/modules/debugger/jpda/truffle/resources/JPDATruffleBackend.jar";
+    static final String REMOTE_CLASSES_ZIPFILE = "/org/netbeans/modules/debugger/jpda/truffle/resources/JPDATruffleBackend.jar";    // NOI18N
 
-    private static final String TRUFFLE_CLASS = "com.oracle.truffle.api.Truffle";
-    private static final String EXPORT_TRUFFLE_CLASS = "com.oracle.truffle.polyglot.LanguageCache$Loader";
-    private static final String EXPORT_TRUFFLE_METHOD = "exportTruffle";
-    private static final String EXPORT_TRUFFLE_SIGNAT = "(Ljava/lang/ClassLoader;)V";
+    private static final String TRUFFLE_CLASS = "com.oracle.truffle.api.Truffle";       // NOI18N
+    private static final String EXPORT_TRUFFLE_CLASS = "com.oracle.truffle.api.impl.TruffleJDKServices";    // NOI18N
+    private static final String EXPORT_TRUFFLE_METHOD = "exportTo";                                         // NOI18N
+    private static final String EXPORT_TRUFFLE_SIGNAT = "(Ljava/lang/ClassLoader;Ljava/lang/String;)V";     // NOI18N
     
     private static final Map<JPDADebugger, ClassObjectReference> remoteServiceClasses = new WeakHashMap<>();
     private static final Map<JPDADebugger, ThreadReference> remoteServiceAccess = new WeakHashMap<>();
     
-    private static final RequestProcessor AUTORESUME_AFTER_SUSPEND_RP = new RequestProcessor("Autoresume after suspend", 1);
+    private static final RequestProcessor AUTORESUME_AFTER_SUSPEND_RP = new RequestProcessor("Autoresume after suspend", 1);    // NOI18N
     
     private static final Set<PropertyChangeListener> serviceListeners = new WeakSet<>();
 
@@ -279,7 +279,7 @@ public final class RemoteServices {
                     Exceptions.printStackTrace(new IllegalStateException("Method " + EXPORT_TRUFFLE_METHOD + " was not found in " + EXPORT_TRUFFLE_CLASS +" in the debuggee."));
                     return null;
                 }
-                ClassTypeWrapper.invokeMethod(languageLoader, tawt, exportTruffle, Collections.singletonList(classLoader), ObjectReference.INVOKE_SINGLE_THREADED);
+                ClassTypeWrapper.invokeMethod(languageLoader, tawt, exportTruffle, Arrays.asList(classLoader, null), ObjectReference.INVOKE_SINGLE_THREADED);
             } else {
                 ObjectReference cl;
                 cl = getTruffleClassLoader(tawt, vm);

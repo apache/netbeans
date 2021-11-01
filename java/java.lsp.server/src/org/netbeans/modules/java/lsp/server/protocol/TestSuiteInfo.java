@@ -51,7 +51,7 @@ public final class TestSuiteInfo {
 
     /**
      * The state of the tests suite. Can be one of the following values:
-     * "loaded" | "started" | "completed" | "errored"
+     * "loaded" | "started" | "passed" | "failed" | "skipped" | "errored"
      */
     @NonNull
     private String state;
@@ -125,7 +125,7 @@ public final class TestSuiteInfo {
 
     /**
      * The state of the tests suite. Can be one of the following values:
-     * "loaded" | "started" | "completed" | "errored"
+     * "loaded" | "started" | "passed" | "failed" | "skipped" | "errored"
      */
     @Pure
     @NonNull
@@ -135,7 +135,7 @@ public final class TestSuiteInfo {
 
     /**
      * The state of the tests suite. Can be one of the following values:
-     * "loaded" | "started" | "completed" | "errored"
+     * "loaded" | "started" | "passed" | "failed" | "skipped" | "errored"
      */
     public void setState(@NonNull final String state) {
         this.state = Preconditions.checkNotNull(state, "state");
@@ -433,8 +433,6 @@ public final class TestSuiteInfo {
         public static final String Loaded = "loaded";
 
         public static final String Started = "started";
-
-        public static final String Completed  = "completed";
 
         public static final String Passed  = "passed";
 

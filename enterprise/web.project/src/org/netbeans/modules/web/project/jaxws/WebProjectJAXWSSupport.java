@@ -412,7 +412,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
     public void serviceFromJavaRemoved(String serviceName) {
         JaxWsModel jaxWsModel = (JaxWsModel)project.getLookup().lookup(JaxWsModel.class);
         Boolean isJsr109 = jaxWsModel.getJsr109();
-        if(isJsr109!=null && !isJsr109.booleanValue()){
+        if(isJsr109!=null && !isJsr109){
             try{
                 removeNonJsr109Entries(serviceName);
             }catch(IOException e){

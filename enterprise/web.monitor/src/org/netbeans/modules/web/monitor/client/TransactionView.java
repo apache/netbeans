@@ -286,7 +286,7 @@ class TransactionView extends TopComponent implements ExplorerManager.Provider,
 	buttonPanel.setFloatable (false);
 
 	JButton updateButton = new JButton(new ImageIcon(TransactionView.class.getResource
-        ("/org/netbeans/modules/web/monitor/client/icons/update.gif")));; // NOI18N
+        ("/org/netbeans/modules/web/monitor/client/icons/update.gif"))); // NOI18N
 	updateButton.setToolTipText(NbBundle.getBundle(TransactionView.class).getString("MON_Reload_all_17"));
 	updateButton.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {

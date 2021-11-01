@@ -519,6 +519,17 @@ public class GroovyParser extends Parser {
             this.indexing = indexing;
             this.errorCollector = new NbGroovyErrorCollector(configuration);
         }
+        
+        boolean inited;
+        
+        public void addPhaseOperation(final ISourceUnitOperation op, final int phase) {
+            if (!inited) {
+                ((ClassNodeCache.TransformationClassLoader)getTransformLoader()).setUnit(this);
+                inited = true;
+            }
+            super.addPhaseOperation(op, phase);
+        }
+        
         /**
          * Inject static compilation transformation; apply them in the
          *
@@ -528,6 +539,9 @@ public class GroovyParser extends Parser {
         @Override
         public void gotoPhase(int phase) throws CompilationFailedException {
             super.gotoPhase(phase);
+            if (phase > Phases.CONVERSION) {
+                ((NbGroovyErrorCollector)errorCollector).setDisableErrors(true);
+            }
             if (phase != Phases.INSTRUCTION_SELECTION) {
                 return;
             }
@@ -575,15 +589,23 @@ public class GroovyParser extends Parser {
 
         String fileName = "";
         String path = "";
-        if (context.snapshot.getSource().getFileObject() != null) {
-            fileName = context.snapshot.getSource().getFileObject().getNameExt();
-            path = context.snapshot.getSource().getFileObject().getPath();
+        FileObject file = context.snapshot.getSource().getFileObject();
+        if (file != null) {
+            fileName = file.getNameExt();
+            path = file.getPath();
         }
 
         FileObject fo = context.snapshot.getSource().getFileObject();
         ClassPath bootPath = fo == null ? ClassPath.EMPTY : ClassPath.getClassPath(fo, ClassPath.BOOT);
         ClassPath compilePath = fo == null ? ClassPath.EMPTY : ClassPath.getClassPath(fo, ClassPath.COMPILE);
         ClassPath sourcePath = fo == null ? ClassPath.EMPTY : ClassPath.getClassPath(fo, ClassPath.SOURCE);
+        
+        if (bootPath == null) {
+            bootPath = ClassPath.EMPTY;
+        }
+        if (compilePath == null) {
+            compilePath = ClassPath.EMPTY;
+        }
         
         CompilerConfiguration configuration = new CompilerConfiguration();
         final ClassNodeCache classNodeCache = ClassNodeCache.get();
@@ -599,7 +621,8 @@ public class GroovyParser extends Parser {
         ClassPath transformPath = ClassPathSupport.createProxyClassPath(bootPath, cachedCompile);
         ClassPath cp = ClassPathSupport.createProxyClassPath(transformPath, sourcePath);
         final ParsingClassLoader classLoader = classNodeCache.createResolveLoader(cp, configuration);
-        final GroovyClassLoader transformationLoader = classNodeCache.createTransformationLoader(transformPath, configuration);
+        final GroovyClassLoader transformationLoader = classNodeCache.createTransformationLoader(
+                transformPath, configuration, file, bootPath, cachedCompile);
         
         if (LOG.isLoggable(Level.FINEST)) {
             FileObject[] roots = cp.getRoots();
@@ -640,7 +663,6 @@ public class GroovyParser extends Parser {
             start = System.currentTimeMillis();
         }
         NbGroovyErrorCollector coll = (NbGroovyErrorCollector)compilationUnit.getErrorCollector();
-        coll.setDisableErrors(true);
         try {
             try {
                 PerfData.withPerfData(context.perfData, () -> {

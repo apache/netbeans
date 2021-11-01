@@ -159,7 +159,7 @@ public final class Setup extends AbstractDiffSetup {
                 break;
 
             default:
-                throw new IllegalArgumentException("Unknow diff type: " + type); // NOI18N
+                throw new IllegalArgumentException("Unknown diff type: " + type); // NOI18N
         }
 
 
@@ -212,7 +212,7 @@ public final class Setup extends AbstractDiffSetup {
                 break;
 
             default:
-                throw new IllegalArgumentException("Unknow diff type: " + type); // NOI18N
+                throw new IllegalArgumentException("Unknown diff type: " + type); // NOI18N
         }
         
         if (propertyName != null){

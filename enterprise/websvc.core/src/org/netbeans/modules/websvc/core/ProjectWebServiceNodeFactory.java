@@ -174,7 +174,7 @@ public class ProjectWebServiceNodeFactory implements NodeFactory {
                             serviceNode.getFactory().updateKeys();
                         }
                         if (clientNode != null) {
-                            clientNode.getFactory().updateKeys();;
+                            clientNode.getFactory().updateKeys();
                         }
                     }
                 }

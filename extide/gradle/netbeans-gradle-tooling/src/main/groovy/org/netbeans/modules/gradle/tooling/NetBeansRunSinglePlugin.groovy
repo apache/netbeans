@@ -35,6 +35,8 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
     static String RUN_SINGLE_MAIN = "runClassName"
     static String RUN_SINGLE_ARGS = "runArgs"
     static String RUN_SINGLE_JVM_ARGS = "runJvmArgs"
+    static String RUN_SINGLE_CWD = "runWorkingDir"
+    static String RUN_SINGLE_ENV = "runEnvironment"
     
     void apply(Project project) {
         project.afterEvaluate {
@@ -65,7 +67,107 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
             if (project.hasProperty(RUN_SINGLE_ARGS)) {
                 args = project.getProperty(RUN_SINGLE_ARGS).tokenize(' ')
             }
+            if (project.hasProperty(RUN_SINGLE_CWD)) {
+                workingDir = project.getProperty(RUN_SINGLE_CWD)
+            }
+            if (project.hasProperty(RUN_SINGLE_ENV)) {
+                // Quoted space-separated expressions of <ENV_VAR>=<ENV_VALUE>
+                // to set environment variables, or !<ENV_VAR>
+                // to remove environment variables
+                unescapeParameters(project.getProperty(RUN_SINGLE_ENV)).each {
+                    env ->
+                        if (env.startsWith("!")) {
+                            environment.remove(env.substring(1))
+                        } else {
+                            def i = env.indexOf("=")
+                            if (i > 0) {
+                                environment[env.substring(0, i)] = env.substring(i + 1)
+                            }
+                        }
+                }
+            }
         }
     }
-    
+
+    private String[] unescapeParameters(String s) {
+        final int NULL = 0x0;
+        final int IN_PARAM = 0x1;
+        final int IN_DOUBLE_QUOTE = 0x2;
+        final int IN_SINGLE_QUOTE = 0x3;
+        ArrayList<String> params = new ArrayList<>(5);
+        char c;
+
+        int state = NULL;
+        StringBuilder buff = new StringBuilder(20);
+        int slength = s.length();
+
+        for (int i = 0; i < slength; i++) {
+            c = s.charAt(i);
+            switch (state) {
+                case NULL:
+                    switch (c) {
+                        case '\'':
+                            state = IN_SINGLE_QUOTE;
+                            break;
+                        case '"':
+                            state = IN_DOUBLE_QUOTE;
+                            break;
+                        default:
+                            if (!Character.isWhitespace(c)) {
+                                buff.append(c);
+                                state = IN_PARAM;
+                            }
+                    }
+                    break;
+                case IN_SINGLE_QUOTE:
+                    if (c != '\'') {
+                        buff.append(c);
+                    } else {
+                        state = IN_PARAM;
+                    }
+                    break;
+                case IN_DOUBLE_QUOTE:
+                    switch (c) {
+                        case '\\':
+                            char peek = (i < slength - 1) ? s.charAt(i+1) : Character.MIN_VALUE;
+                            if (peek == '"' || peek =='\\') {
+                                buff.append(peek);
+                                i++;
+                            } else {
+                                buff.append(c);
+                            }
+                            break;
+                        case '"':
+                            state = IN_PARAM;
+                            break;
+                        default:
+                            buff.append(c);
+                    }
+                    break;
+                case IN_PARAM:
+                    switch (c) {
+                        case '\'':
+                            state = IN_SINGLE_QUOTE;
+                            break;
+                        case '"':
+                            state = IN_DOUBLE_QUOTE;
+                            break;
+                        default:
+                          if (Character.isWhitespace(c)) {
+                              params.add(buff.toString());
+                              buff.setLength(0);
+                              state = NULL;
+                          } else {
+                              buff.append(c);
+                          }
+                    }
+                    break;
+            }
+        }
+        if (buff.length() > 0) {
+            params.add(buff.toString());
+        }
+
+        return params.toArray(new String[params.size()])
+    }
 }

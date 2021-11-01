@@ -47,6 +47,7 @@ Apache NetBeans Language Server brings full featured Java development (edit-comp
 * Debugger __Java 8+...__ - start main class or test on JDK8+. More in [Debugger section](#debugger-and-launch-configurations)
 * Progress shown for long running operations with cancel support for selected types
 * __Native Image Debugger__ is a new Run configuration added which allows Java style debugging of Ahead of Time compiled native-images, produced by GraalVM. It is experimental feature which works with GDB on Linux. GDB 7.11 or GDB 10.1+ is required due to known issue [#26139](https://sourceware.org/bugzilla/show_bug.cgi?id=26139) in GDB 8 and 9.
+  * It is also possible to attach to running native image process using __Attach to Native Image__ launch configuation.
 * __Micronaut and Spring__ support especially for YAML configuration files with code completion and source code navigation to Java.
 * __Test Explorer__ for Java tests results visualization and execution including editor code Lenses.
 * Maven and Gradle support including multi-project projects, subprojects opening and Gradle priming builds.
@@ -69,11 +70,37 @@ Default launch configurations provided by Language Server can modified in `launc
 
 Class level refactorings as well as variable refactorings are supported in VSCode via Apache NetBeans extension. See following screenshots:
 
-![Class Source Actions](images/Source_actions.png) ![Introduce ... refactoring](images/Introduce_refactoring.png)
+### Source Action ... context menu
+![Class Source Actions](images/Source_actions.png) 
+
+### Introduce refactorings available via Show Code actions light bulb
+![Introduce ... refactoring](images/Introduce_refactoring.png)
+
+### More Refactorings available also using Refactor... context menu
+![More Refactorings](images/Refactor_menu.png)
+
+### Surroung with refactorings
+![Surrond with Refactorings](images/Surrond_With_refactorings.png)
 
 Some refactorings are two steps with like Override method ... where method to be overriden is selected in 2nd step:
 
 ![Override refactoring](images/Override_refactoring.png)
+### Some of supported refactorings:
+* Convert to static import 
+* Rename 	
+* Pull member up & down 
+* Move class 
+* Extract interface/method 
+* Extract local variable
+* Assign to variable
+* Generate hashCode/equals
+* Generate toString()
+* Change method signature
+* Surround With refactoring
+* For cycle refactoring
+* try-catch refactoring
+* switch() statement
+* while() cycle
 
 ## Test Explorer
 NetBeans Language Server provides Test Explorer view which allows to run all tests in a project, examine the results, go to source code and  run particular test.
@@ -81,7 +108,6 @@ NetBeans Language Server provides Test Explorer view which allows to run all tes
 
 
 ## Native Image Debugger
-Experimental Support
 
 NetBeans Language Server allows Java like debugging of native images produced by GraalVM EE native-image tool. It is provided using GDB and via new Run configuration named __Launch Native Image__. This experimental feature works __now__ only on Linux with certain version of GDB, see above. GraalVM Enterprise Edition is needed as it produces full debug information for native images, at this time.
 

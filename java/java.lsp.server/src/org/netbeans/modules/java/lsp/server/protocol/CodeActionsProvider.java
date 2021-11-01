@@ -20,7 +20,6 @@ package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.sun.source.tree.LineMap;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -29,11 +28,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.Command;
@@ -41,7 +36,7 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
-import org.netbeans.modules.editor.java.Utilities;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.parsing.api.ResultIterator;
 
@@ -99,33 +94,7 @@ public abstract class CodeActionsProvider {
     }
 
     protected static String createLabel(CompilationInfo info, TypeElement e, boolean fqn) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(fqn ? e.getQualifiedName() : e.getSimpleName());
-        List<? extends TypeParameterElement> typeParams = e.getTypeParameters();
-        if (typeParams != null && !typeParams.isEmpty()) {
-            sb.append("<"); // NOI18N
-            for(Iterator<? extends TypeParameterElement> it = typeParams.iterator(); it.hasNext();) {
-                TypeParameterElement tp = it.next();
-                sb.append(tp.getSimpleName());
-                List<? extends TypeMirror> bounds = tp.getBounds();
-                if (!bounds.isEmpty()) {
-                    if (bounds.size() > 1 || !"java.lang.Object".equals(bounds.get(0).toString())) { // NOI18N
-                        sb.append(" extends "); // NOI18N
-                        for (Iterator<? extends TypeMirror> bIt = bounds.iterator(); bIt.hasNext();) {
-                            sb.append(Utilities.getTypeName(info, bIt.next(), fqn));
-                            if (bIt.hasNext()) {
-                                sb.append(" & "); // NOI18N
-                            }
-                        }
-                    }
-                }
-                if (it.hasNext()) {
-                    sb.append(", "); // NOI18N
-                }
-            }
-            sb.append(">"); // NOI18N
-        }
-        return sb.toString();
+        return Utils.label(info, e, fqn);
     }
 
     protected static String createLabel(CompilationInfo info, VariableElement e) {
@@ -134,11 +103,9 @@ public abstract class CodeActionsProvider {
 
     protected static String createLabel(CompilationInfo info, VariableElement e, boolean fqn) {
         StringBuilder sb = new StringBuilder();
-        sb.append(e.getSimpleName());
-        if (e.getKind() != ElementKind.ENUM_CONSTANT) {
-            sb.append(" : "); // NOI18N
-            sb.append(Utilities.getTypeName(info, e.asType(), fqn));
-        }
+        sb.append(Utils.label(info, e, fqn));
+        sb.append(" : "); // NOI18N
+        sb.append(Utils.detail(info, e, fqn));
         return sb.toString();
     }
 
@@ -148,34 +115,9 @@ public abstract class CodeActionsProvider {
 
     protected static String createLabel(CompilationInfo info, ExecutableElement e, boolean fqn) {
         StringBuilder sb = new StringBuilder();
-        if (e.getKind() == ElementKind.CONSTRUCTOR) {
-            sb.append(e.getEnclosingElement().getSimpleName());
-        } else {
-            sb.append(e.getSimpleName());
-        }
-        sb.append("("); // NOI18N
-        for (Iterator<? extends VariableElement> it = e.getParameters().iterator(); it.hasNext();) {
-            VariableElement param = it.next();
-            if (!it.hasNext() && e.isVarArgs() && param.asType().getKind() == TypeKind.ARRAY) {
-                sb.append(Utilities.getTypeName(info, ((ArrayType) param.asType()).getComponentType(), fqn));
-                sb.append("...");
-            } else {
-                sb.append(Utilities.getTypeName(info, param.asType(), fqn));
-            }
-            sb.append(" "); // NOI18N
-            sb.append(param.getSimpleName());
-            if (it.hasNext()) {
-                sb.append(", "); // NOI18N
-            }
-        }
-        sb.append(")"); // NOI18N
-        if (e.getKind() != ElementKind.CONSTRUCTOR) {
-            TypeMirror rt = e.getReturnType();
-            if (rt.getKind() != TypeKind.VOID) {
-                sb.append(" : "); // NOI18N
-                sb.append(Utilities.getTypeName(info, e.getReturnType(), fqn));
-            }
-        }
+        sb.append(Utils.label(info, e, fqn));
+        sb.append(" : "); // NOI18N
+        sb.append(Utils.detail(info, e, fqn));
         return sb.toString();
     }
 

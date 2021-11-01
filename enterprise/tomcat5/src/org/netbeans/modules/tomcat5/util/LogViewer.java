@@ -403,7 +403,7 @@ public class LogViewer extends Thread {
                         if (nextColonIdx > -1) {
                             String lineNum = logLine.substring(colonIdx + 1, nextColonIdx);
                             try {
-                                line = Integer.valueOf(lineNum).intValue();
+                                line = Integer.valueOf(lineNum);
                             } catch(NumberFormatException nfe) { 
                                 // ignore it
                                 Logger.getLogger(LogViewer.class.getName()).log(Level.INFO, null, nfe);
@@ -428,7 +428,7 @@ public class LogViewer extends Thread {
                         if (thirdColonIdx > -1) {
                             String lineNum = logLine.substring(secondColonIdx + 1, thirdColonIdx);
                             try {
-                                line = Integer.valueOf(lineNum).intValue();
+                                line = Integer.valueOf(lineNum);
                             } catch(NumberFormatException nfe) { // ignore it
                                 Logger.getLogger(LogViewer.class.getName()).log(Level.INFO, null, nfe);
                             }
@@ -453,7 +453,7 @@ public class LogViewer extends Thread {
                         if (lastParenthIdx > -1 && lastColonIdx > -1) {
                             String lineNum = logLine.substring(lastColonIdx + 1, lastParenthIdx);
                             try {
-                                line = Integer.valueOf(lineNum).intValue();
+                                line = Integer.valueOf(lineNum);
                             } catch(NumberFormatException nfe) { // ignore it
                                 Logger.getLogger(LogViewer.class.getName()).log(Level.INFO, null, nfe);
                             }

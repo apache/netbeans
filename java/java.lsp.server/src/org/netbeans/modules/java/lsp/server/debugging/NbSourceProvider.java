@@ -37,6 +37,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.lsp4j.debug.Source;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.modules.java.lsp.server.URITranslator;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -96,6 +97,7 @@ public final class NbSourceProvider {
     
     public Source getSource(String sourceName, String debuggerURI) {
         return uriToSource.computeIfAbsent(debuggerURI, uri -> {
+            uri = URITranslator.getDefault().uriToLSP(uri);
             Source source = new Source();
             source.setName(sourceName);
             source.setSourceReference(0);

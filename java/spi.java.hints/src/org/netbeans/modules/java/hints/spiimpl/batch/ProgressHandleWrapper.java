@@ -206,18 +206,22 @@ public final class ProgressHandleWrapper {
             this.delegate = delegate;
         }
 
+        @Override
         public void start(int totalWork) {
             delegate.start(totalWork);
         }
 
+        @Override
         public void progress(int currentWorkDone) {
             delegate.progress(currentWorkDone);
         }
 
+        @Override
         public void progress(String message) {
             delegate.progress(message);
         }
 
+        @Override
         public void finish() {
             delegate.finish();
         }
@@ -229,18 +233,22 @@ public final class ProgressHandleWrapper {
             this.delegate = delegate;
         }
 
+        @Override
         public void start(int totalWork) {
             delegate.start(totalWork);
         }
 
+        @Override
         public void progress(int currentWorkDone) {
             delegate.progress(currentWorkDone);
         }
 
+        @Override
         public void progress(String message) {
             delegate.progress(message);
         }
 
+        @Override
         public void finish() {
             delegate.finish();
         }
@@ -252,18 +260,22 @@ public final class ProgressHandleWrapper {
             this.delegate = delegate;
         }
 
+        @Override
         public void start(int totalWork) {
             delegate.startNextPart(totalWork);
         }
 
+        @Override
         public void progress(int currentWorkDone) {
             delegate.setCurrentPartWorkDone(currentWorkDone);
         }
 
+        @Override
         public void progress(String message) {
             delegate.setMessage(message);
         }
 
+        @Override
         public void finish() {}
     }
 

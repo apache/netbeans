@@ -45,12 +45,13 @@ import * as launcher from './nbcode';
 import {NbTestAdapter} from './testAdapter';
 import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification, DebugConnector,
          TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification,
+         SetTextEditorDecorationParams
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
 
 const API_VERSION : string = "1.0";
 let client: Promise<LanguageClient>;
-let testAdapter: NbTestAdapter | null = null;
+let testAdapter: NbTestAdapter | undefined;
 let nbProcess : ChildProcess | null = null;
 let debugPort: number = -1;
 let consoleLog: boolean = !!process.env['ENABLE_CONSOLE_LOG'];
@@ -177,6 +178,8 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     });
 
     //register debugger:
+    let debugTrackerFactory =new NetBeansDebugAdapterTrackerFactory();
+    context.subscriptions.push(vscode.debug.registerDebugAdapterTrackerFactory('java8+', debugTrackerFactory));
     let configInitialProvider = new NetBeansConfigurationInitialProvider();
     context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java8+', configInitialProvider, vscode.DebugConfigurationProviderTriggerKind.Initial));
     let configDynamicProvider = new NetBeansConfigurationDynamicProvider(context);
@@ -345,9 +348,6 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
 
     // register completions:
     launchConfigurations.registerCompletion(context);
-
-    // register TestAdapter
-    context.subscriptions.push(testAdapter = new NbTestAdapter(client));
 
     return Object.freeze({
         version : API_VERSION
@@ -543,7 +543,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 { language: 'properties', pattern: '**/{application,bootstrap}*.properties' },
                 { language: 'jackpot-hint' }
         ];
-        const enableGroovy : boolean = conf.get("netbeans.groovySupport.enabled") || false;
+        const enableGroovy : boolean = conf.get("netbeans.groovySupport.enabled") || true;
         if (enableGroovy) {
             documentSelectors.push({ language: 'groovy'});
         }
@@ -591,6 +591,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         handleLog(log, 'Language Client: Starting');
         c.start();
         c.onReady().then(() => {
+            testAdapter = new NbTestAdapter();
             c.onNotification(StatusMessageRequest.type, showStatusBarMessage);
             c.onNotification(LogMessageNotification.type, (param) => handleLog(log, param.message));
             c.onRequest(QuickPickRequest.type, async param => {
@@ -606,6 +607,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 }
             });
             let decorations = new Map<string, TextEditorDecorationType>();
+            let decorationParamsByUri = new Map<vscode.Uri, SetTextEditorDecorationParams>();
             c.onRequest(TextEditorDecorationCreateRequest.type, param => {
                 let decorationType = vscode.window.createTextEditorDecorationType(param);
                 decorations.set(decorationType.key, decorationType);
@@ -619,13 +621,32 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                     );
                     if (editorsWithUri.length > 0) {
                         editorsWithUri[0].setDecorations(decorationType, asRanges(param.ranges));
+                        decorationParamsByUri.set(editorsWithUri[0].document.uri, param);
                     }
                 }
             });
+            let disposableListener = vscode.window.onDidChangeVisibleTextEditors(editors => {
+                editors.forEach(editor => {
+                    let decorationParams = decorationParamsByUri.get(editor.document.uri);
+                    if (decorationParams) {
+                        let decorationType = decorations.get(decorationParams.key);
+                        if (decorationType) {
+                            editor.setDecorations(decorationType, asRanges(decorationParams.ranges));
+                        }
+                    }
+                });
+            });
+            context.subscriptions.push(disposableListener);
             c.onNotification(TextEditorDecorationDisposeNotification.type, param => {
                 let decorationType = decorations.get(param);
                 if (decorationType) {
+                    decorations.delete(param);
                     decorationType.dispose();
+                    decorationParamsByUri.forEach((value, key, map) => {
+                        if (value.key == param) {
+                            map.delete(key);
+                        }
+                    });
                 }
             });
             handleLog(log, 'Language Client: Ready');
@@ -705,6 +726,10 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
 }
 
 function stopClient(clinetPromise: Promise<LanguageClient>): Thenable<void> {
+    if (testAdapter) {
+        testAdapter.dispose();
+        testAdapter = undefined;
+    }
     return clinetPromise ? clinetPromise.then(c => c.stop()) : Promise.resolve();
 }
 
@@ -713,6 +738,19 @@ export function deactivate(): Thenable<void> {
         nbProcess.kill();
     }
     return stopClient(client);
+}
+
+class NetBeansDebugAdapterTrackerFactory implements vscode.DebugAdapterTrackerFactory {
+
+    createDebugAdapterTracker(_session: vscode.DebugSession): vscode.ProviderResult<vscode.DebugAdapterTracker> {
+        return {
+            onDidSendMessage(message: any): void {
+                if (testAdapter && message.type === 'event' && message.event === 'output') {
+                    testAdapter.testOutput(message.body.output);
+                }
+            }
+        }
+    }
 }
 
 class NetBeansDebugAdapterDescriptionFactory implements vscode.DebugAdapterDescriptorFactory {

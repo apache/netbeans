@@ -51,7 +51,7 @@ public class CharsetDisplayPreferenceEditor extends LogLevelEditor{
     }
         
     public String getAsText() {
-        return choices[val.intValue()];
+        return choices[val];
     }
     
     public void setAsText(String string) throws IllegalArgumentException {
@@ -80,7 +80,7 @@ public class CharsetDisplayPreferenceEditor extends LogLevelEditor{
         }
         
         this.val = (Integer) val;
-        int ival = this.val.intValue();
+        int ival = this.val;
         if (ival < 0 || ival > 2){
             this.val = DEFAULT_PREF_VAL;
         }

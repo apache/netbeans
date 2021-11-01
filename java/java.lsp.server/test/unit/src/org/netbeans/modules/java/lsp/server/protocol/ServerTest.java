@@ -73,6 +73,7 @@ import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
+import org.eclipse.lsp4j.ConfigurationParams;
 import org.eclipse.lsp4j.CreateFile;
 import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Diagnostic;
@@ -148,7 +149,6 @@ import org.netbeans.modules.java.hints.infrastructure.JavaErrorProvider;
 import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.parsing.impl.indexing.implspi.CacheFolderProvider;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
-import org.netbeans.spi.java.classpath.PathResourceImplementation;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.java.queries.AnnotationProcessingQueryImplementation;
 import org.netbeans.spi.lsp.ErrorProvider;
@@ -285,6 +285,11 @@ public class ServerTest extends NbTestCase {
         public void logMessage(MessageParams arg0) {
             loggedMessages.add(arg0);
         }
+
+        @Override
+        public CompletableFuture<List<Object>> configuration(ConfigurationParams configurationParams) {
+            return CompletableFuture.completedFuture(null);
+        }
     }
 
     public void testMain() throws Exception {
@@ -340,7 +345,7 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, closingBrace), new Position(0, closingBrace)), 0, "public String c(Object o) {\nreturn o;\n}"))));
         List<Diagnostic> diagnostics = assertDiags(diags, "Error:1:0-1:9"); //errors
         assertDiags(diags, "Error:1:0-1:9");//hints
-        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 0), new Position(1, 9)), new CodeActionContext(Arrays.asList(diagnostics.get(0))))).get();
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 4), new Position(1, 4)), new CodeActionContext(Arrays.asList(diagnostics.get(0))))).get();
         String log = codeActions.toString();
         assertTrue(log, codeActions.size() >= 2);
         assertTrue(log, codeActions.get(0).isRight());
@@ -627,7 +632,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic> diagnostics = assertDiags(diags, "Warning:1:7-1:19");//hints
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(1);
         id.setUri(toURI(src));
-        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 7), new Position(1, 19)), new CodeActionContext(Arrays.asList(diagnostics.get(0))))).get();
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 13), new Position(1, 13)), new CodeActionContext(Arrays.asList(diagnostics.get(0))))).get();
         String log = codeActions.toString();
         assertTrue(log, codeActions.size() >= 1);
         assertTrue(log, codeActions.get(0).isRight());
@@ -751,16 +756,7 @@ public class ServerTest extends NbTestCase {
                           "    line = 7\n" +
                           "    character = 5\n" +
                           "  ]\n" +
-                          "]:(Constructor:Inner:Range [\n" +
-                          "  start = Position [\n" +
-                          "    line = 4\n" +
-                          "    character = 4\n" +
-                          "  ]\n" +
-                          "  end = Position [\n" +
-                          "    line = 4\n" +
-                          "    character = 4\n" +
-                          "  ]\n" +
-                          "]:(), Method:innerMethod:Range [\n" +
+                          "]:(Method:innerMethod():Range [\n" +
                           "  start = Position [\n" +
                           "    line = 5\n" +
                           "    character = 8\n" +
@@ -769,16 +765,7 @@ public class ServerTest extends NbTestCase {
                           "    line = 6\n" +
                           "    character = 9\n" +
                           "  ]\n" +
-                          "]:()), Constructor:Test:Range [\n" +
-                          "  start = Position [\n" +
-                          "    line = 0\n" +
-                          "    character = 7\n" +
-                          "  ]\n" +
-                          "  end = Position [\n" +
-                          "    line = 0\n" +
-                          "    character = 7\n" +
-                          "  ]\n" +
-                          "]:(), Field:field:Range [\n" +
+                          "]:()), Field:field:Range [\n" +
                           "  start = Position [\n" +
                           "    line = 1\n" +
                           "    character = 4\n" +
@@ -787,7 +774,7 @@ public class ServerTest extends NbTestCase {
                           "    line = 1\n" +
                           "    character = 22\n" +
                           "  ]\n" +
-                          "]:(), Method:method:Range [\n" +
+                          "]:(), Method:method():Range [\n" +
                           "  start = Position [\n" +
                           "    line = 2\n" +
                           "    character = 4\n" +
@@ -1365,12 +1352,12 @@ public class ServerTest extends NbTestCase {
         InitializeParams initParams = new InitializeParams();
         initParams.setRootUri(toURI(getWorkDir()));
         InitializeResult result = server.initialize(initParams).get();
-        indexingComplete.await();
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        indexingComplete.await();
 
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(toURI(src), 1);
         {
-            VersionedTextDocumentIdentifier id1 = new VersionedTextDocumentIdentifier(toURI(src), 1);
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id1, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 8), new Position(2, 8)), 0, "s."))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 8), new Position(2, 8)), 0, "s."))));
 
             Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(2, 8 + "s.".length()))).get();
             assertTrue(completion.isRight());
@@ -1385,8 +1372,7 @@ public class ServerTest extends NbTestCase {
         }
 
         {
-            VersionedTextDocumentIdentifier id2 = new VersionedTextDocumentIdentifier(toURI(src), 1);
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(1, 1), new Position(1, 1)), 0, "@java.lang."))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(1, 1), new Position(1, 1)), 0, "@java.lang."))));
 
             Position afterJavaLang = new Position(1, 1 + "@java.lang.".length());
 
@@ -1399,7 +1385,7 @@ public class ServerTest extends NbTestCase {
                 assertEquals(CompletionItemKind.Module, annotationItem.get().getKind());
             }
 
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(afterJavaLang, afterJavaLang), 0, "annotation."))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(afterJavaLang, afterJavaLang), 0, "annotation."))));
 
             Position afterJavaLangAnnotation = new Position(1, afterJavaLang.getCharacter() + "annotation.".length());
 
@@ -1413,7 +1399,7 @@ public class ServerTest extends NbTestCase {
                 assertEquals(CompletionItemKind.Interface, targetItem.get().getKind());
             }
 
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(afterJavaLangAnnotation, afterJavaLangAnnotation), 0, "Target("))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(afterJavaLangAnnotation, afterJavaLangAnnotation), 0, "Target("))));
 
             Position afterTarget = new Position(1, afterJavaLangAnnotation.getCharacter() + "Target(".length());
 
@@ -1433,7 +1419,7 @@ public class ServerTest extends NbTestCase {
                 assertEquals("\nimport java.lang.annotation.ElementType;\n\n", methodItem.get().getAdditionalTextEdits().get(0).getNewText());
             }
 
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 0), new Position(0, 0)), 0, "import java.lang.annotation.ElementType;"))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 0), new Position(0, 0)), 0, "import java.lang.annotation.ElementType;"))));
 
             {
                 //import already exists:
@@ -1501,12 +1487,12 @@ public class ServerTest extends NbTestCase {
         InitializeParams initParams = new InitializeParams();
         initParams.setRootUri(toURI(getWorkDir()));
         server.initialize(initParams).get();
-        indexingComplete.await();
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        indexingComplete.await();
 
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(toURI(src), 1);
         {
-            VersionedTextDocumentIdentifier id1 = new VersionedTextDocumentIdentifier(toURI(src), 1);
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id1, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 8), new Position(2, 8)), 0, "ArrayL"))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 8), new Position(2, 8)), 0, "ArrayL"))));
 
             Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(2, 8 + "ArrayL".length()))).get();
             assertTrue(completion.isRight());
@@ -1523,9 +1509,7 @@ public class ServerTest extends NbTestCase {
         }
 
         {
-            VersionedTextDocumentIdentifier id2 = new VersionedTextDocumentIdentifier(toURI(src), 1);
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 0), new Position(0, 0)), 0, "import java.util.ArrayList;\n"))));
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(3, 8), new Position(3, 8)), 0, "ArrayL"))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 0), new Position(0, 0)), 0, "import java.util.ArrayList;\n"))));
 
             Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(3, 8 + "ArrayL".length()))).get();
             assertTrue(completion.isRight());
@@ -2014,7 +1998,6 @@ public class ServerTest extends NbTestCase {
         }
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 17), new Position(2, 17)), new CodeActionContext(diags[0]))).get();
-        assertTrue(codeActions.size() >= 1);
         Optional<CodeAction> generateMehtod =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -2036,7 +2019,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(0).getRange());
         assertEquals("\n" +
                      "    private String convertToString(int value) {\n" +
-                     "        throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates.\n" +
+                     "        throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
                      "    }\n",
                      fileChanges.get(0).getNewText());
     }
@@ -2100,8 +2083,7 @@ public class ServerTest extends NbTestCase {
             }
         }
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
-        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 14), new Position(2, 14)), new CodeActionContext(diags[0]))).get();
-        assertTrue(codeActions.size() >= 2);
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 14), new Position(1, 14)), new CodeActionContext(diags[0]))).get();
         Optional<CodeAction> generateClass =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -2212,7 +2194,7 @@ public class ServerTest extends NbTestCase {
         assertEquals("\n" +
                      "    @Override\n" +
                      "    public void run() {\n" +
-                     "        throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates.\n" +
+                     "        throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
                      "    }\n",
                      fileChanges.get(0).getNewText());
     }
@@ -2302,7 +2284,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(0).getRange());
         assertEquals("            @Override\n" +
                      "            public void run() {\n" +
-                     "                throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates.\n" +
+                     "                throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
                      "            }\n",
                      fileChanges.get(0).getNewText());
     }
@@ -2390,7 +2372,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(0).getRange());
         assertEquals("        @Override\n" +
                      "        public void run() {\n" +
-                     "            throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates.\n" +
+                     "            throw new UnsupportedOperationException(\"Not supported yet.\"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody\n" +
                      "        }\n",
                      fileChanges.get(0).getNewText());
     }
@@ -3372,10 +3354,7 @@ public class ServerTest extends NbTestCase {
                      "        if (!Objects.equals(this.f1, other.f1)) {\n" +
                      "            return false;\n" +
                      "        }\n" +
-                     "        if (!Objects.equals(this.f2, other.f2)) {\n" +
-                     "            return false;\n" +
-                     "        }\n" +
-                     "        return true;\n" +
+                     "        return Objects.equals(this.f2, other.f2);\n" +
                      "    }\n",
                      fileChanges.get(0).getNewText());
     }
@@ -3492,7 +3471,8 @@ public class ServerTest extends NbTestCase {
                      "    @Override\n" +
                      "    public String toString() {\n" +
                      "        StringBuilder sb = new StringBuilder();\n" +
-                     "        sb.append(\"Test{f1=\").append(f1);\n" +
+                     "        sb.append(\"Test{\");\n" +
+                     "        sb.append(\"f1=\").append(f1);\n" +
                      "        sb.append('}');\n" +
                      "        return sb.toString();\n" +
                      "    }\n",
@@ -3734,12 +3714,12 @@ public class ServerTest extends NbTestCase {
         assertEquals("\n" +
                      "    @Override\n" +
                      "    protected void finalize() throws Throwable {\n" +
-                     "        super.finalize(); //To change body of generated methods, choose Tools | Templates.\n" +
+                     "        super.finalize(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody\n" +
                      "    }\n" +
                      "\n" +
                      "    @Override\n" +
                      "    public String toString() {\n" +
-                     "        return super.toString(); //To change body of generated methods, choose Tools | Templates.\n" +
+                     "        return super.toString(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody\n" +
                      "    }\n",
                      fileChanges.get(0).getNewText());
     }
@@ -5172,7 +5152,7 @@ public class ServerTest extends NbTestCase {
                 codeActions.stream()
                            .filter(Either::isRight)
                            .map(Either::getRight)
-                           .filter(a -> a.getTitle().startsWith(Bundle.DN_SurroundWith("do { ...")))
+                           .filter(a -> a.getTitle().startsWith(Bundle.DN_SurroundWith("do")))
                            .findAny();
         assertTrue(surroundWith.isPresent());
         Command command = surroundWith.get().getCommand();

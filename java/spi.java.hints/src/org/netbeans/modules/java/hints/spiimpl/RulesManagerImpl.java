@@ -52,7 +52,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=RulesManager.class)
 public class RulesManagerImpl extends RulesManager {
 
-    private final Map<HintMetadata, Collection<HintDescription>> globalHints = new HashMap<HintMetadata, Collection<HintDescription>>();
+    private final Map<HintMetadata, Collection<HintDescription>> globalHints = new HashMap<>();
 
     public RulesManagerImpl() {
         reload();
@@ -67,7 +67,7 @@ public class RulesManagerImpl extends RulesManager {
 
             if (pHints != null) {
                 for (Entry<HintMetadata, ? extends Collection<? extends HintDescription>> e : pHints.entrySet()) {
-                    globalHints.put(e.getKey(), new ArrayList<HintDescription>(e.getValue()));
+                    globalHints.put(e.getKey(), new ArrayList<>(e.getValue()));
                 }
             }
         }
@@ -86,7 +86,7 @@ public class RulesManagerImpl extends RulesManager {
         
         public Holder(ClasspathInfo cpInfo) {
             cpInfo.addChangeListener(this);
-            LinkedList<ClassPath> cps = new LinkedList<ClassPath>();
+            LinkedList<ClassPath> cps = new LinkedList<>();
             cps.add(cpInfo.getClassPath(PathKind.BOOT));
             cps.add(cpInfo.getClassPath(PathKind.COMPILE));
             cps.add(cpInfo.getClassPath(PathKind.SOURCE));
@@ -101,7 +101,7 @@ public class RulesManagerImpl extends RulesManager {
 
     @Override
     public Map<HintMetadata, ? extends Collection<? extends HintDescription>> readHints(CompilationInfo info, Collection<? extends ClassPath> from, AtomicBoolean cancel) {
-        Map<HintMetadata, Collection<HintDescription>> result = new HashMap<HintMetadata, Collection<HintDescription>>(globalHints);
+        Map<HintMetadata, Collection<HintDescription>> result = new HashMap<>(globalHints);
 
         if (info != null) {
             for (ElementBasedHintProvider provider : Lookup.getDefault().lookupAll(ElementBasedHintProvider.class)) {
@@ -151,7 +151,7 @@ public class RulesManagerImpl extends RulesManager {
             Collection<HintDescription> h = into.get(hd.getMetadata());
 
             if (h == null) {
-                into.put(hd.getMetadata(), h = new ArrayList<HintDescription>());
+                into.put(hd.getMetadata(), h = new ArrayList<>());
             }
 
             h.add(hd);

@@ -1,0 +1,14 @@
+Display text: private int $<b>privateField</b> = 1;
+File name: index.php
+Name: $privateField
+Position: BEGIN: 859 END: 871
+
+Display text: $this-><b>privateField</b>;
+File name: index.php
+Name: $privateField
+Position: BEGIN: 997 END: 1009
+
+Display text: echo $this-><b>privateField</b>;
+File name: nb6087.php
+Name: $privateField
+Position: BEGIN: 929 END: 941

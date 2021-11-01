@@ -56,6 +56,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiFunction;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.logging.Level;
@@ -926,7 +927,7 @@ public final class FileUtil extends Object {
 
         return retVal;
     }
-
+    
     /** Copies attributes from one file to another.
     * Note: several special attributes will not be copied, as they should
     * semantically be transient. These include attributes used by the
@@ -937,6 +938,23 @@ public final class FileUtil extends Object {
     */
     public static void copyAttributes(FileObject source, FileObject dest)
     throws IOException {
+        copyAttributes(source, dest, null);
+    }
+    
+    /** Copies attributes from one file to another.
+    * Note: several special attributes will not be copied, as they should
+    * semantically be transient. These include attributes used by the
+    * template wizard (but not the template attribute itself). If {@code attrTransformer} is specified,
+    * it is called for each non-transient attribute that is about to be copied. The returned value will be
+    * written to the target. If {@code attrTransformer} returns {@code null}, the attribute will be skipped.
+    * @param source source file object
+    * @param dest destination file object
+    * @param attrTransformer callback to transform or filter attribute values. Can be {@code null}.
+    * @exception IOException if the copying failed
+    * @since 9.27
+    */
+    public static void copyAttributes(FileObject source, FileObject dest, BiFunction<String, Object, Object> attrTransformer) 
+        throws IOException {
         Enumeration<String> attrKeys = source.getAttributes();
 
         while (attrKeys.hasMoreElements()) {
@@ -958,12 +976,17 @@ public final class FileUtil extends Object {
             // by mistake in code. So it should happen only if you import some
             // settings from old version.
             if (value != null && !(value instanceof MultiFileObject.VoidValue)) {
-                if (isRawValue.get() && value instanceof Method) {
-                    dest.setAttribute("methodvalue:" + key, value); // NOI18N
-                } else if (isRawValue.get() && value instanceof Class) {
-                    dest.setAttribute("newvalue:" + key, value); // NOI18N
-                } else {
-                    dest.setAttribute(key, value);
+                if (attrTransformer != null) {
+                    value = attrTransformer.apply(key, value);
+                }
+                if (value != null) {
+                    if (isRawValue.get() && value instanceof Method) {
+                        dest.setAttribute("methodvalue:" + key, value); // NOI18N
+                    } else if (isRawValue.get() && value instanceof Class) {
+                        dest.setAttribute("newvalue:" + key, value); // NOI18N
+                    } else {
+                        dest.setAttribute(key, value);
+                    }
                 }
             }
         }

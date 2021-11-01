@@ -21,7 +21,6 @@ package org.netbeans.api.templates;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -175,16 +174,15 @@ public abstract class CreateFromTemplateHandler {
      */
     public static void copyAttributesFromTemplate(CreateFromTemplateHandler h, FileObject from, FileObject to) throws IOException {
         // copy attributes; some attributes are filtered by FileSystems API already
-        FileUtil.copyAttributes(from, to);
-        // need to filter additional template-related attributes:
-        for (String a : Collections.list(to.getAttributes())) {
-            if ("javax.script.ScriptEngine".equals(a) // NOI18N 
-                || a.startsWith(ATTR_TEMPLATE_PREFIX)) {
-                to.setAttribute(a, null);
+        FileUtil.copyAttributes (from, to, (n, v) -> {
+            if ("javax.script.ScriptEngine".equals(n) // NOI18N 
+                    || n.startsWith(ATTR_TEMPLATE_PREFIX)
+                    || PROP_TEMPLATE.equals(n)) {
+                return null;
+            } else {
+                return v;
             }
-        }
-        // hack to overcome package-private modifier in setTemplate(fo, boolean)
-        to.setAttribute(PROP_TEMPLATE, null);
+        });
     }
     
     

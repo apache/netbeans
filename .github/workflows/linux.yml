@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-name: Apache Netbeans Check Linux
+name: Apache Netbeans
 
 on:
   push:
@@ -23,7 +23,7 @@ on:
 
 jobs:
   linux:
-    name: Check Build System
+    name: Check Linux
     runs-on: ubuntu-18.04
     env:
       ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json

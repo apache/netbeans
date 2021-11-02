@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-name: Apache Netbeans Continuous Integration
+name: Apache Netbeans
 
 on:
   push:
@@ -23,7 +23,7 @@ on:
 
 jobs:
   linux-php:
-    name: Linux build of PHP cluster
+    name: PHP on Linux
     runs-on: ubuntu-18.04
     env:
       DISPLAY: ":99.0"

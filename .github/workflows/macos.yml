@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-name: Apache Netbeans Continuous Integration on Mac OS X
+name: Apache Netbeans
 
 on:
   push:
@@ -23,7 +23,7 @@ on:
 
 jobs:
   macos:
-    name: MacOS build
+    name: Commit-validation (on Mac OS X)
     runs-on: macos-10.15
     env:
       ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json

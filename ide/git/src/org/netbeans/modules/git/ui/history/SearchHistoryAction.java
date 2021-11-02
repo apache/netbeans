@@ -63,7 +63,7 @@ public class SearchHistoryAction extends MultipleRepositoryAction {
     }
     
     public static void openSearch (final File repository, final File[] roots, final String branchName, final String contextName) {
-        openSearch(repository, roots, branchName, contextName, roots != null && (roots.length == 1 && roots[0].isFile() || roots.length > 1 && Utils.shareCommonDataObject(roots)));
+        openSearch(repository, roots, branchName, contextName, roots != null && (roots.length == 1 || roots.length > 1 && Utils.shareCommonDataObject(roots)));
     }
     
     public static void openSearch (final File repository, final File[] roots, final String branchName, final String contextName, final boolean invokeSearch) {

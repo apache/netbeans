@@ -16,27 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.source.nbjavac.indexing;
+package org.netbeans.insane.hook;
 
-import java.util.Collection;
-import org.netbeans.modules.java.source.indexing.CompileWorker.ParsingOutput;
-import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
-import org.netbeans.modules.java.source.indexing.JavaParsingContext;
-import org.netbeans.modules.parsing.spi.indexing.Context;
+import java.lang.reflect.AccessibleObject;
 
-/**
- *
- * @author lahvac
- */
-public class OnePassCompileWorkerTest extends NBJavacCompileWorkerTestBase {
-    
-    public OnePassCompileWorkerTest(String name) {
-        super(name);
+public final class MakeAccessible {
+    private MakeAccessible() {
     }
 
-    @Override
-    protected ParsingOutput runCompileWorker(Context context, JavaParsingContext javaContext, Collection<? extends CompileTuple> files) {
-        return new OnePassCompileWorker().compile(null, context, javaContext, files);
+    public static void setAccessible(AccessibleObject obj, boolean accessible) {
+        obj.setAccessible(accessible);
     }
-    
+
 }

@@ -26,6 +26,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import org.junit.Ignore;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbModuleSuite;
@@ -59,6 +60,7 @@ public class VerifyGradleProjectTemplatesTest extends NbTestCase {
         clearWorkDir();
     }
 
+    @Ignore
     public void testGradleProjectTemplates() throws Exception {
         FileObject root = FileUtil.getConfigFile("Templates/Project/Gradle");
         assertNotNull("Gradle project folder found", root);

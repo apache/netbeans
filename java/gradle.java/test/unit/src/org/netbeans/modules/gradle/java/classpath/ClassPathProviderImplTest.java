@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import junit.framework.AssertionFailedError;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -44,6 +45,8 @@ import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.lookup.Lookups;
+
+import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.EVALUATED;
 
 /**
  *
@@ -94,7 +97,7 @@ public class ClassPathProviderImplTest extends AbstractGradleProjectTestCase {
     private void createSimpleApp() throws IOException {
         FileObject d = FileUtil.toFileObject(getDataDir());
         FileObject main = d.getFileObject("javasimple/src/main/java/test/App.java");
-        project = createGradleProject(path, "apply plugin: 'java'", null);
+        project = createGradleProject(path, "apply plugin: 'java'", "");
         FileObject src = FileUtil.createFolder(project, "src/main/java/test");
         java = FileUtil.copyFile(main, src, main.getName());
     }
@@ -212,7 +215,7 @@ public class ClassPathProviderImplTest extends AbstractGradleProjectTestCase {
         ProjectTrust.getDefault().distrustProject(prj);
         
         NbGradleProject ngp = NbGradleProject.get(prj);
-        assertTrue("Closed project should be at least EVALUATED", ngp.getQuality().atLeast(NbGradleProject.Quality.EVALUATED));
+        assertTrue("Closed project should be at least EVALUATED", ngp.getQuality().atLeast(EVALUATED));
         
         ClassPath cp = ClassPath.getClassPath(java, ClassPath.COMPILE);
         assertFalse("Cached project must know its COMPILE path", cp.getRoots().length == 0);
@@ -222,11 +225,14 @@ public class ClassPathProviderImplTest extends AbstractGradleProjectTestCase {
      * Checks that a trusted, once compiled project will provide nonempty compile classpath
      * just after open.
      */
+    @Ignore
     public void testCompilePreTrusted() throws Exception {
         path = "first";
         createSimpleApp();
         Project prj = FileOwnerQuery.getOwner(java);
         compileProject(prj);
+
+        assertTrue("Closed project should be at least EVALUATED", NbGradleProject.get(prj).getQuality().atLeast(EVALUATED));
         
         // open the project - and then close it, so the project is ditched by Gradle module.
         openAndCloseProject(prj);

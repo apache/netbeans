@@ -123,7 +123,7 @@ public final class TemplateUtils {
         CreateDescriptor desc, List<FileObject> fos, FileObject fo) throws IOException {
         List<FileObject> pomDirs = new ArrayList<>();
         collectPomDirs(fo, pomDirs);
-        if (pomDirs != null) {
+        if (pomDirs != null && fos != null) {
             pomDirs.addAll(fos);
         }
 

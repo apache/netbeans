@@ -572,9 +572,10 @@ public class StartTask extends BasicTask<TaskState> {
             return change.fireOperationStateChanged();
         }
         if (!PayaraState.isOnline(instance)) {
-              return fireOperationStateChanged(
-                      TaskState.FAILED, TaskEvent.CMD_FAILED,
-                      "StartTask.startDAS.startFailed", instanceName);
+            PayaraStatus.suspend(instance);
+            return fireOperationStateChanged(
+                    TaskState.FAILED, TaskEvent.CMD_FAILED,
+                    "StartTask.startDAS.startFailed", instanceName);
         } else {
             return startClusterOrInstance(adminHost, adminPort);
         }

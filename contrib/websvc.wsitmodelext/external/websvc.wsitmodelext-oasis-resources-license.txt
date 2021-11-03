@@ -1,3 +1,9 @@
+Name: ?
+Version: ?
+Description: ?
+License: BSD-OASIS
+Origin: ?
+
 Copyright (c) [YYYY], OASIS Open Repositories
 All rights reserved.
 

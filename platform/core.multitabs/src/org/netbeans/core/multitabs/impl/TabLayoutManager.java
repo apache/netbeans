@@ -28,6 +28,7 @@ import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
@@ -247,10 +248,12 @@ abstract class TabLayoutManager {
                 rowIndexes[i] = new ArrayList<Integer>( tabCount );
             }
 
+            Map<TabData, ProjectProxy> tab2Project = projectSupport.tryGetProjectsForTabs(tabModel.getTabs());
+
             for( int i=0; i<tabCount; i++ ) {
                 TabData td = tabModel.getTab( i );
 
-                ProjectProxy p = projectSupport.getProjectForTab( td );
+                ProjectProxy p = tab2Project.get(td);
                 int index = projects.indexOf( p );
                 if( index < 0 || index >= rowIndexes.length-1 || rowCount == 1 )
                     index = 0;

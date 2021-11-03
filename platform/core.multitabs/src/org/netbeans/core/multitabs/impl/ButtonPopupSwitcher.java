@@ -28,6 +28,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
@@ -461,14 +463,25 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
     }
 
     private Item[] createSwitcherItems(final Controller controller) {
+
         ProjectSupport projectSupport = ProjectSupport.getDefault();
-        final boolean sortByProject = Settings.getDefault().isSortDocumentListByProject()
-                && projectSupport.isEnabled();
-        java.util.List<TabData> tabs = controller.getTabModel().getTabs();
-        ArrayList<Item> items = new ArrayList<Item>(tabs.size());
+        boolean sortByProject = Settings.getDefault().isSortDocumentListByProject() && projectSupport.isEnabled();
+
+        List<TabData> tabs = controller.getTabModel().getTabs();
+        Map<TabData, ProjectProxy> tab2ProjectMap = Collections.emptyMap();
+
+        if (sortByProject) {
+            tab2ProjectMap = projectSupport.tryGetProjectsForTabs(tabs);
+            if (tab2ProjectMap.isEmpty()) {
+                sortByProject = false;
+            }
+        }
+
+        ArrayList<Item> items = new ArrayList<>(tabs.size());
         int selIdx = controller.getSelectedIndex();
         TabData selectedTab = selIdx >= 0 && selIdx < controller.getTabModel().size() ? controller.getTabModel().getTab(selIdx) : null;
         boolean hasProjectInfo = false;
+
         for (TabData tab : tabs) {
             String name;
             String htmlName;
@@ -487,8 +500,8 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
                 name = htmlName = tab.getText();
             }
             ProjectProxy project = null;
-            if( sortByProject ) {
-                project = projectSupport.getProjectForTab( tab );
+            if (sortByProject) {
+                project = tab2ProjectMap.get(tab);
                 hasProjectInfo |= null != project;
             }
             items.add( new Item(
@@ -499,6 +512,7 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
                     tab == selectedTab,
                     project));
         }
+
         Collections.sort( items );
         if( sortByProject && hasProjectInfo ) {
             //add project headers

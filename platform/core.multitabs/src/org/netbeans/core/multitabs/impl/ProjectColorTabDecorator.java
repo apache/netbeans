@@ -205,7 +205,7 @@ public class ProjectColorTabDecorator extends TabDecorator {
     }
 
     private static Color getColorForTab( TabData tab ) {
-        ProjectProxy p = ProjectSupport.getDefault().getProjectForTab( tab );
+        ProjectProxy p = ProjectSupport.getDefault().tryGetProjectForTab(tab);
         if( null != p ) {
             synchronized( project2color ) {
                 return project2color.get( p.getToken() );

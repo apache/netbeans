@@ -60,6 +60,7 @@ public class UtilsTest extends NbTestCase {
         // Create dummy file to test version matcher - Apache policy makes it
         // difficult to have "jar" files in the repository, even if they are
         // just files, containing a newline ...
+        Files.createDirectories(dataDir.toPath().resolve("subdir"));
         Files.write(dataDir.toPath().resolve("nottaDir-4_1_2.jar"), new byte[] {'\n'}, CREATE, WRITE);
         Files.write(dataDir.toPath().resolve("subdir/nottaDir-5.0.jar"), new byte[] {'\n'}, CREATE, WRITE);
     }

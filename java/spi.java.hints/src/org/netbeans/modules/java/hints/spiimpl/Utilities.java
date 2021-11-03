@@ -1525,8 +1525,7 @@ public class Utilities {
                         }
 
                         JCIdent identTree = F.at(pos).Ident(name);
-
-                        return JackpotTrees.createInstance(ctx, JCCase.class, name, identTree, new Class<?>[] {JCExpression.class, com.sun.tools.javac.util.List.class}, new Object[] {identTree, com.sun.tools.javac.util.List.nil()});
+                        return JackpotTrees.createJCCase(name, identTree, com.sun.tools.javac.util.List.nil());
                     }
                 }
             }
@@ -1555,17 +1554,9 @@ public class Utilities {
                             nextToken();
                         }
 
-                        @SuppressWarnings("rawtypes")
-                        Class caseKind = Class.forName("com.sun.source.tree.CaseTree$CaseKind", false, JCCase.class.getClassLoader());
-                        @SuppressWarnings("unchecked")
-                        Object statement = Enum.valueOf(caseKind, "STATEMENT");
-
                         JCIdent identTree = F.at(pos).Ident(name);
                         return com.sun.tools.javac.util.List.of(
-                                    JackpotTrees.createInstance(ctx, JCCase.class, name, identTree,
-                                        new Class<?>[] {caseKind, com.sun.tools.javac.util.List.class, com.sun.tools.javac.util.List.class, JCTree.class},
-                                        new Object[] {statement, com.sun.tools.javac.util.List.of(identTree), com.sun.tools.javac.util.List.nil(), null}
-                                    )
+                                    JackpotTrees.createJCCase(name, identTree, "STATEMENT", com.sun.tools.javac.util.List.of(identTree), com.sun.tools.javac.util.List.nil(), null)
                                 );
                     }
                 }

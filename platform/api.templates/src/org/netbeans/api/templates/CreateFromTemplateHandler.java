@@ -69,9 +69,8 @@ public abstract class CreateFromTemplateHandler {
      * @param expression string template
      * @param parameters parameter values
      * @return evaluated string.
-     * @since 1.23
      */
-    public static String mapParameters(String expression, Map<String, ?> parameters) {
+    static String mapParameters(String expression, Map<String, ?> parameters) {
         int start = 0;
         int pos = 0;
         StringBuilder sb = null;
@@ -127,9 +126,6 @@ public abstract class CreateFromTemplateHandler {
                 token = token.substring(0, colon);
             }
             
-            if (sb == null) {
-                sb = new StringBuilder();
-            }
             Object v = parameters.get(token);
             if (v == null) {
                 v = defValue;
@@ -137,6 +133,9 @@ public abstract class CreateFromTemplateHandler {
             if (v == null) {
                 pos += 2;
                 continue;
+            }
+            if (sb == null) {
+                sb = new StringBuilder();
             }
             sb.append(expression.substring(start, pos)).append(v.toString());
             start = endPos + 1;

@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
@@ -54,7 +55,8 @@ import org.openide.util.lookup.ServiceProvider;
 */
 @ServiceProvider(service=CreateFromTemplateHandler.class, position = 1000)
 public class ScriptingCreateFromTemplateHandler extends CreateFromTemplateHandler {
-
+    private static final Logger LOG = Logger.getLogger(ScriptingCreateFromTemplateHandler.class.getName());
+    
     public static final String SCRIPT_ENGINE_ATTR = "javax.script.ScriptEngine";
     
     private static ScriptEngineManager manager;
@@ -87,9 +89,6 @@ public class ScriptingCreateFromTemplateHandler extends CreateFromTemplateHandle
         }
         
         String nameUniq = FileUtil.findFreeFileName(f, name, noExt ? null : template.getExt());
-        FileObject output = FileUtil.createData(f, noExt ? nameUniq : nameUniq + extWithDot);
-        Charset targetEnc = FileEncodingQuery.getEncoding(output);
-        Charset sourceEnc = FileEncodingQuery.getEncoding(template);
         
         ScriptEngine eng = engine(template);
         Bindings bind = eng.getContext().getBindings(ScriptContext.ENGINE_SCOPE);
@@ -98,11 +97,20 @@ public class ScriptingCreateFromTemplateHandler extends CreateFromTemplateHandle
         }
         bind.putAll(values);
         
+        if (desc.getTemplate().isFolder()) {
+            FileObject folder = FileUtil.createFolder(desc.getTarget(), nameUniq);
+            CreateFromTemplateHandler.copyAttributesFromTemplate(null, desc.getTemplate(), folder);
+            return CreateFromTemplateHandler.defaultCopyContents(desc, desc.getTemplate(), folder);
+        }
+
+        FileObject output = FileUtil.createData(f, noExt ? nameUniq : nameUniq + extWithDot);
+        Charset targetEnc = FileEncodingQuery.getEncoding(output);
+        Charset sourceEnc = FileEncodingQuery.getEncoding(template);
+
         if(!values.containsKey(ENCODING_PROPERTY_NAME)) {
             bind.put(ENCODING_PROPERTY_NAME, targetEnc.name());
         }
         
-        //Document doc = createDocument(template.getMIMEType());
         FileLock lock = output.lock();
         try (Writer w = new OutputStreamWriter(output.getOutputStream(lock), targetEnc);
              Reader is = new InputStreamReader(template.getInputStream(), sourceEnc);
@@ -145,7 +153,7 @@ public class ScriptingCreateFromTemplateHandler extends CreateFromTemplateHandle
         return manager.getEngineByName(engName);
     }
     
-    private static ScriptEngine engine(FileObject fo) {
+    public static ScriptEngine engine(FileObject fo) {
         Object obj = fo.getAttribute(SCRIPT_ENGINE_ATTR); // NOI18N
         if (obj instanceof ScriptEngine) {
             return (ScriptEngine)obj;

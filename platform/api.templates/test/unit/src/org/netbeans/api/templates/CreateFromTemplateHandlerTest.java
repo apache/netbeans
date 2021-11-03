@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.templates;
+package org.netbeans.api.templates;
 
 import java.io.BufferedReader;
 import java.io.IOException;

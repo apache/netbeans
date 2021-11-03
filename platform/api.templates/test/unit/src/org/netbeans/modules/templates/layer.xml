@@ -21,12 +21,6 @@
 -->
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
-    <folder name="Maven2Templates">
-        <file name="settings.xml" url="settings.xml">
-            <attr name="template" boolvalue="true"/>
-        </file>
-    </folder>
-  
     <folder name="Templates">
         <folder name="Test">
             <folder name="Simple">
@@ -58,7 +52,7 @@
                     </folder>
                     <folder name="test">
                         <folder name="java">
-                            <folder name="${packagePath}">
+                            <folder name="${packagePath:}">
                                 <file name="${mainClassName:App}Test.java" url="nbres:/org/netbeans/modules/templates/AppTestTemplate.java.template">
                                     <attr name="replaceHandler" boolvalue="true"/>
                                 </file>

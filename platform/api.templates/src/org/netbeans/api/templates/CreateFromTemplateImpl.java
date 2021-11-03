@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -38,7 +39,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
+import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
@@ -56,6 +60,8 @@ import org.openide.util.Parameters;
  * @author sdedic
  */
 final class CreateFromTemplateImpl {
+    private static final Logger LOG = Logger.getLogger(CreateFromTemplateImpl.class.getName());
+    
     private static final String NEWLINE = "\n"; // NOI18N
     
     private final FileBuilder builder;
@@ -170,28 +176,50 @@ final class CreateFromTemplateImpl {
         return result;
     }
     
+    static String interpolateName(ScriptEngine eng, String name, Map<String, ?> values, FileObject template) {
+        if (eng == null) {
+            return CreateFromTemplateHandler.mapParameters(name, values);
+        }
+        Bindings bind = eng.getContext().getBindings(ScriptContext.ENGINE_SCOPE);
+        bind.putAll(values);
+        bind.put("name", name); // NOI18N
+
+        try {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            eng.getContext().setWriter(pw);
+            eng.getContext().setAttribute(FileObject.class.getName(), template, ScriptContext.ENGINE_SCOPE);
+            eng.getContext().setAttribute(ScriptEngine.FILENAME, template.getNameExt(), ScriptContext.ENGINE_SCOPE);
+            eng.eval(name);
+            pw.flush();
+            return sw.toString();
+        } catch (ScriptException ex) {
+            LOG.log(Level.SEVERE, "Errors encountered during interpolation of {0}", name);
+            LOG.log(Level.SEVERE, "Cannot interpolate name", ex);
+            return name;
+        }
+    }
+    
     /* package private */ static void computeEffectiveName(CreateDescriptor desc) {
         String name = desc.getName();
         if (name == null) {
             // name is not set - try to check parameters, if some template attribute handler
             // did not supply a suggestion:
             Object o = desc.getParameters().get("name"); // NOi18N
-            if (o instanceof String) {
-                name = CreateFromTemplateHandler.mapParameters((String)o, desc.getParameters());
+            ScriptEngine scriptEng = ScriptingCreateFromTemplateHandler.engine(desc.getTemplate());
+            String n = o instanceof String ? o.toString() : desc.getTemplate().getName();
+            name = interpolateName(scriptEng, n, desc.getParameters(), desc.getTemplate());
+            boolean merge = 
+                    Boolean.TRUE.equals(desc.getValue(FileBuilder.ATTR_TEMPLATE_MERGE_FOLDERS)) ||
+                    Boolean.TRUE.equals(desc.getTemplate().getAttribute(FileBuilder.ATTR_TEMPLATE_MERGE_FOLDERS));
+
+            if (desc.getTemplate().isFolder() && merge) {
+                // hack, but pass down.
+                desc.parameters.put(FileBuilder.ATTR_TEMPLATE_MERGE_FOLDERS, Boolean.TRUE);
             } else {
-                name = CreateFromTemplateHandler.mapParameters(desc.getTemplate().getName(), desc.getParameters());
-                boolean merge = 
-                        Boolean.TRUE.equals(desc.getValue(FileBuilder.ATTR_TEMPLATE_MERGE_FOLDERS)) ||
-                        Boolean.TRUE.equals(desc.getTemplate().getAttribute(FileBuilder.ATTR_TEMPLATE_MERGE_FOLDERS));
-                
-                if (desc.getTemplate().isFolder() && merge) {
-                    // hack, but pass down.
-                    desc.parameters.put(FileBuilder.ATTR_TEMPLATE_MERGE_FOLDERS, Boolean.TRUE);
-                } else {
-                    name = FileUtil.findFreeFileName(
-                           desc.getTarget(), name, desc.getTemplate().getExt ()
-                    );
-                }
+                name = FileUtil.findFreeFileName(
+                       desc.getTarget(), name, desc.getTemplate().getExt ()
+                );
             }
         }
         desc.proposedName = name;

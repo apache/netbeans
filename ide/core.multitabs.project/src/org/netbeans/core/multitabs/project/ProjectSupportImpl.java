@@ -44,7 +44,7 @@ import org.openide.windows.TopComponent;
 @ServiceProvider(service = ProjectSupport.class)
 public class ProjectSupportImpl extends ProjectSupport {
 
-    private static final Map<FileObject, Project> file2project = new WeakHashMap<FileObject, Project>(50);
+    private static final Map<FileObject, Project> file2project = new WeakHashMap<>(50);
     private static final RequestProcessor RP = new RequestProcessor("TabProjectBridge"); //NOI18N
     private static final ChangeSupport changeSupport = new ChangeSupport(RP);
     private static PropertyChangeListener projectsListener;
@@ -62,12 +62,7 @@ public class ProjectSupportImpl extends ProjectSupport {
         synchronized( changeSupport ) {
             changeSupport.addChangeListener(l);
             if( null == projectsListener ) {
-                projectsListener = new PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        changeSupport.fireChange();
-                    }
-                };
+                projectsListener = (PropertyChangeEvent evt) -> changeSupport.fireChange();
                 OpenProjects.getDefault().addPropertyChangeListener( projectsListener );
             }
         }

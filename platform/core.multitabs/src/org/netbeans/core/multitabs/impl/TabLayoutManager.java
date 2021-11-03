@@ -22,7 +22,6 @@ import java.awt.Container;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
@@ -59,13 +58,7 @@ abstract class TabLayoutManager {
         this.rows = rows;
         this.container = container;
         this.tabModel = tabModel;
-        layoutTimer = new Timer( 350, new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                doLayout();
-            }
-        });
+        layoutTimer = new Timer(350, (ActionEvent e) -> doLayout());
         layoutTimer.setRepeats( false );
     }
 
@@ -212,7 +205,7 @@ abstract class TabLayoutManager {
                     }
                 }
             }
-            ArrayList<Integer> tabs = new ArrayList<Integer>( tabCount );
+            ArrayList<Integer> tabs = new ArrayList<>( tabCount );
             int prevTab = -1;
             for( int i=0; i<lastIndexInRow.length; i++ ) {
                 tabs.clear();
@@ -245,7 +238,7 @@ abstract class TabLayoutManager {
             final int rowCount = rows.size();
             List<Integer>[] rowIndexes = new ArrayList[rowCount];
             for( int i=0; i<rowCount; i++ ) {
-                rowIndexes[i] = new ArrayList<Integer>( tabCount );
+                rowIndexes[i] = new ArrayList<>( tabCount );
             }
 
             Map<TabData, ProjectProxy> tab2Project = projectSupport.tryGetProjectsForTabs(tabModel.getTabs());

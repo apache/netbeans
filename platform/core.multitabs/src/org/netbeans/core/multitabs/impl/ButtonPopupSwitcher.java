@@ -87,8 +87,8 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
     
     private final DocumentSwitcherTable pTable;
     
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
 
     private boolean isDragging = true;
 
@@ -178,12 +178,9 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
         if (popup != null) {
             popup.removePopupMenuListener( this );
             final JPopupMenu popupToHide = popup;
-            SwingUtilities.invokeLater( new Runnable() {
-                @Override
-                public void run() {
-                    if( popupToHide.isVisible() )
-                        popupToHide.setVisible( false );
-                }
+            SwingUtilities.invokeLater(() -> {
+                if( popupToHide.isVisible() )
+                    popupToHide.setVisible( false );
             });
             popup.setVisible( false );
             popup = null;
@@ -279,20 +276,6 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
         }
     }
     
-    /**
-     * Was mouse upon the popup table when mouse action had been taken.
-     */
-    private boolean onSwitcherTable(MouseEvent e) {
-        Point p = e.getPoint();
-        //#118828
-        if (! (e.getSource() instanceof Component)) {
-            return false;
-        }
-        
-        p = SwingUtilities.convertPoint((Component) e.getSource(), p, pTable);
-        return pTable.contains(p);
-    }
-    
     @Override
     public void eventDispatched(AWTEvent event) {
         if (event.getSource() == this) {
@@ -365,12 +348,7 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
                     int tabIndex = controller.getTabModel().indexOf( tab );
                     if( tabIndex >= 0 ) {
                         if( controller.getTabModel().size() == 1 ) {
-                            SwingUtilities.invokeLater( new Runnable() {
-                                @Override
-                                public void run() {
-                                    hideCurrentPopup();
-                                }
-                            });
+                            SwingUtilities.invokeLater(this::hideCurrentPopup);
                         }
                         TabActionEvent tae = new TabActionEvent( this, TabbedContainer.COMMAND_CLOSE, tabIndex );
                         controller.postActionEvent( tae );
@@ -528,11 +506,11 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
                 currentProject = p;
             }
         }
-        return items.toArray( new Item[items.size()] );
+        return items.toArray( new Item[0] );
     }
 
     private class ActivatableTab implements SwitcherTableItem.Activatable {
-        private TabData tab;
+        private final TabData tab;
 
         private ActivatableTab(TabData tab) {
             this.tab = tab;

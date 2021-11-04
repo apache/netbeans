@@ -188,7 +188,9 @@ final class CreateFromTemplateImpl {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             eng.getContext().setWriter(pw);
-            eng.getContext().setAttribute(FileObject.class.getName(), template, ScriptContext.ENGINE_SCOPE);
+            // Existing ScriptEngines (e.g. Freemarker does) may cache compiled templates, based on FO. Let's introduce another
+            // attribute for "just" filename template to avoid the cache.
+            eng.getContext().setAttribute(FileObject.class.getName() + ".owner", template, ScriptContext.ENGINE_SCOPE);
             eng.getContext().setAttribute(ScriptEngine.FILENAME, template.getNameExt(), ScriptContext.ENGINE_SCOPE);
             eng.eval(name);
             pw.flush();

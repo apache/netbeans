@@ -59,7 +59,7 @@ public final class NbCodeClientCapabilities {
     /**
      * Asks for groovy support. Temporary option, will be removed.
      */
-    private Boolean wantsGroovySupport;
+    private Boolean wantsGroovySupport = Boolean.TRUE;
 
     public ClientCapabilities getClientCapabilities() {
         return clientCaps;
@@ -94,11 +94,11 @@ public final class NbCodeClientCapabilities {
     }
 
     public void setWantGroovySupport(Boolean enableGroovy) {
-        this.wantsGroovySupport = enableGroovy;
+        this.wantsGroovySupport = enableGroovy == null ? Boolean.TRUE : enableGroovy;
     }
 
     public boolean wantsGroovySupport() {
-        return wantsGroovySupport != null && wantsGroovySupport.booleanValue();
+        return wantsGroovySupport.booleanValue();
     }
 
     private NbCodeClientCapabilities withCapabilities(ClientCapabilities caps) {

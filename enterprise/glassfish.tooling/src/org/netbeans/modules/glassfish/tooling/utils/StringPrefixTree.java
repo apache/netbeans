@@ -59,8 +59,7 @@ public class StringPrefixTree<Type> {
          *         with case sensitive settings rules applied.
          */
         Character toCharacter(final char c) {
-            return Character.valueOf(
-                    caseSensitive ? c : Character.toUpperCase(c));
+            return caseSensitive ? c : Character.toUpperCase(c);
         }
 
         /**

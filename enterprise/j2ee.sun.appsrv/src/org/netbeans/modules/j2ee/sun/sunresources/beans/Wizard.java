@@ -227,7 +227,7 @@ public class Wizard extends org.netbeans.modules.schema2beans.BaseBean
 	private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException{
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		write(baos);
-		String str = baos.toString();;
+		String str = baos.toString();
 		// System.out.println("str='"+str+"'");
 		out.writeUTF(str);
 	}

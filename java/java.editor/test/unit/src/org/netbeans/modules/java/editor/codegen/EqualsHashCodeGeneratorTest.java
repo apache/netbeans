@@ -392,10 +392,7 @@ public class EqualsHashCodeGeneratorTest extends NbTestCase {
                         "        if (!Arrays.deepEquals(this.y, other.y)) {\n" +
                         "            return false;\n" +
                         "        }" +
-                        "        if (this.o != other.o && (this.o == null || !this.o.equals(other.o))) {\n" +
-                        "            return false;\n" +
-                        "        }\n" +
-                        "        return true;\n" +
+                        "        return this.o == other.o || (this.o != null && this.o.equals(other.o));\n" +
                         "    }\n" +
                         "}\n";
 
@@ -574,10 +571,7 @@ public class EqualsHashCodeGeneratorTest extends NbTestCase {
                         "        if (this.c != other.c) {\n" +
                         "            return false;\n" +
                         "        }\n" +
-                        "        if (this.e != other.e) {\n" +
-                        "            return false;\n" +
-                        "        }\n" +
-                        "        return true;\n" +
+                        "        return this.e == other.e;\n" +
                         "    }\n" +
                         "  public enum E {A, B;}\n" +
                         "}\n";
@@ -652,10 +646,7 @@ public class EqualsHashCodeGeneratorTest extends NbTestCase {
                         "            return false;\n" +
                         "        }\n" +
                         "        final X other = (X) obj;\n" +
-                        "        if (this.e != other.e) {\n" +
-                        "            return false;\n" +
-                        "        }\n" +
-                        "        return true;\n" +
+                        "        return this.e == other.e;\n" +
                         "    }\n" +
                         "  enum E {A}\n" +
                         "}\n";

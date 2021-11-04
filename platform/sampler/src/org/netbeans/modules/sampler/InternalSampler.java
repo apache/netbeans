@@ -48,7 +48,7 @@ import static org.netbeans.modules.sampler.Bundle.*;
 final class InternalSampler extends Sampler {
     private static final String SAMPLER_NAME = "selfsampler";  // NOI18N
     private static final String FILE_NAME = SAMPLER_NAME+SamplesOutputStream.FILE_EXT;
-    private static final String UNKNOW_MIME_TYPE = "content/unknown"; // NOI18N
+    private static final String UNKNOWN_MIME_TYPE = "content/unknown"; // NOI18N
     private static final String X_DEBUG_ARG = "-Xdebug"; // NOI18N
     private static final String JDWP_DEBUG_ARG = "-agentlib:jdwp"; // NOI18N
     private static final String JDWP_DEBUG_ARG_PREFIX = "-agentlib:jdwp="; // NOI18N
@@ -142,7 +142,7 @@ final class InternalSampler extends Sampler {
         // open snapshot
         FileObject fo = fs.findResource(FILE_NAME);
         // test for DefaultDataObject
-        if (UNKNOW_MIME_TYPE.equals(fo.getMIMEType())) {
+        if (UNKNOWN_MIME_TYPE.equals(fo.getMIMEType())) {
             String msg = SelfSamplerAction_SavedFile(outFile.getAbsolutePath());
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(msg));
         } else {

@@ -75,6 +75,9 @@ public abstract class VectorIcon implements Icon, Serializable {
         return height;
     }
 
+    /* We can't use org.openide.awt.GraphicsUtils.configureDefaultRenderingHints here, since this module
+    is not allowed to depend on it. But in any case, the rendering hints for VectorIcon are intended
+    to remain standardized, unaffected by settings elsewhere. */
     private static Graphics2D createGraphicsWithRenderingHintsConfigured(Graphics basedOn) {
         Graphics2D ret = (Graphics2D) basedOn.create();
         Object desktopHints =

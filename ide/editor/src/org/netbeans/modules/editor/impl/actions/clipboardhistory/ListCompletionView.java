@@ -25,11 +25,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
 import java.awt.event.MouseListener;
-import java.util.Map;
 import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
@@ -39,6 +35,7 @@ import javax.swing.JList;
 import javax.swing.JViewport;
 import javax.swing.ListCellRenderer;
 import org.netbeans.lib.editor.util.StringEscapeUtils;
+import org.openide.awt.GraphicsUtils;
 import org.openide.awt.HtmlRenderer;
 import org.openide.util.ImageUtilities;
 
@@ -185,20 +182,8 @@ public class ListCompletionView extends JList {
     }
 
     public @Override void paint(Graphics g) {
-        Object value = Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints"); //NOI18N
-        Map renderingHints = (value instanceof Map) ? (java.util.Map)value : null;
-        if (renderingHints != null && g instanceof Graphics2D) {
-            Graphics2D g2d = (Graphics2D) g;
-            RenderingHints oldHints = g2d.getRenderingHints();
-            g2d.setRenderingHints(renderingHints);
-            try {
-                super.paint(g2d);
-            } finally {
-                g2d.setRenderingHints(oldHints);
-            }
-        } else {
-            super.paint(g);
-        }
+        GraphicsUtils.configureDefaultRenderingHints(g);
+        super.paint(g);
     }
 
     static class Model extends AbstractListModel {

@@ -33,7 +33,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 public class JavaCompletionTask114FeaturesTest extends CompletionTestBase {
 
-    private static String SOURCE_LEVEL = "14"; //NOI18N
+    private static final String SOURCE_LEVEL = "14"; //NOI18N
 
     public JavaCompletionTask114FeaturesTest(String testName) {
         super(testName);
@@ -78,9 +78,21 @@ public class JavaCompletionTask114FeaturesTest extends CompletionTestBase {
         performTest("Records", 999, null, "override.pass", SOURCE_LEVEL);
     } 
     
-    public void testRecordKeywordInsideClass() throws Exception {
+    public void testRecordKeywordInsideMethod() throws Exception {
         performTest("Records", 1014, "rec", "record.pass", SOURCE_LEVEL);
-    } 
+    }
+
+    public void testRecordKeywordInsideClass() throws Exception {
+        performTest("Records", 844, "rec", "record.pass", SOURCE_LEVEL);
+    }
+
+    public void testRecordKeywordInsideMethodIfPrefixDoesntMatch() throws Exception {
+        performTest("Records", 1014, "someprefix", "empty.pass", SOURCE_LEVEL);
+    }
+
+    public void testRecordKeywordInsideClassIfPrefixDoesntMatch() throws Exception {
+        performTest("Records", 844, "someprefix", "empty.pass", SOURCE_LEVEL);
+    }
     
     public void testVariableNameSuggestion() throws Exception {
         TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--enable-preview");

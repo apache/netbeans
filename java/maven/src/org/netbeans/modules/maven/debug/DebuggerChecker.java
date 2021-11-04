@@ -248,25 +248,35 @@ public class DebuggerChecker implements LateBoundPrerequisitesChecker, Execution
                 }
                 String val = start.execute(context.getInputOutput());
                 for (Map.Entry<String,String> entry : NbCollections.checkedMapByFilter(config.getProperties(), String.class, String.class, true).entrySet()) {
-                    StringBuilder buf = new StringBuilder(entry.getValue());
+                    String value = entry.getValue();
+                    StringBuilder buf = null;
                     String replaceItem = "${jpda.address}"; //NOI18N
-                    int index = buf.indexOf(replaceItem);
+                    int index = value.indexOf(replaceItem);
                     while (index > -1) {
                         String newItem = val;
                         newItem = newItem == null ? "" : newItem; //NOI18N
+                        if (buf == null) {
+                            buf = new StringBuilder(value);
+                        }
                         buf.replace(index, index + replaceItem.length(), newItem);
                         index = buf.indexOf(replaceItem);
                     }
                     // debug must properly update debug port in runconfig...
                     if(entry.getKey().equals(MAVENSUREFIREDEBUG)) {
                         String address = "address="; //NOI18N
-                        index = buf.indexOf(address);
+                        index = value.indexOf(address);
                         if(index > -1) {
+                            if (buf == null) {
+                                buf = new StringBuilder(value);
+                            }
                             buf.replace(index + 8, buf.length(), val);
                         }
                     }
+                    if (buf != null) { // Change the value when necessary only, to keep it's identity otherwise.
+                        value = buf.toString();
+                    }
                     //                System.out.println("setting property=" + key + "=" + buf.toString());
-                    config.setProperty(entry.getKey(), buf.toString());
+                    config.setProperty(entry.getKey(), value);
                 }
                 config.setProperty("jpda.address", val); //NOI18N
             } catch (Throwable th) {

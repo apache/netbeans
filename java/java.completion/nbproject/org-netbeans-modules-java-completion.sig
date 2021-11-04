@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.20.0
+#Version 1.21.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -147,6 +147,7 @@ fld public final static java.lang.String RECORD = "RECORD"
 fld public final static java.lang.String SWITCH_EXPRESSION = "SWITCH_EXPRESSION"
 fld public final static java.lang.String YIELD = "YIELD"
 meth public static <%0 extends com.sun.source.tree.Tree> boolean isRecord({%%0})
+meth public static <%0 extends java.lang.Throwable> java.lang.RuntimeException throwAny(java.lang.Throwable) throws {%%0}
 meth public static boolean isJDKVersionRelease16_Or_Above()
 meth public static boolean isJDKVersionSupportEnablePreview()
 meth public static boolean isRecord(javax.lang.model.element.Element)
@@ -156,6 +157,7 @@ meth public static boolean isRuleCase(com.sun.source.tree.CaseTree)
 meth public static com.sun.source.doctree.ReferenceTree getRefrenceTree(com.sun.tools.javac.tree.DocTreeMaker,com.sun.source.tree.ExpressionTree,java.lang.CharSequence,java.util.List<? extends com.sun.source.tree.Tree>,com.sun.tools.javac.util.Names,java.util.List<com.sun.tools.javac.tree.JCTree>)
 meth public static com.sun.source.tree.ExpressionTree getValue(com.sun.source.tree.BreakTree)
 meth public static com.sun.source.tree.ExpressionTree getYieldValue(com.sun.source.tree.Tree)
+meth public static com.sun.source.tree.ModuleTree getModule(com.sun.source.tree.CompilationUnitTree)
 meth public static com.sun.source.tree.Tree SwitchExpression(com.sun.tools.javac.tree.TreeMaker,com.sun.source.tree.ExpressionTree,java.util.List<? extends com.sun.source.tree.CaseTree>)
 meth public static com.sun.source.tree.Tree getBindingPatternType(com.sun.source.tree.Tree)
 meth public static com.sun.source.tree.Tree getBody(com.sun.source.tree.CaseTree)

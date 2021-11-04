@@ -81,7 +81,7 @@ final class PatternResourcesSetupPanel extends AbstractPanel {
             component = currentPattern.createUI(panelName);
             if (allWizardSteps != null) {
                 component.putClientProperty(Util.WIZARD_PANEL_CONTENT_DATA, allWizardSteps);
-                component.putClientProperty(Util.WIZARD_PANEL_CONTENT_SELECTED_INDEX, Integer.valueOf(indexInAllSteps));
+                component.putClientProperty(Util.WIZARD_PANEL_CONTENT_SELECTED_INDEX, indexInAllSteps);
             }
             component.setName(panelName);
             ((Settings)component).addChangeListener(this);

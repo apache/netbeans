@@ -137,9 +137,7 @@ public abstract class XMLJ2eeDataObject extends XMLDataObject implements CookieS
     public String getOutputStringForInvalidDocument(SAXParseError error){
         //return error.getErrorText()+" ["+error.getErrorLine()+","+error.getErrorColumn()+"]";
         String mes = NbBundle.getMessage (XMLJ2eeDataObject.class, "TXT_errorMessage",
-                                new Object [] { error.getErrorText(),
-                                                new Integer(error.getErrorLine()),
-                                                new Integer(error.getErrorColumn()) });
+                                new Object [] { error.getErrorText(), error.getErrorLine(), error.getErrorColumn()});
         return mes;        
     }
     /** Getter for property nodeDirty.

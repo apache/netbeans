@@ -523,6 +523,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     insideSwitch(env);
                 } else if (TreeShims.isRecord(path.getLeaf())) {
                     insideRecord(env);
+                } else if (path.getLeaf().getKind().toString().equals("DEFAULT_CASE_LABEL")) {
+                    localResult(env);
+                    addKeywordsForBlock(env);
                 }
                 break;
         }
@@ -2493,7 +2496,15 @@ public final class JavaCompletionTask<T> extends BaseTask {
             }
         } else {
             TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, cst, offset);
-            if (ts != null && ts.token().id() != JavaTokenId.DEFAULT) {
+            if (ts != null && ts.token().id() == JavaTokenId.IDENTIFIER) {
+                for (ExpressionTree caseExpression : caseTreeList) {
+                    if (caseExpression != null && caseExpression.getKind() == Tree.Kind.IDENTIFIER) {
+                        TreePath tPath = new TreePath(path, caseExpression);
+                        insideExpression(env, tPath);
+                        return;
+                    }
+                }
+            } else if (ts != null && ts.token().id() != JavaTokenId.DEFAULT) {
                 localResult(env);
                 addKeywordsForBlock(env);
             }
@@ -4653,7 +4664,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 && env.getController().getTreeUtilities().getPathElementOfKind(Tree.Kind.INTERFACE, env.getPath()) != null) {
             results.add(itemFactory.createKeywordItem(DEFAULT_KEYWORD, SPACE, anchorOffset, false));
         }
-        if (isRecordSupported(env)) {
+        if (isRecordSupported(env) && Utilities.startsWith(RECORD_KEYWORD, prefix)) {
             results.add(itemFactory.createKeywordItem(RECORD_KEYWORD, SPACE, anchorOffset, false));
         }
         addPrimitiveTypeKeywords(env);
@@ -4671,7 +4682,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 results.add(itemFactory.createKeywordItem(kw, SPACE, anchorOffset, false));
             }
         }
-        if (isRecordSupported(env)) {
+        if (isRecordSupported(env) && Utilities.startsWith(RECORD_KEYWORD, prefix)) {
             results.add(itemFactory.createKeywordItem(RECORD_KEYWORD, SPACE, anchorOffset, false));
         }
         if (Utilities.startsWith(RETURN_KEYWORD, prefix)) {

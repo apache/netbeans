@@ -80,7 +80,7 @@ public class NFA<I, R> {
     }
 
     public Set<R> getResults(State bs) {
-        Set<R> result = new HashSet<R>();
+        Set<R> result = new HashSet<>();
 
         for (int i : bs) {
 //        for (int i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i+1)) {
@@ -93,7 +93,7 @@ public class NFA<I, R> {
     }
 
     public static <I, R> NFA<I, R> create(int startingState, int stateCount, Set<I> inputs, Map<Key<I>, State> transitionTable, Map<Integer, R> finalStates) {
-        return new NFA<I, R>(startingState, stateCount, inputs, transitionTable, finalStates);
+        return new NFA<>(startingState, stateCount, inputs, transitionTable, finalStates);
     }
 
     public State join(State s1, State s2) {
@@ -115,7 +115,7 @@ public class NFA<I, R> {
         }
 
         public static <I> Key<I> create(int state, I input) {
-            return new Key<I>(state, input);
+            return new Key<>(state, input);
         }
 
         @Override

@@ -23,7 +23,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -37,13 +36,9 @@ import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.LookupMerger;
 import org.netbeans.spi.project.LookupProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;
-import org.openide.filesystems.FileObject;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
-import org.openide.util.Lookup.Template;
-import org.openide.util.lookup.Lookups;
-import org.openide.util.lookup.ProxyLookup;
 
 /**
  * Factory methods for lazy {@link LookupProvider} registration.
@@ -52,7 +47,7 @@ public class LazyLookupProviders {
 
     private LazyLookupProviders() {}
 
-    private static final Logger LOG = Logger.getLogger(LazyLookupProviders.class.getName());
+    static final Logger LOG = Logger.getLogger(LazyLookupProviders.class.getName());
     private static final Map<Lookup,ThreadLocal<Member>> INSIDE_LOAD = new WeakHashMap<Lookup,ThreadLocal<Member>>();
     private static final Collection<Member> WARNED = Collections.synchronizedSet(new HashSet<Member>());
 
@@ -62,97 +57,39 @@ public class LazyLookupProviders {
     public static LookupProvider forProjectServiceProvider(final Map<String,Object> attrs) throws ClassNotFoundException {
         class Prov implements LookupProvider {
             @Override
-            public Lookup createAdditionalLookup(final Lookup lkp) {
-                final Lookup result =  new ProxyLookup() {
-                    Collection<String> serviceNames = Arrays.asList(((String) attrs.get("service")).split(",")); // NOI18N
-                    final Thread[] LOCK = { null };
-                    @Override protected void beforeLookup(Template<?> template) {
-                        safeToLoad();
-                        Class<?> service = template.getType();
-                        synchronized (LOCK) {
-                            for (;;) {
-                                if (serviceNames == null || !serviceNames.contains(service.getName())) {
-                                    return;
-                                }
-                                if (LOCK[0] == null) {
-                                    break;
-                                }
-                                if (LOCK[0] == Thread.currentThread()) {
-                                    return;
-                                }
-                                try {
-                                    LOCK.wait();
-                                } catch (InterruptedException ex) {
-                                    LOG.log(Level.INFO, null, ex);
-                                }
-                            }
-                            LOCK[0] = Thread.currentThread();
-                        }
-                        try {
-                            Object instance = loadPSPInstance((String) attrs.get("class"), (String) attrs.get("method"), lkp); // NOI18N
-                            if (!service.isInstance(instance)) {
-                                // JRE #6456938: Class.cast currently throws an exception without details.
-                                throw new ClassCastException("Instance of " + instance.getClass() + " unassignable to " + service);
-                            }
-                            setLookups(Lookups.singleton(instance));
-                            synchronized (LOCK) {
-                                serviceNames = null;
-                            }
-                        } catch (Exception x) {
-                            Exceptions.attachMessage(x, "while loading from " + attrs);
-                            Exceptions.printStackTrace(x);
-                        } finally {
-                            synchronized (LOCK) {
-                                LOCK[0] = null;
-                                LOCK.notifyAll();
-                            }
-                        }
-                    }
-                    private void safeToLoad() {
-                        ThreadLocal<Member> memberRef;
-                        synchronized (INSIDE_LOAD) {
-                            memberRef = INSIDE_LOAD.get(lkp);
-                        }
-                        if (memberRef == null) {
-                            return;
-                        }
-                        Member member = memberRef.get();
-                        if (member != null && WARNED.add(member)) {
-                            LOG.log(Level.WARNING, null, new IllegalStateException("may not call Project.getLookup().lookup(...) inside " + member.getName() + " registered under @ProjectServiceProvider"));
-                        }
-                    }
-
-                    @Override
-                    public String toString() {
-                        return Prov.this.toString();
-                    }
-                };
+            public Lookup createAdditionalLookup(Lookup lkp) {
+                LazyLookup result = new LazyLookup(attrs, lkp);
                 if (LOG.isLoggable(Level.FINE)) {
                     LOG.log(
-                        Level.FINE,
-                        "Additional lookup created: {0} service class: {1} for base lookup: {2}",   //NOI18N
-                        new Object[]{
+                            Level.FINE,
+                            "Additional lookup created: {0} service class: {1} for base lookup: {2}", //NOI18N
+                            new Object[]{
                             System.identityHashCode(result),
-                            attrs.get("class"),
-                            System.identityHashCode(lkp)
-                        });
+                                attrs.get("class"),
+                                System.identityHashCode(lkp)
+                            });
                 }
                 return result;
             }
-            
-            @Override
-            @SuppressWarnings("element-type-mismatch")
-            public String toString() {
-                return "LazyLookupProviders.LookupProvider[service=" + 
-                    attrs.get("service") + 
-                    ", class=" + attrs.get("class") + 
-                    ", orig=" + attrs.get(FileObject.class) + 
-                    "]";
-            }
-        };
+        }
         return new Prov();
     }
-    private static Object loadPSPInstance(String implName, String methodName, Lookup lkp) throws Exception {
+
+    static void safeToLoad(Lookup lkp) {
+        ThreadLocal<Member> memberRef;
+        synchronized (LazyLookupProviders.INSIDE_LOAD) {
+            memberRef = LazyLookupProviders.INSIDE_LOAD.get(lkp);
+        }
+        if (memberRef == null) {
+            return;
+        }
+        Member member = memberRef.get();
+        if (member != null && LazyLookupProviders.WARNED.add(member)) {
+            LazyLookupProviders.LOG.log(Level.WARNING, null, new IllegalStateException("may not call Project.getLookup().lookup(...) inside " + member.getName() + " registered under @ProjectServiceProvider"));
+        }
+    }
+    
+    static Object loadPSPInstance(String implName, String methodName, Lookup lkp) throws Exception {
         ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
         if (loader == null) {
             loader = Thread.currentThread().getContextClassLoader();

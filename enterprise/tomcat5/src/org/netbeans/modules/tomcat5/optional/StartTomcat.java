@@ -891,7 +891,7 @@ public final class StartTomcat extends StartServer implements ProgressObject {
             } catch (IOException ioe) {
                 LOGGER.log(Level.FINE, null, ioe);
             } finally {
-                try { in.close(); } catch (IOException ioe) {};
+                try { in.close(); } catch (IOException ioe) {}
             }
         }
     };

@@ -21,6 +21,7 @@ package org.netbeans.insane.impl;
 
 import java.lang.reflect.*;
 import java.util.*;
+import org.netbeans.insane.hook.MakeAccessible;
 
 import org.netbeans.insane.scanner.*;
 
@@ -220,7 +221,7 @@ try {
             Field act = flds[i];
             if (((act.getModifiers() & Modifier.STATIC) != 0) &&
                                 (!act.getType().isPrimitive())) {
-                act.setAccessible(true);
+                MakeAccessible.setAccessible(act, true);
                 Object target;
                 try {
                     target = act.get(null);
@@ -272,7 +273,7 @@ try {
                         if (((act.getModifiers() & Modifier.STATIC) == 0) &&
                                     (!act.getType().isPrimitive())) {
                         
-                            act.setAccessible(true);
+                            MakeAccessible.setAccessible(act, true);
                             Object target = act.get(obj);
                             if (target!= null) {
                                 if (filter.accept(target, obj, act)) {

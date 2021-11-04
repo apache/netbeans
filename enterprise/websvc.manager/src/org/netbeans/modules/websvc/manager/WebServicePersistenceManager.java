@@ -83,9 +83,9 @@ public class WebServicePersistenceManager implements ExceptionListener {
                     for (String url : loadedServices) {
                         partnerServices.add(url);
                     }
-                    wsDataNums = ((Integer) decoder.readObject()).intValue();
+                    wsDataNums = ((Integer) decoder.readObject());
                 } else {
-                    wsDataNums = ((Integer) firstObject).intValue();
+                    wsDataNums = ((Integer) firstObject);
                 }
 
                 for (int i = 0; i < wsDataNums; i++) {
@@ -99,7 +99,7 @@ public class WebServicePersistenceManager implements ExceptionListener {
 
                     wsDatas.add(wsData);
                 }
-                int wsGroupSize = ((Integer) decoder.readObject()).intValue();
+                int wsGroupSize = ((Integer) decoder.readObject());
                 Map<String, WebServiceGroup> groupByIds = new HashMap<String, WebServiceGroup>();
                 for (int i = 0; i < wsGroupSize; i++) {
                     try {
@@ -226,7 +226,7 @@ public class WebServicePersistenceManager implements ExceptionListener {
             }
 
             List<WebServiceGroup> wsGroupSet = model.getWebServiceGroupSet();
-            encoder.writeObject(new Integer(wsGroupSet.size()));
+            encoder.writeObject(wsGroupSet.size());
 
             synchronized (wsGroupSet) {
                 for (WebServiceGroup group : wsGroupSet) {

@@ -37,6 +37,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -55,6 +56,7 @@ import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.api.extexecution.base.Processes;
 import org.netbeans.api.extexecution.startup.StartupExtender;
@@ -79,6 +81,7 @@ import org.netbeans.modules.maven.execute.cmd.ShellConstructor;
 import org.netbeans.modules.maven.indexer.api.RepositoryIndexer;
 import org.netbeans.modules.maven.indexer.api.RepositoryPreferences;
 import org.netbeans.modules.maven.options.MavenSettings;
+import org.netbeans.modules.maven.runjar.MavenExecuteUtils;
 import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
 import org.openide.LifecycleManager;
 import org.openide.awt.HtmlBrowser;
@@ -123,9 +126,9 @@ import org.openide.windows.OutputListener;
  * @author  Svata Dedic (svatopluk.dedic@gmail.com)
  */
 public class MavenCommandLineExecutor extends AbstractMavenExecutor {
-    static final String ENV_PREFIX = "Env."; //NOI18N
+    static final String ENV_PREFIX = MavenExecuteUtils.ENV_PREFIX;
     static final String INTERNAL_PREFIX = "NbIde."; //NOI18N
-    static final String ENV_JAVAHOME = "Env.JAVA_HOME"; //NOI18N
+    static final String ENV_JAVAHOME = ENV_PREFIX + "JAVA_HOME"; //NOI18N
 
     private static final String KEY_UUID = "NB_EXEC_MAVEN_PROCESS_UUID"; //NOI18N
 
@@ -363,7 +366,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         out.waitFor();
         return executionresult;
     }
-
+    
     private void kill(Process prcs, String uuid) {
         Map<String, String> env = new HashMap<String, String>();
         env.put(KEY_UUID, uuid);
@@ -618,15 +621,25 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             }
         }
 
-        File mavenHome = EmbedderFactory.getEffectiveMavenHome();
-        if (MavenSettings.getDefault().isUseBestMaven()) {
-            File n = guessBestMaven(clonedConfig, ioput);
-            if (n != null) {
-                mavenHome = n;
-            }
+        Constructor constructeur;
+        File mavenHome = null;
+        File wrapper = null;
+        if (MavenSettings.getDefault().isPreferMavenWrapper()) {
+            wrapper = searchMavenWrapper(config);
         }
-        Constructor constructeur = new ShellConstructor(mavenHome);
-
+        if (wrapper != null) {
+            constructeur = new WrapperShellConstructor(wrapper);
+        } else {
+            mavenHome = EmbedderFactory.getEffectiveMavenHome();
+            if (MavenSettings.getDefault().isUseBestMaven()) {
+                File n = guessBestMaven(clonedConfig, ioput);
+                if (n != null) {
+                    mavenHome = n;
+                }
+            }
+            constructeur = new ShellConstructor(mavenHome);
+        }
+        
         List<String> cmdLine = createMavenExecutionCommand(clonedConfig, constructeur);
 
         //#228901 on windows, since u21 we must use cmd /c
@@ -674,7 +687,11 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                 continue;// #191374: would prevent bin/mvn from using selected installation
             }
             // TODO: do we really put *all* the env vars there? maybe filter, M2_HOME and JDK_HOME?
-            builder.environment().put(env, val);
+            if (MavenExecuteUtils.isEnvRemovedValue(val)) {
+                builder.environment().remove(env);
+            } else {
+                builder.environment().put(env, val);
+            }
             if (!env.equals(CosChecker.NETBEANS_PROJECT_MAPPINGS)
                     && !env.equals(NETBEANS_MAVEN_COMMAND_LINE)) { //don't show to user
                 display.append(Utilities.escapeParameters(new String[] {env + "=" + val})).append(' '); // NOI18N
@@ -983,5 +1000,61 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             }
         }
         return Places.getCacheSubdirectory("downloaded-mavens");
+    }
+    
+    private File searchMavenWrapper(RunConfig config) {
+        String fileName = Utilities.isWindows() ? "mvnw.cmd" : "mvnw"; //NOI18N
+        MavenProject project = config.getMavenProject();
+        while (project != null) {
+            File baseDir = project.getBasedir();
+            if (baseDir != null) {
+                File mvnw = new File(baseDir, fileName);
+                if (mvnw.exists()) {
+                    return mvnw;
+                }
+            }
+            project = project.getParent();
+        }
+        return null;
+    }
+
+    // part copied from ShellConstructor - @TODO consolidate here
+    private static class WrapperShellConstructor implements Constructor {
+
+        private final @NonNull File wrapper;
+
+        WrapperShellConstructor(@NonNull File wrapper) {
+            this.wrapper = wrapper;
+        }
+
+        @Override
+        public List<String> construct() {
+            //#164234
+            //if maven.bat file is in space containing path, we need to quote with simple quotes.
+            String quote = "\"";
+            List<String> toRet = new ArrayList<>();
+            toRet.add(quoteSpaces(wrapper.getAbsolutePath(), quote));
+
+            if (Utilities.isWindows()) { //#153101, since #228901 always on windows use cmd /c
+                toRet.add(0, "/c"); //NOI18N
+                toRet.add(0, "cmd"); //NOI18N
+            }
+            return toRet;
+        }
+
+        // we run the shell/bat script in the process, on windows we need to quote any spaces
+        //once/if we get rid of shell/bat execution, we might need to remove this
+        //#164234
+        private static String quoteSpaces(String val, String quote) {
+            if (Utilities.isWindows()) {
+                //since #228901 always quote
+                //#208065 not only space but a few other characters are to be quoted..
+                //if (val.indexOf(' ') != -1 || val.indexOf('=') != -1 || val.indexOf(";") != -1 || val.indexOf(",") != -1) { //NOI18N
+                return quote + val + quote;
+                //}
+            }
+            return val;
+        }
+
     }
 }

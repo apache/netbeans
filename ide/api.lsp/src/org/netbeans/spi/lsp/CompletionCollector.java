@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javax.swing.text.Document;
@@ -31,6 +33,7 @@ import org.netbeans.api.lsp.Completion;
 import org.netbeans.api.lsp.TextEdit;
 import org.netbeans.modules.lsp.CompletionAccessor;
 import org.netbeans.spi.editor.mimelookup.MimeLocation;
+import org.openide.util.RequestProcessor;
 
 /**
  * Interface for computing and collecting completions. Clients can use this interface
@@ -338,6 +341,7 @@ public interface CompletionCollector {
 
         private static class LazyCompletableFuture<T> extends CompletableFuture<T> {
 
+            private static final RequestProcessor ASYNC_WORKER = new RequestProcessor(LazyCompletableFuture.class.getName(), 1);
             private final Supplier<T> supplier;
 
             private LazyCompletableFuture(Supplier<T> supplier) {
@@ -352,6 +356,17 @@ public interface CompletionCollector {
                     this.completeExceptionally(ex);
                 }
                 return super.get();
+            }
+
+            @Override
+            public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+                CompletableFuture.supplyAsync(supplier, ASYNC_WORKER).thenAccept(t -> {
+                    this.complete(t);
+                }).exceptionally(ex -> {
+                    this.completeExceptionally(ex);
+                    return null;
+                });
+                return super.get(timeout, unit);
             }
         }
     }

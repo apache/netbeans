@@ -123,7 +123,7 @@ public class ResourceLibraryIterator implements TemplateWizard.Iterator {
 
     @Override
     public String name() {
-        return NbBundle.getMessage(TemplateIterator.class, "TITLE_x_of_y", new Integer(index + 1), new Integer(panels.length));
+        return NbBundle.getMessage(TemplateIterator.class, "TITLE_x_of_y", index + 1, panels.length);
     }
 
     @Override
@@ -201,7 +201,7 @@ public class ResourceLibraryIterator implements TemplateWizard.Iterator {
                 if (c instanceof JComponent) { // assume Swing components
                     JComponent jc = (JComponent) c;
                     // Sets step number of a component
-                    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(i)); // NOI18N
+                    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i); // NOI18N
                     // Sets steps names for a panel
                     jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps); // NOI18N
                     // Show steps on the left side with the image on the background

@@ -11,17 +11,9 @@ children:ATTRIBUTE:[]:children:
       age:ATTRIBUTE:[]:age:
       name:ATTRIBUTE:[]:name:
       siblings:ATTRIBUTE:[]:siblings:
-        list item:ATTRIBUTE:[]:list item:
-          age:ATTRIBUTE:[]:age:
-          children:ATTRIBUTE:[]:children:
-          name:ATTRIBUTE:[]:name:
-          siblings:ATTRIBUTE:[]:siblings:
-          spouse:ATTRIBUTE:[]:spouse:
+        1:ATTRIBUTE:[]:1:
   list item:ATTRIBUTE:[]:list item:
     age:ATTRIBUTE:[]:age:
     name:ATTRIBUTE:[]:name:
 siblings:ATTRIBUTE:[]:siblings:
-  list item:ATTRIBUTE:[]:list item:
-    age:ATTRIBUTE:[]:age:
-    name:ATTRIBUTE:[]:name:
-    siblings:ATTRIBUTE:[]:siblings:
+  2:ATTRIBUTE:[]:2:

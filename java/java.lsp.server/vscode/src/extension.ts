@@ -30,8 +30,7 @@ import {
     MessageType,
     LogMessageNotification,
     RevealOutputChannelOn,
-    DocumentSelector,
-    DocumentFilter
+    DocumentSelector
 } from 'vscode-languageclient';
 
 import * as net from 'net';
@@ -39,18 +38,17 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { ChildProcess } from 'child_process';
 import * as vscode from 'vscode';
-import { testExplorerExtensionId, TestHub } from 'vscode-test-adapter-api';
-import { TestAdapterRegistrar } from 'vscode-test-adapter-util';
 import * as launcher from './nbcode';
 import {NbTestAdapter} from './testAdapter';
-import { StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification, DebugConnector,
+import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification, DebugConnector,
          TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification, HtmlPageRequest, HtmlPageParams,
+         SetTextEditorDecorationParams
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
 
 const API_VERSION : string = "1.0";
 let client: Promise<LanguageClient>;
-let testAdapterRegistrar: TestAdapterRegistrar<NbTestAdapter>;
+let testAdapter: NbTestAdapter | undefined;
 let nbProcess : ChildProcess | null = null;
 let debugPort: number = -1;
 let consoleLog: boolean = !!process.env['ENABLE_CONSOLE_LOG'];
@@ -177,6 +175,8 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     });
 
     //register debugger:
+    let debugTrackerFactory =new NetBeansDebugAdapterTrackerFactory();
+    context.subscriptions.push(vscode.debug.registerDebugAdapterTrackerFactory('java8+', debugTrackerFactory));
     let configInitialProvider = new NetBeansConfigurationInitialProvider();
     context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java8+', configInitialProvider, vscode.DebugConfigurationProviderTriggerKind.Initial));
     let configDynamicProvider = new NetBeansConfigurationDynamicProvider(context);
@@ -291,6 +291,23 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             ]);
         }
     }));
+    context.subscriptions.push(commands.registerCommand('java.surround.with', async (items) => {
+        const selected: any = await window.showQuickPick(items, { placeHolder: 'Surround with ...' });
+        if (selected) {
+            if (selected.userData.edit && selected.userData.edit.changes) {
+                let edit = new vscode.WorkspaceEdit();
+                Object.keys(selected.userData.edit.changes).forEach(key => {
+                    edit.set(vscode.Uri.parse(key), selected.userData.edit.changes[key].map((change: any) => {
+                        let start = new vscode.Position(change.range.start.line, change.range.start.character);
+                        let end = new vscode.Position(change.range.end.line, change.range.end.character);
+                        return new vscode.TextEdit(new vscode.Range(start, end), change.newText);
+                    }));
+                });
+                await workspace.applyEdit(edit);
+            }
+            await commands.executeCommand(selected.userData.command.command, ...(selected.userData.command.arguments || []));
+        }
+    }));
     const runDebug = async (noDebug: boolean, testRun: boolean, uri: string, methodName?: string, launchConfiguration?: string) => {
         const docUri = uri ? vscode.Uri.file(uri) : window.activeTextEditor?.document.uri;
         if (docUri) {
@@ -319,6 +336,9 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(commands.registerCommand('java.run.test', async (uri, methodName?, launchConfiguration?) => {
         await runDebug(true, true, uri, methodName, launchConfiguration);
     }));
+    context.subscriptions.push(commands.registerCommand('java.debug.test', async (uri, methodName?, launchConfiguration?) => {
+        await runDebug(false, true, uri, methodName, launchConfiguration);
+    }));
     context.subscriptions.push(commands.registerCommand('java.run.single', async (uri, methodName?, launchConfiguration?) => {
         await runDebug(true, false, uri, methodName, launchConfiguration);
     }));
@@ -328,17 +348,6 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
 
     // register completions:
     launchConfigurations.registerCompletion(context);
-
-    // get the Test Explorer extension and register TestAdapter
-    const testExplorerExtension = vscode.extensions.getExtension<TestHub>(testExplorerExtensionId);
-    if (testExplorerExtension) {
-        const testHub = testExplorerExtension.exports;
-        testAdapterRegistrar = new TestAdapterRegistrar(
-            testHub,
-            workspaceFolder => new NbTestAdapter(workspaceFolder, client)
-        );
-        context.subscriptions.push(testAdapterRegistrar);
-    }
 
     return Object.freeze({
         version : API_VERSION
@@ -534,7 +543,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 { language: 'properties', pattern: '**/{application,bootstrap}*.properties' },
                 { language: 'jackpot-hint' }
         ];
-        const enableGroovy : boolean = conf.get("netbeans.groovySupport.enabled") || false;
+        const enableGroovy : boolean = conf.get("netbeans.groovySupport.enabled") || true;
         if (enableGroovy) {
             documentSelectors.push({ language: 'groovy'});
         }
@@ -582,6 +591,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         handleLog(log, 'Language Client: Starting');
         c.start();
         c.onReady().then(() => {
+            testAdapter = new NbTestAdapter();
             c.onNotification(StatusMessageRequest.type, showStatusBarMessage);
             c.onNotification(HtmlPageRequest.type, showHtmlPage);
             c.onNotification(LogMessageNotification.type, (param) => handleLog(log, param.message));
@@ -593,17 +603,12 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 return await window.showInputBox({ prompt: param.prompt, value: param.value });
             });
             c.onNotification(TestProgressNotification.type, param => {
-                if (testAdapterRegistrar) {
-                    const ws = workspace.getWorkspaceFolder(vscode.Uri.parse(param.uri));
-                    if (ws) {
-                        const adapter = testAdapterRegistrar.getAdapter(ws);
-                        if (adapter) {
-                            adapter.testProgress(param.suite);
-                        }
-                    }
+                if (testAdapter) {
+                    testAdapter.testProgress(param.suite);
                 }
             });
             let decorations = new Map<string, TextEditorDecorationType>();
+            let decorationParamsByUri = new Map<vscode.Uri, SetTextEditorDecorationParams>();
             c.onRequest(TextEditorDecorationCreateRequest.type, param => {
                 let decorationType = vscode.window.createTextEditorDecorationType(param);
                 decorations.set(decorationType.key, decorationType);
@@ -616,14 +621,33 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                         editor => editor.document.uri.toString() == param.uri
                     );
                     if (editorsWithUri.length > 0) {
-                        editorsWithUri[0].setDecorations(decorationType, param.ranges);
+                        editorsWithUri[0].setDecorations(decorationType, asRanges(param.ranges));
+                        decorationParamsByUri.set(editorsWithUri[0].document.uri, param);
                     }
                 }
             });
+            let disposableListener = vscode.window.onDidChangeVisibleTextEditors(editors => {
+                editors.forEach(editor => {
+                    let decorationParams = decorationParamsByUri.get(editor.document.uri);
+                    if (decorationParams) {
+                        let decorationType = decorations.get(decorationParams.key);
+                        if (decorationType) {
+                            editor.setDecorations(decorationType, asRanges(decorationParams.ranges));
+                        }
+                    }
+                });
+            });
+            context.subscriptions.push(disposableListener);
             c.onNotification(TextEditorDecorationDisposeNotification.type, param => {
                 let decorationType = decorations.get(param);
                 if (decorationType) {
+                    decorations.delete(param);
                     decorationType.dispose();
+                    decorationParamsByUri.forEach((value, key, map) => {
+                        if (value.key == param) {
+                            map.delete(key);
+                        }
+                    });
                 }
             });
             handleLog(log, 'Language Client: Ready');
@@ -736,6 +760,10 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
 }
 
 function stopClient(clinetPromise: Promise<LanguageClient>): Thenable<void> {
+    if (testAdapter) {
+        testAdapter.dispose();
+        testAdapter = undefined;
+    }
     return clinetPromise ? clinetPromise.then(c => c.stop()) : Promise.resolve();
 }
 
@@ -744,6 +772,19 @@ export function deactivate(): Thenable<void> {
         nbProcess.kill();
     }
     return stopClient(client);
+}
+
+class NetBeansDebugAdapterTrackerFactory implements vscode.DebugAdapterTrackerFactory {
+
+    createDebugAdapterTracker(_session: vscode.DebugSession): vscode.ProviderResult<vscode.DebugAdapterTracker> {
+        return {
+            onDidSendMessage(message: any): void {
+                if (testAdapter && message.type === 'event' && message.event === 'output') {
+                    testAdapter.testOutput(message.body.output);
+                }
+            }
+        }
+    }
 }
 
 class NetBeansDebugAdapterDescriptionFactory implements vscode.DebugAdapterDescriptorFactory {

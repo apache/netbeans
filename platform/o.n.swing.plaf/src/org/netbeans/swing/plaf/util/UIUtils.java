@@ -25,21 +25,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 /** XP color scheme installer.
  *
  * @author  Dafe Simonek
  */
 public final class UIUtils {
-    private static HashMap<RenderingHints.Key, Object> hintsMap = null;
-    private static final boolean noAntialias =
-        Boolean.getBoolean("nb.no.antialias"); //NOI18N
-
-    /** true when XP style colors are installed into UI manager, false otherwise */
-    private static boolean colorsReady = false;
-            
     /** No need to instantiate this utility class. */
     private UIUtils() {
     }
@@ -71,25 +62,6 @@ public final class UIUtils {
         Boolean isXP = (Boolean)Toolkit.getDefaultToolkit().
                         getDesktopProperty("win.xpstyle.themeActive"); //NOI18N
         return isXP == null ? false : isXP.booleanValue();
-    }
-
-     private static final Map<RenderingHints.Key, Object> getHints() {
-        //XXX should do this in update() in the UI instead
-        //Note for this method we do NOT want only text antialiasing - we 
-        //want antialiased curves.
-        if (hintsMap == null) {
-            hintsMap = new HashMap<RenderingHints.Key, Object>();
-            hintsMap.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            hintsMap.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        }
-        return hintsMap;
-    }
-    
-    public static final void configureRenderingHints (Graphics g) {
-        if (noAntialias) return;
-        Graphics2D g2d = (Graphics2D) g;
-        
-        g2d.addRenderingHints(getHints());
     }
 
     public static Image loadImage (String s) {
@@ -168,14 +140,7 @@ public final class UIUtils {
         int blue = Math.max(0, Math.min(255, c.getBlue() + bDiff));
         return new Color(red, green, blue);
     }    
-    
-    /**
-     * Rotates a float value around 0-1
-     */
-    private static float minMax(float f) {
-        return Math.max(0, Math.min(1, f));
-    }
-    
+
     public static boolean isBrighter(Color a, Color b) {
         int[] ac = new int[]{a.getRed(), a.getGreen(), a.getBlue()};
         int[] bc = new int[]{b.getRed(), b.getGreen(), b.getBlue()};

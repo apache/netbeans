@@ -176,7 +176,9 @@ public final class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactori
                     String label = EXTRACT_SUPERCLASS_REFACTORING_COMMAND.equals(command) ? Bundle.DN_SelectClassName() : Bundle.DN_SelectInterfaceName();
                     String value = EXTRACT_SUPERCLASS_REFACTORING_COMMAND.equals(command) ? "NewClass" : "NewInterface";
                     client.showInputBox(new ShowInputBoxParams(label, value)).thenAccept(name -> {
-                        extract(client, uri, command, type, selected, name);
+                        if (name != null && !name.isEmpty()) {
+                            extract(client, uri, command, type, selected, name);
+                        }
                     });
                 }
             });

@@ -765,7 +765,7 @@ public class ValidationManager {
                     if(argumentType.equals("java.lang.String[]")){      //NOI18N
                         Integer sz = (Integer)utils.getElement("value", //NOI18N
                             parameter, SIZE_PREFIX);
-                        noOfValues = sz.intValue();
+                        noOfValues = sz;
                         argumentType = "java.lang.String";              //NOI18N
                     } 
                     for(int j=0; j<noOfValues; j++) {
@@ -813,7 +813,7 @@ public class ValidationManager {
         Constructor constructor =
             utils.getConstructor(CARDINAL_CONSTRAINT_CLASS, argumentTypes);
 
-        Integer parameter = Integer.valueOf(cardinal);
+        Integer parameter = cardinal;
         Object[] argumentValues = new Object[] {parameter};
 
         return (CardinalConstraint) utils.createObject(constructor,
@@ -842,7 +842,7 @@ public class ValidationManager {
         String sizeMethodName =  utils.methodNameFromBeanName(elementName,
             SIZE_PREFIX);
         Method sizeMethod = validatee.getMethod(sizeMethodName);
-        noOfElements = ((Integer)validatee.invoke(sizeMethod)).intValue();
+        noOfElements = ((Integer)validatee.invoke(sizeMethod));
 
         ArrayList failures = new ArrayList();
         Object child = null;

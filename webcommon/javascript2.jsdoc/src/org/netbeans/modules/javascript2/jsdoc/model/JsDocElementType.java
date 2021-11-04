@@ -28,7 +28,7 @@ import java.util.Map;
 public enum JsDocElementType {
     // special context sensitive type
     CONTEXT_SENSITIVE("contextSensitive", JsDocElement.Category.DESCRIPTION), //NOI18N
-    // unknow type
+    // unknown type
     UNKNOWN("unknown", JsDocElement.Category.UNKNOWN), //NOI18N
     // common jsDoc tags
     ARGUMENT("@argument", JsDocElement.Category.NAMED_PARAMETER), //NOI18N

@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.codehaus.groovy.control.Phases;
@@ -43,6 +44,47 @@ public class PerfData {
     private int fileCount;
     
     private PerfData collector;
+    
+    private static ThreadLocal<PerfData> threadInstance = new ThreadLocal<>();
+    
+    @SuppressWarnings("unchecked")
+    private static <T extends Throwable> void sneakyThrow(Throwable exception) throws T {
+            throw (T) exception;
+    }        
+    
+    /**
+     * Retrieves the contextual perf counters. If none are set, returns global counters.
+     * @return context counters, or global ones.
+     */
+    public static PerfData context() {
+        PerfData d = threadInstance.get();
+        return d == null ? global : d;
+    }
+
+    /**
+     * Helper wrapper that establishes a thread-local context instance of {@link PerfData} that can be retrieved by
+     * {@link #context}.
+     * @param <T> result type of the task
+     * @param data perfdata instance
+     * @param c the task to execute
+     * @return data computed by the task
+     */
+    public static <T> T withPerfData(PerfData data, Callable<T> c) {
+        PerfData old = threadInstance.get();
+        try {
+            threadInstance.set(data);
+            return c.call();
+        } catch (Exception ex) {
+            sneakyThrow(ex);
+        } finally {
+            if (old != null) {
+                threadInstance.set(old);
+            } else {
+                threadInstance.remove();
+            }
+        }
+        return null;
+    }
 
     public PerfData() {
         collector = global;

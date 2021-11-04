@@ -116,7 +116,7 @@ class WinFlatEditorTabCellRenderer extends AbstractTabCellRenderer {
         Insets ins = getInsets();
         int availH = getHeight() - (ins.top + ins.bottom);
         // Ad hoc adjustment for the Windows LAF.
-        int yAdjustment = 1;
+        int yAdjustment = -1;
         return ((availH <= txtH) ? -fm.getDescent() : -1) + yAdjustment;
     }
 

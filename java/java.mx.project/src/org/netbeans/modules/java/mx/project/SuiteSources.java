@@ -23,6 +23,8 @@ import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -408,16 +410,7 @@ final class SuiteSources implements Sources,
     public SourceForBinaryQueryImplementation2.Result findSourceRoots2(URL url) {
         this.ensureTransitiveDependenciesAreComputed();
         for (Dist dist : this.distributions) {
-            URL jar;
-            try {
-                jar = dist.getJarRoot();
-                if (jar == null) {
-                    continue;
-                }
-            } catch (MalformedURLException ok) {
-                continue;
-            }
-            if (jar.equals(url)) {
+            if (dist.isRootJar(url)) {
                 List<FileObject> roots = new ArrayList<>();
                 for (Group d : dist.getContributingGroups()) {
                     roots.add(d.srcDir);
@@ -574,18 +567,51 @@ final class SuiteSources implements Sources,
             if (SuiteSources.this.dir == null) {
                 return null;
             }
+
+            FileObject dists = mxBuildDists();
+            List<FileObject> candidates = findCandidates(dists);
+            if (candidates.isEmpty()) {
+                return dists.getFileObject(name.toLowerCase().replace("_", "-") + ".jar", false);
+            } else {
+                return candidates.get(0);
+            }
+        }
+
+        private FileObject mxBuildDists() {
             FileObject dists = getSubDir(SuiteSources.this.dir, "mxbuild/dists");
+            return dists;
+        }
+
+        boolean isRootJar(URL url) {
+            try {
+                if (url == null) {
+                    return false;
+                }
+                URI uri = url.toURI();
+                for (FileObject fo : findCandidates(mxBuildDists())) {
+                    if (uri.equals(toJarURL(fo).toURI())) {
+                        return true;
+                    }
+                }
+            } catch (MalformedURLException | URISyntaxException ex) {
+                // ignore
+            }
+            return false;
+        }
+
+        private List<FileObject> findCandidates(FileObject dists) {
+            List<FileObject> candidates = new ArrayList<>();
             List<FileObject> dist = Arrays.stream(dists.getChildren()).
-                filter((fo) -> fo.isFolder() && fo.getName().startsWith("jdk")).
-                collect(Collectors.toList());
+                    filter((fo) -> fo.isFolder() && fo.getName().startsWith("jdk")).
+                    collect(Collectors.toList());
             dist.sort((fo1, fo2) -> fo2.getName().compareTo(fo1.getName()));
             for (FileObject jdkDir : dist) {
                 FileObject jar = jdkDir.getFileObject(name.toLowerCase().replace("_", "-") + ".jar");
                 if (jar != null) {
-                    return jar;
+                    candidates.add(jar);
                 }
             }
-            return dists.getFileObject(name.toLowerCase().replace("_", "-") + ".jar", false);
+            return candidates;
         }
 
         @Override
@@ -606,7 +632,10 @@ final class SuiteSources implements Sources,
         }
 
         private URL getJarRoot() throws MalformedURLException {
-            FileObject jar = getJar();
+            return toJarURL(getJar());
+        }
+
+        private URL toJarURL(FileObject jar) throws MalformedURLException {
             if (jar != null) {
                 return new URL("jar:" + jar.toURL() + "!/");
             } else {

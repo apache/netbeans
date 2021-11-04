@@ -364,7 +364,7 @@ matrix:
             #- ant $OPTS -f java/java.kit test
             #- ant $OPTS -f java/java.lexer test
             #- ant $OPTS -f java/java.lexer test
-            #- ant $OPTS -f java/java.lsp.server test
+            - ant $OPTS -f java/java.lsp.server test
             #- ant $OPTS -f java/java.metrics test
             - ant $OPTS -f java/java.module.graph test
             - ant $OPTS -f java/java.navigation test
@@ -379,7 +379,6 @@ matrix:
             #- ant $OPTS -f java/java.source.ant test
             - ant $OPTS -f java/java.source.base test
             - ant $OPTS -f java/java.source.compat8 test
-            - ant $OPTS -f java/java.source.nbjavac test
             - ant $OPTS -f java/java.source.queriesimpl test
             #- ant $OPTS -f java/java.sourceui test
             - ant $OPTS -f java/java.testrunner test

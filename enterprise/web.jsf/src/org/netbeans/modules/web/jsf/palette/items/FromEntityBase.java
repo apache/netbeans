@@ -558,9 +558,9 @@ public abstract class FromEntityBase {
 
         private boolean isFieldAccess() {
             if (fieldAccess == null) {
-                fieldAccess = Boolean.valueOf(JpaControllerUtil.isFieldAccess(bean));
+                fieldAccess = JpaControllerUtil.isFieldAccess(bean);
             }
-            return fieldAccess.booleanValue();
+            return fieldAccess;
         }
 
         public boolean isValid() {
@@ -569,9 +569,9 @@ public abstract class FromEntityBase {
 
         public int getRelationship() {
             if (relationship == null) {
-                relationship = Integer.valueOf(JpaControllerUtil.isRelationship(method, isFieldAccess()));
+                relationship = JpaControllerUtil.isRelationship(method, isFieldAccess());
             }
-            return relationship.intValue();
+            return relationship;
         }
 
         public String getDateTimeFormat() {

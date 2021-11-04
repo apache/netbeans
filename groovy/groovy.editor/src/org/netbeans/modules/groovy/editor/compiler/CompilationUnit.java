@@ -128,6 +128,10 @@ public class CompilationUnit extends org.codehaus.groovy.control.CompilationUnit
                 throw new CancellationException();
             }
 
+            if (cache.isNonExistent(name)) {
+                return null;
+            }
+            
             ClassNode classNode = cache.get(name);
             if (classNode != null) {
                 return classNode;
@@ -143,10 +147,6 @@ public class CompilationUnit extends org.codehaus.groovy.control.CompilationUnit
                 return classNode;
             }
 
-            if (cache.isNonExistent(name)) {
-                return null;
-            }
-            
             classNode = classResolver.apply(name);
             if (classNode != null) {
                 cache.put(name, classNode);

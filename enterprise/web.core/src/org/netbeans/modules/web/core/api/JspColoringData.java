@@ -112,7 +112,7 @@ public final class JspColoringData extends PropertyChangeSupport {
     }*/
         
     public void parsingStarted() {
-        firePropertyChange(PROP_PARSING_IN_PROGRESS, null, new Boolean(true));
+        firePropertyChange(PROP_PARSING_IN_PROGRESS, null, true);
     }
     
     /** Incorporates new parse data from the parser, possibly firing a change about coloring.
@@ -127,7 +127,7 @@ public final class JspColoringData extends PropertyChangeSupport {
         // check whether coloring has not changed
         boolean coloringSame = equalsColoringInformation(taglibs, prefixMapper, newTaglibs, newPrefixMapper);
         
-        firePropertyChange(PROP_PARSING_SUCCESSFUL, null, new Boolean(parseSuccessful));
+        firePropertyChange(PROP_PARSING_SUCCESSFUL, null, parseSuccessful);
         
         // check and apply EL data
         if (parseSuccessful) {

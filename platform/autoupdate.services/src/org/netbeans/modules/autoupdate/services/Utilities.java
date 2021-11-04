@@ -122,9 +122,11 @@ public class Utilities {
             List<KeyStore> kss = new ArrayList<>();
 
             for (KeyStoreProvider provider : c) {
-                KeyStore ks = provider.getKeyStore();
-                if (ks != null) {
-                    kss.add(ks);
+                if (provider.getTrustLevel() == trustLevel) {
+                    KeyStore ks = provider.getKeyStore();
+                    if (ks != null) {
+                        kss.add(ks);
+                    }
                 }
             }
 

@@ -730,7 +730,7 @@ public class FileUtilTest extends NbTestCase {
             } else if ("filtered.two".equals(n)) {
                 return 42;
             } else {
-                return v;
+                return FileUtil.defaultAttributesTransformer().apply(n, v);
             }
         });
         assertEquals(Boolean.TRUE, cFile.getAttribute("template"));

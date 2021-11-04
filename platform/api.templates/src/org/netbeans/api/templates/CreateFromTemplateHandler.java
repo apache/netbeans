@@ -179,7 +179,7 @@ public abstract class CreateFromTemplateHandler {
                     || PROP_TEMPLATE.equals(n)) {
                 return null;
             } else {
-                return v;
+                return FileUtil.defaultAttributesTransformer().apply(n, v);
             }
         });
     }

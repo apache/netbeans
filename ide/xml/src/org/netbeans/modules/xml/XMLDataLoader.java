@@ -277,7 +277,7 @@ public class XMLDataLoader extends UniFileLoader {
             }
 
             // copy attributes
-            FileUtil.copyAttributes (getFile (), fo, (n, v) -> DataObject.PROP_TEMPLATE.equals(n) ? null : v);
+            FileUtil.copyAttributes (getFile (), fo, (n, v) -> DataObject.PROP_TEMPLATE.equals(n) ? null : FileUtil.defaultAttributesTransformer().apply(n, v));
             return fo;
         }
 

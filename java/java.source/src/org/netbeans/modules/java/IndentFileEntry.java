@@ -154,7 +154,7 @@ public abstract class IndentFileEntry extends FileEntry.Format {
         }
         // copy attributes
         FileUtil.copyAttributes (getFile (), fo, (n, v) -> {
-            return DataObject.PROP_TEMPLATE.equals(n) ? null : v;
+            return DataObject.PROP_TEMPLATE.equals(n) ? null : FileUtil.defaultAttributesTransformer().apply(n, v);
         });
         return fo;
     }

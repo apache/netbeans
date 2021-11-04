@@ -938,15 +938,32 @@ public final class FileUtil extends Object {
     */
     public static void copyAttributes(FileObject source, FileObject dest)
     throws IOException {
-        copyAttributes(source, dest, null);
+        copyAttributes(source, dest, defaultAttributesTransformer());
     }
+    
+    private static final BiFunction<String, Object, Object> DEFAULT_ATTR_TRANSFORMER = (n, v) -> {
+        return transientAttributes.contains(n) ? null : v;
+    };
+
+    /**
+     * Default attribute transformer for {@link #copyAttributes(org.openide.filesystems.FileObject, org.openide.filesystems.FileObject, java.util.function.BiFunction)} that
+     * skips common transient attributes defined or used by the Platform. Custom Attribute Transformers should delegate to this instance.
+     * @return default attribute transformer instance.
+     * @since 9.27
+     */
+    public static BiFunction<String, Object, Object> defaultAttributesTransformer() {
+        return DEFAULT_ATTR_TRANSFORMER;
+    }
+
     
     /** Copies attributes from one file to another.
     * Note: several special attributes will not be copied, as they should
     * semantically be transient. These include attributes used by the
     * template wizard (but not the template attribute itself). If {@code attrTransformer} is specified,
-    * it is called for each non-transient attribute that is about to be copied. The returned value will be
-    * written to the target. If {@code attrTransformer} returns {@code null}, the attribute will be skipped.
+    * it is called for each attribute that is about to be copied. The returned value will be
+    * written to the target. If {@code attrTransformer} returns {@code null}, the attribute will be skipped. 
+    * The Transformer should delegate to {@link #defaultAttributesTransformer()} to conform to the usual transient attribute
+    * conventions - unless it really intends to copy such otherwise transient attributes.
     * @param source source file object
     * @param dest destination file object
     * @param attrTransformer callback to transform or filter attribute values. Can be {@code null}.
@@ -956,13 +973,13 @@ public final class FileUtil extends Object {
     public static void copyAttributes(FileObject source, FileObject dest, BiFunction<String, Object, Object> attrTransformer) 
         throws IOException {
         Enumeration<String> attrKeys = source.getAttributes();
+        
+        if (attrTransformer == null) {
+            attrTransformer = defaultAttributesTransformer();
+        }
 
         while (attrKeys.hasMoreElements()) {
             String key = attrKeys.nextElement();
-
-            if (transientAttributes.contains(key)) {
-                continue;
-            }
 
             if (isTransient(source, key)) {
                 continue;

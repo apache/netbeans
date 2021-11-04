@@ -1231,7 +1231,7 @@ public class ServerTest extends NbTestCase {
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
-        assertTrue(result.getCapabilities().getDocumentHighlightProvider());
+        assertTrue(result.getCapabilities().getDocumentHighlightProvider().isLeft() && result.getCapabilities().getDocumentHighlightProvider().getLeft());
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
         assertHighlights(server.getTextDocumentService().documentHighlight(new DocumentHighlightParams(new TextDocumentIdentifier(toURI(src)), new Position(1, 13))).get(),
                          "<none>:2:21-2:31", "<none>:3:26-3:35", "<none>:4:13-4:22");
@@ -1281,7 +1281,7 @@ public class ServerTest extends NbTestCase {
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
-        assertTrue(result.getCapabilities().getHoverProvider());
+        assertTrue(result.getCapabilities().getHoverProvider().isLeft() && result.getCapabilities().getHoverProvider().getLeft());
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
         Hover hover = server.getTextDocumentService().hover(new HoverParams(new TextDocumentIdentifier(toURI(src)), new Position(5, 10))).get();
         assertNotNull(hover);
@@ -5586,11 +5586,12 @@ public class ServerTest extends NbTestCase {
             @Override
             public void notifyProgress(ProgressParams params) {
                 assertEquals(token, params.getToken().getLeft());
-                if (params.getValue() instanceof WorkDoneProgressReport) {
-                    WorkDoneProgressReport rep = (WorkDoneProgressReport)params.getValue();
+                assertTrue(params.getValue().isLeft());
+                if (params.getValue().getLeft() instanceof WorkDoneProgressReport) {
+                    WorkDoneProgressReport rep = (WorkDoneProgressReport)params.getValue().getLeft();
                     perCent = Math.max(perCent, rep.getPercentage());
                 }
-                if (params.getValue().getKind() == WorkDoneProgressKind.end) {
+                if (params.getValue().getLeft().getKind() == WorkDoneProgressKind.end) {
                     progressEnd.countDown();
                 }
             }

@@ -27,41 +27,74 @@ select {
     padding: 4px !important;
 }
 button {
-    font-size: 13px;
-    text-decoration: none;
-    border: none;
-    background: var(--vscode-button-background);
-    color: var(--vscode-button-foreground);
-    font-family: var(--vscode-font-family) !important;
-    padding: 4px 10px 4px 10px;
-    margin: 5px;
     cursor: pointer;
-}
-button:hover, button:focus {
-    background: var(--vscode-button-hoverBackground);
-}
-button:focus {
-    outline: 1px solid var(--vscode-button-hoverBackground);
-    outline-offset: 2px;
 }
 label {
     display: block;
     margin-bottom: 5px;
+    user-select: none;
 }
-.caption1 {
-    margin-bottom: -20px !important;
+.vscode-font {
+    font-family: var(--vscode-font-family);
+    font-size: var(--vscode-font-size);
+    text-decoration: none;
 }
-.caption2 {
-    margin-bottom: -20px !important;
-	margin-left: -32px;
+.button-text {
+    margin-left: 5px;
+    vertical-align: text-top;
 }
-.action {
-	border-radius: 4px;
+.regular-button {
+    border: none;
+    padding: 4px 10px 4px 10px;
+    margin: 5px;
+    color: var(--vscode-button-foreground);
+    background-color: var(--vscode-button-background);
+}
+.regular-button:hover, .regular-button:focus {
+    background: var(--vscode-button-hoverBackground);
+}
+.regular-button:focus {
+    outline: 1px solid var(--vscode-button-hoverBackground);
+    outline-offset: 2px;
+}
+.silent-button {
+    border: none;
+    padding: 4px 10px 4px 10px;
+    margin: 5px;
+    color: var(--vscode-input-foreground);
+    background-color: var(--vscode-list-hoverBackground);
+}
+.silent-button:hover {
+    color: var(--vscode-button-foreground);
+    background-color: var(--vscode-button-hoverBackground);
+}
+.silent-button:focus {
+    color: var(--vscode-button-foreground);
+    background-color: var(--vscode-button-hoverBackground);
+    outline: 1px solid var(--vscode-button-hoverBackground);
+    outline-offset: 2px;
+}
+.action-button {
+    border: none;
+    border-radius: 4px;
 	padding: 2px;
 	margin: 3px 0px;
+    color: var(--vscode-input-foreground);
+    background-color: transparent;
 }
-.action:hover {
+.action-button:hover {
 	background-color: var(--vscode-list-inactiveSelectionBackground);
+}
+.action-button:focus, .action-button:hover:focus {
+    color: var(--vscode-button-foreground);
+    background-color: var(--vscode-button-hoverBackground);
+    outline: none;
+}
+.params-caption {
+    margin-bottom: 8px;
+}
+.filler {
+    width: 53px;
 }
 .preview-panel {
     margin: 0px;
@@ -92,6 +125,9 @@ label {
 .row:hover {
     background-color: var(--vscode-list-hoverBackground);
 }
+.row:focus-within {
+    background-color: var(--vscode-tab-unfocusedInactiveModifiedBorder);
+}
 .flex {
     display: flex;
 }
@@ -105,4 +141,8 @@ label {
 }
 .align-right {
     margin-left: auto;
+}
+.add-param {
+    padding: 0px 15px;
+    padding-top: 2px;
 }

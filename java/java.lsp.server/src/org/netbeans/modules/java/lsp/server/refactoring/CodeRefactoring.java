@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.lsp.server.protocol;
+package org.netbeans.modules.java.lsp.server.refactoring;
 
 import java.io.File;
 import java.net.URL;
@@ -39,6 +39,7 @@ import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RefactoringSession;
@@ -57,7 +58,7 @@ import org.openide.filesystems.FileObject;
  */
 public abstract class CodeRefactoring extends CodeActionsProvider {
 
-    protected final WorkspaceEdit perform(AbstractRefactoring refactoring, String name) throws Exception {
+    protected static final WorkspaceEdit perform(AbstractRefactoring refactoring, String name) throws Exception {
         RefactoringSession session = RefactoringSession.create(name);
         Problem p = refactoring.checkParameters();
         if (p != null && p.isFatal()) {

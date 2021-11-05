@@ -320,11 +320,6 @@
 		],
 		"commands": [
 			{
-				"command": "java.workspace.html.demo",
-				"title": "Demo HTML UI",
-				"category": "Java"
-			},
-			{
 				"command": "java.workspace.compile",
 				"title": "Compile Workspace",
 				"category": "Java"

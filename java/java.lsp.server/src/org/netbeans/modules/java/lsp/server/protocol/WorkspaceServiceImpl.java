@@ -23,7 +23,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sun.source.util.TreePath;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -49,7 +48,6 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
-import javax.swing.Action;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
@@ -88,8 +86,6 @@ import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachNativeConfigurations;
-import org.netbeans.modules.java.lsp.server.htmlui.demo.HelloWorld;
-import org.netbeans.modules.java.lsp.server.htmlui.demo.HelloWorldCntrl;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaTypeProvider;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
@@ -135,10 +131,6 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return LspTemplateUI.createFromTemplate("Templates", client, params);
             case Server.JAVA_NEW_PROJECT:
                 return LspTemplateUI.createProject("Templates/Project", client, params);
-            case Server.JAVA_HTML_DEMO: {
-                HelloWorldCntrl.show();
-                return CompletableFuture.completedFuture(true);
-            }
             case Server.JAVA_BUILD_WORKSPACE: {
                 final CommandProgress progressOfCompilation = new CommandProgress();
                 final Lookup ctx = Lookups.singleton(progressOfCompilation);

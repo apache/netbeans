@@ -632,7 +632,6 @@ public final class Server {
                         JAVA_LOAD_WORKSPACE_TESTS,
                         JAVA_NEW_FROM_TEMPLATE,
                         JAVA_NEW_PROJECT,
-                        JAVA_HTML_DEMO,
                         JAVA_PROJECT_CONFIGURATION_COMPLETION,
                         JAVA_SUPER_IMPLEMENTATION,
                         NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH));

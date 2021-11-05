@@ -241,9 +241,6 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             throw `Client ${c} doesn't support new project`;
         }
     }));
-    context.subscriptions.push(commands.registerCommand('java.workspace.html.demo', () => {
-        vscode.commands.executeCommand('java.html.demo');
-    }));
     context.subscriptions.push(commands.registerCommand('java.workspace.compile', () => {
         return window.withProgress({ location: ProgressLocation.Window }, p => {
             return new Promise(async (resolve, reject) => {
@@ -661,7 +658,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
     });
 
     function showHtmlPage(params : HtmlPageParams) {
-        function showUri(url: string, id: string, name: string) {
+        function showUri(url: string) {
             let uri = vscode.Uri.parse(url);
             var http = require('http');
 
@@ -679,7 +676,9 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                     data += chunk;
                 });
                 res.on('end', function() {
-                    let view = vscode.window.createWebviewPanel(id, name, vscode.ViewColumn.One, {
+                    const match = /<title>(.*)<\/title>/i.exec(data);
+                    const name = match && match.length > 1 ? match[1] : ''
+                    let view = vscode.window.createWebviewPanel('htmlView', name, vscode.ViewColumn.Beside, {
                         enableScripts: true,
                     });
                     view.webview.html = data.replace("<head>", `<head><base href="${url}">`);
@@ -690,7 +689,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             });
             request.end();
         }
-        showUri(params.uri, "test", "Showing a view");
+        showUri(params.uri);
     }
 
     function showStatusBarMessage(params : ShowStatusMessageParams) {

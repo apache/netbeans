@@ -4072,7 +4072,7 @@ public class ServerTest extends NbTestCase {
             @Override
             public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
                 List<QuickPickItem> items = params.getItems();
-                return CompletableFuture.completedFuture(Bundle.DN_SelectTargetPackage().equals(params.getPlaceHolder()) ? items.subList(2, 3) : items.subList(0, 1));
+                return CompletableFuture.completedFuture("Select target package".equals(params.getPlaceHolder()) ? items.subList(2, 3) : items.subList(0, 1));
             }
 
             @Override
@@ -4093,7 +4093,7 @@ public class ServerTest extends NbTestCase {
                 codeActions.stream()
                            .filter(Either::isRight)
                            .map(Either::getRight)
-                           .filter(a -> Bundle.DN_Move().equals(a.getTitle()))
+                           .filter(a -> "Move...".equals(a.getTitle()))
                            .findAny();
         assertTrue(move.isPresent());
         server.getWorkspaceService().executeCommand(new ExecuteCommandParams(move.get().getCommand().getCommand(), move.get().getCommand().getArguments())).get();
@@ -4232,7 +4232,7 @@ public class ServerTest extends NbTestCase {
             @Override
             public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
                 List<QuickPickItem> items = params.getItems();
-                return CompletableFuture.completedFuture(Bundle.DN_SelectTargetPackage().equals(params.getPlaceHolder()) ? items.subList(1, 2) : items.subList(0, 1));
+                return CompletableFuture.completedFuture("Select target package".equals(params.getPlaceHolder()) ? items.subList(1, 2) : items.subList(0, 1));
             }
 
             @Override
@@ -4253,7 +4253,7 @@ public class ServerTest extends NbTestCase {
                 codeActions.stream()
                            .filter(Either::isRight)
                            .map(Either::getRight)
-                           .filter(a -> Bundle.DN_Move().equals(a.getTitle()))
+                           .filter(a -> "Move...".equals(a.getTitle()))
                            .findAny();
         assertTrue(move.isPresent());
         server.getWorkspaceService().executeCommand(new ExecuteCommandParams(move.get().getCommand().getCommand(), move.get().getCommand().getArguments())).get();
@@ -4402,7 +4402,7 @@ public class ServerTest extends NbTestCase {
                 codeActions.stream()
                            .filter(Either::isRight)
                            .map(Either::getRight)
-                           .filter(a -> Bundle.DN_ExtractInterface().equals(a.getTitle()))
+                           .filter(a -> "Extract Interface...".equals(a.getTitle()))
                            .findAny();
         assertTrue(extractInterface.isPresent());
         server.getWorkspaceService().executeCommand(new ExecuteCommandParams(extractInterface.get().getCommand().getCommand(), extractInterface.get().getCommand().getArguments())).get();
@@ -4567,7 +4567,7 @@ public class ServerTest extends NbTestCase {
                 codeActions.stream()
                            .filter(Either::isRight)
                            .map(Either::getRight)
-                           .filter(a -> Bundle.DN_ExtractSuperclass().equals(a.getTitle()))
+                           .filter(a -> "Extract Superclass...".equals(a.getTitle()))
                            .findAny();
         assertTrue(extractSuperclass.isPresent());
         server.getWorkspaceService().executeCommand(new ExecuteCommandParams(extractSuperclass.get().getCommand().getCommand(), extractSuperclass.get().getCommand().getArguments())).get();
@@ -4754,7 +4754,7 @@ public class ServerTest extends NbTestCase {
                 codeActions.stream()
                            .filter(Either::isRight)
                            .map(Either::getRight)
-                           .filter(a -> Bundle.DN_PullUp().equals(a.getTitle()))
+                           .filter(a -> "Pull Up...".equals(a.getTitle()))
                            .findAny();
         assertTrue(pullUp.isPresent());
         server.getWorkspaceService().executeCommand(new ExecuteCommandParams(pullUp.get().getCommand().getCommand(), pullUp.get().getCommand().getArguments())).get();
@@ -4902,7 +4902,7 @@ public class ServerTest extends NbTestCase {
                 codeActions.stream()
                            .filter(Either::isRight)
                            .map(Either::getRight)
-                           .filter(a -> Bundle.DN_PushDown().equals(a.getTitle()))
+                           .filter(a -> "Push Down...".equals(a.getTitle()))
                            .findAny();
         assertTrue(pushDown.isPresent());
         server.getWorkspaceService().executeCommand(new ExecuteCommandParams(pushDown.get().getCommand().getCommand(), pushDown.get().getCommand().getArguments())).get();
@@ -5044,6 +5044,11 @@ public class ServerTest extends NbTestCase {
             public void showStatusBarMessage(ShowStatusMessageParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
+
+            @Override
+            public void showHtmlPage(HtmlPageParams params) {
+                throw new UnsupportedOperationException();
+            }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
@@ -5058,7 +5063,7 @@ public class ServerTest extends NbTestCase {
                 codeActions.stream()
                            .filter(Either::isRight)
                            .map(Either::getRight)
-                           .filter(a -> Bundle.DN_ChangeMethodParams().equals(a.getTitle()))
+                           .filter(a -> "Change Method Parameters...".equals(a.getTitle()))
                            .findAny();
         assertTrue(changeMethodParams.isPresent());
         server.getWorkspaceService().executeCommand(new ExecuteCommandParams(changeMethodParams.get().getCommand().getCommand(), changeMethodParams.get().getCommand().getArguments())).get();

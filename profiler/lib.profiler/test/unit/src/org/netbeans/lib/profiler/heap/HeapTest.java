@@ -172,11 +172,27 @@ public class HeapTest {
      */
     @Test
     public void testGetBiggestObjectsByRetainedSize() {
-        List result = heap.getBiggestObjectsByRetainedSize(2);
+        List<Instance> result = heap.getBiggestObjectsByRetainedSize(2);
+        assertFalse("Empty biggest object list", result.isEmpty());
         Instance i1 = (Instance) result.get(0);
+        assertNotNull("No first instance for " + result.get(0) + " in " + result, i1);
         Instance i2 = (Instance) result.get(1);
-        assertEquals(52283, i1.getRetainedSize());
-        assertEquals(52082, i2.getRetainedSize());
+        assertNotNull("No second instance for " + result.get(1) + " in " + result, i2);
+        assertEquals("Wrong id for next-to-largest in " + idsAndSizes(result),
+                52082, i2.getRetainedSize());
+        assertEquals("Wrong id for largest in " + idsAndSizes(result),
+                52283, i1.getRetainedSize());
+    }
+
+    private String idsAndSizes(List<Instance> result) {
+        StringBuilder sb = new StringBuilder();
+        for (Instance in : result) {
+            if (sb.length() != 0) {
+                sb.append(",");
+            }
+            sb.append(in.getInstanceId()).append(":").append(in.getRetainedSize()).append(":").append(in.getJavaClass().getName());
+        }
+        return sb.toString();
     }
 
     /**

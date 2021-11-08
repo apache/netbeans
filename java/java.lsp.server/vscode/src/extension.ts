@@ -432,11 +432,27 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         }, time);
     };
 
-    const beVerbose : boolean = workspace.getConfiguration('netbeans').get('verbose', false);
+    const netbeansConfig = workspace.getConfiguration('netbeans');
+    const beVerbose : boolean = netbeansConfig.get('verbose', false);
+    let userdir = netbeansConfig.get('userdir', 'global');
+    switch (userdir) {
+        case 'local':
+            if (context.storagePath) {
+                userdir = context.storagePath;
+                break;
+            }
+            // fallthru
+        case 'global':
+            userdir = context.globalStoragePath;
+            break;
+        default:
+            // assume storage is path on disk
+    }
+
     let info = {
         clusters : findClusters(context.extensionPath),
         extensionPath: context.extensionPath,
-        storagePath : context.globalStoragePath,
+        storagePath : userdir,
         jdkHome : specifiedJDK,
         verbose: beVerbose
     };

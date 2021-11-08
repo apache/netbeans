@@ -76,6 +76,19 @@
 					"default": false,
 					"description": "Enables verbose messages from the Apache NetBeans Language Server"
 				},
+				"netbeans.userdir": {
+					"description": "Keep settings and caches as 'global' or 'local' per workspace?",
+					"type": "string",
+					"enum": [
+						"global",
+						"local"
+					],
+					"enumDescriptions": [
+						"Share data between all workspaces (more effective)",
+						"Each workspace has its own data (more isolated)"
+					],
+					"default": "global"
+				},
 				"netbeans.conflict.check": {
 					"type": "boolean",
 					"default": true,

@@ -222,7 +222,11 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
                 for (int i = 0; i < parameters.size(); i++) {
                     ParameterUI parameter = parameters.get(i);
                     parameter.getInfo(i, (idx, info) -> {
-                        params[idx] = info != null ? info : new ChangeParametersRefactoring.ParameterInfo(-1, parameter.getName(), parameter.getType(), defaultValue(parameter.getType()));
+                        if (info != null) {
+                            params[idx] = new ChangeParametersRefactoring.ParameterInfo(info.getOriginalIndex(), parameter.getName(), parameter.getType(), null);
+                        } else {
+                            params[idx] = new ChangeParametersRefactoring.ParameterInfo(-1, parameter.getName(), parameter.getType(), defaultValue(parameter.getType()));
+                        }
                     });
                 }
                 refactoring.setParameterInfo(params);

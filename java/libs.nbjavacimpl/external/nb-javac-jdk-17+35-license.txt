@@ -4,7 +4,7 @@ Version: jdk-17+35
 License: GPL-2-CP
 Origin: OpenJDK (https://github.com/openjdk/jdk17)
 Source: https://github.com/openjdk/jdk17
-Type: compile-time,optional
+Type: optional
 Comment: Used at compile and design time to compile against; optional at runtime.
 
 The GNU General Public License (GPL)

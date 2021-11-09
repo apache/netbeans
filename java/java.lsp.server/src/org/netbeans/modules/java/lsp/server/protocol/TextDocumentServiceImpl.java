@@ -1001,7 +1001,23 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         });
         return resultFuture;
     }
-                
+
+    @Override
+    public CompletableFuture<CodeAction> resolveCodeAction(CodeAction unresolved) {
+        JsonObject data = (JsonObject) unresolved.getData();
+        if (data != null) {
+            String providerClass = data.getAsJsonPrimitive(CodeActionsProvider.CODE_ACTIONS_PROVIDER_CLASS).getAsString();
+            for (CodeActionsProvider codeGenerator : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
+                try {
+                    if (codeGenerator.getClass().getName().equals(providerClass)) {
+                        return codeGenerator.resolve(client, unresolved, data.get(CodeActionsProvider.DATA));
+                    }
+                } catch (Exception ex) {
+                }
+            }
+        }
+        return CompletableFuture.completedFuture(unresolved);
+    }
 
     @NbBundle.Messages({"# {0} - method name", "LBL_Run=Run {0}",
                         "# {0} - method name", "LBL_Debug=Debug {0}",

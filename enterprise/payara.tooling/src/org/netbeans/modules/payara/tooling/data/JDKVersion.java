@@ -263,6 +263,14 @@ public final class JDKVersion {
         }
     }
 
+    public static JDKVersion toValue(String version, String vendor) {
+        if (version != null && version.matches(VERSION_MATCHER)) {
+            return new JDKVersion(version, vendor, null);
+        } else {
+            return null;
+        }
+    }
+
     public static JDKVersion toValue(String version, String vendor, String vm) {
         if (version != null && version.matches(VERSION_MATCHER)) {
             return new JDKVersion(version, vendor, vm);

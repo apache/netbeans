@@ -201,6 +201,8 @@ public class JvmConfigReader extends NodeListener implements XMLReader {
     public static class JvmOption {
 
         public final String option;
+        @Deprecated
+        public final Optional<String> vendor;
         public final Optional<String> vendorOrVM;
         public final Optional<JDKVersion> minVersion;
         public final Optional<JDKVersion> maxVersion;
@@ -217,6 +219,7 @@ public class JvmConfigReader extends NodeListener implements XMLReader {
 
         public JvmOption(String option) {
             Matcher matcher = PATTERN.matcher(option);
+            this.vendor = Optional.empty();
             if (matcher.matches()) {
                 if (matcher.group(1).contains("-")  // NOI18N
                         && Character.isLetter(matcher.group(1).charAt(0))) {
@@ -239,6 +242,7 @@ public class JvmConfigReader extends NodeListener implements XMLReader {
 
         public JvmOption(String option, String minVersion, String maxVersion) {
             this.option = option;
+            this.vendor = Optional.empty();
             this.vendorOrVM = Optional.empty();
             this.minVersion = Optional.ofNullable(JDKVersion.toValue(minVersion));
             this.maxVersion = Optional.ofNullable(JDKVersion.toValue(maxVersion));

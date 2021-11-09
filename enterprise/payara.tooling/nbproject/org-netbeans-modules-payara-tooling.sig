@@ -1241,13 +1241,12 @@ meth public java.util.Optional<java.lang.Short> getMinor()
 meth public java.util.Optional<java.lang.Short> getSubMinor()
 meth public java.util.Optional<java.lang.Short> getUpdate()
 meth public java.util.Optional<java.lang.String> getVendor()
-meth public java.util.Optional<java.lang.String> getVM()
 meth public short getMajor()
 meth public static boolean isCorrectJDK(java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>)
 meth public static boolean isCorrectJDK(org.netbeans.modules.payara.tooling.data.JDKVersion,java.util.Optional<java.lang.String>,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>)
 meth public static org.netbeans.modules.payara.tooling.data.JDKVersion getDefaultPlatformVersion()
 meth public static org.netbeans.modules.payara.tooling.data.JDKVersion toValue(java.lang.String)
-meth public static org.netbeans.modules.payara.tooling.data.JDKVersion toValue(java.lang.String,java.lang.String,java.lang.String)
+meth public static org.netbeans.modules.payara.tooling.data.JDKVersion toValue(java.lang.String,java.lang.String)
 supr java.lang.Object
 hfds DEFAULT_VALUE,IDE_JDK_VERSION,MAJOR_INDEX,MINOR_INDEX,SUBMINOR_INDEX,UPDATE_INDEX,VERSION_MATCHER,major,minor,subminor,update,vendor
 

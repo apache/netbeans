@@ -457,10 +457,11 @@ public class TruffleAccess implements JPDABreakpointListener {
     private static HitBreakpointInfo[] getBreakpointInfos(ExecutionHaltedInfo haltedInfo, JPDAThread thread) {
         ObjectVariable[] breakpointsHit = haltedInfo.breakpointsHit;
         ObjectVariable[] breakpointConditionExceptions = haltedInfo.breakpointConditionExceptions;
-        int n = breakpointsHit.length;
+        int n = (breakpointsHit != null) ? breakpointsHit.length : 0;
         HitBreakpointInfo[] breakpointInfos = null;
         for (int i = 0; i < n; i++) {
-            HitBreakpointInfo breakpointInfo = HitBreakpointInfo.create(breakpointsHit[i], breakpointConditionExceptions[i]);
+            ObjectVariable exception = (breakpointConditionExceptions != null) ? breakpointConditionExceptions[i] : null;
+            HitBreakpointInfo breakpointInfo = HitBreakpointInfo.create(breakpointsHit[i], exception);
             if (breakpointInfo != null) {
                 if (breakpointInfos == null) {
                     breakpointInfos = new HitBreakpointInfo[] { breakpointInfo };

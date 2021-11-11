@@ -63,63 +63,54 @@ public class SearchHistoryAction extends MultipleRepositoryAction {
     }
     
     public static void openSearch (final File repository, final File[] roots, final String branchName, final String contextName) {
-        openSearch(repository, roots, branchName, contextName, roots != null && (roots.length == 1 && roots[0].isFile() || roots.length > 1 && Utils.shareCommonDataObject(roots)));
+        openSearch(repository, roots, branchName, contextName, roots != null && (roots.length == 1 || roots.length > 1 && Utils.shareCommonDataObject(roots)));
     }
     
     public static void openSearch (final File repository, final File[] roots, final String branchName, final String contextName, final boolean invokeSearch) {
         final String title = NbBundle.getMessage(SearchHistoryTopComponent.class, "LBL_SearchHistoryTopComponent.title", contextName);
         final RepositoryInfo info = RepositoryInfo.getInstance(repository);
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run () {
-                SearchHistoryTopComponent tc = new SearchHistoryTopComponent(repository, info, roots);
-                tc.setBranch(branchName);
-                tc.setDisplayName(title);
-                tc.open();
-                tc.requestActive();
-                if (invokeSearch) {
-                    tc.search(false);
-                }
+        EventQueue.invokeLater(() -> {
+            SearchHistoryTopComponent tc = new SearchHistoryTopComponent(repository, info, roots);
+            tc.setBranch(branchName);
+            tc.setDisplayName(title);
+            tc.open();
+            tc.requestActive();
+            if (invokeSearch) {
+                tc.search(false);
             }
         });
     }
     
-    public static void openSearch (final File repository, final File root, final String contextName,
-            final String commitIdFrom, final String commitIdTo) {
+    public static void openSearch (final File repository, final File root, final String contextName, final String commitIdFrom, final String commitIdTo) {
         final String title = NbBundle.getMessage(SearchHistoryTopComponent.class, "LBL_SearchHistoryTopComponent.title", contextName);
         final RepositoryInfo info = RepositoryInfo.getInstance(repository);
-        Mutex.EVENT.readAccess(new Runnable() {
-            @Override
-            public void run () {
-                SearchHistoryTopComponent tc = new SearchHistoryTopComponent(repository, info, new File[] { root });
-                tc.setDisplayName(title);
-                tc.open();
-                tc.requestActive();
-                tc.setSearchCommitFrom(commitIdFrom);
-                tc.setSearchCommitTo(commitIdTo);
-                tc.search(true);
-            }
+        Mutex.EVENT.readAccess(() -> {
+            SearchHistoryTopComponent tc = new SearchHistoryTopComponent(repository, info, new File[] { root });
+            tc.setDisplayName(title);
+            tc.open();
+            tc.requestActive();
+            tc.setSearchCommitFrom(commitIdFrom);
+            tc.setSearchCommitTo(commitIdTo);
+            tc.search(true);
         });
     }
     
     public static void openSearch (final File repository, final File root, final String contextName, final int lineNumber) {
         final String title = NbBundle.getMessage(SearchHistoryTopComponent.class, "LBL_SearchHistoryTopComponent.title", contextName);
         final RepositoryInfo info = RepositoryInfo.getInstance(repository);
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run () {
-                SearchHistoryTopComponent tc = new SearchHistoryTopComponent(repository, info, root, new SearchHistoryTopComponent.DiffResultsViewFactory() {
-                    @Override
-                    DiffResultsView createDiffResultsView(SearchHistoryPanel panel, List<RepositoryRevision> results) {
-                        return new DiffResultsViewForLine(panel, results, lineNumber);
-                    }
-                });
-                tc.setDisplayName(title);
-                tc.open();
-                tc.requestActive();
-                tc.search(true);
-                tc.activateDiffView(true);
-            }
+        EventQueue.invokeLater(() -> {
+            SearchHistoryTopComponent tc = new SearchHistoryTopComponent(repository, info, root,
+                    new SearchHistoryTopComponent.DiffResultsViewFactory() {
+                        @Override
+                        DiffResultsView createDiffResultsView(SearchHistoryPanel panel, List<RepositoryRevision> results) {
+                            return new DiffResultsViewForLine(panel, results, lineNumber);
+                        }
+                    });
+            tc.setDisplayName(title);
+            tc.open();
+            tc.requestActive();
+            tc.search(true);
+            tc.activateDiffView(true);
         });
     }
 

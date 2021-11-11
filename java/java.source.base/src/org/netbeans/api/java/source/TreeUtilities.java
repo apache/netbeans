@@ -121,6 +121,8 @@ import org.openide.util.Exceptions;
  */
 public final class TreeUtilities {
     
+    private static final Logger LOG = Logger.getLogger(TreeUtilities.class.getName());
+
     /**{@link Kind}s that are represented by {@link ClassTree}.
      * 
      * @since 0.67
@@ -932,7 +934,7 @@ public final class TreeUtilities {
             Method m = Enter.class.getDeclaredMethod("unenter", JCCompilationUnit.class, JCTree.class);
             m.invoke(Enter.instance(ctx), cut, tree);
         } catch (Throwable t) {
-            t.printStackTrace();
+            LOG.log(Level.FINE, null, t);
         }
     }
 

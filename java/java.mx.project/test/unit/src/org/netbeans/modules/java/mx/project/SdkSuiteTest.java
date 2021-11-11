@@ -28,7 +28,6 @@ import static junit.framework.TestCase.assertTrue;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
-import org.netbeans.junit.RandomlyFails;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -41,7 +40,6 @@ public class SdkSuiteTest extends SuiteCheck {
         return suite(SdkSuiteTest.class);
     }
 
-    @RandomlyFails
     public void testParseSdkSourcesWithoutError() throws Exception {
         verifyNoErrorsInSuite("sdk");
     }

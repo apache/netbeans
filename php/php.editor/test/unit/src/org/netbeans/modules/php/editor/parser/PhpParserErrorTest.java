@@ -1192,6 +1192,11 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php80/attributeSyntax_02.php");
     }
 
+    // [NETBEANS-6193] attributes of interface constants and methods
+    public void testAttributeSyntax_03() throws Exception {
+        checkErrors("testfiles/parser/php80/attributeSyntax_03.php");
+    }
+
     public void testAttributeSyntaxError_01() throws Exception {
         checkErrors("testfiles/parser/php80/attributeSyntaxError_01.php");
     }

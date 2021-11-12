@@ -43,10 +43,13 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.google.gson.InstanceCreator;
+import com.google.gson.JsonObject;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionOptions;
 import org.eclipse.lsp4j.CodeLensOptions;
 import org.eclipse.lsp4j.CompletionOptions;
+import org.eclipse.lsp4j.ConfigurationItem;
+import org.eclipse.lsp4j.ConfigurationParams;
 import org.eclipse.lsp4j.ExecuteCommandOptions;
 import org.eclipse.lsp4j.FoldingRangeProviderOptions;
 import org.eclipse.lsp4j.InitializeParams;
@@ -60,6 +63,7 @@ import org.eclipse.lsp4j.SemanticTokensCapabilities;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
+import org.eclipse.lsp4j.TextDocumentSyncOptions;
 import org.eclipse.lsp4j.WorkDoneProgressCancelParams;
 import org.eclipse.lsp4j.WorkDoneProgressParams;
 import org.eclipse.lsp4j.WorkspaceFolder;
@@ -280,13 +284,15 @@ public final class Server {
 
     static class LanguageServerImpl implements LanguageServer, LanguageClientAware, LspServerState {
 
+        private static final String NETBEANS_JAVA_IMPORTS = "netbeans.java.imports";
+
         // change to a greater throughput if the initialization waits on more processes than just (serialized) project open.
         private static final RequestProcessor SERVER_INIT_RP = new RequestProcessor(LanguageServerImpl.class.getName());
 
         private static final Logger LOG = Logger.getLogger(LanguageServerImpl.class.getName());
         private NbCodeClientWrapper client;
-        private final TextDocumentService textDocumentService = new TextDocumentServiceImpl(this);
-        private final WorkspaceService workspaceService = new WorkspaceServiceImpl(this);
+        private final TextDocumentServiceImpl textDocumentService = new TextDocumentServiceImpl(this);
+        private final WorkspaceServiceImpl workspaceService = new WorkspaceServiceImpl(this);
         private final InstanceContent   sessionServices = new InstanceContent();
         private final Lookup sessionLookup = new ProxyLookup(
                 new AbstractLookup(sessionServices),
@@ -610,7 +616,11 @@ public final class Server {
         private InitializeResult constructInitResponse(JavaSource src) {
             ServerCapabilities capabilities = new ServerCapabilities();
             if (src != null) {
-                capabilities.setTextDocumentSync(TextDocumentSyncKind.Incremental);
+                TextDocumentSyncOptions textDocumentSyncOptions = new TextDocumentSyncOptions();
+                textDocumentSyncOptions.setChange(TextDocumentSyncKind.Incremental);
+                textDocumentSyncOptions.setOpenClose(true);
+                textDocumentSyncOptions.setWillSaveWaitUntil(true);
+                capabilities.setTextDocumentSync(textDocumentSyncOptions);
                 CompletionOptions completionOptions = new CompletionOptions();
                 completionOptions.setResolveProvider(true);
                 completionOptions.setTriggerCharacters(Collections.singletonList("."));
@@ -689,13 +699,31 @@ public final class Server {
             // chain showIndexingComplete message after initial project open.
             prjs.
                     thenApply(this::showIndexingCompleted);
-            
+
+            initializeOptions();
+
             // but complete the InitializationRequest independently of the project initialization.
             return CompletableFuture.completedFuture(
                     finishInitialization(
                         constructInitResponse(checkJavaSupport())
                     )
             );
+        }
+
+        private void initializeOptions() {
+            getWorkspaceProjects().thenAccept(projects -> {
+                if (projects != null && projects.length > 0) {
+                    ConfigurationItem item = new ConfigurationItem();
+                    FileObject fo = projects[0].getProjectDirectory();
+                    item.setScopeUri(Utils.toUri(fo));
+                    item.setSection(NETBEANS_JAVA_IMPORTS);
+                    client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
+                        if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {
+                            workspaceService.updateJavaImportPreferences(fo, (JsonObject) c.get(0));
+                        }
+                    });
+                }
+            });
         }
 
         public CompletableFuture<Project[]> getWorkspaceProjects() {

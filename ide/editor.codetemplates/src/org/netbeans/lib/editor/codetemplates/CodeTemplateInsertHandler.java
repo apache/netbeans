@@ -226,6 +226,10 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
         }
         // Insert the template into document
         insertTemplate();
+
+        if (masterParameters.stream().noneMatch(param -> param.isEditable())) {
+            SwingUtilities.invokeLater(Completion.get()::showCompletion);
+        }
     }
 
     void checkInsertTextBuilt() {
@@ -320,7 +324,7 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
                 CodeTemplateParameterImpl masterImpl = CodeTemplateParameterImpl.get(master);
                 if (CodeTemplateParameter.CURSOR_PARAMETER_NAME.equals(master.getName())) {
                     // Add explicit ${cursor} as last into text sync group to jump to it by TAB as last param
-                    caretTextRegion = masterImpl.textRegion(); 
+                    caretTextRegion = masterImpl.textRegion();
                 } else {
                     textSyncGroup.addTextSync(masterImpl.textRegion().textSync());
                 }
@@ -503,7 +507,7 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
             }
         }
     }
-    
+
     void release() {
         synchronized (this) {
             if (released) {

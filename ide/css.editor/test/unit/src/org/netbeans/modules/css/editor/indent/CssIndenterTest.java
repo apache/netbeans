@@ -186,7 +186,7 @@ public class CssIndenterTest extends TestBase {
     public void testPartitialFormatting() throws Exception {
         IndentPrefs preferences = new IndentPrefs(4, 4);
         String file = "testfiles/partialformatting.css";
-        
+
         FileObject fo = getTestFile(file);
         assertNotNull(fo);
         BaseDocument doc = getDocument(fo);
@@ -201,14 +201,14 @@ public class CssIndenterTest extends TestBase {
         assertDescriptionMatches(file, after, false, ".formatted");
 
         DataObject.find(fo).getLookup().lookup(Closable.class).close();
-        
+
         doc = getDocument(fo);
         setupDocumentIndentation(doc, preferences);
         format(doc, formatter, 857, 904, false);
         after = doc.getText(0, doc.getLength());
         assertDescriptionMatches(file, after, false, ".formatted2");
     }
-    
+
     public void testIndentation() throws Exception {
         // property indentation:
         insertNewline("a{^background: red;\n  }\n", "a{\n    ^background: red;\n  }\n", null);

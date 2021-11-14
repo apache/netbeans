@@ -40,23 +40,23 @@ public class JDKVersionTest {
     public void parseJDKVersion() {
         Map<String, JDKVersion> jdkVersions = new HashMap<>();
         jdkVersions.put("1.8",
-                new JDKVersion((short) 1, Optional.of((short) 8), Optional.of((short) 0), Optional.of((short) 0), Optional.empty()));
+                new JDKVersion((short) 1, Optional.of((short) 8), Optional.of((short) 0), Optional.of((short) 0), Optional.empty(), Optional.empty()));
         jdkVersions.put("1.8.0",
-                new JDKVersion((short) 1, Optional.of((short) 8), Optional.of((short) 0), Optional.of((short) 0), Optional.empty()));
+                new JDKVersion((short) 1, Optional.of((short) 8), Optional.of((short) 0), Optional.of((short) 0), Optional.empty(), Optional.empty()));
         jdkVersions.put("1.8.0u121",
-                new JDKVersion((short) 1, Optional.of((short) 8), Optional.of((short) 0), Optional.of((short) 121), Optional.empty()));
+                new JDKVersion((short) 1, Optional.of((short) 8), Optional.of((short) 0), Optional.of((short) 121), Optional.empty(), Optional.empty()));
         jdkVersions.put("1.8.0_191",
-                new JDKVersion((short) 1, Optional.of((short) 8), Optional.of((short) 0), Optional.of((short) 191), Optional.empty()));
+                new JDKVersion((short) 1, Optional.of((short) 8), Optional.of((short) 0), Optional.of((short) 191), Optional.empty(), Optional.empty()));
         jdkVersions.put("1.8.0_232-ea-8u232-b09-0ubuntu1-b09",
-                new JDKVersion((short) 1, Optional.of((short) 8), Optional.of((short) 0), Optional.of((short) 232), Optional.empty()));
+                new JDKVersion((short) 1, Optional.of((short) 8), Optional.of((short) 0), Optional.of((short) 232), Optional.empty(), Optional.empty()));
         jdkVersions.put("9",
-                new JDKVersion((short) 9, Optional.of((short) 0), Optional.of((short) 0), Optional.of((short) 0), Optional.empty()));
+                new JDKVersion((short) 9, Optional.of((short) 0), Optional.of((short) 0), Optional.of((short) 0), Optional.empty(), Optional.empty()));
         jdkVersions.put("11.0.6",
-                new JDKVersion((short) 11, Optional.of((short) 0), Optional.of((short) 6), Optional.of((short) 0), Optional.empty()));
+                new JDKVersion((short) 11, Optional.of((short) 0), Optional.of((short) 6), Optional.of((short) 0), Optional.empty(), Optional.empty()));
         jdkVersions.put("11.0.6_234",
-                new JDKVersion((short) 11, Optional.of((short) 0), Optional.of((short) 6), Optional.of((short) 234), Optional.empty()));
+                new JDKVersion((short) 11, Optional.of((short) 0), Optional.of((short) 6), Optional.of((short) 234), Optional.empty(), Optional.empty()));
         jdkVersions.put("11.0.6u234",
-                new JDKVersion((short) 11, Optional.of((short) 0), Optional.of((short) 6), Optional.of((short) 234), Optional.empty()));
+                new JDKVersion((short) 11, Optional.of((short) 0), Optional.of((short) 6), Optional.of((short) 234), Optional.empty(), Optional.empty()));
 
         for (Entry<String, JDKVersion> version : jdkVersions.entrySet()) {
             assertTrue(JDKVersion.toValue(version.getKey()).equals(version.getValue()), version.getKey());

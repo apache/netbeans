@@ -69,7 +69,11 @@ public final class Info implements ProjectInformation, PropertyChangeListener {
 
     @Override
     public String getName() {
+        final NbGradleProject nb = NbGradleProject.get(project);
         GradleBaseProject prj = GradleBaseProject.get(project);
+        if (!nb.isGradleProjectLoaded() || prj == null || prj.getName() == null) {
+            return project.getProjectDirectory().getNameExt();
+        }
 
         String ret = prj.isRoot() ? prj.getName() : prj.getRootDir().getName() + prj.getPath();
         return ret;

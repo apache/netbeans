@@ -28,6 +28,7 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
+import org.netbeans.spi.editor.hints.Severity;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.Hint;
 import org.netbeans.spi.java.hints.HintContext;
@@ -35,15 +36,15 @@ import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.hints.TriggerTreeKind;
 import org.openide.util.NbBundle.Messages;
 
-@Hint(displayName = "#DN_ConvertTextBlockToString", description = "#DESC_ConvertTextBlockToString", category = "general", minSourceVersion = "13")
+@Hint(displayName = "#DN_ConvertTextBlockToString", description = "#DESC_ConvertTextBlockToString", category = "rules15", severity = Severity.HINT)
 @Messages({
     "DN_ConvertTextBlockToString=Convert Text block to String",
-    "DESC_ConvertTextBlockToString=Text Block may not be supported in older versions of java older then 13"
+    "DESC_ConvertTextBlockToString=Converts java 15 Text Blocks back to regular Strings."
 })
 public class ConvertTextBlockToString {
 
     @TriggerTreeKind(Tree.Kind.STRING_LITERAL)
-    @Messages("ERR_ConvertTextBlockToString=Text block may not be supported")//NOI18N
+    @Messages("ERR_ConvertTextBlockToString=Text block can be converted to String")//NOI18N
     public static ErrorDescription computeWarning(HintContext ctx) {
         TokenSequence<?> ts = ctx.getInfo().getTokenHierarchy().tokenSequence();
         if (ts == null) {
@@ -89,8 +90,8 @@ public class ConvertTextBlockToString {
         protected void performRewrite(TransformationContext ctx) {
             ExpressionTree ext = ctx.getWorkingCopy().getTreeMaker().Literal(orignalStringArr[orignalStringArr.length - 1]);
             if (orignalStringArr.length > 1) {
-                ext = ctx.getWorkingCopy().getTreeMaker().Binary(Tree.Kind.PLUS, buildTree(orignalStringArr, orignalStringArr.length - 2, ctx), (ExpressionTree) ext);
-                if (orignalStringArr[orignalStringArr.length - 1].equals("")) {
+                ext = ctx.getWorkingCopy().getTreeMaker().Binary(Tree.Kind.PLUS, buildTree(orignalStringArr, orignalStringArr.length - 2, ctx), ext);
+                if (orignalStringArr[orignalStringArr.length - 1].isEmpty()) {
                     ext = (((BinaryTree) ext).getLeftOperand());
                 }
             }

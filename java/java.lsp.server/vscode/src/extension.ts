@@ -21,11 +21,14 @@
 import { commands, window, workspace, ExtensionContext, ProgressLocation, TextEditorDecorationType } from 'vscode';
 
 import {
-    LanguageClient,
-    LanguageClientOptions,
+	LanguageClient,
+	LanguageClientOptions,
+	StreamInfo
+} from 'vscode-languageclient/node';
+
+import {
     CloseAction,
     ErrorAction,
-    StreamInfo,
     Message,
     MessageType,
     LogMessageNotification,
@@ -42,6 +45,7 @@ import * as launcher from './nbcode';
 import {NbTestAdapter} from './testAdapter';
 import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification, DebugConnector,
          TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification,
+         SetTextEditorDecorationParams
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
 
@@ -428,11 +432,27 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         }, time);
     };
 
-    const beVerbose : boolean = workspace.getConfiguration('netbeans').get('verbose', false);
+    const netbeansConfig = workspace.getConfiguration('netbeans');
+    const beVerbose : boolean = netbeansConfig.get('verbose', false);
+    let userdir = netbeansConfig.get('userdir', 'global');
+    switch (userdir) {
+        case 'local':
+            if (context.storagePath) {
+                userdir = context.storagePath;
+                break;
+            }
+            // fallthru
+        case 'global':
+            userdir = context.globalStoragePath;
+            break;
+        default:
+            // assume storage is path on disk
+    }
+
     let info = {
         clusters : findClusters(context.extensionPath),
         extensionPath: context.extensionPath,
-        storagePath : context.globalStoragePath,
+        storagePath : userdir,
         jdkHome : specifiedJDK,
         verbose: beVerbose
     };
@@ -603,6 +623,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 }
             });
             let decorations = new Map<string, TextEditorDecorationType>();
+            let decorationParamsByUri = new Map<vscode.Uri, SetTextEditorDecorationParams>();
             c.onRequest(TextEditorDecorationCreateRequest.type, param => {
                 let decorationType = vscode.window.createTextEditorDecorationType(param);
                 decorations.set(decorationType.key, decorationType);
@@ -616,13 +637,32 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                     );
                     if (editorsWithUri.length > 0) {
                         editorsWithUri[0].setDecorations(decorationType, asRanges(param.ranges));
+                        decorationParamsByUri.set(editorsWithUri[0].document.uri, param);
                     }
                 }
             });
+            let disposableListener = vscode.window.onDidChangeVisibleTextEditors(editors => {
+                editors.forEach(editor => {
+                    let decorationParams = decorationParamsByUri.get(editor.document.uri);
+                    if (decorationParams) {
+                        let decorationType = decorations.get(decorationParams.key);
+                        if (decorationType) {
+                            editor.setDecorations(decorationType, asRanges(decorationParams.ranges));
+                        }
+                    }
+                });
+            });
+            context.subscriptions.push(disposableListener);
             c.onNotification(TextEditorDecorationDisposeNotification.type, param => {
                 let decorationType = decorations.get(param);
                 if (decorationType) {
+                    decorations.delete(param);
                     decorationType.dispose();
+                    decorationParamsByUri.forEach((value, key, map) => {
+                        if (value.key == param) {
+                            map.delete(key);
+                        }
+                    });
                 }
             });
             handleLog(log, 'Language Client: Ready');

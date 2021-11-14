@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.php.editor.actions;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.php.editor.api.AliasedName;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.model.ModelUtils;
@@ -33,6 +35,7 @@ import org.netbeans.modules.php.editor.model.UseScope;
 import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
+import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeNode;
@@ -62,9 +65,45 @@ public class UsedNamesCollector {
     }
 
     public Map<String, List<UsedNamespaceName>> collectNames() {
-        NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(parserResult.getModel().getFileScope(), caretPosition);
+        NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(parserResult, caretPosition);
         assert namespaceScope != null;
         OffsetRange offsetRange = namespaceScope.getBlockRange();
+        // in the following case, avoid being inserted incorrect uses
+        // because default namespace range is whole file...
+        // // caret here^
+        // declare (strict_types=1);
+        //
+        // namespace {
+        //     class GlobalNamespace {}
+        // }
+        //
+        // namespace Test {
+        //     class TestClass {
+        //         public function __construct()
+        //         {
+        //             $test = new Foo();
+        //         }
+        //         public function test(?Foo $foo): ?Foo
+        //         {
+        //             return null;
+        //         }
+        //     }
+        // }
+        if (namespaceScope.isDefaultNamespace()) {
+            NamespaceDeclarationVisitor namespaceDeclarationVisitor = new NamespaceDeclarationVisitor();
+            parserResult.getProgram().accept(namespaceDeclarationVisitor);
+            List<NamespaceDeclaration> globalNamespaces = namespaceDeclarationVisitor.getGlobalNamespaceDeclarations();
+            if (!globalNamespaces.isEmpty()) {
+                Block body = globalNamespaces.get(0).getBody();
+                offsetRange = new OffsetRange(body.getStartOffset(), body.getEndOffset());
+            }
+            for (NamespaceDeclaration globalNamespace : globalNamespaces) {
+                if (globalNamespace.getBody().getStartOffset() <= caretPosition
+                        && caretPosition <= globalNamespace.getBody().getEndOffset()) {
+                    offsetRange = new OffsetRange(globalNamespace.getBody().getStartOffset(), globalNamespace.getBody().getEndOffset());
+                }
+            }
+        }
         Collection<? extends UseScope> declaredUses = namespaceScope.getAllDeclaredSingleUses();
         NamespaceNameVisitor namespaceNameVisitor = new NamespaceNameVisitor(offsetRange);
         parserResult.getProgram().accept(namespaceNameVisitor);
@@ -171,4 +210,24 @@ public class UsedNamesCollector {
 
     }
 
+    private static class NamespaceDeclarationVisitor extends DefaultVisitor {
+
+        private final List<NamespaceDeclaration> globalNamespaceDeclarations = new ArrayList<>();
+
+        public List<NamespaceDeclaration> getGlobalNamespaceDeclarations() {
+            return Collections.unmodifiableList(globalNamespaceDeclarations);
+        }
+
+        @Override
+        public void visit(NamespaceDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            if (node.isBracketed() && node.getName() == null) {
+                globalNamespaceDeclarations.add(node);
+            }
+            super.visit(node);
+        }
+
+    }
 }

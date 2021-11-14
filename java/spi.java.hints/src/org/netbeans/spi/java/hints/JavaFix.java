@@ -129,7 +129,7 @@ public abstract class JavaFix {
     
     JavaFix(TreePathHandle handle, Map<String, String> options, String sortText) {
         this.handle = handle;
-        this.options = Collections.unmodifiableMap(new HashMap<String, String>(options));
+        this.options = Collections.unmodifiableMap(new HashMap<>(options));
         this.sortText = sortText;
     }
 
@@ -282,13 +282,11 @@ public abstract class JavaFix {
                 if (doc != null) {
                     final String[] result = new String[1];
 
-                    doc.render(new Runnable() {
-                        @Override public void run() {
-                            try {
-                                result[0] = doc.getText(0, doc.getLength());
-                            } catch (BadLocationException ex) {
-                                Exceptions.printStackTrace(ex);
-                            }
+                    doc.render(() -> {
+                        try {
+                            result[0] = doc.getText(0, doc.getLength());
+                        } catch (BadLocationException ex) {
+                            Exceptions.printStackTrace(ex);
                         }
                     });
 

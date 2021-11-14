@@ -22,8 +22,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
@@ -124,6 +126,7 @@ import org.eclipse.lsp4j.ResourceOperation;
 import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SignatureHelpParams;
 import org.eclipse.lsp4j.SymbolInformation;
+import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
@@ -141,6 +144,7 @@ import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.project.JavaProjectConstants;
+import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
@@ -161,6 +165,7 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
+import org.netbeans.modules.editor.indent.spi.CodeStylePreferences;
 import org.netbeans.modules.editor.java.GoToSupport;
 import org.netbeans.modules.editor.java.GoToSupport.GoToTarget;
 import org.netbeans.modules.java.editor.base.fold.JavaElementFoldVisitor;
@@ -312,56 +317,67 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         ? new Completion.Context(Completion.TriggerKind.valueOf(params.getContext().getTriggerKind().name()),
                                 params.getContext().getTriggerCharacter() == null || params.getContext().getTriggerCharacter().isEmpty() ? null : params.getContext().getTriggerCharacter().charAt(0))
                         : null;
-                boolean isComplete = Completion.collect(doc, caret, context, completion -> {
-                    CompletionItem item = new CompletionItem(completion.getLabel());
-                    if (completion.getKind() != null) {
-                        item.setKind(CompletionItemKind.valueOf(completion.getKind().name()));
-                    }
-                    if (completion.getTags() != null) {
-                        item.setTags(completion.getTags().stream().map(tag -> CompletionItemTag.valueOf(tag.name())).collect(Collectors.toList()));
-                    }
-                    if (completion.getDetail() != null && completion.getDetail().isDone()) {
-                        item.setDetail(completion.getDetail().getNow(null));
-                    }
-                    if (completion.getDocumentation() != null && completion.getDocumentation().isDone()) {
-                        String documentation = completion.getDocumentation().getNow(null);
-                        if (documentation != null) {
-                            MarkupContent markup = new MarkupContent();
-                            markup.setKind("markdown");
-                            markup.setValue(html2MD(documentation));
-                            item.setDocumentation(markup);
+                Preferences prefs = CodeStylePreferences.get(doc, "text/x-java").getPreferences();
+                String point = prefs.get("classMemberInsertionPoint", null);
+                try {
+                    prefs.put("classMemberInsertionPoint", CodeStyle.InsertionPoint.CARET_LOCATION.name());
+                    boolean isComplete = Completion.collect(doc, caret, context, completion -> {
+                        CompletionItem item = new CompletionItem(completion.getLabel());
+                        if (completion.getKind() != null) {
+                            item.setKind(CompletionItemKind.valueOf(completion.getKind().name()));
                         }
-                    }
-                    if (completion.isPreselect()) {
-                        item.setPreselect(true);
-                    }
-                    item.setSortText(completion.getSortText());
-                    item.setFilterText(completion.getFilterText());
-                    item.setInsertText(completion.getInsertText());
-                    if (completion.getInsertTextFormat() != null) {
-                        item.setInsertTextFormat(InsertTextFormat.valueOf(completion.getInsertTextFormat().name()));
-                    }
-                    org.netbeans.api.lsp.TextEdit edit = completion.getTextEdit();
-                    if (edit != null) {
-                        item.setTextEdit(new TextEdit(new Range(Utils.createPosition(file, edit.getStartOffset()), Utils.createPosition(file, edit.getEndOffset())), edit.getNewText()));
-                    }
-                    if (completion.getAdditionalTextEdits() != null && completion.getAdditionalTextEdits().isDone()) {
-                        List<org.netbeans.api.lsp.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().getNow(null);
-                        if (additionalTextEdits != null && !additionalTextEdits.isEmpty()) {
-                            item.setAdditionalTextEdits(additionalTextEdits.stream().map(ed -> {
-                                return new TextEdit(new Range(Utils.createPosition(file, ed.getStartOffset()), Utils.createPosition(file, ed.getEndOffset())), ed.getNewText());
-                            }).collect(Collectors.toList()));
+                        if (completion.getTags() != null) {
+                            item.setTags(completion.getTags().stream().map(tag -> CompletionItemTag.valueOf(tag.name())).collect(Collectors.toList()));
                         }
+                        if (completion.getDetail() != null && completion.getDetail().isDone()) {
+                            item.setDetail(completion.getDetail().getNow(null));
+                        }
+                        if (completion.getDocumentation() != null && completion.getDocumentation().isDone()) {
+                            String documentation = completion.getDocumentation().getNow(null);
+                            if (documentation != null) {
+                                MarkupContent markup = new MarkupContent();
+                                markup.setKind("markdown");
+                                markup.setValue(html2MD(documentation));
+                                item.setDocumentation(markup);
+                            }
+                        }
+                        if (completion.isPreselect()) {
+                            item.setPreselect(true);
+                        }
+                        item.setSortText(completion.getSortText());
+                        item.setFilterText(completion.getFilterText());
+                        item.setInsertText(completion.getInsertText());
+                        if (completion.getInsertTextFormat() != null) {
+                            item.setInsertTextFormat(InsertTextFormat.valueOf(completion.getInsertTextFormat().name()));
+                        }
+                        org.netbeans.api.lsp.TextEdit edit = completion.getTextEdit();
+                        if (edit != null) {
+                            item.setTextEdit(Either.forLeft(new TextEdit(new Range(Utils.createPosition(file, edit.getStartOffset()), Utils.createPosition(file, edit.getEndOffset())), edit.getNewText())));
+                        }
+                        if (completion.getAdditionalTextEdits() != null && completion.getAdditionalTextEdits().isDone()) {
+                            List<org.netbeans.api.lsp.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().getNow(null);
+                            if (additionalTextEdits != null && !additionalTextEdits.isEmpty()) {
+                                item.setAdditionalTextEdits(additionalTextEdits.stream().map(ed -> {
+                                    return new TextEdit(new Range(Utils.createPosition(file, ed.getStartOffset()), Utils.createPosition(file, ed.getEndOffset())), ed.getNewText());
+                                }).collect(Collectors.toList()));
+                            }
+                        }
+                        if (completion.getCommitCharacters() != null) {
+                            item.setCommitCharacters(completion.getCommitCharacters().stream().map(ch -> ch.toString()).collect(Collectors.toList()));
+                        }
+                        lastCompletions.add(completion);
+                        item.setData(new CompletionData(uri, index.getAndIncrement()));
+                        items.add(item);
+                    });
+                    if (!isComplete) {
+                        completionList.setIsIncomplete(true);
                     }
-                    if (completion.getCommitCharacters() != null) {
-                        item.setCommitCharacters(completion.getCommitCharacters().stream().map(ch -> ch.toString()).collect(Collectors.toList()));
+                } finally {
+                    if (point != null) {
+                        prefs.put("classMemberInsertionPoint", point);
+                    } else {
+                        prefs.remove("classMemberInsertionPoint");
                     }
-                    lastCompletions.add(completion);
-                    item.setData(new CompletionData(uri, index.getAndIncrement()));
-                    items.add(item);
-                });
-                if (!isComplete) {
-                    completionList.setIsIncomplete(true);
                 }
                 completionList.setItems(items);
                 return Either.forRight(completionList);
@@ -732,39 +748,51 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(DocumentSymbolParams params) {
-        // shortcut: if the projects are not yet initialized, return empty:
-        if (server.openedProjects().getNow(null) == null) {
-            return CompletableFuture.completedFuture(Collections.emptyList());
-        }
-        JavaSource js = getJavaSource(params.getTextDocument().getUri());
-        if (js == null) {
-            return CompletableFuture.completedFuture(Collections.emptyList());
-        }
-        List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
-        try {
-            js.runUserActionTask(cc -> {
-                cc.toPhase(JavaSource.Phase.RESOLVED);
-                for (Element tel : cc.getTopLevelElements()) {
-                    DocumentSymbol ds = element2DocumentSymbol(cc, tel);
-                    if (ds != null)
-                        result.add(Either.forRight(ds));
-                }
-            }, true);
-        } catch (IOException ex) {
-            //TODO: include stack trace:
-            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-        }
-
-        return CompletableFuture.completedFuture(result);
+        return server.openedProjects().thenCompose(projects -> {
+            JavaSource js = getJavaSource(params.getTextDocument().getUri());
+            if (js == null) {
+                return CompletableFuture.completedFuture(Collections.emptyList());
+            }
+            List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
+            try {
+                js.runUserActionTask(cc -> {
+                    cc.toPhase(JavaSource.Phase.RESOLVED);
+                    Trees trees = cc.getTrees();
+                    CompilationUnitTree cu = cc.getCompilationUnit();
+                    if (cu.getPackage() != null) {
+                        TreePath tp = trees.getPath(cu, cu.getPackage());
+                        Element el = trees.getElement(tp);
+                        if (el != null && el.getKind() == ElementKind.PACKAGE) {
+                            String name = Utils.label(cc, el, true);
+                            SymbolKind kind = Utils.elementKind2SymbolKind(el.getKind());
+                            Range range = Utils.treeRange(cc, tp.getLeaf());
+                            result.add(Either.forRight(new DocumentSymbol(name, kind, range, range)));
+                        }
+                    }
+                    for (Element tel : cc.getTopLevelElements()) {
+                        DocumentSymbol ds = element2DocumentSymbol(cc, tel);
+                        if (ds != null)
+                            result.add(Either.forRight(ds));
+                    }
+                }, true);
+            } catch (IOException ex) {
+                client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+            }
+            return CompletableFuture.completedFuture(result);
+        });
     }
 
-    private DocumentSymbol element2DocumentSymbol(CompilationInfo info, Element el) throws BadLocationException {
+    private static DocumentSymbol element2DocumentSymbol(CompilationInfo info, Element el) {
         TreePath path = info.getTrees().getPath(el);
         if (path == null)
+            return null;
+        TreeUtilities tu = info.getTreeUtilities();
+        if (tu.isSynthetic(path))
             return null;
         Range range = Utils.treeRange(info, path.getLeaf());
         if (range == null)
             return null;
+        Range selection = Utils.selectionRange(info, path.getLeaf());
         List<DocumentSymbol> children = new ArrayList<>();
         for (Element c : el.getEnclosedElements()) {
             DocumentSymbol ds = element2DocumentSymbol(info, c);
@@ -772,16 +800,44 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 children.add(ds);
             }
         }
-
-        String simpleName;
-
-        if (el.getKind() == ElementKind.CONSTRUCTOR) {
-            simpleName = el.getEnclosingElement().getSimpleName().toString();
-        } else {
-            simpleName = el.getSimpleName().toString();
+        if (path.getLeaf().getKind() == Kind.METHOD || path.getLeaf().getKind() == Kind.VARIABLE) {
+            children.addAll(getAnonymousInnerClasses(info, path));
         }
+        String name = Utils.label(info, el, false);
+        String detail = Utils.detail(info, el, false);
+        return new DocumentSymbol(name, Utils.elementKind2SymbolKind(el.getKind()), range, selection != null ? selection : range, detail, children);
+    }
 
-        return new DocumentSymbol(simpleName, Utils.elementKind2SymbolKind(el.getKind()), range, range, null, children);
+    private static List<DocumentSymbol> getAnonymousInnerClasses(CompilationInfo info, TreePath path) {
+        List<DocumentSymbol> inner = new ArrayList<>();
+        new TreePathScanner<Void, Void>() {
+            @Override
+            public Void visitNewClass(NewClassTree node, Void p) {
+                if (node.getClassBody() != null) {
+                    Range range = Utils.treeRange(info, node);
+                    if (range != null) {
+                        Range selectionRange = Utils.treeRange(info, node.getIdentifier());
+                        Element e = info.getTrees().getElement(new TreePath(getCurrentPath(), node.getClassBody()));
+                        if (e != null) {
+                            Element te = info.getTrees().getElement(new TreePath(getCurrentPath(), node.getIdentifier()));
+                            if (te != null) {
+                                String name = "new " + te.getSimpleName() + "() {...}";
+                                List<DocumentSymbol> children = new ArrayList<>();
+                                for (Element c : e.getEnclosedElements()) {
+                                    DocumentSymbol ds = element2DocumentSymbol(info, c);
+                                    if (ds != null) {
+                                        children.add(ds);
+                                    }
+                                }
+                                inner.add(new DocumentSymbol(name, Utils.elementKind2SymbolKind(e.getKind()), range, selectionRange, null, children));
+                            }
+                        }
+                    }
+                }
+                return null;
+            }
+        }.scan(path, null);
+        return inner;
     }
 
     @Override
@@ -1651,7 +1707,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
             missingFileDiscovered(uri);
         } catch (MalformedURLException ex) {
-            LOG.log(Level.WARNING, "Invalid file URL: " + uri, ex);
+            if (!uri.startsWith("untitled:")) {
+                LOG.log(Level.WARNING, "Invalid file URL: " + uri, ex);
+            }
         }
         return null;
     }

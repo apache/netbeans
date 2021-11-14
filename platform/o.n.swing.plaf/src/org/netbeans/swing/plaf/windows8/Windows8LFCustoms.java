@@ -23,9 +23,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -34,6 +34,8 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import org.netbeans.swing.plaf.LFCustoms;
 import org.netbeans.swing.plaf.util.UIBootstrapValue;
 import org.netbeans.swing.plaf.util.UIUtils;
@@ -65,36 +67,62 @@ public final class Windows8LFCustoms extends LFCustoms {
     // There is also a SCROLLPANE_BORDER_COLOR constant in the superclass. Both seem to be in use.
     static final String SCROLLPANE_BORDER_COLOR2 = "scrollpane_border"; //NOI18N
 
+    /**
+     * A list of {@link UIDefaults} font properties which may need adjustment of the font family
+     * and/or font size.
+     */
     private static final String[] DEFAULT_GUI_FONT_PROPERTIES = new String[] {
+        /* These font properties are usually set to Tahoma 11 by Swing's Windows LAF. Since
+        Windows Vista, the default Windows font has switched to Segoe UI 12. Swing kept Tahoma 11
+        for backwards compatibility reasons only; see https://www.pushing-pixels.org/page/213?m and
+        JDK-6669448.
+
+        There's also a JDK Swing LAF bug which causes these font properties to be assigned the wrong
+        size under certain HiDPI configurations. Currently, JDK's WindowsLookAndFeel derives font
+        properties such as Label.font from the Windows API call GetStockObject(DEFAULT_GUI_FONT),
+        which appears to be unreliable when HiDPI display configurations are changed without logging
+        out of Windows and back in again (as may frequently happen, for instance, when an external
+        monitor is connected or disconnected). See the "win.defaultGUI.font" property in
+        WindowsLookAndFeel and
+        java.desktop/windows/native/libawt/windows/awt_DesktopProperties.cpp . The
+        "win.messagebox.font" property is not affected by this problem, however, so we fetch the
+        default font using that one instead. FlatLAF does the same, in
+        com.formdev.flatlaf.FlatLaf.initialize(). Note that the font size in the
+        "win.defaultGUI.font" property may still be affected by the "Make text bigger" option in the
+        Windows 10 control panel, which exists independently of monitor-level HiDPI scaling
+        settings. */
         "TitledBorder.font", "Slider.font", "PasswordField.font", "TableHeader.font", "TextPane.font",
         "ProgressBar.font", "Viewport.font", "TabbedPane.font", "List.font", "CheckBox.font",
         "Table.font", "ScrollPane.font", "ToggleButton.font", "Panel.font", "RadioButton.font",
         "FormattedTextField.font", "TextField.font", "Spinner.font", "Button.font", "EditorPane.font",
-        "Label.font", "ComboBox.font", "Tree.font", "TextArea.font" }; //NOI18N
+        "Label.font", "ComboBox.font", "Tree.font",
+        /* This one is Monospaced 13 by default, but should be switched to the standard UI font.
+        (This particular font substitution has been part of NetBeans since at least 2004.) */
+        "TextArea.font",
+        /* These font properties seem to be unaffected by the aforementioned HiDPI bug, and are also
+        set to Segoe UI 12 by Swing's Windows LAF. But include them in the list of fonts to update,
+        for consistency in case of future changes. */
+        "CheckBoxMenuItem.font", "OptionPane.font", "Menu.font", "ToolTip.font", "PopupMenu.font",
+        "RadioButtonMenuItem.font", "MenuItem.font", "ToolBar.font", "MenuBar.font",
+        /* This one is usually set to "Dialog 12" by default. Include it in the list to switch it to
+        Segoe UI as well. */
+        "ColorChooser.font"
+    }; //NOI18N
+
+    // Copied from com.formdev.flatlaf.FlatLAF.createCompositeFont.
+    private static FontUIResource createCompositeFont(String family, int style, int size) {
+      // using StyleContext.getFont() here because it uses
+      // sun.font.FontUtilities.getCompositeFontUIResource()
+      // and creates a composite font that is able to display all Unicode characters
+      Font font = StyleContext.getDefaultStyleContext().getFont(family, style, size);
+      return (font instanceof FontUIResource) ? (FontUIResource) font : new FontUIResource(font);
+    }
 
     final Color TAB_CONTENT_BORDER_COLOR = new Color(156, 156, 156);
 
     @Override
     public Object[] createLookAndFeelCustomizationKeysAndValues() {
-        /* Don't try to fetch this font size from the LAF; it won't work reliably for HiDPI
-        configurations (see a related workaround below). */
-        int fontsize = 11;
-        Integer in = (Integer) UIManager.get(CUSTOM_FONT_SIZE); //NOI18N
-        if (in != null) {
-            fontsize = in.intValue();
-        }
-        //Work around a bug in windows which sets the text area font to
-        //"MonoSpaced", causing all accessible dialogs to have monospaced text
-        Font textAreaFont = UIManager.getFont("Label.font"); //NOI18N
-        if (textAreaFont == null) {
-            textAreaFont = new Font("Dialog", Font.PLAIN, fontsize); //NOI18N
-        } else {
-            textAreaFont = textAreaFont.deriveFont((float) fontsize);
-        }
-
         Object[] constants = new Object[] {
-            "TextArea.font", textAreaFont, //NOI18N
-
             EDITOR_PREFERRED_COLOR_PROFILE, "NetBeans", //NOI18N
             EDITOR_ERRORSTRIPE_SCROLLBAR_INSETS, new Insets(17, 0, 17, 0),
 
@@ -128,36 +156,27 @@ public final class Windows8LFCustoms extends LFCustoms {
         List<Object> result = new ArrayList<>();
         result.addAll(Arrays.asList(constants));
 
-        /* Workaround for Windows LAF JDK bug that causes fonts to appear at the wrong size on
-        certain configurations involving HiDPI monitors. Currently, WindowsLookAndFeel derive
-        font properties such as Label.font from the Windows API call
-        GetStockObject(DEFAULT_GUI_FONT), which appears to be unreliable when HiDPI display
-        configurations are changed without logging out of Windows and back in again (as may
-        frequently happen, for instance, when an external monitor is connected or
-        disconnected). See the "win.defaultGUI.font" property in WindowsLookAndFeel and
-        java.desktop/windows/native/libawt/windows/awt_DesktopProperties.cpp . */
-        /* If a custom font size is set, the font sizes have already been set in
-        AllLFCustoms.initCustomFontSize. */
-        if (UIManager.get(CUSTOM_FONT_SIZE) == null) {
-            /* Use the same logic as in AllLFCustoms.switchFont, since it seems to take some special
-            precautions (e.g. using deriveFont instead of FontUIResource for the Windows case). */
-            Map<Font,Font> fontTranslation = new HashMap<>();
+        // Adjust fonts; see comments on DEFAULT_GUI_FONT_PROPERTIES.
+        {
+            // Fallback values.
+            int fontSize = 11;
+            String fontFamily = "Dialog";
+            Object messageBoxFont =
+                Toolkit.getDefaultToolkit().getDesktopProperty("win.messagebox.font");
+            if (messageBoxFont instanceof Font) {
+                fontSize = ((Font) messageBoxFont).getSize();
+                fontFamily = ((Font) messageBoxFont).getFamily();
+            }
+            Object customFontSize = UIManager.get(CUSTOM_FONT_SIZE); //NOI18N
+            if (customFontSize instanceof Integer) {
+                /* In this case, AllLFCustoms.switchFont will already have run, but we probably need
+                to change the font family, too, so still add the customizations here. */
+                fontSize = (Integer) customFontSize;
+            }
+            Font useFont = createCompositeFont(fontFamily, Font.PLAIN, fontSize);
             for (String uiKey : DEFAULT_GUI_FONT_PROPERTIES) {
-                if (uiKey.equals("TextArea.font")) { //NOI18N
-                    // Skip this one; it was set earlier as part of an unrelated workaround.
-                    continue;
-                }
-                Font oldFont = UIManager.getFont(uiKey);
-                if (oldFont == null) {
-                    continue;
-                }
-                Font newFont = fontTranslation.get(oldFont);
-                if (newFont == null) {
-                    newFont = oldFont.deriveFont((float) fontsize);
-                    fontTranslation.put(oldFont, newFont);
-                }
                 result.add(uiKey);
-                result.add(newFont);
+                result.add(useFont);
             }
         }
 
@@ -380,14 +399,14 @@ public final class Windows8LFCustoms extends LFCustoms {
             "ViewTab.unscaledBorders", true,
 
             // Left means left of the icon. Right means right of the caption, not of the "X" icon.
-            "EditorTab.tabInsets", new Insets(3,6,5,6),
+            "EditorTab.tabInsets", new Insets(3,6,3,6),
             "EditorTab.underlineHeight", 2,
             "EditorTab.underlineAtTop", true,
             "EditorTab.showTabSeparators", true,
 
             /* Left/top means left/top of the caption. Right means right of the caption. The X is
             centered vertically. */
-            "ViewTab.tabInsets", new Insets(4,7,4,3),
+            "ViewTab.tabInsets", new Insets(2,7,4,3),
             "ViewTab.underlineHeight", 2,
             "ViewTab.underlineAtTop", true,
             "ViewTab.showTabSeparators", false,

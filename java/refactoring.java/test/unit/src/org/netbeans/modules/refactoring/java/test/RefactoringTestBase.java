@@ -214,7 +214,7 @@ public class RefactoringTestBase extends NbTestCase {
                                     return TestUtil.getBootClassPath();
                                 }
                                 if (JavaClassPathConstants.MODULE_BOOT_PATH.equals(type)) {
-                                    return BootClassPathUtil.getBootClassPath();
+                                    return BootClassPathUtil.getModuleBootPath();
                                 }
                                 if (ClassPath.COMPILE.equals(type)) {
                                     return ClassPathSupport.createClassPath(new FileObject[0]);

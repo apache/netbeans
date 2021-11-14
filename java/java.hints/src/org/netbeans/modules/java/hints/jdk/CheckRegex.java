@@ -38,6 +38,7 @@ import javax.swing.SwingUtilities;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.spi.editor.hints.ErrorDescription;
+import org.netbeans.spi.editor.hints.Severity;
 import org.netbeans.spi.java.hints.ConstraintVariableType;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.Hint;
@@ -47,7 +48,7 @@ import org.netbeans.spi.java.hints.TriggerPattern;
 import org.netbeans.spi.java.hints.TriggerPatterns;
 import org.openide.util.NbBundle.Messages;
 
-@Hint(displayName = "#DN_CheckRegex", description = "#DESC_CheckRegex", category = "general")
+@Hint(displayName = "#DN_CheckRegex", description = "#DESC_CheckRegex", category = "general", severity = Severity.HINT)
 @Messages({
     "DN_CheckRegex=Check Regular Expression",
     "DESC_CheckRegex=Check Regular Expression"

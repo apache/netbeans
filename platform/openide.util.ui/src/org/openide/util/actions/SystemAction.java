@@ -237,7 +237,7 @@ public abstract class SystemAction extends SharedClassObject implements Action, 
 
                         if (i != null) {
                             // OK, the normal case.
-                            img = new ImageIcon(i);
+                            img = ImageUtilities.image2Icon(i);
                         } else {
                             // Check for an old-style relative path.
                             URL u = getClass().getResource(resName);

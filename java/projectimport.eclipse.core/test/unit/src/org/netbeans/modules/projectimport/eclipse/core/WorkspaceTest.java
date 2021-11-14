@@ -39,10 +39,10 @@ public class WorkspaceTest extends ProjectImporterTestCase {
     }
     
     public void testLoadMyEclipseLibraries() throws Exception {
-        File baseDir = extractToWorkDir("myeclipselibstest.zip");
-        Workspace w = EclipseProjectTestUtils.createWorkspace(getWorkDir(), 
-            new Workspace.Variable("MYECLIPSE_JSF_HOME", getDataDir().getPath()),
-            new Workspace.Variable("ECLIPSE_HOME", getWorkDirPath())
+        File myecliselibstest = new File(getDataDir(), "myecliselibstest");
+        Workspace w = EclipseProjectTestUtils.createWorkspace(myecliselibstest, 
+            new Workspace.Variable("MYECLIPSE_JSF_HOME", myecliselibstest.getPath()),
+            new Workspace.Variable("ECLIPSE_HOME", myecliselibstest.getAbsolutePath())
             );
         w.loadMyEclipseLibraries(new ArrayList<String>());
         assertEquals(3, w.getUserLibraries().keySet().size());
@@ -52,8 +52,8 @@ public class WorkspaceTest extends ProjectImporterTestCase {
         assertEquals(13, jarContent.size());
         jarContent = w.getUserLibraries().get("FACELETS1");
         assertEquals(3, jarContent.size());
-        assertEquals(getDataDir().getPath()+"/facelets/lib/jsf-facelets.jar", jarContent.get(0));
-        assertEquals(getDataDir().getPath()+"/facelets/lib/el-api.jar", jarContent.get(1));
-        assertEquals(getDataDir().getPath()+"/facelets/lib/el-ri.jar", jarContent.get(2));
+        assertEquals(myecliselibstest.getAbsolutePath()+"/facelets/lib/jsf-facelets.jar", jarContent.get(0));
+        assertEquals(myecliselibstest.getAbsolutePath()+"/facelets/lib/el-api.jar", jarContent.get(1));
+        assertEquals(myecliselibstest.getAbsolutePath()+"/facelets/lib/el-ri.jar", jarContent.get(2));
     }
 }

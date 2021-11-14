@@ -1022,6 +1022,7 @@ public class GoToSupportTest extends NbTestCase {
             //OK, no RELEASE_10, skip test:
             return ;
         }
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         final boolean[] wasCalled = new boolean[1];
         this.sourceLevel = "1.10";
         final String code = "package test;\n" +

@@ -44,6 +44,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import com.google.gson.InstanceCreator;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionOptions;
 import org.eclipse.lsp4j.CodeLensOptions;
@@ -142,6 +143,7 @@ public final class Server {
     private static Launcher<NbCodeLanguageClient> createLauncher(LanguageServerImpl server, Pair<InputStream, OutputStream> io,
             Function<MessageConsumer, MessageConsumer> processor) {
         return new LSPLauncher.Builder<NbCodeLanguageClient>()
+            .configureGson(gb -> gb.registerTypeAdapter(SemanticTokensCapabilities.class, (InstanceCreator<SemanticTokensCapabilities>) type -> new SemanticTokensCapabilities(false)))
             .setLocalService(server)
             .setRemoteInterface(NbCodeLanguageClient.class)
             .setInput(io.first())

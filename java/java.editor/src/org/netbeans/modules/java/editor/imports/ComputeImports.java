@@ -135,11 +135,6 @@ public final class ComputeImports {
      */
     Map<String, Set<String>> possibleMethodFQNs = new HashMap<>();
     
-    /**
-     * Index of possible elements of the same FQN. Computed for each round
-     * of Hint processing
-     */
-    Map<String, List<Element>> fqn2Methods = new HashMap<>();
     
     public synchronized void cancel() {
         cancelled = true;
@@ -320,7 +315,6 @@ public final class ComputeImports {
             // reset possible FQNs, since the set of acessible stuff may have changed -> 
             // collect again
             possibleMethodFQNs.clear();
-            fqn2Methods.clear();
             
             for (Hint hint: v.hints) {
                 wasChanged |= hint.filter(allInfo, this);
@@ -367,12 +361,6 @@ public final class ComputeImports {
             return;
         }
         String fqn = info.getElementUtilities().getElementName(el, true).toString();
-        List<Element> els = fqn2Methods.get(fqn);
-        if (els == null) {
-            els = new ArrayList<>(2);
-            fqn2Methods.put(fqn, els);
-        }
-        els.add(el);
         String simpleName = ((ExecutableElement)el).getSimpleName().toString();
         Set<String> col = possibleMethodFQNs.get(simpleName);
         if (col == null) {
@@ -392,23 +380,7 @@ public final class ComputeImports {
         fqnSB.append(info.getElementUtilities().getElementName(element, true));
 
         if (element.getKind() == ElementKind.METHOD) {
-            String fqn = fqnSB.toString();
-            fqnSB.append('(');
-            // check if there are no overloads, otherwise append just ellipsis:
-            Collection<Element> col = fqn2Methods.get(fqn);
-            if (col == null || col.size() == 1) {
-                boolean first = true;
-                for (VariableElement var : ((ExecutableElement) element).getParameters()) {
-                    if (!first) {
-                        fqnSB.append(", ");
-                    }
-                    fqnSB.append(info.getTypeUtilities().getTypeName(info.getTypes().erasure(var.asType())));
-                    first = false;
-                }
-            } else {
-                fqnSB.append("..."); // NOI18N
-            }
-            fqnSB.append(')'); // NOI18N
+            fqnSB.append("(...)"); // NOI18N
         }
         
         return fqnSB.toString();

@@ -156,6 +156,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.editor.indent</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>1.57</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.editor.lib</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -684,8 +693,8 @@
                 <binary-origin>external/org.eclipse.lsp4j.debug-0.12.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.xtend.lib.macro-2.19.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.xtend.lib.macro-2.19.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.xtend.lib.macro-2.24.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.xtend.lib.macro-2.24.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/org.eclipse.lsp4j.generator-0.12.0.jar</runtime-relative-path>
@@ -700,12 +709,12 @@
                 <binary-origin>external/org.eclipse.lsp4j.jsonrpc.debug-0.12.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.xtend.lib-2.19.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.xtend.lib-2.19.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.xtend.lib-2.24.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.xtend.lib-2.24.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.xtext.xbase.lib-2.19.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.xtext.xbase.lib-2.19.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.xtext.xbase.lib-2.24.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.xtext.xbase.lib-2.24.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/org.eclipse.lsp4j-0.12.0.jar</runtime-relative-path>

@@ -74,6 +74,7 @@ import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
+import org.eclipse.lsp4j.ConfigurationParams;
 import org.eclipse.lsp4j.CreateFile;
 import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Diagnostic;
@@ -289,6 +290,11 @@ public class ServerTest extends NbTestCase {
         @Override
         public void logMessage(MessageParams arg0) {
             loggedMessages.add(arg0);
+        }
+
+        @Override
+        public CompletableFuture<List<Object>> configuration(ConfigurationParams configurationParams) {
+            return CompletableFuture.completedFuture(null);
         }
     }
 
@@ -756,16 +762,7 @@ public class ServerTest extends NbTestCase {
                           "    line = 7\n" +
                           "    character = 5\n" +
                           "  ]\n" +
-                          "]:(Constructor:Inner:Range [\n" +
-                          "  start = Position [\n" +
-                          "    line = 4\n" +
-                          "    character = 4\n" +
-                          "  ]\n" +
-                          "  end = Position [\n" +
-                          "    line = 4\n" +
-                          "    character = 4\n" +
-                          "  ]\n" +
-                          "]:(), Method:innerMethod:Range [\n" +
+                          "]:(Method:innerMethod():Range [\n" +
                           "  start = Position [\n" +
                           "    line = 5\n" +
                           "    character = 8\n" +
@@ -774,16 +771,7 @@ public class ServerTest extends NbTestCase {
                           "    line = 6\n" +
                           "    character = 9\n" +
                           "  ]\n" +
-                          "]:()), Constructor:Test:Range [\n" +
-                          "  start = Position [\n" +
-                          "    line = 0\n" +
-                          "    character = 7\n" +
-                          "  ]\n" +
-                          "  end = Position [\n" +
-                          "    line = 0\n" +
-                          "    character = 7\n" +
-                          "  ]\n" +
-                          "]:(), Field:field:Range [\n" +
+                          "]:()), Field:field:Range [\n" +
                           "  start = Position [\n" +
                           "    line = 1\n" +
                           "    character = 4\n" +
@@ -792,7 +780,7 @@ public class ServerTest extends NbTestCase {
                           "    line = 1\n" +
                           "    character = 22\n" +
                           "  ]\n" +
-                          "]:(), Method:method:Range [\n" +
+                          "]:(), Method:method():Range [\n" +
                           "  start = Position [\n" +
                           "    line = 2\n" +
                           "    character = 4\n" +
@@ -1249,8 +1237,7 @@ public class ServerTest extends NbTestCase {
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
-        assertTrue(result.getCapabilities().getDocumentHighlightProvider().getLeft());
-        assertTrue(result.getCapabilities().getDocumentHighlightProvider().getLeft());
+        assertTrue(result.getCapabilities().getDocumentHighlightProvider().isLeft() && result.getCapabilities().getDocumentHighlightProvider().getLeft());
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
         assertHighlights(server.getTextDocumentService().documentHighlight(new DocumentHighlightParams(new TextDocumentIdentifier(toURI(src)), new Position(1, 13))).get(),
                          "<none>:2:21-2:31", "<none>:3:26-3:35", "<none>:4:13-4:22");
@@ -1300,8 +1287,7 @@ public class ServerTest extends NbTestCase {
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
-        assertTrue(result.getCapabilities().getHoverProvider().isLeft());
-        assertTrue(result.getCapabilities().getHoverProvider().getLeft());
+        assertTrue(result.getCapabilities().getHoverProvider().isLeft() && result.getCapabilities().getHoverProvider().getLeft());
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
         Hover hover = server.getTextDocumentService().hover(new HoverParams(new TextDocumentIdentifier(toURI(src)), new Position(5, 10))).get();
         assertNotNull(hover);
@@ -1372,17 +1358,17 @@ public class ServerTest extends NbTestCase {
         InitializeParams initParams = new InitializeParams();
         initParams.setRootUri(toURI(getWorkDir()));
         InitializeResult result = server.initialize(initParams).get();
-        indexingComplete.await();
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        indexingComplete.await();
 
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(toURI(src), 1);
         {
-            VersionedTextDocumentIdentifier id1 = new VersionedTextDocumentIdentifier(toURI(src), 1);
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id1, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 8), new Position(2, 8)), 0, "s."))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 8), new Position(2, 8)), 0, "s."))));
 
             Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(2, 8 + "s.".length()))).get();
             assertTrue(completion.isRight());
             Optional<CompletionItem> lengthItem = completion.getRight().getItems().stream().filter(ci -> "length() : int".equals(ci.getLabel())).findAny();
-            assertTrue(lengthItem.isPresent());
+            assertTrue("Expecting length field: " + completion.getRight().getItems(), lengthItem.isPresent());
             assertEquals(InsertTextFormat.PlainText, lengthItem.get().getInsertTextFormat());
             assertEquals("length()", lengthItem.get().getInsertText());
             Optional<CompletionItem> substringItem = completion.getRight().getItems().stream().filter(ci -> ci.getLabel().startsWith("substring(") && ci.getLabel().contains(",")).findAny();
@@ -1392,8 +1378,7 @@ public class ServerTest extends NbTestCase {
         }
 
         {
-            VersionedTextDocumentIdentifier id2 = new VersionedTextDocumentIdentifier(toURI(src), 1);
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(1, 1), new Position(1, 1)), 0, "@java.lang."))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(1, 1), new Position(1, 1)), 0, "@java.lang."))));
 
             Position afterJavaLang = new Position(1, 1 + "@java.lang.".length());
 
@@ -1406,7 +1391,7 @@ public class ServerTest extends NbTestCase {
                 assertEquals(CompletionItemKind.Folder, annotationItem.get().getKind());
             }
 
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(afterJavaLang, afterJavaLang), 0, "annotation."))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(afterJavaLang, afterJavaLang), 0, "annotation."))));
 
             Position afterJavaLangAnnotation = new Position(1, afterJavaLang.getCharacter() + "annotation.".length());
 
@@ -1420,7 +1405,7 @@ public class ServerTest extends NbTestCase {
                 assertEquals(CompletionItemKind.Interface, targetItem.get().getKind());
             }
 
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(afterJavaLangAnnotation, afterJavaLangAnnotation), 0, "Target("))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(afterJavaLangAnnotation, afterJavaLangAnnotation), 0, "Target("))));
 
             Position afterTarget = new Position(1, afterJavaLangAnnotation.getCharacter() + "Target(".length());
 
@@ -1440,7 +1425,7 @@ public class ServerTest extends NbTestCase {
                 assertEquals("\nimport java.lang.annotation.ElementType;\n\n", methodItem.get().getAdditionalTextEdits().get(0).getNewText());
             }
 
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 0), new Position(0, 0)), 0, "import java.lang.annotation.ElementType;"))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 0), new Position(0, 0)), 0, "import java.lang.annotation.ElementType;"))));
 
             {
                 //import already exists:
@@ -1508,12 +1493,12 @@ public class ServerTest extends NbTestCase {
         InitializeParams initParams = new InitializeParams();
         initParams.setRootUri(toURI(getWorkDir()));
         server.initialize(initParams).get();
-        indexingComplete.await();
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        indexingComplete.await();
 
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(toURI(src), 1);
         {
-            VersionedTextDocumentIdentifier id1 = new VersionedTextDocumentIdentifier(toURI(src), 1);
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id1, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 8), new Position(2, 8)), 0, "ArrayL"))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 8), new Position(2, 8)), 0, "ArrayL"))));
 
             Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(2, 8 + "ArrayL".length()))).get();
             assertTrue(completion.isRight());
@@ -1530,9 +1515,7 @@ public class ServerTest extends NbTestCase {
         }
 
         {
-            VersionedTextDocumentIdentifier id2 = new VersionedTextDocumentIdentifier(toURI(src), 1);
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 0), new Position(0, 0)), 0, "import java.util.ArrayList;\n"))));
-            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(3, 8), new Position(3, 8)), 0, "ArrayL"))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 0), new Position(0, 0)), 0, "import java.util.ArrayList;\n"))));
 
             Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(3, 8 + "ArrayL".length()))).get();
             assertTrue(completion.isRight());
@@ -3377,10 +3360,7 @@ public class ServerTest extends NbTestCase {
                      "        if (!Objects.equals(this.f1, other.f1)) {\n" +
                      "            return false;\n" +
                      "        }\n" +
-                     "        if (!Objects.equals(this.f2, other.f2)) {\n" +
-                     "            return false;\n" +
-                     "        }\n" +
-                     "        return true;\n" +
+                     "        return Objects.equals(this.f2, other.f2);\n" +
                      "    }\n",
                      fileChanges.get(0).getNewText());
     }
@@ -5702,6 +5682,7 @@ public class ServerTest extends NbTestCase {
             public void notifyProgress(ProgressParams params) {
                 //XXX: hardcoded getLeft()
                 assertEquals(token, params.getToken().getLeft());
+                assertTrue(params.getValue().isLeft());
                 if (params.getValue().getLeft() instanceof WorkDoneProgressReport) {
                     WorkDoneProgressReport rep = (WorkDoneProgressReport)params.getValue().getLeft();
                     perCent = Math.max(perCent, rep.getPercentage());

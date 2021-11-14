@@ -34,7 +34,7 @@ public class CheckRegexTest {
                         + "    }\n"
                         + "}\n")
                 .run(CheckRegex.class)
-                .assertWarnings("4:34-4:41:verifier:" + Bundle.ERR_CheckRegex());
+                .assertWarnings("4:34-4:41:hint:" + Bundle.ERR_CheckRegex());
     }
     
     @Test
@@ -48,7 +48,7 @@ public class CheckRegexTest {
                         + "    }\n"
                         + "}\n")
                 .run(CheckRegex.class)
-                .assertWarnings("4:34-4:41:verifier:" + Bundle.ERR_CheckRegex());
+                .assertWarnings("4:34-4:41:hint:" + Bundle.ERR_CheckRegex());
     }
     
 }

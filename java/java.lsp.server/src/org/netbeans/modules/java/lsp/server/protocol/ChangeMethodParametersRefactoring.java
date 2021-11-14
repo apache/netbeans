@@ -48,6 +48,7 @@ import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.editor.java.Utilities;
@@ -87,31 +88,27 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
         }
         info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
         int offset = getOffset(info, params.getRange().getStart());
-        String uri = Utils.toUri(info.getFileObject());
         Trees trees = info.getTrees();
         TreePath path = info.getTreeUtilities().pathFor(offset);
         Tree.Kind kind = null;
         while (path != null && (kind = path.getLeaf().getKind()) != Tree.Kind.METHOD && kind != Tree.Kind.METHOD_INVOCATION && kind != Tree.Kind.NEW_CLASS && kind != Tree.Kind.MEMBER_REFERENCE) {
             path = path.getParentPath();
         }
+        Element element = null;
+        FileObject elementSource = null;
         if (kind == Tree.Kind.METHOD_INVOCATION || kind == Tree.Kind.NEW_CLASS || kind == Tree.Kind.MEMBER_REFERENCE) {
-            Element element = trees.getElement(path);
+            element = trees.getElement(path);
             if (element == null || element.asType().getKind() == TypeKind.ERROR) {
                 return Collections.emptyList();
             }
-            ExecutableElement method = (ExecutableElement) element;
-            path = info.getTrees().getPath(method);
+            elementSource = SourceUtils.getFile(ElementHandle.create(element), info.getClasspathInfo());
         }
-        if (path == null) {
-            return Collections.emptyList();
-        }
-        Element element = trees.getElement(path);
-        if (!(element instanceof ExecutableElement)) {
+        if (elementSource == null) {
             return Collections.emptyList();
         }
         QuickPickItem elementItem = new QuickPickItem(createLabel(info, element, true));
         elementItem.setUserData(new ElementData(element));
-        return Collections.singletonList(createCodeAction(Bundle.DN_ChangeMethodParams(), CHANGE_METHOD_PARAMS_REFACTORING_KIND, CHANGE_METHOD_PARAMS_REFACTORING_COMMAND, uri, elementItem));
+        return Collections.singletonList(createCodeAction(Bundle.DN_ChangeMethodParams(), CHANGE_METHOD_PARAMS_REFACTORING_KIND, CHANGE_METHOD_PARAMS_REFACTORING_COMMAND, Utils.toUri(elementSource), elementItem));
     }
 
     @Override

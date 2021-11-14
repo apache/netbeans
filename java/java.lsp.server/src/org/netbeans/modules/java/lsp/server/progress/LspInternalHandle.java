@@ -222,8 +222,8 @@ public final class LspInternalHandle extends InternalHandle {
 
     void notify(WorkDoneProgressNotification msg) {
         findProgressToken().thenAccept(token -> {
-            LOG.log(Level.FINER, () -> 
-                    MessageFormat.format("Sending progress {0}, msg: {1}", 
+            LOG.log(Level.FINER, () ->
+                    MessageFormat.format("Sending progress {0}, msg: {1}",
                         id(), msg
                     )
             );

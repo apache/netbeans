@@ -234,11 +234,11 @@ public class ErrorDescriptionFactory {
     }
 
     static List<Fix> resolveDefaultFixes(HintContext ctx, Fix... provided) {
-        List<Fix> auxiliaryFixes = new LinkedList<Fix>();
+        List<Fix> auxiliaryFixes = new LinkedList<>();
         HintMetadata hm = SPIAccessor.getINSTANCE().getHintMetadata(ctx);
 
         if (hm != null) {
-            Set<String> suppressWarningsKeys = new LinkedHashSet<String>();
+            Set<String> suppressWarningsKeys = new LinkedHashSet<>();
 
             for (String key : hm.suppressWarnings) {
                 if (key == null || key.length() == 0) {
@@ -263,7 +263,7 @@ public class ErrorDescriptionFactory {
                 auxiliaryFixes.addAll(createSuppressWarnings(ctx.getInfo(), ctx.getPath(), suppressWarningsKeys.toArray(new String[0])));
             }
 
-            List<Fix> result = new LinkedList<Fix>();
+            List<Fix> result = new LinkedList<>();
 
             for (Fix f : provided != null ? provided : new Fix[0]) {
                 if (f == null) continue;
@@ -384,20 +384,17 @@ public class ErrorDescriptionFactory {
 
         @Override
         public ChangeInfo implement() throws Exception {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (transform) {
-                        final InspectAndTransformOpener o = Lookup.getDefault().lookup(InspectAndTransformOpener.class);
-
-                        if (o != null) {
-                            o.openIAT(metadata);
-                        } else {
-                            //warn
-                        }
+            SwingUtilities.invokeLater(() -> {
+                if (transform) {
+                    final InspectAndTransformOpener o = Lookup.getDefault().lookup(InspectAndTransformOpener.class);
+                    
+                    if (o != null) {
+                        o.openIAT(metadata);
                     } else {
-                        CodeAnalysis.open(WarningDescription.create("text/x-java:" + metadata.id, null, null, null));
+                        //warn
                     }
+                } else {
+                    CodeAnalysis.open(WarningDescription.create("text/x-java:" + metadata.id, null, null, null));
                 }
             });
             
@@ -517,6 +514,7 @@ public class ErrorDescriptionFactory {
             this.file = file;
         }
 
+        @Override
         public String getText() {
             StringBuilder keyNames = new StringBuilder();
             for (int i = 0; i < keys.length; i++) {
@@ -530,10 +528,12 @@ public class ErrorDescriptionFactory {
             return NbBundle.getMessage(ErrorDescriptionFactory.class, "LBL_FIX_Suppress_Waning",  keyNames.toString() );  // NOI18N
         }
 
+        @Override
         public ChangeInfo implement() throws IOException {
             JavaSource js = JavaSource.forFileObject(file);
 
             js.runModificationTask(new Task<WorkingCopy>() {
+                @Override
                 public void run(WorkingCopy copy) throws IOException {
                     copy.toPhase(Phase.RESOLVED); //XXX: performance
                     TreePath path = handle.resolve(copy);

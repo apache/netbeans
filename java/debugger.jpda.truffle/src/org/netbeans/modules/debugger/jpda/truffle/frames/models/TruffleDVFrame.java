@@ -21,6 +21,7 @@ package org.netbeans.modules.debugger.jpda.truffle.frames.models;
 import java.io.InvalidObjectException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.JPDAThread;
 import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
@@ -77,15 +78,18 @@ public final class TruffleDVFrame implements DVFrame {
             return null;
         }
         Source source = sourcePosition.getSource();
-        URI uri = source.getURI();
-        if (uri != null && "file".equalsIgnoreCase(uri.getScheme())) {
-            return uri;
+        URL url = source.getUrl();
+        URI uri;
+        if (url != null) {
+            try {
+                uri = url.toURI();
+            } catch (URISyntaxException ex) {
+                uri = source.getURI();
+            }
+        } else {
+            uri = source.getURI();
         }
-        try {
-            return source.getUrl().toURI();
-        } catch (URISyntaxException ex) {
-            return null;
-        }
+        return uri;
     }
 
     @Override

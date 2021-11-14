@@ -43,7 +43,7 @@ import org.openide.util.Utilities;
 public class GradleTestForSourceImpl implements MultipleRootsUnitTestForSourceQueryImplementation {
 
     private static final SourceType[] MAIN_SOURCES = new SourceType[]{
-        SourceType.JAVA, SourceType.GROOVY, SourceType.SCALA
+        SourceType.JAVA, SourceType.GROOVY, SourceType.SCALA, SourceType.KOTLIN
     };
 
     private final Project project;

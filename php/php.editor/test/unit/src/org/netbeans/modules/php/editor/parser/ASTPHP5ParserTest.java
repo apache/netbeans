@@ -1265,6 +1265,11 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php80/attributeSyntax_02");
     }
 
+    // [NETBEANS-6193] attributes of interface constants and methods
+    public void testAttributeSyntax_03() throws Exception {
+        performTest("parser/php80/attributeSyntax_03");
+    }
+
     public void testAttributeSyntaxError_01() throws Exception {
         performTest("parser/php80/attributeSyntaxError_01");
     }

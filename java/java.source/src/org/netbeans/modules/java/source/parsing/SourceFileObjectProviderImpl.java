@@ -38,11 +38,13 @@ public final class SourceFileObjectProviderImpl implements SourceFileObjectProvi
             @NonNull final AbstractSourceFileObject.Handle handle,
             @NullAllowed final JavaFileFilterImplementation filter,
             @NullAllowed final CharSequence content,
-            final boolean renderNow) throws IOException {
+            final boolean renderNow,
+            final boolean embedded) throws IOException {
         return new SourceFileObject (
             handle,
             filter,
             content,
-            renderNow);
+            renderNow,
+            embedded);
     }
 }

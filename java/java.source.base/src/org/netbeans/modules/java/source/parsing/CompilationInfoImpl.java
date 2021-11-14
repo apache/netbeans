@@ -121,8 +121,9 @@ public final class CompilationInfoImpl {
         this.snapshot = snapshot;
         this.partialReparseLastGoodSnapshot = new SoftReference<>(snapshot);
         assert file == null || snapshot != null;
+        boolean embedded = snapshot.getMimePath().size() > 1;
         this.jfo = file != null ?
-            FileObjects.sourceFileObject(file, root, JavaFileFilterQuery.getFilter(file), snapshot.getText()) :
+            FileObjects.sourceFileObject(file, root, JavaFileFilterQuery.getFilter(file), snapshot.getText(), embedded) :
             null;
         this.javacTask = javacTask;
         this.diagnosticListener = diagnosticListener;

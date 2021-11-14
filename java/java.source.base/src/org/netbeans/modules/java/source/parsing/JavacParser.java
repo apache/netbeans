@@ -119,6 +119,7 @@ import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.impl.Utilities;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
+import org.netbeans.modules.parsing.spi.ParserBasedEmbeddingProvider;
 import org.netbeans.modules.parsing.spi.ParserResultTask;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
 import org.openide.filesystems.FileObject;
@@ -429,7 +430,7 @@ public class JavacParser extends Parser {
                     if (sequentialParsing == null && ciImpl == null && oneInstanceJava) {
                         List<JavaFileObject> jfos = new ArrayList<>();
                         for (Snapshot s : snapshots) {
-                            jfos.add(FileObjects.sourceFileObject(s.getSource().getFileObject(), root, JavaFileFilterQuery.getFilter(s.getSource().getFileObject()), s.getText()));
+                            jfos.add(FileObjects.sourceFileObject(s.getSource().getFileObject(), root, JavaFileFilterQuery.getFilter(s.getSource().getFileObject()), s.getText(), false));
                         }
                         diagnosticListener = new CompilationInfoImpl.DiagnosticListenerImpl(this.root, jfos.get(0), this.cpInfo);
                         javacTask = JavacParser.createJavacTask(this.file, jfos, this.root, this.cpInfo,
@@ -466,6 +467,7 @@ public class JavacParser extends Parser {
 
         final boolean isJavaParserResultTask = task instanceof JavaParserResultTask;
         final boolean isParserResultTask = task instanceof ParserResultTask;
+        final boolean isParserBasedEmbeddingProvider = task instanceof ParserBasedEmbeddingProvider;
         final boolean isUserTask = task instanceof UserTask;
         final boolean isClasspathInfoProvider = task instanceof ClasspathInfo.Provider;
 
@@ -525,7 +527,7 @@ public class JavacParser extends Parser {
                 result = new JavacParserResult(JavaSourceAccessor.getINSTANCE().createCompilationInfo(ciImpl));
             }
         }
-        else if (isUserTask) {
+        else if (isUserTask || isParserBasedEmbeddingProvider) {
             result = new JavacParserResult(JavaSourceAccessor.getINSTANCE().createCompilationController(ciImpl));
         }
         else {
@@ -1070,7 +1072,7 @@ public class JavacParser extends Parser {
         }
         for (com.sun.tools.javac.code.Source source : sources) {
             if (source == com.sun.tools.javac.code.Source.lookup(sourceLevel)) {
-                if (DISABLE_SOURCE_LEVEL_DOWNGRADE || isModuleInfo) {
+                if (true || DISABLE_SOURCE_LEVEL_DOWNGRADE || isModuleInfo) {
                     return source;
                 }
                 if (source.compareTo(com.sun.tools.javac.code.Source.JDK1_4) >= 0) {

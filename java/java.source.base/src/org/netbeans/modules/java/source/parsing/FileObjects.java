@@ -357,7 +357,8 @@ public class FileObjects {
             new AbstractSourceFileObject.Handle(file, root),
             filter,
             null,
-            renderNow);
+            renderNow,
+            false);
     }
 
     /**
@@ -371,7 +372,7 @@ public class FileObjects {
      * @exception {@link IOException} may be thrown
      */
     public static AbstractSourceFileObject sourceFileObject (final FileObject file, final FileObject root,
-            final JavaFileFilterImplementation filter, final CharSequence content) throws IOException {
+            final JavaFileFilterImplementation filter, final CharSequence content, boolean embedded) throws IOException {
         assert file != null;
         if (!file.isValid() || file.isVirtual()) {
             throw new InvalidFileException (file);
@@ -380,7 +381,8 @@ public class FileObjects {
             new AbstractSourceFileObject.Handle(file, root),
             filter,
             content,
-            true);
+            true,
+            embedded);
     }
 
     /**
@@ -474,7 +476,7 @@ public class FileObjects {
             }
 
         };
-        return AbstractSourceFileObject.getFactory().createJavaFileObject(handle, null, null, false);
+        return AbstractSourceFileObject.getFactory().createJavaFileObject(handle, null, null, false, false);
     }
 
     /**

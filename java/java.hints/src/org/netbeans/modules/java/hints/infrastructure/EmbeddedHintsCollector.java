@@ -92,10 +92,10 @@ public class EmbeddedHintsCollector extends JavaParserResultTask<Parser.Result> 
             // I do not want the inner mimetype
             return;
         }
-        if (mySnapshot.getMimeType().equals("text/x-java")) {
-            // ignore toplevel java
-            return;
-        }
+//        if (mySnapshot.getMimeType().equals("text/x-java")) {
+//            // ignore toplevel java
+//            return;
+//        }
         try {
             synchronized (hints) {
                 for (Snapshot snap : hints.keySet()) {
@@ -108,7 +108,7 @@ public class EmbeddedHintsCollector extends JavaParserResultTask<Parser.Result> 
                 return;
             }
             if (allHints != null) {
-                HintsController.setErrors(result.getSnapshot().getSource().getDocument(false), "java-hints", allHints);
+                HintsController.setErrors(result.getSnapshot().getSource().getDocument(false), "java-hints-embedded", allHints);
             }
         } finally {
             synchronized (hints) {

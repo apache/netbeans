@@ -62,7 +62,8 @@ public class SourceFileObjectTest extends NbTestCase {
             new AbstractSourceFileObject.Handle(data, work),
             new FilterImplementation(doc),
             null,
-            true);
+            true,
+            false);
     }
     
     private static final class FilterImplementation implements JavaFileFilterImplementation {

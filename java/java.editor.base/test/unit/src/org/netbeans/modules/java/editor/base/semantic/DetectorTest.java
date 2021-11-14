@@ -794,6 +794,49 @@ public class DetectorTest extends TestBase {
                     "[PRIVATE, METHOD, DECLARATION], 17:25-17:29");
     }
 
+    public void testEmbedding() throws Exception {
+        setShowPrependedText(true); //XXX
+        performTest("Test.java",
+                    "package test;\n" +
+                    "public class Test {\n" +
+                    "    @Language(\"java\")\n" +
+                    "    private static final String I = \n" +
+                    "        \"\"\"\n" +
+                    "        public class Embedded {\n" + // 6
+                    "            int field;\n" +          // 7
+                    "            void method() {\n" +     // 8
+                    "                methodA();\n" +      // 9
+                    "            }\n" +                   //10
+                    "            void methodA() {\n" +    //11
+                    "            }\n" +                   //12
+                    "        }\n" +                       //13
+                    "        \"\"\";\n" +
+                    "    @interface Language {\n" +
+                    "         public String value();\n" +
+                    "    }\n" +
+                    "}\n",
+                    "[PUBLIC, CLASS, DECLARATION], 1:13-1:17",
+                    "[STATIC, PACKAGE_PRIVATE, ANNOTATION_TYPE], 2:5-2:13",
+                    "[PUBLIC, CLASS], 3:25-3:31",
+                    "[STATIC, PRIVATE, FIELD, UNUSED, DECLARATION], 3:32-3:33",
+                    "[PUBLIC, CLASS, DECLARATION], 5:21-5:29",
+                    "[UNINDENTED_TEXT_BLOCK], 5:8-5:31",
+                    "[PACKAGE_PRIVATE, FIELD, DECLARATION], 6:16-6:21",
+                    "[UNINDENTED_TEXT_BLOCK], 6:8-6:22",
+                    "[PACKAGE_PRIVATE, METHOD, DECLARATION], 7:17-7:23",
+                    "[UNINDENTED_TEXT_BLOCK], 7:8-7:27",
+                    "[PACKAGE_PRIVATE, METHOD], 8:16-8:23",
+                    "[UNINDENTED_TEXT_BLOCK], 8:8-8:26",
+                    "[UNINDENTED_TEXT_BLOCK], 9:8-9:13",
+                    "[PACKAGE_PRIVATE, METHOD, DECLARATION], 10:17-10:24",
+                    "[UNINDENTED_TEXT_BLOCK], 10:8-10:28",
+                    "[UNINDENTED_TEXT_BLOCK], 11:8-11:13",
+                    "[UNINDENTED_TEXT_BLOCK], 12:8-12:9",
+                    "[STATIC, PACKAGE_PRIVATE, ANNOTATION_TYPE, DECLARATION], 14:15-14:23",
+                    "[PUBLIC, CLASS], 15:16-15:22",
+                    "[ABSTRACT, PUBLIC, METHOD, DECLARATION], 15:23-15:28");
+    }
+
     public void testRawStringLiteralNETBEANS_5118() throws Exception {
         try {
             SourceVersion.valueOf("RELEASE_15");

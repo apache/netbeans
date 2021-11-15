@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.groovy.editor.api.completion;
 
+import org.junit.Before;
+
 /**
  *
  * @author Petr Pisl
@@ -29,8 +31,8 @@ public class PackageKeywordCCTest extends GroovyCCTestBase {
     }
 
     @Override
-    protected String getTestType() {
-        return "package";
+    protected String getTestType() { 
+       return "package";
     }
  
     public void testPackageKeyword01() throws Exception {
@@ -43,6 +45,10 @@ public class PackageKeywordCCTest extends GroovyCCTestBase {
     
     public void testPackageKeyword03() throws Exception {
         checkCompletion(BASE + "PackageKeyword03.groovy", "pac^", true);
+    }
+    
+    public void testPackagesCC01() throws Exception {
+        checkCompletion(BASE + "PackagesCC01.groovy", "package     /* a comment */              or^", true);
     }
     
 }

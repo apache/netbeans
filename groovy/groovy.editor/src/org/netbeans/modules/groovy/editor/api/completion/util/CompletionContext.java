@@ -316,6 +316,7 @@ public final class CompletionContext {
             // are we in the package statement?
             ts.move(position);  // back on the caret position
             boolean isPackageStatement = true;
+            boolean blockComment = false;
             int countOfWhitespaces = 0;
             while (ts.isValid() && ts.movePrevious() && ts.offset() >= 0 && isPackageStatement) {
                 Token<GroovyTokenId> t = ts.token();
@@ -323,11 +324,17 @@ public final class CompletionContext {
                     break;
                 } else if (t.id() == GroovyTokenId.WHITESPACE) {
                     countOfWhitespaces++;
+                } else if (t.id() == GroovyTokenId.BLOCK_COMMENT) {
+                    // cases: 
+                    //      package /* comment */ org.apache.something
+                    //      package /* comment */org.apache.something
+                    //      package/* comment */org.apache.something
+                    blockComment = true;
                 } else {
                     isPackageStatement = (t.id() == GroovyTokenId.DOT || t.id() == GroovyTokenId.IDENTIFIER);
                 }
             }
-            if (isPackageStatement && countOfWhitespaces == 1) {
+            if (isPackageStatement && (countOfWhitespaces == 1 || (blockComment && countOfWhitespaces < 3))) {
                 // we are just behind the package keyword
                 return CaretLocation.INSIDE_PACKAGE;
             }

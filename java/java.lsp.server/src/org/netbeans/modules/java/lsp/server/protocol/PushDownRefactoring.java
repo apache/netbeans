@@ -126,7 +126,7 @@ public final class PushDownRefactoring extends CodeRefactoring {
         }
         QuickPickItem elementItem = new QuickPickItem(createLabel(info, element));
         elementItem.setUserData(new ElementData(element));
-        return Collections.singletonList(createCodeAction(Bundle.DN_PushDown(), PUSH_DOWN_REFACTORING_KIND, PUSH_DOWN_REFACTORING_COMMAND, uri, elementItem, members));
+        return Collections.singletonList(createCodeAction(Bundle.DN_PushDown(), PUSH_DOWN_REFACTORING_KIND, null, PUSH_DOWN_REFACTORING_COMMAND, uri, elementItem, members));
     }
 
     @Override

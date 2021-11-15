@@ -98,9 +98,9 @@ public final class MoveRefactoring extends CodeRefactoring {
         if (element != null) {
             QuickPickItem elementItem = new QuickPickItem(createLabel(info, element));
             elementItem.setUserData(new ElementData(element));
-            return Collections.singletonList(createCodeAction(Bundle.DN_Move(), MOVE_REFACTORING_KIND, MOVE_REFACTORING_COMMAND, uri, elementItem));
+            return Collections.singletonList(createCodeAction(Bundle.DN_Move(), MOVE_REFACTORING_KIND, null, MOVE_REFACTORING_COMMAND, uri, elementItem));
         } else {
-            return Collections.singletonList(createCodeAction(Bundle.DN_Move(), MOVE_REFACTORING_KIND, MOVE_REFACTORING_COMMAND, uri));
+            return Collections.singletonList(createCodeAction(Bundle.DN_Move(), MOVE_REFACTORING_KIND, null, MOVE_REFACTORING_COMMAND, uri));
         }
     }
 

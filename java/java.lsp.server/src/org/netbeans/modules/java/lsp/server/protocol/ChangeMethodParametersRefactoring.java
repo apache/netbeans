@@ -108,7 +108,7 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
         }
         QuickPickItem elementItem = new QuickPickItem(createLabel(info, element, true));
         elementItem.setUserData(new ElementData(element));
-        return Collections.singletonList(createCodeAction(Bundle.DN_ChangeMethodParams(), CHANGE_METHOD_PARAMS_REFACTORING_KIND, CHANGE_METHOD_PARAMS_REFACTORING_COMMAND, Utils.toUri(elementSource), elementItem));
+        return Collections.singletonList(createCodeAction(Bundle.DN_ChangeMethodParams(), CHANGE_METHOD_PARAMS_REFACTORING_KIND, null, CHANGE_METHOD_PARAMS_REFACTORING_COMMAND, Utils.toUri(elementSource), elementItem));
     }
 
     @Override

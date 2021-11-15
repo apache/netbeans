@@ -134,7 +134,7 @@ public final class SurroundWithHint extends CodeActionsProvider {
                         snippet = sb.append(snippet).toString();
                     }
                     int idx = label.indexOf(' ');
-                    CodeAction codeAction = createCodeAction(Bundle.DN_SurroundWith(idx < 0 ? label : label.substring(0, idx)), CodeActionKind.RefactorRewrite, COMMAND_INSERT_SNIPPET, Collections.singletonMap(SNIPPET, snippet));
+                    CodeAction codeAction = createCodeAction(Bundle.DN_SurroundWith(idx < 0 ? label : label.substring(0, idx)), CodeActionKind.RefactorRewrite, null, COMMAND_INSERT_SNIPPET, Collections.singletonMap(SNIPPET, snippet));
                     if (!edits.isEmpty()) {
                         codeAction.setEdit(new WorkspaceEdit(Collections.singletonMap(params.getTextDocument().getUri(), edits)));
                     }
@@ -146,19 +146,9 @@ public final class SurroundWithHint extends CodeActionsProvider {
             }
         }
         if (items.size() > codeActions.size()) {
-            codeActions.add(createCodeAction(Bundle.DN_SurroundWithAll(), CodeActionKind.RefactorRewrite, COMMAND_SURROUND_WITH, items));
+            codeActions.add(createCodeAction(Bundle.DN_SurroundWithAll(), CodeActionKind.RefactorRewrite, null, COMMAND_SURROUND_WITH, items));
         }
         return codeActions;
-    }
-
-    @Override
-    public Set<String> getCommands() {
-        return Collections.emptySet();
-    }
-
-    @Override
-    public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-        return CompletableFuture.completedFuture(false);
     }
 
     private static Collection<? extends CodeTemplateFilter> getTemplateFilters(Document doc, int startOffset, int endOffset) {

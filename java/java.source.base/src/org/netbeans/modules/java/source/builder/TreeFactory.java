@@ -280,6 +280,7 @@ public class TreeFactory {
         }
     }
     
+
     public CaseTree CaseMultiplePatterns(List<? extends Tree> expressions, List<? extends StatementTree> statements) {
         ListBuffer<JCStatement> lb = new ListBuffer<JCStatement>();
         for (StatementTree t : statements)

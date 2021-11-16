@@ -1,5 +1,6 @@
 Name: Javac Compiler Implementation
 Description: Javac Compiler Implementation
+Files: nb-javac-jdk-17+35-api.jar nb-javac-jdk-17+35.jar
 Version: jdk-17+35
 License: GPL-2-CP
 Origin: OpenJDK (https://github.com/openjdk/jdk17)

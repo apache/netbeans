@@ -1,11 +1,12 @@
-Name: Javac Compiler API
-Description: Javac Compiler API
+Name: Javac Compiler Implementation
+Description: Javac Compiler Implementation
 Version: jdk-17+35
+Files: nb-javac-jdk-17+35-api.jar nb-javac-jdk-17+35.jar
 License: GPL-2-CP
 Origin: OpenJDK (https://github.com/openjdk/jdk17)
 Source: https://github.com/openjdk/jdk17
-Type: optional
-Comment: Used at design time to compile against; optional at runtime.
+Type: optional,reviewed
+Comment: The binary has been reviewed to be under the Classpath Exception as a whole. Optional at runtime, but used by default.
 
 The GNU General Public License (GPL)
 

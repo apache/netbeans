@@ -321,9 +321,10 @@ public class VerifyLibsAndLicenses extends Task {
                 String license = headers.get("License");
                 if (license != null) {
                     if (license.contains("GPL")) {
-                        if (headers.getOrDefault("Type", "").contains("compile-time")) {
+                        String type = headers.getOrDefault("Type", "");
+                        if (type.contains("compile-time") || type.contains("reviewed")) {
                             // GPL dependencies are ok as build/compile time dependencies
-                            // but not ok, as a runtime dependency
+                            // or if they are explicitly reviewed
                             if (!headers.containsKey("Comment")) {
                                 msg.append("\n" + path + " has a GPL-family license but does not have a Comment.");
                             }

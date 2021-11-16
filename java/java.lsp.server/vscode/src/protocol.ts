@@ -22,7 +22,8 @@ import * as vscode from 'vscode';
 import {
     ProtocolNotificationType,
     ProtocolRequestType,
-    ShowMessageParams
+    ShowMessageParams,
+    NotificationType
 } from 'vscode-languageclient';
 import {
     Position,
@@ -41,7 +42,7 @@ export interface HtmlPageParams {
 }
 
 export namespace HtmlPageRequest {
-    export const type = new NotificationType<HtmlPageParams, void>('window/showHtmlPage');
+    export const type = new NotificationType<HtmlPageParams>('window/showHtmlPage');
 };
 
 export namespace StatusMessageRequest {

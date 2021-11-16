@@ -147,6 +147,8 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.api.sendopts.CommandLine;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.infrastructure.JavaErrorProvider;
+import org.netbeans.modules.java.lsp.server.refactoring.ChangeMethodParameterUI;
+import org.netbeans.modules.java.lsp.server.ui.MockHtmlViewer;
 import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.parsing.impl.indexing.implspi.CacheFolderProvider;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
@@ -5047,7 +5049,8 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public void showHtmlPage(HtmlPageParams params) {
-                throw new UnsupportedOperationException();
+                ChangeMethodParameterUI ui = MockHtmlViewer.assertDialogShown(params.getUri(), ChangeMethodParameterUI.class);
+                ui.doRefactoring();
             }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();

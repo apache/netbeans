@@ -701,6 +701,13 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                         enableScripts: true,
                     });
                     view.webview.html = data.replace("<head>", `<head><base href="${url}">`);
+                    view.webview.onDidReceiveMessage(message => {
+                        switch (message.command) {
+                            case 'dispose':
+                                view.dispose();
+                                break;
+                        }
+                    });
                 });
             });
             request.on('error', function(e: any) {

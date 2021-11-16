@@ -895,8 +895,10 @@ public final class Server {
             logWarning(message);
         }
     };
-    
-    
+
+
+    private static boolean groovyClassWarningLogged;
+
     /**
      * Hacky way to enable or disable Groovy support. Since it is hack, it will disable Groovy for the whole NBJLS, not just a specific client / project. Should
      * be revisited after NetBeans 12.5, after Groovy parsing improves
@@ -910,7 +912,10 @@ public final class Server {
             m.setAccessible(true);
             m.invoke(null, b);
         } catch (ReflectiveOperationException ex) {
-            LOG.log(Level.WARNING, "Unable to configure Groovy support", ex);
+            if (!groovyClassWarningLogged) {
+                groovyClassWarningLogged = true;
+                LOG.log(Level.WARNING, "Unable to configure Groovy support", ex);
+            }
         }
     }
 }

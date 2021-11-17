@@ -772,7 +772,9 @@ public class JavacParser extends Parser {
                         compiler.todo.offer(env);
                     }
                 }
-                currentPhase = Phase.RESOLVED;
+                if (!lowMemoryCancel.get()) {
+                    currentPhase = Phase.RESOLVED;
+                }
                 long end = System.currentTimeMillis ();
                 logTime(currentInfo.getFileObject(),currentPhase,(end-start));
             }
@@ -780,10 +782,7 @@ public class JavacParser extends Parser {
                 currentPhase = Phase.UP_TO_DATE;
             }
         } catch (CancelAbort ca) {
-            if (lowMemoryCancel.get()) {
-                currentInfo.markIncomplete();
-                HUGE_SNAPSHOTS.add(new WeakReference<>(snapshots));
-            } else {
+            if (!lowMemoryCancel.get()) {
                 //real cancel
                 currentPhase = Phase.MODIFIED;
                 invalidate(false);
@@ -791,10 +790,7 @@ public class JavacParser extends Parser {
         } catch (Abort abort) {
             parserError = currentPhase;
         } catch (RuntimeException | Error ex) {
-            if (lowMemoryCancel.get()) {
-                currentInfo.markIncomplete();
-                HUGE_SNAPSHOTS.add(new WeakReference<>(snapshots));
-            } else {
+            if (!lowMemoryCancel.get()) {
                 if (cancellable && parserCanceled.get()) {
                     currentPhase = Phase.MODIFIED;
                     invalidate(false);
@@ -805,6 +801,10 @@ public class JavacParser extends Parser {
                 }
             }
         } finally {
+            if (lowMemoryCancel.get()) {
+                currentInfo.markIncomplete();
+                HUGE_SNAPSHOTS.add(new WeakReference<>(snapshots));
+            }
             currentInfo.setPhase(currentPhase);
             currentInfo.parserCrashed = parserError;
         }

@@ -35,9 +35,28 @@
         </uptodate>
     </target>
     <target name="-copy-gradle-wrapper" depends="projectized-common.-release.files" unless="have.gradle.wrapper">
-        <copy file="external/gradle-wrapper-4.10.2.jar" tofile="${tooling}/gradle/wrapper/gradle-wrapper.jar"/>
+        <copy file="external/gradle-wrapper.jar" tofile="${tooling}/gradle/wrapper/gradle-wrapper.jar"/>
     </target>
 
+    <target name="-download.release.files" depends="basic-init">
+        <mkdir dir="external"/>
+        <get src="${gradle.distributionUrl}/gradle-${gradle.version}-bin.zip" dest="external/gradle-bin.zip" skipexisting="true"/>
+        <checksum file="external/gradle-bin.zip" algorithm="SHA-256" property="${gradle.checksum}" verifyproperty="gradle.checksum.valid"/>
+        <fail message="external/gradle-bin.zip does not match the expected checksum: ${gradle.checksum}" unless="${gradle.checksum.valid}"/>
+        <unzip src="external/gradle-bin.zip" dest="external">
+            <patternset>
+                <include name="gradle-${gradle.version}/lib/gradle-wrapper-${gradle.version}.jar"/>
+            </patternset>
+            <flattenmapper/>
+        </unzip>
+        <unzip src="external/gradle-wrapper-${gradle.version}.jar" dest="external">
+            <patternset>
+                <include name="gradle-wrapper.jar"/>
+            </patternset>
+            <flattenmapper/>
+        </unzip>
+    </target> 
+    
     <target name="build-tooling-lib" depends="-download.release.files,-copy-gradle-wrapper,-uptodate-tooling" unless="tooling.uptodate">
         <java fork="true" dir="${tooling}" classpath="${tooling}/gradle/wrapper/gradle-wrapper.jar" classname="org.gradle.wrapper.GradleWrapperMain" failonerror="true">
             <sysproperty key="org.gradle.appname" value="Gradle"/>

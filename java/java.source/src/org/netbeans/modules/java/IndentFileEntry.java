@@ -153,9 +153,9 @@ public abstract class IndentFileEntry extends FileEntry.Format {
             r.close ();
         }
         // copy attributes
-        FileUtil.copyAttributes (getFile (), fo);
-	// hack to overcome package-private modifier in setTemplate(fo, boolean)
-        fo.setAttribute(DataObject.PROP_TEMPLATE, null);
+        FileUtil.copyAttributes (getFile (), fo, (n, v) -> {
+            return DataObject.PROP_TEMPLATE.equals(n) ? null : FileUtil.defaultAttributesTransformer().apply(n, v);
+        });
         return fo;
     }
     

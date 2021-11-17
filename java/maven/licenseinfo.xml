@@ -79,4 +79,10 @@
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/maven/resources/AppTest.java.template</file>
+        <file>src/org/netbeans/modules/maven/resources/App.java.template</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="TEMPLATE_MINIMAL_IP"/>
+    </fileset>
 </licenseinfo>

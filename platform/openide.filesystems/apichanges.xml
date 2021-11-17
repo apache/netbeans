@@ -25,6 +25,18 @@
         <apidef name="filesystems">Filesystems API</apidef>
     </apidefs>
     <changes>
+        <change id="fileutil.copyattr.trasnform">
+            <api name="filesystems"/>
+            <summary>Allow to filter or transform attribute values during copying.</summary>
+            <version major="9" minor="27"/>
+            <date day="2" month="11" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                <a href="@TOP@/org/openide/filesystems/FileUtil.html#">FileUtil.copyAttributes</a> support custom filtering or value transformations.
+            </description>
+            <class name="FileUtil" package="org.openide.filesystems"/>
+        </change>
         <change>
             <api name="filesystems"/>
             <summary>Utility to check valid filenames</summary>

@@ -1,3 +1,12 @@
+Name: Gradle
+Description: Gradle Build System
+Version: 7.3
+License: Gradle
+Origin: Gradle Inc.
+URL: https://gradle.org/
+Type: compile-time
+Comment: The library must not be redistributed in its bundled form, as it contains libraries with a mix of licenses
+
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/

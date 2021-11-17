@@ -102,7 +102,7 @@ public class NetBeansToolingPlugin implements Plugin<Project> {
                 ret.setGradleException(sw.toString());
 
                 Throwable cause = ex;
-                while ((cause != null) || (cause.getCause() != cause)) {
+                while ((cause != null) && (cause.getCause() != cause)) {
                     if (cause instanceof GradleException) {
                         ret.noteProblem((GradleException) cause);
                         break;

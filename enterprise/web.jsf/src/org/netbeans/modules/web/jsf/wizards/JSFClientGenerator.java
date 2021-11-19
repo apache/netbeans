@@ -1070,7 +1070,12 @@ public class JSFClientGenerator {
         StringBuilder getAsStringBody = new StringBuilder();
         getAsStringBody.append("if (object == null) {\n return null;\n }\nif(object instanceof ").append(entityReferenceName).append(") {\n").append(entityReferenceName).append(" o = (").append(entityReferenceName).append(") object;\n");
         if (embeddable[0]) {
-            getAsStringBody.append(idPropertyType[0]).append(" id  = o.").append(idGetterName[0]).append("();\nif (id == null) {\nreturn \"\";\n}\nString delim = \"#\";\nString escape = \"~\";\n\n");
+            getAsStringBody.append(idPropertyType[0]).append(" id  = o.").append(idGetterName[0]).append("();\n")
+                    .append("if (id == null) {\n")
+                    .append("return \"\";\n")
+                    .append("}\n")
+                    .append("String delim = \"#\";\n")
+                    .append("String escape = \"~\";\n\n");
             for(int i = 0; i < paramSetters.size(); i++) {
                 MethodModel setter = paramSetters.get(i);
                 String propName = JpaControllerUtil.getPropNameFromMethod(setter.getName());

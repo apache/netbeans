@@ -1020,7 +1020,29 @@ public class JSFClientGenerator {
                 getIdBody.append(idPropertyType[0]).append(" id;\n");//do not initialize, user need to update code and may be use not default constructor
             }
 
-            getIdBody.append("String params[] = new String[").append(params).append("];\nint p = 0;\nint grabStart = 0;\nString delim = \"#\";\nString escape = \"~\";\nPattern pattern = Pattern.compile(escape + \"*\" + delim);\nMatcher matcher = pattern.matcher(string);\nwhile (matcher.find()) {\nString found = matcher.group();\nif (found.length() % 2 == 1) {\nparams[p] = string.substring(grabStart, matcher.start());\np++;\ngrabStart = matcher.end();\n}\n}\nif (p != params.length - 1) {\nthrow new IllegalArgumentException(\"string \" + string + \" is not in expected format. expected ").append(params).append(" ids delimited by \" + delim);\n}\nparams[p] = string.substring(grabStart);\nfor (int i = 0; i < params.length; i++) {\nparams[i] = params[i].replace(escape + delim, delim);\nparams[i] = params[i].replace(escape + escape, escape);\n}\n\n");
+            getIdBody.append("String params[] = new String[").append(params).append("];\n")
+                    .append("int p = 0;\n")
+                    .append("int grabStart = 0;\n")
+                    .append("String delim = \"#\";\n")
+                    .append("String escape = \"~\";\n")
+                    .append("Pattern pattern = Pattern.compile(escape + \"*\" + delim);\n")
+                    .append("Matcher matcher = pattern.matcher(string);\n")
+                    .append("while (matcher.find()) {\n")
+                    .append("String found = matcher.group();\n")
+                    .append("if (found.length() % 2 == 1) {\n")
+                    .append("params[p] = string.substring(grabStart, matcher.start());\n")
+                    .append("p++;\n")
+                    .append("grabStart = matcher.end();\n")
+                    .append("}\n")
+                    .append("}\n")
+                    .append("if (p != params.length - 1) {\n")
+                    .append("throw new IllegalArgumentException(\"string \" + string + \" is not in expected format. expected ").append(params).append(" ids delimited by \" + delim);\n")
+                    .append("}\n")
+                    .append("params[p] = string.substring(grabStart);\n")
+                    .append("for (int i = 0; i < params.length; i++) {\n")
+                    .append("params[i] = params[i].replace(escape + delim, delim);\n")
+                    .append("params[i] = params[i].replace(escape + escape, escape);\n")
+                    .append("}\n\n");
             for (int i = 0; i < paramSetters.size(); i++) {
                 MethodModel setter = paramSetters.get(i);
                 String type = setter.getParameters().get(0).getType();

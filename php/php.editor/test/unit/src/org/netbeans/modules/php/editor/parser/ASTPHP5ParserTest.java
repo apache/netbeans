@@ -1302,6 +1302,23 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php80/namedArgumentsWithAttribute_01");
     }
 
+    // [NETBEANS-5599] PHP 8.1
+    public void testFinalClassConstants_01() throws Exception {
+        performTest("parser/php81/finalClassConstants_01");
+    }
+
+    public void testFinalClassConstantsWithAttributes_01() throws Exception {
+        performTest("parser/php81/finalClassConstantsWithAttributes_01");
+    }
+
+    public void testFinalClassMethods_01() throws Exception {
+        performTest("parser/finalClassMethods_01");
+    }
+
+    public void testFinalTraitMethods_01() throws Exception {
+        performTest("parser/finalTraitMethods_01");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

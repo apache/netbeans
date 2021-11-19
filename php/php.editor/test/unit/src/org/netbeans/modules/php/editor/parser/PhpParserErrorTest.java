@@ -1228,4 +1228,22 @@ public class PhpParserErrorTest extends PHPTestBase {
     public void testNamedArgumentsWithAttribute_01() throws Exception {
         checkErrors("testfiles/parser/php80/namedArgumentsWithAttribute_01.php");
     }
+
+    // [NETBEANS-5599] PHP 8.1
+    public void testFinalClassConstants_01() throws Exception {
+        checkErrors("testfiles/parser/php81/finalClassConstants_01.php");
+    }
+
+    public void testFinalClassConstantsWithAttributes_01() throws Exception {
+        checkErrors("testfiles/parser/php81/finalClassConstantsWithAttributes_01.php");
+    }
+
+    public void testFinalClassMethods_01() throws Exception {
+        checkErrors("testfiles/parser/finalClassMethods_01.php");
+    }
+
+    public void testFinalTraitMethods_01() throws Exception {
+        checkErrors("testfiles/parser/finalTraitMethods_01.php");
+    }
+
 }

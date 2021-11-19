@@ -585,6 +585,8 @@ non terminal List isset_variables;
 non terminal Expression isset_variable;
 non terminal Variable tracked_variable;
 non terminal Variable optional_tracked_variable;
+non terminal Integer abstract_modifier;
+non terminal Integer final_modifier;
 non terminal Integer static_modifier;
 non terminal Integer ppp_modifiers;
 non terminal Integer af_modifiers;
@@ -2926,6 +2928,27 @@ constant_modifiers ::=
 {:
     RESULT = modifier;
 :}
+
+| final_modifier:modifier
+{:
+    RESULT = modifier;
+:}
+
+| final_modifier:fModifier ppp_modifiers:pModifier
+{:
+    int result = 0;
+    result |= fModifier.intValue();
+    result |= pModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| ppp_modifiers:pModifier final_modifier:fModifier
+{:
+    int result = 0;
+    result |= pModifier.intValue();
+    result |= fModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
 ;
 
 variable_modifiers ::=
@@ -3022,7 +3045,15 @@ method_modifiers ::=
     RESULT = Integer.valueOf(result);
 :}
 
-| af_modifiers:fModifier ppp_modifiers:sModifier
+| abstract_modifier:aModifier ppp_modifiers:sModifier
+{:
+    int result = 0;
+    result |= aModifier.intValue();
+    result |= sModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| final_modifier:fModifier ppp_modifiers:sModifier
 {:
     int result = 0;
     result |= fModifier.intValue();
@@ -3075,13 +3106,36 @@ method_modifiers ::=
     RESULT = Integer.valueOf(result);
 :}
 
-| af_modifiers:fModifier ppp_modifiers:sModifier static_modifier:tModifier
+| abstract_modifier:aModifier ppp_modifiers:sModifier static_modifier:tModifier
+{:
+    int result = 0;
+    result |= aModifier.intValue();
+    result |= sModifier.intValue();
+    result |= tModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| final_modifier:fModifier ppp_modifiers:sModifier static_modifier:tModifier
 {:
     int result = 0;
     result |= fModifier.intValue();
     result |= sModifier.intValue();
     result |= tModifier.intValue();
     RESULT = Integer.valueOf(result);
+:}
+;
+
+abstract_modifier ::=
+T_ABSTRACT
+{:
+    RESULT = ASTPHP5Parser.ABSTRACT;
+:}
+;
+
+final_modifier ::=
+T_FINAL
+{:
+    RESULT = ASTPHP5Parser.FINAL;
 :}
 ;
 
@@ -3110,14 +3164,14 @@ T_PUBLIC
 ;
 
 af_modifiers ::=
-T_ABSTRACT
+abstract_modifier:modifier
 {:
-    RESULT = ASTPHP5Parser.ABSTRACT;
+    RESULT = modifier;
 :}
 
-| T_FINAL
+| final_modifier:modifier
 {:
-    RESULT = ASTPHP5Parser.FINAL;
+    RESULT = modifier;
 :}
 ;
 

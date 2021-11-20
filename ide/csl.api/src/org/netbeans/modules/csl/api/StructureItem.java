@@ -42,11 +42,26 @@ public interface StructureItem {
     long getEndPosition();
     /** Icon to use instead of the default implied by the ElementKind */
     @CheckForNull ImageIcon getCustomIcon();
-    
+
     @Override
     public abstract boolean equals(Object o);
     @Override
     public abstract int hashCode();
+
+    /**
+     * Check whether the StructureItem is an inherited item.
+     *
+     * @since 2.72.0
+     * @param structureItem the structure item
+     * @return {@code true} if it is an inherited item (a class doesn't override
+     * that member), otherwise {@code false} (a class declares it as an
+     * overriding member)
+     */
+    public static boolean isInherited(StructureItem structureItem) {
+        // see also http://wiki.apidesign.org/wiki/ExtendingInterfaces
+        return structureItem instanceof StructureItem.InheritedItem
+                && ((StructureItem.InheritedItem) structureItem).isInherited();
+    }
 
     public interface CollapsedDefault extends StructureItem {
 
@@ -60,4 +75,25 @@ public interface StructureItem {
 
     }
 
+    public interface InheritedItem extends StructureItem {
+
+        /**
+         * Check whether this StructureItem is an inherited item.
+         *
+         * @since 2.72.0
+         * @return {@code true} if it is an inherited item (a class doesn't
+         * override that member), otherwise {@code false} (a class declares it
+         * as an overriding member)
+         */
+        boolean isInherited();
+
+        /**
+         * Get the declaring element handle. e.g. class
+         *
+         * @since 2.72.0
+         * @return the declaring element handle of the inherited item
+         */
+        @NonNull
+        ElementHandle getDeclaringElement();
+    }
 }

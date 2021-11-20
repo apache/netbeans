@@ -147,8 +147,8 @@ class TraitScopeImpl extends TypeScopeImpl implements TraitScope, VariableNameFa
         sb.append(getName()).append(Signature.ITEM_DELIMITER);
         sb.append(getOffset()).append(Signature.ITEM_DELIMITER);
         NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(this);
-        assert namespaceScope != null;
-        QualifiedName qualifiedName = namespaceScope.getQualifiedName();
+        // if inScope is IndexScope, namespaceScope is null
+        QualifiedName qualifiedName = namespaceScope != null ? namespaceScope.getQualifiedName() : QualifiedName.create(""); // NOI18N
         sb.append(qualifiedName.toString()).append(Signature.ITEM_DELIMITER);
         if (!usedTraits.isEmpty()) {
             StringBuilder traitSb = new StringBuilder();

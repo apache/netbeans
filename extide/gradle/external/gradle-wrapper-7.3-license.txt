@@ -1,9 +1,10 @@
 Name: Gradle Wrapper
 Description: Gradle Wrapper
-Version: 4.10.2
+Version: 7.3
 License: Apache-2.0
 Origin: Gradle Inc.
 URL: https://gradle.org/
+Type: generated
 
                                  Apache License
                            Version 2.0, January 2004

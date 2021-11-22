@@ -17,76 +17,83 @@
  * under the License.
  */
 
-package org.netbeans.modules.gradle.tooling
+package org.netbeans.modules.gradle.tooling;
 
-import java.lang.Iterable
-import org.gradle.api.Plugin
-import org.gradle.api.Project
-import org.gradle.api.tasks.JavaExec
-import org.gradle.process.CommandLineArgumentProvider
+import java.util.ArrayList;
+import java.util.Arrays;
+import static java.util.Arrays.asList;
+import java.util.Map;
+import org.gradle.api.Plugin;
+import org.gradle.api.Project;
+import org.gradle.api.tasks.JavaExec;
+import org.gradle.api.tasks.SourceSet;
+import org.gradle.process.CommandLineArgumentProvider;
 
 /**
  *
  * @author Laszlo Kishalmi
  */
 class NetBeansRunSinglePlugin implements Plugin<Project> {
-    
-    static String RUN_SINGLE_TASK = "runSingle"
-    static String RUN_SINGLE_MAIN = "runClassName"
-    static String RUN_SINGLE_ARGS = "runArgs"
-    static String RUN_SINGLE_JVM_ARGS = "runJvmArgs"
-    static String RUN_SINGLE_CWD = "runWorkingDir"
-    static String RUN_SINGLE_ENV = "runEnvironment"
-    
-    void apply(Project project) {
-        project.afterEvaluate {
-            if (project.plugins.hasPlugin('java') 
-                && (project.tasks.findByPath(RUN_SINGLE_TASK) == null)
-                && project.hasProperty(RUN_SINGLE_MAIN)) {
-                
-                addTask(project)
+
+    private static final String RUN_SINGLE_TASK = "runSingle";
+    private static final String RUN_SINGLE_MAIN = "runClassName";
+    private static final String RUN_SINGLE_ARGS = "runArgs";
+    private static final String RUN_SINGLE_JVM_ARGS = "runJvmArgs";
+    private static final String RUN_SINGLE_CWD = "runWorkingDir";
+    private static final String RUN_SINGLE_ENV = "runEnvironment";
+
+    @Override
+    public void apply(Project project) {
+        project.afterEvaluate(p -> {
+            if (p.getPlugins().hasPlugin("java") 
+                    && (project.getTasks().findByPath(RUN_SINGLE_TASK) == null)
+                    && project.hasProperty(RUN_SINGLE_CWD)){
+                addTask(p);
             }
-            if (project.hasProperty(RUN_SINGLE_JVM_ARGS)) {
-                project.tasks.withType(JavaExec).configureEach { je ->
-                    je.jvmArgumentProviders.add(new CommandLineArgumentProvider() {
-                        public Iterable<String> asArguments() {
-                            return project.getProperty(RUN_SINGLE_JVM_ARGS).tokenize(' ')
-                        }
-                    })
-                }
+            if(p.hasProperty(RUN_SINGLE_JVM_ARGS)) {
+                p.getTasks().withType(JavaExec.class).configureEach(je -> {
+                    je.getJvmArgumentProviders().add(() -> {
+                        return asList(p.property(RUN_SINGLE_JVM_ARGS).toString().split(" "));
+                    });
+                });
             }
-        }
+        });
     }
 
-    void addTask(Project project) {
-        def runSingle = project.tasks.create(RUN_SINGLE_TASK, JavaExec) {
-            main = project.getProperty(RUN_SINGLE_MAIN)
-            classpath = project.sourceSets.main.runtimeClasspath
-            standardInput = System.in
-                    
-            if (project.hasProperty(RUN_SINGLE_ARGS)) {
-                args = project.getProperty(RUN_SINGLE_ARGS).tokenize(' ')
-            }
-            if (project.hasProperty(RUN_SINGLE_CWD)) {
-                workingDir = project.getProperty(RUN_SINGLE_CWD)
-            }
-            if (project.hasProperty(RUN_SINGLE_ENV)) {
-                // Quoted space-separated expressions of <ENV_VAR>=<ENV_VALUE>
-                // to set environment variables, or !<ENV_VAR>
-                // to remove environment variables
-                unescapeParameters(project.getProperty(RUN_SINGLE_ENV)).each {
-                    env ->
+    private void addTask(Project project) {
+        Map<String,SourceSet> sourceSets = (Map<String,SourceSet>) project.property("sourceSets");
+
+        JavaExec je = new JavaExec();
+        je.setMain(project.property(RUN_SINGLE_MAIN).toString());
+        je.setClasspath(sourceSets.get("main").getRuntimeClasspath());
+        je.setStandardInput(System.in);
+
+        if (project.hasProperty(RUN_SINGLE_ARGS)) {
+            je.setArgs(asList(project.property(RUN_SINGLE_ARGS).toString().split(" ")));
+        }
+
+        if(project.hasProperty(RUN_SINGLE_CWD)) {
+            je.setWorkingDir(project.property(RUN_SINGLE_CWD).toString());
+        }
+
+        if (project.hasProperty(RUN_SINGLE_ENV)) {
+            // Quoted space-separated expressions of <ENV_VAR>=<ENV_VALUE>
+            // to set environment variables, or !<ENV_VAR>
+            // to remove environment variables
+            Arrays.stream(unescapeParameters(project.property(RUN_SINGLE_ENV).toString()))
+                    .forEach(env -> {
                         if (env.startsWith("!")) {
-                            environment.remove(env.substring(1))
+                            je.getEnvironment().remove(env);
                         } else {
-                            def i = env.indexOf("=")
+                            int i = env.indexOf("=");
                             if (i > 0) {
-                                environment[env.substring(0, i)] = env.substring(i + 1)
+                                je.getEnvironment().put(env.substring(0, i), env.substring(i + 1));
                             }
                         }
-                }
-            }
+                    });
         }
+
+        project.getTasks().create(RUN_SINGLE_TASK, JavaExec.class, je);
     }
 
     private String[] unescapeParameters(String s) {
@@ -168,6 +175,6 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
             params.add(buff.toString());
         }
 
-        return params.toArray(new String[params.size()])
+        return params.toArray(new String[params.size()]);
     }
 }

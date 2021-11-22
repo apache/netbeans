@@ -21,6 +21,7 @@ package org.netbeans.modules.gradle.tooling;
 
 import org.netbeans.modules.gradle.api.NbProjectInfo;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -31,10 +32,14 @@ import java.util.Set;
  */
 public class NbProjectInfoModel extends BaseModel implements NbProjectInfo {
 
-    Map<String, Object> info = new HashMap<>();
-    Map<String, Object> ext = new HashMap<>();
-    Set<String> problems = new LinkedHashSet<>();
-    boolean miscOnly = false;
+    private final Map<String, Object> info = new HashMap<>();
+    private final Map<String, Object> ext = new HashMap<>();
+    private final Set<String> problems = new LinkedHashSet<>();
+    private boolean miscOnly = false;
+
+    public NbProjectInfoModel() {
+        ext.put("perf", new LinkedHashMap());
+    }
 
     @Override
     public Map<String, Object> getInfo() {
@@ -51,6 +56,10 @@ public class NbProjectInfoModel extends BaseModel implements NbProjectInfo {
         return problems;
     }
 
+    void noteProblem(String s) {
+        problems.add(s);
+    }
+
     void noteProblem(Exception e) {
         StringBuilder problem = new StringBuilder(e.getMessage());
         if (e.getCause() != null) {
@@ -59,8 +68,16 @@ public class NbProjectInfoModel extends BaseModel implements NbProjectInfo {
         problems.add(problem.toString());
     }
 
+    public void setMiscOnly(boolean miscOnly) {
+        this.miscOnly = miscOnly;
+    }
+
     @Override
     public boolean getMiscOnly() {
         return miscOnly;
+    }
+
+    public void registerPerf(String name, Object runtime) {
+        ((LinkedHashMap<String,Object>) ext.get("perf")).put(name, runtime);
     }
 }

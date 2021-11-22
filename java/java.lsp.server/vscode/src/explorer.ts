@@ -1,26 +1,27 @@
 import * as vscode from 'vscode';
 import {  LanguageClient } from 'vscode-languageclient/node';
+import { NbLanguageClient } from './extension';
 import { NodeChangedParams, NodeInfoNotification, NodeInfoRequest } from './protocol';
 
-class TreeViewService {  
-  private client : LanguageClient;
+export class TreeViewService {  
+  private client : NbLanguageClient;
   private trees : Map<string, vscode.TreeView<Visualizer>> = new Map();
   private images : Map<number, vscode.Uri> = new Map();
   private providers : Map<number, VisualizerProvider> = new Map();
-  constructor (c : LanguageClient) {
+  constructor (c : NbLanguageClient) {
     this.client = c;
   }
 
-  getClient() : LanguageClient {
+  getClient() : NbLanguageClient {
     return this.client;
   }
 
-  async createView(id : string, options? : Partial<vscode.TreeViewOptions<any>>) : Promise<vscode.TreeView<Visualizer>> {
+  public async createView(id : string, title? : string, options? : Partial<vscode.TreeViewOptions<any>>) : Promise<vscode.TreeView<Visualizer>> {
     let tv : vscode.TreeView<Visualizer> | undefined  = this.trees.get(id);
     if (tv) {
       return tv;
     }
-    const res = await createViewProvider(id);
+    const res = await createViewProvider(this.client, id);
     this.providers.set(res.getRoot().data.id, res);
     let opts : vscode.TreeViewOptions<Visualizer> = {
       treeDataProvider : res,
@@ -55,19 +56,6 @@ class TreeViewService {
     } else {
       return this.images.get(nodeData.iconIndex);
     }
-  }
-}
-
-let treeService : Promise<TreeViewService>;
-let promisedTreeService : (ts : TreeViewService) => void;
-
-export function findTreeViewService() : Promise<TreeViewService> {
-  if (treeService) {
-    return treeService;
-  } else {
-    return treeService = new Promise((resolve, reject) => {
-      promisedTreeService = resolve;
-    })
   }
 }
 
@@ -194,18 +182,8 @@ class Visualizer extends vscode.TreeItem {
   }
 }
 
-function replaceTreeService(ts : TreeViewService) {
-  treeService = new Promise((resolve, reject) => {
-    resolve(ts);
-  });
-  if (promisedTreeService) {
-    promisedTreeService(ts);
-  }
-}
-
-
-export async function createViewProvider(id : string) : Promise<VisualizerProvider> {
-  const ts = await findTreeViewService();
+export async function createViewProvider(c : NbLanguageClient, id : string) : Promise<VisualizerProvider> {
+  const ts = c.findTreeViewService();
   const client = ts.getClient();
   const res = client.sendRequest(NodeInfoRequest.explorermanager, { explorerId: id }).then(node => {
     if (!node) {
@@ -226,22 +204,16 @@ export async function createViewProvider(id : string) : Promise<VisualizerProvid
  * @param viewTitle title for the new view, optional.
  * @returns promise of the tree view instance.
  */
-export async function createTreeView<T>(viewId: string, viewTitle? : string, options? : Partial<vscode.TreeViewOptions<any>>) : Promise<vscode.TreeView<Visualizer>> {
-  return treeService.then(ts => ts.createView(viewId, options).then(v => { 
-    if (viewTitle) {
-        v.title = viewTitle; 
-    }
-    return v; 
-  }));
+export async function createTreeView<T>(c: NbLanguageClient, viewId: string, viewTitle? : string, options? : Partial<vscode.TreeViewOptions<any>>) : Promise<vscode.TreeView<Visualizer>> {
+  let ts = c.findTreeViewService();
+  return ts.createView(viewId, viewTitle, options);
 }
 
 /**
  * Registers the treeview service with the language server.
  */
-export function register(c : LanguageClient) {
+export function createTreeViewService(c : NbLanguageClient): TreeViewService {
     const ts : TreeViewService = new TreeViewService(c);
-    replaceTreeService(ts);
-
     vscode.commands.registerCommand("foundProjects.deleteEntry", async function (this: any, args: any) {
         let v = args as Visualizer;
         let ok = await c.sendRequest(NodeInfoRequest.destroy, { nodeId : v.data.id });
@@ -249,5 +221,7 @@ export function register(c : LanguageClient) {
             vscode.window.showErrorMessage('Cannot delete node ' + v.label);
         }
     });
+
+    return ts;
 }
 

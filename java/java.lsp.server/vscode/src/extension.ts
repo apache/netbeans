@@ -23,6 +23,7 @@ import { commands, window, workspace, ExtensionContext, ProgressLocation, TextEd
 import {
 	LanguageClient,
 	LanguageClientOptions,
+	ServerOptions,
 	StreamInfo
 } from 'vscode-languageclient/node';
 
@@ -48,14 +49,28 @@ import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickReque
          SetTextEditorDecorationParams
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
-import * as explorer from './explorer';
+import { createTreeViewService, TreeViewService } from './explorer';
+import { TLSSocket } from 'tls';
 
 const API_VERSION : string = "1.0";
-let client: Promise<LanguageClient>;
+let client: Promise<NbLanguageClient>;
 let testAdapter: NbTestAdapter | undefined;
 let nbProcess : ChildProcess | null = null;
 let debugPort: number = -1;
 let consoleLog: boolean = !!process.env['ENABLE_CONSOLE_LOG'];
+
+export class NbLanguageClient extends LanguageClient {
+    private _treeViewService: TreeViewService;
+
+    constructor (id : string, name: string, s : ServerOptions, c : LanguageClientOptions) {
+        super(id, name, s, c);
+        this._treeViewService = createTreeViewService(this);
+    }
+
+    findTreeViewService(): TreeViewService {
+        return this._treeViewService;
+    }
+}
 
 function handleLog(log: vscode.OutputChannel, msg: string): void {
     log.appendLine(msg);
@@ -103,8 +118,23 @@ export function findClusters(myPath : string): string[] {
 }
 
 // for tests only !
-export function awaitClient() : Promise<LanguageClient> {
-    return client;
+export function awaitClient() : Promise<NbLanguageClient> {
+    const c : Promise<NbLanguageClient> = client;
+    if (c) {
+        return c;
+    }
+    let nbcode = vscode.extensions.getExtension('asf.apache-netbeans-java');
+    if (!nbcode) {
+        return Promise.reject(new Error("Extension not installed."));
+    }
+    const t : Thenable<NbLanguageClient> = nbcode.activate().then(nc => {
+        if (client === undefined) {
+            throw new Error("Client not available");
+        } else {
+            return client;
+        }
+    });
+    return Promise.resolve(t);
 }
 
 function findJDK(onChange: (path : string | null) => void): void {
@@ -377,8 +407,8 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
         return;
     }
     let oldClient = client;
-    let setClient : [(c : LanguageClient) => void, (err : any) => void];
-    client = new Promise<LanguageClient>((clientOK, clientErr) => {
+    let setClient : [(c : NbLanguageClient) => void, (err : any) => void];
+    client = new Promise<NbLanguageClient>((clientOK, clientErr) => {
         setClient = [ clientOK, clientErr ];
     });
     const a : Promise<void> | null = maintenance;
@@ -428,7 +458,7 @@ function killNbProcess(notifyKill : boolean, log : vscode.OutputChannel, specPro
 }
 
 function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean,
-    setClient : [(c : LanguageClient) => void, (err : any) => void]
+    setClient : [(c : NbLanguageClient) => void, (err : any) => void]
 ): void {
     maintenance = null;
     let restartWithJDKLater : ((time: number, n: boolean) => void) = function restartLater(time: number, n : boolean) {
@@ -462,7 +492,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         jdkHome : specifiedJDK,
         verbose: beVerbose
     };
-    let launchMsg = `Launching Apache NetBeans Language Server with ${specifiedJDK ? specifiedJDK : 'default system JDK'}`;
+    let launchMsg = `Launching Apache NetBeans Language Server with ${specifiedJDK ? specifiedJDK : 'default system JDK'} and userdir ${userdir}`;
     handleLog(log, launchMsg);
     vscode.window.setStatusBarMessage(launchMsg, 2000);
 
@@ -604,7 +634,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         }
 
 
-        let c = new LanguageClient(
+        let c = new NbLanguageClient(
                 'java',
                 'NetBeans Java',
                 connection,
@@ -671,13 +701,12 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                     });
                 }
             });
-            explorer.register(c);
             handleLog(log, 'Language Client: Ready');
             setClient[0](c);
             commands.executeCommand('setContext', 'nbJavaLSReady', true);
         
             // create project explorer:
-            explorer.createTreeView('foundProjects', 'Projects', { canSelectMany : false });
+            c.findTreeViewService().createView('foundProjects', 'Projects', { canSelectMany : false });
         }).catch(setClient[1]);
     }).catch((reason) => {
         activationPending = false;

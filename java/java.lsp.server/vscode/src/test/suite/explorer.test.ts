@@ -20,15 +20,14 @@ Mocha.before(async () => {
     let folder: string = assertWorkspace();
     fs.rmdirSync(folder, { recursive: true });
     fs.mkdirSync(folder, { recursive: true });
-    await prepareProject(folder);
 });
 
 suite('Explorer Test Suite', () => {
-    vscode.window.showInformationMessage('Start all tests.');
+    vscode.window.showInformationMessage('Start explorer tests.');
     myExtension.enableConsoleLog();
 
     test('Explorer can be created', async () => {
-        const lvp = await myExplorer.createViewProvider('foundProjects');
+        const lvp = await myExplorer.createViewProvider(await myExtension.awaitClient(), 'foundProjects');
         const firstLevelChildren = await (lvp.getChildren() as Thenable<any[]>);
         assert.strictEqual(firstLevelChildren.length, 0, "No child under the root");
     });

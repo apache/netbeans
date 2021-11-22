@@ -99,6 +99,26 @@ class MainTest {
     await waitProjectRecognized(folder);
 }
 
+export function waitCommandsReady() : Promise<void> {
+    return new Promise((resolve, reject) => {
+        function checkCommands(attempts : number, cb : () => void) {
+            try {
+                // this command is parameterless
+                vscode.commands.executeCommand("java.attachDebugger.configurations")
+                resolve();
+            } catch (e) {
+                if (attempts > 0) {
+                    console.log("Waiting for NBLS commands to be registered, " + attempts + " attempts to go...");
+                    setTimeout(() => checkCommands(attempts - 1, cb), 100);
+                } else {
+                    reject(new Error("Timeout waiting for NBLS commands registration: " + e));
+                }
+            }
+        }
+        myExtension.awaitClient().then(() => checkCommands(5, () => {}));
+    });
+}
+
 export function assertWorkspace(): string {
     assert.ok(vscode.workspace, "workspace is defined");
     const dirs = vscode.workspace.workspaceFolders;
@@ -112,10 +132,11 @@ async function waitProjectRecognized(folder : string) {
     let testPkg = path.join(folder, 'src', 'test', 'java', 'pkg');
     let mainTestJava = path.join(testPkg, 'MainTest.java');
 
-    await myExtension.awaitClient;
-    const u : vscode.Uri = vscode.Uri.file(mainTestJava);
-    // this should assure opening the root with the created project.
-    await vscode.commands.executeCommand("java.get.project.packages", u.toString());
+    return waitCommandsReady().then(() => {
+        const u : vscode.Uri = vscode.Uri.file(mainTestJava);
+        // this should assure opening the root with the created project.
+        return vscode.commands.executeCommand("java.get.project.packages", u.toString());
+    });
 }
 
 export async function dumpJava() {

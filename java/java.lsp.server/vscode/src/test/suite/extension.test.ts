@@ -69,6 +69,9 @@ suite('Extension Test Suite', () => {
     async function demo(where: number) {
         let folder: string = assertWorkspace();
 
+        await prepareProject(folder);
+        vscode.workspace.saveAll();
+        
         if (where === 6) return;
 
         try {
@@ -88,7 +91,7 @@ suite('Extension Test Suite', () => {
 
         assert.ok(fs.statSync(mainClass).isFile(), "Class created by compilation: " + mainClass);
 
-        myExplorer.createViewProvider("foundProjects").then(async (lvp) => {
+        myExplorer.createViewProvider(await myExtension.awaitClient(), "foundProjects").then(async (lvp) => {
             const firstLevelChildren = await (lvp.getChildren() as Thenable<any[]>);
             assert.strictEqual(firstLevelChildren.length, 1, "One child under the root");
             const item = await (lvp.getTreeItem(firstLevelChildren[0]) as Thenable<vscode.TreeItem>);
@@ -108,6 +111,7 @@ suite('Extension Test Suite', () => {
     async function mavenTerminateWithoutDebugger() {
         let folder: string = assertWorkspace();
 
+        await prepareProject(folder);
         vscode.workspace.saveAll();
         let u : Uri = vscode.Uri.file(path.join(folder, 'src', 'main', 'java', 'pkg', 'Main.java'));
         let doc : TextDocument = await vscode.workspace.openTextDocument(u);
@@ -157,6 +161,7 @@ suite('Extension Test Suite', () => {
     async function getProjectInfo() {
         let folder: string = assertWorkspace();
 
+        await prepareProject(folder);
         vscode.workspace.saveAll();
 
         try {
@@ -226,6 +231,8 @@ suite('Extension Test Suite', () => {
     async function testExplorerTests() {
         let folder: string = assertWorkspace();
 
+        await prepareProject(folder);
+        vscode.workspace.saveAll();
         try {
             console.log("Test: load workspace tests");
             let tests: any = await vscode.commands.executeCommand("java.load.workspace.tests", Uri.file(folder).toString());

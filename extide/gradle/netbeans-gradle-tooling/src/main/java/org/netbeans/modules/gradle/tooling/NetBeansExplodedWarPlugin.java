@@ -22,7 +22,6 @@ package org.netbeans.modules.gradle.tooling;
 import java.io.File;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
-import org.gradle.api.Task;
 import org.gradle.api.tasks.Sync;
 import org.gradle.api.tasks.bundling.War;
 
@@ -43,13 +42,14 @@ class NetBeansExplodedWarPlugin implements Plugin<Project> {
     }
 
     private void addTask(Project p) {
-        War war = (War) p.property("war");
-        Sync sync = new Sync();
-        sync.setGroup("build");
-        sync.into(new File(new File(p.getBuildDir(), "exploded"), war.getArchiveFileName().get()));
-        sync.with(war);
-        Task explodedWar = p.getTasks().create(EXPLODED_WAR_TASK, Sync.class, sync);
-        war.getDependsOn().add(explodedWar);
+        War war = (War) p.getTasks().getByName("war");
+        p.getTasks().register(EXPLODED_WAR_TASK, Sync.class, (sync) -> {
+            sync.setGroup("build");
+            sync.into(new File(new File(p.getBuildDir(), "exploded"), war.getArchiveFileName().get()));
+            sync.with(war);
+            
+        });
+        war.dependsOn(EXPLODED_WAR_TASK);
     }
 
 }

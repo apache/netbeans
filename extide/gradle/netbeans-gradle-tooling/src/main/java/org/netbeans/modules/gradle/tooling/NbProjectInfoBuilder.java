@@ -480,7 +480,7 @@ class NbProjectInfoBuilder {
             long time_report = System.currentTimeMillis();
             model.registerPerf(depPrefix + "collect", time_report - time_collect);
 
-            model.getInfo().put(configPrefix + "components", storeSet(componentIds));
+            model.getInfo().put(configPrefix + "components", componentIds);
             model.getInfo().put(configPrefix + "projects", projectNames);
             model.getInfo().put(configPrefix + "files", fileDeps);
             model.getInfo().put(configPrefix + "unresolved", unresolvedIds);

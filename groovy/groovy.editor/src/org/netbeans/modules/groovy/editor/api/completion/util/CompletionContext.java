@@ -28,7 +28,6 @@ import org.codehaus.groovy.ast.FieldNode;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.ast.Parameter;
-import org.codehaus.groovy.ast.expr.ClassExpression;
 import org.codehaus.groovy.ast.expr.ClosureExpression;
 import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.ConstructorCallExpression;
@@ -285,6 +284,8 @@ public final class CompletionContext {
 
             if (t.id() == GroovyTokenId.LITERAL_package) {
                 return CaretLocation.ABOVE_PACKAGE;
+            } else if (t.id() == GroovyTokenId.LITERAL_class || t.id() == GroovyTokenId.LITERAL_def) {
+                break;
             }
         }
 
@@ -293,6 +294,8 @@ public final class CompletionContext {
 
         boolean classDefBeforePosition = false;
         boolean openBraceBeforePosition = false;
+        // is there package statement?
+        boolean afterPackagePosition = false;
 
         ts.move(position);
 
@@ -303,9 +306,39 @@ public final class CompletionContext {
             } else if (t.id() == GroovyTokenId.LITERAL_class || t.id() == GroovyTokenId.LITERAL_interface || t.id() == GroovyTokenId.LITERAL_trait) {
                 classDefBeforePosition = true;
                 break;
+            } else if (t.id() == GroovyTokenId.LITERAL_package) {
+                afterPackagePosition = true;
+                break;
             }
         }
 
+        if (afterPackagePosition) {
+            // are we in the package statement?
+            ts.move(position);  // back on the caret position
+            boolean isPackageStatement = true;
+            boolean blockComment = false;
+            int countOfWhitespaces = 0;
+            while (ts.isValid() && ts.movePrevious() && ts.offset() >= 0 && isPackageStatement) {
+                Token<GroovyTokenId> t = ts.token();
+                if (t.id() == GroovyTokenId.LITERAL_package) {
+                    break;
+                } else if (t.id() == GroovyTokenId.WHITESPACE) {
+                    countOfWhitespaces++;
+                } else if (t.id() == GroovyTokenId.BLOCK_COMMENT) {
+                    // cases: 
+                    //      package /* comment */ org.apache.something
+                    //      package /* comment */org.apache.something
+                    //      package/* comment */org.apache.something
+                    blockComment = true;
+                } else {
+                    isPackageStatement = (t.id() == GroovyTokenId.DOT || t.id() == GroovyTokenId.IDENTIFIER);
+                }
+            }
+            if (isPackageStatement && (countOfWhitespaces == 1 || (blockComment && countOfWhitespaces < 3))) {
+                // we are just behind the package keyword
+                return CaretLocation.INSIDE_PACKAGE;
+            }
+        } 
 
         boolean classDefAfterPosition = false;
 
@@ -319,7 +352,7 @@ public final class CompletionContext {
             }
         }
 
-        if (path != null) {
+         if (path != null) {
             ASTNode node = path.root();
             if (node instanceof ModuleNode) {
                 ModuleNode module = (ModuleNode) node;

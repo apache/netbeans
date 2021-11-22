@@ -82,7 +82,19 @@ class KeywordCompletion extends BaseCompletion {
         // filter-out keywords in a step-by-step approach
         filterPackageStatement(havePackage);
         filterPrefix(prefix);
-        filterLocation(request.location);
+        if (keywords.contains(GroovyKeyword.KEYWORD_package) && isFirstStatement(request)) {
+            // This is a hack for offering package keyword in the script as the first statement.
+            // The current implementation use INSIDE_LOCATION for the top context in script, which is OK, 
+            // but package is only above class keyword and will not be displayed here. 
+            // This covers case, when you have empty file and you want to write package as the first. 
+            filterLocation(request.location);
+            if (!keywords.contains(GroovyKeyword.KEYWORD_package)) {
+                // the package is only above class keyword, but on the first position we should offer it
+                keywords.add(GroovyKeyword.KEYWORD_package);
+            }
+        } else {
+            filterLocation(request.location);
+        }
         filterClassInterfaceOrdering(request.context);
         filterMethodDefinitions(request.context);
         filterKeywordsNextToEachOther(request.context);
@@ -98,6 +110,27 @@ class KeywordCompletion extends BaseCompletion {
         return true;
     }
 
+    boolean isFirstStatement(final CompletionContext request) {
+        TokenSequence<GroovyTokenId> ts = LexUtilities.getGroovyTokenSequence(request.doc, 1);
+
+        if (ts != null) {
+            ts.move(request.lexOffset);
+            if (ts.movePrevious()) {
+                while (ts.isValid() && ts.movePrevious() && ts.offset() >= 0) {
+                    Token<GroovyTokenId> t = ts.token();
+                    if (!(t.id() == GroovyTokenId.NLS || t.id() == GroovyTokenId.WHITESPACE 
+                            || t.id() == GroovyTokenId.SH_COMMENT || t.id() == GroovyTokenId.SL_COMMENT
+                            || t.id() == GroovyTokenId.BLOCK_COMMENT || t.id() == GroovyTokenId.LINE_COMMENT)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        return false;
+    }
+    
     boolean checkForPackageStatement(final CompletionContext request) {
         TokenSequence<GroovyTokenId> ts = LexUtilities.getGroovyTokenSequence(request.doc, 1);
 

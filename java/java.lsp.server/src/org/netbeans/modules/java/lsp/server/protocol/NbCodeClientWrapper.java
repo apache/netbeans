@@ -23,12 +23,15 @@ import java.util.concurrent.CompletableFuture;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.ApplyWorkspaceEditResponse;
 import org.eclipse.lsp4j.ConfigurationParams;
+import org.eclipse.lsp4j.LogTraceParams;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.ProgressParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.RegistrationParams;
-import org.eclipse.lsp4j.SemanticHighlightingParams;
+import org.eclipse.lsp4j.SetTraceParams;
+import org.eclipse.lsp4j.ShowDocumentParams;
+import org.eclipse.lsp4j.ShowDocumentResult;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.UnregistrationParams;
 import org.eclipse.lsp4j.WorkDoneProgressCreateParams;
@@ -123,6 +126,11 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     }
 
     @Override
+    public CompletableFuture<ShowDocumentResult> showDocument(ShowDocumentParams params) {
+        return remote.showDocument(params);
+    }
+
+    @Override
     public void logMessage(MessageParams message) {
         remote.logMessage(message);
     }
@@ -135,11 +143,6 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     @Override
     public CompletableFuture<List<Object>> configuration(ConfigurationParams configurationParams) {
         return remote.configuration(configurationParams);
-    }
-
-    @Override
-    public void semanticHighlighting(SemanticHighlightingParams params) {
-        remote.semanticHighlighting(params);
     }
 
     @Override
@@ -165,5 +168,25 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     @Override
     public void disposeTextEditorDecoration(String params) {
         remote.disposeTextEditorDecoration(params);
+    }
+
+    @Override
+    public void logTrace(LogTraceParams params) {
+        remote.logTrace(params);
+    }
+
+    @Override
+    public void setTrace(SetTraceParams params) {
+        remote.setTrace(params);
+    }
+
+    @Override
+    public CompletableFuture<Void> refreshSemanticTokens() {
+        return remote.refreshSemanticTokens();
+    }
+
+    @Override
+    public CompletableFuture<Void> refreshCodeLenses() {
+        return remote.refreshCodeLenses();
     }
 }

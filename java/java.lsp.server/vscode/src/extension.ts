@@ -21,11 +21,14 @@
 import { commands, window, workspace, ExtensionContext, ProgressLocation, TextEditorDecorationType } from 'vscode';
 
 import {
-    LanguageClient,
-    LanguageClientOptions,
+	LanguageClient,
+	LanguageClientOptions,
+	StreamInfo
+} from 'vscode-languageclient/node';
+
+import {
     CloseAction,
     ErrorAction,
-    StreamInfo,
     Message,
     MessageType,
     LogMessageNotification,
@@ -429,11 +432,27 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         }, time);
     };
 
-    const beVerbose : boolean = workspace.getConfiguration('netbeans').get('verbose', false);
+    const netbeansConfig = workspace.getConfiguration('netbeans');
+    const beVerbose : boolean = netbeansConfig.get('verbose', false);
+    let userdir = netbeansConfig.get('userdir', 'global');
+    switch (userdir) {
+        case 'local':
+            if (context.storagePath) {
+                userdir = context.storagePath;
+                break;
+            }
+            // fallthru
+        case 'global':
+            userdir = context.globalStoragePath;
+            break;
+        default:
+            // assume storage is path on disk
+    }
+
     let info = {
         clusters : findClusters(context.extensionPath),
         extensionPath: context.extensionPath,
-        storagePath : context.globalStoragePath,
+        storagePath : userdir,
         jdkHome : specifiedJDK,
         verbose: beVerbose
     };
@@ -682,6 +701,13 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                         enableScripts: true,
                     });
                     view.webview.html = data.replace("<head>", `<head><base href="${url}">`);
+                    view.webview.onDidReceiveMessage(message => {
+                        switch (message.command) {
+                            case 'dispose':
+                                view.dispose();
+                                break;
+                        }
+                    });
                 });
             });
             request.on('error', function(e: any) {

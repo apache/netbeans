@@ -84,14 +84,18 @@
         <delete file="${validation-store}" />
         <genkey
             keystore="${validation-store}"
-            alias="demo-key" storepass="password"
+            alias="demo-key"
+            storepass="password"
+            keyalg="RSA"
             dname="CN=Demo Key, OU=NetBeans, O=Apache.org, C=US"
         />
         <property name="unvalidation-store" value="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/test-unvalidate-keystore.jks" />
         <delete file="${unvalidation-store}" />
         <genkey
             keystore="${unvalidation-store}"
-            alias="demo-key-unvalidated" storepass="password"
+            alias="demo-key-unvalidated"
+            storepass="password"
+            keyalg="RSA"
             dname="CN=Demo Key (unvalidated), OU=NetBeans, O=Apache.org, C=US"
         />
         <touch file="${build.dir}/Dummy.class" />

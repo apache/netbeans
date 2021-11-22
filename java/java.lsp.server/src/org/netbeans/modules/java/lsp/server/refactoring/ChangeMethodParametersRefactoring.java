@@ -32,6 +32,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
+import net.java.html.js.JavaScriptBody;
 import net.java.html.json.ComputedProperty;
 import net.java.html.json.Function;
 import net.java.html.json.Model;
@@ -135,30 +136,7 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
                         ci.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                         ExecutableElement method = (ExecutableElement) handle.resolve(ci);
                         if (method != null) {
-                            ParameterUI[] params = new ParameterUI[method.getParameters().size()];
-                            for (int i = 0; i < method.getParameters().size(); i++) {
-                                VariableElement param = method.getParameters().get(i);
-                                ChangeParametersRefactoring.ParameterInfo info = new ChangeParametersRefactoring.ParameterInfo(i, param.getSimpleName().toString(), Utilities.getTypeName(ci, param.asType(), true).toString(), null);
-                                params[i] = new ParameterUI(info.getType(), info.getName());
-                                params[i].assignInfo(info);
-                            }
-                            Modifier mod;
-                            if (method.getModifiers().contains(javax.lang.model.element.Modifier.PUBLIC)) {
-                                mod = Modifier.PUBLIC;
-                            } else if (method.getModifiers().contains(javax.lang.model.element.Modifier.PROTECTED)) {
-                                mod = Modifier.PROTECTED;
-                            } else if (method.getModifiers().contains(javax.lang.model.element.Modifier.PRIVATE)) {
-                                mod = Modifier.PRIVATE;
-                            } else {
-                                mod = Modifier.PACKAGE_PRIVATE;
-                            }
-                            ChangeMethodParameterUI model = new ChangeMethodParameterUI();
-                            model.withName(method.getSimpleName().toString())
-                                    .withReturnType(Utilities.getTypeName(ci, method.getReturnType(), true).toString())
-                                    .withSelectedModifier(mod)
-                                    .withParameters(params)
-                                    .assignData(client, file, TreePathHandle.from(handle, ClasspathInfo.create(file)));
-                            Pages.showChangeMethodParametersUI(model);
+                            Pages.showChangeMethodParametersUI(ci, client, file, handle, method);
                         }
                     }, true);
                 }
@@ -188,8 +166,37 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
     }
 
     @HTMLDialog(url = "ui/ChangeMethodParameters.html")
-    static ChangeMethodParameterUI showChangeMethodParametersUI(ChangeMethodParameterUI ui) {
-        return ui.applyBindings();
+    static ChangeMethodParameterUI showChangeMethodParametersUI(
+        CompilationController ci,
+        NbCodeLanguageClient client,
+        FileObject file,
+        ElementHandle handle,
+        ExecutableElement method
+    ) {
+        ParameterUI[] params = new ParameterUI[method.getParameters().size()];
+        for (int i = 0; i < method.getParameters().size(); i++) {
+            VariableElement param = method.getParameters().get(i);
+            ChangeParametersRefactoring.ParameterInfo info = new ChangeParametersRefactoring.ParameterInfo(i, param.getSimpleName().toString(), Utilities.getTypeName(ci, param.asType(), true).toString(), null);
+            params[i] = new ParameterUI(info.getType(), info.getName());
+            params[i].assignInfo(info);
+        }
+        Modifier mod;
+        if (method.getModifiers().contains(javax.lang.model.element.Modifier.PUBLIC)) {
+            mod = Modifier.PUBLIC;
+        } else if (method.getModifiers().contains(javax.lang.model.element.Modifier.PROTECTED)) {
+            mod = Modifier.PROTECTED;
+        } else if (method.getModifiers().contains(javax.lang.model.element.Modifier.PRIVATE)) {
+            mod = Modifier.PRIVATE;
+        } else {
+            mod = Modifier.PACKAGE_PRIVATE;
+        }
+        ChangeMethodParameterUI model = new ChangeMethodParameterUI();
+        model.withName(method.getSimpleName().toString())
+                .withReturnType(Utilities.getTypeName(ci, method.getReturnType(), true).toString())
+                .withSelectedModifier(mod)
+                .withParameters(params)
+                .assignData(client, file, TreePathHandle.from(handle, ClasspathInfo.create(file)));
+        return model.applyBindings();
     }
 
     @Model(className = "ChangeMethodParameterUI", targetId = "", instance = true, builder = "with", properties = {
@@ -211,6 +218,7 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
             this.handle = handle;
         }
 
+        @ModelOperation
         @Function
         void doRefactoring(ChangeMethodParameterUI ui) {
             try {
@@ -232,6 +240,7 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
                 refactoring.setParameterInfo(params);
                 refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(file));
                 client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, "ChangeMethodParameters")));
+                closeWindow();
             } catch (Exception ex) {
                 client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
             }
@@ -271,7 +280,16 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
 
         @Function
         void cancel(ChangeMethodParameterUI ui) {
+            closeWindow();
         }
+
+        @JavaScriptBody(args = {}, body = "\n"
+            + "const vscode = acquireVsCodeApi();\n" // this method can be called only once per WebView existance
+            + "vscode.postMessage({\n"
+            + "  command: 'dispose',\n"
+            + "});\n"
+        )
+        private static native void closeWindow();
 
         @ComputedProperty
         static List<Modifier> availableModifiers() {

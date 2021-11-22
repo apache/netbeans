@@ -3297,9 +3297,9 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                                 final List<Indexable> resources = crawler.getResources();
                                 if (crawler.isFinished()) {
                                     logCrawlerTime(crawler, t);
-                                    invalidateSources(resources);
                                     delete(crawler.getDeletedResources(), ctxToFinish, usedIterables);
                                     indexResult = index(resources, crawler.getAllResources(), root, sourceForBinaryRoot, indexers, invalidatedMap, ctxToFinish, usedIterables);
+                                    invalidateSources(resources);
                                     if (indexResult) {
                                         crawler.storeTimestamps();
                                         return true;
@@ -5721,7 +5721,6 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                                 try {
                                     scanStarted (root, sourceForBinaryRoot, indexers, invalidatedMap, ctxToFinish);
                                     delete(deleted, ctxToFinish, usedIterables);
-                                    invalidateSources(resources);
                                     final long tm = System.currentTimeMillis();
                                     final boolean rlAdded = RepositoryUpdater.getDefault().rootsListeners.addSource(root, entry);
                                     if (recursiveListenersTime != null) {
@@ -5737,6 +5736,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                                                 invalidatedMap,
                                                 ctxToFinish,
                                                 usedIterables);
+                                        invalidateSources(resources);
                                         if (indexResult) {
                                             crawler.storeTimestamps();
                                             outOfDateFiles[0] = resources.size();

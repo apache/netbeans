@@ -20,14 +20,11 @@
 package org.netbeans.modules.gradle.tooling;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import static java.util.Arrays.asList;
-import java.util.Map;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.tasks.JavaExec;
-import org.gradle.api.tasks.SourceSet;
-import org.gradle.process.CommandLineArgumentProvider;
+import org.gradle.api.tasks.SourceSetContainer;
 
 /**
  *
@@ -61,39 +58,37 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
     }
 
     private void addTask(Project project) {
-        Map<String,SourceSet> sourceSets = (Map<String,SourceSet>) project.property("sourceSets");
+        SourceSetContainer sourceSets = project.getExtensions().findByType(SourceSetContainer.class);
 
-        JavaExec je = new JavaExec();
-        je.setMain(project.property(RUN_SINGLE_MAIN).toString());
-        je.setClasspath(sourceSets.get("main").getRuntimeClasspath());
-        je.setStandardInput(System.in);
+        project.getTasks().register(RUN_SINGLE_TASK, JavaExec.class, (je) -> {
+            // Using setMain to keep the backward compatibility
+            je.setMain(project.property(RUN_SINGLE_MAIN).toString());
+            je.setClasspath(sourceSets.findByName("main").getRuntimeClasspath());
+            je.setStandardInput(System.in);
+            if (project.hasProperty(RUN_SINGLE_ARGS)) {
+                je.setArgs(asList(project.property(RUN_SINGLE_ARGS).toString().split(" ")));
+            }
 
-        if (project.hasProperty(RUN_SINGLE_ARGS)) {
-            je.setArgs(asList(project.property(RUN_SINGLE_ARGS).toString().split(" ")));
-        }
+            if(project.hasProperty(RUN_SINGLE_CWD)) {
+                je.setWorkingDir(project.property(RUN_SINGLE_CWD).toString());
+            }
 
-        if(project.hasProperty(RUN_SINGLE_CWD)) {
-            je.setWorkingDir(project.property(RUN_SINGLE_CWD).toString());
-        }
-
-        if (project.hasProperty(RUN_SINGLE_ENV)) {
-            // Quoted space-separated expressions of <ENV_VAR>=<ENV_VALUE>
-            // to set environment variables, or !<ENV_VAR>
-            // to remove environment variables
-            Arrays.stream(unescapeParameters(project.property(RUN_SINGLE_ENV).toString()))
-                    .forEach(env -> {
-                        if (env.startsWith("!")) {
-                            je.getEnvironment().remove(env);
-                        } else {
-                            int i = env.indexOf("=");
-                            if (i > 0) {
-                                je.getEnvironment().put(env.substring(0, i), env.substring(i + 1));
-                            }
+            if (project.hasProperty(RUN_SINGLE_ENV)) {
+                // Quoted space-separated expressions of <ENV_VAR>=<ENV_VALUE>
+                // to set environment variables, or !<ENV_VAR>
+                // to remove environment variables
+                for (String env : unescapeParameters(project.property(RUN_SINGLE_ENV).toString())) {                    
+                    if (env.startsWith("!")) {
+                        je.getEnvironment().remove(env);
+                    } else {
+                        int i = env.indexOf('=');
+                        if (i > 0) {
+                            je.getEnvironment().put(env.substring(0, i), env.substring(i + 1));
                         }
-                    });
-        }
-
-        project.getTasks().create(RUN_SINGLE_TASK, JavaExec.class, je);
+                    }
+                }
+            }
+        });
     }
 
     private String[] unescapeParameters(String s) {

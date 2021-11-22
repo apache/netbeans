@@ -14,10 +14,6 @@ import { TextDocument, TextEditor, Uri } from 'vscode';
 import { assertWorkspace, dumpJava, prepareProject } from './testutils';
 
 suite('Extension Test Suite', () => {
-    vscode.window.showInformationMessage('Cleaning up workspace.');
-    let folder: string = assertWorkspace();
-    fs.rmdirSync(folder, { recursive: true });
-    fs.mkdirSync(folder, { recursive: true });
     vscode.window.showInformationMessage('Start all tests.');
     myExtension.enableConsoleLog();
 
@@ -73,10 +69,6 @@ suite('Extension Test Suite', () => {
     async function demo(where: number) {
         let folder: string = assertWorkspace();
 
-        await prepareProject(folder);
-
-        vscode.workspace.saveAll();
-
         if (where === 6) return;
 
         try {
@@ -115,8 +107,6 @@ suite('Extension Test Suite', () => {
      */
     async function mavenTerminateWithoutDebugger() {
         let folder: string = assertWorkspace();
-
-        await prepareProject(folder);
 
         vscode.workspace.saveAll();
         let u : Uri = vscode.Uri.file(path.join(folder, 'src', 'main', 'java', 'pkg', 'Main.java'));
@@ -166,8 +156,6 @@ suite('Extension Test Suite', () => {
 
     async function getProjectInfo() {
         let folder: string = assertWorkspace();
-
-        await prepareProject(folder);
 
         vscode.workspace.saveAll();
 
@@ -237,10 +225,6 @@ suite('Extension Test Suite', () => {
 
     async function testExplorerTests() {
         let folder: string = assertWorkspace();
-
-        await prepareProject(folder);
-
-        vscode.workspace.saveAll();
 
         try {
             console.log("Test: load workspace tests");

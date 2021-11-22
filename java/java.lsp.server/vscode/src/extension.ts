@@ -102,6 +102,11 @@ export function findClusters(myPath : string): string[] {
     return clusters;
 }
 
+// for tests only !
+export function awaitClient() : Promise<LanguageClient> {
+    return client;
+}
+
 function findJDK(onChange: (path : string | null) => void): void {
     function find(): string | null {
         let nbJdk = workspace.getConfiguration('netbeans').get('jdkhome');

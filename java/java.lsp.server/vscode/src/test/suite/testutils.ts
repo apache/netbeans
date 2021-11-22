@@ -8,6 +8,8 @@ import { Readable } from 'stream';
 // as well as import your extension to test it
 import * as vscode from 'vscode';
 
+import * as myExtension from '../../extension';
+
 export async function prepareProject(folder: string) {
     await fs.promises.writeFile(path.join(folder, 'pom.xml'), `
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -93,6 +95,8 @@ class MainTest {
     }
 }
             `);
+    vscode.workspace.saveAll();
+    await waitProjectRecognized(folder);
 }
 
 export function assertWorkspace(): string {
@@ -102,6 +106,16 @@ export function assertWorkspace(): string {
     assert.strictEqual(dirs.length, 1, "One folder provided");
     let folder: string = dirs[0].uri.fsPath;
     return folder;
+}
+
+async function waitProjectRecognized(folder : string) {
+    let testPkg = path.join(folder, 'src', 'test', 'java', 'pkg');
+    let mainTestJava = path.join(testPkg, 'MainTest.java');
+
+    await myExtension.awaitClient;
+    const u : vscode.Uri = vscode.Uri.file(mainTestJava);
+    // this should assure opening the root with the created project.
+    await vscode.commands.executeCommand("java.get.project.packages", u.toString());
 }
 
 export async function dumpJava() {

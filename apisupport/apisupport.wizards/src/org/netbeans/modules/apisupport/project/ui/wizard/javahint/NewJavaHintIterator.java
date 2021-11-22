@@ -82,7 +82,6 @@ public class NewJavaHintIterator extends BasicWizardIterator {
 
             //java cluster
             cmf.add(cmf.addModuleToTargetPlatform("org.netbeans.modules.classfile", "java")); // NOI18N
-            cmf.add(cmf.addModuleToTargetPlatform("org.netbeans.libs.javacimpl", "java")); // NOI18N
             cmf.add(cmf.addModuleToTargetPlatform("org.netbeans.spi.java.hints", "java")); // NOI18N
             cmf.add(cmf.addModuleToTargetPlatform("org.netbeans.modules.java.hints.test", "java")); // NOI18N
             cmf.add(cmf.addModuleToTargetPlatform("org.netbeans.modules.java.lexer", "java")); // NOI18N

@@ -118,3 +118,7 @@ webcommon/javascript2.jsdoc/external/testfiles-jsdoc-1.zip webcommon/javascript2
 
 # not part of the product:
 harness/apisupport.harness/external/launcher-12.5-distribution.zip platform/o.n.bootstrap/external/launcher-12.5-distribution.zip
+
+# only one is part of the product:
+java/libs.javacapi/external/nb-javac-jdk-17+35-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-17+35-api.jar
+java/libs.javacapi/external/nb-javac-jdk-17+35.jar java/libs.nbjavacapi/external/nb-javac-jdk-17+35.jar

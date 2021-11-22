@@ -19,10 +19,7 @@
     under the License.
 
 -->
-<licenseinfo>
-    <fileset>
-        <file>src/org/netbeans/modules/updatecenters/resources/updateAction.gif</file>
-        <license ref="Apache-2.0-ASF" />
-        <comment type="COMMENT_UNSUPPORTED" />
-    </fileset>
-</licenseinfo>
+<project basedir="." default="netbeans" name="java/libs.nbjavacapi">
+    <description>Builds, tests, and runs the project org.netbeans.libs.nbjavacapi</description>
+    <import file="../../nbbuild/templates/projectized.xml"/>
+</project>

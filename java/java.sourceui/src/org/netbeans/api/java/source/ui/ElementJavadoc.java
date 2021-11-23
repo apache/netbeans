@@ -42,6 +42,7 @@ import com.sun.source.util.DocTreeScanner;
 import com.sun.source.util.DocTrees;
 import com.sun.source.util.TreePath;
 import java.awt.event.ActionEvent;
+import java.io.CharConversionException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
@@ -69,6 +70,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Modifier;
@@ -1282,23 +1285,275 @@ public class ElementJavadoc {
                     TextTree ttag = (TextTree)tag;
                     sb.append(ttag.getBody());
 					break;
-				default:
+		default:
                     if (tag.getKind().toString().equals("SNIPPET")) {
-                        sb.append("<pre>"); //NOI18N
-                        sb.append("<code>"); //NOI18N
-                        List<DocTree> attributes = TreeShims.getSnippetDocTreeAttributes(tag);
-                        TextTree text =  TreeShims.getSnippetDocTreeText(tag);
-                        try {
-                            sb.append(XMLUtil.toElementContent(text.getBody()));
-                        } catch (IOException ioe) {}
-                        sb.append("</code>"); //NOI18N
-                        sb.append("</pre>"); //NOI18N
+                        processSnippetTag(sb, tag);
                     }	
             }
         }
         return sb;
     }
 
+    private void processSnippetTag(StringBuilder sb, DocTree tag) {
+        sb.append("<pre>"); //NOI18N
+        sb.append("<code>"); //NOI18N
+        
+        List<DocTree> attributes = TreeShims.getSnippetDocTreeAttributes(tag);
+        TextTree text = TreeShims.getSnippetDocTreeText(tag);
+        SnippetTagCommentParser parser = new SnippetTagCommentParser();
+        List<SourceLineMeta> parseResult = parser.parse(text.getBody());
+        ProcessedTags tags = processTags(parseResult);
+        buildHtml(parseResult, tags, sb);
+        
+        sb.append("</code>"); //NOI18N
+        sb.append("</pre>"); //NOI18N
+    }
+    
+    private void buildHtml(List<SourceLineMeta> parseResult, ProcessedTags tags, StringBuilder sb) {
+        Map<Integer, List<Attrib>> markUpTagLineMapper = tags.markUpTagLineMapper != null ? tags.markUpTagLineMapper : new TreeMap<>();
+        Map<Integer, List<Region>> regionTagLineMapper = tags.regionTagLineMapper != null ? tags.regionTagLineMapper : new TreeMap<>();
+        int lineCounter = 0;
+        for (SourceLineMeta fullLineInfo : parseResult) {
+            lineCounter++;
+            String uncommentLine = fullLineInfo.getUncommentSourceLine();
+            try {
+                uncommentLine = XMLUtil.toElementContent(uncommentLine);
+            } catch (CharConversionException ex) {
+                Exceptions.printStackTrace(ex);
+                //continue;
+            }
+
+            List<Attrib> attributes = markUpTagLineMapper.get(lineCounter);
+            List<Region> regions = regionTagLineMapper.get(lineCounter);
+
+            if (attributes == null && regions == null) {
+                try {
+                    sb.append(XMLUtil.toElementContent(fullLineInfo.getActualSourceLine() + "\n"));
+                } catch (CharConversionException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                continue;
+            } else {
+                if (attributes != null) {
+                    for (Attrib attrib : attributes) {
+                        uncommentLine = applyTagsToHTML(uncommentLine, attrib.getAttributes());
+                    }
+                }
+                if (regions != null) {
+                    for (Region region : regions) {
+                        uncommentLine = applyTagsToHTML(uncommentLine, region.getAttributes());
+                    }
+                }
+                sb.append(uncommentLine);
+            }
+            sb.append("\n");
+        }
+    }
+
+    private String applyTagsToHTML(String uncommentLine, Map<String, String> hAttrib) {
+
+        String type = hAttrib.get("type") != null ? hAttrib.get("type") : "bold";
+        String regex = hAttrib.get("regex");
+        String subString = hAttrib.get("substring");
+
+        if (regex != null) {
+            try {
+                regex = XMLUtil.toElementContent(regex);
+                Pattern pattern = Pattern.compile(regex);
+                Matcher matcher = pattern.matcher(uncommentLine);
+                while (matcher.find()) {
+                    switch (type) {
+                        case "italic":
+                            uncommentLine = matcher.replaceAll("<i>" + matcher.group(0) + "</i>");
+                            break;
+                        case "bold":
+                            uncommentLine = matcher.replaceAll("<b>" + matcher.group(0) + "</b>");
+                            break;
+                        case "highlighted":
+                            uncommentLine = matcher.replaceAll("<span style=\"background-color:yellow;\">" + matcher.group(0) + "</span>");
+                            break;
+                    }
+                }
+            } catch (CharConversionException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        if (subString != null) {
+            try {
+                subString = XMLUtil.toElementContent(subString);
+                switch (type) {
+                    case "italic":
+                        uncommentLine = uncommentLine.replace(subString, "<i>" + subString + "</i>");
+                        break;
+                    case "bold":
+                        uncommentLine = uncommentLine.replace(subString, "<b>" + subString + "</b>");
+                        break;
+                    case "highlighted":
+                        uncommentLine = uncommentLine.replace(subString, "<span style=\"background-color:yellow;\">" + subString + "</span>");
+                        break;
+                }
+            } catch (CharConversionException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        return uncommentLine;
+    }
+    private ProcessedTags processTags(List<SourceLineMeta> parseResult ){
+        Map<Integer, List<Attrib>> markUpTagLineMapper = new TreeMap<>();
+        Map<Integer, List<Region>> regionTagLineMapper = new TreeMap<>();
+        List<Region> regionList = new ArrayList<>();
+        List<Attrib> attribList = new ArrayList<>();
+        int thisLine = 1;
+        int nextLine = 1;
+        
+        main:
+        for(SourceLineMeta fullLineInfo : parseResult){
+            nextLine++;
+            //checkng no attribute on this line
+            if(fullLineInfo.getThisLineMarkUpTags() == null){
+                if(regionList.size() > 0){
+                    List<Region> newRegionList = new ArrayList<>(regionList);
+                    regionTagLineMapper.put(nextLine, newRegionList);
+                }
+                
+            } else {
+                for (MarkUpTag markUpTag : fullLineInfo.getThisLineMarkUpTags()) {
+                    if (markUpTag.tagName.equals("highlight")) {
+                        //validate highlight markup tag attrbutes, shouldn't contain regex and substring simultaneously
+                        if (validateHighlightMarkupTagAttributes(markUpTag.markUpTagAttributes)) {
+                            //error: snippet markup: attributes "substring" and "regex" used simultaneously
+                           regionTagLineMapper = null;
+                           markUpTagLineMapper = null;
+                           break main;
+                        }
+                        Map<String, String> hAttrib = new HashMap<>();
+                        //refactor this for loop later
+                        for (MarkUpTagAttribute markUpTagAttribute : markUpTag.markUpTagAttributes) {
+                            hAttrib.putIfAbsent(markUpTagAttribute.getName(), markUpTagAttribute.getValue());
+                        }
+                        
+                        if(hAttrib.containsKey("region")){
+                            String regionVal = hAttrib.get("region");
+                            hAttrib.remove("region");
+                            Region region = new Region(regionVal, hAttrib);
+                            regionList.add(region);
+                            List<Region> newRegionList = new ArrayList<>(regionList);
+                            regionTagLineMapper.put(nextLine, newRegionList);
+                        } else{
+                            Attrib attrib = new Attrib(hAttrib);
+                            attribList.add(attrib);
+                            List<Attrib> newAttribList = new ArrayList<>(attribList);
+                            markUpTagLineMapper.put(thisLine, newAttribList);
+                        }
+                    }
+                    if (markUpTag.tagName.equals("end")){
+                        List<Region> newRegionList = new ArrayList<>(regionList);
+                        regionTagLineMapper.put(nextLine -1, newRegionList);
+                        Map<String, String> eAttrib = new HashMap<>();
+                        //refactor this for loop later
+                        for (MarkUpTagAttribute markUpTagAttribute : markUpTag.markUpTagAttributes) {
+                            eAttrib.putIfAbsent(markUpTagAttribute.getName(), markUpTagAttribute.getValue());
+                        }
+                        
+                        if(eAttrib.containsKey("region")){
+                            String regionVal = eAttrib.get("region");
+                            regionVal = regionVal == null || regionVal.isEmpty() ? "anonymous" : regionVal;
+                            
+                            for(int i = regionList.size() - 1; i >=0 ; i--){
+                                if(regionList.get(i).getValue().equals(regionVal)){
+                                    regionList.remove(i);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            thisLine++;
+        }
+        return new ProcessedTags(markUpTagLineMapper, regionTagLineMapper);
+    }
+    
+    
+    private class Region{
+        private final String value;
+        private Map<String, String> attributes;
+
+        Region(String value, Map<String, String> attributes){
+            this.value = value == null || value.isEmpty() ? "anonymous" : value;
+            this.attributes = attributes;
+        }
+
+        public Map<String, String> getAttributes() {
+            return attributes;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return "Region{" + "value=" + value + ", attributes=" + attributes + '}';
+        }
+        
+        
+        
+    }
+    
+    class Attrib{
+        private Map<String, String> attributes;
+
+        Attrib(Map<String, String> attributes){
+            this.attributes = attributes;
+        }
+
+        public Map<String, String> getAttributes() {
+            return attributes;
+        }
+
+        @Override
+        public String toString() {
+            return "Attrib{" + "attributes=" + attributes + '}';
+        }
+        
+        
+
+    }
+    
+    class ProcessedTags{
+        Map<Integer, List<Attrib>> markUpTagLineMapper;
+        Map<Integer, List<Region>> regionTagLineMapper;
+
+        public ProcessedTags(Map<Integer, List<Attrib>> markUpTagLineMapper, Map<Integer, List<Region>> regionTagLineMapper) {
+            this.markUpTagLineMapper = markUpTagLineMapper;
+            this.regionTagLineMapper = regionTagLineMapper;
+        }
+
+        public void setMarkUpTagLineMapper(Map<Integer, List<Attrib>> markUpTagLineMapper) {
+            this.markUpTagLineMapper = markUpTagLineMapper;
+        }
+
+        public void setRegionTagLineMapper(Map<Integer, List<Region>> regionTagLineMapper) {
+            this.regionTagLineMapper = regionTagLineMapper;
+        }
+        
+        
+    }
+    private boolean validateHighlightMarkupTagAttributes(Set<MarkUpTagAttribute> markUpTagAttributes){
+        boolean subString = false;
+        boolean regex = false;
+        for(MarkUpTagAttribute attribute: markUpTagAttributes){
+            if(attribute.getName().equals("substring")){
+                subString = true;
+            }
+            if(attribute.getName().equals("regex")){
+                regex = true;
+            }
+        }
+        
+        return subString && regex;
+    }
     private void appendReference(StringBuilder sb, ReferenceTree ref, List<? extends DocTree> label, TreePath docPath, DocCommentTree doc, DocTrees trees) {
         String sig = ref.getSignature();
         if (sig != null && sig.length() > 0) {

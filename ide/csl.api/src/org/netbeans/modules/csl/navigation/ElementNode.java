@@ -242,6 +242,11 @@ public class ElementNode extends AbstractNode {
             Node[] children = ch.getNodes();
             for (int i = 0; i < children.length; i++) {
                 ElementNode c = (ElementNode) children[i];
+                if (this.getFileObject() != c.getDescription().getElementHandle().getFileObject()) {
+                    // e.g. inherited items may be in another file
+                    // in such a case, incorrect item is highlighted on the navigator window if the FileObjects are not checked
+                    continue;
+                }
                 long start = c.getDescription().getPosition();
                 if (start <= offset) {
                     long end = c.getDescription().getEndPosition();

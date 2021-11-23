@@ -2824,7 +2824,6 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        WorkspaceEdit[] edit = new WorkspaceEdit[1];
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
@@ -2851,8 +2850,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
-                edit[0] = params.getEdit();
-                return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
         }, client.getInputStream(), client.getOutputStream());
@@ -2871,9 +2869,12 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> Bundle.DN_GenerateGetterSetterFor("f2").equals(a.getTitle()))
                            .findAny();
         assertTrue(generateGetterSetter.isPresent());
-        server.getWorkspaceService().executeCommand(new ExecuteCommandParams(generateGetterSetter.get().getCommand().getCommand(), generateGetterSetter.get().getCommand().getArguments())).get();
-        assertEquals(1, edit[0].getChanges().size());
-        List<TextEdit> fileChanges = edit[0].getChanges().get(uri);
+        CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateGetterSetter.get()).get();
+        assertNotNull(resolvedCodeAction);
+        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        assertNotNull(edit);
+        assertEquals(1, edit.getChanges().size());
+        List<TextEdit> fileChanges = edit.getChanges().get(uri);
         assertNotNull(fileChanges);
         assertEquals(1, fileChanges.size());
         assertEquals(new Range(new Position(6, 0),
@@ -2900,7 +2901,6 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        WorkspaceEdit[] edit = new WorkspaceEdit[1];
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
             @Override
             public void telemetryEvent(Object arg0) {
@@ -2927,8 +2927,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
-                edit[0] = params.getEdit();
-                return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -2987,13 +2986,12 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> Bundle.DN_GenerateConstructor().equals(a.getTitle()))
                            .findAny();
         assertTrue(generateConstructor.isPresent());
-        server.getWorkspaceService().executeCommand(new ExecuteCommandParams(generateConstructor.get().getCommand().getCommand(), generateConstructor.get().getCommand().getArguments())).get();
-        int cnt = 0;
-        while(edit[0] == null && cnt++ < 10) {
-            Thread.sleep(1000);
-        }
-        assertEquals(1, edit[0].getChanges().size());
-        List<TextEdit> fileChanges = edit[0].getChanges().get(uri);
+        CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateConstructor.get()).get();
+        assertNotNull(resolvedCodeAction);
+        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        assertNotNull(edit);
+        assertEquals(1, edit.getChanges().size());
+        List<TextEdit> fileChanges = edit.getChanges().get(uri);
         assertNotNull(fileChanges);
         assertEquals(1, fileChanges.size());
         assertEquals(new Range(new Position(3, 0),
@@ -3016,7 +3014,6 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        WorkspaceEdit[] edit = new WorkspaceEdit[1];
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
@@ -3043,8 +3040,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
-                edit[0] = params.getEdit();
-                return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
         }, client.getInputStream(), client.getOutputStream());
@@ -3055,7 +3051,7 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(3, 0), new Position(3, 0)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Source)))).get();
-        assertEquals(9, codeActions.size());
+        assertEquals(10, codeActions.size());
         Optional<CodeAction> generateGetterSetter =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -3063,9 +3059,12 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> Bundle.DN_GenerateGetterSetterFor("f2").equals(a.getTitle()))
                            .findAny();
         assertTrue(generateGetterSetter.isPresent());
-        server.getWorkspaceService().executeCommand(new ExecuteCommandParams(generateGetterSetter.get().getCommand().getCommand(), generateGetterSetter.get().getCommand().getArguments())).get();
-        assertEquals(1, edit[0].getChanges().size());
-        List<TextEdit> fileChanges = edit[0].getChanges().get(uri);
+        CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateGetterSetter.get()).get();
+        assertNotNull(resolvedCodeAction);
+        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        assertNotNull(edit);
+        assertEquals(1, edit.getChanges().size());
+        List<TextEdit> fileChanges = edit.getChanges().get(uri);
         assertNotNull(fileChanges);
         assertEquals(1, fileChanges.size());
         assertEquals(new Range(new Position(3, 0),
@@ -3082,7 +3081,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(0).getNewText());
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(fileChanges.get(0).getRange(), 0, fileChanges.get(0).getNewText()))));
         codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(3, 0), new Position(3, 0)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Source)))).get();
-        assertEquals(7, codeActions.size());
+        assertEquals(8, codeActions.size());
         Optional<CodeAction> generateGetter =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -3090,9 +3089,12 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> Bundle.DN_GenerateGetterFor("f1").equals(a.getTitle()))
                            .findAny();
         assertTrue(generateGetter.isPresent());
-        server.getWorkspaceService().executeCommand(new ExecuteCommandParams(generateGetter.get().getCommand().getCommand(), generateGetter.get().getCommand().getArguments())).get();
-        assertEquals(1, edit[0].getChanges().size());
-        fileChanges = edit[0].getChanges().get(uri);
+        resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateGetter.get()).get();
+        assertNotNull(resolvedCodeAction);
+        edit = resolvedCodeAction.getEdit();
+        assertNotNull(edit);
+        assertEquals(1, edit.getChanges().size());
+        fileChanges = edit.getChanges().get(uri);
         assertNotNull(fileChanges);
         assertEquals(1, fileChanges.size());
         assertEquals(new Range(new Position(11, 0),
@@ -3114,7 +3116,6 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        WorkspaceEdit[] edit = new WorkspaceEdit[1];
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
             @Override
             public void telemetryEvent(Object arg0) {
@@ -3141,8 +3142,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
-                edit[0] = params.getEdit();
-                return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -3193,7 +3193,7 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 0), new Position(2, 0)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Source)))).get();
-        assertEquals(7, codeActions.size());
+        assertEquals(8, codeActions.size());
         Optional<CodeAction> generateConstructor =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -3201,13 +3201,12 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> Bundle.DN_GenerateConstructor().equals(a.getTitle()))
                            .findAny();
         assertTrue(generateConstructor.isPresent());
-        server.getWorkspaceService().executeCommand(new ExecuteCommandParams(generateConstructor.get().getCommand().getCommand(), generateConstructor.get().getCommand().getArguments())).get();
-        int cnt = 0;
-        while(edit[0] == null && cnt++ < 10) {
-            Thread.sleep(1000);
-        }
-        assertEquals(1, edit[0].getChanges().size());
-        List<TextEdit> fileChanges = edit[0].getChanges().get(uri);
+        CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateConstructor.get()).get();
+        assertNotNull(resolvedCodeAction);
+        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        assertNotNull(edit);
+        assertEquals(1, edit.getChanges().size());
+        List<TextEdit> fileChanges = edit.getChanges().get(uri);
         assertNotNull(fileChanges);
         assertEquals(1, fileChanges.size());
         assertEquals(new Range(new Position(2, 0),
@@ -3245,7 +3244,6 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        WorkspaceEdit[] edit = new WorkspaceEdit[1];
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
             @Override
             public void telemetryEvent(Object arg0) {
@@ -3272,8 +3270,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
-                edit[0] = params.getEdit();
-                return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -3324,7 +3321,7 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(5, 0), new Position(5, 0)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Source)))).get();
-        assertEquals(9, codeActions.size());
+        assertEquals(10, codeActions.size());
         Optional<CodeAction> generateEquals =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -3332,13 +3329,12 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> Bundle.DN_GenerateEquals().equals(a.getTitle()))
                            .findAny();
         assertTrue(generateEquals.isPresent());
-        server.getWorkspaceService().executeCommand(new ExecuteCommandParams(generateEquals.get().getCommand().getCommand(), generateEquals.get().getCommand().getArguments())).get();
-        int cnt = 0;
-        while(edit[0] == null && cnt++ < 10) {
-            Thread.sleep(1000);
-        }
-        assertEquals(1, edit[0].getChanges().size());
-        List<TextEdit> fileChanges = edit[0].getChanges().get(uri);
+        CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateEquals.get()).get();
+        assertNotNull(resolvedCodeAction);
+        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        assertNotNull(edit);
+        assertEquals(1, edit.getChanges().size());
+        List<TextEdit> fileChanges = edit.getChanges().get(uri);
         assertNotNull(fileChanges);
         assertEquals(1, fileChanges.size());
         assertEquals(new Range(new Position(13, 0),
@@ -3374,7 +3370,6 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        WorkspaceEdit[] edit = new WorkspaceEdit[1];
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
             @Override
             public void telemetryEvent(Object arg0) {
@@ -3401,8 +3396,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
-                edit[0] = params.getEdit();
-                return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -3453,7 +3447,7 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 0), new Position(2, 0)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Source)))).get();
-        assertEquals(7, codeActions.size());
+        assertEquals(8, codeActions.size());
         Optional<CodeAction> generateToString =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -3461,13 +3455,12 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> Bundle.DN_GenerateToString().equals(a.getTitle()))
                            .findAny();
         assertTrue(generateToString.isPresent());
-        server.getWorkspaceService().executeCommand(new ExecuteCommandParams(generateToString.get().getCommand().getCommand(), generateToString.get().getCommand().getArguments())).get();
-        int cnt = 0;
-        while(edit[0] == null && cnt++ < 10) {
-            Thread.sleep(1000);
-        }
-        assertEquals(1, edit[0].getChanges().size());
-        List<TextEdit> fileChanges = edit[0].getChanges().get(uri);
+        CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateToString.get()).get();
+        assertNotNull(resolvedCodeAction);
+        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        assertNotNull(edit);
+        assertEquals(1, edit.getChanges().size());
+        List<TextEdit> fileChanges = edit.getChanges().get(uri);
         assertNotNull(fileChanges);
         assertEquals(1, fileChanges.size());
         assertEquals(new Range(new Position(2, 0),
@@ -3494,7 +3487,6 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        WorkspaceEdit[] edit = new WorkspaceEdit[1];
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
             @Override
             public void telemetryEvent(Object arg0) {
@@ -3521,8 +3513,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
-                edit[0] = params.getEdit();
-                return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -3573,7 +3564,7 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 0), new Position(2, 0)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Source)))).get();
-        assertEquals(7, codeActions.size());
+        assertEquals(8, codeActions.size());
         Optional<CodeAction> generateDelegateMethod =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -3581,13 +3572,12 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> Bundle.DN_GenerateDelegateMethod().equals(a.getTitle()))
                            .findAny();
         assertTrue(generateDelegateMethod.isPresent());
-        server.getWorkspaceService().executeCommand(new ExecuteCommandParams(generateDelegateMethod.get().getCommand().getCommand(), generateDelegateMethod.get().getCommand().getArguments())).get();
-        int cnt = 0;
-        while(edit[0] == null && cnt++ < 10) {
-            Thread.sleep(1000);
-        }
-        assertEquals(1, edit[0].getChanges().size());
-        List<TextEdit> fileChanges = edit[0].getChanges().get(uri);
+        CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateDelegateMethod.get()).get();
+        assertNotNull(resolvedCodeAction);
+        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        assertNotNull(edit);
+        assertEquals(1, edit.getChanges().size());
+        List<TextEdit> fileChanges = edit.getChanges().get(uri);
         assertNotNull(fileChanges);
         assertEquals(2, fileChanges.size());
         assertEquals(new Range(new Position(0, 0),
@@ -3618,7 +3608,6 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        WorkspaceEdit[] edit = new WorkspaceEdit[1];
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
             @Override
             public void telemetryEvent(Object arg0) {
@@ -3645,8 +3634,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
-                edit[0] = params.getEdit();
-                return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -3697,7 +3685,7 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 0), new Position(2, 0)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Source)))).get();
-        assertEquals(7, codeActions.size());
+        assertEquals(8, codeActions.size());
         Optional<CodeAction> generateOverrideMethod =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -3705,13 +3693,12 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> Bundle.DN_GenerateOverrideMethod().equals(a.getTitle()))
                            .findAny();
         assertTrue(generateOverrideMethod.isPresent());
-        server.getWorkspaceService().executeCommand(new ExecuteCommandParams(generateOverrideMethod.get().getCommand().getCommand(), generateOverrideMethod.get().getCommand().getArguments())).get();
-        int cnt = 0;
-        while(edit[0] == null && cnt++ < 10) {
-            Thread.sleep(1000);
-        }
-        assertEquals(1, edit[0].getChanges().size());
-        List<TextEdit> fileChanges = edit[0].getChanges().get(uri);
+        CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateOverrideMethod.get()).get();
+        assertNotNull(resolvedCodeAction);
+        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        assertNotNull(edit);
+        assertEquals(1, edit.getChanges().size());
+        List<TextEdit> fileChanges = edit.getChanges().get(uri);
         assertNotNull(fileChanges);
         assertEquals(1, fileChanges.size());
         assertEquals(new Range(new Position(2, 0),
@@ -3739,7 +3726,6 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        WorkspaceEdit[] edit = new WorkspaceEdit[1];
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
             @Override
             public void telemetryEvent(Object arg0) {
@@ -3766,8 +3752,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
-                edit[0] = params.getEdit();
-                return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -3818,7 +3803,7 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 0), new Position(2, 0)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Source)))).get();
-        assertEquals(7, codeActions.size());
+        assertEquals(8, codeActions.size());
         Optional<CodeAction> generateLogger =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -3826,13 +3811,12 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> Bundle.DN_GenerateLogger().equals(a.getTitle()))
                            .findAny();
         assertTrue(generateLogger.isPresent());
-        server.getWorkspaceService().executeCommand(new ExecuteCommandParams(generateLogger.get().getCommand().getCommand(), generateLogger.get().getCommand().getArguments())).get();
-        int cnt = 0;
-        while(edit[0] == null && cnt++ < 10) {
-            Thread.sleep(1000);
-        }
-        assertEquals(1, edit[0].getChanges().size());
-        List<TextEdit> fileChanges = edit[0].getChanges().get(uri);
+        CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateLogger.get()).get();
+        assertNotNull(resolvedCodeAction);
+        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        assertNotNull(edit);
+        assertEquals(1, edit.getChanges().size());
+        List<TextEdit> fileChanges = edit.getChanges().get(uri);
         assertNotNull(fileChanges);
         assertEquals(2, fileChanges.size());
         assertEquals(new Range(new Position(0, 0),
@@ -3846,6 +3830,82 @@ public class ServerTest extends NbTestCase {
         assertEquals("\n" +
                      "    private static final Logger LOGGER = Logger.getLogger(Test.class.getName());\n",
                      fileChanges.get(1).getNewText());
+    }
+
+    public void testSourceActionOrganizeImports() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "import java.util.List;\n" +
+                      "import java.util.ArrayList;\n" +
+                      "import java.util.Collection;\n" +
+                      "\n" +
+                      "public class Test {\n" +
+                      "    private final List<String> names = new ArrayList<>();\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        server.initialize(new InitializeParams()).get();
+        String uri = src.toURI().toString();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(6, 0), new Position(6, 0)), new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Source)))).get();
+        assertEquals(8, codeActions.size());
+        Optional<CodeAction> organizeImports =
+                codeActions.stream()
+                           .filter(Either::isRight)
+                           .map(Either::getRight)
+                           .filter(a -> Bundle.DN_OrganizeImports().equals(a.getTitle()))
+                           .findAny();
+        assertTrue(organizeImports.isPresent());
+        CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(organizeImports.get()).get();
+        assertNotNull(resolvedCodeAction);
+        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        assertNotNull(edit);
+        assertEquals(1, edit.getChanges().size());
+        List<TextEdit> fileChanges = edit.getChanges().get(uri);
+        assertNotNull(fileChanges);
+        assertEquals(2, fileChanges.size());
+        assertEquals(new Range(new Position(0, 0),
+                               new Position(1, 0)),
+                     fileChanges.get(0).getRange());
+        assertEquals("", fileChanges.get(0).getNewText());
+        assertEquals(new Range(new Position(2, 17),
+                               new Position(2, 27)),
+                     fileChanges.get(1).getRange());
+        assertEquals("List", fileChanges.get(1).getNewText());
     }
 
     public void testRenameDocumentChangesCapabilitiesRenameOp() throws Exception {

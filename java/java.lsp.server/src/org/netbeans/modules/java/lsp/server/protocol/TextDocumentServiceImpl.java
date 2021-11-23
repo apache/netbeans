@@ -146,6 +146,7 @@ import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.TypeDefinitionParams;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
+import org.eclipse.lsp4j.WillSaveTextDocumentParams;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
@@ -193,6 +194,7 @@ import org.netbeans.modules.java.editor.base.semantic.SemanticHighlighterBase.Er
 import org.netbeans.modules.java.editor.options.MarkOccurencesSettings;
 import org.netbeans.modules.java.editor.overridden.ComputeOverriding;
 import org.netbeans.modules.java.editor.overridden.ElementDescription;
+import org.netbeans.modules.java.hints.OrganizeImports;
 import org.netbeans.modules.java.hints.introduce.IntroduceFixBase;
 import org.netbeans.modules.java.hints.introduce.IntroduceHint;
 import org.netbeans.modules.java.hints.introduce.IntroduceKind;
@@ -251,6 +253,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     private static final String COMMAND_RUN_SINGLE = "java.run.single";         // NOI18N
     private static final String COMMAND_DEBUG_SINGLE = "java.debug.single";     // NOI18N
     private static final String NETBEANS_JAVADOC_LOAD_TIMEOUT = "netbeans.javadoc.load.timeout";// NOI18N
+    private static final String NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS = "netbeans.java.onSave.organizeImports";// NOI18N
     
     private static final RequestProcessor BACKGROUND_TASKS = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
     private static final RequestProcessor WORKER = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
@@ -1061,6 +1064,23 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         return resultFuture;
     }
 
+    @Override
+    public CompletableFuture<CodeAction> resolveCodeAction(CodeAction unresolved) {
+        JsonObject data = (JsonObject) unresolved.getData();
+        if (data != null) {
+            String providerClass = data.getAsJsonPrimitive(CodeActionsProvider.CODE_ACTIONS_PROVIDER_CLASS).getAsString();
+            for (CodeActionsProvider codeGenerator : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
+                try {
+                    if (codeGenerator.getClass().getName().equals(providerClass)) {
+                        return codeGenerator.resolve(client, unresolved, data.get(CodeActionsProvider.DATA));
+                    }
+                } catch (Exception ex) {
+                }
+            }
+        }
+        return CompletableFuture.completedFuture(unresolved);
+    }
+
     @NbBundle.Messages({"# {0} - method name", "LBL_Run=Run {0}",
                         "# {0} - method name", "LBL_Debug=Debug {0}",
                         "# {0} - method name", "# {1} - configuration name", "LBL_RunWith=Run {0} with {1}",
@@ -1498,6 +1518,30 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         } finally {
             reportNotificationDone("didClose", params);
         }
+    }
+
+    @Override
+    public CompletableFuture<List<TextEdit>> willSaveWaitUntil(WillSaveTextDocumentParams params) {
+        String uri = params.getTextDocument().getUri();
+        JavaSource js = getJavaSource(uri);
+        if (js == null) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
+        ConfigurationItem conf = new ConfigurationItem();
+        conf.setScopeUri(uri);
+        conf.setSection(NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS);
+        return client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenApply(c -> {
+            if (c != null && !c.isEmpty() && ((JsonPrimitive) c.get(0)).getAsBoolean()) {
+                try {
+                    List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
+                        wc.toPhase(JavaSource.Phase.RESOLVED);
+                        OrganizeImports.doOrganizeImports(wc, null, false);
+                    });
+                    return edits;
+                } catch (IOException ex) {}
+            }
+            return Collections.emptyList();
+        });
     }
 
     @Override

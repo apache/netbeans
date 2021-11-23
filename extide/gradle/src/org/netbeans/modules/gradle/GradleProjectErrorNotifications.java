@@ -62,7 +62,7 @@ public class GradleProjectErrorNotifications {
         sb.append("<ul>");                                   //NOI18N
         for (Object element : elements) {
             sb.append("<li>");                               //NOI18N
-            String[] lines = element.toString().split("\n"); //NOI18N
+            String[] lines = String.valueOf(element).split("\n"); //NOI18N
             for (int i = 0; i < lines.length; i++) {
                 String line = lines[i];
                 sb.append(lineWrap(line, 78));

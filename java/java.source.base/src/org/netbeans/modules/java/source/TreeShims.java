@@ -372,6 +372,17 @@ public class TreeShims {
         }
     }
     
+    public static boolean isPatternMatch(Tree node) {
+        if (isJDKVersionRelease17_Or_Above()) {
+            try {
+                return node.getClass().getField("patternSwitch").getBoolean(node);
+            } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException ex) {
+                throw TreeShims.<RuntimeException>throwAny(ex);
+            }
+        }
+        return false;
+    }
+
     public static boolean isJDKVersionSupportEnablePreview() {
         return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(PATTERN_MATCHING_INSTANCEOF_PREVIEW_JDK_VERSION) <= 0;
     }

@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
@@ -48,6 +47,7 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.openide.awt.HtmlBrowser;
@@ -94,7 +94,7 @@ public class ConfigurationsNode extends AbstractNode {
     })
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public ConfigurationsNode(NbGradleProjectImpl project) {
-        super(Children.create(new ConfigurationsChildren(project), true), Lookups.singleton(project));
+        super(Children.create(new ConfigurationsChildren(project), false), Lookups.singleton(project));
         this.project = project;
         setName("configurations"); //NOI18N
         setDisplayName(Bundle.LBL_ConfigurationsNode());
@@ -108,7 +108,7 @@ public class ConfigurationsNode extends AbstractNode {
     public Image getIcon(int type) {
         GradleProject gp = project.getGradleProject();
         Image ret = ImageUtilities.loadImage(LIBRARIES_ICON);
-        if (gp.getQuality().worseThan(Quality.FULL) || !gp.getBaseProject().isResolved()) {
+        if (gp.getQuality().worseThan(Quality.FULL) || needsResolve()) {
             Image warn = ImageUtilities.loadImage(WARNING_BADGE);
             ret = ImageUtilities.mergeImages(ret, warn, 8, 0);
         }
@@ -134,8 +134,12 @@ public class ConfigurationsNode extends AbstractNode {
     })
     @Override
     public String getShortDescription() {
-        GradleProject gp = project.getGradleProject();
-        return gp.getBaseProject().isResolved() ? Bundle.HINT_ConfigurationsNode() : Bundle.HINT_ConfigurationsNodeUnresolved();
+        return !needsResolve() ? Bundle.HINT_ConfigurationsNode() : Bundle.HINT_ConfigurationsNodeUnresolved();
+    }
+
+    private boolean needsResolve() {
+        GradleBaseProject gbp = GradleBaseProject.get(project);
+        return !gbp.isResolved() && !gbp.hasPlugins("java-platform"); //NOI18N
     }
 
     private static class ConfigurationsChildren extends ChildFactory.Detachable<GradleConfiguration> implements PreferenceChangeListener, PropertyChangeListener {
@@ -148,7 +152,7 @@ public class ConfigurationsNode extends AbstractNode {
 
         @Override
         protected Node createNodeForKey(GradleConfiguration conf) {
-            Children ch = conf.isEmpty() ? Children.LEAF : Children.create(new ConfigurationChildren(project, conf.getName()), true);
+            Children ch = conf.isEmpty() ? Children.LEAF : Children.create(new ConfigurationChildren(project, conf.getName()), false);
             AbstractNode ret = new AbstractNode(ch);
             ret.setName(conf.getName());
             ret.setShortDescription(conf.getDescription());
@@ -220,6 +224,7 @@ public class ConfigurationsNode extends AbstractNode {
 
         @NbBundle.Messages({
             "LBL_LocalDependenciesNode=Local Files",
+            "HINT_NotResolvableConfiguration=This dependency is not resolved here as its configuration can't be resolved.",
         })
         @Override
         protected Node[] createNodesForKey(GradleDependency key) {
@@ -272,11 +277,15 @@ public class ConfigurationsNode extends AbstractNode {
                     break;
                 }
                 case UNRESOLVED: {
+                    GradleConfiguration conf = GradleBaseProject.get(project).getConfigurations().get(configuration);
                     GradleDependency.UnresolvedDependency dep = (GradleDependency.UnresolvedDependency) key;
 
                     AbstractNode node = new AbstractNode(Children.LEAF);
                     node.setName(dep.getId());
                     node.setIconBaseWithExtension(UNRESOLVED_ICON);
+                    if (!conf.isCanBeResolved()) {
+                        node.setShortDescription(Bundle.HINT_NotResolvableConfiguration());
+                    }
                     ret.add(node);
                     break;
                 }
@@ -287,9 +296,8 @@ public class ConfigurationsNode extends AbstractNode {
 
         @Override
         protected boolean createKeys(List<GradleDependency> list) {
-            GradleProject gp = project.getGradleProject();
             ArrayList<GradleDependency> ret = new ArrayList<>();
-            GradleConfiguration conf = gp.getBaseProject().getConfigurations().get(configuration);
+            GradleConfiguration conf = GradleBaseProject.get(project).getConfigurations().get(configuration);
             // We can get null here in some extreme cases, e.g. when the project is being deleted
             if (conf != null) {
                 ret.addAll(conf.getUnresolved());
@@ -313,7 +321,6 @@ public class ConfigurationsNode extends AbstractNode {
         @Override
         protected void addNotify() {
             NbGradleProject.addPropertyChangeListener(project, this);
-
         }
 
         @Override
@@ -419,12 +426,7 @@ public class ConfigurationsNode extends AbstractNode {
                     ret.add(fo);
                 }
             }
-            ret.sort(new Comparator<FileObject>() {
-                @Override
-                public int compare(FileObject o1, FileObject o2) {
-                    return o1.getNameExt().compareTo(o2.getNameExt());
-                }
-            });
+            ret.sort((FileObject o1, FileObject o2) -> o1.getNameExt().compareTo(o2.getNameExt()));
             keys.addAll(ret);
             return true;
         }

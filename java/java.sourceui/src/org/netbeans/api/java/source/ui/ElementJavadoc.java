@@ -1336,12 +1336,12 @@ public class ElementJavadoc {
             } else {
                 if (attributes != null) {
                     for (Attrib attrib : attributes) {
-                        uncommentLine = applyTagsToHTML(uncommentLine, attrib.getAttributes());
+                        uncommentLine = applyTagsToHTML(uncommentLine, attrib.getAttributes(), attrib.getTagType());
                     }
                 }
                 if (regions != null) {
                     for (Region region : regions) {
-                        uncommentLine = applyTagsToHTML(uncommentLine, region.getAttributes());
+                        uncommentLine = applyTagsToHTML(uncommentLine, region.getAttributes(), region.getTagType());
                     }
                 }
                 sb.append(uncommentLine);
@@ -1350,11 +1350,12 @@ public class ElementJavadoc {
         }
     }
 
-    private String applyTagsToHTML(String uncommentLine, Map<String, String> hAttrib) {
+    private String applyTagsToHTML(String uncommentLine, Map<String, String> hAttrib, String tagType) {
 
         String type = hAttrib.get("type") != null ? hAttrib.get("type") : "bold";
         String regex = hAttrib.get("regex");
         String subString = hAttrib.get("substring");
+        String replacement = tagType.equals("replace") ? hAttrib.get("replacement") : null;
 
         if (regex != null) {
             try {
@@ -1362,16 +1363,21 @@ public class ElementJavadoc {
                 Pattern pattern = Pattern.compile(regex);
                 Matcher matcher = pattern.matcher(uncommentLine);
                 while (matcher.find()) {
-                    switch (type) {
-                        case "italic":
-                            uncommentLine = matcher.replaceAll("<i>" + matcher.group(0) + "</i>");
-                            break;
-                        case "bold":
-                            uncommentLine = matcher.replaceAll("<b>" + matcher.group(0) + "</b>");
-                            break;
-                        case "highlighted":
-                            uncommentLine = matcher.replaceAll("<span style=\"background-color:yellow;\">" + matcher.group(0) + "</span>");
-                            break;
+                    if (tagType.equals("highlight")) {
+                        switch (type) {
+                            case "italic":
+                                uncommentLine = matcher.replaceAll("<i>" + matcher.group(0) + "</i>");
+                                break;
+                            case "bold":
+                                uncommentLine = matcher.replaceAll("<b>" + matcher.group(0) + "</b>");
+                                break;
+                            case "highlighted":
+                                uncommentLine = matcher.replaceAll("<span style=\"background-color:yellow;\">" + matcher.group(0) + "</span>");
+                                break;
+                        }
+                    }
+                    if(tagType.equals("replace") && replacement != null){
+                        uncommentLine = matcher.replaceAll(replacement);
                     }
                 }
             } catch (CharConversionException ex) {
@@ -1381,16 +1387,21 @@ public class ElementJavadoc {
         if (subString != null) {
             try {
                 subString = XMLUtil.toElementContent(subString);
-                switch (type) {
-                    case "italic":
-                        uncommentLine = uncommentLine.replace(subString, "<i>" + subString + "</i>");
-                        break;
-                    case "bold":
-                        uncommentLine = uncommentLine.replace(subString, "<b>" + subString + "</b>");
-                        break;
-                    case "highlighted":
-                        uncommentLine = uncommentLine.replace(subString, "<span style=\"background-color:yellow;\">" + subString + "</span>");
-                        break;
+                if (tagType.equals("highlight")) {
+                    switch (type) {
+                        case "italic":
+                            uncommentLine = uncommentLine.replace(subString, "<i>" + subString + "</i>");
+                            break;
+                        case "bold":
+                            uncommentLine = uncommentLine.replace(subString, "<b>" + subString + "</b>");
+                            break;
+                        case "highlighted":
+                            uncommentLine = uncommentLine.replace(subString, "<span style=\"background-color:yellow;\">" + subString + "</span>");
+                            break;
+                    }
+                }
+                if (tagType.equals("replace") && replacement != null) {
+                    uncommentLine = uncommentLine.replace(subString, replacement);
                 }
             } catch (CharConversionException ex) {
                 Exceptions.printStackTrace(ex);
@@ -1402,12 +1413,13 @@ public class ElementJavadoc {
         Map<Integer, List<Attrib>> markUpTagLineMapper = new TreeMap<>();
         Map<Integer, List<Region>> regionTagLineMapper = new TreeMap<>();
         List<Region> regionList = new ArrayList<>();
-        List<Attrib> attribList = new ArrayList<>();
+        
         int thisLine = 1;
         int nextLine = 1;
         
         main:
         for(SourceLineMeta fullLineInfo : parseResult){
+            List<Attrib> attribList = new ArrayList<>();
             nextLine++;
             //checkng no attribute on this line
             if(fullLineInfo.getThisLineMarkUpTags() == null){
@@ -1418,7 +1430,7 @@ public class ElementJavadoc {
                 
             } else {
                 for (MarkUpTag markUpTag : fullLineInfo.getThisLineMarkUpTags()) {
-                    if (markUpTag.tagName.equals("highlight")) {
+                    if (markUpTag.tagName.equals("highlight") || markUpTag.tagName.equals("replace")) {
                         //validate highlight markup tag attrbutes, shouldn't contain regex and substring simultaneously
                         if (validateHighlightMarkupTagAttributes(markUpTag.markUpTagAttributes)) {
                             //error: snippet markup: attributes "substring" and "regex" used simultaneously
@@ -1435,12 +1447,12 @@ public class ElementJavadoc {
                         if(hAttrib.containsKey("region")){
                             String regionVal = hAttrib.get("region");
                             hAttrib.remove("region");
-                            Region region = new Region(regionVal, hAttrib);
+                            Region region = new Region(regionVal, hAttrib, markUpTag.tagName);
                             regionList.add(region);
                             List<Region> newRegionList = new ArrayList<>(regionList);
                             regionTagLineMapper.put(nextLine, newRegionList);
                         } else{
-                            Attrib attrib = new Attrib(hAttrib);
+                            Attrib attrib = new Attrib(hAttrib, markUpTag.tagName);
                             attribList.add(attrib);
                             List<Attrib> newAttribList = new ArrayList<>(attribList);
                             markUpTagLineMapper.put(thisLine, newAttribList);
@@ -1476,12 +1488,14 @@ public class ElementJavadoc {
     
     
     private class Region{
+        private final String tagType;
         private final String value;
         private Map<String, String> attributes;
 
-        Region(String value, Map<String, String> attributes){
+        Region(String value, Map<String, String> attributes, String tagType){
             this.value = value == null || value.isEmpty() ? "anonymous" : value;
             this.attributes = attributes;
+            this.tagType = tagType;
         }
 
         public Map<String, String> getAttributes() {
@@ -1490,6 +1504,10 @@ public class ElementJavadoc {
 
         public String getValue() {
             return value;
+        }
+        
+        public String getTagType() {
+            return tagType;
         }
 
         @Override
@@ -1502,14 +1520,20 @@ public class ElementJavadoc {
     }
     
     class Attrib{
+        private final String tagType;
         private Map<String, String> attributes;
 
-        Attrib(Map<String, String> attributes){
+        Attrib(Map<String, String> attributes, String tagType){
             this.attributes = attributes;
+            this.tagType = tagType;
         }
 
         public Map<String, String> getAttributes() {
             return attributes;
+        }
+        
+        public String getTagType() {
+            return tagType;
         }
 
         @Override

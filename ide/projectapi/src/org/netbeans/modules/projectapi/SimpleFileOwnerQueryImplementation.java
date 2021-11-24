@@ -45,6 +45,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.spi.project.FileOwnerQueryImplementation;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.BaseUtilities;
 import org.openide.util.NbPreferences;
@@ -59,9 +60,13 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
     private static final Logger LOG = Logger.getLogger(SimpleFileOwnerQueryImplementation.class.getName());
     private static final URI UNOWNED_URI = URI.create("http:unowned");
     private static final Set<String> forbiddenFolders;
+    private static final String projectScanRoot;
+    
     static {
         Set<String> files = new HashSet<String>();
+        String root = null;
         try {
+            root = System.getProperty("project.limitScanRoot"); // NOI18N
             String forbidden = System.getProperty("project.forbiddenFolders", System.getProperty("versioning.forbiddenFolders", "")); //NOI18N
             files.addAll(Arrays.asList(forbidden.split("\\;"))); //NOI18N
             files.remove(""); //NOI18N
@@ -69,6 +74,7 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
             LOG.log(Level.INFO, e.getMessage(), e);
         }
         forbiddenFolders = files;
+        projectScanRoot = root;
     }
     
     /** Do nothing */
@@ -108,6 +114,9 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
         
         deserialize();
         while (f != null) {
+            if (projectScanRoot != null && (f.equals(projectScanRoot) || !f.getPath().startsWith(projectScanRoot))) {
+                break;
+            }
             boolean folder = f.isFolder();
             final URI[] furi = new URI[1];
             if (folder) {

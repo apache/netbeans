@@ -21,6 +21,7 @@ package org.netbeans.modules.htmlui;
 import org.netbeans.spi.htmlui.HtmlViewer;
 import java.net.URL;
 import java.util.concurrent.Callable;
+import java.util.function.Consumer;
 import org.openide.util.Lookup;
 
 final class HtmlPair<HtmlView> {
@@ -68,5 +69,9 @@ final class HtmlPair<HtmlView> {
 
     final boolean isDefault() {
         return this.viewer == HtmlComponent.VIEWER;
+    }
+
+    Object createButton(String id, Consumer<String> callback) {
+        return viewer.createButton(id, callback);
     }
 }

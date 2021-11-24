@@ -18,10 +18,11 @@
  */
 package org.netbeans.modules.htmlui;
 
-import java.awt.EventQueue;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import javax.swing.JButton;
+import java.util.Objects;
+import java.util.function.Consumer;
 import net.java.html.js.JavaScriptBody;
 import org.openide.util.NbBundle;
 
@@ -29,8 +30,14 @@ import org.openide.util.NbBundle;
  *
  * @author Jaroslav Tulach <jtulach@netbeans.org>
  */
-final class Buttons {
-    private final List<JButton> arr = new ArrayList<>();
+abstract class Buttons<Button> {
+    protected abstract Button createButton(String name);
+    protected abstract String getName(Button b);
+    protected abstract void setText(Button b, String text);
+    protected abstract void setEnabled(Button b, boolean enabled);
+    protected abstract void runLater(Runnable r);
+    
+    private final List<Button> arr = new ArrayList<>();
     
     @JavaScriptBody(args = {}, javacall = true, body = 
         "var self = this;\n" +
@@ -43,11 +50,6 @@ final class Buttons {
         "  }\n" +
         "  target.addEventListener('DOMSubtreeModified', l, false);\n" +
         "}\n" +
-        "var l = function(changes) { throw 'Here';\n" +
-        "  for (var i = 0; i < changes.length; i++) {\n" +
-        "    var b = changes[i].target;\n" +
-        "  };\n" +
-        "};\n" +
         "for (var i = 0; i < list.length; i++) {\n" +
         "  var b = list[i];\n" +
         "  if (b.hidden === true) {\n" +
@@ -62,14 +64,11 @@ final class Buttons {
     private native Object[] list();
     
     final void changeState(final String id, final boolean disabled, final String text) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                for (JButton b : arr) {
-                    if (b.getName().equals(id)) {
-                        b.setEnabled(!disabled);
-                        b.setText(text);
-                    }
+        runLater(() -> {
+            for (Button b : arr) {
+                if (Objects.equals(getName(b), id)) {
+                    setEnabled(b, !disabled);
+                    setText(b, text);
                 }
             }
         });
@@ -79,24 +78,27 @@ final class Buttons {
         "CTL_OK=OK",
         "CTL_Cancel=Cancel",
     })
-    public static JButton[] buttons() {
-        final Buttons btns = new Buttons();
-        final Object[] all = btns.list();
-        for (int i = 0; i < all.length; i += 3) {
-            JButton b = new JButton();
-            b.setName(all[i].toString());
-            b.setText(all[i + 1].toString());
-            if (Boolean.TRUE.equals(all[i + 2])) {
-                b.setEnabled(false);
+    public List<Button> buttons() {
+        if (arr.isEmpty()) {
+            final Object[] all = list();
+            for (int i = 0; i < all.length; i += 3) {
+                final String id = all[i].toString();
+                Button b = createButton(id);
+                setText(b, all[i + 1].toString());
+                if (Boolean.TRUE.equals(all[i + 2])) {
+                    setEnabled(b, false);
+                }
+                arr.add(b);
             }
-            btns.arr.add(b);
+            if (arr.isEmpty()) {
+                Button ok = createButton("OK"); // NOI18N
+                setText(ok, Bundle.CTL_OK());
+                arr.add(ok);
+                Button cancel = createButton(null);
+                setText(cancel, Bundle.CTL_Cancel());
+                arr.add(cancel);
+            }
         }
-        if (btns.arr.isEmpty()) {
-            JButton ok = new JButton(Bundle.CTL_OK());
-            ok.setName("OK");
-            btns.arr.add(ok);
-            btns.arr.add(new JButton(Bundle.CTL_Cancel()));
-        }
-        return btns.arr.toArray(new JButton[0]);
+        return Collections.unmodifiableList(arr);
     }
 }

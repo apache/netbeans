@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import javax.swing.JComponent;
 import net.java.html.js.JavaScriptBody;
@@ -155,6 +156,11 @@ public final class HtmlComponent extends TopComponent {
         @Override
         public void load(HtmlComponent view, ClassLoader loader, URL pageUrl, Callable<Object> initialize, String[] techIds) {
             view.loadFX(loader, pageUrl, initialize, techIds);
+        }
+
+        @Override
+        public Object createButton(String id, Consumer<String> run) {
+            return null;
         }
     };
 }

@@ -25,6 +25,7 @@ import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import org.openide.*;
@@ -33,8 +34,7 @@ import org.openide.util.Lookup;
 
 final class HTMLDialogImpl extends HTMLDialogBase implements Runnable {
     private volatile int state;
-    private JComponent p;
-    private DialogDescriptor dd;
+    private ChromeWithButtons panel;
     private Object webView;
     private boolean nestedLoop;
 
@@ -50,7 +50,7 @@ final class HTMLDialogImpl extends HTMLDialogBase implements Runnable {
                 break;
             case 1:
                 state = 2;
-                webView = HtmlToolkit.getDefault().initHtmlDialog(url, dd, p, this, techIds);
+                webView = HtmlToolkit.getDefault().initHtmlDialog(url, panel.dd, panel.p, this, techIds);
                 break;
             case 2:
                 initPage();
@@ -75,6 +75,7 @@ final class HTMLDialogImpl extends HTMLDialogBase implements Runnable {
         }
     }
 
+    @Override
     public String showAndWait() {
         if (EventQueue.isDispatchThread()) {
             run();
@@ -93,20 +94,14 @@ final class HTMLDialogImpl extends HTMLDialogBase implements Runnable {
                 showDialog();
             }
         }
-        Object val = dd.getValue();
-        return val instanceof JButton ? ((JButton)val).getName() : null;
+        return panel.getValueName();
     }
 
     private void showDialog() {
-        p.setPreferredSize(new Dimension(600, 400));
-        Dialog d = DialogDisplayer.getDefault().createDialog(dd);
-        d.setVisible(true);
+        panel.showDialog();
     }
 
     private void initPanel() {
-        p = HtmlToolkit.getDefault().newPanel();
-        dd = new DialogDescriptor(p, "");
-        dd.setOptions(new Object[0]);
         state = 1;
         HtmlToolkit.getDefault().execute(this);
     }
@@ -117,10 +112,10 @@ final class HTMLDialogImpl extends HTMLDialogBase implements Runnable {
         } catch (Throwable t) {
             Exceptions.printStackTrace(t);
         }
-        final JButton[] buttons = Buttons.buttons();
-        dd.setOptions(buttons);
+        panel.initButtons();
     }
 
+    @Override
     public <C> C component(Class<C> type) {
         state = -1;
         ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
@@ -134,5 +129,61 @@ final class HTMLDialogImpl extends HTMLDialogBase implements Runnable {
             throw new IllegalStateException(ex);
         }
         return HtmlToolkit.getDefault().convertToComponent(type, pageUrl, loader, onPageLoad, techIds);
+    }
+    
+    private static final class ChromeWithButtons extends Buttons<JButton> {
+        final JComponent p;
+        final DialogDescriptor dd;
+
+        public ChromeWithButtons() {
+            this.p = HtmlToolkit.getDefault().newPanel();
+            this.dd = new DialogDescriptor(p, "");
+            this.dd.setOptions(new Object[0]);
+        }
+        
+        
+
+        @Override
+        protected JButton createButton(String name) {
+            JButton b = new JButton();
+            b.setName(name);
+            return b;
+        }
+
+        @Override
+        protected String getName(JButton b) {
+            return b.getName();
+        }
+
+        @Override
+        protected void setText(JButton b, String text) {
+            b.setText(text);
+        }
+
+        @Override
+        protected void setEnabled(JButton b, boolean enabled) {
+            b.setEnabled(enabled);
+        }
+
+        @Override
+        protected void runLater(Runnable r) {
+            EventQueue.invokeLater(r);
+        }
+
+        String getValueName() {
+            Object val = dd.getValue();
+            return val instanceof JButton ? ((JButton)val).getName() : null;
+        }
+
+        void showDialog() {
+            p.setPreferredSize(new Dimension(600, 400));
+            Dialog d = DialogDisplayer.getDefault().createDialog(dd);
+            d.setVisible(true);
+        }
+
+        void initButtons() {
+            List<JButton> buttons = buttons();
+            dd.setOptions(buttons.toArray(new JButton[0]));
+        }
     }
 }

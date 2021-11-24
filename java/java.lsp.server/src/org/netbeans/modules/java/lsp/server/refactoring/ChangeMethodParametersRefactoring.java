@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -61,6 +62,7 @@ import org.netbeans.modules.refactoring.java.api.ChangeParametersRefactoring;
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -132,13 +134,24 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
                 FileObject file = Utils.fromUri(uri);
                 JavaSource js = JavaSource.forFileObject(file);
                 if (js != null) {
-                    js.runUserActionTask(ci -> {
-                        ci.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                        ExecutableElement method = (ExecutableElement) handle.resolve(ci);
-                        if (method != null) {
-                            Pages.showChangeMethodParametersUI(ci, client, file, handle, method);
+                    return CompletableFuture.supplyAsync(() -> {
+                        try {
+                            js.runUserActionTask(ci -> {
+                                ci.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                                ExecutableElement method = (ExecutableElement) handle.resolve(ci);
+                                if (method != null) {
+                                    ChangeMethodParameterUI[] model = { null };
+                                    String res = Pages.showChangeMethodParametersUI(ci, client, file, handle, method, model);
+                                    if ("accept".equals(res)) {
+                                        model[0].doRefactoring();
+                                    }
+                                }
+                            }, true);
+                            return null;
+                        } catch (IOException ex) {
+                            throw new IllegalStateException(ex);
                         }
-                    }, true);
+                    }, RequestProcessor.getDefault());
                 }
             } else {
                 throw new IllegalArgumentException(String.format("Illegal number of arguments received for command: %s", command));
@@ -171,7 +184,8 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
         NbCodeLanguageClient client,
         FileObject file,
         ElementHandle handle,
-        ExecutableElement method
+        ExecutableElement method,
+        ChangeMethodParameterUI[] modelBack
     ) {
         ParameterUI[] params = new ParameterUI[method.getParameters().size()];
         for (int i = 0; i < method.getParameters().size(); i++) {
@@ -196,6 +210,7 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
                 .withSelectedModifier(mod)
                 .withParameters(params)
                 .assignData(client, file, TreePathHandle.from(handle, ClasspathInfo.create(file)));
+        modelBack[0] = model;
         return model.applyBindings();
     }
 

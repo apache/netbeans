@@ -20,6 +20,7 @@ package org.netbeans.spi.htmlui;
 
 import java.net.URL;
 import java.util.concurrent.Callable;
+import java.util.function.Consumer;
 
 /**
  *
@@ -30,4 +31,5 @@ public interface HtmlViewer<HtmlView> {
     public HtmlView newView();
     public void makeVisible(HtmlView view, Runnable whenReady);
     public void load(HtmlView view, ClassLoader loader, URL pageUrl, Callable<Object> initialize, String[] techIds);
+    public Object createButton(String id, Consumer<String> callback);
 }

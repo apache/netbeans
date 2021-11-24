@@ -31,7 +31,10 @@
 			"outFiles": [
 				"${workspaceFolder}/out/test/**/*.js"
 			],
-			"preLaunchTask": "${defaultBuildTask}"
+			"preLaunchTask": "${defaultBuildTask}",
+			"env": { 
+				"netbeans.extra.options" : "-J-Dproject.limitScanRoot=${workspaceFolder}/out"
+			}
 		}
 	]
 }

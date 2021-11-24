@@ -28,7 +28,8 @@ async function main() {
             extensionDevelopmentPath,
             extensionTestsPath,
             extensionTestsEnv: {
-                'ENABLE_CONSOLE_LOG' : 'true'
+                'ENABLE_CONSOLE_LOG' : 'true',
+                "netbeans.extra.options" : `-J-Dproject.limitScanRoot=${extensionDevelopmentPath}/out`
             },
             launchArgs: [
                 workspaceDir,

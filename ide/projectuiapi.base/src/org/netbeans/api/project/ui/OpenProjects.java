@@ -319,7 +319,7 @@ public final class OpenProjects {
      * logical structure of a project.
      *
      * @return new instance of the manager
-     * @since 1.100
+     * @since 1.101
      */
     public ExplorerManager createLogicalView() {
         return trampoline.createLogicalView();
@@ -329,7 +329,7 @@ public final class OpenProjects {
      * physical structure of a project.
      *
      * @return new instance of the manager
-     * @since 1.100
+     * @since 1.101
      */
     public ExplorerManager createPhysicalView() {
         return trampoline.createPhysicalView();

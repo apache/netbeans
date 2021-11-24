@@ -27,6 +27,15 @@ import org.openide.util.Lookup;
  * Factory has to be registered as a named service on path {@code Explorers/&lt;id>}; first registration
  * wins.
  * <p>
+ * The interface is to be registered as a <b>lookup service</b> on path <code>Explorers/&lt;id></code> where 
+ * <b>id</b> is a string unique identifier of the explorer view. A few of them will be published & documented
+ * in various APIs as the interface matures. Currently only the LSP client is able to obtain data for a named
+ * explorer view, but a general API to display an explorer will be provided. See example registration in 
+ * {@link ProjectExplorer}. An annotation to register an explorer view may be created in the future.
+ * <p>
+ * In order for the LSP client to obtain a new view, it needs to issue a request for <code>nodes/explorerManager</code> path.
+ * The message interface is {@link TreeViewService}.
+ * <p>
  * Note: this interface will become an API independent of LSP.
  * @author sdedic
  */

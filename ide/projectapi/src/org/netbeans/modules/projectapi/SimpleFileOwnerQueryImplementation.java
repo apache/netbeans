@@ -45,7 +45,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.spi.project.FileOwnerQueryImplementation;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.BaseUtilities;
 import org.openide.util.NbPreferences;
@@ -114,7 +113,7 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
         
         deserialize();
         while (f != null) {
-            if (projectScanRoot != null && (f.equals(projectScanRoot) || !f.getPath().startsWith(projectScanRoot))) {
+            if (projectScanRoot != null && !f.getPath().startsWith(projectScanRoot)) {
                 break;
             }
             boolean folder = f.isFolder();

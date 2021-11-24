@@ -18,8 +18,6 @@
  */
 package org.netbeans.modules.java.lsp.server.ui;
 
-import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.Callable;
 import org.netbeans.html.boot.spi.Fn;
@@ -47,19 +45,16 @@ public class AbstractLspHtmlViewer implements HtmlViewer<AbstractLspHtmlViewer.V
         UIContext ui = UIContext.find();
 
         Browser.Config c = new Browser.Config();
-        Fn.Presenter b = new Browser(c) {
-            @Override
-            protected void show(URI page) throws IOException {
-                try {
-                    ui.showHtmlPage(new HtmlPageParams(page.toASCIIString()));
-                } catch (Exception ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+        c.browser((page) -> {
+            try {
+                ui.showHtmlPage(new HtmlPageParams(page.toASCIIString()));
+            } catch (Exception ex) {
+                Exceptions.printStackTrace(ex);
             }
-        };
+        });
+        Fn.Presenter b = new Browser(c);
         b.displayPage(pageUrl, () -> {
             try {
-//                ui.showStatusMessage(new ShowStatusMessageParams(MessageType.Error, "http://localhost:" + port));
                 Object v = initialize.call();
                 System.err.println("v: " + v);
             } catch (Exception ex) {

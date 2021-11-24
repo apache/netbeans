@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.Executor;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,7 +65,7 @@ import org.openide.util.lookup.ServiceProvider;
  * &lt;/dependency&gt;
  * </pre>
  */
-public abstract class Browser implements Fn.Presenter, Fn.KeepAlive, Flushable,
+public final class Browser implements Fn.Presenter, Fn.KeepAlive, Flushable,
 Executor, Closeable {
     static final Logger LOG = Logger.getLogger(Browser.class.getName());
     private final Map<String,Command> SESSIONS = new HashMap<>();
@@ -151,8 +152,9 @@ Executor, Closeable {
      * @param page the page to display in the browser
      * @throws IOException if something goes wrong
      */
-    protected abstract void show(URI page) throws IOException;
-
+    void show(URI page) throws IOException {
+        config.getBrowser().accept(page);
+    }
     @Override
     public Fn defineFn(String string, String... strings) {
         throw new UnsupportedOperationException();
@@ -210,7 +212,7 @@ Executor, Closeable {
      * constructor.
      */
     public final static class Config {
-        String browser;
+        private Consumer<URI> browser;
         Integer port;
         boolean debug = Boolean.getBoolean("com.dukescript.presenters.browserDebug");
 
@@ -218,6 +220,7 @@ Executor, Closeable {
          * Default constructor.
          */
         public Config() {
+            command(null);
         }
 
         private Config(Config copy) {
@@ -246,7 +249,20 @@ Executor, Closeable {
          * @return this instance
          */
         public Config command(String executable) {
-            this.browser = executable;
+            this.browser = (page) -> {
+                String impl = executable;
+                if (impl == null) {
+                    impl = System.getProperty("com.dukescript.presenters.browser"); // NOI18N
+                }
+                if ("none".equalsIgnoreCase(impl)) { // NOI18N
+                    return;
+                }
+                // Show.show(impl, page); TBD
+            };
+            return this;
+        }
+        public Config browser(Consumer<URI> urlOpener) {
+            this.browser = urlOpener;
             return this;
         }
 
@@ -273,11 +289,8 @@ Executor, Closeable {
             return this;
         }
 
-        final String getBrowser() {
-            if (browser != null) {
-                return browser;
-            }
-            return System.getProperty("com.dukescript.presenters.browser"); // NOI18N
+        final Consumer<URI> getBrowser() {
+            return browser;
         }
 
         final int getPort() {

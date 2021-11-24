@@ -4737,11 +4737,6 @@ public class ServerTest extends NbTestCase {
             public void showStatusBarMessage(ShowStatusMessageParams params) {
                 throw new UnsupportedOperationException();
             }
-
-            @Override
-            public void showHtmlPage(HtmlPageParams params) {
-                throw new UnsupportedOperationException();
-            }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
@@ -4883,11 +4878,6 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public void showStatusBarMessage(ShowStatusMessageParams params) {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public void showHtmlPage(HtmlPageParams params) {
                 throw new UnsupportedOperationException();
             }
         }, client.getInputStream(), client.getOutputStream());
@@ -5048,9 +5038,10 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
-            public void showHtmlPage(HtmlPageParams params) {
+            public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
                 ChangeMethodParameterUI ui = MockHtmlViewer.assertDialogShown(params.getUri(), ChangeMethodParameterUI.class);
                 ui.doRefactoring();
+                return CompletableFuture.completedFuture(null);
             }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();

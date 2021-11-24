@@ -47,8 +47,8 @@ public interface NbCodeLanguageClient extends LanguageClient {
      * Shows an HTML based UI.
      * @param params the URI of the page to show
      */
-    @JsonNotification("window/showHtmlPage")
-    public void showHtmlPage(@NonNull HtmlPageParams params);
+    @JsonRequest("window/showHtmlPage")
+    public CompletableFuture<String> showHtmlPage(@NonNull HtmlPageParams params);
 
     /**
      * Shows a selection list allowing multiple selections.

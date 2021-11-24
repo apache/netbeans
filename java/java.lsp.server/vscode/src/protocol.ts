@@ -42,7 +42,7 @@ export interface HtmlPageParams {
 }
 
 export namespace HtmlPageRequest {
-    export const type = new NotificationType<HtmlPageParams>('window/showHtmlPage');
+    export const type = new ProtocolRequestType<HtmlPageParams, string, never, void, void>('window/showHtmlPage');
 };
 
 export namespace StatusMessageRequest {

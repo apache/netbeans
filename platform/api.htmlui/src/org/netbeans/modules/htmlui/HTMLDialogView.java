@@ -58,10 +58,11 @@ final class HTMLDialogView extends HTMLDialogBase {
     
     private final class FooterButtons extends Buttons<Object> implements Consumer<String> {
         private static final String PREFIX = "dialog-buttons-";
+        private boolean hasResult;
         private String result;
         
         public synchronized String obtainResult() {
-            while (result == null) {
+            while (!hasResult) {
                 try {
                     wait();
                 } catch (InterruptedException ex) {
@@ -73,10 +74,14 @@ final class HTMLDialogView extends HTMLDialogBase {
 
         @Override
         public synchronized void accept(String t) {
-            if (t.startsWith(PREFIX)) {
+            if (t == null) {
+                result = null;
+            } else if (t.startsWith(PREFIX)) {
                 result = t.substring(PREFIX.length());
-                notifyAll();
             }
+            hasResult = true;
+            notifyAll();
+            closeWindow0();
         }
         
         @Override
@@ -117,4 +122,7 @@ final class HTMLDialogView extends HTMLDialogBase {
 
     @JavaScriptBody(args = { "b", "disabled" }, body = "return b.disabled = disabled;")
     native static String buttonDisabled0(Object b, boolean disabled);
+
+    @JavaScriptBody(args = {}, body = "window.close();")
+    native static void closeWindow0();
 }

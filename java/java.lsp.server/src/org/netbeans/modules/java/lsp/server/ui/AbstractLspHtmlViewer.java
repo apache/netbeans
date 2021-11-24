@@ -46,16 +46,25 @@ public class AbstractLspHtmlViewer implements HtmlViewer<AbstractLspHtmlViewer.V
     public void load(View view, ClassLoader loader, URL pageUrl, Callable<Object> initialize, String[] techIds) {
         UIContext ui = UIContext.find();
 
+        AutoCloseable[] toClose = { null };
         Browser.Config c = new Browser.Config();
         c.browser((page) -> {
             try {
-                ui.showHtmlPage(new HtmlPageParams(page.toASCIIString()));
+                ui.showHtmlPage(new HtmlPageParams(page.toASCIIString())).thenAccept((t) -> {
+                    try {
+                        toClose[0].close();
+                    } catch (Exception ex) {
+                        throw new IllegalStateException(ex);
+                    }
+                });
             } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);
             }
         });
-        Fn.Presenter b = new Browser(c);
+        Browser b = new Browser(c);
+        toClose[0] = b;
         b.displayPage(pageUrl, () -> {
+            registerCloseWindow();
             try {
                 Object v = initialize.call();
                 System.err.println("v: " + v);
@@ -64,6 +73,16 @@ public class AbstractLspHtmlViewer implements HtmlViewer<AbstractLspHtmlViewer.V
             }
         });
     }
+
+    @JavaScriptBody(args = {}, body = "\n"
+        + "const vscode = acquireVsCodeApi();\n" // this method can be called only once per WebView existance
+        + "window.close = function() {\n"
+        + "  vscode.postMessage({\n"
+        + "    command: 'dispose',\n"
+        + "  });\n"
+        + "};\n"
+    )
+    private static native void registerCloseWindow();
 
     @Override
     public Object createButton(String id, Consumer<String> callback) {

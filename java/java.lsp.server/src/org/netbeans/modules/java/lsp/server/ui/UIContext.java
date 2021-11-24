@@ -78,8 +78,9 @@ public abstract class UIContext {
 
     protected abstract boolean isValid();
     protected abstract void showMessage(MessageParams msg);
-    protected void showHtmlPage(HtmlPageParams msg) {
+    protected CompletableFuture<String> showHtmlPage(HtmlPageParams msg) {
         showMessage(new MessageParams(MessageType.Log, msg.getUri()));
+        return CompletableFuture.completedFuture(null);
     }
     protected abstract CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams msg);
     protected abstract void logMessage(MessageParams msg);
@@ -121,8 +122,9 @@ public abstract class UIContext {
         }
 
         @Override
-        protected void showHtmlPage(HtmlPageParams msg) {
+        protected CompletableFuture<String> showHtmlPage(HtmlPageParams msg) {
             System.out.println("Open in browser: " + msg.getUri());
+            return CompletableFuture.completedFuture(null);
         }
     }
 }

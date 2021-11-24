@@ -255,7 +255,6 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
                 refactoring.setParameterInfo(params);
                 refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(file));
                 client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, "ChangeMethodParameters")));
-                closeWindow();
             } catch (Exception ex) {
                 client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
             }
@@ -292,19 +291,6 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
         void removeParameter(ChangeMethodParameterUI ui, ParameterUI data) {
             ui.getParameters().remove(data);
         }
-
-        @Function
-        void cancel(ChangeMethodParameterUI ui) {
-            closeWindow();
-        }
-
-        @JavaScriptBody(args = {}, body = "\n"
-            + "const vscode = acquireVsCodeApi();\n" // this method can be called only once per WebView existance
-            + "vscode.postMessage({\n"
-            + "  command: 'dispose',\n"
-            + "});\n"
-        )
-        private static native void closeWindow();
 
         @ComputedProperty
         static List<Modifier> availableModifiers() {

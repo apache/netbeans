@@ -609,7 +609,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         c.onReady().then(() => {
             testAdapter = new NbTestAdapter();
             c.onNotification(StatusMessageRequest.type, showStatusBarMessage);
-            c.onNotification(HtmlPageRequest.type, showHtmlPage);
+            c.onRequest(HtmlPageRequest.type, showHtmlPage);
             c.onNotification(LogMessageNotification.type, (param) => handleLog(log, param.message));
             c.onRequest(QuickPickRequest.type, async param => {
                 const selected = await window.showQuickPick(param.items, { placeHolder: param.placeHolder, canPickMany: param.canPickMany });
@@ -676,8 +676,8 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         window.showErrorMessage('Error initializing ' + reason);
     });
 
-    function showHtmlPage(params : HtmlPageParams) {
-        function showUri(url: string) {
+    async function showHtmlPage(params : HtmlPageParams): Promise<string> {
+        function showUri(url: string, ok: any, err: any) {
             let uri = vscode.Uri.parse(url);
             var http = require('http');
 
@@ -708,14 +708,19 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                                 break;
                         }
                     });
+                    view.onDidDispose(() => {
+                        ok(null);
+                    });
                 });
             });
             request.on('error', function(e: any) {
-                vscode.window.showWarningMessage(e.message);
+                err(e);
             });
             request.end();
         }
-        showUri(params.uri);
+        return new Promise((ok, err) => {
+            showUri(params.uri, ok, err);
+        });
     }
 
     function showStatusBarMessage(params : ShowStatusMessageParams) {

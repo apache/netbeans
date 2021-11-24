@@ -42,7 +42,7 @@ public abstract class TestCodeLanguageClient implements NbCodeLanguageClient {
     }
 
     @Override
-    public void showHtmlPage(HtmlPageParams params) {
+    public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
         throw new UnsupportedOperationException();
     }
 

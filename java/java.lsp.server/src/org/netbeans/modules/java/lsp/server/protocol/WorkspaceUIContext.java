@@ -67,7 +67,7 @@ class WorkspaceUIContext extends UIContext {
     }
 
     @Override
-    protected void showHtmlPage(HtmlPageParams msg) {
-        client.showHtmlPage(msg);
+    protected CompletableFuture<String> showHtmlPage(HtmlPageParams msg) {
+        return client.showHtmlPage(msg);
     }
 }

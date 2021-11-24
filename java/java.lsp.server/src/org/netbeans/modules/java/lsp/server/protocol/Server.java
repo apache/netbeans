@@ -867,8 +867,9 @@ public final class Server {
         }
 
         @Override
-        public void showHtmlPage(HtmlPageParams params) {
+        public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
             logWarning(params);
+            return CompletableFuture.completedFuture(null);
         }
     };
     

@@ -104,6 +104,7 @@ import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
@@ -332,6 +333,13 @@ public final class Server {
          * the set of opened projects change, collections are never modified.
          */
         private volatile Collection<Project> openedProjects = Collections.emptyList();
+        
+        /**
+         * Workspace folders (nonproject) accepted by the user; we do not ask for opening projects
+         * underneath these folders.
+         */
+        // @GuardedBy(this)
+        private final List<FileObject> acceptedWorkspaceFolders = new ArrayList<>();
 
         private final OpenedDocuments openedDocuments = new OpenedDocuments();
 
@@ -353,7 +361,7 @@ public final class Server {
             }
             CompletableFuture<Project[]> f = new CompletableFuture<>();
             SERVER_INIT_RP.post(() -> {
-                asyncOpenSelectedProjects0(f, projectCandidates, true);
+                asyncOpenSelectedProjects0(f, projectCandidates, true, false);
             });
             return f;
         }
@@ -404,11 +412,20 @@ public final class Server {
                             break;
                         }
                     }
+                    if (!openImmediately) {
+                        FileObject pdir = prj.getProjectDirectory();
+                        // accept projects in folders which were not recognized as project parts.
+                        for (FileObject wf : acceptedWorkspaceFolders) {
+                            if (wf.equals(pdir) || FileUtil.isParentOf(wf, pdir)) {
+                                openImmediately = true;
+                            }
+                        }
+                    }
                 }
                 if (openImmediately) {
                     // open without asking
                     SERVER_INIT_RP.post(() -> {
-                        asyncOpenSelectedProjects0(f, Collections.singletonList(file), false);
+                        asyncOpenSelectedProjects0(f, Collections.singletonList(file), false, false);
                     });
                 } else {
                     ProjectInformation pi = ProjectUtils.getInformation(prj);
@@ -431,7 +448,7 @@ public final class Server {
                             return;
                         }
                         SERVER_INIT_RP.post(() -> {
-                            asyncOpenSelectedProjects0(f, Collections.singletonList(file), false);
+                            asyncOpenSelectedProjects0(f, Collections.singletonList(file), false, false);
                         });
                     });
                 }
@@ -439,20 +456,56 @@ public final class Server {
             });
         }
 
+        public List<FileObject> getAcceptedWorkspaceFolders() {
+            return acceptedWorkspaceFolders;
+        }
+
         /**
          * For diagnostic purposes
          */
         private AtomicInteger openRequestId = new AtomicInteger(1);
 
-        private void asyncOpenSelectedProjects0(CompletableFuture<Project[]> f, List<FileObject> projectCandidates, boolean asWorkspaceProjects) {
+        private void asyncOpenSelectedProjects0(CompletableFuture<Project[]> f, List<FileObject> projectCandidates, boolean asWorkspaceProjects, boolean validParents) {
             List<Project> projects = new ArrayList<>();
+            List<FileObject> nonProjects = new ArrayList<>();
+            List<FileObject> haveProjects = new ArrayList<>();
             try {
                 if (projectCandidates != null) {
                     for (FileObject candidate : projectCandidates) {
                         Project prj = FileOwnerQuery.getOwner(candidate);
                         if (prj != null) {
                             projects.add(prj);
+                            haveProjects.add(prj.getProjectDirectory());
+                        } else if (validParents && candidate.isFolder()) {
+                            nonProjects.add(candidate);
                         }
+                    }
+                    
+                    synchronized (this) {
+                        boolean nwp = asWorkspaceProjects;
+                        for (FileObject pd : haveProjects) {
+                            for (FileObject wf : new ArrayList<>(acceptedWorkspaceFolders)) {
+                                if (wf.equals(pd) || FileUtil.isParentOf(pd, wf)) {
+                                    LOG.log(Level.FINE, "Nonproject workspace folder turned to project: {0}", projectCandidates.get(0));
+                                    acceptedWorkspaceFolders.remove(wf);
+                                    // we should call asyncOpenSelectedProjects1 twice, once to add to workspace, once to not add - 
+                                    // but it should only happen with single-file open = just one project.
+                                    if (projectCandidates.size() == 1) {
+                                        nwp = true;
+                                    }
+                                }
+                            }
+                        }
+                        A: for (FileObject np : nonProjects) {
+                            for (FileObject c : acceptedWorkspaceFolders) {
+                                if (c.equals(np) || FileUtil.isParentOf(c, np)) {
+                                    continue A;
+                                }
+                            }
+                            LOG.log(Level.FINE, "Not recognized as a project, but accepting as workspace : {0}", np);
+                            acceptedWorkspaceFolders.add(np);
+                        }
+                        asWorkspaceProjects = nwp;
                     }
                 }
                 Project[] previouslyOpened;
@@ -556,8 +609,9 @@ public final class Server {
                     openedProjects = projectSet;
                     if (addToWorkspace) {
                         Set<Project> ns = new HashSet<>(projects);
-                        int s = ns.size();
-                        ns.addAll(Arrays.asList(workspaceProjects.getNow(new Project[0])));
+                        List<Project> current = Arrays.asList(workspaceProjects.getNow(new Project[0]));
+                        int s = current.size();
+                        ns.addAll(current);
                         if (s != ns.size()) {
                             prjs = ns.toArray(new Project[ns.size()]);
                             workspaceProjects = CompletableFuture.completedFuture(prjs);
@@ -700,7 +754,7 @@ public final class Server {
                 }
             }
             CompletableFuture<Project[]> prjs = workspaceProjects;
-            SERVER_INIT_RP.post(() -> asyncOpenSelectedProjects0(prjs, projectCandidates, true));
+            SERVER_INIT_RP.post(() -> asyncOpenSelectedProjects0(prjs, projectCandidates, true, true));
 
             // chain showIndexingComplete message after initial project open.
             prjs.

@@ -18,6 +18,10 @@ async function main() {
 
         const workspaceDir = path.join(extensionDevelopmentPath, 'out', 'test', 'ws');
 
+        const outRoot = path.join(extensionDevelopmentPath, "out");
+        const extDir = path.join(outRoot, "test", "vscode", "exts");
+        const userDir = path.join(outRoot, "test", "vscode", "user");
+
         if (!fs.statSync(workspaceDir).isDirectory()) {
             throw `Expecting ${workspaceDir} to be a directory!`;
         }
@@ -29,12 +33,14 @@ async function main() {
             extensionTestsPath,
             extensionTestsEnv: {
                 'ENABLE_CONSOLE_LOG' : 'true',
-                "netbeans.extra.options" : `-J-Dproject.limitScanRoot=${extensionDevelopmentPath}/out`
+                "netbeans.extra.options" : `-J-Dproject.limitScanRoot=${outRoot}`
             },
             launchArgs: [
-                workspaceDir,
                 '--disable-extensions',
-                '--disable-workspace-trust'
+                '--disable-workspace-trust',
+                '--extensions-dir', `${extDir}`,
+                '--user-data-dir', `${userDir}`,
+                workspaceDir
             ]
         });
     } catch (err) {

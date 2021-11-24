@@ -709,6 +709,7 @@ public final class Server {
                         JAVA_NEW_PROJECT,
                         JAVA_PROJECT_CONFIGURATION_COMPLETION,
                         JAVA_SUPER_IMPLEMENTATION,
+                        JAVA_CLEAR_PROJECT_CACHES,
                         NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH));
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
                     commands.addAll(codeActionsProvider.getCommands());
@@ -875,6 +876,13 @@ public final class Server {
      * Provides code-completion of configurations.
      */
     public static final String JAVA_PROJECT_CONFIGURATION_COMPLETION = "java.project.configuration.completion";
+
+
+    /**
+     * Diagnostic / test command: clears NBLS internal project caches. Useful between testcases and after
+     * new project files were generated into workspace subtree.
+     */
+    public static final String JAVA_CLEAR_PROJECT_CACHES =  "java.clear.project.caches";
 
     static final String INDEXING_COMPLETED = "Indexing completed.";
     static final String NO_JAVA_SUPPORT = "Cannot initialize Java support on JDK ";

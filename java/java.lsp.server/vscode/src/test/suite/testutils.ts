@@ -96,7 +96,7 @@ class MainTest {
 }
             `);
     vscode.workspace.saveAll();
-    await waitProjectRecognized(folder);
+    await waitProjectRecognized(mainJava);
 }
 
 export function waitCommandsReady() : Promise<void> {
@@ -105,6 +105,7 @@ export function waitCommandsReady() : Promise<void> {
             try {
                 // this command is parameterless
                 vscode.commands.executeCommand("java.attachDebugger.configurations")
+                console.log("NBLS commands ready.");
                 resolve();
             } catch (e) {
                 if (attempts > 0) {
@@ -128,14 +129,19 @@ export function assertWorkspace(): string {
     return folder;
 }
 
-async function waitProjectRecognized(folder : string) {
-    let testPkg = path.join(folder, 'src', 'test', 'java', 'pkg');
-    let mainTestJava = path.join(testPkg, 'MainTest.java');
-
+/**
+ * Ensures that the project that holds the parameter file was opened in NBJLS.
+ * @param folder 
+ * @returns promise that will be fullfilled after the project opens in NBJLS.
+ */
+async function waitProjectRecognized(someJavaFile : string) {
     return waitCommandsReady().then(() => {
-        const u : vscode.Uri = vscode.Uri.file(mainTestJava);
-        // this should assure opening the root with the created project.
-        return vscode.commands.executeCommand("java.get.project.packages", u.toString());
+        const u : vscode.Uri = vscode.Uri.file(someJavaFile);
+        // clear out possible bad or negative caches.
+        return vscode.commands.executeCommand("java.clear.project.caches").then(
+            // this should assure opening the root with the created project.
+            () => vscode.commands.executeCommand("java.get.project.packages", u.toString())
+        );
     });
 }
 

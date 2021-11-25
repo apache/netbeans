@@ -31,7 +31,7 @@ import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
  *
  * @author Dusan Balek
  */
-@MimeRegistration(mimeType = "text/x-java", service = CompletionProvider.class, position = 200)
+@MimeRegistration(mimeType = "text/x-java", service = CompletionProvider.class, position = 250)
 public final class MicronautDataCompletionProvider implements CompletionProvider {
 
     @Override

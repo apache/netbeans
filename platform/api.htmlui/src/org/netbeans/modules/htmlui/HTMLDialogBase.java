@@ -34,6 +34,7 @@ public abstract class HTMLDialogBase {
 
     public abstract String showAndWait();
     public abstract <C> C component(Class<C> type);
+    protected abstract void onSubmit(String id);
 
     public void addTechIds(String[] ids) {
         this.techIds.addAll(Arrays.asList(ids));
@@ -44,7 +45,12 @@ public abstract class HTMLDialogBase {
     }
 
     public static HTMLDialogBase create(String url) {
-        HtmlPair<?> view = HtmlPair.newView();
-        return view.isDefault() ? new HTMLDialogImpl(url) : new HTMLDialogView(url, view);
+        HTMLDialogBase[] base = { null };
+        HtmlPair<?> view = HtmlPair.newView((id) -> {
+            base[0].onSubmit(id);
+        });
+        final HTMLDialogBase dialog = view.isDefault() ? new HTMLDialogImpl(url) : new HTMLDialogView(url, view);
+        base[0] = dialog;
+        return dialog;
     }
 }

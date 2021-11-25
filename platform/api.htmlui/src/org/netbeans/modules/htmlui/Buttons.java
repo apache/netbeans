@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 import net.java.html.js.JavaScriptBody;
 import org.openide.util.NbBundle;
 

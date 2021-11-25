@@ -22,7 +22,6 @@ import java.net.URL;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import net.java.html.js.JavaScriptBody;
-import org.netbeans.html.boot.spi.Fn;
 import org.netbeans.modules.java.lsp.server.htmlui.Browser;
 import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
 import org.netbeans.spi.htmlui.HtmlViewer;
@@ -33,8 +32,9 @@ public class AbstractLspHtmlViewer implements HtmlViewer<AbstractLspHtmlViewer.V
     }
 
     @Override
-    public View newView() {
-        return new View();
+    public View newView(Consumer<String> lifeCycleCallback) {
+        UIContext ui = UIContext.find();
+        return new View(ui, lifeCycleCallback);
     }
 
     @Override
@@ -44,34 +44,7 @@ public class AbstractLspHtmlViewer implements HtmlViewer<AbstractLspHtmlViewer.V
 
     @Override
     public void load(View view, ClassLoader loader, URL pageUrl, Callable<Object> initialize, String[] techIds) {
-        UIContext ui = UIContext.find();
-
-        AutoCloseable[] toClose = { null };
-        Browser.Config c = new Browser.Config();
-        c.browser((page) -> {
-            try {
-                ui.showHtmlPage(new HtmlPageParams(page.toASCIIString())).thenAccept((t) -> {
-                    try {
-                        toClose[0].close();
-                    } catch (Exception ex) {
-                        throw new IllegalStateException(ex);
-                    }
-                });
-            } catch (Exception ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        });
-        Browser b = new Browser(c);
-        toClose[0] = b;
-        b.displayPage(pageUrl, () -> {
-            registerCloseWindow();
-            try {
-                Object v = initialize.call();
-                System.err.println("v: " + v);
-            } catch (Exception ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        });
+        view.load(pageUrl, initialize);
     }
 
     @JavaScriptBody(args = {}, body = "\n"
@@ -85,8 +58,8 @@ public class AbstractLspHtmlViewer implements HtmlViewer<AbstractLspHtmlViewer.V
     private static native void registerCloseWindow();
 
     @Override
-    public Object createButton(String id, Consumer<String> callback) {
-        return createButton0(id, callback);
+    public Object createButton(View view, String id) {
+        return createButton0(id, view.callback);
     }
 
     @JavaScriptBody(args = { "id", "callback" }, javacall = true, body = "\n"
@@ -115,8 +88,63 @@ public class AbstractLspHtmlViewer implements HtmlViewer<AbstractLspHtmlViewer.V
     )
     native static Object createButton0(String id, Consumer<?> callback);
 
-    public static final class View {
-        public View() {
+    static final class View {
+        private final Consumer<String> callback;
+        private final UIContext ui;
+        private Browser presenter;
+
+        private View(UIContext ui, Consumer<String> callback) {
+            this.ui = ui;
+            this.callback = callback;
+        }
+
+        private void notifyClose() {
+            if (callback != null) {
+                callback.accept(null);
+            }
+        }
+
+        private void load(URL pageUrl, Callable<?> initialize) {
+            Browser.Config c = new Browser.Config();
+            c.browser((page) -> {
+                try {
+                    ui.showHtmlPage(new HtmlPageParams(page.toASCIIString())).thenAccept((t) -> {
+                        final Browser p = presenter;
+                        if (p == null) {
+                            return;
+                        }
+                        try {
+                            notifyClose();
+                        } catch (Throwable ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                        try {
+                            p.close();
+                        } catch (Exception ex) {
+                            Exceptions.printStackTrace(ex);
+                        } finally {
+                            presenter = null;
+                        }
+                    }).exceptionally((t) -> {
+                        notifyClose();
+                        presenter = null;
+                        return null;
+                    });
+                } catch (Exception ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            });
+            presenter = new Browser(c);
+            presenter.displayPage(pageUrl, () -> {
+                registerCloseWindow();
+                try {
+                    Object v = initialize.call();
+                    System.err.println("v: " + v);
+                } catch (Exception ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            });
+
         }
     }
 }

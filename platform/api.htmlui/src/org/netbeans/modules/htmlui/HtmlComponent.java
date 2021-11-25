@@ -142,7 +142,7 @@ public final class HtmlComponent extends TopComponent {
 
     static final HtmlViewer<?> VIEWER = new HtmlViewer<HtmlComponent>() {
         @Override
-        public HtmlComponent newView() {
+        public HtmlComponent newView(Consumer<String> lifeCycleCallback) {
             return new HtmlComponent();
         }
 
@@ -159,7 +159,7 @@ public final class HtmlComponent extends TopComponent {
         }
 
         @Override
-        public Object createButton(String id, Consumer<String> run) {
+        public Object createButton(HtmlComponent view, String id) {
             return null;
         }
     };

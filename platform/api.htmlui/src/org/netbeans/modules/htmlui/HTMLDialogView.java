@@ -55,6 +55,11 @@ final class HTMLDialogView extends HTMLDialogBase {
     public <C> C component(Class<C> type) {
         return null;
     }
+
+    @Override
+    protected void onSubmit(String id) {
+        this.buttons.accept(id);
+    }
     
     private final class FooterButtons extends Buttons<Object> implements Consumer<String> {
         private static final String PREFIX = "dialog-buttons-";
@@ -74,6 +79,9 @@ final class HTMLDialogView extends HTMLDialogBase {
 
         @Override
         public synchronized void accept(String t) {
+            if (hasResult) {
+                return;
+            }
             if (t == null) {
                 result = null;
             } else if (t.startsWith(PREFIX)) {

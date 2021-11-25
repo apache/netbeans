@@ -97,6 +97,10 @@ final class HTMLDialogImpl extends HTMLDialogBase implements Runnable {
         return panel.getValueName();
     }
 
+    @Override
+    protected void onSubmit(String id) {
+    }
+
     private void showDialog() {
         panel.showDialog();
     }

@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import javax.swing.Action;
 import org.openide.awt.Actions;
 import org.openide.util.Lookup;
@@ -47,7 +48,7 @@ public final class Pages {
         );
     }
 
-    static class R implements ActionListener, Runnable {
+    static class R implements ActionListener, Runnable, Consumer<String> {
         private final Map<?,?> map;
         private String methodName;
         private Class<?> clazz;
@@ -69,7 +70,7 @@ public final class Pages {
                 clazz = HtmlPair.loadClass(c);
                 pageUrl = new URL("nbresloc:/" + u);
 
-                tc = HtmlPair.newView();
+                tc = HtmlPair.newView(this);
                 tc.makeVisible(this);
             } catch (Exception ex) {
                 throw new IllegalStateException(ex);
@@ -103,6 +104,10 @@ public final class Pages {
                 }
             }
             return techIds.toArray(new String[0]);
+        }
+
+        @Override
+        public void accept(String t) {
         }
     }
 }

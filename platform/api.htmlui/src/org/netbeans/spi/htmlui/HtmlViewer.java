@@ -28,8 +28,8 @@ import java.util.function.Consumer;
  * @since 1.21
  */
 public interface HtmlViewer<HtmlView> {
-    public HtmlView newView();
+    public HtmlView newView(Consumer<String> lifeCycleCallback);
     public void makeVisible(HtmlView view, Runnable whenReady);
     public void load(HtmlView view, ClassLoader loader, URL pageUrl, Callable<Object> initialize, String[] techIds);
-    public Object createButton(String id, Consumer<String> callback);
+    public Object createButton(HtmlView view, String id);
 }

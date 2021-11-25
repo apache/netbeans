@@ -44,18 +44,18 @@ final class HtmlPair<HtmlView> {
         return Class.forName(c, true, l);
     }
 
-    static HtmlPair<?> newView() {
+    static HtmlPair<?> newView(Consumer<String> life) {
         for (HtmlViewer<?> viewer : Lookup.getDefault().lookupAll(HtmlViewer.class)) {
-            HtmlPair<?> pair = newView(viewer);
+            HtmlPair<?> pair = newView(viewer, life);
             if (pair != null) {
                 return pair;
             }
         }
-        return newView(HtmlComponent.VIEWER);
+        return newView(HtmlComponent.VIEWER, life);
     }
 
-    private static <HtmlView> HtmlPair<HtmlView> newView(HtmlViewer<HtmlView> viewer) {
-        final HtmlView view = viewer.newView();
+    private static <HtmlView> HtmlPair<HtmlView> newView(HtmlViewer<HtmlView> viewer, Consumer<String> life) {
+        final HtmlView view = viewer.newView(life);
         return view == null ? null : new HtmlPair<>(viewer, view);
     }
 
@@ -72,6 +72,6 @@ final class HtmlPair<HtmlView> {
     }
 
     Object createButton(String id, Consumer<String> callback) {
-        return viewer.createButton(id, callback);
+        return viewer.createButton(view, id);
     }
 }

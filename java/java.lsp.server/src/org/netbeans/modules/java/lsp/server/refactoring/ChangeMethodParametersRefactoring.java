@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
+import java.util.logging.Level;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
@@ -61,6 +62,7 @@ import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.refactoring.java.api.ChangeParametersRefactoring;
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
@@ -256,7 +258,13 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
                 refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(file));
                 client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, "ChangeMethodParameters")));
             } catch (Exception ex) {
-                client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+                if (client == null) {
+                    Exceptions.printStackTrace(
+                        Exceptions.attachSeverity(ex, Level.SEVERE)
+                    );
+                } else {
+                    client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+                }
             }
         }
 
@@ -333,7 +341,7 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
         }
     }
 
-    static enum Modifier {
+    public static enum Modifier {
         PUBLIC("public"), PROTECTED("protected"), PACKAGE_PRIVATE("", "package private"), PRIVATE("private");
 
         final String javaName;

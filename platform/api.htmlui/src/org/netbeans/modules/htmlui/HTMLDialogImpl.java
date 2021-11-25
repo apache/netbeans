@@ -34,12 +34,13 @@ import org.openide.util.Lookup;
 
 final class HTMLDialogImpl extends HTMLDialogBase implements Runnable {
     private volatile int state;
-    private ChromeWithButtons panel;
+    private final ChromeWithButtons panel;
     private Object webView;
     private boolean nestedLoop;
 
     HTMLDialogImpl(String url) {
         super(url);
+        this.panel = new ChromeWithButtons();
     }
 
     @Override

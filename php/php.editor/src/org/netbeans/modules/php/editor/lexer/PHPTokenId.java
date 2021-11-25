@@ -60,6 +60,7 @@ public enum PHPTokenId implements TokenId {
     PHP_TYPE_VOID("void", "keyword"), //NOI18N
     PHP_TYPE_OBJECT("object", "keyword"), //NOI18N
     PHP_TYPE_MIXED("mixed", "keyword"), //NOI18N
+    PHP_TYPE_NEVER("never", "keyword"), //NOI18N NETBEANS-5599 PHP 8.1
     PHP_FINAL(null, "keyword"), //NOI18N
     PHP_PAAMAYIM_NEKUDOTAYIM(null, "operator"), //NOI18N
     PHP_EXTENDS(null, "keyword"), //NOI18N

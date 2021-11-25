@@ -44,6 +44,10 @@ public class UnusableTypesHintErrorTest extends PHPHintsTestBase {
         checkHints(new UnusableTypesHintError(), "testMixedTypes_01.php");
     }
 
+    public void testNeverTypes_01() throws Exception {
+        checkHints(new UnusableTypesHintError(), "testNeverTypes_01.php");
+    }
+
     @Override
     protected String getTestDirectory() {
         return TEST_DIRECTORY + "UnusableTypesHintError/";

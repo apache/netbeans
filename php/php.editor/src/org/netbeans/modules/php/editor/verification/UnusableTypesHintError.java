@@ -234,6 +234,8 @@ public class UnusableTypesHintError extends HintErrorRule {
             } else if (type instanceof NamespaceName) {
                 if (isVoidType((NamespaceName) type)) {
                     createError(type, Type.VOID, UnusableType.Context.Property);
+                } else if (isNeverType((NamespaceName) type)) {
+                    createError(type, Type.NEVER, UnusableType.Context.Property);
                 }
                 if (!isInUnionType) {
                     checkFalseAndNullTypes((NamespaceName) type);
@@ -244,10 +246,12 @@ public class UnusableTypesHintError extends HintErrorRule {
         }
 
         private void checkParameterType(Expression parameterType, boolean isInUnionType) {
-            // unusable type: void
+            // unusable type: void, never
             if (parameterType instanceof NamespaceName) {
                 if (isVoidType((NamespaceName) parameterType)) {
                     createError(parameterType, Type.VOID, UnusableType.Context.Parameter);
+                } else if (isNeverType((NamespaceName) parameterType)) {
+                    createError(parameterType, Type.NEVER, UnusableType.Context.Parameter);
                 }
                 if (!isInUnionType) {
                     checkFalseAndNullTypes((NamespaceName) parameterType);
@@ -258,10 +262,12 @@ public class UnusableTypesHintError extends HintErrorRule {
         }
 
         private void checkArrowFunctionReturnType(Expression returnType, boolean isInUnionType) {
-            // unusable type: void
+            // unusable type: void, never
             if (returnType instanceof NamespaceName) {
                 if (isVoidType((NamespaceName) returnType)) {
-                    createError(returnType, Type.VOID, UnusableType.Context.Return);
+                    createError(returnType, Type.VOID, UnusableType.Context.ArrowFunctionReturn);
+                } else if (isNeverType((NamespaceName) returnType)) {
+                    createError(returnType, Type.NEVER, UnusableType.Context.ArrowFunctionReturn);
                 }
                 if (!isInUnionType) {
                     checkFalseAndNullTypes((NamespaceName) returnType);
@@ -287,6 +293,8 @@ public class UnusableTypesHintError extends HintErrorRule {
                     // "void" can't be part of a union type
                     if (isVoidType((NamespaceName) type)) {
                         createError(type, Type.VOID, UnusableType.Context.Union);
+                    } else if (isNeverType((NamespaceName) type)) {
+                        createError(type, Type.NEVER, UnusableType.Context.Union);
                     }
                 }
             } else if (type instanceof UnionType) {
@@ -450,6 +458,10 @@ public class UnusableTypesHintError extends HintErrorRule {
             return Type.VOID.equals(CodeUtils.extractUnqualifiedName(namespaceName));
         }
 
+        private static boolean isNeverType(NamespaceName namespaceName) {
+            return Type.NEVER.equals(CodeUtils.extractUnqualifiedName(namespaceName));
+        }
+
         private static boolean isFalseType(NamespaceName namespaceName) {
             return Type.FALSE.equals(CodeUtils.extractUnqualifiedName(namespaceName));
         }
@@ -479,6 +491,7 @@ public class UnusableTypesHintError extends HintErrorRule {
     @NbBundle.Messages({
         "UnusableType.Context.parameter=a parameter",
         "UnusableType.Context.return=a return",
+        "UnusableType.Context.arrowFunctionReturn=an arrow function return",
         "UnusableType.Context.property=a property",
         "UnusableType.Context.standalone=a standalone",
         "UnusableType.Context.union=a union",
@@ -492,6 +505,7 @@ public class UnusableTypesHintError extends HintErrorRule {
         enum Context {
             Parameter(Bundle.UnusableType_Context_parameter()),
             Return(Bundle.UnusableType_Context_return()),
+            ArrowFunctionReturn(Bundle.UnusableType_Context_arrowFunctionReturn()),
             Property(Bundle.UnusableType_Context_property()),
             Standalone(Bundle.UnusableType_Context_standalone()),
             Union(Bundle.UnusableType_Context_union()),

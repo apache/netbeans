@@ -210,6 +210,17 @@ public enum PhpVersion {
     }
 
     /**
+     * Check whether this version supports the never type.
+     *
+     * @return {@code true} if this version supports never type, {@code false}
+     * otherwise
+     * @since 2.81
+     */
+    public boolean hasNeverType() {
+        return this.compareTo(PhpVersion.PHP_81) >= 0;
+    }
+
+    /**
      * Check whether this is supported version yet by PHP official.
      *
      * @return {@code true} if this is supported version, {@code false}

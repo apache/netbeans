@@ -37,6 +37,10 @@ import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
+/**
+ * Don't check "never" type because it may be used in older versions as a class
+ * name.
+ */
 public final class PHP81UnhandledError extends UnhandledErrorRule {
 
     @NbBundle.Messages("PHP81UnhandledError.displayName=Language feature not compatible with PHP version indicated in project settings")

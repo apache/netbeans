@@ -1,3 +1,3 @@
 $af = fn(): void => $y;
             ----
-HINT:"void" cannot be used as a return type.
+HINT:"void" cannot be used as an arrow function return type.

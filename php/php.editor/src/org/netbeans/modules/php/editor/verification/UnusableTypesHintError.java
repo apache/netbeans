@@ -25,7 +25,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import org.netbeans.api.annotations.common.NullAllowed;
-import org.netbeans.modules.csl.api.Error;
+import org.netbeans.modules.csl.api.Hint;
+import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.csl.api.Rule;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.CodeUtils;
@@ -58,7 +60,7 @@ import org.openide.util.Pair;
  * file).
  *
  */
-public class UnusableTypesUnhandledError extends UnhandledErrorRule {
+public class UnusableTypesHintError extends HintErrorRule {
 
     private static final String TRAVERSABLE_TYPE = "Traversable"; // NOI18N
     private static final List<String> VALID_TYPES_WITH_OBJECT_TYPE = Arrays.asList(
@@ -67,20 +69,20 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
     );
 
     @Override
-    @NbBundle.Messages("UnusableTypesUnhandledError.displayName=Unusable types.")
+    @NbBundle.Messages("UnusableTypesHintError.displayName=Unusable types.")
     public String getDisplayName() {
-        return Bundle.UnusableTypesUnhandledError_displayName();
+        return Bundle.UnusableTypesHintError_displayName();
     }
 
     @Override
-    public void invoke(PHPRuleContext context, List<Error> result) {
+    public void invoke(PHPRuleContext context, List<Hint> result) {
         PHPParseResult phpParseResult = (PHPParseResult) context.parserResult;
         if (phpParseResult.getProgram() != null) {
             FileObject fileObject = phpParseResult.getSnapshot().getSource().getFileObject();
             if (fileObject != null) {
-                CheckVisitor checkVisitor = new CheckVisitor(fileObject, phpParseResult.getModel(), CodeUtils.getPhpVersion(fileObject));
+                CheckVisitor checkVisitor = new CheckVisitor(this, fileObject, phpParseResult.getModel(), CodeUtils.getPhpVersion(fileObject));
                 phpParseResult.getProgram().accept(checkVisitor);
-                result.addAll(checkVisitor.getErrors());
+                result.addAll(checkVisitor.getHints());
             }
         }
     }
@@ -88,7 +90,8 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
     //~ Inner classes
     private static final class CheckVisitor extends DefaultVisitor {
 
-        private final List<VerificationError> errors = new ArrayList<>();
+        private final UnusableTypesHintError rule;
+        private final List<Hint> hints = new ArrayList<>();
         private final FileObject fileObject;
         private final Model model;
         private final PhpVersion phpVersion;
@@ -96,15 +99,16 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
         private boolean isInLambdaFunction;
         private boolean isInMethodBody;
 
-        private CheckVisitor(FileObject fileObject, Model model, PhpVersion phpVersion) {
+        private CheckVisitor(UnusableTypesHintError rule, FileObject fileObject, Model model, PhpVersion phpVersion) {
             assert fileObject != null;
+            this.rule = rule;
             this.fileObject = fileObject;
             this.model = model;
             this.phpVersion = phpVersion;
         }
 
-        private List<VerificationError> getErrors() {
-            return Collections.unmodifiableList(errors);
+        private List<Hint> getHints() {
+            return Collections.unmodifiableList(hints);
         }
 
         @Override
@@ -417,19 +421,19 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
         }
 
         private void createError(int startOffset, int endOffset, String type, UnusableType.Context context) {
-            errors.add(new UnusableType(fileObject, startOffset, endOffset, type, context));
+            hints.add(new UnusableType(rule, fileObject, startOffset, endOffset, type, context));
         }
 
         private void createDuplicateTypeError(ASTNode node, String type) {
-            errors.add(new DuplicateType(fileObject, node.getStartOffset(), node.getEndOffset(), type));
+            hints.add(new DuplicateType(rule, fileObject, node.getStartOffset(), node.getEndOffset(), type));
         }
 
         private void createRedundantTypeCombinationError(ASTNode node, UnionType unionType, String type, String redundantType) {
-            errors.add(new RedundantTypeCombination(fileObject, node.getStartOffset(), node.getEndOffset(), unionType, Pair.of(type, redundantType)));
+            hints.add(new RedundantTypeCombination(rule, fileObject, node.getStartOffset(), node.getEndOffset(), unionType, Pair.of(type, redundantType)));
         }
 
         private void createIterableRedundantTypeCombinationError(UnionType unionType, IterableRedundantTypeCombination.RedundantType redundantType) {
-            errors.add(new IterableRedundantTypeCombination(fileObject, unionType.getStartOffset(), unionType.getEndOffset(), unionType, redundantType));
+            hints.add(new IterableRedundantTypeCombination(rule, fileObject, unionType.getStartOffset(), unionType.getEndOffset(), unionType, redundantType));
         }
 
         private static boolean isArrayType(Identifier identifier) {
@@ -473,14 +477,17 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
     }
 
     @NbBundle.Messages({
-        "UnusableType.Context.parameter=parameter",
-        "UnusableType.Context.return=return",
-        "UnusableType.Context.property=property",
-        "UnusableType.Context.standalone=standalone",
-        "UnusableType.Context.union=union",
-        "UnusableType.Context.nullable=nullable",
+        "UnusableType.Context.parameter=a parameter",
+        "UnusableType.Context.return=a return",
+        "UnusableType.Context.property=a property",
+        "UnusableType.Context.standalone=a standalone",
+        "UnusableType.Context.union=a union",
+        "UnusableType.Context.nullable=a nullable",
+        "# {0} - type",
+        "# {1} - context",
+        "UnusableType.description=\"{0}\" cannot be used as {1} type.",
     })
-    private static final class UnusableType extends VerificationError {
+    private static final class UnusableType extends Hint {
 
         enum Context {
             Parameter(Bundle.UnusableType_Context_parameter()),
@@ -501,115 +508,32 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
             }
         }
 
-        private static final String KEY = "Php.Unusable.Type"; // NOI18N
-        private final String type;
-        private final String context;
-
-        private UnusableType(FileObject fileObject, int startOffset, int endOffset, String type, Context context) {
-            super(fileObject, startOffset, endOffset);
-            this.type = type;
-            this.context = context.getContext();
+        private UnusableType(Rule rule, FileObject fileObject, int startOffset, int endOffset, String type, Context context) {
+            super(rule, Bundle.UnusableType_description(type, context.getContext()), fileObject, new OffsetRange(startOffset, endOffset), Collections.emptyList(), 500);
         }
-
-        @NbBundle.Messages({
-            "# {0} - type",
-            "# {1} - context",
-            "UnusableType.displayName=Unusable type: \"{0}\" cannot be used as {1} type."
-        })
-        @Override
-        public String getDisplayName() {
-            return Bundle.UnusableType_displayName(type, context);
-        }
-
-        @NbBundle.Messages({
-            "# {0} - type",
-            "# {1} - context",
-            "UnusableType.description=\"{0}\" cannot be used as {1} type."
-        })
-        @Override
-        public String getDescription() {
-            return Bundle.UnusableType_description(type, context);
-        }
-
-        @Override
-        public String getKey() {
-            return KEY;
-        }
-
     }
 
-    private static final class DuplicateType extends VerificationError {
+    @NbBundle.Messages({
+        "# {0} - type",
+        "DuplicateType.description=Type \"{0}\" is duplicated.",
+    })
+    private static final class DuplicateType extends Hint {
 
-        private static final String KEY = "Php.Duplicate.Type"; // NOI18N
-        private final String type;
-
-        private DuplicateType(FileObject fileObject, int startOffset, int endOffset, String type) {
-            super(fileObject, startOffset, endOffset);
-            this.type = type;
+        private DuplicateType(Rule rule, FileObject fileObject, int startOffset, int endOffset, String type) {
+            super(rule, Bundle.DuplicateType_description(type), fileObject, new OffsetRange(startOffset, endOffset), Collections.emptyList(), 500);
         }
-
-        @NbBundle.Messages({
-            "# {0} - type",
-            "DuplicateType.displayName=Duplicate type: \"{0}\" is redundant."
-        })
-        @Override
-        public String getDisplayName() {
-            return Bundle.DuplicateType_displayName(type);
-        }
-
-        @NbBundle.Messages({
-            "# {0} - type",
-            "DuplicateType.description=Type \"{0}\" is duplicated."
-        })
-        @Override
-        public String getDescription() {
-            return Bundle.DuplicateType_description(type);
-        }
-
-        @Override
-        public String getKey() {
-            return KEY;
-        }
-
     }
 
-    private static class RedundantTypeCombination extends VerificationError {
+    @NbBundle.Messages({
+        "# {0} - union type",
+        "# {1} - type",
+        "# {2} - redundant type",
+        "RedundantTypeCombination.description=Redundant combination: \"{0}\" contains both \"{1}\" and \"{2}\".",
+    })
+    private static class RedundantTypeCombination extends Hint {
 
-        private static final String KEY = "Php.Redundant.Type.Combination"; // NOI18N
-        private final UnionType unionType;
-        private final Pair<String, String> types;
-
-        public RedundantTypeCombination(FileObject fileObject, int startOffset, int endOffset, UnionType unionType, Pair<String, String> types) {
-            super(fileObject, startOffset, endOffset);
-            this.unionType = unionType;
-            this.types = types;
-        }
-
-        @NbBundle.Messages({
-            "# {0} - union type",
-            "# {1} - type",
-            "# {2} - redundant type",
-            "RedundantTypeCombination.displayName=Redundant combination: \"{0}\" contains both \"{1}\" and \"{2}\"."
-        })
-        @Override
-        public String getDisplayName() {
-            return Bundle.RedundantTypeCombination_displayName(VariousUtils.getUnionType(unionType), types.first(), types.second());
-        }
-
-        @NbBundle.Messages({
-            "# {0} - union type",
-            "# {1} - type",
-            "# {2} - redundant type",
-            "RedundantTypeCombination.description=\"{0}\" contains both \"{1}\" and \"{2}\"."
-        })
-        @Override
-        public String getDescription() {
-            return Bundle.RedundantTypeCombination_description(VariousUtils.getUnionType(unionType), types.first(), types.second());
-        }
-
-        @Override
-        public String getKey() {
-            return KEY;
+        public RedundantTypeCombination(Rule rule, FileObject fileObject, int startOffset, int endOffset, UnionType unionType, Pair<String, String> types) {
+            super(rule, Bundle.RedundantTypeCombination_description(VariousUtils.getUnionType(unionType), types.first(), types.second()), fileObject, new OffsetRange(startOffset, endOffset), Collections.emptyList(), 500);
         }
 
     }
@@ -637,8 +561,8 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
             }
         }
 
-        public IterableRedundantTypeCombination(FileObject fileObject, int startOffset, int endOffset, UnionType unionType, RedundantType redundantType) {
-            super(fileObject, startOffset, endOffset, unionType, Pair.of(Type.ITERABLE, redundantType.getType()));
+        public IterableRedundantTypeCombination(Rule rule, FileObject fileObject, int startOffset, int endOffset, UnionType unionType, RedundantType redundantType) {
+            super(rule, fileObject, startOffset, endOffset, unionType, Pair.of(Type.ITERABLE, redundantType.getType()));
         }
 
     }

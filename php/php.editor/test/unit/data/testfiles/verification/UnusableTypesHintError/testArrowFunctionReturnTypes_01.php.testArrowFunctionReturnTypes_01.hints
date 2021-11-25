@@ -1,0 +1,3 @@
+$af = fn(): void => $y;
+            ----
+HINT:"void" cannot be used as a return type.

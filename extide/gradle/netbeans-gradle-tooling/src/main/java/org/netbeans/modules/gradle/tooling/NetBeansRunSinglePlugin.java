@@ -44,7 +44,7 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
         project.afterEvaluate(p -> {
             if (p.getPlugins().hasPlugin("java") 
                     && (project.getTasks().findByPath(RUN_SINGLE_TASK) == null)
-                    && project.hasProperty(RUN_SINGLE_CWD)){
+                    && project.hasProperty(RUN_SINGLE_MAIN)){
                 addTask(p);
             }
             if(p.hasProperty(RUN_SINGLE_JVM_ARGS)) {

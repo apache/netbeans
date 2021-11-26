@@ -1157,6 +1157,7 @@ final class CompletionContextFinder {
                 || id == PHPTokenId.PHP_TYPE_INT
                 || id == PHPTokenId.PHP_TYPE_STRING
                 || id == PHPTokenId.PHP_TYPE_VOID
+                || id == PHPTokenId.PHP_TYPE_NEVER
                 || id == PHPTokenId.PHP_TYPE_OBJECT
                 || id == PHPTokenId.PHP_TYPE_MIXED
                 || id == PHPTokenId.PHP_SELF

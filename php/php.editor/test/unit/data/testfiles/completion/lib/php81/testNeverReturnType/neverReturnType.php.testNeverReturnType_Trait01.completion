@@ -1,8 +1,8 @@
 Code completion result for source line:
-function voidReturnType(): |void { // func
+public function returnType(): |never { // trait
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-CLASS      TestClass                       [PUBLIC]   voidReturnType.php
-CLASS      TestInterface                   [PUBLIC]   voidReturnType.php
+CLASS      TestClass                       [PUBLIC]   neverReturnType.php
+CLASS      TestInterface                   [PUBLIC]   neverReturnType.php
 ------------------------------------
 KEYWORD    array                                      null
 KEYWORD    bool                                       null
@@ -15,5 +15,8 @@ KEYWORD    mixed                                      null
 KEYWORD    never                                      null
 KEYWORD    null                                       null
 KEYWORD    object                                     null
+KEYWORD    parent                                     null
+KEYWORD    self                                       null
+KEYWORD    static                                     null
 KEYWORD    string                                     null
 KEYWORD    void                                       null

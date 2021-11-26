@@ -18,14 +18,19 @@
  */
 package org.netbeans.modules.micronaut.completion;
 
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.editor.BaseDocument;
+import org.netbeans.lib.editor.codetemplates.api.CodeTemplateManager;
+import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.spi.editor.completion.CompletionResultSet;
 import org.netbeans.spi.editor.completion.CompletionTask;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionQuery;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
+import org.netbeans.spi.editor.completion.support.CompletionUtilities;
 
 /**
  *
@@ -51,17 +56,47 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
 
     private static class MicronautDataCompletionQuery extends AsyncCompletionQuery {
 
+        private static final String ICON = "org/netbeans/modules/micronaut/resources/micronaut.png";
+
         @Override
         protected void query(CompletionResultSet resultSet, Document doc, int caretOffset) {
             MicronautDataCompletionTask task = new MicronautDataCompletionTask();
-            resultSet.addAllItems(task.query(doc, caretOffset, new MicronautDataCompletionTask.ItemFactory<MicronautDataCompletionItem>() {
+            resultSet.addAllItems(task.query(doc, caretOffset, new MicronautDataCompletionTask.ItemFactory<CompletionItem>() {
                 @Override
-                public MicronautDataCompletionItem createFinderMethodItem(String name, String returnType, int offset) {
-                    return MicronautDataCompletionItem.createFinderMethodItem(name, returnType, offset);
+                public CompletionItem createFinderMethodItem(String name, String returnType, int offset) {
+                    CompletionUtilities.CompletionItemBuilder builder = CompletionUtilities.newCompletionItemBuilder(name)
+                            .startOffset(offset)
+                            .iconResource(ICON)
+                            .leftHtmlText("<b>" + name + "</b>")
+                            .sortPriority(10);
+                    if (returnType != null) {
+                        builder.onSelect((component, overwrite) -> {
+                            final BaseDocument doc = (BaseDocument) component.getDocument();
+                            doc.runAtomic (new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        doc.remove(offset, component.getCaretPosition() - offset);
+                                    } catch (BadLocationException e) {
+                                    }
+                                }
+                            });
+                            String template = "${PAR#1 default=\"" + returnType + "\"} " + name + "${cursor completionInvoke}()";
+                            CodeTemplateManager.get(doc).createTemporary(template).insert(component);
+                        });
+                    }
+                    return builder.build();
                 }
+
                 @Override
-                public MicronautDataCompletionItem createFinderMethodNameItem(String prefix, String name, int offset) {
-                    return MicronautDataCompletionItem.createFinderMethodNameItem(prefix, name, offset);
+                public CompletionItem createFinderMethodNameItem(String prefix, String name, int offset) {
+                    return CompletionUtilities.newCompletionItemBuilder(prefix + name)
+                            .startOffset(offset)
+                            .iconResource(ICON)
+                            .leftHtmlText( prefix + "<b>" + name + "</b>")
+                            .sortPriority(10)
+                            .sortText(name)
+                            .build();
                 }
             }));
             resultSet.setAnchorOffset(task.getAnchorOffset());

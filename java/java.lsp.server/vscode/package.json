@@ -453,8 +453,6 @@
 					"when": "nbJavaLSReady"
 				}
 			],
-			"view/title": [
-			],
 			"view/item/context": [
 				{
 					"command": "foundProjects.deleteEntry",

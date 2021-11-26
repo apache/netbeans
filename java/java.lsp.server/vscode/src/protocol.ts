@@ -23,7 +23,6 @@ import * as vscode from 'vscode';
 import {
     ProtocolNotificationType,
     ProtocolRequestType,
-    RequestType,
     ShowMessageParams
 } from 'vscode-languageclient';
 

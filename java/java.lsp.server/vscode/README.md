@@ -156,6 +156,12 @@ the extension disables certain functionality known to cause problems, this is do
 
 This behavior can be disabled by setting `netbeans.conflict.check` setting to `false`.
 
+## Project Explorer
+Very simple Project Explorer is introduced, as a counterpart for File Explorer. The Project Explorer 
+follows logical project's structure, groups sources together and in case of Java, simplifies package structure
+view. In the future, Project Explorer will offer build, execute and build system (gradle/maven) oriented 
+actions.
+![Project Explorer](images/project-explorer.png)
 ## Contributing
 
 Read [building instructions](BUILD.md) to help Apache community to

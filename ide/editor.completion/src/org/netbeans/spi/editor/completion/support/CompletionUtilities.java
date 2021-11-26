@@ -24,11 +24,13 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 import javax.swing.ImageIcon;
 import javax.swing.text.JTextComponent;
 import org.netbeans.modules.editor.completion.PatchedHtmlRenderer;
 import org.netbeans.modules.editor.completion.SimpleCompletionItem;
 import org.netbeans.spi.editor.completion.CompletionItem;
+import org.netbeans.spi.editor.completion.CompletionTask;
 
 /**
  * Various code completion utilities including completion item
@@ -185,7 +187,6 @@ public final class CompletionUtilities {
     public static final class CompletionItemBuilder {
 
         private String insertText;
-        private String insertTemplateText;
         private int startOffset = -1;
         private int endOffset = -1;
         private String iconResource;
@@ -193,6 +194,8 @@ public final class CompletionUtilities {
         private String rightHtmlText;
         private int sortPriority = 10000;
         private CharSequence sortText;
+        private Supplier<CompletionTask> documentationTask;
+        private Supplier<CompletionTask> tooltipTask;
         private BiConsumer<JTextComponent, Boolean> onSelectCallback;
 
         private CompletionItemBuilder(String insertText) {
@@ -206,16 +209,6 @@ public final class CompletionUtilities {
          */
         public CompletionItemBuilder insertText(String insertText) {
             this.insertText = insertText;
-            return this;
-        }
-
-        /**
-         * A text of the template to be inserted into a document when selecting the item.
-         *
-         * @since 1.60
-         */
-        public CompletionItemBuilder insertTemplate(String templateText) {
-            this.insertTemplateText = templateText;
             return this;
         }
 
@@ -253,7 +246,7 @@ public final class CompletionUtilities {
 
         /**
          * An html text that will be displayed on the left side of the item next to the icon.
-         * If omitted, insert text would be used instead.
+         * If omitted, insertText would be used instead.
          *
          * @since 1.60
          */
@@ -293,6 +286,28 @@ public final class CompletionUtilities {
         }
 
         /**
+         * A task used to obtain a documentation associated with the item if there
+         * is any.
+         *
+         * @since 1.60
+         */
+        public CompletionItemBuilder documentationTask(Supplier<CompletionTask> task) {
+            this.documentationTask = task;
+            return this;
+        }
+
+        /**
+         * A task used to obtain a tooltip hint associated with the item if there
+         * is any.
+         *
+         * @since 1.60
+         */
+        public CompletionItemBuilder tooltipTask(Supplier<CompletionTask> task) {
+            this.tooltipTask = task;
+            return this;
+        }
+
+        /**
          * A callback to process the item insertion. Should be used for complex cases
          * when a simple insertText insertion is not sufficient.
          *
@@ -309,7 +324,8 @@ public final class CompletionUtilities {
          * @since 1.60
          */
         public CompletionItem build() {
-            return new SimpleCompletionItem(insertText, startOffset, endOffset, iconResource, leftHtmlText, rightHtmlText, sortPriority, sortText, onSelectCallback);
+            return new SimpleCompletionItem(insertText, startOffset, endOffset, iconResource, leftHtmlText, rightHtmlText,
+                    sortPriority, sortText, documentationTask, tooltipTask, onSelectCallback);
         }
     }
 }

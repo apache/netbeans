@@ -24,6 +24,7 @@ import java.awt.Graphics;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 import javax.swing.ImageIcon;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
@@ -48,11 +49,15 @@ public class SimpleCompletionItem implements CompletionItem {
     private final String rightHtmlText;
     private final int sortPriority;
     private final CharSequence sortText;
+    private final Supplier<CompletionTask> documentationTask;
+    private final Supplier<CompletionTask> tooltipTask;
     private final BiConsumer<JTextComponent, Boolean> onSelectCallback;
 
     private ImageIcon icon;
 
-    public SimpleCompletionItem(String insertText, int startOffset, int endOffset, String iconResource, String leftHtmlText, String rightHtmlText, int sortPriority, CharSequence sortText, BiConsumer<JTextComponent, Boolean> onSelectCallback) {
+    public SimpleCompletionItem(String insertText, int startOffset, int endOffset, String iconResource, String leftHtmlText, String rightHtmlText,
+            int sortPriority, CharSequence sortText, Supplier<CompletionTask> documentationTask, Supplier<CompletionTask> tooltipTask,
+            BiConsumer<JTextComponent, Boolean> onSelectCallback) {
         this.insertText = insertText;
         this.startOffset = startOffset;
         this.endOffset = endOffset;
@@ -61,6 +66,8 @@ public class SimpleCompletionItem implements CompletionItem {
         this.rightHtmlText = rightHtmlText;
         this.sortPriority = sortPriority;
         this.sortText = sortText;
+        this.documentationTask = documentationTask;
+        this.tooltipTask = tooltipTask;
         this.onSelectCallback = onSelectCallback;
     }
 
@@ -86,21 +93,27 @@ public class SimpleCompletionItem implements CompletionItem {
 
     @Override
     public int getPreferredWidth(Graphics g, Font defaultFont) {
-        return CompletionUtilities.getPreferredWidth(leftHtmlText, rightHtmlText, g, defaultFont);
+        return CompletionUtilities.getPreferredWidth(leftHtmlText != null ? leftHtmlText : insertText, rightHtmlText, g, defaultFont);
     }
 
     @Override
     public void render(Graphics g, Font defaultFont, Color defaultColor, Color backgroundColor, int width, int height, boolean selected) {
-        CompletionUtilities.renderHtml(getIcon(), leftHtmlText, rightHtmlText, g, defaultFont, defaultColor, width, height, selected);
+        CompletionUtilities.renderHtml(getIcon(), leftHtmlText != null ? leftHtmlText : insertText, rightHtmlText, g, defaultFont, defaultColor, width, height, selected);
     }
 
     @Override
     public CompletionTask createDocumentationTask() {
+        if (documentationTask != null) {
+            return documentationTask.get();
+        }
         return null;
     }
 
     @Override
     public CompletionTask createToolTipTask() {
+        if (tooltipTask != null) {
+            tooltipTask.get();
+        }
         return null;
     }
 
@@ -116,7 +129,7 @@ public class SimpleCompletionItem implements CompletionItem {
 
     @Override
     public CharSequence getSortText() {
-        return sortText;
+        return sortText != null ? sortText : insertText;
     }
 
     @Override

@@ -65,7 +65,6 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
                 @Override
                 public CompletionItem createFinderMethodItem(String name, String returnType, int offset) {
                     CompletionUtilities.CompletionItemBuilder builder = CompletionUtilities.newCompletionItemBuilder(name)
-                            .startOffset(offset)
                             .iconResource(ICON)
                             .leftHtmlText("<b>" + name + "</b>")
                             .sortPriority(10);
@@ -84,6 +83,8 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
                             String template = "${PAR#1 default=\"" + returnType + "\"} " + name + "${cursor completionInvoke}()";
                             CodeTemplateManager.get(doc).createTemporary(template).insert(component);
                         });
+                    } else {
+                        builder.startOffset(offset);
                     }
                     return builder.build();
                 }

@@ -24,6 +24,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -78,6 +79,7 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
@@ -326,6 +328,29 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 CompletableFuture<List<CompletionItem>> joinedFuture = CompletableFuture.allOf(completionFutures.toArray(new CompletableFuture[0]))
                         .thenApply(avoid -> completionFutures.stream().flatMap(c -> c.join().stream()).collect(Collectors.toList()));
                 return (CompletableFuture<Object>) (CompletableFuture<?>) joinedFuture;
+            }
+            case Server.JAVA_CLEAR_PROJECT_CACHES: {
+                // politely clear project manager's cache of "no project" answers
+                ProjectManager.getDefault().clearNonProjectCache();
+                // impolitely clean the project-based traversal's cache, so any affiliation of intermediate folders will disappear
+                ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
+                CompletableFuture<Boolean> result = new CompletableFuture<>();
+                try {
+                    Class queryImpl = Class.forName("org.netbeans.modules.projectapi.SimpleFileOwnerQueryImplementation", true, loader); // NOI18N
+                    Method resetMethod = queryImpl.getMethod("reset"); // NOI18N
+                    resetMethod.invoke(null);
+                    result.complete(true);
+                } catch (ReflectiveOperationException ex) {
+                    result.completeExceptionally(ex);
+                }
+                // and finally, let's refresh everything we had opened:
+                for (FileObject f : server.getAcceptedWorkspaceFolders()) {
+                    f.refresh();
+                }
+                for (Project p : OpenProjects.getDefault().getOpenProjects()) {
+                    p.getProjectDirectory().refresh();
+                }
+                return (CompletableFuture<Object>) (CompletableFuture<?>)result;
             }
             default:
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {

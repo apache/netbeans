@@ -15,11 +15,11 @@
 # specific language governing permissions and limitations
 # under the License.
 
-javac.compilerargs=-Xlint -Xlint:-serial
-javac.source=1.7
-spec.version.base=1.101.0
-is.autoload=true
-javadoc.arch=${basedir}/arch.xml
-javadoc.apichanges=${basedir}/apichanges.xml
+# Use fully qualified names, one class per line. Syntax is:
+#   qualified.name=value    : value will be used instead of qualified name.
+#   [prefix.]qualified.name : the prefix will be stripped
+#   [prefix=subst]          : the prefix in all classes will be replaced by subst, possibly empty
+#   * as the first character: watch for changes in this interface, fire changes.
+# Names will be converted to "class:<name>" tokens.
 
-test.config.stableBTD.includes=**/*Test.class
+org.netbeans.api.actions.Openable

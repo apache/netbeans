@@ -92,9 +92,6 @@
                 <fileset dir="${nb_all}/java/libs.javacapi/external/" erroronmissingdir="false">
                     <include name="nb-javac*.jar"/>
                 </fileset>
-                <fileset dir="${nb_all}/java/libs.javacimpl/external/" erroronmissingdir="false">
-                    <include name="nb-javac*.jar"/>
-                </fileset>
             </path>
         </pathconvert>
         <property name="bootclasspath.prepend.vanilla" value="${nb_all}/nbbuild/external/vanilla-javac-api.jar${path.separator}${nb_all}/nbbuild/external/vanilla-javac-impl.jar" />

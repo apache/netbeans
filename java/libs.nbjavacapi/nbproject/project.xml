@@ -23,36 +23,26 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
-            <code-name-base>org.netbeans.lib.nbjavac</code-name-base>
+            <code-name-base>org.netbeans.libs.nbjavacapi</code-name-base>
             <module-dependencies>
                 <dependency>
                     <code-name-base>org.netbeans.libs.javacapi</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <implementation-version/>
+                        <specification-version>8.36</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <test-dependencies>
-                <test-type>
-                    <name>unit</name>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.libs.junit4</code-name-base>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.modules.nbjunit</code-name-base>
-                        <recursive/>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.openide.util</code-name-base>
-                        <compile-dependency/>
-                    </test-dependency>
-                </test-type>
-            </test-dependencies>
             <public-packages/>
+            <class-path-extension>
+                <runtime-relative-path>ext/nb-javac-jdk-17-api.jar</runtime-relative-path>
+                <binary-origin>external/nb-javac-jdk-17-api.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/nb-javac-jdk-17.jar</runtime-relative-path>
+                <binary-origin>external/nb-javac-jdk-17.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>

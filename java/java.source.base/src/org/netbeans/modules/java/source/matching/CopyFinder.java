@@ -583,6 +583,9 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
         TreePath prev = currentPath;
         try {
             currentPath = new TreePath(currentPath, node);
+            if (TreeShims.BINDING_PATTERN.equals(node.getKind().name())) {
+                return visitBindingPattern(node, p);
+            }
             return super.scan(node, p);
         } finally {
             currentPath = prev;
@@ -1519,6 +1522,13 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
         if (!scan(node.getExpression(), t.getExpression(), p))
             return false;
 
+        Tree nodePattern = TreeShims.getPattern(node);
+        Tree pPattern = TreeShims.getPattern(t);
+
+        if (nodePattern != null || pPattern != null) {
+            return scan(nodePattern, pPattern, p);
+        }
+
         return scan(node.getType(), t.getType(), p);
     }
 
@@ -1641,6 +1651,15 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
         }
 
         return node.getName().contentEquals(t.getName());
+    }
+
+    public Boolean visitBindingPattern(Tree node, TreePath p) {
+        if (p == null) {
+            //XXX:
+            return false;
+        }
+
+        return scan(TreeShims.getBindingVariable(node), TreeShims.getBindingVariable(p.getLeaf()), p);
     }
 
 //

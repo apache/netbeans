@@ -186,6 +186,19 @@ public class TreeShims {
         }
     }
 
+    public static VariableTree getBindingVariable(Tree node) {
+        try {
+            Class bpt = Class.forName("com.sun.source.tree.BindingPatternTree"); //NOI18N
+            return isJDKVersionSupportEnablePreview()
+                    ? null
+                    : ((VariableTree)bpt.getDeclaredMethod("getVariable").invoke(node)); //NOI18N
+        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
     public static Tree getGuardedPattern(Tree node) {
         try {
             Class gpt = Class.forName("com.sun.source.tree.GuardedPatternTree"); //NOI18N

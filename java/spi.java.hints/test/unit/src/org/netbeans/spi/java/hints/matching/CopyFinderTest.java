@@ -1306,6 +1306,31 @@ public class CopyFinderTest extends NbTestCase {
                              false);
     }
 
+    public void testInsidePatternMatchingInstanceOf() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17");
+        } catch (IllegalArgumentException ex) {
+            System.err.println("Skipping testPatternMatchingInstanceOf," +
+                               "as SourceVersion.RELEASE_17 is not available.");
+            return ;
+        }
+        sourceLevel = "17";
+        performVariablesTest("package test;\n" +
+                             "public class Test {\n" +
+                             "    boolean test(Object o) {\n" +
+                             "      return o.toString() instanceof String s;\n" +
+                             "    }\n" +
+                             "}\n",
+                             "$expr.toString()",
+                             new Pair[] {
+                                 new Pair<String, int[]>("$expr", new int[] {76, 77}),
+                             },
+                             new Pair[0],
+                             new Pair[0],
+                             false,
+                             false);
+    }
+
     public void testKeepImplicitThis() throws Exception {
         prepareTest("package test; public class Test { void t() { toString(); } }", -1);
 

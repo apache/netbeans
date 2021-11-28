@@ -76,6 +76,8 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Env;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -108,6 +110,7 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.TreeShims;
+import org.openide.util.Exceptions;
 
 /**TODO: tested by CopyFinderTest in java.hints module.
  *
@@ -1655,8 +1658,14 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
 
     public Boolean visitBindingPattern(Tree node, TreePath p) {
         if (p == null) {
-            //XXX:
-            return false;
+            try {
+                return (boolean) MethodHandles.lookup()
+                        .findSpecial(ErrorAwareTreeScanner.class, "visitBindingPattern", MethodType.methodType(Object.class, Class.forName("com.sun.source.tree.BindingPatternTree"), Object.class), CopyFinder.class) // NOI18N
+                        .invoke(this, node, p);
+            } catch (Throwable ex) {
+                TreeShims.throwAny(ex);
+                return false;
+            }
         }
 
         return scan(TreeShims.getBindingVariable(node), TreeShims.getBindingVariable(p.getLeaf()), p);

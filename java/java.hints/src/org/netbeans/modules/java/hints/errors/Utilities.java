@@ -3180,7 +3180,7 @@ public class Utilities {
         Tree typeCastTree = null;
         List<? extends CaseTree> cases;
         Set<VariableElement> variablesDeclaredInOtherCases = new HashSet<>();
-        List<ExpressionTree> patterns = new ArrayList<>();
+        List<Tree> patterns = new ArrayList<>();
         Tree leftVariable = null;
         boolean ruleSwitchFlag = st.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION);
         if (ruleSwitchFlag) {
@@ -3192,7 +3192,11 @@ public class Utilities {
         for (Iterator<? extends CaseTree> it = cases.iterator(); it.hasNext();) {
             CaseTree ct = it.next();
             TreePath casePath = new TreePath(tp, ct);
-            patterns.addAll(TreeShims.getExpressions(ct));
+            if(TreeShims.isPatternMatch(st)){
+                patterns.addAll(TreeShims.getLabels(ct));
+            }else{
+                patterns.addAll(TreeShims.getExpressions(ct));
+            }
             List<StatementTree> statements;
             if (ct.getStatements() == null) {
                 statements = new ArrayList<>(((JCTree.JCCase) ct).stats);
@@ -3279,9 +3283,9 @@ public class Utilities {
                         typeCastTree = ((JCTree.JCTypeCast)body).getType();
                         body = ((JCTree.JCTypeCast)body).getExpression();
                     }
-                newCases.add(make.Case(patterns, make.ExpressionStatement((ExpressionTree) body)));
+                newCases.add(make.CasePatterns(patterns, make.ExpressionStatement((ExpressionTree) body)));
             } else {
-                newCases.add(make.Case(patterns, body));
+                newCases.add(make.CasePatterns(patterns, body));
             }
 
             patterns = new ArrayList<>();

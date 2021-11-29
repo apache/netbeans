@@ -1978,8 +1978,17 @@ public class CasualDiff {
 
     protected int diffCase(JCCase oldT, JCCase newT, int[] bounds) {
         int localPointer = bounds[0];
-        List<JCExpression> oldPatterns = getCasePatterns(oldT);
-        List<JCExpression> newPatterns = getCasePatterns(newT);
+        List<? extends JCTree> oldPatterns;
+        List<? extends JCTree> newPatterns;
+        
+        if(TreeShims.isJDKVersionRelease17_Or_Above()){
+            oldPatterns = getCaseLabelPatterns(oldT);
+            newPatterns = getCaseLabelPatterns(newT);
+        }else{
+            oldPatterns = getCasePatterns(oldT);
+            newPatterns = getCasePatterns(newT);;
+        }
+        
         PositionEstimator patternEst = EstimatorFactory.casePatterns(
                 oldPatterns,
                 newPatterns,
@@ -2077,7 +2086,7 @@ public class CasualDiff {
             return pat != null ? Collections.singletonList(pat) : Collections.emptyList();
         }
     }
-
+    
     public static List<JCTree> getCaseLabelPatterns(JCCase cs) {
         try {
             return (List<JCTree>) CaseTree.class.getDeclaredMethod("getLabels").invoke(cs);

@@ -22,6 +22,11 @@
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
 <filesystem>
     <folder name="Databases">
+        <folder name="JDBCDrivers">
+            <file name="mysql.xml" url="mysql.xml">
+                <attr name="weight" intvalue="1000"/>
+            </file>
+        </folder>
         <folder name="Explorer">
             <folder name="Root">
                 <folder name="NodeProviders">

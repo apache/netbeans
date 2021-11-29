@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -1535,16 +1536,7 @@ public class ServerTest extends NbTestCase {
         }
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
-            @Override
-            public void notifyProgress(ProgressParams params) {
-            }
-
-            @Override
-            public CompletableFuture<Void> createProgress(WorkDoneProgressCreateParams params) {
-                return CompletableFuture.completedFuture(null);
-            }
-
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
             @Override
             public void showStatusBarMessage(ShowStatusMessageParams params) {
                 if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
@@ -1553,66 +1545,11 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
-            public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void notifyTestProgress(TestProgressParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public NbCodeClientCapabilities getNbCodeCapabilities() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
                     diags[0] = params.getDiagnostics();
                     diags.notifyAll();
                 }
-            }
-
-            @Override
-            public void showMessage(MessageParams params) {
-                throw new UnsupportedOperationException("Unexpected message.");
-            }
-
-            @Override
-            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void logMessage(MessageParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void disposeTextEditorDecoration(String params) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
@@ -1650,9 +1587,8 @@ public class ServerTest extends NbTestCase {
                     "    int get() { return t.val; };\n" +
                     "}\n");
         }
-        List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -1660,10 +1596,6 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
-                synchronized (diags) {
-                    diags[0] = params.getDiagnostics();
-                    diags.notifyAll();
-                }
             }
 
             @Override
@@ -2884,6 +2816,95 @@ public class ServerTest extends NbTestCase {
                      "    }\n",
                      fileChanges.get(0).getNewText());
     }
+    
+    class NbCodeLanguageClientStub implements NbCodeLanguageClient {
+        @Override
+        public CompletableFuture<Void> createProgress(WorkDoneProgressCreateParams params) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public void notifyProgress(ProgressParams params) {
+        }
+        
+        @Override
+        public void telemetryEvent(Object arg0) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void publishDiagnostics(PublishDiagnosticsParams params) {
+        }
+
+        @Override
+        public void showMessage(MessageParams arg0) {
+        }
+
+        @Override
+        public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void logMessage(MessageParams arg0) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void showStatusBarMessage(ShowStatusMessageParams params) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
+            return CompletableFuture.completedFuture(params.getItems().stream().filter(item -> item.isPicked()).collect(Collectors.toList()));
+        }
+
+        @Override
+        public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void notifyTestProgress(TestProgressParams params) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public NbCodeClientCapabilities getNbCodeCapabilities() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void disposeTextEditorDecoration(String params) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void notifyNodeChange(NodeChangedParams params) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+	public CompletableFuture<List<Object>> configuration(ConfigurationParams configurationParams) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+	}
+    }
 
     public void testCodeActionGenerateConstructor() throws Exception {
         File src = new File(getWorkDir(), "Test.java");
@@ -2895,37 +2916,9 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
-            @Override
-            public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void publishDiagnostics(PublishDiagnosticsParams params) {
-            }
-
-            @Override
-            public void showMessage(MessageParams arg0) {
-            }
-
-            @Override
-            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void logMessage(MessageParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void showStatusBarMessage(ShowStatusMessageParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
@@ -2933,37 +2926,6 @@ public class ServerTest extends NbTestCase {
             public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
                 return CompletableFuture.completedFuture(params.getItems().stream().filter(item -> item.isPicked()).collect(Collectors.toList()));
             }
-
-            @Override
-            public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void notifyTestProgress(TestProgressParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public NbCodeClientCapabilities getNbCodeCapabilities() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void disposeTextEditorDecoration(String params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
@@ -3110,73 +3072,15 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
-            @Override
-            public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void publishDiagnostics(PublishDiagnosticsParams params) {
-            }
-
-            @Override
-            public void showMessage(MessageParams arg0) {
-            }
-
-            @Override
-            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void logMessage(MessageParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
-            public void showStatusBarMessage(ShowStatusMessageParams params) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
             public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
                 return CompletableFuture.completedFuture(params.getItems().size() > 2 ? params.getItems().subList(0, 2) : params.getItems());
-            }
-
-            @Override
-            public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void notifyTestProgress(TestProgressParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public NbCodeClientCapabilities getNbCodeCapabilities() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void disposeTextEditorDecoration(String params) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
         }, client.getInputStream(), client.getOutputStream());
@@ -3238,73 +3142,10 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
-            @Override
-            public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void publishDiagnostics(PublishDiagnosticsParams params) {
-            }
-
-            @Override
-            public void showMessage(MessageParams arg0) {
-            }
-
-            @Override
-            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void logMessage(MessageParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void showStatusBarMessage(ShowStatusMessageParams params) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
             @Override
             public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
                 return CompletableFuture.completedFuture(params.getItems().size() > 2 ? params.getItems().subList(0, 2) : params.getItems());
-            }
-
-            @Override
-            public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void notifyTestProgress(TestProgressParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public NbCodeClientCapabilities getNbCodeCapabilities() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void disposeTextEditorDecoration(String params) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
         }, client.getInputStream(), client.getOutputStream());
@@ -3364,73 +3205,15 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
-            @Override
-            public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void publishDiagnostics(PublishDiagnosticsParams params) {
-            }
-
-            @Override
-            public void showMessage(MessageParams arg0) {
-            }
-
-            @Override
-            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void logMessage(MessageParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
-            public void showStatusBarMessage(ShowStatusMessageParams params) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
             public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
                 return CompletableFuture.completedFuture(params.getItems().size() > 2 ? params.getItems().subList(0, 2) : params.getItems());
-            }
-
-            @Override
-            public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void notifyTestProgress(TestProgressParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public NbCodeClientCapabilities getNbCodeCapabilities() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void disposeTextEditorDecoration(String params) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
         }, client.getInputStream(), client.getOutputStream());
@@ -3481,73 +3264,15 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
-            @Override
-            public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void publishDiagnostics(PublishDiagnosticsParams params) {
-            }
-
-            @Override
-            public void showMessage(MessageParams arg0) {
-            }
-
-            @Override
-            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void logMessage(MessageParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
-            public void showStatusBarMessage(ShowStatusMessageParams params) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
             public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
                 return CompletableFuture.completedFuture(params.getItems().size() > 2 ? params.getItems().subList(0, 2) : params.getItems());
-            }
-
-            @Override
-            public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void notifyTestProgress(TestProgressParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public NbCodeClientCapabilities getNbCodeCapabilities() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void disposeTextEditorDecoration(String params) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
         }, client.getInputStream(), client.getOutputStream());
@@ -3602,73 +3327,15 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
-            @Override
-            public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void publishDiagnostics(PublishDiagnosticsParams params) {
-            }
-
-            @Override
-            public void showMessage(MessageParams arg0) {
-            }
-
-            @Override
-            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void logMessage(MessageParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
-            public void showStatusBarMessage(ShowStatusMessageParams params) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
             public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
                 return CompletableFuture.completedFuture(params.getItems().size() > 2 ? params.getItems().subList(0, 2) : params.getItems());
-            }
-
-            @Override
-            public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void notifyTestProgress(TestProgressParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public NbCodeClientCapabilities getNbCodeCapabilities() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void disposeTextEditorDecoration(String params) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
         }, client.getInputStream(), client.getOutputStream());
@@ -3720,38 +3387,10 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
-            @Override
-            public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void publishDiagnostics(PublishDiagnosticsParams params) {
-            }
-
-            @Override
-            public void showMessage(MessageParams arg0) {
-            }
-
-            @Override
-            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void logMessage(MessageParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void showStatusBarMessage(ShowStatusMessageParams params) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
@@ -3762,31 +3401,6 @@ public class ServerTest extends NbTestCase {
             @Override
             public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
                 return CompletableFuture.completedFuture("LOGGER");
-            }
-
-            @Override
-            public void notifyTestProgress(TestProgressParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public NbCodeClientCapabilities getNbCodeCapabilities() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void disposeTextEditorDecoration(String params) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
         }, client.getInputStream(), client.getOutputStream());
@@ -4058,12 +3672,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
-            @Override
-            public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -4082,60 +3691,15 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
-            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void logMessage(MessageParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 edit[0] = params.getEdit();
                 return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
             }
 
             @Override
-            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void disposeTextEditorDecoration(String params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public NbCodeClientCapabilities getNbCodeCapabilities() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void notifyTestProgress(TestProgressParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
             public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
                 List<QuickPickItem> items = params.getItems();
                 return CompletableFuture.completedFuture(Bundle.DN_SelectTargetPackage().equals(params.getPlaceHolder()) ? items.subList(2, 3) : items.subList(0, 1));
-            }
-
-            @Override
-            public void showStatusBarMessage(ShowStatusMessageParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
@@ -4218,12 +3782,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
-            @Override
-            public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -4242,60 +3801,15 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
-            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void logMessage(MessageParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 edit[0] = params.getEdit();
                 return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
             }
 
             @Override
-            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void disposeTextEditorDecoration(String params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public NbCodeClientCapabilities getNbCodeCapabilities() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void notifyTestProgress(TestProgressParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
             public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
                 List<QuickPickItem> items = params.getItems();
                 return CompletableFuture.completedFuture(Bundle.DN_SelectTargetPackage().equals(params.getPlaceHolder()) ? items.subList(1, 2) : items.subList(0, 1));
-            }
-
-            @Override
-            public void showStatusBarMessage(ShowStatusMessageParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
@@ -4367,12 +3881,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
-            @Override
-            public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -4391,49 +3900,9 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
-            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void logMessage(MessageParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 edit[0] = params.getEdit();
                 return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
-            }
-
-            @Override
-            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void disposeTextEditorDecoration(String params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public NbCodeClientCapabilities getNbCodeCapabilities() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void notifyTestProgress(TestProgressParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
-                return CompletableFuture.completedFuture(params.getValue());
             }
 
             @Override
@@ -4443,9 +3912,10 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
-            public void showStatusBarMessage(ShowStatusMessageParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
+            public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+                return CompletableFuture.completedFuture(params.getValue());
             }
+
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
@@ -4532,12 +4002,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
-            @Override
-            public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -4556,44 +4021,9 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
-            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void logMessage(MessageParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 edit[0] = params.getEdit();
                 return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
-            }
-
-            @Override
-            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void disposeTextEditorDecoration(String params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public NbCodeClientCapabilities getNbCodeCapabilities() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void notifyTestProgress(TestProgressParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -4605,11 +4035,6 @@ public class ServerTest extends NbTestCase {
             public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
                 List<QuickPickItem> items = params.getItems();
                 return CompletableFuture.completedFuture(items);
-            }
-
-            @Override
-            public void showStatusBarMessage(ShowStatusMessageParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
@@ -4714,12 +4139,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
-            @Override
-            public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -4738,44 +4158,9 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
-            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void logMessage(MessageParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 edit[0] = params.getEdit();
                 return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
-            }
-
-            @Override
-            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void disposeTextEditorDecoration(String params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public NbCodeClientCapabilities getNbCodeCapabilities() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void notifyTestProgress(TestProgressParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -4787,11 +4172,6 @@ public class ServerTest extends NbTestCase {
             public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
                 List<QuickPickItem> items = params.getItems();
                 return CompletableFuture.completedFuture(items.size() > 1 ? items.subList(1, 2) : items);
-            }
-
-            @Override
-            public void showStatusBarMessage(ShowStatusMessageParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
@@ -4857,12 +4237,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
-            @Override
-            public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -4881,44 +4256,9 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
-            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void logMessage(MessageParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 edit[0] = params.getEdit();
                 return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
-            }
-
-            @Override
-            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void disposeTextEditorDecoration(String params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public NbCodeClientCapabilities getNbCodeCapabilities() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void notifyTestProgress(TestProgressParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -4930,11 +4270,6 @@ public class ServerTest extends NbTestCase {
             public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
                 List<QuickPickItem> items = params.getItems();
                 return CompletableFuture.completedFuture(items.size() > 1 ? items.subList(1, 2) : items);
-            }
-
-            @Override
-            public void showStatusBarMessage(ShowStatusMessageParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
@@ -5014,12 +4349,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
-            @Override
-            public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -5038,59 +4368,14 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
-            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void logMessage(MessageParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 edit[0] = params.getEdit();
                 return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
             }
 
             @Override
-            public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void disposeTextEditorDecoration(String params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public NbCodeClientCapabilities getNbCodeCapabilities() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void notifyTestProgress(TestProgressParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
             public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
                 return CompletableFuture.completedFuture("(java.lang.String s, int cnt, boolean b):java.lang.String");
-            }
-
-            @Override
-            public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void showStatusBarMessage(ShowStatusMessageParams params) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();

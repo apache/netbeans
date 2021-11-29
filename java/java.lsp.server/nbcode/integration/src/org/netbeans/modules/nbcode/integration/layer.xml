@@ -21,6 +21,11 @@
 -->
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
+    <folder name="Explorers">
+        <folder name="_all">
+            <file name="standard-cookies.contextValues" url="standard-cookies.contextValues"/>
+        </folder>
+    </folder>
     <folder name="Debugger">
         <file name="org-netbeans-modules-debugger-jpda-ui-CurrentThreadAnnotationListener.instance_hidden"/>
     </folder>
@@ -39,7 +44,6 @@
             </folder>
             <file name="Import_hidden"/>
             <folder name="Maven2">
-                <file name="JavaApplication_hidden"/>
                 <file name="org-netbeans-modules-fish-payara-micro-project-ui-MicroProjectWizardIterator-createWebAppIterator_hidden"/>
                 <file name="org-netbeans-modules-maven-j2ee-ui-wizard-EAWizardIterator_hidden"/>
                 <file name="org-netbeans-modules-maven-j2ee-ui-wizard-EEWizardIterator-createAppClientIterator_hidden"/>

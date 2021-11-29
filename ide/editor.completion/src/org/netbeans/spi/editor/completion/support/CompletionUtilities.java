@@ -23,10 +23,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javax.swing.ImageIcon;
 import javax.swing.text.JTextComponent;
+import org.netbeans.modules.editor.completion.CompletionSupportSpiPackageAccessor;
 import org.netbeans.modules.editor.completion.PatchedHtmlRenderer;
 import org.netbeans.modules.editor.completion.SimpleCompletionItem;
 import org.netbeans.spi.editor.completion.CompletionItem;
@@ -41,6 +42,10 @@ import org.netbeans.spi.editor.completion.CompletionTask;
  */
 
 public final class CompletionUtilities {
+
+    static {
+        CompletionSupportSpiPackageAccessor.register(new SpiAccessor());
+    }
 
     /**
      * The gap between left edge and icon.
@@ -181,6 +186,17 @@ public final class CompletionUtilities {
 
     /**
      * Builder for simple {@link CompletionItem} instances.
+     * <br/>
+     * Example usage:
+     * <pre>
+     * CompletionUtilities.newCompletionItemBuilder(insertText)
+     *                    .startOffset(offset)
+     *                    .iconResource(iconPath)
+     *                    .leftHtmlText("<b>" + label + "</b>")
+     *                    .sortPriority(10)
+     *                    .sortText(label)
+     *                    .build();
+     * </pre>
      *
      * @since 1.60
      */
@@ -196,7 +212,7 @@ public final class CompletionUtilities {
         private CharSequence sortText;
         private Supplier<CompletionTask> documentationTask;
         private Supplier<CompletionTask> tooltipTask;
-        private BiConsumer<JTextComponent, Boolean> onSelectCallback;
+        private Consumer<OnSelectContext> onSelectCallback;
 
         private CompletionItemBuilder(String insertText) {
             this.insertText = insertText;
@@ -313,7 +329,7 @@ public final class CompletionUtilities {
          *
          * @since 1.60
          */
-        public CompletionItemBuilder onSelect(BiConsumer<JTextComponent, Boolean> callback) {
+        public CompletionItemBuilder onSelect(Consumer<OnSelectContext> callback) {
             this.onSelectCallback = callback;
             return this;
         }
@@ -326,6 +342,49 @@ public final class CompletionUtilities {
         public CompletionItem build() {
             return new SimpleCompletionItem(insertText, startOffset, endOffset, iconResource, leftHtmlText, rightHtmlText,
                     sortPriority, sortText, documentationTask, tooltipTask, onSelectCallback);
+        }
+
+    }
+
+    /**
+     * A parameter passed to CompletionItemBuilder's onSelect callback.
+     *
+     * @since 1.60
+     */
+    public static final class OnSelectContext {
+
+        private final JTextComponent component;
+        private final boolean overwrite;
+
+        private OnSelectContext(JTextComponent component, boolean overwrite) {
+            this.component = component;
+            this.overwrite = overwrite;
+        }
+
+        /**
+         * A text component to which the completion item should be inserted.
+         *
+         * @since 1.60
+         */
+        public JTextComponent getComponent() {
+            return component;
+        }
+
+        /**
+         * If true, the inserted completion item should overwrite existing text.
+         *
+         * @since 1.60
+         */
+        public boolean isOverwrite() {
+            return overwrite;
+        }
+    }
+
+    private static final class SpiAccessor extends CompletionSupportSpiPackageAccessor {
+
+        @Override
+        public OnSelectContext createOnSelectContext(JTextComponent component, boolean overwrite) {
+            return new OnSelectContext(component, overwrite);
         }
     }
 }

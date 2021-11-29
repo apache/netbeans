@@ -23,7 +23,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javax.swing.ImageIcon;
 import javax.swing.text.BadLocationException;
@@ -51,13 +51,13 @@ public class SimpleCompletionItem implements CompletionItem {
     private final CharSequence sortText;
     private final Supplier<CompletionTask> documentationTask;
     private final Supplier<CompletionTask> tooltipTask;
-    private final BiConsumer<JTextComponent, Boolean> onSelectCallback;
+    private final Consumer<CompletionUtilities.OnSelectContext> onSelectCallback;
 
     private ImageIcon icon;
 
     public SimpleCompletionItem(String insertText, int startOffset, int endOffset, String iconResource, String leftHtmlText, String rightHtmlText,
             int sortPriority, CharSequence sortText, Supplier<CompletionTask> documentationTask, Supplier<CompletionTask> tooltipTask,
-            BiConsumer<JTextComponent, Boolean> onSelectCallback) {
+            Consumer<CompletionUtilities.OnSelectContext> onSelectCallback) {
         this.insertText = insertText;
         this.startOffset = startOffset;
         this.endOffset = endOffset;
@@ -139,7 +139,8 @@ public class SimpleCompletionItem implements CompletionItem {
 
     private void process(JTextComponent component, boolean overwrite) {
         if (onSelectCallback != null) {
-            onSelectCallback.accept(component, overwrite);
+            CompletionUtilities.OnSelectContext ctx = CompletionSupportSpiPackageAccessor.get().createOnSelectContext(component, overwrite);
+            onSelectCallback.accept(ctx);
         } else {
             final BaseDocument doc = (BaseDocument) component.getDocument();
             doc.runAtomic (new Runnable() {

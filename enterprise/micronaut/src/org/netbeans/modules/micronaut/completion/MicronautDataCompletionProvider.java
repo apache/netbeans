@@ -22,7 +22,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
-import org.netbeans.editor.BaseDocument;
 import org.netbeans.lib.editor.codetemplates.api.CodeTemplateManager;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.editor.completion.CompletionProvider;
@@ -31,6 +30,7 @@ import org.netbeans.spi.editor.completion.CompletionTask;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionQuery;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
 import org.netbeans.spi.editor.completion.support.CompletionUtilities;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -69,19 +69,15 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
                             .leftHtmlText("<b>" + name + "</b>")
                             .sortPriority(10);
                     if (returnType != null) {
-                        builder.onSelect((component, overwrite) -> {
-                            final BaseDocument doc = (BaseDocument) component.getDocument();
-                            doc.runAtomic (new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        doc.remove(offset, component.getCaretPosition() - offset);
-                                    } catch (BadLocationException e) {
-                                    }
-                                }
-                            });
+                        builder.onSelect(ctx -> {
+                            final Document doc = ctx.getComponent().getDocument();
+                            try {
+                                doc.remove(offset, ctx.getComponent().getCaretPosition() - offset);
+                            } catch (BadLocationException ex) {
+                                Exceptions.printStackTrace(ex);
+                            }
                             String template = "${PAR#1 default=\"" + returnType + "\"} " + name + "${cursor completionInvoke}()";
-                            CodeTemplateManager.get(doc).createTemporary(template).insert(component);
+                            CodeTemplateManager.get(doc).createTemporary(template).insert(ctx.getComponent());
                         });
                     } else {
                         builder.startOffset(offset);

@@ -136,14 +136,14 @@ public class MicronautConfigCompletionProvider implements CompletionProvider {
                             .documentationTask(() -> {
                                 return new AsyncCompletionTask(new MicronautConfigDocumentationQuery(property));
                             })
-                            .onSelect((component, overwrite) -> {
+                            .onSelect(ctx -> {
                                 try {
-                                    Document doc = component.getDocument();
+                                    Document doc = ctx.getComponent().getDocument();
                                     LineDocument lineDocument = LineDocumentUtils.as(doc, LineDocument.class);
                                     if (lineDocument != null) {
-                                        int caretOffset = component.getCaretPosition();
+                                        int caretOffset = ctx.getComponent().getCaretPosition();
                                         int end = LineDocumentUtils.getWordEnd(lineDocument, caretOffset);
-                                        if (overwrite && LineDocumentUtils.getWordStart(lineDocument, end) == offset) {
+                                        if (ctx.isOverwrite() && LineDocumentUtils.getWordStart(lineDocument, end) == offset) {
                                             String textEnd = doc.getText(end, 1);
                                             while(baseIndent < 0 && textEnd.endsWith(".")) {
                                                 end = LineDocumentUtils.getWordEnd(lineDocument, end + 1);
@@ -195,7 +195,7 @@ public class MicronautConfigCompletionProvider implements CompletionProvider {
                                                 }
                                             }
                                         }
-                                        CodeTemplateManager.get(doc).createTemporary(sb.toString()).insert(component);
+                                        CodeTemplateManager.get(doc).createTemporary(sb.toString()).insert(ctx.getComponent());
                                     }
                                 } catch (BadLocationException ex) {
                                     Exceptions.printStackTrace(ex);
@@ -214,14 +214,14 @@ public class MicronautConfigCompletionProvider implements CompletionProvider {
                             .iconResource(ICON)
                             .leftHtmlText(PROPERTY_NAME_COLOR + "<b>" + propName + "</b></font>")
                             .sortPriority(10)
-                            .onSelect((component, overwrite) -> {
+                            .onSelect(ctx -> {
                                 try {
-                                    Document doc = component.getDocument();
+                                    Document doc = ctx.getComponent().getDocument();
                                     LineDocument lineDocument = LineDocumentUtils.as(doc, LineDocument.class);
                                     if (lineDocument != null) {
-                                        int caretOffset = component.getCaretPosition();
+                                        int caretOffset = ctx.getComponent().getCaretPosition();
                                         int end = LineDocumentUtils.getWordEnd(lineDocument, caretOffset);
-                                        if (overwrite && LineDocumentUtils.getWordStart(lineDocument, end) == offset) {
+                                        if (ctx.isOverwrite() && LineDocumentUtils.getWordStart(lineDocument, end) == offset) {
                                             String textEnd = doc.getText(end, 1);
                                             if (baseIndent < 0 && textEnd.endsWith(".") || textEnd.endsWith(":")) {
                                                 end++;
@@ -241,7 +241,7 @@ public class MicronautConfigCompletionProvider implements CompletionProvider {
                                             ArrayUtilities.appendSpaces(sb, baseIndent + indentLevelSize);
                                             sb.append("${cursor completionInvoke}");
                                         }
-                                        CodeTemplateManager.get(doc).createTemporary(sb.toString()).insert(component);
+                                        CodeTemplateManager.get(doc).createTemporary(sb.toString()).insert(ctx.getComponent());
                                     }
                                 } catch (BadLocationException ex) {
                                     Exceptions.printStackTrace(ex);

@@ -92,6 +92,7 @@ public class MicronautProjectWizardIterator implements WizardDescriptor.Progress
     public Set instantiate(ProgressHandle handle) throws IOException {
         try {
             handle.start(4);
+            String projectName = (String) wiz.getProperty(PROJECT_NAME);
             File projFile = FileUtil.normalizeFile((File) wiz.getProperty(PROJECT_LOCATION));
             projFile.mkdirs();
             handle.progress(1);
@@ -105,7 +106,7 @@ public class MicronautProjectWizardIterator implements WizardDescriptor.Progress
                     (Set<MicronautLaunchService.Feature>) wiz.getProperty(FEATURES));
             handle.progress(2);
             FileObject projDir = FileUtil.toFileObject(projFile);
-            unzip(stream, projDir);
+            unzip(stream, projDir, projectName + '/');
             handle.progress(3);
             ProjectManager.getDefault().clearNonProjectCache();
             Project prj = ProjectManager.getDefault().findProject(projDir);
@@ -207,11 +208,14 @@ public class MicronautProjectWizardIterator implements WizardDescriptor.Progress
     public void removeChangeListener(ChangeListener l) {
     }
 
-    private static void unzip(InputStream stream, FileObject folder) throws IOException {
+    private static void unzip(InputStream stream, FileObject folder, String prefix) throws IOException {
         try (ZipInputStream zis = new ZipInputStream(stream)) {
             ZipEntry zipEntry;
             while ((zipEntry = zis.getNextEntry()) != null) {
                 String entryName = zipEntry.getName();
+                if (entryName.startsWith(prefix)) {
+                    entryName = entryName.substring(prefix.length());
+                }
                 if (zipEntry.isDirectory()) {
                     FileUtil.createFolder(folder, entryName);
                 } else {

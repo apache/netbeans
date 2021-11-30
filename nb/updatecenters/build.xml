@@ -35,7 +35,7 @@
       <tempfile destdir="${build.dir}" prefix="sign" suffix=".ks" property="netbeans.bundled.ks" deleteonexit="true" />
       <tempfile destdir="${build.dir}" prefix="sign" suffix=".cert" property="netbeans.bundled.cert" deleteonexit="true"/>
       <genkey
-        keystore="${netbeans.bundled.ks}"
+        keystore="${netbeans.bundled.ks}" keyalg="RSA"
         alias="netbeans-bundled" storepass="${netbeans.bundled.ks}"
         dname="CN=Ant Group, OU=NetBeans, O=Apache.org, C=US"
       />

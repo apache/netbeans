@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.67.0
+#Version 1.68.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -934,6 +934,7 @@ CLSS public abstract interface org.eclipse.persistence.jpa.jpql.tools.spi.IMappi
 intf java.lang.Comparable<org.eclipse.persistence.jpa.jpql.tools.spi.IMapping>
 meth public abstract boolean hasAnnotation(java.lang.Class<? extends java.lang.annotation.Annotation>)
 meth public abstract boolean isCollection()
+meth public abstract boolean isEmbeddable()
 meth public abstract boolean isProperty()
 meth public abstract boolean isRelationship()
 meth public abstract boolean isTransient()
@@ -1699,6 +1700,7 @@ cons public init(org.netbeans.modules.j2ee.persistence.spi.jpql.ManagedType,org.
 intf org.eclipse.persistence.jpa.jpql.tools.spi.IMapping
 meth public boolean hasAnnotation(java.lang.Class<? extends java.lang.annotation.Annotation>)
 meth public boolean isCollection()
+meth public boolean isEmbeddable()
 meth public boolean isProperty()
 meth public boolean isRelationship()
 meth public boolean isTransient()

@@ -534,8 +534,10 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                     typesForReturnTypeName.remove(Type.FALSE);
                     typesForReturnTypeName.remove(Type.NULL);
                     typesForReturnTypeName.remove(Type.VOID);
+                    typesForReturnTypeName.remove(Type.NEVER);
                 } else if (context == CompletionContext.RETURN_UNION_TYPE_NAME) {
                     typesForReturnTypeName.remove(Type.VOID);
+                    typesForReturnTypeName.remove(Type.NEVER);
                     typesForReturnTypeName.remove(Type.MIXED);
                 }
                 autoCompleteKeywords(completionResult, request, typesForReturnTypeName);

@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -256,7 +257,7 @@ public class MicronautDataCompletionTask {
     private static TypeElement getEntityFor(CompilationInfo info, TreePath path) {
         TypeElement te = (TypeElement) info.getTrees().getElement(path);
         if (te.getModifiers().contains(Modifier.ABSTRACT)) {
-            if (checkForRepositoryAnnotation(te.getAnnotationMirrors())) {
+            if (checkForRepositoryAnnotation(te.getAnnotationMirrors(), new HashSet<>())) {
                 Types types = info.getTypes();
                 TypeMirror repositoryType = types.erasure(info.getElements().getTypeElement(REPOSITORY_TYPE_NAME).asType());
                 for (TypeMirror iface : te.getInterfaces()) {
@@ -275,10 +276,10 @@ public class MicronautDataCompletionTask {
         return null;
     }
 
-    private static boolean checkForRepositoryAnnotation(List<? extends AnnotationMirror> annotations) {
+    private static boolean checkForRepositoryAnnotation(List<? extends AnnotationMirror> annotations, HashSet<TypeElement> checked) {
         for (AnnotationMirror annotation : annotations) {
-            DeclaredType annotationType = annotation.getAnnotationType();
-            if (REPOSITORY_ANNOTATION_NAME.contentEquals(((TypeElement) annotationType.asElement()).getQualifiedName()) || checkForRepositoryAnnotation(annotationType.getAnnotationMirrors())) {
+            TypeElement annotationElement = (TypeElement) annotation.getAnnotationType().asElement();
+            if (REPOSITORY_ANNOTATION_NAME.contentEquals(annotationElement.getQualifiedName()) || checked.add(annotationElement) && checkForRepositoryAnnotation(annotationElement.getAnnotationMirrors(), checked)) {
                 return true;
             }
         }

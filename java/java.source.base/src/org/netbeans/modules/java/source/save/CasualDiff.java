@@ -1981,12 +1981,18 @@ public class CasualDiff {
         List<? extends JCTree> oldPatterns;
         List<? extends JCTree> newPatterns;
         
-        if(TreeShims.isJDKVersionRelease17_Or_Above()){
-            oldPatterns = getCaseLabelPatterns(oldT);
-            newPatterns = getCaseLabelPatterns(newT);
+        if(TreeShims.isJDKVersionRelease17_Or_Above() && 
+            !(getCaseLabelPatterns(oldT).size() == 1 && getCaseLabelPatterns(oldT).get(0).getKind().toString().equals(TreeShims.DEFAULT_CASE_LABEL))){
+            oldPatterns = getCaseLabelPatterns(oldT);            
         }else{
-            oldPatterns = getCasePatterns(oldT);
-            newPatterns = getCasePatterns(newT);;
+            oldPatterns = getCasePatterns(oldT);           
+        }
+        
+        if(TreeShims.isJDKVersionRelease17_Or_Above() && 
+            !(getCaseLabelPatterns(newT).size() == 1 && getCaseLabelPatterns(newT).get(0).getKind().toString().equals(TreeShims.DEFAULT_CASE_LABEL))){
+            newPatterns = getCaseLabelPatterns(newT);            
+        }else{
+            newPatterns = getCasePatterns(oldT);           
         }
         
         PositionEstimator patternEst = EstimatorFactory.casePatterns(

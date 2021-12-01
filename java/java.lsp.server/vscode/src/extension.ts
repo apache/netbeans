@@ -70,6 +70,14 @@ export class NbLanguageClient extends LanguageClient {
     findTreeViewService(): TreeViewService {
         return this._treeViewService;
     }
+
+    stop(): Promise<void> {
+        // stop will be called even in case of external close & client restart, so OK.
+        const r: Promise<void> = super.stop();
+        this._treeViewService.dispose();
+        return r;
+    }
+    
 }
 
 function handleLog(log: vscode.OutputChannel, msg: string): void {

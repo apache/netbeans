@@ -1,19 +1,34 @@
+import { disconnect } from 'process';
 import * as vscode from 'vscode';
 import {  LanguageClient } from 'vscode-languageclient/node';
 import { NbLanguageClient } from './extension';
 import { NodeChangedParams, NodeInfoNotification, NodeInfoRequest } from './protocol';
 
-export class TreeViewService {  
+export class TreeViewService extends vscode.Disposable {  
+  private handler : vscode.Disposable | undefined;
   private client : NbLanguageClient;
   private trees : Map<string, vscode.TreeView<Visualizer>> = new Map();
   private images : Map<number, vscode.Uri> = new Map();
   private providers : Map<number, VisualizerProvider> = new Map();
-  constructor (c : NbLanguageClient) {
+  constructor (c : NbLanguageClient, disposeFunc : () => void) {
+    super(() => { this.disposeAllViews(); disposeFunc(); });
     this.client = c;
   }
 
   getClient() : NbLanguageClient {
     return this.client;
+  }
+
+  private disposeAllViews() : void {
+    for (let tree of this.trees.values()) {
+      tree.dispose();
+    }
+    for (let provider of this.providers.values()) {
+      provider.dispose();
+    }
+    this.trees.clear();
+    this.providers.clear();
+    this.handler?.dispose();
   }
 
   public async createView(id : string, title? : string, options? : Partial<vscode.TreeViewOptions<any>>) : Promise<vscode.TreeView<Visualizer>> {
@@ -36,8 +51,9 @@ export class TreeViewService {
       opts.showCollapseAll = options.showCollapseAll;
     }
     let view = vscode.window.createTreeView(id, opts);
+    this.trees.set(id, view);
     // this will replace the handler over and over, but never mind
-    this.client.onNotification(NodeInfoNotification.type, params => this.nodeChanged(params));
+    this.handler = this.client.onNotification(NodeInfoNotification.type, params => this.nodeChanged(params));
     return view;
   }
 
@@ -60,7 +76,7 @@ export class TreeViewService {
 }
 
 
-class VisualizerProvider implements vscode.TreeDataProvider<Visualizer> {
+class VisualizerProvider extends vscode.Disposable implements vscode.TreeDataProvider<Visualizer> {
   private root: Visualizer;
   private treeData : Map<number, Visualizer> = new Map();
   
@@ -70,12 +86,17 @@ class VisualizerProvider implements vscode.TreeDataProvider<Visualizer> {
     id : string,
     rootData : NodeInfoRequest.Data
   ) {
+    super(() => this.disconnect());
     this.root = new Visualizer(rootData, ts.imageUri(rootData));
     this.treeData.set(rootData.id, this.root);
   }
 
   private _onDidChangeTreeData: vscode.EventEmitter<Visualizer | undefined | null | void> = new vscode.EventEmitter<Visualizer | undefined | null | void>();
   readonly onDidChangeTreeData: vscode.Event<Visualizer | undefined | null | void> = this._onDidChangeTreeData.event;
+
+  private disconnect() : void {
+    // nothing at the moment.
+  }
   
   refresh(params : NodeChangedParams): void {
       if (this.root.data.id === params.rootId) {
@@ -213,15 +234,16 @@ export async function createTreeView<T>(c: NbLanguageClient, viewId: string, vie
  * Registers the treeview service with the language server.
  */
 export function createTreeViewService(c : NbLanguageClient): TreeViewService {
-    const ts : TreeViewService = new TreeViewService(c);
-    vscode.commands.registerCommand("foundProjects.deleteEntry", async function (this: any, args: any) {
+    const d = vscode.commands.registerCommand("foundProjects.deleteEntry", async function (this: any, args: any) {
         let v = args as Visualizer;
         let ok = await c.sendRequest(NodeInfoRequest.destroy, { nodeId : v.data.id });
         if (!ok) {
             vscode.window.showErrorMessage('Cannot delete node ' + v.label);
         }
     });
-
+    const ts : TreeViewService = new TreeViewService(c, () => {
+      d.dispose()
+    });
     return ts;
 }
 

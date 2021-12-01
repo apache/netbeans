@@ -974,8 +974,6 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
     
     public void testSwitchToRuleSwitchGuardedPattern() throws Exception {
-        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
-            return;
         HintTest.create()
                 .input("package test;" +
                         "public class Test {\n" +
@@ -1023,7 +1021,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                 .sourceLevel(SourceVersion.latest().name())
                 .options("--enable-preview")
                 .run(ConvertSwitchToRuleSwitch.class)
-                .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
+                .findWarning("2:8-2:14:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
                 .assertCompilable()
                 .assertVerbatimOutput("package test;"

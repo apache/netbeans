@@ -1992,7 +1992,7 @@ public class CasualDiff {
             !(getCaseLabelPatterns(newT).size() == 1 && getCaseLabelPatterns(newT).get(0).getKind().toString().equals(TreeShims.DEFAULT_CASE_LABEL))){
             newPatterns = getCaseLabelPatterns(newT);            
         }else{
-            newPatterns = getCasePatterns(oldT);           
+            newPatterns = getCasePatterns(newT);           
         }
         
         PositionEstimator patternEst = EstimatorFactory.casePatterns(

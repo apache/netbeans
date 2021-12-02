@@ -707,6 +707,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         
             // create project explorer:
             c.findTreeViewService().createView('foundProjects', 'Projects', { canSelectMany : false });
+            c.findTreeViewService().createView('database.connections', undefined , { canSelectMany : true });
         }).catch(setClient[1]);
     }).catch((reason) => {
         activationPending = false;

@@ -82,6 +82,11 @@ public final class PhpModifiers extends Modifier {
         return this;
     }
 
+    public PhpModifiers setReadonly() {
+        mod |= Modifier.READONLY;
+        return this;
+    }
+
     private PhpModifiers(int... bitmask) {
         for (int mode : bitmask) {
             this.mod |= mode;
@@ -142,6 +147,10 @@ public final class PhpModifiers extends Modifier {
 
     public boolean isAbstract() {
         return Modifier.isAbstract(mod);
+    }
+
+    public boolean isReadonly() {
+        return Modifier.isReadonly(mod);
     }
 
     @Override

@@ -28,4 +28,8 @@ public class PHP81FeaturesTest extends PHPLexerTestBase {
         performTest("lexer/php81/neverType_01");
     }
 
+    public void testReadonlyProperties_01() throws Exception {
+        performTest("lexer/php81/readonlyProperties_01");
+    }
+
 }

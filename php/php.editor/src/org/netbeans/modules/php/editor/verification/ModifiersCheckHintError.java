@@ -31,6 +31,7 @@ import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
+import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
@@ -41,8 +42,15 @@ import org.netbeans.modules.php.editor.model.FileScope;
 import org.netbeans.modules.php.editor.model.InterfaceScope;
 import org.netbeans.modules.php.editor.model.MethodScope;
 import org.netbeans.modules.php.editor.model.ModelUtils;
+import org.netbeans.modules.php.editor.model.TraitScope;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
+import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration.Modifier;
+import org.netbeans.modules.php.editor.parser.astnodes.Expression;
+import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -53,7 +61,7 @@ public class ModifiersCheckHintError extends HintErrorRule {
     private List<Hint> hints;
     private FileObject fileObject;
     private BaseDocument doc;
-    private boolean currectClassHasAbstractMethod = false;
+    private boolean currentClassHasAbstractMethod = false;
 
     @Override
     public void invoke(PHPRuleContext context, List<Hint> hints) {
@@ -73,6 +81,12 @@ public class ModifiersCheckHintError extends HintErrorRule {
                 }
                 processClassScope(classScope);
             }
+            for (TraitScope traitScope : ModelUtils.getDeclaredTraits(fileScope)) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
+                processTraitScope(traitScope);
+            }
             Collection<? extends InterfaceScope> declaredInterfaces = ModelUtils.getDeclaredInterfaces(fileScope);
             for (InterfaceScope interfaceScope : declaredInterfaces) {
                 if (CancelSupport.getDefault().isCancelled()) {
@@ -80,7 +94,43 @@ public class ModifiersCheckHintError extends HintErrorRule {
                 }
                 processInterfaceScope(interfaceScope);
             }
+            checkReadonlyFieldDeclarationsWithDefaultValue(phpParseResult, hints);
         }
+    }
+
+    @NbBundle.Messages({
+        "# {0} - field name",
+        "ModifiersCheckHintError.realdonlyFieldWithDefaultValue=Readonly property \"{0}\" can''t have default value"
+    })
+    private void checkReadonlyFieldDeclarationsWithDefaultValue(PHPParseResult phpParseResult, List<Hint> hints) {
+        CheckVisitor checkVisitor = new CheckVisitor();
+        phpParseResult.getProgram().accept(checkVisitor);
+        for (SingleFieldDeclaration fieldDeclaration : checkVisitor.getReadonlyFieldDeclarationsWithDefaultValue()) {
+            // e.g. public readonly int $prop = 1;
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            Expression value = fieldDeclaration.getName();
+            if (value != null) {
+                addHint(
+                        CodeUtils.getOffsetRagne(value),
+                        Bundle.ModifiersCheckHintError_realdonlyFieldWithDefaultValue(fieldDeclaration.getName()),
+                        hints,
+                        Collections.emptyList()
+                );
+            }
+        }
+    }
+
+    private void addHint(OffsetRange offsetRange, String description, List<Hint> hints, List<HintFix> fixes) {
+        hints.add(new Hint(
+                this,
+                description,
+                fileObject,
+                offsetRange,
+                fixes,
+                500
+        ));
     }
 
     @Override
@@ -104,16 +154,35 @@ public class ModifiersCheckHintError extends HintErrorRule {
             }
             processMethodScope(methodScope);
         }
-        if (currectClassHasAbstractMethod) {
+        if (currentClassHasAbstractMethod) {
             processPossibleAbstractClass(classScope);
         }
-        currectClassHasAbstractMethod = false;
+        currentClassHasAbstractMethod = false;
+    }
+
+    private void processTraitScope(TraitScope traitScope) {
+        Collection<? extends FieldElement> declaredFields = traitScope.getDeclaredFields();
+        for (FieldElement fieldElement : declaredFields) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            processFieldElement(fieldElement);
+        }
+        Collection<? extends MethodScope> declaredMethods = traitScope.getDeclaredMethods();
+        for (MethodScope methodScope : declaredMethods) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            processMethodScope(methodScope);
+        }
     }
 
     @Messages({
         "# {0} - Field name",
         "# {1} - Modifier name",
-        "InvalidField=Field \"{0}\" can not be declared {1}"
+        "InvalidField=Field \"{0}\" can not be declared {1}",
+        "# {0} - Field name",
+        "InvalidReadonlyProperty=Readonly property \"{0}\" must have type"
     })
     private void processFieldElement(FieldElement fieldElement) {
         PhpModifiers phpModifiers = fieldElement.getPhpModifiers();
@@ -127,6 +196,10 @@ public class ModifiersCheckHintError extends HintErrorRule {
             invalidModifier = "final"; //NOI18N
             fixes = Collections.<HintFix>singletonList(new RemoveModifierFix(doc, invalidModifier, fieldElement.getOffset()));
             hints.add(new SimpleHint(Bundle.InvalidField(fieldElement.getName(), invalidModifier), fieldElement.getNameRange(), fixes));
+        } else if (phpModifiers.isReadonly()
+                && fieldElement.getDefaultTypeNames().isEmpty()) {
+            // e.g. public readonly $prop;
+            hints.add(new SimpleHint(Bundle.InvalidReadonlyProperty(fieldElement.getName()), fieldElement.getNameRange(), Collections.emptyList()));
         }
     }
 
@@ -141,6 +214,7 @@ public class ModifiersCheckHintError extends HintErrorRule {
     private void processMethodScope(MethodScope methodScope) {
         PhpModifiers phpModifiers = methodScope.getPhpModifiers();
         List<HintFix> fixes;
+        boolean isTrait = methodScope.getInScope() instanceof TraitScope;
         if (phpModifiers.isAbstract() && phpModifiers.isFinal()) {
             fixes = new ArrayList<>();
             fixes.add(new RemoveModifierFix(doc, "abstract", methodScope.getOffset())); //NOI18N
@@ -149,12 +223,14 @@ public class ModifiersCheckHintError extends HintErrorRule {
         } else if (phpModifiers.isAbstract() && methodScope.getBlockRange() != null) {
             fixes = Collections.<HintFix>singletonList(new RemoveBodyFix(doc, methodScope));
             hints.add(new SimpleHint(Bundle.AbstractWithBlockMethod(methodScope.getName()), methodScope.getNameRange(), fixes));
-        } else if (phpModifiers.isAbstract() && phpModifiers.isPrivate()) {
+        } else if (phpModifiers.isAbstract() && phpModifiers.isPrivate() && !isTrait) {
+            // the following is valid in a trait scope
+            // abstract private function abstractMethod();
             fixes = Collections.<HintFix>singletonList(new RemoveModifierFix(doc, "private", methodScope.getOffset())); //NOI18N
             hints.add(new SimpleHint(Bundle.AbstractPrivateMethod(methodScope.getName()), methodScope.getNameRange(), fixes));
         }
-        if (phpModifiers.isAbstract()) {
-            currectClassHasAbstractMethod = true;
+        if (phpModifiers.isAbstract() && !isTrait) {
+            currentClassHasAbstractMethod = true;
         }
     }
 
@@ -391,6 +467,35 @@ public class ModifiersCheckHintError extends HintErrorRule {
             doc.readUnlock();
         }
         return retval;
+    }
+
+    private static final class CheckVisitor extends DefaultVisitor {
+
+        private final List<SingleFieldDeclaration> readonlyFieldDeclarationsWithDefaultValue = new ArrayList<>();
+
+        @Override
+        public void visit(FieldsDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            if (Modifier.isReadonly(node.getModifier())) {
+                // e.g. public readonly int $prop = 1;
+                for (SingleFieldDeclaration field : node.getFields()) {
+                    if (CancelSupport.getDefault().isCancelled()) {
+                        return;
+                    }
+                    if (field.getValue() != null) {
+                        readonlyFieldDeclarationsWithDefaultValue.add(field);
+                    }
+                }
+            }
+            super.visit(node);
+        }
+
+        public List<SingleFieldDeclaration> getReadonlyFieldDeclarationsWithDefaultValue() {
+            return Collections.unmodifiableList(readonlyFieldDeclarationsWithDefaultValue);
+        }
+
     }
 
 }

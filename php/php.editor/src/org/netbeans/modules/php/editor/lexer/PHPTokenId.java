@@ -169,7 +169,9 @@ public enum PHPTokenId implements TokenId {
     PHP__METHOD__(null, "constant"), //NOI18N
     PHP_TRUE(null, "keyword"), //NOI18N
     PHP_FALSE(null, "keyword"), //NOI18N
-    PHP_NULL(null, "keyword"); //NOI18N
+    PHP_NULL(null, "keyword"), // NOI18N
+    PHP_READONLY(null, "keyword"), // NOI18N NETBEANS-5599 PHP 8.1
+    ;
 
     private final String fixedText;
     private final String primaryCategory;

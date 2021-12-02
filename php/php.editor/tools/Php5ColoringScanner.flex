@@ -891,6 +891,10 @@ PHP_TYPE_NEVER=[n][e][v][e][r]
     return PHPTokenId.PHP_PUBLIC;
 }
 
+<ST_PHP_IN_SCRIPTING>"readonly" {
+    return PHPTokenId.PHP_READONLY;
+}
+
 <ST_PHP_IN_SCRIPTING>"unset" {
     return PHPTokenId.PHP_UNSET;
 }

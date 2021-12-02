@@ -179,6 +179,14 @@ public abstract class TreeViewProvider {
     }
     
     protected abstract void onDidChangeTreeData(Node n, int id);
+
+    public Lookup getLookup() {
+        return context;
+    }
+    
+    public ExplorerManager getExplorerManager() {
+        return manager;
+    }
     
     /**
      * Keeps the Nodes that were published to the client in the memory. If the client

@@ -942,8 +942,12 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
     
         public void testSwitchToRuleSwitchBindingPattern() throws Exception {
-        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip tests
             return;
+        }
         HintTest.create()
                 .input("package test;" +
                         "public class Test {\n" +
@@ -955,7 +959,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                         "         }\n" +
                         "     }\n" +
                         "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel("17")
                 .options("--enable-preview")
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
@@ -974,6 +978,12 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
     
     public void testSwitchToRuleSwitchGuardedPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip tests
+            return;
+        }
         HintTest.create()
                 .input("package test;" +
                         "public class Test {\n" +
@@ -985,7 +995,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                         "         }\n" +
                         "     }\n" +
                         "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel("17")
                 .options("--enable-preview")
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
@@ -1004,8 +1014,12 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
     
         public void testSwitchExpressionGuardedPattern() throws Exception {
-        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip tests
             return;
+        }
         HintTest.create()
                 .input("package test;"
                         + "class Test {\n"
@@ -1018,7 +1032,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                         + "        }\n"
                         + "    }\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel("17")
                 .options("--enable-preview")
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("2:8-2:14:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())

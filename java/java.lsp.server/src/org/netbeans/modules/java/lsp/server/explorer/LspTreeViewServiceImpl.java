@@ -31,7 +31,6 @@ import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeOperationParams;
 import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
 /**
@@ -58,6 +57,10 @@ public class LspTreeViewServiceImpl implements TreeViewService, LanguageClientAw
                 }
             }
         };
+    }
+    
+    public TreeNodeRegistry getNodeRegistry() {
+        return treeService;
     }
     
     @Override

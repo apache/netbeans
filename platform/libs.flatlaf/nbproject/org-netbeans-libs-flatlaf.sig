@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.7
+#Version 1.8
 
 CLSS public abstract interface com.formdev.flatlaf.FlatClientProperties
 fld public final static java.lang.String BUTTON_TYPE = "JButton.buttonType"
@@ -154,6 +154,7 @@ supr com.formdev.flatlaf.FlatLightLaf
 
 CLSS public abstract com.formdev.flatlaf.FlatLaf
 cons public init()
+fld public final static java.lang.Object NULL_VALUE
 innr public abstract interface static DisabledIconProvider
 meth protected java.util.List<java.lang.Class<?>> getLafClassesForDefaultsLoading()
 meth protected java.util.Properties getAdditionalDefaults()
@@ -182,6 +183,7 @@ meth public static void registerCustomDefaultsSource(java.lang.String)
 meth public static void registerCustomDefaultsSource(java.lang.String,java.lang.ClassLoader)
 meth public static void repaintAllFramesAndDialogs()
 meth public static void revalidateAndRepaintAllFramesAndDialogs()
+meth public static void runWithUIDefaultsGetter(java.util.function.Function<java.lang.Object,java.lang.Object>,java.lang.Runnable)
 meth public static void setUseNativeWindowDecorations(boolean)
 meth public static void showMnemonics(java.awt.Component)
 meth public static void unregisterCustomDefaultsSource(java.io.File)
@@ -190,10 +192,12 @@ meth public static void unregisterCustomDefaultsSource(java.lang.String,java.lan
 meth public static void updateUI()
 meth public static void updateUILater()
 meth public void initialize()
+meth public void registerUIDefaultsGetter(java.util.function.Function<java.lang.Object,java.lang.Object>)
 meth public void uninitialize()
+meth public void unregisterUIDefaultsGetter(java.util.function.Function<java.lang.Object,java.lang.Object>)
 supr javax.swing.plaf.basic.BasicLookAndFeel
-hfds DESKTOPFONTHINTS,aquaLoaded,customDefaultsSources,desktopPropertyListener,desktopPropertyName,desktopPropertyName2,mnemonicHandler,oldPopupFactory,postInitialization,updateUIPending
-hcls ActiveFont,ImageIconUIResource
+hfds DESKTOPFONTHINTS,aquaLoaded,customDefaultsSources,desktopPropertyListener,desktopPropertyName,desktopPropertyName2,mnemonicHandler,oldPopupFactory,postInitialization,uiDefaultsGetters,updateUIPending
+hcls ActiveFont,FlatUIDefaults,ImageIconUIResource
 
 CLSS public abstract interface static com.formdev.flatlaf.FlatLaf$DisabledIconProvider
  outer com.formdev.flatlaf.FlatLaf
@@ -321,7 +325,9 @@ CLSS public com.formdev.flatlaf.util.ColorFunctions
 cons public init()
 innr public abstract interface static ColorFunction
 innr public static Fade
+innr public static HSLChange
 innr public static HSLIncreaseDecrease
+innr public static Mix
 meth public !varargs static java.awt.Color applyFunctions(java.awt.Color,com.formdev.flatlaf.util.ColorFunctions$ColorFunction[])
 meth public static float clamp(float)
 meth public static java.awt.Color mix(java.awt.Color,java.awt.Color,float)
@@ -340,6 +346,16 @@ meth public java.lang.String toString()
 meth public void apply(float[])
 supr java.lang.Object
 
+CLSS public static com.formdev.flatlaf.util.ColorFunctions$HSLChange
+ outer com.formdev.flatlaf.util.ColorFunctions
+cons public init(int,float)
+fld public final float value
+fld public final int hslIndex
+intf com.formdev.flatlaf.util.ColorFunctions$ColorFunction
+meth public java.lang.String toString()
+meth public void apply(float[])
+supr java.lang.Object
+
 CLSS public static com.formdev.flatlaf.util.ColorFunctions$HSLIncreaseDecrease
  outer com.formdev.flatlaf.util.ColorFunctions
 cons public init(int,boolean,float,boolean,boolean)
@@ -350,6 +366,16 @@ fld public final float amount
 fld public final int hslIndex
 intf com.formdev.flatlaf.util.ColorFunctions$ColorFunction
 meth protected boolean shouldInverse(float[])
+meth public java.lang.String toString()
+meth public void apply(float[])
+supr java.lang.Object
+
+CLSS public static com.formdev.flatlaf.util.ColorFunctions$Mix
+ outer com.formdev.flatlaf.util.ColorFunctions
+cons public init(java.awt.Color,float)
+fld public final float weight
+fld public final java.awt.Color color2
+intf com.formdev.flatlaf.util.ColorFunctions$ColorFunction
 meth public java.lang.String toString()
 meth public void apply(float[])
 supr java.lang.Object

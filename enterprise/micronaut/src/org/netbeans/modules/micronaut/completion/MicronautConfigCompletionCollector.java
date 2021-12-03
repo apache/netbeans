@@ -77,7 +77,7 @@ public class MicronautConfigCompletionCollector implements CompletionCollector {
                                     ArrayUtilities.appendSpaces(insertText, indentLevelSize);
                                 }
                             }
-                            return CompletionCollector.newBuilder(propName).kind(Completion.Kind.Property).sortText(String.format("%4d%s", 10, propName))
+                            return CompletionCollector.newBuilder(propName).kind(Completion.Kind.Property).sortText(String.format("%04d%s", 10, propName))
                                     .insertText(insertText.toString()).insertTextFormat(insertTextFormat).build();
                         }
 
@@ -112,7 +112,7 @@ public class MicronautConfigCompletionCollector implements CompletionCollector {
                                 }
                             }
                             CompletionCollector.Builder builder = CompletionCollector.newBuilder(property.getId()).kind(Completion.Kind.Property)
-                                    .sortText(String.format("%4d%s", property.isDeprecated() ? 30 : 20, property.getId())).insertText(insertText.toString())
+                                    .sortText(String.format("%04d%s", property.isDeprecated() ? 30 : 20, property.getId())).insertText(insertText.toString())
                                     .insertTextFormat(insertTextFormat).documentation(new MicronautConfigDocumentation(property).getText());
                             if (property.isDeprecated()) {
                                 builder.addTag(Completion.Tag.Deprecated);

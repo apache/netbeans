@@ -24,6 +24,7 @@ import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.netbeans.modules.java.lsp.server.protocol.DecorationRenderOptions;
 import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
@@ -106,4 +107,8 @@ public abstract class TestCodeLanguageClient implements NbCodeLanguageClient {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public void notifyNodeChange(NodeChangedParams params) {
+        throw new UnsupportedOperationException();
+    }
 }

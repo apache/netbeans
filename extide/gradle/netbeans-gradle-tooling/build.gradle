@@ -17,7 +17,6 @@
  * under the License.
  */
 
-apply plugin: 'groovy'
 apply plugin: 'application'
 
 mainClassName = 'org.netbeans.modules.gradle.DebugTooling'

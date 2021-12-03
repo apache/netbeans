@@ -60,6 +60,14 @@
 				"path": "./syntaxes/java.tmLanguage.json"
 			}
 		],
+		"views": {
+			"explorer": [
+				{
+					"id": "foundProjects",
+					"name": "Projects"
+				}
+			]
+		},
 		"configuration": {
 			"title": "Java",
 			"properties": {
@@ -108,6 +116,34 @@
 					"type": "integer",
 					"default": 100,
 					"description": "Timeout (in milliseconds) for loading Javadoc in code completion (-1 for unlimited)"
+				},
+				"netbeans.java.onSave.organizeImports": {
+					"type": "boolean",
+					"default": true,
+					"description": "Enable organize imports action on a document save"
+				},
+				"netbeans.java.imports.groups": {
+					"type": "array",
+					"description": "Groups of import statements (specified by their package prefixes) and their sorting order. Import statements within a group are ordered alphabetically",
+					"default": [
+						"java",
+						"javax",
+						"org",
+						"com",
+						""
+					]
+				},
+				"netbeans.java.imports.countForUsingStarImport": {
+					"type": "integer",
+					"description": "Class count to use a star-import",
+					"default": 999,
+					"minimum": 1
+				},
+				"netbeans.java.imports.countForUsingStaticStarImport": {
+					"type": "integer",
+					"description": "Members count to use a static star-import",
+					"default": 999,
+					"minimum": 1
 				}
 			}
 		},
@@ -356,6 +392,10 @@
 				"command": "graalvm.pause.script",
 				"title": "Pause in Script",
 				"category": "GraalVM"
+			},
+			{
+				"command": "foundProjects.deleteEntry",
+				"title": "Delete"
 			}
 		],
 		"keybindings": [
@@ -411,6 +451,12 @@
 				{
 					"command": "graalvm.pause.script",
 					"when": "nbJavaLSReady"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "foundProjects.deleteEntry",
+					"when": "view == foundProjects && viewItem == node"
 				}
 			]
 		}

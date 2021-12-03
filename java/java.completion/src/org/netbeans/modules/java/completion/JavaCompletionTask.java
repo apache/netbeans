@@ -4862,12 +4862,18 @@ public final class JavaCompletionTask<T> extends BaseTask {
         if (!modifiers.contains(PUBLIC) && !modifiers.contains(PRIVATE)) {
             kws.add(PUBLIC_KEYWORD);
         }
-        if (!modifiers.contains(FINAL) && !modifiers.contains(ABSTRACT) && !modifiers.contains(SEALED_KEYWORD) && !modifiers.contains(NON_SEALED_KEYWORD)) {
-            kws.add(ABSTRACT_KEYWORD);
-            kws.add(FINAL_KEYWORD);
-            if (isSealedSupported(env)) {
-                kws.add(SEALED_KEYWORD);
-                kws.add(NON_SEALED_KEYWORD);
+        if (!modifiers.contains(FINAL)) {
+            if (!modifiers.contains(ABSTRACT)) {
+                kws.add(ABSTRACT_KEYWORD);
+            }
+            if (!contains(modifiers, "SEALED") && !contains(modifiers, "NON_SEALED")) {
+                if (!modifiers.contains(ABSTRACT)) {
+                    kws.add(FINAL_KEYWORD);
+                }
+                if (isSealedSupported(env)) {
+                    kws.add(SEALED_KEYWORD);
+                    kws.add(NON_SEALED_KEYWORD);
+                }
             }
         }
         kws.add(CLASS_KEYWORD);
@@ -4880,6 +4886,14 @@ public final class JavaCompletionTask<T> extends BaseTask {
             if (Utilities.startsWith(kw, prefix)) {
                 results.add(itemFactory.createKeywordItem(kw, SPACE, anchorOffset, false));
             }
+        }
+    }
+
+    private static boolean contains(Set<Modifier> modifiers, String modifier) {
+        try {
+            return modifiers.contains(Modifier.valueOf(modifier));
+        } catch (IllegalArgumentException ex) {
+            return false;
         }
     }
 

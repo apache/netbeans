@@ -21,6 +21,7 @@ package org.netbeans.modules.css.editor.indent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.LinkedList;
 import javax.swing.text.BadLocationException;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
@@ -94,37 +95,76 @@ public class CssIndentTask implements IndentTask, Lookup.Provider {
                 .get(context.document())
                 .embeddedTokenSequences(reg.getStartOffset(), false);
             TokenSequence<?> ts = tslist.get(tslist.size() - 1);
-            int blockLevel = determineBlocklevel(ts);
+
+            LinkedList<IndentType> blockLevel = new LinkedList<>();
+
+            // Initialize blockLevel with the indentions created by the
+            // outside context
+            ts.moveStart();
+            Token lastToken = null;
+            if (ts.moveNext()) {
+                List<TokenSequence<?>> tokenSequences = TokenHierarchy
+                        .get(context.document())
+                        .tokenSequenceList(ts.languagePath(), 0, ts.offset());
+                OUTER:
+                for (TokenSequence tsX : tokenSequences) {
+                    tsX.moveStart();
+                    while (tsX.moveNext()) {
+                        if (tsX.offset() >= ts.offset()) {
+                            break OUTER;
+                        }
+                        if (tsX.token().id() == CssTokenId.LBRACE) {
+                            if (isStringInterpolation(lastToken)) {
+                                // The sequence "@{" and "#{" lead in a strong interpolation
+                                // in LESS (former) and SCSS (latter).
+                                blockLevel.addLast(IndentType.NONE);
+                            } else {
+                                blockLevel.addLast(IndentType.BLOCK);
+                            }
+                        } else if (tsX.token().id() == CssTokenId.RBRACE) {
+                            blockLevel.pollLast();
+                        }
+                        lastToken = tsX.token();
+                    }
+                }
+            }
+
             ts.moveStart();
             while(ts.moveNext()) {
                 if(ts.token().id() == CssTokenId.LBRACE) {
-                    blockLevel++;
-                    // Ensure, that there is a newline after an block opening
-                    // brace "{"
-                    if(LexerUtils.followsToken(ts, CssTokenId.NL, false, true, CssTokenId.WS, CssTokenId.COMMENT) == null) {
-                        while(ts.moveNext()) {
-                            if (ts.token().id() != CssTokenId.WS && ts.token().id() != CssTokenId.COMMENT) {
-                                newlinesMissing.add(ts.offset());
-                                ts.movePrevious();
-                                break;
+                    if(! isStringInterpolation(lastToken)) {
+                        blockLevel.add(IndentType.BLOCK);
+                        // Ensure, that there is a newline after an block opening
+                        // brace "{"
+                        if(LexerUtils.followsToken(ts, CssTokenId.NL, false, true, CssTokenId.WS, CssTokenId.COMMENT) == null) {
+                            while(ts.moveNext()) {
+                                if (ts.token().id() != CssTokenId.WS && ts.token().id() != CssTokenId.COMMENT) {
+                                    newlinesMissing.add(ts.offset());
+                                    ts.movePrevious();
+                                    break;
+                                }
                             }
                         }
+                    } else {
+                        blockLevel.add(IndentType.NONE);
                     }
                 } else if (ts.token().id() == CssTokenId.RBRACE) {
-                    blockLevel--;
-                    // Ensure, that there is a newline before an block closing
-                    // brace "}"
-                    if (LexerUtils.followsToken(ts, CssTokenId.NL, true, true, CssTokenId.WS, CssTokenId.COMMENT) == null) {
-                        newlinesMissing.add(ts.offset());
-                    }
-                    // Ensure, that there is a newline after an block closing
-                    // brace "}"
-                    if (LexerUtils.followsToken(ts, CssTokenId.NL, false, true, CssTokenId.WS, CssTokenId.COMMENT) == null) {
-                        while(ts.moveNext()) {
-                            if (ts.token().id() != CssTokenId.WS && ts.token().id() != CssTokenId.COMMENT) {
-                                newlinesMissing.add(ts.offset());
-                                ts.movePrevious();
-                                break;
+                    IndentType it = blockLevel.removeLast();
+                    if (it == IndentType.BLOCK) {
+                        // Ensure, that there is a newline before an block closing
+                        // brace "}"
+                        if (LexerUtils.followsToken(ts, CssTokenId.NL, true, true, CssTokenId.WS, CssTokenId.COMMENT) == null) {
+                            newlinesMissing.add(ts.offset());
+                        }
+                        // Ensure, that there is a newline after an block closing
+                        // brace "}"
+                        if (LexerUtils.followsToken(ts, CssTokenId.NL, false, true, CssTokenId.WS, CssTokenId.COMMENT) == null) {
+                            while (ts.moveNext()) {
+                                if (ts.token().id() != CssTokenId.WS && ts.token().id() != CssTokenId.COMMENT) {
+                                    newlinesMissing.add(ts.offset());
+                                    ts.movePrevious();
+                                    break;
+                                }
                             }
                         }
                     }
@@ -133,7 +173,7 @@ public class CssIndentTask implements IndentTask, Lookup.Provider {
                     // (between property definitions). This should only be done
                     // in regular CSS definitions (rules), but not in inline
                     // style definitions
-                    if (blockLevel > 0 && LexerUtils.followsToken(ts, asList(CssTokenId.NL, CssTokenId.RBRACE), false, true, CssTokenId.WS, CssTokenId.COMMENT) == null) {
+                    if (!blockLevel.isEmpty() && LexerUtils.followsToken(ts, asList(CssTokenId.NL, CssTokenId.RBRACE), false, true, CssTokenId.WS, CssTokenId.COMMENT) == null) {
                         while (ts.moveNext()) {
                             if (ts.token().id() != CssTokenId.WS && ts.token().id() != CssTokenId.COMMENT) {
                                 newlinesMissing.add(ts.offset());
@@ -143,6 +183,7 @@ public class CssIndentTask implements IndentTask, Lookup.Provider {
                         }
                     }
                 }
+                lastToken = ts.token();
             }
         }
         // Remove newline insertions if
@@ -162,6 +203,10 @@ public class CssIndentTask implements IndentTask, Lookup.Provider {
         }
     }
 
+    private static boolean isStringInterpolation(Token lastToken) {
+        return lastToken != null && (lastToken.id() == CssTokenId.AT_SIGN || lastToken.id() == CssTokenId.HASH_SYMBOL);
+    }
+
     private boolean isPositionInFormatRegions(int pos) {
         for(Region r: context.indentRegions()) {
             if(r.getStartOffset() <= pos && r.getEndOffset() > pos) {
@@ -169,31 +214,6 @@ public class CssIndentTask implements IndentTask, Lookup.Provider {
             }
         }
         return false;
-    }
-    
-    private int determineBlocklevel(TokenSequence<?> ts) {
-        int blockLevel = 0;
-        ts.moveStart();
-        if (!ts.moveNext()) {
-            return 0;
-        }
-        List<TokenSequence<?>> tokenSequences = TokenHierarchy
-            .get(context.document())
-            .tokenSequenceList(ts.languagePath(), 0, ts.offset());
-        OUTER: for(TokenSequence tsX: tokenSequences) {
-            tsX.moveStart();
-            while(tsX.moveNext()) {
-                if(tsX.offset() >= ts.offset()) {
-                    break OUTER;
-                }
-                if(tsX.token().id() == CssTokenId.LBRACE) {
-                    blockLevel++;
-                } else if (tsX.token().id() == CssTokenId.RBRACE) {
-                    blockLevel--;
-                }
-            }
-        }
-        return blockLevel;
     }
 
     @Override
@@ -206,4 +226,8 @@ public class CssIndentTask implements IndentTask, Lookup.Provider {
         return lookup;
     }
 
+    private static enum IndentType {
+        NONE,
+        BLOCK
+    }
 }

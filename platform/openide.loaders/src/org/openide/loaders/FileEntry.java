@@ -337,9 +337,7 @@ public class FileEntry extends MultiDataObject.Entry {
             }
             FileObject fo = FileUtil.createFolder (f, name);
 
-            FileUtil.copyAttributes (getFile (), fo);
-            DataObject.setTemplate (fo, false);
-
+            FileUtil.copyAttributes (getFile (), fo, (n, v) -> DataObject.PROP_TEMPLATE.equals(n) ? null : FileUtil.defaultAttributesTransformer().apply(n, v));
             return fo;
         }
 

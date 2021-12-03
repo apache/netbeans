@@ -151,10 +151,10 @@ public final class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactori
             QuickPickItem elementItem = new QuickPickItem(createLabel(info, type));
             elementItem.setUserData(new ElementData(type));
             if (!type.getKind().isInterface()) {
-                result.add(createCodeAction(Bundle.DN_ExtractSuperclass(), CodeActionKind.RefactorExtract, EXTRACT_SUPERCLASS_REFACTORING_COMMAND, uri, elementItem, allMembers));
+                result.add(createCodeAction(Bundle.DN_ExtractSuperclass(), CodeActionKind.RefactorExtract, null, EXTRACT_SUPERCLASS_REFACTORING_COMMAND, uri, elementItem, allMembers));
             }
             if (!members.isEmpty()) {
-                result.add(createCodeAction(Bundle.DN_ExtractInterface(), CodeActionKind.RefactorExtract, EXTRACT_INTERFACE_REFACTORING_COMMAND, uri, elementItem, members));
+                result.add(createCodeAction(Bundle.DN_ExtractInterface(), CodeActionKind.RefactorExtract, null, EXTRACT_INTERFACE_REFACTORING_COMMAND, uri, elementItem, members));
             }
         }
         return result;

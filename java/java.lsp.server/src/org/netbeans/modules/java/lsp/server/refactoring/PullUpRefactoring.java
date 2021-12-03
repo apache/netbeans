@@ -119,7 +119,7 @@ public final class PullUpRefactoring extends CodeRefactoring {
         }
         QuickPickItem elementItem = new QuickPickItem(createLabel(info, element));
         elementItem.setUserData(new ElementData(element));
-        return Collections.singletonList(createCodeAction(Bundle.DN_PullUp(), PULL_UP_REFACTORING_KIND, PULL_UP_REFACTORING_COMMAND, uri, offset, elementItem, supertypeItems));
+        return Collections.singletonList(createCodeAction(Bundle.DN_PullUp(), PULL_UP_REFACTORING_KIND, null, PULL_UP_REFACTORING_COMMAND, uri, offset, elementItem, supertypeItems));
     }
 
     @Override

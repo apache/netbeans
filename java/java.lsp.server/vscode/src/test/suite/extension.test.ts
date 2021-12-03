@@ -1,21 +1,37 @@
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import * as assert from 'assert';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as ps from 'ps-node';
-import { spawn, ChildProcessByStdio, spawnSync, SpawnSyncReturns } from 'child_process';
-import { Readable } from 'stream';
 
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
 import * as vscode from 'vscode';
 import * as myExtension from '../../extension';
+import * as myExplorer from '../../explorer';
 import { TextDocument, TextEditor, Uri } from 'vscode';
+import { assertWorkspace, dumpJava, prepareProject } from './testutils';
 
 suite('Extension Test Suite', () => {
-    vscode.window.showInformationMessage('Cleaning up workspace.');
-    let folder: string = assertWorkspace();
-    fs.rmdirSync(folder, { recursive: true });
-    fs.mkdirSync(folder, { recursive: true });
     vscode.window.showInformationMessage('Start all tests.');
     myExtension.enableConsoleLog();
 
@@ -72,9 +88,8 @@ suite('Extension Test Suite', () => {
         let folder: string = assertWorkspace();
 
         await prepareProject(folder);
-
         vscode.workspace.saveAll();
-
+        
         if (where === 6) return;
 
         try {
@@ -93,11 +108,19 @@ suite('Extension Test Suite', () => {
         if (where === 8) return;
 
         assert.ok(fs.statSync(mainClass).isFile(), "Class created by compilation: " + mainClass);
+
+        myExplorer.createViewProvider(await myExtension.awaitClient(), "foundProjects").then(async (lvp) => {
+            const firstLevelChildren = await (lvp.getChildren() as Thenable<any[]>);
+            assert.strictEqual(firstLevelChildren.length, 1, "One child under the root");
+            const item = await (lvp.getTreeItem(firstLevelChildren[0]) as Thenable<vscode.TreeItem>);
+            assert.strictEqual(item?.label, "basicapp", "Element is named as the Maven project");
+        })
     }
 
     test("Compile workspace6", async() => demo(6));
     test("Compile workspace7", async() => demo(7));
     test("Compile workspace8", async() => demo(8));
+    test("Compile workspace9", async() => demo(9));
 
     /**
      * Checks that maven-managed process can be started, and forcefully terminated by vscode
@@ -107,7 +130,6 @@ suite('Extension Test Suite', () => {
         let folder: string = assertWorkspace();
 
         await prepareProject(folder);
-
         vscode.workspace.saveAll();
         let u : Uri = vscode.Uri.file(path.join(folder, 'src', 'main', 'java', 'pkg', 'Main.java'));
         let doc : TextDocument = await vscode.workspace.openTextDocument(u);
@@ -158,7 +180,6 @@ suite('Extension Test Suite', () => {
         let folder: string = assertWorkspace();
 
         await prepareProject(folder);
-
         vscode.workspace.saveAll();
 
         try {
@@ -229,9 +250,7 @@ suite('Extension Test Suite', () => {
         let folder: string = assertWorkspace();
 
         await prepareProject(folder);
-
         vscode.workspace.saveAll();
-
         try {
             console.log("Test: load workspace tests");
             let tests: any = await vscode.commands.executeCommand("java.load.workspace.tests", Uri.file(folder).toString());
@@ -257,120 +276,3 @@ suite('Extension Test Suite', () => {
 
     test("Test Explorer tests", async() => testExplorerTests());
 });
-
-function assertWorkspace(): string {
-    assert.ok(vscode.workspace, "workspace is defined");
-    const dirs = vscode.workspace.workspaceFolders;
-    assert.ok(dirs?.length, "There are some workspace folders: " + dirs);
-    assert.strictEqual(dirs.length, 1, "One folder provided");
-    let folder: string = dirs[0].uri.fsPath;
-    return folder;
-}
-
-async function prepareProject(folder: string) {
-    await fs.promises.writeFile(path.join(folder, 'pom.xml'), `
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-<modelVersion>4.0.0</modelVersion>
-<groupId>org.netbeans.demo.vscode.t1</groupId>
-<artifactId>basicapp</artifactId>
-<version>1.0</version>
-<properties>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-</properties>
-<build>
-<plugins>
-    <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.22.0</version>
-    </plugin>
-</plugins>
-</build>
-<dependencies>
-<dependency>
-    <groupId>org.junit.jupiter</groupId>
-    <artifactId>junit-jupiter-api</artifactId>
-    <version>5.3.1</version>
-    <scope>test</scope>
-</dependency>
-<dependency>
-    <groupId>org.junit.jupiter</groupId>
-    <artifactId>junit-jupiter-params</artifactId>
-    <version>5.3.1</version>
-    <scope>test</scope>
-</dependency>
-<dependency>
-    <groupId>org.junit.jupiter</groupId>
-    <artifactId>junit-jupiter-engine</artifactId>
-    <version>5.3.1</version>
-    <scope>test</scope>
-</dependency>
-</dependencies>
-</project>
-            `);
-
-            let pkg = path.join(folder, 'src', 'main', 'java', 'pkg');
-            let testPkg = path.join(folder, 'src', 'test', 'java', 'pkg');
-            let resources = path.join(folder, 'src', 'main', 'resources');
-            let mainJava = path.join(pkg, 'Main.java');
-            let mainTestJava = path.join(testPkg, 'MainTest.java');
-
-            await fs.promises.mkdir(pkg, { recursive: true });
-            await fs.promises.mkdir(resources, { recursive: true });
-            await fs.promises.mkdir(testPkg, { recursive: true });
-
-            await fs.promises.writeFile(mainJava, `
-package pkg;
-public class Main {
-    public static void main(String... args) throws Exception {
-        System.out.println("Endless wait...");
-        while (true) {
-            Thread.sleep(1000);
-        }
-    }
-    public String getName() {
-        return "John";
-    }
-}
-            `);
-
-            await fs.promises.writeFile(mainTestJava, `
-package pkg;
-import static org.junit.jupiter.api.Assertions.*;
-class MainTest {
-    @org.junit.jupiter.api.Test
-    public void testGetName() {
-        assertEquals("John", new Main().getName());
-    }
-    @org.junit.jupiter.api.Nested
-    class NestedTest {
-        @org.junit.jupiter.api.Test
-        public void testTrue() {
-            assertTrue(true);
-        }
-    }
-}
-            `);
-}
-
-async function dumpJava() {
-    const cmd = 'jps';
-    const args = [ '-v' ];
-    console.log(`Running: ${cmd} ${args.join(' ')}`);
-    let p : ChildProcessByStdio<null, Readable, Readable> = spawn(cmd, args, {
-        stdio : ["ignore", "pipe", "pipe"],
-    });
-    let n = await new Promise<number>((r, e) => {
-        p.stdout.on('data', function(d: any) {
-            console.log(d.toString());
-        });
-        p.stderr.on('data', function(d: any) {
-            console.log(d.toString());
-        });
-        p.on('close', function(code: number) {
-            r(code);
-        });
-    });
-    console.log(`${cmd} ${args.join(' ')} finished with code ${n}`);
-}

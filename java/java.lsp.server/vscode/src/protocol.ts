@@ -19,23 +19,18 @@
 'use strict';
 
 import * as vscode from 'vscode';
+
 import {
     ProtocolNotificationType,
     ProtocolRequestType,
     ShowMessageParams,
     NotificationType
 } from 'vscode-languageclient';
+
 import {
     Position,
     Range
 } from 'vscode-languageserver-protocol';
-
-export interface ShowStatusMessageParams extends ShowMessageParams {
-    /**
-     * The timeout
-     */
-    timeout?: number;
-}
 
 export interface HtmlPageParams {
     uri: string;
@@ -44,6 +39,13 @@ export interface HtmlPageParams {
 export namespace HtmlPageRequest {
     export const type = new ProtocolRequestType<HtmlPageParams, string, never, void, void>('window/showHtmlPage');
 };
+
+export interface ShowStatusMessageParams extends ShowMessageParams {
+    /**
+     * The timeout
+     */
+    timeout?: number;
+}
 
 export namespace StatusMessageRequest {
     export const type = new ProtocolNotificationType<ShowStatusMessageParams, void>('window/showStatusBarMessage');
@@ -134,6 +136,46 @@ export namespace TextEditorDecorationSetNotification {
 
 export namespace TextEditorDecorationDisposeNotification {
     export const type = new ProtocolNotificationType<string, void>('window/disposeTextEditorDecoration');
+}
+
+export interface NodeChangedParams {
+    rootId : number;
+    nodeId : number | null;
+}
+
+export interface CreateExplorerParams {
+    explorerId : string;
+}
+
+export interface NodeOperationParams {
+    nodeId : number;
+}
+
+export namespace NodeInfoNotification {
+    export const type = new ProtocolNotificationType<NodeChangedParams, void>('nodes/nodeChanged');
+}
+
+export namespace NodeInfoRequest {
+    export const explorermanager = new ProtocolRequestType<CreateExplorerParams, never, Data, void, void>('nodes/explorermanager');
+    export const info = new ProtocolRequestType<NodeOperationParams, Data, never,void, void>('nodes/info');
+    export const children = new ProtocolRequestType<NodeOperationParams, number[], never, void, void>('nodes/children');
+    export const destroy = new ProtocolRequestType<NodeOperationParams, boolean, never, void, void>('nodes/delete');
+    export const collapsed = new ProtocolNotificationType<NodeOperationParams, void>('nodes/collapsed');
+    
+    export interface Data {
+        id : number; /* numeric ID of the node */
+        name : string; /* Node.getName() */
+        label : string; /* Node.getDisplayName() */
+        tooltip? : string; 
+        description : string; /* Node.getShortDescription() */
+        resourceUri? : string; /* external URL to file: resource */
+        collapsibleState : vscode.TreeItemCollapsibleState;
+        canDestroy : boolean; /* Node.canDestroy() */
+        contextValue : string; /* Node.getCookies() */
+        iconUri : string | null;
+        iconIndex : number;
+        command? : string;
+    }
 };
 
 export function asPosition(value: undefined | null): undefined;

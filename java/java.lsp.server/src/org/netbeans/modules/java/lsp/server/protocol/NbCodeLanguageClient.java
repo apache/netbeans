@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import org.eclipse.lsp4j.MessageParams;
@@ -101,6 +102,14 @@ public interface NbCodeLanguageClient extends LanguageClient {
      */
     @JsonNotification("window/disposeTextEditorDecoration")
     public void disposeTextEditorDecoration(@NonNull String params);
+
+    /**
+     * Notifies client about change in a node.
+     *
+     * @param params the id of the node
+     */
+    @JsonNotification("nodes/nodeChanged")
+    public void notifyNodeChange(@NonNull NodeChangedParams params);
 
     /**
      * Returns extended code capabilities.

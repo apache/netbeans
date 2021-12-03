@@ -138,9 +138,6 @@ abstract class LspTemplateUI {
                 final DataFolder target = targetAndName.first();
                 final String name = targetAndName.second();
                 Map<String,String> prjParams = new HashMap<>();
-                prjParams.put("version", "1.0-SNAPSHOT"); // NOI18N
-                prjParams.put("artifactId", name);  // NOI18N
-                prjParams.put("groupId", findGroupId(pkg, name));
                 prjParams.put("package", pkg);
                 prjParams.put("packageBase", pkg);
                 DataObject newObject = template.createFromTemplate(target, name, prjParams);

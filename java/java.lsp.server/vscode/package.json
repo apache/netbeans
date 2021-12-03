@@ -166,9 +166,6 @@
 				],
 				"configurationAttributes": {
 					"launch": {
-						"required": [
-							"mainClass"
-						],
 						"properties": {
 							"mainClass": {
 								"type": "string",
@@ -264,8 +261,7 @@
 					{
 						"type": "java8+",
 						"request": "launch",
-						"name": "Launch Java 8+ App",
-						"mainClass": "${file}"
+						"name": "Launch Java 8+ App"
 					}
 				],
 				"configurationSnippets": [
@@ -275,8 +271,7 @@
 						"body": {
 							"type": "java8+",
 							"request": "launch",
-							"name": "Launch Java 8+ App",
-							"mainClass": "^\"${1:\\${file\\}}\""
+							"name": "Launch Java 8+ App"
 						}
 					}
 				]

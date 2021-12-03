@@ -873,7 +873,6 @@ class NetBeansConfigurationInitialProvider implements vscode.DebugConfigurationP
                     name: cname,
                     type: "java8+",
                     request: "launch",
-                    mainClass: '${file}',
                     launchConfiguration: cn,
                 };
                 result.push(debugConfig);
@@ -951,9 +950,7 @@ class NetBeansConfigurationResolver implements vscode.DebugConfigurationProvider
         if (!config.request) {
             config.request = 'launch';
         }
-        if ('launch' == config.request && !config.mainClass) {
-            config.mainClass = '${file}';
-        }
+        config.file = '${file}';
         if (!config.classPaths) {
             config.classPaths = ['any'];
         }

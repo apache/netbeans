@@ -6,7 +6,6 @@ import java.util.List;
 public class SourceLineMeta {
 
     String actualSourceLine;
-    int actualSourceLineStartPos;
     List<MarkUpTag> thisLineMarkUpTags;
     String sourceLineWithoutComment;
 
@@ -16,14 +15,6 @@ public class SourceLineMeta {
 
     public void setActualSourceLine(String actualSourceLine) {
         this.actualSourceLine = actualSourceLine;
-    }
-
-    public int getActualSourceLineStartPos() {
-        return actualSourceLineStartPos;
-    }
-
-    public void setActualSourceLineStartPos(int actualSourceLineStartPos) {
-        this.actualSourceLineStartPos = actualSourceLineStartPos;
     }
 
     public List<MarkUpTag> getThisLineMarkUpTags() {

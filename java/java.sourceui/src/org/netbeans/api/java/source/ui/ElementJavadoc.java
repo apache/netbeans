@@ -110,6 +110,17 @@ import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.xml.XMLUtil;
 
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.SimpleJavaFileObject;
+import javax.tools.ToolProvider;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.util.JavacTask;
+import com.sun.source.util.SourcePositions;
+import com.sun.source.util.Trees;
+
 /** Utility class for viewing Javadoc comments as HTML.
  *
  * @author Dusan Balek, Petr Hrebejk, Tomas Zezula
@@ -1315,9 +1326,9 @@ public class ElementJavadoc {
         int lineCounter = 0;
         for (SourceLineMeta fullLineInfo : parseResult) {
             lineCounter++;
-            String uncommentLine = fullLineInfo.getUncommentSourceLine();
+            String codeLine = fullLineInfo.getUncommentSourceLine() != null ? fullLineInfo.getUncommentSourceLine() : fullLineInfo.getActualSourceLine();
             try {
-                uncommentLine = XMLUtil.toElementContent(uncommentLine);
+                codeLine = XMLUtil.toElementContent(codeLine);
             } catch (CharConversionException ex) {
                 Exceptions.printStackTrace(ex);
                 //continue;
@@ -1328,7 +1339,7 @@ public class ElementJavadoc {
 
             if (attributes == null && regions == null) {
                 try {
-                    sb.append(XMLUtil.toElementContent(fullLineInfo.getActualSourceLine() + "\n"));
+                    sb.append(XMLUtil.toElementContent(codeLine + "\n"));//to-do modify for region
                 } catch (CharConversionException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -1336,21 +1347,21 @@ public class ElementJavadoc {
             } else {
                 if (attributes != null) {
                     for (Attrib attrib : attributes) {
-                        uncommentLine = applyTagsToHTML(uncommentLine, attrib.getAttributes(), attrib.getTagType());
+                        codeLine = applyTagsToHTML(codeLine, attrib.getAttributes(), attrib.getTagType());
                     }
                 }
                 if (regions != null) {
                     for (Region region : regions) {
-                        uncommentLine = applyTagsToHTML(uncommentLine, region.getAttributes(), region.getTagType());
+                        codeLine = applyTagsToHTML(codeLine, region.getAttributes(), region.getTagType());
                     }
                 }
-                sb.append(uncommentLine);
+                sb.append(codeLine);
             }
             sb.append("\n");
         }
     }
 
-    private String applyTagsToHTML(String uncommentLine, Map<String, String> hAttrib, String tagType) {
+    private String applyTagsToHTML(String codeLine, Map<String, String> hAttrib, String tagType) {
 
         String type = hAttrib.get("type") != null ? hAttrib.get("type") : "bold";
         String regex = hAttrib.get("regex");
@@ -1361,23 +1372,23 @@ public class ElementJavadoc {
             try {
                 regex = XMLUtil.toElementContent(regex);
                 Pattern pattern = Pattern.compile(regex);
-                Matcher matcher = pattern.matcher(uncommentLine);
+                Matcher matcher = pattern.matcher(codeLine);
                 while (matcher.find()) {
                     if (tagType.equals("highlight")) {
                         switch (type) {
                             case "italic":
-                                uncommentLine = matcher.replaceAll("<i>" + matcher.group(0) + "</i>");
+                                codeLine = matcher.replaceAll("<i>" + matcher.group(0) + "</i>");
                                 break;
                             case "bold":
-                                uncommentLine = matcher.replaceAll("<b>" + matcher.group(0) + "</b>");
+                                codeLine = matcher.replaceAll("<b>" + matcher.group(0) + "</b>");
                                 break;
                             case "highlighted":
-                                uncommentLine = matcher.replaceAll("<span style=\"background-color:yellow;\">" + matcher.group(0) + "</span>");
+                                codeLine = matcher.replaceAll("<span style=\"background-color:yellow;\">" + matcher.group(0) + "</span>");
                                 break;
                         }
                     }
                     if(tagType.equals("replace") && replacement != null){
-                        uncommentLine = matcher.replaceAll(replacement);
+                        codeLine = matcher.replaceAll(replacement);
                     }
                 }
             } catch (CharConversionException ex) {
@@ -1390,24 +1401,24 @@ public class ElementJavadoc {
                 if (tagType.equals("highlight")) {
                     switch (type) {
                         case "italic":
-                            uncommentLine = uncommentLine.replace(subString, "<i>" + subString + "</i>");
+                            codeLine = codeLine.replace(subString, "<i>" + subString + "</i>");
                             break;
                         case "bold":
-                            uncommentLine = uncommentLine.replace(subString, "<b>" + subString + "</b>");
+                            codeLine = codeLine.replace(subString, "<b>" + subString + "</b>");
                             break;
                         case "highlighted":
-                            uncommentLine = uncommentLine.replace(subString, "<span style=\"background-color:yellow;\">" + subString + "</span>");
+                            codeLine = codeLine.replace(subString, "<span style=\"background-color:yellow;\">" + subString + "</span>");
                             break;
                     }
                 }
                 if (tagType.equals("replace") && replacement != null) {
-                    uncommentLine = uncommentLine.replace(subString, replacement);
+                    codeLine = codeLine.replace(subString, replacement);
                 }
             } catch (CharConversionException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
-        return uncommentLine;
+        return codeLine;
     }
     private ProcessedTags processTags(List<SourceLineMeta> parseResult ){
         Map<Integer, List<Attrib>> markUpTagLineMapper = new TreeMap<>();
@@ -1444,18 +1455,18 @@ public class ElementJavadoc {
                             hAttrib.putIfAbsent(markUpTagAttribute.getName(), markUpTagAttribute.getValue());
                         }
                         
-                        if(hAttrib.containsKey("region")){
+                        if (hAttrib.containsKey("region")) {
                             String regionVal = hAttrib.get("region");
                             hAttrib.remove("region");
                             Region region = new Region(regionVal, hAttrib, markUpTag.tagName);
                             regionList.add(region);
                             List<Region> newRegionList = new ArrayList<>(regionList);
                             regionTagLineMapper.put(nextLine, newRegionList);
-                        } else{
+                        } else {
                             Attrib attrib = new Attrib(hAttrib, markUpTag.tagName);
                             attribList.add(attrib);
                             List<Attrib> newAttribList = new ArrayList<>(attribList);
-                            markUpTagLineMapper.put(thisLine, newAttribList);
+                            markUpTagLineMapper.put(markUpTag.isTagApplicableToNextLine ? nextLine : thisLine, newAttribList);
                         }
                     }
                     if (markUpTag.tagName.equals("end")){
@@ -1514,9 +1525,6 @@ public class ElementJavadoc {
         public String toString() {
             return "Region{" + "value=" + value + ", attributes=" + attributes + '}';
         }
-        
-        
-        
     }
     
     class Attrib{
@@ -1545,7 +1553,7 @@ public class ElementJavadoc {
 
     }
     
-    class ProcessedTags{
+    private class ProcessedTags{
         Map<Integer, List<Attrib>> markUpTagLineMapper;
         Map<Integer, List<Region>> regionTagLineMapper;
 
@@ -1553,16 +1561,6 @@ public class ElementJavadoc {
             this.markUpTagLineMapper = markUpTagLineMapper;
             this.regionTagLineMapper = regionTagLineMapper;
         }
-
-        public void setMarkUpTagLineMapper(Map<Integer, List<Attrib>> markUpTagLineMapper) {
-            this.markUpTagLineMapper = markUpTagLineMapper;
-        }
-
-        public void setRegionTagLineMapper(Map<Integer, List<Region>> regionTagLineMapper) {
-            this.regionTagLineMapper = regionTagLineMapper;
-        }
-        
-        
     }
     private boolean validateHighlightMarkupTagAttributes(Set<MarkUpTagAttribute> markUpTagAttributes){
         boolean subString = false;

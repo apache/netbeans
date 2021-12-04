@@ -26,7 +26,6 @@ import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.db.api.sql.execute.SQLExecution;
-import org.netbeans.modules.db.sql.editor.ui.actions.SQLExecutionBaseAction;
 import org.netbeans.modules.db.sql.lexer.SQLTokenId;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.spi.editor.completion.CompletionTask;
@@ -44,14 +43,14 @@ public class SQLCompletionProvider implements CompletionProvider {
     public CompletionTask createTask(int queryType, JTextComponent component) {
         if (queryType == CompletionProvider.COMPLETION_QUERY_TYPE || 
                 queryType == CompletionProvider.COMPLETION_ALL_QUERY_TYPE) {
-            
+
             /* to support DB related completion tasks (i.e. auto populating table 
             names or db columns for given schema) check for connection */
             DatabaseConnection dbconn = findDBConn(component);
 
             return new AsyncCompletionTask(new SQLCompletionQuery(dbconn), component);
         }
-        
+
         // not a completion query type so return nothing
         return null;
     }
@@ -69,6 +68,7 @@ public class SQLCompletionProvider implements CompletionProvider {
      * @param typedText
      * @return 
      */
+    @Override
     public int getAutoQueryTypes(JTextComponent component, String typedText) {
         // XXX: Check if "enable/disable" autocomplete is setting.  See NETBEANS-188
         // If "." has not been typed then acceptable to start checking for options.
@@ -79,22 +79,20 @@ public class SQLCompletionProvider implements CompletionProvider {
         if (!isDotAtOffset(component, component.getSelectionStart() - 1)) {
             return 0;
         }
-        
+
         // check if there is a DB connection
         DatabaseConnection dbconn = findDBConn(component);
         if (dbconn == null) {
             String message = NbBundle.getMessage(SQLCompletionProvider.class, "MSG_NoDatabaseConnection");
             StatusDisplayer.getDefault().setStatusText(message);
-            SQLExecutionBaseAction.notifyNoDatabaseConnection();
         }
 
         // check and notify if DB connection is inactive
         if (dbconn != null && dbconn.getJDBCConnection() == null) {
             String message = NbBundle.getMessage(SQLCompletionProvider.class, "MSG_NotConnected");
             StatusDisplayer.getDefault().setStatusText(message);
-            SQLExecutionBaseAction.notifyNoDatabaseConnection();            
-            // XXX: Maybe add content specific "fixs"
-            }
+        }
+
         return COMPLETION_QUERY_TYPE;
     }
 

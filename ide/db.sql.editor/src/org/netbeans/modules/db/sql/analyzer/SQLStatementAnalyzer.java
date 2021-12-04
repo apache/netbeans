@@ -34,6 +34,7 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.db.sql.analyzer.SQLStatement.Context;
 import org.netbeans.modules.db.sql.editor.StringUtils;
 import org.netbeans.modules.db.sql.lexer.SQLTokenId;
+import org.openide.util.Parameters;
 /**
  *
  * @author Jiri Rechtacek, Jiri Skrivanek
@@ -48,6 +49,8 @@ public class SQLStatementAnalyzer {
     protected final List<SelectStatement> subqueries = new ArrayList<SelectStatement>();
 
     protected SQLStatementAnalyzer(TokenSequence<SQLTokenId> seq, Quoter quoter) {
+        Parameters.notNull("seq", seq);
+        Parameters.notNull("quoter", quoter);
         this.seq = seq;
         this.quoter = quoter;
     }
@@ -238,10 +241,6 @@ public class SQLStatementAnalyzer {
     }
 
     protected String getUnquotedIdentifier() {
-        // quoter unavailable so returnas is
-        if (quoter == null) {
-            return seq.token().text().toString();
-        }
         return quoter.unquote(seq.token().text().toString());
     }
 

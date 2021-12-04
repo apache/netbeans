@@ -113,7 +113,6 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.lib.nbjavac.services.NBJavaCompiler;
-import org.netbeans.lib.nbjavac.services.NBJavacProcessingEnvironment;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
 import org.netbeans.modules.java.source.parsing.FileManagerTransaction;
 import org.netbeans.modules.java.source.parsing.FileObjects;
@@ -201,7 +200,6 @@ final class VanillaCompileWorker extends CompileWorker {
                 fileObjects.values().iterator().next().aptGenerated ? null : APTUtils.get(context.getRoot()),
                 CompilerOptionsQuery.getOptions(context.getRoot()),
                 fileObjects.keySet());
-            NBJavacProcessingEnvironment.preRegister(jt.getContext());
             for (CompilationUnitTree cut : jt.parse()) {
                 trees.add(cut);
                 CompileTuple tuple = fileObjects.get(cut.getSourceFile());

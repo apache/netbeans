@@ -47,6 +47,7 @@ import java.util.stream.Collectors;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.lang.model.SourceVersion;
 import javax.swing.event.ChangeListener;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
@@ -1942,6 +1943,12 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
     }
 
     public void testAnnotationProcessing1() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_18");
+        } catch (IllegalArgumentException ex) {
+            System.err.println("Old javac, skipping test!");
+            return ;
+        }
         ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test1.java",
                                                                       "package test;\n" +
                                                                       "public class Test1 {\n" +
@@ -1976,7 +1983,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
             assertEquals("gen/Gen" + suff + ".java\n", raptContent);
         }
 
-        assertEquals("res/Res2.txt\nres/Res1.txt\n", readTextFully(new File(getWorkDir().toURI().resolve("cache/s1/java/15/classes/resouces.res"))));
+        assertEquals("res/Res1.txt\nres/Res2.txt\n", readTextFully(new File(getWorkDir().toURI().resolve("cache/s1/java/15/classes/resouces.res"))));
     }
 
     private String readTextFully(File file) throws IOException {

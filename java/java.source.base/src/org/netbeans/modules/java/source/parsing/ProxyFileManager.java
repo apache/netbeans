@@ -42,6 +42,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.tools.FileObject;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
@@ -181,6 +183,23 @@ public final class ProxyFileManager implements JavaFileManager {
             }
         } finally {
             clearOwnerThread();
+        }
+    }
+
+    @CheckForNull
+    public FileObject getFileForOutputForOriginatingFiles(
+            @NonNull final Location l,
+            @NonNull final String packageName,
+            @NonNull final String relativeName,
+            @NullAllowed final FileObject... originatingFiles)
+        throws IOException, UnsupportedOperationException, IllegalArgumentException {
+        List<String> files = files2URLs(originatingFiles);
+
+        handleOption(AptSourceFileManager.ORIGIN_RESOURCE_ELEMENT_URL, files.iterator());
+        try {
+            return getFileForOutput(l, packageName, relativeName, null);
+        } finally {
+            handleOption(AptSourceFileManager.ORIGIN_RESOURCE_ELEMENT_URL, Collections.emptyIterator());
         }
     }
 
@@ -423,6 +442,29 @@ public final class ProxyFileManager implements JavaFileManager {
         }
     }
 
+    @CheckForNull
+    public JavaFileObject getJavaFileForOutputForOriginatingFiles(
+            @NonNull final Location l,
+            @NonNull final String className,
+            @NonNull final JavaFileObject.Kind kind,
+            @NonNull final FileObject... originatingFiles)
+        throws IOException, UnsupportedOperationException, IllegalArgumentException {
+        List<String> files = files2URLs(originatingFiles);
+
+        handleOption(AptSourceFileManager.ORIGIN_SOURCE_ELEMENT_URL, files.iterator());
+        try {
+            return getJavaFileForOutput(l, className, kind, null);
+        } finally {
+            handleOption(AptSourceFileManager.ORIGIN_SOURCE_ELEMENT_URL, Collections.emptyIterator());
+        }
+    }
+
+    public List<String> files2URLs(final FileObject[] originatingFiles) {
+        List<String> files = Stream.of(originatingFiles)
+                .map(f -> f.toUri().toString())
+                .collect(Collectors.toList());
+        return files;
+    }
 
     @Override
     @CheckForNull

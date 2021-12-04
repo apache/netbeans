@@ -1,0 +1,6 @@
+Code completion result for source line:
+someFile.absoluteFile.parentFile.mkd|irs()
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     mkdir()                         [PUBLIC]   boolean
+METHOD     mkdirs()                        [PUBLIC]   boolean

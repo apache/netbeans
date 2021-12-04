@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.22
+#Version 9.24
 
 CLSS public java.io.IOException
 cons public init()
@@ -503,6 +503,7 @@ meth public static boolean isArchiveFile(java.net.URL)
 meth public static boolean isArchiveFile(org.openide.filesystems.FileObject)
 meth public static boolean isParentOf(org.openide.filesystems.FileObject,org.openide.filesystems.FileObject)
 meth public static boolean isRecursiveSymbolicLink(org.openide.filesystems.FileObject) throws java.io.IOException
+meth public static boolean isValidFileName(java.lang.String)
 meth public static java.io.File archiveOrDirForURL(java.net.URL)
 meth public static java.io.File normalizeFile(java.io.File)
 meth public static java.io.File toFile(org.openide.filesystems.FileObject)
@@ -560,7 +561,7 @@ meth public static void removeRecursiveListener(org.openide.filesystems.FileChan
 meth public static void setMIMEType(java.lang.String,java.lang.String)
 meth public static void setOrder(java.util.List<org.openide.filesystems.FileObject>) throws java.io.IOException
 supr java.lang.Object
-hfds LOG,REFRESH_RP,archiveRootProviderCache,archiveRootProviders,diskFileSystem,normalizedRef,refreshTask,transientAttributes
+hfds ILLEGAL_FILENAME_CHARACTERS,LOG,REFRESH_RP,archiveRootProviderCache,archiveRootProviders,diskFileSystem,normalizedRef,refreshTask,transientAttributes
 hcls NonCanonicalizingFile
 
 CLSS public abstract interface org.openide.filesystems.ImageDecorator

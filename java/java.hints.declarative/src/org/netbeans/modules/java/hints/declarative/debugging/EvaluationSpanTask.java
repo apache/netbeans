@@ -25,6 +25,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -47,7 +48,6 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaParserResultTask;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.NbEditorUtilities;
@@ -105,20 +105,15 @@ public class EvaluationSpanTask extends JavaParserResultTask<Result> {
             start -= ts.offset();
             end -= ts.offset();
 
-            Writer out;
-
             try {
                 FileObject file = FileUtil.createMemoryFileSystem().getRoot().createData("Test.java");
-                out = new OutputStreamWriter(file.getOutputStream(), "UTF-8");
-                out.write(ts.token().text().toString());
-                out.close();//XXX: finally!
+                try (Writer out = new OutputStreamWriter(file.getOutputStream(), StandardCharsets.UTF_8)) {
+                    out.write(ts.token().text().toString());
+                }
                 ClasspathInfo cpInfo = ClasspathInfo.create(file);
-                JavaSource.create(cpInfo, file).runUserActionTask(new Task<CompilationController>() {
-
-                    public void run(CompilationController parameter) throws Exception {
-                        parameter.toPhase(JavaSource.Phase.RESOLVED);
-                        info[0] = parameter;
-                    }
+                JavaSource.create(cpInfo, file).runUserActionTask((CompilationController parameter) -> {
+                    parameter.toPhase(JavaSource.Phase.RESOLVED);
+                    info[0] = parameter;
                 }, true);
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
@@ -135,15 +130,11 @@ public class EvaluationSpanTask extends JavaParserResultTask<Result> {
         for (final Document doc : documents) {
             assert doc != null;
 
-            List<int[]> passed = new LinkedList<int[]>();
-            List<int[]> failed = new LinkedList<int[]>();
+            List<int[]> passed = new LinkedList<>();
+            List<int[]> failed = new LinkedList<>();
             final String[] text = new String[1];
 
-            doc.render(new Runnable() {
-                @Override public void run() {
-                    text[0] = DocumentUtilities.getText(doc).toString();
-                }
-            });
+            doc.render(() -> text[0] = DocumentUtilities.getText(doc).toString());
 
             Collection<? extends HintWrapper> hints = HintWrapper.parse(NbEditorUtilities.getFileObject(doc), text[0]);
 
@@ -191,9 +182,9 @@ public class EvaluationSpanTask extends JavaParserResultTask<Result> {
         }
         
         for (HintWrapper d : hints) {
-            Map<String, TreePath> variables = new HashMap<String, TreePath>();
-            Map<String, Collection<? extends TreePath>> multiVariables = new HashMap<String, Collection<? extends TreePath>>();
-            Map<String, String> variableNames = new HashMap<String, String>();
+            Map<String, TreePath> variables = new HashMap<>();
+            Map<String, Collection<? extends TreePath>> multiVariables = new HashMap<>();
+            Map<String, String> variableNames = new HashMap<>();
 
             variables.put("$_", tp);
 
@@ -287,6 +278,7 @@ public class EvaluationSpanTask extends JavaParserResultTask<Result> {
         return null;
     }
 
+    @Override
     public void cancel() {
         //XXX
     }

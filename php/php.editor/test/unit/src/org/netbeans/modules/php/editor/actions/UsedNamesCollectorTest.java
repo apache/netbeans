@@ -80,6 +80,38 @@ public class UsedNamesCollectorTest extends PHPTestBase {
         performTest("issue209755", "class Class^Name {");
     }
 
+    public void testNB4978_01() throws Exception {
+        performTest("nb4978_01", "// test^");
+    }
+
+    public void testNB4978_02() throws Exception {
+        performTest("nb4978_02", "// test^");
+    }
+
+    public void testNB4978_03() throws Exception {
+        performTest("nb4978_03", "// test^");
+    }
+
+    public void testNB4978_04() throws Exception {
+        performTest("nb4978_04", "// test^");
+    }
+
+    public void testNB4978_05() throws Exception {
+        performTest("nb4978_05", "public funct^ion test(?Foo $foo): ?Foo");
+    }
+
+    public void testNB4978_06() throws Exception {
+        performTest("nb4978_06", "public funct^ion test(?Foo $foo): ?Foo");
+    }
+
+    public void testNB4978_07() throws Exception {
+        performTest("nb4978_07", "// test^");
+    }
+
+    public void testNB4978_08() throws Exception {
+        performTest("nb4978_08", "// test^");
+    }
+
     protected void performTest(String fileName, String caretLine) throws Exception {
         String exactFileName = "testfiles/actions/" + fileName + ".php";
         Map<String, List<UsedNamespaceName>> testResult = getTestResult(exactFileName, caretLine);

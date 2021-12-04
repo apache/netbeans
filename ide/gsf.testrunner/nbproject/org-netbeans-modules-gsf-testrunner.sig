@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.23
+#Version 2.26
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -862,10 +862,11 @@ meth public org.netbeans.modules.gsf.testrunner.api.Testcase getCurrentTestCase(
 meth public void addOutput(java.lang.String)
 meth public void addSuite(org.netbeans.modules.gsf.testrunner.api.TestSuite)
 meth public void addTestCase(org.netbeans.modules.gsf.testrunner.api.Testcase)
+meth public void finishSuite(org.netbeans.modules.gsf.testrunner.api.TestSuite)
 meth public void setRerunHandler(org.netbeans.modules.gsf.testrunner.api.RerunHandler)
 meth public void setStartingMsg(java.lang.String)
 supr java.lang.Object
-hfds failuresCount,fileLocator,name,output,project,projectURI,rerunHandler,sessionType,startingMsg,testSuites
+hfds failuresCount,fileLocator,name,output,project,projectURI,rerunHandler,sessionType,startingMsg,suiteIdxs,testSuites
 
 CLSS public final static org.netbeans.modules.gsf.testrunner.api.TestSession$SessionResult
  outer org.netbeans.modules.gsf.testrunner.api.TestSession

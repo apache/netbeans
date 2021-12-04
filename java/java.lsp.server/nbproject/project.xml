@@ -139,11 +139,29 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.editor.codetemplates</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.56</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.editor.document</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>1.12</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.editor.indent</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>1.57</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -197,7 +215,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>1.17</specification-version>
+                        <specification-version>1.20</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -214,7 +232,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.25</specification-version>
+                        <specification-version>1.27</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -266,7 +284,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>0</release-version>
-                        <specification-version>0.1</specification-version>
+                        <specification-version>0.3</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -344,7 +362,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>0</release-version>
-                        <specification-version>0.2</specification-version>
+                        <specification-version>0.5</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -379,7 +397,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.80</specification-version>
+                        <specification-version>1.85</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -388,7 +406,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.89</specification-version>
+                        <specification-version>1.101</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -432,7 +450,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>2.67</specification-version>
+                        <specification-version>2.72</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -475,6 +493,14 @@
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>7.52</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.explorer</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>6.50</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -671,36 +697,36 @@
                 <package>org.netbeans.modules.java.lsp.server.ui</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.lsp4j.debug-0.10.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.lsp4j.debug-0.10.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.lsp4j.debug-0.12.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.lsp4j.debug-0.12.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.xtend.lib.macro-2.19.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.xtend.lib.macro-2.19.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.xtend.lib.macro-2.24.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.xtend.lib.macro-2.24.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.lsp4j.generator-0.10.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.lsp4j.generator-0.10.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.lsp4j.generator-0.12.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.lsp4j.generator-0.12.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.lsp4j.jsonrpc-0.10.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.lsp4j.jsonrpc-0.10.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.lsp4j.jsonrpc-0.12.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.lsp4j.jsonrpc-0.12.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.lsp4j.jsonrpc.debug-0.10.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.lsp4j.jsonrpc.debug-0.10.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.lsp4j.jsonrpc.debug-0.12.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.lsp4j.jsonrpc.debug-0.12.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.xtend.lib-2.19.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.xtend.lib-2.19.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.xtend.lib-2.24.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.xtend.lib-2.24.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.xtext.xbase.lib-2.19.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.xtext.xbase.lib-2.19.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.xtext.xbase.lib-2.24.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.xtext.xbase.lib-2.24.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.lsp4j-0.10.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.lsp4j-0.10.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.lsp4j-0.12.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.lsp4j-0.12.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/commons-io-2.5.jar</runtime-relative-path>

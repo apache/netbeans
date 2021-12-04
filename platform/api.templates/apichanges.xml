@@ -30,6 +30,29 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
   <changes>
+      <change id="lookup-handler-interpolation">
+          <api name="templates"/>
+          <summary>Support to pass additional services or information, layer can declare handlers. Defaut processing handles folders. Interpolates
+            variables in filenames.</summary>
+          <version major="1" minor="23"/>
+          <date year="2021" month="10" day="22"/>
+          <compatibility addition="yes" binary="compatible" source="compatible"/>
+          <description>
+                <p>
+                    Allows the template API caller to communicate additional details or services
+                    to template handlers and decorators.
+                </p>
+                <p>
+                    Allows to specify a handler for a template, as a counterpart to WizardIterator.
+                </p>
+                <p>
+                    Default processing can now handle folders, will copy them recursively. Interpolates variable references
+                    in filenames.
+                </p>
+          </description>
+          <class package="org.netbeans.api.templates" name="CreateFromTemplateDecorator"/>
+          <class package="org.netbeans.api.templates" name="FileBuilder"/>
+      </change>
       <change id="decorators">
           <api name="templates"/>
           <summary>Support for decorating the creation process</summary>

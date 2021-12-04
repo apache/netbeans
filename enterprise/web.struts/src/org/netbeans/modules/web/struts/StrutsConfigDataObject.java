@@ -291,11 +291,8 @@ public class StrutsConfigDataObject extends MultiDataObject
         try {
             Document doc = getDomDocument(is);
             lastGoodConfig = StrutsConfig.createGraph(doc);
-        }
-        catch(SAXParseException ex) {
+        } catch(SAXParseException ex) {
             return new SAXParseError(ex);
-        } catch(SAXException ex) {
-            throw new IOException();
         }
         return null;
     }

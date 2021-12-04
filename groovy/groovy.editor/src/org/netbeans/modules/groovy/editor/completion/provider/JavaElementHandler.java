@@ -38,6 +38,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
@@ -45,7 +46,6 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
-import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.ElementUtilities.ElementAcceptor;
 import org.netbeans.api.java.source.JavaSource;
@@ -54,6 +54,7 @@ import org.netbeans.api.java.source.TypeUtilities;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.groovy.editor.api.completion.FieldSignature;
 import org.netbeans.modules.groovy.editor.api.completion.MethodSignature;
+import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
 import org.netbeans.modules.groovy.editor.api.elements.common.MethodElement.MethodParameter;
 import org.netbeans.modules.groovy.editor.completion.AccessLevel;
 import org.netbeans.modules.groovy.editor.java.JavaElementHandle;
@@ -70,19 +71,20 @@ public final class JavaElementHandler {
     private static final Logger LOG = Logger.getLogger(GroovyElementsProvider.class.getName());
 
     private final ParserResult info;
+    private final CompletionContext context;
 
-    private JavaElementHandler(ParserResult info) {
+    private JavaElementHandler(ParserResult info, CompletionContext context) {
         this.info = info;
+        this.context = context;
     }
 
-    public static JavaElementHandler forCompilationInfo(ParserResult info) {
-        return new JavaElementHandler(info);
+    public static JavaElementHandler forCompilationInfo(ParserResult info, CompletionContext context) {
+        return new JavaElementHandler(info, context);
     }
 
     // FIXME ideally there should be something like nice CompletionRequest once public and stable
     // then this class could implement some common interface
-    public Map<MethodSignature, CompletionItem> getMethods(String className,
-            String prefix, int anchor, String[] typeParameters, boolean emphasise, Set<AccessLevel> levels, boolean nameOnly) {
+    public Map<MethodSignature, CompletionItem> getMethods(String className, String prefix, int anchor, String[] typeParameters, boolean emphasise, Set<AccessLevel> levels, boolean nameOnly) {
         JavaSource javaSource = createJavaSource();
         
         if (javaSource == null) {
@@ -96,7 +98,7 @@ public final class JavaElementHandler {
         Map<MethodSignature, CompletionItem> result = Collections.synchronizedMap(new HashMap<MethodSignature, CompletionItem>());
         try {
             javaSource.runUserActionTask(new MethodCompletionHelper(cnt, javaSource, f, className, typeParameters,
-                    levels, prefix, anchor, result, emphasise, nameOnly), true);
+                    levels, prefix, anchor, result, emphasise, nameOnly, context.isStaticMembers()), true);
         } catch (IOException ex) {
             LOG.log(Level.FINEST, "Problem in runUserActionTask :  {0}", ex.getMessage());
             return Collections.emptyMap();
@@ -125,7 +127,7 @@ public final class JavaElementHandler {
         FileObject f = info.getSnapshot().getSource().getFileObject();
         try {
             javaSource.runUserActionTask(new FieldCompletionHelper(cnt, javaSource, f, className,
-                    Collections.singleton(AccessLevel.PUBLIC), prefix, anchor, result, emphasise), true);
+                    Collections.singleton(AccessLevel.PUBLIC), prefix, anchor, result, emphasise, context.isStaticMembers()), true);
         } catch (IOException ex) {
             LOG.log(Level.FINEST, "Problem in runUserActionTask :  {0}", ex.getMessage());
             return Collections.emptyMap();
@@ -180,10 +182,12 @@ public final class JavaElementHandler {
         private final Map<MethodSignature, CompletionItem> proposals;
 
         private final boolean nameOnly;
+        
+        private final boolean staticMethods;
 
         public MethodCompletionHelper(CountDownLatch cnt, JavaSource javaSource, FileObject groovySource, String className, 
                 String[] typeParameters, Set<AccessLevel> levels, String prefix, int anchor,
-                Map<MethodSignature, CompletionItem> proposals, boolean emphasise, boolean nameOnly) {
+                Map<MethodSignature, CompletionItem> proposals, boolean emphasise, boolean nameOnly, boolean staticMethods) {
 
             this.cnt = cnt;
             this.javaSource = javaSource;
@@ -196,14 +200,20 @@ public final class JavaElementHandler {
             this.proposals = proposals;
             this.emphasise = emphasise;
             this.nameOnly = nameOnly;
+            this.staticMethods = staticMethods;
         }
 
         @Override
         public void run(CompilationController info) throws Exception {
             Elements elements = info.getElements();
+            info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+            
             ElementAcceptor acceptor = new ElementAcceptor() {
 
                 public boolean accept(Element e, TypeMirror type) {
+                    if (staticMethods && !e.getModifiers().contains(javax.lang.model.element.Modifier.STATIC)) {
+                        return false;
+                    }
                     if (e.getKind() != ElementKind.METHOD) {
                         return false;
                     }
@@ -215,7 +225,7 @@ public final class JavaElementHandler {
                     return false;
                 }
             };
-
+            info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
             TypeElement te = elements.getTypeElement(className);
             if (te != null) {
                 for (ExecutableElement element : ElementFilter.methodsIn(te.getEnclosedElements())) {
@@ -262,14 +272,19 @@ public final class JavaElementHandler {
             
             for (VariableElement variableElement : params) {
                 TypeMirror tm = variableElement.asType();
-                
                 String fullName;
                 String typeName;
                 
                 if (tm.getKind() == TypeKind.TYPEVAR) {
                     fullName = substituteActualType(tm, classElement, exe, info.getTypes());
                     typeName = GroovyUtils.stripPackage(fullName);
-                } else {
+                } else if (tm.getKind() == TypeKind.ARRAY &&
+                        variableElement == params.get(params.size() - 1) &&
+                        exe.isVarArgs()) {
+                    tm = ((ArrayType)tm).getComponentType();
+                    fullName = info.getTypeUtilities().getTypeName(tm, TypeUtilities.TypeNameOptions.PRINT_FQN).toString() + "..."; // NOI18N
+                    typeName = info.getTypeUtilities().getTypeName(tm).toString() + "..."; // NOI18N
+                } else { 
                     fullName = info.getTypeUtilities().getTypeName(tm, TypeUtilities.TypeNameOptions.PRINT_FQN).toString();
                     typeName = info.getTypeUtilities().getTypeName(tm).toString();
                 }
@@ -350,9 +365,11 @@ public final class JavaElementHandler {
         
         private final FileObject groovySource;
         
+        private final boolean staticMembers;
+        
         public FieldCompletionHelper(CountDownLatch cnt, JavaSource javaSource, FileObject groovySource, String className,
                 Set<AccessLevel> levels, String prefix, int anchor,
-                Map<FieldSignature, CompletionItem> proposals, boolean emphasise) {
+                Map<FieldSignature, CompletionItem> proposals, boolean emphasise, boolean staticMembers) {
 
             this.cnt = cnt;
             this.javaSource = javaSource;
@@ -363,16 +380,21 @@ public final class JavaElementHandler {
             this.anchor = anchor;
             this.proposals = proposals;
             this.emphasise = emphasise;
+            this.staticMembers = staticMembers;
         }
 
         public void run(CompilationController info) throws Exception {
 
             Elements elements = info.getElements();
             if (elements != null) {
+                info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                 ElementAcceptor acceptor = new ElementAcceptor() {
 
                     public boolean accept(Element e, TypeMirror type) {
-                        if (e.getKind() != ElementKind.FIELD) {
+                        if (!e.getKind().isField()) {
+                            return false;
+                        }
+                        if (staticMembers && !e.getModifiers().contains(javax.lang.model.element.Modifier.STATIC)) {
                             return false;
                         }
                         for (AccessLevel level : levels) {
@@ -383,7 +405,7 @@ public final class JavaElementHandler {
                         return false;
                     }
                 };
-
+                info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                 TypeElement te = elements.getTypeElement(className);
                 if (te != null) {
                     for (VariableElement element : ElementFilter.fieldsIn(te.getEnclosedElements())) {

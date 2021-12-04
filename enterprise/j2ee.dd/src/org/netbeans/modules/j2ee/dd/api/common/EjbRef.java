@@ -22,8 +22,6 @@ package org.netbeans.modules.j2ee.dd.api.common;
 //
 // This interface has all of the bean info accessor methods.
 //
-import org.netbeans.modules.j2ee.dd.api.common.CommonDDBean;
-import org.netbeans.modules.j2ee.dd.api.common.DescriptionInterface;
 
 /**
  * Generated interface for EjbRef element.

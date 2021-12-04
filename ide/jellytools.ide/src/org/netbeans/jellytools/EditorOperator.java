@@ -24,6 +24,7 @@ import java.awt.event.KeyEvent;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Iterator;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
@@ -649,7 +650,7 @@ public class EditorOperator extends TopComponentOperator {
                     Class annotationsClass = Class.forName("org.netbeans.editor.Annotations");
                     Field lineAnnotationsArrayField = annotationsClass.getDeclaredField("lineAnnotationsArray");
                     lineAnnotationsArrayField.setAccessible(true);
-                    ArrayList lineAnnotationsArray = (ArrayList) lineAnnotationsArrayField.get(getAnnotationsInstance());
+                    List lineAnnotationsArray = (List) lineAnnotationsArrayField.get(getAnnotationsInstance());
                     // loop through all lines
                     for (int i = 0; i < lineAnnotationsArray.size(); i++) {
                         result.addAll(getAnnotations(lineAnnotationsArray.get(i)));

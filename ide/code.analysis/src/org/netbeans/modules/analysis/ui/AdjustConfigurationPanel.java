@@ -102,7 +102,7 @@ public class AdjustConfigurationPanel extends javax.swing.JPanel implements Prop
         }
 
         this.analyzers = analyzers;
-        DefaultComboBoxModel analyzerModel = new DefaultComboBoxModel();
+        DefaultComboBoxModel<AnalyzerFactory> analyzerModel = new DefaultComboBoxModel<>();
 
         for (AnalyzerFactory a : analyzers) {
             CustomizerProvider<Object, JComponent> cp = a.getCustomizerProvider();

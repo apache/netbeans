@@ -508,6 +508,36 @@ public final class DebuggingView {
          * @since 2.65
          */
         int getColumn();
+
+        /**
+         * Pop all frames up to and including this frame off the stack.
+         *
+         * @throws UnsupportedOperationException thrown when popping of stack frames is not supported.
+         * @throws PopException when the pop frame operation fails.
+         * @since 2.70
+         */
+        default void popOff() throws UnsupportedOperationException, PopException {
+            throw new UnsupportedOperationException("The frame pop is not supported.");
+        }
+    }
+
+    /**
+     * Thrown when {@link DVFrame#popOff()} operation fails. The message of this
+     * exception describes the failure.
+     *
+     * @since 2.70
+     */
+    public static final class PopException extends Exception {
+
+        /**
+         * Creates a new PopException with a description message.
+         * @param message the description
+         *
+         * @since 2.70
+         */
+        public PopException(String message) {
+            super(message);
+        }
     }
 
     /**

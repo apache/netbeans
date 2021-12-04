@@ -157,12 +157,7 @@ public class ConfigurableActionsProviderImpl implements ProjectActionMappingProv
         this.project = project;
         this.projectDirectory = project.getProjectDirectory();
         
-        FileChangeListener wl =  WeakListeners.create(FileChangeListener.class, new FileChangeAdapter() {
-            @Override
-            public void fileDataCreated(FileEvent fe) {
-                actionFileChanged(fe.getFile(), null, false);
-            }
-        }, this.projectDirectory);
+        FileChangeListener wl =  WeakListeners.create(FileChangeListener.class, fcl, this.projectDirectory);
         projectDirectory.addFileChangeListener(wl);
         
         LOG.log(Level.FINER, "Initializing ConfigurableAP for {0}", project);

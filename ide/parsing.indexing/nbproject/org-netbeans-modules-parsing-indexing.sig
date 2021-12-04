@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.21.0
+#Version 9.23.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -252,6 +252,7 @@ meth public org.netbeans.modules.parsing.spi.indexing.support.IndexDocument crea
 meth public org.netbeans.modules.parsing.spi.indexing.support.IndexDocument createDocument(org.openide.filesystems.FileObject)
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public static boolean isIndexingTask(org.netbeans.modules.parsing.api.Task)
 meth public static org.netbeans.modules.parsing.spi.indexing.support.IndexingSupport getInstance(org.netbeans.modules.parsing.spi.indexing.Context) throws java.io.IOException
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()

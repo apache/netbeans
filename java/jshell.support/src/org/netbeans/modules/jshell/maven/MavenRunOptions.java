@@ -182,7 +182,7 @@ public class MavenRunOptions extends javax.swing.JPanel implements HelpCtx.Provi
     }
 
     private void setupConfigurations() {
-        DefaultComboBoxModel comModel = new DefaultComboBoxModel();
+        DefaultComboBoxModel<ModelHandle2.Configuration> comModel = new DefaultComboBoxModel<>();
         for (ModelHandle2.Configuration conf : handle.getConfigurations()) {
             comModel.addElement(conf);
         }

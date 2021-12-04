@@ -19,6 +19,8 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
@@ -26,8 +28,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -43,7 +47,6 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
-import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
@@ -51,11 +54,12 @@ import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
-import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -64,12 +68,14 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Dusan Balek
  */
-@ServiceProvider(service = CodeGenerator.class, position = 10)
-public final class ConstructorGenerator extends CodeGenerator {
+@ServiceProvider(service = CodeActionsProvider.class, position = 10)
+public final class ConstructorGenerator extends CodeActionsProvider {
 
-    public static final String GENERATE_CONSTRUCTOR =  "java.generate.constructor";
+    private static final String URI =  "uri";
+    private static final String OFFSET =  "offset";
+    private static final String CONSTRUCTORS =  "constructors";
+    private static final String FIELDS =  "fields";
 
-    private final Set<String> commands = Collections.singleton(GENERATE_CONSTRUCTOR);
     private final Gson gson = new Gson();
 
     public ConstructorGenerator() {
@@ -79,7 +85,12 @@ public final class ConstructorGenerator extends CodeGenerator {
     @NbBundle.Messages({
         "DN_GenerateConstructor=Generate Constructor...",
     })
-    public List<CodeAction> getCodeActions(CompilationInfo info, CodeActionParams params) {
+    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+        CompilationController info = CompilationController.get(resultIterator.getParserResult());
+        if (info == null) {
+            return Collections.emptyList();
+        }
+        info.toPhase(JavaSource.Phase.RESOLVED);
         List<String> only = params.getContext().getOnly();
         boolean isSource = only != null && only.contains(CodeActionKind.Source);
         int startOffset = getOffset(info, params.getRange().getStart());
@@ -163,62 +174,101 @@ public final class ConstructorGenerator extends CodeGenerator {
             return Collections.emptyList();
         }
         String uri = Utils.toUri(info.getFileObject());
-        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateConstructor(), isSource ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, GENERATE_CONSTRUCTOR, uri, startOffset, constructors, fields));
-    }
-
-    @Override
-    public Set<String> getCommands() {
-        return commands;
+        Map<String, Object> data = new HashMap<>();
+        data.put(URI, uri);
+        data.put(OFFSET, startOffset);
+        data.put(CONSTRUCTORS, constructors);
+        data.put(FIELDS, fields);
+        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateConstructor(), isSource ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, data, null));
     }
 
     @Override
     @NbBundle.Messages({
         "DN_SelectSuperConstructor=Select super constructor",
     })
-    public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-        if (arguments.size() > 3) {
-            String uri = gson.fromJson(gson.toJson(arguments.get(0)), String.class);
-            int offset = gson.fromJson(gson.toJson(arguments.get(1)), Integer.class);
-            List<QuickPickItem> constructors = Arrays.asList(gson.fromJson(gson.toJson(arguments.get(2)), QuickPickItem[].class));
-            List<QuickPickItem> fields = Arrays.asList(gson.fromJson(gson.toJson(arguments.get(3)), QuickPickItem[].class));
+    public CompletableFuture<CodeAction> resolve(NbCodeLanguageClient client, CodeAction codeAction, Object data) {
+        CompletableFuture<CodeAction> future = new CompletableFuture<>();
+        try {
+            String uri = ((JsonObject) data).getAsJsonPrimitive(URI).getAsString();
+            int offset = ((JsonObject) data).getAsJsonPrimitive(OFFSET).getAsInt();
+            List<QuickPickItem> constructors = Arrays.asList(gson.fromJson(gson.toJson(((JsonObject) data).get(CONSTRUCTORS)), QuickPickItem[].class));
+            List<QuickPickItem> fields = Arrays.asList(gson.fromJson(((JsonObject) data).get(FIELDS), QuickPickItem[].class));
             if (constructors.size() < 2 && fields.isEmpty()) {
-                generate(client, uri, offset, constructors, fields);
+                WorkspaceEdit edit = generate(client, uri, offset, constructors, fields);
+                if (edit != null) {
+                    codeAction.setEdit(edit);
+                }
+                future.complete(codeAction);
             } else {
                 if (constructors.size() > 1) {
                     client.showQuickPick(new ShowQuickPickParams(Bundle.DN_SelectSuperConstructor(), true, constructors)).thenAccept(selected -> {
-                        if (selected != null) {
-                            selectFields(client, uri, offset, selected, fields);
+                        try {
+                            if (selected != null) {
+                                selectFields(client, uri, offset, selected, fields).handle((edit, ex) -> {
+                                    if (ex != null) {
+                                        future.completeExceptionally(ex);
+                                    } else {
+                                        if (edit != null) {
+                                            codeAction.setEdit(edit);
+                                        }
+                                        future.complete(codeAction);
+                                    }
+                                    return null;
+                                });
+                            } else {
+                                future.complete(codeAction);
+                            }
+                        } catch (IOException | IllegalArgumentException ex) {
+                            future.completeExceptionally(ex);
                         }
                     });
                 } else {
-                    selectFields(client, uri, offset, constructors, fields);
+                    selectFields(client, uri, offset, constructors, fields).handle((edit, ex) -> {
+                        if (ex != null) {
+                            future.completeExceptionally(ex);
+                        } else {
+                            if (edit != null) {
+                                codeAction.setEdit(edit);
+                            }
+                            future.complete(codeAction);
+                        }
+                        return null;
+                    });
                 }
             }
-        } else {
-            client.logMessage(new MessageParams(MessageType.Error, String.format("Illegal number of arguments received for command: %s", command)));
+        } catch (JsonSyntaxException | IOException | IllegalArgumentException ex) {
+            future.completeExceptionally(ex);
         }
-        return CompletableFuture.completedFuture(true);
+        return future;
     }
 
     @NbBundle.Messages({
         "DN_SelectConstructorFields=Select fields to be initialized by constructor",
     })
-    private void selectFields(NbCodeLanguageClient client, String uri, int offset, List<QuickPickItem> constructors, List<QuickPickItem> fields) {
+    private CompletableFuture<WorkspaceEdit> selectFields(NbCodeLanguageClient client, String uri, int offset, List<QuickPickItem> constructors, List<QuickPickItem> fields) throws IOException, IllegalArgumentException {
+        CompletableFuture<WorkspaceEdit> future = new CompletableFuture<>();
         if (!fields.isEmpty()) {
             client.showQuickPick(new ShowQuickPickParams(Bundle.DN_SelectConstructorFields(), true, fields)).thenAccept(selected -> {
-                if (selected != null) {
-                    generate(client, uri, offset, constructors, selected);
+                try {
+                    if (selected != null) {
+                        future.complete(generate(client, uri, offset, constructors, selected));
+                    } else {
+                        future.complete(null);
+                    }
+                } catch (IOException | IllegalArgumentException ex) {
+                    future.completeExceptionally(ex);
                 }
             });
         } else {
-            generate(client, uri, offset, constructors, fields);
+            future.complete(generate(client, uri, offset, constructors, fields));
         }
+        return future;
     }
 
     @NbBundle.Messages({
         "DN_ConstructorAlreadyExists=Given constructor already exists",
     })
-    private void generate(NbCodeLanguageClient client, String uri, int offset, List<QuickPickItem> constructors, List<QuickPickItem> fields) {
+    private WorkspaceEdit generate(NbCodeLanguageClient client, String uri, int offset, List<QuickPickItem> constructors, List<QuickPickItem> fields) throws IOException, IllegalArgumentException {
         try {
             FileObject file = Utils.fromUri(uri);
             JavaSource js = JavaSource.forFileObject(file);
@@ -241,11 +291,10 @@ public final class ConstructorGenerator extends CodeGenerator {
                     GeneratorUtils.generateConstructors(wc, tp, selectedFields, selectedConstructors, -1);
                 }
             });
-            client.applyEdit(new ApplyWorkspaceEditParams(new WorkspaceEdit(Collections.singletonMap(uri, edits))));
+            return edits.isEmpty() ? null : new WorkspaceEdit(Collections.singletonMap(uri, edits));
         } catch (GeneratorUtils.DuplicateMemberException dme) {
             client.showMessage(new MessageParams(MessageType.Info, Bundle.DN_ConstructorAlreadyExists()));
-        } catch (IOException | IllegalArgumentException ex) {
-            client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }
+        return null;
     }
 }

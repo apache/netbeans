@@ -30,7 +30,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
-import org.netbeans.api.editor.document.EditorDocumentUtils;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.source.CancellableTask;
@@ -41,7 +41,6 @@ import org.netbeans.api.java.source.JavaSourceTaskFactory;
 import org.netbeans.api.java.source.support.CaretAwareJavaSourceTaskFactory;
 import org.netbeans.api.java.source.support.EditorAwareJavaSourceTaskFactory;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.java.hints.providers.spi.PositionRefresherHelper;
 import org.netbeans.modules.java.hints.providers.spi.PositionRefresherHelper.DocumentVersion;
@@ -54,7 +53,6 @@ import org.netbeans.spi.editor.hints.HintsController;
 import org.netbeans.spi.editor.hints.Severity;
 import org.netbeans.spi.editor.hints.settings.FileHintPreferences;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -79,6 +77,7 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
         this.caretAware = caretAware;
     }
     
+    @Override
     public void run(CompilationInfo info) {
         cancel.set(false);
 
@@ -136,6 +135,7 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
         }
     }
 
+    @Override
     public void cancel() {
         cancel.set(true);
     }
@@ -199,14 +199,14 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
 
         @Override
         public List<ErrorDescription> getErrorDescriptionsAt(CompilationInfo info, Context context, Document doc) throws BadLocationException {
-            int rowStart = Utilities.getRowStart((BaseDocument) doc, context.getPosition());
-            int rowEnd = Utilities.getRowEnd((BaseDocument) doc, context.getPosition());
+            int rowStart = LineDocumentUtils.getLineStart((BaseDocument) doc, context.getPosition());
+            int rowEnd = LineDocumentUtils.getLineEnd((BaseDocument) doc, context.getPosition());
 
             return new HintsInvoker(HintsSettings.getSettingsFor(info.getFileObject()), rowStart, rowEnd, context.getCancel()).computeHints(info);
         }
 
         private static void setVersion(Document doc) {
-            for (PositionRefresherHelper h : MimeLookup.getLookup("text/x-java").lookupAll(PositionRefresherHelper.class)) {
+            for (PositionRefresherHelper<?> h : MimeLookup.getLookup("text/x-java").lookupAll(PositionRefresherHelper.class)) {
                 if (h instanceof HintPositionRefresherHelper) {
                     ((HintPositionRefresherHelper) h).setVersion(doc, new DocumentVersion(doc));
                 }
@@ -233,7 +233,7 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
         }
 
         private static void setVersion(Document doc, int caret) {
-            for (PositionRefresherHelper h : MimeLookup.getLookup("text/x-java").lookupAll(PositionRefresherHelper.class)) {
+            for (PositionRefresherHelper<?> h : MimeLookup.getLookup("text/x-java").lookupAll(PositionRefresherHelper.class)) {
                 if (h instanceof SuggestionsPositionRefresherHelper) {
                     ((SuggestionsPositionRefresherHelper) h).setVersion(doc, new SuggestionsDocumentVersion(doc, caret));
                 }

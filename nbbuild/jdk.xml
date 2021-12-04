@@ -224,11 +224,27 @@
             <os family="windows"/> <!-- #72467 -->
         </condition>
         <property name=".exe" value=""/>
+        <property name="test.nbjdk.home" location="" />
         <condition property="test.nbjdk.java" value="${test.nbjdk.home}/bin/java${.exe}" else="${nbjdk.home}/bin/java${.exe}">
             <and>
                 <isset property="test.nbjdk.home" />
                 <available file="${test.nbjdk.home}/bin/java${.exe}" type="file"/>
             </and>
+        </condition>
+        <available property="have-jdk-1.9" file="${nbjdk.home}/bin/jmod${.exe}"/>
+        <condition property="test-have-jdk-1.9">
+            <or>
+                <and>
+                    <isset property="test.nbjdk.home" />
+                    <available file="${test.nbjdk.home}/bin/jmod${.exe}" type="file"/>
+                </and>
+                <and>
+                    <not>
+                        <isset property="test.nbjdk.home" />
+                    </not>
+                    <available file="${nbjdk.home}/bin/java${.exe}" type="file"/>
+                </and>
+            </or>
         </condition>
     </target>
     

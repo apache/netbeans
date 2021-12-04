@@ -24,13 +24,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -40,7 +40,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -61,9 +66,10 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.DebuggerManager;
-import org.netbeans.api.editor.mimelookup.MimeLookup;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
+import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -73,24 +79,21 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.editor.indent.spi.CodeStylePreferences;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
-import org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods;
+import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodFinder;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
+import org.netbeans.modules.java.lsp.server.debugging.attach.AttachNativeConfigurations;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaTypeProvider;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
-import org.netbeans.modules.parsing.api.ParserManager;
-import org.netbeans.modules.parsing.api.ResultIterator;
-import org.netbeans.modules.parsing.api.Source;
-import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.lucene.support.Queries;
-import org.netbeans.modules.parsing.spi.ParseException;
-import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.spi.jumpto.type.SearchType;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
@@ -175,15 +178,24 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             case Server.JAVA_GET_PROJECT_PACKAGES: {
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 boolean srcOnly = params.getArguments().size() > 1 ? ((JsonPrimitive) params.getArguments().get(1)).getAsBoolean() : false;
-                return getSourceRoots(uri, JavaProjectConstants.SOURCES_TYPE_JAVA).thenApply(roots -> {
-                    HashSet<String> packages = new HashSet<>();
-                    EnumSet<ClassIndex.SearchScope> scope = srcOnly ? EnumSet.of(ClassIndex.SearchScope.SOURCE) : EnumSet.allOf(ClassIndex.SearchScope.class);
-                    for(FileObject root : roots) {
-                        packages.addAll(ClasspathInfo.create(root).getClassIndex().getPackageNames("", false, scope));
+                return getSourceRoots(uri, JavaProjectConstants.SOURCES_TYPE_JAVA).thenCompose(roots -> {
+                    CompletableFuture<Object> future = new CompletableFuture<>();
+                    JavaSource js = JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY));
+                    try {
+                        js.runWhenScanFinished(controller -> {
+                            HashSet<String> packages = new HashSet<>();
+                            EnumSet<ClassIndex.SearchScope> scope = srcOnly ? EnumSet.of(ClassIndex.SearchScope.SOURCE) : EnumSet.allOf(ClassIndex.SearchScope.class);
+                            for(FileObject root : roots) {
+                                packages.addAll(ClasspathInfo.create(root).getClassIndex().getPackageNames("", false, scope));
+                            }
+                            ArrayList<String> ret = new ArrayList<>(packages);
+                            Collections.sort(ret);
+                            future.complete(ret);
+                        }, true);
+                    } catch (IOException ex) {
+                        future.completeExceptionally(ex);
                     }
-                    ArrayList<String> ret = new ArrayList<>(packages);
-                    Collections.sort(ret);
-                    return ret;
+                    return future;
                 });
             }
             case Server.JAVA_LOAD_WORKSPACE_TESTS: {
@@ -198,26 +210,51 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 if (file == null) {
                     return CompletableFuture.completedFuture(Collections.emptyList());
                 }
-                return server.asyncOpenFileOwner(file).thenCompose(this::getTestRoots).thenApply(testRoots -> {
-                    List<TestMethodController.TestMethod> testMethods = new ArrayList<>();
-                    findTestMethods(testRoots, testMethods);
-                    if (testMethods.isEmpty()) {
-                        return Collections.emptyList();
+                return server.asyncOpenFileOwner(file).thenCompose(this::getTestRoots).thenCompose(testRoots -> {
+                    CompletableFuture<Object> future = new CompletableFuture<>();
+                    JavaSource js = JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY));
+                    try {
+                        js.runWhenScanFinished(controller -> {
+                            BiFunction<FileObject, Collection<TestMethodController.TestMethod>, Collection<TestSuiteInfo>> f = (fo, methods) -> {
+                                String url = Utils.toUri(fo);
+                                Map<String, TestSuiteInfo> suite2infos = new LinkedHashMap<>();
+                                for (TestMethodController.TestMethod testMethod : methods) {
+                                    TestSuiteInfo suite = suite2infos.computeIfAbsent(testMethod.getTestClassName(), name -> {
+                                        Position pos = testMethod.getTestClassPosition() != null ? Utils.createPosition(fo, testMethod.getTestClassPosition().getOffset()) : null;
+                                        return new TestSuiteInfo(name, url, pos != null ? new Range(pos, pos) : null, TestSuiteInfo.State.Loaded, new ArrayList<>());
+                                    });
+                                    String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
+                                    Position startPos = testMethod.start() != null ? Utils.createPosition(fo, testMethod.start().getOffset()) : null;
+                                    Position endPos = testMethod.end() != null ? Utils.createPosition(fo, testMethod.end().getOffset()) : startPos;
+                                    Range range = startPos != null ? new Range(startPos, endPos) : null;
+                                    suite.getTests().add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), url, range, TestSuiteInfo.State.Loaded, null));
+                                }
+                                return suite2infos.values();
+                            };
+                            testMethodsListener.compareAndSet(null, (fo, methods) -> {
+                                Logger.getLogger(WorkspaceServiceImpl.class.getName()).info("FileObject reindexed: " + fo.getPath());
+                                try {
+                                    for (TestSuiteInfo testSuiteInfo : f.apply(fo, methods)) {
+                                        client.notifyTestProgress(new TestProgressParams(Utils.toUri(fo), testSuiteInfo));
+                                    }
+                                } catch (Exception e) {
+                                    Logger.getLogger(WorkspaceServiceImpl.class.getName()).severe(e.getMessage());
+                                    Exceptions.printStackTrace(e);
+                                    testMethodsListener.set(null);
+                                }
+                            });
+                            Logger.getLogger(WorkspaceServiceImpl.class.getName()).info("Attaching listener: " + testMethodsListener.get());
+                            Map<FileObject, Collection<TestMethodController.TestMethod>> testMethods = TestMethodFinder.findTestMethods(testRoots, testMethodsListener.get());
+                            Collection<TestSuiteInfo> suites = new ArrayList<>(testMethods.size());
+                            for (Entry<FileObject, Collection<TestMethodController.TestMethod>> entry : testMethods.entrySet()) {
+                                suites.addAll(f.apply(entry.getKey(), entry.getValue()));
+                            }
+                            future.complete(suites);
+                        }, true);
+                    } catch (IOException ex) {
+                        future.completeExceptionally(ex);
                     }
-                    Map<FileObject, TestSuiteInfo> file2TestSuites = new HashMap<>();
-                    for (TestMethodController.TestMethod testMethod : testMethods) {
-                        TestSuiteInfo suite = file2TestSuites.computeIfAbsent(testMethod.method().getFile(), fo -> {
-                            String foUri = Utils.toUri(fo);
-                            int off = testMethod.getTestClassPosition() != null ? testMethod.getTestClassPosition().getOffset() : -1;
-                            Integer line = off < 0 ? null : Utils.createPosition(testMethod.method().getFile(), off).getLine();
-                            return new TestSuiteInfo(testMethod.getTestClassName(), foUri, line, TestSuiteInfo.State.Loaded, new ArrayList<>());
-                        });
-                        String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
-                        String fullName = testMethod.getTestClassName() + '.' + testMethod.method().getMethodName();
-                        int line = Utils.createPosition(testMethod.method().getFile(), testMethod.start().getOffset()).getLine();
-                        suite.getTests().add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), fullName, suite.getFile(), line, TestSuiteInfo.State.Loaded, null));
-                    }
-                    return file2TestSuites.values();
+                    return future;
                 });
             }
             case Server.JAVA_SUPER_IMPLEMENTATION:
@@ -243,6 +280,9 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             }
             case Server.JAVA_FIND_DEBUG_PROCESS_TO_ATTACH: {
                 return AttachConfigurations.findProcessAttachTo(client);
+            }
+            case Server.NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH: {
+                return AttachNativeConfigurations.findProcessAttachTo(client);
             }
             case Server.JAVA_PROJECT_CONFIGURATION_COMPLETION: {
                 // We expect one, two or three arguments.
@@ -289,16 +329,41 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                         .thenApply(avoid -> completionFutures.stream().flatMap(c -> c.join().stream()).collect(Collectors.toList()));
                 return (CompletableFuture<Object>) (CompletableFuture<?>) joinedFuture;
             }
+            case Server.JAVA_CLEAR_PROJECT_CACHES: {
+                // politely clear project manager's cache of "no project" answers
+                ProjectManager.getDefault().clearNonProjectCache();
+                // impolitely clean the project-based traversal's cache, so any affiliation of intermediate folders will disappear
+                ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
+                CompletableFuture<Boolean> result = new CompletableFuture<>();
+                try {
+                    Class queryImpl = Class.forName("org.netbeans.modules.projectapi.SimpleFileOwnerQueryImplementation", true, loader); // NOI18N
+                    Method resetMethod = queryImpl.getMethod("reset"); // NOI18N
+                    resetMethod.invoke(null);
+                    result.complete(true);
+                } catch (ReflectiveOperationException ex) {
+                    result.completeExceptionally(ex);
+                }
+                // and finally, let's refresh everything we had opened:
+                for (FileObject f : server.getAcceptedWorkspaceFolders()) {
+                    f.refresh();
+                }
+                for (Project p : OpenProjects.getDefault().getOpenProjects()) {
+                    p.getProjectDirectory().refresh();
+                }
+                return (CompletableFuture<Object>) (CompletableFuture<?>)result;
+            }
             default:
-                for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
-                    if (codeGenerator.getCommands().contains(command)) {
-                        return codeGenerator.processCommand(client, command, params.getArguments());
+                for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
+                    if (codeActionsProvider.getCommands().contains(command)) {
+                        return codeActionsProvider.processCommand(client, command, params.getArguments());
                     }
                 }
         }
         throw new UnsupportedOperationException("Command not supported: " + params.getCommand());
     }
-    
+
+    private final AtomicReference<BiConsumer<FileObject, Collection<TestMethodController.TestMethod>>> testMethodsListener = new AtomicReference<>();
+
     private static Map<String, Object> attributesMap(JsonObject json) {
         Map<String, Object> map = new LinkedHashMap<>();
         for (Entry<String, JsonElement> entry : json.entrySet()) {
@@ -361,7 +426,10 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     }
                 }
             }
-            contained = ProjectUtils.getContainedProjects(prj, true).stream().map(p -> p.getProjectDirectory()).collect(Collectors.toList());
+            Set<Project> containedProjects = ProjectUtils.getContainedProjects(prj, true);
+            if (containedProjects != null) {
+                contained = containedProjects.stream().map(p -> p.getProjectDirectory()).collect(Collectors.toList());
+            }
         }
         return server.asyncOpenSelectedProjects(contained).thenApply(projects -> {
             for (Project project : projects) {
@@ -378,34 +446,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     }
 
     private boolean isTestGroup(SourceGroup sg) {
-        return sg.getName().contains("TestSourceRoot") || sg.getName().contains("test.");
-    }
-
-    private void findTestMethods(Set<FileObject> testRoots, List<TestMethodController.TestMethod> testMethods) {
-        for (FileObject testRoot : testRoots) {
-            List<Source> sources = new ArrayList<>();
-            Enumeration<? extends FileObject> children = testRoot.getChildren(true);
-            while(children.hasMoreElements()) {
-                FileObject fo = children.nextElement();
-                boolean groovy = this.client.getNbCodeCapabilities().wantsGroovySupport();
-                if (fo.hasExt("java") || (groovy && fo.hasExt("groovy"))) {
-                    sources.add(((TextDocumentServiceImpl)server.getTextDocumentService()).getSource(Utils.toUri(fo)));
-                }
-            }
-            if (!sources.isEmpty()) {
-                try {
-                    ParserManager.parseWhenScanFinished(sources, new UserTask() {
-                        @Override
-                        public void run(ResultIterator resultIterator) throws Exception {
-                            Parser.Result parserResult = resultIterator.getParserResult();
-                            for (ComputeTestMethods ctm : MimeLookup.getLookup(parserResult.getSnapshot().getMimePath()).lookupAll(ComputeTestMethods.class)) {
-                                testMethods.addAll(ctm.computeTestMethods(parserResult, new AtomicBoolean()));
-                            }
-                        }
-                    }).get();
-                } catch (Exception ex) {}
-            }
-        }
+        return UnitTestForSourceQuery.findSources(sg.getRootFolder()).length > 0;
     }
 
     @Override
@@ -646,8 +687,23 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     }
 
     @Override
-    public void didChangeConfiguration(DidChangeConfigurationParams arg0) {
-        //TODO: no real configuration right now
+    public void didChangeConfiguration(DidChangeConfigurationParams params) {
+        server.openedProjects().thenAccept(projects -> {
+            if (projects != null && projects.length > 0) {
+                updateJavaImportPreferences(projects[0].getProjectDirectory(), ((JsonObject) params.getSettings()).getAsJsonObject("netbeans").getAsJsonObject("java").getAsJsonObject("imports"));
+            }
+        });
+    }
+
+    void updateJavaImportPreferences(FileObject fo, JsonObject configuration) {
+        Preferences prefs = CodeStylePreferences.get(fo, "text/x-java").getPreferences();
+        if (prefs != null) {
+            prefs.put("importGroupsOrder", String.join(";", gson.fromJson(configuration.get("groups"), String[].class)));
+            prefs.putBoolean("allowConvertToStarImport", true);
+            prefs.putInt("countForUsingStarImport", configuration.getAsJsonPrimitive("countForUsingStarImport").getAsInt());
+            prefs.putBoolean("allowConvertToStaticStarImport", true);
+            prefs.putInt("countForUsingStaticStarImport", configuration.getAsJsonPrimitive("countForUsingStaticStarImport").getAsInt());
+        }
     }
 
     @Override

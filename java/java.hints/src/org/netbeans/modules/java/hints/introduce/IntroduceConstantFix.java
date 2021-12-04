@@ -22,7 +22,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-import java.io.IOException;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Element;
@@ -32,13 +32,14 @@ import javax.lang.model.type.TypeKind;
 import javax.swing.JButton;
 import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.StopProcessing;
 import org.netbeans.modules.java.hints.errors.Utilities;
+import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.modules.parsing.spi.ParseException;
 import org.openide.util.NbBundle;
 
 /**
@@ -104,7 +105,7 @@ public class IntroduceConstantFix extends IntroduceFieldFix {
         if (el == null || !(el.getKind().isClass() || el.getKind().isInterface())) {
             return null;
         }
-        IntroduceConstantFix fix = new IntroduceConstantFix(h, info.getJavaSource(), varName, numDuplicates, offset, TreePathHandle.create(constantTarget, info));
+        IntroduceConstantFix fix = new IntroduceConstantFix(h, info.getSnapshot().getSource(), varName, numDuplicates, offset, TreePathHandle.create(constantTarget, info));
         fix.setTargetIsInterface(clazz.getKind() == Tree.Kind.INTERFACE);
         return fix;
     }
@@ -135,8 +136,8 @@ public class IntroduceConstantFix extends IntroduceFieldFix {
         }
     }
 
-    public IntroduceConstantFix(TreePathHandle handle, JavaSource js, String guessedName, int numDuplicates, int offset, TreePathHandle target) {
-        super(handle, js, guessedName, numDuplicates, null, true, true, offset, true, target);
+    public IntroduceConstantFix(TreePathHandle handle, Source source, String guessedName, int numDuplicates, int offset, TreePathHandle target) {
+        super(handle, source, guessedName, numDuplicates, null, true, true, offset, true, target);
     }
 
     @Override
@@ -165,7 +166,7 @@ public class IntroduceConstantFix extends IntroduceFieldFix {
     }
 
     @Override
-    public ModificationResult getModificationResult() throws IOException {
-        return js.runModificationTask(new Worker(guessedName, permitDuplicates, true, EnumSet.of(Modifier.PRIVATE), IntroduceFieldPanel.INIT_FIELD, null, false));
+    public ModificationResult getModificationResult() throws ParseException {
+        return ModificationResult.runModificationTask(Collections.singleton(source), new Worker(guessedName, permitDuplicates, true, EnumSet.of(Modifier.PRIVATE), IntroduceFieldPanel.INIT_FIELD, null, false));
     }
 }

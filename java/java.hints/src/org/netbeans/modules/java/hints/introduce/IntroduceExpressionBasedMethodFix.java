@@ -28,7 +28,6 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import java.awt.GraphicsEnvironment;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -49,7 +48,6 @@ import javax.swing.text.Document;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ModificationResult;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
@@ -59,6 +57,10 @@ import org.netbeans.api.java.source.matching.Matcher;
 import org.netbeans.api.java.source.matching.Occurrence;
 import org.netbeans.api.java.source.matching.Pattern;
 import org.netbeans.modules.java.hints.errors.Utilities;
+import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.modules.parsing.api.UserTask;
+import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.Fix;
 import org.openide.DialogDescriptor;
@@ -156,8 +158,8 @@ final class IntroduceExpressionBasedMethodFix extends IntroduceFixBase implement
     private final List<TreePathHandle> typeVars;
     private final Collection<TargetDescription> targets;
 
-    public IntroduceExpressionBasedMethodFix(JavaSource js, TreePathHandle expression, List<TreePathHandle> parameters, TypeMirrorHandle returnType, Set<TypeMirrorHandle> thrownTypes, int duplicatesCount, List<TreePathHandle> typeVars, int offset, Collection<TargetDescription> targets) {
-        super(js, expression, duplicatesCount, offset);
+    public IntroduceExpressionBasedMethodFix(Source source, TreePathHandle expression, List<TreePathHandle> parameters, TypeMirrorHandle returnType, Set<TypeMirrorHandle> thrownTypes, int duplicatesCount, List<TreePathHandle> typeVars, int offset, Collection<TargetDescription> targets) {
+        super(source, expression, duplicatesCount, offset);
         this.parameters = parameters;
         this.thrownTypes = thrownTypes;
         this.typeVars = typeVars;
@@ -181,7 +183,7 @@ final class IntroduceExpressionBasedMethodFix extends IntroduceFixBase implement
         String caption = NbBundle.getMessage(IntroduceHint.class, "CAP_IntroduceMethod");
         DialogDescriptor dd = new DialogDescriptor(panel, caption, true, new Object[]{btnOk, btnCancel}, btnOk, DialogDescriptor.DEFAULT_ALIGN, null, null);
         NotificationLineSupport notifier = dd.createNotificationLineSupport();
-        MethodValidator val = new MethodValidator(js, parameters, returnType);
+        MethodValidator val = new MethodValidator(source, parameters, returnType);
         panel.setNotifier(notifier);
         panel.setValidator(val);
         panel.setOkButton(btnOk);
@@ -199,7 +201,7 @@ final class IntroduceExpressionBasedMethodFix extends IntroduceFixBase implement
     }
 
     @Override
-    public ModificationResult getModificationResult() throws IOException {
+    public ModificationResult getModificationResult() throws ParseException {
         ModificationResult result = null;
         int counter = 0;
         do {
@@ -212,9 +214,10 @@ final class IntroduceExpressionBasedMethodFix extends IntroduceFixBase implement
         return result;
     }
 
-    private ModificationResult getModificationResult(final String name, final TargetDescription target, final boolean replaceOther, final Set<Modifier> access, final boolean redoReferences, final MemberSearchResult searchResult) throws IOException {
-        return js.runModificationTask(new Task<WorkingCopy>() {
-            public void run(WorkingCopy copy) throws Exception {
+    private ModificationResult getModificationResult(final String name, final TargetDescription target, final boolean replaceOther, final Set<Modifier> access, final boolean redoReferences, final MemberSearchResult searchResult) throws ParseException {
+        return ModificationResult.runModificationTask(Collections.singleton(source), new UserTask() {
+            public void run(ResultIterator resultIterator) throws Exception {
+                WorkingCopy copy = WorkingCopy.get(resultIterator.getParserResult());
                 copy.toPhase(JavaSource.Phase.RESOLVED);
                 TreePath expression = IntroduceExpressionBasedMethodFix.this.handle.resolve(copy);
                 InstanceRefFinder finder = new InstanceRefFinder(copy, expression);

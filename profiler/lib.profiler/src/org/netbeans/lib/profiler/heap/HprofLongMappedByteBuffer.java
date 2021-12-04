@@ -19,11 +19,8 @@
 
 package org.netbeans.lib.profiler.heap;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
+import java.nio.ByteBuffer;
 
 
 /**
@@ -40,23 +37,14 @@ class HprofLongMappedByteBuffer extends HprofByteBuffer {
 
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
-    private MappedByteBuffer[] dumpBuffer;
+    private final ByteBuffer[] dumpBuffer;
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
     HprofLongMappedByteBuffer(File dumpFile) throws IOException {
-        FileInputStream fis = new FileInputStream(dumpFile);
-        FileChannel channel = fis.getChannel();
-        length = channel.size();
-        dumpBuffer = new MappedByteBuffer[(int) (((length + BUFFER_SIZE) - 1) / BUFFER_SIZE)];
-
-        for (int i = 0; i < dumpBuffer.length; i++) {
-            long position = i * BUFFER_SIZE;
-            long size = Math.min(BUFFER_SIZE + BUFFER_EXT, length - position);
-            dumpBuffer[i] = channel.map(FileChannel.MapMode.READ_ONLY, position, size);
-        }
-
-        channel.close();
+        long[] len = { 0 };
+        this.dumpBuffer = dumpFile.mmapReadOnlyAsBuffers(len, BUFFER_SIZE, BUFFER_EXT);
+        this.length = len[0];
         readHeader();
     }
 
@@ -92,7 +80,7 @@ class HprofLongMappedByteBuffer extends HprofByteBuffer {
     }
 
     synchronized void get(long position, byte[] chars) {
-        MappedByteBuffer buffer = dumpBuffer[getBufferIndex(position)];
+        ByteBuffer buffer = dumpBuffer[getBufferIndex(position)];
         buffer.position(getBufferOffset(position));
         buffer.get(chars);
     }

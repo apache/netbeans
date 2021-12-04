@@ -19,13 +19,13 @@
 
 package org.netbeans.modules.maven.runjar;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
-import org.apache.maven.wagon.Streams;
+
 import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.api.extexecution.startup.StartupExtender;
 import org.netbeans.api.project.Project;
@@ -39,7 +39,6 @@ import org.netbeans.modules.maven.execute.BeanRunConfig;
 import org.netbeans.modules.maven.execute.ModelRunConfig;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;
-import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 
@@ -108,7 +107,7 @@ public class RunJarStartupArgs implements LateBoundPrerequisitesChecker {
                 }
             }
             for (StartupExtender group : StartupExtender.getExtenders(new AbstractLookup(ic), mode)) {
-                fixedArgs.addAll(group.getArguments());
+                fixedArgs.addAll(group.getRawArguments());
             }
         }
         
@@ -206,6 +205,20 @@ public class RunJarStartupArgs implements LateBoundPrerequisitesChecker {
                     MavenExecuteUtils.joinParameters(vmArgs));
             config.setProperty(MavenExecuteUtils.RUN_APP_PARAMS, 
                     MavenExecuteUtils.joinParameters(appArgsValue));
+        }
+        File workingDirectory = injectParams.getWorkingDirectory();
+        if (workingDirectory != null) {
+            config.setProperty(MavenExecuteUtils.RUN_WORKDIR,
+                    workingDirectory.getAbsolutePath());
+        }
+        Map<String, String> environmentVariables = injectParams.getEnvironmentVariables();
+        for (Map.Entry<String, String> env : environmentVariables.entrySet()) {
+            String value = env.getValue();
+            if (value == null) {
+                // The environment variable is to be removed when the value is null
+                value = MavenExecuteUtils.ENV_REMOVED;
+            }
+            config.setProperty(MavenExecuteUtils.ENV_PREFIX + env.getKey(), value);
         }
 
         if ("test".equals(props.get("exec.classpathScope"))) {

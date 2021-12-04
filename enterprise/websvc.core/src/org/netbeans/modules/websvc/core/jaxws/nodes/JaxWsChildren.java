@@ -144,7 +144,6 @@ public class JaxWsChildren extends Children.Keys<Object>/* implements MDRChangeL
     @Override
     protected void addNotify() {
         if (isFromWsdl()) {
-            try {
                 FileObject localWsdlFolder = getJAXWSSupport().getLocalWsdlFolderForService(service.getName(),false);
                 if (localWsdlFolder == null) {
                     Logger.getLogger(this.getClass().getName()).log(Level.INFO,"missing folder for wsdl file"); // NOI18
@@ -155,7 +154,7 @@ public class JaxWsChildren extends Children.Keys<Object>/* implements MDRChangeL
                     localWsdlFolder.getFileObject(service.getLocalWsdlFile());
                 if (wsdlFo==null) return;
                 if (wsdlModeler==null) { 
-                    wsdlModeler = WsdlModelerFactory.getDefault().getWsdlModeler(wsdlFo.getURL());
+                    wsdlModeler = WsdlModelerFactory.getDefault().getWsdlModeler(wsdlFo.toURL());
                 }
                 if (wsdlModeler==null) {
                     return;
@@ -192,10 +191,6 @@ public class JaxWsChildren extends Children.Keys<Object>/* implements MDRChangeL
                         }
                     }
                 });
-            } catch (FileStateInvalidException ex) {
-                ErrorManager.getDefault().log(ex.getLocalizedMessage());
-                updateKeys();
-            }
         } else {
             assert(implClass != null);
             if (fcl == null) {
@@ -497,11 +492,10 @@ public class JaxWsChildren extends Children.Keys<Object>/* implements MDRChangeL
     void refreshKeys(boolean downloadWsdl, final boolean refreshImplClass, String newWsdlUrl) {
         if (!isFromWsdl()) return;
         super.addNotify();
-        try {
-            // copy to local wsdl first
-            JAXWSSupport support = getJAXWSSupport();
+        // copy to local wsdl first
+        JAXWSSupport support = getJAXWSSupport();
             
-            if (downloadWsdl) {
+        if (downloadWsdl) {
                 String serviceName = getNode().getName();
                 FileObject xmlResorcesFo = support.getLocalWsdlFolderForService(serviceName,true);
                 FileObject localWsdl = null;
@@ -586,7 +580,7 @@ public class JaxWsChildren extends Children.Keys<Object>/* implements MDRChangeL
             }
             FileObject wsdlFo = 
                 localWsdlFolder.getFileObject(service.getLocalWsdlFile());
-            wsdlModeler = WsdlModelerFactory.getDefault().getWsdlModeler(wsdlFo.getURL());
+            wsdlModeler = WsdlModelerFactory.getDefault().getWsdlModeler(wsdlFo.toURL());
             String packageName = service.getPackageName();
             if (packageName!=null && service.isPackageNameForceReplace()) {
                 // set the package name for the modeler
@@ -693,10 +687,7 @@ public class JaxWsChildren extends Children.Keys<Object>/* implements MDRChangeL
                         }
                     }
                 }
-            });
-        } catch (FileStateInvalidException ex) {
-            ErrorManager.getDefault().log(ex.getLocalizedMessage());
-        }
+        });
     }
     
     private void regenerateJavaArtifacts() {

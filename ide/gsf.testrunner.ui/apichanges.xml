@@ -52,6 +52,18 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="TestMethodsFinder">
+        <api name="CommonTestrunnerUIAPI"/>
+        <summary>Added FindTestMethods API</summary>
+        <version major="1" minor="27"/>
+        <date day="25" month="8" year="2021"/>
+        <author login="dbalek"/>
+        <compatibility addition="yes"/>
+        <description>
+            Added API to provide a list of TestMethods found in sources under particutlar test roots.
+        </description>
+        <class package="org.netbeans.modules.gsf.testrunner.ui.api" name="TestMethodFinder"/>
+    </change>
     <change id="ComputeTestMethodsAndTestMethodGetTestClassPosition">
         <api name="CommonTestrunnerUIAPI"/>
         <summary>Added ComputeTestMethods SPI and getTestClassPosition() to TestMethod</summary>

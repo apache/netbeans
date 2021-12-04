@@ -1,0 +1,248 @@
+Code completion result for source line:
+someFile.getParentFile().|mkdirs()
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     addShutdownHook(Closure)                   void
+METHOD     any()                                      boolean
+METHOD     any(Closure)                               boolean
+METHOD     append(InputStream)                        void
+METHOD     append(Object)                             void
+METHOD     append(Object,  boolean)                   void
+METHOD     append(Object, String)                     void
+METHOD     append(Object, String,  boolea             void
+METHOD     append(Reader)                             void
+METHOD     append(Reader,  boolean)                   void
+METHOD     append(Reader, String)                     void
+METHOD     append(Reader, String,  boolea             void
+METHOD     append(Writer)                             void
+METHOD     append(Writer,  boolean)                   void
+METHOD     append(Writer, String)                     void
+METHOD     append(Writer, String,  boolea             void
+METHOD     append(byte[])                             void
+METHOD     asBoolean()                                boolean
+METHOD     asType(Class)                              Object
+METHOD     asWritable()                               File
+METHOD     asWritable(String)                         File
+METHOD     canExecute()                    [PUBLIC]   boolean
+METHOD     canRead()                       [PUBLIC]   boolean
+METHOD     canWrite()                      [PUBLIC]   boolean
+METHOD     collect()                                  Collection
+METHOD     collect(Closure)                           List
+METHOD     collect(Collection, Closure)               Collection
+METHOD     compareTo(File)                 [PUBLIC]   int
+METHOD     createNewFile()                 [PUBLIC]   boolean
+METHOD     createTempDir()                            File
+METHOD     createTempDir(String)                      File
+METHOD     createTempDir(String, String)              File
+METHOD     createTempFile(String, String)  [STATIC,   File
+METHOD     createTempFile(String, String,  [STATIC,   File
+METHOD     delete()                        [PUBLIC]   boolean
+METHOD     deleteDir()                                boolean
+METHOD     deleteOnExit()                  [PUBLIC]   void
+METHOD     directorySize()                            long
+METHOD     dump()                                     String
+METHOD     each(Closure)                              Object
+METHOD     eachByte(Closure)                          void
+METHOD     eachByte(int, Closure)                     void
+METHOD     eachDir(Closure)                           void
+METHOD     eachDirMatch(Object, Closure)              void
+METHOD     eachDirRecurse(Closure)                    void
+METHOD     eachFile(Closure)                          void
+METHOD     eachFile(FileType, Closure)                void
+METHOD     eachFileMatch(FileType, Object             void
+METHOD     eachFileMatch(Object, Closure)             void
+METHOD     eachFileRecurse(Closure)                   void
+METHOD     eachFileRecurse(FileType, Clos             void
+METHOD     eachLine(Closure)                          Object
+METHOD     eachLine(String,  int, Closure             Object
+METHOD     eachLine(String, Closure)                  Object
+METHOD     eachLine(int, Closure)                     Object
+METHOD     eachObject(Closure)                        void
+METHOD     eachWithIndex(Closure)                     Object
+METHOD     equals(Object)                  [PUBLIC]   boolean
+METHOD     every()                                    boolean
+METHOD     every(Closure)                             boolean
+METHOD     exists()                        [PUBLIC]   boolean
+METHOD     filterLine(Closure)                        Writable
+METHOD     filterLine(String, Closure)                Writable
+METHOD     filterLine(Writer, Closure)                void
+METHOD     filterLine(Writer, String, Clo             void
+METHOD     find()                                     Object
+METHOD     find(Closure)                              Object
+METHOD     findAll()                                  Collection
+METHOD     findAll(Closure)                           Collection
+METHOD     findIndexOf(Closure)                       int
+METHOD     findIndexOf(int, Closure)                  int
+METHOD     findIndexValues(Closure)                   List
+METHOD     findIndexValues(Number, Closur             List
+METHOD     findLastIndexOf(Closure)                   int
+METHOD     findLastIndexOf(int, Closure)              int
+METHOD     findResult(Closure)                        Object
+METHOD     findResult(Object, Closure)                Object
+METHOD     getAbsoluteFile()               [PUBLIC]   File
+METHOD     getAbsolutePath()               [PUBLIC]   String
+METHOD     getAt(String)                              Object
+METHOD     getBytes()                                 byte[]
+METHOD     getCanonicalFile()              [PUBLIC]   File
+METHOD     getCanonicalPath()              [PUBLIC]   String
+METHOD     getClass()                      [PUBLIC]   Class<?>
+METHOD     getFreeSpace()                  [PUBLIC]   long
+METHOD     getMetaClass()                             MetaClass
+METHOD     getMetaPropertyValues()                    List
+METHOD     getName()                       [PUBLIC]   String
+METHOD     getParent()                     [PUBLIC]   String
+METHOD     getParentFile()                 [PUBLIC]   File
+METHOD     getPath()                       [PUBLIC]   String
+METHOD     getProperties()                            Map
+METHOD     getText()                                  String
+METHOD     getText(String)                            String
+METHOD     getTotalSpace()                 [PUBLIC]   long
+METHOD     getUsableSpace()                [PUBLIC]   long
+METHOD     grep()                                     Collection
+METHOD     grep(Object)                               Collection
+METHOD     hasProperty(String)                        MetaProperty
+METHOD     hashCode()                      [PUBLIC]   int
+METHOD     identity(Closure)                          Object
+METHOD     inject(Closure)                            Object
+METHOD     inject(Object, Closure)                    Object
+METHOD     inspect()                                  String
+METHOD     invokeMethod(String, Object)               Object
+METHOD     is(Object)                                 boolean
+METHOD     isAbsolute()                    [PUBLIC]   boolean
+METHOD     isCase(Object)                             boolean
+METHOD     isDirectory()                   [PUBLIC]   boolean
+METHOD     isFile()                        [PUBLIC]   boolean
+METHOD     isHidden()                      [PUBLIC]   boolean
+METHOD     iterator()                                 Iterator
+METHOD     lastModified()                  [PUBLIC]   long
+METHOD     leftShift(InputStream)                     File
+METHOD     leftShift(Object)                          File
+METHOD     leftShift(byte[])                          File
+METHOD     length()                        [PUBLIC]   long
+METHOD     list()                          [PUBLIC]   String[]
+METHOD     list(FilenameFilter)            [PUBLIC]   String[]
+METHOD     listFiles()                     [PUBLIC]   File[]
+METHOD     listFiles(FileFilter)           [PUBLIC]   File[]
+METHOD     listFiles(FilenameFilter)       [PUBLIC]   File[]
+METHOD     listRoots()                     [STATIC,   File[]
+METHOD     metaClass(Closure)                         MetaClass
+METHOD     mkdir()                         [PUBLIC]   boolean
+METHOD     mkdirs()                        [PUBLIC]   boolean
+METHOD     newDataInputStream()                       DataInputStream
+METHOD     newDataOutputStream()                      DataOutputStream
+METHOD     newInputStream()                           BufferedInputStream
+METHOD     newObjectInputStream()                     ObjectInputStream
+METHOD     newObjectInputStream(ClassLoad             ObjectInputStream
+METHOD     newObjectOutputStream()                    ObjectOutputStream
+METHOD     newOutputStream()                          BufferedOutputStream
+METHOD     newPrintWriter()                           PrintWriter
+METHOD     newPrintWriter(String)                     PrintWriter
+METHOD     newReader()                                BufferedReader
+METHOD     newReader(String)                          BufferedReader
+METHOD     newWriter()                                BufferedWriter
+METHOD     newWriter(String)                          BufferedWriter
+METHOD     newWriter(String,  boolean)                BufferedWriter
+METHOD     newWriter(String,  boolean,  b             BufferedWriter
+METHOD     newWriter(boolean)                         BufferedWriter
+METHOD     notify()                        [PUBLIC]   void
+METHOD     notifyAll()                     [PUBLIC]   void
+METHOD     numberAwareCompareTo(Comparabl             int
+METHOD     print(Object)                              void
+METHOD     print(PrintWriter)                         void
+METHOD     printf(String, Object)                     void
+METHOD     printf(String, Object)                     void
+METHOD     println()                                  void
+METHOD     println(Object)                            void
+METHOD     println(PrintWriter)                       void
+METHOD     putAt(String, Object)                      void
+METHOD     readBytes()                                byte[]
+METHOD     readLines()                                List
+METHOD     readLines(String)                          List
+METHOD     relativePath(File)                         String
+METHOD     renameTo(File)                  [PUBLIC]   boolean
+METHOD     renameTo(String)                           boolean
+METHOD     respondsTo(String)                         List
+METHOD     respondsTo(String, Object)                 List
+METHOD     setBytes(byte[])                           void
+METHOD     setExecutable(boolean)          [PUBLIC]   boolean
+METHOD     setExecutable(boolean, boolean  [PUBLIC]   boolean
+METHOD     setLastModified(long)           [PUBLIC]   boolean
+METHOD     setMetaClass(MetaClass)                    void
+METHOD     setReadOnly()                   [PUBLIC]   boolean
+METHOD     setReadable(boolean)            [PUBLIC]   boolean
+METHOD     setReadable(boolean, boolean)   [PUBLIC]   boolean
+METHOD     setText(String)                            void
+METHOD     setText(String, String)                    void
+METHOD     setWritable(boolean)            [PUBLIC]   boolean
+METHOD     setWritable(boolean, boolean)   [PUBLIC]   boolean
+METHOD     size()                                     long
+METHOD     sleep(long)                                void
+METHOD     sleep(long, Closure)                       void
+METHOD     split(Closure)                             Collection
+METHOD     splitEachLine(Pattern, Closure             Object
+METHOD     splitEachLine(Pattern, String,             Object
+METHOD     splitEachLine(String, Closure)             Object
+METHOD     splitEachLine(String, String,              Object
+METHOD     sprintf(String, Object)                    String
+METHOD     sprintf(String, Object)                    String
+METHOD     stream()                                   Stream
+METHOD     tap(Closure)                               Object
+METHOD     toPath()                        [PUBLIC]   Path
+METHOD     toString()                      [PUBLIC]   String
+METHOD     toURI()                         [PUBLIC]   URI
+METHOD     toURL()                         [PUBLIC]   URL
+METHOD     traverse(Closure)                          void
+METHOD     traverse(Map)                              void
+METHOD     traverse(Map, Closure)                     void
+METHOD     use(Class, Closure)                        Object
+METHOD     use(List, Closure)                         Object
+METHOD     use(Object[])                              Object
+METHOD     wait()                          [PUBLIC]   void
+METHOD     wait(long)                      [PUBLIC]   void
+METHOD     wait(long, int)                 [PUBLIC]   void
+METHOD     with(Closure)                              Object
+METHOD     with(boolean, Closure)                     Object
+METHOD     withDataInputStream(Closure)               Object
+METHOD     withDataOutputStream(Closure)              Object
+METHOD     withInputStream(Closure)                   Object
+METHOD     withObjectInputStream(ClassLoa             Object
+METHOD     withObjectInputStream(Closure)             Object
+METHOD     withObjectOutputStream(Closure             Object
+METHOD     withOutputStream(Closure)                  Object
+METHOD     withPrintWriter(Closure)                   Object
+METHOD     withPrintWriter(String, Closur             Object
+METHOD     withReader(Closure)                        Object
+METHOD     withReader(String, Closure)                Object
+METHOD     withTraits(Class[])                        Object
+METHOD     withWriter(Closure)                        Object
+METHOD     withWriter(String, Closure)                Object
+METHOD     withWriterAppend(Closure)                  Object
+METHOD     withWriterAppend(String, Closu             Object
+METHOD     write(String)                              void
+METHOD     write(String,  boolean)                    void
+METHOD     write(String, String)                      void
+METHOD     write(String, String,  boolean             void
+FIELD      absolute                        [PUBLIC]   boolean
+FIELD      absoluteFile                    [PUBLIC]   File
+FIELD      absolutePath                    [PUBLIC]   String
+FIELD      canonicalFile                   [PUBLIC]   File
+FIELD      canonicalPath                   [PUBLIC]   String
+FIELD      class                           [PUBLIC]   Class
+FIELD      directory                       [PUBLIC]   boolean
+FIELD      executable                      [PUBLIC]   boolean
+FIELD      file                            [PUBLIC]   boolean
+FIELD      freeSpace                       [PUBLIC]   long
+FIELD      hidden                          [PUBLIC]   boolean
+FIELD      lastModified                    [PUBLIC]   long
+FIELD      name                            [PUBLIC]   String
+FIELD      parent                          [PUBLIC]   String
+FIELD      parentFile                      [PUBLIC]   File
+FIELD      path                            [PUBLIC]   String
+FIELD      pathSeparator                   [STATIC,   String
+FIELD      pathSeparatorChar               [STATIC,   char
+FIELD      readable                        [PUBLIC]   boolean
+FIELD      separator                       [STATIC,   String
+FIELD      separatorChar                   [STATIC,   char
+FIELD      totalSpace                      [PUBLIC]   long
+FIELD      usableSpace                     [PUBLIC]   long
+FIELD      writable                        [PUBLIC]   boolean

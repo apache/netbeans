@@ -23,8 +23,15 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import javax.swing.ImageIcon;
+import javax.swing.text.JTextComponent;
+import org.netbeans.modules.editor.completion.CompletionSupportSpiPackageAccessor;
 import org.netbeans.modules.editor.completion.PatchedHtmlRenderer;
+import org.netbeans.modules.editor.completion.SimpleCompletionItem;
+import org.netbeans.spi.editor.completion.CompletionItem;
+import org.netbeans.spi.editor.completion.CompletionTask;
 
 /**
  * Various code completion utilities including completion item
@@ -35,6 +42,10 @@ import org.netbeans.modules.editor.completion.PatchedHtmlRenderer;
  */
 
 public final class CompletionUtilities {
+
+    static {
+        CompletionSupportSpiPackageAccessor.register(new SpiAccessor());
+    }
 
     /**
      * The gap between left edge and icon.
@@ -160,5 +171,220 @@ public final class CompletionUtilities {
                 defaultFont, defaultColor, PatchedHtmlRenderer.STYLE_TRUNCATE, true, selected);
         }
     }
-    
+
+    /**
+     * Creates a builder for simple {@link CompletionItem} instances.
+     *
+     * @param insertText a text to be inserted into a document when selecting the item.
+     * @return newly created builder
+     *
+     * @since 1.60
+     */
+    public static CompletionItemBuilder newCompletionItemBuilder(String insertText) {
+        return new CompletionItemBuilder(insertText);
+    }
+
+    /**
+     * Builder for simple {@link CompletionItem} instances.
+     * <br/>
+     * Example usage:
+     * <pre>
+     * CompletionUtilities.newCompletionItemBuilder(insertText)
+     *                    .startOffset(offset)
+     *                    .iconResource(iconPath)
+     *                    .leftHtmlText("<b>" + label + "</b>")
+     *                    .sortPriority(10)
+     *                    .sortText(label)
+     *                    .build();
+     * </pre>
+     *
+     * @since 1.60
+     */
+    public static final class CompletionItemBuilder {
+
+        private String insertText;
+        private int startOffset = -1;
+        private int endOffset = -1;
+        private String iconResource;
+        private String leftHtmlText;
+        private String rightHtmlText;
+        private int sortPriority = 10000;
+        private CharSequence sortText;
+        private Supplier<CompletionTask> documentationTask;
+        private Supplier<CompletionTask> tooltipTask;
+        private Consumer<OnSelectContext> onSelectCallback;
+
+        private CompletionItemBuilder(String insertText) {
+            this.insertText = insertText;
+        }
+
+        /**
+         * A text to be inserted into a document when selecting the item.
+         *
+         * @since 1.60
+         */
+        public CompletionItemBuilder insertText(String insertText) {
+            this.insertText = insertText;
+            return this;
+        }
+
+        /**
+         * Start offset of the region to be removed on the item's selection. If omitted,
+         * the caret offset would be used.
+         *
+         * @since 1.60
+         */
+        public CompletionItemBuilder startOffset(int offset) {
+            this.startOffset = offset;
+            return this;
+        }
+
+        /**
+         * Start offset of the region to be removed on the item's selection. If omitted,
+         * the caret offset would be used.
+         *
+         * @since 1.60
+         */
+        public CompletionItemBuilder endOffset(int offset) {
+            this.endOffset = offset;
+            return this;
+        }
+
+        /**
+         * Resource path of the icon. It may be null which means that no icon will be displayed.
+         *
+         * @since 1.60
+         */
+        public CompletionItemBuilder iconResource(String iconResource) {
+            this.iconResource = iconResource;
+            return this;
+        }
+
+        /**
+         * An html text that will be displayed on the left side of the item next to the icon.
+         * If omitted, insertText would be used instead.
+         *
+         * @since 1.60
+         */
+        public CompletionItemBuilder leftHtmlText(String leftHtmlText) {
+            this.leftHtmlText = leftHtmlText;
+            return this;
+        }
+
+        /**
+         * An html text that will be aligned to the right edge of the item.
+         *
+         * @since 1.60
+         */
+        public CompletionItemBuilder rightHtmlText(String rightHtmlText) {
+            this.rightHtmlText = rightHtmlText;
+            return this;
+        }
+
+        /**
+         * Item's priority. A lower value means a lower index of the item in the completion result list.
+         *
+         * @since 1.60
+         */
+        public CompletionItemBuilder sortPriority(int sortPriority) {
+            this.sortPriority = sortPriority;
+            return this;
+        }
+
+        /**
+         * A text used to sort items alphabetically. If omitted, insertText would be used instead.
+         *
+         * @since 1.60
+         */
+        public CompletionItemBuilder sortText(CharSequence sortText) {
+            this.sortText = sortText;
+            return this;
+        }
+
+        /**
+         * A task used to obtain a documentation associated with the item if there
+         * is any.
+         *
+         * @since 1.60
+         */
+        public CompletionItemBuilder documentationTask(Supplier<CompletionTask> task) {
+            this.documentationTask = task;
+            return this;
+        }
+
+        /**
+         * A task used to obtain a tooltip hint associated with the item if there
+         * is any.
+         *
+         * @since 1.60
+         */
+        public CompletionItemBuilder tooltipTask(Supplier<CompletionTask> task) {
+            this.tooltipTask = task;
+            return this;
+        }
+
+        /**
+         * A callback to process the item insertion. Should be used for complex cases
+         * when a simple insertText insertion is not sufficient.
+         *
+         * @since 1.60
+         */
+        public CompletionItemBuilder onSelect(Consumer<OnSelectContext> callback) {
+            this.onSelectCallback = callback;
+            return this;
+        }
+
+        /**
+         * Builds completion item.
+         *
+         * @since 1.60
+         */
+        public CompletionItem build() {
+            return new SimpleCompletionItem(insertText, startOffset, endOffset, iconResource, leftHtmlText, rightHtmlText,
+                    sortPriority, sortText, documentationTask, tooltipTask, onSelectCallback);
+        }
+
+    }
+
+    /**
+     * A parameter passed to CompletionItemBuilder's onSelect callback.
+     *
+     * @since 1.60
+     */
+    public static final class OnSelectContext {
+
+        private final JTextComponent component;
+        private final boolean overwrite;
+
+        private OnSelectContext(JTextComponent component, boolean overwrite) {
+            this.component = component;
+            this.overwrite = overwrite;
+        }
+
+        /**
+         * A text component to which the completion item should be inserted.
+         *
+         * @since 1.60
+         */
+        public JTextComponent getComponent() {
+            return component;
+        }
+
+        /**
+         * If true, the inserted completion item should overwrite existing text.
+         *
+         * @since 1.60
+         */
+        public boolean isOverwrite() {
+            return overwrite;
+        }
+    }
+
+    private static final class SpiAccessor extends CompletionSupportSpiPackageAccessor {
+
+        @Override
+        public OnSelectContext createOnSelectContext(JTextComponent component, boolean overwrite) {
+            return new OnSelectContext(component, overwrite);
+        }
+    }
 }

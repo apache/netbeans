@@ -142,17 +142,19 @@ public final class Matcher {
         TreePath path = ctx.getSingleVariable(var);
 
         if (path != null) {
-            return MatcherUtilities.matches(ctx.ctx, path, pattern, ctx.variables.get(0), ctx.multiVariables.get(0), ctx.variableNames.get(0));
+            return MatcherUtilities.matches(ctx.ctx, path, pattern,
+                    ctx.variables.getFirst(), ctx.multiVariables.getFirst(), ctx.variableNames.getFirst());
         }
 
         Iterable<? extends Variable> multiVar = ctx.getIndexedVariables(var);
-        Collection<TreePath> multi = new LinkedList<TreePath>();
+        Collection<TreePath> multi = new LinkedList<>();
 
         for (Variable v : multiVar) {
             multi.add(ctx.getSingleVariable(v));
         }
 
-        return MatcherUtilities.matches(ctx.ctx, multi, pattern, ctx.variables.get(0), ctx.multiVariables.get(0), ctx.variableNames.get(0));
+        return MatcherUtilities.matches(ctx.ctx, multi, pattern,
+                ctx.variables.getFirst(), ctx.multiVariables.getFirst(), ctx.variableNames.getFirst());
     }
 
 }

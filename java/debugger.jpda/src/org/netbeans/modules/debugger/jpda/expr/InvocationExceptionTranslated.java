@@ -40,6 +40,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.debugger.jpda.InvalidExpressionException;
 import org.netbeans.api.debugger.jpda.JPDAThread;
+import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
 import org.netbeans.modules.debugger.jpda.jdi.ArrayReferenceWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.ClassNotPreparedExceptionWrapper;
@@ -79,7 +80,11 @@ public class InvocationExceptionTranslated extends Exception {
     public InvocationExceptionTranslated(InvocationException iex, JPDADebuggerImpl debugger) {
         this(iex.getMessage(), iex.exception(), debugger);
     }
-    
+
+    public InvocationExceptionTranslated(ObjectVariable exception, JPDADebuggerImpl debugger) {
+        this(null, (ObjectReference) ((JDIVariable) exception).getJDIValue(), debugger);
+    }
+
     private InvocationExceptionTranslated(String invocationMessage, ObjectReference exeption, JPDADebuggerImpl debugger) {
         super(InvocationException.class.getName(), null);
         this.invocationMessage = invocationMessage;

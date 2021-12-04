@@ -71,7 +71,7 @@ public class TomcatManagerConfig {
                 loggerPrefix = host.getAttributeValue(SContext.LOGGER, "prefix"); // NOI18N
                 loggerSuffix = host.getAttributeValue(SContext.LOGGER, "suffix"); // NOI18N
                 String timestamp = host.getAttributeValue(SContext.LOGGER, "timestamp"); // NOI18N
-                loggerTimestamp = Boolean.valueOf(timestamp).booleanValue();
+                loggerTimestamp = Boolean.valueOf(timestamp);
             } else {
                 Engine engine = getEngineElement();
                 if  (engine != null && engine.isLogger()) {
@@ -81,7 +81,7 @@ public class TomcatManagerConfig {
                     loggerPrefix = engine.getAttributeValue(SContext.LOGGER, "prefix"); // NOI18N
                     loggerSuffix = engine.getAttributeValue(SContext.LOGGER, "suffix"); // NOI18N
                     String timestamp = engine.getAttributeValue(SContext.LOGGER, "timestamp"); // NOI18N
-                    loggerTimestamp = Boolean.valueOf(timestamp).booleanValue();
+                    loggerTimestamp = Boolean.valueOf(timestamp);
                 } else {
                     hasLogger = false;
                 }

@@ -2188,7 +2188,7 @@ public abstract class BaseBean implements Cloneable, Bean {
                     getMessage("CantGetConstructor_msg"));
         }
         
-        Object[] p = new Object[] {doc, new Integer(Common.NO_DEFAULT_VALUES)};
+        Object[] p = new Object[] {doc, Integer.valueOf(Common.NO_DEFAULT_VALUES)};
         
         try {
             bean = (BaseBean)c.newInstance(p);

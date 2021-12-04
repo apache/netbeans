@@ -149,7 +149,7 @@ public class VmCustomizer extends javax.swing.JPanel {
         try {
         addressValue.setValue(new Integer(number));
         } catch (NumberFormatException nfe) {
-            addressValue.setValue(new Integer(0));
+            addressValue.setValue(0);
         }
     }
 
@@ -382,10 +382,10 @@ public class VmCustomizer extends javax.swing.JPanel {
             } catch (IOException ioe) {
                 // I will ignore this nor now.
             }
-            setAddressValue(new Integer(debugPort));
+            setAddressValue(debugPort);
         } else {
             // clear the field and disable it
-            setAddressValue(new Integer(0));
+            setAddressValue(0);
             addressValue.setEnabled(false);
         }
     }//GEN-LAST:event_toggleAddressUsage

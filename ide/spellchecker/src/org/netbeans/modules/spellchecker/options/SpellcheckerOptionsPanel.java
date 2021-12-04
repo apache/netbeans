@@ -126,7 +126,7 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
             public void changedUpdate(DocumentEvent e) {}
         });
         List<String> cathegories = loadCategories ();
-        DefaultListModel model = new DefaultListModel ();
+        DefaultListModel<String> model = new DefaultListModel<>();
         for (String category : cathegories)
             model.addElement (category);
         lUseIn.setModel (model);
@@ -225,7 +225,7 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
     
     private void updateUsedIn() {
         List<String> categories = loadCategories();
-        DefaultListModel model = new DefaultListModel();
+        DefaultListModel<String> model = new DefaultListModel<>();
         for (String category : categories) {
             model.addElement(category);
         }
@@ -233,8 +233,8 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
     }
 
     private void updateLocales() {
-        DefaultListModel model = new DefaultListModel();
-        List<Locale> locales = new ArrayList<Locale>(Arrays.asList(DictionaryProviderImpl.getInstalledDictionariesLocales()));
+        DefaultListModel<Locale> model = new DefaultListModel<>();
+        List<Locale> locales = new ArrayList<>(Arrays.asList(DictionaryProviderImpl.getInstalledDictionariesLocales()));
 
         for (DictionaryDescription desc : addedDictionaries) {
             locales.add(desc.getLocale());
@@ -526,8 +526,8 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
     }
 
     private ComboBoxModel getLocaleModel() {
-        DefaultComboBoxModel dlm = new DefaultComboBoxModel();
-        List<Locale> locales = new ArrayList<Locale>(Arrays.asList(Locale.getAvailableLocales()));
+        DefaultComboBoxModel<Locale> dlm = new DefaultComboBoxModel<>();
+        List<Locale> locales = new ArrayList<>(Arrays.asList(Locale.getAvailableLocales()));
         
         Collections.sort(locales, new LocaleComparator());
         

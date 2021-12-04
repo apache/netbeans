@@ -208,7 +208,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 units.put(cut, tuple);
                 computeFQNs(file2FQNs, cut, tuple);
             }
-            Log.instance(jt.getContext()).nerrors = 0;
+//            Log.instance(jt.getContext()).nerrors = 0;
         } catch (CancelAbort ca) {
             if (context.isCancelled() && JavaIndex.LOG.isLoggable(Level.FINEST)) {
                 JavaIndex.LOG.log(Level.FINEST, "VanillaCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), ca);  //NOI18N
@@ -422,6 +422,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 JavaIndex.LOG.log(Level.FINEST, "VanillaCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), ca);  //NOI18N
             }
         } catch (Throwable t) {
+            Exceptions.printStackTrace(t);
              if (t instanceof ThreadDeath) {
                 throw (ThreadDeath) t;
             } else {

@@ -103,7 +103,6 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -111,8 +110,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.AnnotationValueVisitor;
@@ -196,11 +193,7 @@ public class Utilities {
     
 
     public static <E> Iterable<E> checkedIterableByFilter(final Iterable<?> raw, final Class<E> type, final boolean strict) {
-        return new Iterable<E>() {
-            public Iterator<E> iterator() {
-                return NbCollections.checkedIteratorByFilter(raw.iterator(), type, strict);
-            }
-        };
+        return () -> NbCollections.checkedIteratorByFilter(raw.iterator(), type, strict);
     }
     
 //    public static AnnotationTree constructConstraint(WorkingCopy wc, String name, TypeMirror tm) {
@@ -237,7 +230,7 @@ public class Utilities {
 
     public static List<AnnotationTree> findArrayValue(AnnotationTree at, String name) {
         ExpressionTree fixesArray = findValue(at, name);
-        List<AnnotationTree> fixes = new LinkedList<AnnotationTree>();
+        List<AnnotationTree> fixes = new LinkedList<>();
 
         if (fixesArray != null && fixesArray.getKind() == Kind.NEW_ARRAY) {
             NewArrayTree trees = (NewArrayTree) fixesArray;
@@ -269,7 +262,7 @@ public class Utilities {
             Collection<HintDescription> h = output.get(d.getMetadata().displayName);
 
             if (h == null) {
-                output.put(d.getMetadata().displayName, h = new LinkedList<HintDescription>());
+                output.put(d.getMetadata().displayName, h = new LinkedList<>());
             }
 
             h.add(d);
@@ -279,7 +272,7 @@ public class Utilities {
     }
 
     public static List<HintDescription> listAllHints(Set<ClassPath> cps) {
-        List<HintDescription> result = new LinkedList<HintDescription>();
+        List<HintDescription> result = new LinkedList<>();
 
         for (Collection<? extends HintDescription> hints : RulesManager.getInstance().readHints(null, cps, new AtomicBoolean()).values()) {
             for (HintDescription hd : hints) {
@@ -294,8 +287,8 @@ public class Utilities {
     }
 
     public static List<HintDescription> listClassPathHints(Set<ClassPath> sourceCPs, Set<ClassPath> binaryCPs) {
-        List<HintDescription> result = new LinkedList<HintDescription>();
-        Set<FileObject> roots = new HashSet<FileObject>();
+        List<HintDescription> result = new LinkedList<>();
+        Set<FileObject> roots = new HashSet<>();
 
         for (ClassPath cp : binaryCPs) {
             for (FileObject r : cp.getRoots()) {
@@ -309,7 +302,7 @@ public class Utilities {
             }
         }
 
-        Set<ClassPath> cps = new HashSet<ClassPath>(sourceCPs);
+        Set<ClassPath> cps = new HashSet<>(sourceCPs);
 
         cps.add(ClassPathSupport.createClassPath(roots.toArray(new FileObject[0])));
 
@@ -354,7 +347,7 @@ public class Utilities {
         Context c = jti.getContext();
         JavaCompiler.instance(c); //force reasonable initialization order
         TreeFactory make = TreeFactory.instance(c);
-        List<Diagnostic<? extends JavaFileObject>> patternTreeErrors = new LinkedList<Diagnostic<? extends JavaFileObject>>();
+        List<Diagnostic<? extends JavaFileObject>> patternTreeErrors = new LinkedList<>();
         Tree toAttribute;
         Tree patternTree = toAttribute = !isStatement(pattern) ? parseExpression(c, pattern, true, sourcePositions, patternTreeErrors) : null;
         int offset = 0;
@@ -362,7 +355,7 @@ public class Utilities {
         boolean classMember = false;
 
         if (pattern.startsWith("case ")) {//XXX: should be a lexer token
-            List<Diagnostic<? extends JavaFileObject>> currentPatternTreeErrors = new LinkedList<Diagnostic<? extends JavaFileObject>>();
+            List<Diagnostic<? extends JavaFileObject>> currentPatternTreeErrors = new LinkedList<>();
             Tree switchTree = parseStatement(c, "switch ($$foo) {" + pattern + "}", sourcePositions, currentPatternTreeErrors);
 
             offset = "switch ($$foo) {".length();
@@ -373,7 +366,7 @@ public class Utilities {
 
         if (patternTree == null || isErrorTree(patternTree) || SWITCH_EXPRESSION.equals(patternTree.getKind().name())) {
             SourcePositions[] currentPatternTreePositions = new SourcePositions[1];
-            List<Diagnostic<? extends JavaFileObject>> currentPatternTreeErrors = new LinkedList<Diagnostic<? extends JavaFileObject>>();
+            List<Diagnostic<? extends JavaFileObject>> currentPatternTreeErrors = new LinkedList<>();
             Tree currentPatternTree = parseStatement(c, "{" + pattern + "}", currentPatternTreePositions, currentPatternTreeErrors);
 
             assert currentPatternTree.getKind() == Kind.BLOCK : currentPatternTree.getKind();
@@ -399,7 +392,7 @@ public class Utilities {
             if (!currentPatternTreeErrors.isEmpty() || containsError(currentPatternTree)) {
                 //maybe a class member?
                 SourcePositions[] classPatternTreePositions = new SourcePositions[1];
-                List<Diagnostic<? extends JavaFileObject>> classPatternTreeErrors = new LinkedList<Diagnostic<? extends JavaFileObject>>();
+                List<Diagnostic<? extends JavaFileObject>> classPatternTreeErrors = new LinkedList<>();
                 Tree classPatternTree = parseExpression(c, "new Object() {" + pattern + "}", false, classPatternTreePositions, classPatternTreeErrors);
 
                 if (!containsError(classPatternTree)) {
@@ -439,7 +432,7 @@ public class Utilities {
                 //maybe type?
                 if (Utilities.isPureMemberSelect(patternTree, false)) {
                     SourcePositions[] varPositions = new SourcePositions[1];
-                    List<Diagnostic<? extends JavaFileObject>> varErrors = new LinkedList<Diagnostic<? extends JavaFileObject>>();
+                    List<Diagnostic<? extends JavaFileObject>> varErrors = new LinkedList<>();
                     Tree var = parseExpression(c, pattern + ".Class.class;", false, varPositions, varErrors);
 
                     attributeTree(jti, var, scope, varErrors);
@@ -501,7 +494,7 @@ public class Utilities {
 
             if (members.size() > 1 + syntheticOffset) {
                 ModifiersTree mt = make.Modifiers(EnumSet.noneOf(Modifier.class));
-                List<Tree> newMembers = new LinkedList<Tree>();
+                List<Tree> newMembers = new LinkedList<>();
 
                 newMembers.add(make.ExpressionStatement(make.Identifier("$$1$")));
                 newMembers.addAll(members.subList(syntheticOffset, members.size()));
@@ -775,7 +768,7 @@ public class Utilities {
             compiler.enterTrees(com.sun.tools.javac.util.List.of(cut));
 
             Todo todo = compiler.todo;
-            ListBuffer<Env<AttrContext>> defer = new ListBuffer<Env<AttrContext>>();
+            ListBuffer<Env<AttrContext>> defer = new ListBuffer<>();
             
             while (todo.peek() != null) {
                 Env<AttrContext> env = todo.remove();
@@ -902,7 +895,7 @@ public class Utilities {
 
     public static Set<? extends String> findSuppressedWarnings(CompilationInfo info, TreePath path) {
         //TODO: cache?
-        Set<String> keys = new HashSet<String>();
+        Set<String> keys = new HashSet<>();
 
         while (path != null) {
             Tree leaf = path.getLeaf();
@@ -944,57 +937,73 @@ public class Utilities {
                     continue;
 
                 e.getValue().accept(new AnnotationValueVisitor<Void, Void>() {
+                    @Override
                     public Void visit(AnnotationValue av, Void p) {
                         av.accept(this, p);
                         return null;
                     }
+                    @Override
                     public Void visit(AnnotationValue av) {
                         av.accept(this, null);
                         return null;
                     }
+                    @Override
                     public Void visitBoolean(boolean b, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitByte(byte b, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitChar(char c, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitDouble(double d, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitFloat(float f, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitInt(int i, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitLong(long i, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitShort(short s, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitString(String s, Void p) {
                         keys.add(s);
                         return null;
                     }
+                    @Override
                     public Void visitType(TypeMirror t, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitEnumConstant(VariableElement c, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitAnnotation(AnnotationMirror a, Void p) {
                         return null;
                     }
+                    @Override
                     public Void visitArray(List<? extends AnnotationValue> vals, Void p) {
                         for (AnnotationValue av : vals) {
                             av.accept(this, p);
                         }
                         return null;
                     }
+                    @Override
                     public Void visitUnknown(AnnotationValue av, Void p) {
                         return null;
                     }
@@ -1031,7 +1040,7 @@ public class Utilities {
 
         assert translated.getKind() == Kind.BLOCK;
 
-        List<StatementTree> newStatements = new LinkedList<StatementTree>();
+        List<StatementTree> newStatements = new LinkedList<>();
         BlockTree block = (BlockTree) translated;
 
         if (firstStatement != lastStatement) {
@@ -1062,6 +1071,7 @@ public class Utilities {
         // @GuardedBy(this)
         private PropertyChangeListener weakL;
 
+        @Override
         public synchronized ClasspathInfo createUniversalCPInfo() {
             Reference<ClasspathInfo> r = cached;
             if (r != null) {
@@ -1100,8 +1110,8 @@ public class Utilities {
     
     private static final class GeneralizePattern extends ErrorAwareTreePathScanner<Void, Void> {
 
-        public final Map<Tree, Tree> tree2Variable = new HashMap<Tree, Tree>();
-        private final Map<Element, String> element2Variable = new HashMap<Element, String>();
+        public final Map<Tree, Tree> tree2Variable = new HashMap<>();
+        private final Map<Element, String> element2Variable = new HashMap<>();
         private final Trees javacTrees;
         private final TreeFactory make;
 
@@ -1370,7 +1380,7 @@ public class Utilities {
             }
             JCTree.JCVariableDecl result = null;
             try {
-                Class[] paramTypes = {boolean.class, boolean.class};
+                Class<?>[] paramTypes = {boolean.class, boolean.class};
                 result = (JCTree.JCVariableDecl) MethodHandles.lookup()
                         .findSpecial(JavacParser.class, "formalParameter", MethodType.methodType(JCTree.JCVariableDecl.class, paramTypes), JackpotJavacParser.class) // NOI18N
                         .invoke(this, lambdaParam, recordComponents);
@@ -1456,7 +1466,7 @@ public class Utilities {
             }
 
             com.sun.tools.javac.util.List<JCTree> result = null;
-            Class[] argsType = {com.sun.tools.javac.util.Name.class, boolean.class, boolean.class};
+            Class<?>[] argsType = {com.sun.tools.javac.util.Name.class, boolean.class, boolean.class};
             try {
                 result = (com.sun.tools.javac.util.List<JCTree>) MethodHandles.lookup().findSpecial(JavacParser.class, "classOrInterfaceOrRecordBodyDeclaration", MethodType.methodType(com.sun.tools.javac.util.List.class, argsType), JackpotJavacParser.class) // NOI18N
                         .invoke(this, className, false, false);
@@ -1515,8 +1525,7 @@ public class Utilities {
                         }
 
                         JCIdent identTree = F.at(pos).Ident(name);
-
-                        return JackpotTrees.createInstance(ctx, JCCase.class, name, identTree, new Class[] {JCExpression.class, com.sun.tools.javac.util.List.class}, new Object[] {identTree, com.sun.tools.javac.util.List.nil()});
+                        return JackpotTrees.createJCCase(name, identTree, com.sun.tools.javac.util.List.nil());
                     }
                 }
             }
@@ -1545,16 +1554,17 @@ public class Utilities {
                             nextToken();
                         }
 
-                        Class caseKind = Class.forName("com.sun.source.tree.CaseTree$CaseKind", false, JCCase.class.getClassLoader());
                         JCIdent identTree = F.at(pos).Ident(name);
-                        return com.sun.tools.javac.util.List.of(JackpotTrees.createInstance(ctx, JCCase.class, name, identTree, new Class[] {caseKind, com.sun.tools.javac.util.List.class, com.sun.tools.javac.util.List.class, JCTree.class}, new Object[] {Enum.valueOf(caseKind, "STATEMENT"), com.sun.tools.javac.util.List.of(identTree), com.sun.tools.javac.util.List.nil(), null}));
+                        return com.sun.tools.javac.util.List.of(
+                                    JackpotTrees.createJCCase(name, identTree, "STATEMENT", com.sun.tools.javac.util.List.of(identTree), com.sun.tools.javac.util.List.nil(), null)
+                                );
                     }
                 }
             }
 
-            return (com.sun.tools.javac.util.List) MethodHandles.lookup()
-                                                                .findSpecial(NBJavacParser.class, "switchBlockStatementGroup", MethodType.methodType(com.sun.tools.javac.util.List.class), JackpotJavacParser.class)
-                                                                .invoke(this);
+            return (com.sun.tools.javac.util.List<JCCase>) MethodHandles.lookup()
+                        .findSpecial(NBJavacParser.class, "switchBlockStatementGroup", MethodType.methodType(com.sun.tools.javac.util.List.class), JackpotJavacParser.class)
+                        .invoke(this);
         }
 
         @Override
@@ -1590,7 +1600,7 @@ public class Utilities {
      * Only for members (i.e. generated constructor):
      */
     public static List<? extends Tree> filterHidden(TreePath basePath, Iterable<? extends Tree> members) {
-        List<Tree> result = new LinkedList<Tree>();
+        List<Tree> result = new LinkedList<>();
 
         for (Tree t : members) {
             if (!isSynthetic(basePath != null ? basePath.getCompilationUnit() : null, t)) {
@@ -1666,10 +1676,12 @@ public class Utilities {
             this.offset = offset;
         }
 
+        @Override
         public long getStartPosition(CompilationUnitTree cut, Tree tree) {
             return delegate.getStartPosition(cut, tree) + offset;
         }
 
+        @Override
         public long getEndPosition(CompilationUnitTree cut, Tree tree) {
             return delegate.getEndPosition(cut, tree) + offset;
         }
@@ -1687,22 +1699,27 @@ public class Utilities {
             this.offset = offset;
         }
 
+        @Override
         public Diagnostic.Kind getKind() {
             return delegate.getKind();
         }
 
+        @Override
         public S getSource() {
             return delegate.getSource();
         }
 
+        @Override
         public long getPosition() {
             return delegate.getPosition() + offset;
         }
 
+        @Override
         public long getStartPosition() {
             return delegate.getStartPosition() + offset;
         }
 
+        @Override
         public long getEndPosition() {
             if (delegate instanceof JCDiagnostic) {
                 JCDiagnostic dImpl = (JCDiagnostic) delegate;
@@ -1722,18 +1739,22 @@ public class Utilities {
             return delegate.getEndPosition() + offset;
         }
 
+        @Override
         public long getLineNumber() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Override
         public long getColumnNumber() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Override
         public String getCode() {
             return delegate.getCode();
         }
 
+        @Override
         public String getMessage(Locale locale) {
             return delegate.getMessage(locale);
         }
@@ -1748,10 +1769,12 @@ public class Utilities {
             this.parser = parser;
         }
 
+        @Override
         public long getStartPosition(CompilationUnitTree file, Tree tree) {
             return parser.getStartPos((JCTree)tree);
         }
 
+        @Override
         public long getEndPosition(CompilationUnitTree file, Tree tree) {
             return parser.getEndPos((JCTree)tree);
         }

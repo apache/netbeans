@@ -295,10 +295,6 @@ public class JavaSourceTest extends NbTestCase {
     }
 
     public void testMultipleFilesSameJavac() throws Exception {
-        if (!NoJavacHelper.hasNbJavac()) {
-            //nb-javac (NB_JAVAC_): JDK's javac we currently don't correctly run JavaSource with multiple files:
-            return ;
-        }
         final FileObject testFile1 = createTestFile("Test1");
         final FileObject testFile2 = createTestFile("Test2");
         final ClassPath bootPath = createBootPath();

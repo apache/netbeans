@@ -39,6 +39,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -60,6 +62,8 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class DownloadBinaries extends Task {
     private static final String MAVEN_REPO = "https://repo1.maven.org/maven2/";
+
+    private static final Pattern URL_PATTERN = Pattern.compile("(https?://\\S*[^/\\s]+)\\s+(\\S+)$");
 
     private File cache;
     /**
@@ -158,9 +162,12 @@ public class DownloadBinaries extends Task {
                                 throw new BuildException("Bad line '" + line + "' in " + manifest, getLocation());
                             }
 
+                            Matcher urlMatcher = URL_PATTERN.matcher(hashAndFile[1]);
                             if (MavenCoordinate.isMavenFile(hashAndFile[1])) {
                                 MavenCoordinate mc = MavenCoordinate.fromGradleFormat(hashAndFile[1]);
                                 success &= fillInFile(hashAndFile[0], mc.toArtifactFilename(), manifest, () -> mavenFile(mc));
+                            } else if (urlMatcher.matches()) {
+                                success &= fillInFile(hashAndFile[0], urlMatcher.group(2), manifest, () -> downloadFromServer(this, new URL(urlMatcher.group(1))));
                             } else {
                                 success &= fillInFile(hashAndFile[0], hashAndFile[1], manifest, () -> legacyDownload(hashAndFile[0] + "-" + hashAndFile[1]));
                             }
@@ -310,6 +317,7 @@ public class DownloadBinaries extends Task {
         }
         throw new BuildException("Could not download " + cacheName + " from " + server + ": " + firstProblem, firstProblem, getLocation());
     }
+
 
     private static byte[] downloadFromServer(Task task, URL url) throws IOException {
         task.getProject().log("Downloading: " + url);

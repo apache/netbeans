@@ -70,7 +70,7 @@ public final class XSLDataLoader extends UniFileLoader {
     }
 
     /** Creates the right data object for given primary file.
-     * It is guaranteed that the provided file is realy primary file
+     * It is guaranteed that the provided file is really primary file
      * returned from the method findPrimaryFile.
      *
      * @param primaryFile the primary file

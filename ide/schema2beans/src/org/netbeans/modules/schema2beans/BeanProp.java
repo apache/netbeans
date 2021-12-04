@@ -1707,7 +1707,7 @@ public class BeanProp implements BaseProperty {
 		
 		//  Do not initialize the default values
 		Object[] p =
-		    new Object[] {new Integer(Common.NO_DEFAULT_VALUES)};
+		    new Object[] {Integer.valueOf(Common.NO_DEFAULT_VALUES)};
 		
 		return (BaseBean)c.newInstance(p);
 	    }

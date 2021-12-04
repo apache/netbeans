@@ -23,7 +23,6 @@ import java.beans.PropertyChangeListener;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.Future;
@@ -34,7 +33,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.project.uiapi.OpenProjectsTrampoline;
 import org.netbeans.modules.project.uiapi.BaseUtilities;
-import org.openide.util.Lookup;
+import org.openide.explorer.ExplorerManager;
 import org.openide.util.Parameters;
 
 /**
@@ -315,5 +314,24 @@ public final class OpenProjects {
     public void removeProjectGroupChangeListener( @NonNull ProjectGroupChangeListener listener) {
         trampoline.removeProjectGroupChangeListenerAPI(listener);
     }
-    
+
+    /** Creates new {@link ExplorerManager} to show and control
+     * logical structure of a project.
+     *
+     * @return new instance of the manager
+     * @since 1.101
+     */
+    public ExplorerManager createLogicalView() {
+        return trampoline.createLogicalView();
+    }
+
+    /** Creates new {@link ExplorerManager} to show and control
+     * physical structure of a project.
+     *
+     * @return new instance of the manager
+     * @since 1.101
+     */
+    public ExplorerManager createPhysicalView() {
+        return trampoline.createPhysicalView();
+    }
 }

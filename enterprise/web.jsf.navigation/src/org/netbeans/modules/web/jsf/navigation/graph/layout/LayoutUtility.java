@@ -19,7 +19,6 @@
 package org.netbeans.modules.web.jsf.navigation.graph.layout;
 
 import org.netbeans.api.visual.graph.GraphPinScene;
-import org.netbeans.modules.web.jsf.navigation.graph.layout.FreePlaceNodesLayouter;
 import org.netbeans.modules.web.jsf.navigation.graph.PageFlowScene;
 
 /**

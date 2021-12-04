@@ -156,10 +156,10 @@ public final class Watcher extends BaseAnnotationProvider {
     }
 
     private class Ext<KEY> extends ProvidedExtensions implements Runnable {
-        private final ReferenceQueue<FileObject> REF = new ReferenceQueue<FileObject>();
+        private final ReferenceQueue<FileObject> REF = new ReferenceQueue<>();
         private final Notifier<KEY> impl;
         private final Object LOCK = new Object();
-        private final Set<NotifierKeyRef> references = new HashSet<NotifierKeyRef>();
+        private final Set<NotifierKeyRef<KEY>> references = new HashSet<>();
         private final Thread watcher;
         private volatile boolean shutdown;
         private int loggedRegisterExceptions = 0;
@@ -271,7 +271,7 @@ public final class Watcher extends BaseAnnotationProvider {
         final void unregister(FileObject fo) {
             assert !fo.isValid() || fo.isFolder() : "If valid, it should be a folder: " + fo + " clazz: " + fo.getClass();
             synchronized (LOCK) {
-                final NotifierKeyRef[] equalOne = new NotifierKeyRef[1];
+                final NotifierKeyRef<KEY>[] equalOne = new NotifierKeyRef[1];
                 NotifierKeyRef<KEY> kr = new NotifierKeyRef<KEY>(fo, null, null, impl) {
                     @Override
                     public boolean equals(Object obj) {
@@ -368,7 +368,7 @@ public final class Watcher extends BaseAnnotationProvider {
             watcher.join(1000);
         }
 
-        private Set<NotifierKeyRef> getReferences() {
+        private Set<NotifierKeyRef<KEY>> getReferences() {
             assert Thread.holdsLock(LOCK);
             return references;
         }
@@ -453,7 +453,7 @@ public final class Watcher extends BaseAnnotationProvider {
     private static Notifier<?> getNotifierForPlatform() {
         for (Item<Notifier> item : Lookup.getDefault().lookupResult(Notifier.class).allItems()) {
             try {
-                final Notifier notifier = item.getInstance();
+                final Notifier<?> notifier = item.getInstance();
                 if (notifier != null) {
                     NotifierAccessor.getDefault().start(notifier);
                     return notifier;

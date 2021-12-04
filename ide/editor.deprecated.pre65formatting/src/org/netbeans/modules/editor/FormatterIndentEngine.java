@@ -162,11 +162,11 @@ public abstract class FormatterIndentEngine extends IndentEngine {
         getFormatter().setSpacesPerTab(spacesPerTab);
         if (old != spacesPerTab) {
             setValue(SimpleValueNames.SPACES_PER_TAB,
-                new Integer(spacesPerTab), SPACES_PER_TAB_PROP);
+                Integer.valueOf(spacesPerTab), SPACES_PER_TAB_PROP);
             
             firePropertyChange(SPACES_PER_TAB_PROP,
-                new Integer(old),
-                new Integer(spacesPerTab)
+                Integer.valueOf(old),
+                Integer.valueOf(spacesPerTab)
             );
         }
     }

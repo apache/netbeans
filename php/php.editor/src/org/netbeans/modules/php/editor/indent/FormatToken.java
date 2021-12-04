@@ -173,6 +173,9 @@ public class FormatToken {
         DOC_COMMENT,
         DOC_COMMENT_START,
         DOC_COMMENT_END,
+        HAS_NEWLINE_WITHIN_METHOD_PARAMS,
+        HAS_NEWLINE_WITHIN_METHOD_CALL_ARGS,
+        HAS_NEWLINE_WITHIN_FOR,
         ATTRIBUTE_START;
     }
     private int offset;

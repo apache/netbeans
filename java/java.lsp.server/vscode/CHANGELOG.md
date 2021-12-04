@@ -20,6 +20,17 @@
     under the License.
 
 -->
+## Version 13.0.0
+* Project Explorer to display project organization, dependencies and contents introduced.
+
+## Version 12.5.301
+* Number of refactorings added
+* Attach to Native Image launch config added for Native Image Debugger
+* Native Image debugger visually distinguishes when Java code was not included in binary by native-image tool.
+* Groovy Support for Spock tests enabled by default
+* Java 8+ launch config accepts arguments for ENV and CWD
+* JDK17 support
+* Supporting VS Code 1.59 official API and UI for running tests
 
 ## Version 12.4.301
 

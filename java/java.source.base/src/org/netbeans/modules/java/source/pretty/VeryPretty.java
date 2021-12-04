@@ -1337,18 +1337,29 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     public void visitCase(JCCase tree) {
         int old = cs.indentCasesFromSwitch() ? indent() : out.leftMargin;
         toLeftMargin();
-        java.util.List<JCExpression> patterns = CasualDiff.getCasePatterns(tree);
-	if (patterns.isEmpty()) {
-	    print("default");
-	} else {
-	    print("case ");
+        java.util.List<JCTree> labels = CasualDiff.getCaseLabelPatterns(tree);
+        if (labels.size() > 0) {
+            print("case ");
             String sep = "";
-            for (JCExpression pat : patterns) {
+            for (JCTree lab : labels) {
                 print(sep);
-                printNoParenExpr(pat);
+                printNoParenExpr(lab);
                 sep = ", "; //TODO: space or not should be a configuration setting
             }
-	}
+        } else {
+            java.util.List<JCExpression> patterns = CasualDiff.getCasePatterns(tree);
+            if (patterns.isEmpty()) {
+                print("default");
+            } else {
+                print("case ");
+                String sep = "";
+                for (JCExpression pat : patterns) {
+                    print(sep);
+                    printNoParenExpr(pat);
+                    sep = ", "; //TODO: space or not should be a configuration setting
+                }
+            }
+        }
         Object caseKind = CasualDiff.getCaseKind(tree);
         if (caseKind == null || !String.valueOf(caseKind).equals("RULE")) {
             print(':');
@@ -2084,6 +2095,9 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             } catch (RuntimeException ex) {
                 Exceptions.printStackTrace(ex);
             }
+        }else if ("DEFAULT_CASE_LABEL".equals(tree.getKind().name())) {
+            print("default");
+            return;
         }
 	print("(UNKNOWN: " + tree + ")");
 	newline();

@@ -582,9 +582,44 @@ public final class CodeStyle {
         return WrapStyle.valueOf(wrap);
     }
 
+    public boolean wrapMethodParamsAfterLeftParen() {
+        return preferences.getBoolean(
+                WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN,
+                getDefaultAsBoolean(WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN)
+        );
+    }
+
+    public boolean wrapMethodParamsRightParen() {
+        return preferences.getBoolean(
+                WRAP_METHOD_PARAMS_RIGHT_PAREN,
+                getDefaultAsBoolean(WRAP_METHOD_PARAMS_RIGHT_PAREN)
+        );
+    }
+
+    public boolean wrapMethodParamsKeepParenAndBraceOnTheSameLine() {
+        return preferences.getBoolean(
+                WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE,
+                getDefaultAsBoolean(WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE)
+        );
+    }
+
     public WrapStyle wrapMethodCallArgs() {
         String wrap = preferences.get(WRAP_METHOD_CALL_ARGS, getDefaultAsString(WRAP_METHOD_CALL_ARGS));
         return WrapStyle.valueOf(wrap);
+    }
+
+    public boolean wrapMethodCallArgsAfterLeftParen() {
+        return preferences.getBoolean(
+                WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN,
+                getDefaultAsBoolean(WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN)
+        );
+    }
+
+    public boolean wrapMethodCallArgsRightParen() {
+        return preferences.getBoolean(
+                WRAP_METHOD_CALL_ARGS_RIGHT_PAREN,
+                getDefaultAsBoolean(WRAP_METHOD_CALL_ARGS_RIGHT_PAREN)
+        );
     }
 
     public WrapStyle wrapChainedMethodCalls() {
@@ -600,6 +635,20 @@ public final class CodeStyle {
     public WrapStyle wrapFor() {
         String wrap = preferences.get(WRAP_FOR, getDefaultAsString(WRAP_FOR));
         return WrapStyle.valueOf(wrap);
+    }
+
+    public boolean wrapForAfterLeftParen() {
+        return preferences.getBoolean(
+                WRAP_FOR_AFTER_LEFT_PAREN,
+                getDefaultAsBoolean(WRAP_FOR_AFTER_LEFT_PAREN)
+        );
+    }
+
+    public boolean wrapForRightParen() {
+        return preferences.getBoolean(
+                WRAP_FOR_RIGHT_PAREN,
+                getDefaultAsBoolean(WRAP_FOR_RIGHT_PAREN)
+        );
     }
 
     public WrapStyle wrapForStatement() {

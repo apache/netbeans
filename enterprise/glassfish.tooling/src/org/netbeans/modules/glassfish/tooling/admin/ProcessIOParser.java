@@ -162,7 +162,7 @@ public class ProcessIOParser {
             String prompt = content.getCurrentPrompt();
             promptLen = prompt != null ? prompt.length() : 0;
             promptBuff = new CyclicStringBuffer(promptLen);
-            output = new LinkedList();
+            output = new LinkedList<>();
         }
 
         /**

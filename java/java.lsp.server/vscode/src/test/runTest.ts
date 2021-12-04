@@ -1,8 +1,26 @@
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 import * as path from 'path';
 
-import { downloadAndUnzipVSCode, resolveCliPathFromVSCodeExecutablePath, runTests } from 'vscode-test';
+import { downloadAndUnzipVSCode, runTests } from 'vscode-test';
 
-import * as cp from 'child_process';
 import * as fs from 'fs';
 
 async function main() {
@@ -11,19 +29,17 @@ async function main() {
         // Passed to `--extensionDevelopmentPath`
         const extensionDevelopmentPath = path.resolve(__dirname, '../../');
 
-        const vscodeExecutablePath: string = await downloadAndUnzipVSCode('1.56.2');
-        const cliPath: string = resolveCliPathFromVSCodeExecutablePath(vscodeExecutablePath);
-
-        cp.spawnSync(cliPath, ['--install-extension', 'hbenl.vscode-test-explorer'], {
-            encoding: 'utf-8',
-            stdio: 'inherit',
-        });
+        const vscodeExecutablePath: string = await downloadAndUnzipVSCode('stable');
 
         // The path to test runner
         // Passed to --extensionTestsPath
         const extensionTestsPath = path.resolve(__dirname, './suite/index');
 
         const workspaceDir = path.join(extensionDevelopmentPath, 'out', 'test', 'ws');
+
+        const outRoot = path.join(extensionDevelopmentPath, "out");
+        const extDir = path.join(outRoot, "test", "vscode", "exts");
+        const userDir = path.join(outRoot, "test", "vscode", "user");
 
         if (!fs.statSync(workspaceDir).isDirectory()) {
             throw `Expecting ${workspaceDir} to be a directory!`;
@@ -35,9 +51,16 @@ async function main() {
             extensionDevelopmentPath,
             extensionTestsPath,
             extensionTestsEnv: {
-                'ENABLE_CONSOLE_LOG' : 'true'
+                'ENABLE_CONSOLE_LOG' : 'true',
+                "netbeans.extra.options" : `-J-Dproject.limitScanRoot=${outRoot}`
             },
-            launchArgs: [workspaceDir, '--async-stack-traces']
+            launchArgs: [
+                '--disable-extensions',
+                '--disable-workspace-trust',
+                '--extensions-dir', `${extDir}`,
+                '--user-data-dir', `${userDir}`,
+                workspaceDir
+            ]
         });
     } catch (err) {
         console.error('Failed to run tests');

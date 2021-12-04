@@ -84,7 +84,7 @@ public class OnSaveTabPanel extends JPanel implements PropertyChangeListener {
         if (this.selector != null) {
             this.weakListener = WeakListeners.propertyChange(this, this.selector);
             this.selector.addPropertyChangeListener(weakListener);
-            DefaultComboBoxModel model = new DefaultComboBoxModel();
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
             String preSelectMimeType = null;
             for (String mimeType : this.selector.getMimeTypes()) {
                 model.addElement(mimeType);

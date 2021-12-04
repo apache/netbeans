@@ -20,7 +20,6 @@
 package org.netbeans.modules.j2ee.deployment.plugins.spi;
 
 import javax.enterprise.deploy.spi.DeploymentManager;
-import org.netbeans.modules.j2ee.deployment.plugins.spi.J2eePlatformImpl;
 
 /**
  * Mandatory factory class for producing {@link J2eePlatformImpl}. Plugin is

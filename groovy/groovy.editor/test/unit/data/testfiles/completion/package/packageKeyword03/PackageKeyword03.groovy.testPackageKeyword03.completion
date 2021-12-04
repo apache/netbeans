@@ -1,0 +1,7 @@
+Code completion result for source line:
+pac|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      Package                                    null
+CLASS      PackageKeyword03                           null
+KEYWORD    package                                    null

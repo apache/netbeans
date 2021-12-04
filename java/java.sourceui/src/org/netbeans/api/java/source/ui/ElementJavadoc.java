@@ -1169,21 +1169,17 @@ public class ElementJavadoc {
             final FileObject resource = cp.findResource(toSearch);
             if (resource != null) {
                 final FileObject root = cp.findOwnerRoot(resource);
-                try {
-                    final URL rootURL = root.getURL();
-                    if (JavadocForBinaryQuery.findJavadoc(rootURL).getRoots().length == 0) {
-                        FileObject userRoot = FileUtil.getArchiveFile(root);
-                        if (userRoot == null) {
-                            userRoot = root;
-                        }
-                        return NbBundle.getMessage(
+                final URL rootURL = root.toURL();
+                if (JavadocForBinaryQuery.findJavadoc(rootURL).getRoots().length == 0) {
+                    FileObject userRoot = FileUtil.getArchiveFile(root);
+                    if (userRoot == null) {
+                        userRoot = root;
+                    }
+                    return NbBundle.getMessage(
                                 ElementJavadoc.class,
                                 "javadoc_content_not_found_attach",
                                 rootURL.toExternalForm(),
                                 FileUtil.getFileDisplayName(userRoot));
-                    }
-                } catch (FileStateInvalidException ex) {
-                    Exceptions.printStackTrace(ex);
                 }
             }
         }

@@ -72,6 +72,7 @@ public final class MavenSettings  {
     private static final String PROP_EXPERIMENTAL_ALTERNATE_LOCATION = "bestMavenAltLocation";
     private static final String PROP_VM_OPTIONS_WRAP = "vmOptionsWrap";
     private static final String PROP_DEFAULT_JDK = "defaultJdk";
+    private static final String PROP_PREFER_WRAPPER = "preferWrapper"; //NOI18N
 
     //these are from former versions (6.5) and are here only for conversion
     private static final String PROP_DEBUG = "showDebug"; // NOI18N
@@ -320,6 +321,14 @@ public final class MavenSettings  {
 
     public String getProjectNodeNamePattern() {
         return getPreferences().get(PROP_PROJECTNODE_NAME_PATTERN, null); //NOI18N
+    }
+    
+    public boolean isPreferMavenWrapper() {
+        return getPreferences().getBoolean(PROP_PREFER_WRAPPER, true);
+    }
+    
+    public void setPreferMavenWrapper(boolean preferWrapper) {
+        getPreferences().putBoolean(PROP_PREFER_WRAPPER, preferWrapper);
     }
 
     public boolean isUseBestMaven() {

@@ -23,6 +23,7 @@ import * as os from 'os';
 import * as path from 'path';
 import { spawn, ChildProcessByStdio } from 'child_process';
 import { Readable } from 'stream';
+import { env } from 'process';
 
 export interface LaunchInfo {
     clusters: string[];
@@ -68,7 +69,14 @@ export function launch(
     if (info.verbose) {
         ideArgs.push('-J-Dnetbeans.logger.console=true');
     }
+    if (env['netbeans.extra.options']) {
+        ideArgs.push(env['netbeans.extra.options']);
+    }
     ideArgs.push(...extraArgs);
+    
+    if (env['netbeans.debug'] && extraArgs && extraArgs.find(s => s.includes("--list"))) {
+        ideArgs.push(...['-J-Xdebug', '-J-Dnetbeans.logger.console=true', '-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000']);
+    }
 
     let process: ChildProcessByStdio<any, Readable, Readable> = spawn(nbcodePath, ideArgs, {
         cwd : userDir,

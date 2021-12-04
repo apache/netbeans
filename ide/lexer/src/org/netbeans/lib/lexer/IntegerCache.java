@@ -42,7 +42,7 @@ public final class IntegerCache {
             }
 
         } else { // cannot cache
-            integer = new Integer(i);
+            integer = Integer.valueOf(i);
         }
         return integer;
     }

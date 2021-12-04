@@ -18,14 +18,17 @@
  */
 package org.netbeans.modules.java.nativeimage.debugger.actions;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
+import java.util.List;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -34,14 +37,18 @@ import javax.swing.filechooser.FileFilter;
 import org.netbeans.api.debugger.Properties;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.java.nativeimage.debugger.actions.Processes.ProcessInfo;
 import org.netbeans.modules.java.nativeimage.debugger.api.NIDebugRunner;
+import org.netbeans.modules.nativeimage.api.debug.StartDebugParameters;
 import org.netbeans.spi.debugger.ui.Controller;
 import static org.netbeans.spi.debugger.ui.Controller.PROP_VALID;
 import org.netbeans.spi.debugger.ui.PersistentController;
 import static org.netbeans.spi.project.ActionProvider.COMMAND_DEBUG;
+
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.Actions;
+import org.openide.awt.Mnemonics;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.ModuleInfo;
@@ -59,7 +66,8 @@ public class NIAttachCustomizer extends javax.swing.JPanel {
 
     private final ConnectController controller;
     private final ValidityDocumentListener validityDocumentListener = new ValidityDocumentListener();
-    private final RequestProcessor currentFileRP = new RequestProcessor(NIAttachCustomizer.class);
+    private final RequestProcessor RP = new RequestProcessor(NIAttachCustomizer.class.getName(), 2);
+    private ProcessInfo processInfo = null;
 
     /**
      * Creates new form NIAttachCustomizer
@@ -69,10 +77,11 @@ public class NIAttachCustomizer extends javax.swing.JPanel {
         initComponents();
         fileTextField.getDocument().addDocumentListener(validityDocumentListener);
         initNIFile();
+        initProcesses();
     }
 
     private void initNIFile() {
-        currentFileRP.post(() -> {
+        RP.post(() -> {
             FileObject currentFO = Utilities.actionsGlobalContext().lookup(FileObject.class);
             if (currentFO != null) {
                 File currentFile = FileUtil.toFile(currentFO);
@@ -98,6 +107,66 @@ public class NIAttachCustomizer extends javax.swing.JPanel {
         });
     }
 
+    private void initProcesses() {
+        processTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        final int spacing = 8;
+        processTable.setIntercellSpacing(new Dimension(spacing, 0));
+        Mnemonics.setLocalizedText(attachLabel, org.openide.util.NbBundle.getMessage(NIAttachCustomizer.class, "NIAttachCustomizer.attachLabel.text", 0l)); // NOI18N
+        RP.post(() -> {
+            List<ProcessInfo> processes = Processes.getAllProcesses();
+            int size = processes.size();
+            Object[][] processValues = new Object[size][];
+            for (int i = 0; i < size; i++) {
+                ProcessInfo info = processes.get(i);
+                processValues[i] = new Object[] {
+                    info.getPid(),
+                    info.getCommand()
+                };
+            }
+            SwingUtilities.invokeLater(() -> {
+                processTable.setModel(new javax.swing.table.DefaultTableModel(
+                    processValues,
+                    new String [] {
+                        NbBundle.getMessage(NIAttachCustomizer.class, "NIAttachCustomizer.processPID.text"), // NOI18N
+                        NbBundle.getMessage(NIAttachCustomizer.class, "NIAttachCustomizer.processCommand.text"), // NOI18N
+                    }
+                ) {
+                    Class<?>[] types = new Class<?>[] {
+                        Long.class, String.class
+                    };
+
+                    @Override
+                    public Class<?> getColumnClass(int columnIndex) {
+                        return types[columnIndex];
+                    }
+
+                    @Override
+                    public boolean isCellEditable(int rowIndex, int columnIndex) {
+                        return false;
+                    }
+                });
+                if (!processes.isEmpty()) {
+                    int width = processTable.getGraphics().getFontMetrics().stringWidth(Long.toString(processes.get(0).getPid()));
+                    width += 2*spacing;
+                    processTable.getColumnModel().getColumn(0).setPreferredWidth(width);
+                    processTable.getColumnModel().getColumn(0).setMaxWidth(width);
+                    processTable.getSelectionModel().addListSelectionListener(listSelectionEvent -> {
+                        int index = processTable.getSelectedRow();
+                        if (index < 0) {
+                            Mnemonics.setLocalizedText(attachLabel, NbBundle.getMessage(NIAttachCustomizer.class, "NIAttachCustomizer.attachLabel.text", 0l)); // NOI18N
+                            processInfo = null;
+                        } else {
+                            ProcessInfo info = processes.get(index);
+                            Mnemonics.setLocalizedText(attachLabel, NbBundle.getMessage(NIAttachCustomizer.class, "NIAttachCustomizer.attachLabel.text", info.getPid())); // NOI18N
+                            fileTextField.setText(info.getExecutable());
+                            processInfo = info;
+                        }
+                    });
+                }
+            });
+        });
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -111,11 +180,13 @@ public class NIAttachCustomizer extends javax.swing.JPanel {
         fileTextField = new javax.swing.JTextField();
         fileButton = new javax.swing.JButton();
         dbgLabel = new javax.swing.JLabel();
-        dbgComboBox = new javax.swing.JComboBox<>();
+        dbgTextField = new javax.swing.JTextField();
+        attachLabel = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        processTable = new javax.swing.JTable();
 
+        fileLabel.setLabelFor(fileTextField);
         org.openide.awt.Mnemonics.setLocalizedText(fileLabel, org.openide.util.NbBundle.getMessage(NIAttachCustomizer.class, "NIAttachCustomizer.fileLabel.text")); // NOI18N
-
-        fileTextField.setText(org.openide.util.NbBundle.getMessage(NIAttachCustomizer.class, "NIAttachCustomizer.fileTextField.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(fileButton, org.openide.util.NbBundle.getMessage(NIAttachCustomizer.class, "NIAttachCustomizer.fileButton.text")); // NOI18N
         fileButton.addActionListener(new java.awt.event.ActionListener() {
@@ -124,9 +195,15 @@ public class NIAttachCustomizer extends javax.swing.JPanel {
             }
         });
 
+        dbgLabel.setLabelFor(dbgTextField);
         org.openide.awt.Mnemonics.setLocalizedText(dbgLabel, org.openide.util.NbBundle.getMessage(NIAttachCustomizer.class, "NIAttachCustomizer.dbgLabel.text")); // NOI18N
 
-        dbgComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "gdb", "lldb-mi" }));
+        dbgTextField.setText("gdb");
+
+        attachLabel.setLabelFor(processTable);
+        org.openide.awt.Mnemonics.setLocalizedText(attachLabel, org.openide.util.NbBundle.getMessage(NIAttachCustomizer.class, "NIAttachCustomizer.attachLabel.text")); // NOI18N
+
+        jScrollPane1.setViewportView(processTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -135,16 +212,20 @@ public class NIAttachCustomizer extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(fileLabel)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fileLabel)
+                            .addComponent(dbgLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fileTextField))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dbgTextField)
+                            .addComponent(fileTextField))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fileButton))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(dbgLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dbgComboBox, 0, 196, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fileButton)
+                        .addComponent(attachLabel)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -158,8 +239,12 @@ public class NIAttachCustomizer extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dbgLabel)
-                    .addComponent(dbgComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(dbgTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(attachLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -185,14 +270,17 @@ public class NIAttachCustomizer extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> dbgComboBox;
+    private javax.swing.JLabel attachLabel;
     private javax.swing.JLabel dbgLabel;
+    private javax.swing.JTextField dbgTextField;
     private javax.swing.JButton fileButton;
     private javax.swing.JLabel fileLabel;
     private javax.swing.JTextField fileTextField;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable processTable;
     // End of variables declaration//GEN-END:variables
 
-    RequestProcessor.Task validationTask = currentFileRP.create(new FileValidationTask());
+    RequestProcessor.Task validationTask = new RequestProcessor(NIAttachCustomizer.class).create(new FileValidationTask());
 
     @NbBundle.Messages({"MSG_NoFile=Native Imige File is missing."})
     private void checkValid() {
@@ -241,11 +329,13 @@ public class NIAttachCustomizer extends javax.swing.JPanel {
 
     private static final String CPPLITE_DEBUGGER = "org.netbeans.modules.cpplite.debugger"; // NOI18N
 
-    @NbBundle.Messages({"MSG_EnableNativeDebugger=Enable {0} in Plugins Manager", "TTL_EnableNativeDebugger=Native Debugger Dependency"})
+    @NbBundle.Messages({"# {0} - Name of the module that needs to be enabled.",
+                        "MSG_EnableNativeDebugger=Enable {0} in Plugins Manager",
+                        "TTL_EnableNativeDebugger=Native Debugger Dependency"})
     private static boolean checkCPPLite() {
         ModuleInfo cppliteDebugger = Modules.getDefault().findCodeNameBase(CPPLITE_DEBUGGER);
         if (cppliteDebugger != null && !cppliteDebugger.isEnabled()) {
-            Action pluginsManager = Actions.forID("System", "org.netbeans.modules.autoupdate.ui.actions.PluginManagerAction");
+            Action pluginsManager = Actions.forID("System", "org.netbeans.modules.autoupdate.ui.actions.PluginManagerAction");  // NOI18N
             String moduleDisplayName = cppliteDebugger.getDisplayName();
             NotifyDescriptor messageDescriptor = new NotifyDescriptor.Confirmation(
                     Bundle.MSG_EnableNativeDebugger(moduleDisplayName),
@@ -264,16 +354,16 @@ public class NIAttachCustomizer extends javax.swing.JPanel {
 
     public class ConnectController implements PersistentController {
 
-        private static final String NI_ATTACH_PROPERTIES = "native_image_attach_settings";
-        private static final String PROP_NI_FILE = "niFile";
-        private static final String PROP_DBG = "debugger";
+        private static final String NI_ATTACH_PROPERTIES = "native_image_attach_settings";  // NOI18N
+        private static final String PROP_NI_FILE = "niFile";                                // NOI18N
+        private static final String PROP_DBG = "debugger";                                  // NOI18N
 
         private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
         private boolean valid = true;
 
         @Override
         public String getDisplayName() {
-            return dbgComboBox.getSelectedItem() + " " + new File(fileTextField.getText()).getName();
+            return dbgTextField.getText() + " " + new File(fileTextField.getText()).getName();
         }
 
         @Override
@@ -285,7 +375,7 @@ public class NIAttachCustomizer extends javax.swing.JPanel {
                     @Override
                     public void run() {
                         fileTextField.setText(attachProps.getString(PROP_NI_FILE, ""));
-                        dbgComboBox.setSelectedItem(attachProps.getString(PROP_DBG, "DBG"));
+                        dbgTextField.setText(attachProps.getString(PROP_DBG, "DBG"));
                     }
                 });
             } catch (InterruptedException | InvocationTargetException ex) {
@@ -318,20 +408,25 @@ public class NIAttachCustomizer extends javax.swing.JPanel {
 
         private void saveToProps(Properties attachProps) {
             attachProps.setString(PROP_NI_FILE, fileTextField.getText());
-            attachProps.setString(PROP_DBG, (String) dbgComboBox.getSelectedItem());
+            attachProps.setString(PROP_DBG, dbgTextField.getText());
         }
 
         @Override
         public boolean ok() {
             String filePath = fileTextField.getText();
-            String debuggerCommand = dbgComboBox.getSelectedItem().toString();
-            currentFileRP.post(() -> {
+            String debuggerCommand = dbgTextField.getText();
+            ProcessInfo attach2Process = processInfo;
+            RP.post(() -> {
                 if (!checkCPPLite()) {
                     return ;
                 }
                 File file = new File(filePath);
                 String displayName = COMMAND_DEBUG + " " + file.getName();
-                NIDebugRunner.start(file, Collections.emptyList(), debuggerCommand, null, displayName, null, null);
+                if (attach2Process != null) {
+                    NIDebugRunner.attach(file, attach2Process.getPid(), debuggerCommand, null, null);
+                } else {
+                    NIDebugRunner.start(file, Collections.emptyList(), debuggerCommand, null, displayName, null, null);
+                }
             });
             return true;
         }

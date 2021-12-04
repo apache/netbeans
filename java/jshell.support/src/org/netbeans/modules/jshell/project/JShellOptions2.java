@@ -91,7 +91,7 @@ public class JShellOptions2 extends javax.swing.JPanel implements ItemListener {
         this.project = project;
         initComponents();
         
-        DefaultComboBoxModel mdl = new DefaultComboBoxModel();
+        DefaultComboBoxModel<LoaderPolicy> mdl = new DefaultComboBoxModel<>();
         mdl.addElement(LoaderPolicy.SYSTEM);
         mdl.addElement(LoaderPolicy.CLASS);
         mdl.addElement(LoaderPolicy.EVAL);

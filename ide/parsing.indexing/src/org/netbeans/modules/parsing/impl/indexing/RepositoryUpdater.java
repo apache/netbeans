@@ -3124,7 +3124,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                     return false;
                 }
 
-                Collection<? extends IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> infos = eifInfosMap.get(dirty.getMimeType());
+                Collection<? extends IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> infos = getIndexerInfos(eifInfosMap, dirty.getMimeType());
                 if (infos != null && infos.size() > 0) {
                     final URL url = dirty.getURL();
                     if (url == null) {
@@ -3145,7 +3145,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                             @Override
                             public void run(ResultIterator resultIterator) throws Exception {
                                 final String mimeType = resultIterator.getSnapshot().getMimeType();
-                                final Collection<? extends IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> infos = eifInfosMap.get(mimeType);
+                                final Collection<? extends IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> infos = getIndexerInfos(eifInfosMap, mimeType);
 
                                 if (infos != null && infos.size() > 0) {
                                     boolean finished = false;
@@ -3297,9 +3297,9 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                                 final List<Indexable> resources = crawler.getResources();
                                 if (crawler.isFinished()) {
                                     logCrawlerTime(crawler, t);
-                                    invalidateSources(resources);
                                     delete(crawler.getDeletedResources(), ctxToFinish, usedIterables);
                                     indexResult = index(resources, crawler.getAllResources(), root, sourceForBinaryRoot, indexers, invalidatedMap, ctxToFinish, usedIterables);
+                                    invalidateSources(resources);
                                     if (indexResult) {
                                         crawler.storeTimestamps();
                                         return true;
@@ -3576,6 +3576,21 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                 result[i+2] = countTimePair[1];
             }
             return result;
+        }
+
+        private static final String ALL_MIME_TYPES = ""; //NOI18N
+
+        private static Collection<? extends IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> getIndexerInfos(
+                final Map<String, Collection<IndexerCache.IndexerInfo<EmbeddingIndexerFactory>>> eifInfosMap,
+                final String mimeType) {
+            final Collection<IndexerCache.IndexerInfo<EmbeddingIndexerFactory>> infos = new ArrayList<>();
+            if (eifInfosMap.containsKey(mimeType)) {
+                infos.addAll(eifInfosMap.get(mimeType));
+            }
+            if (eifInfosMap.containsKey(ALL_MIME_TYPES)) {
+                infos.addAll(eifInfosMap.get(ALL_MIME_TYPES));
+            }
+            return infos;
         }
 
         protected final boolean storeChanges(
@@ -5706,7 +5721,6 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                                 try {
                                     scanStarted (root, sourceForBinaryRoot, indexers, invalidatedMap, ctxToFinish);
                                     delete(deleted, ctxToFinish, usedIterables);
-                                    invalidateSources(resources);
                                     final long tm = System.currentTimeMillis();
                                     final boolean rlAdded = RepositoryUpdater.getDefault().rootsListeners.addSource(root, entry);
                                     if (recursiveListenersTime != null) {
@@ -5722,6 +5736,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                                                 invalidatedMap,
                                                 ctxToFinish,
                                                 usedIterables);
+                                        invalidateSources(resources);
                                         if (indexResult) {
                                             crawler.storeTimestamps();
                                             outOfDateFiles[0] = resources.size();

@@ -110,6 +110,10 @@
                 <test-type>
                     <name>unit</name>
                     <test-dependency>
+                        <code-name-base>org.netbeans.bootstrap</code-name-base>
+                        <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
                         <code-name-base>org.netbeans.libs.junit4</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
@@ -125,12 +129,12 @@
                         <code-name-base>org.netbeans.modules.projectapi.nb</code-name-base>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.openide.util.ui</code-name-base>
+                        <code-name-base>org.openide.util.lookup</code-name-base>
                         <compile-dependency/>
                         <test/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.openide.util.lookup</code-name-base>
+                        <code-name-base>org.openide.util.ui</code-name-base>
                         <compile-dependency/>
                         <test/>
                     </test-dependency>
@@ -180,7 +184,7 @@
                 <!-- XXX <subpackages> not permitted by schema -->
                 <package>javax.inject</package>
                 <package>com.google.inject</package>
-                <package>com.google.common.base</package>                
+                <package>com.google.common.base</package>
                 <package>org.apache.maven</package>
                 <package>org.apache.maven.artifact</package>
                 <package>org.apache.maven.artifact.factory</package>
@@ -264,7 +268,7 @@
                 <package>org.sonatype.plexus.components.cipher</package>
                 <package>org.sonatype.plexus.components.sec.dispatcher</package>
                 <package>org.slf4j</package>
-                <package>org.slf4j.impl</package>                
+                <package>org.slf4j.impl</package>
                 <package>org.apache.maven.wagon.shared.http4</package>
                 <package>org.apache.maven.wagon.providers.http.wagon.shared</package>
             </friend-packages>
@@ -277,7 +281,7 @@
                 <binary-origin>external/jdom-1.0.jar</binary-origin>
             </class-path-extension>
             <!-- zipinfo -1 .../apache-maven-*-bin.zip | sort | perl -n -e 'if (m!^apache-maven-.+/((lib|boot)/.+.jar)$!) {print "            <class-path-extension>\n                <runtime-relative-path>../maven/$1</runtime-relative-path>\n            </class-path-extension>\n"}' -->
-                        <class-path-extension>
+            <class-path-extension>
                 <runtime-relative-path>../maven/boot/plexus-classworlds-2.6.0.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>

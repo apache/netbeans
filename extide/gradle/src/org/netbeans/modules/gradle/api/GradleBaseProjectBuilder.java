@@ -36,6 +36,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.modules.gradle.GradleModuleFileCache21;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.openide.util.lookup.ServiceProvider;
@@ -49,6 +51,7 @@ import org.openide.util.lookup.ServiceProvider;
 class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
 
     final static Map<String, List<String>> DEPENDENCY_TO_PLUGIN = new LinkedHashMap<>();
+    final static Logger LOG = Logger.getLogger(GradleBaseProjectBuilder.class.getName());
 
     static {
         addDependencyPlugin("javax:javaee-api:.*", "ejb", "jpa");
@@ -73,6 +76,11 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
     }
 
     void build() {
+        if (LOG.isLoggable(Level.FINE)) {
+            for (Map.Entry<String, Object> entry : info.entrySet()) {
+                LOG.log(Level.FINE, entry.getKey() + " = " + String.valueOf(entry.getValue()));
+            }
+        }
         processBasicInfo();
         processTasks();
         processDependencies();
@@ -217,7 +225,11 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
                 Set<String> unresolvedComp = (Set<String>) info.get("configuration_" + name + "_unresolved");
                 if (unresolvedComp != null) {
                     for (String u : unresolvedComp) {
-                        conf.unresolved.add(unresolved.get(u));
+                        UnresolvedDependency dep = unresolved.get(u);
+                        if (dep == null) {
+                            dep = new UnresolvedDependency(u);
+                        }
+                        conf.unresolved.add(dep);
                     }
                 }
                 Set<File> files = (Set<File>) info.get("configuration_" + name + "_files");

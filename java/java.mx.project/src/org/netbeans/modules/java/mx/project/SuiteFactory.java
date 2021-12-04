@@ -63,7 +63,7 @@ public class SuiteFactory implements ProjectFactory2 {
         // Support the case where a subproject is directly opened. The mx
         // netbeans configuration generator generates java ant projects on the
         // subproject level. This is detected and overriden by this factory.
-        FileObject baseDir2 = fo.getParent() != null ? fo.getParent().getParent() : null;
+        FileObject baseDir2 = parentNoIgnore(parentNoIgnore(fo));
 
         if (baseDir2 != null) {
             final String mxDirName2 = "mx." + baseDir2.getNameExt();
@@ -72,6 +72,20 @@ public class SuiteFactory implements ProjectFactory2 {
         } else {
             return null;
         }
+    }
+
+    static FileObject parentNoIgnore(FileObject fo) {
+        if (fo == null) {
+            return null;
+        }
+        FileObject p = fo.getParent();
+        if (p == null) {
+            return null;
+        }
+        if (p.getFileObject(".mxignore") != null) { // NOI18N
+            return null;
+        }
+        return p;
     }
 
     @Override

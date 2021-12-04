@@ -172,7 +172,7 @@ public class ServerInfo extends ModuleMBean implements Constants{
         boolean restartReq = false;
         String val = (String)getRuntimeAttributeValue("restartRequired"); //NOI18N
         if(val != null){
-            restartReq = Boolean.valueOf(val).booleanValue();
+            restartReq = Boolean.valueOf(val);
         }
         return restartReq;
     }

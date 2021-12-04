@@ -19,7 +19,9 @@
 package org.netbeans.modules.groovy.support.actions;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.text.Position;
 import org.codehaus.groovy.ast.AnnotationNode;
@@ -27,6 +29,8 @@ import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
@@ -49,11 +53,18 @@ public class GroovyComputeTestMethods implements ComputeTestMethods {
         if (cancel.get()) {
             return result;
         }
+        FileObject fileObject = parserResult.getSnapshot().getSource().getFileObject();
+        if (!isTestSource(fileObject)) {
+            return result;
+        }
         String text = parserResult.getSnapshot().getText().toString();
         ModuleNode moduleNode = TestMethodUtil.extractModuleNode(parserResult);
+        if (moduleNode == null) {
+            // total parser failure
+            return result;
+        }
         for (ClassNode classNode : moduleNode.getClasses()) {
-            ClassNode superClass = classNode.getSuperClass();
-            if ("spock.lang.Specification".equals(superClass.getName())) {
+            if (isSpecification(classNode.getSuperClass())) {
                 int classStartLine = classNode.getLineNumber();
                 int classStartColumn = classNode.getColumnNumber();
                 int classOffset = classStartLine > 0 && classStartColumn > 0 ? getOffset(text, classStartLine, classStartColumn) : 0;
@@ -68,7 +79,6 @@ public class GroovyComputeTestMethods implements ComputeTestMethods {
                                 int startOffset = getOffset(text, startLine, startColumn);
                                 int endOffset = getOffset(text, endLine, endColumn);
                                 String name = annotation.getMember("name").getText();
-                                FileObject fileObject = parserResult.getSnapshot().getSource().getFileObject();
                                 Project project = FileOwnerQuery.getOwner(fileObject);
                                 boolean isMaven = project != null && project.getLookup().lookup(NbMavenProject.class) != null;
                                 result.add(new TestMethodController.TestMethod(isMaven ? classNode.getNameWithoutPackage() : classNode.getName(),
@@ -84,6 +94,30 @@ public class GroovyComputeTestMethods implements ComputeTestMethods {
             }
         }
         return result;
+    }
+
+    private static boolean isSpecification(ClassNode classNode) {
+        Set<String> visited = new HashSet<>();
+        String name;
+        while (classNode != null && !visited.contains(name = classNode.getName())) {
+            if ("spock.lang.Specification".equals(name)) {
+                return true;
+            }
+            visited.add(name);
+            classNode = classNode.getSuperClass();
+        }
+        return false;
+    }
+
+    private static boolean isTestSource(FileObject fo) {
+        ClassPath cp = ClassPath.getClassPath(fo, ClassPath.SOURCE);
+        if (cp != null) {
+            FileObject root = cp.findOwnerRoot(fo);
+            if (root != null) {
+                return UnitTestForSourceQuery.findSources(root).length > 0;
+            }
+        }
+        return false;
     }
 
     private static int getOffset(String text, int lineNumber, int columnNumber) {

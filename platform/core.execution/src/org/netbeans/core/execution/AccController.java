@@ -28,7 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /** Tries to get an IOProtectionDomain from an AccessControlContext.
-*
+* XXX: use StackWalker on JDK 9+
 * @author Ales Novak
 */
 class AccController {
@@ -73,7 +73,7 @@ class AccController {
     }
     
     /** @return an IOPermissionCollection or <tt>null</tt> if not found */
-    static IOPermissionCollection getIOPermissionCollection(AccessControlContext acc) {
+    private static IOPermissionCollection getIOPermissionCollection(AccessControlContext acc) {
         try {
             ProtectionDomain[] pds = getDomains(acc);
             PermissionCollection pc;

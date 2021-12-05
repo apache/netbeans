@@ -40,9 +40,10 @@ public class ModuleLifecycleManager extends LifecycleManager {
     public ModuleLifecycleManager() {
         Runtime.getRuntime().addShutdownHook(new Thread("close modules") { // NOI18N
             public @Override void run() {
-                if (System.getSecurityManager() instanceof TopSecurityManager) {
+                //XXX
+//                if (System.getSecurityManager() instanceof TopSecurityManager) {
                     LifecycleManager.getDefault().exit();
-                }
+//                }
             }
         });
     }

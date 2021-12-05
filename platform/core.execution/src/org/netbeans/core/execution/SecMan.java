@@ -19,7 +19,8 @@
 
 package org.netbeans.core.execution;
 
-import java.security.*;
+import java.awt.Window;
+import org.netbeans.agent.hooks.TrackingHooks;
 
 import org.openide.execution.NbClassLoader;
 
@@ -27,9 +28,9 @@ import org.openide.execution.NbClassLoader;
  * A security manager for execution.
  * @author Jesse Glick
  */
-public class SecMan extends SecurityManager {
+public class SecMan extends TrackingHooks {
 
-    public static SecurityManager DEFAULT = new SecMan();
+    public static TrackingHooks DEFAULT = new SecMan();
 
     private static Class nbClassLoaderClass = NbClassLoader.class;
 
@@ -38,18 +39,12 @@ public class SecMan extends SecurityManager {
 
     public SecMan() {
         base = ExecutionEngine.base;
-        PrivilegedCheck.init();
         AccController.init();
     }
 
     @Override
     public void checkExit(int status) throws SecurityException {
-        PrivilegedCheck.checkExit(status, this);
-    }
-    
-    final void checkExitImpl(int status, AccessControlContext acc) throws SecurityException {
-        IOPermissionCollection iopc;
-        iopc = AccController.getIOPermissionCollection(acc);
+        IOPermissionCollection iopc = AccController.getIOPermissionCollection();
 
         if (iopc != null && iopc.grp != null) {
             ExecutionEngine.getTaskIOs().free(iopc.grp, iopc.getIO()); // closes output
@@ -87,92 +82,27 @@ public class SecMan extends SecurityManager {
     }
 
     @Override
-    public void checkPermission(Permission perm) {
-        checkPermission(perm, null);
-    }
-
-    @Override
-    public void checkPermission(Permission perm, Object context) {
-        if ("showWindowWithoutWarningBanner".equals(perm.getName())) { // NOI18N
-            checkTopLevelWindow(context);
-        }
-        if (context instanceof AccessControlContext) {
-            super.checkPermission(perm, context);
-        }
-    }
-
-    public boolean checkTopLevelWindow(Object window) {
+    protected void checkNewAWTWindow(Window window) {
         IOPermissionCollection iopc = AccController.getIOPermissionCollection();
         if (iopc != null && iopc.grp != null && (window instanceof java.awt.Window)) {
             ExecutionEngine.putWindow((java.awt.Window) window, iopc.grp);
         }
-        return true;
     }
 
     /** @return true iff an instance of the NbClassLoader class is on the stack
     */
     protected boolean isNbClassLoader() {
-        Class[] ctx = getClassContext();
-        ClassLoader cloader;
-
-        for (int i = 0; i < ctx.length; i++) {
-            if ((nbClassLoaderClass.isInstance(ctx[i].getClassLoader())) &&
-                (ctx[i].getProtectionDomain().getCodeSource() != null)) {
-                return true;
-            }
-        }
+        //XXX
+//        Class[] ctx = getClassContext();
+//        ClassLoader cloader;
+//
+//        for (int i = 0; i < ctx.length; i++) {
+//            if ((nbClassLoaderClass.isInstance(ctx[i].getClassLoader())) &&
+//                (ctx[i].getProtectionDomain().getCodeSource() != null)) {
+//                return true;
+//            }
+//        }
         return false;
-    }
-    
-    /** mostly copied from TopSecurityManager */
-    private static final class PrivilegedCheck implements PrivilegedExceptionAction<Object> {
-        private final int action;
-        private final SecMan sm;
-        
-        // exit
-        private int status;
-        private AccessControlContext acc;
-
-        public PrivilegedCheck(int action, SecMan sm) {
-            this.action = action;
-            this.sm = sm;
-            
-            if (action == 0) {
-                acc = AccessController.getContext();
-            }
-        }
-
-        /** Just to preresolve the class and get it into the start class cache */
-        static void init() {
-        }
-        
-        public Object run() throws Exception {
-            switch (action) {
-                case 0 : 
-                    sm.checkExitImpl(status, acc);
-                    break;
-                default :
-            }
-            return null;
-        }
-        
-        static void checkExit(int status, SecMan sm) {
-            PrivilegedCheck pea = new PrivilegedCheck(0, sm);
-            pea.status = status;
-            check(pea);
-        }
-        
-        private static void check(PrivilegedCheck action) {
-            try {
-                AccessController.doPrivileged(action);
-            } catch (PrivilegedActionException e) {
-                Exception orig = e.getException();
-                if (orig instanceof RuntimeException) {
-                    throw ((RuntimeException) orig);
-                }
-                orig.printStackTrace();
-            }
-        }
     }
     
 }

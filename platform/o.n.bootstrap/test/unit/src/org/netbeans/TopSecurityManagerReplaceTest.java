@@ -36,7 +36,7 @@ public class TopSecurityManagerReplaceTest extends NbTestCase {
         System.setProperty("netbeans.security.nocheck", "true");
         assertNull("No manager yet", System.getSecurityManager());
         TopSecurityManager.install();
-        assertTrue("Installed OK", System.getSecurityManager() instanceof TopSecurityManager);
+        assertTrue("Installed OK", System.getSecurityManager() instanceof TopSecurityManagerOld);
     }
     
     public void testReplaceSecurityManager() {

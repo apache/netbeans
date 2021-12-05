@@ -18,6 +18,7 @@
  */
 package tracking.agent.test;
 
+import java.awt.Window;
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -33,25 +34,26 @@ public class TrackingAgentTest {
     public static void main(String[] args) throws Exception {
         Class<?> agent = Class.forName("org.netbeans.agent.TrackingAgent");
         agent.getDeclaredMethod("install").invoke(null);
-        try {
-            System.exit(42);
-        } catch (Throwable t) {
-            t.printStackTrace();
-            System.err.println("caught Throwable");
-        }
-        try {
-            Runtime.getRuntime().halt(42);
-        } catch (Throwable t) {
-            t.printStackTrace();
-            System.err.println("caught Throwable");
-        }
-        try {
-            Runtime.getRuntime().exit(42);
-        } catch (Throwable t) {
-            t.printStackTrace();
-            System.err.println("caught Throwable");
-        }
+//        try {
+//            System.exit(42);
+//        } catch (Throwable t) {
+//            t.printStackTrace();
+//            System.err.println("caught Throwable");
+//        }
+//        try {
+//            Runtime.getRuntime().halt(42);
+//        } catch (Throwable t) {
+//            t.printStackTrace();
+//            System.err.println("caught Throwable");
+//        }
+//        try {
+//            Runtime.getRuntime().exit(42);
+//        } catch (Throwable t) {
+//            t.printStackTrace();
+//            System.err.println("caught Throwable");
+//        }
         new FileOutputStream(new File("/tmp/x2.txt")).close();
+        new Window((Window) null);
         System.err.println("finished successfully");
     }
     

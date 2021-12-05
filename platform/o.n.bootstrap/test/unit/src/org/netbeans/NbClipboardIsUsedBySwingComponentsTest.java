@@ -59,12 +59,12 @@ public class NbClipboardIsUsedBySwingComponentsTest extends NbTestCase {
             java.text.NumberFormat.getInstance ();
 
             Object clazz = org.netbeans.TopSecurityManager.class;
-            SecurityManager m = new org.netbeans.TopSecurityManager ();
+            SecurityManager m = new org.netbeans.TopSecurityManagerOld ();
             System.setSecurityManager (m);
             
             inMiddleOfSettingUpTheManager();
             
-            org.netbeans.TopSecurityManager.makeSwingUseSpecialClipboard (this.clip);
+            org.netbeans.TopSecurityManagerOld.makeSwingUseSpecialClipboard (this.clip);
         } else {
             inMiddleOfSettingUpTheManager();
         }

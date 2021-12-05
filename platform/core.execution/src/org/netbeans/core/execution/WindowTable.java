@@ -59,7 +59,7 @@ final class WindowTable extends HashMap<Window,TaskThreadGroup> {
     public synchronized void putTaskWindow(Window win, TaskThreadGroup grp) {
         ArrayList<Window> vec;
         if ((vec = windowMap.get(grp)) == null) {
-            vec = new ArrayList<Window>();
+            vec = new ArrayList<Window>();//possibly not unique with hooks
             windowMap.put(grp, vec);
         }
         vec.add(win);

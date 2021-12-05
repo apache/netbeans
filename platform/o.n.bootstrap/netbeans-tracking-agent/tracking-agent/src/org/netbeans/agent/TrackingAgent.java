@@ -18,13 +18,16 @@
  */
 package org.netbeans.agent;
 
+import java.awt.Window;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,13 +39,15 @@ import java.util.stream.Collectors;
 
 public class TrackingAgent {
 
+    private static final String TRACKING_HOOKS = "org/netbeans/agent/hooks/TrackingHooks";
+
     private static final List<TrackingTransformer.MethodEnhancement> toInject = Arrays.asList(
             new TrackingTransformer.MethodEnhancement("java/lang/System",
                                                       "exit",
                                                       "(I)V",
                                                       Arrays.asList(
-                                                        "s" + "tracking/hooks/TrackingHooks",
-                                                        "s" + "exit",
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "exitCallback",
                                                         "s" + "(I)V",
                                                         "0C,%1s,%2s",
                                                         "07,%0s",
@@ -53,8 +58,8 @@ public class TrackingAgent {
                                                       "exit",
                                                       "(I)V",
                                                       Arrays.asList(
-                                                        "s" + "tracking/hooks/TrackingHooks",
-                                                        "s" + "exit",
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "exitCallback",
                                                         "s" + "(I)V",
                                                         "0C,%1s,%2s",
                                                         "07,%0s",
@@ -65,8 +70,8 @@ public class TrackingAgent {
                                                       "halt",
                                                       "(I)V",
                                                       Arrays.asList(
-                                                        "s" + "tracking/hooks/TrackingHooks",
-                                                        "s" + "exit",
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "exitCallback",
                                                         "s" + "(I)V",
                                                         "0C,%1s,%2s",
                                                         "07,%0s",
@@ -77,7 +82,7 @@ public class TrackingAgent {
                                                       "<init>",
                                                       "(Ljava/io/File;)V",
                                                       Arrays.asList(
-                                                        "s" + "tracking/hooks/TrackingHooks",
+                                                        "s" + TRACKING_HOOKS,
                                                         "s" + "newFileOutputStream",
                                                         "s" + "(Ljava/io/FileOutputStream;Ljava/io/File;)V",
                                                         "0C,%1s,%2s",
@@ -89,9 +94,21 @@ public class TrackingAgent {
                                                       "close",
                                                       "()V",
                                                       Arrays.asList(
-                                                        "s" + "tracking/hooks/TrackingHooks",
+                                                        "s" + TRACKING_HOOKS,
                                                         "s" + "fileOutputStreamClose",
                                                         "s" + "(Ljava/io/FileOutputStream;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/awt/Window", //TODO: all constructors!
+                                                      "<init>",
+                                                      "(Ljava/awt/Window;)V",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "newAWTWindowCallback",
+                                                        "s" + "(Ljava/awt/Window;)V",
                                                         "0C,%1s,%2s",
                                                         "07,%0s",
                                                         "0A,%4s,%3s"
@@ -109,7 +126,7 @@ public class TrackingAgent {
         ClassFileTransformer trackingTransformer = new TrackingTransformer();
         try {
             instrumentation.addTransformer(trackingTransformer, true);
-            instrumentation.retransformClasses(System.class, Runtime.class, FileOutputStream.class/*, Files.class, File.class*/);
+            instrumentation.retransformClasses(System.class, Runtime.class, FileOutputStream.class, Files.class, File.class, Window.class);
         } catch (UnmodifiableClassException ex) {
             System.err.println("cannot instrument:");
             ex.printStackTrace();
@@ -128,7 +145,7 @@ public class TrackingAgent {
         @Override
         public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
             try {
-                List<MethodEnhancement> thisClassEnhancements = toInject.stream().filter(me -> className.equals(me.className)).collect(Collectors.toList());
+                List<MethodEnhancement> thisClassEnhancements = toInject.stream().filter(me -> {/*System.err.println("me=" + me); */return className.equals(me.className);}).collect(Collectors.toList());
             if (thisClassEnhancements.isEmpty()) {
                 System.err.println("not rewriting: " + className);
                 return classfileBuffer;
@@ -138,11 +155,14 @@ public class TrackingAgent {
             int p = 4 + 2 + 2;
             int cpStart = p;
             int cpEntries = readShort(classfileBuffer, p);
+                System.err.println("cpEntries: " + cpEntries);
             p += 2;
             List<Object> constantPool = new ArrayList<>();
             constantPool.add(null);
             for (int entry = 1; entry < cpEntries; entry++) {
+                System.err.println("entry: " + entry);
                 byte tag = classfileBuffer[p++];
+                System.err.println("tag: " + tag);
                 switch (tag) {
                     case 1:
                         int size = readShort(classfileBuffer, p);
@@ -164,6 +184,8 @@ public class TrackingAgent {
                         break;
                     case 5: case 6:
                         p += 8;
+                        constantPool.add(null);
+                        entry++;
                         constantPool.add(null);
                         break;
                     default:

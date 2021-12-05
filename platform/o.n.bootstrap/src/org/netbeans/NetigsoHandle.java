@@ -198,7 +198,7 @@ final class NetigsoHandle {
         
         ClassLoader frameworkLoader = f.findFrameworkClassLoader();
         
-        Class<?>[] stack = TopSecurityManager.getStack();
+        Class<?>[] stack = TopSecurityManagerOld.getStack();
         for (int i = 0; i < stack.length; i++) {
             ClassLoader sl = stack[i].getClassLoader();
             if (sl == null) {

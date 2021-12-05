@@ -41,13 +41,53 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.LoggingPermission;
+import org.netbeans.agent.hooks.TrackingHooks;
 import org.openide.util.Lookup;
 import org.openide.util.WeakSet;
 
 /** NetBeans security manager implementation.
 * @author Ales Novak, Jesse Glick
 */
-public class TopSecurityManager extends SecurityManager {
+public class TopSecurityManager extends TrackingHooks {
+    private static final boolean check = !Boolean.getBoolean("netbeans.security.nocheck"); // NOI18N
+    private static final Logger LOG = Logger.getLogger(TopSecurityManager.class.getName());
+
+    public static void install() {
+        try {
+            Class<?> agent = Class.forName("org.netbeans.agent.TrackingAgent", false, ClassLoader.getSystemClassLoader());
+            agent.getDeclaredMethod("install").invoke(null);
+        } catch (ReflectiveOperationException ex) {
+            LOG.log(Level.WARNING, "Cannot associate tracking hooks, the application will be unstable"); // NOI18N
+            LOG.log(Level.INFO, "Cannot associate tracking hooks, the application will be unstable", ex); // NOI18N
+        }
+        TrackingHooks.register(new TopSecurityManager(), 1000, "exitk");
+    }
+
+    static boolean officialExit = false;
+
+    @Override
+    protected void checkExit(int i) {
+        if (!officialExit) {
+            throw new ExitSecurityException("Illegal attempt to exit early"); // NOI18N
+        }
+    }
+
+    /** Can be called from core classes to exit the system.
+     * Direct calls to System.exit will not be honored, for safety.
+     * @param status the status code to exit with
+     * @see "#20751"
+     */
+    public static void exit(int status) {
+        if (officialExit) {
+            return; // already inside a shutdown hook
+        }
+        officialExit = true;
+        System.exit(status);
+    }
+
+}
+
+class TopSecurityManagerOld extends SecurityManager {
     private static final boolean check = !Boolean.getBoolean("netbeans.security.nocheck"); // NOI18N
     private static final Logger LOG = Logger.getLogger(TopSecurityManager.class.getName());
 
@@ -115,7 +155,7 @@ public class TopSecurityManager extends SecurityManager {
     /**
     * constructs new TopSecurityManager
     */
-    public TopSecurityManager () {
+    public TopSecurityManagerOld () {
         allPermission = new AllPermission();
     }
 
@@ -164,38 +204,38 @@ public class TopSecurityManager extends SecurityManager {
         }
     }
     
-    static boolean officialExit = false;
+//    static boolean officialExit = false;
     static Class<?>[] getStack() {
         SecurityManager s = System.getSecurityManager();
-        TopSecurityManager t;
-        if (s instanceof TopSecurityManager) {
-            t = (TopSecurityManager)s;
+        TopSecurityManagerOld t;
+        if (s instanceof TopSecurityManagerOld) {
+            t = (TopSecurityManagerOld)s;
         } else {
-            t = new TopSecurityManager();
+            t = new TopSecurityManagerOld();
         }
         return t.getClassContext();
     }
     
-    /** Can be called from core classes to exit the system.
-     * Direct calls to System.exit will not be honored, for safety.
-     * @param status the status code to exit with
-     * @see "#20751"
-     */
-    public static void exit(int status) {
-        if (officialExit) {
-            return; // already inside a shutdown hook
-        }
-        officialExit = true;
-        System.exit(status);
-    }
-
-    final void checkExitImpl(int status, AccessControlContext acc) throws SecurityException {             
-        if (!officialExit) {
-            throw new ExitSecurityException("Illegal attempt to exit early"); // NOI18N
-        }
-
-        super.checkExit(status);
-    }
+//    /** Can be called from core classes to exit the system.
+//     * Direct calls to System.exit will not be honored, for safety.
+//     * @param status the status code to exit with
+//     * @see "#20751"
+//     */
+//    public static void exit(int status) {
+//        if (officialExit) {
+//            return; // already inside a shutdown hook
+//        }
+//        officialExit = true;
+//        System.exit(status);
+//    }
+//
+//    final void checkExitImpl(int status, AccessControlContext acc) throws SecurityException {             
+//        if (!officialExit) {
+//            throw new ExitSecurityException("Illegal attempt to exit early"); // NOI18N
+//        }
+//
+//        super.checkExit(status);
+//    }
 
     @SuppressWarnings("deprecation")
     public boolean checkTopLevelWindow(Object window) {
@@ -522,7 +562,7 @@ public class TopSecurityManager extends SecurityManager {
     
     public static void install() {
         try {
-            System.setSecurityManager(new TopSecurityManager());
+            System.setSecurityManager(new TopSecurityManagerOld());
         } catch (SecurityException ex) {
             LOG.log(Level.WARNING, "Cannot associated own security manager"); // NOI18N
             LOG.log(Level.INFO, "Cannot associated own security manager", ex); // NOI18N
@@ -680,8 +720,8 @@ LOOP:   for (int i = 0; i < ctx.length; i++) {
      */
     public static void makeSwingUseSpecialClipboard (java.awt.datatransfer.Clipboard clip) {
         try {
-            synchronized (TopSecurityManager.class) {
-                if (! (System.getSecurityManager() instanceof TopSecurityManager)) {
+            synchronized (TopSecurityManagerOld.class) {
+                if (! (System.getSecurityManager() instanceof TopSecurityManagerOld)) {
                     LOG.warning("Our manager has to be active: " + System.getSecurityManager());
                     return;
                 } // NOI18N
@@ -751,7 +791,7 @@ LOOP:   for (int i = 0; i < ctx.length; i++) {
 
     private static final class PrivilegedCheck implements PrivilegedExceptionAction<Object> {
         int action;
-        TopSecurityManager tsm;
+        TopSecurityManagerOld tsm;
         
         // exit
         int status;
@@ -762,7 +802,7 @@ LOOP:   for (int i = 0; i < ctx.length; i++) {
         int port;
         
         
-        public PrivilegedCheck(int action, TopSecurityManager tsm) {
+        public PrivilegedCheck(int action, TopSecurityManagerOld tsm) {
             this.action = action;
             this.tsm = tsm;
             
@@ -774,7 +814,7 @@ LOOP:   for (int i = 0; i < ctx.length; i++) {
         public Object run() throws Exception {
             switch (action) {
                 case 0 : 
-                    tsm.checkExitImpl(status, acc);
+//                    tsm.checkExitImpl(status, acc);
                     break;
                 case 1 :
                     tsm.checkConnectImpl(host, port);
@@ -784,13 +824,13 @@ LOOP:   for (int i = 0; i < ctx.length; i++) {
             return null;
         }
         
-        static void checkExit(int status, TopSecurityManager tsm) {
+        static void checkExit(int status, TopSecurityManagerOld tsm) {
             PrivilegedCheck pea = new PrivilegedCheck(0, tsm);
             pea.status = status;
             check(pea);
         }
         
-        static void checkConnect(String host, int port, TopSecurityManager tsm) {
+        static void checkConnect(String host, int port, TopSecurityManagerOld tsm) {
             PrivilegedCheck pea = new PrivilegedCheck(1, tsm);
             pea.host = host;
             pea.port = port;

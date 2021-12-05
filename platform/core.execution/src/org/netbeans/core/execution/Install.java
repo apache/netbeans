@@ -51,6 +51,7 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.text.DefaultEditorKit;
 import org.netbeans.TopSecurityManager;
+import org.netbeans.agent.hooks.TrackingHooks;
 import org.netbeans.core.ModuleActions;
 import org.netbeans.modules.progress.spi.Controller;
 import org.netbeans.modules.progress.spi.InternalHandle;
@@ -88,7 +89,9 @@ public class Install implements Runnable {
     private static final Logger LOG = Logger.getLogger(Install.class.getName());
     
     public @Override void run() {
-        TopSecurityManager.register(SecMan.DEFAULT);
+        TrackingHooks.register(SecMan.DEFAULT, 100, TrackingHooks.HOOK_EXIT, TrackingHooks.HOOK_NEW_AWT_WINDOW);
+        //XXX
+//        TopSecurityManager.register(SecMan.DEFAULT);
     }
     
     @OnStop
@@ -97,7 +100,8 @@ public class Install implements Runnable {
         public @Override void run() {
             showPendingTasks();
 
-            TopSecurityManager.unregister(SecMan.DEFAULT);
+            //XXX
+//            TopSecurityManager.unregister(SecMan.DEFAULT);
         }
     }
 

@@ -35,7 +35,7 @@ public class TopSecurityManagerTest extends TestCase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        TopSecurityManager.uninstall();
+        TopSecurityManagerOld.uninstall();
     }
     
     

@@ -91,22 +91,24 @@ public class DialogsTest {
                         "    <button hidden=true id='OK' disabled=true>Agree</button>" +
                         "    <button hidden=true id='Cancel'>Disagree</button>";
                     setBody(body);
-                    
-                    JButton[] arr = Buttons.buttons();
+
+
+
+                    JButton[] arr = new MockButtons().array();
                     assertEquals(arr.length, 2, "Two buttons");
                     assertEquals(arr[0].getName(), "OK", "id of 1st button parsed");
                     assertEquals(arr[1].getName(), "Cancel", "id of 2nd button parsed");
                     assertEquals(arr[0].getText(), "Agree", "text of 1st button parsed");
                     assertEquals(arr[1].getText(), "Disagree", "text of 2nd button parsed");
-                    
+
                     assertFalse(arr[0].isEnabled(), "OK is disabled");
                     assertTrue(arr[1].isEnabled(), "Cancel is enabled");
-                    
+
                     setDisabled("OK", false);
-                    
+
                     String prev = setText("OK", "Fine");
                     assertEquals(prev, "Agree");
-                    
+
                     buttons[0] = arr[0];
                     buttons[1] = arr[1];
                 } catch (Throwable t) {
@@ -128,7 +130,7 @@ public class DialogsTest {
             }
         });
     }
-    
+
     @Test(timeOut = 9000)
     public void noDefinedButtonsMeanOKCancel() throws Throwable {
         EnsureJavaFXPresent.checkAndThrow();
@@ -140,17 +142,17 @@ public class DialogsTest {
                 try {
                     String body =
                         "    <button>Normal button in a text</button>" +
-// no dialog buttons defined:                            
+// no dialog buttons defined:
 //                        "    <button hidden=true id='OK' disabled=true>Agree</button>" +
 //                        "    <button hidden=true id='Cancel'>Disagree</button>" +
                         "";
                     setBody(body);
-                    
-                    JButton[] arr = Buttons.buttons();
+
+                    JButton[] arr = new MockButtons().array();
                     assertEquals(arr.length, 2, "Two buttons");
                     assertEquals(arr[0].getName(), "OK", "id of 1st default button");
                     assertEquals(arr[1].getName(), null, "id of 2nd default button");
-                    
+
                     assertTrue(arr[0].isEnabled(), "OK is enabled");
                     assertTrue(arr[1].isEnabled(), "Cancel is enabled");
                 } catch (Throwable t) {
@@ -165,29 +167,65 @@ public class DialogsTest {
             throw ex[0];
         }
     }
-    
+
     @JavaScriptBody(args = "b", body = "window.document.getElementsByTagName('body')[0].innerHTML = b;")
     private static native void setBody(String b);
-    
+
     @JavaScriptBody(args = { "id", "state" }, body = "window.document.getElementById(id).disabled = state;")
     private static native void setDisabled(String id, boolean state);
-    
+
     @JavaScriptBody(args = { "id", "t" }, body = ""
             + "var prev = window.document.getElementById(id).innerHTML;\n"
             + "window.document.getElementById(id).innerHTML = t;\n"
             + "return prev;\n"
     )
     private static native String setText(String id, String t);
-    
-    
-    @HTMLDialog(url = "simple.html", className = "TestPages") 
+
+
+    @HTMLDialog(url = "simple.html", className = "TestPages")
     static void showDialog() {
         String ret = TestPages.showDialog();
     }
 
-    @HTMLDialog(url = "http://www.netbeans.org", className = "TestPages") 
+    @HTMLDialog(url = "http://www.netbeans.org", className = "TestPages")
     static void showDialog(int x, String[] y, DialogsTest t) {
         String ret = TestPages.showDialog(10, y, null);
     }
 
+
+    private static class MockButtons extends Buttons<JButton> {
+        MockButtons() {
+        }
+
+        @Override
+        protected JButton createButton(String name) {
+            JButton b = new JButton();
+            b.setName(name);
+            return b;
+        }
+
+        @Override
+        protected String getName(JButton b) {
+            return b.getName();
+        }
+
+        @Override
+        protected void setText(JButton b, String text) {
+            b.setText(text);
+        }
+
+        @Override
+        protected void setEnabled(JButton b, boolean enabled) {
+            b.setEnabled(enabled);
+        }
+
+        @Override
+        protected void runLater(Runnable r) {
+            r.run();
+        }
+
+        final JButton[] array() {
+            return buttons().toArray(new JButton[0]);
+        }
+    }
 }

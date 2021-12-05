@@ -1,6 +1,6 @@
-Name: XHR via Java
-Version: 1.7.2
-Description: XHR via Java
+Name: Html4J Geolocation API
+Version: 1.7.3
+Description: Html4j Geolocation API
 License: Apache-2.0
 Origin: Apache Software Foundation
 URL: http://incubator.apache.org/projects/netbeans.html

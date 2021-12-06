@@ -210,6 +210,14 @@ public final class DatabaseExplorerUIs {
         }
     }
     
+    /**
+     * Provides access to defined connections. The returned node contains connections,
+     * possibly not active, as its children. Active connections may offer database content as
+     * nested Nodes, depending on the actual DB provider.
+     * 
+     * @return connection nodes' parent
+     * @since 1.82
+     */
     public static Node connectionsNode() {
         Node original = RootNode.instance();
         return new FilterNode(original, new ConnChildren(original));

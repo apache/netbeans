@@ -90,7 +90,7 @@ is the proper place.
             <author login="sdedic"/>
             <compatibility addition="yes"/>
             <description>
-                An utility that provides a Node hierarchy for defined database connections,
+                A utility that provides a Node hierarchy for defined database connections,
                 including disconnected (but defined) ones. Usable for selectors etc.
             </description>
             <class package="org.netbeans.api.db.explorer.support" name="DatabaseExplorerUIs"/>

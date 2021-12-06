@@ -109,7 +109,6 @@ public class JPDAStart implements Runnable {
                 final Map properties = new HashMap();
 
                 ClassPath sourcePath = ClassPathSupport.createClassPath(fileObject.getParent());
-                ClassPath jdkPath = ClassPathSupport.createClassPath(System.getProperty("java.class.path"));
 
                 properties.put("sourcepath", sourcePath); //NOI18N
                 File baseDir = FileUtil.toFile(fileObject.getParent());

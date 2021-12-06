@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.logging.Logger;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.java.platform.JavaPlatformManager;
@@ -30,6 +31,7 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
+import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
@@ -50,6 +52,7 @@ import org.openide.windows.InputOutput;
 public class SingleGroovySourceRunActionProvider implements ActionProvider {
 
     private static final String GROOVY_EXTENSION = "groovy";  //NOI18N
+    static final Logger LOG = Logger.getLogger(JPDAStart.class.getPackage().getName());
     
     @Override
     public String[] getSupportedActions() {
@@ -60,12 +63,14 @@ public class SingleGroovySourceRunActionProvider implements ActionProvider {
     }
 
     @NbBundle.Messages({
-        "CTL_SingleGroovyFile=Running Single Groovy File"
+        "CTL_SingleGroovyFile=Running Single Groovy File",
+        "CTL_IsInProject=File is in a project, can not be run single"
     })
     @Override
     public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
         FileObject fileObject = getGroovyFile(context);
         if (!isSingleSourceFile(fileObject)) {
+            StatusDisplayer.getDefault().setStatusText(Bundle.CTL_IsInProject(), StatusDisplayer.IMPORTANCE_ANNOTATION);
             return;
         }
         InputOutput io = IOProvider.getDefault().getIO(Bundle.CTL_SingleGroovyFile(), false);
@@ -147,7 +152,7 @@ public class SingleGroovySourceRunActionProvider implements ActionProvider {
             commandList.add("-cp"); // NOI18N
             // TODO can we add here some heuristic, from which folder and appropriate path the script can be run?
             // For example we can look for the `src` or `src/groovy` fodler, from which the script can be probably run. 
-            commandList.add(".:" + groovyJar.getAbsolutePath());    //NOI18N
+            commandList.add(String.join(File.pathSeparator, new String[]{".", groovyJar.getAbsolutePath()}));    //NOI18N
 
             commandList.add("groovy.ui.GroovyMain");    //NOI18N
             commandList.add(fileObject.getNameExt());
@@ -157,7 +162,7 @@ public class SingleGroovySourceRunActionProvider implements ActionProvider {
             try {
                 return pb.start();
             } catch (IOException ex) {
-                System.out.println("Could not get InputStream of Run Process");
+                LOG.info("Could not get InputStream of Run Process");   //NOI18N
             }
             return null;
         }

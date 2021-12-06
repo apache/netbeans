@@ -18,7 +18,7 @@
  */
 package org.netbeans.modules.htmlui.jfx;
 
-import org.netbeans.spi.htmlui.HtmlToolkit;
+import org.netbeans.modules.htmlui.HtmlToolkit;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

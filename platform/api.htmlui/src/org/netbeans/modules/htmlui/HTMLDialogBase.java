@@ -48,10 +48,10 @@ public abstract class HTMLDialogBase {
 
     public static HTMLDialogBase create(String url) {
         HTMLDialogBase[] base = { null };
-        HtmlPair<?> view = HtmlPair.newView((id) -> {
+        HtmlPair<?, ?> view = HtmlPair.newView((id) -> {
             base[0].onSubmit(id);
         });
-        final HTMLDialogBase dialog = view.isDefault() ? new HTMLDialogImpl(url) : new HTMLDialogView(url, view);
+        final HTMLDialogBase dialog = new HTMLDialogView(url, view);
         base[0] = dialog;
         return dialog;
     }

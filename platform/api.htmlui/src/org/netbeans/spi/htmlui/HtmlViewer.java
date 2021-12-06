@@ -21,15 +21,23 @@ package org.netbeans.spi.htmlui;
 import java.net.URL;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
+import org.netbeans.api.htmlui.HTMLDialog.OnSubmit;
 
 /**
  *
  * @param <HtmlView>
- * @since 1.21
+ * @since 1.23
  */
-public interface HtmlViewer<HtmlView> {
+public interface HtmlViewer<HtmlView, HtmlButton> {
     public HtmlView newView(Consumer<String> lifeCycleCallback);
-    public void makeVisible(HtmlView view, Runnable whenReady);
+    public void makeVisible(HtmlView view, OnSubmit callback, Runnable whenReady);
     public void load(HtmlView view, ClassLoader loader, URL pageUrl, Callable<Object> initialize, String[] techIds);
-    public Object createButton(HtmlView view, String id);
+
+    public <C> C component(HtmlView view, Class<C> type, String url, ClassLoader classLoader, Runnable onPageLoad, String[] techIds);
+
+    public HtmlButton createButton(HtmlView view, String id);
+    public String getName(HtmlView view, HtmlButton b);
+    public void setText(HtmlView view, HtmlButton b, String text);
+    public void setEnabled(HtmlView view, HtmlButton b, boolean enabled);
+    public void runLater(HtmlView view, Runnable r);
 }

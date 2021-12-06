@@ -6,6 +6,18 @@
             <code-name-base>org.netbeans.modules.htmlui</code-name-base>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>net.java.html.boot</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency/>
+                </dependency>
+                <dependency>
+                    <code-name-base>net.java.html.boot.fx</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency/>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.api.htmlui</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -38,14 +50,6 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.openide.util.ui</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>9.21</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.openide.util.lookup</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -54,16 +58,20 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>net.java.html.boot</code-name-base>
+                    <code-name-base>org.openide.util.ui</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
-                    <run-dependency/>
+                    <run-dependency>
+                        <specification-version>9.21</specification-version>
+                    </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>net.java.html.boot.fx</code-name-base>
+                    <code-name-base>org.openide.windows</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
-                    <run-dependency/>
+                    <run-dependency>
+                        <specification-version>6.92</specification-version>
+                    </run-dependency>
                 </dependency>
             </module-dependencies>
             <test-dependencies>

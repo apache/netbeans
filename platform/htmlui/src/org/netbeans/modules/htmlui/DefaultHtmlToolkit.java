@@ -26,7 +26,6 @@ import java.util.function.Consumer;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import org.netbeans.spi.htmlui.HtmlToolkit;
 import org.openide.DialogDescriptor;
 
 public class DefaultHtmlToolkit extends HtmlToolkit {
@@ -49,7 +48,7 @@ public class DefaultHtmlToolkit extends HtmlToolkit {
     }
 
     @Override
-    public void load(Object webView, URL pageUrl, Runnable runnable, ClassLoader loader, Object... ctx) {
+    public void load(Object webView, URL pageUrl, Runnable runnable, ClassLoader loader, Object[] ctx) {
     }
 
     @Override

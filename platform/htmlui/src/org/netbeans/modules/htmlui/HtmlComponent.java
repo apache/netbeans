@@ -18,8 +18,6 @@
  */
 package org.netbeans.modules.htmlui;
 
-import org.netbeans.spi.htmlui.HtmlToolkit;
-import org.netbeans.spi.htmlui.HtmlViewer;
 import java.awt.BorderLayout;
 import java.io.Closeable;
 import java.io.IOException;
@@ -31,14 +29,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import javax.swing.JComponent;
 import net.java.html.js.JavaScriptBody;
-import static org.netbeans.spi.htmlui.HtmlToolkit.LOG;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.windows.TopComponent;
+
+import static org.netbeans.modules.htmlui.HtmlToolkit.LOG;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -54,34 +53,40 @@ public final class HtmlComponent extends TopComponent {
     private final InstanceContent ic;
     private Object value;
     private final Map<String,Object> cache = new HashMap<>();
-    
+
     HtmlComponent() {
         ic = new InstanceContent();
         associateLookup(new AbstractLookup(ic));
         setLayout(new BorderLayout());
         add(p, BorderLayout.CENTER);
     }
-    
+
     public final void loadFX(ClassLoader loader, URL pageUrl, Callable<Object> init, String... ctx) {
         webView = HtmlToolkit.getDefault().initHtmlComponent(p, this::setDisplayName);
-        HtmlToolkit.getDefault().load(webView, pageUrl, new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    HtmlComponent hc = HtmlComponent.this;
-                    value = init.call();
-                    if (value != null) {
-                        hc.value = value;
-                        hc.ic.add(value);
-                    }
-                    listenOnContext(hc);
-                } catch (Exception ex) {
-                    LOG.log(Level.WARNING, "Can't load " + pageUrl, ex);
+        HtmlToolkit.getDefault().load(webView, pageUrl, () -> {
+            try {
+                Object v = init.call();
+                if (v != null) {
+                    value = v;
+                    ic.add(v);
                 }
+                listenOnContext(this);
+            } catch (Exception ex) {
+                LOG.log(Level.WARNING, "Can't load " + pageUrl, ex);
             }
         }, loader, ctx);
     }
-    
+
+    static Class<?> loadClass(String c) throws ClassNotFoundException {
+        ClassLoader l = Lookup.getDefault().lookup(ClassLoader.class);
+        if (l == null) {
+            l = Thread.currentThread().getContextClassLoader();
+        }
+        if (l == null) {
+            l = HtmlComponent.class.getClassLoader();
+        }
+        return Class.forName(c, true, l);
+    }
 
     final void onChange(Object[] values) {
         List<Object> instances = new ArrayList<>();
@@ -94,7 +99,7 @@ public final class HtmlComponent extends TopComponent {
                 if (o instanceof String) {
                     Object inst = c.remove((String)o);
                     if (inst == null) try {
-                        Class<?> cookie = HtmlPair.loadClass((String) o);
+                        Class<?> cookie = loadClass((String) o);
                         Constructor<?>[] arr = cookie.getConstructors();
                         if (arr.length != 1) {
                             LOG.log(Level.WARNING, "Class {0} should have one public constructor. Found {1}", new Object[]{cookie, Arrays.toString(arr)});
@@ -139,28 +144,4 @@ public final class HtmlComponent extends TopComponent {
         + "onChange.@org.netbeans.modules.htmlui.HtmlComponent::onChange([Ljava/lang/Object;)(data.context());\n"
     )
     private static native void listenOnContext(HtmlComponent onChange);
-
-    static final HtmlViewer<?> VIEWER = new HtmlViewer<HtmlComponent>() {
-        @Override
-        public HtmlComponent newView(Consumer<String> lifeCycleCallback) {
-            return new HtmlComponent();
-        }
-
-        @Override
-        public void makeVisible(HtmlComponent view, Runnable whenReady) {
-            view.open();
-            view.requestActive();
-            HtmlToolkit.getDefault().execute(whenReady);
-        }
-
-        @Override
-        public void load(HtmlComponent view, ClassLoader loader, URL pageUrl, Callable<Object> initialize, String[] techIds) {
-            view.loadFX(loader, pageUrl, initialize, techIds);
-        }
-
-        @Override
-        public Object createButton(HtmlComponent view, String id) {
-            return null;
-        }
-    };
 }

@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.htmlui;
 
-import org.netbeans.modules.htmlui.EnsureJavaFXPresent;
 import java.awt.EventQueue;
 import java.net.URL;
 import java.util.concurrent.CountDownLatch;
@@ -31,7 +30,6 @@ import javax.swing.JFrame;
 import net.java.html.BrwsrCtx;
 import net.java.html.js.JavaScriptBody;
 import org.netbeans.api.htmlui.HTMLDialog;
-import org.netbeans.spi.htmlui.HtmlToolkit;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import static org.testng.Assert.*;
@@ -66,7 +64,7 @@ public class DialogsTest {
                         ctx = BrwsrCtx.findDefault(DialogsTest.class);
                         down.countDown();
                     }
-                }, null);
+                }, null, null);
             }
         });
         down.await();
@@ -192,36 +190,9 @@ public class DialogsTest {
         String ret = TestPages.showDialog(10, y, null);
     }
 
-
-    private static class MockButtons extends Buttons<JButton> {
+    private static final class MockButtons extends Buttons<Object, Object> {
         MockButtons() {
-        }
-
-        @Override
-        protected JButton createButton(String name) {
-            JButton b = new JButton();
-            b.setName(name);
-            return b;
-        }
-
-        @Override
-        protected String getName(JButton b) {
-            return b.getName();
-        }
-
-        @Override
-        protected void setText(JButton b, String text) {
-            b.setText(text);
-        }
-
-        @Override
-        protected void setEnabled(JButton b, boolean enabled) {
-            b.setEnabled(enabled);
-        }
-
-        @Override
-        protected void runLater(Runnable r) {
-            r.run();
+            super(null, null);
         }
 
         final JButton[] array() {

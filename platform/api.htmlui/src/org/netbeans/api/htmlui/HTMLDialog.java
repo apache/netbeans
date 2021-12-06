@@ -24,7 +24,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Locale;
 import java.awt.event.ActionEvent;
-import java.util.concurrent.Callable;
 import net.java.html.json.Model;
 import net.java.html.json.Property;
 import org.netbeans.html.context.spi.Contexts.Id;

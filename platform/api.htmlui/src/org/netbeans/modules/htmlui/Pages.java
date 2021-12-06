@@ -37,7 +37,7 @@ import org.openide.util.Lookup;
 public final class Pages {
     private Pages() {
     }
-    
+
     public static Action openAction(final Map<?,?> map) {
         R r = new R(map);
         return Actions.alwaysEnabled(
@@ -48,18 +48,18 @@ public final class Pages {
         );
     }
 
-    static class R implements ActionListener, Runnable, Consumer<String> {
+    static class R implements ActionListener, Runnable {
         private final Map<?,?> map;
         private String methodName;
         private Class<?> clazz;
-        private HtmlPair<?> tc;
+        private HtmlPair<?, ?> tc;
         private URL pageUrl;
         private List<String> techIds;
 
         public R(Map<?, ?> map) {
             this.map = map;
         }
-        
+
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
@@ -70,8 +70,8 @@ public final class Pages {
                 clazz = HtmlPair.loadClass(c);
                 pageUrl = new URL("nbresloc:/" + u);
 
-                tc = HtmlPair.newView(this);
-                tc.makeVisible(this);
+                tc = HtmlPair.newView(null);
+                tc.makeVisible(null, this);
             } catch (Exception ex) {
                 throw new IllegalStateException(ex);
             }
@@ -104,10 +104,6 @@ public final class Pages {
                 }
             }
             return techIds.toArray(new String[0]);
-        }
-
-        @Override
-        public void accept(String t) {
         }
     }
 }

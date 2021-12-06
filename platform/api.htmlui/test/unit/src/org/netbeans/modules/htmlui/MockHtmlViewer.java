@@ -24,17 +24,18 @@ import java.net.URL;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import org.netbeans.api.htmlui.HTMLDialog;
+import org.netbeans.api.htmlui.HTMLDialog.OnSubmit;
 import org.netbeans.html.boot.spi.Fn;
 import org.netbeans.spi.htmlui.HtmlViewer;
 
-public final class MockHtmlViewer implements HtmlViewer<MockHtmlViewer.MockUI> {
+public final class MockHtmlViewer implements HtmlViewer<MockHtmlViewer.MockUI, Object> {
     @Override
     public MockUI newView(Consumer<String> lifeCycleCallback) {
         return new MockUI();
     }
 
     @Override
-    public void makeVisible(MockUI view, Runnable whenReady) {
+    public void makeVisible(MockUI view, OnSubmit callback, Runnable whenReady) {
         whenReady.run();
     }
 
@@ -57,6 +58,29 @@ public final class MockHtmlViewer implements HtmlViewer<MockHtmlViewer.MockUI> {
         if (ui.onSubmit instanceof HTMLDialog.OnSubmit) {
             ((HTMLDialog.OnSubmit) ui.onSubmit).onSubmit(id);
         }
+    }
+
+    @Override
+    public String getName(MockUI view, Object b) {
+        return null;
+    }
+
+    @Override
+    public void setText(MockUI view, Object b, String text) {
+    }
+
+    @Override
+    public void setEnabled(MockUI view, Object b, boolean enabled) {
+    }
+
+    @Override
+    public void runLater(MockUI view, Runnable r) {
+        r.run();
+    }
+
+    @Override
+    public <C> C component(MockUI view, Class<C> type, String url, ClassLoader classLoader, Runnable onPageLoad, String[] techIds) {
+        throw new ClassCastException("" + type + " view: " + view);
     }
 
     public static final class MockButton {

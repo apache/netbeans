@@ -22,13 +22,14 @@ import org.netbeans.spi.htmlui.HtmlViewer;
 import java.net.URL;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
+import org.netbeans.api.htmlui.HTMLDialog.OnSubmit;
 import org.openide.util.Lookup;
 
-final class HtmlPair<HtmlView> {
-    private final HtmlViewer<HtmlView> viewer;
+final class HtmlPair<HtmlView, HtmlButton> {
+    private final HtmlViewer<HtmlView, HtmlButton> viewer;
     private final HtmlView view;
 
-    HtmlPair(HtmlViewer<HtmlView> viewer, HtmlView view) {
+    HtmlPair(HtmlViewer<HtmlView, HtmlButton> viewer, HtmlView view) {
         this.viewer = viewer;
         this.view = view;
     }
@@ -44,23 +45,23 @@ final class HtmlPair<HtmlView> {
         return Class.forName(c, true, l);
     }
 
-    static HtmlPair<?> newView(Consumer<String> life) {
-        for (HtmlViewer<?> viewer : Lookup.getDefault().lookupAll(HtmlViewer.class)) {
-            HtmlPair<?> pair = newView(viewer, life);
+    static HtmlPair<?, ?> newView(Consumer<String> life) {
+        for (HtmlViewer<?, ?> viewer : Lookup.getDefault().lookupAll(HtmlViewer.class)) {
+            HtmlPair<?, ?> pair = newView(viewer, life);
             if (pair != null) {
                 return pair;
             }
         }
-        return newView(HtmlComponent.VIEWER, life);
+        return newView(null, life); // XXX
     }
 
-    private static <HtmlView> HtmlPair<HtmlView> newView(HtmlViewer<HtmlView> viewer, Consumer<String> life) {
+    private static <HtmlView, HtmlButton> HtmlPair<HtmlView, HtmlButton> newView(HtmlViewer<HtmlView, HtmlButton> viewer, Consumer<String> life) {
         final HtmlView view = viewer.newView(life);
         return view == null ? null : new HtmlPair<>(viewer, view);
     }
 
-    final void makeVisible(Runnable whenReady) {
-        viewer.makeVisible(view, whenReady);
+    final void makeVisible(OnSubmit callback, Runnable whenReady) {
+        viewer.makeVisible(view, callback, whenReady);
     }
 
     final void load(ClassLoader loader, URL pageUrl, Callable<Object> initialize, String... techIds) {
@@ -68,10 +69,22 @@ final class HtmlPair<HtmlView> {
     }
 
     final boolean isDefault() {
-        return this.viewer == HtmlComponent.VIEWER;
+        return this.viewer == null; // XXX
     }
 
-    Object createButton(String id, Consumer<String> callback) {
+    Object createButton(String id) {
         return viewer.createButton(view, id);
+    }
+
+    <C> C component(Class<C> type, String url, ClassLoader classLoader, Runnable onPageLoad, String[] techIds) {
+        return viewer.component(view, type, url, classLoader, onPageLoad, techIds);
+    }
+
+    HtmlViewer<HtmlView, HtmlButton> viewer() {
+        return viewer;
+    }
+
+    HtmlView view() {
+        return view;
     }
 }

@@ -20,14 +20,16 @@ package org.netbeans.modules.java.lsp.server.ui;
 
 import java.net.URL;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import net.java.html.js.JavaScriptBody;
+import org.netbeans.api.htmlui.HTMLDialog.OnSubmit;
 import org.netbeans.modules.java.lsp.server.htmlui.Browser;
 import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
 import org.netbeans.spi.htmlui.HtmlViewer;
 import org.openide.util.Exceptions;
 
-public class AbstractLspHtmlViewer implements HtmlViewer<AbstractLspHtmlViewer.View> {
+public class AbstractLspHtmlViewer implements HtmlViewer<AbstractLspHtmlViewer.View, Object> {
     protected AbstractLspHtmlViewer() {
     }
 
@@ -38,7 +40,7 @@ public class AbstractLspHtmlViewer implements HtmlViewer<AbstractLspHtmlViewer.V
     }
 
     @Override
-    public void makeVisible(View view, Runnable whenReady) {
+    public void makeVisible(View view, OnSubmit submit, Runnable whenReady) {
         whenReady.run();
     }
 
@@ -87,6 +89,40 @@ public class AbstractLspHtmlViewer implements HtmlViewer<AbstractLspHtmlViewer.V
             + "return button;\n"
     )
     native static Object createButton0(String id, Consumer<?> callback);
+
+    @Override
+    public <C> C component(View view, Class<C> type, String url, ClassLoader classLoader, Runnable onPageLoad, String[] techIds) {
+        throw new ClassCastException(view + " cannot be cast to " + type);
+    }
+
+    @Override
+    public String getName(View view, Object b) {
+        return buttonName0(b);
+    }
+
+    @Override
+    public void setText(View view, Object b, String text) {
+        buttonText0(b, text);
+    }
+
+    @Override
+    public void setEnabled(View view, Object b, boolean enabled) {
+        buttonDisabled0(b, !enabled);
+    }
+
+    @Override
+    public void runLater(View view, Runnable r) {
+        r.run();
+    }
+
+    @JavaScriptBody(args = { "b" }, body = "return b.id;")
+    native static String buttonName0(Object b);
+
+    @JavaScriptBody(args = { "b", "text" }, body = "b.innerHTML = text;")
+    native static void buttonText0(Object b, String text);
+
+    @JavaScriptBody(args = { "b", "disabled" }, body = "return b.disabled = disabled;")
+    native static String buttonDisabled0(Object b, boolean disabled);
 
     static final class View {
         private final Consumer<String> callback;

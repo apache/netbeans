@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.spi.htmlui;
+package org.netbeans.modules.htmlui;
 
 import java.net.URL;
 import java.util.List;
@@ -24,7 +24,6 @@ import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
-import org.netbeans.modules.htmlui.DefaultHtmlToolkit;
 import org.openide.DialogDescriptor;
 import org.openide.util.Lookup;
 
@@ -42,7 +41,7 @@ public abstract class HtmlToolkit implements Executor {
 
     public abstract boolean isApplicationThread();
     public abstract JComponent newPanel();
-    public abstract void load(Object webView, URL pageUrl, Runnable runnable, ClassLoader loader, Object... ctx);
+    public abstract void load(Object webView, URL pageUrl, Runnable runnable, ClassLoader loader, Object[] ctx);
     public abstract Object initHtmlComponent(JComponent p, Consumer<String> titleDisplayer);
     public abstract Object initHtmlDialog(String page, DialogDescriptor dd, JComponent p, Runnable onPageLoad, List<String> techIds);
     public abstract <C> C convertToComponent(Class<C> type, URL pageUrl, ClassLoader loader, Runnable onPageLoad, List<String> techIds);

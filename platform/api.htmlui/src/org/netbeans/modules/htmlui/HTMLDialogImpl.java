@@ -33,67 +33,52 @@ import org.openide.*;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
-final class HTMLDialogImpl extends HTMLDialogBase implements Runnable {
-    private volatile int state;
+final class HTMLDialogImpl extends HTMLDialogBase {
     private final ChromeWithButtons panel;
-    private Object webView;
-    private boolean nestedLoop;
 
     HTMLDialogImpl(String url) {
         super(url);
         this.panel = new ChromeWithButtons();
     }
 
-    @Override
-    public void run() {
-        switch (state) {
-            case 0:
-                initPanel();
-                break;
-            case 1:
-                state = 2;
-                webView = HtmlToolkit.getDefault().initHtmlDialog(url, panel.dd, panel.p, this, techIds);
-                break;
-            case 2:
-                initPage();
-                if (nestedLoop) {
-                    state = 3;
-                    EventQueue.invokeLater(this);
-                } else {
-                    state = -1;
-                }
-                break;
-            case 3:
-                showDialog();
-                state = 4;
-                HtmlToolkit.getDefault().execute(this);
-                break;
-            case 4:
-                state = -1;
+    final Runnable initializationSequence(Runnable afterInitPage) {
+        return () -> {
+            HtmlToolkit.getDefault().execute(() -> {
+                HtmlToolkit.getDefault().initHtmlDialog(url, panel.dd, panel.p, () -> {
+                    initPage();
+                    if (afterInitPage != null) {
+                        EventQueue.invokeLater(afterInitPage);
+                    }
+                }, techIds);
+            });
+        };
+    }
+
+    final Runnable initializationNestedLoop() {
+        return initializationSequence(() -> {
+            panel.showDialog(null);
+            HtmlToolkit.getDefault().execute(() -> {
                 HtmlToolkit.getDefault().exitNestedLoop(this);
-                break;
-            default:
-                throw new IllegalStateException("State: " + state);
-        }
+            });
+        });
     }
 
     @Override
     public String showAndWait() {
         if (EventQueue.isDispatchThread()) {
-            run();
-            showDialog();
+            initializationSequence(null).run();
+            panel.showDialog(null);
         } else {
             if (HtmlToolkit.getDefault().isApplicationThread()) {
-                nestedLoop = true;
-                EventQueue.invokeLater(this);
+                EventQueue.invokeLater(initializationNestedLoop());
                 HtmlToolkit.getDefault().enterNestedLoop(this);
             } else {
                 try {
-                    EventQueue.invokeAndWait(this);
+                    EventQueue.invokeAndWait(initializationSequence(null));
                 } catch (InterruptedException | InvocationTargetException ex) {
                     throw new IllegalStateException(ex);
                 }
-                showDialog();
+                panel.showDialog(null);
             }
         }
         return panel.getValueName();
@@ -101,37 +86,13 @@ final class HTMLDialogImpl extends HTMLDialogBase implements Runnable {
 
     @Override
     public void show(HTMLDialog.OnSubmit onSubmit) {
-        if (EventQueue.isDispatchThread()) {
-            run();
-            showDialog();
-        } else {
-            if (HtmlToolkit.getDefault().isApplicationThread()) {
-                nestedLoop = true;
-                EventQueue.invokeLater(this);
-                HtmlToolkit.getDefault().enterNestedLoop(this);
-            } else {
-                try {
-                    EventQueue.invokeAndWait(this);
-                } catch (InterruptedException | InvocationTargetException ex) {
-                    throw new IllegalStateException(ex);
-                }
-                showDialog();
-            }
-        }
-        panel.getValueName();
+        EventQueue.invokeLater(initializationSequence(() -> {
+            panel.showDialog(onSubmit);
+        }));
     }
 
     @Override
     protected void onSubmit(String id) {
-    }
-
-    private void showDialog() {
-        panel.showDialog();
-    }
-
-    private void initPanel() {
-        state = 1;
-        HtmlToolkit.getDefault().execute(this);
     }
 
     private void initPage() {
@@ -145,7 +106,6 @@ final class HTMLDialogImpl extends HTMLDialogBase implements Runnable {
 
     @Override
     public <C> C component(Class<C> type) {
-        state = -1;
         ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
         if (loader == null) {
             loader = HTMLDialogImpl.class.getClassLoader();
@@ -158,7 +118,7 @@ final class HTMLDialogImpl extends HTMLDialogBase implements Runnable {
         }
         return HtmlToolkit.getDefault().convertToComponent(type, pageUrl, loader, onPageLoad, techIds);
     }
-    
+
     private static final class ChromeWithButtons extends Buttons<JButton> {
         final JComponent p;
         final DialogDescriptor dd;
@@ -168,8 +128,6 @@ final class HTMLDialogImpl extends HTMLDialogBase implements Runnable {
             this.dd = new DialogDescriptor(p, "");
             this.dd.setOptions(new Object[0]);
         }
-        
-        
 
         @Override
         protected JButton createButton(String name) {
@@ -203,15 +161,25 @@ final class HTMLDialogImpl extends HTMLDialogBase implements Runnable {
             return val instanceof JButton ? ((JButton)val).getName() : null;
         }
 
-        void showDialog() {
+        void showDialog(HTMLDialog.OnSubmit onSubmit) {
             p.setPreferredSize(new Dimension(600, 400));
             Dialog d = DialogDisplayer.getDefault().createDialog(dd);
+            dd.setButtonListener((ev) -> {
+                if (onSubmit != null && ev.getSource() instanceof JButton) {
+                    JButton src = (JButton) ev.getSource();
+                    if (!onSubmit.onSubmit(src.getName())) {
+                        return;
+                    }
+                }
+                d.setVisible(false);
+            });
             d.setVisible(true);
         }
 
         void initButtons() {
             List<JButton> buttons = buttons();
             dd.setOptions(buttons.toArray(new JButton[0]));
+            dd.setClosingOptions(new Object[0]);
         }
     }
 }

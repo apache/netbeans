@@ -26,7 +26,11 @@ import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -57,6 +61,7 @@ import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
+import org.eclipse.lsp4j.ShowDocumentParams;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.services.LanguageClient;
@@ -90,6 +95,7 @@ import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachNativeConfigurations;
+import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaTypeProvider;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
@@ -261,7 +267,50 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 Position pos = gson.fromJson(gson.toJson(params.getArguments().get(1)), Position.class);
                 return (CompletableFuture)((TextDocumentServiceImpl)server.getTextDocumentService()).superImplementations(uri, pos);
-                
+            case Server.JAVA_SOURCE_FOR: {
+                CompletableFuture<Object> result = new CompletableFuture<>();
+                try {
+                    String sourceUri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                    if (sourceUri == null || !sourceUri.startsWith(SOURCE_FOR)) {
+                        throw new IllegalArgumentException("Invalid uri: " + sourceUri);
+                    }
+                    sourceUri = URLDecoder.decode(sourceUri.substring(SOURCE_FOR.length()), StandardCharsets.UTF_8.toString());
+                    int qIdx = sourceUri.lastIndexOf('?');
+                    int hIdx = sourceUri.lastIndexOf('#');
+                    if (qIdx < 0 || hIdx < 0 || hIdx <= qIdx) {
+                        throw new IllegalArgumentException("Invalid uri: " + sourceUri);
+                    }
+                    String rootUri = sourceUri.substring(0, qIdx);
+                    FileObject root = URLMapper.findFileObject(URI.create(rootUri).toURL());
+                    if (root == null) {
+                        throw new IllegalStateException("Unable to find root: " + rootUri);
+                    }
+                    ElementHandle typeHandle = ElementHandleAccessor.getInstance().create(ElementKind.valueOf(sourceUri.substring(qIdx + 1, hIdx)), sourceUri.substring(hIdx + 1));
+                    CompletableFuture<ElementOpen.Location> location = ElementOpen.getLocation(ClasspathInfo.create(root), typeHandle, typeHandle.getQualifiedName().replace('.', '/') + ".class");
+                    location.exceptionally(ex -> {
+                        result.completeExceptionally(ex);
+                        return null;
+                    }).thenAccept(loc -> {
+                        if (loc != null) {
+                            ShowDocumentParams sdp = new ShowDocumentParams(Utils.toUri(loc.getFileObject()));
+                            Position position = Utils.createPosition(loc.getFileObject(), loc.getStartOffset());
+                            sdp.setSelection(new Range(position, position));
+                            client.showDocument(sdp).thenAccept(res -> {
+                                if (res.isSuccess()) {
+                                    result.complete(null);
+                                } else {
+                                    result.completeExceptionally(new IllegalStateException("Cannot open source for: " + typeHandle.getQualifiedName()));
+                                }
+                            });
+                        } else if (!result.isCompletedExceptionally()) {
+                            result.completeExceptionally(new IllegalStateException("Cannot find source for: " + typeHandle.getQualifiedName()));
+                        }
+                    });
+                } catch (Throwable t) {
+                    result.completeExceptionally(t);
+                }
+                return result;
+            }
             case Server.JAVA_FIND_PROJECT_CONFIGURATIONS: {
                 String fileUri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 
@@ -449,6 +498,10 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         return UnitTestForSourceQuery.findSources(sg.getRootFolder()).length > 0;
     }
 
+    private static final Position NO_POS = new Position(0, 0);
+    private static final Range NO_RANGE = new Range(NO_POS, NO_POS);
+    private static final String SOURCE_FOR = "sourceFor:";
+
     @Override
     public CompletableFuture<List<? extends SymbolInformation>> symbol(WorkspaceSymbolParams params) {
         // shortcut: if the projects are not yet initialized, return empty:
@@ -557,9 +610,9 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     }
                 };
                 JavaSymbolProvider.doComputeSymbols(searchType, queryFin, symbolHandler, true, cancel);
-                List<Pair<ElementHandle<TypeElement>, ClasspathInfo>> pairs = new ArrayList<>();
-                JavaTypeProvider.ResultHandler<Pair<ElementHandle<TypeElement>, ClasspathInfo>> typeHandler = new JavaTypeProvider.ResultHandler<Pair<ElementHandle<TypeElement>, ClasspathInfo>>() {
-                    private ClasspathInfo cpInfo;
+                List<Pair<ElementHandle<TypeElement>, FileObject>> pairs = new ArrayList<>();
+                JavaTypeProvider.ResultHandler<Pair<ElementHandle<TypeElement>, FileObject>> typeHandler = new JavaTypeProvider.ResultHandler<Pair<ElementHandle<TypeElement>, FileObject>>() {
+                    private FileObject root;
 
                     @Override
                     public void setMessage(String msg) {
@@ -575,49 +628,37 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
                     @Override
                     public void runRoot(FileObject root, JavaTypeProvider.ResultHandler.Exec exec) throws IOException, InterruptedException {
-                        cpInfo = ClasspathInfo.create(root);
+                        this.root = root;
                         try {
                             exec.run();
                         } finally {
-                            cpInfo = null;
+                            this.root = null;
                         }
                     }
 
                     @Override
-                    public Pair<ElementHandle<TypeElement>, ClasspathInfo> create(JavaTypeProvider.CacheItem cacheItem, ElementHandle<TypeElement> handle, String simpleName, String relativePath) {
-                        return Pair.of(handle, cpInfo);
+                    public Pair<ElementHandle<TypeElement>, FileObject> create(JavaTypeProvider.CacheItem cacheItem, ElementHandle<TypeElement> handle, String simpleName, String relativePath) {
+                        return Pair.of(handle, this.root);
                     }
 
                     @Override
-                    public void addResult(List<? extends Pair<ElementHandle<TypeElement>, ClasspathInfo>> types) {
+                    public void addResult(List<? extends Pair<ElementHandle<TypeElement>, FileObject>> types) {
                         pairs.addAll(types);
                     }
                 };
                 JavaTypeProvider.doComputeTypes(searchType, queryFin, typeHandler, cancel);
-                Map<CompletableFuture<ElementOpen.Location>, ElementHandle<TypeElement>> location2Handles = new HashMap<>();
-                CompletableFuture<ElementOpen.Location>[] futures = pairs.stream().map(pair -> {
-                    CompletableFuture<ElementOpen.Location> future = ElementOpen.getLocation(pair.second(), pair.first(), pair.first().getQualifiedName().replace('.', '/') + ".class");
-                    location2Handles.put(future, pair.first());
-                    return future;
-                }).toArray(CompletableFuture[]::new);
-                CompletableFuture.allOf(futures).thenRun(() -> {
-                    for (CompletableFuture<ElementOpen.Location> future : futures) {
-                        ElementOpen.Location loc = future.getNow(null);
-                        ElementHandle<TypeElement> handle = location2Handles.get(future);
-                        if (loc != null && handle != null) {
-                            FileObject fo = loc.getFileObject();
-                            Location location = new Location(Utils.toUri(fo), new Range(Utils.createPosition(fo, loc.getStartOffset()), Utils.createPosition(fo, loc.getEndOffset())));
-                            String fqn = handle.getQualifiedName();
-                            int idx = fqn.lastIndexOf('.');
-                            String simpleName = idx < 0 ? fqn : fqn.substring(idx + 1);
-                            String contextName = idx < 0 ? null : fqn.substring(0, idx);
-                            SymbolInformation symbol = new SymbolInformation(simpleName, Utils.elementKind2SymbolKind(handle.getKind()), location, contextName);
-                            symbols.add(symbol);
-                        }
-                    }
-                    Collections.sort(symbols, (i1, i2) -> i1.getName().compareToIgnoreCase(i2.getName()));
-                    result.complete(symbols);
-                });
+                for (Pair<ElementHandle<TypeElement>, FileObject> pair : pairs) {
+                    ElementHandle<TypeElement> handle = pair.first();
+                    String fqn = handle.getQualifiedName();
+                    int idx = fqn.lastIndexOf('.');
+                    String simpleName = idx < 0 ? fqn : fqn.substring(idx + 1);
+                    String contextName = idx < 0 ? null : fqn.substring(0, idx);
+                    String uri = URLEncoder.encode(pair.second().toURI().toString() + '?' + handle.getKind().name() + '#' + handle.getBinaryName(), StandardCharsets.UTF_8.toString());
+                    SymbolInformation symbol = new SymbolInformation(simpleName, Utils.elementKind2SymbolKind(handle.getKind()), new Location(SOURCE_FOR + uri, NO_RANGE), contextName);
+                    symbols.add(symbol);
+                }
+                Collections.sort(symbols, (i1, i2) -> i1.getName().compareToIgnoreCase(i2.getName()));
+                result.complete(symbols);
             } catch (Throwable t) {
                 result.completeExceptionally(t);
             }

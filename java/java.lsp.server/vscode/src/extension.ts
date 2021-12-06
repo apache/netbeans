@@ -237,6 +237,10 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('java8+', debugDescriptionFactory));
     context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('nativeimage', debugDescriptionFactory));
 
+    // register content provider
+    let sourceForContentProvider = new NetBeansSourceForContentProvider();
+    context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('sourceFor', sourceForContentProvider));
+
     // register commands
     context.subscriptions.push(commands.registerCommand('java.workspace.new', async (ctx) => {
         let c : LanguageClient = await client;
@@ -985,5 +989,18 @@ class NetBeansConfigurationNativeResolver implements vscode.DebugConfigurationPr
         }
 
         return config;
+    }
+}
+
+class NetBeansSourceForContentProvider implements vscode.TextDocumentContentProvider {
+
+    provideTextDocumentContent(uri: vscode.Uri, token: vscode.CancellationToken): vscode.ProviderResult<string> {
+        vscode.window.withProgress({location: ProgressLocation.Notification, title: 'Finding source...', cancellable: false}, () => {
+            return vscode.commands.executeCommand('java.source.for', uri.toString()).then(() => {
+            }, (reason: any) => {
+                vscode.window.showErrorMessage(reason.data);
+            });
+        });
+        return Promise.reject();
     }
 }

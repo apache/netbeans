@@ -709,6 +709,7 @@ public final class Server {
                         JAVA_NEW_PROJECT,
                         JAVA_PROJECT_CONFIGURATION_COMPLETION,
                         JAVA_SUPER_IMPLEMENTATION,
+                        JAVA_SOURCE_FOR,
                         JAVA_CLEAR_PROJECT_CACHES,
                         NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH));
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
@@ -854,6 +855,7 @@ public final class Server {
     public static final String JAVA_GET_PROJECT_PACKAGES = "java.get.project.packages";
     public static final String JAVA_LOAD_WORKSPACE_TESTS =  "java.load.workspace.tests";
     public static final String JAVA_SUPER_IMPLEMENTATION =  "java.super.implementation";
+    public static final String JAVA_SOURCE_FOR =  "java.source.for";
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
 
     /**

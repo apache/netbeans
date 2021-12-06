@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: org.netbeans.modules.versionvault
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/versionvault/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Layer: org/netbeans/modules/versionvault/layer.xml
+
+

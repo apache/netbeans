@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.lsp.server.explorer;
 
+import org.netbeans.modules.java.lsp.server.ui.AbstractGlobalActionContext;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

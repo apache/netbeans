@@ -172,6 +172,7 @@ public class NodeLookupContextValues implements TreeDataProvider {
                     if (line.length() <= endBracket + 1) {
                         line = "";  // NOI18N
                     } else {
+                        classToken = line.substring(0, bracket) + line.substring(endBracket + 1);
                         line = line.substring(0, bracket) + prefix + line.substring(endBracket + 1);
                     }
                 }

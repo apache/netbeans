@@ -18,7 +18,7 @@
  */
 package org.netbeans.modules.nbcode.integration;
 
-import org.netbeans.modules.java.lsp.server.explorer.AbstractGlobalActionContext;
+import org.netbeans.modules.java.lsp.server.ui.AbstractGlobalActionContext;
 import org.openide.util.*;
 import org.openide.util.lookup.ServiceProvider;
 

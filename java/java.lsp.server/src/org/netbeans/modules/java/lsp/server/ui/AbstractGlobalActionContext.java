@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.lsp.server.explorer;
+package org.netbeans.modules.java.lsp.server.ui;
 
 import java.util.concurrent.Callable;
 import javax.swing.ActionMap;

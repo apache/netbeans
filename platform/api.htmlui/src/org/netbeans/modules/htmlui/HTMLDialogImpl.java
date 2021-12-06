@@ -28,6 +28,7 @@ import java.net.URL;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import org.netbeans.api.htmlui.HTMLDialog;
 import org.openide.*;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -96,6 +97,28 @@ final class HTMLDialogImpl extends HTMLDialogBase implements Runnable {
             }
         }
         return panel.getValueName();
+    }
+
+    @Override
+    public void show(HTMLDialog.OnSubmit onSubmit) {
+        if (EventQueue.isDispatchThread()) {
+            run();
+            showDialog();
+        } else {
+            if (HtmlToolkit.getDefault().isApplicationThread()) {
+                nestedLoop = true;
+                EventQueue.invokeLater(this);
+                HtmlToolkit.getDefault().enterNestedLoop(this);
+            } else {
+                try {
+                    EventQueue.invokeAndWait(this);
+                } catch (InterruptedException | InvocationTargetException ex) {
+                    throw new IllegalStateException(ex);
+                }
+                showDialog();
+            }
+        }
+        panel.getValueName();
     }
 
     @Override

@@ -23,6 +23,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.function.Consumer;
 import net.java.html.js.JavaScriptBody;
+import org.netbeans.api.htmlui.HTMLDialog;
 import org.openide.util.Exceptions;
 
 final class HTMLDialogView extends HTMLDialogBase {
@@ -36,19 +37,30 @@ final class HTMLDialogView extends HTMLDialogBase {
     }
 
     @Override
+    public void show(HTMLDialog.OnSubmit onSubmit) {
+        buttons.onSubmit = onSubmit;
+        makeVisible(onSubmit);
+    }
+
+
+    @Override
     public String showAndWait() {
+        makeVisible(null);
+        return this.buttons.obtainResult();
+    }
+
+    private void makeVisible(HTMLDialog.OnSubmit onSubmit) {
         view.makeVisible(() -> {
             try {
                 view.load(getClass().getClassLoader(), new URL(url), () -> {
                     onPageLoad.run();
                     List<Object> b = buttons.buttons();
-                    return null;
+                    return onSubmit;
                 }, this.techIds.toArray(new String[0]));
             } catch (MalformedURLException ex) {
                 Exceptions.printStackTrace(ex);
             }
         });
-        return this.buttons.obtainResult();
     }
 
     @Override
@@ -60,12 +72,13 @@ final class HTMLDialogView extends HTMLDialogBase {
     protected void onSubmit(String id) {
         this.buttons.accept(id);
     }
-    
+
     private final class FooterButtons extends Buttons<Object> implements Consumer<String> {
         private static final String PREFIX = "dialog-buttons-";
         private boolean hasResult;
         private String result;
-        
+        private HTMLDialog.OnSubmit onSubmit;
+
         public synchronized String obtainResult() {
             while (!hasResult) {
                 try {
@@ -85,13 +98,19 @@ final class HTMLDialogView extends HTMLDialogBase {
             if (t == null) {
                 result = null;
             } else if (t.startsWith(PREFIX)) {
-                result = t.substring(PREFIX.length());
+                String r = t.substring(PREFIX.length());
+                if (onSubmit != null && !onSubmit.onSubmit(r)) {
+                    return;
+                }
+                result = r;
             }
+
+
             hasResult = true;
             notifyAll();
             closeWindow0();
         }
-        
+
         @Override
         protected Object createButton(String name) {
             return view.createButton(PREFIX + name, this);
@@ -121,7 +140,7 @@ final class HTMLDialogView extends HTMLDialogBase {
             r.run();
         }
     }
-    
+
     @JavaScriptBody(args = { "b" }, body = "return b.id;")
     native static String buttonName0(Object b);
 

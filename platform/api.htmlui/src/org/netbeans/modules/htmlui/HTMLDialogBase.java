@@ -21,6 +21,7 @@ package org.netbeans.modules.htmlui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.netbeans.api.htmlui.HTMLDialog;
 
 public abstract class HTMLDialogBase {
     List<String> techIds = new ArrayList<>();
@@ -33,6 +34,7 @@ public abstract class HTMLDialogBase {
 
 
     public abstract String showAndWait();
+    public abstract void show(HTMLDialog.OnSubmit onSubmit);
     public abstract <C> C component(Class<C> type);
     protected abstract void onSubmit(String id);
 

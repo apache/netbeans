@@ -24,6 +24,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Locale;
 import java.awt.event.ActionEvent;
+import java.util.concurrent.Callable;
 import net.java.html.json.Model;
 import net.java.html.json.Property;
 import org.netbeans.html.context.spi.Contexts.Id;
@@ -126,6 +127,22 @@ public @interface HTMLDialog {
      */
     String[] techIds() default {};
 
+    /**
+     *
+     * @since 1.23
+     */
+    @FunctionalInterface
+    public interface OnSubmit {
+        /** Callback when a button is pressed.
+         *
+         * @param button the ID of the pressed button or {@code null} on cancel
+         * @return {@code true} to close the dialog, {@code false} to ignore
+         *   the button press and leave the dialog open
+         * @since 1.23
+         */
+        boolean onSubmit(String button);
+    }
+
     /** Rather than using this class directly, consider
      * {@link HTMLDialog}. The {@link HTMLDialog} annotation
      * generates boilderplate code for you
@@ -175,7 +192,7 @@ public @interface HTMLDialog {
             return this;
         }
 
-        /** Displays the dialog. This method blocks waiting for the
+        /** Displays the dialog and waits. This method blocks waiting for the
          * dialog to be shown and closed by the user.
          *
          * @return 'id' of a selected button element or <code>null</code>
@@ -183,6 +200,16 @@ public @interface HTMLDialog {
          */
         public String showAndWait() {
             return impl.showAndWait();
+        }
+
+        /** Displays the dialog and returns immediately.
+         *
+         * @param s callback to call when a button is clicked and dialog
+         *   is about to be closed
+         * @since 1.23
+         */
+        public void show(OnSubmit s) {
+            impl.show(s);
         }
 
         /** Obtains the component from the builder. The parameter

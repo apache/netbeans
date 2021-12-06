@@ -34,7 +34,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
-import net.java.html.js.JavaScriptBody;
 import net.java.html.json.ComputedProperty;
 import net.java.html.json.Function;
 import net.java.html.json.Model;
@@ -142,11 +141,7 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
                                 ci.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                                 ExecutableElement method = (ExecutableElement) handle.resolve(ci);
                                 if (method != null) {
-                                    ChangeMethodParameterUI[] model = { null };
-                                    String res = Pages.showChangeMethodParametersUI(ci, client, file, handle, method, model);
-                                    if ("accept".equals(res)) {
-                                        model[0].doRefactoring();
-                                    }
+                                    Pages.showChangeMethodParametersUI(ci, client, file, handle, method);
                                 }
                             }, true);
                             return null;
@@ -181,13 +176,12 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
     }
 
     @HTMLDialog(url = "ui/ChangeMethodParameters.html")
-    static ChangeMethodParameterUI showChangeMethodParametersUI(
+    static HTMLDialog.OnSubmit showChangeMethodParametersUI(
         CompilationController ci,
         NbCodeLanguageClient client,
         FileObject file,
         ElementHandle handle,
-        ExecutableElement method,
-        ChangeMethodParameterUI[] modelBack
+        ExecutableElement method
     ) {
         ParameterUI[] params = new ParameterUI[method.getParameters().size()];
         for (int i = 0; i < method.getParameters().size(); i++) {
@@ -212,8 +206,13 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
                 .withSelectedModifier(mod)
                 .withParameters(params)
                 .assignData(client, file, TreePathHandle.from(handle, ClasspathInfo.create(file)));
-        modelBack[0] = model;
-        return model.applyBindings();
+        model.applyBindings();
+        return (id) -> {
+            if ("accept".equals(id)) {
+                model.doRefactoring();
+            }
+            return true; // return false, if validation fails
+        };
     }
 
     @Model(className = "ChangeMethodParameterUI", targetId = "", instance = true, builder = "with", properties = {

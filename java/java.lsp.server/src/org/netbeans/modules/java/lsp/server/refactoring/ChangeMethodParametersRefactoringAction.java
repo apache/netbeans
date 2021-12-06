@@ -69,11 +69,7 @@ public final class ChangeMethodParametersRefactoringAction implements ActionList
                     }
                     if (method != null) {
                         ElementHandle<ExecutableElement> handle = ElementHandle.create(method);
-                        ChangeMethodParameterUI[] model = {null};
-                        String res = Pages.showChangeMethodParametersUI(ci, null, file, handle, method, model);
-                        if ("accept".equals(res)) {
-                            model[0].doRefactoring();
-                        }
+                        Pages.showChangeMethodParametersUI(ci, null, file, handle, method);
                     }
                 }, true);
             } catch (IOException ex) {

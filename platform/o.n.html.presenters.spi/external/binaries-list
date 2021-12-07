@@ -14,6 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-release.external/net.java.html.boot-1.7.3.jar=modules/net-java-html-boot.jar
-is.autoload=true
-nbm.module.author=Jaroslav Tulach
+7621B0AFE4260212C6632FE74E6F5CCDBB61EEB8 org.netbeans.html:generic:1.7.3

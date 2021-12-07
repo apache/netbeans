@@ -23,12 +23,12 @@
    <type>org.netbeans.modules.apisupport.project</type>
    <configuration>
        <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
-           <code-name-base>net.java.html.boot.script</code-name-base>
+           <code-name-base>org.netbeans.html.presenters.spi</code-name-base>
            <module-dependencies/>
            <public-packages/>
            <class-path-extension>
-               <runtime-relative-path>net-java-html-boot-script.jar</runtime-relative-path>
-               <binary-origin>external/net.java.html.boot.script-1.7.3.jar</binary-origin>
+               <runtime-relative-path>org-netbeans-html-presenters-spi.jar</runtime-relative-path>
+               <binary-origin>external/generic-1.7.3.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

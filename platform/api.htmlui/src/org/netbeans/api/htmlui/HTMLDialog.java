@@ -203,7 +203,7 @@ public @interface HTMLDialog {
          *   if the dialog was closed without selecting a button
          */
         public String showAndWait() {
-            HTMLDialogBase impl = HTMLDialogBase.create(url, onPageLoad, null, techIds.toArray(new String[0]));
+            HTMLDialogBase impl = HTMLDialogBase.create(url, onPageLoad, null, techIds.toArray(new String[0]), null);
             return impl.showAndWait();
         }
 
@@ -214,7 +214,7 @@ public @interface HTMLDialog {
          * @since 1.23
          */
         public void show(OnSubmit s) {
-            HTMLDialogBase impl = HTMLDialogBase.create(url, onPageLoad, s, techIds.toArray(new String[0]));
+            HTMLDialogBase impl = HTMLDialogBase.create(url, onPageLoad, s, techIds.toArray(new String[0]), null);
             impl.show(s);
         }
 
@@ -228,7 +228,7 @@ public @interface HTMLDialog {
          * @return instance of the requested component
          */
         public <C> C component(Class<C> type) {
-            HTMLDialogBase impl = HTMLDialogBase.create(url, onPageLoad, null, techIds.toArray(new String[0]));
+            HTMLDialogBase impl = HTMLDialogBase.create(url, onPageLoad, null, techIds.toArray(new String[0]), type);
             return impl.component(type);
         }
     }

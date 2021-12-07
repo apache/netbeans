@@ -18,18 +18,14 @@
  */
 package org.netbeans.modules.htmlui;
 
-import org.netbeans.spi.htmlui.HtmlViewer;
-import java.net.URL;
-import java.util.concurrent.Callable;
-import java.util.function.Consumer;
-import org.netbeans.api.htmlui.HTMLDialog.OnSubmit;
 import org.openide.util.Lookup;
+import org.netbeans.spi.htmlui.HTMLViewerSpi;
 
 final class HtmlPair<HtmlView, HtmlButton> {
-    private final HtmlViewer<HtmlView, HtmlButton> viewer;
+    private final HTMLViewerSpi<HtmlView, HtmlButton> viewer;
     private final HtmlView view;
 
-    HtmlPair(HtmlViewer<HtmlView, HtmlButton> viewer, HtmlView view) {
+    HtmlPair(HTMLViewerSpi<HtmlView, HtmlButton> viewer, HtmlView view) {
         this.viewer = viewer;
         this.view = view;
     }
@@ -45,42 +41,30 @@ final class HtmlPair<HtmlView, HtmlButton> {
         return Class.forName(c, true, l);
     }
 
-    static HtmlPair<?, ?> newView(Consumer<String> life) {
-        for (HtmlViewer<?, ?> viewer : Lookup.getDefault().lookupAll(HtmlViewer.class)) {
-            HtmlPair<?, ?> pair = newView(viewer, life);
+    static HtmlPair<?, ?> newView(HTMLViewerSpi.Context ctx) {
+        for (HTMLViewerSpi<?, ?> viewer : Lookup.getDefault().lookupAll(HTMLViewerSpi.class)) {
+            HtmlPair<?, ?> pair = newView(viewer, ctx);
             if (pair != null) {
                 return pair;
             }
         }
-        return newView(null, life); // XXX
+        return newView(null, ctx); // XXX
     }
 
-    private static <HtmlView, HtmlButton> HtmlPair<HtmlView, HtmlButton> newView(HtmlViewer<HtmlView, HtmlButton> viewer, Consumer<String> life) {
-        final HtmlView view = viewer.newView(life);
+    private static <HtmlView, HtmlButton> HtmlPair<HtmlView, HtmlButton> newView(HTMLViewerSpi<HtmlView, HtmlButton> viewer, HTMLViewerSpi.Context ctx) {
+        final HtmlView view = viewer.newView(ctx);
         return view == null ? null : new HtmlPair<>(viewer, view);
-    }
-
-    final void makeVisible(OnSubmit callback, Runnable whenReady) {
-        viewer.makeVisible(view, callback, whenReady);
-    }
-
-    final void load(ClassLoader loader, URL pageUrl, Callable<Object> initialize, String... techIds) {
-        viewer.load(view, loader, pageUrl, initialize, techIds);
-    }
-
-    final boolean isDefault() {
-        return this.viewer == null; // XXX
     }
 
     Object createButton(String id) {
         return viewer.createButton(view, id);
     }
 
-    <C> C component(Class<C> type, String url, ClassLoader classLoader, Runnable onPageLoad, String[] techIds) {
-        return viewer.component(view, type, url, classLoader, onPageLoad, techIds);
+    <C> C component(Class<C> type) {
+        return viewer.component(view, type);
     }
 
-    HtmlViewer<HtmlView, HtmlButton> viewer() {
+    HTMLViewerSpi<HtmlView, HtmlButton> viewer() {
         return viewer;
     }
 

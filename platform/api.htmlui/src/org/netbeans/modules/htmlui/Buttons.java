@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import net.java.html.js.JavaScriptBody;
 import org.netbeans.api.htmlui.HTMLDialog;
-import org.netbeans.spi.htmlui.HtmlViewer;
+import org.netbeans.spi.htmlui.HTMLViewerSpi;
 import org.openide.util.NbBundle;
 
 /**
@@ -34,26 +34,22 @@ import org.openide.util.NbBundle;
 class Buttons<View, Button> {
     private static final String PREFIX = "dialog-buttons-";
 
-    private final HtmlViewer<View, Button> viewer;
+    private final HTMLDialog.OnSubmit onSubmit;
+    private final HTMLViewerSpi<View, Button> viewer;
     private final View view;
 
     private final List<Button> arr = new ArrayList<>();
     private boolean hasResult;
     private String result;
-    private HTMLDialog.OnSubmit onSubmit;
 
-    static <V, B> Buttons<V, B> create(HtmlPair<V, B> view) {
-        HtmlViewer<V, B> viewer = view.viewer();
-        return new Buttons<>(viewer, view.view());
-    }
-
-    protected Buttons(HtmlViewer<View, Button> viewer, View view) {
+    protected Buttons(HTMLViewerSpi<View, Button> viewer, View view, HTMLDialog.OnSubmit onSubmit) {
         this.viewer = viewer;
         this.view = view;
+        this.onSubmit = onSubmit;
     }
 
-    void onSubmit(HTMLDialog.OnSubmit onSubmit) {
-        this.onSubmit = onSubmit;
+    Buttons(HtmlPair<View, Button> pair, HTMLDialog.OnSubmit onSubmit) {
+        this(pair.viewer(), pair.view(), onSubmit);
     }
 
     @JavaScriptBody(args = {}, javacall = true, body =
@@ -81,11 +77,11 @@ class Buttons<View, Button> {
     private native Object[] list();
 
     final void changeState(final String id, final boolean disabled, final String text) {
-        viewer.runLater(view, () -> {
+        getViewer().runLater(getView(), () -> {
             for (Button b : arr) {
-                if (Objects.equals(getName(b), id)) {
-                    viewer.setEnabled(view, b, !disabled);
-                    viewer.setText(view, b, text);
+                if (Objects.equals(getId(b), id)) {
+                    getViewer().setEnabled(getView(), b, !disabled);
+                    getViewer().setText(getView(), b, text);
                 }
             }
         });
@@ -101,18 +97,18 @@ class Buttons<View, Button> {
             for (int i = 0; i < all.length; i += 3) {
                 final String id = all[i].toString();
                 Button b = createButton(id);
-                viewer.setText(view, b, all[i + 1].toString());
+                getViewer().setText(getView(), b, all[i + 1].toString());
                 if (Boolean.TRUE.equals(all[i + 2])) {
-                    viewer.setEnabled(view, b, false);
+                    getViewer().setEnabled(getView(), b, false);
                 }
                 arr.add(b);
             }
             if (arr.isEmpty()) {
                 Button ok = createButton("OK"); // NOI18N
-                viewer.setText(view, ok, Bundle.CTL_OK());
+                getViewer().setText(getView(), ok, Bundle.CTL_OK());
                 arr.add(ok);
                 Button cancel = createButton(null);
-                viewer.setText(view, cancel, Bundle.CTL_Cancel());
+                getViewer().setText(getView(), cancel, Bundle.CTL_Cancel());
                 arr.add(cancel);
             }
         }
@@ -147,15 +143,15 @@ class Buttons<View, Button> {
 
         hasResult = true;
         notifyAll();
-        closeWindow0();
+        getViewer().runLater(getView(), Buttons::closeWindow0);
     }
 
     private Button createButton(String name) {
-        return viewer.createButton(view, name == null ? null : PREFIX + name);
+        return getViewer().createButton(getView(), name == null ? null : PREFIX + name);
     }
 
-    private String getName(Button b) {
-        String id = viewer.getName(view, b);
+    private String getId(Button b) {
+        String id = getViewer().getId(getView(), b);
         if (id.startsWith(PREFIX)) {
             return id.substring(PREFIX.length());
         }
@@ -163,5 +159,14 @@ class Buttons<View, Button> {
     }
 
     @JavaScriptBody(args = {}, body = "window.close();")
-    private native static void closeWindow0();
+    private static void closeWindow0() {
+    }
+
+    private HTMLViewerSpi<View, Button> getViewer() {
+        return viewer;
+    }
+
+    private View getView() {
+        return view;
+    }
 }

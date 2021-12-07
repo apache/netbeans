@@ -20,50 +20,84 @@ package org.netbeans.modules.htmlui;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.function.Consumer;
 import org.netbeans.api.htmlui.HTMLDialog;
-import org.openide.util.Exceptions;
+import org.netbeans.spi.htmlui.HTMLViewerSpi;
 
 public final class HTMLDialogBase {
-    private final String url;
-    private final Runnable onPageLoad;
-    private final String[] techIds;
-    private final Buttons buttons;
+    private final Buttons<?, ?> buttons;
     private final HtmlPair<?, ?> view;
 
-    private HTMLDialogBase(HtmlPair<?, ?> view, String url, Runnable onPageLoad, String[] techIds, Buttons buttons) {
-        this.url = url;
-        this.onPageLoad = onPageLoad;
-        this.techIds = techIds;
+    private HTMLDialogBase(HtmlPair<?, ?> view, Buttons<?, ?> buttons) {
         this.buttons = buttons;
         this.view = view;
     }
 
-    public static HTMLDialogBase create(String url, Runnable onPageLoad, HTMLDialog.OnSubmit onSubmit, String[] techIds) {
-        Buttons[] base = { null };
-        HtmlPair<?, ?> view = HtmlPair.newView((id) -> {
-            base[0].accept(id);
-        });
-        base[0] = Buttons.create(view);
-        return new HTMLDialogBase(view, url, onPageLoad, techIds, base[0]);
+    public static HTMLDialogBase create(String url, Runnable onPageLoad, HTMLDialog.OnSubmit onSubmit, String[] techIds, Class<?> component) {
+        ClassLoader loader = onPageLoad.getClass().getClassLoader();
+        final URL u;
+        try {
+            u = new URL(url);
+        } catch (MalformedURLException ex) {
+            throw new IllegalArgumentException(url, ex);
+        }
+        class AcceptAndInit implements Consumer<String>, Callable<Object> {
+            private Buttons<?, ?> buttons;
+
+            synchronized <A, B> Buttons<A, B> assignButtons(Buttons<A, B> b) {
+                if (this.buttons != null) {
+                    throw new IllegalStateException();
+                }
+                buttons = b;
+                notifyAll();
+                return b;
+            }
+
+            private Buttons<?, ?> awaitButtons() {
+                assert Thread.holdsLock(this);
+                while (buttons == null) {
+                    try {
+                        wait();
+                    } catch (InterruptedException ex) {
+                        // OK
+                    }
+                }
+                return buttons;
+            }
+
+            @Override
+            public synchronized void accept(String t) {
+                awaitButtons().accept(t);
+            }
+
+            @Override
+            public Object call() throws Exception {
+                onPageLoad.run();
+                initializeButtons();
+                return null;
+            }
+
+            private synchronized void initializeButtons() {
+                if (component != null) {
+                    return;
+                }
+                awaitButtons().buttons();
+            }
+        }
+        AcceptAndInit init = new AcceptAndInit();
+        HTMLViewerSpi.Context c = ContextAccessor.getDefault().newContext(
+            loader, u, techIds, onSubmit, init, init, component
+        );
+        HtmlPair<?, ?> view = HtmlPair.newView(c);
+        final Buttons<?, ?> buttons = component == null ? new Buttons<>(view, onSubmit) : null;
+        HTMLDialogBase base = new HTMLDialogBase(view, init.assignButtons(buttons));
+        view.component(Void.class);
+        return base;
     }
 
     public <C> C component(Class<C> type) {
-        return view.component(type, url, getClass().getClassLoader(), onPageLoad, this.techIds);
-    }
-
-    protected void makeVisible(HTMLDialog.OnSubmit onSubmit) {
-        view.makeVisible(onSubmit, () -> {
-            try {
-                view.load(getClass().getClassLoader(), new URL(url), () -> {
-                    onPageLoad.run();
-                    List<Object> b = buttons.buttons();
-                    return onSubmit;
-                }, this.techIds);
-            } catch (MalformedURLException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        });
+        return view.component(type);
     }
 
     protected void onSubmit(String id) {
@@ -71,12 +105,9 @@ public final class HTMLDialogBase {
     }
 
     public void show(HTMLDialog.OnSubmit onSubmit) {
-        buttons.onSubmit(onSubmit);
-        makeVisible(onSubmit);
     }
 
     public String showAndWait() {
-        makeVisible(null);
         return this.buttons.obtainResult();
     }
 }

@@ -22,55 +22,38 @@ import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.function.Consumer;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import org.netbeans.api.htmlui.HTMLDialog;
-import org.netbeans.api.htmlui.HTMLDialog.OnSubmit;
-import org.netbeans.spi.htmlui.HtmlViewer;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.lookup.ServiceProvider;
 import org.netbeans.modules.htmlui.impl.SwingFXViewer.SFXView;
 import org.openide.util.Lookup;
+import org.netbeans.spi.htmlui.HTMLViewerSpi;
 
-@ServiceProvider(service = HtmlViewer.class)
-public final class SwingFXViewer implements HtmlViewer<SFXView, JButton> {
+@ServiceProvider(service = HTMLViewerSpi.class)
+public class SwingFXViewer implements HTMLViewerSpi<SFXView, JButton> {
     @Override
-    public SFXView newView(Consumer<String> lifeCycleCallback) {
-        return new SFXView(lifeCycleCallback);
-    }
-
-    @Override
-    public void makeVisible(SFXView view, OnSubmit callback, Runnable whenReady) {
-        view.makeVisible(callback, whenReady);
-    }
-
-    @Override
-    public void load(SFXView view, ClassLoader loader, URL pageUrl, Callable<Object> initialize, String[] techIds) {
-        if (view.component != null) {
-            view.component.loadFX(loader, pageUrl, initialize, techIds);
-        } else {
-            view.buttons.loadFX(loader, pageUrl, initialize, techIds);
-        }
+    public SFXView newView(Context ctx) {
+        return new SFXView(ctx);
     }
 
     @Override
     public JButton createButton(SFXView view, String id) {
         JButton b = new JButton();;
         b.setName(id);
+        if (view == null || view.buttons == null) {
+            throw new NullPointerException("Am I: " + this + " view: " + view);
+        }
         view.buttons.add(b);
         return b;
     }
 
     @Override
-    public String getName(SFXView view, JButton b) {
+    public String getId(SFXView view, JButton b) {
         return b.getName();
     }
 
@@ -90,63 +73,66 @@ public final class SwingFXViewer implements HtmlViewer<SFXView, JButton> {
     }
 
     @Override
-    public <C> C component(SFXView view, Class<C> type, String url, ClassLoader classLoader, Runnable onPageLoad, String[] techIds) {
+    public <C> C component(SFXView view, Class<C> type) {
+        if (type == Void.class) {
+            view.makeVisible();
+            return null;
+        }
+
         ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
         if (loader == null) {
             loader = SwingFXViewer.class.getClassLoader();
         }
-        final URL pageUrl;
-        try {
-            pageUrl = new URL(url);
-        } catch (MalformedURLException ex) {
-            throw new IllegalStateException(ex);
-        }
-        return HtmlToolkit.getDefault().convertToComponent(type, pageUrl, loader, onPageLoad, Arrays.asList(techIds));
+        return HtmlToolkit.getDefault().convertToComponent(
+            type, view.ctx.getPage(), loader,
+            view.ctx::onPageLoad, Arrays.asList(view.ctx.getTechIds())
+        );
     }
 
     public static final class SFXView {
+        final Context ctx;
         final HtmlComponent component;
         final ChromeWithButtons buttons;
 
-        SFXView(Consumer<String> life) {
-            if (life == null) {
+        SFXView(Context ctx) {
+            this.ctx = ctx;
+            if (ctx.isDialog()) {
+                this.component = null;
+                this.buttons = new ChromeWithButtons(ctx);
+            } else if (ctx.isWindow()) {
                 this.component = new HtmlComponent();
                 this.buttons = null;
             } else {
                 this.component = null;
-                this.buttons = new ChromeWithButtons(life);
+                this.buttons = null;
             }
         }
 
-        void makeVisible(OnSubmit onSubmit, Runnable whenReady) {
-            if (component != null) {
+        void makeVisible() {
+            if (ctx.isWindow()) {
                 component.open();
                 component.requestActive();
-                HtmlToolkit.getDefault().execute(whenReady);
-            } else {
-                buttons.onSubmit = onSubmit;
-//                if (onSubmit == null) {
-//                    // showAndWait
-//                } else {
-//                    // show
-//                }
-                if (HtmlToolkit.getDefault().isApplicationThread()) {
-                    whenReady.run();
+                HtmlToolkit.getDefault().execute(() -> {
+                    component.loadFX(ctx.getClassLoader(), ctx.getPage(), ctx::onPageLoad, ctx.getTechIds());
+                });
+            } else if (ctx.isDialog()) {
+                if (ctx.isBlocking()) {
+                    buttons.showAndWait();
                 } else {
-                    HtmlToolkit.getDefault().execute(whenReady);
+                    buttons.showLater();
                 }
             }
+
         }
 
         private static final class ChromeWithButtons {
-            final Consumer<String> life;
-            final JComponent p;
-            final DialogDescriptor dd;
-            private List<JButton> buttons = new ArrayList<>();
-            OnSubmit onSubmit;
+            private final Context ctx;
+            private final JComponent p;
+            private final DialogDescriptor dd;
+            private final List<JButton> buttons = new ArrayList<>();
 
-            public ChromeWithButtons(Consumer<String> life) {
-                this.life = life;
+            public ChromeWithButtons(Context ctx) {
+                this.ctx = ctx;
                 this.p = HtmlToolkit.getDefault().newPanel();
                 this.dd = new DialogDescriptor(p, "");
                 this.dd.setOptions(new Object[0]);
@@ -161,38 +147,12 @@ public final class SwingFXViewer implements HtmlViewer<SFXView, JButton> {
                 return val instanceof JButton ? ((JButton)val).getName() : null;
             }
 
-            void showDialog(HTMLDialog.OnSubmit onSubmit) {
-                p.setPreferredSize(new Dimension(600, 400));
-                Dialog modalDialog = DialogDisplayer.getDefault().createDialog(dd);
-                dd.setButtonListener((ev) -> {
-                    String id = null;
-                    if (ev.getSource() instanceof JButton) {
-                        id = ((JButton) ev.getSource()).getName();
-                    }
-                    if (onSubmit != null && id != null) {
-                        if (!onSubmit.onSubmit(id)) {
-                            return;
-                        }
-                    }
-                    modalDialog.setVisible(false);
-                    this.life.accept(id);
-                });
-                modalDialog.setVisible(true);
-            }
-
-            void initButtons() {
-                dd.setOptions(this.buttons.toArray(new JButton[0]));
-                dd.setClosingOptions(new Object[0]);
-            }
-
-            private void loadFX(ClassLoader loader, URL pageUrl, Callable<Object> initialize, String[] techIds) {
-                if (onSubmit != null || EventQueue.isDispatchThread()) {
-                    Runnable initSeq = initializationSequence(pageUrl.toString(), Arrays.asList(techIds), initialize, (__) -> {
-                        showDialog(onSubmit);
-                    });
-                    EventQueue.invokeLater(initSeq);
+            String showAndWait() {
+                if (EventQueue.isDispatchThread()) {
+                    initializationSequence(null).run();
+                    showDialog();
                 } else {
-                    Runnable initSeq = initializationNestedLoop(pageUrl.toString(), initialize, Arrays.asList(techIds));
+                    Runnable initSeq = initializationNestedLoop();
                     if (HtmlToolkit.getDefault().isApplicationThread()) {
                         EventQueue.invokeLater(initSeq);
                         HtmlToolkit.getDefault().enterNestedLoop(this);
@@ -204,36 +164,54 @@ public final class SwingFXViewer implements HtmlViewer<SFXView, JButton> {
                         }
                     }
                 }
+                Object val = dd.getValue();
+                return val instanceof JButton ? ((JButton) val).getName() : null;
+
             }
 
-            final Runnable initializationSequence(
-                String url, List<String> techIds,
-                Callable<Object> initialize, Consumer<OnSubmit> afterInitPage
-            ) {
+            void showLater() {
+                initializationSequence(this::showDialog).run();
+            }
+
+            void showDialog() {
+                p.setPreferredSize(new Dimension(600, 400));
+                Dialog modalDialog = DialogDisplayer.getDefault().createDialog(dd);
+                dd.setButtonListener((ev) -> {
+                    String id = null;
+                    if (ev.getSource() instanceof JButton) {
+                        id = ((JButton) ev.getSource()).getName();
+                    }
+                    if (!ctx.onSubmit(id)) {
+                        return;
+                    }
+                    modalDialog.setVisible(false);
+                });
+                modalDialog.setVisible(true);
+            }
+
+            void initButtons() {
+                dd.setOptions(this.buttons.toArray(new JButton[0]));
+                dd.setClosingOptions(new Object[0]);
+            }
+
+            final Runnable initializationSequence(Runnable afterInitPage) {
                 return () -> {
                     HtmlToolkit.getDefault().execute(() -> {
-                        HtmlToolkit.getDefault().initHtmlDialog(url, dd, p, () -> {
-                            OnSubmit onSubmit;
-                            try {
-                                Object ret = initialize.call();
-                                onSubmit = ret instanceof OnSubmit ? (OnSubmit) ret : null;
-                            } catch (Exception ex) {
-                                throw new IllegalStateException(ex);
-                            }
+                        HtmlToolkit.getDefault().initHtmlDialog(ctx.getPage(), dd, p, () -> {
+                            ctx.onPageLoad();
                             initButtons();
                             if (afterInitPage != null) {
-                                EventQueue.invokeLater(() -> {
-                                    afterInitPage.accept(onSubmit);
-                                });
+                                EventQueue.invokeLater(afterInitPage);
                             }
-                        }, techIds);
+                        }, ctx.getTechIds());
                     });
                 };
             }
 
-            final Runnable initializationNestedLoop(String url, Callable<Object> initialize, List<String> techIds) {
-                return initializationSequence(url, techIds, initialize, (__) -> {
-                    showDialog(null);
+            final Runnable initializationNestedLoop() {
+                return initializationSequence(() -> {
+                    showDialog();
+                    ctx.onSubmit(null);
                     HtmlToolkit.getDefault().execute(() -> {
                         HtmlToolkit.getDefault().exitNestedLoop(this);
                     });

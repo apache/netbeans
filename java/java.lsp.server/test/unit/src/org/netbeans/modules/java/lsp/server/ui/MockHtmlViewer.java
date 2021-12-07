@@ -34,15 +34,21 @@ import org.netbeans.html.json.spi.FunctionBinding;
 import org.netbeans.html.json.spi.PropertyBinding;
 import org.netbeans.html.json.spi.Technology;
 import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
-import org.netbeans.spi.htmlui.HtmlViewer;
 import org.openide.util.lookup.ServiceProvider;
+import org.netbeans.spi.htmlui.HTMLViewerSpi;
 
-@ServiceProvider(service = HtmlViewer.class)
+@ServiceProvider(service = HTMLViewerSpi.class)
 public final class MockHtmlViewer extends AbstractLspHtmlViewer {
     private static final Map<String, BrwsrCtx> data = Collections.synchronizedMap(new HashMap<>());
 
     @Override
-    public void load(View view, ClassLoader loader, URL pageUrl, Callable<Object> initialize, String[] techIds) {
+    public View newView(Context ctx) {
+        View v = super.newView(ctx);
+        load(v, ctx.getClassLoader(), ctx.getPage(), ctx::onPageLoad, ctx.getTechIds());
+        return v;
+    }
+
+    private void load(View view, ClassLoader loader, URL pageUrl, Callable<Object> initialize, String[] techIds) {
         UIContext ui = UIContext.find();
         String key = UUID.randomUUID().toString();
 

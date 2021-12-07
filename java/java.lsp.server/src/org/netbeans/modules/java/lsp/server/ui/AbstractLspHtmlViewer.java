@@ -20,33 +20,21 @@ package org.netbeans.modules.java.lsp.server.ui;
 
 import java.net.URL;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
-import java.util.function.Consumer;
 import net.java.html.js.JavaScriptBody;
-import org.netbeans.api.htmlui.HTMLDialog.OnSubmit;
 import org.netbeans.modules.java.lsp.server.htmlui.Browser;
 import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
-import org.netbeans.spi.htmlui.HtmlViewer;
 import org.openide.util.Exceptions;
+import org.netbeans.spi.htmlui.HTMLViewerSpi;
 
-public class AbstractLspHtmlViewer implements HtmlViewer<AbstractLspHtmlViewer.View, Object> {
+public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewer.View, Object> {
     protected AbstractLspHtmlViewer() {
     }
 
     @Override
-    public View newView(Consumer<String> lifeCycleCallback) {
+    public View newView(Context context) {
         UIContext ui = UIContext.find();
-        return new View(ui, lifeCycleCallback);
-    }
-
-    @Override
-    public void makeVisible(View view, OnSubmit submit, Runnable whenReady) {
-        whenReady.run();
-    }
-
-    @Override
-    public void load(View view, ClassLoader loader, URL pageUrl, Callable<Object> initialize, String[] techIds) {
-        view.load(pageUrl, initialize);
+        View view = new View(ui, context);
+        return view;
     }
 
     @JavaScriptBody(args = {}, body = "\n"
@@ -61,7 +49,7 @@ public class AbstractLspHtmlViewer implements HtmlViewer<AbstractLspHtmlViewer.V
 
     @Override
     public Object createButton(View view, String id) {
-        return createButton0(id, view.callback);
+        return createButton0(id, view.ctx);
     }
 
     @JavaScriptBody(args = { "id", "callback" }, javacall = true, body = "\n"
@@ -78,7 +66,7 @@ public class AbstractLspHtmlViewer implements HtmlViewer<AbstractLspHtmlViewer.V
             + "var button = document.createElement('button');\n"
             + "button.id = id;\n"
             + "button.onclick = function() {;\n"
-            + "  callback.@java.util.function.Consumer::accept(Ljava/lang/Object;)(id);\n"
+            + "  @org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer::clickButton0(Ljava/lang/String;Ljava/lang/Object;)(id, callback);\n"
             + "};\n"
             + "button.classList.add('regular-button');\n"
             + "button.classList.add('vscode-font');\n"
@@ -88,15 +76,23 @@ public class AbstractLspHtmlViewer implements HtmlViewer<AbstractLspHtmlViewer.V
             + "footer.appendChild(button);\n"
             + "return button;\n"
     )
-    native static Object createButton0(String id, Consumer<?> callback);
+    native static Object createButton0(String id, Context callback);
+
+    static void clickButton0(String id, Object callback) {
+        Context ctx = (Context) callback;
+        ctx.onSubmit(id);
+    }
 
     @Override
-    public <C> C component(View view, Class<C> type, String url, ClassLoader classLoader, Runnable onPageLoad, String[] techIds) {
+    public <C> C component(View view, Class<C> type) {
+        if (type == Void.class) {
+            view.load();
+        }
         throw new ClassCastException(view + " cannot be cast to " + type);
     }
 
     @Override
-    public String getName(View view, Object b) {
+    public String getId(View view, Object b) {
         return buttonName0(b);
     }
 
@@ -125,22 +121,23 @@ public class AbstractLspHtmlViewer implements HtmlViewer<AbstractLspHtmlViewer.V
     native static String buttonDisabled0(Object b, boolean disabled);
 
     static final class View {
-        private final Consumer<String> callback;
+        private final Context ctx;
         private final UIContext ui;
         private Browser presenter;
 
-        private View(UIContext ui, Consumer<String> callback) {
+        private View(UIContext ui, Context ctx) {
             this.ui = ui;
-            this.callback = callback;
+            this.ctx = ctx;
         }
 
         private void notifyClose() {
-            if (callback != null) {
-                callback.accept(null);
+            if (ctx != null) {
+                ctx.onSubmit(null);
             }
         }
 
-        private void load(URL pageUrl, Callable<?> initialize) {
+        private void load() {
+            URL pageUrl = ctx.getPage();
             Browser.Config c = new Browser.Config();
             c.browser((page) -> {
                 try {
@@ -174,7 +171,7 @@ public class AbstractLspHtmlViewer implements HtmlViewer<AbstractLspHtmlViewer.V
             presenter.displayPage(pageUrl, () -> {
                 registerCloseWindow();
                 try {
-                    Object v = initialize.call();
+                    Object v = ctx.onPageLoad();
                     System.err.println("v: " + v);
                 } catch (Exception ex) {
                     Exceptions.printStackTrace(ex);

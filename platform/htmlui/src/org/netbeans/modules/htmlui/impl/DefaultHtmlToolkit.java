@@ -57,7 +57,7 @@ public class DefaultHtmlToolkit extends HtmlToolkit {
     }
 
     @Override
-    public Object initHtmlDialog(String page, DialogDescriptor dd, JComponent p, Runnable onPageLoad, List<String> techIds) {
+    public Object initHtmlDialog(URL page, DialogDescriptor dd, JComponent p, Runnable onPageLoad, String[] techIds) {
         return null;
     }
 

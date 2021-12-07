@@ -25,10 +25,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import javax.swing.Action;
 import org.openide.awt.Actions;
 import org.openide.util.Lookup;
+import org.netbeans.spi.htmlui.HTMLViewerSpi;
 
 /** API for controlling HTML like UI from Java language.
  *
@@ -39,7 +39,7 @@ public final class Pages {
     }
 
     public static Action openAction(final Map<?,?> map) {
-        R r = new R(map);
+        OpenHtmlAction r = new OpenHtmlAction(map);
         return Actions.alwaysEnabled(
                 r,
                 (String) map.get("displayName"), // NOI18N
@@ -48,7 +48,7 @@ public final class Pages {
         );
     }
 
-    static class R implements ActionListener, Runnable {
+    static class OpenHtmlAction implements ActionListener {
         private final Map<?,?> map;
         private String methodName;
         private Class<?> clazz;
@@ -56,7 +56,7 @@ public final class Pages {
         private URL pageUrl;
         private List<String> techIds;
 
-        public R(Map<?, ?> map) {
+        OpenHtmlAction(Map<?, ?> map) {
             this.map = map;
         }
 
@@ -70,25 +70,21 @@ public final class Pages {
                 clazz = HtmlPair.loadClass(c);
                 pageUrl = new URL("nbresloc:/" + u);
 
-                tc = HtmlPair.newView(null);
-                tc.makeVisible(null, this);
+                ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
+                if (loader == null) {
+                    loader = clazz.getClassLoader();
+                }
+                HTMLViewerSpi.Context ctx = ContextAccessor.getDefault().newContext(loader, pageUrl, getTechIds(), null, null, () -> {
+                    Method method = clazz.getMethod(methodName);
+                    Object value = method.invoke(null);
+                    return value;
+                }, null);
+
+                tc = HtmlPair.newView(ctx);
+                tc.component(Void.class);
             } catch (Exception ex) {
                 throw new IllegalStateException(ex);
             }
-        }
-
-        @Override
-        public void run() {
-            ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
-            if (loader == null) {
-                loader = clazz.getClassLoader();
-            }
-
-            tc.load(loader, pageUrl, () -> {
-                Method method = clazz.getMethod(methodName);
-                Object value = method.invoke(null);
-                return value;
-            }, getTechIds());
         }
 
         final String[] getTechIds() {

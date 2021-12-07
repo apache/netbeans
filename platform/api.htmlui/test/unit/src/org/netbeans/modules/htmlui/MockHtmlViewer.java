@@ -21,31 +21,13 @@ package org.netbeans.modules.htmlui;
 import java.io.Closeable;
 import java.io.Reader;
 import java.net.URL;
-import java.util.concurrent.Callable;
-import java.util.function.Consumer;
-import org.netbeans.api.htmlui.HTMLDialog;
-import org.netbeans.api.htmlui.HTMLDialog.OnSubmit;
 import org.netbeans.html.boot.spi.Fn;
-import org.netbeans.spi.htmlui.HtmlViewer;
+import org.netbeans.spi.htmlui.HTMLViewerSpi;
 
-public final class MockHtmlViewer implements HtmlViewer<MockHtmlViewer.MockUI, Object> {
+public final class MockHtmlViewer implements HTMLViewerSpi<MockHtmlViewer.MockUI, Object> {
     @Override
-    public MockUI newView(Consumer<String> lifeCycleCallback) {
-        return new MockUI();
-    }
-
-    @Override
-    public void makeVisible(MockUI view, OnSubmit callback, Runnable whenReady) {
-        whenReady.run();
-    }
-
-    @Override
-    public void load(MockUI view, ClassLoader loader, URL pageUrl, Callable<Object> initialize, String[] techIds) {
-        try (Closeable c = Fn.activate(view)) {
-            view.onSubmit = initialize.call();
-        } catch (Exception ex) {
-            throw new AssertionError(ex);
-        }
+    public MockUI newView(Context ctx) {
+        return new MockUI(ctx);
     }
 
     @Override
@@ -55,13 +37,11 @@ public final class MockHtmlViewer implements HtmlViewer<MockHtmlViewer.MockUI, O
 
     static void selectButton(Fn.Presenter p, String id) {
         MockUI ui = (MockUI) p;
-        if (ui.onSubmit instanceof HTMLDialog.OnSubmit) {
-            ((HTMLDialog.OnSubmit) ui.onSubmit).onSubmit(id);
-        }
+        ui.ctx.onSubmit(id);
     }
 
     @Override
-    public String getName(MockUI view, Object b) {
+    public String getId(MockUI view, Object b) {
         return null;
     }
 
@@ -75,11 +55,23 @@ public final class MockHtmlViewer implements HtmlViewer<MockHtmlViewer.MockUI, O
 
     @Override
     public void runLater(MockUI view, Runnable r) {
-        r.run();
+        try (Closeable c = Fn.activate(view)) {
+            r.run();
+        } catch (Exception ex) {
+            throw new AssertionError(ex);
+        }
     }
 
     @Override
-    public <C> C component(MockUI view, Class<C> type, String url, ClassLoader classLoader, Runnable onPageLoad, String[] techIds) {
+    public <C> C component(MockUI view, Class<C> type) {
+        if (type == Void.class) {
+            try (Closeable c = Fn.activate(view)) {
+                view.ctx.onPageLoad();
+            } catch (Exception ex) {
+                throw new AssertionError(ex);
+            }
+            return null;
+        }
         throw new ClassCastException("" + type + " view: " + view);
     }
 
@@ -87,7 +79,11 @@ public final class MockHtmlViewer implements HtmlViewer<MockHtmlViewer.MockUI, O
     }
 
     static final class MockUI implements Fn.Presenter {
-        private Object onSubmit;
+        private final HTMLViewerSpi.Context ctx;
+
+        MockUI(Context ctx) {
+            this.ctx = ctx;
+        }
 
         @Override
         public Fn defineFn(String fn, String... strings) {

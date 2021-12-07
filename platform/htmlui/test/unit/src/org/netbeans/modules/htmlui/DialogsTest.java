@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.htmlui;
 
-import org.netbeans.modules.htmlui.impl.HtmlToolkit;
 import java.awt.EventQueue;
 import java.net.URL;
 import java.util.concurrent.CountDownLatch;
@@ -209,11 +208,14 @@ public class DialogsTest {
 
     private static final class MockButtons extends Buttons<SwingFXViewer.SFXView, JButton> {
         MockButtons() {
-            this(new SwingFXViewer());
-        }
-
-        private MockButtons(SwingFXViewer sv) {
-            super(sv, sv.newView((id) -> {}));
+            super(new SwingFXViewer() {
+                @Override
+                public JButton createButton(SwingFXViewer.SFXView view, String id) {
+                    JButton b = new JButton();
+                    b.setName(id);
+                    return b;
+                }
+            }, null, null);
         }
 
         final JButton[] array() {

@@ -22,7 +22,6 @@ import org.netbeans.modules.htmlui.impl.HtmlToolkit;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.function.Consumer;
@@ -84,7 +83,7 @@ public final class JavaFxHtmlToolkit extends HtmlToolkit {
     }
 
     @Override
-    public Object initHtmlDialog(String url, DialogDescriptor dd, JComponent ourPanel, Runnable onPageLoad, List<String> techIds) {
+    public Object initHtmlDialog(URL url, DialogDescriptor dd, JComponent ourPanel, Runnable onPageLoad, String[] techIds) {
         JFXPanel p = (JFXPanel) ourPanel;
         Platform.setImplicitExit(false);
         WebView webView = new WebView();
@@ -122,13 +121,7 @@ public final class JavaFxHtmlToolkit extends HtmlToolkit {
         if (loader == null) {
             loader = JavaFxHtmlToolkit.class.getClassLoader();
         }
-        URL pageUrl;
-        try {
-            pageUrl = new URL(url);
-        } catch (MalformedURLException ex) {
-            throw new IllegalStateException(ex);
-        }
-        load(webView, pageUrl, onPageLoad, loader, techIds.toArray());
+        load(webView, url, onPageLoad, loader, techIds);
         return webView;
     }
 

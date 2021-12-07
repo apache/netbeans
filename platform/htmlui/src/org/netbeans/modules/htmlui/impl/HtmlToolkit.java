@@ -43,7 +43,7 @@ public abstract class HtmlToolkit implements Executor {
     public abstract JComponent newPanel();
     public abstract void load(Object webView, URL pageUrl, Runnable runnable, ClassLoader loader, Object[] ctx);
     public abstract Object initHtmlComponent(JComponent p, Consumer<String> titleDisplayer);
-    public abstract Object initHtmlDialog(String page, DialogDescriptor dd, JComponent p, Runnable onPageLoad, List<String> techIds);
+    public abstract Object initHtmlDialog(URL page, DialogDescriptor dd, JComponent p, Runnable onPageLoad, String[] techIds);
     public abstract <C> C convertToComponent(Class<C> type, URL pageUrl, ClassLoader loader, Runnable onPageLoad, List<String> techIds);
     public abstract void enterNestedLoop(Object aThis);
     public abstract void exitNestedLoop(Object aThis);

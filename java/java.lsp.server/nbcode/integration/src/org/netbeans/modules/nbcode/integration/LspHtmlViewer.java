@@ -19,9 +19,9 @@
 package org.netbeans.modules.nbcode.integration;
 
 import org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer;
-import org.netbeans.spi.htmlui.HtmlViewer;
+import org.netbeans.spi.htmlui.HTMLViewerSpi;
 import org.openide.util.lookup.ServiceProvider;
 
-@ServiceProvider(service = HtmlViewer.class)
+@ServiceProvider(service = HTMLViewerSpi.class)
 public final class LspHtmlViewer extends AbstractLspHtmlViewer {
 }

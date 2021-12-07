@@ -65,6 +65,10 @@
 				{
 					"id": "foundProjects",
 					"name": "Projects"
+				},
+				{
+					"id": "database.connections",
+					"name": "Databases"
 				}
 			]
 		},
@@ -396,8 +400,21 @@
 			{
 				"command": "foundProjects.deleteEntry",
 				"title": "Delete"
+			},
+			{
+				"command": "nbls:Database:netbeans.db.explorer.action.Connect",
+				"title": "Connect to Database"
+			},
+			{
+				"command": "nbls:Database:netbeans.db.explorer.action.Disconnect",
+				"title": "Disconnect"
+			},
+			{
+				"command": "nbls:Edit:org.openide.actions.DeleteAction",
+				"title": "Delete"
 			}
-		],
+			
+	],
 		"keybindings": [
 			{
 				"command": "java.workspace.compile",
@@ -457,6 +474,18 @@
 				{
 					"command": "foundProjects.deleteEntry",
 					"when": "view == foundProjects && viewItem == node"
+				},
+				{
+					"command": "nbls:Database:netbeans.db.explorer.action.Connect",
+					"when": "nbJavaLSReady && viewItem =~ /class:ddl.DBConnection/"
+				},
+				{
+					"command": "nbls:Database:netbeans.db.explorer.action.Disconnect",
+					"when": "nbJavaLSReady && viewItem =~ /class:ddl.DBConnection/"
+				},
+				{
+					"command": "nbls:Edit:org.openide.actions.DeleteAction",
+					"when": "nbJavaLSReady && viewItem =~ /class:ddl.DBConnection/"
 				}
 			]
 		}

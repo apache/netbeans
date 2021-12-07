@@ -1734,10 +1734,10 @@ public class ServerTest extends NbTestCase {
         indexingComplete.await();
         List<? extends SymbolInformation> symbols = server.getWorkspaceService().symbol(new WorkspaceSymbolParams("Tes")).get();
         List<String> actual = symbols.stream().map(si -> si.getKind() + ":" + si.getName() + ":" + si.getContainerName() + ":" + toString(si.getLocation())).collect(Collectors.toList());
-        assertEquals(Arrays.asList("Class:Test:null:Test.java:0:13-0:17",
+        assertEquals(Arrays.asList("Class:Test:null:Test:0:0-0:0",
                                    "Constructor:Test():Test:Test.java:0:7-0:7",
                                    "Method:testMethod():Test:Test.java:2:4-2:38",
-                                   "Class:TestNested:Test:Test.java:1:24-1:34",
+                                   "Class:TestNested:Test:Test%24TestNested:0:0-0:0",
                                    "Constructor:TestNested():Test.TestNested:Test.java:1:18-1:18"),
                      actual);
     }
@@ -4642,6 +4642,10 @@ public class ServerTest extends NbTestCase {
     private String toString(Location location) {
         String path = location.getUri();
         String simpleName = path.substring(path.lastIndexOf('/') + 1);
+        int idx = simpleName.lastIndexOf("%23");
+        if (idx >= 0) {
+            simpleName = simpleName.substring(idx + 3);
+        }
         return simpleName + ":" + toString(location.getRange());
     }
 

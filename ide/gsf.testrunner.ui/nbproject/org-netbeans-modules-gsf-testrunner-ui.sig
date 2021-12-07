@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.26
+#Version 1.29.0
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -182,6 +182,11 @@ meth public boolean isTestClass(org.openide.nodes.Node)
 meth public final void debugTestMethod(org.openide.nodes.Node)
 supr java.lang.Object
 hfds command,singleMethod,singleMethodTask
+
+CLSS public final org.netbeans.modules.gsf.testrunner.ui.api.TestMethodFinder
+cons public init()
+meth public static java.util.Map<org.openide.filesystems.FileObject,java.util.Collection<org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController$TestMethod>> findTestMethods(java.lang.Iterable<org.openide.filesystems.FileObject>,java.util.function.BiConsumer<org.openide.filesystems.FileObject,java.util.Collection<org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController$TestMethod>>)
+supr java.lang.Object
 
 CLSS public org.netbeans.modules.gsf.testrunner.ui.api.TestMethodNode
 cons protected init(org.netbeans.modules.gsf.testrunner.api.Testcase,org.netbeans.api.project.Project,org.openide.util.Lookup)

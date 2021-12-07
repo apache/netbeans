@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.htmlui;
+package org.netbeans.modules.htmlui.impl;
 
 import java.util.concurrent.CountDownLatch;
 import javafx.application.Platform;
@@ -62,9 +62,7 @@ public class ComponentsTest {
         EnsureJavaFXPresent.checkAndThrow();
         final CountDownLatch cdl = new CountDownLatch(1);
         final CountDownLatch done = new CountDownLatch(1);
-        System.err.println("p1: " + JFXPanel.class.getProtectionDomain().getCodeSource().getLocation());
         final JFXPanel p = new JFXPanel();
-        System.err.println("p2: " + p.getClass().getProtectionDomain().getCodeSource().getLocation());
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -86,7 +84,7 @@ public class ComponentsTest {
         url = "simple.html", className = "TestPages",
         type = JComponent.class, 
         techIds = "second"
-    ) 
+    )
     static void getSwing(int param, CountDownLatch called) {
         assertEquals(param, 10, "Correct value passed in");
         called.countDown();

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.htmlui;
+package org.netbeans.modules.htmlui.impl;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class HtmlComponentTest {
     private static final CountDownLatch down = new CountDownLatch(1);
     private static Lookup lkp;
     private static BrwsrCtx ctx;
-    
+
     public HtmlComponentTest() {
     }
 
@@ -51,30 +51,31 @@ public class HtmlComponentTest {
         if (!EnsureJavaFXPresent.check()) {
             return;
         }
-        
+
         final HtmlComponent tc = new HtmlComponent();
-        final URL u = HtmlComponent.class.getResource("/org/netbeans/api/htmlui/empty.html");
+        final URL u = HtmlComponent.class.getResource("/org/netbeans/modules/htmlui/impl/empty.html");
+        assertNotNull(u, "empty.html found");
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                tc.loadFX(u, HtmlComponentTest.class, "onLoad");
+                tc.loadFX(HtmlComponentTest.class.getClassLoader(), u, HtmlComponentTest::onLoad);
             }
         });
         lkp = tc.getLookup();
     }
-    
+
     public static Object onLoad() {
         ctx = BrwsrCtx.findDefault(HtmlComponentTest.class);
         CheckContext cc = new CheckContext();
         net.java.html.json.Models.applyBindings(cc);
         return cc;
     }
-    
+
     @Test(timeOut = 9000)
     public void updateContext() throws Exception {
         EnsureJavaFXPresent.checkAndThrow();
         CheckContext cc = assertContext();
-        
+
         assertNull(lkp.lookup(DefCnstr.class), "No instance yet");
         cc.addContext(DefCnstr.class.getName());
         waitFX();
@@ -88,7 +89,7 @@ public class HtmlComponentTest {
     public void closedWhenRemoved() throws Exception {
         EnsureJavaFXPresent.checkAndThrow();
         CheckContext cc = assertContext();
-        
+
         cc.addContext(ClsblCnstr.class.getName());
         waitFX();
         final ClsblCnstr inst = lkp.lookup(ClsblCnstr.class);
@@ -104,7 +105,7 @@ public class HtmlComponentTest {
     public void updateContextWithNonDefaultCnstr() throws Exception {
         EnsureJavaFXPresent.checkAndThrow();
         CheckContext cc = assertContext();
-        
+
         assertNull(lkp.lookup(MdlCnstr.class), "No instance yet");
         cc.addContext(MdlCnstr.class.getName());
         waitFX();
@@ -128,15 +129,15 @@ public class HtmlComponentTest {
         assertNotNull(cc, "Value returned from onLoad is in the lookup");
         return cc;
     }
-    
+
     @ModelOperation static void addContext(CheckContext cc, String name) {
         cc.getContext().add(name);
     }
-    
+
     @ModelOperation static void clearContext(CheckContext cc) {
         cc.getContext().clear();
     }
-    
+
     private static void waitFX() throws Exception {
         final CountDownLatch down = new CountDownLatch(1);
         Platform.runLater(new Runnable() {
@@ -147,7 +148,7 @@ public class HtmlComponentTest {
         });
         down.await();
     }
-    
+
     public static final class DefCnstr {
     }
     public static final class MdlCnstr {
@@ -159,7 +160,7 @@ public class HtmlComponentTest {
     }
     public static final class ClsblCnstr implements Closeable {
         boolean closed;
-        
+
         @Override
         public void close() throws IOException {
             this.closed = true;

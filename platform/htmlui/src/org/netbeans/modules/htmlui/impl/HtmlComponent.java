@@ -16,27 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.htmlui;
+package org.netbeans.modules.htmlui.impl;
 
 import java.awt.BorderLayout;
 import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import javax.swing.JComponent;
 import net.java.html.js.JavaScriptBody;
-import static org.netbeans.modules.htmlui.HtmlToolkit.LOG;
-import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.windows.TopComponent;
+
+import static org.netbeans.modules.htmlui.impl.HtmlToolkit.LOG;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -46,45 +47,46 @@ import org.openide.windows.TopComponent;
     persistenceType = TopComponent.PERSISTENCE_NEVER,
     preferredID = "browser"
 )
-public final class HtmlComponent extends TopComponent  {
+public final class HtmlComponent extends TopComponent {
     private final JComponent p = HtmlToolkit.getDefault().newPanel();
     private /* final */ Object webView;
     private final InstanceContent ic;
     private Object value;
     private final Map<String,Object> cache = new HashMap<>();
-    
+
     HtmlComponent() {
         ic = new InstanceContent();
         associateLookup(new AbstractLookup(ic));
         setLayout(new BorderLayout());
         add(p, BorderLayout.CENTER);
     }
-    
-    public void loadFX(URL pageUrl, final Class<?> clazz, final String m, Object... ctx) {
+
+    public final void loadFX(ClassLoader loader, URL pageUrl, Callable<Object> init, String... ctx) {
         webView = HtmlToolkit.getDefault().initHtmlComponent(p, this::setDisplayName);
-        ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
-        if (loader == null) {
-            loader = clazz.getClassLoader();
-        }
-        HtmlToolkit.getDefault().load(webView, pageUrl, new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    HtmlComponent hc = HtmlComponent.this;
-                    Method method = clazz.getMethod(m);
-                    Object value = method.invoke(null);
-                    if (value != null) {
-                        hc.value = value;
-                        hc.ic.add(value);
-                    }
-                    listenOnContext(hc);
-                } catch (Exception ex) {
-                    LOG.log(Level.WARNING, "Can't load " + m + " from " + clazz, ex);
+        HtmlToolkit.getDefault().load(webView, pageUrl, () -> {
+            try {
+                Object v = init.call();
+                if (v != null) {
+                    value = v;
+                    ic.add(v);
                 }
+                listenOnContext(this);
+            } catch (Exception ex) {
+                LOG.log(Level.WARNING, "Can't load " + pageUrl, ex);
             }
         }, loader, ctx);
     }
-    
+
+    static Class<?> loadClass(String c) throws ClassNotFoundException {
+        ClassLoader l = Lookup.getDefault().lookup(ClassLoader.class);
+        if (l == null) {
+            l = Thread.currentThread().getContextClassLoader();
+        }
+        if (l == null) {
+            l = HtmlComponent.class.getClassLoader();
+        }
+        return Class.forName(c, true, l);
+    }
 
     final void onChange(Object[] values) {
         List<Object> instances = new ArrayList<>();
@@ -137,20 +139,9 @@ public final class HtmlComponent extends TopComponent  {
         + "if (typeof data === 'undefined') return;\n"
         + "if (typeof data.context === 'undefined') return;\n"
         + "data.context.subscribe(function(value) {\n"
-        + "  onChange.@org.netbeans.modules.htmlui.HtmlComponent::onChange([Ljava/lang/Object;)(value);\n"
+        + "  onChange.@org.netbeans.modules.htmlui.impl.HtmlComponent::onChange([Ljava/lang/Object;)(value);\n"
         + "});\n"
-        + "onChange.@org.netbeans.modules.htmlui.HtmlComponent::onChange([Ljava/lang/Object;)(data.context());\n"
+        + "onChange.@org.netbeans.modules.htmlui.impl.HtmlComponent::onChange([Ljava/lang/Object;)(data.context());\n"
     )
     private static native void listenOnContext(HtmlComponent onChange);
-
-    static Class loadClass(String c) throws ClassNotFoundException {
-        ClassLoader l = Lookup.getDefault().lookup(ClassLoader.class);
-        if (l == null) {
-            l = Thread.currentThread().getContextClassLoader();
-        }
-        if (l == null) {
-            l = Pages.class.getClassLoader();
-        }
-        return Class.forName(c, true, l);
-    }
 }

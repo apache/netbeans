@@ -16,36 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.htmlui;
+package org.netbeans.modules.htmlui.impl;
 
-import javafx.embed.swing.JFXPanel;
-import static org.testng.AssertJUnit.assertNotNull;
-import org.testng.SkipException;
+import java.net.URL;
+import java.net.URLStreamHandlerFactory;
+import org.openide.util.Lookup;
+import static org.testng.Assert.assertNotNull;
 
-class EnsureJavaFXPresent {
-    private static final Throwable initError;
+/**
+ *
+ * @author Jaroslav Tulach
+ */
+final class NbResloc {
     static {
-        Throwable t;
-        try {
-            JFXPanel p = new JFXPanel();
-            assertNotNull("Allocated", p);
-            t = null;
-        } catch (RuntimeException | LinkageError err) {
-            t = err;
-        }
-        initError = t;
+        URLStreamHandlerFactory f = Lookup.getDefault().lookup(URLStreamHandlerFactory.class);
+        assertNotNull(f, "Factory found");
+        URL.setURLStreamHandlerFactory(f);
     }
-    
-    private EnsureJavaFXPresent() {
-    }
-    
-    static void checkAndThrow() {
-        if (initError != null) {
-            throw new SkipException("Cannot initialize JavaFX", initError);
-        }
-    }
-    
-    static boolean check() {
-        return initError == null;
+    static void init() {
     }
 }

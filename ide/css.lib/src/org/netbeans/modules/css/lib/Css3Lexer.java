@@ -1,4 +1,4 @@
-// $ANTLR 3.5.2 /home/matthias/src/netbeans/ide/css.lib/src/org/netbeans/modules/css/lib/Css3.g 2021-08-07 16:52:40
+// $ANTLR 3.5.2 /home/matthias/src/netbeans/ide/css.lib/src/org/netbeans/modules/css/lib/Css3.g 2021-12-07 21:14:58
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -13109,70 +13109,70 @@ public class Css3Lexer extends Lexer {
 		"\uffff\1\7\113\uffff\1\10\u020c\uffff";
 	static final String DFA193_specialS =
 		"\2\uffff\1\u00ed\6\uffff\1\u013d\12\uffff\1\u013e\5\uffff\1\101\16\uffff"+
-		"\1\u014b\1\u014c\4\uffff\1\u017c\1\u01e8\1\172\1\u0184\1\u0081\1\u008c"+
-		"\1\u01e7\1\20\1\u00d5\1\u0094\1\31\1\u00da\1\u0100\1\u018d\1\u0106\1\u019b"+
-		"\1\u01f0\1\41\1\u01a9\1\61\1\u012b\1\u01ed\1\u0134\1\uffff\1\2\5\uffff"+
-		"\1\u01b7\1\uffff\1\117\1\u00a3\1\142\1\u017d\1\173\1\u0183\1\u0082\1\u008d"+
-		"\1\21\1\u00d6\1\u0095\1\32\1\u00db\1\u0102\1\u0107\1\u019c\1\42\1\u01aa"+
-		"\1\62\1\u012c\1\u0136\1\120\1\141\1\u010e\1\u0128\1\uffff\1\u0117\6\uffff"+
-		"\1\u00af\1\u013f\1\u00bf\1\u010d\1\u0118\1\u00ae\1\u00be\1\u008b\1\u0096"+
-		"\1\17\1\30\1\u00d7\1\u00dc\14\uffff\1\u008e\1\u0097\1\22\1\33\1\u00d8"+
-		"\1\u00dd\1\u019d\1\u01a8\1\43\1\60\2\uffff\1\u0141\1\u019f\1\u01ab\1\44"+
-		"\1\57\1\u012a\1\u0137\1\u012d\1\u0138\1\121\1\143\1\123\1\144\1\uffff"+
+		"\1\u014b\1\u014c\4\uffff\1\u017c\1\u01e8\1\172\1\u0185\1\u0081\1\u008c"+
+		"\1\u01e7\1\20\1\u00d5\1\u0095\1\30\1\u00da\1\u00ff\1\u018d\1\u0106\1\u019b"+
+		"\1\u01f0\1\42\1\u01a9\1\61\1\u012b\1\u01ed\1\u0135\1\uffff\1\2\5\uffff"+
+		"\1\u01b7\1\uffff\1\120\1\u00a3\1\141\1\u017d\1\173\1\u0183\1\u0082\1\u008d"+
+		"\1\21\1\u00d6\1\u0096\1\31\1\u00db\1\u0100\1\u0107\1\u019c\1\41\1\u01a8"+
+		"\1\62\1\u012c\1\u0136\1\121\1\142\1\u010e\1\u0128\1\uffff\1\u0116\6\uffff"+
+		"\1\u00af\1\u013f\1\u00c0\1\u010d\1\u0117\1\u00b0\1\u00c2\1\u008b\1\u0097"+
+		"\1\17\1\32\1\u00d7\1\u00dc\14\uffff\1\u008e\1\u0098\1\22\1\33\1\u00d8"+
+		"\1\u00dd\1\u019d\1\u01aa\1\43\1\64\2\uffff\1\u0141\1\u019f\1\u01ab\1\44"+
+		"\1\66\1\u012a\1\u0134\1\u012d\1\u0137\1\127\1\143\1\130\1\146\1\uffff"+
 		"\1\u0149\1\u014a\1\u00a5\2\uffff\1\u00a6\2\uffff\1\u00ac\1\u00ad\1\102"+
 		"\2\uffff\1\104\2\uffff\1\u00e8\1\u00e9\3\uffff\1\u017a\1\u017b\1\77\2"+
 		"\uffff\1\100\2\uffff\1\u0121\1\u0122\2\uffff\1\u00f4\1\u00e5\1\u00f9\2"+
-		"\uffff\1\u01c6\1\u0190\1\u01d5\1\u00f5\1\u00fa\1\u01c5\1\u01d6\1\126\1"+
-		"\145\4\uffff\1\127\1\146\1\uffff\1\u00aa\1\u00ab\3\uffff\1\u00de\1\u00e0"+
-		"\2\uffff\1\u0158\1\u018c\1\u0168\1\u0159\1\u0169\1\u010f\1\u0119\1\u0110"+
-		"\1\u0116\6\uffff\1\167\1\170\20\uffff\1\u01b6\2\uffff\1\u017e\1\174\1"+
-		"\u0185\1\u0083\1\u0103\1\u0108\1\u01a0\1\50\1\u01ac\1\65\1\u012e\1\u0135"+
-		"\1\130\1\154\1\u01a1\1\51\1\u01ad\1\67\1\u008f\1\23\1\u0177\1\u0099\1"+
+		"\uffff\1\u01c7\1\u0190\1\u01d4\1\u00f5\1\u00fa\1\u01c9\1\u01d5\1\131\1"+
+		"\150\4\uffff\1\133\1\151\1\uffff\1\u00aa\1\u00ab\3\uffff\1\u00de\1\u00e0"+
+		"\2\uffff\1\u0158\1\u018c\1\u0169\1\u0159\1\u016a\1\u010f\1\u0118\1\u0110"+
+		"\1\u0119\6\uffff\1\167\1\170\20\uffff\1\u01b6\2\uffff\1\u017e\1\174\1"+
+		"\u0186\1\u0083\1\u0104\1\u0108\1\u01a0\1\45\1\u01ac\1\60\1\u012e\1\u0138"+
+		"\1\134\1\153\1\u019a\1\47\1\u01ae\1\72\1\u008f\1\23\1\u0177\1\u0099\1"+
 		"\34\1\u0178\7\uffff\1\u00ee\1\u00f0\1\166\3\uffff\1\u008a\1\u01ef\1\u014e"+
 		"\2\uffff\1\u00a7\1\u00a8\3\uffff\1\u0124\1\u0125\1\u01eb\2\uffff\1\u00e1"+
-		"\1\u00e2\7\uffff\1\u0197\1\u0199\2\uffff\1\133\1\156\1\137\1\160\5\uffff"+
+		"\1\u00e2\7\uffff\1\u0197\1\u0199\2\uffff\1\137\1\154\1\140\1\156\5\uffff"+
 		"\1\u0088\1\u0089\2\uffff\1\u009f\1\uffff\1\u0142\1\u0143\7\uffff\1\u0111"+
-		"\1\uffff\1\u011a\1\uffff\1\u00b0\1\u00c0\2\uffff\1\7\16\uffff\1\5\2\uffff"+
-		"\1\u017f\1\175\1\u0186\1\u0084\1\u0104\1\u0109\1\u019a\1\53\1\u01ae\1"+
-		"\70\1\u012f\1\u0139\1\124\1\161\1\u01a4\1\54\1\u01b1\1\64\1\u0090\1\24"+
-		"\1\u01e9\1\u009a\1\35\1\u01ea\4\uffff\1\u00b1\1\u00c1\1\u00b2\1\u00c2"+
-		"\1\12\1\14\1\u01c8\1\u01d4\1\13\1\15\1\u01ca\1\u01d7\3\uffff\1\u0155\1"+
+		"\1\uffff\1\u011a\1\uffff\1\u00b1\1\u00bf\2\uffff\1\7\16\uffff\1\5\2\uffff"+
+		"\1\u017f\1\175\1\u0184\1\u0084\1\u0101\1\u0109\1\u01a1\1\51\1\u01b0\1"+
+		"\73\1\u012f\1\u0139\1\117\1\152\1\u01a4\1\54\1\u01b2\1\67\1\u0090\1\24"+
+		"\1\u01e9\1\u0094\1\35\1\u01ea\4\uffff\1\u00b3\1\u00be\1\u00ae\1\u00c3"+
+		"\1\12\1\14\1\u01c6\1\u01d6\1\13\1\15\1\u01cb\1\u01d8\3\uffff\1\u0155\1"+
 		"\u0156\1\u00b7\3\uffff\1\u00d0\1\115\1\u01bc\2\uffff\1\u00ef\1\u00f1\3"+
 		"\uffff\1\u018e\1\u018f\1\107\2\uffff\1\u0126\1\u0127\2\uffff\1\u0198\4"+
-		"\uffff\1\u01f3\1\u01f4\1\u01cb\1\u01d8\2\uffff\1\u0145\1\u0146\3\uffff"+
-		"\1\132\1\155\2\uffff\1\u00ce\1\u00cf\2\uffff\1\u00e6\1\uffff\1\u015c\1"+
-		"\u0167\2\uffff\1\u00ea\1\u00eb\5\uffff\1\u0112\1\uffff\1\u011b\1\uffff"+
-		"\1\u00b8\1\u00c3\1\u0157\1\u016b\1\u015e\1\u016c\2\uffff\1\u009d\15\uffff"+
-		"\1\u01b8\2\uffff\1\u0180\1\176\1\u0187\1\u0085\1\u0101\1\u010a\1\u01a7"+
-		"\1\56\1\u01b3\1\73\1\u0130\1\u013b\1\136\1\150\1\u019e\1\55\1\u01af\1"+
-		"\71\1\u0091\1\25\1\u0188\1\u009b\1\36\1\u018b\4\uffff\1\u00bb\1\u00c5"+
-		"\1\u00bd\1\u00c8\1\u01c0\1\u01c2\1\u01ce\1\u01d9\1\u01c1\1\u01c3\1\u01cf"+
-		"\1\u01dc\3\uffff\1\u01e4\1\u01e6\1\u00fe\3\uffff\1\u0123\1\u00a9\1\16"+
+		"\uffff\1\u01f3\1\u01f4\1\u01c5\1\u01d9\2\uffff\1\u0145\1\u0146\3\uffff"+
+		"\1\125\1\157\2\uffff\1\u00ce\1\u00cf\2\uffff\1\u00e6\1\uffff\1\u015c\1"+
+		"\u0168\2\uffff\1\u00ea\1\u00eb\5\uffff\1\u0112\1\uffff\1\u011b\1\uffff"+
+		"\1\u00ba\1\u00c7\1\u0157\1\u016c\1\u0160\1\u0170\2\uffff\1\u009d\15\uffff"+
+		"\1\u01b8\2\uffff\1\u0180\1\176\1\u0187\1\u0085\1\u0102\1\u010a\1\u01a7"+
+		"\1\55\1\u01b5\1\63\1\u0130\1\u013b\1\123\1\161\1\u019e\1\56\1\u01ad\1"+
+		"\70\1\u0091\1\25\1\u0188\1\u009b\1\36\1\u018b\4\uffff\1\u00bb\1\u00c8"+
+		"\1\u00bc\1\u00cb\1\u01c0\1\u01c2\1\u01cd\1\u01dc\1\u01c1\1\u01c3\1\u01d0"+
+		"\1\u01de\3\uffff\1\u01e4\1\u01e6\1\u00fe\3\uffff\1\u0123\1\u00a9\1\16"+
 		"\2\uffff\1\u0153\1\u0154\3\uffff\1\u01ec\1\u01ee\1\u00a4\2\uffff\1\u0191"+
-		"\1\u0193\2\uffff\1\u01f7\4\uffff\1\164\1\165\1\u01d0\1\u01e0\2\uffff\1"+
-		"\u01b9\1\u01ba\3\uffff\1\122\1\151\2\uffff\1\u011f\1\u0120\2\uffff\1\u0140"+
-		"\1\uffff\1\u0162\1\u016e\2\uffff\1\u014f\1\u0150\4\uffff\1\u0113\1\uffff"+
-		"\1\u011c\1\uffff\1\u00b3\1\u00ca\1\u0164\1\u016f\1\u0165\1\u0170\2\uffff"+
-		"\1\u00d3\13\uffff\1\103\2\uffff\1\u0181\1\177\1\u0189\1\u0086\1\u0105"+
-		"\1\u010b\1\u01a5\1\46\1\u01b5\1\63\1\u0131\1\u013c\1\140\1\153\1\u01a3"+
-		"\1\47\1\u01b2\1\74\1\u0092\1\26\1\3\1\u009c\1\37\1\4\4\uffff\1\u00b5\1"+
-		"\u00cb\1\u00b9\1\u00c6\1\110\1\112\1\u01d2\1\u01e1\1\111\1\113\1\u01c9"+
-		"\1\u01dd\2\uffff\1\u0161\1\u0175\1\u00cd\2\uffff\1\u00d4\1\163\1\u01c4"+
+		"\1\u0193\2\uffff\1\u01f7\4\uffff\1\164\1\165\1\u01d2\1\u01e0\2\uffff\1"+
+		"\u01b9\1\u01ba\3\uffff\1\132\1\144\2\uffff\1\u011f\1\u0120\2\uffff\1\u0140"+
+		"\1\uffff\1\u0163\1\u0171\2\uffff\1\u014f\1\u0150\4\uffff\1\u0113\1\uffff"+
+		"\1\u011c\1\uffff\1\u00b5\1\u00cc\1\u0165\1\u0174\1\u0166\1\u0167\2\uffff"+
+		"\1\u00d3\13\uffff\1\103\2\uffff\1\u0181\1\177\1\u0189\1\u0086\1\u0103"+
+		"\1\u010b\1\u01a5\1\53\1\u01b3\1\65\1\u0131\1\u013c\1\135\1\162\1\u01a6"+
+		"\1\50\1\u01b1\1\71\1\u0092\1\26\1\3\1\u009c\1\37\1\4\4\uffff\1\u00bd\1"+
+		"\u00c6\1\u00b2\1\u00c4\1\110\1\112\1\u01d3\1\u01e2\1\111\1\113\1\u01d1"+
+		"\1\u01df\2\uffff\1\u0162\1\u0175\1\u00cd\2\uffff\1\u00d4\1\163\1\u01c4"+
 		"\1\uffff\1\u00f2\1\u00f3\2\uffff\1\u0192\1\u0194\1\116\1\uffff\1\u0129"+
-		"\1\u0133\2\uffff\1\171\3\uffff\1\0\1\1\1\u01cd\1\u01da\2\uffff\1\10\1"+
-		"\11\2\uffff\1\135\1\147\1\uffff\1\u00d1\1\u00d2\1\uffff\1\u00e7\1\uffff"+
-		"\1\u0163\1\u0176\2\uffff\1\u01be\1\u01bf\2\uffff\1\u0114\1\uffff\1\u011d"+
-		"\1\uffff\1\u00b6\1\u00cc\1\u015f\1\u0171\1\u015d\1\u0173\1\uffff\1\u009e"+
-		"\1\u0182\1\u0080\1\u018a\1\u0087\1\u00ff\1\u010c\1\u01a2\1\45\1\u01b4"+
-		"\1\72\1\u0132\1\u013a\1\125\1\152\1\u01a6\1\52\1\u01b0\1\66\1\u0093\1"+
-		"\27\1\u00d9\1\u0098\1\40\1\u00df\1\u00ba\1\u00c4\1\u00bc\1\u00c9\1\u00f6"+
-		"\1\u00fb\1\u01c7\1\u01db\1\u00f7\1\u00fc\1\u01d3\1\u01de\1\u01f5\1\u01f6"+
+		"\1\u0133\2\uffff\1\171\3\uffff\1\0\1\1\1\u01ce\1\u01dd\2\uffff\1\10\1"+
+		"\11\2\uffff\1\124\1\145\1\uffff\1\u00d1\1\u00d2\1\uffff\1\u00e7\1\uffff"+
+		"\1\u0161\1\u016b\2\uffff\1\u01be\1\u01bf\2\uffff\1\u0114\1\uffff\1\u011d"+
+		"\1\uffff\1\u00b4\1\u00c9\1\u015d\1\u016e\1\u015f\1\u0173\1\uffff\1\u009e"+
+		"\1\u0182\1\u0080\1\u018a\1\u0087\1\u0105\1\u010c\1\u01a2\1\46\1\u01b4"+
+		"\1\74\1\u0132\1\u013a\1\126\1\155\1\u01a3\1\52\1\u01af\1\57\1\u0093\1"+
+		"\27\1\u00d9\1\u009a\1\40\1\u00df\1\u00b8\1\u00c5\1\u00b9\1\u00c1\1\u00f6"+
+		"\1\u00fb\1\u01ca\1\u01da\1\u00f7\1\u00fc\1\u01cc\1\u01d7\1\u01f5\1\u01f6"+
 		"\1\u0144\1\u014d\1\u00e4\1\114\1\u0195\1\u0196\1\75\1\76\1\u00e3\1\u01e3"+
-		"\1\u01e5\1\uffff\1\6\2\uffff\1\u00a0\1\u00a1\1\u01cc\1\u01df\1\uffff\1"+
-		"\u01bb\1\u01bd\1\uffff\1\134\1\162\1\u0147\1\u0148\1\u0179\1\uffff\1\u015a"+
-		"\1\u0172\1\uffff\1\u0151\1\u0152\1\u0115\1\u011e\1\u00b4\1\u00c7\1\u0160"+
-		"\1\u0174\1\u015b\1\u016a\1\u00ec\1\u00a2\1\u00f8\1\u00fd\1\u01d1\1\u01e2"+
-		"\1\105\1\106\1\131\1\157\1\u0166\1\u016d\1\u01f1\1\u01f2}>";
+		"\1\u01e5\1\uffff\1\6\2\uffff\1\u00a0\1\u00a1\1\u01c8\1\u01e1\1\uffff\1"+
+		"\u01bb\1\u01bd\1\uffff\1\122\1\147\1\u0147\1\u0148\1\u0179\1\uffff\1\u015a"+
+		"\1\u0172\1\uffff\1\u0151\1\u0152\1\u0115\1\u011e\1\u00b6\1\u00ca\1\u0164"+
+		"\1\u016f\1\u015b\1\u0176\1\u00ec\1\u00a2\1\u00f8\1\u00fd\1\u01cf\1\u01db"+
+		"\1\105\1\106\1\136\1\160\1\u015e\1\u016d\1\u01f1\1\u01f2}>";
 	static final String[] DFA193_transitionS = {
 			"\1\27\7\uffff\1\14\23\uffff\2\14\1\20\1\15\1\16\2\14\1\26\1\22\1\14\1"+
 			"\25\1\14\1\21\2\14\1\17\1\14\1\23\1\24\7\14\1\uffff\1\2\2\uffff\1\14"+
@@ -14400,19 +14400,6 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 24 : 
-						int LA193_122 = input.LA(1);
-						 
-						int index193_122 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred5_Css3()) ) {s = 170;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_122);
-						if ( s>=0 ) return s;
-						break;
-
-					case 25 : 
 						int LA193_57 = input.LA(1);
 						 
 						int index193_57 = input.index();
@@ -14425,7 +14412,7 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 26 : 
+					case 25 : 
 						int LA193_90 = input.LA(1);
 						 
 						int index193_90 = input.index();
@@ -14435,6 +14422,19 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_90);
+						if ( s>=0 ) return s;
+						break;
+
+					case 26 : 
+						int LA193_122 = input.LA(1);
+						 
+						int index193_122 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred5_Css3()) ) {s = 170;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_122);
 						if ( s>=0 ) return s;
 						break;
 
@@ -14517,19 +14517,6 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 33 : 
-						int LA193_64 = input.LA(1);
-						 
-						int index193_64 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_64);
-						if ( s>=0 ) return s;
-						break;
-
-					case 34 : 
 						int LA193_95 = input.LA(1);
 						 
 						int index193_95 = input.index();
@@ -14539,6 +14526,19 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_95);
+						if ( s>=0 ) return s;
+						break;
+
+					case 34 : 
+						int LA193_64 = input.LA(1);
+						 
+						int index193_64 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_64);
 						if ( s>=0 ) return s;
 						break;
 
@@ -14569,45 +14569,6 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 37 : 
-						int LA193_754 = input.LA(1);
-						 
-						int index193_754 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_754);
-						if ( s>=0 ) return s;
-						break;
-
-					case 38 : 
-						int LA193_649 = input.LA(1);
-						 
-						int index193_649 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_649);
-						if ( s>=0 ) return s;
-						break;
-
-					case 39 : 
-						int LA193_657 = input.LA(1);
-						 
-						int index193_657 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_657);
-						if ( s>=0 ) return s;
-						break;
-
-					case 40 : 
 						int LA193_269 = input.LA(1);
 						 
 						int index193_269 = input.index();
@@ -14620,7 +14581,20 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 41 : 
+					case 38 : 
+						int LA193_754 = input.LA(1);
+						 
+						int index193_754 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_754);
+						if ( s>=0 ) return s;
+						break;
+
+					case 39 : 
 						int LA193_277 = input.LA(1);
 						 
 						int index193_277 = input.index();
@@ -14630,6 +14604,32 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_277);
+						if ( s>=0 ) return s;
+						break;
+
+					case 40 : 
+						int LA193_657 = input.LA(1);
+						 
+						int index193_657 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_657);
+						if ( s>=0 ) return s;
+						break;
+
+					case 41 : 
+						int LA193_384 = input.LA(1);
+						 
+						int index193_384 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_384);
 						if ( s>=0 ) return s;
 						break;
 
@@ -14647,15 +14647,15 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 43 : 
-						int LA193_384 = input.LA(1);
+						int LA193_649 = input.LA(1);
 						 
-						int index193_384 = input.index();
+						int index193_649 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred7_Css3()) ) {s = 183;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_384);
+						input.seek(index193_649);
 						if ( s>=0 ) return s;
 						break;
 
@@ -14673,19 +14673,6 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 45 : 
-						int LA193_526 = input.LA(1);
-						 
-						int index193_526 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_526);
-						if ( s>=0 ) return s;
-						break;
-
-					case 46 : 
 						int LA193_518 = input.LA(1);
 						 
 						int index193_518 = input.index();
@@ -14698,29 +14685,42 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 47 : 
-						int LA193_153 = input.LA(1);
+					case 46 : 
+						int LA193_526 = input.LA(1);
 						 
-						int index193_153 = input.index();
+						int index193_526 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred7_Css3()) ) {s = 183;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_153);
+						input.seek(index193_526);
+						if ( s>=0 ) return s;
+						break;
+
+					case 47 : 
+						int LA193_764 = input.LA(1);
+						 
+						int index193_764 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_764);
 						if ( s>=0 ) return s;
 						break;
 
 					case 48 : 
-						int LA193_146 = input.LA(1);
+						int LA193_271 = input.LA(1);
 						 
-						int index193_146 = input.index();
+						int index193_271 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred7_Css3()) ) {s = 183;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_146);
+						input.seek(index193_271);
 						if ( s>=0 ) return s;
 						break;
 
@@ -14751,110 +14751,6 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 51 : 
-						int LA193_651 = input.LA(1);
-						 
-						int index193_651 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_651);
-						if ( s>=0 ) return s;
-						break;
-
-					case 52 : 
-						int LA193_394 = input.LA(1);
-						 
-						int index193_394 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_394);
-						if ( s>=0 ) return s;
-						break;
-
-					case 53 : 
-						int LA193_271 = input.LA(1);
-						 
-						int index193_271 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_271);
-						if ( s>=0 ) return s;
-						break;
-
-					case 54 : 
-						int LA193_764 = input.LA(1);
-						 
-						int index193_764 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_764);
-						if ( s>=0 ) return s;
-						break;
-
-					case 55 : 
-						int LA193_279 = input.LA(1);
-						 
-						int index193_279 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_279);
-						if ( s>=0 ) return s;
-						break;
-
-					case 56 : 
-						int LA193_386 = input.LA(1);
-						 
-						int index193_386 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_386);
-						if ( s>=0 ) return s;
-						break;
-
-					case 57 : 
-						int LA193_528 = input.LA(1);
-						 
-						int index193_528 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_528);
-						if ( s>=0 ) return s;
-						break;
-
-					case 58 : 
-						int LA193_756 = input.LA(1);
-						 
-						int index193_756 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_756);
-						if ( s>=0 ) return s;
-						break;
-
-					case 59 : 
 						int LA193_520 = input.LA(1);
 						 
 						int index193_520 = input.index();
@@ -14867,7 +14763,72 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 60 : 
+					case 52 : 
+						int LA193_146 = input.LA(1);
+						 
+						int index193_146 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_146);
+						if ( s>=0 ) return s;
+						break;
+
+					case 53 : 
+						int LA193_651 = input.LA(1);
+						 
+						int index193_651 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_651);
+						if ( s>=0 ) return s;
+						break;
+
+					case 54 : 
+						int LA193_153 = input.LA(1);
+						 
+						int index193_153 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_153);
+						if ( s>=0 ) return s;
+						break;
+
+					case 55 : 
+						int LA193_394 = input.LA(1);
+						 
+						int index193_394 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_394);
+						if ( s>=0 ) return s;
+						break;
+
+					case 56 : 
+						int LA193_528 = input.LA(1);
+						 
+						int index193_528 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_528);
+						if ( s>=0 ) return s;
+						break;
+
+					case 57 : 
 						int LA193_659 = input.LA(1);
 						 
 						int index193_659 = input.index();
@@ -14877,6 +14838,45 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_659);
+						if ( s>=0 ) return s;
+						break;
+
+					case 58 : 
+						int LA193_279 = input.LA(1);
+						 
+						int index193_279 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_279);
+						if ( s>=0 ) return s;
+						break;
+
+					case 59 : 
+						int LA193_386 = input.LA(1);
+						 
+						int index193_386 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_386);
+						if ( s>=0 ) return s;
+						break;
+
+					case 60 : 
+						int LA193_756 = input.LA(1);
+						 
+						int index193_756 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_756);
 						if ( s>=0 ) return s;
 						break;
 
@@ -15114,71 +15114,6 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 79 : 
-						int LA193_79 = input.LA(1);
-						 
-						int index193_79 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_79);
-						if ( s>=0 ) return s;
-						break;
-
-					case 80 : 
-						int LA193_100 = input.LA(1);
-						 
-						int index193_100 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_100);
-						if ( s>=0 ) return s;
-						break;
-
-					case 81 : 
-						int LA193_158 = input.LA(1);
-						 
-						int index193_158 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_158);
-						if ( s>=0 ) return s;
-						break;
-
-					case 82 : 
-						int LA193_595 = input.LA(1);
-						 
-						int index193_595 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_595);
-						if ( s>=0 ) return s;
-						break;
-
-					case 83 : 
-						int LA193_160 = input.LA(1);
-						 
-						int index193_160 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_160);
-						if ( s>=0 ) return s;
-						break;
-
-					case 84 : 
 						int LA193_389 = input.LA(1);
 						 
 						int index193_389 = input.index();
@@ -15191,98 +15126,33 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 85 : 
-						int LA193_759 = input.LA(1);
+					case 80 : 
+						int LA193_79 = input.LA(1);
 						 
-						int index193_759 = input.index();
+						int index193_79 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred12_Css3()) ) {s = 216;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_759);
+						input.seek(index193_79);
 						if ( s>=0 ) return s;
 						break;
 
-					case 86 : 
-						int LA193_208 = input.LA(1);
+					case 81 : 
+						int LA193_100 = input.LA(1);
 						 
-						int index193_208 = input.index();
+						int index193_100 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred12_Css3()) ) {s = 216;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_208);
+						input.seek(index193_100);
 						if ( s>=0 ) return s;
 						break;
 
-					case 87 : 
-						int LA193_214 = input.LA(1);
-						 
-						int index193_214 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_214);
-						if ( s>=0 ) return s;
-						break;
-
-					case 88 : 
-						int LA193_274 = input.LA(1);
-						 
-						int index193_274 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_274);
-						if ( s>=0 ) return s;
-						break;
-
-					case 89 : 
-						int LA193_835 = input.LA(1);
-						 
-						int index193_835 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_835);
-						if ( s>=0 ) return s;
-						break;
-
-					case 90 : 
-						int LA193_461 = input.LA(1);
-						 
-						int index193_461 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_461);
-						if ( s>=0 ) return s;
-						break;
-
-					case 91 : 
-						int LA193_327 = input.LA(1);
-						 
-						int index193_327 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_327);
-						if ( s>=0 ) return s;
-						break;
-
-					case 92 : 
+					case 82 : 
 						int LA193_808 = input.LA(1);
 						 
 						int index193_808 = input.index();
@@ -15295,20 +15165,7 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 93 : 
-						int LA193_719 = input.LA(1);
-						 
-						int index193_719 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_719);
-						if ( s>=0 ) return s;
-						break;
-
-					case 94 : 
+					case 83 : 
 						int LA193_523 = input.LA(1);
 						 
 						int index193_523 = input.index();
@@ -15321,20 +15178,124 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 95 : 
-						int LA193_329 = input.LA(1);
+					case 84 : 
+						int LA193_719 = input.LA(1);
 						 
-						int index193_329 = input.index();
+						int index193_719 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred12_Css3()) ) {s = 216;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_329);
+						input.seek(index193_719);
 						if ( s>=0 ) return s;
 						break;
 
-					case 96 : 
+					case 85 : 
+						int LA193_461 = input.LA(1);
+						 
+						int index193_461 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_461);
+						if ( s>=0 ) return s;
+						break;
+
+					case 86 : 
+						int LA193_759 = input.LA(1);
+						 
+						int index193_759 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_759);
+						if ( s>=0 ) return s;
+						break;
+
+					case 87 : 
+						int LA193_158 = input.LA(1);
+						 
+						int index193_158 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_158);
+						if ( s>=0 ) return s;
+						break;
+
+					case 88 : 
+						int LA193_160 = input.LA(1);
+						 
+						int index193_160 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_160);
+						if ( s>=0 ) return s;
+						break;
+
+					case 89 : 
+						int LA193_208 = input.LA(1);
+						 
+						int index193_208 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_208);
+						if ( s>=0 ) return s;
+						break;
+
+					case 90 : 
+						int LA193_595 = input.LA(1);
+						 
+						int index193_595 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_595);
+						if ( s>=0 ) return s;
+						break;
+
+					case 91 : 
+						int LA193_214 = input.LA(1);
+						 
+						int index193_214 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_214);
+						if ( s>=0 ) return s;
+						break;
+
+					case 92 : 
+						int LA193_274 = input.LA(1);
+						 
+						int index193_274 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_274);
+						if ( s>=0 ) return s;
+						break;
+
+					case 93 : 
 						int LA193_654 = input.LA(1);
 						 
 						int index193_654 = input.index();
@@ -15347,20 +15308,46 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 97 : 
-						int LA193_101 = input.LA(1);
+					case 94 : 
+						int LA193_835 = input.LA(1);
 						 
-						int index193_101 = input.index();
+						int index193_835 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred12_Css3()) ) {s = 216;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_101);
+						input.seek(index193_835);
 						if ( s>=0 ) return s;
 						break;
 
-					case 98 : 
+					case 95 : 
+						int LA193_327 = input.LA(1);
+						 
+						int index193_327 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_327);
+						if ( s>=0 ) return s;
+						break;
+
+					case 96 : 
+						int LA193_329 = input.LA(1);
+						 
+						int index193_329 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_329);
+						if ( s>=0 ) return s;
+						break;
+
+					case 97 : 
 						int LA193_81 = input.LA(1);
 						 
 						int index193_81 = input.index();
@@ -15370,6 +15357,19 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_81);
+						if ( s>=0 ) return s;
+						break;
+
+					case 98 : 
+						int LA193_101 = input.LA(1);
+						 
+						int index193_101 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_101);
 						if ( s>=0 ) return s;
 						break;
 
@@ -15387,71 +15387,6 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 100 : 
-						int LA193_161 = input.LA(1);
-						 
-						int index193_161 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_161);
-						if ( s>=0 ) return s;
-						break;
-
-					case 101 : 
-						int LA193_209 = input.LA(1);
-						 
-						int index193_209 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_209);
-						if ( s>=0 ) return s;
-						break;
-
-					case 102 : 
-						int LA193_215 = input.LA(1);
-						 
-						int index193_215 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_215);
-						if ( s>=0 ) return s;
-						break;
-
-					case 103 : 
-						int LA193_720 = input.LA(1);
-						 
-						int index193_720 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_720);
-						if ( s>=0 ) return s;
-						break;
-
-					case 104 : 
-						int LA193_524 = input.LA(1);
-						 
-						int index193_524 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_524);
-						if ( s>=0 ) return s;
-						break;
-
-					case 105 : 
 						int LA193_596 = input.LA(1);
 						 
 						int index193_596 = input.index();
@@ -15464,98 +15399,72 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
+					case 101 : 
+						int LA193_720 = input.LA(1);
+						 
+						int index193_720 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_720);
+						if ( s>=0 ) return s;
+						break;
+
+					case 102 : 
+						int LA193_161 = input.LA(1);
+						 
+						int index193_161 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_161);
+						if ( s>=0 ) return s;
+						break;
+
+					case 103 : 
+						int LA193_809 = input.LA(1);
+						 
+						int index193_809 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_809);
+						if ( s>=0 ) return s;
+						break;
+
+					case 104 : 
+						int LA193_209 = input.LA(1);
+						 
+						int index193_209 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_209);
+						if ( s>=0 ) return s;
+						break;
+
+					case 105 : 
+						int LA193_215 = input.LA(1);
+						 
+						int index193_215 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_215);
+						if ( s>=0 ) return s;
+						break;
+
 					case 106 : 
-						int LA193_760 = input.LA(1);
-						 
-						int index193_760 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_760);
-						if ( s>=0 ) return s;
-						break;
-
-					case 107 : 
-						int LA193_655 = input.LA(1);
-						 
-						int index193_655 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_655);
-						if ( s>=0 ) return s;
-						break;
-
-					case 108 : 
-						int LA193_275 = input.LA(1);
-						 
-						int index193_275 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_275);
-						if ( s>=0 ) return s;
-						break;
-
-					case 109 : 
-						int LA193_462 = input.LA(1);
-						 
-						int index193_462 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_462);
-						if ( s>=0 ) return s;
-						break;
-
-					case 110 : 
-						int LA193_328 = input.LA(1);
-						 
-						int index193_328 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_328);
-						if ( s>=0 ) return s;
-						break;
-
-					case 111 : 
-						int LA193_836 = input.LA(1);
-						 
-						int index193_836 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_836);
-						if ( s>=0 ) return s;
-						break;
-
-					case 112 : 
-						int LA193_330 = input.LA(1);
-						 
-						int index193_330 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred12_Css3()) ) {s = 216;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_330);
-						if ( s>=0 ) return s;
-						break;
-
-					case 113 : 
 						int LA193_390 = input.LA(1);
 						 
 						int index193_390 = input.index();
@@ -15568,16 +15477,107 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 114 : 
-						int LA193_809 = input.LA(1);
+					case 107 : 
+						int LA193_275 = input.LA(1);
 						 
-						int index193_809 = input.index();
+						int index193_275 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred12_Css3()) ) {s = 216;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_809);
+						input.seek(index193_275);
+						if ( s>=0 ) return s;
+						break;
+
+					case 108 : 
+						int LA193_328 = input.LA(1);
+						 
+						int index193_328 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_328);
+						if ( s>=0 ) return s;
+						break;
+
+					case 109 : 
+						int LA193_760 = input.LA(1);
+						 
+						int index193_760 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_760);
+						if ( s>=0 ) return s;
+						break;
+
+					case 110 : 
+						int LA193_330 = input.LA(1);
+						 
+						int index193_330 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_330);
+						if ( s>=0 ) return s;
+						break;
+
+					case 111 : 
+						int LA193_462 = input.LA(1);
+						 
+						int index193_462 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_462);
+						if ( s>=0 ) return s;
+						break;
+
+					case 112 : 
+						int LA193_836 = input.LA(1);
+						 
+						int index193_836 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_836);
+						if ( s>=0 ) return s;
+						break;
+
+					case 113 : 
+						int LA193_524 = input.LA(1);
+						 
+						int index193_524 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_524);
+						if ( s>=0 ) return s;
+						break;
+
+					case 114 : 
+						int LA193_655 = input.LA(1);
+						 
+						int index193_655 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred12_Css3()) ) {s = 216;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_655);
 						if ( s>=0 ) return s;
 						break;
 
@@ -16011,6 +16011,19 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 148 : 
+						int LA193_398 = input.LA(1);
+						 
+						int index193_398 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred5_Css3()) ) {s = 170;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_398);
+						if ( s>=0 ) return s;
+						break;
+
+					case 149 : 
 						int LA193_56 = input.LA(1);
 						 
 						int index193_56 = input.index();
@@ -16023,7 +16036,7 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 149 : 
+					case 150 : 
 						int LA193_89 = input.LA(1);
 						 
 						int index193_89 = input.index();
@@ -16036,7 +16049,7 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 150 : 
+					case 151 : 
 						int LA193_120 = input.LA(1);
 						 
 						int index193_120 = input.index();
@@ -16049,7 +16062,7 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 151 : 
+					case 152 : 
 						int LA193_138 = input.LA(1);
 						 
 						int index193_138 = input.index();
@@ -16059,19 +16072,6 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_138);
-						if ( s>=0 ) return s;
-						break;
-
-					case 152 : 
-						int LA193_768 = input.LA(1);
-						 
-						int index193_768 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred5_Css3()) ) {s = 170;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_768);
 						if ( s>=0 ) return s;
 						break;
 
@@ -16089,15 +16089,15 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 154 : 
-						int LA193_398 = input.LA(1);
+						int LA193_768 = input.LA(1);
 						 
-						int index193_398 = input.index();
+						int index193_768 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred5_Css3()) ) {s = 170;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_398);
+						input.seek(index193_768);
 						if ( s>=0 ) return s;
 						break;
 
@@ -16347,15 +16347,15 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 174 : 
-						int LA193_117 = input.LA(1);
+						int LA193_407 = input.LA(1);
 						 
-						int index193_117 = input.index();
+						int index193_407 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred9_Css3()) ) {s = 240;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_117);
+						input.seek(index193_407);
 						if ( s>=0 ) return s;
 						break;
 
@@ -16373,6 +16373,19 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 176 : 
+						int LA193_117 = input.LA(1);
+						 
+						int index193_117 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_117);
+						if ( s>=0 ) return s;
+						break;
+
+					case 177 : 
 						int LA193_355 = input.LA(1);
 						 
 						int index193_355 = input.index();
@@ -16385,7 +16398,20 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 177 : 
+					case 178 : 
+						int LA193_672 = input.LA(1);
+						 
+						int index193_672 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_672);
+						if ( s>=0 ) return s;
+						break;
+
+					case 179 : 
 						int LA193_405 = input.LA(1);
 						 
 						int index193_405 = input.index();
@@ -16398,20 +16424,20 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 178 : 
-						int LA193_407 = input.LA(1);
+					case 180 : 
+						int LA193_739 = input.LA(1);
 						 
-						int index193_407 = input.index();
+						int index193_739 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred9_Css3()) ) {s = 240;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_407);
+						input.seek(index193_739);
 						if ( s>=0 ) return s;
 						break;
 
-					case 179 : 
+					case 181 : 
 						int LA193_619 = input.LA(1);
 						 
 						int index193_619 = input.index();
@@ -16424,7 +16450,7 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 180 : 
+					case 182 : 
 						int LA193_821 = input.LA(1);
 						 
 						int index193_821 = input.index();
@@ -16434,32 +16460,6 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_821);
-						if ( s>=0 ) return s;
-						break;
-
-					case 181 : 
-						int LA193_670 = input.LA(1);
-						 
-						int index193_670 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_670);
-						if ( s>=0 ) return s;
-						break;
-
-					case 182 : 
-						int LA193_739 = input.LA(1);
-						 
-						int index193_739 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_739);
 						if ( s>=0 ) return s;
 						break;
 
@@ -16477,32 +16477,6 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 184 : 
-						int LA193_486 = input.LA(1);
-						 
-						int index193_486 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_486);
-						if ( s>=0 ) return s;
-						break;
-
-					case 185 : 
-						int LA193_672 = input.LA(1);
-						 
-						int index193_672 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_672);
-						if ( s>=0 ) return s;
-						break;
-
-					case 186 : 
 						int LA193_771 = input.LA(1);
 						 
 						int index193_771 = input.index();
@@ -16512,6 +16486,32 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_771);
+						if ( s>=0 ) return s;
+						break;
+
+					case 185 : 
+						int LA193_773 = input.LA(1);
+						 
+						int index193_773 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_773);
+						if ( s>=0 ) return s;
+						break;
+
+					case 186 : 
+						int LA193_486 = input.LA(1);
+						 
+						int index193_486 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_486);
 						if ( s>=0 ) return s;
 						break;
 
@@ -16529,19 +16529,6 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 188 : 
-						int LA193_773 = input.LA(1);
-						 
-						int index193_773 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_773);
-						if ( s>=0 ) return s;
-						break;
-
-					case 189 : 
 						int LA193_541 = input.LA(1);
 						 
 						int index193_541 = input.index();
@@ -16554,46 +16541,20 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
+					case 189 : 
+						int LA193_670 = input.LA(1);
+						 
+						int index193_670 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_670);
+						if ( s>=0 ) return s;
+						break;
+
 					case 190 : 
-						int LA193_118 = input.LA(1);
-						 
-						int index193_118 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_118);
-						if ( s>=0 ) return s;
-						break;
-
-					case 191 : 
-						int LA193_114 = input.LA(1);
-						 
-						int index193_114 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_114);
-						if ( s>=0 ) return s;
-						break;
-
-					case 192 : 
-						int LA193_356 = input.LA(1);
-						 
-						int index193_356 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_356);
-						if ( s>=0 ) return s;
-						break;
-
-					case 193 : 
 						int LA193_406 = input.LA(1);
 						 
 						int index193_406 = input.index();
@@ -16606,98 +16567,33 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 194 : 
-						int LA193_408 = input.LA(1);
+					case 191 : 
+						int LA193_356 = input.LA(1);
 						 
-						int index193_408 = input.index();
+						int index193_356 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred9_Css3()) ) {s = 240;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_408);
+						input.seek(index193_356);
 						if ( s>=0 ) return s;
 						break;
 
-					case 195 : 
-						int LA193_487 = input.LA(1);
+					case 192 : 
+						int LA193_114 = input.LA(1);
 						 
-						int index193_487 = input.index();
+						int index193_114 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred9_Css3()) ) {s = 240;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_487);
+						input.seek(index193_114);
 						if ( s>=0 ) return s;
 						break;
 
-					case 196 : 
-						int LA193_772 = input.LA(1);
-						 
-						int index193_772 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_772);
-						if ( s>=0 ) return s;
-						break;
-
-					case 197 : 
-						int LA193_540 = input.LA(1);
-						 
-						int index193_540 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_540);
-						if ( s>=0 ) return s;
-						break;
-
-					case 198 : 
-						int LA193_673 = input.LA(1);
-						 
-						int index193_673 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_673);
-						if ( s>=0 ) return s;
-						break;
-
-					case 199 : 
-						int LA193_822 = input.LA(1);
-						 
-						int index193_822 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_822);
-						if ( s>=0 ) return s;
-						break;
-
-					case 200 : 
-						int LA193_542 = input.LA(1);
-						 
-						int index193_542 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred9_Css3()) ) {s = 240;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_542);
-						if ( s>=0 ) return s;
-						break;
-
-					case 201 : 
+					case 193 : 
 						int LA193_774 = input.LA(1);
 						 
 						int index193_774 = input.index();
@@ -16710,20 +16606,59 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 202 : 
-						int LA193_620 = input.LA(1);
+					case 194 : 
+						int LA193_118 = input.LA(1);
 						 
-						int index193_620 = input.index();
+						int index193_118 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred9_Css3()) ) {s = 240;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_620);
+						input.seek(index193_118);
 						if ( s>=0 ) return s;
 						break;
 
-					case 203 : 
+					case 195 : 
+						int LA193_408 = input.LA(1);
+						 
+						int index193_408 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_408);
+						if ( s>=0 ) return s;
+						break;
+
+					case 196 : 
+						int LA193_673 = input.LA(1);
+						 
+						int index193_673 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_673);
+						if ( s>=0 ) return s;
+						break;
+
+					case 197 : 
+						int LA193_772 = input.LA(1);
+						 
+						int index193_772 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_772);
+						if ( s>=0 ) return s;
+						break;
+
+					case 198 : 
 						int LA193_671 = input.LA(1);
 						 
 						int index193_671 = input.index();
@@ -16736,7 +16671,33 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 204 : 
+					case 199 : 
+						int LA193_487 = input.LA(1);
+						 
+						int index193_487 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_487);
+						if ( s>=0 ) return s;
+						break;
+
+					case 200 : 
+						int LA193_540 = input.LA(1);
+						 
+						int index193_540 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_540);
+						if ( s>=0 ) return s;
+						break;
+
+					case 201 : 
 						int LA193_740 = input.LA(1);
 						 
 						int index193_740 = input.index();
@@ -16746,6 +16707,45 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_740);
+						if ( s>=0 ) return s;
+						break;
+
+					case 202 : 
+						int LA193_822 = input.LA(1);
+						 
+						int index193_822 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_822);
+						if ( s>=0 ) return s;
+						break;
+
+					case 203 : 
+						int LA193_542 = input.LA(1);
+						 
+						int index193_542 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_542);
+						if ( s>=0 ) return s;
+						break;
+
+					case 204 : 
+						int LA193_620 = input.LA(1);
+						 
+						int index193_620 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred9_Css3()) ) {s = 240;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_620);
 						if ( s>=0 ) return s;
 						break;
 
@@ -17407,19 +17407,6 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 255 : 
-						int LA193_751 = input.LA(1);
-						 
-						int index193_751 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred6_Css3()) ) {s = 178;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_751);
-						if ( s>=0 ) return s;
-						break;
-
-					case 256 : 
 						int LA193_59 = input.LA(1);
 						 
 						int index193_59 = input.index();
@@ -17432,20 +17419,7 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 257 : 
-						int LA193_515 = input.LA(1);
-						 
-						int index193_515 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred6_Css3()) ) {s = 178;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_515);
-						if ( s>=0 ) return s;
-						break;
-
-					case 258 : 
+					case 256 : 
 						int LA193_92 = input.LA(1);
 						 
 						int index193_92 = input.index();
@@ -17458,20 +17432,7 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 259 : 
-						int LA193_266 = input.LA(1);
-						 
-						int index193_266 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred6_Css3()) ) {s = 178;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_266);
-						if ( s>=0 ) return s;
-						break;
-
-					case 260 : 
+					case 257 : 
 						int LA193_381 = input.LA(1);
 						 
 						int index193_381 = input.index();
@@ -17484,7 +17445,20 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 261 : 
+					case 258 : 
+						int LA193_515 = input.LA(1);
+						 
+						int index193_515 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred6_Css3()) ) {s = 178;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_515);
+						if ( s>=0 ) return s;
+						break;
+
+					case 259 : 
 						int LA193_646 = input.LA(1);
 						 
 						int index193_646 = input.index();
@@ -17494,6 +17468,32 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_646);
+						if ( s>=0 ) return s;
+						break;
+
+					case 260 : 
+						int LA193_266 = input.LA(1);
+						 
+						int index193_266 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred6_Css3()) ) {s = 178;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_266);
+						if ( s>=0 ) return s;
+						break;
+
+					case 261 : 
+						int LA193_751 = input.LA(1);
+						 
+						int index193_751 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred6_Css3()) ) {s = 178;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_751);
 						if ( s>=0 ) return s;
 						break;
 
@@ -17706,19 +17706,6 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 278 : 
-						int LA193_234 = input.LA(1);
-						 
-						int index193_234 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_234);
-						if ( s>=0 ) return s;
-						break;
-
-					case 279 : 
 						int LA193_105 = input.LA(1);
 						 
 						int index193_105 = input.index();
@@ -17731,7 +17718,7 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 280 : 
+					case 279 : 
 						int LA193_116 = input.LA(1);
 						 
 						int index193_116 = input.index();
@@ -17744,7 +17731,7 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 281 : 
+					case 280 : 
 						int LA193_232 = input.LA(1);
 						 
 						int index193_232 = input.index();
@@ -17754,6 +17741,19 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_232);
+						if ( s>=0 ) return s;
+						break;
+
+					case 281 : 
+						int LA193_234 = input.LA(1);
+						 
+						int index193_234 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_234);
 						if ( s>=0 ) return s;
 						break;
 
@@ -18094,6 +18094,19 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 308 : 
+						int LA193_155 = input.LA(1);
+						 
+						int index193_155 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred8_Css3()) ) {s = 191;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_155);
+						if ( s>=0 ) return s;
+						break;
+
+					case 309 : 
 						int LA193_69 = input.LA(1);
 						 
 						int index193_69 = input.index();
@@ -18103,19 +18116,6 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_69);
-						if ( s>=0 ) return s;
-						break;
-
-					case 309 : 
-						int LA193_273 = input.LA(1);
-						 
-						int index193_273 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred8_Css3()) ) {s = 191;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_273);
 						if ( s>=0 ) return s;
 						break;
 
@@ -18133,19 +18133,6 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 311 : 
-						int LA193_155 = input.LA(1);
-						 
-						int index193_155 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred8_Css3()) ) {s = 191;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_155);
-						if ( s>=0 ) return s;
-						break;
-
-					case 312 : 
 						int LA193_157 = input.LA(1);
 						 
 						int index193_157 = input.index();
@@ -18155,6 +18142,19 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_157);
+						if ( s>=0 ) return s;
+						break;
+
+					case 312 : 
+						int LA193_273 = input.LA(1);
+						 
+						int index193_273 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred8_Css3()) ) {s = 191;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_273);
 						if ( s>=0 ) return s;
 						break;
 
@@ -18625,32 +18625,6 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 349 : 
-						int LA193_743 = input.LA(1);
-						 
-						int index193_743 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_743);
-						if ( s>=0 ) return s;
-						break;
-
-					case 350 : 
-						int LA193_490 = input.LA(1);
-						 
-						int index193_490 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_490);
-						if ( s>=0 ) return s;
-						break;
-
-					case 351 : 
 						int LA193_741 = input.LA(1);
 						 
 						int index193_741 = input.index();
@@ -18663,85 +18637,7 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 352 : 
-						int LA193_823 = input.LA(1);
-						 
-						int index193_823 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_823);
-						if ( s>=0 ) return s;
-						break;
-
-					case 353 : 
-						int LA193_684 = input.LA(1);
-						 
-						int index193_684 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred4_Css3()) ) {s = 162;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_684);
-						if ( s>=0 ) return s;
-						break;
-
-					case 354 : 
-						int LA193_605 = input.LA(1);
-						 
-						int index193_605 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_605);
-						if ( s>=0 ) return s;
-						break;
-
-					case 355 : 
-						int LA193_727 = input.LA(1);
-						 
-						int index193_727 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_727);
-						if ( s>=0 ) return s;
-						break;
-
-					case 356 : 
-						int LA193_621 = input.LA(1);
-						 
-						int index193_621 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_621);
-						if ( s>=0 ) return s;
-						break;
-
-					case 357 : 
-						int LA193_623 = input.LA(1);
-						 
-						int index193_623 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_623);
-						if ( s>=0 ) return s;
-						break;
-
-					case 358 : 
+					case 350 : 
 						int LA193_837 = input.LA(1);
 						 
 						int index193_837 = input.index();
@@ -18754,7 +18650,124 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
+					case 351 : 
+						int LA193_743 = input.LA(1);
+						 
+						int index193_743 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_743);
+						if ( s>=0 ) return s;
+						break;
+
+					case 352 : 
+						int LA193_490 = input.LA(1);
+						 
+						int index193_490 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_490);
+						if ( s>=0 ) return s;
+						break;
+
+					case 353 : 
+						int LA193_727 = input.LA(1);
+						 
+						int index193_727 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_727);
+						if ( s>=0 ) return s;
+						break;
+
+					case 354 : 
+						int LA193_684 = input.LA(1);
+						 
+						int index193_684 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred4_Css3()) ) {s = 162;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_684);
+						if ( s>=0 ) return s;
+						break;
+
+					case 355 : 
+						int LA193_605 = input.LA(1);
+						 
+						int index193_605 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_605);
+						if ( s>=0 ) return s;
+						break;
+
+					case 356 : 
+						int LA193_823 = input.LA(1);
+						 
+						int index193_823 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_823);
+						if ( s>=0 ) return s;
+						break;
+
+					case 357 : 
+						int LA193_621 = input.LA(1);
+						 
+						int index193_621 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_621);
+						if ( s>=0 ) return s;
+						break;
+
+					case 358 : 
+						int LA193_623 = input.LA(1);
+						 
+						int index193_623 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_623);
+						if ( s>=0 ) return s;
+						break;
+
 					case 359 : 
+						int LA193_624 = input.LA(1);
+						 
+						int index193_624 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_624);
+						if ( s>=0 ) return s;
+						break;
+
+					case 360 : 
 						int LA193_472 = input.LA(1);
 						 
 						int index193_472 = input.index();
@@ -18767,7 +18780,7 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 360 : 
+					case 361 : 
 						int LA193_228 = input.LA(1);
 						 
 						int index193_228 = input.index();
@@ -18780,7 +18793,7 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 361 : 
+					case 362 : 
 						int LA193_230 = input.LA(1);
 						 
 						int index193_230 = input.index();
@@ -18793,20 +18806,20 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 362 : 
-						int LA193_826 = input.LA(1);
+					case 363 : 
+						int LA193_728 = input.LA(1);
 						 
-						int index193_826 = input.index();
+						int index193_728 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred3_Css3()) ) {s = 221;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_826);
+						input.seek(index193_728);
 						if ( s>=0 ) return s;
 						break;
 
-					case 363 : 
+					case 364 : 
 						int LA193_489 = input.LA(1);
 						 
 						int index193_489 = input.index();
@@ -18816,19 +18829,6 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_489);
-						if ( s>=0 ) return s;
-						break;
-
-					case 364 : 
-						int LA193_491 = input.LA(1);
-						 
-						int index193_491 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_491);
 						if ( s>=0 ) return s;
 						break;
 
@@ -18846,45 +18846,6 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 366 : 
-						int LA193_606 = input.LA(1);
-						 
-						int index193_606 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_606);
-						if ( s>=0 ) return s;
-						break;
-
-					case 367 : 
-						int LA193_622 = input.LA(1);
-						 
-						int index193_622 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_622);
-						if ( s>=0 ) return s;
-						break;
-
-					case 368 : 
-						int LA193_624 = input.LA(1);
-						 
-						int index193_624 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred3_Css3()) ) {s = 221;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_624);
-						if ( s>=0 ) return s;
-						break;
-
-					case 369 : 
 						int LA193_742 = input.LA(1);
 						 
 						int index193_742 = input.index();
@@ -18894,6 +18855,45 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_742);
+						if ( s>=0 ) return s;
+						break;
+
+					case 367 : 
+						int LA193_824 = input.LA(1);
+						 
+						int index193_824 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_824);
+						if ( s>=0 ) return s;
+						break;
+
+					case 368 : 
+						int LA193_491 = input.LA(1);
+						 
+						int index193_491 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_491);
+						if ( s>=0 ) return s;
+						break;
+
+					case 369 : 
+						int LA193_606 = input.LA(1);
+						 
+						int index193_606 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred3_Css3()) ) {s = 221;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_606);
 						if ( s>=0 ) return s;
 						break;
 
@@ -18924,15 +18924,15 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 372 : 
-						int LA193_824 = input.LA(1);
+						int LA193_622 = input.LA(1);
 						 
-						int index193_824 = input.index();
+						int index193_622 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred3_Css3()) ) {s = 221;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_824);
+						input.seek(index193_622);
 						if ( s>=0 ) return s;
 						break;
 
@@ -18950,15 +18950,15 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 374 : 
-						int LA193_728 = input.LA(1);
+						int LA193_826 = input.LA(1);
 						 
-						int index193_728 = input.index();
+						int index193_826 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred3_Css3()) ) {s = 221;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_728);
+						input.seek(index193_826);
 						if ( s>=0 ) return s;
 						break;
 
@@ -19132,6 +19132,19 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 388 : 
+						int LA193_379 = input.LA(1);
+						 
+						int index193_379 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred4_Css3()) ) {s = 162;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_379);
+						if ( s>=0 ) return s;
+						break;
+
+					case 389 : 
 						int LA193_50 = input.LA(1);
 						 
 						int index193_50 = input.index();
@@ -19144,7 +19157,7 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 389 : 
+					case 390 : 
 						int LA193_264 = input.LA(1);
 						 
 						int index193_264 = input.index();
@@ -19154,19 +19167,6 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_264);
-						if ( s>=0 ) return s;
-						break;
-
-					case 390 : 
-						int LA193_379 = input.LA(1);
-						 
-						int index193_379 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred4_Css3()) ) {s = 162;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_379);
 						if ( s>=0 ) return s;
 						break;
 
@@ -19412,15 +19412,15 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 410 : 
-						int LA193_383 = input.LA(1);
+						int LA193_276 = input.LA(1);
 						 
-						int index193_383 = input.index();
+						int index193_276 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred7_Css3()) ) {s = 183;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_383);
+						input.seek(index193_276);
 						if ( s>=0 ) return s;
 						break;
 
@@ -19503,15 +19503,15 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 417 : 
-						int LA193_276 = input.LA(1);
+						int LA193_383 = input.LA(1);
 						 
-						int index193_276 = input.index();
+						int index193_383 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred7_Css3()) ) {s = 183;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_276);
+						input.seek(index193_383);
 						if ( s>=0 ) return s;
 						break;
 
@@ -19529,15 +19529,15 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 419 : 
-						int LA193_656 = input.LA(1);
+						int LA193_761 = input.LA(1);
 						 
-						int index193_656 = input.index();
+						int index193_761 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred7_Css3()) ) {s = 183;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_656);
+						input.seek(index193_761);
 						if ( s>=0 ) return s;
 						break;
 
@@ -19568,15 +19568,15 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 422 : 
-						int LA193_761 = input.LA(1);
+						int LA193_656 = input.LA(1);
 						 
-						int index193_761 = input.index();
+						int index193_656 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred7_Css3()) ) {s = 183;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_761);
+						input.seek(index193_656);
 						if ( s>=0 ) return s;
 						break;
 
@@ -19594,15 +19594,15 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 424 : 
-						int LA193_144 = input.LA(1);
+						int LA193_96 = input.LA(1);
 						 
-						int index193_144 = input.index();
+						int index193_96 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred7_Css3()) ) {s = 183;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_144);
+						input.seek(index193_96);
 						if ( s>=0 ) return s;
 						break;
 
@@ -19620,15 +19620,15 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 426 : 
-						int LA193_96 = input.LA(1);
+						int LA193_144 = input.LA(1);
 						 
-						int index193_96 = input.index();
+						int index193_144 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred7_Css3()) ) {s = 183;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_96);
+						input.seek(index193_144);
 						if ( s>=0 ) return s;
 						break;
 
@@ -19659,32 +19659,6 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 429 : 
-						int LA193_278 = input.LA(1);
-						 
-						int index193_278 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_278);
-						if ( s>=0 ) return s;
-						break;
-
-					case 430 : 
-						int LA193_385 = input.LA(1);
-						 
-						int index193_385 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred7_Css3()) ) {s = 183;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_385);
-						if ( s>=0 ) return s;
-						break;
-
-					case 431 : 
 						int LA193_527 = input.LA(1);
 						 
 						int index193_527 = input.index();
@@ -19697,7 +19671,20 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 432 : 
+					case 430 : 
+						int LA193_278 = input.LA(1);
+						 
+						int index193_278 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_278);
+						if ( s>=0 ) return s;
+						break;
+
+					case 431 : 
 						int LA193_763 = input.LA(1);
 						 
 						int index193_763 = input.index();
@@ -19710,20 +19697,20 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 433 : 
-						int LA193_393 = input.LA(1);
+					case 432 : 
+						int LA193_385 = input.LA(1);
 						 
-						int index193_393 = input.index();
+						int index193_385 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred7_Css3()) ) {s = 183;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_393);
+						input.seek(index193_385);
 						if ( s>=0 ) return s;
 						break;
 
-					case 434 : 
+					case 433 : 
 						int LA193_658 = input.LA(1);
 						 
 						int index193_658 = input.index();
@@ -19736,16 +19723,29 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 435 : 
-						int LA193_519 = input.LA(1);
+					case 434 : 
+						int LA193_393 = input.LA(1);
 						 
-						int index193_519 = input.index();
+						int index193_393 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred7_Css3()) ) {s = 183;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_519);
+						input.seek(index193_393);
+						if ( s>=0 ) return s;
+						break;
+
+					case 435 : 
+						int LA193_650 = input.LA(1);
+						 
+						int index193_650 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred7_Css3()) ) {s = 183;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_650);
 						if ( s>=0 ) return s;
 						break;
 
@@ -19763,15 +19763,15 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 437 : 
-						int LA193_650 = input.LA(1);
+						int LA193_519 = input.LA(1);
 						 
-						int index193_650 = input.index();
+						int index193_519 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred7_Css3()) ) {s = 183;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_650);
+						input.seek(index193_519);
 						if ( s>=0 ) return s;
 						break;
 
@@ -19969,84 +19969,6 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 453 : 
-						int LA193_206 = input.LA(1);
-						 
-						int index193_206 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_206);
-						if ( s>=0 ) return s;
-						break;
-
-					case 454 : 
-						int LA193_201 = input.LA(1);
-						 
-						int index193_201 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_201);
-						if ( s>=0 ) return s;
-						break;
-
-					case 455 : 
-						int LA193_777 = input.LA(1);
-						 
-						int index193_777 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_777);
-						if ( s>=0 ) return s;
-						break;
-
-					case 456 : 
-						int LA193_411 = input.LA(1);
-						 
-						int index193_411 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_411);
-						if ( s>=0 ) return s;
-						break;
-
-					case 457 : 
-						int LA193_680 = input.LA(1);
-						 
-						int index193_680 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_680);
-						if ( s>=0 ) return s;
-						break;
-
-					case 458 : 
-						int LA193_415 = input.LA(1);
-						 
-						int index193_415 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_415);
-						if ( s>=0 ) return s;
-						break;
-
-					case 459 : 
 						int LA193_452 = input.LA(1);
 						 
 						int index193_452 = input.index();
@@ -20059,7 +19981,33 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 460 : 
+					case 454 : 
+						int LA193_411 = input.LA(1);
+						 
+						int index193_411 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_411);
+						if ( s>=0 ) return s;
+						break;
+
+					case 455 : 
+						int LA193_201 = input.LA(1);
+						 
+						int index193_201 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_201);
+						if ( s>=0 ) return s;
+						break;
+
+					case 456 : 
 						int LA193_802 = input.LA(1);
 						 
 						int index193_802 = input.index();
@@ -20072,85 +20020,46 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 461 : 
-						int LA193_711 = input.LA(1);
+					case 457 : 
+						int LA193_206 = input.LA(1);
 						 
-						int index193_711 = input.index();
+						int index193_206 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred10_Css3()) ) {s = 316;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_711);
+						input.seek(index193_206);
 						if ( s>=0 ) return s;
 						break;
 
-					case 462 : 
-						int LA193_545 = input.LA(1);
+					case 458 : 
+						int LA193_777 = input.LA(1);
 						 
-						int index193_545 = input.index();
+						int index193_777 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred10_Css3()) ) {s = 316;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_545);
+						input.seek(index193_777);
 						if ( s>=0 ) return s;
 						break;
 
-					case 463 : 
-						int LA193_549 = input.LA(1);
+					case 459 : 
+						int LA193_415 = input.LA(1);
 						 
-						int index193_549 = input.index();
+						int index193_415 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred10_Css3()) ) {s = 316;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_549);
+						input.seek(index193_415);
 						if ( s>=0 ) return s;
 						break;
 
-					case 464 : 
-						int LA193_586 = input.LA(1);
-						 
-						int index193_586 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_586);
-						if ( s>=0 ) return s;
-						break;
-
-					case 465 : 
-						int LA193_831 = input.LA(1);
-						 
-						int index193_831 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_831);
-						if ( s>=0 ) return s;
-						break;
-
-					case 466 : 
-						int LA193_676 = input.LA(1);
-						 
-						int index193_676 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_676);
-						if ( s>=0 ) return s;
-						break;
-
-					case 467 : 
+					case 460 : 
 						int LA193_781 = input.LA(1);
 						 
 						int index193_781 = input.index();
@@ -20163,20 +20072,98 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 468 : 
-						int LA193_412 = input.LA(1);
+					case 461 : 
+						int LA193_545 = input.LA(1);
 						 
-						int index193_412 = input.index();
+						int index193_545 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred10_Css3()) ) {s = 316;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_412);
+						input.seek(index193_545);
 						if ( s>=0 ) return s;
 						break;
 
-					case 469 : 
+					case 462 : 
+						int LA193_711 = input.LA(1);
+						 
+						int index193_711 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_711);
+						if ( s>=0 ) return s;
+						break;
+
+					case 463 : 
+						int LA193_831 = input.LA(1);
+						 
+						int index193_831 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_831);
+						if ( s>=0 ) return s;
+						break;
+
+					case 464 : 
+						int LA193_549 = input.LA(1);
+						 
+						int index193_549 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_549);
+						if ( s>=0 ) return s;
+						break;
+
+					case 465 : 
+						int LA193_680 = input.LA(1);
+						 
+						int index193_680 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_680);
+						if ( s>=0 ) return s;
+						break;
+
+					case 466 : 
+						int LA193_586 = input.LA(1);
+						 
+						int index193_586 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_586);
+						if ( s>=0 ) return s;
+						break;
+
+					case 467 : 
+						int LA193_676 = input.LA(1);
+						 
+						int index193_676 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_676);
+						if ( s>=0 ) return s;
+						break;
+
+					case 468 : 
 						int LA193_203 = input.LA(1);
 						 
 						int index193_203 = input.index();
@@ -20189,7 +20176,7 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 470 : 
+					case 469 : 
 						int LA193_207 = input.LA(1);
 						 
 						int index193_207 = input.index();
@@ -20202,98 +20189,20 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
+					case 470 : 
+						int LA193_412 = input.LA(1);
+						 
+						int index193_412 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_412);
+						if ( s>=0 ) return s;
+						break;
+
 					case 471 : 
-						int LA193_416 = input.LA(1);
-						 
-						int index193_416 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_416);
-						if ( s>=0 ) return s;
-						break;
-
-					case 472 : 
-						int LA193_453 = input.LA(1);
-						 
-						int index193_453 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_453);
-						if ( s>=0 ) return s;
-						break;
-
-					case 473 : 
-						int LA193_546 = input.LA(1);
-						 
-						int index193_546 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_546);
-						if ( s>=0 ) return s;
-						break;
-
-					case 474 : 
-						int LA193_712 = input.LA(1);
-						 
-						int index193_712 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_712);
-						if ( s>=0 ) return s;
-						break;
-
-					case 475 : 
-						int LA193_778 = input.LA(1);
-						 
-						int index193_778 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_778);
-						if ( s>=0 ) return s;
-						break;
-
-					case 476 : 
-						int LA193_550 = input.LA(1);
-						 
-						int index193_550 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_550);
-						if ( s>=0 ) return s;
-						break;
-
-					case 477 : 
-						int LA193_681 = input.LA(1);
-						 
-						int index193_681 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_681);
-						if ( s>=0 ) return s;
-						break;
-
-					case 478 : 
 						int LA193_782 = input.LA(1);
 						 
 						int index193_782 = input.index();
@@ -20306,16 +20215,107 @@ public class Css3Lexer extends Lexer {
 						if ( s>=0 ) return s;
 						break;
 
-					case 479 : 
-						int LA193_803 = input.LA(1);
+					case 472 : 
+						int LA193_416 = input.LA(1);
 						 
-						int index193_803 = input.index();
+						int index193_416 = input.index();
 						input.rewind();
 						s = -1;
 						if ( (synpred10_Css3()) ) {s = 316;}
 						else if ( (true) ) {s = 12;}
 						 
-						input.seek(index193_803);
+						input.seek(index193_416);
+						if ( s>=0 ) return s;
+						break;
+
+					case 473 : 
+						int LA193_453 = input.LA(1);
+						 
+						int index193_453 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_453);
+						if ( s>=0 ) return s;
+						break;
+
+					case 474 : 
+						int LA193_778 = input.LA(1);
+						 
+						int index193_778 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_778);
+						if ( s>=0 ) return s;
+						break;
+
+					case 475 : 
+						int LA193_832 = input.LA(1);
+						 
+						int index193_832 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_832);
+						if ( s>=0 ) return s;
+						break;
+
+					case 476 : 
+						int LA193_546 = input.LA(1);
+						 
+						int index193_546 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_546);
+						if ( s>=0 ) return s;
+						break;
+
+					case 477 : 
+						int LA193_712 = input.LA(1);
+						 
+						int index193_712 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_712);
+						if ( s>=0 ) return s;
+						break;
+
+					case 478 : 
+						int LA193_550 = input.LA(1);
+						 
+						int index193_550 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_550);
+						if ( s>=0 ) return s;
+						break;
+
+					case 479 : 
+						int LA193_681 = input.LA(1);
+						 
+						int index193_681 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_681);
 						if ( s>=0 ) return s;
 						break;
 
@@ -20333,6 +20333,19 @@ public class Css3Lexer extends Lexer {
 						break;
 
 					case 481 : 
+						int LA193_803 = input.LA(1);
+						 
+						int index193_803 = input.index();
+						input.rewind();
+						s = -1;
+						if ( (synpred10_Css3()) ) {s = 316;}
+						else if ( (true) ) {s = 12;}
+						 
+						input.seek(index193_803);
+						if ( s>=0 ) return s;
+						break;
+
+					case 482 : 
 						int LA193_677 = input.LA(1);
 						 
 						int index193_677 = input.index();
@@ -20342,19 +20355,6 @@ public class Css3Lexer extends Lexer {
 						else if ( (true) ) {s = 12;}
 						 
 						input.seek(index193_677);
-						if ( s>=0 ) return s;
-						break;
-
-					case 482 : 
-						int LA193_832 = input.LA(1);
-						 
-						int index193_832 = input.index();
-						input.rewind();
-						s = -1;
-						if ( (synpred10_Css3()) ) {s = 316;}
-						else if ( (true) ) {s = 12;}
-						 
-						input.seek(index193_832);
 						if ( s>=0 ) return s;
 						break;
 

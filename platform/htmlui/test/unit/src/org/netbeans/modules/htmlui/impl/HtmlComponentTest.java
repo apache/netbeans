@@ -27,6 +27,7 @@ import net.java.html.BrwsrCtx;
 import net.java.html.json.Model;
 import net.java.html.json.ModelOperation;
 import net.java.html.json.Property;
+import org.netbeans.modules.htmlui.PagesLookup;
 import org.openide.util.Lookup;
 import static org.testng.Assert.*;
 import org.testng.annotations.BeforeClass;
@@ -64,11 +65,11 @@ public class HtmlComponentTest {
         lkp = tc.getLookup();
     }
 
-    public static Object onLoad() {
+    public static Lookup onLoad() {
         ctx = BrwsrCtx.findDefault(HtmlComponentTest.class);
         CheckContext cc = new CheckContext();
         net.java.html.json.Models.applyBindings(cc);
-        return cc;
+        return new PagesLookup(cc.getClass().getClassLoader(), cc);
     }
 
     @Test(timeOut = 9000)

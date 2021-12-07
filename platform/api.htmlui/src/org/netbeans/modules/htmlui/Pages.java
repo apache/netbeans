@@ -70,14 +70,11 @@ public final class Pages {
                 clazz = HtmlPair.loadClass(c);
                 pageUrl = new URL("nbresloc:/" + u);
 
-                ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
-                if (loader == null) {
-                    loader = clazz.getClassLoader();
-                }
+                ClassLoader loader = findClassLoader();
                 HTMLViewerSpi.Context ctx = ContextAccessor.getDefault().newContext(loader, pageUrl, getTechIds(), null, null, () -> {
                     Method method = clazz.getMethod(methodName);
                     Object value = method.invoke(null);
-                    return value;
+                    return new PagesLookup(loader, value);
                 }, null);
 
                 tc = HtmlPair.newView(ctx);
@@ -85,6 +82,14 @@ public final class Pages {
             } catch (Exception ex) {
                 throw new IllegalStateException(ex);
             }
+        }
+
+        private ClassLoader findClassLoader() {
+            ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
+            if (loader == null) {
+                loader = clazz.getClassLoader();
+            }
+            return loader;
         }
 
         final String[] getTechIds() {

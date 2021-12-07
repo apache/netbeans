@@ -152,7 +152,7 @@ public class SingleGroovySourceRunActionProvider implements ActionProvider {
             commandList.add("-cp"); // NOI18N
             // TODO can we add here some heuristic, from which folder and appropriate path the script can be run?
             // For example we can look for the `src` or `src/groovy` fodler, from which the script can be probably run. 
-            commandList.add(String.join(File.pathSeparator, new String[]{".", groovyJar.getAbsolutePath()}));    //NOI18N
+            commandList.add(String.join(File.pathSeparator, ".", groovyJar.getAbsolutePath()));    //NOI18N
 
             commandList.add("groovy.ui.GroovyMain");    //NOI18N
             commandList.add(fileObject.getNameExt());

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.htmlui;
+package org.netbeans.modules.htmlui.impl;
 
 import java.awt.EventQueue;
 import java.util.concurrent.CountDownLatch;

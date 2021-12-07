@@ -151,7 +151,7 @@ class Buttons<View, Button> {
     }
 
     private Button createButton(String name) {
-        return viewer.createButton(view, PREFIX + name);
+        return viewer.createButton(view, name == null ? null : PREFIX + name);
     }
 
     private String getName(Button b) {

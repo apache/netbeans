@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.htmlui;
+package org.netbeans.modules.htmlui.impl;
 
 import java.awt.BorderLayout;
 import java.io.Closeable;
@@ -36,7 +36,7 @@ import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.windows.TopComponent;
 
-import static org.netbeans.modules.htmlui.HtmlToolkit.LOG;
+import static org.netbeans.modules.htmlui.impl.HtmlToolkit.LOG;
 import org.openide.util.Lookup;
 
 /**
@@ -139,9 +139,9 @@ public final class HtmlComponent extends TopComponent {
         + "if (typeof data === 'undefined') return;\n"
         + "if (typeof data.context === 'undefined') return;\n"
         + "data.context.subscribe(function(value) {\n"
-        + "  onChange.@org.netbeans.modules.htmlui.HtmlComponent::onChange([Ljava/lang/Object;)(value);\n"
+        + "  onChange.@org.netbeans.modules.htmlui.impl.HtmlComponent::onChange([Ljava/lang/Object;)(value);\n"
         + "});\n"
-        + "onChange.@org.netbeans.modules.htmlui.HtmlComponent::onChange([Ljava/lang/Object;)(data.context());\n"
+        + "onChange.@org.netbeans.modules.htmlui.impl.HtmlComponent::onChange([Ljava/lang/Object;)(data.context());\n"
     )
     private static native void listenOnContext(HtmlComponent onChange);
 }

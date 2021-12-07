@@ -24,6 +24,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Locale;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import net.java.html.json.Model;
 import net.java.html.json.Property;
 import org.netbeans.html.context.spi.Contexts.Id;
@@ -149,10 +152,12 @@ public @interface HTMLDialog {
      * as soon as possible.
      */
     public static final class Builder {
-        private final HTMLDialogBase impl;
+        private final String url;
+        private List<String> techIds = new ArrayList<>();
+        private Runnable onPageLoad;
 
         private Builder(String u) {
-            impl = HTMLDialogBase.create(u);
+            this.url = u;
         }
 
         /** Starts creation of a new HTML dialog. The page
@@ -174,7 +179,7 @@ public @interface HTMLDialog {
          * @return this builder
          */
         public Builder loadFinished(Runnable run) {
-            impl.setOnPageLoad(run);
+            this.onPageLoad = run;
             return this;
         }
 
@@ -187,7 +192,7 @@ public @interface HTMLDialog {
          * @since 1.3
          */
         public Builder addTechIds(String... ids) {
-            impl.addTechIds(ids);
+            techIds.addAll(Arrays.asList(ids));
             return this;
         }
 
@@ -198,6 +203,7 @@ public @interface HTMLDialog {
          *   if the dialog was closed without selecting a button
          */
         public String showAndWait() {
+            HTMLDialogBase impl = HTMLDialogBase.create(url, onPageLoad, null, techIds.toArray(new String[0]));
             return impl.showAndWait();
         }
 
@@ -208,6 +214,7 @@ public @interface HTMLDialog {
          * @since 1.23
          */
         public void show(OnSubmit s) {
+            HTMLDialogBase impl = HTMLDialogBase.create(url, onPageLoad, s, techIds.toArray(new String[0]));
             impl.show(s);
         }
 
@@ -221,6 +228,7 @@ public @interface HTMLDialog {
          * @return instance of the requested component
          */
         public <C> C component(Class<C> type) {
+            HTMLDialogBase impl = HTMLDialogBase.create(url, onPageLoad, null, techIds.toArray(new String[0]));
             return impl.component(type);
         }
     }

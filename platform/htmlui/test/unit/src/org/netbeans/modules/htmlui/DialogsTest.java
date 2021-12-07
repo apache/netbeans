@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.htmlui;
 
+import org.netbeans.modules.htmlui.impl.HtmlToolkit;
 import java.awt.EventQueue;
 import java.net.URL;
 import java.util.concurrent.CountDownLatch;
@@ -30,6 +31,9 @@ import javax.swing.JFrame;
 import net.java.html.BrwsrCtx;
 import net.java.html.js.JavaScriptBody;
 import org.netbeans.api.htmlui.HTMLDialog;
+import org.netbeans.modules.htmlui.impl.EnsureJavaFXPresent;
+import org.netbeans.modules.htmlui.impl.HtmlToolkit;
+import org.netbeans.modules.htmlui.impl.SwingFXViewer;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import static org.testng.Assert.*;
@@ -51,7 +55,8 @@ public class DialogsTest {
             return;
         }
         final JFXPanel p = new JFXPanel();
-        final URL u = DialogsTest.class.getResource("/org/netbeans/api/htmlui/empty.html");
+        final URL u = DialogsTest.class.getResource("/org/netbeans/modules/htmlui/impl/empty.html");
+        assertNotNull(u, "empty.html found");
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -64,7 +69,7 @@ public class DialogsTest {
                         ctx = BrwsrCtx.findDefault(DialogsTest.class);
                         down.countDown();
                     }
-                }, null, null);
+                }, DialogsTest.class.getClassLoader(), new Object[0]);
             }
         });
         down.await();
@@ -94,8 +99,8 @@ public class DialogsTest {
 
                     JButton[] arr = new MockButtons().array();
                     assertEquals(arr.length, 2, "Two buttons");
-                    assertEquals(arr[0].getName(), "OK", "id of 1st button parsed");
-                    assertEquals(arr[1].getName(), "Cancel", "id of 2nd button parsed");
+                    assertButtonName(arr[0], "OK", "id of 1st button parsed");
+                    assertButtonName(arr[1], "Cancel", "id of 2nd button parsed");
                     assertEquals(arr[0].getText(), "Agree", "text of 1st button parsed");
                     assertEquals(arr[1].getText(), "Disagree", "text of 2nd button parsed");
 
@@ -148,8 +153,8 @@ public class DialogsTest {
 
                     JButton[] arr = new MockButtons().array();
                     assertEquals(arr.length, 2, "Two buttons");
-                    assertEquals(arr[0].getName(), "OK", "id of 1st default button");
-                    assertEquals(arr[1].getName(), null, "id of 2nd default button");
+                    assertButtonName(arr[0], "OK", "id of 1st default button");
+                    assertButtonName(arr[1], null, "id of 2nd default button");
 
                     assertTrue(arr[0].isEnabled(), "OK is enabled");
                     assertTrue(arr[1].isEnabled(), "Cancel is enabled");
@@ -180,7 +185,7 @@ public class DialogsTest {
     private static native String setText(String id, String t);
 
 
-    @HTMLDialog(url = "simple.html", className = "TestPages")
+    @HTMLDialog(url = "impl/simple.html", className = "TestPages")
     static void showDialog() {
         String ret = TestPages.showDialog();
     }
@@ -190,9 +195,25 @@ public class DialogsTest {
         String ret = TestPages.showDialog(10, y, null);
     }
 
-    private static final class MockButtons extends Buttons<Object, Object> {
+    static void assertButtonName(JButton b, String exp, String msg) {
+        assertNotNull(b, msg);
+        String n = b.getName();
+        if (exp == null) {
+            assertNull(n, msg);
+            return;
+        }
+        assertTrue(n.startsWith("dialog-buttons-"), "Starts with prefix: " + n);
+        String r = n.substring(15);
+        assertEquals(r, exp, msg);
+    }
+
+    private static final class MockButtons extends Buttons<SwingFXViewer.SFXView, JButton> {
         MockButtons() {
-            super(null, null);
+            this(new SwingFXViewer());
+        }
+
+        private MockButtons(SwingFXViewer sv) {
+            super(sv, sv.newView((id) -> {}));
         }
 
         final JButton[] array() {

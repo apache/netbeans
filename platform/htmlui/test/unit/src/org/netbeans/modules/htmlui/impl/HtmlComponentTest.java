@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.htmlui;
+package org.netbeans.modules.htmlui.impl;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -53,7 +53,8 @@ public class HtmlComponentTest {
         }
 
         final HtmlComponent tc = new HtmlComponent();
-        final URL u = HtmlComponent.class.getResource("/org/netbeans/api/htmlui/empty.html");
+        final URL u = HtmlComponent.class.getResource("/org/netbeans/modules/htmlui/impl/empty.html");
+        assertNotNull(u, "empty.html found");
         Platform.runLater(new Runnable() {
             @Override
             public void run() {

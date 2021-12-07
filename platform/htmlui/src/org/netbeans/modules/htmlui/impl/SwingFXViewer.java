@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.htmlui;
+package org.netbeans.modules.htmlui.impl;
 
 import java.awt.Dialog;
 import java.awt.Dimension;
@@ -37,7 +37,7 @@ import org.netbeans.spi.htmlui.HtmlViewer;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.lookup.ServiceProvider;
-import org.netbeans.modules.htmlui.SwingFXViewer.SFXView;
+import org.netbeans.modules.htmlui.impl.SwingFXViewer.SFXView;
 import org.openide.util.Lookup;
 
 @ServiceProvider(service = HtmlViewer.class)
@@ -104,7 +104,7 @@ public final class SwingFXViewer implements HtmlViewer<SFXView, JButton> {
         return HtmlToolkit.getDefault().convertToComponent(type, pageUrl, loader, onPageLoad, Arrays.asList(techIds));
     }
 
-    static final class SFXView {
+    public static final class SFXView {
         final HtmlComponent component;
         final ChromeWithButtons buttons;
 

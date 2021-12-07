@@ -16,23 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.htmlui;
+package org.netbeans.modules.htmlui.impl;
 
-import java.net.URL;
-import java.net.URLStreamHandlerFactory;
-import org.openide.util.Lookup;
-import static org.testng.Assert.assertNotNull;
+import org.netbeans.html.context.spi.Contexts;
+import org.openide.util.lookup.ServiceProvider;
 
-/**
- *
- * @author Jaroslav Tulach
- */
-final class NbResloc {
-    static {
-        URLStreamHandlerFactory f = Lookup.getDefault().lookup(URLStreamHandlerFactory.class);
-        assertNotNull(f, "Factory found");
-        URL.setURLStreamHandlerFactory(f);
+public interface ATech {
+    @Contexts.Id("first")
+    public static final class First implements ATech {
     }
-    static void init() {
+    @Contexts.Id("second")
+    public static final class Second implements ATech {
+    }
+
+    @ServiceProvider(service = Contexts.Provider.class)
+    public final static class Register implements Contexts.Provider {
+        @Override
+        public void fillContext(Contexts.Builder bldr, Class<?> type) {
+            bldr.register(ATech.class, new First(), 30);
+            bldr.register(ATech.class, new Second(), 50);
+        }
     }
 }

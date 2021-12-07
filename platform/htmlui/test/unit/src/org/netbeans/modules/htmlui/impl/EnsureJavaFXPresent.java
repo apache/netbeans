@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.htmlui;
+package org.netbeans.modules.htmlui.impl;
 
 import javafx.embed.swing.JFXPanel;
 import static org.testng.AssertJUnit.assertNotNull;
@@ -39,13 +39,13 @@ public final class EnsureJavaFXPresent {
     private EnsureJavaFXPresent() {
     }
     
-    static void checkAndThrow() {
+    public static void checkAndThrow() {
         if (initError != null) {
             throw new SkipException("Cannot initialize JavaFX", initError);
         }
     }
     
-    static boolean check() {
+    public static boolean check() {
         return initError == null;
     }
 }

@@ -18,41 +18,65 @@
  */
 package org.netbeans.modules.htmlui;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import org.netbeans.api.htmlui.HTMLDialog;
+import org.openide.util.Exceptions;
 
-public abstract class HTMLDialogBase {
-    List<String> techIds = new ArrayList<>();
-    final String url;
-    Runnable onPageLoad;
+public final class HTMLDialogBase {
+    private final String url;
+    private final Runnable onPageLoad;
+    private final String[] techIds;
+    private final Buttons buttons;
+    private final HtmlPair<?, ?> view;
 
-    HTMLDialogBase(String url) {
+    private HTMLDialogBase(HtmlPair<?, ?> view, String url, Runnable onPageLoad, String[] techIds, Buttons buttons) {
         this.url = url;
-    }
-
-
-    public abstract String showAndWait();
-    public abstract void show(HTMLDialog.OnSubmit onSubmit);
-    public abstract <C> C component(Class<C> type);
-    protected abstract void onSubmit(String id);
-
-    public void addTechIds(String[] ids) {
-        this.techIds.addAll(Arrays.asList(ids));
-    }
-
-    public void setOnPageLoad(Runnable onPageLoad) {
         this.onPageLoad = onPageLoad;
+        this.techIds = techIds;
+        this.buttons = buttons;
+        this.view = view;
     }
 
-    public static HTMLDialogBase create(String url) {
-        HTMLDialogBase[] base = { null };
+    public static HTMLDialogBase create(String url, Runnable onPageLoad, HTMLDialog.OnSubmit onSubmit, String[] techIds) {
+        Buttons[] base = { null };
         HtmlPair<?, ?> view = HtmlPair.newView((id) -> {
-            base[0].onSubmit(id);
+            base[0].accept(id);
         });
-        final HTMLDialogBase dialog = new HTMLDialogView(url, view);
-        base[0] = dialog;
-        return dialog;
+        base[0] = Buttons.create(view);
+        return new HTMLDialogBase(view, url, onPageLoad, techIds, base[0]);
+    }
+
+    public <C> C component(Class<C> type) {
+        return view.component(type, url, getClass().getClassLoader(), onPageLoad, this.techIds);
+    }
+
+    protected void makeVisible(HTMLDialog.OnSubmit onSubmit) {
+        view.makeVisible(onSubmit, () -> {
+            try {
+                view.load(getClass().getClassLoader(), new URL(url), () -> {
+                    onPageLoad.run();
+                    List<Object> b = buttons.buttons();
+                    return onSubmit;
+                }, this.techIds);
+            } catch (MalformedURLException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        });
+    }
+
+    protected void onSubmit(String id) {
+        this.buttons.accept(id);
+    }
+
+    public void show(HTMLDialog.OnSubmit onSubmit) {
+        buttons.onSubmit(onSubmit);
+        makeVisible(onSubmit);
+    }
+
+    public String showAndWait() {
+        makeVisible(null);
+        return this.buttons.obtainResult();
     }
 }

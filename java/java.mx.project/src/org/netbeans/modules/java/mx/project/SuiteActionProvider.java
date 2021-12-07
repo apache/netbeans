@@ -242,6 +242,7 @@ final class SuiteActionProvider implements ActionProvider {
         processBuilder.setWorkingDirectory(suiteDir.getPath());
         processBuilder.setExecutable("mx"); // NOI18N
         processBuilder.setArguments(Arrays.asList(args));
+        processBuilder.getEnvironment().setVariable("MX_OUTPUT_ROOT_INCLUDES_CONFIG", "false"); // NOI18N
         ExecutionService service = ExecutionService.newService(processBuilder, descriptor, taskName);
         Future<Integer> task = service.run();
         taskResult.complete(task);

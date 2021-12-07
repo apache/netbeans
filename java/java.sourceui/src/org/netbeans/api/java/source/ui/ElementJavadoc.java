@@ -116,6 +116,7 @@ import javax.tools.SimpleJavaFileObject;
 import javax.tools.ToolProvider;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.JavacTask;
 import com.sun.source.util.SourcePositions;
@@ -149,6 +150,7 @@ public class ElementJavadoc {
     private volatile CompletableFuture<String> content;
     private final Callable<Boolean> cancel;
     private Map<String, ElementHandle<? extends Element>> links = new HashMap<>();
+    private List<? extends ImportTree> imports;
     private int linkCounter = 0;
     private volatile URL docURL = null;
     private volatile URL docRoot = null;
@@ -378,6 +380,7 @@ public class ElementJavadoc {
         this.fileObject = compilationInfo.getFileObject();
         this.handle = element == null ? null : ElementHandle.create(element);
         this.cancel = cancel;
+        this.imports = compilationInfo.getCompilationUnit().getImports();
         final StringBuilder header = getElementHeader(element, compilationInfo);
         try {
             //Optimisitic no http
@@ -1347,12 +1350,12 @@ public class ElementJavadoc {
             } else {
                 if (attributes != null) {
                     for (Attrib attrib : attributes) {
-                        codeLine = applyTagsToHTML(codeLine, attrib.getAttributes(), attrib.getTagType());
+                        codeLine = applyTagsToHTML(codeLine, attrib.getAttributes(), attrib.getTagType(), sb);
                     }
                 }
                 if (regions != null) {
                     for (Region region : regions) {
-                        codeLine = applyTagsToHTML(codeLine, region.getAttributes(), region.getTagType());
+                        codeLine = applyTagsToHTML(codeLine, region.getAttributes(), region.getTagType(), sb);
                     }
                 }
                 sb.append(codeLine);
@@ -1361,12 +1364,14 @@ public class ElementJavadoc {
         }
     }
 
-    private String applyTagsToHTML(String codeLine, Map<String, String> hAttrib, String tagType) {
+    private String applyTagsToHTML(String codeLine, Map<String, String> hAttrib, String tagType, StringBuilder sb) {
 
         String type = hAttrib.get("type") != null ? hAttrib.get("type") : "bold";
         String regex = hAttrib.get("regex");
         String subString = hAttrib.get("substring");
         String replacement = tagType.equals("replace") ? hAttrib.get("replacement") : null;
+        String linkTarget = tagType.equals("link") ? hAttrib.get("target") : null;
+        String linkType = hAttrib.get("type") != null ? hAttrib.get("type") : "link";
 
         if (regex != null) {
             try {
@@ -1390,6 +1395,22 @@ public class ElementJavadoc {
                     if(tagType.equals("replace") && replacement != null){
                         codeLine = matcher.replaceAll(replacement);
                     }
+                    if (tagType.equals("link") && linkTarget != null) {
+                    String javaDocCodeBody = prepareJavaDocForLinkTag(linkTarget);
+                    String fullClassCode = addImportsToSource(javaDocCodeBody);
+                    JavaDocSnippetLinkTagFileObject docSnippetLinkTagFileObject = new JavaDocSnippetLinkTagFileObject(fullClassCode);
+                    try {
+                        StringBuilder linkRef = new StringBuilder();
+                        createLinkTag(linkRef, docSnippetLinkTagFileObject);
+                        //replace <code>, becasue of some issue while resolving hyperlink and code
+                        String link = linkRef.toString();
+                        link = link.replace("<code>", "");
+                        link = link.replace("</code>", "");
+                        codeLine = matcher.replaceAll(link);
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
                 }
             } catch (CharConversionException ex) {
                 Exceptions.printStackTrace(ex);
@@ -1413,6 +1434,23 @@ public class ElementJavadoc {
                 }
                 if (tagType.equals("replace") && replacement != null) {
                     codeLine = codeLine.replace(subString, replacement);
+                }
+                if (tagType.equals("link") && linkTarget != null) {
+                    String javaDocCodeBody = prepareJavaDocForLinkTag(linkTarget);
+                    String fullClassCode = addImportsToSource(javaDocCodeBody);
+                    JavaDocSnippetLinkTagFileObject docSnippetLinkTagFileObject = new JavaDocSnippetLinkTagFileObject(fullClassCode);
+                    try {
+                        StringBuilder linkRef = new StringBuilder();
+                        createLinkTag(linkRef, docSnippetLinkTagFileObject);
+                        //replace <code>, becasue of some issue while resolving hyperlink and code
+                        String link = linkRef.toString();
+                        link = link.replace("<code>", "");
+                        link = link.replace("</code>", "");
+                        codeLine = codeLine.replace(subString, link);
+                        
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 }
             } catch (CharConversionException ex) {
                 Exceptions.printStackTrace(ex);
@@ -1441,7 +1479,7 @@ public class ElementJavadoc {
                 
             } else {
                 for (MarkUpTag markUpTag : fullLineInfo.getThisLineMarkUpTags()) {
-                    if (markUpTag.tagName.equals("highlight") || markUpTag.tagName.equals("replace")) {
+                    if (markUpTag.tagName.equals("highlight") || markUpTag.tagName.equals("replace") || markUpTag.tagName.equals("link")) {
                         //validate highlight markup tag attrbutes, shouldn't contain regex and substring simultaneously
                         if (validateHighlightMarkupTagAttributes(markUpTag.markUpTagAttributes)) {
                             //error: snippet markup: attributes "substring" and "regex" used simultaneously
@@ -1576,6 +1614,73 @@ public class ElementJavadoc {
         
         return subString && regex;
     }
+    
+    private String addImportsToSource(String javaDocClassBody){
+        StringBuilder source = new StringBuilder();
+        for (ImportTree impTree : imports) {
+            if (impTree.getKind() == Tree.Kind.IMPORT) {
+                source.append(impTree.toString()).append("\n");
+            }
+        }
+        return source.append(javaDocClassBody).toString();
+
+    }
+    private String prepareJavaDocForLinkTag(String target){
+        return "public class JavaDocSnippetLinkTag {\n" +
+                "\n" +
+                "    /**\n" +
+                "     * {@link "+target+"}\n" +
+                "     */\n" +
+                "    void doc() {\n" +
+                "\n" +
+                "    }\n" +
+                "}";
+
+    }
+
+    private static class JavaDocSnippetLinkTagFileObject extends SimpleJavaFileObject {
+
+        private String text;
+
+        public JavaDocSnippetLinkTagFileObject(String text) {
+            super(URI.create("myfo:/JavaDocSnippetLinkTag.java"), JavaFileObject.Kind.SOURCE); //NOI18N
+            this.text = text;
+        }
+
+        @Override
+        public CharSequence getCharContent(boolean ignoreEncodingErrors) {
+            return text;
+        }
+    }
+    
+    private void createLinkTag(StringBuilder sb, JavaDocSnippetLinkTagFileObject fileObject) throws IOException {
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        JavacTask task = (JavacTask)compiler.getTask(null, null, null, null, null, Arrays.asList(fileObject));
+
+        DocTrees docTrees = DocTrees.instance(task);//trees
+
+        Iterable<? extends Element> docClass = task.analyze();
+        
+        main:
+        for(Element element: docClass){
+            for(Element docClassMember : element.getEnclosedElements()){
+                TreePath path = docTrees.getPath(docClassMember);//path
+                DocCommentTree doc = docTrees.getDocCommentTree(docClassMember);//doc
+                if(doc!=null) {
+                    List<? extends DocTree> body = doc.getFullBody();//body
+                    for(DocTree dTree: body){
+                        if(dTree instanceof LinkTree){
+                            LinkTree linkTag = (LinkTree)dTree;
+                            appendReference(sb, linkTag.getReference(), body, path, doc, docTrees);
+                            break main;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    }
+        
     private void appendReference(StringBuilder sb, ReferenceTree ref, List<? extends DocTree> label, TreePath docPath, DocCommentTree doc, DocTrees trees) {
         String sig = ref.getSignature();
         if (sig != null && sig.length() > 0) {

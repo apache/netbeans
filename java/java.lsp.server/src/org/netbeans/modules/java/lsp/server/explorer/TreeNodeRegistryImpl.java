@@ -40,11 +40,13 @@ import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.ActionMap;
+import javax.swing.text.DefaultEditorKit;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.openide.explorer.ExplorerManager;
+import org.openide.explorer.ExplorerUtils;
 import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
@@ -135,8 +137,17 @@ public class TreeNodeRegistryImpl implements TreeNodeRegistry {
                 throw new PropertyVetoException("Root change not allowed", e);
             }
         });
+        
+        ActionMap map = new ActionMap();
+        map.put(DefaultEditorKit.copyAction, ExplorerUtils.actionCopy(em));
+        map.put(DefaultEditorKit.cutAction, ExplorerUtils.actionCut(em));
+        map.put(DefaultEditorKit.pasteAction, ExplorerUtils.actionPaste(em));
+        map.put("delete", ExplorerUtils.actionDelete(em, false)); // NOI18N
+        
+        Lookup expLookup = ExplorerUtils.createLookup (em, map);
+        
         // delegate the TreeViewProvider notification out:
-        final TreeViewProvider tvp = new TreeViewProvider(id, em, this, ctxLookup) {
+        final TreeViewProvider tvp = new TreeViewProvider(id, em, this, new ProxyLookup(expLookup, ctxLookup)) {
             @Override
             protected void onDidChangeTreeData(Node n, int id) {
                 int rootId = findId(em.getRootContext());

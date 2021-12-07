@@ -127,6 +127,7 @@ class VisualizerProvider extends vscode.Disposable implements vscode.TreeDataPro
       for (let i = 0; i < arr.length; i++) {
         let d = await self.client.sendRequest(NodeInfoRequest.info, { nodeId : arr[i] });
         let v = new Visualizer(d, self.ts.imageUri(d));
+        // console.log('Nodeid ' + d.id + ': visualizer ' + v.visId);
         if (d.command) {
           // PENDING: provide an API to register command (+ parameters) -> command translators.
           if (d.command === 'vscode.open') {
@@ -135,6 +136,7 @@ class VisualizerProvider extends vscode.Disposable implements vscode.TreeDataPro
             v.command = { command : d.command, title: '', arguments: [v]};
           }
         }
+        self.treeData.set(arr[i] as number, v);
         v.parent = element;
         res.push(v);
         ch.set(d.id, v);
@@ -164,16 +166,25 @@ class VisualizerProvider extends vscode.Disposable implements vscode.TreeDataPro
       }
     });
     // cascade
-    this.removeVisualizers(ch);
+    if (ch.length > 0) {
+      this.removeVisualizers(ch);
+    }
   }
 }
 
+// let visualizerSerial = 1;
+
 class Visualizer extends vscode.TreeItem {
+
+  // visId : number;
+
   constructor(
     public data : NodeInfoRequest.Data,
     public image : vscode.Uri | undefined
   ) {
     super(data.label, data.collapsibleState);
+    this.id = "" + data.id;
+    // this.visId = visualizerSerial++;
     this.label = data.label;
     this.description = data.description;
     this.tooltip = data.tooltip;

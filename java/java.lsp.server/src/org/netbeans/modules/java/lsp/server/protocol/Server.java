@@ -841,6 +841,7 @@ public final class Server {
                 }
             });
             sessionServices.add(new WorkspaceUIContext(client));
+            sessionServices.add(treeService.getNodeRegistry());
             ((LanguageClientAware) getTextDocumentService()).connect(client);
             ((LanguageClientAware) getWorkspaceService()).connect(client);
             ((LanguageClientAware) treeService).connect(client);

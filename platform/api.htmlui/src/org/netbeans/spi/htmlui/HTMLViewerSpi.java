@@ -117,7 +117,7 @@ public interface HTMLViewerSpi<HtmlView, HtmlButton> {
          * has to start a nested event queue. Use this method to find out
          * if such special care is needed.
          *
-         * @return
+         * @return {@code true} if the dialog is supposed to block the current thread
          * @since 1.23
          */
         public boolean isBlocking() {
@@ -213,7 +213,7 @@ public interface HTMLViewerSpi<HtmlView, HtmlButton> {
      * </ul>
      *
      * @param context information to display and callbacks to the infrastructure
-     * @return any element representing the view
+     * @return any element representing the view or {@code null} if this viewer cannot handle the request
      * @since 1.23
      */
     public HtmlView newView(Context context);

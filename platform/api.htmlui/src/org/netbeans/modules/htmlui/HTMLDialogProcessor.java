@@ -222,6 +222,9 @@ implements Comparator<ExecutableElement> {
         TypeElement onSubmit = processingEnv.getElementUtils().getTypeElement(HTMLDialog.OnSubmit.class.getCanonicalName());
         final TypeMirror retType = ee.getReturnType();
         boolean returnsOnSubmit = retType.getKind() != TypeKind.ERROR && processingEnv.getTypeUtils().isSubtype(retType, onSubmit.asType());
+        if (!returnsOnSubmit) {
+            warning("Rather modify the method to return HTMLDialog.OnSubmit callback!", ee);
+        }
         w.append("  public static ");
         if (returnsOnSubmit) {
             w.append("void ");
@@ -318,6 +321,10 @@ implements Comparator<ExecutableElement> {
 
     private void error(final String msg, Element e) {
         processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, msg, e);
+    }
+
+    private void warning(final String msg, Element e) {
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, msg, e);
     }
 
     private static PackageElement findPkg(Element e) {

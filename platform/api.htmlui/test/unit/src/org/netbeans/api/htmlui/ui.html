@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,7 +18,17 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="platform/htmlui">
-    <description>Builds, tests, and runs the project org.netbeans.modules.htmlui</description>
-    <import file="../../nbbuild/templates/projectized.xml"/>
-</project>
+<!-- BEGIN: org.netbeans.api.htmlui.ui.html -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Base UI</title>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <div>Hello World! Type in how are you?</div>
+        <input data-bind="textInput: text"><br>
+        <button data-bind="click: submit">Submit</button>
+    </body>
+</html>
+<!-- END: org.netbeans.api.htmlui.ui.html -->

@@ -23,79 +23,57 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Locale;
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import net.java.html.json.Model;
-import net.java.html.json.Property;
 import org.netbeans.html.context.spi.Contexts.Id;
 import org.netbeans.modules.htmlui.HTMLDialogBase;
 
 /** Generates method that opens an HTML based modal dialog. Sample of a typical
  * usage follows.
- * <b>HTML Page <small>dialog.html</small></b>
- * <pre>
-&lt;html&gt;
-    &lt;head&gt; &lt;!-- btw. use <a href="@TOP@architecture-summary.html#property-data-netbeans-css">data-netbeans-css</a> attribute to control the CSS --&gt;
-        &lt;title&gt;Base question&lt;/title&gt;
-        &lt;meta charset="UTF-8"&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;div&gt;Hello World! How are you?&lt;/div&gt;
-        &lt;-- you need to check the checkbox to enabled the OK button --&gt;
-        &lt;input type="checkbox" data-bind="checked: <em style="color: red">ok</em>"&gt;OK?&lt;br&gt;
-        &lt;-- enabled with checkbox is checked --&gt;
-        &lt;button id='ok' hidden data-bind="enable: <em style="color: red">ok</em>"&gt;Good&lt;/button&gt;
-        &lt;button id='bad' hidden&gt;Bad&lt;/button&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
- * </pre>
- * <b>Java Source <small>AskQuestion.java</small></b>
- * <pre>
-{@link Model @Model}(className = "AskCtrl", properties = {
-    {@link Property @Property}(name = <em style="color: red">"ok"</em>, type = <b>boolean</b>.<b>class</b>)
-})
-<b>public final class</b> AskQuestion <b>implements</b> ActionListener {
-    {@link HTMLDialog @HTMLDialog}(url = "dialog.html") <b>static void</b> showHelloWorld(boolean checked) {
-        <b>new</b> AskCtrl(checked).applyBindings();
-    }
-
-    {@link Override @Override} <b>public void</b> actionPerformed({@link ActionEvent} e) {
-        // shows dialog with a question, checkbox is checked by default
-        // {@link #className() Pages} is automatically generated class
-        String ret = Pages.showHelloWorld(true);
-
-        System.out.println("User selected: " + ret);
-    }
-}
- * </pre>
+ * <h5>HTML Page <small>dialog.html</small></h5>
  * <p>
- * The method is generated into <code>Pages</code> class in the same package
- * (unless one changes the name via {@link #className()}) and has the same name,
- * and parameters as the method annotated by this annotation. When the method
- * is invoked, it opens a dialog, loads an HTML page into it. When the page is
- * loaded, it calls back the method annotated by this annotation and passes it
+ * {@codesnippet org.netbeans.api.htmlui.dialog.html}
+ * The <code>dialog.html</code> page defines two buttons as <em>hidden</em> - 
+ * they are re-rendered by the embedding "chrome" (for example as Swing buttons),
+ * but they can be enabled/disabled. For example the <code>ok</code> property
+ * (defined in the Java model below) connects the state of the checkbox and
+ * the <em>Good</em> button.
+ * 
+ * <h5>Java Source <small>AskQuestion.java</small></h5>
+ * {@codesnippet org.netbeans.api.htmlui.AskQuestion}
+ * <p>
+ * The method is generated into <code>AskPages</code> class (specified in the
+ * {@code className} attribute)
+ * in the same package and has the same name,
+ * and parameters as the method annotated by the {@code HTMLDialog} annotation. 
+ * <p>
+ * When the method {@code AskPages.showHelloWorld(true)}
+ * is invoked, it opens a dialog, loads an HTML page {@code dialog.html}
+ * into it. When the page is
+ * loaded, it calls back the method {@code AskQuestion.showHelloWorld}
+ * and passes it
  * its own arguments. The method is supposed to make the page live, preferrably
  * by using {@link net.java.html.json.Model} generated class and calling
- * <code>applyBindings()</code> on it.
+ * <code>applyBindings()</code> on it. The method is suggested to return
+ * an instance of {@link OnSubmit} callback to be notified about user pressing
+ * one of the dialog buttons.
  * <p>
  * The HTML page may contain hidden <code>&lt;button&gt;</code> elements. If it does so,
  * those buttons are copied to the dialog frame and displayed underneath the page.
  * Their enabled/disabled state reflects the state of the buttons in the page.
- * When one of the buttons is selected, the dialog closes and the generated
- * method returns with 'id' of the selected button (or <code>null</code> if
- * the dialog was closed).
+ * When one of the buttons is selected a callback to {@link OnSubmit} instance
+ * is made. If it returns {@code true}, the dialog closes otherwise its closing
+ * is prevented. A {@code null} 'id' signals user closing or cancelling the dialog.
  * <p>
  * By default, if the HTML defines no hidden
  * <code>&lt;button&gt;</code> elements, two buttons are added. One representing
  * the <em>OK</em> choice (with <code>id="OK"</code>) and one representing
  * the cancel choice (with <code>null</code> id). Both buttons are always
- * enabled. One can check the
- * return value from the dialog showing method
- * to be <code>"OK"</code> to know whether the
- * user approved the dialog.
+ * enabled. One can check the callback 'id'
+ * to be <code>"OK"</code> to know whether the user approved the dialog.
  *
+ * 
  * @author Jaroslav Tulach
  */
 @Retention(RetentionPolicy.SOURCE)
@@ -129,8 +107,15 @@ public @interface HTMLDialog {
      */
     String[] techIds() default {};
 
-    /**
+    /** Callback to be notified when user closes a dialog. Return an
+     * implementation of this interface from a method annotated by
+     * {@link HTMLDialog} annotation:
+     * <p>
+     * {@codesnippet org.netbeans.api.htmlui.AskQuestion}
      *
+     * The example returns a <em>lambda</em> function which gets automatically
+     * converted into {@code OnSubmit} instance.
+     * 
      * @since 1.23
      */
     @FunctionalInterface
@@ -148,7 +133,7 @@ public @interface HTMLDialog {
     /** Rather than using this class directly, consider
      * {@link HTMLDialog}. The {@link HTMLDialog} annotation
      * generates boilderplate code for you
-     * and can do some compile times checks helping you to warnings
+     * and can do some compile times checks helping you to get warnings
      * as soon as possible.
      */
     public static final class Builder {

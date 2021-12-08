@@ -108,4 +108,180 @@ public class PHP81CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion("neverReturnType", "public function invalidInParameter(ne^ver $never): never; // interface");
     }
 
+    public void testReadonlyPropertiesTyping01() throws Exception {
+        checkCompletion("readonlyPropertiesTyping01", "    ^// test");
+    }
+
+    public void testReadonlyPropertiesTyping02() throws Exception {
+        checkCompletion("readonlyPropertiesTyping02", "    read^");
+    }
+
+    public void testReadonlyPropertiesTyping03() throws Exception {
+        checkCompletion("readonlyPropertiesTyping03", "readonly ^");
+    }
+
+    public void testReadonlyPropertiesTyping04() throws Exception {
+        checkCompletion("readonlyPropertiesTyping04", "    readonly p^");
+    }
+
+    public void testReadonlyPropertiesTyping05() throws Exception {
+        checkCompletion("readonlyPropertiesTyping05", "readonly public ^");
+    }
+
+    public void testReadonlyPropertiesTyping06() throws Exception {
+        checkCompletion("readonlyPropertiesTyping06", "    p^");
+    }
+
+    public void testReadonlyPropertiesTyping07() throws Exception {
+        checkCompletion("readonlyPropertiesTyping07", "    public ^");
+    }
+
+    public void testReadonlyPropertiesTyping08() throws Exception {
+        checkCompletion("readonlyPropertiesTyping08", "    public read^");
+    }
+
+    public void testReadonlyPropertiesTyping09() throws Exception {
+        checkCompletion("readonlyPropertiesTyping09", "    public readonly ^");
+    }
+
+    public void testReadonlyPropertiesTyping10() throws Exception {
+        checkCompletion("readonlyPropertiesTyping10", "    public readonly ?^");
+    }
+
+    public void testReadonlyPromotedPropertiesTyping01() throws Exception {
+        checkCompletion("readonlyPropertiesTyping01", "        ^// test");
+    }
+
+    public void testReadonlyPromotedPropertiesTyping02() throws Exception {
+        checkCompletion("readonlyPropertiesTyping02", "        read^");
+    }
+
+    public void testReadonlyPromotedPropertiesTyping03() throws Exception {
+        checkCompletion("readonlyPropertiesTyping03", "            readonly ^");
+    }
+
+    public void testReadonlyPromotedPropertiesTyping04() throws Exception {
+        checkCompletion("readonlyPropertiesTyping04", "            readonly p^");
+    }
+
+    public void testReadonlyPromotedPropertiesTyping05() throws Exception {
+        checkCompletion("readonlyPropertiesTyping05", "            readonly public ^");
+    }
+
+    public void testReadonlyPromotedPropertiesTyping06() throws Exception {
+        checkCompletion("readonlyPropertiesTyping06", "            ^// test");
+    }
+
+    public void testReadonlyPromotedPropertiesTyping07() throws Exception {
+        checkCompletion("readonlyPropertiesTyping07", "            read^//test");
+    }
+
+    public void testReadonlyPromotedPropertiesTyping08() throws Exception {
+        checkCompletion("readonlyPropertiesTyping08", "            readonly public int|^//test");
+    }
+
+    public void testReadonlyPromotedPropertiesTyping09() throws Exception {
+        checkCompletion("readonlyPropertiesTyping09", "            p^");
+    }
+
+    public void testReadonlyPromotedPropertiesTyping10() throws Exception {
+        checkCompletion("readonlyPropertiesTyping10", "            private ^");
+    }
+
+    public void testReadonlyPromotedPropertiesTyping11() throws Exception {
+        checkCompletion("readonlyPropertiesTyping11", "            private readon^");
+    }
+
+    public void testReadonlyPromotedPropertiesTyping12() throws Exception {
+        checkCompletion("readonlyPropertiesTyping12", "            private readonly ^");
+    }
+
+    public void testReadonlyPromotedPropertiesTyping13() throws Exception {
+        checkCompletion("readonlyPropertiesTyping13", "            private readonly str^");
+    }
+
+    public void testReadonlyProperties_01() throws Exception {
+        checkCompletion("readonlyProperties", "    publ^ic readonly int $publicReadonly;");
+    }
+
+    public void testReadonlyProperties_02() throws Exception {
+        checkCompletion("readonlyProperties", "    public reado^nly int $publicReadonly;");
+    }
+
+    public void testReadonlyProperties_03() throws Exception {
+        checkCompletion("readonlyProperties", "    public readonly in^t $publicReadonly;");
+    }
+
+    public void testReadonlyProperties_04() throws Exception {
+        checkCompletion("readonlyProperties", "    private readonly ?strin^g $privateReadonly;");
+    }
+
+    public void testReadonlyProperties_05() throws Exception {
+        checkCompletion("readonlyProperties", "    protected readonly stri^ng|int $protectedReadonly;");
+    }
+
+    public void testReadonlyProperties_06() throws Exception {
+        checkCompletion("readonlyProperties", "    protected readonly string|in^t $protectedReadonly;");
+    }
+
+    public void testReadonlyProperties_07() throws Exception {
+        checkCompletion("readonlyProperties", "    readon^ly public string $readonlyPublic;");
+    }
+
+    public void testReadonlyProperties_08() throws Exception {
+        checkCompletion("readonlyProperties", "    readonly publi^c string $readonlyPublic;");
+    }
+
+    public void testReadonlyProperties_09() throws Exception {
+        checkCompletion("readonlyProperties", "    readonly public str^ing $readonlyPublic;");
+    }
+
+    public void testReadonlyProperties_10() throws Exception {
+        checkCompletion("readonlyProperties", "    readonly private ?stri^ng $readonlyPrivate;");
+    }
+
+    public void testReadonlyProperties_11() throws Exception {
+        checkCompletion("readonlyProperties", "    readonly protected in^t|string $readonlyProtected;");
+    }
+
+    public void testReadonlyProperties_12() throws Exception {
+        checkCompletion("readonlyProperties", "    readonly protected int|str^ing $readonlyProtected;");
+    }
+
+    public void testReadonlyProperties_13() throws Exception {
+        checkCompletion("readonlyProperties", "        publ^ic readonly int|string $promotedPublicReadonly = 0,");
+    }
+
+    public void testReadonlyProperties_14() throws Exception {
+        checkCompletion("readonlyProperties", "        public reado^nly int|string $promotedPublicReadonly = 0,");
+    }
+
+    public void testReadonlyProperties_15() throws Exception {
+        checkCompletion("readonlyProperties", "        public readonly i^nt|string $promotedPublicReadonly = 0,");
+    }
+
+    public void testReadonlyProperties_16() throws Exception {
+        checkCompletion("readonlyProperties", "        public readonly int|str^ing $promotedPublicReadonly = 0,");
+    }
+
+    public void testReadonlyProperties_17() throws Exception {
+        checkCompletion("readonlyProperties", "        private readonly arr^ay $promotedPrivateReadonly = [],");
+    }
+
+    public void testReadonlyProperties_18() throws Exception {
+        checkCompletion("readonlyProperties", "        protected readonly ?str^ing $promotedProtectedReadonly = \"test\",");
+    }
+
+    public void testReadonlyProperties_19() throws Exception {
+        checkCompletion("readonlyProperties", "        readonly public int|st^ring $promotedReadonlyPublic = 0,");
+    }
+
+    public void testReadonlyProperties_20() throws Exception {
+        checkCompletion("readonlyProperties", "        readonly private arra^y $promotedReadonlyPrivate = [],");
+    }
+
+    public void testReadonlyProperties_21() throws Exception {
+        checkCompletion("readonlyProperties", "        readonly protected ?stri^ng $promotedReadonlyProtected = \"test\",");
+    }
+
 }

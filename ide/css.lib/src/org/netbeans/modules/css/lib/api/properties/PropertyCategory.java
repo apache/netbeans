@@ -37,6 +37,7 @@ import org.netbeans.modules.css.lib.api.CssModule;
 //TODO defined the displaynames and descriptions
 public enum PropertyCategory {
 
+    ALIGNMENT,
     ANIMATIONS,
     BOX,
     BACKGROUND,

@@ -28,7 +28,7 @@ public interface ATech {
     @Contexts.Id("second")
     public static final class Second implements ATech {
     }
-    
+
     @ServiceProvider(service = Contexts.Provider.class)
     public final static class Register implements Contexts.Provider {
         @Override

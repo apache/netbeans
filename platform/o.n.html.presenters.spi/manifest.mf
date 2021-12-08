@@ -1,1 +1,1 @@
-OpenIDE-Module: generic
+OpenIDE-Module: org.netbeans.html.presenters.spi

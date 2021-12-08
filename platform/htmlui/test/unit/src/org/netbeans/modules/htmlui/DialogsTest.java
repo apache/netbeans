@@ -190,8 +190,11 @@ public class DialogsTest {
     }
 
     @HTMLDialog(url = "http://www.netbeans.org", className = "TestPages")
-    static void showDialog(int x, String[] y, DialogsTest t) {
-        String ret = TestPages.showDialog(10, y, null);
+    static HTMLDialog.OnSubmit showDialog(int x, String[] y, DialogsTest t) {
+        return (id) -> {
+            TestPages.showDialog(10, y, null);
+            return true;
+        };
     }
 
     static void assertButtonName(JButton b, String exp, String msg) {

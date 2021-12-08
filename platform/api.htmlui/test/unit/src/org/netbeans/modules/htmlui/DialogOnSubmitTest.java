@@ -21,8 +21,6 @@ package org.netbeans.modules.htmlui;
 import java.net.URL;
 import java.net.URLStreamHandlerFactory;
 import java.util.concurrent.CountDownLatch;
-import net.java.html.json.Model;
-import net.java.html.json.Property;
 import org.netbeans.api.htmlui.HTMLDialog;
 import org.netbeans.api.htmlui.HTMLDialog.OnSubmit;
 import org.netbeans.html.boot.spi.Fn;

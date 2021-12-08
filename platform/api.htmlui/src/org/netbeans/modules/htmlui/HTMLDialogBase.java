@@ -24,6 +24,7 @@ import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import org.netbeans.api.htmlui.HTMLDialog;
 import org.netbeans.spi.htmlui.HTMLViewerSpi;
+import org.openide.util.Lookup;
 
 public final class HTMLDialogBase {
     private final Buttons<?, ?> buttons;
@@ -42,7 +43,7 @@ public final class HTMLDialogBase {
         } catch (MalformedURLException ex) {
             throw new IllegalArgumentException(url, ex);
         }
-        class AcceptAndInit implements Consumer<String>, Callable<Object> {
+        class AcceptAndInit implements Consumer<String>, Callable<Lookup> {
             private Buttons<?, ?> buttons;
 
             synchronized <A, B> Buttons<A, B> assignButtons(Buttons<A, B> b) {
@@ -72,7 +73,7 @@ public final class HTMLDialogBase {
             }
 
             @Override
-            public Object call() throws Exception {
+            public Lookup call() throws Exception {
                 onPageLoad.run();
                 initializeButtons();
                 return null;

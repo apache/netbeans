@@ -48,7 +48,7 @@ final class HtmlPair<HtmlView, HtmlButton> {
                 return pair;
             }
         }
-        return newView(null, ctx); // XXX
+        return newView(FallbackViewer.DEFAULT, ctx);
     }
 
     private static <HtmlView, HtmlButton> HtmlPair<HtmlView, HtmlButton> newView(HTMLViewerSpi<HtmlView, HtmlButton> viewer, HTMLViewerSpi.Context ctx) {

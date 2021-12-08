@@ -26,7 +26,9 @@ import org.netbeans.api.htmlui.HTMLComponent;
 import org.netbeans.api.htmlui.HTMLDialog;
 import org.netbeans.api.htmlui.HTMLDialog.OnSubmit;
 import org.netbeans.api.htmlui.OpenHTMLRegistration;
+import org.netbeans.html.boot.spi.Fn;
 import org.netbeans.modules.htmlui.ContextAccessor;
+import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
 /** Service provider interface for handing display of HTML based user interface.
@@ -63,7 +65,7 @@ public interface HTMLViewerSpi<HtmlView, HtmlButton> {
                 @Override
                 public Context newContext(
                     ClassLoader loader, URL url, String[] techIds,
-                    OnSubmit onSubmit, Consumer<String> lifeCycleCallback, Callable<?> onPageLoad,
+                    OnSubmit onSubmit, Consumer<String> lifeCycleCallback, Callable<Lookup> onPageLoad,
                     Class<?> component
                 ) {
                     return new Context(loader, url, techIds, onSubmit, lifeCycleCallback, onPageLoad, component);
@@ -75,13 +77,13 @@ public interface HTMLViewerSpi<HtmlView, HtmlButton> {
         private final String[] techIds;
         private final OnSubmit onSubmit;
         private final Consumer<String> lifeCycleCallback;
-        private final Callable<?> onPageLoad;
+        private final Callable<Lookup> onPageLoad;
         private final Class<?> component;
 
         private Context(
             ClassLoader loader, URL url, String[] techIds,
             OnSubmit onSubmit, Consumer<String> lifeCycleCallback,
-            Callable<?> onPageLoad, Class<?> component
+            Callable<Lookup> onPageLoad, Class<?> component
         ) {
             this.loader = loader;
             this.url = url;
@@ -115,7 +117,7 @@ public interface HTMLViewerSpi<HtmlView, HtmlButton> {
          * has to start a nested event queue. Use this method to find out
          * if such special care is needed.
          *
-         * @return
+         * @return {@code true} if the dialog is supposed to block the current thread
          * @since 1.23
          */
         public boolean isBlocking() {
@@ -144,7 +146,21 @@ public interface HTMLViewerSpi<HtmlView, HtmlButton> {
             return true;
         }
 
-        public Object onPageLoad() {
+        /** Initialize the page inside of a webview. Call this method
+         * once the webview is ready and registered as current
+         * {@link Fn#activePresenter()}. Let the application code
+         * handle its initializations and possibly return a {@link Lookup}
+         * representing the content of the view.
+         * <p>
+         * Dialogs usually return {@code null}, but long living windows
+         * created via {@link OpenHTMLRegistration} usually provide a lookup -
+         * see {@link OpenHTMLRegistration specification} on how to fill its
+         * content.
+         *
+         * @return lookup or {@code null}
+         * @since 1.23
+         */
+        public Lookup onPageLoad() {
             if (onPageLoad != null) {
                 try {
                     return onPageLoad.call();
@@ -197,7 +213,7 @@ public interface HTMLViewerSpi<HtmlView, HtmlButton> {
      * </ul>
      *
      * @param context information to display and callbacks to the infrastructure
-     * @return any element representing the view
+     * @return any element representing the view or {@code null} if this viewer cannot handle the request
      * @since 1.23
      */
     public HtmlView newView(Context context);
@@ -209,7 +225,7 @@ public interface HTMLViewerSpi<HtmlView, HtmlButton> {
      * implementations of this interface may not support all these types
      * and may also support other types.
      * <p>
-     * Requesting {@link Void}{@code .class} means to <em>realize</em> 
+     * Requesting {@link Void}{@code .class} means to <em>realize</em>
      * the component - e.g. make it visible.
      *
      * @param <C> the type of requested component

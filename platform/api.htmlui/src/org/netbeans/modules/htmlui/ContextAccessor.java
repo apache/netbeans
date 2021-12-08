@@ -23,6 +23,7 @@ import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import org.netbeans.api.htmlui.HTMLDialog.OnSubmit;
 import org.netbeans.spi.htmlui.HTMLViewerSpi;
+import org.openide.util.Lookup;
 
 public abstract class ContextAccessor {
     private static ContextAccessor DEFAULT;
@@ -50,7 +51,7 @@ public abstract class ContextAccessor {
 
     public abstract HTMLViewerSpi.Context newContext(
         ClassLoader loader, URL url, String[] techIds,
-        OnSubmit onSubmit, Consumer<String> lifeCycleCallback, Callable<?> onPageLoad,
+        OnSubmit onSubmit, Consumer<String> lifeCycleCallback, Callable<Lookup> onPageLoad,
         Class<?> component
     );
 }

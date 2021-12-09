@@ -34,6 +34,7 @@ import org.netbeans.modules.java.lsp.server.Utils;
 import static org.netbeans.modules.java.lsp.server.explorer.NodeLookupContextValues.nodeLookup;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataFolder;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -49,6 +50,10 @@ public class DefaultDecorationsImpl implements TreeDataProvider.Factory {
 
     public static final String EXPLORER_ROOT = "Explorers"; // NOI18N
     public static final String COOKIES_EXT = "contextValues"; // NOI18N
+    
+    public static final String CTXVALUE_FOLDER = "is:folder"; // NOI18N
+    public static final String CTXVALUE_CAP_RENAME = "cap:rename"; // NOI18N
+    public static final String CTXVALUE_CAP_DELETE = "cap:delete"; // NOI18N
 
     private static final Logger LOG = Logger.getLogger(DefaultDecorationsImpl.class.getName());
 
@@ -110,23 +115,47 @@ public class DefaultDecorationsImpl implements TreeDataProvider.Factory {
             }
 
             FileObject f = n.getLookup().lookup(FileObject.class);
+            boolean nodeChecked = false;
+            if (f == null) {
+                DataFolder df = n.getLookup().lookup(DataFolder.class);
+                if (df != null) {
+                    f = df.getPrimaryFile();
+                    // Workaround for possible bug in data folder: DataFolder itself and the Fileobject for the folder do not
+                    // have a Node in their Lookups.
+                    nodeChecked = true;
+                }
+            } else if (f.isFolder()) {
+                // Workaround for possible bug in data folder
+                nodeChecked = true;
+            }
             if (f != null) {
                 // reverse check, if the file's node is proxied to by the node we got:
                 Node fn = f.getLookup().lookup(Node.class);
-                if (fn != null) {
-                    if (n.getLookup().lookup(fn.getClass()) == fn) {
+                if (nodeChecked || fn != null) {
+                    if (nodeChecked || n.getLookup().lookup(fn.getClass()) == fn) {
                         try {
+                            if (f.isFolder()) {
+                                d.addContextValues(CTXVALUE_FOLDER);
+                            } else {
+                                // PENDING: this could be moved to the VSNetbeans module ?
+                                d.setCommand("vscode.open"); // NOI18N
+                            }
                             // set the URI:
                             d.setResourceURI(new URI(Utils.toUri(f)));
-                            // PENDING: this could be moved to the VSNetbeans module ?
-                            d.setCommand("vscode.open"); // NOI18N
                             set = true;
                         } catch (URISyntaxException ex) {
                             LOG.log(Level.WARNING, "Could not convert file to URI: {0}", f);
                         }
                     }
                 }
-
+            }
+            if (n.canDestroy()) {
+                d.addContextValues(CTXVALUE_CAP_DELETE);
+                set = true;
+            }
+            if (n.canRename()) {
+                d.addContextValues(CTXVALUE_CAP_RENAME);
+                set = true;
             }
 
             return set ? d : null;

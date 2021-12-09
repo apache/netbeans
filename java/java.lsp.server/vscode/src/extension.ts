@@ -198,6 +198,38 @@ function contextUri(ctx : any) : vscode.Uri | undefined {
     return vscode.window.activeTextEditor?.document?.uri;
 }
 
+function wrapCommandWithProgress(lsCommand : string, title : string, log? : vscode.OutputChannel, showOutput? : boolean) : Thenable<unknown> {
+    return window.withProgress({ location: ProgressLocation.Window }, p => {
+        return new Promise(async (resolve, reject) => {
+            let c : LanguageClient = await client;
+            const commands = await vscode.commands.getCommands();
+            if (commands.includes(lsCommand)) {
+                p.report({ message: title });
+                c.outputChannel.show(true);
+                const start = new Date().getTime();
+                if (log) {
+                    handleLog(log, `starting ${lsCommand}`);
+                }
+                const res = await vscode.commands.executeCommand(lsCommand);
+                const elapsed = new Date().getTime() - start;
+                if (log) {
+                    handleLog(log, `finished ${lsCommand} in ${elapsed} ms with result ${res}`);
+                }
+                const humanVisibleDelay = elapsed < 1000 ? 1000 : 0;
+                setTimeout(() => { // set a timeout so user would still see the message when build time is short
+                    if (res) {
+                        resolve(res);
+                    } else {
+                        reject(res);
+                    }
+                }, humanVisibleDelay);
+            } else {
+                reject(`cannot run ${lsCommand}; client is ${c}`);
+            }
+        });
+    });
+}
+
 export function activate(context: ExtensionContext): VSNetBeansAPI {
     let log = vscode.window.createOutputChannel("Apache NetBeans Language Server");
 
@@ -288,33 +320,12 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             throw `Client ${c} doesn't support new project`;
         }
     }));
-    context.subscriptions.push(commands.registerCommand('java.workspace.compile', () => {
-        return window.withProgress({ location: ProgressLocation.Window }, p => {
-            return new Promise(async (resolve, reject) => {
-                let c : LanguageClient = await client;
-                const commands = await vscode.commands.getCommands();
-                if (commands.includes('java.build.workspace')) {
-                    p.report({ message: 'Compiling workspace...' });
-                    c.outputChannel.show(true);
-                    const start = new Date().getTime();
-                    handleLog(log, `starting java.build.workspace`);
-                    const res = await vscode.commands.executeCommand('java.build.workspace');
-                    const elapsed = new Date().getTime() - start;
-                    handleLog(log, `finished java.build.workspace in ${elapsed} ms with result ${res}`);
-                    const humanVisibleDelay = elapsed < 1000 ? 1000 : 0;
-                    setTimeout(() => { // set a timeout so user would still see the message when build time is short
-                        if (res) {
-                            resolve(res);
-                        } else {
-                            reject(res);
-                        }
-                    }, humanVisibleDelay);
-                } else {
-                    reject(`cannot compile workspace; client is ${c}`);
-                }
-            });
-        });
-    }));
+    context.subscriptions.push(commands.registerCommand('java.workspace.compile', () => 
+        wrapCommandWithProgress('java.build.workspace', 'Compiling workspace...', log, true)
+    ));
+    context.subscriptions.push(commands.registerCommand('java.workspace.clean', () => 
+        wrapCommandWithProgress('java.build.workspace', 'Cleaning workspace...', log, true)
+    ));
     context.subscriptions.push(commands.registerCommand('java.goto.super.implementation', async () => {
         if (window.activeTextEditor?.document.languageId !== "java") {
             return;

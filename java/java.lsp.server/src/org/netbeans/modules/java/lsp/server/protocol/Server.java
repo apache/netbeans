@@ -698,6 +698,7 @@ public final class Server {
                 List<String> commands = new ArrayList<>(Arrays.asList(
                         GRAALVM_PAUSE_SCRIPT,
                         JAVA_BUILD_WORKSPACE,
+                        JAVA_CLEAN_WORKSPACE,
                         JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS,
                         JAVA_FIND_DEBUG_PROCESS_TO_ATTACH,
                         JAVA_FIND_PROJECT_CONFIGURATIONS,
@@ -849,6 +850,7 @@ public final class Server {
     }
 
     public static final String JAVA_BUILD_WORKSPACE =  "java.build.workspace";
+    public static final String JAVA_CLEAN_WORKSPACE =  "java.clean.workspace";
     public static final String JAVA_NEW_FROM_TEMPLATE =  "java.new.from.template";
     public static final String JAVA_NEW_PROJECT =  "java.new.project";
     public static final String JAVA_GET_PROJECT_SOURCE_ROOTS = "java.get.project.source.roots";

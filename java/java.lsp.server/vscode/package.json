@@ -373,6 +373,11 @@
 				"category": "Java"
 			},
 			{
+				"command": "java.clean.workspace",
+				"title": "Clean Workspace",
+				"category": "Java"
+			},
+			{
 				"command": "java.workspace.new",
 				"title": "New from Template...",
 				"category": "Java",
@@ -502,7 +507,15 @@
 					"when": "nbJavaLSReady && view == foundProjects"
 				},
 				{
+					"command": "java.clean.workspace",
+					"when": "nbJavaLSReady && view == foundProjects"
+				},
+				{
 					"command": "test-explorer.run-all",
+					"when": "nbJavaLSReady && view == foundProjects"
+				},
+				{
+					"command": "workbench.action.debug.run",
 					"when": "nbJavaLSReady && view == foundProjects"
 				},
 				{

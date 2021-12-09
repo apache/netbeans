@@ -153,6 +153,18 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 progressOfCompilation.checkStatus();
                 return progressOfCompilation.getFinishFuture();
             }
+            case Server.JAVA_CLEAN_WORKSPACE: {
+                final CommandProgress progressOfCompilation = new CommandProgress();
+                final Lookup ctx = Lookups.singleton(progressOfCompilation);
+                for (Project prj : server.openedProjects().getNow(OpenProjects.getDefault().getOpenProjects())) {
+                    ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
+                    if (ap != null && ap.isActionEnabled(ActionProvider.COMMAND_CLEAN, Lookup.EMPTY)) {
+                        ap.invokeAction(ActionProvider.COMMAND_CLEAN, ctx);
+                    }
+                }
+                progressOfCompilation.checkStatus();
+                return progressOfCompilation.getFinishFuture();
+            }
             case Server.JAVA_GET_PROJECT_SOURCE_ROOTS: {
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 String type = params.getArguments().size() > 1 ? ((JsonPrimitive) params.getArguments().get(1)).getAsString() : JavaProjectConstants.SOURCES_TYPE_JAVA;

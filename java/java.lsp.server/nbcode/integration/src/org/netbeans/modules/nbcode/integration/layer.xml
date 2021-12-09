@@ -41,6 +41,9 @@
         <folder name="database.connections">
             <file name="database-cookies.contextValues" url="database-cookies.contextValues"/>
         </folder>
+        <folder name="foundProjects">
+            <attr name="explorerConfirmsDelete" boolvalue="true"/>
+        </folder>
     </folder>
     <folder name="Debugger">
         <file name="org-netbeans-modules-debugger-jpda-ui-CurrentThreadAnnotationListener.instance_hidden"/>
@@ -52,6 +55,10 @@
         </folder>
     </folder>
     <folder name="Templates">
+        <folder name="Classes">
+            <attr name="new.sourceGroup" stringvalue="java"/>
+            <attr name="new.sourceHint" stringvalue="main"/>
+        </folder>
         <folder name="Project">
             <file name="AntJava_hidden"/>
             <file name="ClientSide_hidden"/>
@@ -76,6 +83,8 @@
             <file name="Samples_hidden"/>
         </folder>
         <folder name="UnitTests">
+            <attr name="new.sourceGroup" stringvalue="java"/>
+            <attr name="new.sourceHint" stringvalue="test"/>
             <file name="EmptyJUnitTest.java_hidden"/>
             <file name="TestSuite.java_hidden"/>
             <file name="org-netbeans-modules-junit-ui-wizards-SimpleTestCaseWizardIterator_hidden"/>

@@ -25,6 +25,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
@@ -447,7 +448,8 @@ final class SimpleServer extends HttpServer<SimpleServer.ReqRes, SimpleServer.Re
             Random random = new Random();
             for (int i = min; i <= max; i++) {
                 int at = min + random.nextInt(max - min + 1);
-                InetSocketAddress address = new InetSocketAddress(at);
+                final InetAddress localHostOnly = InetAddress.getByName(null);
+                InetSocketAddress address = new InetSocketAddress(localHostOnly, at);
                 try {
                     s.socket().bind(address);
                 } catch (IOException ex) {

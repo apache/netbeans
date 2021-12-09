@@ -45,7 +45,7 @@ import * as vscode from 'vscode';
 import * as launcher from './nbcode';
 import {NbTestAdapter} from './testAdapter';
 import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification, DebugConnector,
-         TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification,
+         TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification, HtmlPageRequest, HtmlPageParams,
          SetTextEditorDecorationParams
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
@@ -628,6 +628,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 'nbcodeCapabilities' : {
                     'statusBarMessageSupport' : true,
                     'testResultsSupport' : true,
+                    'showHtmlPageSupport' : true,
                     'wantsGroovySupport' : enableGroovy
                 }
             },
@@ -657,6 +658,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         c.onReady().then(() => {
             testAdapter = new NbTestAdapter();
             c.onNotification(StatusMessageRequest.type, showStatusBarMessage);
+            c.onRequest(HtmlPageRequest.type, showHtmlPage);
             c.onNotification(LogMessageNotification.type, (param) => handleLog(log, param.message));
             c.onRequest(QuickPickRequest.type, async param => {
                 const selected = await window.showQuickPick(param.items, { placeHolder: param.placeHolder, canPickMany: param.canPickMany });
@@ -726,6 +728,53 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         handleLog(log, reason);
         window.showErrorMessage('Error initializing ' + reason);
     });
+
+    async function showHtmlPage(params : HtmlPageParams): Promise<string> {
+        function showUri(url: string, ok: any, err: any) {
+            let uri = vscode.Uri.parse(url);
+            var http = require('http');
+
+            let host = uri.authority.split(":")[0];
+            let port = uri.authority.split(":")[1];
+
+            var options = {
+                host: host,
+                port: port,
+                path: uri.path
+            }
+            var request = http.request(options, function(res: any) {
+                var data = '';
+                res.on('data', function(chunk: any) {
+                    data += chunk;
+                });
+                res.on('end', function() {
+                    const match = /<title>(.*)<\/title>/i.exec(data);
+                    const name = match && match.length > 1 ? match[1] : ''
+                    let view = vscode.window.createWebviewPanel('htmlView', name, vscode.ViewColumn.Beside, {
+                        enableScripts: true,
+                    });
+                    view.webview.html = data.replace("<head>", `<head><base href="${url}">`);
+                    view.webview.onDidReceiveMessage(message => {
+                        switch (message.command) {
+                            case 'dispose':
+                                view.dispose();
+                                break;
+                        }
+                    });
+                    view.onDidDispose(() => {
+                        ok(null);
+                    });
+                });
+            });
+            request.on('error', function(e: any) {
+                err(e);
+            });
+            request.end();
+        }
+        return new Promise((ok, err) => {
+            showUri(params.uri, ok, err);
+        });
+    }
 
     function showStatusBarMessage(params : ShowStatusMessageParams) {
         let decorated : string = params.message;

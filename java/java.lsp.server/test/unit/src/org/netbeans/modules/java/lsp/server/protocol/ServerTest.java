@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
-import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -147,6 +146,7 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.api.sendopts.CommandLine;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.infrastructure.JavaErrorProvider;
+import org.netbeans.modules.java.lsp.server.TestCodeLanguageClient;
 import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.parsing.impl.indexing.implspi.CacheFolderProvider;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
@@ -175,6 +175,7 @@ import org.openide.windows.IOProvider;
  *
  * @author lahvac
  */
+@SuppressWarnings({"unchecked", "rawtypes", "deprecation"})
 public class ServerTest extends NbTestCase {
 
     private final Gson gson = new Gson();
@@ -1536,7 +1537,7 @@ public class ServerTest extends NbTestCase {
         }
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
             @Override
             public void showStatusBarMessage(ShowStatusMessageParams params) {
                 if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
@@ -1588,7 +1589,7 @@ public class ServerTest extends NbTestCase {
                     "}\n");
         }
         CountDownLatch indexingComplete = new CountDownLatch(1);
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -2817,95 +2818,6 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(0).getNewText());
     }
     
-    class NbCodeLanguageClientStub implements NbCodeLanguageClient {
-        @Override
-        public CompletableFuture<Void> createProgress(WorkDoneProgressCreateParams params) {
-            return CompletableFuture.completedFuture(null);
-        }
-
-        @Override
-        public void notifyProgress(ProgressParams params) {
-        }
-        
-        @Override
-        public void telemetryEvent(Object arg0) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void publishDiagnostics(PublishDiagnosticsParams params) {
-        }
-
-        @Override
-        public void showMessage(MessageParams arg0) {
-        }
-
-        @Override
-        public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void logMessage(MessageParams arg0) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void showStatusBarMessage(ShowStatusMessageParams params) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
-            return CompletableFuture.completedFuture(params.getItems().stream().filter(item -> item.isPicked()).collect(Collectors.toList()));
-        }
-
-        @Override
-        public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void notifyTestProgress(TestProgressParams params) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public NbCodeClientCapabilities getNbCodeCapabilities() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public CompletableFuture<String> createTextEditorDecoration(DecorationRenderOptions params) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void setTextEditorDecoration(SetTextEditorDecorationParams params) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void disposeTextEditorDecoration(String params) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void notifyNodeChange(NodeChangedParams params) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-	public CompletableFuture<List<Object>> configuration(ConfigurationParams configurationParams) {
-            return CompletableFuture.completedFuture(Collections.emptyList());
-	}
-    }
-
     public void testCodeActionGenerateConstructor() throws Exception {
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();
@@ -2916,7 +2828,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -3072,7 +2984,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -3142,7 +3054,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
             @Override
             public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
                 return CompletableFuture.completedFuture(params.getItems().size() > 2 ? params.getItems().subList(0, 2) : params.getItems());
@@ -3205,7 +3117,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -3264,7 +3176,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -3327,7 +3239,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -3387,7 +3299,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -3672,7 +3584,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -3699,7 +3611,7 @@ public class ServerTest extends NbTestCase {
             @Override
             public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
                 List<QuickPickItem> items = params.getItems();
-                return CompletableFuture.completedFuture(Bundle.DN_SelectTargetPackage().equals(params.getPlaceHolder()) ? items.subList(2, 3) : items.subList(0, 1));
+                return CompletableFuture.completedFuture("Select target package".equals(params.getPlaceHolder()) ? items.subList(2, 3) : items.subList(0, 1));
             }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
@@ -3715,7 +3627,7 @@ public class ServerTest extends NbTestCase {
                 codeActions.stream()
                            .filter(Either::isRight)
                            .map(Either::getRight)
-                           .filter(a -> Bundle.DN_Move().equals(a.getTitle()))
+                           .filter(a -> "Move...".equals(a.getTitle()))
                            .findAny();
         assertTrue(move.isPresent());
         server.getWorkspaceService().executeCommand(new ExecuteCommandParams(move.get().getCommand().getCommand(), move.get().getCommand().getArguments())).get();
@@ -3782,7 +3694,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -3809,7 +3721,7 @@ public class ServerTest extends NbTestCase {
             @Override
             public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
                 List<QuickPickItem> items = params.getItems();
-                return CompletableFuture.completedFuture(Bundle.DN_SelectTargetPackage().equals(params.getPlaceHolder()) ? items.subList(1, 2) : items.subList(0, 1));
+                return CompletableFuture.completedFuture("Select target package".equals(params.getPlaceHolder()) ? items.subList(1, 2) : items.subList(0, 1));
             }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
@@ -3825,7 +3737,7 @@ public class ServerTest extends NbTestCase {
                 codeActions.stream()
                            .filter(Either::isRight)
                            .map(Either::getRight)
-                           .filter(a -> Bundle.DN_Move().equals(a.getTitle()))
+                           .filter(a -> "Move...".equals(a.getTitle()))
                            .findAny();
         assertTrue(move.isPresent());
         server.getWorkspaceService().executeCommand(new ExecuteCommandParams(move.get().getCommand().getCommand(), move.get().getCommand().getArguments())).get();
@@ -3881,7 +3793,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -3930,7 +3842,7 @@ public class ServerTest extends NbTestCase {
                 codeActions.stream()
                            .filter(Either::isRight)
                            .map(Either::getRight)
-                           .filter(a -> Bundle.DN_ExtractInterface().equals(a.getTitle()))
+                           .filter(a -> "Extract Interface...".equals(a.getTitle()))
                            .findAny();
         assertTrue(extractInterface.isPresent());
         server.getWorkspaceService().executeCommand(new ExecuteCommandParams(extractInterface.get().getCommand().getCommand(), extractInterface.get().getCommand().getArguments())).get();
@@ -4002,7 +3914,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -4050,7 +3962,7 @@ public class ServerTest extends NbTestCase {
                 codeActions.stream()
                            .filter(Either::isRight)
                            .map(Either::getRight)
-                           .filter(a -> Bundle.DN_ExtractSuperclass().equals(a.getTitle()))
+                           .filter(a -> "Extract Superclass...".equals(a.getTitle()))
                            .findAny();
         assertTrue(extractSuperclass.isPresent());
         server.getWorkspaceService().executeCommand(new ExecuteCommandParams(extractSuperclass.get().getCommand().getCommand(), extractSuperclass.get().getCommand().getArguments())).get();
@@ -4139,7 +4051,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -4187,7 +4099,7 @@ public class ServerTest extends NbTestCase {
                 codeActions.stream()
                            .filter(Either::isRight)
                            .map(Either::getRight)
-                           .filter(a -> Bundle.DN_PullUp().equals(a.getTitle()))
+                           .filter(a -> "Pull Up...".equals(a.getTitle()))
                            .findAny();
         assertTrue(pullUp.isPresent());
         server.getWorkspaceService().executeCommand(new ExecuteCommandParams(pullUp.get().getCommand().getCommand(), pullUp.get().getCommand().getArguments())).get();
@@ -4237,7 +4149,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -4285,7 +4197,7 @@ public class ServerTest extends NbTestCase {
                 codeActions.stream()
                            .filter(Either::isRight)
                            .map(Either::getRight)
-                           .filter(a -> Bundle.DN_PushDown().equals(a.getTitle()))
+                           .filter(a -> "Push Down...".equals(a.getTitle()))
                            .findAny();
         assertTrue(pushDown.isPresent());
         server.getWorkspaceService().executeCommand(new ExecuteCommandParams(pushDown.get().getCommand().getCommand(), pushDown.get().getCommand().getArguments())).get();
@@ -4349,7 +4261,7 @@ public class ServerTest extends NbTestCase {
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
         WorkspaceEdit[] edit = new WorkspaceEdit[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClientStub() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new TestCodeLanguageClient() {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
@@ -4377,6 +4289,11 @@ public class ServerTest extends NbTestCase {
             public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
                 return CompletableFuture.completedFuture("(java.lang.String s, int cnt, boolean b):java.lang.String");
             }
+
+            @Override
+            public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
+                return CompletableFuture.completedFuture(null);
+            }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
@@ -4391,7 +4308,7 @@ public class ServerTest extends NbTestCase {
                 codeActions.stream()
                            .filter(Either::isRight)
                            .map(Either::getRight)
-                           .filter(a -> Bundle.DN_ChangeMethodParams().equals(a.getTitle()))
+                           .filter(a -> "Change Method Parameters...".equals(a.getTitle()))
                            .findAny();
         assertTrue(changeMethodParams.isPresent());
         server.getWorkspaceService().executeCommand(new ExecuteCommandParams(changeMethodParams.get().getCommand().getCommand(), changeMethodParams.get().getCommand().getArguments())).get();

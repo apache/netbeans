@@ -23,7 +23,8 @@ import * as vscode from 'vscode';
 import {
     ProtocolNotificationType,
     ProtocolRequestType,
-    ShowMessageParams
+    ShowMessageParams,
+    NotificationType
 } from 'vscode-languageclient';
 
 import {
@@ -31,12 +32,13 @@ import {
     Range
 } from 'vscode-languageserver-protocol';
 
-export interface ShowStatusMessageParams extends ShowMessageParams {
-    /**
-     * The timeout
-     */
-    timeout?: number;
+export interface HtmlPageParams {
+    uri: string;
 }
+
+export namespace HtmlPageRequest {
+    export const type = new ProtocolRequestType<HtmlPageParams, string, never, void, void>('window/showHtmlPage');
+};
 
 export interface ShowStatusMessageParams extends ShowMessageParams {
     /**

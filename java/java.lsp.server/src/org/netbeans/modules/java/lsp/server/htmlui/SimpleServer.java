@@ -25,8 +25,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.URLDecoder;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedByInterruptException;
@@ -59,8 +59,6 @@ import java.util.regex.Pattern;
 import org.netbeans.html.boot.spi.Fn;
 
 final class SimpleServer extends HttpServer<SimpleServer.ReqRes, SimpleServer.ReqRes, Object, SimpleServer.Context> {
-    private final Random random;
-
     private final Map<String, Handler> maps = new TreeMap<>((s1, s2) -> {
         if (s1.length() != s2.length()) {
             return s2.length() - s1.length();
@@ -88,8 +86,14 @@ final class SimpleServer extends HttpServer<SimpleServer.ReqRes, SimpleServer.Re
     private static final Pattern PATTERN_LENGTH = Pattern.compile(".*^Content-Length: ([0-9]+)$", Pattern.MULTILINE);
     static final Logger LOG = Logger.getLogger(SimpleServer.class.getName());
 
-    SimpleServer(Random r) {
-        this.random = r;
+    private final Random random;
+
+    SimpleServer() {
+        this(new Random());
+    }
+
+    SimpleServer(Random random) {
+        this.random = random;
     }
 
     @Override
@@ -384,7 +388,7 @@ final class SimpleServer extends HttpServer<SimpleServer.ReqRes, SimpleServer.Re
         throw new IllegalStateException("No mapping for " + url + " among " + maps);
     }
 
-    private static void parseArgs(final Map<String, ? super String> context, final String args) {
+    private static void parseArgs(final Map<String, ? super String> context, final String args) throws UnsupportedEncodingException {
         if (args != null) {
             for (String arg : args.substring(1).split("&")) {
                 String[] valueAndKey = arg.split("=");
@@ -392,7 +396,7 @@ final class SimpleServer extends HttpServer<SimpleServer.ReqRes, SimpleServer.Re
                     continue;
                 }
 
-                String key = valueAndKey[1].replaceAll("\\+", " ");
+                String key = URLDecoder.decode(valueAndKey[1], "US-ASCII");
                 for (int idx = 0;;) {
                     idx = key.indexOf("%", idx);
                     if (idx == -1) {
@@ -428,19 +432,14 @@ final class SimpleServer extends HttpServer<SimpleServer.ReqRes, SimpleServer.Re
     /**
      * Computes todays's date .
      */
-    static byte[] date(Date date) {
+    static String date(Date date) {
         return date("Date: ", date != null ? date : new Date());
     }
 
-    static byte[] date(String prefix, Date date) {
-        try {
-            DateFormat f = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Locale.US);
-            f.setTimeZone(TimeZone.getTimeZone("GMT")); // NOI18N
-            return (prefix + f.format(date)).getBytes("utf-8");
-        } catch (UnsupportedEncodingException ex) {
-            LOG.log(Level.WARNING, ex.getMessage(), ex);
-            return new byte[0];
-        }
+    static String date(String prefix, Date date) {
+        DateFormat f = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Locale.US);
+        f.setTimeZone(TimeZone.getTimeZone("GMT")); // NOI18N
+        return prefix + f.format(date);
     }
 
     public synchronized ServerSocketChannel getServer() throws IOException {
@@ -450,8 +449,7 @@ final class SimpleServer extends HttpServer<SimpleServer.ReqRes, SimpleServer.Re
 
             for (int i = min; i <= max; i++) {
                 int at = min + random.nextInt(max - min + 1);
-                final InetAddress localHostOnly = InetAddress.getByName(null);
-                InetSocketAddress address = new InetSocketAddress(localHostOnly, at);
+                InetSocketAddress address = new InetSocketAddress(at);
                 try {
                     s.socket().bind(address);
                 } catch (IOException ex) {
@@ -526,8 +524,8 @@ final class SimpleServer extends HttpServer<SimpleServer.ReqRes, SimpleServer.Re
 
         private final StringBuilder buffer = new StringBuilder();
 
-        final ReqRes process(SelectionKey key, ByteBuffer chunk) {
-            String text = new String(chunk.array(), 0, chunk.limit(), StandardCharsets.US_ASCII);
+        final ReqRes process(SelectionKey key, ByteBuffer chunk) throws UnsupportedEncodingException {
+            String text = new String(chunk.array(), 0, chunk.limit(), "US-ASCII");
             buffer.append(text);
             int fullHeader = buffer.indexOf("\r\n\r\n");
             if (fullHeader == -1) {
@@ -637,17 +635,17 @@ final class SimpleServer extends HttpServer<SimpleServer.ReqRes, SimpleServer.Re
 
             LOG.log(Level.FINE, "Serving page request {0}", url); // NOI18N
             ((Buffer) bb).clear();
-            bb.put(("HTTP/1.1 " + status + "\r\n").getBytes());
-            bb.put("Connection: close\r\n".getBytes());
-            bb.put("Server: Browser presenter\r\n".getBytes());
-            bb.put(date(null));
-            bb.put("\r\n".getBytes());
-            bb.put(("Content-Type: " + contentType + "\r\n").getBytes());
+            putString(bb, "HTTP/1.1 " + status + "\r\n");
+            putString(bb, "Connection: close\r\n");
+            putString(bb, "Server: Browser presenter\r\n");
+            putString(bb, date(null));
+            putString(bb, "\r\n");
+            putString(bb, "Content-Type: " + contentType + "\r\n");
             for (Map.Entry<String, String> entry : headers.entrySet()) {
-                bb.put((entry.getKey() + ":" + entry.getValue() + "\r\n").getBytes());
+                putString(bb, entry.getKey() + ":" + entry.getValue() + "\r\n");
             }
-            bb.put("Pragma: no-cache\r\nCache-control: no-cache\r\n".getBytes());
-            bb.put("\r\n".getBytes());
+            putString(bb, "Pragma: no-cache\r\nCache-control: no-cache\r\n");
+            putString(bb, "\r\n");
             ((Buffer) bb).flip();
 
             return new WriteReply(delegate, url, bb, ByteBuffer.wrap(toByteArray()));
@@ -706,5 +704,9 @@ final class SimpleServer extends HttpServer<SimpleServer.ReqRes, SimpleServer.Re
             }
 
         }
+    }
+
+    private static void putString(ByteBuffer bb, String text) throws UnsupportedEncodingException {
+        bb.put(text.getBytes("US-ASCII"));
     }
 }

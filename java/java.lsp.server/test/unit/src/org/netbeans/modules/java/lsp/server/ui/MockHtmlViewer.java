@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 import net.java.html.BrwsrCtx;
 import static org.junit.Assert.assertTrue;
 import org.netbeans.html.boot.spi.Fn;
@@ -40,12 +39,6 @@ import org.netbeans.spi.htmlui.HTMLViewerSpi;
 @ServiceProvider(service = HTMLViewerSpi.class)
 public final class MockHtmlViewer extends AbstractLspHtmlViewer {
     private static final Map<String, BrwsrCtx> data = Collections.synchronizedMap(new HashMap<>());
-
-    @Override
-    public View newView(Context ctx) {
-        View v = super.newView(ctx);
-        return v;
-    }
 
     private void load(View view) {
         UIContext ui = UIContext.find();

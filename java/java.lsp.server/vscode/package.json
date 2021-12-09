@@ -375,12 +375,14 @@
 			{
 				"command": "java.workspace.new",
 				"title": "New from Template...",
-				"category": "Java"
+				"category": "Java",
+				"icon": "$(new-file)"
 			},
 			{
 				"command": "java.workspace.newproject",
 				"title": "New Project...",
-				"category": "Java"
+				"category": "Java",
+				"icon" : "$(new-folder)"
 			},
 			{
 				"command": "java.goto.super.implementation",
@@ -407,6 +409,31 @@
 			{
 				"command": "nbls:Edit:org.openide.actions.DeleteAction",
 				"title": "Delete"
+			},
+			{
+				"command": "workbench.action.debug.run",
+				"title": "Run Without Debugging",
+				"icon": "$(run)"
+			},
+			{
+				"command": "workbench.action.debug.start",
+				"title": "Start Debugging",
+				"icon": "$(debug-alt)"
+			},
+			{
+				"command": "java.run.project",
+				"title": "Run Project Without Debugging",
+				"icon": "$(run)"
+			},
+			{
+				"command": "java.debug.project",
+				"title": "Debug Project",
+				"icon": "$(debug-alt)"
+			},
+			{
+				"command": "java.test.project",
+				"title": "Test Project",
+				"icon": "$(debug-alt)"
 			}
 		],
 		"keybindings": [
@@ -464,6 +491,29 @@
 					"when": "nbJavaLSReady"
 				}
 			],
+			"view/title": [
+				{
+					"command": "java.workspace.newproject",
+					"when": "nbJavaLSReady && view == foundProjects",
+					"group": "navigation"
+				},
+				{
+					"command": "java.workspace.compile",
+					"when": "nbJavaLSReady && view == foundProjects"
+				},
+				{
+					"command": "test-explorer.run-all",
+					"when": "nbJavaLSReady && view == foundProjects"
+				},
+				{
+					"command": "workbench.action.debug.run",
+					"when": "nbJavaLSReady && view == foundProjects"
+				},
+				{
+					"command": "workbench.action.debug.start",
+					"when": "nbJavaLSReady && view == foundProjects"
+				}
+			],
 			"view/item/context": [
 				{
 					"command": "foundProjects.deleteEntry",
@@ -471,15 +521,30 @@
 				},
 				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Connect",
-					"when": "nbJavaLSReady && viewItem =~ /class:ddl.DBConnection/"
+					"when": "viewItem =~ /class:ddl.DBConnection/"
 				},
 				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Disconnect",
-					"when": "nbJavaLSReady && viewItem =~ /class:ddl.DBConnection/"
+					"when": "viewItem =~ /class:ddl.DBConnection/"
 				},
 				{
 					"command": "nbls:Edit:org.openide.actions.DeleteAction",
-					"when": "nbJavaLSReady && viewItem =~ /class:ddl.DBConnection/"
+					"when": "viewItem =~ /cap:delete/"
+				},
+				{
+					"command": "java.workspace.new",
+					"when": "view == foundProjects && viewItem =~ /is:folder/",
+					"group": "inline@1"
+				},
+				{
+					"command": "java.run.project",
+					"when": "view == foundProjects && viewItem =~ /class:project.Project/",
+					"group": "inline@10"
+				},
+				{
+					"command": "java.debug.project",
+					"when": "view == foundProjects && viewItem =~ /class:project.Project/",
+					"group": "inline@11"
 				}
 			]
 		}

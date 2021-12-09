@@ -189,6 +189,15 @@ interface VSNetBeansAPI {
     version : string;
 }
 
+function contextUri(ctx : any) : vscode.Uri | undefined {
+    if (ctx && ctx.fsPath) {
+        return ctx as vscode.Uri;
+    } else if (ctx && ctx.resourceUri) {
+        return ctx.resourceUri as vscode.Uri;
+    }
+    return vscode.window.activeTextEditor?.document?.uri;
+}
+
 export function activate(context: ExtensionContext): VSNetBeansAPI {
     let log = vscode.window.createOutputChannel("Apache NetBeans Language Server");
 
@@ -218,7 +227,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                 activateWithJDK(specifiedJDK, context, log, true);
             }
         }));
-        activateWithJDK(specifiedJDK, context, log, true);
+        activateWithJDK(specifiedJDK, context, log, true);  
     });
 
     //register debugger:
@@ -246,14 +255,8 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         let c : LanguageClient = await client;
         const commands = await vscode.commands.getCommands();
         if (commands.includes('java.new.from.template')) {
-            function ctxUri(): vscode.Uri | undefined {
-                if (ctx && ctx.fsPath) {
-                    return ctx as vscode.Uri;
-                }
-                return vscode.window.activeTextEditor?.document?.uri;
-            }
-
-            const res = await vscode.commands.executeCommand('java.new.from.template', ctxUri()?.toString());
+            // first give the context, then the open-file hint in the case the context is not specific enough
+            const res = await vscode.commands.executeCommand('java.new.from.template', contextUri(ctx)?.toString(), vscode.window.activeTextEditor?.document?.uri?.toString());
 
             if (typeof res === 'string') {
                 let newFile = vscode.Uri.parse(res as string);
@@ -267,14 +270,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         let c : LanguageClient = await client;
         const commands = await vscode.commands.getCommands();
         if (commands.includes('java.new.project')) {
-            function ctxUri(): vscode.Uri | undefined {
-                if (ctx && ctx.fsPath) {
-                    return ctx as vscode.Uri;
-                }
-                return vscode.window.activeTextEditor?.document?.uri;
-            }
-
-            const res = await vscode.commands.executeCommand('java.new.project', ctxUri()?.toString());
+            const res = await vscode.commands.executeCommand('java.new.project', contextUri(ctx)?.toString());
             if (typeof res === 'string') {
                 let newProject = vscode.Uri.parse(res as string);
 
@@ -356,7 +352,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             await commands.executeCommand(selected.userData.command.command, ...(selected.userData.command.arguments || []));
         }
     }));
-    const runDebug = async (noDebug: boolean, testRun: boolean, uri: string, methodName?: string, launchConfiguration?: string) => {
+    const runDebug = async (noDebug: boolean, testRun: boolean, uri: string, methodName?: string, launchConfiguration?: string, project : boolean = false, ) => {
         const docUri = uri ? vscode.Uri.file(uri) : window.activeTextEditor?.document.uri;
         if (docUri) {
             const workspaceFolder = vscode.workspace.getWorkspaceFolder(docUri);
@@ -364,11 +360,16 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                 type: "java8+",
                 name: "Java Single Debug",
                 request: "launch",
-                mainClass: uri,
                 methodName,
                 launchConfiguration,
                 testRun
             };
+            if (project) {
+                debugConfig['file'] = uri;
+                debugConfig['project'] = true;
+            } else {
+                debugConfig['mainClass'] = uri;
+            }
             const debugOptions : vscode.DebugSessionOptions = {
                 noDebug: noDebug,
             }
@@ -392,6 +393,15 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     }));
     context.subscriptions.push(commands.registerCommand('java.debug.single', async (uri, methodName?, launchConfiguration?) => {
         await runDebug(false, false, uri, methodName, launchConfiguration);
+    }));
+    context.subscriptions.push(commands.registerCommand('java.run.project', async (node, launchConfiguration?) => {
+        return runDebug(true, false, contextUri(node)?.toString() || '',  undefined, launchConfiguration, true);
+    }));
+    context.subscriptions.push(commands.registerCommand('java.debug.project', async (node, launchConfiguration?) => {
+        return runDebug(false, false, contextUri(node)?.toString() || '',  undefined, launchConfiguration, true);
+    }));
+    context.subscriptions.push(commands.registerCommand('java.test.project', async (node, launchConfiguration?) => {
+        return runDebug(true, true, contextUri(node)?.toString() || '',  undefined, launchConfiguration, true);
     }));
 
     // register completions:

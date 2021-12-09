@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 import net.java.html.BrwsrCtx;
 import static org.junit.Assert.assertTrue;
 import org.netbeans.html.boot.spi.Fn;
@@ -41,14 +40,7 @@ import org.netbeans.spi.htmlui.HTMLViewerSpi;
 public final class MockHtmlViewer extends AbstractLspHtmlViewer {
     private static final Map<String, BrwsrCtx> data = Collections.synchronizedMap(new HashMap<>());
 
-    @Override
-    public View newView(Context ctx) {
-        View v = super.newView(ctx);
-        load(v, ctx.getClassLoader(), ctx.getPage(), ctx::onPageLoad, ctx.getTechIds());
-        return v;
-    }
-
-    private void load(View view, ClassLoader loader, URL pageUrl, Callable<Object> initialize, String[] techIds) {
+    private void load(View view) {
         UIContext ui = UIContext.find();
         String key = UUID.randomUUID().toString();
 
@@ -56,7 +48,7 @@ public final class MockHtmlViewer extends AbstractLspHtmlViewer {
         ctx.execute(() -> {
             Object v;
             try (Closeable c = Fn.activate(Contexts.find(ctx, Fn.Presenter.class))) {
-                v = initialize.call();
+                v = view.ctx.onPageLoad();
             } catch (Exception ex) {
                 MockTech.exception(ctx, ex);
             }
@@ -72,6 +64,15 @@ public final class MockHtmlViewer extends AbstractLspHtmlViewer {
         }
         assertTrue("Expecting " + clazz + " but was " + v, clazz.isInstance(v));
         return clazz.cast(v);
+    }
+
+    @Override
+    public <C> C component(View view, Class<C> type) {
+        if (type == Void.class) {
+            load(view);
+            return null;
+        }
+        throw new ClassCastException();
     }
 
     private BrwsrCtx mockPresenter() {
@@ -134,7 +135,6 @@ public final class MockHtmlViewer extends AbstractLspHtmlViewer {
 
         @Override
         public void valueHasMutated(Object data, String string) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override

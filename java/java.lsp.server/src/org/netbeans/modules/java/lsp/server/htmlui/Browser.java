@@ -40,6 +40,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
@@ -50,7 +51,6 @@ import org.netbeans.html.boot.spi.Fn;
 import org.netbeans.html.boot.spi.Fn.Presenter;
 import org.netbeans.html.presenters.spi.ProtoPresenter;
 import org.netbeans.html.presenters.spi.ProtoPresenterBuilder;
-import org.openide.util.lookup.ServiceProvider;
 
 /** Browser based {@link Presenter}. It starts local server and
  * launches browser that connects to it. Use {@link Browser.Config} to
@@ -115,7 +115,9 @@ Executor, Closeable {
     }
 
     Browser(String app, Config config, Supplier<HttpServer<?,?,?, ?>> serverProvider) {
-        this.serverProvider = serverProvider != null ? serverProvider : SimpleServer::new;
+        this.serverProvider = serverProvider != null ? serverProvider : () -> {
+            return new SimpleServer(config.random);
+        };
         this.app = app;
         this.config = new Config(config);
     }
@@ -197,10 +199,12 @@ Executor, Closeable {
             }
             server.init(from, to);
 
-            this.server.addHttpHandler(new RootPage(page), "/");
+            String prefix = "/" + new UUID(config.random.nextLong(), config.random.nextLong()).toString();
+
+            this.server.addHttpHandler(new RootPage(page, prefix), prefix);
             server.start();
 
-            show(pageURL("http", server, "/"));
+            show(pageURL("http", server, prefix));
         } catch (IOException ex) {
             Logger.getLogger(Browser.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -211,10 +215,11 @@ Executor, Closeable {
      * to {@link Browser#Browser(org.netbeans.html.presenters.browser.Browser.Config) }
      * constructor.
      */
-    public final static class Config {
+    public final static class Config implements Cloneable {
         private Consumer<URI> browser;
         Integer port;
         boolean debug = Boolean.getBoolean("com.dukescript.presenters.browserDebug");
+        Random random = new Random();
 
         /**
          * Default constructor.
@@ -227,6 +232,12 @@ Executor, Closeable {
             this.browser = copy.browser;
             this.port = copy.port;
             this.debug = copy.debug;
+            this.random = copy.random;
+        }
+
+        @Override
+        public Config clone() {
+            return new Config(this);
         }
 
         /** The command to use when invoking a browser. Possible values:
@@ -279,7 +290,7 @@ Executor, Closeable {
         /** Enable or disable debugging. The default value is taken from a property
          * {@code com.dukescript.presenters.browserDebug}. If the property is
          * not specified, then the default value is {@code false}.
-         * 
+         *
          * @param debug true or false
          * @return this instance
          * @since 1.8
@@ -316,33 +327,43 @@ Executor, Closeable {
 
     private final class RootPage extends HttpServer.Handler {
         private final URL page;
+        private final String prefix;
 
-        public RootPage(URL page) {
+        public RootPage(URL page, String prefix) {
             this.page = page;
+            this.prefix = prefix;
         }
 
         @Override
         public <Request, Response> void service(HttpServer<Request, Response, ?, ?> server, Request rqst, Response rspns) throws IOException {
             String path = server.getRequestURI(rqst);
+            if (path.startsWith(prefix)) {
+                path = path.substring(prefix.length());
+            } else {
+                server.setStatus(rspns, 404);
+                server.shutdownNow();
+                return;
+            }
+
             cors(server, rspns);
             if ("OPTIONS".equals(server.getMethod(rqst))) { // NOI18N
                 server.setStatus(rspns, 204);
                 server.addHeader(rspns, "Allow", "OPTIONS, GET, HEAD, POST, PUT"); // NOI18N
                 return;
             }
-            if ("/".equals(path) || "index.html".equals(path)) {
+            if ("".equals(path) || "/".equals(path) || "index.html".equals(path)) {
                 Reader is;
-                String prefix = "http://" + server.getServerName(rqst) + ":" + server.getServerPort(rqst) + "/";
+                String cmdPrefix = "http://" + server.getServerName(rqst) + ":" + server.getServerPort(rqst) + this.prefix + "/";
                 Writer w = server.getWriter(rspns);
                 server.setContentType(rspns, "text/html");
-                final Command cmd = new Command(server, Browser.this, prefix);
+                final Command cmd = new Command(server, Browser.this, cmdPrefix);
                 try {
                     is = new InputStreamReader(page.openStream());
                 } catch (IOException ex) {
                     w.write("<html><body>");
                     w.write("<h1>Browser</h1>");
                     w.write("<pre id='cmd'></pre>");
-                    emitScript(w, prefix, cmd.id);
+                    emitScript(w, cmdPrefix, cmd.id);
                     w.write("</body></html>");
                     w.close();
                     return;
@@ -370,12 +391,12 @@ Executor, Closeable {
                     }
                     w.write((char)ch);
                     if (state == 500) {
-                        emitScript(w, prefix, cmd.id);
+                        emitScript(w, cmdPrefix, cmd.id);
                         state = 1000;
                     }
                 }
                 if (state != 1000) {
-                    emitScript(w, prefix, cmd.id);
+                    emitScript(w, cmdPrefix, cmd.id);
                 }
                 is.close();
                 w.close();

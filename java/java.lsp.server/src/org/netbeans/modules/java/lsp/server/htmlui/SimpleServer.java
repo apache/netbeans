@@ -59,6 +59,8 @@ import java.util.regex.Pattern;
 import org.netbeans.html.boot.spi.Fn;
 
 final class SimpleServer extends HttpServer<SimpleServer.ReqRes, SimpleServer.ReqRes, Object, SimpleServer.Context> {
+    private final Random random;
+
     private final Map<String, Handler> maps = new TreeMap<>((s1, s2) -> {
         if (s1.length() != s2.length()) {
             return s2.length() - s1.length();
@@ -86,7 +88,8 @@ final class SimpleServer extends HttpServer<SimpleServer.ReqRes, SimpleServer.Re
     private static final Pattern PATTERN_LENGTH = Pattern.compile(".*^Content-Length: ([0-9]+)$", Pattern.MULTILINE);
     static final Logger LOG = Logger.getLogger(SimpleServer.class.getName());
 
-    SimpleServer() {
+    SimpleServer(Random r) {
+        this.random = r;
     }
 
     @Override
@@ -445,7 +448,6 @@ final class SimpleServer extends HttpServer<SimpleServer.ReqRes, SimpleServer.Re
             ServerSocketChannel s = ServerSocketChannel.open();
             s.configureBlocking(false);
 
-            Random random = new Random();
             for (int i = min; i <= max; i++) {
                 int at = min + random.nextInt(max - min + 1);
                 final InetAddress localHostOnly = InetAddress.getByName(null);

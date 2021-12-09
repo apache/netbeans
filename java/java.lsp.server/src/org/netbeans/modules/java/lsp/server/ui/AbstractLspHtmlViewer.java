@@ -19,14 +19,16 @@
 package org.netbeans.modules.java.lsp.server.ui;
 
 import java.net.URL;
-import java.util.concurrent.Callable;
 import net.java.html.js.JavaScriptBody;
 import org.netbeans.modules.java.lsp.server.htmlui.Browser;
+import org.netbeans.modules.java.lsp.server.htmlui.Browser.Config;
 import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
 import org.openide.util.Exceptions;
 import org.netbeans.spi.htmlui.HTMLViewerSpi;
 
 public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewer.View, Object> {
+    private final Config initial = new Config();
+
     protected AbstractLspHtmlViewer() {
     }
 
@@ -87,6 +89,7 @@ public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewe
     public <C> C component(View view, Class<C> type) {
         if (type == Void.class) {
             view.load();
+            return null;
         }
         throw new ClassCastException(view + " cannot be cast to " + type);
     }
@@ -120,7 +123,7 @@ public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewe
     @JavaScriptBody(args = { "b", "disabled" }, body = "return b.disabled = disabled;")
     native static String buttonDisabled0(Object b, boolean disabled);
 
-    static final class View {
+    final class View {
         private final Context ctx;
         private final UIContext ui;
         private Browser presenter;
@@ -138,7 +141,7 @@ public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewe
 
         private void load() {
             URL pageUrl = ctx.getPage();
-            Browser.Config c = new Browser.Config();
+            Browser.Config c = initial.clone();
             c.browser((page) -> {
                 try {
                     ui.showHtmlPage(new HtmlPageParams(page.toASCIIString())).thenAccept((t) -> {

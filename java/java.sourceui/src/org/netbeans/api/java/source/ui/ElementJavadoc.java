@@ -1474,7 +1474,7 @@ public class ElementJavadoc {
             if(fullLineInfo.getThisLineMarkUpTags() == null){
                 if(regionList.size() > 0){
                     List<Region> newRegionList = new ArrayList<>(regionList);
-                    regionTagLineMapper.put(nextLine, newRegionList);
+                    regionTagLineMapper.put(thisLine, newRegionList);
                 }
                 
             } else {
@@ -1494,12 +1494,12 @@ public class ElementJavadoc {
                         }
                         
                         if (hAttrib.containsKey("region")) {
-                            String regionVal = hAttrib.get("region");
+                            String regionVal = hAttrib.get("region") != null ? hAttrib.get("region") : "anonymous";//provide annonymous region here if region value is empty
                             hAttrib.remove("region");
                             Region region = new Region(regionVal, hAttrib, markUpTag.tagName);
                             regionList.add(region);
                             List<Region> newRegionList = new ArrayList<>(regionList);
-                            regionTagLineMapper.put(nextLine, newRegionList);
+                            regionTagLineMapper.put(thisLine, newRegionList);
                         } else {
                             Attrib attrib = new Attrib(hAttrib, markUpTag.tagName);
                             attribList.add(attrib);
@@ -1509,7 +1509,7 @@ public class ElementJavadoc {
                     }
                     if (markUpTag.tagName.equals("end")){
                         List<Region> newRegionList = new ArrayList<>(regionList);
-                        regionTagLineMapper.put(nextLine -1, newRegionList);
+                        regionTagLineMapper.put(thisLine, newRegionList);
                         Map<String, String> eAttrib = new HashMap<>();
                         //refactor this for loop later
                         for (MarkUpTagAttribute markUpTagAttribute : markUpTag.markUpTagAttributes) {
@@ -1526,11 +1526,21 @@ public class ElementJavadoc {
                                     break;
                                 }
                             }
+                        } else if(regionList.size() > 0){
+                            regionList.remove(regionList.size() - 1);//if no region defined then end with last region
+                        } else{//no region defined only @end is provided, this case considered as invalid
+                            regionTagLineMapper = null;
+                            markUpTagLineMapper = null;
+                            break main;
                         }
                     }
                 }
             }
             thisLine++;
+        }
+        if(regionList.size() > 0){
+            regionTagLineMapper = null;
+            markUpTagLineMapper = null;
         }
         return new ProcessedTags(markUpTagLineMapper, regionTagLineMapper);
     }

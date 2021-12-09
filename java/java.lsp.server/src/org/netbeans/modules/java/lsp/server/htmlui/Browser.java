@@ -204,7 +204,7 @@ Executor, Closeable {
             this.server.addHttpHandler(new RootPage(page, prefix), prefix);
             server.start();
 
-            show(pageURL("http", server, prefix));
+            show(pageURL("http", server, prefix + "/"));
         } catch (IOException ex) {
             Logger.getLogger(Browser.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -329,7 +329,7 @@ Executor, Closeable {
         private final URL page;
         private final String prefix;
 
-        public RootPage(URL page, String prefix) {
+        RootPage(URL page, String prefix) {
             this.page = page;
             this.prefix = prefix;
         }
@@ -351,7 +351,7 @@ Executor, Closeable {
                 server.addHeader(rspns, "Allow", "OPTIONS, GET, HEAD, POST, PUT"); // NOI18N
                 return;
             }
-            if ("".equals(path) || "/".equals(path) || "index.html".equals(path)) {
+            if ("/".equals(path) || "index.html".equals(path)) {
                 Reader is;
                 String cmdPrefix = "http://" + server.getServerName(rqst) + ":" + server.getServerPort(rqst) + this.prefix + "/";
                 Writer w = server.getWriter(rspns);

@@ -92,7 +92,7 @@ public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewe
      * @since 1.14
      */
     protected final class View {
-        private final Context ctx;
+        final Context ctx;
         private final UIContext ui;
         private Browser presenter;
 

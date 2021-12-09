@@ -20,11 +20,16 @@ package org.netbeans.modules.java.lsp.server.ui;
 
 import java.net.URL;
 import net.java.html.js.JavaScriptBody;
+import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
 import org.netbeans.modules.java.lsp.server.htmlui.Browser;
 import org.netbeans.modules.java.lsp.server.htmlui.Browser.Config;
 import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
+import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
 import org.openide.util.Exceptions;
 import org.netbeans.spi.htmlui.HTMLViewerSpi;
+import org.openide.awt.StatusDisplayer;
+import org.openide.util.NbBundle;
 
 public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewer.View, Object> {
     private final Config initial = new Config();
@@ -139,7 +144,19 @@ public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewe
             }
         }
 
+        @NbBundle.Messages({
+            "MSG_NoHtmlUI=HTML UI isn't supported by the client!"
+        })
         private void load() {
+            NbCodeClientCapabilities caps = NbCodeClientCapabilities.find(ui);
+            if (caps == null || !caps.hasShowHtmlPageSupport()) {
+                MessageParams msg = new MessageParams();
+                msg.setMessage(Bundle.MSG_NoHtmlUI());
+                msg.setType(MessageType.Warning);
+                ui.showMessage(msg);
+                notifyClose();
+                return;
+            }
             URL pageUrl = ctx.getPage();
             Browser.Config c = initial.clone();
             c.browser((page) -> {
@@ -174,8 +191,7 @@ public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewe
             presenter.displayPage(pageUrl, () -> {
                 registerCloseWindow();
                 try {
-                    Object v = ctx.onPageLoad();
-                    System.err.println("v: " + v);
+                    ctx.onPageLoad();
                 } catch (Exception ex) {
                     Exceptions.printStackTrace(ex);
                 }

@@ -628,6 +628,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 'nbcodeCapabilities' : {
                     'statusBarMessageSupport' : true,
                     'testResultsSupport' : true,
+                    'showHtmlPageSupport' : true,
                     'wantsGroovySupport' : enableGroovy
                 }
             },

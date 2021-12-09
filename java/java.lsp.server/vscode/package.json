@@ -413,8 +413,7 @@
 				"command": "nbls:Edit:org.openide.actions.DeleteAction",
 				"title": "Delete"
 			}
-			
-	],
+		],
 		"keybindings": [
 			{
 				"command": "java.workspace.compile",

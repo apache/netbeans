@@ -24,13 +24,21 @@ import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.netbeans.modules.java.lsp.server.htmlui.Browser;
 import org.netbeans.modules.java.lsp.server.htmlui.Browser.Config;
+import org.netbeans.modules.java.lsp.server.htmlui.Buttons;
+import static org.netbeans.modules.java.lsp.server.htmlui.Buttons.buttonName0;
+import static org.netbeans.modules.java.lsp.server.htmlui.Buttons.buttonText0;
 import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
 import org.openide.util.Exceptions;
 import org.netbeans.spi.htmlui.HTMLViewerSpi;
-import org.openide.awt.StatusDisplayer;
 import org.openide.util.NbBundle;
 
+/**
+ * Implementation of {@link HTMLViewerSpi} that uses <code>window/showHtmlPage</code>
+ * extended message of language server protocol to display a page.
+ * 
+ * @since 1.14
+ */
 public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewer.View, Object> {
     private final Config initial = new Config();
 
@@ -44,51 +52,12 @@ public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewe
         return view;
     }
 
-    @JavaScriptBody(args = {}, body = "\n"
-        + "const vscode = acquireVsCodeApi();\n" // this method can be called only once per WebView existance
-        + "window.close = function() {\n"
-        + "  vscode.postMessage({\n"
-        + "    command: 'dispose',\n"
-        + "  });\n"
-        + "};\n"
-    )
-    private static native void registerCloseWindow();
 
     @Override
     public Object createButton(View view, String id) {
-        return createButton0(id, view.ctx);
+        return Buttons.createButton0(id, view.ctx);
     }
 
-    @JavaScriptBody(args = { "id", "callback" }, javacall = true, body = "\n"
-            + "var first = false;\n"
-            + "var footer = document.getElementById('dialog-buttons');\n"
-            + "if (!footer) {\n"
-            + "  first = true\n"
-            + "  footer = document.createElement('div');\n"
-            + "  footer.id = 'dialog-buttons';\n"
-            + "  footer.classList.add('flex');\n"
-            + "  footer.classList.add('section');\n"
-            + "  document.body.appendChild(footer);\n"
-            + "}\n"
-            + "var button = document.createElement('button');\n"
-            + "button.id = id;\n"
-            + "button.onclick = function() {;\n"
-            + "  @org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer::clickButton0(Ljava/lang/String;Ljava/lang/Object;)(id, callback);\n"
-            + "};\n"
-            + "button.classList.add('regular-button');\n"
-            + "button.classList.add('vscode-font');\n"
-            + "if (first) {\n"
-            + "  button.classList.add('align-right');\n"
-            + "}\n"
-            + "footer.appendChild(button);\n"
-            + "return button;\n"
-    )
-    native static Object createButton0(String id, Context callback);
-
-    static void clickButton0(String id, Object callback) {
-        Context ctx = (Context) callback;
-        ctx.onSubmit(id);
-    }
 
     @Override
     public <C> C component(View view, Class<C> type) {
@@ -111,7 +80,7 @@ public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewe
 
     @Override
     public void setEnabled(View view, Object b, boolean enabled) {
-        buttonDisabled0(b, !enabled);
+        Buttons.buttonDisabled0(b, !enabled);
     }
 
     @Override
@@ -119,16 +88,10 @@ public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewe
         r.run();
     }
 
-    @JavaScriptBody(args = { "b" }, body = "return b.id;")
-    native static String buttonName0(Object b);
-
-    @JavaScriptBody(args = { "b", "text" }, body = "b.innerHTML = text;")
-    native static void buttonText0(Object b, String text);
-
-    @JavaScriptBody(args = { "b", "disabled" }, body = "return b.disabled = disabled;")
-    native static String buttonDisabled0(Object b, boolean disabled);
-
-    final class View {
+    /** View element used by {@link AbstractLspHtmlViewer}.
+     * @since 1.14
+     */
+    protected final class View {
         private final Context ctx;
         private final UIContext ui;
         private Browser presenter;
@@ -189,7 +152,7 @@ public class AbstractLspHtmlViewer implements HTMLViewerSpi<AbstractLspHtmlViewe
             });
             presenter = new Browser(c);
             presenter.displayPage(pageUrl, () -> {
-                registerCloseWindow();
+                Buttons.registerCloseWindow();
                 try {
                     ctx.onPageLoad();
                 } catch (Exception ex) {

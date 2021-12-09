@@ -188,14 +188,9 @@
     </target>
 
     <target name="probe" depends="init">
-        <available property="probe.javac.source" value="1.6" classname="java.lang.Module"/>
-        <available property="probe.javac.target" value="1.6" classname="java.lang.Module"/>
-        <available property="probe.javac.source" value="1.6" file="${nbjdk.home}/bin/jmod"/>
-        <available property="probe.javac.target" value="1.6" file="${nbjdk.home}/bin/jmod"/>
-        <property name="probe.javac.source" value="1.4"/>
-        <property name="probe.javac.target" value="1.4"/>
+        <property name="probe.javac.release" value="8"/>
         <mkdir dir="${build.classes.dir}/org/netbeans/installer/utils/applications/"/>
-        <javac srcdir="probesrc" destdir="${build.classes.dir}/org/netbeans/installer/utils/applications/" source="${probe.javac.source}" debug="true" deprecation="true" target="${probe.javac.target}"/>
+        <javac srcdir="probesrc" destdir="${build.classes.dir}/org/netbeans/installer/utils/applications/" release="${probe.javac.release}" debug="true" deprecation="true"/>
     </target>
 
 </project>

@@ -26,7 +26,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Properties;
 import java.util.regex.Pattern;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.Project;
@@ -34,6 +33,10 @@ import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.templates.CreateDescriptor;
 import org.netbeans.modules.maven.api.archetype.ProjectInfo;
+import org.netbeans.modules.maven.model.Utilities;
+import org.netbeans.modules.maven.model.pom.POMModel;
+import org.netbeans.modules.maven.model.pom.POMModelFactory;
+import org.netbeans.modules.xml.xam.ModelSource;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
@@ -99,6 +102,11 @@ public final class TemplateUtils {
     public static final String PARAM_INITIAL_PRIME = "primedAfterCreate"; // NOI18N
 
     /**
+     * Name of the created main class.
+     */
+    public static final String PARAM_MAIN_CLASS_NAME = "mainClassName"; // NOI18N
+
+    /**
      * The target directory
      */
     public static final String PARAM_PROJDIR = CommonProjectActions.PROJECT_PARENT_FOLDER;
@@ -123,17 +131,20 @@ public final class TemplateUtils {
         CreateDescriptor desc, List<FileObject> fos, FileObject fo) throws IOException {
         List<FileObject> pomDirs = new ArrayList<>();
         collectPomDirs(fo, pomDirs);
-        if (pomDirs != null && fos != null) {
+        if (fos != null) {
             pomDirs.addAll(fos);
         }
+        setMainClass(additionalProperties, fo);
 
         // compatibility with older archetype handler
-        String toOpen = Objects.toString(additionalProperties.get("archetypeOpen"), null); // NOI18N
-        if (toOpen == null) {
-            toOpen = desc.getValue(TemplateUtils.PARAM_TO_OPEN);
-        }
-        if (toOpen != null) {
-            collectFiles(fo, fos, toOpen.split(",")); // NOI18N
+        if (fos != null) {
+            String toOpen = Objects.toString(additionalProperties.get("archetypeOpen"), null); // NOI18N
+            if (toOpen == null) {
+                toOpen = desc.getValue(TemplateUtils.PARAM_TO_OPEN);
+            }
+            if (toOpen != null) {
+                collectFiles(fo, fos, toOpen.split(",")); // NOI18N
+            }
         }
         // compatibility with older archetype handler
         boolean enableBuild = Boolean.valueOf(
@@ -232,6 +243,40 @@ public final class TemplateUtils {
                 if (p.matcher(relPath).matches()) {
                     found.add(fo);
                     break;
+                }
+            }
+        }
+    }
+
+    private static void setMainClass(Map<Object, Object> properties, FileObject fo) {
+        FileObject pom = fo.getFileObject("pom.xml");   // NOI18N
+        if (pom != null) {
+            ModelSource modelSource = Utilities.createModelSource(pom);
+            POMModel model = POMModelFactory.getDefault().getModel(modelSource);
+            org.netbeans.modules.maven.model.pom.Project root = model.getProject();
+            if (root != null) {
+                if (model.startTransaction()) {
+                    try {
+                        org.netbeans.modules.maven.model.pom.Properties props = root.getProperties();
+                        if (props == null) {
+                            props = model.getFactory().createProperties();
+                            root.setProperties(props);
+                        }
+                        String packageName = (String) properties.get(TemplateUtils.PARAM_PACKAGE);
+                        String mainClass = (String) properties.get(TemplateUtils.PARAM_MAIN_CLASS_NAME);
+                        if (mainClass == null || mainClass.isEmpty()) {
+                            mainClass = "App";  // NOI18N
+                        }
+                        if (packageName != null && !packageName.isEmpty()) {
+                            mainClass = packageName + '.' + mainClass;
+                        }
+                        props.setProperty("exec.mainClass", mainClass); // NOI18N
+                    } finally {
+                        model.endTransaction();
+                        try {
+                            Utilities.saveChanges(model);
+                        } catch (IOException ex) {}
+                    }
                 }
             }
         }

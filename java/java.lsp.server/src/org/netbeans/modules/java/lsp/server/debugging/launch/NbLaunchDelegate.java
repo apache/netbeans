@@ -123,7 +123,9 @@ public abstract class NbLaunchDelegate {
         }
     }
 
-    public final CompletableFuture<Void> nbLaunch(FileObject toRun, File nativeImageFile, String method, Map<String, Object> launchArguments, DebugAdapterContext context, boolean debug, boolean testRun, Consumer<NbProcessConsole.ConsoleMessage> consoleMessages) {
+    public final CompletableFuture<Void> nbLaunch(FileObject toRun, boolean preferProjActions, @NullAllowed File nativeImageFile,
+                                                  @NullAllowed String method, Map<String, Object> launchArguments, DebugAdapterContext context,
+                                                  boolean debug, boolean testRun, Consumer<NbProcessConsole.ConsoleMessage> consoleMessages) {
         CompletableFuture<Void> launchFuture = new CompletableFuture<>();
         NbProcessConsole ioContext = new NbProcessConsole(consoleMessages);
         SingleMethod singleMethod;
@@ -150,7 +152,8 @@ public abstract class NbLaunchDelegate {
                 }
             }
         };
-        if (toRun != null) {
+        Project prj = FileOwnerQuery.getOwner(toRun);
+        if (nativeImageFile == null) {
             class W extends Writer {
                 @Override
                 public void write(char[] cbuf, int off, int len) throws IOException {
@@ -173,7 +176,7 @@ public abstract class NbLaunchDelegate {
                 }
             }
             W writer = new W();
-            CompletableFuture<Pair<ActionProvider, String>> commandFuture = findTargetWithPossibleRebuild(toRun, singleMethod, debug, testRun, ioContext);
+            CompletableFuture<Pair<ActionProvider, String>> commandFuture = findTargetWithPossibleRebuild(prj, preferProjActions, toRun, singleMethod, debug, testRun, ioContext);
             commandFuture.thenAccept((providerAndCommand) -> {
                 ExplicitProcessParameters params = createExplicitProcessParameters(launchArguments);
                 OperationContext ctx = OperationContext.find(Lookup.getDefault());
@@ -183,9 +186,10 @@ public abstract class NbLaunchDelegate {
                         context.setProcessExecutorHandle(e.getProgressHandle());
                     }
                 });
+                Object contextObject = (preferProjActions && prj != null) ? prj : toRun;
                 TestProgressHandler testProgressHandler = ctx.getClient().getNbCodeCapabilities().hasTestResultsSupport() ? new TestProgressHandler(ctx.getClient(), context.getClient(), Utils.toUri(toRun)) : null;
                 Lookup launchCtx = new ProxyLookup(
-                        testProgressHandler != null ? Lookups.fixed(toRun, ioContext, progress, testProgressHandler) : Lookups.fixed(toRun, ioContext, progress),
+                        testProgressHandler != null ? Lookups.fixed(contextObject, ioContext, progress, testProgressHandler) : Lookups.fixed(contextObject, ioContext, progress),
                         Lookup.getDefault()
                 );
                 
@@ -194,9 +198,8 @@ public abstract class NbLaunchDelegate {
                 
                 Object o = launchArguments.get("launchConfiguration");
                 if (o instanceof String) {
-                    Project p = FileOwnerQuery.getOwner(toRun);
-                    if (p != null) {
-                        pcp = p.getLookup().lookup(ProjectConfigurationProvider.class);
+                    if (prj != null) {
+                        pcp = prj.getLookup().lookup(ProjectConfigurationProvider.class);
                         if (pcp != null) {
                             String n = (String)o;
                             selectConfiguration = pcp.getConfigurations().stream().filter(c -> n.equals(c.getDisplayName())).findAny().orElse(null);
@@ -204,7 +207,7 @@ public abstract class NbLaunchDelegate {
                     }
                 }
                 List<? super Object> runContext = new ArrayList<>();
-                runContext.add(toRun);
+                runContext.add(contextObject);
                 runContext.add(params);
                 runContext.add(ioContext);
                 runContext.add(progress);
@@ -477,8 +480,8 @@ public abstract class NbLaunchDelegate {
         }
     }
     
-    private static CompletableFuture<Pair<ActionProvider, String>> findTargetWithPossibleRebuild(FileObject toRun, SingleMethod singleMethod, boolean debug, boolean testRun, NbProcessConsole ioContext) throws IllegalArgumentException {
-        Pair<ActionProvider, String> providerAndCommand = findTarget(toRun, singleMethod, debug, testRun);
+    private static CompletableFuture<Pair<ActionProvider, String>> findTargetWithPossibleRebuild(Project proj, boolean preferProjActions, FileObject toRun, SingleMethod singleMethod, boolean debug, boolean testRun, NbProcessConsole ioContext) throws IllegalArgumentException {
+        Pair<ActionProvider, String> providerAndCommand = findTarget(proj, preferProjActions, toRun, singleMethod, debug, testRun);
         if (providerAndCommand != null) {
             return CompletableFuture.completedFuture(providerAndCommand);
         }
@@ -494,7 +497,7 @@ public abstract class NbLaunchDelegate {
             @Override
             public void finished(boolean success) {
                 if (success) {
-                    Pair<ActionProvider, String> providerAndCommand = findTarget(toRun, singleMethod, debug, testRun);
+                    Pair<ActionProvider, String> providerAndCommand = findTarget(proj, preferProjActions, toRun, singleMethod, debug, testRun);
                     if (providerAndCommand != null) {
                         afterBuild.complete(providerAndCommand);
                         return;
@@ -512,7 +515,7 @@ public abstract class NbLaunchDelegate {
             ), Lookup.getDefault()
         );
 
-        Collection<ActionProvider> providers = findActionProviders(toRun);
+        Collection<ActionProvider> providers = findActionProviders(proj);
         for (ActionProvider ap : providers) {
             if (ap.isActionEnabled(ActionProvider.COMMAND_BUILD, launchCtx)) {
                 Lookups.executeWith(launchCtx, () -> {
@@ -527,7 +530,7 @@ public abstract class NbLaunchDelegate {
         return afterBuild;
     }
 
-    protected static @CheckForNull Pair<ActionProvider, String> findTarget(FileObject toRun, SingleMethod singleMethod, boolean debug, boolean testRun) {
+    protected static @CheckForNull Pair<ActionProvider, String> findTarget(Project prj, boolean preferProjActions, FileObject toRun, SingleMethod singleMethod, boolean debug, boolean testRun) {
         ClassPath sourceCP = ClassPath.getClassPath(toRun, ClassPath.SOURCE);
         FileObject fileRoot = sourceCP != null ? sourceCP.findOwnerRoot(toRun) : null;
         boolean mainSource;
@@ -538,17 +541,24 @@ public abstract class NbLaunchDelegate {
         }
         ActionProvider provider = null;
         String command = null;
-        Collection<ActionProvider> actionProviders = findActionProviders(toRun);
-        Lookup testLookup = Lookups.singleton(toRun);
+        Collection<ActionProvider> actionProviders = findActionProviders(prj);
+        Lookup testLookup = preferProjActions ? Lookups.singleton(prj) : (singleMethod != null) ? Lookups.fixed(toRun, singleMethod) : Lookups.singleton(toRun);
         String[] actions;
         if (!mainSource && singleMethod != null) {
             actions = debug ? new String[] {SingleMethod.COMMAND_DEBUG_SINGLE_METHOD}
                             : new String[] {SingleMethod.COMMAND_RUN_SINGLE_METHOD};
         } else {
-            actions = debug ? mainSource ? new String[] {ActionProvider.COMMAND_DEBUG_SINGLE}
-                                         : new String[] {ActionProvider.COMMAND_DEBUG_TEST_SINGLE, ActionProvider.COMMAND_DEBUG_SINGLE}
-                            : mainSource ? new String[] {ActionProvider.COMMAND_RUN_SINGLE}
-                                         : new String[] {ActionProvider.COMMAND_TEST_SINGLE, ActionProvider.COMMAND_RUN_SINGLE};
+            if (preferProjActions) {
+                actions = debug ? mainSource ? new String[] {ActionProvider.COMMAND_DEBUG}
+                                             : new String[] {ActionProvider.COMMAND_DEBUG_TEST_SINGLE, ActionProvider.COMMAND_DEBUG}
+                                : mainSource ? new String[] {ActionProvider.COMMAND_RUN}
+                                             : new String[] {ActionProvider.COMMAND_TEST, ActionProvider.COMMAND_RUN};
+            } else {
+                actions = debug ? mainSource ? new String[] {ActionProvider.COMMAND_DEBUG_SINGLE}
+                                             : new String[] {ActionProvider.COMMAND_DEBUG_TEST_SINGLE, ActionProvider.COMMAND_DEBUG_SINGLE}
+                                : mainSource ? new String[] {ActionProvider.COMMAND_RUN_SINGLE}
+                                             : new String[] {ActionProvider.COMMAND_TEST_SINGLE, ActionProvider.COMMAND_RUN_SINGLE};
+            }
         }
 
         for (String commandCandidate : actions) {
@@ -566,7 +576,7 @@ public abstract class NbLaunchDelegate {
                                          : ActionProvider.COMMAND_TEST;
             provider = findActionProvider(command, actionProviders, testLookup);
             if (!mainSource) {
-                final Collection<ActionProvider> nestedAPs = findNestedActionProviders(toRun, command, testLookup);
+                final Collection<ActionProvider> nestedAPs = findNestedActionProviders(prj, command, testLookup);
                 if (!nestedAPs.isEmpty()) {
                     final String finalCommand = command;
                     final ActionProvider finalProvider = provider;
@@ -602,9 +612,8 @@ public abstract class NbLaunchDelegate {
         return Pair.of(provider, command);
     }
 
-    private static Collection<ActionProvider> findActionProviders(FileObject toRun) {
+    private static Collection<ActionProvider> findActionProviders(Project prj) {
         Collection<ActionProvider> actionProviders = new ArrayList<>();
-        Project prj = FileOwnerQuery.getOwner(toRun);
         if (prj != null) {
             ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
             actionProviders.add(ap);
@@ -631,9 +640,8 @@ public abstract class NbLaunchDelegate {
         return null;
     }
 
-    private static Collection<ActionProvider> findNestedActionProviders(FileObject toRun, String action, Lookup enabledOnLookup) {
+    private static Collection<ActionProvider> findNestedActionProviders(Project prj, String action, Lookup enabledOnLookup) {
         Collection<ActionProvider> actionProviders = new ArrayList<>();
-        Project prj = FileOwnerQuery.getOwner(toRun);
         if (prj != null) {
             for (Project containedPrj : ProjectUtils.getContainedProjects(prj, true)) {
                 ActionProvider ap = containedPrj.getLookup().lookup(ActionProvider.class);

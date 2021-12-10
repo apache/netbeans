@@ -18,12 +18,19 @@
  */
 package org.netbeans.modules.java.lsp.server;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
+import org.eclipse.lsp4j.ApplyWorkspaceEditResponse;
+import org.eclipse.lsp4j.ConfigurationParams;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.ProgressParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.eclipse.lsp4j.WorkDoneProgressCreateParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.netbeans.modules.java.lsp.server.protocol.DecorationRenderOptions;
 import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
@@ -37,6 +44,26 @@ import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.netbeans.modules.java.lsp.server.protocol.TestProgressParams;
 
 public abstract class TestCodeLanguageClient implements NbCodeLanguageClient {
+
+    @Override
+    public CompletableFuture<Void> createProgress(WorkDoneProgressCreateParams params) {
+        return CompletableFuture.completedFuture(null);
+    }
+
+    @Override
+    public void notifyProgress(ProgressParams params) {
+    }
+
+    @Override
+    public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public CompletableFuture<List<Object>> configuration(ConfigurationParams params) {
+        return CompletableFuture.completedFuture(Collections.emptyList());
+    }
+
     @Override
     public void showStatusBarMessage(ShowStatusMessageParams params) {
         throw new UnsupportedOperationException();
@@ -49,7 +76,7 @@ public abstract class TestCodeLanguageClient implements NbCodeLanguageClient {
 
     @Override
     public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
-        throw new UnsupportedOperationException();
+        return CompletableFuture.completedFuture(params.getItems().stream().filter(item -> item.isPicked()).collect(Collectors.toList()));
     }
 
     @Override
@@ -83,27 +110,25 @@ public abstract class TestCodeLanguageClient implements NbCodeLanguageClient {
     }
 
     @Override
-    public void telemetryEvent(Object arg0) {
+    public void telemetryEvent(Object params) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void publishDiagnostics(PublishDiagnosticsParams arg0) {
+    public void publishDiagnostics(PublishDiagnosticsParams params) {
+    }
+
+    @Override
+    public void showMessage(MessageParams params) {
+    }
+
+    @Override
+    public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams params) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void showMessage(MessageParams arg0) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void logMessage(MessageParams arg0) {
+    public void logMessage(MessageParams params) {
         throw new UnsupportedOperationException();
     }
 

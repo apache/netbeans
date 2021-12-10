@@ -19,6 +19,7 @@
 package org.netbeans.modules.maven.runjar;
 
 import java.awt.Dialog;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
@@ -28,7 +29,6 @@ import java.util.Properties;
 import javax.swing.JButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Plugin;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.netbeans.api.java.project.JavaProjectConstants;
@@ -103,14 +103,23 @@ public class RunJarPrereqChecker implements PrerequisitesChecker {
                 if (entry.getValue().contains("${packageClassName}")) { //NOI18N
                     //show dialog to choose main class.
                     if (mc == null) {
-                        mc = eventuallyShowDialog(config.getProject(), actionName);
+                        if (mainClass != null) {
+                            mc = mainClass;
+                        } else if (testedMainClass != null) {
+                            mainClass = testedMainClass;
+                            mc = mainClass;
+                        } else if (!GraphicsEnvironment.isHeadless()) {
+                            mc = showMainClassDialog(config.getProject(), actionName);
+                            if (mc == null) {
+                                return false;
+                            }
+                        }
                     }
-                    if (mc == null) {
-                        return false;
+                    if (mc != null) {
+                        config.setProperty(entry.getKey(), entry.getValue().replace("${packageClassName}", mc)); // NOI18N
+                        // send a note to RunJarStartupArgs
+                        config.setProperty(MavenExecuteUtils.RUN_MAIN_CLASS, mc); // NOI18N
                     }
-                    config.setProperty(entry.getKey(), entry.getValue().replace("${packageClassName}", mc)); // NOI18N
-                    // send a note to RunJarStartupArgs
-                    config.setProperty(MavenExecuteUtils.RUN_MAIN_CLASS, mc); // NOI18N
                 }
             }
         }
@@ -173,14 +182,7 @@ public class RunJarPrereqChecker implements PrerequisitesChecker {
         "LBL_ChooseMainClass_Title=Select Main Class for Execution",
         "LBL_ChooseMainClass_OK=Select Main Class"
     })
-    private String eventuallyShowDialog(Project project, String actionName) {
-        if (mainClass != null) {
-            return mainClass;
-        } 
-        if (testedMainClass != null) {
-            mainClass = testedMainClass;
-            return mainClass;
-        }
+    private String showMainClassDialog(Project project, String actionName) {
         List<FileObject> roots = new ArrayList<FileObject>();
         Sources srcs = ProjectUtils.getSources(project);
         for (SourceGroup sourceGroup : srcs.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {

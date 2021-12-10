@@ -62,7 +62,14 @@ public final class NbLaunchRequestHandler {
         // validation
         List<String> modulePaths = (List<String>) launchArguments.getOrDefault("modulePaths", Collections.emptyList());
         List<String> classPaths = (List<String>) launchArguments.getOrDefault("classPaths", Collections.emptyList());
-        if (!isNative && (StringUtils.isBlank((String)launchArguments.get("mainClass")) && StringUtils.isBlank((String)launchArguments.get("file"))
+
+        // "file" key is provided by DAP client infrastructure, sometimes in an unsuitable manner, e.g. some cryptic ID for Output window etc. 
+        // the "projectFile" allows to override the infrastructure from client logic.
+        String filePath = (String)launchArguments.get("file");
+        String projectFilePath = (String)launchArguments.get("projectFile");
+        String mainFilePath = (String)launchArguments.get("mainClass");
+
+        if (!isNative && (StringUtils.isBlank(mainFilePath) && StringUtils.isBlank(filePath) && StringUtils.isBlank(projectFilePath)
                           || modulePaths.isEmpty() && classPaths.isEmpty())) {
             ErrorUtilities.completeExceptionally(resultFuture,
                 "Failed to launch debuggee VM. Missing mainClass or modulePaths/classPaths options in launch configuration.",
@@ -93,8 +100,9 @@ public final class NbLaunchRequestHandler {
 
         activeLaunchHandler.preLaunch(launchArguments, context);
 
-        String filePath = (String)launchArguments.get("file");
-        String mainFilePath = (String)launchArguments.get("mainClass");
+        if (projectFilePath != null) {
+            filePath = projectFilePath;
+        }
         boolean preferProjActions = true; // True when we prefer project actions to the current (main) file actions.
         if (filePath == null || mainFilePath != null) {
             // main overides the current file

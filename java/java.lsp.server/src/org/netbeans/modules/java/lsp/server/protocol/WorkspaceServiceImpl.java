@@ -41,6 +41,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -54,6 +55,7 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
@@ -83,6 +85,7 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.ui.ElementOpen;
+import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
@@ -152,6 +155,72 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
                 progressOfCompilation.checkStatus();
                 return progressOfCompilation.getFinishFuture();
+            }
+            case Server.JAVA_RUN_PROJECT_ACTION: {
+                // TODO: maybe a structure would be better for future compatibility / extensions, i.e. what to place in the action's context Lookup.
+                List<FileObject> targets = new ArrayList<>();
+                ProjectActionParams actionParams = gson.fromJson(gson.toJson(params.getArguments().get(0)), ProjectActionParams.class);
+                String actionName = actionParams.getAction();
+                String configName = actionParams.getConfiguration();
+                boolean acceptDefault = actionParams.getFallbackDefault() == Boolean.TRUE;
+                
+                for (int i = 1; i < params.getArguments().size(); i++) {
+                    JsonElement item = gson.fromJson(gson.toJson(params.getArguments().get(i)), JsonElement.class);                    
+                    if (item.isJsonPrimitive()) {
+                        String uri = item.getAsString();
+                        FileObject file;
+                        try {
+                            file = URLMapper.findFileObject(new URL(uri));
+                        } catch (MalformedURLException ex) {
+                            // TODO: report an invalid parameter or ignore ?
+                            continue;
+                        }
+                        targets.add(file);
+                    }
+                }
+                // also forms invokeAction off the main LSP thread.
+                return server.asyncOpenSelectedProjects(targets, false).thenCompose((Project[] owners) -> {
+                    Map<Project, List<FileObject>> items = new LinkedHashMap<>();
+                    for (int i = 0; i < owners.length; i++) {
+                        items.computeIfAbsent(owners[i], (p) -> new ArrayList<>()).add(targets.get(i));
+                    }
+                    final CommandProgress progressOfCompilation = new CommandProgress();
+                    boolean someStarted = false;
+                    boolean configNotFound = false;
+                    
+                    for (Project prj : items.keySet()) {
+                        List<Object> ctxObjects = new ArrayList<>();
+                        ctxObjects.add(progressOfCompilation);
+                        ctxObjects.addAll(items.get(prj));
+                        if (!StringUtils.isBlank(configName)) {
+                            ProjectConfigurationProvider<ProjectConfiguration> pcp = prj.getLookup().lookup(ProjectConfigurationProvider.class);
+                            if (pcp != null) {
+                                Optional<ProjectConfiguration> cfg = pcp.getConfigurations().stream().filter(c -> c.getDisplayName().equals(configName)).findAny();
+                                if (cfg.isPresent()) {
+                                    ctxObjects.add(cfg);
+                                } else if (!acceptDefault) {
+                                    // TODO: report ? Fail the action ? Fallback to default config ?
+                                    configNotFound = true;
+                                    continue;
+                                }
+                            }
+                        }
+                        // TBD: possibly include project configuration ?
+                        final Lookup ctx = Lookups.fixed(ctxObjects.toArray(new Object[ctxObjects.size()]));
+                        ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
+                        if (ap != null && ap.isActionEnabled(actionName, ctx)) {
+                            ap.invokeAction(actionName, ctx);
+                            someStarted = true;
+                        }
+                    }
+                    if (!configNotFound || !someStarted) {
+                        // TODO: print a message like 'nothing to do' in the status bar ?
+                        return CompletableFuture.completedFuture(false);
+                    }
+                    final boolean cfgNotFound = configNotFound;
+                    progressOfCompilation.checkStatus();
+                    return progressOfCompilation.getFinishFuture().thenApply(b -> (b == Boolean.TRUE) && cfgNotFound);
+                });
             }
             case Server.JAVA_CLEAN_WORKSPACE: {
                 final CommandProgress progressOfCompilation = new CommandProgress();

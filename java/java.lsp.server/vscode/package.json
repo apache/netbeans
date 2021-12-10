@@ -426,19 +426,27 @@
 				"icon": "$(debug-alt)"
 			},
 			{
-				"command": "java.run.project",
+				"command": "java.project.run",
 				"title": "Run Project Without Debugging",
 				"icon": "$(run)"
 			},
 			{
-				"command": "java.debug.project",
+				"command": "java.project.debug",
 				"title": "Debug Project",
 				"icon": "$(debug-alt)"
 			},
 			{
-				"command": "java.test.project",
+				"command": "java.project.test",
 				"title": "Test Project",
-				"icon": "$(debug-alt)"
+				"icon": "$(testing-run-all-icon)"
+			},
+			{
+				"command": "java.project.compile",
+				"title": "Compile Project"
+			},
+			{
+				"command": "java.project.clean",
+				"title": "Clean Project"
 			}
 		],
 		"keybindings": [
@@ -519,10 +527,6 @@
 					"when": "nbJavaLSReady && view == foundProjects"
 				},
 				{
-					"command": "workbench.action.debug.run",
-					"when": "nbJavaLSReady && view == foundProjects"
-				},
-				{
 					"command": "workbench.action.debug.start",
 					"when": "nbJavaLSReady && view == foundProjects"
 				}
@@ -550,14 +554,26 @@
 					"group": "inline@1"
 				},
 				{
-					"command": "java.run.project",
+					"command": "java.project.run",
 					"when": "view == foundProjects && viewItem =~ /class:project.Project/",
 					"group": "inline@10"
 				},
 				{
-					"command": "java.debug.project",
+					"command": "java.project.debug",
 					"when": "view == foundProjects && viewItem =~ /class:project.Project/",
 					"group": "inline@11"
+				},
+				{
+					"command": "java.project.test",
+					"when": "view == foundProjects && viewItem =~ /class:project.Project/"
+				},
+				{
+					"command": "java.project.compile",
+					"when": "view == foundProjects && viewItem =~ /class:project.Project/"
+				},
+				{
+					"command": "java.project.clean",
+					"when": "view == foundProjects && viewItem =~ /class:project.Project/"
 				}
 			]
 		}

@@ -355,13 +355,13 @@ public final class Server {
          * @return future that yields the opened project instances.
          */
         @Override
-        public CompletableFuture<Project[]> asyncOpenSelectedProjects(List<FileObject> projectCandidates) {
+        public CompletableFuture<Project[]> asyncOpenSelectedProjects(List<FileObject> projectCandidates, boolean addWorkspace) {
             if (projectCandidates == null || projectCandidates.isEmpty()) {
                 return CompletableFuture.completedFuture(new Project[0]);
             }
             CompletableFuture<Project[]> f = new CompletableFuture<>();
             SERVER_INIT_RP.post(() -> {
-                asyncOpenSelectedProjects0(f, projectCandidates, true, false);
+                asyncOpenSelectedProjects0(f, projectCandidates, addWorkspace, false);
             });
             return f;
         }
@@ -695,10 +695,10 @@ public final class Server {
                 capabilities.setImplementationProvider(true);
                 capabilities.setDocumentHighlightProvider(true);
                 capabilities.setReferencesProvider(true);
-                List<String> commands = new ArrayList<>(Arrays.asList(
-                        GRAALVM_PAUSE_SCRIPT,
+                List<String> commands = new ArrayList<>(Arrays.asList(GRAALVM_PAUSE_SCRIPT,
                         JAVA_BUILD_WORKSPACE,
                         JAVA_CLEAN_WORKSPACE,
+                        JAVA_RUN_PROJECT_ACTION,
                         JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS,
                         JAVA_FIND_DEBUG_PROCESS_TO_ATTACH,
                         JAVA_FIND_PROJECT_CONFIGURATIONS,
@@ -860,6 +860,7 @@ public final class Server {
     public static final String JAVA_SUPER_IMPLEMENTATION =  "java.super.implementation";
     public static final String JAVA_SOURCE_FOR =  "java.source.for";
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
+    public static final String JAVA_RUN_PROJECT_ACTION = "java.project.run.action";
 
     /**
      * Enumerates project configurations.

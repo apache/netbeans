@@ -151,6 +151,12 @@ export interface NodeOperationParams {
     nodeId : number;
 }
 
+export interface ProjectActionParams {
+    action : string;
+    configuration? : string;
+    fallback? : boolean;
+}
+
 export namespace NodeInfoNotification {
     export const type = new ProtocolNotificationType<NodeChangedParams, void>('nodes/nodeChanged');
 }

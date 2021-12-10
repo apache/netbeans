@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.lsp.server.Utils;
 import static org.netbeans.modules.java.lsp.server.explorer.NodeLookupContextValues.nodeLookup;
 import org.openide.filesystems.FileObject;
@@ -150,8 +151,13 @@ public class DefaultDecorationsImpl implements TreeDataProvider.Factory {
                 }
             }
             if (n.canDestroy()) {
-                d.addContextValues(CTXVALUE_CAP_DELETE);
-                set = true;
+                // TODO Hack: exclude projects from delete capability. The TreeItemData probably needs to support
+                // exclusion... Project delete UI is not suitable for LSP at the moment
+                Project p = n.getLookup().lookup(Project.class);
+                if (p == null || f == null || !p.getProjectDirectory().equals(f)) {
+                    d.addContextValues(CTXVALUE_CAP_DELETE);
+                    set = true;
+                }
             }
             if (n.canRename()) {
                 d.addContextValues(CTXVALUE_CAP_RENAME);

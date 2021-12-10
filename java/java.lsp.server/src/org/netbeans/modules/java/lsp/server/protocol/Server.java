@@ -851,7 +851,6 @@ public final class Server {
     public static final String JAVA_BUILD_WORKSPACE =  "java.build.workspace";
     public static final String JAVA_NEW_FROM_TEMPLATE =  "java.new.from.template";
     public static final String JAVA_NEW_PROJECT =  "java.new.project";
-    public static final String JAVA_HTML_DEMO =  "java.html.demo";
     public static final String JAVA_GET_PROJECT_SOURCE_ROOTS = "java.get.project.source.roots";
     public static final String JAVA_GET_PROJECT_CLASSPATH = "java.get.project.classpath";
     public static final String JAVA_GET_PROJECT_PACKAGES = "java.get.project.packages";

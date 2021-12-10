@@ -313,7 +313,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             }
             case Server.JAVA_FIND_PROJECT_CONFIGURATIONS: {
                 String fileUri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
-
+                
                 FileObject file;
                 try {
                     file = URLMapper.findFileObject(new URL(fileUri));
@@ -422,7 +422,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         }
         return map;
     }
-
+    
     private CompletableFuture<Object> findProjectConfigurations(FileObject ownedFile) {
         return server.asyncOpenFileOwner(ownedFile).thenApply(p -> {
             if (p == null) {

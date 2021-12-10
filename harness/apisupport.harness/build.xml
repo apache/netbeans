@@ -50,7 +50,7 @@
 
     <target name="compile-jnlp-launcher" depends="init,compile">
         <mkdir dir="${build.dir}/jnlp-launcher-classes"/>
-        <nb-javac srcdir="jnlp-src" destdir="${build.dir}/jnlp-launcher-classes" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" source="1.6" target="1.6" includeantruntime="false">
+        <nb-javac srcdir="jnlp-src" destdir="${build.dir}/jnlp-launcher-classes" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" release="8" includeantruntime="false">
             <classpath>
                 <path path="${jnlp.cp}"/>
             </classpath>

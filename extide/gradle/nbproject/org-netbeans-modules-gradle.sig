@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.15
+#Version 2.21
 
 CLSS public abstract interface java.io.Serializable
 
@@ -919,9 +919,11 @@ hfds TEMPLATE_BUILD,TEMPLATE_PROPS,TEMPLATE_SETTINGS,buildTemplate,templateParam
 CLSS public final org.netbeans.modules.gradle.spi.newproject.TemplateOperation
 cons public init()
 cons public init(org.netbeans.api.progress.ProgressHandle)
+innr public abstract InitOperation
 innr public abstract interface static ProjectConfigurator
 intf java.lang.Runnable
 meth public java.util.Set<org.openide.filesystems.FileObject> getImportantFiles()
+meth public org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation createGradleInit(java.io.File,java.lang.String)
 meth public void addConfigureProject(java.io.File,org.netbeans.modules.gradle.spi.newproject.TemplateOperation$ProjectConfigurator)
 meth public void addProjectPreload(java.io.File)
 meth public void addWrapperInit(java.io.File)
@@ -934,7 +936,16 @@ meth public void openFromTemplate(java.lang.String,java.io.File,java.util.Map<ja
 meth public void run()
 supr java.lang.Object
 hfds handle,importantFiles,steps
-hcls ConfigureProjectStep,CopyFromFileTemplate,CopyFromTemplate,CreateDirStep,InitGradleWrapper,OperationStep,PreloadProject
+hcls ConfigureProjectStep,CopyFromFileTemplate,CopyFromTemplate,CreateDirStep,InitGradleWrapper,InitStep,OperationStep,PreloadProject
+
+CLSS public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation
+ outer org.netbeans.modules.gradle.spi.newproject.TemplateOperation
+meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation basePackage(java.lang.String)
+meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation dsl(java.lang.String)
+meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation projectName(java.lang.String)
+meth public abstract org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOperation testFramework(java.lang.String)
+meth public final void add()
+supr java.lang.Object
 
 CLSS public abstract interface static org.netbeans.modules.gradle.spi.newproject.TemplateOperation$ProjectConfigurator
  outer org.netbeans.modules.gradle.spi.newproject.TemplateOperation

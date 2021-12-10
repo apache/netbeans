@@ -23,6 +23,7 @@ import { commands, window, workspace, ExtensionContext, ProgressLocation, TextEd
 import {
 	LanguageClient,
 	LanguageClientOptions,
+	ServerOptions,
 	StreamInfo
 } from 'vscode-languageclient/node';
 
@@ -44,17 +45,40 @@ import * as vscode from 'vscode';
 import * as launcher from './nbcode';
 import {NbTestAdapter} from './testAdapter';
 import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification, DebugConnector,
-         TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification,
+         TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification, HtmlPageRequest, HtmlPageParams,
          SetTextEditorDecorationParams
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
+import { createTreeViewService, TreeViewService } from './explorer';
+import { TLSSocket } from 'tls';
 
 const API_VERSION : string = "1.0";
-let client: Promise<LanguageClient>;
+let client: Promise<NbLanguageClient>;
 let testAdapter: NbTestAdapter | undefined;
 let nbProcess : ChildProcess | null = null;
 let debugPort: number = -1;
 let consoleLog: boolean = !!process.env['ENABLE_CONSOLE_LOG'];
+
+export class NbLanguageClient extends LanguageClient {
+    private _treeViewService: TreeViewService;
+
+    constructor (id : string, name: string, s : ServerOptions, c : LanguageClientOptions) {
+        super(id, name, s, c);
+        this._treeViewService = createTreeViewService(this);
+    }
+
+    findTreeViewService(): TreeViewService {
+        return this._treeViewService;
+    }
+
+    stop(): Promise<void> {
+        // stop will be called even in case of external close & client restart, so OK.
+        const r: Promise<void> = super.stop();
+        this._treeViewService.dispose();
+        return r;
+    }
+    
+}
 
 function handleLog(log: vscode.OutputChannel, msg: string): void {
     log.appendLine(msg);
@@ -99,6 +123,26 @@ export function findClusters(myPath : string): string[] {
         }
     }
     return clusters;
+}
+
+// for tests only !
+export function awaitClient() : Promise<NbLanguageClient> {
+    const c : Promise<NbLanguageClient> = client;
+    if (c) {
+        return c;
+    }
+    let nbcode = vscode.extensions.getExtension('asf.apache-netbeans-java');
+    if (!nbcode) {
+        return Promise.reject(new Error("Extension not installed."));
+    }
+    const t : Thenable<NbLanguageClient> = nbcode.activate().then(nc => {
+        if (client === undefined) {
+            throw new Error("Client not available");
+        } else {
+            return client;
+        }
+    });
+    return Promise.resolve(t);
 }
 
 function findJDK(onChange: (path : string | null) => void): void {
@@ -192,6 +236,10 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     let debugDescriptionFactory = new NetBeansDebugAdapterDescriptionFactory();
     context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('java8+', debugDescriptionFactory));
     context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('nativeimage', debugDescriptionFactory));
+
+    // register content provider
+    let sourceForContentProvider = new NetBeansSourceForContentProvider();
+    context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('sourceFor', sourceForContentProvider));
 
     // register commands
     context.subscriptions.push(commands.registerCommand('java.workspace.new', async (ctx) => {
@@ -371,8 +419,8 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
         return;
     }
     let oldClient = client;
-    let setClient : [(c : LanguageClient) => void, (err : any) => void];
-    client = new Promise<LanguageClient>((clientOK, clientErr) => {
+    let setClient : [(c : NbLanguageClient) => void, (err : any) => void];
+    client = new Promise<NbLanguageClient>((clientOK, clientErr) => {
         setClient = [ clientOK, clientErr ];
     });
     const a : Promise<void> | null = maintenance;
@@ -422,7 +470,7 @@ function killNbProcess(notifyKill : boolean, log : vscode.OutputChannel, specPro
 }
 
 function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean,
-    setClient : [(c : LanguageClient) => void, (err : any) => void]
+    setClient : [(c : NbLanguageClient) => void, (err : any) => void]
 ): void {
     maintenance = null;
     let restartWithJDKLater : ((time: number, n: boolean) => void) = function restartLater(time: number, n : boolean) {
@@ -456,7 +504,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         jdkHome : specifiedJDK,
         verbose: beVerbose
     };
-    let launchMsg = `Launching Apache NetBeans Language Server with ${specifiedJDK ? specifiedJDK : 'default system JDK'}`;
+    let launchMsg = `Launching Apache NetBeans Language Server with ${specifiedJDK ? specifiedJDK : 'default system JDK'} and userdir ${userdir}`;
     handleLog(log, launchMsg);
     vscode.window.setStatusBarMessage(launchMsg, 2000);
 
@@ -478,7 +526,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 stdOut = null;
             }
         }
-        let p = launcher.launch(info, "--modules", "--list");
+        let p = launcher.launch(info, "--modules", "--list", "-J-XX:PerfMaxStringConstLength=10240");
         handleLog(log, "LSP server launching: " + p.pid);
         p.stdout.on('data', function(d: any) {
             logAndWaitForEnabled(d.toString(), true);
@@ -580,6 +628,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 'nbcodeCapabilities' : {
                     'statusBarMessageSupport' : true,
                     'testResultsSupport' : true,
+                    'showHtmlPageSupport' : true,
                     'wantsGroovySupport' : enableGroovy
                 }
             },
@@ -598,7 +647,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         }
 
 
-        let c = new LanguageClient(
+        let c = new NbLanguageClient(
                 'java',
                 'NetBeans Java',
                 connection,
@@ -609,6 +658,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         c.onReady().then(() => {
             testAdapter = new NbTestAdapter();
             c.onNotification(StatusMessageRequest.type, showStatusBarMessage);
+            c.onRequest(HtmlPageRequest.type, showHtmlPage);
             c.onNotification(LogMessageNotification.type, (param) => handleLog(log, param.message));
             c.onRequest(QuickPickRequest.type, async param => {
                 const selected = await window.showQuickPick(param.items, { placeHolder: param.placeHolder, canPickMany: param.canPickMany });
@@ -668,12 +718,63 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             handleLog(log, 'Language Client: Ready');
             setClient[0](c);
             commands.executeCommand('setContext', 'nbJavaLSReady', true);
+        
+            // create project explorer:
+            c.findTreeViewService().createView('foundProjects', 'Projects', { canSelectMany : false });
+            c.findTreeViewService().createView('database.connections', undefined , { canSelectMany : true });
         }).catch(setClient[1]);
     }).catch((reason) => {
         activationPending = false;
         handleLog(log, reason);
         window.showErrorMessage('Error initializing ' + reason);
     });
+
+    async function showHtmlPage(params : HtmlPageParams): Promise<string> {
+        function showUri(url: string, ok: any, err: any) {
+            let uri = vscode.Uri.parse(url);
+            var http = require('http');
+
+            let host = uri.authority.split(":")[0];
+            let port = uri.authority.split(":")[1];
+
+            var options = {
+                host: host,
+                port: port,
+                path: uri.path
+            }
+            var request = http.request(options, function(res: any) {
+                var data = '';
+                res.on('data', function(chunk: any) {
+                    data += chunk;
+                });
+                res.on('end', function() {
+                    const match = /<title>(.*)<\/title>/i.exec(data);
+                    const name = match && match.length > 1 ? match[1] : ''
+                    let view = vscode.window.createWebviewPanel('htmlView', name, vscode.ViewColumn.Beside, {
+                        enableScripts: true,
+                    });
+                    view.webview.html = data.replace("<head>", `<head><base href="${url}">`);
+                    view.webview.onDidReceiveMessage(message => {
+                        switch (message.command) {
+                            case 'dispose':
+                                view.dispose();
+                                break;
+                        }
+                    });
+                    view.onDidDispose(() => {
+                        ok(null);
+                    });
+                });
+            });
+            request.on('error', function(e: any) {
+                err(e);
+            });
+            request.end();
+        }
+        return new Promise((ok, err) => {
+            showUri(params.uri, ok, err);
+        });
+    }
 
     function showStatusBarMessage(params : ShowStatusMessageParams) {
         let decorated : string = params.message;
@@ -826,7 +927,6 @@ class NetBeansConfigurationInitialProvider implements vscode.DebugConfigurationP
                     name: cname,
                     type: "java8+",
                     request: "launch",
-                    mainClass: '${file}',
                     launchConfiguration: cn,
                 };
                 result.push(debugConfig);
@@ -904,9 +1004,7 @@ class NetBeansConfigurationResolver implements vscode.DebugConfigurationProvider
         if (!config.request) {
             config.request = 'launch';
         }
-        if ('launch' == config.request && !config.mainClass) {
-            config.mainClass = '${file}';
-        }
+        config.file = '${file}';
         if (!config.classPaths) {
             config.classPaths = ['any'];
         }
@@ -938,5 +1036,18 @@ class NetBeansConfigurationNativeResolver implements vscode.DebugConfigurationPr
         }
 
         return config;
+    }
+}
+
+class NetBeansSourceForContentProvider implements vscode.TextDocumentContentProvider {
+
+    provideTextDocumentContent(uri: vscode.Uri, token: vscode.CancellationToken): vscode.ProviderResult<string> {
+        vscode.window.withProgress({location: ProgressLocation.Notification, title: 'Finding source...', cancellable: false}, () => {
+            return vscode.commands.executeCommand('java.source.for', uri.toString()).then(() => {
+            }, (reason: any) => {
+                vscode.window.showErrorMessage(reason.data);
+            });
+        });
+        return Promise.reject();
     }
 }

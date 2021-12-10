@@ -81,9 +81,9 @@ public class Hacks {
         };
         StandardJavaFileManager sjfm = ToolProvider.getSystemJavaCompiler().getStandardFileManager(devNull, null, null);
 
+        final Map<String, ByteArrayOutputStream> class2BAOS = new HashMap<String, ByteArrayOutputStream>();
         sjfm.setLocation(StandardLocation.CLASS_PATH, toFiles(compile));
 
-        final Map<String, ByteArrayOutputStream> class2BAOS = new HashMap<String, ByteArrayOutputStream>();
 
         JavaFileManager jfm = new ForwardingJavaFileManager<JavaFileManager>(sjfm) {
             @Override

@@ -79,19 +79,25 @@ public class GitBranchHash extends Task {
             if (headroot != null && Files.size(headroot) > 0l) {
                 List<String> lines = Files.readAllLines(headroot);
                 String line = lines.get(0);
-                String revLink = line.substring(line.indexOf(':')+1).trim();
-                branch = revLink.substring(revLink.lastIndexOf('/')+1).trim();
-                Path revPath = headroot.getParent().resolve(revLink);
-                if(Files.isRegularFile(revPath) && Files.size(revPath) > 0l) {
-                    List<String> revlines = Files.readAllLines(revPath);
-                    String revline = revlines.get(0);
-                    if(revline.length()>=12){
-                        hash = revline.trim();
-                    } else {
-                        log("no content in " + revPath, Project.MSG_WARN);                        
-                    }
+                if (!line.contains(":") && (line.length() == 40)) {
+                    //Detached HEAD
+                    hash = line;
+                    log("Detached HEAD please specify '" + branchProperty + "' externally.", Project.MSG_WARN);
                 } else {
-                    log("unable to find revision info for " + revPath, Project.MSG_WARN);
+                    String revLink = line.substring(line.indexOf(':')+1).trim();
+                    branch = revLink.substring(revLink.lastIndexOf('/')+1).trim();
+                    Path revPath = headroot.getParent().resolve(revLink);
+                    if(Files.isRegularFile(revPath) && Files.size(revPath) > 0l) {
+                        List<String> revlines = Files.readAllLines(revPath);
+                        String revline = revlines.get(0);
+                        if(revline.length()>=12){
+                            hash = revline.trim();
+                        } else {
+                            log("no content in " + revPath, Project.MSG_WARN);                        
+                        }
+                    } else {
+                        log("unable to find revision info for " + revPath, Project.MSG_WARN);
+                    }
                 }
             } else {
                 log("No HEAD found starting from " + file, Project.MSG_WARN);
@@ -99,11 +105,14 @@ public class GitBranchHash extends Task {
         } catch(IOException ex) {
             log("Could not read " + headroot + ": " + ex, Project.MSG_WARN);
         }
-        if (!branch.isEmpty() && !hash.isEmpty()) {
+        if (!branch.isEmpty()) {
             getProject().setNewProperty(branchProperty, branch);
+        }
+        if (!hash.isEmpty()) {
             getProject().setNewProperty(hashProperty, hash);
         }
         
     }
 
 }
+

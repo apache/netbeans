@@ -90,12 +90,6 @@
                     </file>
                 </folder>
                 <folder name="Actions">
-                    <file name="org-netbeans-modules-db-explorer-action-ConnectAction.instance">
-                        <attr name="position" intvalue="100"/>
-                    </file>
-                    <file name="org-netbeans-modules-db-explorer-action-DisconnectAction.instance">
-                        <attr name="position" intvalue="150"/>
-                    </file>
                     <file name="Separator1.instance">
                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                         <attr name="position" intvalue="200"/>

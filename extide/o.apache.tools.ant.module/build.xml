@@ -35,7 +35,7 @@
                 <path path="${src-bridge.cp}"/>
             </classpath>
         </depend>
-        <javac srcdir="src-bridge" destdir="build/bridge-classes" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" source="1.6" target="1.6" includeantruntime="false">
+        <javac srcdir="src-bridge" destdir="build/bridge-classes" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" release="8" includeantruntime="false">
             <classpath>
                 <path path="${src-bridge.cp}"/>
             </classpath>

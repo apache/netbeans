@@ -79,4 +79,10 @@ public interface LspServerState {
      * Get documents opened by the LSP client.
      */
     public OpenedDocuments getOpenedDocuments();
+    
+    /**
+     * Return the current set of nonproject folders worked with in LSP workspace.
+     * @return snapshot of folders.
+     */
+    public List<FileObject> getAcceptedWorkspaceFolders();
 }

@@ -62,7 +62,7 @@ public final class NbLaunchRequestHandler {
         // validation
         List<String> modulePaths = (List<String>) launchArguments.getOrDefault("modulePaths", Collections.emptyList());
         List<String> classPaths = (List<String>) launchArguments.getOrDefault("classPaths", Collections.emptyList());
-        if (!isNative && (StringUtils.isBlank((String)launchArguments.get("mainClass"))
+        if (!isNative && (StringUtils.isBlank((String)launchArguments.get("mainClass")) && StringUtils.isBlank((String)launchArguments.get("file"))
                           || modulePaths.isEmpty() && classPaths.isEmpty())) {
             ErrorUtilities.completeExceptionally(resultFuture,
                 "Failed to launch debuggee VM. Missing mainClass or modulePaths/classPaths options in launch configuration.",
@@ -93,23 +93,18 @@ public final class NbLaunchRequestHandler {
 
         activeLaunchHandler.preLaunch(launchArguments, context);
 
-        String filePath = (String)launchArguments.get("mainClass");
+        String filePath = (String)launchArguments.get("file");
+        String mainFilePath = (String)launchArguments.get("mainClass");
+        boolean preferProjActions = true; // True when we prefer project actions to the current (main) file actions.
+        if (filePath == null || mainFilePath != null) {
+            // main overides the current file
+            preferProjActions = false;
+            filePath = mainFilePath;
+        }
         FileObject file = null;
         File nativeImageFile = null;
         if (!isNative) {
-            File ioFile = null;
-            if (filePath != null) {
-                ioFile = new File(filePath);
-                if (!ioFile.exists()) {
-                    try {
-                        URI uri = new URI(filePath);
-                        ioFile = Utilities.toFile(uri);
-                    } catch (URISyntaxException ex) {
-                        // Not a valid file
-                    }
-                }
-            }
-            file = ioFile != null ? FileUtil.toFileObject(ioFile) : null;
+            file = getFileObject(filePath);
             if (file == null) {
                 ErrorUtilities.completeExceptionally(resultFuture,
                         "Missing file: " + filePath,
@@ -141,7 +136,7 @@ public final class NbLaunchRequestHandler {
         }
         String singleMethod = (String)launchArguments.get("methodName");
         boolean testRun = (Boolean) launchArguments.getOrDefault("testRun", Boolean.FALSE);
-        activeLaunchHandler.nbLaunch(file, nativeImageFile, singleMethod, launchArguments, context, !noDebug, testRun, new OutputListener(context)).thenRun(() -> {
+        activeLaunchHandler.nbLaunch(file, preferProjActions, nativeImageFile, singleMethod, launchArguments, context, !noDebug, testRun, new OutputListener(context)).thenRun(() -> {
             activeLaunchHandler.postLaunch(launchArguments, context);
             resultFuture.complete(null);
         }).exceptionally(e -> {
@@ -149,6 +144,22 @@ public final class NbLaunchRequestHandler {
             return null;
         });
         return resultFuture;
+    }
+
+    private static FileObject getFileObject(String filePath) {
+        File ioFile = null;
+        if (filePath != null) {
+            ioFile = new File(filePath);
+            if (!ioFile.exists()) {
+                try {
+                    URI uri = new URI(filePath);
+                    ioFile = Utilities.toFile(uri);
+                } catch (URISyntaxException ex) {
+                    // Not a valid file
+                }
+            }
+        }
+        return ioFile != null ? FileUtil.toFileObject(ioFile) : null;
     }
 
     private static final Pattern STACKTRACE_PATTERN = Pattern.compile("\\s+at\\s+(([\\w$]+\\.)*[\\w$]+)\\(([\\w-$]+\\.java:\\d+)\\)");

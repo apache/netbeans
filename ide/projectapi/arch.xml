@@ -507,7 +507,13 @@ Nothing.
 -->
  <answer id="exec-property">
   <p>
-   No.
+      <api name="project.limitScanRoot" category="friend" group="systemproperty" type="export">
+          <p>
+              If defined, limits search for a parent project to a certain subtree. The property defines <b>absolute path</b> of a folder
+              where upwards search for a project in parent folders is terminated. Queries outside of the root will not find any project.
+              Currently used for tests so the tested runtime does not escape the workdir.
+          </p>
+      </api>
   </p>
  </answer>
 

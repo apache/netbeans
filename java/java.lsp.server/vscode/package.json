@@ -60,6 +60,18 @@
 				"path": "./syntaxes/java.tmLanguage.json"
 			}
 		],
+		"views": {
+			"explorer": [
+				{
+					"id": "foundProjects",
+					"name": "Projects"
+				},
+				{
+					"id": "database.connections",
+					"name": "Databases"
+				}
+			]
+		},
 		"configuration": {
 			"title": "Java",
 			"properties": {
@@ -158,9 +170,6 @@
 				],
 				"configurationAttributes": {
 					"launch": {
-						"required": [
-							"mainClass"
-						],
 						"properties": {
 							"mainClass": {
 								"type": "string",
@@ -256,8 +265,7 @@
 					{
 						"type": "java8+",
 						"request": "launch",
-						"name": "Launch Java 8+ App",
-						"mainClass": "${file}"
+						"name": "Launch Java 8+ App"
 					}
 				],
 				"configurationSnippets": [
@@ -267,8 +275,7 @@
 						"body": {
 							"type": "java8+",
 							"request": "launch",
-							"name": "Launch Java 8+ App",
-							"mainClass": "^\"${1:\\${file\\}}\""
+							"name": "Launch Java 8+ App"
 						}
 					}
 				]
@@ -384,6 +391,22 @@
 				"command": "graalvm.pause.script",
 				"title": "Pause in Script",
 				"category": "GraalVM"
+			},
+			{
+				"command": "foundProjects.deleteEntry",
+				"title": "Delete"
+			},
+			{
+				"command": "nbls:Database:netbeans.db.explorer.action.Connect",
+				"title": "Connect to Database"
+			},
+			{
+				"command": "nbls:Database:netbeans.db.explorer.action.Disconnect",
+				"title": "Disconnect"
+			},
+			{
+				"command": "nbls:Edit:org.openide.actions.DeleteAction",
+				"title": "Delete"
 			}
 		],
 		"keybindings": [
@@ -439,6 +462,24 @@
 				{
 					"command": "graalvm.pause.script",
 					"when": "nbJavaLSReady"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "foundProjects.deleteEntry",
+					"when": "view == foundProjects && viewItem == node"
+				},
+				{
+					"command": "nbls:Database:netbeans.db.explorer.action.Connect",
+					"when": "nbJavaLSReady && viewItem =~ /class:ddl.DBConnection/"
+				},
+				{
+					"command": "nbls:Database:netbeans.db.explorer.action.Disconnect",
+					"when": "nbJavaLSReady && viewItem =~ /class:ddl.DBConnection/"
+				},
+				{
+					"command": "nbls:Edit:org.openide.actions.DeleteAction",
+					"when": "nbJavaLSReady && viewItem =~ /class:ddl.DBConnection/"
 				}
 			]
 		}

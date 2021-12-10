@@ -37,8 +37,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import junit.framework.Assert;
-import junit.framework.AssertionFailedError;
 
 /**
  * Lets you register mock implementations of global services.
@@ -161,7 +159,10 @@ public class MockServices {
             for (Class<?> c : services) {
                 try {
                     if (test) {
-                        Assert.assertEquals(c, getParent().loadClass(c.getName()));
+                        final Class<?> real = getParent().loadClass(c.getName());
+                        if (!c.equals(real)) {
+                            throw new AssertionError("Service " + c + " isn't " + real);
+                        }
                     }
                     int mods = c.getModifiers();
                     if (!Modifier.isPublic(mods) || Modifier.isAbstract(mods)) {
@@ -173,7 +174,7 @@ public class MockServices {
                 } catch (NoSuchMethodException x) {
                     throw (IllegalArgumentException) new IllegalArgumentException("Class " + c.getName() + " has no public no-arg constructor").initCause(x);
                 } catch (Exception x) {
-                    throw (AssertionFailedError) new AssertionFailedError(x.toString()).initCause(x);
+                    throw new AssertionError(x.toString(), x);
                 }
             }
             this.services = services;

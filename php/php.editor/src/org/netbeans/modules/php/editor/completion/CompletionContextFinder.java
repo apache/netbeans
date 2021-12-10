@@ -183,6 +183,9 @@ final class CompletionContextFinder {
             new Object[]{PHPTokenId.PHP_FINAL},
             new Object[]{PHPTokenId.PHP_FINAL, PHPTokenId.WHITESPACE},
             new Object[]{PHPTokenId.PHP_FINAL, PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING},
+            new Object[]{PHPTokenId.PHP_READONLY},
+            new Object[]{PHPTokenId.PHP_READONLY, PHPTokenId.WHITESPACE},
+            new Object[]{PHPTokenId.PHP_READONLY, PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING},
             new Object[]{PHPTokenId.PHP_CURLY_OPEN},
             new Object[]{PHPTokenId.WHITESPACE},
             new Object[]{PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING},
@@ -980,12 +983,16 @@ final class CompletionContextFinder {
                             || isNullableTypesPrefix(cToken)
                             || isVerticalBar(cToken)
                             || isOrOperator(cToken)
-                            || isVisibilityModifier(cToken)) {
+                            || isVisibilityModifier(cToken)
+                            || isReadonlyModifier(cToken)) {
                         isCompletionSeparator = true;
                         if (isVerticalBar(cToken) || isOrOperator(cToken)) {
                             isUnionType = true;
                         }
-                        if (isVisibilityModifier(token) || isVisibilityModifier(cToken)) {
+                        if (isVisibilityModifier(token)
+                                || isVisibilityModifier(cToken)
+                                || isReadonlyModifier(token)
+                                || isReadonlyModifier(cToken)) {
                             contextForSeparator = CompletionContext.VISIBILITY_MODIFIER_OR_TYPE_NAME;
                         } else {
                             contextForSeparator = CompletionContext.TYPE_NAME;
@@ -1136,6 +1143,7 @@ final class CompletionContextFinder {
                 || token.id() == PHPTokenId.PHP_PROTECTED
                 || token.id() == PHPTokenId.PHP_PUBLIC
                 || token.id() == PHPTokenId.PHP_STATIC
+                || token.id() == PHPTokenId.PHP_READONLY
                 || token.id() == PHPTokenId.PHP_VAR;
     }
 
@@ -1143,6 +1151,10 @@ final class CompletionContextFinder {
         return token.id() == PHPTokenId.PHP_PRIVATE
                 || token.id() == PHPTokenId.PHP_PROTECTED
                 || token.id() == PHPTokenId.PHP_PUBLIC;
+    }
+
+    private static boolean isReadonlyModifier(Token<PHPTokenId> token) {
+        return token.id() == PHPTokenId.PHP_READONLY;
     }
 
     private static boolean isConstructor(Token<PHPTokenId> token) {

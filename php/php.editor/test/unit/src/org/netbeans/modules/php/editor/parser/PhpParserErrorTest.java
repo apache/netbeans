@@ -1246,4 +1246,16 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/finalTraitMethods_01.php");
     }
 
+    public void testReadonlyProperties_01() throws Exception {
+        checkErrors("testfiles/parser/php81/readonlyProperties_01.php");
+    }
+
+    public void testReadonlyPropertiesWithConstError() throws Exception {
+        checkErrors("testfiles/parser/php81/readonlyPropertiesWithConstError.php");
+    }
+
+    public void testReadonlyPropertiesWithStaticError() throws Exception {
+        checkErrors("testfiles/parser/php81/readonlyPropertiesWithStaticError.php");
+    }
+
 }

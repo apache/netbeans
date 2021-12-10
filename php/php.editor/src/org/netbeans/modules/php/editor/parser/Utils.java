@@ -396,6 +396,9 @@ public final class Utils {
             case ASTPHP5Symbols.T_QUESTION_MARK:
                 name = "T_QUESTION_MARK"; //NOI18N
                 break;
+            case ASTPHP5Symbols.T_READONLY:
+                name = "T_READONLY"; //NOI18N
+                break;
             case ASTPHP5Symbols.T_REFERENCE:
                 name = "T_REFERENCE"; //NOI18N
                 break;

@@ -1319,6 +1319,18 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/finalTraitMethods_01");
     }
 
+    public void testReadonlyProperties_01() throws Exception {
+        performTest("parser/php81/readonlyProperties_01");
+    }
+
+    public void testReadonlyPropertiesWithConstError() throws Exception {
+        performTest("parser/php81/readonlyPropertiesWithConstError");
+    }
+
+    public void testReadonlyPropertiesWithStaticError() throws Exception {
+        performTest("parser/php81/readonlyPropertiesWithStaticError");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

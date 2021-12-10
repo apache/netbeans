@@ -43,10 +43,6 @@ public class HintsTest extends PHPHintsTestBase {
         return inputFile;
     }
 
-    public void testModifiersCheckHint() throws Exception {
-        checkHints(new ModifiersCheckHintError(), "testModifiersCheckHint.php");
-    }
-
     public void testAbstractClassInstantiationHint() throws Exception {
         checkHints(new AbstractClassInstantiationHintError(), "testAbstractClassInstantiationHint.php");
     }
@@ -468,18 +464,6 @@ public class HintsTest extends PHPHintsTestBase {
 
     public void testIssue259026Fix_03() throws Exception {
         applyHint(new EmptyStatementHint(), "testIssue259026_03.php", "$test1 = 1;;^", "Empty Statement");
-    }
-
-    public void testConstantModifiersCheckHint() throws Exception {
-        checkHints(new ModifiersCheckHintError(), "testConstantModifiersCheckHint.php");
-    }
-
-    public void testConstantModifiersCheckFix_01() throws Exception {
-        applyHint(new ModifiersCheckHintError(), "testConstantModifiersCheckFix.php", "private const PRIVATE_INT^ERFACE_CONST = 2;", "Remove modifier");
-    }
-
-    public void testConstantModifiersCheckFix_02() throws Exception {
-        applyHint(new ModifiersCheckHintError(), "testConstantModifiersCheckFix.php", "protected const P^ROTECTED_INTERFACE_CONST = 3;", "Remove modifier");
     }
 
     public void testDeclareStrictTypes_01a() throws Exception {

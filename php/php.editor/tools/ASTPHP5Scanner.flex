@@ -703,6 +703,10 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     return createFullSymbol(ASTPHP5Symbols.T_PUBLIC);
 }
 
+<ST_IN_SCRIPTING>"readonly" {
+    return createFullSymbol(ASTPHP5Symbols.T_READONLY);
+}
+
 <ST_IN_SCRIPTING>"unset" {
     return createFullSymbol(ASTPHP5Symbols.T_UNSET);
 }

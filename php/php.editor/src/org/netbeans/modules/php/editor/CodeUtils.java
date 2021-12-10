@@ -27,10 +27,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.model.UseScope;
 import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.model.nodes.NamespaceDeclarationInfo;
+import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
@@ -797,4 +800,13 @@ public final class CodeUtils {
         return typeName;
     }
 
+    /**
+     * Get an OffsetRange of an ASTNode.
+     *
+     * @param node the ASTNode
+     * @return the OffsetRange
+     */
+    public static OffsetRange getOffsetRagne(@NonNull ASTNode node) {
+        return new OffsetRange(node.getStartOffset(), node.getEndOffset());
+    }
 }

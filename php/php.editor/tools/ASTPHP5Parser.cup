@@ -36,6 +36,7 @@ parser code {:
     protected final static Integer ABSTRACT = Integer.valueOf(BodyDeclaration.Modifier.ABSTRACT);
     protected final static Integer FINAL = Integer.valueOf(BodyDeclaration.Modifier.FINAL);
     protected final static Integer STATIC = Integer.valueOf(BodyDeclaration.Modifier.STATIC);
+    protected final static Integer READONLY = Integer.valueOf(BodyDeclaration.Modifier.READONLY);
 
     private ErrorStrategy defaultStrategy = new DefaultErrorStrategy();;
     private ErrorStrategy errorStrategy = defaultStrategy;
@@ -410,6 +411,7 @@ terminal T_ELLIPSIS;
 terminal T_COALESCE;
 terminal T_COALESCE_EQUAL;
 terminal T_ATTRIBUTE;
+terminal String T_READONLY;
 
 /* Non terminals */
 
@@ -544,7 +546,7 @@ non terminal Identifier identifier_without_class;
 non terminal Identifier identifier;
 non terminal List class_constant_declaration;
 non terminal List constant_declaration;
-non terminal Integer optional_visibility_modifier;
+non terminal Integer optional_property_modifiers;
 non terminal Integer constant_modifiers;
 non terminal Integer method_modifiers;
 non terminal Block method_body;
@@ -587,6 +589,7 @@ non terminal Variable tracked_variable;
 non terminal Variable optional_tracked_variable;
 non terminal Integer abstract_modifier;
 non terminal Integer final_modifier;
+non terminal Integer readonly_modifier;
 non terminal Integer static_modifier;
 non terminal Integer ppp_modifiers;
 non terminal Integer af_modifiers;
@@ -660,7 +663,7 @@ precedence nonassoc T_NEW, T_CLONE;
 precedence left T_ELSEIF;
 precedence left T_ELSE;
 precedence left T_ENDIF;
-precedence right T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC;
+precedence right T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC, T_READONLY;
 
 thestart ::=
 top_statement_list:statementList
@@ -1096,6 +1099,11 @@ reserved_non_modifiers_without_class:reserved
 :}
 
 | T_PUBLIC:modifier
+{:
+    RESULT = new Identifier(modifierleft, modifierright, modifier, true);
+:}
+
+| T_READONLY:modifier
 {:
     RESULT = new Identifier(modifierleft, modifierright, modifier, true);
 :}
@@ -2346,15 +2354,52 @@ attributes:attributes parameter:param
 :}
 ;
 
-optional_visibility_modifier ::=
-constant_modifiers:modifier
+optional_property_modifiers ::=
+/* empty */
 {:
-    RESULT = modifier;
+    RESULT = null;
+:}
+
+| ppp_modifiers:pModifier
+{:
+    RESULT = pModifier;
+:}
+
+| readonly_modifier:modifier
+{:
+    /* e.g. readonly int $property = 1, */
+    int result = 0;
+    result |= ASTPHP5Parser.IMPLICIT_PUBLIC.intValue();
+    result |= modifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| ppp_modifiers:pModifier readonly_modifier:rModifier
+{:
+    int result = 0;
+    result |= pModifier.intValue();
+    result |= rModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| readonly_modifier:rModifier ppp_modifiers:pModifier
+{:
+    int result = 0;
+    result |= rModifier.intValue();
+    result |= pModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+;
+
+readonly_modifier ::=
+T_READONLY
+{:
+    RESULT = ASTPHP5Parser.READONLY;
 :}
 ;
 
 parameter ::=
-optional_visibility_modifier:modifier optional_class_type_without_static:classType is_reference:isReference is_variadic:isVariadic T_VARIABLE:var
+optional_property_modifiers:modifier optional_class_type_without_static:classType is_reference:isReference is_variadic:isVariadic T_VARIABLE:var
 {:
     int start = varleft;
     if (isVariadic) {
@@ -2385,7 +2430,7 @@ optional_visibility_modifier:modifier optional_class_type_without_static:classTy
     RESULT = parameter;
 :}
 
-| optional_visibility_modifier:modifier optional_class_type_without_static:classType is_reference:isReference is_variadic:isVariadic T_VARIABLE:var T_EQUAL static_scalar:scalar
+| optional_property_modifiers:modifier optional_class_type_without_static:classType is_reference:isReference is_variadic:isVariadic T_VARIABLE:var T_EQUAL static_scalar:scalar
 {:
     int start = varleft;
     if (isVariadic) {
@@ -2957,6 +3002,15 @@ ppp_modifiers:modifier
     RESULT = modifier;
 :}
 
+| readonly_modifier:modifier
+{:
+    /* e.g. readonly int $property; */
+    int result = 0;
+    result |= ASTPHP5Parser.IMPLICIT_PUBLIC.intValue();
+    result |= modifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
 | static_modifier:modifier
 {:
     RESULT = modifier;
@@ -2975,6 +3029,22 @@ ppp_modifiers:modifier
     int result = 0;
     result |= fModifier.intValue();
     result |= sModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| readonly_modifier:rModifier ppp_modifiers:fModifier
+{:
+    int result = 0;
+    result |= rModifier.intValue();
+    result |= fModifier.intValue();
+    RESULT = Integer.valueOf(result);
+:}
+
+| ppp_modifiers:fModifier readonly_modifier:rModifier
+{:
+    int result = 0;
+    result |= fModifier.intValue();
+    result |= rModifier.intValue();
     RESULT = Integer.valueOf(result);
 :}
 

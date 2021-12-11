@@ -356,6 +356,27 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             await commands.executeCommand(selected.userData.command.command, ...(selected.userData.command.arguments || []));
         }
     }));
+    const mergeWithLaunchConfig = (dconfig : vscode.DebugConfiguration) => {
+        const folder = vscode.workspace.workspaceFolders?.[0];
+        const uri = folder?.uri;
+        if (uri) {
+            const launchConfig = workspace.getConfiguration('launch', uri);
+            // retrieve values
+            const configurations = launchConfig.get('configurations') as (any[] | undefined);
+            if (configurations) {
+                for (let config of configurations) {
+                    if (config["type"] == dconfig.type) {
+                        for (let key in config) {
+                            if (!dconfig[key]) {
+                                dconfig[key] = config[key];
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
     const runDebug = async (noDebug: boolean, testRun: boolean, uri: string, methodName?: string, launchConfiguration?: string) => {
         const docUri = uri ? vscode.Uri.file(uri) : window.activeTextEditor?.document.uri;
         if (docUri) {
@@ -369,6 +390,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                 launchConfiguration,
                 testRun
             };
+            mergeWithLaunchConfig(debugConfig);
             const debugOptions : vscode.DebugSessionOptions = {
                 noDebug: noDebug,
             }

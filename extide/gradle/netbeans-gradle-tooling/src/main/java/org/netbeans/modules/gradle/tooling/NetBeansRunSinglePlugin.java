@@ -37,7 +37,6 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
     private static final String RUN_SINGLE_ARGS = "runArgs";
     private static final String RUN_SINGLE_JVM_ARGS = "runJvmArgs";
     private static final String RUN_SINGLE_CWD = "runWorkingDir";
-    private static final String RUN_SINGLE_ENV = "runEnvironment";
 
     @Override
     public void apply(Project project) {
@@ -47,13 +46,17 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
                     && project.hasProperty(RUN_SINGLE_MAIN)){
                 addTask(p);
             }
-            if(p.hasProperty(RUN_SINGLE_JVM_ARGS)) {
-                p.getTasks().withType(JavaExec.class).configureEach(je -> {
+            p.getTasks().withType(JavaExec.class).configureEach(je -> {
+                if (p.hasProperty(RUN_SINGLE_JVM_ARGS)) {
                     je.getJvmArgumentProviders().add(() -> {
                         return asList(p.property(RUN_SINGLE_JVM_ARGS).toString().split(" "));
                     });
-                });
-            }
+                }
+                je.setStandardInput(System.in);
+                if (project.hasProperty(RUN_SINGLE_CWD)) {
+                    je.setWorkingDir(project.property(RUN_SINGLE_CWD).toString());
+                }
+            });
         });
     }
 
@@ -64,112 +67,10 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
             // Using setMain to keep the backward compatibility
             je.setMain(project.property(RUN_SINGLE_MAIN).toString());
             je.setClasspath(sourceSets.findByName("main").getRuntimeClasspath());
-            je.setStandardInput(System.in);
             if (project.hasProperty(RUN_SINGLE_ARGS)) {
                 je.setArgs(asList(project.property(RUN_SINGLE_ARGS).toString().split(" ")));
-            }
-
-            if(project.hasProperty(RUN_SINGLE_CWD)) {
-                je.setWorkingDir(project.property(RUN_SINGLE_CWD).toString());
-            }
-
-            if (project.hasProperty(RUN_SINGLE_ENV)) {
-                // Quoted space-separated expressions of <ENV_VAR>=<ENV_VALUE>
-                // to set environment variables, or !<ENV_VAR>
-                // to remove environment variables
-                for (String env : unescapeParameters(project.property(RUN_SINGLE_ENV).toString())) {                    
-                    if (env.startsWith("!")) {
-                        je.getEnvironment().remove(env);
-                    } else {
-                        int i = env.indexOf('=');
-                        if (i > 0) {
-                            je.getEnvironment().put(env.substring(0, i), env.substring(i + 1));
-                        }
-                    }
-                }
             }
         });
     }
 
-    private String[] unescapeParameters(String s) {
-        final int NULL = 0x0;
-        final int IN_PARAM = 0x1;
-        final int IN_DOUBLE_QUOTE = 0x2;
-        final int IN_SINGLE_QUOTE = 0x3;
-        ArrayList<String> params = new ArrayList<>(5);
-        char c;
-
-        int state = NULL;
-        StringBuilder buff = new StringBuilder(20);
-        int slength = s.length();
-
-        for (int i = 0; i < slength; i++) {
-            c = s.charAt(i);
-            switch (state) {
-                case NULL:
-                    switch (c) {
-                        case '\'':
-                            state = IN_SINGLE_QUOTE;
-                            break;
-                        case '"':
-                            state = IN_DOUBLE_QUOTE;
-                            break;
-                        default:
-                            if (!Character.isWhitespace(c)) {
-                                buff.append(c);
-                                state = IN_PARAM;
-                            }
-                    }
-                    break;
-                case IN_SINGLE_QUOTE:
-                    if (c != '\'') {
-                        buff.append(c);
-                    } else {
-                        state = IN_PARAM;
-                    }
-                    break;
-                case IN_DOUBLE_QUOTE:
-                    switch (c) {
-                        case '\\':
-                            char peek = (i < slength - 1) ? s.charAt(i+1) : Character.MIN_VALUE;
-                            if (peek == '"' || peek =='\\') {
-                                buff.append(peek);
-                                i++;
-                            } else {
-                                buff.append(c);
-                            }
-                            break;
-                        case '"':
-                            state = IN_PARAM;
-                            break;
-                        default:
-                            buff.append(c);
-                    }
-                    break;
-                case IN_PARAM:
-                    switch (c) {
-                        case '\'':
-                            state = IN_SINGLE_QUOTE;
-                            break;
-                        case '"':
-                            state = IN_DOUBLE_QUOTE;
-                            break;
-                        default:
-                          if (Character.isWhitespace(c)) {
-                              params.add(buff.toString());
-                              buff.setLength(0);
-                              state = NULL;
-                          } else {
-                              buff.append(c);
-                          }
-                    }
-                    break;
-            }
-        }
-        if (buff.length() > 0) {
-            params.add(buff.toString());
-        }
-
-        return params.toArray(new String[params.size()]);
-    }
 }

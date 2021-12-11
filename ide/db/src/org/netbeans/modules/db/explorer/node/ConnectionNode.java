@@ -29,6 +29,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
+import org.netbeans.api.db.explorer.ConnectionListener;
+import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseException;
 import org.netbeans.api.db.explorer.DatabaseMetaDataTransfer;
 import org.netbeans.api.db.explorer.node.BaseNode;
@@ -60,7 +62,7 @@ import org.openide.util.datatransfer.ExTransferable;
  *
  * @author Rob Englander
  */
-public class ConnectionNode extends BaseNode implements PropertyChangeListener {
+public class ConnectionNode extends BaseNode implements PropertyChangeListener, ConnectionListener {
 
     private static final Logger LOG = Logger.getLogger(ConnectionNode.class.getName());
     
@@ -101,6 +103,7 @@ public class ConnectionNode extends BaseNode implements PropertyChangeListener {
         super(new ChildNodeFactory(lookup), lookup, FOLDER, provider);
         connection = getLookup().lookup(DatabaseConnection.class);
         lookup.add(DatabaseConnectionAccessor.DEFAULT.createDatabaseConnection(connection));
+        ConnectionManager.getDefault().addConnectionListener(WeakListeners.create(ConnectionListener.class, this, ConnectionManager.getDefault()));
     }
 
     @Override
@@ -109,6 +112,40 @@ public class ConnectionNode extends BaseNode implements PropertyChangeListener {
         connection.addPropertyChangeListener(WeakListeners.propertyChange(this, connection));
         updateModel();
     }
+    
+    private boolean preferred;
+
+    @Override
+    public void connectionsChanged() {
+        if (preferred || 
+            connection.getDatabaseConnection() == ConnectionManager.getDefault().getPreferredConnection(true)) {
+            update();
+        }
+    }
+
+    @Override
+    protected void updateProperties() {
+        boolean iAmPreferred = connection.getDatabaseConnection() == ConnectionManager.getDefault().getPreferredConnection(true);
+        super.updateProperties();
+        if (preferred != iAmPreferred) {
+            this.preferred = iAmPreferred;
+            fireDisplayNameChange(null, null);
+        }
+    }
+
+    @Override
+    public String getHtmlDisplayName() {
+        String s = super.getHtmlDisplayName();
+        if (s == null) {
+            s = getName();
+        }
+        if (preferred) {
+            s = "<b>" + s + "</b>";
+        }
+        return s;
+    }
+    
+    
 
     private final RequestProcessor.Task UPDATE = RP.create(
             new Runnable() { //#203127 - asynchronous update

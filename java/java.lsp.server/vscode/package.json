@@ -427,25 +427,30 @@
 			},
 			{
 				"command": "java.project.run",
+				"category": "Project",
 				"title": "Run Project Without Debugging",
 				"icon": "$(run)"
 			},
 			{
 				"command": "java.project.debug",
+				"category": "Project",
 				"title": "Debug Project",
 				"icon": "$(debug-alt)"
 			},
 			{
 				"command": "java.project.test",
+				"category": "Project",
 				"title": "Test Project",
 				"icon": "$(testing-run-all-icon)"
 			},
 			{
 				"command": "java.project.compile",
+				"category": "Project",
 				"title": "Compile Project"
 			},
 			{
 				"command": "java.project.clean",
+				"category": "Project",
 				"title": "Clean Project"
 			}
 		],
@@ -502,6 +507,22 @@
 				{
 					"command": "graalvm.pause.script",
 					"when": "nbJavaLSReady"
+				},
+				{
+					"command": "foundProjects.deleteEntry",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Database:netbeans.db.explorer.action.Connect",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Database:netbeans.db.explorer.action.Disconnect",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Edit:org.openide.actions.DeleteAction",
+					"when": "false"
 				}
 			],
 			"view/title": [

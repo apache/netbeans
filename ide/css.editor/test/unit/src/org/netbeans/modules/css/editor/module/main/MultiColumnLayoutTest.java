@@ -31,13 +31,13 @@ public class MultiColumnLayoutTest extends CssModuleTestBase {
     }
 
     public void testProperties() throws ParseException {
-        assertPropertyValues("break-after", "always");
+        assertPropertyValues("break-after", "avoid", "avoid-region", "verso", "var(--test)");
 
         assertPropertyValues("column-gap", "10px", "normal");
 
         assertPropertyValues("column-rule", "10px", "10px red");
 
-        assertPropertyValues("column-rule-style", "ridge ridge inset outset");
+        assertPropertyValues("column-rule-style", "ridge", "inset", "outset");
 
         assertPropertyValues("columns", "auto auto", "auto 12em", "2 auto");
     }

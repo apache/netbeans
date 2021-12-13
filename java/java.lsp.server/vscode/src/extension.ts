@@ -196,7 +196,11 @@ function contextUri(ctx : any) : vscode.Uri | undefined {
     } else if (ctx?.resourceUri) {
         return ctx.resourceUri as vscode.Uri;
     } else if (typeof ctx == 'string') {
-        return vscode.Uri.file(ctx);
+        try {
+            return vscode.Uri.parse(ctx, true);
+        } catch (err) {
+            return vscode.Uri.file(ctx);
+        }
     }
     return vscode.window.activeTextEditor?.document?.uri;
 }

@@ -298,6 +298,17 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
                         }
 
                         // TODO try to find it in Groovy
+                        
+                        // This resolves the problem only partially.
+                        // I reuse the VariableScopeVisitor and if it finds the FiledNode, it return its position. 
+                        VariableScopeVisitor vsv = new VariableScopeVisitor(((ModuleNode)root).getContext(), path, doc, astOffset);
+                        vsv.collect();
+                        for (ASTNode astNode : vsv.getOccurrences()) {
+                            if (astNode instanceof FieldNode) {
+                                int offset = ASTUtils.getOffset(doc, astNode.getLineNumber(), astNode.getColumnNumber());
+                                return new DeclarationLocation(fo, offset);
+                            }
+                        }
                     }
                 }
             } else if (closest instanceof DeclarationExpression
@@ -868,5 +879,7 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
         }
         return DeclarationLocation.NONE;
     }
+    
+    
 
 }

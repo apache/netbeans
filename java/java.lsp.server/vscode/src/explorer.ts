@@ -121,9 +121,8 @@ class VisualizerProvider extends vscode.Disposable implements vscode.TreeDataPro
 
   getChildren(e?: Visualizer): Thenable<Visualizer[]> {
     const self = this;
-    async function collectResults(arr: any, element: Visualizer): Promise<Array<Visualizer>> {
-      let res = Array<Visualizer>();
-      let ch : Map<number, Visualizer> = new Map();
+    async function collectResults(arr: any, element: Visualizer): Promise<Visualizer[]> {
+      let res : Visualizer[] = [];
       for (let i = 0; i < arr.length; i++) {
         let d = await self.client.sendRequest(NodeInfoRequest.info, { nodeId : arr[i] });
         let v = new Visualizer(d, self.ts.imageUri(d));
@@ -136,13 +135,15 @@ class VisualizerProvider extends vscode.Disposable implements vscode.TreeDataPro
             v.command = { command : d.command, title: '', arguments: [v]};
           }
         }
-        self.treeData.set(arr[i] as number, v);
-        v.parent = element;
         res.push(v);
-        ch.set(d.id, v);
       }
-      element.updateChildren(ch, self);
-      return res;
+      const now : Visualizer[] = element.updateChildren(res, self);
+      for (let i = 0; i < arr.length; i++) {
+        const v = res[i];
+        self.treeData.set((v.id || -1) as number, v);
+        v.parent = element;
+      }
+      return now;
     }
 
     if (e) {
@@ -198,19 +199,49 @@ class Visualizer extends vscode.TreeItem {
   parent: Visualizer | null = null;
   children: Map<number, Visualizer> | null = null;
 
-  updateChildren(ch : Map<number, Visualizer>, provider : VisualizerProvider) {
-    let c : number[] = [];
+  update(other : Visualizer) {
+    this.id = "" + other.id;
+    // this.visId = visualizerSerial++;
+    this.label = other.label;
+    this.description = other.description;
+    this.tooltip = other.tooltip;
+    this.collapsibleState = other.collapsibleState;
+    this.iconPath = other.iconPath;
+    this.resourceUri = other.resourceUri;
+    this.contextValue = other.contextValue;
+    this.data = other.data;
+    this.image = other.image;
+    this.collapsibleState = other.collapsibleState;
+    this.command = other.command;
+  }
+
+  updateChildren(newChildren : Visualizer[], provider : VisualizerProvider) : Visualizer[] {
+    let toRemove : number[] = [];
+    let ch : Map<number, Visualizer> = new Map();
+
+    for (let i = 0; i < newChildren.length; i++) {
+      let c = newChildren[i];
+      const n : number = (c.id || -1) as number;
+      const v : Visualizer | undefined = this.children?.get(n);
+      if (v) {
+        v.update(c);
+        newChildren[i] = c = v;
+      }
+      ch.set(n, c);
+    }
+
     if (this.children) {
       for (let k of this.children.keys()) {
         if (!ch.get(k)) {
-          c.push(k);
+          toRemove.push(k);
         }
       }
     }
     this.children = ch;
-    if (c.length) {
-      provider.removeVisualizers(c);
+    if (toRemove.length) {
+      provider.removeVisualizers(toRemove);
     }
+    return newChildren;
   }
 }
 

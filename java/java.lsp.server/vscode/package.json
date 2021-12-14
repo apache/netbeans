@@ -64,11 +64,13 @@
 			"explorer": [
 				{
 					"id": "foundProjects",
-					"name": "Projects"
+					"name": "Projects",
+					"when": "nbJavaLSReady"
 				},
 				{
 					"id": "database.connections",
-					"name": "Databases"
+					"name": "Databases",
+					"when": "nbJavaLSReady"
 				}
 			]
 		},

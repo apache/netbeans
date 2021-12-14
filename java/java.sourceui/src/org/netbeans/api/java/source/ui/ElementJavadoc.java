@@ -1378,24 +1378,28 @@ public class ElementJavadoc {
                 regex = XMLUtil.toElementContent(regex);
                 Pattern pattern = Pattern.compile(regex);
                 Matcher matcher = pattern.matcher(codeLine);
-                while (matcher.find()) {
-                    if (tagType.equals("highlight")) {
+                if (tagType.equals("highlight")) {
+                    StringBuffer formattedLine = new StringBuffer();
+                    while (matcher.find()) {
                         switch (type) {
                             case "italic":
-                                codeLine = matcher.replaceAll("<i>" + matcher.group(0) + "</i>");
+                                matcher.appendReplacement(formattedLine, "<i>" + matcher.group() + "</i>");
                                 break;
                             case "bold":
-                                codeLine = matcher.replaceAll("<b>" + matcher.group(0) + "</b>");
+                                matcher.appendReplacement(formattedLine, "<b>" + matcher.group() + "</b>");
                                 break;
                             case "highlighted":
-                                codeLine = matcher.replaceAll("<span style=\"background-color:yellow;\">" + matcher.group(0) + "</span>");
+                                matcher.appendReplacement(formattedLine, "<span style=\"background-color:yellow;\">" + matcher.group() + "</span>");
                                 break;
                         }
                     }
-                    if(tagType.equals("replace") && replacement != null){
-                        codeLine = matcher.replaceAll(replacement);
-                    }
-                    if (tagType.equals("link") && linkTarget != null) {
+                    matcher.appendTail(formattedLine);
+                    codeLine = formattedLine.toString();
+                }
+                if (tagType.equals("replace") && replacement != null) {
+                    codeLine = matcher.replaceAll(replacement);
+                }
+                if (tagType.equals("link") && linkTarget != null) {
                     String javaDocCodeBody = prepareJavaDocForLinkTag(linkTarget);
                     String fullClassCode = addImportsToSource(javaDocCodeBody);
                     JavaDocSnippetLinkTagFileObject docSnippetLinkTagFileObject = new JavaDocSnippetLinkTagFileObject(fullClassCode);
@@ -1411,7 +1415,7 @@ public class ElementJavadoc {
                         Exceptions.printStackTrace(ex);
                     }
                 }
-                }
+                //}
             } catch (CharConversionException ex) {
                 Exceptions.printStackTrace(ex);
             }

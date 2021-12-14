@@ -507,7 +507,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     private CompletableFuture<Object> findProjectConfigurations(FileObject ownedFile) {
         return server.asyncOpenFileOwner(ownedFile).thenApply(p -> {
             if (p == null) {
-                return CompletableFuture.completedFuture(Collections.emptyList());
+                return Collections.emptyList();
             }
             ProjectConfigurationProvider<ProjectConfiguration> provider = p.getLookup().lookup(ProjectConfigurationProvider.class);
             List<String> configDispNames = new ArrayList<>();

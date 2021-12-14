@@ -542,13 +542,13 @@ public abstract class NbLaunchDelegate {
         ActionProvider provider = null;
         String command = null;
         Collection<ActionProvider> actionProviders = findActionProviders(prj);
-        Lookup testLookup = preferProjActions ? Lookups.singleton(prj) : (singleMethod != null) ? Lookups.fixed(toRun, singleMethod) : Lookups.singleton(toRun);
+        Lookup testLookup = preferProjActions && prj != null ? Lookups.singleton(prj) : (singleMethod != null) ? Lookups.fixed(toRun, singleMethod) : Lookups.singleton(toRun);
         String[] actions;
         if (!mainSource && singleMethod != null) {
             actions = debug ? new String[] {SingleMethod.COMMAND_DEBUG_SINGLE_METHOD}
                             : new String[] {SingleMethod.COMMAND_RUN_SINGLE_METHOD};
         } else {
-            if (preferProjActions) {
+            if (preferProjActions && prj != null) {
                 actions = debug ? mainSource ? new String[] {ActionProvider.COMMAND_DEBUG}
                                              : new String[] {ActionProvider.COMMAND_DEBUG_TEST_SINGLE, ActionProvider.COMMAND_DEBUG}
                                 : mainSource ? new String[] {ActionProvider.COMMAND_RUN}

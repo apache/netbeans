@@ -452,6 +452,10 @@
 				"command": "java.project.clean",
 				"category": "Project",
 				"title": "Clean Project"
+			},
+			{
+				"command": "java.local.db.set.preferred.connection",
+				"title": "Make Default Connection"
 			}
 		],
 		"keybindings": [
@@ -523,6 +527,10 @@
 				{
 					"command": "nbls:Edit:org.openide.actions.DeleteAction",
 					"when": "false"
+				},
+				{
+					"command": "java.local.db.set.preferred.connection",
+					"when": "false"
 				}
 			],
 			"view/title": [
@@ -551,7 +559,7 @@
 					"command": "workbench.action.debug.start",
 					"when": "nbJavaLSReady && view == foundProjects"
 				}
-			],
+				],
 			"view/item/context": [
 				{
 					"command": "foundProjects.deleteEntry",
@@ -595,6 +603,10 @@
 				{
 					"command": "java.project.clean",
 					"when": "view == foundProjects && viewItem =~ /class:project.Project/"
+				},
+				{
+					"command": "java.local.db.set.preferred.connection",
+					"when": "viewItem =~ /class:ddl.DBConnection/"
 				}
 			]
 		}

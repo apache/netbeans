@@ -50,7 +50,7 @@ import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickReque
          ProjectActionParams
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
-import { createTreeViewService, TreeViewService } from './explorer';
+import { createTreeViewService, TreeViewService, TreeItemDecorator, Visualizer, CustomizableTreeDataProvider } from './explorer';
 import { TLSSocket } from 'tls';
 
 const API_VERSION : string = "1.0";
@@ -812,13 +812,61 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         
             // create project explorer:
             c.findTreeViewService().createView('foundProjects', 'Projects', { canSelectMany : false });
-            c.findTreeViewService().createView('database.connections', undefined , { canSelectMany : true });
+            createDatabaseView(c);
         }).catch(setClient[1]);
     }).catch((reason) => {
         activationPending = false;
         handleLog(log, reason);
         window.showErrorMessage('Error initializing ' + reason);
     });
+
+    class Decorator implements TreeItemDecorator<Visualizer> {
+        private provider : CustomizableTreeDataProvider<Visualizer>;
+        private serverPreferred : Thenable<any>;
+        private setCommand : vscode.Disposable;
+
+        constructor(provider : CustomizableTreeDataProvider<Visualizer>, client : NbLanguageClient) {
+            this.provider = provider;
+            this.serverPreferred = vscode.commands.executeCommand('java.db.preferred.connection');
+            this.setCommand = vscode.commands.registerCommand('java.local.db.set.preferred.connection', (n) => this.setPreferred(n));
+        }
+
+        async decorateTreeItem(vis : Visualizer, item : vscode.TreeItem) : Promise<vscode.TreeItem> {
+            return new Promise((resolve, reject) => {
+                this.serverPreferred.then((id) => {
+                    if (id == vis.id) {
+                        let s : string = typeof item.label == 'string' ? item.label : item.label?.label || '';
+                        const high : [number, number][] = [[0, s.length]];
+                        item.label = { label : s, highlights: high };
+                    }
+                    resolve(item);
+                });
+            })
+        }
+
+        setPreferred(...args : any[]) {
+            const id : number = args[0]?.id || -1;
+            this.serverPreferred = new  Promise((resolve, reject) => resolve(id));
+            vscode.commands.executeCommand('nbls:Database:netbeans.db.explorer.action.makepreferred', ...args);
+            // refresh all
+            this.provider.fireItemChange();
+        }
+
+        dispose() {
+            this.setCommand?.dispose();
+        }
+    }
+
+    function createDatabaseView(c : NbLanguageClient) {
+        let decoRegister : CustomizableTreeDataProvider<Visualizer>;
+        c.findTreeViewService().createView('database.connections', undefined , { 
+            canSelectMany : true,  
+            
+            providerInitializer : (customizable) => 
+                customizable.addItemDecorator(new Decorator(customizable, c))
+        });
+        
+    }
 
     async function showHtmlPage(params : HtmlPageParams): Promise<string> {
         function showUri(url: string, ok: any, err: any) {

@@ -31,6 +31,7 @@
                 <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.lsp.server.explorer.NodeActionsProvider.forFile"/>
                 <attr name="action:netbeans.db.explorer.action.Connect" stringvalue="Database"/>
                 <attr name="action:netbeans.db.explorer.action.Disconnect" stringvalue="Database"/>
+                <attr name="action:netbeans.db.explorer.action.makepreferred" stringvalue="Database"/>
             </file>
         </folder>
     </folder>

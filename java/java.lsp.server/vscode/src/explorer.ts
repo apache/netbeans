@@ -31,13 +31,17 @@ export class TreeViewService extends vscode.Disposable {
     this.handler?.dispose();
   }
 
-  public async createView(id : string, title? : string, options? : Partial<vscode.TreeViewOptions<any>>) : Promise<vscode.TreeView<Visualizer>> {
+  public async createView(id : string, title? : string, options? : 
+      Partial<vscode.TreeViewOptions<any> & { 
+          providerInitializer : (provider : CustomizableTreeDataProvider<Visualizer>) => void }
+      >) : Promise<vscode.TreeView<Visualizer>> {
     let tv : vscode.TreeView<Visualizer> | undefined  = this.trees.get(id);
     if (tv) {
       return tv;
     }
     const res = await createViewProvider(this.client, id);
     this.providers.set(res.getRoot().data.id, res);
+    options?.providerInitializer?.(res)
     let opts : vscode.TreeViewOptions<Visualizer> = {
       treeDataProvider : res,
       canSelectMany: true,
@@ -75,11 +79,20 @@ export class TreeViewService extends vscode.Disposable {
   }
 }
 
+export interface TreeItemDecorator<T> extends vscode.Disposable {
+  decorateTreeItem(element: T, item : vscode.TreeItem): vscode.TreeItem | Thenable<vscode.TreeItem>;
+}
 
-class VisualizerProvider extends vscode.Disposable implements vscode.TreeDataProvider<Visualizer> {
+export interface CustomizableTreeDataProvider<T> extends vscode.TreeDataProvider<T> {
+  fireItemChange(item? : T) : void;
+  addItemDecorator(deco : TreeItemDecorator<T>) : vscode.Disposable;
+}
+
+class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDataProvider<Visualizer> {
   private root: Visualizer;
   private treeData : Map<number, Visualizer> = new Map();
-  
+  private decorators : TreeItemDecorator<Visualizer>[] = [];
+
   constructor(
     private client: LanguageClient,
     private ts : TreeViewService,
@@ -96,8 +109,31 @@ class VisualizerProvider extends vscode.Disposable implements vscode.TreeDataPro
 
   private disconnect() : void {
     // nothing at the moment.
+    for (let deco of this.decorators) {
+      deco.dispose();
+    }
   }
-  
+
+  fireItemChange(item : Visualizer) : void {
+    if (!item) {
+      this._onDidChangeTreeData.fire();
+    } else {
+      this._onDidChangeTreeData.fire(item);
+    }
+  }
+
+  addItemDecorator(decoInstance : TreeItemDecorator<Visualizer>) : vscode.Disposable {
+    this.decorators.push(decoInstance);
+    const self = this;
+    return new vscode.Disposable(() => {
+      const idx = this.decorators.indexOf(decoInstance);
+      if (idx > 0) {
+        this.decorators.splice(idx, 1);
+        decoInstance.dispose();
+      }
+    });
+  }
+
   refresh(params : NodeChangedParams): void {
       if (this.root.data.id === params.rootId) {
         if (this.root.data.id == params.nodeId || !params.nodeId) {
@@ -112,11 +148,29 @@ class VisualizerProvider extends vscode.Disposable implements vscode.TreeDataPro
   }
 
   getRoot() : Visualizer {
-    return this.root;
+    return this.root.copy();
   }
 
-  getTreeItem(element: Visualizer): vscode.TreeItem {
-    return element;
+  getTreeItem(element: Visualizer): vscode.TreeItem | Thenable<vscode.TreeItem> {
+    if (this.decorators.length == 0) {
+      return element;
+    }
+    let list : TreeItemDecorator<Visualizer>[] = [...this.decorators];
+    
+    function f(item : vscode.TreeItem) : vscode.TreeItem | Thenable<vscode.TreeItem> {
+      const deco = list.shift();
+      if (!deco) {
+        return item;
+      }
+      const decorated = deco.decorateTreeItem(element, item);
+      if (decorated instanceof vscode.TreeItem) {
+          return f(decorated);
+      } else {
+          return (decorated as Thenable<vscode.TreeItem>).then(f);
+      }
+    }
+
+    return f(element.copy());
   }
 
   getChildren(e?: Visualizer): Thenable<Visualizer[]> {
@@ -174,7 +228,7 @@ class VisualizerProvider extends vscode.Disposable implements vscode.TreeDataPro
 
 // let visualizerSerial = 1;
 
-class Visualizer extends vscode.TreeItem {
+export class Visualizer extends vscode.TreeItem {
 
   // visId : number;
 
@@ -195,6 +249,19 @@ class Visualizer extends vscode.TreeItem {
     }
     this.contextValue = data.contextValue;
   }
+
+  copy() : Visualizer {
+    let v : Visualizer = new Visualizer(this.data, this.image);
+    v.id = this.id;
+    v.label = this.label;
+    v.description = this.description;
+    v.tooltip = this.tooltip;
+    v.iconPath = this.iconPath;
+    v.resourceUri = this.resourceUri;
+    v.contextValue = this.contextValue;
+    return v;
+  }
+
   parent: Visualizer | null = null;
   children: Map<number, Visualizer> | null = null;
 

@@ -454,6 +454,37 @@ public abstract class TreeViewProvider {
     public final CompletionStage<Node> getParent(Node node) {
         return CompletableFuture.completedFuture(node.getParentNode());
     }
+    
+    public CompletionStage<Integer> getNodeId(Node n) {
+        Integer i;
+        List<Node> toExpand = new ArrayList<>();
+        synchronized (this) {
+            i = idMap.get(n);
+            if (i != null) {
+                return CompletableFuture.completedFuture(i);
+            }
+            Node parent = n.getParentNode();
+            while (parent != null) {
+                toExpand.add(parent);
+                i = idMap.get(parent);
+                if (i != null) {
+                    break;
+                }
+            }
+            if (parent == null) {
+                return CompletableFuture.completedFuture(null);
+            }
+        }
+        CompletionStage<Node[]> stage = null;
+        for (Node p : toExpand) {
+            if (stage == null) {
+                stage = getChildren(p);
+            } else {
+                stage = stage.thenCompose((nodes) -> getChildren(p));
+            }
+        }
+        return stage.thenCompose((any) -> getNodeId(n));
+    }
 
     public final CompletionStage<TreeItem> getTreeItem(int id) {
         return getTreeItem(findNode(id));

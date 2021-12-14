@@ -407,8 +407,12 @@
 			{
 				"command": "nbls:Edit:org.openide.actions.DeleteAction",
 				"title": "Delete"
+			},
+			{
+				"command": "java.local.db.set.preferred.connection",
+				"title": "Make Default Connection"
 			}
-		],
+	],
 		"keybindings": [
 			{
 				"command": "java.workspace.compile",
@@ -462,8 +466,12 @@
 				{
 					"command": "graalvm.pause.script",
 					"when": "nbJavaLSReady"
+				},
+				{
+					"command": "java.local.db.set.preferred.connection",
+					"when": "false"
 				}
-			],
+				],
 			"view/item/context": [
 				{
 					"command": "foundProjects.deleteEntry",
@@ -480,6 +488,10 @@
 				{
 					"command": "nbls:Edit:org.openide.actions.DeleteAction",
 					"when": "nbJavaLSReady && viewItem =~ /class:ddl.DBConnection/"
+				},
+				{
+					"command": "java.local.db.set.preferred.connection",
+					"when": "viewItem =~ /class:ddl.DBConnection/"
 				}
 			]
 		}

@@ -23,6 +23,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sun.source.util.TreePath;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -32,6 +33,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -111,6 +113,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
+import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -217,39 +220,61 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     return CompletableFuture.completedFuture(Collections.emptyList());
                 }
                 return server.asyncOpenFileOwner(file).thenCompose(this::getTestRoots).thenCompose(testRoots -> {
+                    BiFunction<FileObject, Collection<TestMethodController.TestMethod>, Collection<TestSuiteInfo>> f = (fo, methods) -> {
+                        String url = Utils.toUri(fo);
+                        Map<String, TestSuiteInfo> suite2infos = new LinkedHashMap<>();
+                        for (TestMethodController.TestMethod testMethod : methods) {
+                            TestSuiteInfo suite = suite2infos.computeIfAbsent(testMethod.getTestClassName(), name -> {
+                                Position pos = testMethod.getTestClassPosition() != null ? Utils.createPosition(fo, testMethod.getTestClassPosition().getOffset()) : null;
+                                return new TestSuiteInfo(name, url, pos != null ? new Range(pos, pos) : null, TestSuiteInfo.State.Loaded, new ArrayList<>());
+                            });
+                            String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
+                            Position startPos = testMethod.start() != null ? Utils.createPosition(fo, testMethod.start().getOffset()) : null;
+                            Position endPos = testMethod.end() != null ? Utils.createPosition(fo, testMethod.end().getOffset()) : startPos;
+                            Range range = startPos != null ? new Range(startPos, endPos) : null;
+                            suite.getTests().add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), url, range, TestSuiteInfo.State.Loaded, null));
+                        }
+                        return suite2infos.values();
+                    };
+                    testMethodsListener.compareAndSet(null, (fo, methods) -> {
+                        try {
+                            for (TestSuiteInfo testSuiteInfo : f.apply(fo, methods)) {
+                                client.notifyTestProgress(new TestProgressParams(Utils.toUri(fo), testSuiteInfo));
+                            }
+                        } catch (Exception e) {
+                            Logger.getLogger(WorkspaceServiceImpl.class.getName()).severe(e.getMessage());
+                            Exceptions.printStackTrace(e);
+                            testMethodsListener.set(null);
+                        }
+                    });
+                    if (openProjectsListener.compareAndSet(null, (evt) -> {
+                        if ("openProjects".equals(evt.getPropertyName())) {
+                            JavaSource js = JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY));
+                            try {
+                                js.runWhenScanFinished(controller -> {
+                                    List<Project> old = Arrays.asList((Project[]) evt.getOldValue());
+                                    for (Project p : (Project[])evt.getNewValue()) {
+                                        if (!old.contains(p)) {
+                                            getTestRoots(p).thenAccept(tr -> {
+                                                for (Entry<FileObject, Collection<TestMethodController.TestMethod>> entry : TestMethodFinder.findTestMethods(tr, testMethodsListener.get()).entrySet()) {
+                                                    for (TestSuiteInfo tsi : f.apply(entry.getKey(), entry.getValue())) {
+                                                        client.notifyTestProgress(new TestProgressParams(Utils.toUri(entry.getKey()), tsi));
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                }, true);
+                            } catch (IOException ex) {
+                            }
+                        }
+                    })) {
+                        OpenProjects.getDefault().addPropertyChangeListener(WeakListeners.propertyChange(openProjectsListener.get(), OpenProjects.getDefault()));
+                    }
                     CompletableFuture<Object> future = new CompletableFuture<>();
                     JavaSource js = JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY));
                     try {
                         js.runWhenScanFinished(controller -> {
-                            BiFunction<FileObject, Collection<TestMethodController.TestMethod>, Collection<TestSuiteInfo>> f = (fo, methods) -> {
-                                String url = Utils.toUri(fo);
-                                Map<String, TestSuiteInfo> suite2infos = new LinkedHashMap<>();
-                                for (TestMethodController.TestMethod testMethod : methods) {
-                                    TestSuiteInfo suite = suite2infos.computeIfAbsent(testMethod.getTestClassName(), name -> {
-                                        Position pos = testMethod.getTestClassPosition() != null ? Utils.createPosition(fo, testMethod.getTestClassPosition().getOffset()) : null;
-                                        return new TestSuiteInfo(name, url, pos != null ? new Range(pos, pos) : null, TestSuiteInfo.State.Loaded, new ArrayList<>());
-                                    });
-                                    String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
-                                    Position startPos = testMethod.start() != null ? Utils.createPosition(fo, testMethod.start().getOffset()) : null;
-                                    Position endPos = testMethod.end() != null ? Utils.createPosition(fo, testMethod.end().getOffset()) : startPos;
-                                    Range range = startPos != null ? new Range(startPos, endPos) : null;
-                                    suite.getTests().add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), url, range, TestSuiteInfo.State.Loaded, null));
-                                }
-                                return suite2infos.values();
-                            };
-                            testMethodsListener.compareAndSet(null, (fo, methods) -> {
-                                Logger.getLogger(WorkspaceServiceImpl.class.getName()).info("FileObject reindexed: " + fo.getPath());
-                                try {
-                                    for (TestSuiteInfo testSuiteInfo : f.apply(fo, methods)) {
-                                        client.notifyTestProgress(new TestProgressParams(Utils.toUri(fo), testSuiteInfo));
-                                    }
-                                } catch (Exception e) {
-                                    Logger.getLogger(WorkspaceServiceImpl.class.getName()).severe(e.getMessage());
-                                    Exceptions.printStackTrace(e);
-                                    testMethodsListener.set(null);
-                                }
-                            });
-                            Logger.getLogger(WorkspaceServiceImpl.class.getName()).info("Attaching listener: " + testMethodsListener.get());
                             Map<FileObject, Collection<TestMethodController.TestMethod>> testMethods = TestMethodFinder.findTestMethods(testRoots, testMethodsListener.get());
                             Collection<TestSuiteInfo> suites = new ArrayList<>(testMethods.size());
                             for (Entry<FileObject, Collection<TestMethodController.TestMethod>> entry : testMethods.entrySet()) {
@@ -412,6 +437,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     }
 
     private final AtomicReference<BiConsumer<FileObject, Collection<TestMethodController.TestMethod>>> testMethodsListener = new AtomicReference<>();
+    private final AtomicReference<PropertyChangeListener> openProjectsListener = new AtomicReference<>();
 
     private static Map<String, Object> attributesMap(JsonObject json) {
         Map<String, Object> map = new LinkedHashMap<>();

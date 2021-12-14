@@ -1499,7 +1499,7 @@ public class ElementJavadoc {
                             Region region = new Region(regionVal, hAttrib, markUpTag.tagName);
                             regionList.add(region);
                             List<Region> newRegionList = new ArrayList<>(regionList);
-                            regionTagLineMapper.put(thisLine, newRegionList);
+                            regionTagLineMapper.put(markUpTag.isTagApplicableToNextLine ? nextLine : thisLine, newRegionList);
                         } else {
                             Attrib attrib = new Attrib(hAttrib, markUpTag.tagName);
                             attribList.add(attrib);

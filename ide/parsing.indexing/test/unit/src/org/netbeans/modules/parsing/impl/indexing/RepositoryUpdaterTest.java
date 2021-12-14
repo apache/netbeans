@@ -100,6 +100,7 @@ import org.netbeans.modules.parsing.spi.indexing.CustomIndexer;
 import org.netbeans.modules.parsing.spi.indexing.CustomIndexerFactory;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory;
+import org.netbeans.modules.parsing.spi.indexing.IndexabilityQueryImplementation;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.netbeans.modules.parsing.spi.indexing.PathRecognizer;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
@@ -197,8 +198,9 @@ public class RepositoryUpdaterTest extends IndexingTestBase {
                     SFBQImpl.class,
                     ClassPathProviderImpl.class,
                     Visibility.class,
+                    Indexability.class,
                     IndexDownloaderImpl.class,
-                    IndexPatcherImpl.class
+                    IndexPatcherImpl.class,
                 })
         );
     }
@@ -1713,6 +1715,101 @@ public class RepositoryUpdaterTest extends IndexingTestBase {
         assertTrue(indexerFactory.indexer.awaitDeleted(TIME));
     }
 
+    public void testIndexabilityQueryInIDERun() throws Exception {
+        final RepositoryUpdater ru = RepositoryUpdater.getDefault();
+        assertEquals(0, ru.getScannedBinaries().size());
+        assertEquals(0, ru.getScannedBinaries().size());
+        assertEquals(0, ru.getScannedUnknowns().size());
+
+        final TestHandler handler = new TestHandler();
+        final Logger logger = Logger.getLogger(RepositoryUpdater.class.getName()+".tests");
+        logger.setLevel (Level.FINEST);
+        logger.addHandler(handler);
+
+        ////1st) Default visibility everything should be scanned
+        indexerFactory.indexer.setExpectedFile(customFiles, new URL[0], new URL[0]);
+        eindexerFactory.indexer.setExpectedFile(embeddedFiles, new URL[0], new URL[0]);
+        final MutableClassPathImplementation mcpi1 = new MutableClassPathImplementation         ();
+        mcpi1.addResource(this.srcRootWithFiles1);
+        final ClassPath cp1 = ClassPathFactory.createClassPath(mcpi1);
+        globalPathRegistry_register(SOURCES,new ClassPath[]{cp1});
+        assertTrue (handler.await());
+        assertEquals(0, handler.getBinaries().size());
+        assertEquals(1, handler.getSources().size());
+        assertEquals(this.srcRootWithFiles1.toURL(), handler.getSources().get(0));
+        assertTrue(indexerFactory.indexer.awaitIndex(TIME));
+        assertTrue(eindexerFactory.indexer.awaitIndex());
+
+        //2nd) Change of VisibilityQuery should trigger rescan,
+        //     customFiles[1] should be invisible and have been removed from
+        //     index
+        final Indexability indexability = Lookup.getDefault().lookup(Indexability.class);
+        assertNotNull(indexability);
+        indexability.registerInvisibles(Collections.singleton(URLMapper.findFileObject(customFiles[1])));
+        handler.reset();
+        indexerFactory.indexer.deletedCounter = 0;
+        eindexerFactory.indexer.deletedCounter = 0;
+        indexerFactory.indexer.setExpectedFile(new URL[0], new URL[] {customFiles[1]}, new URL[0]);
+        eindexerFactory.indexer.setExpectedFile(new URL[0], new URL[0], new URL[0]);
+        assertTrue (handler.await());
+        assertEquals(0, handler.getBinaries().size());
+        assertEquals(1, handler.getSources().size());
+        assertEquals(this.srcRootWithFiles1.toURL(), handler.getSources().get(0));
+        assertTrue(indexerFactory.indexer.awaitIndex(TIME));
+        assertTrue(eindexerFactory.indexer.awaitIndex());
+        assertTrue(indexerFactory.indexer.awaitDeleted(TIME));
+        assertEquals(1, eindexerFactory.indexer.deletedCounter);
+
+        //3rd) Change of VisibilityQuery should trigger rescan, customFiles[1] should be visible again
+        indexability.registerInvisibles(Collections.<FileObject>emptySet());
+        handler.reset();
+        indexerFactory.indexer.setExpectedFile(new URL[]{customFiles[1]}, new URL[0], new URL[0]);
+        eindexerFactory.indexer.setExpectedFile(new URL[0], new URL[0], new URL[0]);
+        assertTrue (handler.await());
+        assertEquals(0, handler.getBinaries().size());
+        assertEquals(1, handler.getSources().size());
+        assertEquals(this.srcRootWithFiles1.toURL(), handler.getSources().get(0));
+        assertTrue(indexerFactory.indexer.awaitIndex(TIME));
+        assertTrue(eindexerFactory.indexer.awaitIndex());
+        assertTrue(indexerFactory.indexer.awaitDeleted(TIME));
+    }
+    
+    public void testScannerBasedFilter() throws Exception {
+        final RepositoryUpdater ru = RepositoryUpdater.getDefault();
+        assertEquals(0, ru.getScannedBinaries().size());
+        assertEquals(0, ru.getScannedBinaries().size());
+        assertEquals(0, ru.getScannedUnknowns().size());
+
+        final TestHandler handler = new TestHandler();
+        final Logger logger = Logger.getLogger(RepositoryUpdater.class.getName()+".tests");
+        logger.setLevel (Level.FINEST);
+        logger.addHandler(handler);
+        
+        // Block indexing for the "emb" indexer only
+        final Indexability indexability = Lookup.getDefault().lookup(Indexability.class);
+        assertNotNull(indexability);
+        indexability.registerInvisiblesByIndexer(Collections.singleton("emb"));
+        
+        indexerFactory.indexer.setExpectedFile(new URL[0], new URL[0], new URL[0]);
+        eindexerFactory.indexer.setExpectedFile(new URL[0], new URL[0], new URL[0]);
+        final MutableClassPathImplementation mcpi1 = new MutableClassPathImplementation         ();
+        mcpi1.addResource(this.srcRootWithFiles1);
+        final ClassPath cp1 = ClassPathFactory.createClassPath(mcpi1);
+        globalPathRegistry_register(SOURCES,new ClassPath[]{cp1});
+        assertTrue (handler.await());
+        assertEquals(0, handler.getBinaries().size());
+        assertEquals(1, handler.getSources().size());
+        assertEquals(this.srcRootWithFiles1.toURL(), handler.getSources().get(0));
+        assertTrue(indexerFactory.indexer.awaitIndex(TIME));
+        assertTrue(eindexerFactory.indexer.awaitIndex());
+        
+        // srcRootWithFiles1 has to files that are scanned by the foo indexer
+        // and two that are scanned by the emb indexer. The latter is blocked,
+        // so should report 0 files indexed
+        assertEquals(2, indexerFactory.indexer.getIndexCount());
+        assertEquals(0, eindexerFactory.indexer.getIndexCount());
+    }
+    
     /**
      * Test that unknown source roots are registered in the scannedRoots2Dependencies with EMPTY_DEPS
      * and when the unknown root registers it's changed to regular dependencies.
@@ -2481,14 +2578,10 @@ public class RepositoryUpdaterTest extends IndexingTestBase {
         }
 
         public void reset(final Type t) {
-            sources = null;
-            binaries = null;
-            type = t;
             if (t == Type.BATCH) {
-                latch = new CountDownLatch(2);
-            }
-            else {
-                latch = new CountDownLatch(1);
+                reset(t, 2);
+            } else {
+                reset(t, 1);
             }
         }
 
@@ -2507,10 +2600,12 @@ public class RepositoryUpdaterTest extends IndexingTestBase {
             return latch.await(time, TimeUnit.MILLISECONDS);
         }
 
+        @SuppressWarnings("ReturnOfCollectionOrArrayField")
         public Set<URL> getBinaries () {
             return this.binaries;
         }
 
+        @SuppressWarnings("ReturnOfCollectionOrArrayField")
         public List<URL> getSources() {
             return this.sources;
         }
@@ -3559,6 +3654,67 @@ public class RepositoryUpdaterTest extends IndexingTestBase {
         @Override
         public void removeChangeListener(ChangeListener l) {
             changeSupport.removeChangeListener(l);
+        }
+    }
+    
+    public static class Indexability implements IndexabilityQueryImplementation {
+
+        private final Collection<FileObject> invisible =
+                Collections.synchronizedList( new ArrayList<>());
+
+        private final Collection<String> blockedIndexers =
+                Collections.synchronizedList( new ArrayList<>());
+        
+        private final ChangeSupport changeSupport = new ChangeSupport(this);
+
+        public Indexability() {
+        }
+
+        public void registerInvisibles (final Collection<? extends FileObject> invisibles) {
+            synchronized (invisible) {
+                invisible.clear();
+                invisible.addAll(invisibles);
+            }
+            changeSupport.fireChange();
+        }
+        
+        public void registerInvisiblesByIndexer (final Collection<? extends String> blockedIndexersNew) {
+            synchronized (blockedIndexers) {
+                blockedIndexers.clear();
+                blockedIndexers.addAll(blockedIndexersNew);
+            }
+            changeSupport.fireChange();
+        }
+
+        @Override
+        public boolean preventIndexing(IndexabilityQueryContext iqc) {
+            return invisible.contains(URLMapper.findFileObject(iqc.getIndexable()))
+                    || blockedIndexers.contains(iqc.getIndexerName());
+        }
+        
+        @Override
+        public void addChangeListener(ChangeListener l) {
+            changeSupport.addChangeListener(l);
+        }
+
+        @Override
+        public void removeChangeListener(ChangeListener l) {
+            changeSupport.removeChangeListener(l);
+        }
+
+        @Override
+        public String getName() {
+            return getClass().getName();
+        }
+
+        @Override
+        public int getVersion() {
+            return 1;
+        }
+
+        @Override
+        public String getStateIdentifier() {
+            return "NO_CONFIGURATION";
         }
     }
 

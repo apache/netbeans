@@ -34,7 +34,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
@@ -54,32 +53,58 @@ import org.openide.util.RequestProcessor;
  *
  * @author Tomas Zezula
  */
-class VisibilitySupport implements ChangeListener {
+class IndexabilitySupport {
 
     private static final int VISIBILITY_CHANGE_WINDOW = 1000;
-    private static final Logger LOGGER = Logger.getLogger(VisibilitySupport.class.getName());
-    
+    private static final Logger LOGGER = Logger.getLogger(IndexabilitySupport.class.getName());
+
     //@GuardedBy("visibilityCache")
-    private final Map<FileObject,Boolean> visibilityCache = Collections.synchronizedMap(new WeakHashMap<FileObject, Boolean>());
+    private final Map<FileObject,Boolean> visibilityCache = Collections.synchronizedMap(new WeakHashMap<>());
     private final SlidingTask visibilityTask;
     private final RequestProcessor.Task visibilityChanged;
-    
-    private VisibilitySupport(
+
+    private final ChangeListener visibilityListener;
+    private final ChangeListener indexabilityListener;
+
+    private IndexabilitySupport(
             @NonNull final RepositoryUpdater ru,
             @NonNull final RequestProcessor worker) {
         this.visibilityTask = new SlidingTask(ru);
         this.visibilityChanged = worker.create(this.visibilityTask);
+
+        visibilityListener = (ChangeEvent e) -> {
+            visibilityCache.clear();
+            if (Crawler.listenOnVisibility()) {
+                if (e instanceof VisibilityQueryChangeEvent) {
+                    final FileObject[] affectedFiles = ((VisibilityQueryChangeEvent) e).getFileObjects();
+                    visibilityTask.localChange(affectedFiles);
+                } else {
+                    visibilityTask.globalChange();
+                }
+                visibilityChanged.schedule(VISIBILITY_CHANGE_WINDOW);
+            }
+        };
+
+        indexabilityListener = (ChangeEvent e) -> {
+            // Indexability could invalidate a subset of the indexer,
+            // so there is a valid index state for a file, but it might
+            // contain more/less data than intended after the change
+            visibilityTask.globalChangeFull();
+            visibilityChanged.schedule(VISIBILITY_CHANGE_WINDOW);
+        };
     }
 
     void start() {
-        VisibilityQuery.getDefault().addChangeListener(this);
+        VisibilityQuery.getDefault().addChangeListener(visibilityListener);
+        IndexabilityQuery.getInstance().addChangeListener(indexabilityListener);
     }
-    
+
     void stop() {
-        VisibilityQuery.getDefault().removeChangeListener(this);
+        VisibilityQuery.getDefault().removeChangeListener(visibilityListener);
+        IndexabilityQuery.getInstance().removeChangeListener(indexabilityListener);
     }
-    
-    boolean isVisible(
+
+    boolean canIndex(
         @NonNull FileObject file,
         @NullAllowed final FileObject root) {
         long st = 0L;
@@ -88,7 +113,8 @@ class VisibilitySupport implements ChangeListener {
         }
         try {
             final VisibilityQuery vq = VisibilityQuery.getDefault();
-            final Deque<FileObject> fta = new ArrayDeque<FileObject>();
+            final IndexabilityQuery iq = IndexabilityQuery.getInstance();
+            final Deque<FileObject> fta = new ArrayDeque<>();
             Boolean vote = null;
             boolean folder = false;
             while (root != null && !root.equals(file)) {
@@ -99,7 +125,7 @@ class VisibilitySupport implements ChangeListener {
                 if (folder || file.isFolder()) {
                     fta.offer(file);
                 }
-                if (!vq.isVisible(file)) {
+                if ((!vq.isVisible(file)) || iq.preventIndexing(file)) {
                     vote = Boolean.FALSE;
                     break;
                 }
@@ -107,7 +133,7 @@ class VisibilitySupport implements ChangeListener {
                 folder = true;
             }
             if (vote == null) {
-                vote = vq.isVisible(file);
+                vote = vq.isVisible(file) && (! iq.preventIndexing(file));
                 fta.offer(file);
             }
             if (!fta.isEmpty()) {
@@ -128,32 +154,28 @@ class VisibilitySupport implements ChangeListener {
         }
     }
 
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        visibilityCache.clear();
-        if (Crawler.listenOnVisibility()) {            
-            if (e instanceof VisibilityQueryChangeEvent) {
-                final FileObject[] affectedFiles = ((VisibilityQueryChangeEvent)e).getFileObjects();
-                visibilityTask.localChange(affectedFiles);
-            } else {
-                visibilityTask.globalChange();
-            }
-            visibilityChanged.schedule(VISIBILITY_CHANGE_WINDOW);
-        }
-    }
-
     private static class SlidingTask implements Runnable {
 
         private final RepositoryUpdater ru;
 
         //@GuardedBy("this")
         private boolean globalChange;
-        private final Set</*@GuardedBy("this")*/FileObject> localChanges = new HashSet<FileObject>();
+        private boolean fullScan;
+        private final Set</*@GuardedBy("this")*/FileObject> localChanges = new HashSet<>();
         //@GuardedBy("this")
         private  LogContext visibilityLogCtx;
 
         SlidingTask(@NonNull final RepositoryUpdater ru) {
             this.ru = ru;
+        }
+
+        synchronized void globalChangeFull() {
+            globalChange = true;
+            fullScan = true;
+
+            if (visibilityLogCtx == null) {
+                visibilityLogCtx = LogContext.create(LogContext.EventType.FILE, null);
+            }
         }
 
         synchronized void globalChange() {
@@ -174,19 +196,26 @@ class VisibilitySupport implements ChangeListener {
         @Override
         public void run() {
             final boolean global;
+            final boolean full;
             final Collection<FileObject> changedFiles;
             final LogContext logCtx;
             synchronized (this) {
                 logCtx = visibilityLogCtx;
                 visibilityLogCtx = null;
                 global = globalChange;
+                full = fullScan;
                 globalChange = false;
-                changedFiles = new ArrayList<FileObject>(localChanges);
+                fullScan = false;
+                changedFiles = new ArrayList<>(localChanges);
                 localChanges.clear();
             }
             if (global) {
                 LOGGER.fine ("VisibilityQuery global changed, reindexing");    //NOI18N
-                ru.refreshAll(false, false, true, logCtx);
+                if(full) {
+                    ru.refreshAll(true, false, true, logCtx);
+                } else {
+                    ru.refreshAll(false, false, true, logCtx);
+                }
             } else {
                 if (LOGGER.isLoggable(Level.FINE)) {
                     LOGGER.log (
@@ -194,24 +223,23 @@ class VisibilitySupport implements ChangeListener {
                       "VisibilityQuery changed for {0}, reindexing these files.",    //NOI18N
                       Arrays.asList(changedFiles));
                 }
-                final Map<URI, Collection<URL>> srcShownPerRoot =
-                        new HashMap<URI, Collection<URL>>();
-                final Map<URI, Set<String>> srcHiddenPerRoot =
-                        new HashMap<URI, Set<String>>();
-                final Set<URI> binChangedRoot =
-                        new HashSet<URI>();
-                final Map<URI,TimeStamps> tsPerRoot = new HashMap<URI, TimeStamps>();
+                final Map<URI, Collection<URL>> srcShownPerRoot = new HashMap<>();
+                final Map<URI, Set<String>> srcHiddenPerRoot = new HashMap<>();
+                final Set<URI> binChangedRoot = new HashSet<>();
+                final Map<URI,TimeStamps> tsPerRoot = new HashMap<>();
                 final VisibilityQuery vq = VisibilityQuery.getDefault();
+                final IndexabilityQuery iq = IndexabilityQuery.getInstance();
                 for (FileObject chf : changedFiles) {
                     Pair<URL,FileObject> owner = ru.getOwningSourceRoot(chf);
                     if (owner != null) {
-                        final boolean visible = vq.isVisible(chf);
+                        final boolean visible = vq.isVisible(chf)
+                                && (! iq.preventIndexing(chf));
                         try {
                             final URI ownerURI = owner.first().toURI();
                             if (visible) {
                                 Collection<URL> files = srcShownPerRoot.get(ownerURI);
                                 if (files == null) {
-                                    files = new ArrayList<URL>();
+                                    files = new ArrayList<>();
                                     srcShownPerRoot.put(ownerURI, files);
                                 }
                                 if (chf.equals(owner.second())) {
@@ -224,7 +252,7 @@ class VisibilitySupport implements ChangeListener {
                             } else if (owner.second() != null) {
                                 Set<String> files = srcHiddenPerRoot.get(ownerURI);
                                 if (files == null) {
-                                    files = new HashSet<String>();
+                                    files = new HashSet<>();
                                     srcHiddenPerRoot.put(ownerURI, files);
                                 }
                                 if (chf.isFolder()) {
@@ -238,9 +266,7 @@ class VisibilitySupport implements ChangeListener {
                                     files.add(FileUtil.getRelativePath(owner.second(), chf));
                                 }
                             }
-                        } catch (URISyntaxException e) {
-                            Exceptions.printStackTrace(e);
-                        } catch (IOException e) {
+                        } catch (URISyntaxException | IOException e) {
                             Exceptions.printStackTrace(e);
                         }
                         continue;
@@ -294,12 +320,12 @@ class VisibilitySupport implements ChangeListener {
     }
 
     @NonNull
-    static VisibilitySupport create(
+    static IndexabilitySupport create(
         @NonNull final RepositoryUpdater ru,
         @NonNull final RequestProcessor worker) {
         Parameters.notNull("ru", ru);   //NOI18N
         Parameters.notNull("worker", worker);   //NOI18N
-        return new VisibilitySupport(ru, worker);
+        return new IndexabilitySupport(ru, worker);
     }
 
 

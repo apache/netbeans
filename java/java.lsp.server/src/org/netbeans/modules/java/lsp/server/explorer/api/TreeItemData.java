@@ -64,8 +64,22 @@ public final class TreeItemData {
     public String[] getContextValues() {
         return contextValues;
     }
+    
+    public TreeItemData addContextValues(String... addValues) {
+        if (addValues == null || addValues.length == 0) {
+            return this;
+        }
+        if (this.contextValues == null) {
+            this.contextValues = addValues;
+        } else {
+            String[] v = Arrays.copyOf(this.contextValues, this.contextValues.length + addValues.length);
+            System.arraycopy(addValues, 0, v, this.contextValues.length, addValues.length);
+            this.contextValues = v;
+        }
+        return this;
+    }
 
-    public TreeItemData setContextValues(String[] contextValues) {
+    public TreeItemData setContextValues(String... contextValues) {
         this.contextValues = contextValues;
         return this;
     }

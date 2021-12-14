@@ -46,6 +46,8 @@ import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
@@ -113,11 +115,15 @@ public class TreeNodeRegistryImpl implements TreeNodeRegistry {
             Lookups.forPath("Explorers/_all") // NOI18N
         );
         
+        
+        FileObject conf = FileUtil.getConfigFile("Explorers/" + id); // NOI18N
+        boolean confirmDelete = conf != null &&conf.getAttribute("explorerConfirmsDelete") == Boolean.TRUE; // NOI18N
+        
         for (ExplorerManagerFactory f : ctxLookup.lookupAll(ExplorerManagerFactory.class)) {
             CompletionStage<ExplorerManager> em = f.createManager(id, ctxLookup);
             if (em != null) {
                 LOG.log(Level.FINER, "Creating provider from factory {0}", f);
-                return em.thenApply(em2 -> registerManager(em2, id, ctxLookup));
+                return em.thenApply(em2 -> registerManager(em2, id, ctxLookup, confirmDelete));
             }
         }
         CompletableFuture<TreeViewProvider> f = new CompletableFuture<>();
@@ -127,7 +133,7 @@ public class TreeNodeRegistryImpl implements TreeNodeRegistry {
     
     protected void notifyItemChanged(NodeChangedParams itemId) {}
     
-    private synchronized TreeViewProvider registerManager(ExplorerManager em, String id, Lookup ctxLookup) {
+    private synchronized TreeViewProvider registerManager(ExplorerManager em, String id, Lookup ctxLookup, boolean confirmDelete) {
         TreeViewProvider p = providers.get(id);
         if (p != null) {
             return p;
@@ -142,7 +148,7 @@ public class TreeNodeRegistryImpl implements TreeNodeRegistry {
         map.put(DefaultEditorKit.copyAction, ExplorerUtils.actionCopy(em));
         map.put(DefaultEditorKit.cutAction, ExplorerUtils.actionCut(em));
         map.put(DefaultEditorKit.pasteAction, ExplorerUtils.actionPaste(em));
-        map.put("delete", ExplorerUtils.actionDelete(em, false)); // NOI18N
+        map.put("delete", ExplorerUtils.actionDelete(em, confirmDelete)); // NOI18N
         
         Lookup expLookup = ExplorerUtils.createLookup (em, map);
         

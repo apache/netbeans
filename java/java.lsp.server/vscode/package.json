@@ -373,14 +373,21 @@
 				"category": "Java"
 			},
 			{
+				"command": "java.clean.workspace",
+				"title": "Clean Workspace",
+				"category": "Java"
+			},
+			{
 				"command": "java.workspace.new",
 				"title": "New from Template...",
-				"category": "Java"
+				"category": "Java",
+				"icon": "$(new-file)"
 			},
 			{
 				"command": "java.workspace.newproject",
 				"title": "New Project...",
-				"category": "Java"
+				"category": "Java",
+				"icon" : "$(new-folder)"
 			},
 			{
 				"command": "java.goto.super.implementation",
@@ -409,10 +416,48 @@
 				"title": "Delete"
 			},
 			{
+				"command": "workbench.action.debug.run",
+				"title": "Run Without Debugging",
+				"icon": "$(run)"
+			},
+			{
+				"command": "workbench.action.debug.start",
+				"title": "Start Debugging",
+				"icon": "$(debug-alt)"
+			},
+			{
+				"command": "java.project.run",
+				"category": "Project",
+				"title": "Run Project Without Debugging",
+				"icon": "$(run)"
+			},
+			{
+				"command": "java.project.debug",
+				"category": "Project",
+				"title": "Debug Project",
+				"icon": "$(debug-alt)"
+			},
+			{
+				"command": "java.project.test",
+				"category": "Project",
+				"title": "Test Project",
+				"icon": "$(testing-run-all-icon)"
+			},
+			{
+				"command": "java.project.compile",
+				"category": "Project",
+				"title": "Compile Project"
+			},
+			{
+				"command": "java.project.clean",
+				"category": "Project",
+				"title": "Clean Project"
+			},
+			{
 				"command": "java.local.db.set.preferred.connection",
 				"title": "Make Default Connection"
 			}
-	],
+		],
 		"keybindings": [
 			{
 				"command": "java.workspace.compile",
@@ -468,8 +513,51 @@
 					"when": "nbJavaLSReady"
 				},
 				{
+					"command": "foundProjects.deleteEntry",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Database:netbeans.db.explorer.action.Connect",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Database:netbeans.db.explorer.action.Disconnect",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Edit:org.openide.actions.DeleteAction",
+					"when": "false"
+				},
+				{
 					"command": "java.local.db.set.preferred.connection",
 					"when": "false"
+				}
+			],
+			"view/title": [
+				{
+					"command": "java.workspace.newproject",
+					"when": "nbJavaLSReady && view == foundProjects",
+					"group": "navigation"
+				},
+				{
+					"command": "java.workspace.compile",
+					"when": "nbJavaLSReady && view == foundProjects"
+				},
+				{
+					"command": "java.clean.workspace",
+					"when": "nbJavaLSReady && view == foundProjects"
+				},
+				{
+					"command": "test-explorer.run-all",
+					"when": "nbJavaLSReady && view == foundProjects"
+				},
+				{
+					"command": "workbench.action.debug.run",
+					"when": "nbJavaLSReady && view == foundProjects"
+				},
+				{
+					"command": "workbench.action.debug.start",
+					"when": "nbJavaLSReady && view == foundProjects"
 				}
 				],
 			"view/item/context": [
@@ -479,15 +567,42 @@
 				},
 				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Connect",
-					"when": "nbJavaLSReady && viewItem =~ /class:ddl.DBConnection/"
+					"when": "viewItem =~ /class:ddl.DBConnection/"
 				},
 				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Disconnect",
-					"when": "nbJavaLSReady && viewItem =~ /class:ddl.DBConnection/"
+					"when": "viewItem =~ /class:ddl.DBConnection/"
 				},
 				{
 					"command": "nbls:Edit:org.openide.actions.DeleteAction",
-					"when": "nbJavaLSReady && viewItem =~ /class:ddl.DBConnection/"
+					"when": "viewItem =~ /cap:delete/"
+				},
+				{
+					"command": "java.workspace.new",
+					"when": "view == foundProjects && viewItem =~ /is:folder/",
+					"group": "inline@1"
+				},
+				{
+					"command": "java.project.run",
+					"when": "view == foundProjects && viewItem =~ /class:project.Project/",
+					"group": "inline@10"
+				},
+				{
+					"command": "java.project.debug",
+					"when": "view == foundProjects && viewItem =~ /class:project.Project/",
+					"group": "inline@11"
+				},
+				{
+					"command": "java.project.test",
+					"when": "view == foundProjects && viewItem =~ /class:project.Project/"
+				},
+				{
+					"command": "java.project.compile",
+					"when": "view == foundProjects && viewItem =~ /class:project.Project/"
+				},
+				{
+					"command": "java.project.clean",
+					"when": "view == foundProjects && viewItem =~ /class:project.Project/"
 				},
 				{
 					"command": "java.local.db.set.preferred.connection",

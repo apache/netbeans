@@ -147,6 +147,14 @@ public class CCParser {
                             case COMMA:
                                 //just consume, still in INNN
                                 break;
+                            case STRING_LITERAL:
+                                if (attrs.isEmpty()) {
+                                    state = EQ;
+                                    currAttrStartOffset = currAttrStartOffset<0 ? ts.offset() : currAttrStartOffset;
+                                    currAttrQuated = true;//currently is used in cc and we support qq for one literal only, may need to be revieved later for "combined" cases
+                                    currAttrValue = Utils.unquote(titk.text().toString());
+                                    break;
+                                }
                             default:
                                 //we reached end of the annotation, or error
                                 state = ERROR;

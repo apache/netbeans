@@ -51,7 +51,7 @@ public class ServerTasksTest extends CommonTest {
         gfServer = createGlassfishServer();
         args = new StartupArgs() {
             
-            private List<String> javaArgs = Arrays.asList("-Xms128m", "-XX:PermSize=96m", "-Dtest=true");
+            private List<String> javaArgs = Arrays.asList("-Xms128m", "-Dtest=true");
             private List<String> glassfishArgs = Arrays.asList("--domaindir " + gfServer.getDomainsFolder() + File.separator + gfServer.getDomainName(),
                     "--domain " + gfServer.getDomainName());
             private HashMap<String, String> envVars;

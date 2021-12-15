@@ -710,7 +710,7 @@ public class NetBeansUtils {
             sysProp + nbHomeProp    + eq + nbHome,
             sysProp + nbUserdirProp + eq + nbUserdir,
             sysProp + nbDirsProp    + eq + nbDirsString,
-            "-Xms32m", "-XX:MaxPermSize=96m", "-Xverify:none", "-Xmx128m",
+            "-Xms32m", "-Xverify:none", "-Xmx128m",
             "-cp", classpath,
             UPDATER_FRAMENAME, "--nosplash"});
     }

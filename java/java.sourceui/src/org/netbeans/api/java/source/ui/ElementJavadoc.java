@@ -1324,6 +1324,12 @@ public class ElementJavadoc {
     }
     
     private void buildHtml(List<SourceLineMeta> parseResult, ProcessedTags tags, StringBuilder sb) {
+        
+        if(tags.errorList.size() > 0){
+            reportError(tags.errorList, sb);
+            return;
+        }
+        
         Map<Integer, List<Attrib>> markUpTagLineMapper = tags.markUpTagLineMapper != null ? tags.markUpTagLineMapper : new TreeMap<>();
         Map<Integer, List<Region>> regionTagLineMapper = tags.regionTagLineMapper != null ? tags.regionTagLineMapper : new TreeMap<>();
         int lineCounter = 0;
@@ -1340,30 +1346,23 @@ public class ElementJavadoc {
             List<Attrib> attributes = markUpTagLineMapper.get(lineCounter);
             List<Region> regions = regionTagLineMapper.get(lineCounter);
 
-            if (attributes == null && regions == null) {
-                try {
-                    sb.append(XMLUtil.toElementContent(codeLine + "\n"));//to-do modify for region
-                } catch (CharConversionException ex) {
-                    Exceptions.printStackTrace(ex);
+            if (attributes != null) {
+                for (Attrib attrib : attributes) {
+                    codeLine = applyTagsToHTML(codeLine, attrib.getAttributes(), attrib.getTagType(), sb);
                 }
-                continue;
-            } else {
-                if (attributes != null) {
-                    for (Attrib attrib : attributes) {
-                        codeLine = applyTagsToHTML(codeLine, attrib.getAttributes(), attrib.getTagType(), sb);
-                    }
-                }
-                if (regions != null) {
-                    for (Region region : regions) {
-                        codeLine = applyTagsToHTML(codeLine, region.getAttributes(), region.getTagType(), sb);
-                    }
-                }
-                sb.append(codeLine);
             }
-            sb.append("\n");
+            if (regions != null) {
+                for (Region region : regions) {
+                    codeLine = applyTagsToHTML(codeLine, region.getAttributes(), region.getTagType(), sb);
+                }
+            }
+            sb.append(codeLine).append("\n");
         }
     }
 
+    private void reportError(List<String> errorList, StringBuilder sb){
+        errorList.iterator().forEachRemaining(error -> sb.append("<span style=\"color:red;\">"+error +"</span>").append("\n"));
+    }
     private String applyTagsToHTML(String codeLine, Map<String, String> hAttrib, String tagType, StringBuilder sb) {
 
         String type = hAttrib.get("type") != null ? hAttrib.get("type") : "bold";
@@ -1465,6 +1464,7 @@ public class ElementJavadoc {
     private ProcessedTags processTags(List<SourceLineMeta> parseResult ){
         Map<Integer, List<Attrib>> markUpTagLineMapper = new TreeMap<>();
         Map<Integer, List<Region>> regionTagLineMapper = new TreeMap<>();
+        List<String> errorList = new ArrayList<>();
         List<Region> regionList = new ArrayList<>();
         
         int thisLine = 1;
@@ -1489,6 +1489,7 @@ public class ElementJavadoc {
                             //error: snippet markup: attributes "substring" and "regex" used simultaneously
                            regionTagLineMapper = null;
                            markUpTagLineMapper = null;
+                            errorList.add("error: snippet markup: attributes \"substring\" and \"regex\" used simultaneously");
                            break main;
                         }
                         Map<String, String> hAttrib = new HashMap<>();
@@ -1520,10 +1521,9 @@ public class ElementJavadoc {
                             eAttrib.putIfAbsent(markUpTagAttribute.getName(), markUpTagAttribute.getValue());
                         }
                         
+                        String regionVal = "anonymous";
                         if(eAttrib.containsKey("region")){
-                            String regionVal = eAttrib.get("region");
-                            regionVal = regionVal == null || regionVal.isEmpty() ? "anonymous" : regionVal;
-                            
+                            regionVal = eAttrib.get("region") == null ||  eAttrib.get("region").trim().isEmpty() ? "anonymous" : eAttrib.get("region");
                             for(int i = regionList.size() - 1; i >=0 ; i--){
                                 if(regionList.get(i).getValue().equals(regionVal)){
                                     regionList.remove(i);
@@ -1535,6 +1535,8 @@ public class ElementJavadoc {
                         } else{//no region defined only @end is provided, this case considered as invalid
                             regionTagLineMapper = null;
                             markUpTagLineMapper = null;
+                            //report error with @end tag and region value;
+                            errorList.add("error: snippet markup: no region to end "+ "@end"+ " " +regionVal);
                             break main;
                         }
                     }
@@ -1545,8 +1547,17 @@ public class ElementJavadoc {
         if(regionList.size() > 0){
             regionTagLineMapper = null;
             markUpTagLineMapper = null;
+            for(Region region :regionList){
+                String error = "";
+                if(region.tagType.equals("end")){
+                    error = "error: snippet markup: no region to end "+region.tagType + " " +region.value;
+                } else{
+                    error = "error: snippet markup: unpaired region "+region.tagType + " "+ region.value;
+                }
+                errorList.add(error);
+            }
         }
-        return new ProcessedTags(markUpTagLineMapper, regionTagLineMapper);
+        return new ProcessedTags(markUpTagLineMapper, regionTagLineMapper, errorList);
     }
     
     
@@ -1608,10 +1619,12 @@ public class ElementJavadoc {
     private class ProcessedTags{
         Map<Integer, List<Attrib>> markUpTagLineMapper;
         Map<Integer, List<Region>> regionTagLineMapper;
+        List<String> errorList = new ArrayList<>();
 
-        public ProcessedTags(Map<Integer, List<Attrib>> markUpTagLineMapper, Map<Integer, List<Region>> regionTagLineMapper) {
+        public ProcessedTags(Map<Integer, List<Attrib>> markUpTagLineMapper, Map<Integer, List<Region>> regionTagLineMapper, List<String> errorList) {
             this.markUpTagLineMapper = markUpTagLineMapper;
             this.regionTagLineMapper = regionTagLineMapper;
+            this.errorList = errorList;
         }
     }
     private boolean validateHighlightMarkupTagAttributes(Set<MarkUpTagAttribute> markUpTagAttributes){

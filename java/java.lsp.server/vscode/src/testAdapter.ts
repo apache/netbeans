@@ -92,7 +92,9 @@ export class NbTestAdapter {
                 case 'failed':
                 case 'errored':
                     this.itemsToRun?.delete(item);
-                    this.currentRun[state](item, message || new TestMessage(''));
+                    if (message) {
+                        this.currentRun[state](item, message);
+                    }
                     break;
             }
             if (!noPassDown) {

@@ -1330,8 +1330,6 @@ public class ElementJavadoc {
             return;
         }
         
-        Map<Integer, List<Attrib>> markUpTagLineMapper = tags.markUpTagLineMapper != null ? tags.markUpTagLineMapper : new TreeMap<>();
-        Map<Integer, List<Region>> regionTagLineMapper = tags.regionTagLineMapper != null ? tags.regionTagLineMapper : new TreeMap<>();
         int lineCounter = 0;
         for (SourceLineMeta fullLineInfo : parseResult) {
             lineCounter++;
@@ -1343,8 +1341,8 @@ public class ElementJavadoc {
                 //continue;
             }
 
-            List<Attrib> attributes = markUpTagLineMapper.get(lineCounter);
-            List<Region> regions = regionTagLineMapper.get(lineCounter);
+            List<Attrib> attributes = tags.markUpTagLineMapper.get(lineCounter);
+            List<Region> regions = tags.regionTagLineMapper.get(lineCounter);
 
             if (attributes != null) {
                 for (Attrib attrib : attributes) {
@@ -1414,7 +1412,6 @@ public class ElementJavadoc {
                         Exceptions.printStackTrace(ex);
                     }
                 }
-                //}
             } catch (CharConversionException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -1487,9 +1484,7 @@ public class ElementJavadoc {
                         //validate highlight markup tag attrbutes, shouldn't contain regex and substring simultaneously
                         if (validateHighlightMarkupTagAttributes(markUpTag.markUpTagAttributes)) {
                             //error: snippet markup: attributes "substring" and "regex" used simultaneously
-                           regionTagLineMapper = null;
-                           markUpTagLineMapper = null;
-                            errorList.add("error: snippet markup: attributes \"substring\" and \"regex\" used simultaneously");
+                           errorList.add("error: snippet markup: attributes \"substring\" and \"regex\" used simultaneously");
                            break main;
                         }
                         Map<String, String> hAttrib = new HashMap<>();
@@ -1533,8 +1528,6 @@ public class ElementJavadoc {
                         } else if(regionList.size() > 0){
                             regionList.remove(regionList.size() - 1);//if no region defined then end with last region
                         } else{//no region defined only @end is provided, this case considered as invalid
-                            regionTagLineMapper = null;
-                            markUpTagLineMapper = null;
                             //report error with @end tag and region value;
                             errorList.add("error: snippet markup: no region to end "+ "@end"+ " " +regionVal);
                             break main;
@@ -1545,8 +1538,6 @@ public class ElementJavadoc {
             thisLine++;
         }
         if(regionList.size() > 0){
-            regionTagLineMapper = null;
-            markUpTagLineMapper = null;
             for(Region region :regionList){
                 String error = "";
                 if(region.tagType.equals("end")){

@@ -25,6 +25,7 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.tasks.JavaExec;
 import org.gradle.api.tasks.SourceSetContainer;
+import org.gradle.process.CommandLineArgumentProvider;
 
 /**
  *
@@ -48,8 +49,14 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
             }
             p.getTasks().withType(JavaExec.class).configureEach(je -> {
                 if (p.hasProperty(RUN_SINGLE_JVM_ARGS)) {
-                    je.getJvmArgumentProviders().add(() -> {
-                        return asList(p.property(RUN_SINGLE_JVM_ARGS).toString().split(" "));
+                    // Property jvmArgumentProviders should not be implemented as a lambda to allow execution optimizations.
+                    // See https://docs.gradle.org/current/userguide/validation_problems.html#implementation_unknown
+                    je.getJvmArgumentProviders().add(new CommandLineArgumentProvider() {
+                        // Do not convert to lambda.
+                        @Override
+                        public Iterable<String> asArguments() {
+                            return asList(p.property(RUN_SINGLE_JVM_ARGS).toString().split(" "));
+                        }
                     });
                 }
                 je.setStandardInput(System.in);

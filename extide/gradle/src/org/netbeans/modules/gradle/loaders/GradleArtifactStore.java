@@ -28,12 +28,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
+import org.netbeans.modules.gradle.GradleModuleFileCache21;
 import org.netbeans.modules.gradle.GradleProject;
 import org.openide.modules.OnStart;
 import org.openide.modules.Places;
@@ -45,7 +51,8 @@ import org.openide.util.RequestProcessor;
  * @author Laszlo Kishalmi
  */
 public class GradleArtifactStore {
-
+    private static Logger LOG = Logger.getLogger(GradleArtifactStore.class.getName());
+    
     private static final String GRADLE_ARTIFACT_STORE_INFO = "gradle/artifact-store-info.ser";
     public static final RequestProcessor RP = new RequestProcessor("Gradle Artifact Store", 1); //NOI18
 
@@ -114,11 +121,13 @@ public class GradleArtifactStore {
         if (gp.getQuality().worseThan(Quality.FULL)) {
             return;
         }
+        List<String> gavs = new ArrayList<>();
         boolean changed = false;
         for (GradleConfiguration conf : gp.getBaseProject().getConfigurations().values()) {
             for (GradleDependency.ModuleDependency module : conf.getModules()) {
                 Set<File> oldBins = binaries.get(module.getId());
                 Set<File> newBins = module.getArtifacts();
+                gavs.add(module.getId());
                 if (oldBins != newBins) {
                     binaries.put(module.getId(), newBins);
                     changed = true;
@@ -142,6 +151,9 @@ public class GradleArtifactStore {
                 }
             }
         }
+        LOG.log(Level.FINE, "Cache refresh for project {0}, changed {2}, module deps {1}", new Object[] {
+            gp.getBaseProject().getProjectDir(), gavs, changed
+        });
         if (changed) {
             store();
             notifyTask.schedule(1000);
@@ -159,7 +171,54 @@ public class GradleArtifactStore {
             store();
         }
     }
-
+    
+    /**
+     * Checks that all dependencies the project thinks should be in the global cache
+     * are actually in the global cache. If the global artifact cache does not contain
+     * an entry from a resolved depency in the project cache then many random failures can
+     * occur, as an artifact is formally OK, but its JAR cannot be looked up.
+     * 
+     * @param gp cached project
+     * @return true if the cached project resolves.
+     */
+    public final boolean sanityCheckCachedProject(GradleProject gp) {
+        GradleModuleFileCache21 modCache = GradleModuleFileCache21.getGradleFileCache();
+        for (GradleConfiguration conf : gp.getBaseProject().getConfigurations().values()) {
+            for (GradleDependency.ModuleDependency module : conf.getModules()) {
+                Set<File> oldBins = binaries.get(module.getId());
+                if (oldBins == null || oldBins.isEmpty()) {
+                    LOG.log(Level.FINE, "Checking {0}: Module dependency {1} not found in cache.", new Object[] { gp.getBaseProject().getProjectDir(), module.getId() });
+                    return false;
+                }
+                if (oldBins.size() == 1) {
+                    File binary = oldBins.iterator().next();
+                    GradleModuleFileCache21.CachedArtifactVersion cav = modCache.resolveModule(module.getId());
+                    if (cav == null) {
+                        LOG.log(Level.FINE, "Checking {0}: Cached artifact not found for {1}", new Object[] { gp.getBaseProject().getProjectDir(), module.getId() });
+                        return false;
+                    }
+                    GradleModuleFileCache21.CachedArtifactVersion.Entry javadocEntry = cav.getJavaDoc();
+                    GradleModuleFileCache21.CachedArtifactVersion.Entry sourceEntry = cav.getSources();
+                    if (sourceEntry != null && Files.exists(sourceEntry.getPath())) {
+                        File check = sources.get(binary);
+                        if (check == null || !check.toPath().equals(sourceEntry.getPath())) {
+                            LOG.log(Level.FINE, "Checking {0}: cache does not list CachedArtifact for source {2}", new Object[] { gp.getBaseProject().getProjectDir(), module.getId(), sourceEntry.getPath() });
+                            return false;
+                        }
+                    }
+                    if (javadocEntry != null && Files.exists(javadocEntry.getPath())) {
+                        File check = javadocs.get(binary);
+                        if (check == null || !check.toPath().equals(javadocEntry.getPath())) {
+                            LOG.log(Level.FINE, "Checking {0}: cache does not list CachedArtifact for javadoc {2}", new Object[] { gp.getBaseProject().getProjectDir(), module.getId(), javadocEntry.getPath() });
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+    
     public final void addChangeListener(ChangeListener l) {
         cs.addChangeListener(l);
     }

@@ -1258,4 +1258,16 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php81/readonlyPropertiesWithStaticError.php");
     }
 
+    public void testNewInInitializers_01() throws Exception {
+        checkErrors("testfiles/parser/php81/newInInitializers_01.php");
+    }
+
+    public void testNewInInitializersWithClassConstantError() throws Exception {
+        checkErrors("testfiles/parser/php81/newInInitializersWithClassConstantError.php");
+    }
+
+    public void testNewInInitializersWithPropertyError() throws Exception {
+        checkErrors("testfiles/parser/php81/newInInitializersWithPropertyError.php");
+    }
+
 }

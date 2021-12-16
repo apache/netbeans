@@ -478,7 +478,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(commands.registerCommand('java.project.debug', async (node, launchConfiguration?) => {
         return runDebug(false, false, contextUri(node)?.toString() || '',  undefined, launchConfiguration, true);
     }));
-    context.subscriptions.push(commands.registerCommand('java.project.tet', async (node, launchConfiguration?) => {
+    context.subscriptions.push(commands.registerCommand('java.project.test', async (node, launchConfiguration?) => {
         return runDebug(true, true, contextUri(node)?.toString() || '',  undefined, launchConfiguration, true);
     }));
     context.subscriptions.push(commands.registerCommand('java.package.test', async (uri, launchConfiguration?) => {

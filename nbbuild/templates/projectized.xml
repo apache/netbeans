@@ -295,7 +295,7 @@
         <condition property="test.run.args" value="-ea -Xmx480m">
             <istrue value="${have-jdk-1.8}"/>
         </condition>
-        <property name="test.run.args" value="-ea -XX:PermSize=32m -XX:MaxPermSize=200m -Xmx480m"/>
+        <property name="test.run.args" value="-ea -Xmx480m"/>
         <property name="extra.test.libs.dir" location="${test.dist.dir}/extralibs"/>
         <macrodef name="test-init-nborg">
             <attribute name="test.type"/>

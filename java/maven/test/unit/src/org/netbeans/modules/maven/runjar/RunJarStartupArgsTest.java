@@ -109,9 +109,11 @@ public class RunJarStartupArgsTest extends NbTestCase {
                 "    <properties>\n" +
                 "        <project.mainclass>test.PrintCommandLine</project.mainclass>\n" +
                 "        <exec.java.bin>${java.home}/bin/java</exec.java.bin>\n" +
+                "        <maven.compiler.source>" + System.getProperty("java.specification.version") + "</maven.compiler.source>\n" +
+                "        <maven.compiler.target>" + System.getProperty("java.specification.version") + "</maven.compiler.target>\n" +
                 "    </properties>\n" +
                 "</project>\n");
-        
+
         FileObject f = FileUtil.createFolder(d, "src/main/java/test");
         FileObject source = FileUtil.toFileObject(getDataDir()).getFileObject("exec/PrintCommandLine.java");
         FileObject result = FileUtil.copyFile(source, f, source.getName());

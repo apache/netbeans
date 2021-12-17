@@ -47,10 +47,11 @@ public class NBModelBuilder extends DefaultModelBuilder {
 
     private static final String NETBEANS_PROFILES = "____netbeans.profiles";
     private static final String NETBEANS_MODELDESCS = "____netbeans.model.descriptions";
-    
+
     @Override
     public ModelBuildingResult build(ModelBuildingRequest request) throws ModelBuildingException {
         ModelBuildingResult toRet = super.build(request);
+        postProcessResult(request, toRet);
         Model eff = toRet.getEffectiveModel();
         InputSource source = new InputSource();
         source.setLocation("");
@@ -64,7 +65,14 @@ public class NBModelBuilder extends DefaultModelBuilder {
         }
         return toRet;
     }
-    
+
+    @Override
+    public ModelBuildingResult build(ModelBuildingRequest request, ModelBuildingResult result) throws ModelBuildingException {
+        ModelBuildingResult mbr = super.build(request, result);
+        postProcessResult(request, result);
+        return mbr;
+    }
+
     private static class ModelInputSource extends InputSource {
 
         final List<ModelDescription> rawModels;
@@ -75,21 +83,19 @@ public class NBModelBuilder extends DefaultModelBuilder {
         }
     }
 
-    @Override
-    public ModelBuildingResult build(ModelBuildingRequest request, ModelBuildingResult result) throws ModelBuildingException {
-        ModelBuildingResult toRet = super.build(request, result);
-        if (request.getPomFile() != null) {
-            List<ModelDescription> rawModels = new ArrayList<ModelDescription>();
-            for (String id : toRet.getModelIds()) {
+    private void postProcessResult(ModelBuildingRequest request, ModelBuildingResult result) throws ModelBuildingException {
+        if (request.getPomFile() != null && result.getEffectiveModel().getLocation(NETBEANS_MODELDESCS) == null) {
+            List<ModelDescription> rawModels = new ArrayList<>();
+            for (String id : result.getModelIds()) {
                 if (id != null && id.trim().length() > 0) {
                     //skip the default super pom
-                    Model m = toRet.getRawModel(id);
-                    List<String> modules = new ArrayList<String>();
+                    Model m = result.getRawModel(id);
+                    List<String> modules = new ArrayList<>();
                     for (String module : m.getModules()) {
                         modules.add(module);
                     }
                     String name = m.getName();
-                    List<String> profiles = new ArrayList<String>();
+                    List<String> profiles = new ArrayList<>();
                     for (Profile p : m.getProfiles()) {
                         profiles.add(p.getId());
                         //TODO for activated profiles, not entirely correct.
@@ -106,15 +112,13 @@ public class NBModelBuilder extends DefaultModelBuilder {
                     rawModels.add(new ModelDescImpl(id, loc, name, profiles, modules));
                 }
             }
-            toRet.getEffectiveModel().setLocation(NETBEANS_MODELDESCS, new InputLocation(-1, -1, new ModelInputSource(rawModels)));
+            result.getEffectiveModel().setLocation(NETBEANS_MODELDESCS, new InputLocation(-1, -1, new ModelInputSource(rawModels)));
         }
-        return toRet;
     }
 
-    
     public static Set<String> getAllProfiles(Model mdl) {
         InputLocation location = mdl.getLocation(NETBEANS_PROFILES);
-        HashSet<String> toRet = new HashSet<String>();
+        HashSet<String> toRet = new HashSet<>();
         if (location != null) {
             String s = location.getSource().getLocation();
             if (!s.isEmpty()) {

@@ -65,9 +65,9 @@ public final class DocumentUtilities {
     
     private static final Object TYPING_MODIFICATION_KEY = new Object();
     
-    private static Field numReadersField;
+    private static volatile Field numReadersField;
     
-    private static Field currWriterField;
+    private static volatile Field currWriterField;
     
     
     private DocumentUtilities() {

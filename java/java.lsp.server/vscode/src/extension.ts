@@ -51,6 +51,7 @@ import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickReque
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
 import { createTreeViewService, TreeViewService, TreeItemDecorator, Visualizer, CustomizableTreeDataProvider } from './explorer';
+import { initializeRunConfiguration, runConfigurationProvider, runConfigurationNodeProvider, configureRunSettings } from './runConfiguration';
 import { TLSSocket } from 'tls';
 
 const API_VERSION : string = "1.0";
@@ -319,6 +320,18 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     // register content provider
     let sourceForContentProvider = new NetBeansSourceForContentProvider();
     context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('sourceFor', sourceForContentProvider));
+
+    // initialize Run Configuration
+    initializeRunConfiguration().then(initialized => {
+		if (initialized) {
+			context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java8+', runConfigurationProvider));
+			context.subscriptions.push(vscode.window.registerTreeDataProvider('run-config', runConfigurationNodeProvider));
+			context.subscriptions.push(vscode.commands.registerCommand('java.workspace.configureRunSettings', (...params: any[]) => {
+				configureRunSettings(context, params);
+			}));
+			vscode.commands.executeCommand('setContext', 'runConfigurationInitialized', true);
+		}
+	});
 
     // register commands
     context.subscriptions.push(commands.registerCommand('java.workspace.new', async (ctx) => {

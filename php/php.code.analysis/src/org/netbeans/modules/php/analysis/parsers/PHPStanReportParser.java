@@ -34,6 +34,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.lib.editor.util.StringEscapeUtils;
 import org.netbeans.modules.php.analysis.results.Result;
 import org.netbeans.modules.php.api.util.FileUtils;
 import org.openide.filesystems.FileObject;
@@ -165,7 +166,8 @@ public class PHPStanReportParser extends DefaultHandler {
         currentResult.setColumn(getInt(attributes, "column")); // NOI18N
         String message = attributes.getValue("message"); // NOI18N
         currentResult.setCategory(String.format("%s: %s", attributes.getValue("severity"), message)); // NOI18N
-        currentResult.setDescription(message);
+        // Message can contain types like "array<string>" and description is renderd as HTML so it has to be properly escaped.
+        currentResult.setDescription(StringEscapeUtils.escapeHtml(message));
     }
 
     private void processResultEnd() {

@@ -114,7 +114,7 @@ class RunConfigurationNode extends vscode.TreeItem {
 
 	prompt: string;
 	hint: string;
-	value: string;
+	value: string | undefined;
 
 	settingsKey: string;
 
@@ -128,8 +128,7 @@ class RunConfigurationNode extends vscode.TreeItem {
 
 		this.settingsKey = settingsKey;
 		
-		const savedValue: string | undefined = this.getConfig().get(this.settingsKey);
-		this.value = savedValue ? savedValue : '';
+		this.value = this.getConfig().get(this.settingsKey);
 		this.updateNode();
     }
 
@@ -143,29 +142,26 @@ class RunConfigurationNode extends vscode.TreeItem {
 			}
 		).then(async val => {
 			if (val !== undefined) {
-				this.setValue(val.toString().trim());
+				const value = val.toString().trim();
+				this.setValue(value ? value : undefined);
 			}
 		});
 	}
 
 	public getValue(): string | undefined {
-		return this.hasValue() ? this.value : undefined;
+		return this.value;
 	}
 
-	setValue(value: string) {
+	setValue(value: string | undefined) {
 		this.value = value;
-		this.getConfig().update(this.settingsKey, this.hasValue() ? value : undefined, false);
+		this.getConfig().update(this.settingsKey, this.value, false);
 		this.updateNode();
         runConfigurationNodeProvider.refresh();
 	}
 
 	updateNode() {
-		this.description = this.hasValue() ? this.value : '<default>';
+		this.description = this.value ? this.value : '<default>';
         this.tooltip = `${this.label} ${this.description}`;
-	}
-
-	hasValue(): boolean {
-		return this.value.length > 0;
 	}
 
 	getConfig(): vscode.WorkspaceConfiguration {

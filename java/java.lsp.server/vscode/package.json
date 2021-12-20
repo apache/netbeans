@@ -405,6 +405,11 @@
 				"command": "foundProjects.deleteEntry",
 				"title": "Delete"
 			},
+                        {
+                                "command": "db.add.connection",
+                                "title": "Add Database Connection",
+ 				"category": "Database"
+                        },
 			{
 				"command": "nbls:Database:netbeans.db.explorer.action.Connect",
 				"title": "Connect to Database"

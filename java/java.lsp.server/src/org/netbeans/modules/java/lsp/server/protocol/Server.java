@@ -712,7 +712,8 @@ public final class Server {
                         JAVA_SUPER_IMPLEMENTATION,
                         JAVA_SOURCE_FOR,
                         JAVA_CLEAR_PROJECT_CACHES,
-                        NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH));
+                        NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH,
+                        DB_ADD_CONNECTION));
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
                     commands.addAll(codeActionsProvider.getCommands());
                 }
@@ -860,6 +861,7 @@ public final class Server {
     public static final String JAVA_SUPER_IMPLEMENTATION =  "java.super.implementation";
     public static final String JAVA_SOURCE_FOR =  "java.source.for";
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
+    public static final String DB_ADD_CONNECTION =  "db.add.connection";
     public static final String JAVA_RUN_PROJECT_ACTION = "java.project.run.action";
 
     /**

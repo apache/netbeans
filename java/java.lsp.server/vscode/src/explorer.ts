@@ -291,7 +291,6 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
   delayedFire : Set<Visualizer> = new Set<Visualizer>();
 
   async fetchItem(n : number) : Promise<Visualizer> {
-    let refreshVis = this.treeData.get(n);
     let d = await this.client.sendRequest(NodeInfoRequest.info, { nodeId : n });
     let v = new Visualizer(d, this.ts.imageUri(d));
     if (d.command) {

@@ -92,6 +92,7 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
   private root: Visualizer;
   private treeData : Map<number, Visualizer> = new Map();
   private decorators : TreeItemDecorator<Visualizer>[] = [];
+  private pendingRefresh : Set<number> = new Set();
 
   constructor(
     private client: LanguageClient,
@@ -139,6 +140,7 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
         if (this.root.data.id == params.nodeId || !params.nodeId) {
           this._onDidChangeTreeData.fire();
         } else {
+          this.pendingRefresh.add(params.nodeId);
           let v : Visualizer | undefined = this.treeData.get(params.nodeId);
           if (v) {
               this._onDidChangeTreeData.fire(v);
@@ -152,6 +154,13 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
   }
 
   getTreeItem(element: Visualizer): vscode.TreeItem | Thenable<vscode.TreeItem> {
+    const n = Number(element.id);
+    if (this.pendingRefresh.delete(n)) {
+      return this.fetchItem(n).then((newV) => {
+        element.update(newV);
+        return element;
+      });
+    }
     if (this.decorators.length == 0) {
       return element;
     }
@@ -173,28 +182,38 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
     return f(element.copy());
   }
 
+  async fetchItem(n : number) : Promise<Visualizer> {
+    let d = await this.client.sendRequest(NodeInfoRequest.info, { nodeId : n });
+    if (this.pendingRefresh.delete(n)) {
+      // and again
+      return this.fetchItem(n);
+    }
+    let v = new Visualizer(d, this.ts.imageUri(d));
+    // console.log('Nodeid ' + d.id + ': visualizer ' + v.visId);
+    if (d.command) {
+      // PENDING: provide an API to register command (+ parameters) -> command translators.
+      if (d.command === 'vscode.open') {
+        v.command = { command : d.command, title: '', arguments: [v.resourceUri]};
+      } else {
+        v.command = { command : d.command, title: '', arguments: [v]};
+      }
+    }
+    return v;
+  }
+
   getChildren(e?: Visualizer): Thenable<Visualizer[]> {
     const self = this;
     async function collectResults(arr: any, element: Visualizer): Promise<Visualizer[]> {
       let res : Visualizer[] = [];
+      let refreshAgain : Visualizer[] = [];
       for (let i = 0; i < arr.length; i++) {
-        let d = await self.client.sendRequest(NodeInfoRequest.info, { nodeId : arr[i] });
-        let v = new Visualizer(d, self.ts.imageUri(d));
-        // console.log('Nodeid ' + d.id + ': visualizer ' + v.visId);
-        if (d.command) {
-          // PENDING: provide an API to register command (+ parameters) -> command translators.
-          if (d.command === 'vscode.open') {
-            v.command = { command : d.command, title: '', arguments: [v.resourceUri]};
-          } else {
-            v.command = { command : d.command, title: '', arguments: [v]};
-          }
-        }
-        res.push(v);
+        res.push(await self.fetchItem(arr[i]));
       }
       const now : Visualizer[] = element.updateChildren(res, self);
       for (let i = 0; i < arr.length; i++) {
         const v = res[i];
-        self.treeData.set((v.id || -1) as number, v);
+        const n : number = Number(v.id || -1);
+        self.treeData.set(n, v);
         v.parent = element;
       }
       return now;
@@ -288,7 +307,7 @@ export class Visualizer extends vscode.TreeItem {
 
     for (let i = 0; i < newChildren.length; i++) {
       let c = newChildren[i];
-      const n : number = (c.id || -1) as number;
+      const n : number = Number(c.id || -1);
       const v : Visualizer | undefined = this.children?.get(n);
       if (v) {
         v.update(c);

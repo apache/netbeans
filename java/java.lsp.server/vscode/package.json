@@ -626,17 +626,17 @@
 				},
 				{
 					"command": "java.project.run",
-					"when": "view == foundProjects && viewItem =~ /is:project/",
+					"when": "view == foundProjects && viewItem =~ /is:project/ && viewItem =~ /^(?!.*is:projectRoot)/",
 					"group": "inline@10"
 				},
 				{
 					"command": "java.project.debug",
-					"when": "view == foundProjects && viewItem =~ /is:project/",
+					"when": "view == foundProjects && viewItem =~ /is:project/ && viewItem =~ /^(?!.*is:projectRoot)/",
 					"group": "inline@11"
 				},
 				{
 					"command": "java.project.test",
-					"when": "view == foundProjects && viewItem =~ /is:project/"
+					"when": "view == foundProjects && viewItem =~ /is:project/ && viewItem =~ /^(?!.*is:projectRoot)/"
 				},
 				{
 					"command": "java.project.compile",

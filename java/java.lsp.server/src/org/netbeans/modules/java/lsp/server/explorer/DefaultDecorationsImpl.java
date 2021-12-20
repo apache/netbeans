@@ -29,6 +29,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -58,6 +59,7 @@ public class DefaultDecorationsImpl implements TreeDataProvider.Factory {
     public static final String CTXVALUE_FOLDER = "is:folder"; // NOI18N
     public static final String CTXVALUE_PROJECT = "is:project"; // NOI18N
     public static final String CTXVALUE_PROJECT_ROOT = "is:projectRoot"; // NOI18N
+    public static final String CTXVALUE_PROJECT_SUBPROJECT = "is:subproject"; // NOI18N
     public static final String CTXVALUE_CAP_RENAME = "cap:rename"; // NOI18N
     public static final String CTXVALUE_CAP_DELETE = "cap:delete"; // NOI18N
 
@@ -184,7 +186,12 @@ public class DefaultDecorationsImpl implements TreeDataProvider.Factory {
                 d.addContextValues(CTXVALUE_PROJECT);
                 Project root = ProjectUtils.rootOf(p);
                 if (root == p) {
-                    d.addContextValues(CTXVALUE_PROJECT_ROOT);
+                    Set<Project> contained = ProjectUtils.getContainedProjects(root, false);
+                    if (contained != null && !contained.isEmpty()) {
+                        d.addContextValues(CTXVALUE_PROJECT_ROOT);
+                    }
+                } else {
+                    d.addContextValues(CTXVALUE_PROJECT_SUBPROJECT);
                 }
             } else if (f == null || physFile != null) { 
                 // TODO Hack: exclude projects from delete capability. The TreeItemData probably needs to support

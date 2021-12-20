@@ -234,7 +234,7 @@ public abstract class TreeViewProvider {
         synchronized (this) {
             Integer lspId = releaseNode(n);
             parentLspId = idMap.get(parent);
-            if (!(lspId instanceof Integer || parentLspId instanceof Integer)) {
+            if (!(lspId instanceof Integer && parentLspId instanceof Integer)) {
                 return;
             }
             NodeHolder nh = holdChildren.get(parentLspId);

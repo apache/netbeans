@@ -175,7 +175,7 @@ public class GradleArtifactStore {
     /**
      * Checks that all dependencies the project thinks should be in the global cache
      * are actually in the global cache. If the global artifact cache does not contain
-     * an entry from a resolved depency in the project cache then many random failures can
+     * an entry from a resolved dependency in the project cache then many random failures can
      * occur, as an artifact is formally OK, but its JAR cannot be looked up.
      * 
      * @param gp cached project

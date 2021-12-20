@@ -40,7 +40,6 @@ import org.netbeans.api.db.explorer.JDBCDriverManager;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
-import org.netbeans.modules.java.lsp.server.protocol.Server;
 import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
 import org.netbeans.modules.parsing.api.ResultIterator;
@@ -173,7 +172,7 @@ public class DBAddConnection extends CodeActionsProvider {
 
     @Override
     public Set<String> getCommands() {
-        return Set.of(DB_ADD_CONNECTION);
+        return Collections.singleton(DB_ADD_CONNECTION);
     }
 
     @Override

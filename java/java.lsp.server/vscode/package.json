@@ -626,25 +626,25 @@
 				},
 				{
 					"command": "java.project.run",
-					"when": "view == foundProjects && viewItem =~ /class:project.Project/",
+					"when": "view == foundProjects && viewItem =~ /is:project/",
 					"group": "inline@10"
 				},
 				{
 					"command": "java.project.debug",
-					"when": "view == foundProjects && viewItem =~ /class:project.Project/",
+					"when": "view == foundProjects && viewItem =~ /is:project/",
 					"group": "inline@11"
 				},
 				{
 					"command": "java.project.test",
-					"when": "view == foundProjects && viewItem =~ /class:project.Project/"
+					"when": "view == foundProjects && viewItem =~ /is:project/"
 				},
 				{
 					"command": "java.project.compile",
-					"when": "view == foundProjects && viewItem =~ /class:project.Project/"
+					"when": "view == foundProjects && viewItem =~ /is:project/"
 				},
 				{
 					"command": "java.project.clean",
-					"when": "view == foundProjects && viewItem =~ /class:project.Project/"
+					"when": "view == foundProjects && viewItem =~ /is:project/"
 				},
 				{
 					"command": "java.local.db.set.preferred.connection",

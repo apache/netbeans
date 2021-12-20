@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import org.eclipse.lsp4j.CodeAction;
@@ -65,10 +66,11 @@ import org.openide.util.lookup.ServiceProvider;
 })
 @ServiceProvider(service = CodeActionsProvider.class)
 public class DBAddConnection extends CodeActionsProvider {
+    public static final String DB_ADD_CONNECTION =  "db.add.connection"; // NOI18N
 
     @Override
     public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-        if (!Server.DB_ADD_CONNECTION.equals(command)) {
+        if (!DB_ADD_CONNECTION.equals(command)) {
             return null;
         }
         JDBCDriver[] drivers = JDBCDriverManager.getDefault().getDrivers();
@@ -167,6 +169,11 @@ public class DBAddConnection extends CodeActionsProvider {
             }
         }
         return schemas;
+    }
+
+    @Override
+    public Set<String> getCommands() {
+        return Set.of(DB_ADD_CONNECTION);
     }
 
     @Override

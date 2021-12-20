@@ -82,7 +82,7 @@ export interface ShowInputBoxParams {
     /**
      * Controls if a password input is shown. Password input hides the typed text.
      */
-    password: boolean;
+    password?: boolean;
 }
 
 export namespace InputBoxRequest {

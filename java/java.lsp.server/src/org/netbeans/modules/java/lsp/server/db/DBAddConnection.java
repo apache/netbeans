@@ -23,9 +23,12 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+import org.eclipse.lsp4j.CodeAction;
+import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.netbeans.api.db.explorer.ConnectionManager;
@@ -33,14 +36,18 @@ import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.explorer.DatabaseException;
 import org.netbeans.api.db.explorer.JDBCDriver;
 import org.netbeans.api.db.explorer.JDBCDriverManager;
+import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.protocol.Server;
 import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
+import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -56,9 +63,14 @@ import org.openide.util.NbBundle;
     "MSG_ConnectionFailed=Connection failed",
     "MSG_SelectSchema=Select Database Schema"
 })
-public class DatabaseCommands {
+@ServiceProvider(service = CodeActionsProvider.class)
+public class DBAddConnection extends CodeActionsProvider {
 
-    public static CompletableFuture<Object> addDbConnection(NbCodeLanguageClient client) {
+    @Override
+    public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
+        if (!Server.DB_ADD_CONNECTION.equals(command)) {
+            return null;
+        }
         JDBCDriver[] drivers = JDBCDriverManager.getDefault().getDrivers();
         List<QuickPickItem> items = new ArrayList<>();
         for (int i = 0; i < drivers.length; i++) {
@@ -155,6 +167,11 @@ public class DatabaseCommands {
             }
         }
         return schemas;
+    }
+
+    @Override
+    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+        return Collections.emptyList();
     }
     
 }

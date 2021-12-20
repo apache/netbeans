@@ -98,7 +98,7 @@ import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodFinder;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
-import org.netbeans.modules.java.lsp.server.db.DatabaseCommands;
+import org.netbeans.modules.java.lsp.server.db.DBAddConnection;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachNativeConfigurations;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
@@ -507,9 +507,6 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     p.getProjectDirectory().refresh();
                 }
                 return (CompletableFuture<Object>) (CompletableFuture<?>)result;
-            }
-            case Server.DB_ADD_CONNECTION: {
-                return DatabaseCommands.addDbConnection(client);
             }
             default:
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {

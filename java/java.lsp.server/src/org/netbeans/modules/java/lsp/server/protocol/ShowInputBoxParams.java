@@ -97,7 +97,7 @@ public class ShowInputBoxParams {
     /**
      * Controls if a password input is shown. Password input hides the typed text.
      * 
-     * @since 1.14
+     * @since 1.16
      */
     @Pure
     @NonNull
@@ -108,7 +108,7 @@ public class ShowInputBoxParams {
     /**
      * Controls if a password input is shown. Password input hides the typed text.
      * 
-     * @since 1.14
+     * @since 1.16
      */
     public void setPassword(boolean password) {
         this.password = password;

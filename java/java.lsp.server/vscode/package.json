@@ -494,6 +494,11 @@
 				"command": "java.workspace.configureRunSettings",
 				"title": "Edit",
 				"icon": "$(edit)"
+            },
+            {
+				"command": "testing.runAll",
+				"title": "Run All Tests",
+				"category": "Test"
 			}
 		],
 		"keybindings": [
@@ -590,7 +595,7 @@
 					"when": "nbJavaLSReady && view == foundProjects"
 				},
 				{
-					"command": "test-explorer.run-all",
+					"command": "testing.runAll",
 					"when": "nbJavaLSReady && view == foundProjects"
 				},
 				{
@@ -626,25 +631,25 @@
 				},
 				{
 					"command": "java.project.run",
-					"when": "view == foundProjects && viewItem =~ /class:project.Project/",
+					"when": "view == foundProjects && viewItem =~ /is:project/ && viewItem =~ /^(?!.*is:projectRoot)/",
 					"group": "inline@10"
 				},
 				{
 					"command": "java.project.debug",
-					"when": "view == foundProjects && viewItem =~ /class:project.Project/",
+					"when": "view == foundProjects && viewItem =~ /is:project/ && viewItem =~ /^(?!.*is:projectRoot)/",
 					"group": "inline@11"
 				},
 				{
 					"command": "java.project.test",
-					"when": "view == foundProjects && viewItem =~ /class:project.Project/"
+					"when": "view == foundProjects && viewItem =~ /is:project/ && viewItem =~ /^(?!.*is:projectRoot)/"
 				},
 				{
 					"command": "java.project.compile",
-					"when": "view == foundProjects && viewItem =~ /class:project.Project/"
+					"when": "view == foundProjects && viewItem =~ /is:project/"
 				},
 				{
 					"command": "java.project.clean",
-					"when": "view == foundProjects && viewItem =~ /class:project.Project/"
+					"when": "view == foundProjects && viewItem =~ /is:project/"
 				},
 				{
 					"command": "java.local.db.set.preferred.connection",

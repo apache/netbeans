@@ -102,11 +102,26 @@ public final class URITranslator {
                 }
                 File cache = new File(foundSegment, FileUtil.getRelativePath(FileUtil.getArchiveRoot(archive), file));
                 cache.getParentFile().mkdirs();
-                try (OutputStream out = new FileOutputStream(cache)) {
-                    out.write(file.asBytes());
+                if (file.isFolder()) {
+                    if (cache.exists() && cache.isFile()) {
+                        if (!cache.delete()) {
+                            return uri;
+                        }
+                    }
+                    cache.mkdir();
                     return cache.toURI().toString();
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
+                } else if (file.isData()) {
+                    try {
+                        if (cache.exists() && cache.isDirectory()) {
+                            FileUtil.toFileObject(cache).delete();
+                        }
+                        try (OutputStream out = new FileOutputStream(cache)) {
+                            out.write(file.asBytes());
+                            return cache.toURI().toString();
+                        }
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 }
             }
             if (uriUri.getScheme().equals("nbfs")) {            // NOI18N

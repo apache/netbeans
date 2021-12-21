@@ -23,14 +23,18 @@ import org.netbeans.modules.java.lsp.server.explorer.api.TreeItemData;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeDataProvider;
 import java.awt.Image;
 import java.beans.BeanInfo;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.java.lsp.server.Utils;
 import static org.netbeans.modules.java.lsp.server.explorer.NodeLookupContextValues.nodeLookup;
 import org.openide.filesystems.FileObject;
@@ -53,6 +57,9 @@ public class DefaultDecorationsImpl implements TreeDataProvider.Factory {
     public static final String COOKIES_EXT = "contextValues"; // NOI18N
     
     public static final String CTXVALUE_FOLDER = "is:folder"; // NOI18N
+    public static final String CTXVALUE_PROJECT = "is:project"; // NOI18N
+    public static final String CTXVALUE_PROJECT_ROOT = "is:projectRoot"; // NOI18N
+    public static final String CTXVALUE_PROJECT_SUBPROJECT = "is:subproject"; // NOI18N
     public static final String CTXVALUE_CAP_RENAME = "cap:rename"; // NOI18N
     public static final String CTXVALUE_CAP_DELETE = "cap:delete"; // NOI18N
 
@@ -88,7 +95,7 @@ public class DefaultDecorationsImpl implements TreeDataProvider.Factory {
         NodeLookupContextValues p = nodeLookup(lines.toArray(new String[lines.size()]));
         return new ProviderImpl(p);
     }
-
+    
     static class ProviderImpl implements TreeDataProvider {
 
         private final NodeLookupContextValues lookupValues;
@@ -114,7 +121,7 @@ public class DefaultDecorationsImpl implements TreeDataProvider.Factory {
                 d.setIconImage(i);
                 set = true;
             }
-
+            
             FileObject f = n.getLookup().lookup(FileObject.class);
             boolean nodeChecked = false;
             if (f == null) {
@@ -129,13 +136,35 @@ public class DefaultDecorationsImpl implements TreeDataProvider.Factory {
                 // Workaround for possible bug in data folder
                 nodeChecked = true;
             }
+            
+            boolean folder = false;
+            File physFile = null;
+            Project p = n.getLookup().lookup(Project.class);
+            
             if (f != null) {
                 // reverse check, if the file's node is proxied to by the node we got:
                 Node fn = f.getLookup().lookup(Node.class);
                 if (nodeChecked || fn != null) {
                     if (nodeChecked || n.getLookup().lookup(fn.getClass()) == fn) {
                         try {
-                            if (f.isFolder()) {
+                            // Workaround for prevailing folder usage in LSP clients: filter out
+                            // virtual or archive-based = readonly folders
+                            physFile = FileUtil.toFile(f);
+                            F: if (f.isFolder() && physFile != null) {
+                                // workaround^2: if the node represents the project directory, it may be some computed collection like
+                                // project files / buildscripts. Check the parent folder and if it yields the same project, then this node is
+                                // just a collection not a real project root -> not a "folder" for LSP.
+                                Project owner = FileOwnerQuery.getOwner(f);
+                                if (owner != null && owner.getProjectDirectory().equals(f)) {
+                                    Node parent = n.getParentNode();
+                                    if (parent != null) {
+                                        Project parentP = parent.getLookup().lookup(Project.class);
+                                        if (parentP == owner) {
+                                            break F;
+                                        }   
+                                    }
+                                }
+                                folder = true;
                                 d.addContextValues(CTXVALUE_FOLDER);
                             } else {
                                 // PENDING: this could be moved to the VSNetbeans module ?
@@ -150,14 +179,25 @@ public class DefaultDecorationsImpl implements TreeDataProvider.Factory {
                     }
                 }
             }
-            if (n.canDestroy()) {
+            
+            // special handling for project - just presence of ProjectCookie is not sufficient. 
+            // The Node must also expose a folder that is the project root folder itself:
+            if (p != null & folder && p.getProjectDirectory().equals(f)) {
+                d.addContextValues(CTXVALUE_PROJECT);
+                Project root = ProjectUtils.rootOf(p);
+                if (root == p) {
+                    Set<Project> contained = ProjectUtils.getContainedProjects(root, false);
+                    if (contained != null && !contained.isEmpty()) {
+                        d.addContextValues(CTXVALUE_PROJECT_ROOT);
+                    }
+                } else {
+                    d.addContextValues(CTXVALUE_PROJECT_SUBPROJECT);
+                }
+            } else if (f == null || physFile != null) { 
                 // TODO Hack: exclude projects from delete capability. The TreeItemData probably needs to support
                 // exclusion... Project delete UI is not suitable for LSP at the moment
-                Project p = n.getLookup().lookup(Project.class);
-                if (p == null || f == null || !p.getProjectDirectory().equals(f)) {
-                    d.addContextValues(CTXVALUE_CAP_DELETE);
-                    set = true;
-                }
+                d.addContextValues(CTXVALUE_CAP_DELETE);
+                set = true;
             }
             if (n.canRename()) {
                 d.addContextValues(CTXVALUE_CAP_RENAME);

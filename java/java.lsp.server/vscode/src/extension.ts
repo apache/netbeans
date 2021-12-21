@@ -757,7 +757,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 return selected ? Array.isArray(selected) ? selected : [selected] : undefined;
             });
             c.onRequest(InputBoxRequest.type, async param => {
-                return await window.showInputBox({ prompt: param.prompt, value: param.value });
+                return await window.showInputBox({ prompt: param.prompt, value: param.value, password: param.password });
             });
             c.onNotification(TestProgressNotification.type, param => {
                 if (testAdapter) {

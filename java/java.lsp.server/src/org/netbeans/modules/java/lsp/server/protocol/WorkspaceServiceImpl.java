@@ -98,6 +98,7 @@ import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodFinder;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.db.DBAddConnection;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachNativeConfigurations;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
@@ -516,7 +517,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         }
         throw new UnsupportedOperationException("Command not supported: " + params.getCommand());
     }
-
+    
     private final AtomicReference<BiConsumer<FileObject, Collection<TestMethodController.TestMethod>>> testMethodsListener = new AtomicReference<>();
     private final AtomicReference<PropertyChangeListener> openProjectsListener = new AtomicReference<>();
 

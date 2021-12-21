@@ -79,6 +79,10 @@ export interface ShowInputBoxParams {
      * The value to prefill in the input box.
      */
     value: string;
+    /**
+     * Controls if a password input is shown. Password input hides the typed text.
+     */
+    password?: boolean;
 }
 
 export namespace InputBoxRequest {

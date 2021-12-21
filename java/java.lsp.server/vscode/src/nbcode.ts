@@ -97,7 +97,9 @@ if (typeof process === 'object' && process.argv0 === 'node') {
     let clusters = fs.readdirSync(nbcode).filter(c => c !== 'bin' && c !== 'etc').map(c => path.join(nbcode, c));
     let args = process.argv.slice(2);
     let json = JSON.parse("" + fs.readFileSync(path.join(extension, 'package.json')));
-    let globalStorage = path.join(os.homedir(), '.config', 'Code', 'User', 'globalStorage', json.publisher + '.' + json.name);
+    let globalStorage = os.platform() === 'darwin' ? 
+        path.join(os.homedir(), 'Library', 'Application Support', 'Code', 'User', 'globalStorage', json.publisher + '.' + json.name) :
+        path.join(os.homedir(), '.config', 'Code', 'User', 'globalStorage', json.publisher + '.' + json.name);
     let info = {
         clusters : clusters,
         extensionPath: extension,

@@ -23,7 +23,8 @@
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 
-    <target name="compile" depends="check-main-status,projectized-common.compile,rebuild-main"/>
+    <target name="compile" depends="-build-hooks,check-main-status,projectized-common.compile,rebuild-main"/>
+    <target name="clean" depends="projectized-common.clean,-clean-hooks"/>
 
     <target name="check-main-status">
         <uptodate property="main.up.to.date" srcfile="${src.dir}/org/netbeans/Main.java" targetfile="${build.classes.dir}/org/netbeans/Main.class"/>
@@ -37,5 +38,13 @@
             <include name="org/netbeans/Main.java"/>
             <compilerarg line="${javac.compilerargs}"/>
         </javac>
+    </target>
+    <target name="-build-hooks">
+        <ant dir="netbeans-tracking-agent/tracking-agent" target="jar" inheritAll="false" inheritRefs="false" />
+        <ant dir="netbeans-tracking-agent/tracking-hooks" target="jar" inheritAll="false" inheritRefs="false" />
+    </target>
+    <target name="-clean-hooks">
+        <ant dir="netbeans-tracking-agent/tracking-agent" target="clean" inheritAll="false" inheritRefs="false" />
+        <ant dir="netbeans-tracking-agent/tracking-hooks" target="clean" inheritAll="false" inheritRefs="false" />
     </target>
 </project>

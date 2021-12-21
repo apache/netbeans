@@ -20,6 +20,7 @@
 package org.netbeans;
 
 import junit.framework.TestCase;
+import org.netbeans.agent.hooks.TrackingHooks;
 
 /**
  *
@@ -35,7 +36,7 @@ public class TopSecurityManagerTest extends TestCase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        TopSecurityManagerOld.uninstall();
+        TrackingHooks.clear();
     }
     
     

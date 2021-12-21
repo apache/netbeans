@@ -18,16 +18,12 @@
  */
 package org.netbeans.agent;
 
-import java.awt.Window;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,8 +31,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class TrackingAgent {
@@ -317,6 +311,7 @@ public class TrackingAgent {
     }
 
     public static void install() {
+        //TODO: should happen only once
         ClassFileTransformer trackingTransformer = new TrackingTransformer();
         try {
             List<Class<?>> classes2Transform = new ArrayList<>();
@@ -453,7 +448,20 @@ public class TrackingAgent {
 
                         //TODO: fix exception offsets, StackMapTable offsets, etc.
                         int exceptions = readShort(classfileBuffer, pp); pp += 2;
-                        pp += 8 * exceptions;
+                        for (int exception = 0; exception < exceptions; exception++) {
+                            int start = readShort(classfileBuffer, pp) + dataToInject.length; pp += 2;
+                            int end = readShort(classfileBuffer, pp) + dataToInject.length; pp += 2;
+                            int handler = readShort(classfileBuffer, pp) + dataToInject.length; pp += 2;
+                            pp += 2;
+                            injectBytes.add(new Edit(pp - 8, 6, new byte[] {
+                                (byte) ((start >>  8) & 0xFF),
+                                (byte) ((start >>  0) & 0xFF),
+                                (byte) ((end >>  8) & 0xFF),
+                                (byte) ((end >>  0) & 0xFF),
+                                (byte) ((handler >>  8) & 0xFF),
+                                (byte) ((handler >>  0) & 0xFF)
+                            }));
+                        }
                         pp = readAttributes(constantPool, classfileBuffer, pp, NOOP_INJECTOR);
                         return null;
                     };

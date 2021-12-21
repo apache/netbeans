@@ -59,6 +59,11 @@ public abstract class TrackingHooks {
         return result;
     }
 
+    //for tests:
+    public static synchronized void clear() {
+        hook2Delegates.clear();
+    }
+
     protected void checkExit(int i) {}
 
     public static void exitCallback(int i) {

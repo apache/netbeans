@@ -4,14 +4,19 @@ import {  LanguageClient } from 'vscode-languageclient/node';
 import { NbLanguageClient } from './extension';
 import { NodeChangedParams, NodeInfoNotification, NodeInfoRequest } from './protocol';
 
+const doLog : boolean = false;
 export class TreeViewService extends vscode.Disposable {  
+  
   private handler : vscode.Disposable | undefined;
   private client : NbLanguageClient;
   private trees : Map<string, vscode.TreeView<Visualizer>> = new Map();
   private images : Map<number, vscode.Uri> = new Map();
   private providers : Map<number, VisualizerProvider> = new Map();
-  constructor (c : NbLanguageClient, disposeFunc : () => void) {
+  log : vscode.OutputChannel;
+  
+  constructor (log : vscode.OutputChannel, c : NbLanguageClient, disposeFunc : () => void) {
     super(() => { this.disposeAllViews(); disposeFunc(); });
+    this.log = log;
     this.client = c;
   }
 
@@ -92,11 +97,11 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
   private root: Visualizer;
   private treeData : Map<number, Visualizer> = new Map();
   private decorators : TreeItemDecorator<Visualizer>[] = [];
-  private pendingRefresh : Set<number> = new Set();
-
+  
   constructor(
     private client: LanguageClient,
     private ts : TreeViewService,
+    private log : vscode.OutputChannel,
     id : string,
     rootData : NodeInfoRequest.Data
   ) {
@@ -115,8 +120,11 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
     }
   }
 
-  fireItemChange(item : Visualizer) : void {
-    if (!item) {
+  fireItemChange(item : Visualizer | undefined) : void {
+    if (doLog) {
+      this.log.appendLine(`Firing change on ${item?.idstring()}`);
+    }
+    if (!item || item == this.root) {
       this._onDidChangeTreeData.fire();
     } else {
       this._onDidChangeTreeData.fire(item);
@@ -137,13 +145,20 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
 
   refresh(params : NodeChangedParams): void {
       if (this.root.data.id === params.rootId) {
-        if (this.root.data.id == params.nodeId || !params.nodeId) {
-          this._onDidChangeTreeData.fire();
+        let v : Visualizer | undefined;
+        if (this. root.data.id == params.nodeId || !params.nodeId) {
+          v = this.root;
         } else {
-          this.pendingRefresh.add(params.nodeId);
-          let v : Visualizer | undefined = this.treeData.get(params.nodeId);
-          if (v) {
-              this._onDidChangeTreeData.fire(v);
+          v = this.treeData.get(params.nodeId);
+        }
+        if (v) {
+          if (this.delayedFire.has(v)) {
+            if (doLog) {
+              this.log.appendLine(`Delaying change on ${v.idstring()}`);
+            }
+            v.pendingChange = true;
+          } else {
+            this.fireItemChange(v);
           }
         }
       }
@@ -154,42 +169,130 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
   }
 
   getTreeItem(element: Visualizer): vscode.TreeItem | Thenable<vscode.TreeItem> {
-    const n = Number(element.id);
-    if (this.pendingRefresh.delete(n)) {
-      return this.fetchItem(n).then((newV) => {
-        element.update(newV);
-        return element;
-      });
+    const n : number = Number(element.id);
+    const self = this;
+    if (doLog) {
+      this.log.appendLine(`Doing getTreeItem on ${element.idstring()}`);
     }
+
+    return this.wrap(async (arr) => {
+      let fetched = await this.queryVisualizer(element, arr, () => this.fetchItem(n));
+      element.update(fetched);
+      return self.getTreeItem2(fetched);
+    });
+  }
+
+  /**
+   * Wraps code that queries individual Visualizers so that blocked changes are fired after
+   * the code terminated.
+   * 
+   * Usage:
+   * wrap(() => { ... code ... ; queryVisualizer(vis, () => { ... })});
+   * @param fn the code to execute
+   * @returns value of the code function
+   */
+  async wrap<X>(fn : (pending : Visualizer[]) => Thenable<X>) : Promise<X> {
+    let arr : Visualizer[] = [];
+    try {
+      return await fn(arr);
+    } finally {
+      this.releaseVisualizersAndFire(arr);
+    }
+  }
+
+  /**
+   * Just creates a string list from visualizer IDs. Diagnostics only.
+   */
+  private visualizerList(arr : Visualizer[]) : string {
+    let s = "";
+    for (let v of arr) {
+      s += v.idstring() + " ";
+    }
+    return s;
+  }
+
+  /**
+   * Do not use directly, use wrap(). Fires delayed events for visualizers that have no pending queries.
+   */
+  private releaseVisualizersAndFire(list : Visualizer[] | undefined) {
+    if (!list) {
+      list = Array.from(this.delayedFire);
+    }
+    if (doLog) {
+      this.log.appendLine(`Done with ${this.visualizerList(list)}`);
+    }
+    // v can be in list several times, each push increased its counter, so we need to decrease it.
+    for (let v of list) {
+      if (this.treeData?.get(Number(v.id || -1)) === v) {
+        if (--v.pendingQueries) {
+          if (doLog) {
+            this.log.appendLine(`${v.idstring()} has pending ${v.pendingQueries} queries`);
+          }
+          continue;
+        }
+        if (v.pendingChange) {
+          if (doLog) {
+            this.log.appendLine(`Fire delayed change on ${v.idstring()}`);
+          }
+          this.fireItemChange(v);
+          v.pendingChange = false;
+        }
+      }
+      this.delayedFire.delete(v);
+    }
+    if (doLog) {
+      this.log.appendLine("Pending queue: " + this.visualizerList(Array.from(this.delayedFire)));
+      this.log.appendLine("---------------");
+    }
+  }
+
+  /**
+   * Should wrap calls to NBLS for individual visualizers (info, children). Puts visualizer on the delayed fire list.
+   * Must be itself wrapped in wrap() -- wrap(... queryVisualizer()).
+   * @param element visualizer to be queried, possibly undefined (new item is expected)
+   * @param fn code to execute
+   * @returns code's result
+   */
+  async queryVisualizer<X>(element : Visualizer | undefined, pending : Visualizer[], fn : () => Promise<X>) : Promise<X> {
+    if (!element) {
+      return fn();
+    }
+    this.delayedFire.add(element);
+    pending.push(element);
+    element.pendingQueries++;
+    if (doLog) {
+      this.log.appendLine(`Delaying visualizer ${element.idstring()}, queries = ${element.pendingQueries}`)
+    }
+    return fn();
+  }
+
+  async getTreeItem2(element: Visualizer): Promise<vscode.TreeItem> {
+    const n = Number(element.id);
     if (this.decorators.length == 0) {
-      return element;
+     return element;
     }
     let list : TreeItemDecorator<Visualizer>[] = [...this.decorators];
     
-    function f(item : vscode.TreeItem) : vscode.TreeItem | Thenable<vscode.TreeItem> {
+    async function f(item : vscode.TreeItem) : Promise<vscode.TreeItem> {
       const deco = list.shift();
       if (!deco) {
-        return item;
+       return item;
       }
       const decorated = deco.decorateTreeItem(element, item);
       if (decorated instanceof vscode.TreeItem) {
           return f(decorated);
       } else {
-          return (decorated as Thenable<vscode.TreeItem>).then(f);
+         return (decorated as Thenable<vscode.TreeItem>).then(f);
       }
     }
-
     return f(element.copy());
   }
 
+  delayedFire : Set<Visualizer> = new Set<Visualizer>();
+
   async fetchItem(n : number) : Promise<Visualizer> {
     let d = await this.client.sendRequest(NodeInfoRequest.info, { nodeId : n });
-    if (this.pendingRefresh.delete(n)) {
-      // and again
-      return this.fetchItem(n);
-    }
     let v = new Visualizer(d, this.ts.imageUri(d));
-    // console.log('Nodeid ' + d.id + ': visualizer ' + v.visId);
     if (d.command) {
       // PENDING: provide an API to register command (+ parameters) -> command translators.
       if (d.command === 'vscode.open') {
@@ -203,31 +306,42 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
 
   getChildren(e?: Visualizer): Thenable<Visualizer[]> {
     const self = this;
-    async function collectResults(arr: any, element: Visualizer): Promise<Visualizer[]> {
+
+    if (doLog) {
+      this.log.appendLine(`Doing getChildren on ${e?.idstring()}`);
+    }
+
+    async function collectResults(list : Visualizer[], arr: any, element: Visualizer): Promise<Visualizer[]> {
       let res : Visualizer[] = [];
-      let refreshAgain : Visualizer[] = [];
+      let now : Visualizer[] | undefined;
       for (let i = 0; i < arr.length; i++) {
-        res.push(await self.fetchItem(arr[i]));
+        const old : Visualizer | undefined = self.treeData.get(arr[i]);
+        res.push(
+          await self.queryVisualizer(old, list, () => self.fetchItem(arr[i]))
+        );
       }
-      const now : Visualizer[] = element.updateChildren(res, self);
+      now = element.updateChildren(res, self);
       for (let i = 0; i < arr.length; i++) {
-        const v = res[i];
+        const v = now[i];
         const n : number = Number(v.id || -1);
         self.treeData.set(n, v);
         v.parent = element;
       }
-      return now;
+      return now || [];
     }
 
-    if (e) {
-      return this.client.sendRequest(NodeInfoRequest.children, { nodeId : e.data.id}).then(async (arr) => {
-        return collectResults(arr, e);
-      });
-    } else {
-      return this.client.sendRequest(NodeInfoRequest.children, { nodeId: this.root.data.id}).then(async (arr) => {
-        return collectResults(arr, this.root);
-      });
-    }
+    return self.wrap((list) => self.queryVisualizer(e, list, () => {
+        if (e) {
+          return this.client.sendRequest(NodeInfoRequest.children, { nodeId : e.data.id}).then(async (arr) => {
+            return collectResults(list, arr, e);
+          });
+        } else {
+          return this.client.sendRequest(NodeInfoRequest.children, { nodeId: this.root.data.id}).then(async (arr) => {
+            return collectResults(list, arr, this.root);
+          });
+        }
+      }
+    ));
   }
 
   removeVisualizers(vis : number[]) {
@@ -246,19 +360,20 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
   }
 }
 
-// let visualizerSerial = 1;
+let visualizerSerial = 1;
 
 export class Visualizer extends vscode.TreeItem {
 
-  // visId : number;
-
+  visId : number;
+  pendingQueries : number = 0;
+  pendingChange : boolean = false;
   constructor(
     public data : NodeInfoRequest.Data,
     public image : vscode.Uri | undefined
   ) {
     super(data.label, data.collapsibleState);
+    this.visId = visualizerSerial++;
     this.id = "" + data.id;
-    // this.visId = visualizerSerial++;
     this.label = data.label;
     this.description = data.description;
     this.tooltip = data.tooltip;
@@ -285,9 +400,11 @@ export class Visualizer extends vscode.TreeItem {
   parent: Visualizer | null = null;
   children: Map<number, Visualizer> | null = null;
 
-  update(other : Visualizer) {
-    this.id = "" + other.id;
-    // this.visId = visualizerSerial++;
+  idstring() : string {
+    return `[${this.id} : ${this.visId} - "${this.label}"]`;
+  }
+
+  update(other : Visualizer) : Visualizer {
     this.label = other.label;
     this.description = other.description;
     this.tooltip = other.tooltip;
@@ -299,6 +416,7 @@ export class Visualizer extends vscode.TreeItem {
     this.image = other.image;
     this.collapsibleState = other.collapsibleState;
     this.command = other.command;
+    return this;
   }
 
   updateChildren(newChildren : Visualizer[], provider : VisualizerProvider) : Visualizer[] {
@@ -338,7 +456,7 @@ export async function createViewProvider(c : NbLanguageClient, id : string) : Pr
     if (!node) {
       throw "Unsupported view: " + id;
     }
-    return new VisualizerProvider(client, ts, id, node);
+    return new VisualizerProvider(client, ts, ts.log, id, node);
   });
   if (!res) {
     throw "Unsupported view: " + id;
@@ -361,7 +479,7 @@ export async function createTreeView<T>(c: NbLanguageClient, viewId: string, vie
 /**
  * Registers the treeview service with the language server.
  */
-export function createTreeViewService(c : NbLanguageClient): TreeViewService {
+export function createTreeViewService(log : vscode.OutputChannel, c : NbLanguageClient): TreeViewService {
     const d = vscode.commands.registerCommand("foundProjects.deleteEntry", async function (this: any, args: any) {
         let v = args as Visualizer;
         let ok = await c.sendRequest(NodeInfoRequest.destroy, { nodeId : v.data.id });
@@ -369,7 +487,7 @@ export function createTreeViewService(c : NbLanguageClient): TreeViewService {
             vscode.window.showErrorMessage('Cannot delete node ' + v.label);
         }
     });
-    const ts : TreeViewService = new TreeViewService(c, () => {
+    const ts : TreeViewService = new TreeViewService(log, c, () => {
       d.dispose()
     });
     return ts;

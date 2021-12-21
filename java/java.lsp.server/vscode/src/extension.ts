@@ -63,9 +63,9 @@ let consoleLog: boolean = !!process.env['ENABLE_CONSOLE_LOG'];
 export class NbLanguageClient extends LanguageClient {
     private _treeViewService: TreeViewService;
 
-    constructor (id : string, name: string, s : ServerOptions, c : LanguageClientOptions) {
+    constructor (id : string, name: string, s : ServerOptions, log : vscode.OutputChannel, c : LanguageClientOptions) {
         super(id, name, s, c);
-        this._treeViewService = createTreeViewService(this);
+        this._treeViewService = createTreeViewService(log, this);
     }
 
     findTreeViewService(): TreeViewService {
@@ -742,6 +742,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 'java',
                 'NetBeans Java',
                 connection,
+                log,
                 clientOptions
         );
         handleLog(log, 'Language Client: Starting');

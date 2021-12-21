@@ -71,6 +71,12 @@
 					"id": "database.connections",
 					"name": "Databases",
 					"when": "nbJavaLSReady"
+				},
+				{
+					"id": "run-config",
+					"name": "Run Configuration",
+					"contextualTitle": "Run Configuration",
+					"when": "runConfigurationInitialized"
 				}
 			]
 		},
@@ -150,6 +156,26 @@
 					"description": "Members count to use a static star-import",
 					"default": 999,
 					"minimum": 1
+				},
+				"java8+.runConfig.arguments": {
+					"type": "string",
+					"default": "",
+					"description": "Arguments"
+				},
+				"java8+.runConfig.vmOptions": {
+					"type": "string",
+					"default": "",
+					"description": "VM options"
+				},
+				"java8+.runConfig.env": {
+					"type": "string",
+					"default": "",
+					"description": "Environment variables"
+				},
+				"java8+.runConfig.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Working directory"
 				}
 			}
 		},
@@ -463,6 +489,11 @@
 			{
 				"command": "java.local.db.set.preferred.connection",
 				"title": "Make Default Connection"
+			},
+			{
+				"command": "java.workspace.configureRunSettings",
+				"title": "Edit",
+				"icon": "$(edit)"
 			}
 		],
 		"keybindings": [
@@ -537,6 +568,10 @@
 				},
 				{
 					"command": "java.local.db.set.preferred.connection",
+					"when": "false"
+				},
+				{
+					"command": "java.workspace.configureRunSettings",
 					"when": "false"
 				}
 			],
@@ -614,6 +649,11 @@
 				{
 					"command": "java.local.db.set.preferred.connection",
 					"when": "viewItem =~ /class:ddl.DBConnection/"
+				},
+				{
+					"command": "java.workspace.configureRunSettings",
+					"when": "view == run-config && viewItem == configureRunSettings",
+					"group": "inline@1"
 				}
 			]
 		}

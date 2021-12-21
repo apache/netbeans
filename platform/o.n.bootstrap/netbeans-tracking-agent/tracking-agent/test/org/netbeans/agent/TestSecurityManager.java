@@ -16,29 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.masterfs;
+package org.netbeans.agent;
 
 import org.netbeans.agent.hooks.TrackingHooks;
-import org.netbeans.modules.masterfs.filebasedfs.utils.FileChangedManager;
-import org.netbeans.modules.masterfs.watcher.Watcher;
-import org.openide.modules.OnStart;
-import org.openide.modules.OnStop;
 
-/** Shutdown the watcher system.
+/**
+ *
+ * @author lahvac
  */
-@OnStart
-public final class Installer implements Runnable {
-    @Override
-    public void run() {
-        Watcher.isEnabled();
-        TrackingHooks.register(new FileChangedManager(), 0, TrackingHooks.HOOK_IO);
-    }
-    
-    @OnStop
-    public static final class Down implements Runnable {
-        @Override
-        public void run() {
-            Watcher.shutdown();
+public class TestSecurityManager {
+    public static void main(String... args) {
+        TrackingAgent.install();
+        TrackingHooks.register(new TrackingHooks() {
+            @Override
+            protected void checkExit(int i) {
+                System.out.println("check exit called with: " + i);
+                throw new SecurityException();
+            }
+        }, 0, TrackingHooks.HOOK_EXIT);
+        try {
+            System.exit(-2);
+            throw new AssertionError("Didn't throw a SecurityException!");
+        } catch (SecurityException ex) {
+            System.out.println("caught expected SecurityException");
         }
     }
 }

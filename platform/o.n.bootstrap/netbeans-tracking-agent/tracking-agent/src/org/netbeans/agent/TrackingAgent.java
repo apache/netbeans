@@ -35,6 +35,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class TrackingAgent {
@@ -84,27 +86,219 @@ public class TrackingAgent {
                                                       Arrays.asList(
                                                         "s" + TRACKING_HOOKS,
                                                         "s" + "newFileOutputStream",
-                                                        "s" + "(Ljava/io/FileOutputStream;Ljava/io/File;)V",
+                                                        "s" + "(Ljava/io/File;)V",
                                                         "0C,%1s,%2s",
                                                         "07,%0s",
                                                         "0A,%4s,%3s"
                                                       ),
-                                                      "2A2BB8,%5s"), //aload0, aload1, invokespecial #5
+                                                      "2A2BB8,%5s"), //aload1, invokespecial #5
             new TrackingTransformer.MethodEnhancement("java/io/FileOutputStream",
-                                                      "close",
-                                                      "()V",
+                                                      "<init>",
+                                                      "(Ljava/lang/String;)V",
                                                       Arrays.asList(
                                                         "s" + TRACKING_HOOKS,
-                                                        "s" + "fileOutputStreamClose",
-                                                        "s" + "(Ljava/io/FileOutputStream;)V",
+                                                        "s" + "newFileOutputStream",
+                                                        "s" + "(Ljava/lang/String;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2A2BB8,%5s"), //aload1, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/FileInputStream",
+                                                      "<init>",
+                                                      "(Ljava/io/File;)V",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "newFileInputStream",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2A2BB8,%5s"), //aload1, invokespecial #5
+//            new TrackingTransformer.MethodEnhancement("java/io/FileInputStream", //delegates to FileInputStream(File)
+//                                                      "<init>",
+//                                                      "(Ljava/lang/String;)V",
+//                                                      Arrays.asList(
+//                                                        "s" + TRACKING_HOOKS,
+//                                                        "s" + "newFileInputStream",
+//                                                        "s" + "(Ljava/lang/String;)V",
+//                                                        "0C,%1s,%2s",
+//                                                        "07,%0s",
+//                                                        "0A,%4s,%3s"
+//                                                      ),
+//                                                      "2A2BB8,%5s"), //aload1, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
+                                                      "newOutputStream",
+                                                      "(Ljava/nio/file/Path;[Ljava/nio/file/OpenOption;)Ljava/io/OutputStream;",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "newFileOutputStream",
+                                                        "s" + "(Ljava/nio/file/Path;)V",
                                                         "0C,%1s,%2s",
                                                         "07,%0s",
                                                         "0A,%4s,%3s"
                                                       ),
                                                       "2AB8,%5s"), //aload0, invokespecial #5
-            new TrackingTransformer.MethodEnhancement("java/awt/Window", //TODO: all constructors!
+            new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
+                                                      "newInputStream",
+                                                      "(Ljava/nio/file/Path;[Ljava/nio/file/OpenOption;)Ljava/io/InputStream;",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "newFileInputStream",
+                                                        "s" + "(Ljava/nio/file/Path;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0 , invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "delete",
+                                                      "()Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "deleteFile",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
+                                                      "delete",
+                                                      "(Ljava/nio/file/Path;)V",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "deleteFile",
+                                                        "s" + "(Ljava/nio/file/Path;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0 , invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/lang/System",
+                                                      "getProperty",
+                                                      "(Ljava/lang/String;)Ljava/lang/String;",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "systemProperty",
+                                                        "s" + "(Ljava/lang/String;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0 , invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/lang/System",
+                                                      "getProperty",
+                                                      "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "systemProperty",
+                                                        "s" + "(Ljava/lang/String;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0 , invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/lang/System",
+                                                      "clearProperty",
+                                                      "(Ljava/lang/String;)Ljava/lang/String;",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "systemProperty",
+                                                        "s" + "(Ljava/lang/String;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0 , invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/lang/reflect/Constructor",
+                                                      "setAccessible",
+                                                      "(Z)V",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "setAccessible",
+                                                        "s" + "(Ljava/lang/reflect/AccessibleObject;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0 , invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/lang/reflect/Field",
+                                                      "setAccessible",
+                                                      "(Z)V",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "setAccessible",
+                                                        "s" + "(Ljava/lang/reflect/AccessibleObject;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0 , invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/lang/reflect/Method",
+                                                      "setAccessible",
+                                                      "(Z)V",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "setAccessible",
+                                                        "s" + "(Ljava/lang/reflect/AccessibleObject;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0 , invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/lang/reflect/AccessibleObject",
+                                                      "setAccessible",
+                                                      "(Z)V",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "setAccessible",
+                                                        "s" + "(Ljava/lang/reflect/AccessibleObject;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0 , invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/lang/System",
+                                                      "setSecurityManager",
+                                                      "(Ljava/lang/SecurityManager;)V",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "setSecurityManager",
+                                                        "s" + "(Ljava/lang/Object;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/awt/Window",
+                                                      "<init>",
+                                                      "(Ljava/awt/Frame;)V",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "newAWTWindowCallback",
+                                                        "s" + "(Ljava/awt/Window;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/awt/Window",
                                                       "<init>",
                                                       "(Ljava/awt/Window;)V",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "newAWTWindowCallback",
+                                                        "s" + "(Ljava/awt/Window;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/awt/Window",
+                                                      "<init>",
+                                                      "(Ljava/awt/Window;Ljava/awt/GraphicsConfiguration;)V",
                                                       Arrays.asList(
                                                         "s" + TRACKING_HOOKS,
                                                         "s" + "newAWTWindowCallback",
@@ -125,8 +319,18 @@ public class TrackingAgent {
     public static void install() {
         ClassFileTransformer trackingTransformer = new TrackingTransformer();
         try {
+            List<Class<?>> classes2Transform = new ArrayList<>();
+            for (String className : toInject.stream().map(me -> me.className.replace('/', '.')).collect(Collectors.toSet())) {
+                try {
+                    classes2Transform.add(Class.forName(className));
+                } catch (ClassNotFoundException ex) {
+                    //XXX: warn:
+                    System.err.println("cannot instrument:");
+                    ex.printStackTrace();
+                }
+            }
             instrumentation.addTransformer(trackingTransformer, true);
-            instrumentation.retransformClasses(System.class, Runtime.class, FileOutputStream.class, Files.class, File.class, Window.class);
+            instrumentation.retransformClasses(classes2Transform.toArray(new Class[0]));
         } catch (UnmodifiableClassException ex) {
             System.err.println("cannot instrument:");
             ex.printStackTrace();
@@ -145,24 +349,24 @@ public class TrackingAgent {
         @Override
         public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
             try {
-                List<MethodEnhancement> thisClassEnhancements = toInject.stream().filter(me -> {/*System.err.println("me=" + me); */return className.equals(me.className);}).collect(Collectors.toList());
+                List<MethodEnhancement> thisClassEnhancements = toInject.stream().filter(me -> {/*System.err.println("className=" + className); */return className.equals(me.className);}).collect(Collectors.toList());
             if (thisClassEnhancements.isEmpty()) {
-                System.err.println("not rewriting: " + className);
+//                System.err.println("not rewriting: " + className);
                 return classfileBuffer;
             }
             List<Edit> injectBytes = new ArrayList<>();
-            System.err.println("transforming: " + className);
+//            System.err.println("transforming: " + className);
             int p = 4 + 2 + 2;
             int cpStart = p;
             int cpEntries = readShort(classfileBuffer, p);
-                System.err.println("cpEntries: " + cpEntries);
+//                System.err.println("cpEntries: " + cpEntries);
             p += 2;
             List<Object> constantPool = new ArrayList<>();
             constantPool.add(null);
             for (int entry = 1; entry < cpEntries; entry++) {
-                System.err.println("entry: " + entry);
+//                System.err.println("entry: " + entry);
                 byte tag = classfileBuffer[p++];
-                System.err.println("tag: " + tag);
+//                System.err.println("tag: " + tag);
                 switch (tag) {
                     case 1:
                         int size = readShort(classfileBuffer, p);
@@ -216,7 +420,7 @@ public class TrackingAgent {
                 int nameIdx = readShort(classfileBuffer, p); p += 2;
                 int descriptor = readShort(classfileBuffer, p); p += 2;
                 BiFunction<String, Integer, byte[]> injector = (n, pp) -> null;
-                Optional<MethodEnhancement> me = thisClassEnhancements.stream().filter(me_ -> constantPool.get(nameIdx).equals(me_.methodName)).filter(me_ -> constantPool.get(descriptor).equals(me_.methodDescriptions)).findAny();
+                Optional<MethodEnhancement> me = thisClassEnhancements.stream().filter(me_ -> constantPool.get(nameIdx).equals(me_.methodName)).filter(me_ -> constantPool.get(descriptor).equals(me_.methodDescriptor)).findAny();
                 if (me.isPresent()) {
                     injector = (n, pp) -> {
                         if (!"Code".equals(n)) {
@@ -352,14 +556,14 @@ public class TrackingAgent {
         private static final class MethodEnhancement {
             private final String className;
             private final String methodName;
-            private final String methodDescriptions;
+            private final String methodDescriptor;
             private final List<String> constantPool;
             private final String code2Inject;
 
             public MethodEnhancement(String className, String methodName, String methodDescriptions, List<String> constantPool, String code2Inject) {
                 this.className = className;
                 this.methodName = methodName;
-                this.methodDescriptions = methodDescriptions;
+                this.methodDescriptor = methodDescriptions;
                 this.constantPool = constantPool;
                 this.code2Inject = code2Inject;
             }

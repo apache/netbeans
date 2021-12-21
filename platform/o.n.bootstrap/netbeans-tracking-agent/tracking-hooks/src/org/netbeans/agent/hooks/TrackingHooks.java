@@ -20,26 +20,24 @@ package org.netbeans.agent.hooks;
 
 import java.awt.Window;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.lang.reflect.AccessibleObject;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
-/**
- *
- * @author lahvac
- */
 public abstract class TrackingHooks {
 
     public static final String HOOK_EXIT = "exit";
+    public static final String HOOK_IO = "io";
+    public static final String HOOK_PROPERTY = "property";
+    public static final String HOOK_ACCESSIBLE = "accessible";
     public static final String HOOK_NEW_AWT_WINDOW = "newAWTWindow";
+    public static final String HOOK_SECURITY_MANAGER = "securityManager";
 
     private static final Map<String, Set<HookDescription>> hook2Delegates = new HashMap<>();
 
@@ -51,7 +49,14 @@ public abstract class TrackingHooks {
     }
 
     private static synchronized Iterable<TrackingHooks> getDelegates(String hook) {
-        return hook2Delegates.getOrDefault(hook, Collections.emptySet()).stream().map(d -> d.hooks).collect(Collectors.toList());
+        //bootstrap issues, cannot use lambdas here:
+        List<TrackingHooks> result = new ArrayList<>();
+
+        for (HookDescription desc : hook2Delegates.getOrDefault(hook, Collections.emptySet())) {
+            result.add(desc.hooks);
+        }
+
+        return result;
     }
 
     protected void checkExit(int i) {}
@@ -62,12 +67,83 @@ public abstract class TrackingHooks {
         }
     }
 
-    public static void newFileOutputStream(FileOutputStream out, File file) {
-        System.err.println("new FileOutputStream(" + out + ", " + file + ")");
+    protected void checkFileWrite(String path) {}
+    protected void checkFileRead(String path) {}
+    protected void checkDelete(String path) {}
+
+    public static void newFileOutputStream(File file) {
+        newFileOutputStream(file.getPath());
     }
 
-    public static void fileOutputStreamClose(FileOutputStream out) {
-        System.err.println("close(" + out + ")");
+    public static void newFileOutputStream(Path path) {
+        File file = path.toFile();
+        if (file != null) {
+            newFileOutputStream(file);
+        }
+    }
+
+    public static void newFileOutputStream(String name) {
+        for (TrackingHooks h : getDelegates(HOOK_IO)) {
+            h.checkFileWrite(name);
+        }
+    }
+
+    public static void newFileInputStream(File file) {
+        newFileInputStream(file.getPath());
+    }
+
+    public static void newFileInputStream(Path path) {
+        File file = path.toFile();
+        if (file != null) {
+            newFileInputStream(file);
+        }
+    }
+
+    public static void newFileInputStream(String name) {
+        for (TrackingHooks h : getDelegates(HOOK_IO)) {
+            h.checkFileRead(name);
+        }
+    }
+
+    public static void deleteFile(File file) {
+        deleteFile(file.getPath());
+    }
+
+    public static void deleteFile(Path path) {
+        File file = path.toFile();
+        if (file != null) {
+            deleteFile(file);
+        }
+    }
+
+    private static void deleteFile(String name) {
+        for (TrackingHooks h : getDelegates(HOOK_IO)) {
+            h.checkDelete(name);
+        }
+    }
+
+    protected void checkSystemProperty(String property) {}
+
+    public static void systemProperty(String property) {
+        for (TrackingHooks h : getDelegates(HOOK_PROPERTY)) {
+            h.checkSystemProperty(property);
+        }
+    }
+
+    protected void checkSetAccessible(AccessibleObject what) {}
+
+    public static void setAccessible(AccessibleObject what) {
+        for (TrackingHooks h : getDelegates(HOOK_ACCESSIBLE)) {
+            h.checkSetAccessible(what);
+        }
+    }
+
+    protected void checkSetSecurityManager(Object what) {}
+
+    public static void setSecurityManager(Object what) {
+        for (TrackingHooks h : getDelegates(HOOK_SECURITY_MANAGER)) {
+            h.checkSetSecurityManager(what);
+        }
     }
 
     protected void checkNewAWTWindow(Window w) {}

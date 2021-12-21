@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.agent.hooks.TrackingHooks;
 import org.netbeans.modules.masterfs.filebasedfs.children.ChildrenSupport;
 import org.netbeans.modules.masterfs.filebasedfs.naming.NamingFactory;
 import org.openide.util.Lookup;
@@ -36,11 +37,7 @@ import org.openide.util.lookup.ServiceProviders;
  *
  * @author Radek Matous
  */
-@ServiceProviders({
-    @ServiceProvider(service=SecurityManager.class),
-    @ServiceProvider(service=FileChangedManager.class)
-})
-public class FileChangedManager extends SecurityManager {
+public class FileChangedManager extends TrackingHooks {
     private static final Logger LOG = Logger.getLogger(FileChangedManager.class.getName());
     private static final boolean isFine;
     private static final boolean isFiner;
@@ -86,29 +83,20 @@ public class FileChangedManager extends SecurityManager {
     }
 
     @Override
-    public void checkPermission(Permission perm) {
-    }
-    
-    @Override
-    public void checkDelete(String file) {
-        put(file, false);
+    protected void checkDelete(String path) {
+        put(path, false);
     }
 
     @Override
-    public void checkWrite(String file) {
-        put(file, true);
+    protected void checkFileWrite(String path) {
+        put(path, true);
     }
 
     @Override
-    public void checkRead(String file) {
+    protected void checkFileRead(String path) {
         pingIO(1);
     }
 
-    @Override
-    public void checkRead(String file, Object context) {
-        pingIO(1);
-    }
-        
     public boolean impeachExistence(File f, boolean expectedExixts) {
         Integer hint = remove(getKey(f));
         boolean retval = (hint == null) ? false : true;

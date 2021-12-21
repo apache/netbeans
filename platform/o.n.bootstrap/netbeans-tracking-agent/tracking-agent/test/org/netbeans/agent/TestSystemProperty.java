@@ -16,29 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.masterfs;
+package org.netbeans.agent;
 
+import java.io.IOException;
 import org.netbeans.agent.hooks.TrackingHooks;
-import org.netbeans.modules.masterfs.filebasedfs.utils.FileChangedManager;
-import org.netbeans.modules.masterfs.watcher.Watcher;
-import org.openide.modules.OnStart;
-import org.openide.modules.OnStop;
 
-/** Shutdown the watcher system.
+/**
+ *
+ * @author lahvac
  */
-@OnStart
-public final class Installer implements Runnable {
-    @Override
-    public void run() {
-        Watcher.isEnabled();
-        TrackingHooks.register(new FileChangedManager(), 0, TrackingHooks.HOOK_IO);
-    }
-    
-    @OnStop
-    public static final class Down implements Runnable {
-        @Override
-        public void run() {
-            Watcher.shutdown();
-        }
+public class TestSystemProperty {
+    public static void main(String... args) throws IOException {
+        TrackingAgent.install();
+        TrackingHooks.register(new TrackingHooks() {
+            @Override
+            protected void checkSystemProperty(String property) {
+                System.err.println("checkSystemProperty: " + property);
+            }
+        }, 0, TrackingHooks.HOOK_PROPERTY);
+        System.err.println("going to read property without default:");
+        System.getProperty("property");
+        System.err.println("going to read property with default:");
+        System.getProperty("property", "");
+        System.err.println("going to clear property:");
+        System.clearProperty("property");
     }
 }

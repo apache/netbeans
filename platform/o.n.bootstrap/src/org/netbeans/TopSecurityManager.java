@@ -221,6 +221,9 @@ public class TopSecurityManager extends TrackingHooks {
         wl.add("org.apache.lucene.util.RamUsageEstimator");//#217037
         wl.add("com.google.gson.internal.UnsafeAllocator"); //#219464   //NOI18N
         wl.add("org.netbeans.modules.web.jspparser_ext.WebAppParseSupport$ParserClassLoader"); //#218690 // NOI18N
+        wl.add("net.bytebuddy.dynamic.loading.ClassInjector$UsingUnsafe$Dispatcher$CreationAction"); // NOI18N
+        wl.add("com.oracle.truffle.api.library.LibraryFactory"); // NOI18N
+        wl.add("com.oracle.truffle.api.nodes.NodeFieldAccessor$AbstractUnsafeNodeFieldAccessor"); // NOI18N
         return wl;
     }
     private static boolean isDangerous(String caller, String accessTo) {

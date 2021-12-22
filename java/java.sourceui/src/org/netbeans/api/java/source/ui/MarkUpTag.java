@@ -1,42 +1,28 @@
 package org.netbeans.api.java.source.ui;
 
-
-import java.util.Set;
+import java.util.List;
 
 class MarkUpTag {
 
-        String tagName;
-        int lineSourceOffset;
-        int markupLineOffset;
-        int nameLineOffset;
-        int start;
-        int end;
-        Set<MarkUpTagAttribute> markUpTagAttributes;
-        boolean isTagApplicableToNextLine;
+    private String tagName;
+    private List<MarkUpTagAttribute> markUpTagAttributes;
+    private boolean isTagApplicableToNextLine;
 
-        String name() {
-            return tagName;
-        }
 
-        Set<MarkUpTagAttribute> attributes() {
-            return markUpTagAttributes;
-        }
-
-        int start() {
-            return start;
-        }
-
-        int end() {
-            return end;
-        }
-
-        @Override
-        public String toString() {
-            return "Tag{" +
-                    "name='" + tagName + '\'' +
-                    ", start=" + start +
-                    ", end=" + end +
-                    ", attributes=" + markUpTagAttributes +
-                    '}';
-        }
+    public MarkUpTag(String tagName, List<MarkUpTagAttribute> markUpTagAttributes, boolean isTagApplicableToNextLine) {
+        this.tagName = tagName;
+        this.markUpTagAttributes = markUpTagAttributes;
+        this.isTagApplicableToNextLine = isTagApplicableToNextLine;
     }
+
+    public String getTagName() {
+        return tagName;
+    }
+
+    public List<MarkUpTagAttribute> getMarkUpTagAttributes() {
+        return markUpTagAttributes;
+    }
+    public boolean isTagApplicableToNextLine() {
+        return isTagApplicableToNextLine;
+    }
+}

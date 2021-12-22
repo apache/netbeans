@@ -36,7 +36,6 @@ public class MarkUpTagAttribute {
     public int hashCode() {
         int hash = 7;
         hash = 43 * hash + Objects.hashCode(this.name);
-        hash = 43 * hash + Objects.hashCode(this.value);
         return hash;
     }
 
@@ -53,9 +52,6 @@ public class MarkUpTagAttribute {
         }
         final MarkUpTagAttribute other = (MarkUpTagAttribute) obj;
         if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        if (!Objects.equals(this.value, other.value)) {
             return false;
         }
         return true;

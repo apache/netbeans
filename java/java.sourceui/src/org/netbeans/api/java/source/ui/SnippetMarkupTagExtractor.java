@@ -1,6 +1,5 @@
 package org.netbeans.api.java.source.ui;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,8 +12,7 @@ public final class SnippetMarkupTagExtractor {
     private int bufferLength;
     private char currentChar;
     private char[] charBuffer;
-    private static char MARKUP_TAG_START_CHAR = '@';
-
+    private static final char MARKUP_TAG_START_CHAR = '@';
 
     public List<MarkUpTag> extract(String tagLine) {
 
@@ -48,14 +46,14 @@ public final class SnippetMarkupTagExtractor {
         skipWhitespace();
 
         boolean isTagApplicableToNextLine = false;
-        Set<MarkUpTagAttribute> markUpTagAttributes = new HashSet<>();
+        List<MarkUpTagAttribute> markUpTagAttributes = new ArrayList<>();
 
         if (currentChar == ':') {// @highlight: regex = "\barg\b", for this markup tag consider only the tag i.e.
-                                // highlight and skipped all attributes
+            // highlight and skipped all attributes
             isTagApplicableToNextLine = true;
             nextChar();
         } else {
-            markUpTagAttributes = new HashSet(getAllMarkUpTagAttributes());
+            markUpTagAttributes = getAllMarkUpTagAttributes();
             skipWhitespace();
             if (currentChar == ':') {//This colon check is for end of the markup tag attributes
                 isTagApplicableToNextLine = true;
@@ -63,16 +61,8 @@ public final class SnippetMarkupTagExtractor {
             }
         }
 
-        MarkUpTag mtag = new MarkUpTag();
-        mtag.nameLineOffset = nameBufferPointer;
-        mtag.tagName = tagName;
-        mtag.markUpTagAttributes = markUpTagAttributes;
-        mtag.isTagApplicableToNextLine = isTagApplicableToNextLine;
-
-        return mtag;
+        return new MarkUpTag(tagName, markUpTagAttributes, isTagApplicableToNextLine);
     }
-
-
 
     private List<MarkUpTagAttribute> getAllMarkUpTagAttributes() {
         List<MarkUpTagAttribute> attrs = new ArrayList<>();
@@ -112,12 +102,10 @@ public final class SnippetMarkupTagExtractor {
             //some attribute doesn't have value e.g. // @highlight region
             MarkUpTagAttribute markUpTagAttribute = new MarkUpTagAttribute(attributeName, nameStartPos, value.toString(), valueStartPos);
 
-
             attrs.add(markUpTagAttribute);
         }
         return attrs;
     }
-
 
     private void addRemainingText(StringBuilder b, int textStart, int textEnd) {
         if (textStart != -1) {
@@ -135,7 +123,7 @@ public final class SnippetMarkupTagExtractor {
         return readName();
     }
 
-    private String readName(){
+    private String readName() {
         int start = bufferPointer;
         nextChar();
         while (bufferPointer < bufferLength && (Character.isUnicodeIdentifierPart(currentChar) || currentChar == '-')) {
@@ -157,62 +145,4 @@ public final class SnippetMarkupTagExtractor {
     private void nextChar() {
         currentChar = charBuffer[bufferPointer < bufferLength ? ++bufferPointer : bufferLength];
     }
-    
-    //    public static void main(String[] args) {
-//        System.out.println("---------------------tag with single attribute----------------------");
-//
-//        String tagLine = "@highlight regex = \"\\barg\\b\"";
-//        System.out.println(tagLine);
-//        List<MarkUpTag> extract = new SnippetMarkupTagExtractor().extract(tagLine);
-//        print(extract);
-//
-//        System.out.println("---------------------tag with multiple attributes----------------------");
-//
-//        tagLine = "//@highlight region=here regex = \"\\barg\\b\"";
-//        System.out.println(tagLine);
-//        extract = new SnippetMarkupTagExtractor().extract(tagLine);
-//        print(extract);
-//
-//        System.out.println("-----------------multiple tags--------------------------");
-//
-//        tagLine = "//@highlight region=here regex = \"\\barg\\b\" @link substring = println" ;
-//        System.out.println(tagLine);
-//        extract = new SnippetMarkupTagExtractor().extract(tagLine);
-//        print(extract);
-//
-//        System.out.println("------------------Only Tag End with semi colon-------------------------");
-//
-//        tagLine = "//@highlight: region=here regex = \"\\barg\\b\" @link substring = println" ;
-//        System.out.println(tagLine);
-//        extract = new SnippetMarkupTagExtractor().extract(tagLine);
-//        print(extract);
-//
-//        System.out.println("------------------Tag attributes End with semi colon-------------------------");
-//
-//        tagLine = "//@highlight region=here regex = \"\\barg\\b\": @link substring = println" ;
-//        System.out.println(tagLine);
-//        extract = new SnippetMarkupTagExtractor().extract(tagLine);//@highlight region=here regex = "\barg\b"
-//        print(extract);
-//
-//        System.out.println("------------------Tag attributes with regex and replacement-------------------------");
-//
-//        tagLine = "// @replace regex='\".*\"' replacement=\"...\"" ;
-//        System.out.println(tagLine);
-//        extract = new SnippetMarkupTagExtractor().extract(tagLine);
-//        print(extract);
-//
-//    }
-
-
-
-//    public static void print(List<MarkUpTag> extract){
-//        for(MarkUpTag markUpTag : extract) {
-//            System.out.println("TagName = " + markUpTag.tagName);
-//            for (MarkUpTagAttribute attribute : markUpTag.markUpTagAttributes) {
-//                System.out.println("attribute name = " + attribute.getName());
-//                System.out.println("attribute value = " + attribute.getValue());
-//            }
-//        }
-//    }
-
 }

@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.tomcat5.deploy;
 
-import org.netbeans.modules.tomcat5.deploy.TomcatManager;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;

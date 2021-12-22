@@ -27,7 +27,11 @@ plugins {
 def commonProject = project.parent
 def jdk8 = System.getProperty("java.version").startsWith("1.8")
 
-mainClassName = '${packageBase}.DesktopMain'
+if (hasProperty("runClassName")) {
+    mainClassName = runClassName
+} else {
+    mainClassName = '${packageBase}.DesktopMain'
+}
 
 <#noparse>
 distributions {

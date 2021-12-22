@@ -518,6 +518,10 @@ public final class MavenEmbedder {
      * Should be called in the same thread as whatever thread was throwing the NPE.
      */
     public void setUpLegacySupport() {
+        LegacySupport support = lookupComponent(LegacySupport.class);
+        if (support.getSession() != null) {
+            return;
+        }
         DefaultRepositorySystemSession session = new DefaultRepositorySystemSession();
         session.setOffline(isOffline());
         SimpleLocalRepositoryManagerFactory f = new SimpleLocalRepositoryManagerFactory();        

@@ -75,6 +75,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.lang.model.SourceVersion;
 import javax.tools.Diagnostic;
@@ -530,7 +531,7 @@ public class VanillaPartialReparser implements PartialReparser {
             String verifyTree = treeToString(verifyInfo, verifyInfo.getCompilationUnit());
             if (cancel.get()) return ;
             if (!Objects.equals(reparsedTree, verifyTree)) {
-                failInfo += "Expected tree: " + reparsedTree + ", actual tree: " + verifyTree;
+                failInfo += "Expected tree: " + reparsedTree + "\n" + "  actual tree: " + verifyTree;
             }
             if (!failInfo.isEmpty() && !cancel.get()) {
                 Utilities.revalidate(reparsed.getFileObject());
@@ -581,13 +582,25 @@ public class VanillaPartialReparser implements PartialReparser {
                         dump.append(Trees.instance(info.getJavacTask()).getSourcePositions().getStartPosition(tp.getCompilationUnit(), tree)).append(":");
                         dump.append(Trees.instance(info.getJavacTask()).getSourcePositions().getEndPosition(tp.getCompilationUnit(), tree)).append(":");
                         dump.append(String.valueOf(Trees.instance(info.getJavacTask()).getElement(tp))).append(":");
-                        dump.append(String.valueOf(Trees.instance(info.getJavacTask()).getTypeMirror(tp))).append(":");
+                        dump.append(normalizeCapture(String.valueOf(Trees.instance(info.getJavacTask()).getTypeMirror(tp)))).append(":");
                         dump.append(",");
                     }
                     return super.scan(tree, p);
                 }
             }.scan(cut, null);
             return dump.toString();
+        }
+
+        private static final Pattern MIRROR_PATTERN = Pattern.compile("capture#(\\d+)");
+        private static String normalizeCapture(String s) {
+            // the toString result of a CapturedType contains the sequence
+            // "capture#NUMBER" where number is the hashCode of the mirror
+            // as hashCode is not overwriten, this is more or less a random
+            // number and thus meaning less for the tree comparisson leading to
+            // invalid incorrect partial reparsing reports
+            //
+            // This normalises it to a plain capture.
+            return MIRROR_PATTERN.matcher(s).replaceAll("capture");
         }
 
         @MimeRegistration(service=TaskFactory.class, mimeType="text/x-java")

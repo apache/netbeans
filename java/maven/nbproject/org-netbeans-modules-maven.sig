@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.147
+#Version 2.151
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1114,6 +1114,7 @@ hfds MODULE_INFO
 CLSS public final org.netbeans.modules.maven.api.NbMavenProject
 fld public final static java.lang.String PROP_PROJECT = "MavenProject"
 fld public final static java.lang.String PROP_RESOURCE = "RESOURCES"
+fld public final static java.lang.String TYPE = "org-netbeans-modules-maven"
 fld public final static java.lang.String TYPE_APPCLIENT = "app-client"
 fld public final static java.lang.String TYPE_EAR = "ear"
 fld public final static java.lang.String TYPE_EJB = "ejb"
@@ -1159,6 +1160,7 @@ hcls AccessorImpl,FCHSL
 
 CLSS public org.netbeans.modules.maven.api.PluginPropertyUtils
 innr public abstract interface static ConfigurationBuilder
+innr public final static PluginConfigPathParams
 meth public static <%0 extends java.lang.Object> {%%0} getPluginPropertyBuildable(org.apache.maven.project.MavenProject,java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.maven.api.PluginPropertyUtils$ConfigurationBuilder<{%%0}>)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
@@ -1259,6 +1261,11 @@ meth public static java.lang.String[] getReportPluginPropertyList(org.netbeans.a
  anno 4 org.netbeans.api.annotations.common.NonNull()
  anno 5 org.netbeans.api.annotations.common.NonNull()
  anno 6 org.netbeans.api.annotations.common.NullAllowed()
+meth public static java.util.List<org.apache.maven.artifact.Artifact> getPluginPathProperty(org.netbeans.api.project.Project,org.netbeans.modules.maven.api.PluginPropertyUtils$PluginConfigPathParams,boolean,java.util.List<org.apache.maven.artifact.resolver.ArtifactResolutionException>)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 4 org.netbeans.api.annotations.common.NullAllowed()
 meth public static java.util.Properties getPluginPropertyParameter(org.apache.maven.project.MavenProject,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -1281,11 +1288,27 @@ meth public static org.codehaus.plexus.component.configurator.expression.Express
  anno 1 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
 hfds CONTEXT_EXPRESSION_EVALUATOR,DUMMY_EVALUATOR,LIFECYCLE_PLUGINS
-hcls ExternalDefaultBuilder
+hcls DependencyListBuilder,ExternalDefaultBuilder
 
 CLSS public abstract interface static org.netbeans.modules.maven.api.PluginPropertyUtils$ConfigurationBuilder<%0 extends java.lang.Object>
  outer org.netbeans.modules.maven.api.PluginPropertyUtils
 meth public abstract {org.netbeans.modules.maven.api.PluginPropertyUtils$ConfigurationBuilder%0} build(org.codehaus.plexus.util.xml.Xpp3Dom,org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator)
+
+CLSS public final static org.netbeans.modules.maven.api.PluginPropertyUtils$PluginConfigPathParams
+ outer org.netbeans.modules.maven.api.PluginPropertyUtils
+cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+meth public java.lang.String getArtifactType()
+meth public java.lang.String getDefaultScope()
+meth public java.lang.String getGoal()
+meth public java.lang.String getPathItemName()
+meth public java.lang.String getPathProperty()
+meth public java.lang.String getPluginArtifactId()
+meth public java.lang.String getPluginGroupId()
+meth public void setArtifactType(java.lang.String)
+meth public void setDefaultScope(java.lang.String)
+meth public void setGoal(java.lang.String)
+supr java.lang.Object
+hfds artifactType,defaultScope,goal,pathItemName,pathProperty,pluginArtifactId,pluginGroupId
 
 CLSS public abstract interface org.netbeans.modules.maven.api.ProjectProfileHandler
 meth public abstract java.util.List<java.lang.String> getActiveProfiles(boolean)
@@ -1430,6 +1453,7 @@ meth public org.netbeans.modules.maven.model.pom.POMModel getPOMModel()
 meth public static org.netbeans.modules.maven.api.customizer.ModelHandle2$Configuration createCustomConfiguration(java.lang.String)
 meth public static org.netbeans.modules.maven.api.customizer.ModelHandle2$Configuration createDefaultConfiguration()
 meth public static org.netbeans.modules.maven.api.customizer.ModelHandle2$Configuration createProfileConfiguration(java.lang.String)
+meth public static org.netbeans.modules.maven.api.customizer.ModelHandle2$Configuration createProvidedConfiguration(java.lang.String)
 meth public static org.netbeans.modules.maven.execute.model.NetbeansActionMapping getDefaultMapping(java.lang.String,org.netbeans.api.project.Project)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public static org.netbeans.modules.maven.execute.model.NetbeansActionMapping getMapping(java.lang.String,org.netbeans.api.project.Project,org.netbeans.spi.project.ProjectConfiguration)
@@ -1452,6 +1476,7 @@ CLSS public static org.netbeans.modules.maven.api.customizer.ModelHandle2$Config
  outer org.netbeans.modules.maven.api.customizer.ModelHandle2
 meth public boolean isDefault()
 meth public boolean isProfileBased()
+meth public boolean isProvided()
 meth public boolean isShared()
 meth public java.lang.String getDisplayName()
 meth public java.lang.String getFileNameExt()
@@ -1461,10 +1486,11 @@ meth public java.util.List<java.lang.String> getActivatedProfiles()
 meth public java.util.Map<java.lang.String,java.lang.String> getProperties()
 meth public void setActivatedProfiles(java.util.List<java.lang.String>)
 meth public void setDefault(boolean)
+meth public void setDisplayName(java.lang.String)
 meth public void setProperties(java.util.Map<java.lang.String,java.lang.String>)
 meth public void setShared(boolean)
 supr java.lang.Object
-hfds activatedProfiles,defaul,id,profileBased,properties,shared
+hfds activatedProfiles,defaul,displayName,id,profileBased,properties,shared
 
 CLSS public abstract org.netbeans.modules.maven.api.customizer.support.CheckBoxUpdater
 cons public init(javax.swing.JCheckBox)
@@ -1823,11 +1849,14 @@ supr java.lang.Enum<org.netbeans.modules.maven.execute.AbstractOutputHandler$Lev
 CLSS public final org.netbeans.modules.maven.execute.ActionToGoalUtils
 fld public static org.netbeans.modules.maven.execute.ActionToGoalUtils$ContextAccessor ACCESSOR
 innr public abstract static ContextAccessor
+meth public static boolean isActionEnable(java.lang.String,org.netbeans.modules.maven.NbMavenProjectImpl,org.netbeans.spi.project.ProjectConfiguration,org.openide.util.Lookup)
 meth public static boolean isActionEnable(java.lang.String,org.netbeans.modules.maven.NbMavenProjectImpl,org.openide.util.Lookup)
+meth public static boolean isDisabledMapping(org.netbeans.modules.maven.execute.model.NetbeansActionMapping)
 meth public static java.io.File resolveProjectExecutionBasedir(org.netbeans.modules.maven.execute.model.NetbeansActionMapping,org.netbeans.api.project.Project)
 meth public static java.util.List<? extends org.netbeans.modules.maven.spi.actions.MavenActionsProvider> actionProviders(org.netbeans.api.project.Project)
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public static org.netbeans.modules.maven.api.execute.RunConfig createRunConfig(java.lang.String,org.netbeans.modules.maven.NbMavenProjectImpl,org.netbeans.spi.project.ProjectConfiguration,org.openide.util.Lookup)
 meth public static org.netbeans.modules.maven.api.execute.RunConfig createRunConfig(java.lang.String,org.netbeans.modules.maven.NbMavenProjectImpl,org.openide.util.Lookup)
 meth public static org.netbeans.modules.maven.execute.model.ActionToGoalMapping readMappingsFromFileAttributes(org.openide.filesystems.FileObject)
 meth public static org.netbeans.modules.maven.execute.model.NetbeansActionMapping getActiveMapping(java.lang.String,org.netbeans.api.project.Project,org.netbeans.modules.maven.configurations.M2Configuration)
@@ -1948,6 +1977,7 @@ meth public static org.openide.execution.ExecutorTask executeMaven(org.netbeans.
 meth public void run()
 supr org.netbeans.modules.maven.execute.AbstractMavenExecutor
 hfds ENV_JAVAHOME,ENV_PREFIX,INTERNAL_PREFIX,KEY_UUID,LOGGER,NETBEANS_MAVEN_COMMAND_LINE,RP,UPDATE_INDEX_RP,VER17,preProcess,preProcessUUID,process,processUUID
+hcls WrapperShellConstructor
 
 CLSS public static org.netbeans.modules.maven.execute.MavenCommandLineExecutor$ExecuteMaven
  outer org.netbeans.modules.maven.execute.MavenCommandLineExecutor
@@ -2085,14 +2115,16 @@ hfds actionName,activatedProfiles,basedir,displayName,goals,modelEncoding,packag
 
 CLSS public org.netbeans.modules.maven.execute.model.NetbeansActionProfile
 cons public init()
+meth public java.lang.String getDisplayName()
 meth public java.lang.String getId()
 meth public java.util.List<org.netbeans.modules.maven.execute.model.NetbeansActionMapping> getActions()
 meth public void addAction(org.netbeans.modules.maven.execute.model.NetbeansActionMapping)
 meth public void removeAction(org.netbeans.modules.maven.execute.model.NetbeansActionMapping)
 meth public void setActions(java.util.List<org.netbeans.modules.maven.execute.model.NetbeansActionMapping>)
+meth public void setDisplayName(java.lang.String)
 meth public void setId(java.lang.String)
 supr java.lang.Object
-hfds actions,id
+hfds actions,displayName,id
 
 CLSS public abstract org.netbeans.modules.maven.execute.model.NetbeansActionReader
 cons public init()
@@ -2190,8 +2222,10 @@ meth public java.util.Set<java.lang.String> getSupportedDefaultActions()
 meth public org.netbeans.modules.maven.execute.model.ActionToGoalMapping getRawMappings()
 meth public org.netbeans.modules.maven.execute.model.NetbeansActionMapping getMappingForAction(java.lang.String,org.netbeans.api.project.Project)
 meth public static java.lang.String dynamicSubstitutions(java.util.Map<java.lang.String,java.lang.String>,java.lang.String)
+meth public static org.netbeans.modules.maven.spi.actions.MavenActionsProvider fromNbActions(org.netbeans.api.project.Project,java.net.URL)
 supr java.lang.Object
 hfds LOG,writer
+hcls ResourceConfigAwareProvider
 
 CLSS public abstract interface org.netbeans.modules.maven.spi.actions.ActionConvertor
 meth public abstract java.lang.String convert(java.lang.String,org.openide.util.Lookup)

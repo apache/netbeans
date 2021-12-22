@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.64
+#Version 1.66
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -870,9 +870,10 @@ CLSS public final org.netbeans.modules.classfile.ModuleTarget
 meth public java.lang.String getOSArch()
 meth public java.lang.String getOSName()
 meth public java.lang.String getOSVersion()
+meth public java.lang.String getPlatform()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds osArch,osName,osVersion
+hfds platform
 
 CLSS public final org.netbeans.modules.classfile.NestedElementValue
 meth public final org.netbeans.modules.classfile.Annotation getNestedValue()

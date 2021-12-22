@@ -97,7 +97,7 @@ class LongMap extends AbstractLongMap {
                 try {
                     referenceList.putFirst(getReferencesPointer(),instanceId);
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    Systems.printStackTrace(ex);
                 }
             }
         }
@@ -113,7 +113,7 @@ class LongMap extends AbstractLongMap {
                     return ref;
                 }
             } catch (IOException ex) {
-                ex.printStackTrace();
+                Systems.printStackTrace(ex);
             }
             return 0L;
         }
@@ -137,7 +137,7 @@ class LongMap extends AbstractLongMap {
                     }
                 }
             } catch (IOException ex) {
-                ex.printStackTrace();
+                Systems.printStackTrace(ex);
             }
         }
         
@@ -154,7 +154,7 @@ class LongMap extends AbstractLongMap {
                 try {
                     return referenceList.getNumbersIterator(ref);
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    Systems.printStackTrace(ex);
                 }
             }
             return LongIterator.EMPTY_ITERATOR;

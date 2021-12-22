@@ -239,7 +239,7 @@ public class NetUtils {
                     System.setProperty("socksNonProxyHosts",  socksNonProxyHosts + localhost);
                     ConnectException ce = new ConnectException();
                     ce.initCause(ex);
-                    throw ce; //status unknow at this point
+                    throw ce; //status unknown at this point
                     //next call, we'll be ok and it will really detect if we are secure or not
                 }
             }

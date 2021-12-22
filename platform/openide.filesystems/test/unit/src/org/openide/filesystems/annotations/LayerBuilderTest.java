@@ -81,8 +81,9 @@ public class LayerBuilderTest extends NbTestCase {
     private static String clean(String layer) {
         return layer.
                 replace('"', '\'').
-                replaceFirst("^<\\?xml version='1\\.0' encoding='UTF-8'\\?>\r?\n", "").
-                replaceFirst("^<!DOCTYPE [^>]+>\r?\n", "").
+                 // can be on same line try to remove only the element
+                replaceFirst("<\\?xml version='1\\.0' encoding='UTF-8'\\?>", "").
+                replaceFirst("<!DOCTYPE [^>]+>", "").
                 replaceAll("\r?\n *", "");
     }
 

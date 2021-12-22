@@ -1,21 +1,37 @@
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import * as assert from 'assert';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as ps from 'ps-node';
-import { spawn, ChildProcessByStdio, spawnSync, SpawnSyncReturns } from 'child_process';
-import { Readable } from 'stream';
 
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
 import * as vscode from 'vscode';
 import * as myExtension from '../../extension';
+import * as myExplorer from '../../explorer';
 import { TextDocument, TextEditor, Uri } from 'vscode';
+import { assertWorkspace, dumpJava, prepareProject } from './testutils';
 
 suite('Extension Test Suite', () => {
-    vscode.window.showInformationMessage('Cleaning up workspace.');
-    let folder: string = assertWorkspace();
-    fs.rmdirSync(folder, { recursive: true });
-    fs.mkdirSync(folder, { recursive: true });
     vscode.window.showInformationMessage('Start all tests.');
     myExtension.enableConsoleLog();
 
@@ -71,35 +87,9 @@ suite('Extension Test Suite', () => {
     async function demo(where: number) {
         let folder: string = assertWorkspace();
 
-        await fs.promises.writeFile(path.join(folder, 'pom.xml'), `
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.netbeans.demo.vscode.t1</groupId>
-    <artifactId>basicapp</artifactId>
-    <version>1.0</version>
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
-</project>
-		`);
-
-        let pkg = path.join(folder, 'src', 'main', 'java', 'pkg');
-        let mainJava = path.join(pkg, 'Main.java');
-
-        await fs.promises.mkdir(pkg, { recursive: true });
-
-        await fs.promises.writeFile(mainJava, `
-package pkg;
-class Main {
-	public static void main(String... args) {
-		System.out.println("Hello World!");
-	}
-}
-		`);
-
+        await prepareProject(folder);
         vscode.workspace.saveAll();
-
+        
         if (where === 6) return;
 
         try {
@@ -118,11 +108,19 @@ class Main {
         if (where === 8) return;
 
         assert.ok(fs.statSync(mainClass).isFile(), "Class created by compilation: " + mainClass);
+
+        myExplorer.createViewProvider(await myExtension.awaitClient(), "foundProjects").then(async (lvp) => {
+            const firstLevelChildren = await (lvp.getChildren() as Thenable<any[]>);
+            assert.strictEqual(firstLevelChildren.length, 1, "One child under the root");
+            const item = await (lvp.getTreeItem(firstLevelChildren[0]) as Thenable<vscode.TreeItem>);
+            assert.strictEqual(item?.label, "basicapp", "Element is named as the Maven project");
+        })
     }
 
     test("Compile workspace6", async() => demo(6));
     test("Compile workspace7", async() => demo(7));
     test("Compile workspace8", async() => demo(8));
+    test("Compile workspace9", async() => demo(9));
 
     /**
      * Checks that maven-managed process can be started, and forcefully terminated by vscode
@@ -131,42 +129,13 @@ class Main {
     async function mavenTerminateWithoutDebugger() {
         let folder: string = assertWorkspace();
 
-        await fs.promises.writeFile(path.join(folder, 'pom.xml'), `
-    <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.netbeans.demo.vscode.t1</groupId>
-    <artifactId>basicapp</artifactId>
-    <version>1.0</version>
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
-    </project>
-        `);
-
-        let pkg = path.join(folder, 'src', 'main', 'java', 'pkg');
-        let mainJava = path.join(pkg, 'Main.java');
-
-        await fs.promises.mkdir(pkg, { recursive: true });
-
-        await fs.promises.writeFile(mainJava, `
-    package pkg;
-    class Main {
-    public static void main(String... args) throws Exception {
-        System.out.println("Endless wait...");
-        while (true) {
-            Thread.sleep(1000);
-        }
-    }
-    }
-        `);
+        await prepareProject(folder);
         vscode.workspace.saveAll();
-        let u : Uri = vscode.Uri.file(mainJava);
+        let u : Uri = vscode.Uri.file(path.join(folder, 'src', 'main', 'java', 'pkg', 'Main.java'));
         let doc : TextDocument = await vscode.workspace.openTextDocument(u);
         let e : TextEditor = await vscode.window.showTextDocument(doc);
 
         try {
-            let terminated = false;
             let r = new Promise((resolve, reject) => {
                 function waitUserApplication(cnt : number, running: boolean, cb : () => void) {
                     ps.lookup({
@@ -210,65 +179,40 @@ class Main {
     async function getProjectInfo() {
         let folder: string = assertWorkspace();
 
-        await fs.promises.writeFile(path.join(folder, 'pom.xml'), `
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.netbeans.demo.vscode.t1</groupId>
-    <artifactId>basicapp</artifactId>
-    <version>1.0</version>
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
-</project>
-		`);
-
-        let pkg = path.join(folder, 'src', 'main', 'java', 'pkg');
-        let resources = path.join(folder, 'src', 'main', 'resources');
-        let mainJava = path.join(pkg, 'Main.java');
-
-        await fs.promises.mkdir(pkg, { recursive: true });
-        await fs.promises.mkdir(resources, { recursive: true });
-
-        await fs.promises.writeFile(mainJava, `
-package pkg;
-class Main {
-	public static void main(String... args) {
-		System.out.println("Hello World!");
-	}
-}
-		`);
-
+        await prepareProject(folder);
         vscode.workspace.saveAll();
 
         try {
             console.log("Test: get project java source roots");
             let res: any = await vscode.commands.executeCommand("java.get.project.source.roots", Uri.file(folder).toString());
             console.log(`Test: get project java source roots finished with ${res}`);
-            assert.ok(res, "No java source root rertuned");
-            assert.strictEqual(res.length, 1, `Invalid number of java roots returned`);
-            assert.strictEqual(res[0], path.join('file:', folder, 'src', 'main', 'java') + path.sep, `Invalid java source root returned`);
+            assert.ok(res, "No java source root returned");
+            assert.strictEqual(res.length, 2, `Invalid number of java roots returned`);
+            assert.strictEqual(res[0], path.join('file:', folder, 'src', 'main', 'java') + path.sep, `Invalid java main source root returned`);
+            assert.strictEqual(res[1], path.join('file:', folder, 'src', 'test', 'java') + path.sep, `Invalid java test source root returned`);
 
             console.log("Test: get project resource roots");
             res = await vscode.commands.executeCommand("java.get.project.source.roots", Uri.file(folder).toString(), 'resources');
             console.log(`Test: get project resource roots finished with ${res}`);
             assert.ok(res, "No resource root returned");
             assert.strictEqual(res.length, 1, `Invalid number of resource roots returned`);
-            assert.strictEqual(res[0], path.join('file:', resources) + path.sep, `Invalid resource root returned`);
+            assert.strictEqual(res[0], path.join('file:', folder, 'src', 'main', 'resources') + path.sep, `Invalid resource root returned`);
 
             console.log("Test: get project compile classpath");
             res = await vscode.commands.executeCommand("java.get.project.classpath", Uri.file(folder).toString());
             console.log(`Test: get project compile classpath finished with ${res}`);
             assert.ok(res, "No compile classpath returned");
-            assert.strictEqual(res.length, 1, `Invalid number of compile classpath roots returned`);
-            assert.strictEqual(res[0], path.join('file:', folder, 'target', 'classes') + path.sep, `Invalid compile classpath root returned`);
+            assert.strictEqual(res.length, 9, `Invalid number of compile classpath roots returned`);
+            assert.ok(res.find((item: any) => item === path.join('file:', folder, 'target', 'classes') + path.sep, `Invalid compile classpath root returned`));
 
             console.log("Test: get project source classpath");
             res = await vscode.commands.executeCommand("java.get.project.classpath", Uri.file(folder).toString(), 'SOURCE');
             console.log(`Test: get project source classpath finished with ${res}`);
             assert.ok(res, "No source classpath returned");
-            assert.strictEqual(res.length, 1, `Invalid number of source classpath roots returned`);
-            assert.strictEqual(res[0], path.join('file:', folder, 'src', 'main', 'java') + path.sep, `Invalid source classpath root returned`);
+            assert.strictEqual(res.length, 3, `Invalid number of source classpath roots returned`);
+            assert.ok(res.find((item: any) => item === path.join('file:', folder, 'src', 'main', 'java') + path.sep, `Invalid source classpath root returned`));
+            assert.ok(res.find((item: any) => item === path.join('file:', folder, 'src', 'main', 'resources') + path.sep, `Invalid source classpath root returned`));
+            assert.ok(res.find((item: any) => item === path.join('file:', folder, 'src', 'test', 'java') + path.sep, `Invalid source classpath root returned`));
 
             console.log("Test: get project boot classpath");
             res = await vscode.commands.executeCommand("java.get.project.classpath", Uri.file(folder).toString(), 'BOOT');
@@ -302,34 +246,33 @@ class Main {
 
     test("Get project sources, classpath, and packages", async() => getProjectInfo());
 
+    async function testExplorerTests() {
+        let folder: string = assertWorkspace();
+
+        await prepareProject(folder);
+        vscode.workspace.saveAll();
+        try {
+            console.log("Test: load workspace tests");
+            let tests: any = await vscode.commands.executeCommand("java.load.workspace.tests", Uri.file(folder).toString());
+            console.log(`Test: load workspace tests finished with ${tests}`);
+            assert.ok(tests, "No tests returned for workspace");
+            assert.strictEqual(tests.length, 2, `Invalid number of test suites returned`);
+            assert.strictEqual(tests[0].name, 'pkg.MainTest', `Invalid test suite name returned`);
+            assert.strictEqual(tests[0].tests.length, 1, `Invalid number of tests in suite returned`);
+            assert.strictEqual(tests[0].tests[0].name, 'testGetName', `Invalid test name returned`);
+            assert.strictEqual(tests[1].name, 'pkg.MainTest$NestedTest', `Invalid test suite name returned`);
+            assert.strictEqual(tests[1].tests.length, 1, `Invalid number of tests in suite returned`);
+            assert.strictEqual(tests[1].tests[0].name, 'testTrue', `Invalid test name returned`);
+
+            console.log("Test: run all workspace tests");
+            const workspaceFolder = (vscode.workspace.workspaceFolders!)[0];
+            await vscode.commands.executeCommand('java.run.test', workspaceFolder.uri.toString());
+            console.log(`Test: run all workspace tests finished`);
+        } catch (error) {
+            dumpJava();
+            throw error;
+        }
+    }
+
+    test("Test Explorer tests", async() => testExplorerTests());
 });
-
-function assertWorkspace(): string {
-    assert.ok(vscode.workspace, "workspace is defined");
-    const dirs = vscode.workspace.workspaceFolders;
-    assert.ok(dirs?.length, "There are some workspace folders: " + dirs);
-    assert.strictEqual(dirs.length, 1, "One folder provided");
-    let folder: string = dirs[0].uri.fsPath;
-    return folder;
-}
-
-async function dumpJava() {
-    const cmd = 'jps';
-    const args = [ '-v' ];
-    console.log(`Running: ${cmd} ${args.join(' ')}`);
-    let p : ChildProcessByStdio<null, Readable, Readable> = spawn(cmd, args, {
-        stdio : ["ignore", "pipe", "pipe"],
-    });
-    let n = await new Promise<number>((r, e) => {
-        p.stdout.on('data', function(d: any) {
-            console.log(d.toString());
-        });
-        p.stderr.on('data', function(d: any) {
-            console.log(d.toString());
-        });
-        p.on('close', function(code: number) {
-            r(code);
-        });
-    });
-    console.log(`${cmd} ${args.join(' ')} finished with code ${n}`);
-}

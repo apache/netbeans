@@ -201,7 +201,7 @@ public final class SourceUtilsEx {
         for (FileObject fo : fos) {
             FileObject root = cp.findOwnerRoot(fo);
             assert root != null;
-            FileObject[] sourceRoots = SourceForBinaryQuery.findSourceRoots(root.getURL()).getRoots();
+            FileObject[] sourceRoots = SourceForBinaryQuery.findSourceRoots(root.toURL()).getRoots();
             ClassPath sourcePath = ClassPathSupport.createClassPath(sourceRoots);
             LinkedList<FileObject> folders = new LinkedList<FileObject>(sourcePath.findAllResources(pkgName));
 

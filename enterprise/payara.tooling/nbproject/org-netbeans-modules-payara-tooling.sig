@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.7
+#Version 2.9
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1240,6 +1240,7 @@ meth public java.lang.String toString()
 meth public java.util.Optional<java.lang.Short> getMinor()
 meth public java.util.Optional<java.lang.Short> getSubMinor()
 meth public java.util.Optional<java.lang.Short> getUpdate()
+meth public java.util.Optional<java.lang.String> getVM()
 meth public java.util.Optional<java.lang.String> getVendor()
 meth public short getMajor()
 meth public static boolean isCorrectJDK(java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>)
@@ -1247,8 +1248,9 @@ meth public static boolean isCorrectJDK(org.netbeans.modules.payara.tooling.data
 meth public static org.netbeans.modules.payara.tooling.data.JDKVersion getDefaultPlatformVersion()
 meth public static org.netbeans.modules.payara.tooling.data.JDKVersion toValue(java.lang.String)
 meth public static org.netbeans.modules.payara.tooling.data.JDKVersion toValue(java.lang.String,java.lang.String)
+meth public static org.netbeans.modules.payara.tooling.data.JDKVersion toValue(java.lang.String,java.lang.String,java.lang.String)
 supr java.lang.Object
-hfds DEFAULT_VALUE,IDE_JDK_VERSION,MAJOR_INDEX,MINOR_INDEX,SUBMINOR_INDEX,UPDATE_INDEX,VERSION_MATCHER,major,minor,subminor,update,vendor
+hfds DEFAULT_VALUE,IDE_JDK_VERSION,MAJOR_INDEX,MINOR_INDEX,SUBMINOR_INDEX,UPDATE_INDEX,VERSION_MATCHER,major,minor,subminor,update,vendor,vm
 
 CLSS public final !enum org.netbeans.modules.payara.tooling.data.PayaraAdminInterface
 fld public final static org.netbeans.modules.payara.tooling.data.PayaraAdminInterface HTTP
@@ -1318,6 +1320,7 @@ supr java.lang.Object
 hfds artifactId,groupId,version
 
 CLSS public org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion
+fld public final static java.lang.String DEFAULT_REPOSITORY_URL = "https://repo1.maven.org/maven2/"
 fld public final static org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI EMPTY
 intf java.lang.Comparable<org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI>
 intf org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI
@@ -1338,13 +1341,18 @@ meth public short getMajor()
 meth public short getMinor()
 meth public short getUpdate()
 meth public static java.util.List<org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI> getVersions()
+meth public static java.util.List<org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI> getVersions(java.lang.String)
 meth public static java.util.Map<java.lang.String,org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI> getVersionMap()
 meth public static org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI getLatestVersion()
 meth public static org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI toValue(java.lang.String)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public static org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI toValue(java.lang.String,java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
-hfds CDDL_LICENSE,DOWNLOAD_URL,METADATA_URL,build,directUrl,indirectUrl,latestVersion,major,minor,update,uriFragment,value,versions
+hfds CDDL_LICENSE,DOWNLOAD_URL,LOCAL_METADATA_URL,LOGGER,METADATA_URL,build,directUrl,indirectUrl,latestVersion,major,minor,update,uriFragment,value,versions
 
 CLSS public abstract interface org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI
 fld public final static char SEPARATOR = '.'
@@ -2160,6 +2168,8 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.String,java.lang.String)
 fld public final java.lang.String option
 fld public final java.util.Optional<java.lang.String> vendor
+ anno 0 java.lang.Deprecated()
+fld public final java.util.Optional<java.lang.String> vendorOrVM
 fld public final java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion> maxVersion
 fld public final java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion> minVersion
 meth public boolean equals(java.lang.Object)

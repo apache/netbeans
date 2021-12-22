@@ -38,6 +38,7 @@ import java.beans.PropertyVetoException;
 import java.io.InvalidObjectException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -89,6 +90,8 @@ import org.netbeans.modules.debugger.jpda.truffle.TruffleDebugManager;
 import org.netbeans.modules.debugger.jpda.truffle.Utils;
 import org.netbeans.modules.debugger.jpda.truffle.actions.StepActionProvider;
 import org.netbeans.modules.debugger.jpda.truffle.ast.TruffleNode;
+import org.netbeans.modules.debugger.jpda.truffle.breakpoints.impl.HitBreakpointInfo;
+import org.netbeans.modules.debugger.jpda.truffle.breakpoints.impl.TruffleBreakpointOutput;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackInfo;
 import org.netbeans.modules.debugger.jpda.truffle.source.Source;
@@ -366,12 +369,18 @@ public class TruffleAccess implements JPDABreakpointListener {
         JPDADebugger debugger = event.getDebugger();
         if (execHaltedBP.get(debugger) == bp) {
             LOG.log(Level.FINE, "TruffleAccessBreakpoints.breakpointReached({0}), exec halted.", event);
-            StepActionProvider.killJavaStep(debugger);
-            setCurrentPosition(debugger, event.getThread());
+            if (!setCurrentPosition(debugger, event.getThread())) {
+                event.resume();
+            } else {
+                StepActionProvider.killJavaStep(debugger);
+            }
         } else if (execStepIntoBP.get(debugger) == bp) {
             LOG.log(Level.FINE, "TruffleAccessBreakpoints.breakpointReached({0}), exec step into.", event);
-            StepActionProvider.killJavaStep(debugger);
-            setCurrentPosition(debugger, event.getThread());
+            if (!setCurrentPosition(debugger, event.getThread())) {
+                event.resume();
+            } else {
+                StepActionProvider.killJavaStep(debugger);
+            }
         } else if (dbgAccessBP.get(debugger) == bp) {
             LOG.log(Level.FINE, "TruffleAccessBreakpoints.breakpointReached({0}), debugger access.", event);
             try {
@@ -388,8 +397,11 @@ public class TruffleAccess implements JPDABreakpointListener {
         }
     }
     
-    private void setCurrentPosition(JPDADebugger debugger, JPDAThread thread) {
+    private boolean setCurrentPosition(JPDADebugger debugger, JPDAThread thread) {
         CurrentPCInfo cpci = getCurrentPosition(debugger, thread);
+        if (cpci == null) {
+            return false;
+        }
         synchronized (currentPCInfos) {
             ThreadInfo info = currentPCInfos.get(thread);
             if (info == null) {
@@ -399,6 +411,7 @@ public class TruffleAccess implements JPDABreakpointListener {
             }
             info.cpi = cpci;
         }
+        return true;
     }
 
     private static CurrentPCInfo getCurrentPosition(JPDADebugger debugger, JPDAThread thread) {
@@ -427,13 +440,39 @@ public class TruffleAccess implements JPDABreakpointListener {
             ObjectVariable thisObject = null;// TODO: (ObjectVariable) frameInfoVar.getField("thisObject");
             TruffleStackFrame topFrame = new TruffleStackFrame(debugger, thread, 0, frame, topFrameDescription, null/*code*/, scopes, thisObject, true);
             TruffleStackInfo stack = new TruffleStackInfo(debugger, thread, stackTrace, haltedInfo.supportsJavaFrames);
-            return new CurrentPCInfo(haltedInfo.stepCmd, thread, sp, scopes, topFrame, stack, depth -> {
+            HitBreakpointInfo[] breakpointInfos = getBreakpointInfos(haltedInfo, thread);
+            CurrentPCInfo cpi = new CurrentPCInfo(haltedInfo.stepCmd, thread, sp, scopes, topFrame,stack, depth -> {
                 return getTruffleAST(debugger, (JPDAThreadImpl) thread, depth, sp, stack);
             });
+            if (breakpointInfos != null) {
+                TruffleBreakpointOutput.breakpointsHit(breakpointInfos, cpi);
+            }
+            return cpi;
         } catch (IllegalStateException ex) {
             Exceptions.printStackTrace(ex);
             return null;
         }
+    }
+
+    private static HitBreakpointInfo[] getBreakpointInfos(ExecutionHaltedInfo haltedInfo, JPDAThread thread) {
+        ObjectVariable[] breakpointsHit = haltedInfo.breakpointsHit;
+        ObjectVariable[] breakpointConditionExceptions = haltedInfo.breakpointConditionExceptions;
+        int n = (breakpointsHit != null) ? breakpointsHit.length : 0;
+        HitBreakpointInfo[] breakpointInfos = null;
+        for (int i = 0; i < n; i++) {
+            ObjectVariable exception = (breakpointConditionExceptions != null) ? breakpointConditionExceptions[i] : null;
+            HitBreakpointInfo breakpointInfo = HitBreakpointInfo.create(breakpointsHit[i], exception);
+            if (breakpointInfo != null) {
+                if (breakpointInfos == null) {
+                    breakpointInfos = new HitBreakpointInfo[] { breakpointInfo };
+                } else {
+                    // There will rarely be more than one breakpoint hit
+                    breakpointInfos = Arrays.copyOf(breakpointInfos, breakpointInfos.length + 1);
+                    breakpointInfos[breakpointInfos.length - 1] = breakpointInfo;
+                }
+            }
+        }
+        return breakpointInfos;
     }
 
     private static TruffleNode getTruffleAST(JPDADebugger debugger, JPDAThreadImpl thread, int depth, SourcePosition topPosition, TruffleStackInfo stack) {

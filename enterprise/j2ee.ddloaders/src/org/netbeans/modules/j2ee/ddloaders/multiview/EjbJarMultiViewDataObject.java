@@ -291,13 +291,13 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
     }
     
     private RequestProcessor.Task elementTask;
-    private List deletedEjbNames;
-    private List newFileNames;
+    private List<String> deletedEjbNames;
+    private List<String> newFileNames;
     
     private void elementCreated(final String elementName) {
         synchronized (this) {
             if (newFileNames == null) {
-                newFileNames = new ArrayList();
+                newFileNames = new ArrayList<>();
             }
             newFileNames.add(elementName);
         }
@@ -388,7 +388,7 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
                     if (resourceName.equals(ejbs[i].getEjbClass())) {
                         synchronized (this) {
                             if (deletedEjbNames == null) {
-                                deletedEjbNames = new ArrayList();
+                                deletedEjbNames = new ArrayList<>();
                             }
                             deletedEjbNames.add(resourceName);
                         }
@@ -618,10 +618,7 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
         }
         
         public void view() {
-            try {
-                HtmlBrowser.URLDisplayer.getDefault().showURL(primary.getFile().getURL());
-            } catch (FileStateInvalidException e) {
-            }
+            HtmlBrowser.URLDisplayer.getDefault().showURL(primary.getFile().toURL());
         }
     }
     

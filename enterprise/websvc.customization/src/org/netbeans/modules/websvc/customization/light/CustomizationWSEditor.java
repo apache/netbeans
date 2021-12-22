@@ -222,10 +222,10 @@ public class CustomizationWSEditor implements WSEditor {
         }
         Definitions definitions = wsdlModel.getDefinitions();
         if (definitions.getImports().size() == 0) {
-            wsdlModels.put(wsdlModel, Boolean.valueOf(dobj.isModified()));
+            wsdlModels.put(wsdlModel, dobj.isModified());
             return;
         } else {
-            wsdlModels.put(wsdlModel, Boolean.valueOf(dobj.isModified()));
+            wsdlModels.put(wsdlModel, dobj.isModified());
             Set<WSDLModel> modelSet = getImportedModels(definitions);
             for (WSDLModel wModel : modelSet) {
                 populateAllModels(wModel);

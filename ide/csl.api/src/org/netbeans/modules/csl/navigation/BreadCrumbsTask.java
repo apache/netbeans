@@ -122,7 +122,9 @@ public class BreadCrumbsTask extends ElementScanningTask {
         OUTER: while (requestId.get() == id) {
             for (Node n : toSelect.getChildren().getNodes(true)) {
                 StructureItemNode sin = (StructureItemNode) n;
-                
+                if (StructureItem.isInherited(sin.item)) {
+                    continue;
+                }
                 if (sin.item.getPosition() <= caret && caret <= sin.item.getEndPosition()) {
                     toSelect = sin;
                     // see #223480, mimetype nodes look ugly in the breadcrumb bar

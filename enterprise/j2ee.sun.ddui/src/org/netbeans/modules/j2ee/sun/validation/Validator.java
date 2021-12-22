@@ -25,11 +25,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import org.netbeans.modules.j2ee.sun.validation.Constants;
 import org.netbeans.modules.j2ee.sun.validation.constraints.Constraint;
 import org.netbeans.modules.j2ee.sun.validation.util.BundleReader;
 import org.netbeans.modules.j2ee.sun.validation.util.Utils;
-import org.netbeans.modules.j2ee.sun.validation.Validatee;
 
 /**
  * Validator  is an <code>Object</code> that knows how to validate its
@@ -228,7 +226,7 @@ class Validator {
         String sizeMethodName =  utils.methodNameFromBeanName(
             elementName, SIZE_PREFIX);
         Method sizeMethod = validatee.getMethod(sizeMethodName);
-        noOfElements = ((Integer)validatee.invoke(sizeMethod)).intValue();
+        noOfElements = ((Integer)validatee.invoke(sizeMethod));
         
         ArrayList constraintList =
             (ArrayList)elementToConstraints.get(elementDtdName);

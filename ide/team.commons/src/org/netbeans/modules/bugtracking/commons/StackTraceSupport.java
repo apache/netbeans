@@ -188,7 +188,7 @@ class StackTraceSupport {
                    case ']':
                        continue;
                    default:
-                     //  System.out.println("  ???? " + new Integer(ch));
+                     //  System.out.println("  ???? " + Integer.valueOf(ch));
                        return false;
                }
            }

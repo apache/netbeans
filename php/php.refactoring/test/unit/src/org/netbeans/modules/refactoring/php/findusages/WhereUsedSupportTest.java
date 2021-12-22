@@ -248,4 +248,28 @@ public class WhereUsedSupportTest extends FindUsagesTestBase {
         findUsages("(new Two)->get^Two();");
     }
 
+    public void testNB6087_PrivateTraitMethod01() throws Exception {
+        findUsages("private function private^Method(): void");
+    }
+
+    public void testNB6087_PrivateTraitMethod02() throws Exception {
+        findUsages("$this->privateMetho^d();");
+    }
+
+    public void testNB6087_PrivateTraitMethod03() throws Exception {
+        findUsages("$this->privateMetho^d();", "nb6087.php");
+    }
+
+    public void testNB6087_PrivateTraitField01() throws Exception {
+        findUsages("private int $privateFi^eld = 1;");
+    }
+
+    public void testNB6087_PrivateTraitField02() throws Exception {
+        findUsages("$this->privateFie^ld;");
+    }
+
+    public void testNB6087_PrivateTraitField03() throws Exception {
+        findUsages("echo $this->privateFi^eld;", "nb6087.php");
+    }
+
 }

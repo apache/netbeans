@@ -34,6 +34,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.api.project.ui.ProjectGroup;
 import org.netbeans.api.project.ui.ProjectGroupChangeListener;
+import org.openide.explorer.ExplorerManager;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 
@@ -140,6 +141,16 @@ public final class BaseUtilities {
             }
             assert res != null;
             return res;
+        }
+
+        @Override
+        public ExplorerManager createLogicalView() {
+            return new ExplorerManager();
+        }
+
+        @Override
+        public ExplorerManager createPhysicalView() {
+            return new ExplorerManager();
         }
     }
 }

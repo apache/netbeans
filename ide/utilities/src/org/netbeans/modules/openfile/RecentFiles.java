@@ -162,8 +162,7 @@ public final class RecentFiles {
             String value = _prefs.get(curKey, null);
             if (value != null) {
                 try {
-                    int id = new Integer(
-                         curKey.substring(PROP_URL_PREFIX.length())).intValue();
+                    int id = Integer.parseInt(curKey.substring(PROP_URL_PREFIX.length()));
                     HistoryItem hItem = new HistoryItem(id, value,
                             _prefs.getByteArray(PROP_ICON_PREFIX + id, null));
                     int ind = result.indexOf(hItem);

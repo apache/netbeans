@@ -18,12 +18,13 @@
  */
 package org.netbeans.modules.glassfish.tooling.data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.modules.glassfish.tooling.logging.Logger;
 import org.netbeans.modules.glassfish.tooling.utils.EnumUtils;
 import org.openide.util.Parameters;
 
@@ -83,7 +84,9 @@ public enum GlassFishVersion {
     /** GlassFish 6. */
     GF_6       ((short) 6, (short) 0, (short) 0, (short) 0, GlassFishVersion.GF_6_STR),
     /** GlassFish 6.1.0 */
-    GF_6_1_0       ((short) 6, (short) 1, (short) 0, (short) 0, GlassFishVersion.GF_6_1_0_STR);
+    GF_6_1_0       ((short) 6, (short) 1, (short) 0, (short) 0, GlassFishVersion.GF_6_1_0_STR),
+    /** GlassFish 6.2.1 */
+    GF_6_2_1       ((short) 6, (short) 2, (short) 1, (short) 0, GlassFishVersion.GF_6_2_1_STR);
     ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
     ////////////////////////////////////////////////////////////////////////////
@@ -201,6 +204,10 @@ public enum GlassFishVersion {
     static final String GF_6_1_0_STR = "6.1.0";
     /** Additional <code>String</code> representations of GF_6_1_0 value. */
     static final String GF_6_1_0_STR_NEXT[] = {"6.1", "6.1.0"};
+    /** A <code>String</code> representation of GF_6_1_0 value. */
+    static final String GF_6_2_1_STR = "6.2.1";
+    /** Additional <code>String</code> representations of GF_6_2_1 value. */
+    static final String GF_6_2_1_STR_NEXT[] = {"6.2.1"};
 
     /**
      * Stored <code>String</code> values for backward <code>String</code>
@@ -232,6 +239,7 @@ public enum GlassFishVersion {
         initStringValuesMapFromArray(GF_5_1_0, GF_5_1_0_STR_NEXT);
         initStringValuesMapFromArray(GF_6, GF_6_STR_NEXT);
         initStringValuesMapFromArray(GF_6_1_0, GF_6_1_0_STR_NEXT);
+        initStringValuesMapFromArray(GF_6_2_1, GF_6_2_1_STR_NEXT);
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -272,48 +280,54 @@ public enum GlassFishVersion {
         GlassFishVersion version
                 = stringValuesMap.get(versionStr.toUpperCase(Locale.ENGLISH));
         if (version == null) {
-            String[] versionNumbers = versionStr.split("\\"+SEPARATOR);
-            for (int i = versionNumbers.length - 1;
-                    version == null && i > 0; i--) {
-                int versionStrLen = i - 1;
-                for (int j = 0; j < i; j++) {
-                    versionStrLen += versionNumbers[j].length();
+            List<Integer> versionNumbers = new ArrayList<>(4);
+
+            String[] versionParts = versionStr.split("[^0-9.]", 2);
+            String[] versionNumberStrings = versionParts[0].split("\\.");
+            for (int i = 0; i < Math.min(4, versionNumberStrings.length); i++) {
+                try {
+                    int value = Integer.parseInt(versionNumberStrings[i]);
+                    versionNumbers.add(value);
+                } catch (NumberFormatException ex) {
+                    break;
                 }
-                StringBuilder sb = new StringBuilder(versionStrLen);
-                for (int j = 0; j < i; j++) {
-                    if (j > 0) {
-                        sb.append(SEPARATOR);
-                    }
-                    try {
-                        Integer.parseInt(versionNumbers[j]);
-                        sb.append(versionNumbers[j]);
-                    } catch (NumberFormatException ex) {
-                        break;
-                    }
-                }
-                version = stringValuesMap.get(sb.toString().toUpperCase(Locale.ENGLISH));
             }
-            if (version == null) {
-                // fallback attempt
-                int dot = versionStr.indexOf('.');
-                if (dot > 0) {
-                    try {
-                        int major = Integer.parseInt(versionStr.substring(0, dot));
-                        // this needs enum to be properly ordered latest versions last
-                        for (GlassFishVersion v : values()) {
-                            if (v.major <= major) {
-                                version = v;
-                            } else if (v.major > major) {
-                                break;
-                            }
-                        }
-                    } catch (NumberFormatException ex) {
-                        // noop
-                    }
+
+            for (int i = versionNumbers.size(); i < 4; i++ ) {
+                versionNumbers.add(0);
+            }
+
+            GlassFishVersion candidates[] = values();
+            for(int i = candidates.length - 1; i >= 0; i--) {
+                if(gfvSmallerOrEqual(candidates[i], versionNumbers)) {
+                    version = candidates[i];
+                    break;
                 }
             }
         }
         return version;
+    }
+
+    private static boolean gfvSmallerOrEqual(GlassFishVersion gfv, List<Integer> versionNumbers) {
+        if (gfv.getMajor() < versionNumbers.get(0)) {
+            return true;
+        } else if (gfv.getMajor() == versionNumbers.get(0)) {
+            if (gfv.getMinor() < versionNumbers.get(1)) {
+                return true;
+            } else if (gfv.getMinor() == versionNumbers.get(1)) {
+                if(gfv.getUpdate() < versionNumbers.get(2)) {
+                    return true;
+                } else if (gfv.getUpdate() == versionNumbers.get(2)) {
+                    return gfv.getBuild() <= versionNumbers.get(3);
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////

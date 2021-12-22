@@ -87,6 +87,11 @@ public class GroovyBreakpointFactory {
                     b.setSourcePath(relativePath);
                     return relativePath;
                 }
+            } else {
+                // Suppose the current folder
+                String relativePath = fo.getNameExt();
+                b.setSourcePath(relativePath);
+                return relativePath;
             }
         }
         return null;

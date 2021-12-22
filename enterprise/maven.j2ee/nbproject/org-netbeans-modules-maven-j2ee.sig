@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.73
+#Version 1.75
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1217,8 +1217,10 @@ meth public java.util.Set<java.lang.String> getSupportedDefaultActions()
 meth public org.netbeans.modules.maven.execute.model.ActionToGoalMapping getRawMappings()
 meth public org.netbeans.modules.maven.execute.model.NetbeansActionMapping getMappingForAction(java.lang.String,org.netbeans.api.project.Project)
 meth public static java.lang.String dynamicSubstitutions(java.util.Map<java.lang.String,java.lang.String>,java.lang.String)
+meth public static org.netbeans.modules.maven.spi.actions.MavenActionsProvider fromNbActions(org.netbeans.api.project.Project,java.net.URL)
 supr java.lang.Object
 hfds LOG,writer
+hcls ResourceConfigAwareProvider
 
 CLSS public abstract interface org.netbeans.modules.maven.spi.actions.MavenActionsProvider
 meth public abstract boolean isActionEnable(java.lang.String,org.netbeans.api.project.Project,org.openide.util.Lookup)

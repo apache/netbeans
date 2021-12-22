@@ -50,6 +50,7 @@ import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.nativeimage.debugger.api.NIDebugRunner;
 import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 
@@ -82,6 +83,7 @@ public final class NbAttachRequestHandler {
         }
     }
 
+    @NbBundle.Messages("MSG_UnknownNIPath=Unknown native image path. Please set `nativeImagePath`.")
     private CompletableFuture<Void> attachToNative(Map<String, Object> attachArguments, DebugAdapterContext context) {
         CompletableFuture<Void> resultFuture = new CompletableFuture<>();
         String processAndExe = (String) attachArguments.get("processId");   // NOI18N
@@ -92,11 +94,17 @@ public final class NbAttachRequestHandler {
         try {
             if (index > 0) {
                 processId = Long.parseLong(processAndExe.substring(0, index));
-                if (nativeImagePath.isEmpty()) {
+                if (nativeImagePath == null || nativeImagePath.isEmpty()) {
                     nativeImagePath = processAndExe.substring(index + 1);
                 }
             } else {
                 processId = Long.parseLong(processAndExe);
+                if (nativeImagePath == null) {
+                    ErrorUtilities.completeExceptionally(resultFuture,
+                            Bundle.MSG_UnknownNIPath(),
+                            ResponseErrorCode.serverErrorStart);
+                    return resultFuture;
+                }
             }
             String executable = nativeImagePath;
             RP.post(() -> attachNativeDebug(new File(executable), processId, miDebugger, context, resultFuture));

@@ -67,6 +67,8 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
     private static volatile ImageIcon javaIcon;
     private static volatile ImageIcon newConstructorIcon;
     
+    private int sortOverride;
+    
     static {
         CompletionAccessor.setInstance(new CompletionAccessor() {
             @Override
@@ -132,6 +134,12 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
             public CompletionItem createDynamicMethod(int anchorOffset, String name, List<MethodParameter> parameters, String returnType, boolean prefix) {
                 return new DynamicMethodItem(anchorOffset, name, parameters, returnType, prefix);
             }
+
+            @Override
+            public CompletionItem sortOverride(CompletionItem item, int override) {
+                item.sortOverride = override;
+                return item;
+            }
         });
     }
 
@@ -162,6 +170,10 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
     @Override
     public Set<Modifier> getModifiers() {
         return element.getModifiers();
+    }
+
+    public int getSortPrioOverride() {
+        return sortOverride;
     }
 
     @Override
@@ -291,7 +303,7 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
                 if (sb.length() > 0) {
                     sb.append(", ");
                 }
-                sb.append(GroovyUtils.stripPackage(par.getFqnType()));
+                sb.append(GroovyUtils.stripPackage(par.getType()));
             }
             return sb.toString();
         }

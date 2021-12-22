@@ -169,7 +169,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                 // packed them to the war file by default.  classpath/compile_only (for scope provided)
                 boolean modified = false;
                 Boolean isMaven = (Boolean)panel.getController().getProperties().getProperty("maven");  //NOI18N
-                if (isMaven!=null && isMaven.booleanValue()) {
+                if (isMaven!=null && isMaven) {
                     Project prj = FileOwnerQuery.getOwner(webModule.getDocumentBase());
                     J2eeModuleProvider provider = prj.getLookup().lookup(J2eeModuleProvider.class);
                     if (provider != null) {

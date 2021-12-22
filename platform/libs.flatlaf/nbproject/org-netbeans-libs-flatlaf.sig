@@ -1,8 +1,9 @@
 #Signature file v4.1
-#Version 1.6
+#Version 1.8
 
 CLSS public abstract interface com.formdev.flatlaf.FlatClientProperties
 fld public final static java.lang.String BUTTON_TYPE = "JButton.buttonType"
+fld public final static java.lang.String BUTTON_TYPE_BORDERLESS = "borderless"
 fld public final static java.lang.String BUTTON_TYPE_HELP = "help"
 fld public final static java.lang.String BUTTON_TYPE_ROUND_RECT = "roundRect"
 fld public final static java.lang.String BUTTON_TYPE_SQUARE = "square"
@@ -66,6 +67,7 @@ fld public final static java.lang.String TABBED_PANE_TRAILING_COMPONENT = "JTabb
 fld public final static java.lang.String TAB_BUTTON_SELECTED_BACKGROUND = "JToggleButton.tab.selectedBackground"
 fld public final static java.lang.String TAB_BUTTON_UNDERLINE_COLOR = "JToggleButton.tab.underlineColor"
 fld public final static java.lang.String TAB_BUTTON_UNDERLINE_HEIGHT = "JToggleButton.tab.underlineHeight"
+fld public final static java.lang.String TEXT_FIELD_PADDING = "JTextField.padding"
 fld public final static java.lang.String TITLE_BAR_BACKGROUND = "JRootPane.titleBarBackground"
 fld public final static java.lang.String TITLE_BAR_FOREGROUND = "JRootPane.titleBarForeground"
 fld public final static java.lang.String TREE_PAINT_SELECTION = "JTree.paintSelection"
@@ -83,6 +85,8 @@ fld public final static java.lang.String NAME = "FlatLaf Darcula"
 meth public java.lang.String getDescription()
 meth public java.lang.String getName()
 meth public static boolean install()
+ anno 0 java.lang.Deprecated()
+meth public static boolean setup()
 meth public static void installLafInfo()
 supr com.formdev.flatlaf.FlatDarkLaf
 
@@ -93,6 +97,8 @@ meth public boolean isDark()
 meth public java.lang.String getDescription()
 meth public java.lang.String getName()
 meth public static boolean install()
+ anno 0 java.lang.Deprecated()
+meth public static boolean setup()
 meth public static void installLafInfo()
 supr com.formdev.flatlaf.FlatLaf
 
@@ -141,11 +147,14 @@ fld public final static java.lang.String NAME = "FlatLaf IntelliJ"
 meth public java.lang.String getDescription()
 meth public java.lang.String getName()
 meth public static boolean install()
+ anno 0 java.lang.Deprecated()
+meth public static boolean setup()
 meth public static void installLafInfo()
 supr com.formdev.flatlaf.FlatLightLaf
 
 CLSS public abstract com.formdev.flatlaf.FlatLaf
 cons public init()
+fld public final static java.lang.Object NULL_VALUE
 innr public abstract interface static DisabledIconProvider
 meth protected java.util.List<java.lang.Class<?>> getLafClassesForDefaultsLoading()
 meth protected java.util.Properties getAdditionalDefaults()
@@ -159,9 +168,11 @@ meth public java.lang.String getID()
 meth public javax.swing.Icon getDisabledIcon(javax.swing.JComponent,javax.swing.Icon)
 meth public javax.swing.UIDefaults getDefaults()
 meth public static boolean install(javax.swing.LookAndFeel)
+ anno 0 java.lang.Deprecated()
 meth public static boolean isLafDark()
 meth public static boolean isShowMnemonics()
 meth public static boolean isUseNativeWindowDecorations()
+meth public static boolean setup(javax.swing.LookAndFeel)
 meth public static boolean supportsNativeWindowDecorations()
 meth public static javax.swing.UIDefaults$ActiveValue createActiveFontValue(float)
 meth public static void hideMnemonics()
@@ -172,6 +183,7 @@ meth public static void registerCustomDefaultsSource(java.lang.String)
 meth public static void registerCustomDefaultsSource(java.lang.String,java.lang.ClassLoader)
 meth public static void repaintAllFramesAndDialogs()
 meth public static void revalidateAndRepaintAllFramesAndDialogs()
+meth public static void runWithUIDefaultsGetter(java.util.function.Function<java.lang.Object,java.lang.Object>,java.lang.Runnable)
 meth public static void setUseNativeWindowDecorations(boolean)
 meth public static void showMnemonics(java.awt.Component)
 meth public static void unregisterCustomDefaultsSource(java.io.File)
@@ -180,10 +192,12 @@ meth public static void unregisterCustomDefaultsSource(java.lang.String,java.lan
 meth public static void updateUI()
 meth public static void updateUILater()
 meth public void initialize()
+meth public void registerUIDefaultsGetter(java.util.function.Function<java.lang.Object,java.lang.Object>)
 meth public void uninitialize()
+meth public void unregisterUIDefaultsGetter(java.util.function.Function<java.lang.Object,java.lang.Object>)
 supr javax.swing.plaf.basic.BasicLookAndFeel
-hfds DESKTOPFONTHINTS,aquaLoaded,customDefaultsSources,desktopPropertyListener,desktopPropertyName,desktopPropertyName2,mnemonicHandler,oldPopupFactory,postInitialization,updateUIPending
-hcls ActiveFont,ImageIconUIResource
+hfds DESKTOPFONTHINTS,aquaLoaded,customDefaultsSources,desktopPropertyListener,desktopPropertyName,desktopPropertyName2,mnemonicHandler,oldPopupFactory,postInitialization,uiDefaultsGetters,updateUIPending
+hcls ActiveFont,FlatUIDefaults,ImageIconUIResource
 
 CLSS public abstract interface static com.formdev.flatlaf.FlatLaf$DisabledIconProvider
  outer com.formdev.flatlaf.FlatLaf
@@ -196,6 +210,8 @@ meth public boolean isDark()
 meth public java.lang.String getDescription()
 meth public java.lang.String getName()
 meth public static boolean install()
+ anno 0 java.lang.Deprecated()
+meth public static boolean setup()
 meth public static void installLafInfo()
 supr com.formdev.flatlaf.FlatLaf
 
@@ -232,6 +248,8 @@ fld public final java.lang.String author
 fld public final java.lang.String name
 innr public static ThemeLaf
 meth public static boolean install(java.io.InputStream)
+ anno 0 java.lang.Deprecated()
+meth public static boolean setup(java.io.InputStream)
 meth public static com.formdev.flatlaf.FlatLaf createLaf(com.formdev.flatlaf.IntelliJTheme)
 meth public static com.formdev.flatlaf.FlatLaf createLaf(java.io.InputStream) throws java.io.IOException
 supr java.lang.Object
@@ -307,7 +325,9 @@ CLSS public com.formdev.flatlaf.util.ColorFunctions
 cons public init()
 innr public abstract interface static ColorFunction
 innr public static Fade
+innr public static HSLChange
 innr public static HSLIncreaseDecrease
+innr public static Mix
 meth public !varargs static java.awt.Color applyFunctions(java.awt.Color,com.formdev.flatlaf.util.ColorFunctions$ColorFunction[])
 meth public static float clamp(float)
 meth public static java.awt.Color mix(java.awt.Color,java.awt.Color,float)
@@ -326,6 +346,16 @@ meth public java.lang.String toString()
 meth public void apply(float[])
 supr java.lang.Object
 
+CLSS public static com.formdev.flatlaf.util.ColorFunctions$HSLChange
+ outer com.formdev.flatlaf.util.ColorFunctions
+cons public init(int,float)
+fld public final float value
+fld public final int hslIndex
+intf com.formdev.flatlaf.util.ColorFunctions$ColorFunction
+meth public java.lang.String toString()
+meth public void apply(float[])
+supr java.lang.Object
+
 CLSS public static com.formdev.flatlaf.util.ColorFunctions$HSLIncreaseDecrease
  outer com.formdev.flatlaf.util.ColorFunctions
 cons public init(int,boolean,float,boolean,boolean)
@@ -336,6 +366,16 @@ fld public final float amount
 fld public final int hslIndex
 intf com.formdev.flatlaf.util.ColorFunctions$ColorFunction
 meth protected boolean shouldInverse(float[])
+meth public java.lang.String toString()
+meth public void apply(float[])
+supr java.lang.Object
+
+CLSS public static com.formdev.flatlaf.util.ColorFunctions$Mix
+ outer com.formdev.flatlaf.util.ColorFunctions
+cons public init(java.awt.Color,float)
+fld public final float weight
+fld public final java.awt.Color color2
+intf com.formdev.flatlaf.util.ColorFunctions$ColorFunction
 meth public java.lang.String toString()
 meth public void apply(float[])
 supr java.lang.Object
@@ -425,7 +465,6 @@ meth public void fillPolygon(int[],int[],int)
 meth public void fillPolygon(java.awt.Polygon)
 meth public void fillRect(int,int,int,int)
 meth public void fillRoundRect(int,int,int,int,int,int)
-meth public void finalize()
 meth public void rotate(double)
 meth public void rotate(double,double,double)
 meth public void scale(double,double)

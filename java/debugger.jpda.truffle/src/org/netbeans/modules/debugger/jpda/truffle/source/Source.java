@@ -20,6 +20,7 @@
 package org.netbeans.modules.debugger.jpda.truffle.source;
 
 import com.sun.jdi.StringReference;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -64,7 +65,7 @@ public final class Source {
         this.codeRef = codeRef;
         URL url = null;
         if (hostMethodName == null) {
-            if (uri == null || !"file".equalsIgnoreCase(uri.getScheme())) {
+            if (uri == null || !"file".equalsIgnoreCase(uri.getScheme()) || !fileIsReadable(uri)) { // NOI18N
                 try {
                     url = SourceFilesCache.get(jpda).getSourceFile(name, hash, uri, getContent());
                 } catch (IOException ex) {
@@ -85,6 +86,14 @@ public final class Source {
         this.uri = uri;
         this.mimeType = mimeType;
         this.hash = hash;
+    }
+
+    private static boolean fileIsReadable(URI uri) {
+        try {
+            return new File(uri).canRead();
+        } catch (IllegalArgumentException | SecurityException ex) {
+            return false;
+        }
     }
 
     public static Source getExistingSource(JPDADebugger debugger, long id) {

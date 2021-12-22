@@ -55,6 +55,8 @@ import org.netbeans.modules.php.editor.model.ModelElement;
 import org.netbeans.modules.php.editor.model.ModelFactory;
 import org.netbeans.modules.php.editor.model.ModelUtils;
 import org.netbeans.modules.php.editor.model.Occurence;
+import org.netbeans.modules.php.editor.model.Scope;
+import org.netbeans.modules.php.editor.model.TraitScope;
 import org.netbeans.modules.php.editor.model.TypeScope;
 import org.netbeans.modules.php.editor.model.VariableName;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
@@ -244,7 +246,8 @@ public final class WhereUsedSupport {
             if (!variable.isGloballyVisible()) {
                 return Collections.singleton(mElement.getFileObject());
             }
-        } else if (mElement != null && mElement.getPhpModifiers().isPrivate()) {
+        } else if (mElement != null && mElement.getPhpModifiers().isPrivate() && !(mElement.getInScope() instanceof TraitScope)) {
+            // NETBEANS-6087 private members of trait are used in classes
             return Collections.singleton(mElement.getFileObject());
         }
 

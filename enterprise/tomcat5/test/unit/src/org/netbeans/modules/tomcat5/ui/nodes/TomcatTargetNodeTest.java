@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.tomcat5.ui.nodes;
 
-import org.netbeans.modules.tomcat5.ui.nodes.TomcatTargetNode;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.netbeans.junit.NbTestCase;

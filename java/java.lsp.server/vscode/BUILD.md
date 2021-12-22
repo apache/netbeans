@@ -46,7 +46,7 @@ java.lsp.server$ ant build-vscode-ext
 ```
 The resulting extension is then in the `build` directory, with the `.vsix` extension.
 #### Build Options
-- `-Dvsix.version=x.y.z`can be used to set release version. E.g. set this option to `12.3.0` to get proper NetBeans release version for extension. 
+- `-Dvsix.version=x.y.z`can be used to set release version. E.g. set this option to `12.3.0` to get proper NetBeans release version for extension.
 - `-D3rdparty.modules=` property can be set to different value than `.*nbjavac.*` to not inlcude nb-javac which allows extension to run out of the box on JDK8.
 
 The build of NetBeans VSCode extension with nb-javac included, for version 12.6.0 then looks like this:
@@ -104,6 +104,20 @@ java.lsp.server$ npm_config_https_proxy=http://your.proxy.com:port ant test-vsco
 when executing the tests for the first time. That shall overcome the proxy
 and download an instance of `code` execute the tests on.
 
+### Eating our own Dog Food
+
+Using the application yourself is the best way of testing! If you want to
+_edit/compile/debug_ Apache NetBeans sources, there is a way. After building
+the project, execute:
+
+```bash
+vscode$ npm run apisupport
+```
+
+the system connects to associated autoupdate center and downloads, installs
+and enables `org.netbeans.modules.apisupport.ant` module. With such module installed
+one can open Apache NetBeans projects and work with them directly from VSCode.
+
 ## Running and Debugging
 
 Have a sample Maven project, open it in NetBeans first and select the main file for both
@@ -126,7 +140,7 @@ and specify suitable debug arguments:
 vscode$ npm run nbcode -- --jdkhome /jdk-14/ -J-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000
 ```
 
-Connect to the process with Java debugger, setup all breakpoints. Then launch 
+Connect to the process with Java debugger, setup all breakpoints. Then launch
 and connect from the VS Code extension:
 
 ```bash

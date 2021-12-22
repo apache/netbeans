@@ -23,7 +23,6 @@ import static org.netbeans.modules.fish.payara.micro.plugin.Constants.MAVEN_WAR_
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROFILE_SINGLE_ACTION;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.RUN_SINGLE_ACTION;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.WAR_PACKAGING;
-import org.netbeans.modules.fish.payara.micro.project.MicroApplication;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;

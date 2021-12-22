@@ -37,7 +37,7 @@ import org.openide.util.NbBundle;
  *        // "OK"
  *        Bundle.getString("org.netbeans.core.windows.services.Bundle", "OK_OPTION_CAPTION");
  *        // "Properties of AnObject"
- *        Bundle.getString("org.netbeans.core.Bundle", "CTL_FMT_LocalProperties", new Object[] {new Integer(1), "AnObject"});
+ *        Bundle.getString("org.netbeans.core.Bundle", "CTL_FMT_LocalProperties", new Object[] {Integer.valueOf(1), "AnObject"});
  *        // "View"
  *        Bundle.getStringTrimmed("org.netbeans.core.Bundle", "Menu/View");
  * </pre>

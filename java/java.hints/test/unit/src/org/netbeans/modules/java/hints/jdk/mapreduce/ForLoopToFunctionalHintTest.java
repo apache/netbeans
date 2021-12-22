@@ -56,7 +56,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("12:8-12:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("12:8-12:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -126,7 +126,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("12:8-12:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("12:8-12:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -180,7 +180,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("22:8-22:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("22:8-22:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("/*\n"
                 + " * To change this template, choose Tools | Templates\n"
@@ -237,7 +237,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("12:8-12:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("12:8-12:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -288,7 +288,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("12:8-12:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("12:8-12:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -341,7 +341,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("12:8-12:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("12:8-12:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -398,7 +398,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("12:8-12:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("12:8-12:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -455,7 +455,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("12:8-12:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("12:8-12:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -519,7 +519,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("12:8-12:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("12:8-12:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -583,7 +583,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("14:8-14:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("14:8-14:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -658,7 +658,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("12:8-12:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("12:8-12:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -725,7 +725,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("14:8-14:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("14:8-14:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -787,7 +787,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("14:8-14:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("14:8-14:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -859,7 +859,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("14:8-14:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("14:8-14:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -928,7 +928,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("17:8-17:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("17:8-17:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package javatargettempapp;\n"
                 + "\n"
@@ -990,7 +990,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("17:8-17:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("17:8-17:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package javatargettempapp;\n"
                 + "\n"
@@ -1052,7 +1052,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("17:8-17:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("17:8-17:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package javatargettempapp;\n"
                 + "\n"
@@ -1124,7 +1124,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("23:8-23:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("23:8-23:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("/*\n"
                 + " * To change this template, choose Tools | Templates\n"
@@ -1202,7 +1202,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("23:8-23:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("23:8-23:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("/*\n"
                 + " * To change this template, choose Tools | Templates\n"
@@ -1274,7 +1274,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("23:8-23:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("23:8-23:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("/*\n"
                 + " * To change this template, choose Tools | Templates\n"
@@ -1341,7 +1341,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("23:8-23:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("23:8-23:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("/*\n"
                 + " * To change this template, choose Tools | Templates\n"
@@ -1406,7 +1406,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .assertNotContainsWarnings("23:8-23:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint());
+                .assertNotContainsWarnings("23:8-23:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint());
     }
 
     public void testNoHintDueToNEF() throws Exception {
@@ -1651,7 +1651,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .assertWarnings("15:8-15:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint());
+                .assertWarnings("15:8-15:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint());
     }
 
     public void testNoHintDueToMethodThrowingException() throws Exception {
@@ -1789,7 +1789,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .assertNotContainsWarnings("23:8-23:11:verifier:Can use functional operation");
+                .assertNotContainsWarnings("23:8-23:11:hint:Can use functional operation");
 
     }
 
@@ -1832,7 +1832,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .assertNotContainsWarnings("23:8-23:11:verifier:Can use functional operation");
+                .assertNotContainsWarnings("23:8-23:11:hint:Can use functional operation");
 
     }
 
@@ -1873,7 +1873,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .assertNotContainsWarnings("23:8-23:11:verifier:Can use functional operation");
+                .assertNotContainsWarnings("23:8-23:11:hint:Can use functional operation");
 
     }
     

@@ -715,7 +715,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
 
                 // Add @Basic(optional=false) for not nullable columns
                 if (!m.isNullable()) {
-                    List<ExpressionTree> basicAnnArguments = new ArrayList();
+                    List<ExpressionTree> basicAnnArguments = new ArrayList<>();
                     basicAnnArguments.add(genUtils.createAnnotationArgument("optional", false)); //NOI18N
                     annotations.add(genUtils.createAnnotation("javax.persistence.Basic", basicAnnArguments)); //NOI18N
                     //Add @NotNull constraint
@@ -729,7 +729,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     annotations.add(genUtils.createAnnotation("javax.persistence.Lob")); // NOI18N
                 }
 
-                List<ExpressionTree> columnAnnArguments = new ArrayList();
+                List<ExpressionTree> columnAnnArguments = new ArrayList<>();
                 String memberName = m.getMemberName();
                 String memberType = getMemberType(m);
 

@@ -67,7 +67,7 @@ public final class OperationContext {
      * Progress token for reporting progress to the client. The token is valid
      * for a single ProgressHandle created.
      */
-    private Either<String, Number> progressToken;
+    private Either<String, Integer> progressToken;
     
     /**
      * Token to report partial results to the client.
@@ -111,8 +111,8 @@ public final class OperationContext {
      * progress on the client, asking it to issue a token.
      * @return 
      */
-    public synchronized Either<String, Number> acquireProgressToken() {
-        Either<String, Number> t = progressToken;
+    public synchronized Either<String, Integer> acquireProgressToken() {
+        Either<String, Integer> t = progressToken;
         progressToken = null;
         return t;
     }
@@ -126,7 +126,7 @@ public final class OperationContext {
      * soon.
      * @param s 
      */
-    public void setProgressToken(Either<String, Number> s) {
+    public void setProgressToken(Either<String, Integer> s) {
         progressToken = s;
     }
     
@@ -192,7 +192,7 @@ public final class OperationContext {
      * @param token token
      * @return handle instance or {@code null}
      */
-    public InternalHandle  findActiveHandle(Either<String, Number> token) {
+    public InternalHandle  findActiveHandle(Either<String, Integer> token) {
         if (top != this) {
             return top.findActiveHandle(token);
         }
@@ -201,12 +201,12 @@ public final class OperationContext {
         }
     }
     
-    private Either<String, Number> addHandle(Either<String, Number> token, InternalHandle h) {
+    private Either<String, Integer> addHandle(Either<String, Integer> token, InternalHandle h) {
         top.registerHandle(token, h);
         return token;
     }
     
-    void removeHandle(Either<String, Number> token, LspInternalHandle h) {
+    void removeHandle(Either<String, Integer> token, LspInternalHandle h) {
         if (top != this) {
             top.unregisterHandle(token, h);
         } else {
@@ -215,9 +215,9 @@ public final class OperationContext {
         notifyHandleFinished(h);
     }
     
-    private Map<Either<String, Number>, InternalHandle> handles = new HashMap<>();
+    private Map<Either<String, Integer>, InternalHandle> handles = new HashMap<>();
     
-    private synchronized void unregisterHandle(Either<String, Number> token, InternalHandle h) {
+    private synchronized void unregisterHandle(Either<String, Integer> token, InternalHandle h) {
         if (token == null) {
             handles.values().remove(h);
         } else {
@@ -225,19 +225,19 @@ public final class OperationContext {
         }
     }
     
-    private synchronized void registerHandle(Either<String, Number> token, InternalHandle h) {
+    private synchronized void registerHandle(Either<String, Integer> token, InternalHandle h) {
         handles.put(token, h);
     }
     
-    CompletableFuture<Either<String, Number>> acquireOrObtainToken(InternalHandle h) {
-        Either<String, Number> t = acquireProgressToken();
+    CompletableFuture<Either<String, Integer>> acquireOrObtainToken(InternalHandle h) {
+        Either<String, Integer> t = acquireProgressToken();
         if (t != null) {
             return CompletableFuture.completedFuture(addHandle(t, h));
         } else {
             WorkDoneProgressCreateParams params = new WorkDoneProgressCreateParams(
                 Either.forLeft(UUID.randomUUID().toString())
             );
-            CompletableFuture<Either<String, Number>> tokenPromise = client.
+            CompletableFuture<Either<String, Integer>> tokenPromise = client.
                     createProgress(params).thenApply(v -> params.getToken());
             return tokenPromise.thenApply((p) -> {
                synchronized (this) {

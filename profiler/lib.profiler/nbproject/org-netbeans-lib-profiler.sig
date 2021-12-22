@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.120
+#Version 1.123
 
 CLSS public abstract interface java.io.Serializable
 
@@ -1175,13 +1175,14 @@ CLSS public org.netbeans.lib.profiler.heap.HeapFactory
 cons public init()
 meth public static org.netbeans.lib.profiler.heap.Heap createHeap(java.io.File) throws java.io.IOException
 meth public static org.netbeans.lib.profiler.heap.Heap createHeap(java.io.File,int) throws java.io.IOException
+meth public static org.netbeans.lib.profiler.heap.Heap createHeap(java.nio.ByteBuffer,int) throws java.io.IOException
 supr java.lang.Object
 
 CLSS public final org.netbeans.lib.profiler.heap.HeapProgress
 fld public final static int PROGRESS_MAX = 1000
 meth public static javax.swing.BoundedRangeModel getProgress()
 supr java.lang.Object
-hfds progressThreadLocal
+hfds listener,progressThreadLocal
 hcls ModelInfo
 
 CLSS public abstract interface org.netbeans.lib.profiler.heap.HeapSummary

@@ -24,7 +24,7 @@ package org.netbeans.modules.javascript2.sdoc.elements;
 public enum SDocElementType {
     // description type - at the start of comments
     DESCRIPTION("description", Category.DESCRIPTION), //NOI18N
-    // unknow type
+    // unknown type
     UNKNOWN("unknown", Category.UNKNOWN), //NOI18N
     // common ScriptDoc tags
     ALIAS("@alias", Category.IDENT), //NOI18N

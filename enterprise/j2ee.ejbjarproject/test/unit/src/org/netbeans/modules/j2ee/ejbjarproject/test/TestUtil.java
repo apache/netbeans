@@ -134,7 +134,7 @@ public final class TestUtil extends ProxyLookup {
     public static int projectLoadCount(FileObject dir) {
         Integer i = loadCount.get(dir);
         if (i != null) {
-            return i.intValue();
+            return i;
         } else {
             return 0;
         }
@@ -236,9 +236,9 @@ public final class TestUtil extends ProxyLookup {
         public Project loadProject(FileObject projectDirectory, ProjectState state) throws IOException {
             Integer i = loadCount.get(projectDirectory);
             if (i == null) {
-                i = new Integer(1);
+                i = 1;
             } else {
-                i = new Integer(i.intValue() + 1);
+                i = i + 1;
             }
             loadCount.put(projectDirectory, i);
             FileObject testproject = projectDirectory.getFileObject("testproject");

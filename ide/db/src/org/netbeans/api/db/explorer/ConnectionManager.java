@@ -19,6 +19,7 @@
 
 package org.netbeans.api.db.explorer;
 
+import java.util.Arrays;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.netbeans.lib.ddl.DBConnection;
@@ -409,5 +410,33 @@ public final class ConnectionManager {
      */
     public void removeConnectionListener(ConnectionListener listener) {
         ConnectionList.getDefault().removeConnectionListener(listener);
+    }
+    
+    /**
+     * Returns the preferred connection instance. This is the connection that has been specified by
+     * {@link #setPreferredConnection(org.netbeans.api.db.explorer.DatabaseConnection)}. If none was defined,
+     * the preferred connection is the first one defined. The method will return {@code null} if no connection 
+     * is specified (with fallback = false), or no connection is defined. Usually, fallback = true is the good
+     * choice, except connection management scenarios.
+     * @param fallback if false, returns {@code null} if no connection is explicitly defined.
+     * @return preferred connection or {@code null}.
+     */
+    public DatabaseConnection getPreferredConnection(boolean fallback) {
+        org.netbeans.modules.db.explorer.DatabaseConnection c = ConnectionList.getDefault().getPreferredConnection(fallback);
+        return c == null ? null : c.getDatabaseConnection();
+    }
+    
+    /**
+     * Sets the preferred DB connection for the IDE. Setting the preferred
+     * connection to {@code null} will return the 1st connection as the preferred.
+     * @param conn the preferred connection
+     */
+    public void setPreferredConnection(DatabaseConnection conn) {
+        ConnectionList.getDefault().setPreferredConnection(
+            Arrays.asList(ConnectionList.getDefault().getConnections()).stream().
+                    filter(c -> c.getDatabaseConnection() == conn).
+                    findAny().
+                    orElseThrow(() -> new IllegalArgumentException("Unknown connection"))
+        );
     }
 }

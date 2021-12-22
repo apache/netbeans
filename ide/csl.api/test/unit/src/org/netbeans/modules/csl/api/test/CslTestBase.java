@@ -1820,7 +1820,7 @@ public abstract class CslTestBase extends NbTestCase {
         );
 
         try {
-            ParserManager.parse(Collections.singleton(testSource), new UserTask() {
+            class UT extends UserTask implements IndexingTask {
                 public @Override void run(ResultIterator resultIterator) throws Exception {
                     Parser.Result r = resultIterator.getParserResult();
                     assertTrue(r instanceof ParserResult);
@@ -1830,7 +1830,8 @@ public abstract class CslTestBase extends NbTestCase {
 
                     SPIAccessor.getInstance().index(indexer, indexable, r, context);
                 }
-            });
+            }
+            ParserManager.parse(Collections.singleton(testSource), new UT());
         } finally {
             DocumentIndex index = SPIAccessor.getInstance().getIndexFactory(context).getIndex(context.getIndexFolder());
             if (index != null) {
@@ -1877,7 +1878,7 @@ public abstract class CslTestBase extends NbTestCase {
 
         final Boolean result [] = new Boolean [] { null };
         Source testSource = getTestSource(fo);
-        ParserManager.parse(Collections.singleton(testSource), new UserTask() {
+        class UT extends UserTask implements IndexingTask {
             public @Override void run(ResultIterator resultIterator) throws Exception {
                 Parser.Result r = resultIterator.getParserResult();
                 EmbeddingIndexer indexer = factory.createIndexer(
@@ -1885,7 +1886,8 @@ public abstract class CslTestBase extends NbTestCase {
                     r.getSnapshot());
                 result[0] = Boolean.valueOf(indexer != null);
             }
-        });
+        }
+        ParserManager.parse(Collections.singleton(testSource), new UT());
 
         assertNotNull(result[0]);
         assertEquals(isIndexable, result[0].booleanValue());
@@ -4789,7 +4791,7 @@ public abstract class CslTestBase extends NbTestCase {
 
         public void waitForScanToFinish() {
             try {
-                latch.await(60000, TimeUnit.MILLISECONDS);
+                latch.await(600000, TimeUnit.MILLISECONDS);
                 if (latch.getCount() > 0) {
                     fail("Waiting for classpath scanning to finish timed out");
                 }

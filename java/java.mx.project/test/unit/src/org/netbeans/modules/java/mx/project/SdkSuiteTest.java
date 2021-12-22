@@ -60,6 +60,8 @@ public class SdkSuiteTest extends SuiteCheck {
         final URL archiveURL = new URL("jar:" + graalSdkJar.toURL() + "!/");
 
         SourceForBinaryQuery.Result2 result2 = SourceForBinaryQuery.findSourceRoots2(archiveURL);
+        final FileObject[] resultRoots = result2.getRoots();
+        assertTrue("There should be some roots", resultRoots.length > 0);
 
         Set<FileObject> expected = new HashSet<>();
         for (FileObject ch : fo.getFileObject("src").getChildren()) {
@@ -71,14 +73,14 @@ public class SdkSuiteTest extends SuiteCheck {
                 // TCK is not in graal-sdk.jar
                 continue;
             }
-            if (ch.getNameExt().endsWith("org.graalvm.launcher")) {
+            if (ch.getNameExt().contains("org.graalvm.launcher")) {
                 // launcher is not in graal-sdk.jar
                 continue;
             }
             expected.add(ch);
         }
 
-        for (FileObject r : result2.getRoots()) {
+        for (FileObject r : resultRoots) {
             if ("src_gen".equals(r.getName())) {
                 continue;
             }

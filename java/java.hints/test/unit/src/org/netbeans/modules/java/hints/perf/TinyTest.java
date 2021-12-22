@@ -475,7 +475,7 @@ public class TinyTest extends NbTestCase {
                 .input("package test;\n" +
                        "public class Test {\n" +
                        "     private String[] test(java.util.Collection<String> col) {\n" +
-                       "         return col.toArray(new String[0]);\n" +
+                       "         return col.toArray(new String[col.size()]);\n" +
                        "     }\n" +
                        "}\n")
                 .run(Tiny.class)
@@ -485,7 +485,7 @@ public class TinyTest extends NbTestCase {
                 .assertOutput("package test;\n" +
                               "public class Test {\n" +
                               "     private String[] test(java.util.Collection<String> col) {\n" +
-                              "         return col.toArray(new String[col.size()]);\n" +
+                              "         return col.toArray(new String[0]);\n" +
                               "     }\n" +
                               "}\n");
     }

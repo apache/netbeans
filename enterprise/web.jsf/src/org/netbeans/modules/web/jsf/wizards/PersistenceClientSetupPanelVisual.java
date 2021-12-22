@@ -566,7 +566,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         String jsfPkg = getJsfPackage();
         settings.putProperty(WizardProperties.JPA_CLASSES_PACKAGE, jpaPkg);
         settings.putProperty(WizardProperties.JSF_CLASSES_PACKAGE, jsfPkg);
-        settings.putProperty(WizardProperties.AJAXIFY_JSF_CRUD, Boolean.valueOf(ajaxifyCheckbox.isSelected()));
+        settings.putProperty(WizardProperties.AJAXIFY_JSF_CRUD, ajaxifyCheckbox.isSelected());
         settings.putProperty(WizardProperties.JAVA_PACKAGE_ROOT_FILE_OBJECT, getLocationValue().getRootFolder());
         settings.putProperty(WizardProperties.LOCALIZATION_BUNDLE_NAME, localizationBundleTextField.getText());
         settings.putProperty(WizardProperties.TEMPLATE_STYLE, getTemplatesStyle());

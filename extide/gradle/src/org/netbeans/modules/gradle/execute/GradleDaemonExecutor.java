@@ -34,6 +34,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StreamCorruptedException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,6 +64,7 @@ import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
 import org.openide.awt.StatusDisplayer;
 import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
@@ -81,6 +83,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
 
     private CancellationTokenSource cancelTokenSource;
     private static final Logger LOGGER = Logger.getLogger(GradleDaemonExecutor.class.getName());
+    private static final String JAVA_HOME = "JAVA_HOME";    // NOI18N
 
     private final ProgressHandle handle;
     private InputStream inStream;
@@ -208,16 +211,10 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
 
             printCommandLine(cmd);
             GradleJavaPlatformProvider platformProvider = config.getProject().getLookup().lookup(GradleJavaPlatformProvider.class);
-            if (platformProvider != null) {
-                try {
-                    buildLauncher.setJavaHome(platformProvider.getJavaHome());
-                    Map<String, String> envs = new HashMap<>(System.getenv());
-                    envs.put("JAVA_HOME", platformProvider.getJavaHome().getCanonicalPath());
-                    buildLauncher.setEnvironmentVariables(envs);
-                } catch (IOException ex) {
-                    io.getErr().println(Bundle.NO_PLATFORM(ex.getMessage()));
-                    return;
-                }
+            String runEnvironment = cmd.getProperty(GradleCommandLine.Property.PROJECT, "runEnvironment");
+            boolean success = setPlatformAndEnv(buildLauncher, platformProvider, runEnvironment);
+            if (!success) {
+                return;
             }
 
             outStream = new EscapeProcessingOutputStream(new GradlePlainEscapeProcessor(io, config, false));
@@ -279,6 +276,50 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             markFreeTab();
             actionStatesAtFinish();
         }
+    }
+
+    @NbBundle.Messages({"# {0} - JAVA_HOME", "# {1} - Java platform path", "MSG_JAVA_HOME_EnvWarning=Warning: {0} environment variable is replaced with the current Java platform path {1}."})
+    private boolean setPlatformAndEnv(BuildLauncher buildLauncher, GradleJavaPlatformProvider platformProvider, String runEnvironment) {
+        String javaHome = null;
+        if (platformProvider != null) {
+            try {
+                buildLauncher.setJavaHome(platformProvider.getJavaHome());
+                javaHome = platformProvider.getJavaHome().getCanonicalPath();
+            } catch (IOException ex) {
+                io.getErr().println(Bundle.NO_PLATFORM(ex.getMessage()));
+                gradleTask.finish(1);
+                return false;
+            }
+        }
+        if (javaHome != null || runEnvironment != null) {
+            Map<String, String> envs = new HashMap<>(System.getenv());
+            if (runEnvironment != null) {
+                // Quoted space-separated expressions of <ENV_VAR>=<ENV_VALUE>
+                // to set environment variables,
+                // or !<ENV_VAR> to remove environment variables
+                for (String env : BaseUtilities.parseParameters(runEnvironment)) {
+                    String name = null;
+                    if (env.startsWith("!")) {  // NOI18N
+                        name = env.substring(1);
+                        envs.remove(name);
+                    } else {
+                        int i = env.indexOf('=');   // NOI18N
+                        if (i > 0) {
+                            name = env.substring(0, i);
+                            envs.put(name, env.substring(i + 1));
+                        }
+                    }
+                    if (javaHome != null && JAVA_HOME.equals(name)) {
+                        io.getErr().println(Bundle.MSG_JAVA_HOME_EnvWarning(JAVA_HOME, javaHome));
+                    }
+                }
+            }
+            if (javaHome != null) {
+                envs.put(JAVA_HOME, javaHome);    // NOI18N
+            }
+            buildLauncher.setEnvironmentVariables(envs);
+        }
+        return true;
     }
 
     private String getProjectName() {

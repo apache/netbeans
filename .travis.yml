@@ -109,6 +109,7 @@ matrix:
             - ant $OPTS build
           script:
             - travis_retry hide-logs.sh ant $OPTS -f platform/api.htmlui test
+            - travis_retry hide-logs.sh ant $OPTS -f platform/htmlui test
             - hide-logs.sh ant $OPTS -f platform/api.intent test
             - hide-logs.sh ant $OPTS -f platform/api.io test
             - hide-logs.sh ant $OPTS -f platform/api.progress test
@@ -363,7 +364,7 @@ matrix:
             #- ant $OPTS -f java/java.kit test
             #- ant $OPTS -f java/java.lexer test
             #- ant $OPTS -f java/java.lexer test
-            #- ant $OPTS -f java/java.lsp.server test
+            - ant $OPTS -f java/java.lsp.server test
             #- ant $OPTS -f java/java.metrics test
             - ant $OPTS -f java/java.module.graph test
             - ant $OPTS -f java/java.navigation test
@@ -378,7 +379,6 @@ matrix:
             #- ant $OPTS -f java/java.source.ant test
             - ant $OPTS -f java/java.source.base test
             - ant $OPTS -f java/java.source.compat8 test
-            - ant $OPTS -f java/java.source.nbjavac test
             - ant $OPTS -f java/java.source.queriesimpl test
             #- ant $OPTS -f java/java.sourceui test
             - ant $OPTS -f java/java.testrunner test
@@ -391,7 +391,7 @@ matrix:
             - ant $OPTS -f java/junit.ant.ui test
             - ant $OPTS -f java/lib.nbjavac test
             - ant $OPTS -f java/maven test
-            #- ant $OPTS -f java/maven.embedder test
+            - ant $OPTS -f java/maven.embedder test
             - ant $OPTS -f java/maven.grammar test
             #- ant $OPTS -f java/maven.hints test
             #- ant $OPTS -f java/maven.htmlui test

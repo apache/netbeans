@@ -57,11 +57,10 @@ import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileUtil;
 
-import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
+
 import static org.netbeans.modules.java.hints.spiimpl.batch.TestUtils.writeFilesAndWaitForScan;
 import static org.netbeans.modules.java.hints.spiimpl.batch.TestUtils.prepareHints;
 
@@ -123,13 +122,13 @@ public class BatchSearchTest extends NbTestCase {
                 resourcesRepr.add(r.getRelativePath());
             }
 
-            output.put(e.getKey().getURL().toExternalForm(), resourcesRepr);
+            output.put(e.getKey().toURL().toExternalForm(), resourcesRepr);
         }
 
         Map<String, Iterable<String>> golden = new HashMap<String, Iterable<String>>();
 
-        golden.put(src1.getURL().toExternalForm(), Arrays.asList("test/Test1.java"));
-        golden.put(src2.getURL().toExternalForm(), Arrays.asList("test/Test1.java"));
+        golden.put(src1.toURL().toExternalForm(), Arrays.asList("test/Test1.java"));
+        golden.put(src2.toURL().toExternalForm(), Arrays.asList("test/Test1.java"));
 
         assertEquals(golden, output);
     }
@@ -185,13 +184,13 @@ public class BatchSearchTest extends NbTestCase {
                 resourcesRepr.add(r.getRelativePath());
             }
 
-            output.put(e.getKey().getURL().toExternalForm(), resourcesRepr);
+            output.put(e.getKey().toURL().toExternalForm(), resourcesRepr);
         }
 
         Map<String, Iterable<String>> golden = new HashMap<String, Iterable<String>>();
 
-        golden.put(src1.getURL().toExternalForm(), Arrays.asList("test/Test1.java"));
-        golden.put(src3.getURL().toExternalForm(), Arrays.asList("test/Test1.java"));
+        golden.put(src1.toURL().toExternalForm(), Arrays.asList("test/Test1.java"));
+        golden.put(src3.toURL().toExternalForm(), Arrays.asList("test/Test1.java"));
 
         assertEquals(golden, output);
 
@@ -199,8 +198,8 @@ public class BatchSearchTest extends NbTestCase {
         Map<String, Map<String, Iterable<String>>> verifiedOutput = verifiedSpans(result, false);
         Map<String, Map<String, Iterable<String>>> verifiedGolden = new HashMap<String, Map<String, Iterable<String>>>();
 
-        verifiedGolden.put(src1.getURL().toExternalForm(), Collections.<String, Iterable<String>>singletonMap("test/Test1.java", Arrays.<String>asList()));
-        verifiedGolden.put(src3.getURL().toExternalForm(), Collections.<String, Iterable<String>>singletonMap("test/Test1.java", Arrays.asList("0:75-0:86:verifier:")));
+        verifiedGolden.put(src1.toURL().toExternalForm(), Collections.<String, Iterable<String>>singletonMap("test/Test1.java", Arrays.<String>asList()));
+        verifiedGolden.put(src3.toURL().toExternalForm(), Collections.<String, Iterable<String>>singletonMap("test/Test1.java", Arrays.asList("0:75-0:86:verifier:")));
 
         assertEquals(verifiedGolden, verifiedOutput);
     }
@@ -229,12 +228,12 @@ public class BatchSearchTest extends NbTestCase {
                 resourcesRepr.add(r.getRelativePath());
             }
 
-            output.put(e.getKey().getURL().toExternalForm(), resourcesRepr);
+            output.put(e.getKey().toURL().toExternalForm(), resourcesRepr);
         }
 
         Map<String, Iterable<String>> golden = new HashMap<String, Iterable<String>>();
 
-        golden.put(data.getURL().toExternalForm(), new HashSet<String>(Arrays.asList("src1/test/Test1.java", "src2/test/Test1.java")));
+        golden.put(data.toURL().toExternalForm(), new HashSet<String>(Arrays.asList("src1/test/Test1.java", "src2/test/Test1.java")));
 
         assertEquals(golden, output);
 
@@ -243,11 +242,13 @@ public class BatchSearchTest extends NbTestCase {
         final Set<FileObject> removed = new HashSet<FileObject>();
 
         GlobalPathRegistry.getDefault().addGlobalPathRegistryListener(new GlobalPathRegistryListener() {
+            @Override
             public void pathsAdded(GlobalPathRegistryEvent event) {
                 for (ClassPath cp : event.getChangedPaths()) {
                     added.addAll(Arrays.asList(cp.getRoots()));
                 }
             }
+            @Override
             public void pathsRemoved(GlobalPathRegistryEvent event) {
                 for (ClassPath cp : event.getChangedPaths()) {
                     removed.addAll(Arrays.asList(cp.getRoots()));
@@ -264,7 +265,7 @@ public class BatchSearchTest extends NbTestCase {
         verifiedGoldenPart.put("src1/test/Test1.java", Arrays.<String>asList());
         verifiedGoldenPart.put("src2/test/Test1.java", Arrays.<String>asList("0:75-0:86:verifier:"));
 
-        verifiedGolden.put(data.getURL().toExternalForm(), verifiedGoldenPart);
+        verifiedGolden.put(data.toURL().toExternalForm(), verifiedGoldenPart);
 
         assertEquals(verifiedGolden, verifiedOutput);
         assertEquals(new HashSet<FileObject>(Arrays.asList(dataSrc1, dataSrc2)), added);
@@ -287,7 +288,7 @@ public class BatchSearchTest extends NbTestCase {
         Map<String, Iterable<String>> output = toDebugOutput(result);
         Map<String, Iterable<String>> golden = new HashMap<String, Iterable<String>>();
 
-        golden.put(data.getURL().toExternalForm(), new HashSet<String>(Arrays.asList("src1/test/Test1.java", "src2/test/Test1.java")));
+        golden.put(data.toURL().toExternalForm(), new HashSet<String>(Arrays.asList("src1/test/Test1.java", "src2/test/Test1.java")));
 
         assertEquals(golden, output);
     }
@@ -324,7 +325,7 @@ public class BatchSearchTest extends NbTestCase {
                 resourcesRepr.add(r.getRelativePath());
             }
 
-            output.put(e.getKey().getURL().toExternalForm(), resourcesRepr);
+            output.put(e.getKey().toURL().toExternalForm(), resourcesRepr);
         }
 
         return output;
@@ -334,12 +335,14 @@ public class BatchSearchTest extends NbTestCase {
         final Map<String, Map<String, Iterable<String>>> result = new HashMap<String, Map<String, Iterable<String>>>();
         List<MessageImpl> errors = new LinkedList<MessageImpl>();
         BatchSearch.getVerifiedSpans(candidates, new ProgressHandleWrapper(1), new BatchSearch.VerifiedSpansCallBack() {
+            @Override
             public void groupStarted() {}
+            @Override
             public boolean spansVerified(CompilationController wc, Resource r, Collection<? extends ErrorDescription> hints) throws Exception {
-                Map<String, Iterable<String>> files = result.get(r.getRoot().getURL().toExternalForm());
+                Map<String, Iterable<String>> files = result.get(r.getRoot().toURL().toExternalForm());
 
                 if (files == null) {
-                    result.put(r.getRoot().getURL().toExternalForm(), files = new HashMap<String, Iterable<String>>());
+                    result.put(r.getRoot().toURL().toExternalForm(), files = new HashMap<String, Iterable<String>>());
                 }
 
                 Collection<String> currentHints = new LinkedList<String>();
@@ -352,7 +355,9 @@ public class BatchSearchTest extends NbTestCase {
 
                 return true;
             }
+            @Override
             public void groupFinished() {}
+            @Override
             public void cannotVerifySpan(Resource r) {
                 fail("Cannot verify: " +r.getRelativePath());
             }
@@ -374,6 +379,7 @@ public class BatchSearchTest extends NbTestCase {
             return sourceRoots;
         }
 
+        @Override
         public synchronized ClassPath findClassPath(FileObject file, String type) {
             if (ClassPath.BOOT.equals(type)) {
                 return ClassPathSupport.createClassPath(getBootClassPath().toArray(new URL[0]));
@@ -401,32 +407,28 @@ public class BatchSearchTest extends NbTestCase {
 
     public static synchronized List<URL> getBootClassPath() {
         if (bootClassPath == null) {
-            try {
-                String cp = System.getProperty("sun.boot.class.path");
-                List<URL> urls = new ArrayList<URL>();
-                String[] paths = cp.split(Pattern.quote(System.getProperty("path.separator")));
+            String cp = System.getProperty("sun.boot.class.path");
+            List<URL> urls = new ArrayList<URL>();
+            String[] paths = cp.split(Pattern.quote(System.getProperty("path.separator")));
 
-                for (String path : paths) {
-                    java.io.File f = new java.io.File(path);
+            for (String path : paths) {
+                java.io.File f = new java.io.File(path);
 
-                    if (!f.canRead())
-                        continue;
+                if (!f.canRead())
+                    continue;
 
-                    FileObject fo = FileUtil.toFileObject(f);
+                FileObject fo = FileUtil.toFileObject(f);
 
-                    if (FileUtil.isArchiveFile(fo)) {
-                        fo = FileUtil.getArchiveRoot(fo);
-                    }
-
-                    if (fo != null) {
-                        urls.add(fo.getURL());
-                    }
+                if (FileUtil.isArchiveFile(fo)) {
+                    fo = FileUtil.getArchiveRoot(fo);
                 }
 
-                bootClassPath = urls;
-            } catch (FileStateInvalidException e) {
-                Exceptions.printStackTrace(e);
+                if (fo != null) {
+                    urls.add(fo.toURL());
+                }
             }
+
+            bootClassPath = urls;
         }
 
         return bootClassPath;

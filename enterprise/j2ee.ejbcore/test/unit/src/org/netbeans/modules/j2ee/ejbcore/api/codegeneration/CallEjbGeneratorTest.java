@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.j2ee.ejbcore.api.codegeneration;
 
-import org.netbeans.modules.j2ee.ejbcore.api.codegeneration.CallEjbGenerator;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import java.io.IOException;

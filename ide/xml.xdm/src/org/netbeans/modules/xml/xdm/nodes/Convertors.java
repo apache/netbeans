@@ -92,15 +92,10 @@ public final class Convertors {
         if (system == null) {
             Object obj = doc.getProperty(Document.StreamDescriptionProperty);        
             if (obj instanceof DataObject) {
-                try { 
-                        DataObject dobj = (DataObject) obj;
-                        FileObject fo = dobj.getPrimaryFile();
-                        URL url = fo.getURL();
-                        system = url.toExternalForm();
-                } catch (IOException io) {
-                    ErrorManager emgr = (ErrorManager) Lookup.getDefault().lookup(ErrorManager.class);
-                    emgr.notify(io);
-                }
+                DataObject dobj = (DataObject) obj;
+                FileObject fo = dobj.getPrimaryFile();
+                URL url = fo.toURL();
+                system = url.toExternalForm();
             } else {
                 ErrorManager emgr = (ErrorManager) Lookup.getDefault().lookup(ErrorManager.class);
                 emgr.log("XML:Convertors:Unknown stream description:" + obj);

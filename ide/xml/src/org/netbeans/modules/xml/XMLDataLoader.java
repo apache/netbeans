@@ -27,7 +27,6 @@ import org.netbeans.modules.xml.text.syntax.XMLKit;
 import org.openide.filesystems.*;
 import org.openide.loaders.*;
 import org.openide.util.*;
-import org.openide.ErrorManager;
 
 
 /** The DataLoader for XMLDataObjects.
@@ -278,15 +277,7 @@ public class XMLDataLoader extends UniFileLoader {
             }
 
             // copy attributes
-            FileUtil.copyAttributes (getFile (), fo);
-
-            // unmark template state //###
-            try {
-                DataObject.find(fo).setTemplate (false);
-            } catch (DataObjectNotFoundException ex) {
-                ErrorManager.getDefault().notify(ex);
-            }
-
+            FileUtil.copyAttributes (getFile (), fo, (n, v) -> DataObject.PROP_TEMPLATE.equals(n) ? null : FileUtil.defaultAttributesTransformer().apply(n, v));
             return fo;
         }
 

@@ -23,11 +23,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import static junit.framework.TestCase.fail;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
-import org.eclipse.lsp4j.debug.OutputEventArguments;
 import org.eclipse.lsp4j.debug.services.IDebugProtocolClient;
 import org.junit.Test;
 import org.netbeans.api.extexecution.print.LineConvertors;
@@ -38,9 +38,10 @@ import org.netbeans.modules.gsf.testrunner.api.Status;
 import org.netbeans.modules.gsf.testrunner.api.TestSession;
 import org.netbeans.modules.gsf.testrunner.api.Testcase;
 import org.netbeans.modules.gsf.testrunner.api.Trouble;
+import org.netbeans.modules.java.lsp.server.TestCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.protocol.DecorationRenderOptions;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
-import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
+import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.protocol.SetTextEditorDecorationParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
@@ -117,30 +118,28 @@ public class TestProgressHandlerTest extends NbTestCase {
         assertEquals("Two messages", 2, msgs.size());
         assertEquals(fo.toURI().toString(), msgs.get(0).getUri());
         TestSuiteInfo suite = msgs.get(0).getSuite();
-        assertEquals("TestSuiteName", suite.getSuiteName());
-        assertEquals(TestSuiteInfo.State.Running, suite.getState());
+        assertEquals("TestSuiteName", suite.getName());
+        assertEquals(TestSuiteInfo.State.Started, suite.getState());
         assertEquals(fo.toURI().toString(), msgs.get(1).getUri());
         suite = msgs.get(1).getSuite();
-        assertEquals("TestSuiteName", suite.getSuiteName());
-        assertEquals(TestSuiteInfo.State.Completed, suite.getState());
+        assertEquals("TestSuiteName", suite.getName());
+        assertEquals(TestSuiteInfo.State.Failed, suite.getState());
         assertEquals(2, suite.getTests().size());
         TestSuiteInfo.TestCaseInfo testCase = suite.getTests().get(0);
-        assertEquals("TestSuiteName:test1", testCase.getId());
-        assertEquals("test1", testCase.getShortName());
-        assertEquals("TestSuiteName.test1", testCase.getFullName());
+        assertEquals("TestSuiteName:TestSuiteName.test1", testCase.getId());
+        assertEquals("TestSuiteName.test1", testCase.getName());
         assertEquals(fo.toURI().toString(), testCase.getFile());
         assertEquals(TestSuiteInfo.State.Passed, testCase.getState());
         assertNull(testCase.getStackTrace());
         testCase = suite.getTests().get(1);
-        assertEquals("TestSuiteName:test2", testCase.getId());
-        assertEquals("test2", testCase.getShortName());
-        assertEquals("TestSuiteName.test2", testCase.getFullName());
+        assertEquals("TestSuiteName:TestSuiteName.test2", testCase.getId());
+        assertEquals("TestSuiteName.test2", testCase.getName());
         assertEquals(fo.toURI().toString(), testCase.getFile());
         assertEquals(TestSuiteInfo.State.Failed, testCase.getState());
         assertNotNull(testCase.getStackTrace());
     }
 
-    private static final class MockLanguageClient implements NbCodeLanguageClient {
+    private static final class MockLanguageClient extends TestCodeLanguageClient {
         private final List<TestProgressParams> messages;
 
         MockLanguageClient(List<TestProgressParams> messages) {
@@ -216,5 +215,11 @@ public class TestProgressHandlerTest extends NbTestCase {
         public void disposeTextEditorDecoration(String params) {
             fail();
         }
+
+        @Override
+        public void notifyNodeChange(NodeChangedParams params) {
+            fail();
+        }
+
     }
 }

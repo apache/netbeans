@@ -52,6 +52,10 @@ public class TopSecurityManager extends TrackingHooks {
 
     @Override
     protected void checkExit(int i) {
+        if (!check) {
+            return;
+        }
+
         if (!officialExit) {
             throw new ExitSecurityException("Illegal attempt to exit early"); // NOI18N
         }
@@ -170,10 +174,10 @@ public class TopSecurityManager extends TrackingHooks {
             Class<?> caller = null;
             Class<?>[] arr = getStack();
             for (int i = 0; i < arr.length; i++) {
-                if (arr[i] == TopSecurityManager.class) {
+                if (arr[i] == TopSecurityManager.class || arr[i] == StackSecurityManager.class || arr[i] == TrackingHooks.class) {
                     continue;
                 }
-                if (arr[i] != Class.class) {
+                if (arr[i] != Class.class && arr[i] != AccessibleObject.class) {
                     caller = arr[i];
                     break;
                 }

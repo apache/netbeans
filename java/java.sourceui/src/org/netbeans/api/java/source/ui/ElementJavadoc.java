@@ -1338,44 +1338,33 @@ public class ElementJavadoc {
         for (SourceLineMeta fullLineInfo : parseResult) {
             lineCounter++;
             
-            //dont process further if source line not contains any mark up tags
-            if (fullLineInfo.getUncommentSourceLine() == null) {
-                try {
-                    sb.append(XMLUtil.toElementContent(fullLineInfo.getActualSourceLine())).append("\n");
-                } catch (CharConversionException ex) {
-                    Exceptions.printStackTrace(ex);
-                    return;
-                }
-                continue;
-            }
-            
-            //process markup tags source line
-            String codeLine = fullLineInfo.getUncommentSourceLine();
-            try {
-                codeLine = XMLUtil.toElementContent(codeLine);
-            } catch (CharConversionException ex) {
-                Exceptions.printStackTrace(ex);
-                return;
-            }
+            String codeLine = fullLineInfo.getUncommentSourceLine() != null ? fullLineInfo.getUncommentSourceLine() : fullLineInfo.getActualSourceLine();
+
+//            try {
+//                codeLine = XMLUtil.toElementContent(codeLine);
+//            } catch (CharConversionException ex) {
+//                Exceptions.printStackTrace(ex);
+//                return;
+//            }
             List<SourceLineCharterMapperToHtmlTag> eachCharList = new LinkedList<>();
             for (int pos = 0; pos < codeLine.length(); pos++) {
                 SourceLineCharterMapperToHtmlTag htmlCharMapper = new SourceLineCharterMapperToHtmlTag(new LinkedList<>(), codeLine.charAt(pos), new ArrayList<>());
                 eachCharList.add(htmlCharMapper);
             }
             
-            List<Attrib> attributes = tags.markUpTagLineMapper.get(lineCounter);
+            List<ApplicableMarkupTag> attributes = tags.markUpTagLineMapper.get(lineCounter);
             List<Region> regions = tags.regionTagLineMapper.get(lineCounter);
 
             if (attributes != null) {
-                for (Attrib attrib : attributes) {
+                for (ApplicableMarkupTag attrib : attributes) {
                     codeLine = applyTagsToHTML(codeLine, attrib.getAttributes(), attrib.getMarkupTagName(), sb, eachCharList);
                 }
             }
-            if (regions != null) {
-                for (Region region : regions) {
-                    codeLine = applyTagsToHTML(codeLine, region.getAttributes(), region.getMarkupTagName(), sb, eachCharList);
-                }
-            }
+//            if (regions != null) {
+//                for (Region region : regions) {
+//                    codeLine = applyTagsToHTML(codeLine, region.getAttributes(), region.getMarkupTagName(), sb, eachCharList);
+//                }
+//            }
             
             for (SourceLineCharterMapperToHtmlTag charMapper : eachCharList) {
                 //dont process any html tag for blank character
@@ -1386,7 +1375,7 @@ public class ElementJavadoc {
                 for (String startTag : charMapper.getStartTag()) {
                     sb.append(startTag);
                 }
-                sb.append(charMapper.getSourceChar());
+                sb.append(charMapper.getSourceChar()=='<' ? "&lt;" : charMapper.getSourceChar());
                 for (String endTag : charMapper.getEndTag()) {
                     sb.append(endTag);
                 }
@@ -1410,12 +1399,12 @@ public class ElementJavadoc {
     }
     
     private void applyHighlightTag(String codeLine, String tagAction, String htmlHighlightType, String tagActionValue, List<SourceLineCharterMapperToHtmlTag> eachCharList){
-        try {
-            tagActionValue = XMLUtil.toElementContent(tagActionValue);
-        } catch (CharConversionException ex) {
-            Exceptions.printStackTrace(ex);
-            return;
-        }
+//        try {
+//            tagActionValue = XMLUtil.toElementContent(tagActionValue);
+//        } catch (CharConversionException ex) {
+//            Exceptions.printStackTrace(ex);
+//            return;
+//        }
         HtmlStartEndTag htmlTag = HTML_TAGS.get(htmlHighlightType);
         if(tagAction.equals("substring")){
             int fromIndex = 0;
@@ -1448,13 +1437,13 @@ public class ElementJavadoc {
     }
     
     private String applyReplaceTag(String codeLine, String tagAction, String replacement, String tagActionValue, List<SourceLineCharterMapperToHtmlTag> eachCharList){
-        try {
-            tagActionValue = XMLUtil.toElementContent(tagActionValue);
-            replacement  = XMLUtil.toElementContent(replacement);
-        } catch (CharConversionException ex) {
-            Exceptions.printStackTrace(ex);
-            return codeLine;
-        }
+//        try {
+//            tagActionValue = XMLUtil.toElementContent(tagActionValue);
+//            replacement  = XMLUtil.toElementContent(replacement);
+//        } catch (CharConversionException ex) {
+//            Exceptions.printStackTrace(ex);
+//            return codeLine;
+//        }
         
         
         if (tagAction.equals("substring")) {
@@ -1479,12 +1468,12 @@ public class ElementJavadoc {
                     } else {
                         fromIndex += Integer.compare(replacement.length(), tagActionValue.length());
                     }
-                    try {
-                        codeLine = formattedLine.toString();
-                        codeLine = XMLUtil.toElementContent(codeLine);
-                    } catch (CharConversionException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+//                    try {
+//                        codeLine = formattedLine.toString();
+//                        codeLine = XMLUtil.toElementContent(codeLine);
+//                    } catch (CharConversionException ex) {
+//                        Exceptions.printStackTrace(ex);
+//                    }
                 }
             }
         } else if(tagAction.equals("regex")){
@@ -1514,24 +1503,24 @@ public class ElementJavadoc {
             }
             matcher.appendTail(formattedLine);
            
-            try {
-                codeLine = formattedLine.toString();
-                codeLine = XMLUtil.toElementContent(codeLine);
-            } catch (CharConversionException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+//            try {
+//                codeLine = formattedLine.toString();
+//                codeLine = XMLUtil.toElementContent(codeLine);
+//            } catch (CharConversionException ex) {
+//                Exceptions.printStackTrace(ex);
+//            }
         }
         return codeLine;
     }
     
     private void applyLinkTag(String codeLine, String tagAction, String linkTarget, String tagActionValue, List<SourceLineCharterMapperToHtmlTag> eachCharList) {
-        try {
-            tagActionValue = XMLUtil.toElementContent(tagActionValue);
-            linkTarget = XMLUtil.toElementContent(linkTarget);
-        } catch (CharConversionException ex) {
-            Exceptions.printStackTrace(ex);
-            return;
-        }
+//        try {
+//            tagActionValue = XMLUtil.toElementContent(tagActionValue);
+//            linkTarget = XMLUtil.toElementContent(linkTarget);
+//        } catch (CharConversionException ex) {
+//            Exceptions.printStackTrace(ex);
+//            return;
+//        }
         
         String linkHtmlStartTag = "";
         String linkHtmlEndTag = "";
@@ -1616,7 +1605,7 @@ public class ElementJavadoc {
         return codeLine;
     }
     private ProcessedTags processTags(List<SourceLineMeta> parseResult ){
-        Map<Integer, List<Attrib>> markUpTagOnLine = new TreeMap<>();
+        Map<Integer, List<ApplicableMarkupTag>> markUpTagOnLine = new TreeMap<>();
         Map<Integer, List<Region>> regionTagOnLine = new TreeMap<>();
         List<String> errorList = new ArrayList<>();
         List<Region> regionList = new ArrayList<>();
@@ -1626,13 +1615,15 @@ public class ElementJavadoc {
         
         main:
         for(SourceLineMeta fullLineInfo : parseResult){
-            List<Attrib> attribList = new ArrayList<>();
+            List<ApplicableMarkupTag> attribList = new ArrayList<>();
             nextLine++;
             //checkng no attribute on this line
             if(fullLineInfo.getThisLineMarkUpTags() == null){
                 if(regionList.size() > 0){
                     List<Region> newRegionList = new ArrayList<>(regionList);
                     regionTagOnLine.put(thisLine, newRegionList);
+                    //markUpTagOnLine.put(thisLine, transformRegionAttributeToMarkupTag(newRegionList));
+                    addMarkupTags(thisLine, transformRegionAttributeToMarkupTag(newRegionList), markUpTagOnLine);
                 }
                 
             } else {
@@ -1663,16 +1654,22 @@ public class ElementJavadoc {
                             regionList.add(region);
                             List<Region> newRegionList = new ArrayList<>(regionList);
                             regionTagOnLine.put(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, newRegionList);
+                            //markUpTagOnLine.put(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, transformRegionAttributeToMarkupTag(newRegionList));
+                            addMarkupTags(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, transformRegionAttributeToMarkupTag(newRegionList), markUpTagOnLine);
                         } else {
-                            Attrib attrib = new Attrib(markupAttribute, markUpTag.getTagName());
+                            ApplicableMarkupTag attrib = new ApplicableMarkupTag(markupAttribute, markUpTag.getTagName());
                             attribList.add(attrib);
-                            List<Attrib> newAttribList = new ArrayList<>(attribList);
-                            markUpTagOnLine.put(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, newAttribList);
+                            List<ApplicableMarkupTag> newAttribList = new ArrayList<>(attribList);
+                            //markUpTagOnLine.put(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, newAttribList);
+                            addMarkupTags(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, newAttribList, markUpTagOnLine);
                         }
                     }
                     if (markUpTag.getTagName().equals("end")){
                         List<Region> newRegionList = new ArrayList<>(regionList);
                         regionTagOnLine.put(thisLine, newRegionList);
+                        //markUpTagOnLine.put(thisLine, transformRegionAttributeToMarkupTag(newRegionList));
+                        addMarkupTags(thisLine, transformRegionAttributeToMarkupTag(newRegionList), markUpTagOnLine);
+
                         Map<String, String> eAttrib = new HashMap<>();
                         for (MarkUpTagAttribute markUpTagAttribute : markUpTag.getMarkUpTagAttributes()) {
                             eAttrib.putIfAbsent(markUpTagAttribute.getName(), markUpTagAttribute.getValue());
@@ -1713,16 +1710,30 @@ public class ElementJavadoc {
         return new ProcessedTags(markUpTagOnLine, regionTagOnLine, errorList);
     }
     
+    private List<ApplicableMarkupTag> transformRegionAttributeToMarkupTag(List<Region> regionList){
+        
+        List<ApplicableMarkupTag> markupTag = new ArrayList<>();
+        regionList.iterator().forEachRemaining(region-> markupTag.add(new ApplicableMarkupTag(region.getAttributes(), region.getMarkupTagName())));
+        return markupTag; 
+    }
+    
+    private void addMarkupTags(Integer thisLine, List<ApplicableMarkupTag> markupList, Map<Integer, List<ApplicableMarkupTag>> markUpTagOnLine) {
+        if (markUpTagOnLine.containsKey(thisLine)) {
+            markUpTagOnLine.get(thisLine).addAll(markupList);
+        } else {
+            markUpTagOnLine.put(thisLine, markupList);
+        }
+    }
     
     private class Region{
         private final String markupTagName;
         private final String value;
         private Map<String, String> attributes;
 
-        Region(String value, Map<String, String> attributes, String tagType){
+        Region(String value, Map<String, String> attributes, String markupTagName){
             this.value = value == null || value.isEmpty() ? "anonymous" : value;
             this.attributes = attributes;
-            this.markupTagName = tagType;
+            this.markupTagName = markupTagName;
         }
 
         public Map<String, String> getAttributes() {
@@ -1743,11 +1754,11 @@ public class ElementJavadoc {
         }
     }
     
-    class Attrib{
+    class ApplicableMarkupTag{
         private final String markupTagName;
         private Map<String, String> attributes;
 
-        Attrib(Map<String, String> attributes, String markupTagName){
+        ApplicableMarkupTag(Map<String, String> attributes, String markupTagName){
             this.attributes = attributes;
             this.markupTagName = markupTagName;
         }
@@ -1770,11 +1781,11 @@ public class ElementJavadoc {
     }
     
     private class ProcessedTags{
-        Map<Integer, List<Attrib>> markUpTagLineMapper;
+        Map<Integer, List<ApplicableMarkupTag>> markUpTagLineMapper;
         Map<Integer, List<Region>> regionTagLineMapper;
         List<String> errorList = new ArrayList<>();
 
-        public ProcessedTags(Map<Integer, List<Attrib>> markUpTagLineMapper, Map<Integer, List<Region>> regionTagLineMapper, List<String> errorList) {
+        public ProcessedTags(Map<Integer, List<ApplicableMarkupTag>> markUpTagLineMapper, Map<Integer, List<Region>> regionTagLineMapper, List<String> errorList) {
             this.markUpTagLineMapper = markUpTagLineMapper;
             this.regionTagLineMapper = regionTagLineMapper;
             this.errorList = errorList;

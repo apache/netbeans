@@ -1352,9 +1352,9 @@ public class ElementJavadoc {
                 Exceptions.printStackTrace(ex);
                 return;
             }
-            List<SourceLineCharterMapperToHtmlTag> eachCharList = new ArrayList<>();
+            List<SourceLineCharterMapperToHtmlTag> eachCharList = new LinkedList<>();
             for (int pos = 0; pos < codeLine.length(); pos++) {
-                SourceLineCharterMapperToHtmlTag htmlCharMapper = new SourceLineCharterMapperToHtmlTag(new ArrayList<String>(), codeLine.charAt(pos), new ArrayList<String>());
+                SourceLineCharterMapperToHtmlTag htmlCharMapper = new SourceLineCharterMapperToHtmlTag(new LinkedList<>(), codeLine.charAt(pos), new ArrayList<>());
                 eachCharList.add(htmlCharMapper);
             }
             
@@ -1399,7 +1399,7 @@ public class ElementJavadoc {
         return null;
     }
     
-    private void applyHighlightHTMLTag(String codeLine, String tagAction, String htmlHighlightType, String tagActionValue, StringBuilder sb, List<SourceLineCharterMapperToHtmlTag> eachCharList){
+    private void applyHighlightTag(String codeLine, String tagAction, String htmlHighlightType, String tagActionValue, List<SourceLineCharterMapperToHtmlTag> eachCharList){
         try {
             tagActionValue = XMLUtil.toElementContent(tagActionValue);
         } catch (CharConversionException ex) {
@@ -1423,7 +1423,7 @@ public class ElementJavadoc {
                 }
             }
             
-        } else {
+        } else if(tagAction.equals("regex")){
             Pattern p = Pattern.compile(tagActionValue);
             Matcher m = p.matcher(codeLine);
             while (m.find()) {
@@ -1436,6 +1436,83 @@ public class ElementJavadoc {
             }
         }
     }
+    
+    private String applyReplaceTag(String codeLine, String tagAction, String replacement, String tagActionValue, List<SourceLineCharterMapperToHtmlTag> eachCharList){
+        try {
+            tagActionValue = XMLUtil.toElementContent(tagActionValue);
+            replacement  = XMLUtil.toElementContent(replacement);
+        } catch (CharConversionException ex) {
+            Exceptions.printStackTrace(ex);
+            return codeLine;
+        }
+        
+        
+        if (tagAction.equals("substring")) {
+            int fromIndex = 0;
+            while (fromIndex != -1) {
+                fromIndex = codeLine.indexOf(tagActionValue, fromIndex);
+                if (fromIndex != -1) {
+                    StringBuilder formattedLine = new StringBuilder(codeLine);
+                    for (int i = fromIndex; i < fromIndex + tagActionValue.length(); i++) {
+                        eachCharList.remove(fromIndex);
+                    }
+                    int counter = 0;
+                    for (int i = fromIndex; i < fromIndex + replacement.length(); i++) {
+                        SourceLineCharterMapperToHtmlTag htmlCharMapper = new SourceLineCharterMapperToHtmlTag(new LinkedList<>(), replacement.charAt(counter), new ArrayList<>());
+                        eachCharList.add(i, htmlCharMapper);
+                        counter++;
+                    }
+                    formattedLine.replace(fromIndex, fromIndex + tagActionValue.length(), replacement);
+                    
+                    if (fromIndex == 0) {
+                        fromIndex += replacement.length();
+                    } else {
+                        fromIndex += Integer.compare(replacement.length(), tagActionValue.length());
+                    }
+                    try {
+                        codeLine = formattedLine.toString();
+                        codeLine = XMLUtil.toElementContent(codeLine);
+                    } catch (CharConversionException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            }
+        } else if(tagAction.equals("regex")){
+            Pattern pattern = Pattern.compile(tagActionValue);
+            Matcher matcher = pattern.matcher(codeLine);
+            StringBuffer formattedLine = new StringBuffer();
+            int start = 0;
+            int end = 0;
+            while (matcher.find()) {
+                matcher.appendReplacement(formattedLine, replacement);
+                start = start + matcher.start();
+                end = formattedLine.length();
+                System.out.println("For list deleting : " + start + ":" + (start + matcher.end() - matcher.start()));
+                System.out.println("For list adding : " + start + ":" + end);
+               
+                for (int i = start; i < (start + matcher.end() - matcher.start()); i++) {
+                    eachCharList.remove(start);
+                }
+                int counter = 0;
+                for (int i = start; i < end; i++) {
+                    SourceLineCharterMapperToHtmlTag htmlCharMapper = new SourceLineCharterMapperToHtmlTag(new LinkedList<>(), replacement.charAt(counter), new ArrayList<>());
+                    eachCharList.add(i, htmlCharMapper);
+                    counter++;
+                }
+
+                start = end - matcher.end();
+            }
+            matcher.appendTail(formattedLine);
+           
+            try {
+                codeLine = formattedLine.toString();
+                codeLine = XMLUtil.toElementContent(codeLine);
+            } catch (CharConversionException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        return codeLine;
+    }
     private String applyTagsToHTML(String codeLine, Map<String, String> tagAttributes, String markupTagName, StringBuilder sb, List<SourceLineCharterMapperToHtmlTag> eachCharList) {
         
         String tagAction = getTagAction(tagAttributes);
@@ -1446,13 +1523,19 @@ public class ElementJavadoc {
         switch(markupTagName){
             case "highlight":
                 String htmlHighlightType = tagAttributes.get("type") != null && !tagAttributes.get("type").trim().isEmpty() ? tagAttributes.get("type") : "bold";
-                applyHighlightHTMLTag(codeLine, tagAction, htmlHighlightType, tagAttributes.get(tagAction), sb, eachCharList);
-                return codeLine;
-                //break;
+                applyHighlightTag(codeLine, tagAction, htmlHighlightType, tagAttributes.get(tagAction), eachCharList);
+                break;
+            case "replace":
+                String replacement = tagAttributes.get("replacement") != null && !tagAttributes.get("replacement").trim().isEmpty() ? tagAttributes.get("replacement") : null;
+                codeLine = applyReplaceTag(codeLine, tagAction, replacement, tagAttributes.get(tagAction), eachCharList);
+                break;
             default:
                 break;
         }
 
+        if (tagAction != null) {
+            return codeLine;
+        }
         
         String type = tagAttributes.get("type") != null ? tagAttributes.get("type") : "bold";
         String regex = tagAttributes.get("regex");

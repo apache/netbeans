@@ -103,7 +103,6 @@ import org.netbeans.modules.java.source.JavadocHelper;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -114,15 +113,9 @@ import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.ToolProvider;
-import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.JavacTask;
-import com.sun.source.util.SourcePositions;
-import com.sun.source.util.Trees;
-import com.sun.tools.javac.util.StringUtils;
-import java.util.stream.Collectors;
 
 /** Utility class for viewing Javadoc comments as HTML.
  *
@@ -148,7 +141,6 @@ public class ElementJavadoc {
     private final ClasspathInfo cpInfo;
     private final FileObject fileObject;
     private final ElementHandle<? extends Element> handle;
-    //private Doc doc;
     private volatile CompletableFuture<String> content;
     private final Callable<Boolean> cancel;
     private Map<String, ElementHandle<? extends Element>> links = new HashMap<>();
@@ -1345,7 +1337,20 @@ public class ElementJavadoc {
         int lineCounter = 0;
         for (SourceLineMeta fullLineInfo : parseResult) {
             lineCounter++;
-            String codeLine = fullLineInfo.getUncommentSourceLine() != null ? fullLineInfo.getUncommentSourceLine() : fullLineInfo.getActualSourceLine();
+            
+            //dont process further if source line not contains any mark up tags
+            if (fullLineInfo.getUncommentSourceLine() == null) {
+                try {
+                    sb.append(XMLUtil.toElementContent(fullLineInfo.getActualSourceLine())).append("\n");
+                } catch (CharConversionException ex) {
+                    Exceptions.printStackTrace(ex);
+                    return;
+                }
+                continue;
+            }
+            
+            //process markup tags source line
+            String codeLine = fullLineInfo.getUncommentSourceLine();
             try {
                 codeLine = XMLUtil.toElementContent(codeLine);
             } catch (CharConversionException ex) {
@@ -1373,6 +1378,11 @@ public class ElementJavadoc {
             }
             
             for (SourceLineCharterMapperToHtmlTag charMapper : eachCharList) {
+                //dont process any html tag for blank character
+                if(charMapper.getSourceChar() == ' '){
+                    sb.append(charMapper.getSourceChar());
+                    continue;
+                }
                 for (String startTag : charMapper.getStartTag()) {
                     sb.append(startTag);
                 }
@@ -1513,9 +1523,76 @@ public class ElementJavadoc {
         }
         return codeLine;
     }
+    
+    private void applyLinkTag(String codeLine, String tagAction, String linkTarget, String tagActionValue, List<SourceLineCharterMapperToHtmlTag> eachCharList) {
+        try {
+            tagActionValue = XMLUtil.toElementContent(tagActionValue);
+            linkTarget = XMLUtil.toElementContent(linkTarget);
+        } catch (CharConversionException ex) {
+            Exceptions.printStackTrace(ex);
+            return;
+        }
+        
+        String linkHtmlStartTag = "";
+        String linkHtmlEndTag = "";
+        try {
+            String javaDocCodeBody = prepareJavaDocForLinkTag(linkTarget);
+            String fullClassCode = addImportsToSource(javaDocCodeBody);
+            JavaDocSnippetLinkTagFileObject docSnippetLinkTagFileObject = new JavaDocSnippetLinkTagFileObject(fullClassCode);
+            StringBuilder linkRef = new StringBuilder();
+            createLinkTag(linkRef, docSnippetLinkTagFileObject);
+            
+            String link = linkRef.toString();
+            //replace <code>, becasue of some issue while resolving hyperlink and code in netbeans ide
+            link = link.replace("<code>", "");
+            link = link.replace("</code>", "");
+                        
+            String linkValue = link.replaceAll("\\<.*?>", "");
+            linkHtmlStartTag = link.substring(0, link.indexOf(linkValue));
+            linkHtmlEndTag = link.substring(link.indexOf(linkValue) + linkValue.length());
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+            return;
+        }
+        if(linkHtmlStartTag.equals("") || linkHtmlEndTag.equals("")){
+            return;
+        }
+        
+         if(tagAction.equals("substring")){
+            int fromIndex = 0;
+            while (fromIndex != -1) {
+                fromIndex = codeLine.indexOf(tagActionValue, fromIndex);
+                if (fromIndex != -1) {
+
+                    for (int t = fromIndex; t < fromIndex + tagActionValue.length(); t++) {
+                        List<String> startTag = eachCharList.get(t).getStartTag();
+                        startTag.add(0, linkHtmlStartTag);
+                        List<String> endTag = eachCharList.get(t).getEndTag();
+                        endTag.add(linkHtmlEndTag);
+                    }
+                    fromIndex += tagActionValue.length();
+                }
+            }
+            
+        } else if(tagAction.equals("regex")){
+            Pattern p = Pattern.compile(tagActionValue);
+            Matcher m = p.matcher(codeLine);
+            while (m.find()) {
+                for(int t = m.start(); t < m.end(); t++) {
+                    List<String> startTag = eachCharList.get(t).getStartTag();
+                    startTag.add(0, linkHtmlStartTag);
+                    List<String> endTag = eachCharList.get(t).getEndTag();
+                    endTag.add(linkHtmlEndTag);
+                }
+            }
+        }
+
+        
+    }
     private String applyTagsToHTML(String codeLine, Map<String, String> tagAttributes, String markupTagName, StringBuilder sb, List<SourceLineCharterMapperToHtmlTag> eachCharList) {
         
         String tagAction = getTagAction(tagAttributes);
+        //if no substring or regex defined in markup tag then not process
         if (tagAction == null) {
             return codeLine;
         }
@@ -1529,106 +1606,12 @@ public class ElementJavadoc {
                 String replacement = tagAttributes.get("replacement") != null && !tagAttributes.get("replacement").trim().isEmpty() ? tagAttributes.get("replacement") : null;
                 codeLine = applyReplaceTag(codeLine, tagAction, replacement, tagAttributes.get(tagAction), eachCharList);
                 break;
+            case "link":
+                String linkTarget = tagAttributes.get("target") != null && !tagAttributes.get("target").trim().isEmpty() ? tagAttributes.get("target") : null;
+                applyLinkTag(codeLine, tagAction, linkTarget, tagAttributes.get(tagAction), eachCharList);
+                break;
             default:
                 break;
-        }
-
-        if (tagAction != null) {
-            return codeLine;
-        }
-        
-        String type = tagAttributes.get("type") != null ? tagAttributes.get("type") : "bold";
-        String regex = tagAttributes.get("regex");
-        String subString = tagAttributes.get("substring");
-        String replacement = markupTagName.equals("replace") ? tagAttributes.get("replacement") : null;
-        String linkTarget = markupTagName.equals("link") ? tagAttributes.get("target") : null;
-        String linkType = tagAttributes.get("type") != null ? tagAttributes.get("type") : "link";
-
-        if (regex != null) {
-            try {
-                regex = XMLUtil.toElementContent(regex);
-                Pattern pattern = Pattern.compile(regex);
-                Matcher matcher = pattern.matcher(codeLine);
-                if (markupTagName.equals("highlight")) {
-                    StringBuffer formattedLine = new StringBuffer();
-                    while (matcher.find()) {
-                        switch (type) {
-                            case "italic":
-                                matcher.appendReplacement(formattedLine, "<i>" + matcher.group() + "</i>");
-                                break;
-                            case "bold":
-                                matcher.appendReplacement(formattedLine, "<b>" + matcher.group() + "</b>");
-                                break;
-                            case "highlighted":
-                                matcher.appendReplacement(formattedLine, "<span style=\"background-color:yellow;\">" + matcher.group() + "</span>");
-                                break;
-                        }
-                    }
-                    matcher.appendTail(formattedLine);
-                    codeLine = formattedLine.toString();
-                }
-                if (markupTagName.equals("replace") && replacement != null) {
-                    codeLine = matcher.replaceAll(replacement);
-                }
-                if (markupTagName.equals("link") && linkTarget != null) {
-                    String javaDocCodeBody = prepareJavaDocForLinkTag(linkTarget);
-                    String fullClassCode = addImportsToSource(javaDocCodeBody);
-                    JavaDocSnippetLinkTagFileObject docSnippetLinkTagFileObject = new JavaDocSnippetLinkTagFileObject(fullClassCode);
-                    try {
-                        StringBuilder linkRef = new StringBuilder();
-                        createLinkTag(linkRef, docSnippetLinkTagFileObject);
-                        //replace <code>, becasue of some issue while resolving hyperlink and code
-                        String link = linkRef.toString();
-                        link = link.replace("<code>", "");
-                        link = link.replace("</code>", "");
-                        codeLine = matcher.replaceAll(link);
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
-            } catch (CharConversionException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-        if (subString != null) {
-            try {
-                subString = XMLUtil.toElementContent(subString);
-                if (markupTagName.equals("highlight")) {
-                    switch (type) {
-                        case "italic":
-                            codeLine = codeLine.replace(subString, "<i>" + subString + "</i>");
-                            break;
-                        case "bold":
-                            codeLine = codeLine.replace(subString, "<b>" + subString + "</b>");
-                            break;
-                        case "highlighted":
-                            codeLine = codeLine.replace(subString, "<span style=\"background-color:yellow;\">" + subString + "</span>");
-                            break;
-                    }
-                }
-                if (markupTagName.equals("replace") && replacement != null) {
-                    codeLine = codeLine.replace(subString, replacement);
-                }
-                if (markupTagName.equals("link") && linkTarget != null) {
-                    String javaDocCodeBody = prepareJavaDocForLinkTag(linkTarget);
-                    String fullClassCode = addImportsToSource(javaDocCodeBody);
-                    JavaDocSnippetLinkTagFileObject docSnippetLinkTagFileObject = new JavaDocSnippetLinkTagFileObject(fullClassCode);
-                    try {
-                        StringBuilder linkRef = new StringBuilder();
-                        createLinkTag(linkRef, docSnippetLinkTagFileObject);
-                        //replace <code>, becasue of some issue while resolving hyperlink and code
-                        String link = linkRef.toString();
-                        link = link.replace("<code>", "");
-                        link = link.replace("</code>", "");
-                        codeLine = codeLine.replace(subString, link);
-                        
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
-            } catch (CharConversionException ex) {
-                Exceptions.printStackTrace(ex);
-            }
         }
         return codeLine;
     }
@@ -1672,13 +1655,6 @@ public class ElementJavadoc {
                                 isSubStringOrRegexArrive = true;
                             }
                         }
-                        //if markup tag contains attributes regex and substring simultaneously then take first attribute and discard second
-//                        if (validateAttributeRegexAndSubstringSimultaneously(markUpTag.getMarkUpTagAttributes())) {
-//                            //error: snippet markup: attributes "substring" and "regex" used simultaneously
-//                           errorList.add("error: snippet markup: attributes \"substring\" and \"regex\" used simultaneously");
-//                           break main;
-//                        }
-                        
                         
                         if (markupAttribute.containsKey("region")) {
                             String regionVal = markupAttribute.get("region") != null ? markupAttribute.get("region") : "anonymous";//provide annonymous region here if region value is empty
@@ -1698,7 +1674,6 @@ public class ElementJavadoc {
                         List<Region> newRegionList = new ArrayList<>(regionList);
                         regionTagOnLine.put(thisLine, newRegionList);
                         Map<String, String> eAttrib = new HashMap<>();
-                        //refactor this for loop later
                         for (MarkUpTagAttribute markUpTagAttribute : markUpTag.getMarkUpTagAttributes()) {
                             eAttrib.putIfAbsent(markUpTagAttribute.getName(), markUpTagAttribute.getValue());
                         }
@@ -1805,21 +1780,6 @@ public class ElementJavadoc {
             this.errorList = errorList;
         }
     }
-    
-//    private boolean validateAttributeRegexAndSubstringSimultaneously(List<MarkUpTagAttribute> markUpTagAttributes){
-//        boolean subString = false;
-//        boolean regex = false;
-//        for(MarkUpTagAttribute attribute: markUpTagAttributes){
-//            if(attribute.getName().equals("substring")){
-//                subString = true;
-//            }
-//            if(attribute.getName().equals("regex")){
-//                regex = true;
-//            }
-//        }
-//        
-//        return subString && regex;
-//    }
     
     private String addImportsToSource(String javaDocClassBody){
         StringBuilder source = new StringBuilder();

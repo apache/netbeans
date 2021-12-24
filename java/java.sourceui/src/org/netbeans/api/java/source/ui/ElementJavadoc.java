@@ -21,8 +21,6 @@ package org.netbeans.api.java.source.ui;
 import org.netbeans.api.java.source.ui.snippet.HtmlStartEndTag;
 import org.netbeans.api.java.source.ui.snippet.SourceLineMeta;
 import org.netbeans.api.java.source.ui.snippet.SnippetTagCommentParser;
-import org.netbeans.api.java.source.ui.snippet.MarkupTag;
-import org.netbeans.api.java.source.ui.snippet.MarkupTagAttribute;
 import com.sun.source.doctree.AttributeTree;
 import com.sun.source.doctree.DeprecatedTree;
 import com.sun.source.doctree.DocCommentTree;
@@ -47,7 +45,6 @@ import com.sun.source.util.DocTreeScanner;
 import com.sun.source.util.DocTrees;
 import com.sun.source.util.TreePath;
 import java.awt.event.ActionEvent;
-import java.io.CharConversionException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
@@ -163,9 +160,7 @@ public class ElementJavadoc {
     /** Non-normative notes about the implementation. Typically used for descriptions of the behaviour. Also not inherited. */
     private static final String IMPLNOTE_TAG = "implNote"; //NOI18N
     
-    public static final List<String> SUPPORTED_SNIPPET_MARKUP_TAGS = Arrays.asList("highlight", "replace", "link");
-    
-    public static final Map<String, HtmlStartEndTag> HTML_TAGS = new HashMap<>();
+    private static final Map<String, HtmlStartEndTag> HTML_TAGS = new HashMap<>();
     
     static{
         HTML_TAGS.put("bold", new HtmlStartEndTag("<b>", "</b>"));
@@ -1478,6 +1473,7 @@ public class ElementJavadoc {
                     } else {
                         fromIndex += Integer.compare(replacement.length(), tagActionValue.length());
                     }
+                    codeLine = formattedLine.toString();
                 }
             }
         } else if(tagAction.equals("regex")){
@@ -1506,6 +1502,7 @@ public class ElementJavadoc {
                 start = end - matcher.end();
             }
             matcher.appendTail(formattedLine);
+            codeLine = formattedLine.toString();
            
         }
         return codeLine;

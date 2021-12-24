@@ -19,6 +19,7 @@
 package org.netbeans.api.java.source.ui.snippet;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,8 @@ import org.netbeans.api.java.source.ui.ElementJavadoc;
  */
 public class MarkupTagProcessor {
     
+    private static final List<String> SUPPORTED_SNIPPET_MARKUP_TAGS = Arrays.asList("highlight", "replace", "link");
+
     public ProcessedTags process(List<SourceLineMeta> parseResult ){
         Map<Integer, List<ApplicableMarkupTag>> markUpTagOnLine = new TreeMap<>();
         Map<Integer, List<Region>> regionTagOnLine = new TreeMap<>();
@@ -42,9 +45,9 @@ public class MarkupTagProcessor {
         
         main:
         for(SourceLineMeta fullLineInfo : parseResult){
-            List<ApplicableMarkupTag> attribList = new ArrayList<>();
+            //List<ApplicableMarkupTag> attribList = new ArrayList<>();
             nextLine++;
-            if (regionList.size() > 0) {
+            if (!regionList.isEmpty()) {
                 List<Region> newRegionList = new ArrayList<>(regionList);
                 regionTagOnLine.put(thisLine, newRegionList);
                 //markUpTagOnLine.put(thisLine, transformRegionAttributeToMarkupTag(newRegionList));
@@ -53,7 +56,7 @@ public class MarkupTagProcessor {
             //checkng no attribute on this line
             if (fullLineInfo.getThisLineMarkUpTags() != null) {
                 for (MarkupTag markUpTag : fullLineInfo.getThisLineMarkUpTags()) {
-                    if (ElementJavadoc.SUPPORTED_SNIPPET_MARKUP_TAGS.contains(markUpTag.getTagName())) {
+                    if (SUPPORTED_SNIPPET_MARKUP_TAGS.contains(markUpTag.getTagName())) {
 
                         Map<String, String> markupAttribute = new HashMap<>();
                         boolean isSubStringOrRegexArrive = false;
@@ -77,16 +80,20 @@ public class MarkupTagProcessor {
                             markupAttribute.remove("region");
                             Region region = new Region(regionVal, markupAttribute, markUpTag.getTagName());
                             regionList.add(region);
-                            List<Region> newRegionList = new ArrayList<>(regionList);
+                            List<Region> newRegionList = new ArrayList<>();
+                            newRegionList.add(region);
                             regionTagOnLine.put(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, newRegionList);
                             //markUpTagOnLine.put(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, transformRegionAttributeToMarkupTag(newRegionList));
-                            addMarkupTags(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, transformRegionAttributeToMarkupTag(newRegionList), markUpTagOnLine);
+                            if(!markUpTag.isTagApplicableToNextLine()){
+                                addMarkupTags(thisLine, transformRegionAttributeToMarkupTag(newRegionList), markUpTagOnLine);
+                            }
                         } else {
-                            ApplicableMarkupTag attrib = new ApplicableMarkupTag(markupAttribute, markUpTag.getTagName());
-                            attribList.add(attrib);
-                            List<ApplicableMarkupTag> newAttribList = new ArrayList<>(attribList);
+                            ApplicableMarkupTag markupTag = new ApplicableMarkupTag(markupAttribute, markUpTag.getTagName());
+                            //attribList.add(markupTag);
+                            List<ApplicableMarkupTag> markupTagList = new ArrayList<>();
+                            markupTagList.add(markupTag);
                             //markUpTagOnLine.put(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, newAttribList);
-                            addMarkupTags(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, newAttribList, markUpTagOnLine);
+                            addMarkupTags(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, markupTagList, markUpTagOnLine);
                         }
                     }
                     if (markUpTag.getTagName().equals("end")) {
@@ -142,11 +149,11 @@ public class MarkupTagProcessor {
         return markupTag; 
     }
     
-    private void addMarkupTags(Integer thisLine, List<ApplicableMarkupTag> markupList, Map<Integer, List<ApplicableMarkupTag>> markUpTagOnLine) {
+    private void addMarkupTags(Integer thisLine, List<ApplicableMarkupTag> markupTagList, Map<Integer, List<ApplicableMarkupTag>> markUpTagOnLine) {
         if (markUpTagOnLine.containsKey(thisLine)) {
-            markUpTagOnLine.get(thisLine).addAll(markupList);
+            markUpTagOnLine.get(thisLine).addAll(markupTagList);
         } else {
-            markUpTagOnLine.put(thisLine, markupList);
+            markUpTagOnLine.put(thisLine, markupTagList);
         }
     }
     

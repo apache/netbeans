@@ -1,15 +1,15 @@
-package org.netbeans.api.java.source.ui;
+package org.netbeans.api.java.source.ui.snippet;
 
 import java.util.Objects;
 
-public class MarkUpTagAttribute {
+public class MarkupTagAttribute {
 
     private final String name;
     private final int nameStartPosition;
     private final String value;
     private final int valueStartPosition;
 
-    public MarkUpTagAttribute(String name, int nameStartPosition, String value, int valueStartPosition) {
+    public MarkupTagAttribute(String name, int nameStartPosition, String value, int valueStartPosition) {
         this.name = name;
         this.nameStartPosition = nameStartPosition;
         this.value = value;
@@ -50,7 +50,7 @@ public class MarkUpTagAttribute {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final MarkUpTagAttribute other = (MarkUpTagAttribute) obj;
+        final MarkupTagAttribute other = (MarkupTagAttribute) obj;
         if (!Objects.equals(this.name, other.name)) {
             return false;
         }

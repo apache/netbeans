@@ -1,4 +1,4 @@
-package org.netbeans.api.java.source.ui;
+package org.netbeans.api.java.source.ui.snippet;
 
 
 import java.io.BufferedReader;
@@ -20,7 +20,7 @@ public class SnippetTagCommentParser {
     private final SnippetMarkupTagExtractor extractor = new SnippetMarkupTagExtractor();
     private final Pattern markUpPattern = Pattern.compile(JAVA_LANG_SOURCE_LINE_START_PATTERN + "\\Q//\\E"+ MARKUPTAG_START_PATTERN);
     
-    List<SourceLineMeta> parse(String snippetDocComment) {
+    public List<SourceLineMeta> parse(String snippetDocComment) {
         List<SourceLineMeta> fullSourceLineInfo = new ArrayList<>();
         Matcher matcher = markUpPattern.matcher("");
         for (String snippetLine : computeLines(snippetDocComment)) {//get all java codne lines seperated by new line
@@ -29,7 +29,7 @@ public class SnippetTagCommentParser {
             sourceLine.setActualSourceLine(snippetLine);
             if (matcher.matches()) {
                 sourceLine.setSourceLineWithoutComment(matcher.group(1));//First group before single line comment
-                List<MarkUpTag> markUpTags = extractor.extract(matcher.group(3));// Last group after single line comment, start with @
+                List<MarkupTag> markUpTags = extractor.extract(matcher.group(3));// Last group after single line comment, start with @
                 sourceLine.setThisLineMarkUpTags(markUpTags);
             } 
             fullSourceLineInfo.add(sourceLine);

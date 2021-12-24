@@ -1,4 +1,4 @@
-package org.netbeans.api.java.source.ui;
+package org.netbeans.api.java.source.ui.snippet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +14,7 @@ public final class SnippetMarkupTagExtractor {
     private char[] charBuffer;
     private static final char MARKUP_TAG_START_CHAR = '@';
 
-    public List<MarkUpTag> extract(String tagLine) {
+    public List<MarkupTag> extract(String tagLine) {
 
         int tagLineLength = tagLine.length();
         charBuffer = new char[tagLineLength + 1];
@@ -26,8 +26,8 @@ public final class SnippetMarkupTagExtractor {
         return extractTag();
     }
 
-    private List<MarkUpTag> extractTag() {
-        List<MarkUpTag> markUpTags = new ArrayList<>();
+    private List<MarkupTag> extractTag() {
+        List<MarkupTag> markUpTags = new ArrayList<>();
         while (bufferPointer < bufferLength) {
             if (currentChar == MARKUP_TAG_START_CHAR) {
                 markUpTags.add(readMarkUpTag());
@@ -39,14 +39,14 @@ public final class SnippetMarkupTagExtractor {
         return markUpTags;
     }
 
-    private MarkUpTag readMarkUpTag() {
+    private MarkupTag readMarkUpTag() {
         nextChar();
         int nameBufferPointer = bufferPointer;
         String tagName = readMarkUpTagName();
         skipWhitespace();
 
         boolean isTagApplicableToNextLine = false;
-        List<MarkUpTagAttribute> markUpTagAttributes = new ArrayList<>();
+        List<MarkupTagAttribute> markUpTagAttributes = new ArrayList<>();
 
         if (currentChar == ':') {// @highlight: regex = "\barg\b", for this markup tag consider only the tag i.e.
             // highlight and skipped all attributes
@@ -61,11 +61,11 @@ public final class SnippetMarkupTagExtractor {
             }
         }
 
-        return new MarkUpTag(tagName, markUpTagAttributes, isTagApplicableToNextLine);
+        return new MarkupTag(tagName, markUpTagAttributes, isTagApplicableToNextLine);
     }
 
-    private List<MarkUpTagAttribute> getAllMarkUpTagAttributes() {
-        List<MarkUpTagAttribute> attrs = new ArrayList<>();
+    private List<MarkupTagAttribute> getAllMarkUpTagAttributes() {
+        List<MarkupTagAttribute> attrs = new ArrayList<>();
         skipWhitespace();
 
         while (bufferPointer < bufferLength && Character.isUnicodeIdentifierStart(currentChar)) {
@@ -100,7 +100,7 @@ public final class SnippetMarkupTagExtractor {
                 skipWhitespace();
             }
             //some attribute doesn't have value e.g. // @highlight region
-            MarkUpTagAttribute markUpTagAttribute = new MarkUpTagAttribute(attributeName, nameStartPos, value.toString(), valueStartPos);
+            MarkupTagAttribute markUpTagAttribute = new MarkupTagAttribute(attributeName, nameStartPos, value.toString(), valueStartPos);
 
             attrs.add(markUpTagAttribute);
         }

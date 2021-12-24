@@ -1,4 +1,4 @@
-package org.netbeans.api.java.source.ui;
+package org.netbeans.api.java.source.ui.snippet;
 
 
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 public class SourceLineMeta {
 
     String actualSourceLine;
-    List<MarkUpTag> thisLineMarkUpTags;
+    List<MarkupTag> thisLineMarkUpTags;
     String sourceLineWithoutComment;
 
     public String getActualSourceLine() {
@@ -17,11 +17,11 @@ public class SourceLineMeta {
         this.actualSourceLine = actualSourceLine;
     }
 
-    public List<MarkUpTag> getThisLineMarkUpTags() {
+    public List<MarkupTag> getThisLineMarkUpTags() {
         return thisLineMarkUpTags;
     }
 
-    public void setThisLineMarkUpTags(List<MarkUpTag> thisLineMarkUpTags) {
+    public void setThisLineMarkUpTags(List<MarkupTag> thisLineMarkUpTags) {
         this.thisLineMarkUpTags = thisLineMarkUpTags;
     }
 
@@ -32,6 +32,5 @@ public class SourceLineMeta {
     public void setSourceLineWithoutComment(String sourceLineWithoutComment) {
         this.sourceLineWithoutComment = sourceLineWithoutComment;
     }
-
 
 }

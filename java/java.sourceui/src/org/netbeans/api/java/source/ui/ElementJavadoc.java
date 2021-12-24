@@ -18,6 +18,11 @@
  */
 package org.netbeans.api.java.source.ui;
 
+import org.netbeans.api.java.source.ui.snippet.HtmlStartEndTag;
+import org.netbeans.api.java.source.ui.snippet.SourceLineMeta;
+import org.netbeans.api.java.source.ui.snippet.SnippetTagCommentParser;
+import org.netbeans.api.java.source.ui.snippet.MarkupTag;
+import org.netbeans.api.java.source.ui.snippet.MarkupTagAttribute;
 import com.sun.source.doctree.AttributeTree;
 import com.sun.source.doctree.DeprecatedTree;
 import com.sun.source.doctree.DocCommentTree;
@@ -116,6 +121,7 @@ import javax.tools.ToolProvider;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.JavacTask;
+import org.netbeans.api.java.source.ui.snippet.MarkupTagProcessor;
 
 /** Utility class for viewing Javadoc comments as HTML.
  *
@@ -157,9 +163,9 @@ public class ElementJavadoc {
     /** Non-normative notes about the implementation. Typically used for descriptions of the behaviour. Also not inherited. */
     private static final String IMPLNOTE_TAG = "implNote"; //NOI18N
     
-    private static final List<String> SUPPORTED_SNIPPET_MARKUP_TAGS = Arrays.asList("highlight", "replace", "link");
+    public static final List<String> SUPPORTED_SNIPPET_MARKUP_TAGS = Arrays.asList("highlight", "replace", "link");
     
-    private static final Map<String, HtmlStartEndTag> HTML_TAGS = new HashMap<>();
+    public static final Map<String, HtmlStartEndTag> HTML_TAGS = new HashMap<>();
     
     static{
         HTML_TAGS.put("bold", new HtmlStartEndTag("<b>", "</b>"));
@@ -1305,14 +1311,14 @@ public class ElementJavadoc {
 					break;
 		default:
                     if (tag.getKind().toString().equals("SNIPPET")) {
-                        processSnippetTag(sb, tag);
+                        processDocSnippet(sb, tag);
                     }	
             }
         }
         return sb;
     }
 
-    private void processSnippetTag(StringBuilder sb, DocTree tag) {
+    private void processDocSnippet(StringBuilder sb, DocTree tag) {
         sb.append("<pre>"); //NOI18N
         sb.append("<code>"); //NOI18N
         
@@ -1320,17 +1326,18 @@ public class ElementJavadoc {
         TextTree text = TreeShims.getSnippetDocTreeText(tag);
         SnippetTagCommentParser parser = new SnippetTagCommentParser();
         List<SourceLineMeta> parseResult = parser.parse(text.getBody());
-        ProcessedTags tags = processTags(parseResult);
-        buildHtml(parseResult, tags, sb);
+        MarkupTagProcessor tagProcessor = new MarkupTagProcessor();
+        MarkupTagProcessor.ProcessedTags tags = tagProcessor.process(parseResult);
+        applyTags(parseResult, tags, sb);
         
         sb.append("</code>"); //NOI18N
         sb.append("</pre>"); //NOI18N
     }
     
-    private void buildHtml(List<SourceLineMeta> parseResult, ProcessedTags tags, StringBuilder sb) {
+    private void applyTags(List<SourceLineMeta> parseResult, MarkupTagProcessor.ProcessedTags tags, StringBuilder sb) {
         
-        if(tags.errorList.size() > 0){
-            reportError(tags.errorList, sb);
+        if(tags.getErrorList().size() > 0){
+            reportError(tags.getErrorList(), sb);
             return;
         }
         
@@ -1340,31 +1347,20 @@ public class ElementJavadoc {
             
             String codeLine = fullLineInfo.getUncommentSourceLine() != null ? fullLineInfo.getUncommentSourceLine() : fullLineInfo.getActualSourceLine();
 
-//            try {
-//                codeLine = XMLUtil.toElementContent(codeLine);
-//            } catch (CharConversionException ex) {
-//                Exceptions.printStackTrace(ex);
-//                return;
-//            }
             List<SourceLineCharterMapperToHtmlTag> eachCharList = new LinkedList<>();
             for (int pos = 0; pos < codeLine.length(); pos++) {
                 SourceLineCharterMapperToHtmlTag htmlCharMapper = new SourceLineCharterMapperToHtmlTag(new LinkedList<>(), codeLine.charAt(pos), new ArrayList<>());
                 eachCharList.add(htmlCharMapper);
             }
             
-            List<ApplicableMarkupTag> attributes = tags.markUpTagLineMapper.get(lineCounter);
-            List<Region> regions = tags.regionTagLineMapper.get(lineCounter);
+            List<MarkupTagProcessor.ApplicableMarkupTag> attributes = tags.getMarkUpTagLineMapper().get(lineCounter);
+            List<MarkupTagProcessor.Region> regions = tags.getRegionTagLineMapper().get(lineCounter);
 
             if (attributes != null) {
-                for (ApplicableMarkupTag attrib : attributes) {
+                for (MarkupTagProcessor.ApplicableMarkupTag attrib : attributes) {
                     codeLine = applyTagsToHTML(codeLine, attrib.getAttributes(), attrib.getMarkupTagName(), sb, eachCharList);
                 }
             }
-//            if (regions != null) {
-//                for (Region region : regions) {
-//                    codeLine = applyTagsToHTML(codeLine, region.getAttributes(), region.getMarkupTagName(), sb, eachCharList);
-//                }
-//            }
             
             for (SourceLineCharterMapperToHtmlTag charMapper : eachCharList) {
                 //dont process any html tag for blank character
@@ -1375,6 +1371,7 @@ public class ElementJavadoc {
                 for (String startTag : charMapper.getStartTag()) {
                     sb.append(startTag);
                 }
+                //replace html tag to equivalent plain text
                 sb.append(charMapper.getSourceChar()=='<' ? "&lt;" : charMapper.getSourceChar());
                 for (String endTag : charMapper.getEndTag()) {
                     sb.append(endTag);
@@ -1382,6 +1379,33 @@ public class ElementJavadoc {
             }
             sb.append("\n");
         }
+    }
+
+     private String applyTagsToHTML(String codeLine, Map<String, String> tagAttributes, String markupTagName, StringBuilder sb, List<SourceLineCharterMapperToHtmlTag> eachCharList) {
+        
+        String tagAction = getTagAction(tagAttributes);
+        //if no substring or regex defined in markup tag then not process
+        if (tagAction == null) {
+            return codeLine;
+        }
+        
+        switch(markupTagName){
+            case "highlight":
+                String htmlHighlightType = tagAttributes.get("type") != null && !tagAttributes.get("type").trim().isEmpty() ? tagAttributes.get("type") : "bold";
+                applyHighlightTag(codeLine, tagAction, htmlHighlightType, tagAttributes.get(tagAction), eachCharList);
+                break;
+            case "replace":
+                String replacement = tagAttributes.get("replacement") != null && !tagAttributes.get("replacement").trim().isEmpty() ? tagAttributes.get("replacement") : null;
+                codeLine = applyReplaceTag(codeLine, tagAction, replacement, tagAttributes.get(tagAction), eachCharList);
+                break;
+            case "link":
+                String linkTarget = tagAttributes.get("target") != null && !tagAttributes.get("target").trim().isEmpty() ? tagAttributes.get("target") : null;
+                applyLinkTag(codeLine, tagAction, linkTarget, tagAttributes.get(tagAction), eachCharList);
+                break;
+            default:
+                break;
+        }
+        return codeLine;
     }
 
     private void reportError(List<String> errorList, StringBuilder sb){
@@ -1399,12 +1423,6 @@ public class ElementJavadoc {
     }
     
     private void applyHighlightTag(String codeLine, String tagAction, String htmlHighlightType, String tagActionValue, List<SourceLineCharterMapperToHtmlTag> eachCharList){
-//        try {
-//            tagActionValue = XMLUtil.toElementContent(tagActionValue);
-//        } catch (CharConversionException ex) {
-//            Exceptions.printStackTrace(ex);
-//            return;
-//        }
         HtmlStartEndTag htmlTag = HTML_TAGS.get(htmlHighlightType);
         if(tagAction.equals("substring")){
             int fromIndex = 0;
@@ -1437,14 +1455,6 @@ public class ElementJavadoc {
     }
     
     private String applyReplaceTag(String codeLine, String tagAction, String replacement, String tagActionValue, List<SourceLineCharterMapperToHtmlTag> eachCharList){
-//        try {
-//            tagActionValue = XMLUtil.toElementContent(tagActionValue);
-//            replacement  = XMLUtil.toElementContent(replacement);
-//        } catch (CharConversionException ex) {
-//            Exceptions.printStackTrace(ex);
-//            return codeLine;
-//        }
-        
         
         if (tagAction.equals("substring")) {
             int fromIndex = 0;
@@ -1468,12 +1478,6 @@ public class ElementJavadoc {
                     } else {
                         fromIndex += Integer.compare(replacement.length(), tagActionValue.length());
                     }
-//                    try {
-//                        codeLine = formattedLine.toString();
-//                        codeLine = XMLUtil.toElementContent(codeLine);
-//                    } catch (CharConversionException ex) {
-//                        Exceptions.printStackTrace(ex);
-//                    }
                 }
             }
         } else if(tagAction.equals("regex")){
@@ -1503,33 +1507,20 @@ public class ElementJavadoc {
             }
             matcher.appendTail(formattedLine);
            
-//            try {
-//                codeLine = formattedLine.toString();
-//                codeLine = XMLUtil.toElementContent(codeLine);
-//            } catch (CharConversionException ex) {
-//                Exceptions.printStackTrace(ex);
-//            }
         }
         return codeLine;
     }
     
     private void applyLinkTag(String codeLine, String tagAction, String linkTarget, String tagActionValue, List<SourceLineCharterMapperToHtmlTag> eachCharList) {
-//        try {
-//            tagActionValue = XMLUtil.toElementContent(tagActionValue);
-//            linkTarget = XMLUtil.toElementContent(linkTarget);
-//        } catch (CharConversionException ex) {
-//            Exceptions.printStackTrace(ex);
-//            return;
-//        }
         
         String linkHtmlStartTag = "";
         String linkHtmlEndTag = "";
         try {
-            String javaDocCodeBody = prepareJavaDocForLinkTag(linkTarget);
+            String javaDocCodeBody = prepareJavaDocForSnippetMarkupLinkTag(linkTarget);
             String fullClassCode = addImportsToSource(javaDocCodeBody);
             JavaDocSnippetLinkTagFileObject docSnippetLinkTagFileObject = new JavaDocSnippetLinkTagFileObject(fullClassCode);
             StringBuilder linkRef = new StringBuilder();
-            createLinkTag(linkRef, docSnippetLinkTagFileObject);
+            createSnippetMarkupLinkTag(linkRef, docSnippetLinkTagFileObject);
             
             String link = linkRef.toString();
             //replace <code>, becasue of some issue while resolving hyperlink and code in netbeans ide
@@ -1578,219 +1569,6 @@ public class ElementJavadoc {
 
         
     }
-    private String applyTagsToHTML(String codeLine, Map<String, String> tagAttributes, String markupTagName, StringBuilder sb, List<SourceLineCharterMapperToHtmlTag> eachCharList) {
-        
-        String tagAction = getTagAction(tagAttributes);
-        //if no substring or regex defined in markup tag then not process
-        if (tagAction == null) {
-            return codeLine;
-        }
-        
-        switch(markupTagName){
-            case "highlight":
-                String htmlHighlightType = tagAttributes.get("type") != null && !tagAttributes.get("type").trim().isEmpty() ? tagAttributes.get("type") : "bold";
-                applyHighlightTag(codeLine, tagAction, htmlHighlightType, tagAttributes.get(tagAction), eachCharList);
-                break;
-            case "replace":
-                String replacement = tagAttributes.get("replacement") != null && !tagAttributes.get("replacement").trim().isEmpty() ? tagAttributes.get("replacement") : null;
-                codeLine = applyReplaceTag(codeLine, tagAction, replacement, tagAttributes.get(tagAction), eachCharList);
-                break;
-            case "link":
-                String linkTarget = tagAttributes.get("target") != null && !tagAttributes.get("target").trim().isEmpty() ? tagAttributes.get("target") : null;
-                applyLinkTag(codeLine, tagAction, linkTarget, tagAttributes.get(tagAction), eachCharList);
-                break;
-            default:
-                break;
-        }
-        return codeLine;
-    }
-    private ProcessedTags processTags(List<SourceLineMeta> parseResult ){
-        Map<Integer, List<ApplicableMarkupTag>> markUpTagOnLine = new TreeMap<>();
-        Map<Integer, List<Region>> regionTagOnLine = new TreeMap<>();
-        List<String> errorList = new ArrayList<>();
-        List<Region> regionList = new ArrayList<>();
-        
-        int thisLine = 1;
-        int nextLine = 1;
-        
-        main:
-        for(SourceLineMeta fullLineInfo : parseResult){
-            List<ApplicableMarkupTag> attribList = new ArrayList<>();
-            nextLine++;
-            //checkng no attribute on this line
-            if(fullLineInfo.getThisLineMarkUpTags() == null){
-                if(regionList.size() > 0){
-                    List<Region> newRegionList = new ArrayList<>(regionList);
-                    regionTagOnLine.put(thisLine, newRegionList);
-                    //markUpTagOnLine.put(thisLine, transformRegionAttributeToMarkupTag(newRegionList));
-                    addMarkupTags(thisLine, transformRegionAttributeToMarkupTag(newRegionList), markUpTagOnLine);
-                }
-                
-            } else {
-                for (MarkUpTag markUpTag : fullLineInfo.getThisLineMarkUpTags()) {
-                    if (SUPPORTED_SNIPPET_MARKUP_TAGS.contains(markUpTag.getTagName())) {
-                        
-                        Map<String, String> markupAttribute = new HashMap<>();
-                        boolean isSubStringOrRegexArrive = false;
-                        //remove duplicate attributes and
-                        //if markup tag contains attributes regex and substring simultaneously then take first attribute and discard remaining
-                        for (MarkUpTagAttribute markUpTagAttribute : markUpTag.getMarkUpTagAttributes()) {
-                            if (isSubStringOrRegexArrive
-                                    && (markUpTagAttribute.getName().equals("substring")
-                                    || markUpTagAttribute.getName().equals("regex"))) {
-                                continue;
-                            }
-                            markupAttribute.putIfAbsent(markUpTagAttribute.getName(), markUpTagAttribute.getValue());
-                            if (!isSubStringOrRegexArrive && (markUpTagAttribute.getName().equals("substring")
-                                    || markUpTagAttribute.getName().equals("regex"))) {
-                                isSubStringOrRegexArrive = true;
-                            }
-                        }
-                        
-                        if (markupAttribute.containsKey("region")) {
-                            String regionVal = markupAttribute.get("region") != null ? markupAttribute.get("region") : "anonymous";//provide annonymous region here if region value is empty
-                            markupAttribute.remove("region");
-                            Region region = new Region(regionVal, markupAttribute, markUpTag.getTagName());
-                            regionList.add(region);
-                            List<Region> newRegionList = new ArrayList<>(regionList);
-                            regionTagOnLine.put(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, newRegionList);
-                            //markUpTagOnLine.put(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, transformRegionAttributeToMarkupTag(newRegionList));
-                            addMarkupTags(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, transformRegionAttributeToMarkupTag(newRegionList), markUpTagOnLine);
-                        } else {
-                            ApplicableMarkupTag attrib = new ApplicableMarkupTag(markupAttribute, markUpTag.getTagName());
-                            attribList.add(attrib);
-                            List<ApplicableMarkupTag> newAttribList = new ArrayList<>(attribList);
-                            //markUpTagOnLine.put(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, newAttribList);
-                            addMarkupTags(markUpTag.isTagApplicableToNextLine() ? nextLine : thisLine, newAttribList, markUpTagOnLine);
-                        }
-                    }
-                    if (markUpTag.getTagName().equals("end")){
-                        List<Region> newRegionList = new ArrayList<>(regionList);
-                        regionTagOnLine.put(thisLine, newRegionList);
-                        //markUpTagOnLine.put(thisLine, transformRegionAttributeToMarkupTag(newRegionList));
-                        addMarkupTags(thisLine, transformRegionAttributeToMarkupTag(newRegionList), markUpTagOnLine);
-
-                        Map<String, String> eAttrib = new HashMap<>();
-                        for (MarkUpTagAttribute markUpTagAttribute : markUpTag.getMarkUpTagAttributes()) {
-                            eAttrib.putIfAbsent(markUpTagAttribute.getName(), markUpTagAttribute.getValue());
-                        }
-                        
-                        String regionVal = "anonymous";
-                        if(eAttrib.containsKey("region")){
-                            regionVal = eAttrib.get("region") == null ||  eAttrib.get("region").trim().isEmpty() ? "anonymous" : eAttrib.get("region");
-                            for(int i = regionList.size() - 1; i >=0 ; i--){
-                                if(regionList.get(i).getValue().equals(regionVal)){
-                                    regionList.remove(i);
-                                    break;
-                                }
-                            }
-                        } else if(regionList.size() > 0){
-                            regionList.remove(regionList.size() - 1);//if no region defined then end with last region
-                        } else{//no region defined only @end is provided, this case considered as invalid
-                            //report error with @end tag and region value;
-                            errorList.add("error: snippet markup: no region to end "+ "@end"+ " " +regionVal);
-                            break main;
-                        }
-                    }
-                }
-            }
-            thisLine++;
-        }
-        if(regionList.size() > 0){
-            for(Region region :regionList){
-                String error = "";
-                if(region.markupTagName.equals("end")){
-                    error = "error: snippet markup: no region to end "+region.markupTagName + " " +region.value;
-                } else{
-                    error = "error: snippet markup: unpaired region "+region.markupTagName + " "+ region.value;
-                }
-                errorList.add(error);
-            }
-        }
-        return new ProcessedTags(markUpTagOnLine, regionTagOnLine, errorList);
-    }
-    
-    private List<ApplicableMarkupTag> transformRegionAttributeToMarkupTag(List<Region> regionList){
-        
-        List<ApplicableMarkupTag> markupTag = new ArrayList<>();
-        regionList.iterator().forEachRemaining(region-> markupTag.add(new ApplicableMarkupTag(region.getAttributes(), region.getMarkupTagName())));
-        return markupTag; 
-    }
-    
-    private void addMarkupTags(Integer thisLine, List<ApplicableMarkupTag> markupList, Map<Integer, List<ApplicableMarkupTag>> markUpTagOnLine) {
-        if (markUpTagOnLine.containsKey(thisLine)) {
-            markUpTagOnLine.get(thisLine).addAll(markupList);
-        } else {
-            markUpTagOnLine.put(thisLine, markupList);
-        }
-    }
-    
-    private class Region{
-        private final String markupTagName;
-        private final String value;
-        private Map<String, String> attributes;
-
-        Region(String value, Map<String, String> attributes, String markupTagName){
-            this.value = value == null || value.isEmpty() ? "anonymous" : value;
-            this.attributes = attributes;
-            this.markupTagName = markupTagName;
-        }
-
-        public Map<String, String> getAttributes() {
-            return attributes;
-        }
-
-        public String getValue() {
-            return value;
-        }
-        
-        public String getMarkupTagName() {
-            return markupTagName;
-        }
-
-        @Override
-        public String toString() {
-            return "Region{" + "value=" + value + ", attributes=" + attributes + '}';
-        }
-    }
-    
-    class ApplicableMarkupTag{
-        private final String markupTagName;
-        private Map<String, String> attributes;
-
-        ApplicableMarkupTag(Map<String, String> attributes, String markupTagName){
-            this.attributes = attributes;
-            this.markupTagName = markupTagName;
-        }
-
-        public Map<String, String> getAttributes() {
-            return attributes;
-        }
-        
-        public String getMarkupTagName() {
-            return markupTagName;
-        }
-
-        @Override
-        public String toString() {
-            return "Attrib{" + "attributes=" + attributes + '}';
-        }
-        
-        
-
-    }
-    
-    private class ProcessedTags{
-        Map<Integer, List<ApplicableMarkupTag>> markUpTagLineMapper;
-        Map<Integer, List<Region>> regionTagLineMapper;
-        List<String> errorList = new ArrayList<>();
-
-        public ProcessedTags(Map<Integer, List<ApplicableMarkupTag>> markUpTagLineMapper, Map<Integer, List<Region>> regionTagLineMapper, List<String> errorList) {
-            this.markUpTagLineMapper = markUpTagLineMapper;
-            this.regionTagLineMapper = regionTagLineMapper;
-            this.errorList = errorList;
-        }
-    }
     
     private String addImportsToSource(String javaDocClassBody){
         StringBuilder source = new StringBuilder();
@@ -1802,7 +1580,7 @@ public class ElementJavadoc {
         return source.append(javaDocClassBody).toString();
 
     }
-    private String prepareJavaDocForLinkTag(String target){
+    private String prepareJavaDocForSnippetMarkupLinkTag(String target){
         return "public class JavaDocSnippetLinkTag {\n" +
                 "\n" +
                 "    /**\n" +
@@ -1830,7 +1608,7 @@ public class ElementJavadoc {
         }
     }
     
-    private void createLinkTag(StringBuilder sb, JavaDocSnippetLinkTagFileObject fileObject) throws IOException {
+    private void createSnippetMarkupLinkTag(StringBuilder sb, JavaDocSnippetLinkTagFileObject fileObject) throws IOException {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         JavacTask task = (JavacTask)compiler.getTask(null, null, null, null, null, Arrays.asList(fileObject));
 

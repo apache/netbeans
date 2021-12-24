@@ -1,15 +1,15 @@
-package org.netbeans.api.java.source.ui;
+package org.netbeans.api.java.source.ui.snippet;
 
 import java.util.List;
 
-class MarkUpTag {
+public class MarkupTag {
 
     private String tagName;
-    private List<MarkUpTagAttribute> markUpTagAttributes;
+    private List<MarkupTagAttribute> markUpTagAttributes;
     private boolean isTagApplicableToNextLine;
 
 
-    public MarkUpTag(String tagName, List<MarkUpTagAttribute> markUpTagAttributes, boolean isTagApplicableToNextLine) {
+    public MarkupTag(String tagName, List<MarkupTagAttribute> markUpTagAttributes, boolean isTagApplicableToNextLine) {
         this.tagName = tagName;
         this.markUpTagAttributes = markUpTagAttributes;
         this.isTagApplicableToNextLine = isTagApplicableToNextLine;
@@ -19,7 +19,7 @@ class MarkUpTag {
         return tagName;
     }
 
-    public List<MarkUpTagAttribute> getMarkUpTagAttributes() {
+    public List<MarkupTagAttribute> getMarkUpTagAttributes() {
         return markUpTagAttributes;
     }
     public boolean isTagApplicableToNextLine() {

@@ -649,7 +649,7 @@ matrix:
           script:
             - hide-logs.sh ant $OPTS -f webcommon/api.knockout test
             #- hide-logs.sh ant $OPTS -f webcommon/cordova test
-            #- hide-logs.sh ant $OPTS -f webcommon/html.angular test
+            - ant $OPTS -f webcommon/html.angular test
             - hide-logs.sh ant $OPTS -f webcommon/html.knockout test-unit
             - hide-logs.sh ant $OPTS -f webcommon/javascript.bower test
             - hide-logs.sh ant $OPTS -f webcommon/javascript.cdnjs test
@@ -658,7 +658,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f webcommon/javascript.nodejs test
             - hide-logs.sh ant $OPTS -f webcommon/javascript.v8debug test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.doc test
-            #- hide-logs.sh ant $OPTS -f webcommon/javascript2.editor test
+            - ant $OPTS -f webcommon/javascript2.editor test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.extdoc test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.extjs test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.jade test
@@ -668,9 +668,9 @@ matrix:
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.knockout test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.lexer test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.model test
-            #- hide-logs.sh ant $OPTS -f webcommon/javascript2.nodejs test
+            - ant $OPTS -f webcommon/javascript2.nodejs test
             #- hide-logs.sh ant $OPTS -f webcommon/javascript2.prototypejs test
-            #- hide-logs.sh ant $OPTS -f webcommon/javascript2.requirejs test
+            - ant $OPTS -f webcommon/javascript2.requirejs test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.sdoc test
             - hide-logs.sh ant $OPTS -f webcommon/languages.apacheconf test
             - hide-logs.sh ant $OPTS -f webcommon/languages.ini test

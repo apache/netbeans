@@ -41,7 +41,7 @@ public class JsWithTest extends JsWithBase {
     }
     
     public void testGoTo_01() throws Exception {
-        checkDeclaration("testfiles/with/test01.js", "console.log(getFirs^tName()); ", "man.js", 141);
+        checkDeclaration("testfiles/with/test01.js", "console.log(getFirs^tName());", "man.js", 141);
     }
     
     public void testWith_05() throws Exception {

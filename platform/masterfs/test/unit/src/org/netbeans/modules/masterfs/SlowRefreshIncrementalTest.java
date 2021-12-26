@@ -73,7 +73,7 @@ public class SlowRefreshIncrementalTest extends NbTestCase {
         testFolder = FileUtil.toFileObject(dir);
         assertNotNull("Test folder created", testFolder);
 
-        System.setSecurityManager(new FileChangedManager());
+        FileChangedManager.install();
     }
 
     public void testChangesDeliveredSoonerThanEverythingIsChecked() throws Exception {

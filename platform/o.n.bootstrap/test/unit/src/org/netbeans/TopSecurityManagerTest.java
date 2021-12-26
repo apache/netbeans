@@ -55,6 +55,9 @@ public class TopSecurityManagerTest extends TestCase {
         fail("Associating own security manager when one is already installed shall not be allowed");
     }
 
+    public void testGetStack() {
+        assertEquals(TopSecurityManagerTest.class, TopSecurityManager.getStack()[1]);
+    }
     /* Reenable when assert checkLogger(perm) is added back:
     public void testLoggerCannotBeReset() {
         if (true) return;

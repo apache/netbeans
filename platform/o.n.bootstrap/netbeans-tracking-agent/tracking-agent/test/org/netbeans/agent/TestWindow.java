@@ -20,11 +20,7 @@ package org.netbeans.agent;
 
 import java.awt.Frame;
 import java.awt.Window;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import org.netbeans.agent.hooks.TrackingHooks;
 
 /**
@@ -33,9 +29,6 @@ import org.netbeans.agent.hooks.TrackingHooks;
  */
 public class TestWindow {
     public static void main(String... args) throws IOException {
-        TrackingAgent.install();
-        File temp = File.createTempFile("test", "test");
-        String tempPath = temp.getPath();
         TrackingHooks.register(new TrackingHooks() {
             @Override
             protected void checkNewAWTWindow(Window w) {

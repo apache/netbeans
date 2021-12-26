@@ -26,6 +26,10 @@
             <code-name-base>org.netbeans.modules.masterfs</code-name-base>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>org.netbeans.bootstrap</code-name-base>
+                    <build-prerequisite/>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.queries</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>

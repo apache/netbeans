@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.masterfs;
 
-import org.netbeans.agent.hooks.TrackingHooks;
 import org.netbeans.modules.masterfs.filebasedfs.utils.FileChangedManager;
 import org.netbeans.modules.masterfs.watcher.Watcher;
 import org.openide.modules.OnStart;
@@ -31,7 +30,7 @@ public final class Installer implements Runnable {
     @Override
     public void run() {
         Watcher.isEnabled();
-        TrackingHooks.register(new FileChangedManager(), 0, TrackingHooks.HOOK_IO);
+        FileChangedManager.install();
     }
     
     @OnStop

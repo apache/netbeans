@@ -79,7 +79,7 @@ public class TrackingAgent {
                                                       "(Ljava/io/File;)V",
                                                       Arrays.asList(
                                                         "s" + TRACKING_HOOKS,
-                                                        "s" + "newFileOutputStream",
+                                                        "s" + "write",
                                                         "s" + "(Ljava/io/File;)V",
                                                         "0C,%1s,%2s",
                                                         "07,%0s",
@@ -91,7 +91,7 @@ public class TrackingAgent {
                                                       "(Ljava/lang/String;)V",
                                                       Arrays.asList(
                                                         "s" + TRACKING_HOOKS,
-                                                        "s" + "newFileOutputStream",
+                                                        "s" + "write",
                                                         "s" + "(Ljava/lang/String;)V",
                                                         "0C,%1s,%2s",
                                                         "07,%0s",
@@ -103,7 +103,7 @@ public class TrackingAgent {
                                                       "(Ljava/io/File;)V",
                                                       Arrays.asList(
                                                         "s" + TRACKING_HOOKS,
-                                                        "s" + "newFileInputStream",
+                                                        "s" + "read",
                                                         "s" + "(Ljava/io/File;)V",
                                                         "0C,%1s,%2s",
                                                         "07,%0s",
@@ -115,7 +115,7 @@ public class TrackingAgent {
 //                                                      "(Ljava/lang/String;)V",
 //                                                      Arrays.asList(
 //                                                        "s" + TRACKING_HOOKS,
-//                                                        "s" + "newFileInputStream",
+//                                                        "s" + "read",
 //                                                        "s" + "(Ljava/lang/String;)V",
 //                                                        "0C,%1s,%2s",
 //                                                        "07,%0s",
@@ -127,25 +127,109 @@ public class TrackingAgent {
                                                       "(Ljava/nio/file/Path;[Ljava/nio/file/OpenOption;)Ljava/io/OutputStream;",
                                                       Arrays.asList(
                                                         "s" + TRACKING_HOOKS,
-                                                        "s" + "newFileOutputStream",
+                                                        "s" + "write",
                                                         "s" + "(Ljava/nio/file/Path;)V",
                                                         "0C,%1s,%2s",
                                                         "07,%0s",
                                                         "0A,%4s,%3s"
                                                       ),
                                                       "2AB8,%5s"), //aload0, invokespecial #5
-            new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
-                                                      "newInputStream",
-                                                      "(Ljava/nio/file/Path;[Ljava/nio/file/OpenOption;)Ljava/io/InputStream;",
+//            new TrackingTransformer.MethodEnhancement("java/nio/file/Files", //covered by newByteChannel
+//                                                      "newInputStream",
+//                                                      "(Ljava/nio/file/Path;[Ljava/nio/file/OpenOption;)Ljava/io/InputStream;",
+//                                                      Arrays.asList(
+//                                                        "s" + TRACKING_HOOKS,
+//                                                        "s" + "read",
+//                                                        "s" + "(Ljava/nio/file/Path;)V",
+//                                                        "0C,%1s,%2s",
+//                                                        "07,%0s",
+//                                                        "0A,%4s,%3s"
+//                                                      ),
+//                                                      "2AB8,%5s"), //aload0 , invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "list",
+                                                      "()[Ljava/lang/String;",
                                                       Arrays.asList(
                                                         "s" + TRACKING_HOOKS,
-                                                        "s" + "newFileInputStream",
-                                                        "s" + "(Ljava/nio/file/Path;)V",
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/io/File;)V",
                                                         "0C,%1s,%2s",
                                                         "07,%0s",
                                                         "0A,%4s,%3s"
                                                       ),
-                                                      "2AB8,%5s"), //aload0 , invokespecial #5
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "list",
+                                                      "(Ljava/io/FilenameFilter;)[Ljava/lang/String;",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "listFiles",
+                                                      "()[Ljava/io/File;",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "listFiles",
+                                                      "(Ljava/io/FilenameFilter;)[Ljava/io/File;",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "listFiles",
+                                                      "(Ljava/io/FileFilter;)[Ljava/io/File;",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "mkdir",
+                                                      "()Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "write",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "mkdirs",
+                                                      "()Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "write",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
             new TrackingTransformer.MethodEnhancement("java/io/File",
                                                       "delete",
                                                       "()Z",
@@ -158,6 +242,198 @@ public class TrackingAgent {
                                                         "0A,%4s,%3s"
                                                       ),
                                                       "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "canExecute",
+                                                      "()Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "canRead",
+                                                      "()Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "canWrite",
+                                                      "()Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "isDirectory",
+                                                      "()Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "isFile",
+                                                      "()Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "isHidden",
+                                                      "()Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "exists",
+                                                      "()Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "length",
+                                                      "()J",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "createNewFile",
+                                                      "()Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "write",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "setExecutable",
+                                                      "(ZZ)Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "write",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "setReadable",
+                                                      "(ZZ)Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "write",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "setWritable",
+                                                      "(ZZ)Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "write",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "setReadOnly",
+                                                      "()Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "write",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/File",
+                                                      "lastModified",
+                                                      "(J)Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "write",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+//            new TrackingTransformer.MethodEnhancement("java/io/RandomAccessFile", //covered by <init>(File, String)
+//                                                      "<init>",
+//                                                      "(Ljava/lang/String;Ljava/lang/String;)V",
+//                                                      Arrays.asList(
+//                                                        "s" + TRACKING_HOOKS,
+//                                                        "s" + "readWrite",
+//                                                        "s" + "(Ljava/lang/String;)V",
+//                                                        "0C,%1s,%2s",
+//                                                        "07,%0s",
+//                                                        "0A,%4s,%3s"
+//                                                      ),
+//                                                      "2A2BB8,%5s"), //aload1, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/io/RandomAccessFile",
+                                                      "<init>",
+                                                      "(Ljava/io/File;Ljava/lang/String;)V",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "readWrite",
+                                                        "s" + "(Ljava/io/File;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2A2BB8,%5s"), //aload1, invokespecial #5
             new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
                                                       "delete",
                                                       "(Ljava/nio/file/Path;)V",
@@ -170,6 +446,234 @@ public class TrackingAgent {
                                                         "0A,%4s,%3s"
                                                       ),
                                                       "2AB8,%5s"), //aload0 , invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
+                                                      "createDirectory",
+                                                      "(Ljava/nio/file/Path;[Ljava/nio/file/attribute/FileAttribute;)Ljava/nio/file/Path;",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "write",
+                                                        "s" + "(Ljava/nio/file/Path;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0 , invokespecial #5
+//            new TrackingTransformer.MethodEnhancement("java/nio/file/Files", //covered by createDirectory
+//                                                      "createDirectories",
+//                                                      "(Ljava/nio/file/Path;[Ljava/nio/file/attribute/FileAttribute;)Ljava/nio/file/Path;",
+//                                                      Arrays.asList(
+//                                                        "s" + TRACKING_HOOKS,
+//                                                        "s" + "write",
+//                                                        "s" + "(Ljava/nio/file/Path;)V",
+//                                                        "0C,%1s,%2s",
+//                                                        "07,%0s",
+//                                                        "0A,%4s,%3s"
+//                                                      ),
+//                                                      "2AB8,%5s"), //aload0 , invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
+                                                      "newDirectoryStream",
+                                                      "(Ljava/nio/file/Path;)Ljava/nio/file/DirectoryStream;",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/nio/file/Path;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0 , invokespecial #5
+//            new TrackingTransformer.MethodEnhancement("java/nio/file/Files", //covered by newDirectoryStream
+//                                                      "newDirectoryStream",
+//                                                      "(Ljava/nio/file/Path;Ljava/lang/String;)Ljava/nio/file/DirectoryStream;",
+//                                                      Arrays.asList(
+//                                                        "s" + TRACKING_HOOKS,
+//                                                        "s" + "read",
+//                                                        "s" + "(Ljava/nio/file/Path;)V",
+//                                                        "0C,%1s,%2s",
+//                                                        "07,%0s",
+//                                                        "0A,%4s,%3s"
+//                                                      ),
+//                                                      "2AB8,%5s"), //aload0 , invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
+                                                      "newDirectoryStream",
+                                                      "(Ljava/nio/file/Path;Ljava/nio/file/DirectoryStream$Filter;)Ljava/nio/file/DirectoryStream;",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/nio/file/Path;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0 , invokespecial #5
+//            new TrackingTransformer.MethodEnhancement("java/nio/file/Files", //covered by newByteChannel(Path,Set,FileAttribute[])
+//                                                      "newByteChannel",
+//                                                      "(Ljava/nio/file/Path;[Ljava/nio/file/OpenOption;)Ljava/nio/channels/SeekableByteChannel;",
+//                                                      Arrays.asList(
+//                                                        "s" + TRACKING_HOOKS,
+//                                                        "s" + "readWrite",
+//                                                        "s" + "(Ljava/nio/file/Path;)V",
+//                                                        "0C,%1s,%2s",
+//                                                        "07,%0s",
+//                                                        "0A,%4s,%3s"
+//                                                      ),
+//                                                      "2AB8,%5s"), //aload0 , invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
+                                                      "newByteChannel",
+                                                      "(Ljava/nio/file/Path;Ljava/util/Set;[Ljava/nio/file/attribute/FileAttribute;)Ljava/nio/channels/SeekableByteChannel;",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "readWrite",
+                                                        "s" + "(Ljava/nio/file/Path;Ljava/util/Set;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2A2BB8,%5s"), //aload0, aload1, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
+                                                      "readAttributes",
+                                                      "(Ljava/nio/file/Path;Ljava/lang/Class;[Ljava/nio/file/LinkOption;)Ljava/nio/file/attribute/BasicFileAttributes;",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/nio/file/Path;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
+                                                      "readAttributes",
+                                                      "(Ljava/nio/file/Path;Ljava/lang/String;[Ljava/nio/file/LinkOption;)Ljava/util/Map;",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/nio/file/Path;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+//            new TrackingTransformer.MethodEnhancement("java/nio/file/Files", //covered by readAttribute
+//                                                      "getAttribute",
+//                                                      "(Ljava/nio/file/Path;Ljava/lang/String;[Ljava/nio/file/LinkOption;)Ljava/lang/Object;",
+//                                                      Arrays.asList(
+//                                                        "s" + TRACKING_HOOKS,
+//                                                        "s" + "read",
+//                                                        "s" + "(Ljava/nio/file/Path;)V",
+//                                                        "0C,%1s,%2s",
+//                                                        "07,%0s",
+//                                                        "0A,%4s,%3s"
+//                                                      ),
+//                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
+                                                      "getFileAttributeView",
+                                                      "(Ljava/nio/file/Path;Ljava/lang/Class;[Ljava/nio/file/LinkOption;)Ljava/nio/file/attribute/FileAttributeView;",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/nio/file/Path;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
+                                                      "isDirectory",
+                                                      "(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/nio/file/Path;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
+                                                      "isExecutable",
+                                                      "(Ljava/nio/file/Path;)Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/nio/file/Path;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
+                                                      "isHidden",
+                                                      "(Ljava/nio/file/Path;)Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/nio/file/Path;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
+                                                      "isReadable",
+                                                      "(Ljava/nio/file/Path;)Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/nio/file/Path;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
+                                                      "isRegularFile",
+                                                      "(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/nio/file/Path;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
+                                                      "isSameFile",
+                                                      "(Ljava/nio/file/Path;Ljava/nio/file/Path;)Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/nio/file/Path;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s,2BB8,%5s"), //aload0, invokespecial #5, aload1, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
+                                                      "isWritable",
+                                                      "(Ljava/nio/file/Path;)Z",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "read",
+                                                        "s" + "(Ljava/nio/file/Path;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
+            new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
+                                                      "setAttribute",
+                                                      "(Ljava/nio/file/Path;Ljava/lang/String;Ljava/lang/Object;[Ljava/nio/file/LinkOption;)Ljava/nio/file/Path;",
+                                                      Arrays.asList(
+                                                        "s" + TRACKING_HOOKS,
+                                                        "s" + "write",
+                                                        "s" + "(Ljava/nio/file/Path;)V",
+                                                        "0C,%1s,%2s",
+                                                        "07,%0s",
+                                                        "0A,%4s,%3s"
+                                                      ),
+                                                      "2AB8,%5s"), //aload0, invokespecial #5
             new TrackingTransformer.MethodEnhancement("java/lang/System",
                                                       "getProperty",
                                                       "(Ljava/lang/String;)Ljava/lang/String;",

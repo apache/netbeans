@@ -19,7 +19,6 @@
 package org.netbeans.modules.masterfs.filebasedfs.utils;
 
 import java.io.File;
-import java.security.Permission;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -30,14 +29,16 @@ import org.netbeans.agent.hooks.TrackingHooks;
 import org.netbeans.modules.masterfs.filebasedfs.children.ChildrenSupport;
 import org.netbeans.modules.masterfs.filebasedfs.naming.NamingFactory;
 import org.openide.util.Lookup;
-import org.openide.util.lookup.ServiceProvider;
-import org.openide.util.lookup.ServiceProviders;
 
 /**
  *
  * @author Radek Matous
  */
 public class FileChangedManager extends TrackingHooks {
+    public static void install() {
+        TrackingHooks.register(getInstance(), 0, TrackingHooks.HOOK_IO);
+    }
+
     private static final Logger LOG = Logger.getLogger(FileChangedManager.class.getName());
     private static final boolean isFine;
     private static final boolean isFiner;

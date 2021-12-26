@@ -21,7 +21,9 @@ package org.netbeans.agent.hooks;
 import java.awt.Window;
 import java.io.File;
 import java.lang.reflect.AccessibleObject;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,9 +31,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class TrackingHooks {
 
+    private static final Logger LOG = Logger.getLogger(TrackingHooks.class.getName());
     public static final String HOOK_EXIT = "exit";
     public static final String HOOK_IO = "io";
     public static final String HOOK_PROPERTY = "property";
@@ -42,6 +47,15 @@ public abstract class TrackingHooks {
     private static final Map<String, Set<HookDescription>> hook2Delegates = new HashMap<>();
 
     public static synchronized void register(TrackingHooks delegate, int priority, String... hooks) {
+        if (hook2Delegates.isEmpty() && hooks.length != 0) {
+            try {
+                Class<?> agent = Class.forName("org.netbeans.agent.TrackingAgent", false, ClassLoader.getSystemClassLoader());
+                agent.getDeclaredMethod("install").invoke(null);
+            } catch (ReflectiveOperationException ex) {
+                LOG.log(Level.WARNING, "Cannot associate tracking hooks, the application will be unstable"); // NOI18N
+                LOG.log(Level.INFO, "Cannot associate tracking hooks, the application will be unstable", ex); // NOI18N
+            }
+        }
         for (String hook : hooks) {
             Set<HookDescription> existing = hook2Delegates.computeIfAbsent(hook, x -> new TreeSet<>((d1, d2) -> d1.priority - d2.priority));
             existing.add(new HookDescription(delegate, priority));
@@ -76,42 +90,63 @@ public abstract class TrackingHooks {
     protected void checkFileRead(String path) {}
     protected void checkDelete(String path) {}
 
-    public static void newFileOutputStream(File file) {
-        newFileOutputStream(file.getPath());
+    public static void write(File file) {
+        write(file.getAbsolutePath());
     }
 
-    public static void newFileOutputStream(Path path) {
+    public static void write(Path path) {
         File file = path.toFile();
         if (file != null) {
-            newFileOutputStream(file);
+            write(file);
         }
     }
 
-    public static void newFileOutputStream(String name) {
+    public static void write(String name) {
         for (TrackingHooks h : getDelegates(HOOK_IO)) {
             h.checkFileWrite(name);
         }
     }
 
-    public static void newFileInputStream(File file) {
-        newFileInputStream(file.getPath());
+    public static void read(File file) {
+        read(file.getAbsolutePath());
     }
 
-    public static void newFileInputStream(Path path) {
+    public static void read(Path path) {
         File file = path.toFile();
         if (file != null) {
-            newFileInputStream(file);
+            read(file);
         }
     }
 
-    public static void newFileInputStream(String name) {
+    public static void read(String name) {
         for (TrackingHooks h : getDelegates(HOOK_IO)) {
             h.checkFileRead(name);
         }
     }
 
+    public static void readWrite(File file) {
+        read(file.getAbsolutePath());
+        write(file.getAbsolutePath());
+    }
+
+    public static void readWrite(Path path, Set<OpenOption> options) {
+        File file = path.toFile();
+        if (file != null) {
+            if (options.isEmpty()) {
+                read(file);
+            } else if (options.contains(StandardOpenOption.READ)) {
+                read(file);
+                if (options.size() != 1) {
+                    write(file);
+                }
+            } else {
+                write(file);
+            }
+        }
+    }
+
     public static void deleteFile(File file) {
-        deleteFile(file.getPath());
+        deleteFile(file.getAbsolutePath());
     }
 
     public static void deleteFile(Path path) {

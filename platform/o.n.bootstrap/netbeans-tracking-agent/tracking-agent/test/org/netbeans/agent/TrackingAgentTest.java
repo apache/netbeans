@@ -43,22 +43,86 @@ public class TrackingAgentTest {
     @Test
     public void testIO() throws Exception {
         runTest(TestIO.class,
-                "going to write using File:\n" +
-                "checkFileWrite: TEMP-FILE\n" +
-                "going to delete using File:\n" +
-                "checkDelete: TEMP-FILE\n" +
-                "going to write using Path:\n" +
-                "checkFileWrite: TEMP-FILE\n" +
-                "delete using Path:\n" +
-                "checkDelete: TEMP-FILE\n" +
-                "going to write using String:\n" +
-                "checkFileWrite: TEMP-FILE\n" +
-                "going to read using File:\n" +
+                "going to write using File: checkFileWrite: TEMP-FILE\n" +
+                "File.canExecute: checkFileRead: TEMP-FILE\n" +
+                "File.canRead: checkFileRead: TEMP-FILE\n" +
+                "File.canWrite: checkFileRead: TEMP-FILE\n" +
+                "File.createNewFile: checkFileWrite: TEMP-FILE\n" +
+                "File.isDirectory: checkFileRead: TEMP-FILE\n" +
+                "File.isFile: checkFileRead: TEMP-FILE\n" +
+                "File.isHidden: checkFileRead: TEMP-FILE\n" +
+                "File.length: checkFileRead: TEMP-FILE\n" +
+                "File.exists: checkFileRead: TEMP-FILE\n" +
+                "File.setExecutable(boolean): checkFileWrite: TEMP-FILE\n" +
+                "File.setExecutable(boolean, boolean): checkFileWrite: TEMP-FILE\n" +
+                "File.setReadable(boolean): checkFileWrite: TEMP-FILE\n" +
+                "File.setReadable(boolean, boolean): checkFileWrite: TEMP-FILE\n" +
+                "File.setWritable(boolean): checkFileWrite: TEMP-FILE\n" +
+                "File.setWritable(boolean, boolean): checkFileWrite: TEMP-FILE\n" +
+                "File.setReadOnly(): checkFileWrite: TEMP-FILE\n" +
+                "File.setLastModified(): going to delete using File: checkDelete: TEMP-FILE\n" +
+                "going to mkdir using File: checkFileWrite: TEMP-FILE\n" +
+                "going to mkdirs using File: checkFileWrite: TEMP-FILE\n" +
                 "checkFileRead: TEMP-FILE\n" +
-                "going to read using Path:\n" +
+                "going to list using File: \n" +
+                "1: checkFileRead: TEMP-FILE\n" +
+                "2: checkFileRead: TEMP-FILE\n" +
+                "3: checkFileRead: TEMP-FILE\n" +
+                "4: checkFileRead: TEMP-FILE\n" +
+                "5: checkFileRead: TEMP-FILE\n" +
+                "going to delete using File: checkDelete: TEMP-FILE\n" +
+                "going to mkdirs using File: checkFileWrite: TEMP-FILE\n" +
+                "going to delete using File: checkDelete: TEMP-FILE\n" +
+                "going to write using Path: checkFileWrite: TEMP-FILE\n" +
+                "checkFileRead: /home/lahvac/tools/netbeans/trunk/jdk-platform/lib/libnet.so\n" +
+                "checkFileRead: /home/lahvac/tools/netbeans/trunk/jdk-platform/lib/libnio.so\n" +
+                "delete using Path: checkDelete: TEMP-FILE\n" +
+                "going to mkdir using Path: checkFileWrite: TEMP-FILE\n" +
+                "going to mkdirs using Path: checkFileWrite: TEMP-FILE\n" +
                 "checkFileRead: TEMP-FILE\n" +
-                "going to read using String:\n" +
-                "checkFileRead: TEMP-FILE\n");
+                "checkFileRead: TEMP-FILE\n" +
+                "going to list using Path: \n" +
+                "1: checkFileRead: TEMP-FILE\n" +
+                "2: checkFileRead: TEMP-FILE\n" +
+                "3: checkFileRead: TEMP-FILE\n" +
+                "delete using Path: checkDelete: TEMP-FILE\n" +
+                "going to write using String: checkFileWrite: TEMP-FILE\n" +
+                "going to read using File: checkFileRead: TEMP-FILE\n" +
+                "going to read using Path: checkFileRead: TEMP-FILE\n" +
+                "going to read using String: checkFileRead: TEMP-FILE\n" +
+                "going to open using RandomAccessFile using String: checkFileRead: TEMP-FILE\n" +
+                "checkFileWrite: TEMP-FILE\n" +
+                "going to open using RandomAccessFile using File: checkFileRead: TEMP-FILE\n" +
+                "checkFileWrite: TEMP-FILE\n" +
+                "going to open using newByteChannel: \n" +
+                "1a: checkFileRead: TEMP-FILE\n" +
+                "1b: checkFileRead: TEMP-FILE\n" +
+                "1c: checkFileWrite: TEMP-FILE\n" +
+                "1d: checkFileRead: TEMP-FILE\n" +
+                "checkFileWrite: TEMP-FILE\n" +
+                "2a: checkFileRead: TEMP-FILE\n" +
+                "2b: checkFileRead: TEMP-FILE\n" +
+                "2c: checkFileWrite: TEMP-FILE\n" +
+                "2d: checkFileRead: TEMP-FILE\n" +
+                "checkFileWrite: TEMP-FILE\n" +
+                "Files.readAttributes(Path, Class): checkFileRead: TEMP-FILE\n" +
+                "Files.readAttributes(Path, String): checkFileRead: TEMP-FILE\n" +
+                "Files.getAttribute: checkFileRead: TEMP-FILE\n" +
+                "Files.getFileAttributeView: checkFileRead: TEMP-FILE\n" +
+                "Files.isDirectory: checkFileRead: TEMP-FILE\n" +
+                "Files.isExecutable: checkFileRead: TEMP-FILE\n" +
+                "Files.isHidden: checkFileRead: TEMP-FILE\n" +
+                "Files.isReadable: checkFileRead: TEMP-FILE\n" +
+                "Files.isRegularFile: checkFileRead: TEMP-FILE\n" +
+                "Files.isSameFile: checkFileRead: TEMP-FILE\n" +
+                "checkFileRead: TEMP-FILE\n" +
+                "Files.isWritable: checkFileRead: TEMP-FILE\n" +
+                "Files.getLastModifiedTime: checkFileRead: TEMP-FILE\n" +
+                "Files.getOwner: checkFileRead: TEMP-FILE\n" +
+                "Files.size: checkFileRead: TEMP-FILE\n" +
+                "Files.setAttribute: checkFileWrite: TEMP-FILE\n" +
+                "Files.setLastModifiedTime: checkFileRead: TEMP-FILE\n" +
+                "Files.setOwner: checkFileRead: TEMP-FILE\n");
     }
 
     @Test

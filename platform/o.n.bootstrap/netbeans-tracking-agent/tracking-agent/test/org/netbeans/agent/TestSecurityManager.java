@@ -26,7 +26,6 @@ import org.netbeans.agent.hooks.TrackingHooks;
  */
 public class TestSecurityManager {
     public static void main(String... args) {
-        TrackingAgent.install();
         TrackingHooks.register(new TrackingHooks() {
             @Override
             protected void checkExit(int i) {

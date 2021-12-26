@@ -27,7 +27,6 @@ import org.netbeans.agent.hooks.TrackingHooks;
  */
 public class TestSystemProperty {
     public static void main(String... args) throws IOException {
-        TrackingAgent.install();
         TrackingHooks.register(new TrackingHooks() {
             @Override
             protected void checkSystemProperty(String property) {

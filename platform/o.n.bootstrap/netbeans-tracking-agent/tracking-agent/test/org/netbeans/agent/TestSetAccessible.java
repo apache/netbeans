@@ -27,7 +27,6 @@ import org.netbeans.agent.hooks.TrackingHooks;
  */
 public class TestSetAccessible {
     public static void main(String... args) throws Exception {
-        TrackingAgent.install();
         TrackingHooks.register(new TrackingHooks() {
             @Override
             protected void checkSetAccessible(AccessibleObject what) {

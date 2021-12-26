@@ -75,7 +75,7 @@ public class SlowRefreshSuspendableTest extends NbTestCase {
         testFolder = FileUtil.toFileObject(dir);
         assertNotNull("Test folder created", testFolder);
 
-        System.setSecurityManager(new FileChangedManager());
+        FileChangedManager.install();
     }
 
     @RandomlyFails // NB-Core-Build #4386: Background I/O access needs to stop before we finish our task

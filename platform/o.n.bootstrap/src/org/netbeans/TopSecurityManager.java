@@ -22,9 +22,14 @@ package org.netbeans;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.security.CodeSource;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.agent.hooks.TrackingHooks;
@@ -38,13 +43,6 @@ public class TopSecurityManager extends TrackingHooks {
     private static final Logger LOG = Logger.getLogger(TopSecurityManager.class.getName());
 
     public static void install() {
-        try {
-            Class<?> agent = Class.forName("org.netbeans.agent.TrackingAgent", false, ClassLoader.getSystemClassLoader());
-            agent.getDeclaredMethod("install").invoke(null);
-        } catch (ReflectiveOperationException ex) {
-            LOG.log(Level.WARNING, "Cannot associate tracking hooks, the application will be unstable"); // NOI18N
-            LOG.log(Level.INFO, "Cannot associate tracking hooks, the application will be unstable", ex); // NOI18N
-        }
         TrackingHooks.register(new TopSecurityManager(), 1000, TrackingHooks.HOOK_EXIT, TrackingHooks.HOOK_PROPERTY, TrackingHooks.HOOK_SECURITY_MANAGER, TrackingHooks.HOOK_ACCESSIBLE);
     }
 
@@ -144,9 +142,40 @@ public class TopSecurityManager extends TrackingHooks {
 
 
     static Class<?>[] getStack() {
-        StackSecurityManager t = new StackSecurityManager();
-        return t.getClassContext();
+        try {
+            List<Class<?>> classes = new ArrayList<>();
+            //StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).forEach(f -> classes.add(f.getDeclaringClass()));
+            Class<?> stackWalker = Class.forName("java.lang.StackWalker");
+            Class<?> stackWalkerOption = Class.forName("java.lang.StackWalker$Option");
+            Class<?> stackWalkerStackFrame = Class.forName("java.lang.StackWalker$StackFrame");
+            Method getInstance = stackWalker.getDeclaredMethod("getInstance", stackWalkerOption);
+            Object walker = getInstance.invoke(null, Enum.valueOf((Class<? extends Enum>)stackWalkerOption, "RETAIN_CLASS_REFERENCE"));
+            Method forEach = stackWalker.getDeclaredMethod("forEach", Consumer.class);
+            Method getDeclaringClass = stackWalkerStackFrame.getDeclaredMethod("getDeclaringClass");
+            Consumer<?> stackFrameHandler = stack -> {
+                try {
+                    classes.add((Class<?>) getDeclaringClass.invoke(stack));
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                    throw TopSecurityManager.<RuntimeException>throwAny(ex);
+                }
+            };
+            forEach.invoke(walker, stackFrameHandler);
+            return classes.toArray(new Class<?>[0]);
+        } catch (ReflectiveOperationException ex) {
+            //JDK 8 compatibility:
+            StackSecurityManager t = new StackSecurityManager();
+            Class<?>[] stack = t.getClassContext();
+            Class<?>[] result = new Class<?>[stack.length - 1];
+            System.arraycopy(stack, 1, result, 0, stack.length - 1);
+            return result;
+        }
     }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Throwable> RuntimeException throwAny(Throwable t) throws T {
+        throw (T) t;
+    }
+
     private static final class StackSecurityManager extends SecurityManager {
         @Override
         protected Class[] getClassContext() {

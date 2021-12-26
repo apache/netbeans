@@ -46,7 +46,7 @@ import org.openide.windows.InputOutput;
  * @see <a href="@org-netbeans-api-java-classpath@/org/netbeans/api/java/classpath/ClassPath.html#getClassLoader(boolean)"><code>ClassPath.getClassLoader(...)</code></a>
 * @author Ales Novak, Petr Hamernik, Jaroslav Tulach, Ian Formanek
 */
-@Deprecated //TODO: not really used inside NetBeans IDE?
+@Deprecated
 public class NbClassLoader extends URLClassLoader {
     /** I/O for classes defined by this classloader. May be <code>null</code>. */
     protected InputOutput inout;

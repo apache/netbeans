@@ -73,9 +73,12 @@ public abstract class TrackingHooks {
         return result;
     }
 
-    //for tests:
     public static synchronized void clear() {
         hook2Delegates.clear();
+    }
+
+    public static synchronized  boolean isInstalled() {
+        return !hook2Delegates.isEmpty();
     }
 
     protected void checkExit(int i) {}

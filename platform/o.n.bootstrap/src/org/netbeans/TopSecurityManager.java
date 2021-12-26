@@ -141,7 +141,7 @@ public class TopSecurityManager extends TrackingHooks {
     }
 
 
-    static Class<?>[] getStack() {
+    public static Class<?>[] getStack() {
         try {
             List<Class<?>> classes = new ArrayList<>();
             //StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).forEach(f -> classes.add(f.getDeclaringClass()));

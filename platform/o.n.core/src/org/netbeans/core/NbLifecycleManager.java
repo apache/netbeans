@@ -67,10 +67,6 @@ public final class NbLifecycleManager extends LifecycleManager {
         if (!Boolean.getBoolean("TopSecurityManager.disable")) {
             // set security manager
             TopSecurityManager.install();
-            if (CLIOptions.isGui()) {
-                //XXX
-//                TopSecurityManager.makeSwingUseSpecialClipboard(Lookup.getDefault().lookup(ExClipboard.class));
-            }
         }
         policyAdvanced = true;
     }

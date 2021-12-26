@@ -42,6 +42,7 @@
     <target name="-build-hooks">
         <ant dir="netbeans-tracking-agent/tracking-agent" target="jar" inheritAll="false" inheritRefs="false" />
         <ant dir="netbeans-tracking-agent/tracking-hooks" target="jar" inheritAll="false" inheritRefs="false" />
+        <delete file="${test.dist.dir}/extralibs/tracking-hooks.jar"/>
     </target>
     <target name="-clean-hooks">
         <ant dir="netbeans-tracking-agent/tracking-agent" target="clean" inheritAll="false" inheritRefs="false" />

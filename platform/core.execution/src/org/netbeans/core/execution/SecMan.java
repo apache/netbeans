@@ -20,6 +20,7 @@
 package org.netbeans.core.execution;
 
 import java.awt.Window;
+import org.netbeans.TopSecurityManager;
 import org.netbeans.agent.hooks.TrackingHooks;
 
 import org.openide.execution.NbClassLoader;
@@ -92,16 +93,14 @@ public class SecMan extends TrackingHooks {
     /** @return true iff an instance of the NbClassLoader class is on the stack
     */
     protected boolean isNbClassLoader() {
-        //XXX
-//        Class[] ctx = getClassContext();
-//        ClassLoader cloader;
-//
-//        for (int i = 0; i < ctx.length; i++) {
-//            if ((nbClassLoaderClass.isInstance(ctx[i].getClassLoader())) &&
-//                (ctx[i].getProtectionDomain().getCodeSource() != null)) {
-//                return true;
-//            }
-//        }
+        Class[] ctx = TopSecurityManager.getStack();
+
+        for (int i = 0; i < ctx.length; i++) {
+            if ((nbClassLoaderClass.isInstance(ctx[i].getClassLoader())) &&
+                (ctx[i].getProtectionDomain().getCodeSource() != null)) {
+                return true;
+            }
+        }
         return false;
     }
     

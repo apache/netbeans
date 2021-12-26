@@ -90,8 +90,6 @@ public class Install implements Runnable {
     
     public @Override void run() {
         TrackingHooks.register(SecMan.DEFAULT, 100, TrackingHooks.HOOK_EXIT, TrackingHooks.HOOK_NEW_AWT_WINDOW);
-        //XXX
-//        TopSecurityManager.register(SecMan.DEFAULT);
     }
     
     @OnStop
@@ -100,8 +98,7 @@ public class Install implements Runnable {
         public @Override void run() {
             showPendingTasks();
 
-            //XXX
-//            TopSecurityManager.unregister(SecMan.DEFAULT);
+            TrackingHooks.clear();
         }
     }
 

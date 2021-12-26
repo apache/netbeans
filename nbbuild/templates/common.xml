@@ -532,6 +532,11 @@
                 <isset property="test-have-jdk-1.9"/>
             </or>
         </condition>
+        <condition property="test.tracking.agent.dir" value="${nbplatform.active.dir}/platform/core">
+            <available file="${nbplatform.active.dir}/platform/core" type="dir" />
+        </condition>
+        <property name="test.tracking.agent.dir" location="${o.n.bootstrap.dir}/core/" />
+        <property name="test.tracking.agent.args" value="-javaagent:${test.tracking.agent.dir}/tracking-agent.jar -Xbootclasspath/a:${test.tracking.agent.dir}/tracking-hooks.jar"/>
         <macrodef name="test-init">
             <attribute name="test.type"/>
             <sequential>
@@ -747,7 +752,7 @@
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <syspropertyset refid="test.@{test.type}.properties"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
-                    <jvmarg line="-javaagent:${o.n.bootstrap.dir}/core/tracking-agent.jar -Xbootclasspath/a:${o.n.bootstrap.dir}/core/tracking-hooks.jar"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${test.run.args}"/>
                     <!--needed to have tests NOT to steal focus when running, works in latest apple jdk update only.-->
@@ -779,7 +784,7 @@
                     <propertyset refid="test.@{test.type}.properties"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
-                    <jvmarg line="-javaagent:${o.n.bootstrap.dir}/core/tracking-agent.jar -Xbootclasspath/a:${o.n.bootstrap.dir}/core/tracking-hooks.jar"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${test.run.args}"/>
                     <!-- needed to have tests NOT to steal focus when running, works in latest apple jdk update only.-->
@@ -852,7 +857,7 @@
                     <syspropertyset refid="test.@{test.type}.properties"/>
                     <jvmarg line="${test.run.args}"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
-                    <jvmarg line="-javaagent:${o.n.bootstrap.dir}/core/tracking-agent.jar -Xbootclasspath/a:${o.n.bootstrap.dir}/core/tracking-hooks.jar"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${run.args.ide}"/>
                     <jvmarg line="${run.jvmargs.ide}"/>
@@ -883,7 +888,7 @@
                     <propertyset refid="test.@{test.type}.properties"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
-                    <jvmarg line="-javaagent:${o.n.bootstrap.dir}/core/tracking-agent.jar -Xbootclasspath/a:${o.n.bootstrap.dir}/core/tracking-hooks.jar"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${test.run.args}"/>
                     <!-- needed to have tests NOT to steal focus when running, works in latest apple jdk update only.-->
@@ -913,7 +918,7 @@
                     <propertyset refid="test.@{test.type}.properties"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
-                    <jvmarg line="-javaagent:${o.n.bootstrap.dir}/core/tracking-agent.jar -Xbootclasspath/a:${o.n.bootstrap.dir}/core/tracking-hooks.jar"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${test.run.args}"/>
                     <!-- needed to have tests NOT to steal focus when running, works in latest apple jdk update only.-->
@@ -967,7 +972,7 @@
                         <pathelement location="${ant.home}/lib/ant-junit4.jar"/>
                     </classpath>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
-                    <jvmarg line="-javaagent:${o.n.bootstrap.dir}/core/tracking-agent.jar -Xbootclasspath/a:${o.n.bootstrap.dir}/core/tracking-hooks.jar"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <syspropertyset refid="test.@{test.type}.properties"/>
                     <arg value="${test.class}"/>
@@ -996,7 +1001,7 @@
                     <jvmarg value="-agentlib:jdwp=transport=dt_socket,address=${jpda.address}"/>
                     <jvmarg line="${test.run.args}"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
-                    <jvmarg line="-javaagent:${o.n.bootstrap.dir}/core/tracking-agent.jar -Xbootclasspath/a:${o.n.bootstrap.dir}/core/tracking-hooks.jar"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <syspropertyset refid="test.@{test.type}.properties"/>
@@ -1043,7 +1048,7 @@
                     <propertyset refid="test.@{test.type}.properties"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
-                    <jvmarg line="-javaagent:${o.n.bootstrap.dir}/core/tracking-agent.jar -Xbootclasspath/a:${o.n.bootstrap.dir}/core/tracking-hooks.jar"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${test.run.args}"/>
                     <jvmarg value="-agentlib:jdwp=transport=dt_socket,address=${jpda.address}"/>
@@ -1108,7 +1113,7 @@
                     <syspropertyset refid="test.@{test.type}.properties"/>
                     <jvmarg line="${test.run.args}"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
-                    <jvmarg line="-javaagent:${o.n.bootstrap.dir}/core/tracking-agent.jar -Xbootclasspath/a:${o.n.bootstrap.dir}/core/tracking-hooks.jar"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${run.jvmargs.ide}"/>
                     <formatter type="brief" usefile="false"/>
@@ -1137,7 +1142,7 @@
                     <propertyset refid="test.@{test.type}.properties"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
-                    <jvmarg line="-javaagent:${o.n.bootstrap.dir}/core/tracking-agent.jar -Xbootclasspath/a:${o.n.bootstrap.dir}/core/tracking-hooks.jar"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${test.run.args}"/>
                     <!-- needed to have tests NOT to steal focus when running, works in latest apple jdk update only.-->
@@ -1261,7 +1266,7 @@
                     <test name="${profile.class}" todir="${build.test.@{test.type}.results.dir}"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
-                    <jvmarg line="-javaagent:${o.n.bootstrap.dir}/core/tracking-agent.jar -Xbootclasspath/a:${o.n.bootstrap.dir}/core/tracking-hooks.jar"/>
+                    <jvmarg line="${test.tracking.agent.args}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <syspropertyset refid="test.@{test.type}.properties"/>
                     <jvmarg line="${test.run.args}"/>

@@ -20,6 +20,7 @@ package org.netbeans.agent.hooks;
 
 import java.awt.Window;
 import java.io.File;
+import java.io.RandomAccessFile;
 import java.lang.reflect.AccessibleObject;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -128,9 +129,13 @@ public abstract class TrackingHooks {
         }
     }
 
-    public static void readWrite(File file) {
-        read(file.getAbsolutePath());
-        write(file.getAbsolutePath());
+    public static void readWrite(File file, String mode) {
+        if (mode.contains("r")) {
+            read(file.getAbsolutePath());
+        }
+        if (mode.contains("w")) {
+            write(file.getAbsolutePath());
+        }
     }
 
     public static void readWrite(Path path, Set<OpenOption> options) {

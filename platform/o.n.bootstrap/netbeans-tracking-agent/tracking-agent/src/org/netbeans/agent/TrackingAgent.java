@@ -428,12 +428,12 @@ public class TrackingAgent {
                                                       Arrays.asList(
                                                         "s" + TRACKING_HOOKS,
                                                         "s" + "readWrite",
-                                                        "s" + "(Ljava/io/File;)V",
+                                                        "s" + "(Ljava/io/File;Ljava/lang/String;)V",
                                                         "0C,%1s,%2s",
                                                         "07,%0s",
                                                         "0A,%4s,%3s"
                                                       ),
-                                                      "2A2BB8,%5s"), //aload1, invokespecial #5
+                                                      "2A2B2CB8,%5s"), //aload1, aload2, invokespecial #5
             new TrackingTransformer.MethodEnhancement("java/nio/file/Files",
                                                       "delete",
                                                       "(Ljava/nio/file/Path;)V",

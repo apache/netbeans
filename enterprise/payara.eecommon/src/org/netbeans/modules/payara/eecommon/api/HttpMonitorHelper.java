@@ -510,7 +510,7 @@ public class HttpMonitorHelper {
         @Override
         public void propertyChange(java.beans.PropertyChangeEvent evt) {
             if (evt.getPropertyName().equals("enabled")){ // NOI18N
-                spy.setEnabled(((Boolean)evt.getNewValue()).booleanValue());
+                spy.setEnabled(((Boolean)evt.getNewValue()));
             }            
         }  
     }

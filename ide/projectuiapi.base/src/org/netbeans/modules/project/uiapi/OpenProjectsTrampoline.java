@@ -24,6 +24,7 @@ import java.util.concurrent.Future;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.ProjectGroup;
 import org.netbeans.api.project.ui.ProjectGroupChangeListener;
+import org.openide.explorer.ExplorerManager;
 
 /**
  * List of projects open in the GUI.
@@ -53,4 +54,6 @@ public interface OpenProjectsTrampoline {
 
     public void removeProjectGroupChangeListenerAPI(ProjectGroupChangeListener listener);
  
+    public ExplorerManager createLogicalView();
+    public ExplorerManager createPhysicalView();
 }

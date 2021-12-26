@@ -69,7 +69,7 @@ public class FileHintPreferences {
      * @param file file for which the settings should be opened
      * @param preferencesMimeType mime type for which the settings should be opened
      * @param hintId hint id that should be opened
-     * @since 1.56
+     * @since 1.57
      */
     public static void openFilePreferences(FileObject file, String preferencesMimeType, String hintId) {
         for (FileHintPreferencesProvider p : Lookup.getDefault().lookupAll(FileHintPreferencesProvider.class)) {

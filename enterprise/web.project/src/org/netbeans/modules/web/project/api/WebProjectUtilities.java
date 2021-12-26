@@ -699,7 +699,7 @@ public class WebProjectUtilities {
             boolean skipTests) throws IOException {
 
         Utils.logUI(NbBundle.getBundle(WebProjectUtilities.class), "UI_WEB_PROJECT_CREATE_SHARABILITY", // NOI18N
-                new Object[]{Boolean.valueOf(librariesDefinition != null), Boolean.FALSE});
+                new Object[]{librariesDefinition != null, Boolean.FALSE});
 
         AntProjectHelper h = ProjectGenerator.createProject(dirFO, WebProjectType.TYPE, librariesDefinition);
         Element data = h.getPrimaryConfigurationData(true);

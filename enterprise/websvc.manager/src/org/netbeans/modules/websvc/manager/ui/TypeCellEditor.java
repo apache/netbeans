@@ -186,7 +186,7 @@ public class TypeCellEditor extends DefaultCellEditor implements TableCellEditor
             try {
                 returnValue = Integer.valueOf(inValue);
             } catch(NumberFormatException nfe) {
-                returnValue = Integer.valueOf(0);
+                returnValue = 0;
             }
         } else if(currentType.equalsIgnoreCase("byte") ||
         currentType.equalsIgnoreCase("java.lang.Byte")) {

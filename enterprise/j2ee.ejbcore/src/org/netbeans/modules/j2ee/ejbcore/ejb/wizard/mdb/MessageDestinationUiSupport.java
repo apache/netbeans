@@ -181,7 +181,7 @@ public abstract class MessageDestinationUiSupport {
                     public void propertyChange(PropertyChangeEvent evt) {
                         Object newvalue = evt.getNewValue();
                         if ((newvalue != null) && (newvalue instanceof Boolean)) {
-                            dialogDescriptor.setValid(((Boolean) newvalue).booleanValue());
+                            dialogDescriptor.setValid(((Boolean) newvalue));
                         }
                     }
                 }

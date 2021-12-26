@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 6.49
+#Version 6.51
 
 CLSS public abstract java.awt.Component
 cons protected init()

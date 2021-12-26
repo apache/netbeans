@@ -569,7 +569,7 @@ public class MavenProjectGrammar extends AbstractSchemaBasedGrammar {
         
         if (path.endsWith("dependencies/dependency/scope")) { //NOI18N
             if (path.contains("dependencyManagement")) {
-                ArrayList<String> lst = new ArrayList(Arrays.asList(SCOPES));
+                List<String> lst = new ArrayList<>(Arrays.asList(SCOPES));
                 lst.add("import");
                 Collections.sort(lst);
                 return super.createTextValueList(lst.toArray(new String[0]), virtualTextCtx);

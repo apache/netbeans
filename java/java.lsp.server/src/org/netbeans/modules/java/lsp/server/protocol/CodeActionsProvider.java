@@ -20,8 +20,10 @@ package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.sun.source.tree.LineMap;
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -29,11 +31,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.Command;
@@ -41,7 +39,7 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
-import org.netbeans.modules.editor.java.Utilities;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.parsing.api.ResultIterator;
 
@@ -52,114 +50,95 @@ import org.netbeans.modules.parsing.api.ResultIterator;
 public abstract class CodeActionsProvider {
 
     public static final String CODE_GENERATOR_KIND = "source.generate";
+    public static final String CODE_ACTIONS_PROVIDER_CLASS = "providerClass";
+    public static final String DATA = "data";
     protected static final String ERROR = "<error>"; //NOI18N
 
     public abstract List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception;
 
-    public abstract Set<String> getCommands();
+    public CompletableFuture<CodeAction> resolve(NbCodeLanguageClient client, CodeAction codeAction, Object data) {
+        return CompletableFuture.completedFuture(codeAction);
+    }
 
-    public abstract CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments);
+    public Set<String> getCommands() {
+        return Collections.emptySet();
+    }
+
+    public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
+        return CompletableFuture.completedFuture(false);
+    }
+
+    protected CodeAction createCodeAction(String name, String kind, Object data, String command, Object... commandArgs) {
+        CodeAction action = new CodeAction(name);
+        action.setKind(kind);
+        if (command != null) {
+            action.setCommand(new Command(name, command, Arrays.asList(commandArgs)));
+        }
+        if (data != null) {
+            Map<String, Object> map = new HashMap<>();
+            map.put(CODE_ACTIONS_PROVIDER_CLASS, getClass().getName());
+            map.put(DATA, data);
+            action.setData(map);
+        }
+        return action;
+    }
 
     protected static int getOffset(CompilationInfo info, Position pos) {
         LineMap lm = info.getCompilationUnit().getLineMap();
         return (int) lm.getPosition(pos.getLine() + 1, pos.getCharacter() + 1);
     }
 
-    protected static CodeAction createCodeAction(String name, String kind, String command, Object... args) {
-        CodeAction action = new CodeAction(name);
-        action.setKind(kind);
-        action.setCommand(new Command(name, command, Arrays.asList(args)));
-        return action;
+    protected static String createLabel(CompilationInfo info, Element e) {
+        return createLabel(info, e, false);
     }
 
-    protected static String createLabel(CompilationInfo info, Element e) {
+    protected static String createLabel(CompilationInfo info, Element e, boolean fqn) {
         switch (e.getKind()) {
             case ANNOTATION_TYPE:
             case CLASS:
             case ENUM:
             case INTERFACE:
-                return createLabel(info, (TypeElement) e);
+                return createLabel(info, (TypeElement) e, fqn);
             case CONSTRUCTOR:
             case METHOD:
-                return createLabel(info, (ExecutableElement) e);
+                return createLabel(info, (ExecutableElement) e, fqn);
             case ENUM_CONSTANT:
             case FIELD:
-                return createLabel(info, (VariableElement) e);
+                return createLabel(info, (VariableElement) e, fqn);
             default:
                 return null;
         }
     }
 
     protected static String createLabel(CompilationInfo info, TypeElement e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(e.getSimpleName());
-        List<? extends TypeParameterElement> typeParams = e.getTypeParameters();
-        if (typeParams != null && !typeParams.isEmpty()) {
-            sb.append("<"); // NOI18N
-            for(Iterator<? extends TypeParameterElement> it = typeParams.iterator(); it.hasNext();) {
-                TypeParameterElement tp = it.next();
-                sb.append(tp.getSimpleName());
-                List<? extends TypeMirror> bounds = tp.getBounds();
-                if (!bounds.isEmpty()) {
-                    if (bounds.size() > 1 || !"java.lang.Object".equals(bounds.get(0).toString())) { // NOI18N
-                        sb.append(" extends "); // NOI18N
-                        for (Iterator<? extends TypeMirror> bIt = bounds.iterator(); bIt.hasNext();) {
-                            sb.append(Utilities.getTypeName(info, bIt.next(), false));
-                            if (bIt.hasNext()) {
-                                sb.append(" & "); // NOI18N
-                            }
-                        }
-                    }
-                }
-                if (it.hasNext()) {
-                    sb.append(", "); // NOI18N
-                }
-            }
-            sb.append(">"); // NOI18N
-        }
-        return sb.toString();
+        return createLabel(info, e, false);
+    }
+
+    protected static String createLabel(CompilationInfo info, TypeElement e, boolean fqn) {
+        return Utils.label(info, e, fqn);
     }
 
     protected static String createLabel(CompilationInfo info, VariableElement e) {
+        return createLabel(info, e, false);
+    }
+
+    protected static String createLabel(CompilationInfo info, VariableElement e, boolean fqn) {
         StringBuilder sb = new StringBuilder();
-        sb.append(e.getSimpleName());
-        if (e.getKind() != ElementKind.ENUM_CONSTANT) {
-            sb.append(" : "); // NOI18N
-            sb.append(Utilities.getTypeName(info, e.asType(), false));
-        }
+        sb.append(Utils.label(info, e, fqn));
+        sb.append(" : "); // NOI18N
+        sb.append(Utils.detail(info, e, fqn));
         return sb.toString();
     }
 
     protected static String createLabel(CompilationInfo info, ExecutableElement e) {
+        return createLabel(info, e, false);
+    }
+
+    protected static String createLabel(CompilationInfo info, ExecutableElement e, boolean fqn) {
         StringBuilder sb = new StringBuilder();
-        if (e.getKind() == ElementKind.CONSTRUCTOR) {
-            sb.append(e.getEnclosingElement().getSimpleName());
-        } else {
-            sb.append(e.getSimpleName());
-        }
-        sb.append("("); // NOI18N
-        for (Iterator<? extends VariableElement> it = e.getParameters().iterator(); it.hasNext();) {
-            VariableElement param = it.next();
-            if (!it.hasNext() && e.isVarArgs() && param.asType().getKind() == TypeKind.ARRAY) {
-                sb.append(Utilities.getTypeName(info, ((ArrayType) param.asType()).getComponentType(), false));
-                sb.append("...");
-            } else {
-                sb.append(Utilities.getTypeName(info, param.asType(), false));
-            }
-            sb.append(" "); // NOI18N
-            sb.append(param.getSimpleName());
-            if (it.hasNext()) {
-                sb.append(", "); // NOI18N
-            }
-        }
-        sb.append(")"); // NOI18N
-        if (e.getKind() != ElementKind.CONSTRUCTOR) {
-            TypeMirror rt = e.getReturnType();
-            if (rt.getKind() != TypeKind.VOID) {
-                sb.append(" : "); // NOI18N
-                sb.append(Utilities.getTypeName(info, e.getReturnType(), false));
-            }
-        }
+        sb.append(Utils.label(info, e, fqn));
+        sb.append(" : "); // NOI18N
+        sb.append(Utils.detail(info, e, fqn));
         return sb.toString();
     }
 
@@ -180,11 +159,11 @@ public abstract class CodeActionsProvider {
             this.signature = ElementHandleAccessor.getInstance().getJVMSignature(handle);
         }
 
-        ElementHandle toHandle() {
+        public ElementHandle toHandle() {
             return ElementHandleAccessor.getInstance().create(ElementKind.valueOf(kind), signature);
         }
 
-        Element resolve(CompilationInfo info) {
+        public Element resolve(CompilationInfo info) {
             return toHandle().resolve(info);
         }
 

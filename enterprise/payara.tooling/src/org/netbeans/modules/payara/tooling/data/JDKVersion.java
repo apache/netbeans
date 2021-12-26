@@ -47,6 +47,11 @@ public final class JDKVersion {
      */
     private final Optional<String> vendor;
 
+    /**
+     * JDK vm
+     */
+    private final Optional<String> vm;
+
     private final static int MAJOR_INDEX = 0;
     private final static int MINOR_INDEX = 1;
     private final static int SUBMINOR_INDEX = 2;
@@ -58,21 +63,23 @@ public final class JDKVersion {
 
     private static final Short DEFAULT_VALUE = 0;
 
-    private JDKVersion(String version, String vendor) {
+    private JDKVersion(String version, String vendor, String vm) {
         short[] versions = parseVersions(version);
         this.major = versions[MAJOR_INDEX];
         this.minor = Optional.ofNullable(versions[MINOR_INDEX]);
         this.subminor = Optional.ofNullable(versions[SUBMINOR_INDEX]);
         this.update = Optional.ofNullable(versions[UPDATE_INDEX]);
         this.vendor = Optional.ofNullable(vendor);
+        this.vm = Optional.ofNullable(vm);
     }
 
-    JDKVersion(Short major, Optional<Short> minor, Optional<Short> subminor, Optional<Short> update, Optional<String> vendor) {
+    JDKVersion(Short major, Optional<Short> minor, Optional<Short> subminor, Optional<Short> update, Optional<String> vendor, Optional<String> vm) {
         this.major = major;
         this.minor = minor;
         this.subminor = subminor;
         this.update = update;
         this.vendor = vendor;
+        this.vm = vm;
     }
 
     /**
@@ -112,12 +119,21 @@ public final class JDKVersion {
     }
 
     /**
-     * Get JDK Vendor.
+     * Get JDK Vendor name.
      *
      * @return JDK vendor.
      */
     public Optional<String> getVendor() {
         return vendor;
+    }
+
+    /**
+     * Get JDK VM name.
+     *
+     * @return JDK vm.
+     */
+    public Optional<String> getVM() {
+        return vm;
     }
 
     public boolean gt(JDKVersion version) {
@@ -241,7 +257,7 @@ public final class JDKVersion {
 
     public static JDKVersion toValue(String version) {
         if (version != null && version.matches(VERSION_MATCHER)) {
-            return new JDKVersion(version, null);
+            return new JDKVersion(version, null, null);
         } else {
             return null;
         }
@@ -249,7 +265,15 @@ public final class JDKVersion {
 
     public static JDKVersion toValue(String version, String vendor) {
         if (version != null && version.matches(VERSION_MATCHER)) {
-            return new JDKVersion(version, vendor);
+            return new JDKVersion(version, vendor, null);
+        } else {
+            return null;
+        }
+    }
+
+    public static JDKVersion toValue(String version, String vendor, String vm) {
+        if (version != null && version.matches(VERSION_MATCHER)) {
+            return new JDKVersion(version, vendor, vm);
         } else {
             return null;
         }
@@ -259,15 +283,12 @@ public final class JDKVersion {
         return IDE_JDK_VERSION;
     }
 
-    public static boolean isCorrectJDK(JDKVersion jdkVersion, Optional<String> vendor, Optional<JDKVersion> minVersion, Optional<JDKVersion> maxVersion) {
+    public static boolean isCorrectJDK(JDKVersion jdkVersion, Optional<String> vendorOrVM, Optional<JDKVersion> minVersion, Optional<JDKVersion> maxVersion) {
         boolean correctJDK = true;
 
-        if (vendor.isPresent()) {
-            if (jdkVersion.getVendor().isPresent()) {
-                correctJDK = jdkVersion.getVendor().get().contains(vendor.get());
-            } else {
-                correctJDK = false;
-            }
+        if (vendorOrVM.isPresent()) {
+            correctJDK = jdkVersion.getVendor().map(vendor -> vendor.contains(vendorOrVM.get())).orElse(false)
+                    || jdkVersion.getVM().map(vm -> vm.contains(vendorOrVM.get())).orElse(false);
         }
         if (correctJDK && minVersion.isPresent()) {
             correctJDK = jdkVersion.ge(minVersion.get());
@@ -288,6 +309,7 @@ public final class JDKVersion {
 
     private static void initialize() {
         String vendor = System.getProperty("java.vendor"); // NOI18N
+        String vm = System.getProperty("java.vm.name"); // NOI18N
         /*
             In JEP 223 java.specification.version will be a single number versioning , not a dotted versioning . 
             For JDK 8:
@@ -308,7 +330,8 @@ public final class JDKVersion {
                 Optional.of(versions[MINOR_INDEX]),
                 Optional.of(versions[SUBMINOR_INDEX]),
                 Optional.of(versions[UPDATE_INDEX]),
-                Optional.of(vendor)
+                Optional.of(vendor),
+                Optional.of(vm)
         );
     }
 

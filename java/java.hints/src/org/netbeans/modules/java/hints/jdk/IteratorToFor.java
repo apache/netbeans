@@ -42,7 +42,6 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -75,7 +74,7 @@ import org.openide.util.NbBundle.Messages;
 @Hint(displayName="#DN_IteratorToFor", description="#DESC_IteratorToFor", category="rules15", suppressWarnings={"", "ForLoopReplaceableByForEach", "WhileLoopReplaceableByForEach"},
         minSourceVersion = "5")
 @Messages({
-    "DN_IteratorToFor=Use JDK 5 for-loop",
+    "DN_IteratorToFor=Use Java 5 for-loop",
     "DESC_IteratorToFor=Replaces simple uses of Iterator with a corresponding for-loop.",
     "ERR_IteratorToFor=Use of Iterator for simple loop",
     "ERR_IteratorToForArray=Use enhanced for loop to iterate over the array",
@@ -83,8 +82,12 @@ import org.openide.util.NbBundle.Messages;
 })
 public class IteratorToFor {
 
-    @TriggerPattern(value = "java.util.Iterator $it = $coll.iterator(); while ($it.hasNext()) {$type $elem = ($type) $it.next(); $rest$;}", 
-            constraints = @ConstraintVariableType(variable = "$coll", type = "java.lang.Iterable"))
+    @TriggerPatterns({
+        @TriggerPattern(value = "java.util.Iterator $it = $coll.iterator(); while ($it.hasNext()) {$type $elem = ($type) $it.next(); $rest$;}",
+                constraints = @ConstraintVariableType(variable = "$coll", type = "java.lang.Iterable")),
+        @TriggerPattern(value = "java.util.Iterator<$type> $it = $coll.iterator(); while ($it.hasNext()) {$type $elem = $it.next(); $rest$;}",
+                constraints = @ConstraintVariableType(variable = "$coll", type = "java.lang.Iterable"))
+    })
     public static ErrorDescription whileIdiom(HintContext ctx) {
         if (uses(ctx, ctx.getMultiVariables().get("$rest$"), ctx.getVariables().get("$it"))) {
             return null;
@@ -168,7 +171,7 @@ public class IteratorToFor {
     /**
      * Names of methods that can be safely called on Collection (List) while iterating through the contents.
      */
-    static final Set<String> SAFE_COLLECTION_METHODS = new HashSet<String>();
+    static final Set<String> SAFE_COLLECTION_METHODS = new HashSet<>();
     static {
         SAFE_COLLECTION_METHODS.add("size"); // NOI18N
         SAFE_COLLECTION_METHODS.add("isEmpty"); // NOI18N
@@ -373,10 +376,10 @@ public class IteratorToFor {
         protected void performRewrite(TransformationContext ctx) throws Exception {
             Tree loop = GeneratorUtilities.get(ctx.getWorkingCopy()).importComments(ctx.getPath().getLeaf(), ctx.getPath().getCompilationUnit());
             TreeMaker make = ctx.getWorkingCopy().getTreeMaker();
-            TypeMirror arrType = null;
+            TypeMirror arrType;
             TypeMirror variableType = null;
             String treeName;
-            Tree colArrTree = null;
+            Tree colArrTree;
             
             if (arrHandle != null) {
                 TreePath arr = arrHandle.resolve(ctx.getWorkingCopy());

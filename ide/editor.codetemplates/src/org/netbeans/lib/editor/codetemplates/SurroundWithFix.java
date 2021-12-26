@@ -46,7 +46,7 @@ public class SurroundWithFix implements Fix {
             CodeTemplateManagerOperation op = CodeTemplateManagerOperation.get(component.getDocument(), component.getSelectionStart());
             if (op != null) {
                 op.waitLoaded();
-                Collection<? extends CodeTemplateFilter> filters = CodeTemplateManagerOperation.getTemplateFilters(component, component.getSelectionStart());
+                Collection<? extends CodeTemplateFilter> filters = CodeTemplateManagerOperation.getTemplateFilters(component.getDocument(), component.getSelectionStart(), component.getSelectionEnd());
                 for (CodeTemplate template : op.findSelectionTemplates()) {
                     // for surround-with use also templates that have no contexts.
                     // They are usually user-defined, see #118996.

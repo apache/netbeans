@@ -121,6 +121,8 @@ import org.openide.util.Exceptions;
  */
 public final class TreeUtilities {
     
+    private static final Logger LOG = Logger.getLogger(TreeUtilities.class.getName());
+
     /**{@link Kind}s that are represented by {@link ClassTree}.
      * 
      * @since 0.67
@@ -374,7 +376,12 @@ public final class TreeUtilities {
             
             public Void scan(Tree tree, Void p) {
                 if (tree != null) {
-                    if (sourcePositions.getStartPosition(getCurrentPath().getCompilationUnit(), tree) < pos && sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), tree) >= pos) {
+                    long endPos = sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), tree);
+                    if (endPos == (-1) && tree.getKind() == Kind.ASSIGNMENT && getCurrentPath().getLeaf().getKind() == Kind.ANNOTATION) {
+                        ExpressionTree value = ((AssignmentTree) tree).getExpression();
+                        endPos = sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), value);
+                    }
+                    if (sourcePositions.getStartPosition(getCurrentPath().getCompilationUnit(), tree) < pos && endPos >= pos) {
                         if (tree.getKind() == Tree.Kind.ERRONEOUS) {
                             tree.accept(this, p);
                             throw new Result(getCurrentPath());
@@ -927,7 +934,7 @@ public final class TreeUtilities {
             Method m = Enter.class.getDeclaredMethod("unenter", JCCompilationUnit.class, JCTree.class);
             m.invoke(Enter.instance(ctx), cut, tree);
         } catch (Throwable t) {
-            t.printStackTrace();
+            LOG.log(Level.FINE, null, t);
         }
     }
 

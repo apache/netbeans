@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.58.0
+#Version 1.60.0
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
@@ -86,7 +86,6 @@ meth public javax.swing.Action getGotoSourceAction()
 meth public org.netbeans.api.java.source.ui.ElementJavadoc resolveLink(java.lang.String)
 supr java.lang.Object
 hfds API,APINOTE_TAG,ASSOCIATE_JDOC,IMPLNOTE_TAG,IMPLSPEC_TAG,LANGS,RP,cancel,content,cpInfo,docRoot,docURL,fileObject,goToSource,handle,linkCounter,links
-hcls Now
 
 CLSS public final org.netbeans.api.java.source.ui.ElementOpen
 innr public final static Location

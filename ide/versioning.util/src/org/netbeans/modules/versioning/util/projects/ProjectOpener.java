@@ -118,7 +118,7 @@ public class ProjectOpener implements ActionListener, PropertyChangeListener {
         Object[] options = null;
         if (numberOfProjects > 1) {
             // more that one project
-            String msg = type.getMessage("BK3009", new Integer(numberOfProjects));   // NOI18N
+            String msg = type.getMessage("BK3009", Integer.valueOf(numberOfProjects));   // NOI18N
             panel.jLabel1.setText(msg);
             options = new Object[]{panel.openButton, panel.closeButton};
         } else if (numberOfProjects == 1) {

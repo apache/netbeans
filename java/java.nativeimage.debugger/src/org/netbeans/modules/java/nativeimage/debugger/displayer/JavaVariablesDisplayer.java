@@ -47,6 +47,7 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
     private static final String COMPRESSED_REF_REFIX = "_z_.";
     private static final String PUBLIC = "public";
     private static final String STRING_VALUE = "value";
+    private static final String STRING_CODER = "coder";
     private static final String HASH = "hash";
     private static final String UNSET = "<optimized out>";
 
@@ -240,6 +241,16 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
         return null;
     }
 
+    private String readArray(NIVariable lengthVariable, int offset, int itemSize) {
+        int length = Integer.parseInt(lengthVariable.getValue());
+        String expressionPath = lengthVariable.getExpressionPath();
+        if (expressionPath != null && !expressionPath.isEmpty()) {
+            String addressExpr = "&" + expressionPath;
+            return debugger.readMemory(addressExpr, 4 + offset, length * itemSize); // length has 4 bytes
+        }
+        return null;
+    }
+
     private static NIVariable[] getObjectChildren(NIVariable[] children, int from, int to) {
         for (int i = 0; i < children.length; i++) {
             if (HUB.equals(children[i].getName())) {
@@ -290,16 +301,37 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
         @Override
         public String getValue() {
             NIVariable pub = getVarsByName(var.getChildren()).get(PUBLIC);
-            Map<String, NIVariable> arrayInfo = getVarsByName(getVarsByName(pub.getChildren()).get(STRING_VALUE).getChildren());
+            Map<String, NIVariable> varChildren = getVarsByName(pub.getChildren());
+            Map<String, NIVariable> arrayInfo = getVarsByName(varChildren.get(STRING_VALUE).getChildren());
             arrayInfo = getVarsByName(arrayInfo.get(PUBLIC).getChildren());
             NIVariable arrayVariable = arrayInfo.get(ARRAY);
             NIVariable lengthVariable = arrayInfo.get(ARRAY_LENGTH);
-            String hexArray = readArray(lengthVariable, 2);
+            int length = Integer.parseInt(lengthVariable.getValue());
+            NIVariable coderVar = varChildren.get(STRING_CODER);
+            int coder = -1;
+            if (coderVar != null) {
+                String coderStr = coderVar.getValue();
+                int space = coderStr.indexOf(' ');
+                if (space > 0) {
+                    coderStr = coderStr.substring(0, space);
+                }
+                try {
+                    coder = Integer.parseInt(coderStr);
+                } catch (NumberFormatException ex) {
+                }
+            }
+            String hexArray = readArray(lengthVariable, coder == -1 ? 4 : 0, 2);
             if (hexArray != null) {
-                return parseUTF16(hexArray);
+                switch (coder) {
+                    case 0: // Compressed String on JDK 9+
+                        return parseLatin1(hexArray, length);
+                    case 1: // UTF-16 String on JDK 9+
+                        return parseUTF16(hexArray, length/2);
+                    default: // UTF-16 String on JDK 8
+                        return parseUTF16(hexArray, length);
+                }
             } else { // legacy code
                 String arrayExpression = getArrayExpression(arrayVariable);
-                int length = Integer.parseInt(lengthVariable.getValue());
                 char[] characters = new char[length];
                 try {
                     for (int i = 0; i < length; i++) {
@@ -313,10 +345,9 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
             }
         }
 
-        private String parseUTF16(String hexArray) {
-            CharsetDecoder cd = Charset.forName("utf-16").newDecoder();
+        private String parseUTF16(String hexArray, int length) {
+            CharsetDecoder cd = Charset.forName("utf-16").newDecoder(); // NOI18N
             ByteBuffer buffer = ByteBuffer.allocate(2);
-            int length = hexArray.length() / 4;
             char[] characters = new char[length];
             int ih = 0;
             for (int i = 0; i < length; i++) {
@@ -327,6 +358,26 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
                 buffer.rewind();
                 buffer.put(b0);
                 buffer.put(b1);
+                buffer.rewind();
+                try {
+                    char c = cd.decode(buffer).get();
+                    characters[i] = c;
+                } catch (CharacterCodingException ex) {
+                }
+            }
+            return new String(characters);
+        }
+
+        private String parseLatin1(String hexArray, int length) {
+            CharsetDecoder cd = Charset.forName("latin1").newDecoder(); // NOI18N
+            ByteBuffer buffer = ByteBuffer.allocate(1);
+            char[] characters = new char[length];
+            int ih = 0;
+            for (int i = 0; i < length; i++) {
+                byte b = parseByte(hexArray, ih);
+                ih += 2;
+                buffer.rewind();
+                buffer.put(b);
                 buffer.rewind();
                 try {
                     char c = cd.decode(buffer).get();

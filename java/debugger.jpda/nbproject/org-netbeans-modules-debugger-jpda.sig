@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.120.0
+#Version 1.122.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -19,6 +19,7 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitCompilationUnit(co
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitConditionalExpression(com.sun.source.tree.ConditionalExpressionTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitContinue(com.sun.source.tree.ContinueTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitDefaultCaseLabel(com.sun.source.tree.DefaultCaseLabelTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitDoWhileLoop(com.sun.source.tree.DoWhileLoopTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitEmptyStatement(com.sun.source.tree.EmptyStatementTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitEnhancedForLoop(com.sun.source.tree.EnhancedForLoopTree,{com.sun.source.tree.TreeVisitor%1})
@@ -26,6 +27,7 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitErroneous(com.sun.
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitExports(com.sun.source.tree.ExportsTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitExpressionStatement(com.sun.source.tree.ExpressionStatementTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitForLoop(com.sun.source.tree.ForLoopTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitGuardedPattern(com.sun.source.tree.GuardedPatternTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitIdentifier(com.sun.source.tree.IdentifierTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitIf(com.sun.source.tree.IfTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitImport(com.sun.source.tree.ImportTree,{com.sun.source.tree.TreeVisitor%1})
@@ -47,6 +49,7 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitOther(com.sun.sour
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitPackage(com.sun.source.tree.PackageTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitParameterizedType(com.sun.source.tree.ParameterizedTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitParenthesized(com.sun.source.tree.ParenthesizedTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitParenthesizedPattern(com.sun.source.tree.ParenthesizedPatternTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitPrimitiveType(com.sun.source.tree.PrimitiveTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitProvides(com.sun.source.tree.ProvidesTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitRequires(com.sun.source.tree.RequiresTree,{com.sun.source.tree.TreeVisitor%1})
@@ -97,6 +100,7 @@ meth public {com.sun.source.util.TreeScanner%0} visitCompilationUnit(com.sun.sou
 meth public {com.sun.source.util.TreeScanner%0} visitCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitConditionalExpression(com.sun.source.tree.ConditionalExpressionTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitContinue(com.sun.source.tree.ContinueTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitDefaultCaseLabel(com.sun.source.tree.DefaultCaseLabelTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitDoWhileLoop(com.sun.source.tree.DoWhileLoopTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitEmptyStatement(com.sun.source.tree.EmptyStatementTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitEnhancedForLoop(com.sun.source.tree.EnhancedForLoopTree,{com.sun.source.util.TreeScanner%1})
@@ -104,6 +108,7 @@ meth public {com.sun.source.util.TreeScanner%0} visitErroneous(com.sun.source.tr
 meth public {com.sun.source.util.TreeScanner%0} visitExports(com.sun.source.tree.ExportsTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitExpressionStatement(com.sun.source.tree.ExpressionStatementTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitForLoop(com.sun.source.tree.ForLoopTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitGuardedPattern(com.sun.source.tree.GuardedPatternTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitIdentifier(com.sun.source.tree.IdentifierTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitIf(com.sun.source.tree.IfTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitImport(com.sun.source.tree.ImportTree,{com.sun.source.util.TreeScanner%1})
@@ -125,6 +130,7 @@ meth public {com.sun.source.util.TreeScanner%0} visitOther(com.sun.source.tree.T
 meth public {com.sun.source.util.TreeScanner%0} visitPackage(com.sun.source.tree.PackageTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitParameterizedType(com.sun.source.tree.ParameterizedTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitParenthesized(com.sun.source.tree.ParenthesizedTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitParenthesizedPattern(com.sun.source.tree.ParenthesizedPatternTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitPrimitiveType(com.sun.source.tree.PrimitiveTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitProvides(com.sun.source.tree.ProvidesTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitRequires(com.sun.source.tree.RequiresTree,{com.sun.source.util.TreeScanner%1})
@@ -725,6 +731,7 @@ meth public abstract void breakpointReached(org.netbeans.api.debugger.jpda.event
 
 CLSS public org.netbeans.api.java.source.support.ErrorAwareTreePathScanner<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons public init()
+meth public {org.netbeans.api.java.source.support.ErrorAwareTreePathScanner%0} visitCase(com.sun.source.tree.CaseTree,{org.netbeans.api.java.source.support.ErrorAwareTreePathScanner%1})
 meth public {org.netbeans.api.java.source.support.ErrorAwareTreePathScanner%0} visitErroneous(com.sun.source.tree.ErroneousTree,{org.netbeans.api.java.source.support.ErrorAwareTreePathScanner%1})
 supr com.sun.source.util.TreePathScanner<{org.netbeans.api.java.source.support.ErrorAwareTreePathScanner%0},{org.netbeans.api.java.source.support.ErrorAwareTreePathScanner%1}>
 
@@ -831,7 +838,7 @@ meth public static void logCallEnd(java.lang.String,java.lang.String,java.lang.O
 meth public static void logCallStart(java.lang.String,java.lang.String,java.lang.String,java.lang.Object[])
 meth public static void report(com.sun.jdi.InternalException)
 supr java.lang.Object
-hfds callStartTime,logger
+hfds LOGGER,LOGLEVEL,callStartTime
 
 CLSS public org.netbeans.modules.debugger.jpda.JPDADebuggerImpl
 cons public init(org.netbeans.spi.debugger.ContextProvider)
@@ -936,7 +943,7 @@ meth public void setSuspend(int)
 meth public void suspend()
 meth public void waitRunning() throws org.netbeans.api.debugger.jpda.DebuggerStartException
 supr org.netbeans.api.debugger.jpda.JPDADebugger
-hfds COMPUTING_INTERFACES,LOCK2,SINGLE_THREAD_STEPPING,allInterfacesMap,altCSF,attachingCookie,breakpointsActive,canBeModified,canBeModifiedLock,compoundSmartSteppingListener,currentCallStackFrame,currentSuspendedNoFireThread,currentThread,currentThreadAndFrameLock,deadlockDetector,doContinue,engineContext,expressionPool,finishing,interestedThreadGroups,io,javaEngineProvider,jsr45EngineProviders,jvmVersionPattern,languages,localsTranslation,logger,lookupProvider,lvGenericSignatureMethod,markedObjectLabels,markedObjects,methodCallsUnsupportedExc,operator,pcs,preferredTopFrame,ptd,singleThreadStepResumeDecision,smartSteppingFilter,starting,state,stateLock,stepInterruptByBptResumeDecision,suspend,tcGenericSignatureMethod,threadsCache,threadsCollector,threadsCollectorLock,threadsTranslation,throwable,virtualMachine,virtualMachineLock,vmSuspended
+hfds COMPUTING_INTERFACES,LOCK2,RP_THROUGHPUT,SINGLE_THREAD_STEPPING,allInterfacesMap,altCSF,attachingCookie,breakpointsActive,canBeModified,canBeModifiedLock,compoundSmartSteppingListener,currentCallStackFrame,currentSuspendedNoFireThread,currentThread,currentThreadAndFrameLock,deadlockDetector,doContinue,engineContext,expressionPool,finishing,interestedThreadGroups,io,javaEngineProvider,jsr45EngineProviders,languages,localsTranslation,logger,lookupProvider,markedObjectLabels,markedObjects,methodCallsUnsupportedExc,operator,pcs,preferredTopFrame,ptd,rpCreateThreads,singleThreadStepResumeDecision,smartSteppingFilter,starting,state,stateLock,stepInterruptByBptResumeDecision,stringLengthMethod,stringMethodsLock,stringSubstringMethod,suspend,threadsCache,threadsCollector,threadsCollectorLock,threadsTranslation,throwable,virtualMachine,virtualMachineLock,vmSuspended
 hcls DebuggerReentrantReadWriteLock,PeriodicThreadsDump
 
 CLSS public org.netbeans.modules.debugger.jpda.JPDAStepImpl
@@ -1616,6 +1623,7 @@ hcls ArtificialMirror,BooleanVal,Break,ByteVal,CharVal,CommandMirror,Continue,Do
 
 CLSS public org.netbeans.modules.debugger.jpda.expr.InvocationExceptionTranslated
 cons public init(com.sun.jdi.InvocationException,org.netbeans.modules.debugger.jpda.JPDADebuggerImpl)
+cons public init(org.netbeans.api.debugger.jpda.ObjectVariable,org.netbeans.modules.debugger.jpda.JPDADebuggerImpl)
 meth public java.lang.StackTraceElement[] getStackTrace()
 meth public java.lang.String getLocalizedMessage()
 meth public java.lang.String getMessage()
@@ -2926,6 +2934,7 @@ supr org.netbeans.modules.debugger.jpda.models.AbstractObjectVariable
 hfds logger,value,valueLock,valueRetrieved,valueSet
 
 CLSS public final org.netbeans.modules.debugger.jpda.models.ObjectTranslation
+meth public <%0 extends java.lang.Object> java.util.List<? extends {%%0}> getTranslated(java.util.function.Function<java.lang.Object,{%%0}>)
 meth public java.lang.Object translate(com.sun.jdi.Mirror)
 meth public java.lang.Object translate(com.sun.jdi.Mirror,java.lang.Object)
 meth public java.lang.Object translateExisting(com.sun.jdi.Mirror)
@@ -2936,6 +2945,7 @@ meth public static org.netbeans.modules.debugger.jpda.models.ObjectTranslation c
 meth public void remove(com.sun.jdi.Mirror)
 supr java.lang.Object
 hfds LOCALS_ID,THREAD_ID,cache,debugger,threadCache,translationID
+hcls TranslationFuture
 
 CLSS public org.netbeans.modules.debugger.jpda.models.ReturnVariableImpl
 cons public init(org.netbeans.modules.debugger.jpda.JPDADebuggerImpl,com.sun.jdi.Value,java.lang.String,java.lang.String)

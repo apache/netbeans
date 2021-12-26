@@ -276,7 +276,7 @@ class ServletData extends DeployData {
         char ch = id.charAt(id.length() - 1);
         if (Character.isDigit(ch)) {
             String lastDigit = id.substring(id.length() - 1);
-            int num = new Integer(lastDigit).intValue() + 1;
+            int num = new Integer(lastDigit) + 1;
             return id.substring(0, id.length() - 1) + num;
         } else {
             return id + "_1"; //NOI18N

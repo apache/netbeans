@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.90
+#Version 2.92
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -370,7 +370,7 @@ meth public org.netbeans.ModuleManager getManager()
 meth public org.openide.modules.SpecificationVersion getSpecificationVersion()
 meth public void releaseManifest()
 supr org.openide.modules.ModuleInfo
-hfds DATA_LOCK,autoload,data,eager,enabled,findResources,history,instr
+hfds DATA_LOCK,autoload,data,eager,enabled,history,instr
 
 CLSS public final static org.netbeans.Module$PackageExport
  outer org.netbeans.Module

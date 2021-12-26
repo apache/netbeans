@@ -116,6 +116,7 @@ public class TruffleBreakpointsHandler {
         if (breakpointResolvedHandler != null) {
             DebuggerManager.getDebuggerManager().removeBreakpoint(breakpointResolvedHandler);
         }
+        TruffleBreakpointsRegistry.getDefault().dispose(debugger);
     }
     
     private void setBreakpointResolvedHandler(ClassType accessorClass) {
@@ -193,6 +194,7 @@ public class TruffleBreakpointsHandler {
             if (bp.isEnabled()) {
                 bpImpl = setLineBreakpoint(debugManager, t, uri, bp.getLineNumber(),
                                            getIgnoreCount(bp), bp.getCondition());
+                TruffleBreakpointsRegistry.getDefault().add(debugger, bp, bpImpl);
                 // Find out whether the breakpoint was resolved already during the submission:
                 try {
                     updateResolved(bp, bpImpl, t.getThreadReference());
@@ -320,6 +322,7 @@ public class TruffleBreakpointsHandler {
                             // Find out whether the breakpoint was resolved already during the submission:
                             for (Value v : ret.getValues()) {
                                 if (v instanceof ObjectReference) {
+                                    TruffleBreakpointsRegistry.getDefault().add(debugger, bp, (ObjectReference) v);
                                     updateResolved(bp, (ObjectReference) v, tr);
                                 }
                             }
@@ -392,6 +395,7 @@ public class TruffleBreakpointsHandler {
                                      ObjectCollectedExceptionWrapper ex) {
                                 Exceptions.printStackTrace(ex);
                             }
+                            TruffleBreakpointsRegistry.getDefault().remove(debugger, bpImpl);
                         }
                     } catch (VMDisconnectedExceptionWrapper ex) {}
                 }

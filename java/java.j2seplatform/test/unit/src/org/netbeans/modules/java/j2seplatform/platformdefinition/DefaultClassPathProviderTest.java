@@ -84,6 +84,7 @@ import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation;
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation2;
+import org.openide.explorer.ExplorerManager;
 
 
 import org.openide.filesystems.FileLock;
@@ -683,6 +684,17 @@ public class DefaultClassPathProviderTest extends NbTestCase {
         @Override
         public void removeProjectGroupChangeListenerAPI(ProjectGroupChangeListener listener) {
         }
+
+        @Override
+        public ExplorerManager createLogicalView() {
+            return new ExplorerManager();
+        }
+
+        @Override
+        public ExplorerManager createPhysicalView() {
+            return new ExplorerManager();
+        }
+
     }
 
     private static class Listener implements PropertyChangeListener {

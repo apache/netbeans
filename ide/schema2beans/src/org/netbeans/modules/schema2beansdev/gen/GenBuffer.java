@@ -114,7 +114,7 @@ public class GenBuffer extends Writer {
         int prevOut = curOut;
         // do the select before the push, in case the select throws an exception
         select(bufferNum);
-        selectStack.push(new Integer(prevOut));
+        selectStack.push(Integer.valueOf(prevOut));
     }
 
     public void popSelect() {

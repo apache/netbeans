@@ -45,7 +45,7 @@ public class AddManagedBeanDialog extends javax.swing.JPanel implements Validati
     private JSFConfigDataObject config;
     private Hashtable existingBeans = null;
     
-    private final DefaultComboBoxModel scopeModel = new DefaultComboBoxModel();
+    private final DefaultComboBoxModel<ManagedBean.Scope> scopeModel = new DefaultComboBoxModel<>();
     /** Creates new form AddManagedBeanDialog */
     public AddManagedBeanDialog(JSFConfigDataObject config) {
         initComponents();

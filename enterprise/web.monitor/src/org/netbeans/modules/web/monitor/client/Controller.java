@@ -1014,7 +1014,7 @@ class Controller  {
             int idx = statusCode.indexOf(':');
             if (idx != -1) {
                 statusCode = statusCode.substring(0, idx);
-                statusCodeNum = Integer.valueOf(statusCode).intValue();
+                statusCodeNum = Integer.valueOf(statusCode);
             }
         } catch(NumberFormatException nfe) {
             // ignore
@@ -1551,7 +1551,7 @@ class Controller  {
 		    log(n1.getID());
 		    log(n2.getID());
 		}
-		catch(Exception ex) {};
+		catch(Exception ex) {}
 	    }
 
 	    int result;
@@ -1606,7 +1606,7 @@ class Controller  {
 		    log(n1.getID());
 		    log(n2.getID());
 		}
-		catch(Exception ex) {};
+		catch(Exception ex) {}
 	    }
 	    int diff = n1.getName().compareTo(n2.getName());
 	    if(diff == 0)

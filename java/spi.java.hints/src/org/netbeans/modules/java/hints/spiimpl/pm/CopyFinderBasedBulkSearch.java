@@ -51,7 +51,7 @@ public class CopyFinderBasedBulkSearch extends BulkSearch {
     @Override
     public Map<String, Collection<TreePath>> match(CompilationInfo info, AtomicBoolean cancel, TreePath toSearch, BulkPattern pattern, Map<String, Long> timeLog) {
         Parameters.notNull("info", info);
-        Map<String, Collection<TreePath>> result = new HashMap<String, Collection<TreePath>>();
+        Map<String, Collection<TreePath>> result = new HashMap<>();
         TreePath topLevel = new TreePath(info.getCompilationUnit());
         
         for (Entry<Tree, String> e : ((BulkPatternImpl) pattern).pattern2Code.entrySet()) {
@@ -59,7 +59,7 @@ public class CopyFinderBasedBulkSearch extends BulkSearch {
                 Collection<TreePath> c = result.get(e.getValue());
 
                 if (c == null) {
-                    result.put(e.getValue(), c = new LinkedList<TreePath>());
+                    result.put(e.getValue(), c = new LinkedList<>());
                 }
 
                 c.add(od.getOccurrenceRoot());
@@ -77,7 +77,7 @@ public class CopyFinderBasedBulkSearch extends BulkSearch {
 
     @Override
     public BulkPattern create(Collection<? extends String> code, Collection<? extends Tree> patterns, Collection<? extends AdditionalQueryConstraints> additionalConstraints, AtomicBoolean cancel) {
-        Map<Tree, String> pattern2Code = new HashMap<Tree, String>();
+        Map<Tree, String> pattern2Code = new HashMap<>();
 
         Iterator<? extends String> itCode = code.iterator();
         Iterator<? extends Tree>   itPatt = patterns.iterator();

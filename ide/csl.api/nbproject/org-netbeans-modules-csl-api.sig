@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.67.0
+#Version 2.70.0
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -805,6 +805,7 @@ hcls Edit
 CLSS public org.netbeans.modules.csl.api.EditList
 cons public init(javax.swing.text.Document)
 cons public init(org.netbeans.editor.BaseDocument)
+innr public final static Edit
 meth public int firstEditLine(javax.swing.text.Document)
 meth public int firstLine(org.netbeans.editor.BaseDocument)
 meth public java.lang.String toString()
@@ -818,7 +819,18 @@ meth public void applyToDocument(org.netbeans.editor.BaseDocument)
 meth public void setFormatAll(boolean)
 supr java.lang.Object
 hfds LOG,doc,edits,formatAll,positions
-hcls DelegatedPosition,Edit
+hcls DelegatedPosition
+
+CLSS public final static org.netbeans.modules.csl.api.EditList$Edit
+ outer org.netbeans.modules.csl.api.EditList
+intf java.lang.Comparable<org.netbeans.modules.csl.api.EditList$Edit>
+meth public int compareTo(org.netbeans.modules.csl.api.EditList$Edit)
+meth public int getOffset()
+meth public int getRemoveLen()
+meth public java.lang.String getInsertText()
+meth public java.lang.String toString()
+supr java.lang.Object
+hfds format,insertText,offset,offsetOrdinal,removeLen
 
 CLSS public abstract org.netbeans.modules.csl.api.EditRegions
 cons public init()

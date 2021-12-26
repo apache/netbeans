@@ -147,8 +147,8 @@ public class JavaFixUtilities {
     }
 
     static Fix rewriteFix(CompilationInfo info, String displayName, TreePath what, final String to, Map<String, TreePath> parameters, Map<String, Collection<? extends TreePath>> parametersMulti, final Map<String, String> parameterNames, Map<String, TypeMirror> constraints, Map<String, String> options, String... imports) {
-        final Map<String, TreePathHandle> params = new HashMap<String, TreePathHandle>();
-        final Map<String, Object> extraParamsData = new HashMap<String, Object>();
+        final Map<String, TreePathHandle> params = new HashMap<>();
+        final Map<String, Object> extraParamsData = new HashMap<>();
         final Map<String, ElementHandle<?>> implicitThis = new HashMap<>();
 
         for (Entry<String, TreePath> e : parameters.entrySet()) {
@@ -170,10 +170,10 @@ public class JavaFixUtilities {
             }
         }
 
-        final Map<String, Collection<TreePathHandle>> paramsMulti = new HashMap<String, Collection<TreePathHandle>>();
+        final Map<String, Collection<TreePathHandle>> paramsMulti = new HashMap<>();
 
         for (Entry<String, Collection<? extends TreePath>> e : parametersMulti.entrySet()) {
-            Collection<TreePathHandle> tph = new LinkedList<TreePathHandle>();
+            Collection<TreePathHandle> tph = new LinkedList<>();
 
             for (TreePath tp : e.getValue()) {
                 TreePathHandle x = TreePathHandle.create(tp, info);
@@ -187,7 +187,7 @@ public class JavaFixUtilities {
             paramsMulti.put(e.getKey(), tph);
         }
 
-        final Map<String, TypeMirrorHandle<?>> constraintsHandles = new HashMap<String, TypeMirrorHandle<?>>();
+        final Map<String, TypeMirrorHandle<?>> constraintsHandles = new HashMap<>();
 
         for (Entry<String, TypeMirror> c : constraints.entrySet()) {
             constraintsHandles.put(c.getKey(), TypeMirrorHandle.create(c.getValue()));
@@ -228,7 +228,7 @@ public class JavaFixUtilities {
     }
 
     private static String defaultFixDisplayName(CompilationInfo info, Map<String, TreePath> variables, String replaceTarget) {
-        Map<String, String> stringsForVariables = new HashMap<String, String>();
+        Map<String, String> stringsForVariables = new HashMap<>();
 
         for (Entry<String, TreePath> e : variables.entrySet()) {
             Tree t = e.getValue().getLeaf();
@@ -423,7 +423,7 @@ public class JavaFixUtilities {
             
             final GeneratorUtilities gen = GeneratorUtilities.get(wc);
             tp = new TreePath(tp.getParentPath(), gen.importComments(tp.getLeaf(), tp.getCompilationUnit()));
-            final Map<String, TreePath> parameters = new HashMap<String, TreePath>();
+            final Map<String, TreePath> parameters = new HashMap<>();
 
             for (Entry<String, TreePathHandle> e : params.entrySet()) {
                 TreePath p = e.getValue().resolve(wc);
@@ -448,10 +448,10 @@ public class JavaFixUtilities {
                 implicitThis.put(e.getKey(), clazz);
             }
 
-            final Map<String, Collection<TreePath>> parametersMulti = new HashMap<String, Collection<TreePath>>();
+            final Map<String, Collection<TreePath>> parametersMulti = new HashMap<>();
 
             for (Entry<String, Collection<TreePathHandle>> e : paramsMulti.entrySet()) {
-                Collection<TreePath> tps = new LinkedList<TreePath>();
+                Collection<TreePath> tps = new LinkedList<>();
 
                 for (TreePathHandle tph : e.getValue()) {
                     TreePath p = tph.resolve(wc);
@@ -466,7 +466,7 @@ public class JavaFixUtilities {
                 parametersMulti.put(e.getKey(), tps);
             }
 
-            Map<String, TypeMirror> constraints = new HashMap<String, TypeMirror>();
+            Map<String, TypeMirror> constraints = new HashMap<>();
 
             for (Entry<String, TypeMirrorHandle<?>> c : constraintsHandles.entrySet()) {
                 constraints.put(c.getKey(), c.getValue().resolve(wc));
@@ -482,8 +482,8 @@ public class JavaFixUtilities {
                 parsed = ((ExpressionStatementTree) parsed).getExpression();
             }
             
-            Map<Tree, Tree> rewriteFromTo = new IdentityHashMap<Tree, Tree>();
-            List<Tree> order = new ArrayList<Tree>(7);
+            Map<Tree, Tree> rewriteFromTo = new IdentityHashMap<>();
+            List<Tree> order = new ArrayList<>(7);
             Tree original;
 
             if (Utilities.isFakeBlock(parsed)) {
@@ -497,7 +497,7 @@ public class JavaFixUtilities {
                     statements = statements.subList(1, statements.size() - 1);
 
                     if (parent.getLeaf().getKind() == Kind.BLOCK) {
-                        List<StatementTree> newStatements = new LinkedList<StatementTree>();
+                        List<StatementTree> newStatements = new LinkedList<>();
 
                         for (StatementTree st : ((BlockTree) parent.getLeaf()).getStatements()) {
                             if (st == tp.getLeaf()) {
@@ -520,7 +520,7 @@ public class JavaFixUtilities {
 
                 assert parent.getLeaf().getKind() == Kind.CLASS;
 
-                List<Tree> newMembers = new LinkedList<Tree>();
+                List<Tree> newMembers = new LinkedList<>();
 
                 ClassTree ct = (ClassTree) parent.getLeaf();
 
@@ -534,7 +534,7 @@ public class JavaFixUtilities {
 
                 rewriteFromTo.put(original = parent.getLeaf(), wc.getTreeMaker().Class(ct.getModifiers(), ct.getSimpleName(), ct.getTypeParameters(), ct.getExtendsClause(), ct.getImplementsClause(), newMembers));
             } else if (tp.getLeaf().getKind() == Kind.BLOCK && parametersMulti.containsKey("$$1$") && parsed.getKind() != Kind.BLOCK && StatementTree.class.isAssignableFrom(parsed.getKind().asInterface())) {
-                List<StatementTree> newStatements = new LinkedList<StatementTree>();
+                List<StatementTree> newStatements = new LinkedList<>();
 
                 newStatements.add(wc.getTreeMaker().ExpressionStatement(wc.getTreeMaker().Identifier("$$1$")));
                 newStatements.add((StatementTree) parsed);
@@ -567,7 +567,7 @@ public class JavaFixUtilities {
                 w = w.getParentPath();
             }
 
-            final Set<Tree> originalTrees = Collections.newSetFromMap(new IdentityHashMap<Tree, Boolean>());
+            final Set<Tree> originalTrees = Collections.newSetFromMap(new IdentityHashMap<>());
             
             new ErrorAwareTreeScanner<Void, Void>() {
                 @Override public Void scan(Tree tree, Void p) {
@@ -579,7 +579,7 @@ public class JavaFixUtilities {
             new ReplaceParameters(wc, ctx.isCanShowUI(), inImport, parameters, extraParamsData, implicitThis, parametersMulti, parameterNames, rewriteFromTo, order, originalTrees).scan(new TreePath(tp.getParentPath(), rewriteFromTo.get(original)), null);
 
             if (inPackage) {
-                String newPackage = wc.getTreeUtilities().translate(wc.getCompilationUnit().getPackageName(), new IdentityHashMap<Tree, Tree>(rewriteFromTo))./*XXX: not correct*/toString();
+                String newPackage = wc.getTreeUtilities().translate(wc.getCompilationUnit().getPackageName(), new IdentityHashMap<>(rewriteFromTo))./*XXX: not correct*/toString();
 
                 ClassPath source = wc.getClasspathInfo().getClassPath(PathKind.SOURCE);
                 FileObject ownerRoot = source.findOwnerRoot(wc.getFileObject());
@@ -1151,6 +1151,7 @@ public class JavaFixUtilities {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public Number visitMethodInvocation(MethodInvocationTree node, Void p) {
             List<? extends ExpressionTree> typeArgs = (List<? extends ExpressionTree>) resolveMultiParameters(node.getTypeArguments());
             List<? extends ExpressionTree> args = resolveMultiParameters(node.getArguments());
@@ -1162,6 +1163,7 @@ public class JavaFixUtilities {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public Number visitNewClass(NewClassTree node, Void p) {
             List<? extends ExpressionTree> typeArgs = (List<? extends ExpressionTree>) resolveMultiParameters(node.getTypeArguments());
             List<? extends ExpressionTree> args = resolveMultiParameters(node.getArguments());
@@ -1172,6 +1174,7 @@ public class JavaFixUtilities {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public Number visitParameterizedType(ParameterizedTypeTree node, Void p) {
             List<? extends ExpressionTree> typeArgs = (List<? extends ExpressionTree>) resolveMultiParameters(node.getTypeArguments());
             ParameterizedTypeTree nue = make.ParameterizedType(node.getType(), typeArgs);
@@ -1201,7 +1204,7 @@ public class JavaFixUtilities {
 
         @Override
         public Number visitModifiers(ModifiersTree node, Void p) {
-            List<AnnotationTree> annotations = new ArrayList<AnnotationTree>(node.getAnnotations());
+            List<AnnotationTree> annotations = new ArrayList<>(node.getAnnotations());
             IdentifierTree ident = !annotations.isEmpty() && annotations.get(0).getAnnotationType().getKind() == Kind.IDENTIFIER ? (IdentifierTree) annotations.get(0).getAnnotationType() : null;
 
             if (ident != null) {
@@ -1302,11 +1305,12 @@ public class JavaFixUtilities {
             return super.visitAnnotation(node, p);
         }
 
+        @SuppressWarnings("unchecked")
         private <T extends Tree> List<T> resolveMultiParameters(List<T> list) {
             if (list == null) return null;
             if (!Utilities.containsMultistatementTrees(list)) return list;
 
-            List<T> result = new LinkedList<T>();
+            List<T> result = new LinkedList<>();
 
             for (T t : list) {
                 if (Utilities.isMultistatementWildcardTree(t)) {
@@ -1327,6 +1331,7 @@ public class JavaFixUtilities {
             return result;
         }
         
+        @SuppressWarnings("unchecked")
         private <T extends Tree> T resolveOptionalValue(T in) {
             if (in != null && Utilities.isMultistatementWildcardTree(in)) {
                 TreePath out = parameters.get(Utilities.getWildcardTreeName(in).toString());
@@ -1431,7 +1436,7 @@ public class JavaFixUtilities {
     private static final Map<Kind, Integer> OPERATOR_PRIORITIES;
     
     static {
-        OPERATOR_PRIORITIES = new EnumMap<Kind, Integer>(Kind.class);
+        OPERATOR_PRIORITIES = new EnumMap<>(Kind.class);
 
         OPERATOR_PRIORITIES.put(Kind.IDENTIFIER, 0);
 
@@ -1747,7 +1752,7 @@ public class JavaFixUtilities {
                     TryTree newTry;
 
                     if (tryTree.getResources().contains(leaf)) {
-                        LinkedList<Tree> resources = new LinkedList<Tree>(tryTree.getResources());
+                        LinkedList<Tree> resources = new LinkedList<>(tryTree.getResources());
 
                         resources.remove(leaf);
 

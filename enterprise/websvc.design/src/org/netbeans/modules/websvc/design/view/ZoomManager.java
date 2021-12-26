@@ -308,7 +308,7 @@ public class ZoomManager {
             // instead, give it a prototype value and then ask for the
             // preferred size, making that the maximum size
             // (make it wide enough to accomodate the '%').
-            setPrototypeDisplayValue(new Integer(100000));
+            setPrototypeDisplayValue(100000);
             setMaximumSize(getPreferredSize());
             setEditable(true);
             Listener l = new Listener(manager);

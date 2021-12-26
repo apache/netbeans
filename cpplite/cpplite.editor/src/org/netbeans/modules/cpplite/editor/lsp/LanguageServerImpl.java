@@ -89,7 +89,7 @@ public class LanguageServerImpl implements LanguageServerProvider {
         String ccls = Utils.getCCLSPath();
         String clangd = Utils.getCLANGDPath();
         if (ccls != null || clangd != null) {
-            return prj2Server.compute(prj, (p, pair) -> {
+            Pair<Process, LanguageServerDescription> serverEntry = prj2Server.compute(prj, (p, pair) -> {
                 if (pair != null && pair.first().isAlive()) {
                     return pair;
                 }
@@ -139,7 +139,11 @@ public class LanguageServerImpl implements LanguageServerProvider {
                     LOG.log(Level.FINE, null, ex);
                     return null;
                 }
-            }).second();
+            });
+            if(serverEntry != null) {
+                return serverEntry.second();
+            }
+            return null;
         }
         return null;
     }

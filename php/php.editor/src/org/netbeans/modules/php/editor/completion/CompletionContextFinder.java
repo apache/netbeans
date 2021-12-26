@@ -600,6 +600,10 @@ final class CompletionContextFinder {
 
         boolean hasCurlyOpen = false;
         do {
+            // NETBEANS-5849
+            if (tokenSequence.token().id() == PHPTokenId.PHP_USE) {
+                return false;
+            }
             if (tokenSequence.token().id() == PHPTokenId.PHP_CURLY_OPEN) {
                 hasCurlyOpen = true;
             }

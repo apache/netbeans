@@ -214,7 +214,7 @@ public class TimeComponentPanel extends javax.swing.JPanel implements PropertyCh
     }
     
     private void fillIn() {
-        DefaultListModel model = (DefaultListModel) jList1.getModel();
+        DefaultListModel<WeakReference<Object>> model = (DefaultListModel<WeakReference<Object>>)jList1.getModel();
 
         model.removeAllElements();
 

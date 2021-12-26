@@ -618,6 +618,7 @@ non terminal List<Attribute> attributes;
 non terminal AttributeDeclaration attribute_decl;
 non terminal List<AttributeDeclaration> attribute_group;
 non terminal Statement attributed_statement;
+non terminal Statement attributed_interface_statement;
 non terminal Statement attributed_class_statement;
 non terminal Statement attributed_trait_statement;
 non terminal FormalParameter attributed_parameter;
@@ -1890,7 +1891,7 @@ interface_statement_list:list interface_statement:interfaceStatement
 :}
 ;
 
-interface_statement ::=
+attributed_interface_statement ::=
 constant_modifiers:modifier class_constant_declaration:list T_SEMICOLON:end
 {:
     int constantStart = modifier == null ? listleft : modifierleft;
@@ -1910,6 +1911,18 @@ T_SEMICOLON:end
     FunctionDeclaration functionDeclaration = new FunctionDeclaration(startleft, endright, functionId, paramList, returnType, block, isReference.booleanValue());
     MethodDeclaration methodDeclaration = new MethodDeclaration(methodStart, endright, modifier.intValue(), functionDeclaration, true);
     RESULT = methodDeclaration;
+:}
+;
+
+interface_statement ::=
+attributed_interface_statement:statement
+{:
+    RESULT = statement;
+:}
+
+| attributes:attributes attributed_interface_statement:statement
+{:
+    RESULT = parser.createAttributedStatement(statement, attributes);
 :}
 
 | T_VAR_COMMENT:varComment

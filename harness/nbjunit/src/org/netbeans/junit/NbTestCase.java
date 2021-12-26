@@ -739,7 +739,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
         } else {
             try {
                 if (diffImpl.diff(test, pass, diffFile)) {
-                    throw new AssertionFileFailedError(message, null == diffFile ? "" : diffFile.getAbsolutePath());
+                    throw new AssertionFileFailedError(message+"\n diff: "+diffFile, null == diffFile ? "" : diffFile.getAbsolutePath());
                 }
             } catch (IOException e) {
                 fail("exception in assertFile : " + e.getMessage());
@@ -760,7 +760,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
      * already initialized, when passed in this assertFile function.
      */
     static public void assertFile(File test, File pass, File diff, Diff externalDiff) {
-        assertFile(null, test, pass, diff, externalDiff);
+        assertFile("Difference between " + test + " and " + pass, test, pass, diff, externalDiff);
     }
     /**
      * Asserts that two files are the same, it compares two files and stores possible differences
@@ -789,7 +789,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
      * by the '.diff'.
      */
     static public void assertFile(File test, File pass, File diff) {
-        assertFile(null, test, pass, diff, null);
+        assertFile("Difference between " + test + " and " + pass, test, pass, diff, null);
     }
     /**
      * Asserts that two files are the same, it just compares two files and doesn't produce any additional output.

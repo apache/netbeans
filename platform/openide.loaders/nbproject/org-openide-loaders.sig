@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.81
+#Version 7.84
 
 CLSS public java.awt.Canvas
 cons public init()
@@ -2572,6 +2572,11 @@ meth public void layoutContainer(java.awt.Container)
 supr java.awt.FlowLayout
 hfds serialVersionUID
 
+CLSS public final org.openide.awt.GraphicsUtils
+meth public static void configureDefaultRenderingHints(java.awt.Graphics)
+supr java.lang.Object
+hfds antialias,gtkAA,hintsMap
+
 CLSS public org.openide.awt.HtmlBrowser
 cons public init()
 cons public init(boolean,boolean)
@@ -3082,7 +3087,7 @@ meth public void setDnDListener(org.openide.awt.Toolbar$DnDListener)
 meth public void setUI(javax.swing.plaf.ToolBarUI)
 meth public void setVisible(boolean)
 supr org.openide.awt.ToolbarWithOverflow
-hfds LOG,backingFolder,displayName,emptyAction,emptyInsets,isFlatLaF,isMetalLaF,label,processor,serialVersionUID
+hfds LOG,backingFolder,displayName,emptyAction,emptyInsets,isFlatLaF,isMetalLaF,isWindowsLaF,label,processor,serialVersionUID
 hcls DefaultIconButton,DefaultIconToggleButton,Folder
 
 CLSS public static org.openide.awt.Toolbar$DnDEvent

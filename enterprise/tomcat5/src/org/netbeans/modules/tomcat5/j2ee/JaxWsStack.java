@@ -77,7 +77,7 @@ public class JaxWsStack implements WSStackImplementation<JaxWs> {
         } catch (IOException ex) {
             // Default Version
             version = "2.1.4"; // NOI18N
-        };
+        }
         jaxWs = new JaxWs(getUriDescriptor());
     }
 

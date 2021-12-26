@@ -423,7 +423,7 @@ public final class ELTypeUtilities {
 
             target = NodeUtil.getSiblingBefore(target);
             repeation--;
-        };
+        }
 
         return false;
     }

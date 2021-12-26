@@ -116,6 +116,21 @@ is the proper place.
         </change>
         <change>
             <api name="gradle.java.api"/>
+            <summary>Support Kotlin Source Directories</summary>
+            <version major="1" minor="15"/>
+            <date day="22" month="11" year="2020"/>
+            <author login="jpesek"/>
+            <compatibility addition="yes"/>
+            <description>
+                Sourcsets introduce a new SourceType called KOTLIN
+                It is possible to retrieve the kotlin source directories
+                form a GradleJavaSourceSet from now.
+            </description>
+            <class package="org.netbeans.modules.gradle.java.api" name="GradleJavaSourceSet"/>
+            <issue number="NETBEANS-5050"/>
+        </change>
+        <change>
+            <api name="gradle.java.api"/>
             <summary>Support Generated Source Directories</summary>
             <version major="1" minor="8"/>
             <date day="5" month="7" year="2020"/>

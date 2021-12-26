@@ -46,7 +46,7 @@ import org.openide.util.WeakListeners;
  * @author lkishalmi
  */
 @ProjectServiceProvider(service = ProjectConnection.class, projectType = NbGradleProject.GRADLE_PROJECT_TYPE)
-public class GradleProjectConnection implements ProjectConnection {
+public final class GradleProjectConnection implements ProjectConnection {
 
     final Project project;
     ProjectConnection conn;
@@ -111,6 +111,10 @@ public class GradleProjectConnection implements ProjectConnection {
         compatConn = null;
     }
 
+    synchronized boolean hasConnection() {
+        return conn != null || compatConn != null;
+    }
+    
     private synchronized ProjectConnection getConnection(boolean compatible) {
         if (conn == null) {
             File projectDir = FileUtil.toFile(project.getProjectDirectory());

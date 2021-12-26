@@ -37,6 +37,7 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
@@ -60,6 +61,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticDispatch;
 import org.netbeans.modules.php.editor.parser.astnodes.VariableBase;
+import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.RequestProcessor;
 
@@ -424,6 +426,70 @@ public final class ModelUtils {
         return retval;
     }
 
+    public static NamespaceScope getNamespaceScope(PHPParseResult parserResult, int offset) {
+        // NETBEANS-4978
+        // if the caret position is not in each namespace scope, get the first namespace scope
+        // e.g.
+        // [original]
+        // // caret is here^
+        // declare (strict_types=1);
+        // namespace Foo;
+        // ...
+        // namespace Bar;
+        //
+        // [inserted]
+        // // caret is here
+        // declare (strict_types=1);
+        // namespace Foo;
+        // use ...;
+        // ...
+        // namespace Bar;
+        FileScope fileScope = parserResult.getModel().getFileScope();
+        List<NamespaceDeclaration> namespaceDeclarations = getNamespaceDeclarations(parserResult);
+        boolean isBracketed = false;
+        if (!namespaceDeclarations.isEmpty()) {
+            isBracketed = namespaceDeclarations.get(0).isBracketed();
+        }
+        NamespaceScope retval = ModelUtils.getNamespaceScope(fileScope, offset);
+        assert retval != null;
+        Collection<? extends NamespaceScope> declaredNamespaces = fileScope.getDeclaredNamespaces();
+        if (retval != null && retval.isDefaultNamespace()) {
+            // get the first namespace scope
+            if (isBracketed) {
+                for (NamespaceDeclaration namespaceDeclaration : namespaceDeclarations) {
+                    if (namespaceDeclaration.getName() == null
+                            && namespaceDeclaration.getStartOffset() <= offset && offset <= namespaceDeclaration.getEndOffset()) {
+                        return retval;
+                    }
+                }
+                if (namespaceDeclarations.get(0).getName() == null) {
+                    return retval;
+                }
+                retval = getFirstNamespaceScope(declaredNamespaces, retval);
+            }
+            if (!isBracketed && !namespaceDeclarations.isEmpty()) {
+                // if namespace is not bracketed,
+                // both the global namespace and another namespace don't exist in the same file
+                retval = getFirstNamespaceScope(declaredNamespaces, retval);
+            }
+        }
+        return retval;
+    }
+
+    private static NamespaceScope getFirstNamespaceScope(Collection<? extends NamespaceScope> declaredNamespaces, NamespaceScope namespace) {
+        NamespaceScope retval = namespace;
+        for (NamespaceScope namespaceScope : declaredNamespaces) {
+            if (!namespaceScope.isDefaultNamespace()) {
+                if (retval.isDefaultNamespace()) {
+                    retval = namespaceScope;
+                } else if (retval.getBlockRange().getStart() > namespaceScope.getBlockRange().getStart()) {
+                    retval = namespaceScope;
+                }
+            }
+        }
+        return retval;
+    }
+
     @CheckForNull
     public static TypeScope getTypeScope(ModelElement element) {
         TypeScope retval = (element instanceof TypeScope) ? (TypeScope) element : null;
@@ -652,5 +718,38 @@ public final class ModelUtils {
     public static boolean isAnonymousFunction(Scope scope) {
         return scope instanceof FunctionScope
                 && ((FunctionScope) scope).isAnonymous();
+    }
+
+    private static List<NamespaceDeclaration> getNamespaceDeclarations(PHPParseResult parserResult) {
+        NamespaceDeclarationVisitor checkVisitor = new NamespaceDeclarationVisitor();
+        parserResult.getProgram().accept(checkVisitor);
+        return checkVisitor.getNamespaceDeclarations();
+    }
+
+    private static class NamespaceDeclarationVisitor extends DefaultVisitor {
+
+        private final List<NamespaceDeclaration> namespaceDeclarations = new ArrayList<>();
+        private final List<NamespaceDeclaration> globalNamespaceDeclarations = new ArrayList<>();
+
+        public List<NamespaceDeclaration> getNamespaceDeclarations() {
+            return Collections.unmodifiableList(namespaceDeclarations);
+        }
+
+        public List<NamespaceDeclaration> getGlobalNamespaceDeclarations() {
+            return Collections.unmodifiableList(globalNamespaceDeclarations);
+        }
+
+        @Override
+        public void visit(NamespaceDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            namespaceDeclarations.add(node);
+            if (node.isBracketed() && node.getName() == null) {
+                globalNamespaceDeclarations.add(node);
+            }
+            super.visit(node);
+        }
+
     }
 }

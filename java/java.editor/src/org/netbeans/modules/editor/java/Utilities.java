@@ -235,7 +235,10 @@ public final class Utilities {
     }        
     
     public static boolean isJavaContext(final JTextComponent component, final int offset, final boolean allowInStrings) {
-        Document doc = component.getDocument();
+        return isJavaContext(component.getDocument(), offset, allowInStrings);
+    }
+
+    public static boolean isJavaContext(final Document doc, final int offset, final boolean allowInStrings) {
         if (doc instanceof AbstractDocument) {
             ((AbstractDocument)doc).readLock();
         }

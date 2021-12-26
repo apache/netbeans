@@ -27,6 +27,9 @@ import java.util.Map;
 import org.netbeans.modules.gradle.spi.newproject.TemplateOperation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
+import org.openide.util.Exceptions;
 import org.openide.util.MapFormat;
 
 public final class GradleArchetype {
@@ -69,7 +72,13 @@ public final class GradleArchetype {
 
                     Map<String, Object> pparams = new HashMap<>(params);
                     pparams.put("package", packageName); //NOI18N
-                    copyDataTemplate(ops, template, new File(packageDir, template.getNameExt()), pparams);
+                    String templateName;
+                    try {
+                        templateName = DataObject.find(template).getName();
+                    } catch (DataObjectNotFoundException ex) {
+                        templateName = template.getNameExt();
+                    }
+                    copyDataTemplate(ops, template, new File(packageDir, templateName), pparams);
                 } else {
                     copyDataTemplate(ops, template, new File(rootDir, relativePath), params);
                 }

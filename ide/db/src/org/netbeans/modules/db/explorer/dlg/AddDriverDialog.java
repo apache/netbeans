@@ -68,7 +68,7 @@ public final class AddDriverDialog extends javax.swing.JPanel {
         return ADD_DRIVER_DIALOG_HELPCTX;
     }
     
-    private DefaultListModel dlm;
+    private DefaultListModel<String> dlm;
     private List<URL> drvs = new LinkedList<URL>();
     private boolean customizer = false;
     private ProgressHandle progressHandle;
@@ -105,7 +105,7 @@ public final class AddDriverDialog extends javax.swing.JPanel {
         // without it, the preferred height is sometimes ignored during resize
         // progressContainerPanel.add(Box.createVerticalStrut(progressContainerPanel.getPreferredSize().height), BorderLayout.EAST);
         initAccessibility();
-        dlm = (DefaultListModel) drvList.getModel();
+        dlm = (DefaultListModel<String>) drvList.getModel();
 
         if (driver != null) {
             setDriver(driver);

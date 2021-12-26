@@ -87,7 +87,13 @@
     </target>
 
     <target name="-init-compile-bootclasspath-nb-vanilla" depends="basic-init,jdk-8-check,set-buildnumber,-define-custom-javac-task">
-        <property name="bootclasspath.prepend.nb" value="${nb_all}/java/libs.javacapi/external/nb-javac-16.0.0.0-api.jar${path.separator}${nb_all}/java/libs.javacimpl/external/nb-javac-16.0.0.0.jar" />
+        <pathconvert property="bootclasspath.prepend.nb">
+            <path>
+                <fileset dir="${nb_all}/java/libs.javacapi/external/" erroronmissingdir="false">
+                    <include name="nb-javac*.jar"/>
+                </fileset>
+            </path>
+        </pathconvert>
         <property name="bootclasspath.prepend.vanilla" value="${nb_all}/nbbuild/external/vanilla-javac-api.jar${path.separator}${nb_all}/nbbuild/external/vanilla-javac-impl.jar" />
     </target>
     <target name="-init-bootclasspath-prepend-compile" depends="-init-compile-bootclasspath-nb-vanilla">
@@ -118,14 +124,14 @@
                 </not>
             </and>
         </condition>
-        <condition property="test.extra.nb.javac.deps" value="${java.source.nbjavac.dir}/modules/org-netbeans-modules-java-source-nbjavac.jar">
+<!--        <condition property="test.extra.nb.javac.deps" value="${java.source.nbjavac.dir}/modules/org-netbeans-modules-java-source-nbjavac.jar">
             <and>
                 <istrue value="${requires.nb.javac}"/>
                 <not>
                     <istrue value="${test.use.jdk.javac}"/>
                 </not>
             </and>
-        </condition>
+        </condition>-->
     </target>
     <target name="-init-bootclasspath-prepend" depends="-init-bootclasspath-prepend-run,-init-bootclasspath-prepend-compile">
         <!-- When requires.nb.javac property is true, prepend javac-api and javac-impl on bootclasspath to allow override the default annotation
@@ -289,7 +295,7 @@
         <condition property="test.run.args" value="-ea -Xmx480m">
             <istrue value="${have-jdk-1.8}"/>
         </condition>
-        <property name="test.run.args" value="-ea -XX:PermSize=32m -XX:MaxPermSize=200m -Xmx480m"/>
+        <property name="test.run.args" value="-ea -Xmx480m"/>
         <property name="extra.test.libs.dir" location="${test.dist.dir}/extralibs"/>
         <macrodef name="test-init-nborg">
             <attribute name="test.type"/>

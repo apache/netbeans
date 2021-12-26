@@ -86,7 +86,7 @@ is the proper place.
         <change id="open-settings">
              <api name="EditorHintsSPI"/>
              <summary>Added FileHintPreferences.openFilePreferences to open settings</summary>
-             <version major="1" minor="56"/>
+             <version major="1" minor="57"/>
              <date day="11" month="9" year="2021"/>
              <author login="jlahoda"/>
              <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>

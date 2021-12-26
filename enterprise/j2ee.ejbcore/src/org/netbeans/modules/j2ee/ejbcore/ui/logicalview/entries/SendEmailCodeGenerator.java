@@ -140,7 +140,7 @@ public class SendEmailCodeGenerator implements CodeGenerator {
                 if (evt.getPropertyName().equals(SendEmailPanel.IS_VALID)) {
                     Object newvalue = evt.getNewValue();
                     if ((newvalue != null) && (newvalue instanceof Boolean)) {
-                        boolean isValid = ((Boolean) newvalue).booleanValue();
+                        boolean isValid = ((Boolean) newvalue);
                         dialogDescriptor.setValid(isValid);
                         if (isValid) {
                             notificationSupport.clearMessages();

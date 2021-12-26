@@ -552,7 +552,7 @@ public final class TemplateOperation implements Runnable {
                     FileObject targetParent = FileUtil.createFolder(target.getParentFile());
                     DataFolder targetFolder = DataFolder.findFolder(targetParent);
                     DataObject o = DataObject.find(template);
-                    DataObject newData = o.createFromTemplate(targetFolder,targetName, tokens);
+                    DataObject newData = o.createFromTemplate(targetFolder, targetName, tokens);
                     return important ? Collections.singleton(newData.getPrimaryFile()) : null;
                 } catch (IOException ex) {
 

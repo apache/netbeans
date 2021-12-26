@@ -173,8 +173,18 @@ public final class NILocationVisualizer implements Consumer<String> {
                     while (rangeEnd < end && intervals.contains(rangeEnd)) {
                         rangeEnd++;
                     }
-                    int startCol = intervals.getFirstColumn(start);
-                    int endCol = intervals.getLastColumn(rangeEnd);
+                    int startCol;
+                    int endCol;
+                    int[] extendedRange = intervals.extendRange(start, rangeEnd);
+                    if (extendedRange != null) {
+                        start = extendedRange[0];
+                        startCol = extendedRange[1];
+                        rangeEnd = extendedRange[2];
+                        endCol = extendedRange[3];
+                    } else {
+                        startCol = intervals.getFirstColumn(start);
+                        endCol = intervals.getLastColumn(rangeEnd);
+                    }
                     int endLine = rangeEnd;
                     if (endCol == -1) { // end is the end of line
                         endLine++;
@@ -255,13 +265,15 @@ public final class NILocationVisualizer implements Consumer<String> {
                             List<? extends Tree> members = ((ClassTree) tree).getMembers();
                             for (Tree member : members) {
                                 Tree t = null;
+                                Tree enclosingTree = null;
                                 if (member.getKind() == Tree.Kind.METHOD) {
                                     t = ((MethodTree) member).getBody();
+                                    enclosingTree = member;
                                 } else if (member.getKind() == Tree.Kind.BLOCK) {
                                     t = member;
                                 }
                                 if (t != null) {
-                                    Interval interval = createInterval(cc.getCompilationUnit(), sourcePositions, lineMap, t);
+                                    Interval interval = createInterval(cc.getCompilationUnit(), sourcePositions, lineMap, t, enclosingTree);
                                     if (interval != null) {
                                         intervals.add(interval);
                                     }
@@ -271,7 +283,7 @@ public final class NILocationVisualizer implements Consumer<String> {
                                     if (isStatic) {
                                         String name = variable.getName().toString();
                                         name = cc.getElementUtilities().getElementName(element, true) + "::" + name;
-                                        Interval interval = createInterval(cc.getCompilationUnit(), sourcePositions, lineMap, member);
+                                        Interval interval = createInterval(cc.getCompilationUnit(), sourcePositions, lineMap, member, enclosingTree);
                                         if (interval != null) {
                                             intervals.addVariable(name, interval);
                                         }
@@ -287,7 +299,7 @@ public final class NILocationVisualizer implements Consumer<String> {
         return intervals;
     }
 
-    private static Interval createInterval(CompilationUnitTree cut, SourcePositions sourcePositions, LineMap lineMap, Tree tree) {
+    private static Interval createInterval(CompilationUnitTree cut, SourcePositions sourcePositions, LineMap lineMap, Tree tree, Tree enclosingTree) {
         long start = sourcePositions.getStartPosition(cut, tree);
         long end = sourcePositions.getEndPosition(cut, tree);
         if (start != Diagnostic.NOPOS && end != Diagnostic.NOPOS) {
@@ -295,7 +307,11 @@ public final class NILocationVisualizer implements Consumer<String> {
             int col1 = (int) lineMap.getColumnNumber(start);
             int line2 = (int) lineMap.getLineNumber(end);
             int col2 = (int) lineMap.getColumnNumber(end);
-            return new Interval(line1, col1, line2, col2);
+            Interval enclosingInterval = null;
+            if (enclosingTree != null) {
+                enclosingInterval = createInterval(cut, sourcePositions, lineMap, enclosingTree, null);
+            }
+            return new Interval(line1, col1, line2, col2, enclosingInterval);
         } else {
             return null;
         }
@@ -365,6 +381,32 @@ public final class NILocationVisualizer implements Consumer<String> {
             }
             return -1;
         }
+
+        // If a whole interval is covered, include its enclosing interval
+        private int[] extendRange(int start, int end) {
+            int xStartL = -1;
+            int xStartC = -1;
+            int xEndL = -1;
+            int xEndC = -1;
+            for (Interval i : intervals) {
+                if (start <= i.l1 && i.l2 <= end) {
+                    Interval ie = i.enclosing;
+                    if (ie != null) {
+                        if (xStartL < 0) {
+                            xStartL = ie.l1;
+                            xStartC = ie.c1;
+                        }
+                        xEndL = ie.l2;
+                        xEndC = ie.c2;
+                    }
+                }
+            }
+            if (xStartL != -1) {
+                return new int[] { xStartL, xStartC, xEndL, xEndC};
+            } else {
+                return null;
+            }
+        }
     }
 
     private static final class Interval {
@@ -373,13 +415,19 @@ public final class NILocationVisualizer implements Consumer<String> {
         private final int c1;
         private final int l2;
         private final int c2;
+        private final Interval enclosing;
 
-        Interval(int l1, int c1, int l2, int c2) {
+        Interval(int l1, int c1, int l2, int c2, Interval enclosing) {
             assert l1 <= l2;
             this.l1 = l1;
             this.c1 = c1;
             this.l2 = l2;
             this.c2 = c2;
+            if (enclosing != null) {
+                assert enclosing.l1 <= l1;
+                assert enclosing.l2 >= l2;
+            }
+            this.enclosing = enclosing;
         }
 
         private boolean contains(int l) {

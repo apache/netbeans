@@ -84,6 +84,21 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="CompletionUtilities.newCompletionItemBuilder">
+            <api name="completion"/>
+            <summary>Addition of CompletionUtilities.newCompletionItemBuilder() method</summary>
+            <version major="1" minor="60"/>
+            <date day="26" month="11" year="2021"/>
+            <author login="dbalek"/>
+            <compatibility addition="yes"/>
+            <description>
+            <p>
+                <code>CompletionUtilities.newCompletionItemBuilder()</code> method was added
+                to allow for creation of simple <code>CompletionItem</code>s.
+            </p>
+            </description>
+        </change>
+
         <change id="CompositeCompletionItem">
             <api name="completion"/>
             <summary>Addition of CompositeCompletionItem</summary>

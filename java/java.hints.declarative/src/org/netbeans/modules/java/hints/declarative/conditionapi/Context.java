@@ -19,18 +19,20 @@
 
 package org.netbeans.modules.java.hints.declarative.conditionapi;
 
-import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.lang.model.SourceVersion;
@@ -38,12 +40,10 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.hints.declarative.APIAccessor;
 import org.netbeans.modules.java.hints.spiimpl.Hacks;
@@ -56,9 +56,9 @@ import org.netbeans.spi.java.hints.HintContext;
 public class Context {
 
             final HintContext ctx;
-            final List<Map<String, TreePath>> variables = new LinkedList<Map<String, TreePath>>();
-            final List<Map<String, Collection<? extends TreePath>>> multiVariables = new LinkedList<Map<String, Collection<? extends TreePath>>>();
-            final List<Map<String, String>> variableNames = new LinkedList<Map<String, String>>();
+            final Deque<Map<String, TreePath>> variables = new LinkedList<>();
+            final Deque<Map<String, Collection<? extends TreePath>>> multiVariables = new LinkedList<>();
+            final Deque<Map<String, String>> variableNames = new LinkedList<>();
     private final AtomicInteger auxiliaryVariableCounter = new AtomicInteger();
 
     //XXX: should not be public:
@@ -70,16 +70,7 @@ public class Context {
     }
 
     public @NonNull SourceVersion sourceVersion() {
-        String sourceLevel = SourceLevelQuery.getSourceLevel(ctx.getInfo().getFileObject());
-
-        if (sourceLevel == null) {
-            return SourceVersion.latest(); //TODO
-        }
-
-        String[] splited = sourceLevel.split("\\.");
-        String   spec    = splited[1];
-
-        return SourceVersion.valueOf("RELEASE_"+  spec);//!!!
+        return ctx.getInfo().getSourceVersion();
     }
 
     public @NonNull Set<Modifier> modifiers(@NonNull Variable variable) {
@@ -135,7 +126,7 @@ public class Context {
     private Variable enterAuxiliaryVariable(TreePath path) {
         String output = "*" + auxiliaryVariableCounter.getAndIncrement();
 
-        variables.get(0).put(output, path);
+        variables.getFirst().put(output, path);
 
         return new Variable(output);
     }
@@ -152,10 +143,10 @@ public class Context {
 
     public void createRenamed(@NonNull Variable from, @NonNull Variable to, @NonNull String newName) {
         //TODO: check (the variable should not exist)
-        variableNames.get(0).put(to.variableName, newName);
+        variableNames.getFirst().put(to.variableName, newName);
         TreePath origVariablePath = getSingleVariable(from);
         TreePath newVariablePath = new TreePath(origVariablePath.getParentPath(), Hacks.createRenameTree(origVariablePath.getLeaf(), newName));
-        variables.get(0).put(to.variableName, newVariablePath);
+        variables.getFirst().put(to.variableName, newVariablePath);
     }
 
     public boolean isNullLiteral(@NonNull Variable var) {
@@ -171,9 +162,9 @@ public class Context {
             throw new IllegalArgumentException("TODO: explanation");
         }
 
-        Collection<Variable> result = new LinkedList<Variable>();
+        Collection<Variable> result = new ArrayDeque<>();
         int index = 0;
-
+ 
         for (TreePath tp : paths) {
             result.add(new Variable(multiVariable.variableName, index++));
         }
@@ -182,15 +173,15 @@ public class Context {
     }
 
     public void enterScope() {
-        variables.add(0, new HashMap<String, TreePath>());
-        multiVariables.add(0, new HashMap<String, Collection<? extends TreePath>>());
-        variableNames.add(0, new HashMap<String, String>());
+        variables.addFirst(new HashMap<>());
+        multiVariables.addFirst(new HashMap<>());
+        variableNames.addFirst(new HashMap<>());
     }
 
     public void leaveScope() {
-        variables.remove(0);
-        multiVariables.remove(0);
-        variableNames.remove(0);
+        variables.removeFirst();
+        multiVariables.removeFirst();
+        variableNames.removeFirst();
     }
 
     Iterable<? extends TreePath> getVariable(Variable v) {
@@ -210,8 +201,9 @@ public class Context {
     TreePath getSingleVariable(Variable v) {
         if (v.index == (-1)) {
             for (Map<String, TreePath> map : variables) {
-                if (map.containsKey(v.variableName)) {
-                    return map.get(v.variableName);
+                TreePath var = map.get(v.variableName);
+                if (var != null) {
+                    return var;
                 }
             }
             
@@ -223,8 +215,9 @@ public class Context {
 
     private Collection<? extends TreePath> getMultiVariable(Variable v) {
         for (Map<String, Collection<? extends TreePath>> multi : multiVariables) {
-            if (multi.containsKey(v.variableName)) {
-                return multi.get(v.variableName);
+            Collection<? extends TreePath> vars = multi.get(v.variableName);
+            if (vars != null) {
+                return vars;
             }
         }
 
@@ -242,7 +235,7 @@ public class Context {
      * @return the canonical names of the enclosing classes
      */
     public @NonNull Iterable<? extends String> enclosingClasses(Variable forVariable) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         TreePath path = getSingleVariable(forVariable);
 
         while (path != null) {
@@ -270,9 +263,7 @@ public class Context {
      * @return the name of the enclosing package
      */
     public @NonNull String enclosingPackage() {
-        CompilationUnitTree cut = ctx.getInfo().getCompilationUnit();
-
-        return cut.getPackageName() != null ? cut.getPackageName().toString() : "";
+        return Objects.toString(ctx.getInfo().getCompilationUnit().getPackageName(), "");
     }
     
     /**Checks whether the given Java element is available in the particular source
@@ -314,10 +305,11 @@ public class Context {
 
         @Override
         public Map<String, TreePath> getVariables(Context ctx) {
-            Map<String, TreePath> result = new HashMap<String, TreePath>();
+            Map<String, TreePath> result = new HashMap<>();
 
-            for (Map<String, TreePath> m : reverse(ctx.variables)) {
-                result.putAll(m);
+            Iterator<Map<String, TreePath>> iter = ctx.variables.descendingIterator();
+            while (iter.hasNext()) {
+                result.putAll(iter.next());
             }
 
             return result;
@@ -325,10 +317,11 @@ public class Context {
 
         @Override
         public Map<String, Collection<? extends TreePath>> getMultiVariables(Context ctx) {
-            Map<String, Collection<? extends TreePath>> result = new HashMap<String, Collection<? extends TreePath>>();
+            Map<String, Collection<? extends TreePath>> result = new HashMap<>();
 
-            for (Map<String, Collection<? extends TreePath>> m : reverse(ctx.multiVariables)) {
-                result.putAll(m);
+            Iterator<Map<String, Collection<? extends TreePath>>> iter = ctx.multiVariables.descendingIterator();
+            while (iter.hasNext()) {
+                result.putAll(iter.next());
             }
 
             return result;
@@ -336,20 +329,11 @@ public class Context {
 
         @Override
         public Map<String, String> getVariableNames(Context ctx) {
-            Map<String, String> result = new HashMap<String, String>();
+            Map<String, String> result = new HashMap<>();
 
-            for (Map<String, String> m : reverse(ctx.variableNames)) {
-                result.putAll(m);
-            }
-
-            return result;
-        }
-
-        private <T> List<T> reverse(List<T> original) {
-            List<T> result = new LinkedList<T>();
-
-            for (T t : original) {
-                result.add(0, t);
+            Iterator<Map<String, String>> iter = ctx.variableNames.descendingIterator();
+            while (iter.hasNext()) {
+                result.putAll(iter.next());
             }
 
             return result;

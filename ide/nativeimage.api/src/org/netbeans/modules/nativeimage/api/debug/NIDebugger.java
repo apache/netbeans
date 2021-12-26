@@ -21,6 +21,7 @@ package org.netbeans.modules.nativeimage.api.debug;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
@@ -42,7 +43,7 @@ import org.openide.util.NbBundle;
 
 /**
  * Representation of a native image debugger.
- * @since 1.0
+ * @since 0.1
  */
 public final class NIDebugger {
 
@@ -59,7 +60,7 @@ public final class NIDebugger {
      * @throws IllegalStateException when the native debugger is not available
      *         (there is not an implementation of {@link NIDebuggerServiceProvider}
      *         registered in the default lookup).
-     * @since 1.0
+     * @since 0.1
      */
     @NbBundle.Messages({"MSG_NoNativeDebug=No native debugger is available. Please install native debugger module."})
     public static Builder newBuilder() throws IllegalStateException {
@@ -79,7 +80,7 @@ public final class NIDebugger {
      * @param id a unique ID of the breakpoint
      * @param breakpointDescriptor the breakpoint descriptor
      * @return an instance of the native breakpoint
-     * @since 1.0
+     * @since 0.1
      */
     public Breakpoint addLineBreakpoint(Object id, NILineBreakpointDescriptor breakpointDescriptor) {
         Breakpoint breakpoint = provider.addLineBreakpoint(id, breakpointDescriptor);
@@ -91,7 +92,7 @@ public final class NIDebugger {
      * Remove breakpoint with the given id.
      *
      * @param id the ID of the breakpoint to remove
-     * @since 1.0
+     * @since 0.1
      */
     public void removeBreakpoint(Object id) {
         provider.removeBreakpoint(id);
@@ -107,10 +108,39 @@ public final class NIDebugger {
      * @param executionDescriptor execution descriptor that describes the runtime attributes
      * @param startedEngine the corresponding DebuggerEngine is passed to this consumer
      * @return future that completes on the execution finish
-     * @since 1.0
+     * @since 0.1
+     * @deprecated Use {@link #start(org.netbeans.modules.nativeimage.api.debug.StartDebugParameters, java.util.function.Consumer)}
      */
+    @Deprecated
     public CompletableFuture<Void> start(List<String> command, File workingDirectory, String debugger, String displayName, ExecutionDescriptor executionDescriptor, Consumer<DebuggerEngine> startedEngine) {
         return provider.start(command, workingDirectory, debugger, displayName, executionDescriptor, startedEngine);
+    }
+
+    /**
+     * Start the actual debugging session. Call this typically after breakpoints are added.
+     *
+     * @param debugParameters parameters to start the debugging with
+     * @param startedEngine the corresponding DebuggerEngine is passed to this consumer
+     * @return a future which is completed when the started debugger session finishes
+     * @since 0.5
+     */
+    public CompletableFuture<Void> start(StartDebugParameters debugParameters, Consumer<DebuggerEngine> startedEngine) {
+        Objects.requireNonNull(debugParameters);
+        CompletableFuture<Void> start = provider.start(debugParameters, startedEngine);
+        if (start.isCompletedExceptionally()) {
+            try {
+                start.get();
+            } catch (ExecutionException ex) {
+                if (ex.getCause() instanceof UnsupportedOperationException) {
+                    return startLegacy(debugParameters, startedEngine);
+                }
+            } catch (Throwable ex) {}
+        }
+        return start;
+    }
+
+    private CompletableFuture<Void> startLegacy(StartDebugParameters debugParameters, Consumer<DebuggerEngine> startedEngine) {
+        return provider.start(debugParameters.getCommand(), debugParameters.getWorkingDirectory(), debugParameters.getDebugger(), debugParameters.getDisplayName(), debugParameters.getExecutionDescriptor(), startedEngine);
     }
 
     /**
@@ -135,7 +165,7 @@ public final class NIDebugger {
      *                   when <code>null</code> the expression is used as the name
      * @param frame the frame to evaluate at
      * @return the completable future with the evaluation result
-     * @since 1.0
+     * @since 0.1
      */
     public CompletableFuture<NIVariable> evaluateAsync(String expression, String resultName, NIFrame frame) {
         return provider.evaluateAsync(expression, resultName, frame);
@@ -151,7 +181,7 @@ public final class NIDebugger {
      * @param frame the frame to evaluate at
      * @return the evaluation result
      * @throws EvaluateException when evaluation fails
-     * @since 1.0
+     * @since 0.1
      */
     public NIVariable evaluate(String expression, String resultName, NIFrame frame) throws EvaluateException {
         try {
@@ -169,7 +199,7 @@ public final class NIDebugger {
      * @param length number of bytes to read
      * @return hexadecimal representation of the memory content, or <code>null</code>
      *         when the read is not successful
-     * @since 1.0
+     * @since 0.1
      */
     public String readMemory(String address, long offset, int length) {
         return provider.readMemory(address, offset, length);
@@ -178,7 +208,7 @@ public final class NIDebugger {
     /**
      * Get version of the underlying native debugger.
      *
-     * @since 1.0
+     * @since 0.1
      */
     public String getVersion() {
         return provider.getVersion();
@@ -230,7 +260,7 @@ public final class NIDebugger {
     /**
      * A builder that creates a Native Image debugger with optional displayers.
      *
-     * @since 1.0
+     * @since 0.1
      */
     public static final class Builder {
 
@@ -244,7 +274,7 @@ public final class NIDebugger {
          * Displayer of native frames.
          *
          * @param frameDisplayer translator of the native frame to it's displayed information
-         * @since 1.0
+         * @since 0.1
          */
         public Builder frameDisplayer(FrameDisplayer frameDisplayer) {
             this.debuggerProvider.setFrameDisplayer(frameDisplayer);
@@ -255,7 +285,7 @@ public final class NIDebugger {
          * Displayer of native variables.
          *
          * @param variablesDisplayer translator of native variables to displayed variables.
-         * @since 1.0
+         * @since 0.1
          */
         public Builder variablesDisplayer(VariableDisplayer variablesDisplayer) {
             this.debuggerProvider.setVariablesDisplayer(variablesDisplayer);
@@ -264,7 +294,7 @@ public final class NIDebugger {
 
         /**
          * Create the debugger instance.
-         * @since 1.0
+         * @since 0.1
          */
         public NIDebugger build() {
             return new NIDebugger(debuggerProvider);

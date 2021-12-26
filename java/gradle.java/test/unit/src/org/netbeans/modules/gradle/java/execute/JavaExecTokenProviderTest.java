@@ -18,10 +18,12 @@
  */
 package org.netbeans.modules.gradle.java.execute;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -126,7 +128,7 @@ public class JavaExecTokenProviderTest extends NbTestCase {
                 build();
         
         Map<String, String> map = jetp.createReplacements(ActionProvider.COMMAND_RUN, Lookups.singleton(params));
-        assertEquals(4, map.size());
+        assertEquals(8, map.size());
         
         assertParamList(map.get("java.jvmArgs"), TWO_PROPS);
         assertListInValue(map.get("javaExec.jvmArgs"), TWO_PROPS);
@@ -140,7 +142,7 @@ public class JavaExecTokenProviderTest extends NbTestCase {
                 build();
         
         Map<String, String> map = jetp.createReplacements(ActionProvider.COMMAND_RUN, Lookups.singleton(params));
-        assertEquals(4, map.size());
+        assertEquals(8, map.size());
 
         assertParamList(map.get("java.jvmArgs"), THREE_PROPS);
         assertListInValue(map.get("javaExec.jvmArgs"), THREE_PROPS);
@@ -154,7 +156,7 @@ public class JavaExecTokenProviderTest extends NbTestCase {
                 build();
 
         Map<String, String> map = jetp.createReplacements(ActionProvider.COMMAND_RUN, Lookups.singleton(params));
-        assertEquals(4, map.size());
+        assertEquals(8, map.size());
 
         assertArgs(map.get("javaExec.args"), TWO_PROPS);
         assertParamList(map.get("java.args"), TWO_PROPS);
@@ -168,12 +170,44 @@ public class JavaExecTokenProviderTest extends NbTestCase {
                 build();
 
         Map<String, String> map = jetp.createReplacements(ActionProvider.COMMAND_RUN, Lookups.singleton(params));
-        assertEquals(4, map.size());
+        assertEquals(8, map.size());
 
         assertArgs(map.get("javaExec.args"), THREE_PROPS);
         assertParamList(map.get("java.args"), THREE_PROPS);
     }
     
+    public void testAppCWD() throws Exception {
+        JavaExecTokenProvider jetp = new JavaExecTokenProvider(createSimpleJavaProject());
+        
+        File wdf = new File("A test working/directory");
+        String wd = wdf.getAbsolutePath();
+        ExplicitProcessParameters params = ExplicitProcessParameters.builder().
+                workingDirectory(wdf).
+                build();
+
+        Map<String, String> map = jetp.createReplacements(ActionProvider.COMMAND_RUN, Lookups.singleton(params));
+        assertEquals(8, map.size());
+
+        assertParamList(map.get("java.workingDir"), wd);
+        assertParamList(map.get("javaExec.workingDir"), "-PrunWorkingDir=\"" + wd + "\"");
+    }
+    
+    public void testAppEnvironment() throws Exception {
+        JavaExecTokenProvider jetp = new JavaExecTokenProvider(createSimpleJavaProject());
+        
+        Map<String, String> envVars = new LinkedHashMap<>();
+        envVars.put("TestVar1", "Env Value 1");
+        envVars.put("TestVar2", null);
+        ExplicitProcessParameters params = ExplicitProcessParameters.builder().
+                environmentVariables(envVars).
+                build();
+
+        Map<String, String> map = jetp.createReplacements(ActionProvider.COMMAND_RUN, Lookups.singleton(params));
+        assertEquals(8, map.size());
+
+        assertParamList(map.get("java.environment"), new String[]{"TestVar1=Env Value 1",  "!TestVar2"});
+        assertParamList(map.get("javaExec.environment"), "-PrunEnvironment=\"TestVar1=Env Value 1\" !TestVar2");
+    }
     
     /**
      * Note: this code is not actually run, as it would require an entire

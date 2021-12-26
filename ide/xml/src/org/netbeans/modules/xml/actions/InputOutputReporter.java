@@ -198,7 +198,7 @@ public final class InputOutputReporter implements CookieObserver {
         if (line >= 0) { 
             Object[] args = new Object[] {
                                 message,
-                                new Integer(line),
+                                Integer.valueOf(line),
                                 ext
                             };
 

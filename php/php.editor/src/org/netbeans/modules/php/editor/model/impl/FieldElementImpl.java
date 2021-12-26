@@ -99,7 +99,17 @@ class FieldElementImpl extends ScopeImpl implements FieldElement {
         for (TypeResolver typeResolver : instanceTypes) {
             if (typeResolver.isResolved()) {
                 QualifiedName typeName = typeResolver.getTypeName(false);
-                String type = typeName == null ? "" : typeName.toNamespaceName() + "\\" + typeName.getName(); // NOI18N
+                String type;
+                if (typeName == null) {
+                    type = ""; // NOI18N
+                } else {
+                    if (typeName.toNamespaceName().toString().isEmpty()
+                            && Type.isPrimitive(typeName.getName())) {
+                        type = typeName.getName();
+                    } else {
+                        type = typeName.toNamespaceName() + "\\" + typeName.getName(); // NOI18N
+                    }
+                }
                 if (this.defaultType != null) {
                     this.defaultType += String.format("|%s", type); //NOI18N
                 } else {

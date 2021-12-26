@@ -143,7 +143,7 @@ public class InjectablesPopup extends JPanel implements FocusListener {
     }
     
     private ListModel createListModel() {
-        DefaultListModel dlm = new DefaultListModel();
+        DefaultListModel<ElementHandle<? extends Element>> dlm = new DefaultListModel<>();
         
         for (ElementHandle<? extends Element> el: myHandles) {
             dlm.addElement(el);

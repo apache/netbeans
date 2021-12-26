@@ -80,6 +80,8 @@ public class ETCompletionContextResolver implements CompletionContextResolver {
             completeJPQLContext(ctx, ctx.getMethod(), result);
         } else if("NamedQuery".equals(annotationName)){//NOI18N
             completeJPQLContext(ctx, parsedNN, nnattr, result);
+        } else if("Query".equals(annotationName) && parsedNN.getAttributesList().size() == 1){//NOI18N
+            completeJPQLContext(ctx, parsedNN, nnattr, result);
         }
         
         
@@ -119,7 +121,7 @@ public class ETCompletionContextResolver implements CompletionContextResolver {
      private List completeJPQLContext(JPACodeCompletionProvider.Context ctx, CCParser.CC nn, CCParser.NNAttr nnattr, List<JPACompletionItem> results) {
         String completedMember = nnattr.getName();
 
-        if ("query".equals(completedMember)) { // NOI18N
+        if (completedMember == null || "query".equals(completedMember)) { // NOI18N
             String completedValue = nnattr.getValue().toString() == null ? "" : nnattr.getValue().toString();
             DefaultJPQLQueryHelper helper = new DefaultJPQLQueryHelper(DefaultJPQLGrammar.instance());
 

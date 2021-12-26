@@ -130,8 +130,8 @@ public class FetchLogRemote extends FetchLogPiped {
                     for (String line : result.getValue().getLines()) {
                         byte[] lineOut = line.getBytes();
                         LOGGER.log(Level.FINEST, METHOD, "read", new Object[] {
-                            new Integer(lineOut.length
-                                + lineSeparatorOut.length)});
+                            lineOut.length
+                                    + lineSeparatorOut.length});
                         out.write(lineOut);
                         out.write(lineSeparatorOut);
                     }

@@ -55,9 +55,7 @@ public final class TestMethodFinder {
      * @since 1.27
      */
     public static Map<FileObject, Collection<TestMethodController.TestMethod>> findTestMethods(Iterable<FileObject> testRoots, BiConsumer<FileObject, Collection<TestMethodController.TestMethod>> listener) {
-        if (TestMethodFinderImpl.INSTANCE != null) {
-            TestMethodFinderImpl.INSTANCE.addListener(listener);
-        }
+        TestMethodFinderImpl.INSTANCE.addListener(listener);
         Map<FileObject, Collection<TestMethodController.TestMethod>> file2TestMethods = new HashMap<>();
         for (FileObject testRoot : testRoots) {
             try {
@@ -102,8 +100,10 @@ public final class TestMethodFinder {
                     String info = line.substring(8);
                     int idx = info.lastIndexOf(':');
                     String name = (idx < 0 ? info : info.substring(0, idx)).trim();
-                    Position methodPosition = idx < 0 ? null : () -> Integer.parseInt(info.substring(idx + 1));
-                    testMethods.add(new TestMethodController.TestMethod(className, classPosition, new SingleMethod(fo, name), methodPosition, null, null));
+                    String[] range = idx < 0 ? new String[0] : info.substring(idx + 1).split("-");
+                    Position methodStart = range.length > 0 ? () -> Integer.parseInt(range[0]) : null;
+                    Position methodEnd = range.length > 1 ? () -> Integer.parseInt(range[1]) : null;
+                    testMethods.add(new TestMethodController.TestMethod(className, classPosition, new SingleMethod(fo, name), methodStart, null, methodEnd));
                 }
             }
         } catch (IOException ex) {

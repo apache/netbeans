@@ -158,7 +158,7 @@ public class WildFlyProperties {
 
     public boolean getProxyEnabled() {
         String val = ip.getProperty(PROP_PROXY_ENABLED);
-        return val != null ? Boolean.valueOf(val).booleanValue()
+        return val != null ? Boolean.valueOf(val)
                 : DEF_VALUE_PROXY_ENABLED;
     }
 

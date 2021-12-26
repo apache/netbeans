@@ -46,7 +46,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
@@ -678,9 +677,7 @@ public class TreeUtilitiesTest extends NbTestCase {
     }
 
     public void testNotUsingLiveScope() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_12");
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(12)) {
             //this test cannot pass on JDK <12, as javac there does not allow variables to own other variables
             return ;
         }

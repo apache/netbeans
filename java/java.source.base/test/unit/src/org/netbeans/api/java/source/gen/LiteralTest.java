@@ -25,10 +25,10 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 import java.io.File;
-import javax.lang.model.SourceVersion;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.api.java.source.SourceVersions;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
@@ -170,9 +170,7 @@ public class LiteralTest extends GeneratorTestMDRCompat {
     }
 
     public void testTextBlocksNew() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(13)) {
             //OK, skip test:
             return ;
         }
@@ -217,9 +215,7 @@ public class LiteralTest extends GeneratorTestMDRCompat {
     }
 
     public void testTextBlocksReplace() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(13)) {
             //OK, skip test
             return ;
         }

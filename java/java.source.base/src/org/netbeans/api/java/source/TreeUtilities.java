@@ -938,17 +938,7 @@ public final class TreeUtilities {
         }
     }
 
-    private static boolean VARIABLE_CAN_OWN_VARIABLES;
-    static {
-        boolean result;
-        try {
-            SourceVersion.valueOf("RELEASE_12");
-            result = true;
-        } catch (IllegalArgumentException ex) {
-            result = false;
-        }
-        VARIABLE_CAN_OWN_VARIABLES = result;
-    }
+    private static boolean VARIABLE_CAN_OWN_VARIABLES = SourceVersions.supports(12);
 
     private static Scope attributeTreeTo(JavacTaskImpl jti, CompilationUnitTree cut, Tree tree, Scope scope, Tree to, final List<Diagnostic<? extends JavaFileObject>> errors) {
         Log log = Log.instance(jti.getContext());

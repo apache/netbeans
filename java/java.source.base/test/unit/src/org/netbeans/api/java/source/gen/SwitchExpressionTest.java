@@ -35,12 +35,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.swing.event.ChangeListener;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.SourceVersions;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.java.source.TreeMaker;
@@ -109,9 +109,7 @@ public class SwitchExpressionTest extends TreeRewriteTestBase {
     }
 
     public void testSwitchExpression() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_13");
-        } catch (IllegalArgumentException ex) {
+        if (!SourceVersions.supports(13)) {
             //OK, skip test
             return ;
         }

@@ -41,11 +41,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import org.netbeans.api.java.source.SourceVersions;
 
 public class TreeShims {
 
@@ -284,7 +284,7 @@ public class TreeShims {
     }
 
     public static Tree SwitchExpression(TreeMaker make, ExpressionTree selector, List<? extends CaseTree> caseList) throws SecurityException {
-        ListBuffer<JCTree.JCCase> cases = new ListBuffer<JCTree.JCCase>();
+        ListBuffer<JCTree.JCCase> cases = new ListBuffer<>();
         for (CaseTree t : caseList) {
             cases.append((JCTree.JCCase) t);
         }
@@ -384,15 +384,15 @@ public class TreeShims {
     }
 
     public static boolean isJDKVersionSupportEnablePreview() {
-        return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(PATTERN_MATCHING_INSTANCEOF_PREVIEW_JDK_VERSION) <= 0;
+        return SourceVersions.feature() <= PATTERN_MATCHING_INSTANCEOF_PREVIEW_JDK_VERSION;
     }
 	
     public static boolean isJDKVersionRelease16_Or_Above(){
-        return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(16) >= 0;
+        return SourceVersions.supports(16);
     }
 
     public static boolean isJDKVersionRelease17_Or_Above(){
-        return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(17) >= 0;
+        return SourceVersions.supports(17);
     }
 
     public static ModuleTree getModule(CompilationUnitTree cut) {

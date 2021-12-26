@@ -21,6 +21,9 @@ package org.netbeans.agent.hooks;
 import java.awt.Window;
 import java.io.File;
 import java.lang.reflect.AccessibleObject;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -98,9 +101,8 @@ public abstract class TrackingHooks {
     }
 
     public static void write(Path path) {
-        File file = path.toFile();
-        if (file != null) {
-            write(file);
+        if (path.getFileSystem() == FileSystems.getDefault()) {
+            write(path.toFile());
         }
     }
 
@@ -115,9 +117,8 @@ public abstract class TrackingHooks {
     }
 
     public static void read(Path path) {
-        File file = path.toFile();
-        if (file != null) {
-            read(file);
+        if (path.getFileSystem() == FileSystems.getDefault()) {
+            read(path.toFile());
         }
     }
 
@@ -133,8 +134,8 @@ public abstract class TrackingHooks {
     }
 
     public static void readWrite(Path path, Set<OpenOption> options) {
-        File file = path.toFile();
-        if (file != null) {
+        if (path.getFileSystem() == FileSystems.getDefault()) {
+            File file = path.toFile();
             if (options.isEmpty()) {
                 read(file);
             } else if (options.contains(StandardOpenOption.READ)) {
@@ -153,9 +154,8 @@ public abstract class TrackingHooks {
     }
 
     public static void deleteFile(Path path) {
-        File file = path.toFile();
-        if (file != null) {
-            deleteFile(file);
+        if (path.getFileSystem() == FileSystems.getDefault()) {
+            deleteFile(path.toFile());
         }
     }
 

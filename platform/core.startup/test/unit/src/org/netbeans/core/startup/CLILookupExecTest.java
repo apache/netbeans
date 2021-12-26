@@ -25,6 +25,7 @@ import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.CLIHandler;
+import org.netbeans.agent.hooks.TrackingHooks;
 import org.netbeans.junit.NbTestCase;
 
 /** Make sure the CLIHandler can be in modules and really work.
@@ -61,6 +62,7 @@ public class CLILookupExecTest extends NbTestCase {
     
 
     protected void tearDown() throws Exception {
+        TrackingHooks.clear();
     }
     
     public void testModuleInAClusterCanBeFound() throws Exception {

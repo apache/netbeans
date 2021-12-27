@@ -1,6 +1,6 @@
 Name: SVNClientAdapter Library
 Description: Integration library for subversion client
-Version: 1.10.12
+Version: 1.14.0
 Origin: Subclipse
 License: Apache-2.0
 URL: http://subclipse.tigris.org/svnClientAdapter.html
@@ -206,3 +206,4 @@ URL: http://subclipse.tigris.org/svnClientAdapter.html
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+

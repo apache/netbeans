@@ -250,7 +250,7 @@ public class ConvertToSwitchPatternInstanceOf {
                 iot = (InstanceOfTree) ((ParenthesizedTree) ifTree.getCondition()).getExpression();
                 StatementTree bt = ifTree.getThenStatement();
                 StatementTree thenBlock = removeFirst ? wc.getTreeMaker().removeBlockStatement((BlockTree) bt, 0) : bt;
-                Tree pattern = TreeShims.getPattern(iot);
+                Tree pattern = iot.getPattern();
                 caseBindPattern.add(pattern);
                 BlockTree blockTree = (BlockTree) thenBlock;
                 Tree statementTree = blockTree.getStatements().size() == 1 && isValidCaseTree(blockTree.getStatements().get(0))? blockTree.getStatements().get(0) : thenBlock;

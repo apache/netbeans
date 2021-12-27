@@ -28,6 +28,7 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.CaseTree.CaseKind;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -59,6 +60,7 @@ import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.ThrowTree;
@@ -72,6 +74,7 @@ import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
+import com.sun.source.tree.YieldTree;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.ArrayList;
@@ -102,7 +105,6 @@ import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.CompilationInfo.CacheClearPolicy;
 import org.netbeans.api.java.source.support.CancellableTreeScanner;
-import org.netbeans.modules.editor.java.TreeShims;
 import org.netbeans.modules.java.hints.errors.Utilities;
 import org.netbeans.spi.java.hints.HintContext;
 
@@ -471,13 +473,7 @@ public class Flow {
                 TreePath oldPath = currentPath;
                 try {
                     currentPath = new TreePath(currentPath, tree);
-                    if (TreeShims.SWITCH_EXPRESSION.equals(tree.getKind().name())) {
-                        result = visitSwitchExpression(tree, p);
-                    } else if (TreeShims.YIELD.equals(tree.getKind().name())) {
-                        result = visitYield(tree, p);
-                    } else {
-                        result = super.scan(tree, p);
-                    }
+                    result = super.scan(tree, p);
                 } finally {
                     currentPath = oldPath;
                 }
@@ -1212,8 +1208,9 @@ public class Flow {
             return null;
         }
 
-        public Boolean visitYield(Tree node, ConstructorData p) {
-            scan(TreeShims.getYieldValue(node), p);
+        @Override
+        public Boolean visitYield(YieldTree node, ConstructorData p) {
+            scan(node.getValue(), p);
 
             Tree target = info.getTreeUtilities().getBreakContinueTargetTree(getCurrentPath());
             
@@ -1233,8 +1230,9 @@ public class Flow {
             return null;
         }
 
-        public Boolean visitSwitchExpression(Tree node, ConstructorData p) {
-            generalizedSwitch(node, TreeShims.getExpressions(node).get(0), TreeShims.getCases(node));
+        @Override
+        public Boolean visitSwitchExpression(SwitchExpressionTree node, ConstructorData p) {
+            generalizedSwitch(node, node.getExpression(), node.getCases());
             return null; //never a constant expression
         }
 
@@ -1256,7 +1254,7 @@ public class Flow {
 
                 scan(ct, null);
 
-                if (TreeShims.isRuleCase(ct)) {
+                if (ct.getCaseKind() == CaseKind.RULE) {
                     breakTo(switchTree);
                 }
             }

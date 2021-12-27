@@ -77,13 +77,14 @@ public final class JavaDocumentationTask<T> extends BaseTask {
             }
         }
         if (!controller.getElementUtilities().isErroneous(el)) {
-            switch (simplifyElementKind(el.getKind())) {
+            switch (el.getKind()) {
                 case MODULE:
                 case PACKAGE:
                 case ANNOTATION_TYPE:
                 case CLASS:
                 case ENUM:
                 case INTERFACE:
+                case RECORD:
                 case CONSTRUCTOR:
                 case ENUM_CONSTANT:
                 case FIELD:
@@ -106,10 +107,4 @@ public final class JavaDocumentationTask<T> extends BaseTask {
         return path;
     }    
 
-    private static ElementKind simplifyElementKind(ElementKind kind) {
-        if (TreeShims.RECORD.equals(kind.name())) {
-            return ElementKind.CLASS;
-        }
-        return kind;
-    }
 }

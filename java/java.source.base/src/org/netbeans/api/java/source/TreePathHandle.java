@@ -51,7 +51,6 @@ import javax.tools.JavaFileObject;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.java.source.PositionRefProvider;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileStateInvalidException;
@@ -321,9 +320,11 @@ public final class TreePathHandle {
             case FIELD:
             case ANNOTATION_TYPE:
             case ENUM_CONSTANT:
+            case RECORD:
+                //TODO: record component
                 return true;
             default:
-                return (el.getKind().name().equals(TreeShims.RECORD));
+                return false;
         }
     }
 

@@ -66,7 +66,6 @@ import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.editor.GuardedException;
 import org.netbeans.modules.java.editor.codegen.ImplementOverrideMethodGenerator;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.hints.JavaFix;

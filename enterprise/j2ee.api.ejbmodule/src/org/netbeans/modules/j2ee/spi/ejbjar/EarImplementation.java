@@ -28,6 +28,7 @@ import org.netbeans.modules.web.api.webmodule.WebModule;
  * @see EjbJarFactory
  * @deprecated implement {@link EarImplementation2}
  */
+@Deprecated
 public interface EarImplementation {
 
     /** J2EE platform version - one of the constants
